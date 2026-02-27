@@ -25,6 +25,8 @@ FILES = [
 
 HISTORY_PATH = os.path.join(PROJECT_ROOT, "data-history.js")
 MATCHDETAIL_PATH = os.path.join(PROJECT_ROOT, "data-matchdetail.js")
+SHIELDS_PATH = os.path.join(PROJECT_ROOT, "data-shields.js")
+SHIELDS_BASE = "https://futbolaspalmas.com/escudos/"
 GOALS_URL = "https://futbolaspalmas.com/mostrar-mas-datos-estadisticas.php"
 
 
@@ -232,6 +234,22 @@ def parse_standings(html):
         result.append([i + 1, name, pts_list[i], j, g, e, perd, gf, gc, df])
 
     return result
+
+
+# ─── PARSE SHIELDS (escudos) ─────────────────────────────────────────────────────
+
+def parse_shields(html):
+    """Extract {team_name: shield_filename} from <img src="...escudos/FILE" title="Calendario TEAM">"""
+    pattern = re.compile(
+        r'<img\s+src="[^"]*escudos/([^"]+\.(?:png|jpg|gif|svg))"[^>]*title="\s*Calendario\s+([^"]*)"',
+        re.IGNORECASE,
+    )
+    shields = {}
+    for filename, team in pattern.findall(html):
+        team = team.strip()
+        if team and filename:
+            shields[team] = filename
+    return shields
 
 
 # ─── GOAL SCRAPING (mostrar-mas-datos-estadisticas.php) ─────────────────────────
@@ -455,7 +473,7 @@ def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
     m = re.match(r"const " + var_name + r"=(\[.*?\]);", content, re.DOTALL)
     if not m:
         print(f"  ERROR: {var_name} no encontrado en {os.path.basename(js_path)}")
-        return {}, {}
+        return {}, {}, {}
 
     groups = json.loads(m.group(1))
     tail = content[m.end():]
@@ -464,6 +482,7 @@ def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
     updated_standings = 0
     history_updates = {}
     new_goal_entries = {}
+    all_shields = {}
 
     if existing_matchdetail is None:
         existing_matchdetail = {}
@@ -514,6 +533,13 @@ def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
         except Exception as e:
             print(f"    ⚠ clasificación error: {e}")
 
+        # ── Escudos ──────────────────────────────────────────────────────
+        if clasi_html:
+            shields = parse_shields(clasi_html)
+            if shields:
+                all_shields.update(shields)
+                print(f"    Escudos: {len(shields)} encontrados")
+
         # ── Goles por partido (incremental) ───────────────────────────────
         if clasi_html and all_hist:
             team_codes = extract_team_codes(html)  # main page has team code links
@@ -558,14 +584,31 @@ def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
         f.write(new_content)
 
     print(f"  → {updated_matches} partidos, {updated_standings} clasificaciones actualizadas.\n")
-    return history_updates, new_goal_entries
+    return history_updates, new_goal_entries, all_shields
 
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────
 
+def write_shields(all_shields):
+    """Write data-shields.js with team name → shield filename mapping."""
+    if not all_shields:
+        print("  Sin escudos encontrados.")
+        return
+
+    content = (
+        "const SHIELDS="
+        + json.dumps(all_shields, ensure_ascii=False, separators=(",", ":"))
+        + ";\n"
+    )
+    with open(SHIELDS_PATH, "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"  → {len(all_shields)} escudos escritos en data-shields.js.")
+
+
 def main():
     all_history_updates = {}
     all_goal_entries = {}
+    all_shields = {}
 
     # Load existing matchdetail once so all process_file calls can skip already-scraped matches
     existing_matchdetail = load_matchdetail()
@@ -575,9 +618,10 @@ def main():
         print(f"\n{'='*50}")
         print(f"{os.path.basename(js_path)}")
         print(f"{'='*50}")
-        history_updates, goal_entries = process_file(js_path, var_name, stats_var, existing_matchdetail)
+        history_updates, goal_entries, shields = process_file(js_path, var_name, stats_var, existing_matchdetail)
         all_history_updates.update(history_updates)
         all_goal_entries.update(goal_entries)
+        all_shields.update(shields)
         # Keep running matchdetail up to date so subsequent groups don't re-fetch same match
         existing_matchdetail.update(goal_entries)
 
@@ -590,6 +634,11 @@ def main():
     print("data-matchdetail.js")
     print(f"{'='*50}")
     update_matchdetail(all_goal_entries)
+
+    print(f"\n{'='*50}")
+    print("data-shields.js")
+    print(f"{'='*50}")
+    write_shields(all_shields)
 
     bump_cache_version()
 

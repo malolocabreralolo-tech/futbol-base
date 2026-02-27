@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="./style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
 </head>
@@ -40,6 +41,7 @@
             <span class="stat-val" id="statMatches">0</span> partidos
           </div>
         </div>
+        <button class="theme-toggle" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">🌙</button>
       </div>
 
       <!-- Category Toggle -->
@@ -101,7 +103,9 @@
   <script src="./data-history.js?v=20260227"></script>
   <script src="./data-goleadores.js?v=20260227"></script>
   <script src="./data-matchdetail.js?v=20260227"></script>
+  <script src="./data-shields.js?v=20260227"></script>
   <!-- APP -->
   <script src="./app.js?v=20260227"></script>
+  <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});</script>
 </body>
 </html>

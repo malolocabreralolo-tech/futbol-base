@@ -22,6 +22,44 @@ function el(tag, cls, html) {
   return e;
 }
 
+/* Team badge — real shield from SHIELDS or fallback to initials */
+function teamBadgeFallback(name) {
+  const words = name.replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]/g, '').trim().split(/\s+/);
+  let initials;
+  if (words.length === 1) initials = words[0].substring(0, 2).toUpperCase();
+  else initials = words.slice(0, 3).map(w => w[0]).join('').toUpperCase();
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  const hue = Math.abs(hash) % 360;
+  return `<span class="team-badge" style="background:hsl(${hue},55%,45%)">${initials}</span>`;
+}
+function teamBadge(name) {
+  if (typeof SHIELDS !== 'undefined' && SHIELDS[name]) {
+    return `<img class="team-badge" src="https://futbolaspalmas.com/escudos/${SHIELDS[name]}" alt="${name}" onerror="this.outerHTML=teamBadgeFallback(this.alt)">`;
+  }
+  return teamBadgeFallback(name);
+}
+
+/* Get last N results for a team from HISTORY */
+function getTeamForm(teamName, groupId, n) {
+  n = n || 5;
+  if (typeof HISTORY === 'undefined' || !HISTORY[groupId]) return [];
+  const hist = HISTORY[groupId];
+  const all = [];
+  Object.entries(hist).forEach(([jorName, matches]) => {
+    const jorNum = parseInt(jorName.replace(/\D/g, ''));
+    matches.forEach(m => {
+      if (m[3] === null || m[4] === null) return;
+      if (m[1] !== teamName && m[2] !== teamName) return;
+      const isHome = m[1] === teamName;
+      const gf = isHome ? m[3] : m[4], gc = isHome ? m[4] : m[3];
+      all.push({ jorNum, date: m[0], result: gf > gc ? 'W' : gf < gc ? 'L' : 'D' });
+    });
+  });
+  all.sort((a, b) => a.jorNum - b.jorNum || a.date.localeCompare(b.date));
+  return all.slice(-n);
+}
+
 function getData() {
   return S.cat === 'benjamin' ? BENJAMIN : PREBENJAMIN;
 }
@@ -53,6 +91,12 @@ function countStats() {
 
 /* ====== INIT ====== */
 document.addEventListener('DOMContentLoaded', () => {
+  // Apply saved theme
+  if (localStorage.getItem('theme') === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const t = document.getElementById('themeToggle');
+    if (t) t.textContent = '☀️';
+  }
   updateStats();
   renderSection();
   bindEvents();
@@ -97,6 +141,22 @@ function bindEvents() {
       renderSection();
     }
   });
+  // Theme toggle
+  const themeToggle = $('#themeToggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  }
 }
 
 function updateStats() {
@@ -169,7 +229,7 @@ function buildGroupCard(g, forceOpen) {
   card.innerHTML = `
     <div class="group-header">
       <div class="group-title">
-        ${g.name} <span class="group-badge">${teamCount} equipos</span>
+        ${g.name} <span class="group-badge">${teamCount} equipos</span>${g.jornada ? ` <span class="jornada-badge">${g.jornada}</span>` : ''}
       </div>
       <span class="group-chevron">▾</span>
     </div>
@@ -185,7 +245,7 @@ function buildGroupCard(g, forceOpen) {
 
 function buildStandingsTable(standings, groupId) {
   let html = '<div class="table-wrap"><table class="standings-table"><thead><tr>';
-  html += '<th>#</th><th>Equipo</th><th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DF</th>';
+  html += '<th>#</th><th>Equipo</th><th>F</th><th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DF</th>';
   html += '</tr></thead><tbody>';
   standings.forEach(row => {
     // row: [pos, team, pts, j, g, e, p, gf, gc, df]
@@ -194,10 +254,19 @@ function buildStandingsTable(standings, groupId) {
     const df = row[9];
     const dfCls = df > 0 ? 'df-pos' : (df < 0 ? 'df-neg' : '');
     const dfStr = df > 0 ? `+${df}` : df;
-    const highlight = S.search && row[1].toLowerCase().includes(S.search) ? ' style="background:rgba(0,230,118,0.08)"' : '';
+    const highlight = S.search && row[1].toLowerCase().includes(S.search) ? ' style="background:var(--accent-dim)"' : '';
     html += `<tr class="${cls}"${highlight}>`;
     html += `<td>${pos}</td>`;
-    html += `<td class="team-name-cell" data-group="${groupId}">${row[1]}</td>`;
+    html += `<td class="team-name-cell" data-group="${groupId}">${teamBadge(row[1])} ${row[1]}</td>`;
+    // Form column
+    const form = getTeamForm(row[1], groupId);
+    html += '<td class="form-col">';
+    if (form.length) {
+      html += '<div class="form-mini">';
+      form.forEach(f => { html += `<span class="form-dot ${f.result}">${f.result}</span>`; });
+      html += '</div>';
+    } else { html += '-'; }
+    html += '</td>';
     html += `<td class="pts-col">${row[2]}</td>`;
     html += `<td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td><td>${row[6]}</td>`;
     html += `<td>${row[7]}</td><td>${row[8]}</td>`;
@@ -235,6 +304,8 @@ function renderJornadas() {
   
   selectWrap.appendChild(select);
   selectorRow.appendChild(selectWrap);
+
+
   container.appendChild(selectorRow);
 
   const pillsDiv = el('div', 'jornada-pills');
@@ -330,7 +401,8 @@ function renderJornadaContent() {
     }, 50);
 
     // Render matches for selected jornada
-    if (S.jorNum === currentJor && !hasCurrentInHistory) {
+    if (S.jorNum === currentJor) {
+      // Use group.matches for current jornada (has venue data)
       renderMatchCards(matchesDiv, group.matches.map(m => ({
         date: m[0], time: m[1], home: m[2], away: m[3], hs: m[4], as: m[5], venue: m[6] || null
       })), 'current');
@@ -398,9 +470,9 @@ function renderMatchCards(container, matches, type) {
     const venueHtml = m.venue ? `<div class="match-venue">📍 ${m.venue}</div>` : '';
     card.innerHTML = `
       <div class="match-teams">
-        <div class="match-team home">${m.home}</div>
+        <div class="match-team home">${m.home} ${teamBadge(m.home)}</div>
         <div class="match-score">${scoreHtml}</div>
-        <div class="match-team away">${m.away}</div>
+        <div class="match-team away">${teamBadge(m.away)} ${m.away}</div>
       </div>
       <div class="match-date">${dateStr}${hasDetail ? ' <span class="detail-badge" title="Ver cronología de goles">⚽</span>' : ''}</div>
       ${venueHtml}
@@ -682,9 +754,9 @@ function openMatchDetail(match) {
     <div class="modal-group-label">${groupLabel}</div>
     ${jorLabel ? `<div class="modal-match-jornada">${jorLabel}</div>` : ''}
     <div class="modal-match">
-      <div class="modal-team-name home">${home}${homeTag}${draw ? drawLabel : ''}</div>
+      <div class="modal-team-name home">${home} ${teamBadge(home)}${homeTag}${draw ? drawLabel : ''}</div>
       <div class="modal-big-score">${hs}<span class="score-dash">-</span>${as}</div>
-      <div class="modal-team-name away">${away}${awayTag}${draw && !homeTag ? '' : ''}</div>
+      <div class="modal-team-name away">${teamBadge(away)} ${away}${awayTag}${draw && !homeTag ? '' : ''}</div>
     </div>
     <div class="modal-match-date">${date}</div>
   `;
@@ -845,7 +917,7 @@ function openTeamDetail(teamName, groupId) {
   modalContent.innerHTML = `
     <div class="modal-group-label">${groupLabel}</div>
     <div class="modal-team-header">
-      <div class="modal-team-title">${teamName}</div>
+      <div class="modal-team-title">${teamBadge(teamName)} ${teamName}</div>
       ${row ? `<div class="modal-team-pos">${row[0]}\u00ba clasificado · ${row[2]} pts</div>` : ''}
     </div>
   `;

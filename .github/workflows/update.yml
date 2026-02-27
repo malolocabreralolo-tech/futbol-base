@@ -18,8 +18,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Actualizar campos desde futbolaspalmas.com
-        run: python3 scripts/update_venues.py
+      - name: Actualizar datos desde futbolaspalmas.com
+        run: python3 scripts/fetch_futbolaspalmas.py
 
       - name: Descargar actas FIFLP (si hay cookie)
         if: ${{ secrets.FIFLP_COOKIES != '' }}

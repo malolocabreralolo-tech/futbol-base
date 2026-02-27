@@ -11,6 +11,7 @@ import json
 import os
 import re
 import time
+import urllib.parse
 import urllib.request
 from html.parser import HTMLParser
 
@@ -23,6 +24,8 @@ FILES = [
 ]
 
 HISTORY_PATH = os.path.join(PROJECT_ROOT, "data-history.js")
+MATCHDETAIL_PATH = os.path.join(PROJECT_ROOT, "data-matchdetail.js")
+GOALS_URL = "https://futbolaspalmas.com/mostrar-mas-datos-estadisticas.php"
 
 
 # ─── FETCH ─────────────────────────────────────────────────────────────────────
@@ -185,11 +188,12 @@ def parse_all_matches(html):
                 hs = int(cells[3].strip())
                 as_ = int(cells[4].strip())
             except ValueError:
-                continue  # no score yet → skip
+                hs = None
+                as_ = None
 
             jornadas[current_name].append([full_date, home, away, hs, as_])
 
-    # Remove jornadas with no completed matches
+    # Remove jornadas with no matches at all
     return {k: v for k, v in jornadas.items() if v}
 
 
@@ -228,6 +232,171 @@ def parse_standings(html):
         result.append([i + 1, name, pts_list[i], j, g, e, perd, gf, gc, df])
 
     return result
+
+
+# ─── GOAL SCRAPING (mostrar-mas-datos-estadisticas.php) ─────────────────────────
+
+def extract_team_codes(group_html):
+    """
+    Returns {team_name: code} from the main group page HTML.
+    Looks for: <td class='local2015 fw-bold'>TeamName<a href='...-CODE.html'>
+    """
+    pattern = re.compile(
+        r'<td[^>]*fw-bold[^>]*>\s*([A-Za-z\u00e0-\u00ff \'.,]+?)\s*'
+        r'<a\s+href="[^"]*?-([A-Z0-9]+)\.html"',
+        re.IGNORECASE,
+    )
+    result = {}
+    for name, code in pattern.findall(group_html):
+        name = name.strip()
+        if name and code not in result.values():
+            result[name] = code
+    return result
+
+
+def extract_categoria(clasi_html):
+    """
+    Returns (categoria, clasificacion) from mostrar_clasi.php HTML.
+    Looks for: onClick="calendarioClasificacion('calendario_benjamin_a_g1',..."
+    clasificacion is derived by replacing 'calendario_' with 'clasi_'.
+    """
+    m = re.search(r"calendarioClasificacion\('([^']+)'", clasi_html)
+    if not m:
+        return None, None
+    cat = m.group(1)
+    clasi = cat.replace("calendario_", "clasi_")
+    return cat, clasi
+
+
+def fetch_match_goals(local_code, vis_code, categoria, clasificacion):
+    """POST to mostrar-mas-datos-estadisticas.php. Returns HTML string."""
+    data = urllib.parse.urlencode({
+        "local": local_code,
+        "visitante": vis_code,
+        "categoria": categoria,
+        "clasificacion": clasificacion,
+        "divcarga": "1",
+    }).encode()
+    req = urllib.request.Request(
+        GOALS_URL,
+        data=data,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "text/html,*/*",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=20) as r:
+        raw = r.read()
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return raw.decode("iso-8859-1", errors="replace")
+
+
+def parse_goals(html, hs, as_):
+    """
+    Parse goal events from mostrar-mas-datos-estadisticas.php response.
+    Two <div class="grupo-negro12"> blocks: first = home goals, second = away goals.
+    Within each div, goals are separated by <br /> with format: "12´ -  Name<br />"
+    Returns [[min, name, running_score, side, 'r'], ...] sorted by minute.
+    """
+    # Extract content of each grupo-negro12 div
+    sections = re.findall(
+        r'<div[^>]+grupo-negro12[^>]*>(.*?)</div>',
+        html,
+        re.DOTALL | re.IGNORECASE,
+    )
+    if not sections:
+        return []
+
+    goal_line_re = re.compile(r'(\d+)[´\'\u00b4`]\s*-\s*\t*\s*([^\n<\r]+)')
+
+    def extract_goals_from_section(section):
+        goals = []
+        for m in goal_line_re.finditer(section):
+            minute = int(m.group(1))
+            name = m.group(2).strip()
+            if name:
+                goals.append((minute, name))
+        return goals
+
+    home_raw = extract_goals_from_section(sections[0]) if len(sections) > 0 else []
+    away_raw = extract_goals_from_section(sections[1]) if len(sections) > 1 else []
+
+    # Build chronological event list
+    events = [(mn, nm, "h") for mn, nm in home_raw] + [(mn, nm, "a") for mn, nm in away_raw]
+    events.sort(key=lambda x: x[0])
+
+    # Compute running score
+    h_score, a_score = 0, 0
+    result = []
+    for mn, nm, side in events:
+        if side == "h":
+            h_score += 1
+        else:
+            a_score += 1
+        result.append([mn, nm, f"{h_score}-{a_score}", side, "r"])
+
+    return result
+
+
+def load_matchdetail():
+    """Load existing MATCH_DETAIL from data-matchdetail.js. Returns dict."""
+    try:
+        with open(MATCHDETAIL_PATH, encoding="utf-8") as f:
+            content = f.read()
+        m = re.search(r"const MATCH_DETAIL\s*=\s*(\{.*?\});", content, re.DOTALL)
+        if m:
+            return json.loads(m.group(1))
+    except Exception:
+        pass
+    return {}
+
+
+def update_matchdetail(new_entries):
+    """
+    Merge new_entries into data-matchdetail.js WITHOUT overwriting existing entries.
+    Existing entries (e.g. from FIFLP with better quality) are preserved.
+    """
+    if not new_entries:
+        print("  Sin nuevos detalles de goles.")
+        return
+
+    try:
+        with open(MATCHDETAIL_PATH, encoding="utf-8") as f:
+            content = f.read()
+    except FileNotFoundError:
+        content = "const MATCH_DETAIL = {};\n"
+
+    m = re.search(r"const MATCH_DETAIL\s*=\s*(\{.*?\});", content, re.DOTALL)
+    if m:
+        existing = json.loads(m.group(1))
+        tail = content[m.end():]
+        prefix = content[:m.start()]
+    else:
+        existing = {}
+        tail = "\n"
+        prefix = ""
+
+    added = 0
+    for key, val in new_entries.items():
+        if key not in existing:
+            existing[key] = val
+            added += 1
+
+    new_content = (
+        prefix
+        + "const MATCH_DETAIL="
+        + json.dumps(existing, ensure_ascii=False, separators=(",", ":"))
+        + ";"
+        + tail
+    )
+    with open(MATCHDETAIL_PATH, "w", encoding="utf-8") as f:
+        f.write(new_content)
+
+    print(f"  → Goles: {added} nuevos partidos añadidos ({len(existing)} total en MATCH_DETAIL).")
 
 
 # ─── HISTORY UPDATE ─────────────────────────────────────────────────────────────
@@ -279,14 +448,14 @@ def update_history(all_history_updates):
 
 # ─── PROCESS FILE ───────────────────────────────────────────────────────────────
 
-def process_file(js_path, var_name, stats_var):
+def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
     with open(js_path, encoding="utf-8") as f:
         content = f.read()
 
     m = re.match(r"const " + var_name + r"=(\[.*?\]);", content, re.DOTALL)
     if not m:
         print(f"  ERROR: {var_name} no encontrado en {os.path.basename(js_path)}")
-        return {}
+        return {}, {}
 
     groups = json.loads(m.group(1))
     tail = content[m.end():]
@@ -294,6 +463,10 @@ def process_file(js_path, var_name, stats_var):
     updated_matches = 0
     updated_standings = 0
     history_updates = {}
+    new_goal_entries = {}
+
+    if existing_matchdetail is None:
+        existing_matchdetail = {}
 
     for group in groups:
         url = group.get("url", "")
@@ -327,6 +500,7 @@ def process_file(js_path, var_name, stats_var):
 
         # ── Clasificación ──────────────────────────────────────────────────
         clasi_url = url.rstrip("/") + "/mostrar_clasi.php"
+        clasi_html = None
         try:
             clasi_html = fetch(clasi_url)
             time.sleep(DELAY)
@@ -340,6 +514,39 @@ def process_file(js_path, var_name, stats_var):
         except Exception as e:
             print(f"    ⚠ clasificación error: {e}")
 
+        # ── Goles por partido (incremental) ───────────────────────────────
+        if clasi_html and all_hist:
+            team_codes = extract_team_codes(html)  # main page has team code links
+            cat, clasi = extract_categoria(clasi_html)  # standings page has categoria
+            if team_codes and cat:
+                fetched = 0
+                skipped = 0
+                for jor_matches in all_hist.values():
+                    for entry in jor_matches:
+                        # entry: [date, home, away, hs, as]
+                        if entry[3] is None:
+                            continue  # partido sin resultado
+                        home_t, away_t, hs, as_ = entry[1], entry[2], entry[3], entry[4]
+                        key = f"{home_t}|{away_t}|{hs}-{as_}"
+                        if key in existing_matchdetail or key in new_goal_entries:
+                            skipped += 1
+                            continue
+                        lcode = team_codes.get(home_t)
+                        vcode = team_codes.get(away_t)
+                        if not lcode or not vcode:
+                            continue
+                        try:
+                            goals_html = fetch_match_goals(lcode, vcode, cat, clasi)
+                            goals = parse_goals(goals_html, hs, as_)
+                            if goals:
+                                new_goal_entries[key] = {"g": goals}
+                                fetched += 1
+                            time.sleep(DELAY)
+                        except Exception as e:
+                            print(f"    ⚠ goles {key}: {e}")
+                if fetched or skipped:
+                    print(f"    Goles: {fetched} nuevos, {skipped} ya existentes")
+
     # Write back
     new_content = (
         f"const {var_name}="
@@ -351,25 +558,39 @@ def process_file(js_path, var_name, stats_var):
         f.write(new_content)
 
     print(f"  → {updated_matches} partidos, {updated_standings} clasificaciones actualizadas.\n")
-    return history_updates
+    return history_updates, new_goal_entries
 
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────
 
 def main():
     all_history_updates = {}
+    all_goal_entries = {}
+
+    # Load existing matchdetail once so all process_file calls can skip already-scraped matches
+    existing_matchdetail = load_matchdetail()
+    print(f"MATCH_DETAIL existente: {len(existing_matchdetail)} partidos")
 
     for js_path, var_name, stats_var in FILES:
         print(f"\n{'='*50}")
         print(f"{os.path.basename(js_path)}")
         print(f"{'='*50}")
-        history_updates = process_file(js_path, var_name, stats_var)
+        history_updates, goal_entries = process_file(js_path, var_name, stats_var, existing_matchdetail)
         all_history_updates.update(history_updates)
+        all_goal_entries.update(goal_entries)
+        # Keep running matchdetail up to date so subsequent groups don't re-fetch same match
+        existing_matchdetail.update(goal_entries)
 
     print(f"\n{'='*50}")
     print("data-history.js")
     print(f"{'='*50}")
     update_history(all_history_updates)
+
+    print(f"\n{'='*50}")
+    print("data-matchdetail.js")
+    print(f"{'='*50}")
+    update_matchdetail(all_goal_entries)
+
     bump_cache_version()
 
     print("✓ Terminado.")

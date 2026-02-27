@@ -731,6 +731,9 @@ body {
   border-radius: var(--radius);
   width: 100%;
   max-width: 480px;
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 16px 48px rgba(0,0,0,0.5);
   transform: translateY(20px) scale(0.97);
   transition: transform 0.25s ease;
@@ -829,6 +832,8 @@ body {
 /* Modal body - team stats */
 .modal-body {
   padding: 16px 20px 20px;
+  overflow-y: auto;
+  flex: 1;
 }
 .modal-stats-header {
   font-family: 'Bebas Neue', sans-serif;
@@ -1042,3 +1047,28 @@ body {
   box-shadow: 0 4px 24px rgba(0,230,118,0.5);
   transform: translateY(-2px);
 }
+
+/* ====== TEAM PROFILE MODAL ====== */
+.team-name-cell { cursor: pointer; }
+.team-name-cell:hover { text-decoration: underline dotted rgba(255,255,255,0.5); color: var(--accent); }
+.modal-team-header { padding: 10px 0 4px; text-align: center; }
+.modal-team-title { font-size: 20px; font-weight: 700; color: var(--text); }
+.modal-team-pos { font-size: 13px; color: var(--accent); margin-top: 4px; }
+.team-season-stats { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 0 4px; font-size: 13px; color: var(--text2); }
+.team-season-stats span b { color: var(--text); font-weight: 700; }
+.form-strip { display: flex; gap: 6px; padding: 8px 0; }
+.form-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 5px; font-size: 12px; font-weight: 700; }
+.form-badge.W { background: var(--accent); color: #000; }
+.form-badge.D { background: #444; color: #fff; }
+.form-badge.L { background: #e53935; color: #fff; }
+.team-result-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.tr-jornada { color: var(--text3); min-width: 26px; font-size: 11px; }
+.tr-loc { color: var(--text3); font-size: 11px; min-width: 32px; }
+.tr-opp { flex: 1; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tr-score { font-weight: 700; min-width: 30px; text-align: right; }
+.tr-score.res-w { color: var(--accent); }
+.tr-score.res-l { color: #e53935; }
+.tr-score.res-d { color: var(--text3); }
+.tr-date { color: var(--text3); font-size: 11px; min-width: 36px; text-align: right; }
+.match-team { cursor: pointer; }
+.match-team:hover { text-decoration: underline; }

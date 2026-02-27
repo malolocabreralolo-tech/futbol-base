@@ -148,6 +148,12 @@ function renderClasif() {
   if (!container.children.length) {
     container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No se encontraron equipos</p></div>';
   }
+
+  // Event delegation: click on team name in standings → open team profile
+  container.onclick = e => {
+    const td = e.target.closest('.team-name-cell');
+    if (td) openTeamDetail(td.textContent.trim(), td.dataset.group);
+  };
 }
 
 function filterGroups(groups) {
@@ -168,7 +174,7 @@ function buildGroupCard(g, forceOpen) {
       <span class="group-chevron">▾</span>
     </div>
     <div class="group-body">
-      ${buildStandingsTable(g.standings)}
+      ${buildStandingsTable(g.standings, g.id)}
     </div>
   `;
   card.querySelector('.group-header').addEventListener('click', () => {
@@ -177,7 +183,7 @@ function buildGroupCard(g, forceOpen) {
   return card;
 }
 
-function buildStandingsTable(standings) {
+function buildStandingsTable(standings, groupId) {
   let html = '<div class="table-wrap"><table class="standings-table"><thead><tr>';
   html += '<th>#</th><th>Equipo</th><th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DF</th>';
   html += '</tr></thead><tbody>';
@@ -191,7 +197,7 @@ function buildStandingsTable(standings) {
     const highlight = S.search && row[1].toLowerCase().includes(S.search) ? ' style="background:rgba(0,230,118,0.08)"' : '';
     html += `<tr class="${cls}"${highlight}>`;
     html += `<td>${pos}</td>`;
-    html += `<td>${row[1]}</td>`;
+    html += `<td class="team-name-cell" data-group="${groupId}">${row[1]}</td>`;
     html += `<td class="pts-col">${row[2]}</td>`;
     html += `<td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td><td>${row[6]}</td>`;
     html += `<td>${row[7]}</td><td>${row[8]}</td>`;
@@ -415,6 +421,18 @@ function renderMatchCards(container, matches, type) {
         });
       });
     }
+
+    // Team name clicks → open team profile (stop propagation so match modal doesn't open)
+    const homeEl = card.querySelector('.match-team.home');
+    const awayEl = card.querySelector('.match-team.away');
+    if (homeEl) homeEl.addEventListener('click', e => {
+      e.stopPropagation();
+      openTeamDetail(m.home, S.jorGroup);
+    });
+    if (awayEl) awayEl.addEventListener('click', e => {
+      e.stopPropagation();
+      openTeamDetail(m.away, S.jorGroup);
+    });
 
     grid.appendChild(card);
   });
@@ -789,5 +807,90 @@ function openMatchDetail(match) {
   }
 
   modalBody.innerHTML = bodyHtml;
+  modalOverlay.classList.add('open');
+}
+
+/* ====== TEAM DETAIL MODAL ====== */
+function openTeamDetail(teamName, groupId) {
+  if (!modalOverlay || !modalContent || !modalBody) return;
+
+  // Find group — search both categories so it works from any context
+  const allGroups = (typeof BENJAMIN !== 'undefined' ? BENJAMIN : [])
+    .concat(typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : []);
+  const group = allGroups.find(g => g.id === groupId);
+  if (!group) return;
+
+  const row = group.standings.find(r => r[1] === teamName);
+  // row: [pos, name, pts, j, g, e, p, gf, gc, df]
+
+  // Collect all completed matches for this team from HISTORY
+  const hist = (typeof HISTORY !== 'undefined' && HISTORY[groupId]) ? HISTORY[groupId] : {};
+  const matches = [];
+  Object.entries(hist).forEach(([jorName, jMatches]) => {
+    jMatches.forEach(m => {
+      if ((m[1] === teamName || m[2] === teamName) && m[3] !== null) {
+        const isHome = m[1] === teamName;
+        const gf = isHome ? m[3] : m[4];
+        const gc = isHome ? m[4] : m[3];
+        const result = gf > gc ? 'W' : gf < gc ? 'L' : 'D';
+        matches.push({ jornada: jorName, date: m[0], opp: isHome ? m[2] : m[1],
+          home: m[1], away: m[2], hs: m[3], as: m[4], gf, gc, result, isHome });
+      }
+    });
+  });
+  matches.sort((a, b) => a.date.localeCompare(b.date));
+
+  // Header
+  const groupLabel = `${group.phase} · ${group.name}`;
+  modalContent.innerHTML = `
+    <div class="modal-group-label">${groupLabel}</div>
+    <div class="modal-team-header">
+      <div class="modal-team-title">${teamName}</div>
+      ${row ? `<div class="modal-team-pos">${row[0]}\u00ba clasificado · ${row[2]} pts</div>` : ''}
+    </div>
+  `;
+
+  // Body
+  let body = '';
+
+  if (row) {
+    body += `<div class="modal-stats-header">Temporada</div>
+    <div class="team-season-stats">
+      <span><b>${row[3]}</b> J</span>
+      <span><b>${row[4]}</b> G</span>
+      <span><b>${row[5]}</b> E</span>
+      <span><b>${row[6]}</b> P</span>
+      <span><b>${row[7]}</b> GF</span>
+      <span><b>${row[8]}</b> GC</span>
+      <span><b>${row[9] > 0 ? '+' + row[9] : row[9]}</b> DF</span>
+    </div>`;
+  }
+
+  if (matches.length > 0) {
+    const form = matches.slice(-5);
+    body += `<div class="modal-stats-header">Forma (últimos ${form.length})</div>
+    <div class="form-strip">${form.map(m =>
+      `<span class="form-badge ${m.result}" title="${m.opp}">${m.result}</span>`
+    ).join('')}</div>`;
+
+    body += `<div class="modal-stats-header">Resultados (${matches.length} partidos)</div>`;
+    matches.slice().reverse().forEach(m => {
+      let dateStr = m.date && m.date.includes('-')
+        ? m.date.split('-').reverse().slice(0, 2).join('/') : (m.date || '');
+      const resultCls = m.result === 'W' ? 'res-w' : m.result === 'L' ? 'res-l' : 'res-d';
+      const locLabel = m.isHome ? 'Casa' : 'Fuera';
+      body += `<div class="team-result-row">
+        <span class="tr-jornada">${m.jornada.replace('Jornada ', 'J')}</span>
+        <span class="tr-loc">${locLabel}</span>
+        <span class="tr-opp">${m.opp}</span>
+        <span class="tr-score ${resultCls}">${m.gf}-${m.gc}</span>
+        <span class="tr-date">${dateStr}</span>
+      </div>`;
+    });
+  } else {
+    body += '<div class="modal-h2h-empty">No hay resultados registrados aún</div>';
+  }
+
+  modalBody.innerHTML = body;
   modalOverlay.classList.add('open');
 }

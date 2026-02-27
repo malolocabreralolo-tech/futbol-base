@@ -6,6 +6,7 @@ scrapeando futbolaspalmas.com: clasificación, jornadas históricas, partidos y 
 Sin dependencias externas. Uso: python3 scripts/fetch_futbolaspalmas.py
 """
 
+import datetime
 import json
 import os
 import re
@@ -369,8 +370,22 @@ def main():
     print("data-history.js")
     print(f"{'='*50}")
     update_history(all_history_updates)
+    bump_cache_version()
 
     print("✓ Terminado.")
+
+
+def bump_cache_version():
+    """Update ?v=YYYYMMDD in index.html script tags so browsers fetch fresh data."""
+    index_path = os.path.join(PROJECT_ROOT, "index.html")
+    today = datetime.date.today().strftime("%Y%m%d")
+    with open(index_path, encoding="utf-8") as f:
+        content = f.read()
+    new_content = re.sub(r'\?v=\d{8}', f'?v={today}', content)
+    if new_content != content:
+        with open(index_path, "w", encoding="utf-8") as f:
+            f.write(new_content)
+        print(f"  index.html: versión de caché actualizada a {today}.")
 
 
 if __name__ == "__main__":

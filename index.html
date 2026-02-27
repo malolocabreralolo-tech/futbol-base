@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fútbol Base Las Palmas · Temporada 2025/2026</title>
+  <meta name="description" content="Portal de fútbol base de Las Palmas - Categorías Benjamín y Prebenjamín. Clasificaciones, jornadas, goleadores. Sin publicidad.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Fútbol Base LP">
+  <meta name="theme-color" content="#0a0f1a">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="brand">
+          <div class="brand-icon">⚽</div>
+          <div>
+            <h1>FÚTBOL BASE LAS PALMAS</h1>
+            <div class="subtitle">Temporada 2025/2026 · Sin publicidad</div>
+          </div>
+        </div>
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-val" id="statGroups">0</span> grupos
+          </div>
+          <div class="stat-item">
+            <span class="stat-val" id="statTeams">0</span> equipos
+          </div>
+          <div class="stat-item">
+            <span class="stat-val" id="statMatches">0</span> partidos
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Toggle -->
+      <div class="category-toggle">
+        <button class="cat-btn active" data-cat="benjamin">⚽ BENJAMÍN</button>
+        <button class="cat-btn" data-cat="prebenjamin">⚽ PREBENJAMÍN</button>
+      </div>
+
+      <!-- Section Tabs -->
+      <nav class="section-tabs">
+        <button class="section-tab active" data-section="clasif">CLASIFICACIONES</button>
+        <button class="section-tab" data-section="jornadas">JORNADAS</button>
+        <button class="section-tab" data-section="goleadores">GOLEADORES</button>
+        <button class="section-tab" data-section="isla">POR ISLA</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar equipo...">
+    </div>
+    <div class="search-count" id="searchCount"></div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <div id="sec-clasif" class="section active"></div>
+    <div id="sec-jornadas" class="section"></div>
+    <div id="sec-goleadores" class="section"></div>
+    <div id="sec-isla" class="section"></div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Datos obtenidos de <a href="https://futbolaspalmas.com" target="_blank" rel="noopener noreferrer">futbolaspalmas.com</a></p>
+    <p>Última actualización: 27/02/2026</p>
+  </footer>
+
+  <!-- SCROLL TO TOP -->
+  <button id="scrollTop" class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
+
+  <!-- MATCH DETAIL MODAL -->
+  <div class="modal-overlay" id="matchModal">
+    <div class="modal">
+      <div class="modal-top">
+        <button class="modal-close" id="modalClose">✕</button>
+        <div id="modalContent"></div>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- DATA FILES -->
+  <script src="./data-benjamin.js"></script>
+  <script src="./data-prebenjamin.js"></script>
+  <script src="./data-history.js"></script>
+  <script src="./data-goleadores.js"></script>
+  <script src="./data-matchdetail.js"></script>
+  <!-- APP -->
+  <script src="./app.js"></script>
+</body>
+</html>

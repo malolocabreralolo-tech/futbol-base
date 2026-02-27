@@ -1,0 +1,42 @@
+name: Actualización semanal
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'   # Cada lunes a las 08:00 UTC
+  workflow_dispatch:        # También se puede lanzar manualmente desde GitHub
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Actualizar campos desde futbolaspalmas.com
+        run: python3 scripts/update_venues.py
+
+      - name: Descargar actas FIFLP (si hay cookie)
+        if: ${{ secrets.FIFLP_COOKIES != '' }}
+        env:
+          FIFLP_COOKIES: ${{ secrets.FIFLP_COOKIES }}
+        run: |
+          python3 scripts/fetch_fiflp.py
+          python3 scripts/build_matchdetail.py
+
+      - name: Commit y push si hay cambios
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add data-benjamin.js data-prebenjamin.js data-matchdetail.js
+          if git diff --cached --quiet; then
+            echo "Sin cambios."
+          else
+            git commit -m "Actualización automática $(date '+%d/%m/%Y')"
+            git push
+          fi

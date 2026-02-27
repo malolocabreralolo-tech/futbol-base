@@ -267,8 +267,8 @@ function renderJornadaContent() {
   const group = getData().find(g => g.id === S.jorGroup);
   if (!group) return;
 
-  // For Benjamin: use HISTORY data
-  if (S.cat === 'benjamin' && typeof HISTORY !== 'undefined' && HISTORY[S.jorGroup]) {
+  // Use HISTORY data if available for this group (Benjamin and Prebenjamín)
+  if (typeof HISTORY !== 'undefined' && HISTORY[S.jorGroup]) {
     const hist = HISTORY[S.jorGroup];
     const jornadas = Object.keys(hist).sort((a, b) => {
       const na = parseInt(a.replace(/\D/g, ''));
@@ -715,7 +715,7 @@ function openMatchDetail(match) {
   }
 
   // Head-to-head: find all matches between these two teams in history
-  if (S.cat === 'benjamin' && typeof HISTORY !== 'undefined' && HISTORY[groupId]) {
+  if (typeof HISTORY !== 'undefined' && HISTORY[groupId]) {
     const h2hMatches = [];
     const hist = HISTORY[groupId];
     Object.entries(hist).forEach(([jorName, matches]) => {

@@ -363,9 +363,7 @@ def main():
         print(f"{os.path.basename(js_path)}")
         print(f"{'='*50}")
         history_updates = process_file(js_path, var_name, stats_var)
-        # Only Benjamin groups go into HISTORY
-        if var_name == "BENJAMIN":
-            all_history_updates.update(history_updates)
+        all_history_updates.update(history_updates)
 
     print(f"\n{'='*50}")
     print("data-history.js")

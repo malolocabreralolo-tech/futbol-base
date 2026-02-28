@@ -358,9 +358,17 @@ function renderJornadaContent() {
       return;
     }
 
-    // Default to latest jornada
+    // Default to last jornada with actual results (scores), or last if none played yet
     if (!S.jorNum || !jornadas.includes(S.jorNum)) {
-      S.jorNum = jornadas[jornadas.length - 1];
+      let lastPlayed = jornadas[jornadas.length - 1];
+      for (let i = jornadas.length - 1; i >= 0; i--) {
+        const ms = hist[jornadas[i]] || [];
+        if (ms.some(m => m[3] !== null && m[3] !== undefined)) {
+          lastPlayed = jornadas[i];
+          break;
+        }
+      }
+      S.jorNum = lastPlayed;
     }
 
     // Also add current matchday as extra if not in history

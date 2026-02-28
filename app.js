@@ -4,7 +4,7 @@ const S = {
   section: 'clasif',    // 'clasif' | 'jornadas' | 'goleadores' | 'isla'
   search: '',
   // Jornadas
-  jorGroup: '',
+  jorGroup: 'A2',
   jorNum: '',
   // Goleadores
   golGroup: '__GLOBAL__',
@@ -116,7 +116,7 @@ function bindEvents() {
       S.cat = btn.dataset.cat;
       $$('.cat-btn').forEach(b => b.classList.toggle('active', b === btn));
       S.search = '';
-      S.jorGroup = '';
+      S.jorGroup = S.cat === 'benjamin' ? 'A2' : 'PG2';
       S.jorNum = '';
       S.golGroup = '__GLOBAL__';
       S.island = 'grancanaria';
@@ -129,6 +129,7 @@ function bindEvents() {
   $$('.section-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       S.section = tab.dataset.section;
+      if (S.section === 'jornadas') S.jorNum = '';
       $$('.section-tab').forEach(t => t.classList.toggle('active', t === tab));
       window.scrollTo({ top: 0, behavior: 'smooth' });
       renderSection();
@@ -190,18 +191,17 @@ function renderClasif() {
     'Gran Canaria': '🏔️'
   };
 
-  let isFirst = true;
+  const defaultGroup = S.jorGroup || (S.cat === 'benjamin' ? 'A2' : 'PG2');
   Object.entries(phases).forEach(([phase, groups]) => {
     const filteredGroups = filterGroups(groups);
     if (filteredGroups.length === 0 && S.search) return;
 
     const hdr = el('div', 'phase-header', `<span class="phase-icon">${phaseIcons[phase]||'⚽'}</span> ${phase}`);
     container.appendChild(hdr);
-    
+
     (S.search ? filteredGroups : groups).forEach(g => {
-      const forceOpen = isFirst || !!S.search;
+      const forceOpen = (g.id === defaultGroup) || !!S.search;
       container.appendChild(buildGroupCard(g, forceOpen));
-      isFirst = false;
     });
   });
 

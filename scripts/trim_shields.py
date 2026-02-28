@@ -32,15 +32,23 @@ def fetch_image(url):
 
 
 def trim_transparent(img):
-    """Trim transparent borders from a PIL Image, no margin, no squaring."""
+    """Trim transparent borders from a PIL Image, square by padding (no margin)."""
     if img.mode != "RGBA":
         img = img.convert("RGBA")
     # Get bounding box of non-transparent pixels
     bbox = img.getbbox()
     if bbox is None:
         return img
-    # Crop tightly — no margin, no squaring; resize to 64x64 will fill canvas
-    return img.crop(bbox)
+    # Crop tightly — no margin added
+    cropped = img.crop(bbox)
+    # Make square by padding the shorter side (preserves aspect ratio, no distortion)
+    w, h = cropped.size
+    if w != h:
+        size = max(w, h)
+        square = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+        square.paste(cropped, ((size - w) // 2, (size - h) // 2))
+        return square
+    return cropped
 
 
 def main():

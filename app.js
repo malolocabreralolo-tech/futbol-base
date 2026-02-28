@@ -35,7 +35,7 @@ function teamBadgeFallback(name) {
 }
 function teamBadge(name) {
   if (typeof SHIELDS !== 'undefined' && SHIELDS[name]) {
-    return `<img class="team-badge" src="https://futbolaspalmas.com/escudos/${SHIELDS[name]}" alt="${name}" onerror="this.outerHTML=teamBadgeFallback(this.alt)">`;
+    return `<img class="team-badge" src="./escudos/${SHIELDS[name]}" alt="${name}" onerror="this.outerHTML=teamBadgeFallback(this.alt)">`;
   }
   return teamBadgeFallback(name);
 }

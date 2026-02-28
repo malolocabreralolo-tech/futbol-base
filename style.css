@@ -1163,16 +1163,15 @@ span.team-badge {
 }
 /* Team badge (real shield image) */
 img.team-badge {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
   flex-shrink: 0;
   vertical-align: middle;
-  background: transparent;
 }
-.match-team .team-badge { width: 22px; height: 22px; font-size: 8px; }
+.match-team .team-badge { width: 24px; height: 24px; font-size: 8px; }
 .modal-team-name .team-badge,
-.modal-team-title .team-badge { width: 30px; height: 30px; font-size: 10px; }
+.modal-team-title .team-badge { width: 34px; height: 34px; font-size: 10px; }
 
 /* Form column in standings */
 .form-col { padding: 4px !important; white-space: nowrap; }

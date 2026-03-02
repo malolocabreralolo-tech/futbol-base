@@ -41,6 +41,7 @@ jobs:
 
       - name: Regenerar archivos JS
         run: python3 scripts/generate_js.py
+        continue-on-error: true
 
       - name: Commit y push si hay cambios
         run: |

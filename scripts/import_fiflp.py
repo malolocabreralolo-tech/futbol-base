@@ -143,6 +143,11 @@ def import_group(conn, g, season_id):
                 continue
             home_id = get_or_create_team(conn, m["home"])
             away_id = get_or_create_team(conn, m["away"])
+            # Solo almacenar marcador si ambos goles están presentes
+            hs = m.get("hs")
+            as_ = m.get("as")
+            score_h = hs if (hs is not None and as_ is not None) else None
+            score_a = as_ if (hs is not None and as_ is not None) else None
             conn.execute(
                 """INSERT OR IGNORE INTO matches
                    (group_id, jornada, date, time, home_team_id, away_team_id,
@@ -151,7 +156,7 @@ def import_group(conn, g, season_id):
                 (group_id, jor["num"],
                  fmt_date(m.get("date", "")), m.get("time", ""),
                  home_id, away_id,
-                 m.get("hs"), m.get("as"),
+                 score_h, score_a,
                  m.get("venue", "")),
             )
     conn.commit()

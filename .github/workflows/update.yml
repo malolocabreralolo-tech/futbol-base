@@ -21,14 +21,6 @@ jobs:
       - name: Actualizar datos desde futbolaspalmas.com
         run: python3 scripts/fetch_futbolaspalmas.py
 
-      - name: Descargar actas FIFLP (si hay cookie)
-        if: ${{ secrets.FIFLP_COOKIES != '' }}
-        env:
-          FIFLP_COOKIES: ${{ secrets.FIFLP_COOKIES }}
-        run: |
-          python3 scripts/fetch_fiflp.py
-          python3 scripts/build_matchdetail.py
-
       - name: Commit y push si hay cambios
         run: |
           git config user.name "GitHub Actions"

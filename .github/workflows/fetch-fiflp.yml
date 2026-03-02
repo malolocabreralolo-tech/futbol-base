@@ -28,17 +28,7 @@ jobs:
       - name: Instalar navegador Chromium
         run: playwright install chromium --with-deps
 
-      - name: Test scraping (2 grupos)
-        run: python3 scripts/fetch_fiflp_test.py
-        timeout-minutes: 10
-
-      - name: Test importación y generación JS
-        run: |
-          python3 scripts/import_fiflp.py
-          python3 scripts/generate_js.py
-        timeout-minutes: 5
-
-      - name: Scraping completo
+      - name: Scraping FIFLP
         run: python3 scripts/fetch_fiflp.py
         timeout-minutes: 50
         continue-on-error: true
@@ -46,30 +36,15 @@ jobs:
       - name: Verificar datos obtenidos
         run: python3 scripts/check_fiflp.py
 
-      - name: Importar datos en SQLite DB
-        run: python3 scripts/import_fiflp.py
-
-      - name: Regenerar archivos JS
-        run: python3 scripts/generate_js.py
-
-      - name: Commit y push si hay cambios
+      - name: Guardar datos crudos
         run: |
           git config user.name  "GitHub Actions"
           git config user.email "actions@github.com"
-          git add scripts/fiflp_raw.json \
-                  futbolbase.db \
-                  data-benjamin.js \
-                  data-prebenjamin.js \
-                  data-history.js \
-                  data-goleadores.js \
-                  data-shields.js \
-                  data-stats.js \
-                  data-seasons.js \
-                  index.html
+          git add scripts/fiflp_raw.json
           if git diff --cached --quiet; then
-            echo "Sin cambios que publicar."
+            echo "Sin cambios en fiflp_raw.json."
           else
-            git commit -m "FIFLP update $(date '+%d/%m/%Y %H:%M UTC')"
+            git commit -m "data: FIFLP raw update $(date '+%d/%m/%Y %H:%M UTC')"
             git push
-            echo "Publicado en GitHub Pages"
+            echo "fiflp_raw.json actualizado"
           fi

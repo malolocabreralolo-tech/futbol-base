@@ -2,7 +2,7 @@
 const S = {
   cat: 'benjamin',      // 'benjamin' | 'prebenjamin'
   section: 'clasif',    // 'clasif' | 'jornadas' | 'goleadores' | 'isla'
-  search: '',
+  search: '',  // unused, kept for compat
   // Jornadas
   jorGroup: 'A2',
   jorNum: '',
@@ -115,12 +115,10 @@ function bindEvents() {
     btn.addEventListener('click', () => {
       S.cat = btn.dataset.cat;
       $$('.cat-btn').forEach(b => b.classList.toggle('active', b === btn));
-      S.search = '';
       S.jorGroup = S.cat === 'benjamin' ? 'A2' : 'PG2';
       S.jorNum = '';
       S.golGroup = '__GLOBAL__';
       S.island = 'grancanaria';
-      $('#searchInput').value = '';
       updateStats();
       renderSection();
     });
@@ -135,13 +133,7 @@ function bindEvents() {
       renderSection();
     });
   });
-  // Search
-  $('#searchInput').addEventListener('input', (e) => {
-    S.search = e.target.value.trim().toLowerCase();
-    if (S.section === 'clasif' || S.section === 'isla') {
-      renderSection();
-    }
-  });
+  // Search removed
   // Theme toggle
   const themeToggle = $('#themeToggle');
   if (themeToggle) {
@@ -178,7 +170,6 @@ function renderSection() {
   else if (sec === 'goleadores') renderGoleadores();
   else if (sec === 'isla') renderIsla();
   else if (sec === 'stats') renderStats();
-  updateSearchCount();
 }
 
 /* ====== CLASIFICACIONES ====== */
@@ -195,13 +186,11 @@ function renderClasif() {
   const defaultGroup = S.jorGroup || (S.cat === 'benjamin' ? 'A2' : 'PG2');
   Object.entries(phases).forEach(([phase, groups]) => {
     const filteredGroups = filterGroups(groups);
-    if (filteredGroups.length === 0 && S.search) return;
-
     const hdr = el('div', 'phase-header', `<span class="phase-icon">${phaseIcons[phase]||'⚽'}</span> ${phase}`);
     container.appendChild(hdr);
 
-    (S.search ? filteredGroups : groups).forEach(g => {
-      const forceOpen = (g.id === defaultGroup) || !!S.search;
+    groups.forEach(g => {
+      const forceOpen = (g.id === defaultGroup);
       container.appendChild(buildGroupCard(g, forceOpen));
     });
   });
@@ -255,8 +244,7 @@ function buildStandingsTable(standings, groupId) {
     const df = row[9];
     const dfCls = df > 0 ? 'df-pos' : (df < 0 ? 'df-neg' : '');
     const dfStr = df > 0 ? `+${df}` : df;
-    const highlight = S.search && row[1].toLowerCase().includes(S.search) ? ' style="background:var(--accent-dim)"' : '';
-    html += `<tr class="${cls}"${highlight}>`;
+    html += `<tr class="${cls}">`;
     html += `<td>${pos}</td>`;
     html += `<td class="team-name-cell" data-group="${groupId}">${teamBadge(row[1])} ${row[1]}</td>`;
     // Form column
@@ -679,7 +667,7 @@ function renderIsla() {
     const hdr = el('div', 'phase-header', `⚽ ${phase}`);
     container.appendChild(hdr);
     groups.forEach(g => {
-      container.appendChild(buildGroupCard(g, isFirstIsla || !!S.search));
+      container.appendChild(buildGroupCard(g, isFirstIsla));
       isFirstIsla = false;
     });
   });

@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
 """
-fetch_fiflp_test.py — scraper de prueba: solo 2 grupos de Fase Liga B GC.
-Verifica que el pipeline completo funciona antes del scraping total.
+fetch_fiflp_test.py — descubre competiciones y scrapea prebenjamín GC 2024/2025.
 """
 
-import json, os, re, time, random
+import json, os, re, time, random, sys
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_PATH  = os.path.join(PROJECT_ROOT, "scripts", "fiflp_raw.json")
 BASE = "https://www.fiflp.com/pnfg/NPcd"
-
-# Solo una competición, máximo 2 grupos
-TEST_COMPETITION = {"id": "54422954", "name": "Benjamin Fase Liga B GC",
-                    "cat": "benjamin", "island": "grancanaria", "phase": "Fase Liga B"}
-MAX_GROUPS = 2
 
 def delay():
     time.sleep(random.uniform(2.0, 3.5))
@@ -47,8 +41,7 @@ def parse_standings(page):
     for row in best.query_selector_all('tr'):
         cells = row.query_selector_all('td')
         nc = len(cells)
-        if nc not in (10, 11, 16, 17):
-            continue
+        if nc not in (10, 11, 16, 17): continue
         tx = [c.inner_text().strip().replace('\xa0', ' ') for c in cells]
         try:    pos = int(tx[1])
         except: continue
@@ -110,11 +103,9 @@ def parse_matches(page):
                         "venue": venue, "referee": referee})
     return matches
 
+
 def main():
     from playwright.sync_api import sync_playwright
-
-    comp = TEST_COMPETITION
-    all_data = []
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -124,13 +115,53 @@ def main():
         ))
         page.set_default_timeout(30000)
 
-        print(f"TEST: {comp['name']} — máximo {MAX_GROUPS} grupos\n")
-
+        # 1. Descubrir competiciones
+        print("=== PASO 1: Descubrir competiciones ===")
         if not goto(page, f"{BASE}/NFG_CmpJornada?cod_primaria=1000120"):
-            print("ERROR: no se pudo cargar la página")
+            print("ERROR: no se pudo cargar")
             return
 
-        page.select_option('select[name="competicion"]', comp["id"])
+        all_comps = page.evaluate("""
+            () => {
+                const sel = document.querySelector('select[name="competicion"]');
+                if (!sel) return [];
+                return Array.from(sel.options)
+                    .filter(o => o.value && o.value !== '0')
+                    .map(o => ({id: o.value, name: o.text.trim()}));
+            }
+        """)
+        print(f"Total competiciones: {len(all_comps)}")
+
+        # Buscar Benjamín Fase A 2024/2025
+        target = None
+        for c in all_comps:
+            print(f"  [{c['id']}] {c['name']}")
+            name_lower = c["name"].lower()
+            # Buscar benjamin + fase a / liga a + 2024 o temporada anterior
+            if "benjamin" in name_lower and ("fase a" in name_lower or "liga a" in name_lower):
+                # IDs de la temporada actual que ya conocemos — excluir
+                if c["id"] not in ("54422885","54422953","54422954","54422955","54422884","54422886","54422887","54422890","54422888","54422959","54422889"):
+                    target = c
+
+        if not target:
+            print("\nNo encontré Benjamín Fase A 2024/2025 automáticamente.")
+            print("Buscando todas las de benjamin que NO sean de la temporada actual:")
+            known_ids = {"54422885","54422953","54422954","54422955","54422884","54422886","54422887","54422890","54422888","54422959","54422889"}
+            for c in all_comps:
+                if c["id"] not in known_ids and "benjamin" in c["name"].lower():
+                    print(f"  CANDIDATA: [{c['id']}] {c['name']}")
+                    if not target:
+                        target = c
+
+        if not target:
+            print("\nERROR: No encontré competición target")
+            browser.close()
+            sys.exit(1)
+
+        print(f"\n=== PASO 2: Scrapeando [{target['id']}] {target['name']} ===")
+
+        # 2. Seleccionar competición y ver grupos
+        page.select_option('select[name="competicion"]', target["id"])
         page.wait_for_timeout(1500)
 
         groups = page.evaluate("""
@@ -142,20 +173,31 @@ def main():
                     .map(o => ({value: o.value, text: o.text.trim()}));
             }
         """)
-        print(f"{len(groups)} grupos disponibles, probando {MAX_GROUPS}\n")
+        print(f"{len(groups)} grupos disponibles")
+        # Buscar grupo 2 específicamente, o el segundo
+        target_grp = None
+        for g in groups:
+            if "2" in g["text"] and ("grupo" in g["text"].lower() or g["text"].strip() == "2"):
+                target_grp = g
+                break
+        if not target_grp and len(groups) >= 2:
+            target_grp = groups[1]
+        scrape_groups = [target_grp] if target_grp else groups[:1]
+        print(f"Scrapeando: {[g['text'] for g in scrape_groups]}\n")
 
-        for grp in groups[:MAX_GROUPS]:
+        all_data = []
+        for grp in scrape_groups:
             print(f"  [{grp['text']}]", end="", flush=True)
             gdata = {
-                "competition_id": comp["id"], "competition_name": comp["name"],
-                "cat": comp["cat"], "island": comp["island"], "phase": comp["phase"],
+                "competition_id": target["id"], "competition_name": target["name"],
+                "cat": "benjamin", "island": "grancanaria", "phase": "Fase Liga A 2024/2025",
                 "group_id": grp["value"], "group_name": grp["text"],
                 "standings": [], "jornadas": [],
             }
 
             # Clasificación
             clasif_url = (f"{BASE}/NFG_VisClasificacion?cod_primaria=1000120"
-                          f"&codcompeticion={comp['id']}&codgrupo={grp['value']}&codjornada=99")
+                          f"&codcompeticion={target['id']}&codgrupo={grp['value']}&codjornada=99")
             if goto(page, clasif_url):
                 gdata["standings"] = parse_standings(page)
                 print(f" {len(gdata['standings'])}eq", end="", flush=True)
@@ -167,14 +209,14 @@ def main():
                 continue
 
             try:
-                page.select_option('select[name="competicion"]', comp["id"])
+                page.select_option('select[name="competicion"]', target["id"])
                 page.wait_for_timeout(1500)
                 page.select_option('select[name="grupo"]', grp["value"])
                 try:
                     page.wait_for_load_state("networkidle", timeout=8000)
                 except Exception:
                     page.wait_for_timeout(2000)
-            except Exception as e:
+            except Exception:
                 print(f" [select err]")
                 all_data.append(gdata)
                 continue
@@ -198,8 +240,7 @@ def main():
 
             print(f" | {len(jornada_opts)}J", end="", flush=True)
 
-            # Solo las primeras 3 jornadas para el test
-            for jor in jornada_opts[:3]:
+            for jor in jornada_opts:
                 jor_num  = jor["text"].split(" - ")[0].strip()
                 jor_date = jor["text"].split(" - ")[1].strip() if " - " in jor["text"] else ""
                 try:
@@ -220,7 +261,13 @@ def main():
         browser.close()
 
     save(all_data)
-    print(f"\n✅ TEST OK: {len(all_data)} grupos guardados en fiflp_raw.json")
+
+    # Resumen
+    teams  = sum(len(g["standings"]) for g in all_data)
+    matches = sum(len(j["matches"]) for g in all_data for j in g["jornadas"])
+    played  = sum(1 for g in all_data for j in g["jornadas"] for m in j["matches"] if m["hs"] is not None)
+    print(f"\n✅ {len(all_data)} grupos | {teams} equipos | {matches} partidos ({played} jugados)")
+    print(f"Guardado en {OUTPUT_PATH}")
 
 if __name__ == "__main__":
     main()

@@ -2,6 +2,7 @@
 const S = {
   cat: 'benjamin',      // 'benjamin' | 'prebenjamin'
   section: 'clasif',    // 'clasif' | 'jornadas' | 'goleadores' | 'isla'
+  season: '',           // '' = current season, or '2024-2025' etc.
   search: '',  // unused, kept for compat
   // Jornadas
   jorGroup: 'A2',
@@ -61,7 +62,15 @@ function getTeamForm(teamName, groupId, n) {
 }
 
 function getData() {
+  if (S.season && typeof SEASONS !== 'undefined') {
+    const hist = SEASONS.find(s => s.name === S.season && !s.current);
+    if (hist) return (S.cat === 'benjamin' ? hist.benjamin : hist.prebenjamin) || [];
+  }
   return S.cat === 'benjamin' ? BENJAMIN : PREBENJAMIN;
+}
+
+function isHistorical() {
+  return !!S.season;
 }
 
 function getPhases() {
@@ -80,10 +89,10 @@ function countStats() {
   let teams = 0, matches = 0;
   data.forEach(g => {
     teams += g.standings.length;
-    matches += g.matches.length;
+    matches += (g.matches || []).length;
   });
-  // Add history matches for benjamin
-  if (S.cat === 'benjamin' && typeof HIST_MATCHES !== 'undefined') {
+  // Add history matches for benjamin (current season only)
+  if (!isHistorical() && S.cat === 'benjamin' && typeof HIST_MATCHES !== 'undefined') {
     matches = HIST_MATCHES;
   }
   return { groups, teams, matches };
@@ -97,10 +106,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const t = document.getElementById('themeToggle');
     if (t) t.textContent = '☀️';
   }
+  buildSeasonSelector();
   updateStats();
   renderSection();
   bindEvents();
 });
+
+function buildSeasonSelector() {
+  if (typeof SEASONS === 'undefined' || SEASONS.length <= 1) return;
+  const container = $('#seasonSelector');
+  if (!container) return;
+
+  const select = document.createElement('select');
+  select.id = 'seasonSelect';
+  SEASONS.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.current ? '' : s.name;
+    const label = s.name.replace('-', '/');
+    opt.textContent = s.current ? `${label} (actual)` : label;
+    select.appendChild(opt);
+  });
+  container.appendChild(select);
+
+  select.addEventListener('change', () => {
+    S.season = select.value;
+    // When switching to historical, force to clasif (only available section)
+    if (isHistorical() && S.section !== 'clasif') {
+      S.section = 'clasif';
+      $$('.section-tab').forEach(t => t.classList.toggle('active', t.dataset.section === 'clasif'));
+    }
+    updateSeasonUI();
+    updateStats();
+    renderSection();
+  });
+}
+
+function updateSeasonUI() {
+  const hist = isHistorical();
+  const label = $('#seasonLabel');
+  if (label) {
+    const display = S.season ? S.season.replace('-', '/') : '2025/2026';
+    label.textContent = `Temporada ${display}`;
+  }
+  // Disable tabs that have no data for historical seasons
+  $$('.section-tab').forEach(tab => {
+    if (tab.dataset.section === 'clasif') return;
+    tab.classList.toggle('disabled', hist);
+    tab.disabled = hist;
+  });
+}
 
 function bindEvents() {
   // Scroll to top button
@@ -176,6 +230,17 @@ function renderSection() {
 function renderClasif() {
   const container = $('#sec-clasif');
   container.innerHTML = '';
+
+  if (isHistorical()) {
+    const data = getData();
+    if (!data.length) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div><p>No hay datos disponibles para esta categoría en la temporada ' + S.season.replace('-', '/') + '</p></div>';
+      return;
+    }
+    const banner = el('div', 'historical-banner', '📋 Datos históricos · Temporada ' + S.season.replace('-', '/') + ' · Solo clasificaciones disponibles');
+    container.appendChild(banner);
+  }
+
   const phases = getPhases();
   const phaseIcons = {
     'Segunda Fase A': '🏆', 'Segunda Fase B': '🥈', 'Segunda Fase C': '🥉',
@@ -234,32 +299,43 @@ function buildGroupCard(g, forceOpen) {
 }
 
 function buildStandingsTable(standings, groupId) {
+  // Check if data has GF/GC/DF (row[7] exists and is not null)
+  const hasGoalData = standings.length > 0 && standings[0].length > 7 && standings[0][7] != null;
+  const hist = isHistorical();
+
   let html = '<div class="table-wrap"><table class="standings-table"><thead><tr>';
-  html += '<th>#</th><th>Equipo</th><th>F</th><th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DF</th>';
+  html += '<th>#</th><th>Equipo</th>';
+  if (!hist) html += '<th>F</th>';
+  html += '<th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th>';
+  if (hasGoalData) html += '<th>GF</th><th>GC</th><th>DF</th>';
   html += '</tr></thead><tbody>';
   standings.forEach(row => {
     // row: [pos, team, pts, j, g, e, p, gf, gc, df]
     const pos = row[0];
     const cls = pos <= 3 ? `pos-${pos}` : '';
-    const df = row[9];
-    const dfCls = df > 0 ? 'df-pos' : (df < 0 ? 'df-neg' : '');
-    const dfStr = df > 0 ? `+${df}` : df;
     html += `<tr class="${cls}">`;
     html += `<td>${pos}</td>`;
     html += `<td class="team-name-cell" data-group="${groupId}">${teamBadge(row[1])} ${row[1]}</td>`;
-    // Form column
-    const form = getTeamForm(row[1], groupId);
-    html += '<td class="form-col">';
-    if (form.length) {
-      html += '<div class="form-mini">';
-      form.forEach(f => { html += `<span class="form-dot ${f.result}">${f.result}</span>`; });
-      html += '</div>';
-    } else { html += '-'; }
-    html += '</td>';
+    if (!hist) {
+      // Form column
+      const form = getTeamForm(row[1], groupId);
+      html += '<td class="form-col">';
+      if (form.length) {
+        html += '<div class="form-mini">';
+        form.forEach(f => { html += `<span class="form-dot ${f.result}">${f.result}</span>`; });
+        html += '</div>';
+      } else { html += '-'; }
+      html += '</td>';
+    }
     html += `<td class="pts-col">${row[2]}</td>`;
     html += `<td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td><td>${row[6]}</td>`;
-    html += `<td>${row[7]}</td><td>${row[8]}</td>`;
-    html += `<td class="${dfCls}">${dfStr}</td>`;
+    if (hasGoalData) {
+      const df = row[9];
+      const dfCls = df > 0 ? 'df-pos' : (df < 0 ? 'df-neg' : '');
+      const dfStr = df > 0 ? `+${df}` : df;
+      html += `<td>${row[7]}</td><td>${row[8]}</td>`;
+      html += `<td class="${dfCls}">${dfStr}</td>`;
+    }
     html += '</tr>';
   });
   html += '</tbody></table></div>';

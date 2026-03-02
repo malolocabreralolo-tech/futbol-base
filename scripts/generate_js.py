@@ -532,6 +532,56 @@ def generate_stats_js(conn):
     return "const STATS=" + json.dumps(stats, ensure_ascii=False, separators=(",", ":")) + ";\n"
 
 
+def generate_seasons_js(conn):
+    """Generate data-seasons.js with list of available seasons and historical data."""
+    # Get all seasons
+    seasons = conn.execute(
+        "SELECT id, name, is_current FROM seasons ORDER BY start_year DESC"
+    ).fetchall()
+
+    seasons_list = []
+    for season_id, season_name, is_current in seasons:
+        entry = {"name": season_name, "current": bool(is_current)}
+
+        if not is_current:
+            # Include historical standings data inline
+            for cat_name, cat_key in [("BENJAMIN", "benjamin"), ("PREBENJAMIN", "prebenjamin")]:
+                # Match category by case-insensitive name (import may use lowercase)
+                cat_ids = [r[0] for r in conn.execute(
+                    "SELECT id FROM categories WHERE UPPER(name) = ?", (cat_name,)
+                ).fetchall()]
+                if not cat_ids:
+                    entry[cat_key] = []
+                    continue
+
+                placeholders = ",".join("?" * len(cat_ids))
+                groups = conn.execute(
+                    f"""SELECT g.id, g.code, g.name, g.full_name, g.phase, g.island
+                       FROM groups g
+                       WHERE g.season_id = ? AND g.category_id IN ({placeholders})
+                       ORDER BY g.code""",
+                    [season_id] + cat_ids,
+                ).fetchall()
+
+                groups_data = []
+                for gid, code, name, full_name, phase, island in groups:
+                    standings = get_standings(conn, gid)
+                    groups_data.append({
+                        "id": code,
+                        "name": name,
+                        "fullName": full_name,
+                        "phase": phase or island or "Gran Canaria",
+                        "island": island,
+                        "standings": standings,
+                        "matches": [],
+                    })
+                entry[cat_key] = groups_data
+
+        seasons_list.append(entry)
+
+    return "const SEASONS=" + js_val(seasons_list) + ";\n"
+
+
 def bump_cache_version():
     """Update ?v=YYYYMMDD in index.html to today's date."""
     index_path = os.path.join(PROJECT_ROOT, "index.html")
@@ -588,7 +638,10 @@ def main():
     print("7. data-stats.js")
     write_file("data-stats.js", generate_stats_js(conn))
 
-    print("\n8. Bumping cache version in index.html")
+    print("8. data-seasons.js")
+    write_file("data-seasons.js", generate_seasons_js(conn))
+
+    print("\n9. Bumping cache version in index.html")
     bump_cache_version()
 
     conn.close()

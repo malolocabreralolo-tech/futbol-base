@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fútbol Base Las Palmas · Temporada 2025/2026</title>
+  <title>Fútbol Base Las Palmas</title>
   <meta name="description" content="Portal de fútbol base de Las Palmas - Categorías Benjamín y Prebenjamín. Clasificaciones, jornadas, goleadores. Sin publicidad.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -27,7 +27,7 @@
           <div class="brand-icon">⚽</div>
           <div>
             <h1>FÚTBOL BASE LAS PALMAS</h1>
-            <div class="subtitle">Temporada 2025/2026 · Sin publicidad</div>
+            <div class="subtitle"><span id="seasonLabel">Temporada 2025/2026</span> · Sin publicidad</div>
           </div>
         </div>
         <div class="stats-bar">
@@ -44,10 +44,13 @@
         <button class="theme-toggle" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">🌙</button>
       </div>
 
-      <!-- Category Toggle -->
-      <div class="category-toggle">
-        <button class="cat-btn active" data-cat="benjamin">⚽ BENJAMÍN</button>
-        <button class="cat-btn" data-cat="prebenjamin">⚽ PREBENJAMÍN</button>
+      <!-- Season + Category Toggle -->
+      <div class="season-cat-row">
+        <div class="category-toggle">
+          <button class="cat-btn active" data-cat="benjamin">⚽ BENJAMÍN</button>
+          <button class="cat-btn" data-cat="prebenjamin">⚽ PREBENJAMÍN</button>
+        </div>
+        <div class="season-selector" id="seasonSelector"></div>
       </div>
 
       <!-- Section Tabs -->
@@ -98,6 +101,7 @@
   <script src="./data-matchdetail.js?v=20260302"></script>
   <script src="./data-shields.js?v=20260302"></script>
   <script src="./data-stats.js?v=20260302"></script>
+  <script src="./data-seasons.js?v=20260302"></script>
   <!-- APP -->
   <script src="./app.js?v=20260302"></script>
   <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});</script>

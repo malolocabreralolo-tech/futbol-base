@@ -1,0 +1,3996 @@
+{
+  "season": "2024-2025",
+  "source": "fiflp.com (via futbolaspalmas.com)",
+  "notes": "Benjamin has Primera Fase (23 groups, Oct-Dec 2024) and Segunda Fase (10 groups Gran Canaria + islands, Jan-Jun 2025). Only Segunda Fase final data is available. Prebenjamin is a single phase league.",
+  "benjamin": {
+    "segunda_fase": {
+      "liga_a_oro": {
+        "groups": [
+          {
+            "id": "A1",
+            "name": "Grupo 1",
+            "full_name": "SEGUNDA FASE BENJAMIN A-G1",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-uno/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "Arucas CF",
+                "pts": 30,
+                "pj": 10,
+                "pg": 10,
+                "pe": 0,
+                "pp": 0,
+                "gf": 84,
+                "gc": 23,
+                "dg": 61
+              },
+              {
+                "pos": 2,
+                "team": "Unión Viera",
+                "pts": 27,
+                "pj": 10,
+                "pg": 9,
+                "pe": 0,
+                "pp": 1,
+                "gf": 96,
+                "gc": 15,
+                "dg": 81
+              },
+              {
+                "pos": 3,
+                "team": "UD Valleseco",
+                "pts": 24,
+                "pj": 10,
+                "pg": 8,
+                "pe": 0,
+                "pp": 2,
+                "gf": 42,
+                "gc": 7,
+                "dg": 35
+              },
+              {
+                "pos": 4,
+                "team": "Guayarmina",
+                "pts": 19,
+                "pj": 10,
+                "pg": 6,
+                "pe": 1,
+                "pp": 3,
+                "gf": 68,
+                "gc": 43,
+                "dg": 25
+              },
+              {
+                "pos": 5,
+                "team": "San Nicolás",
+                "pts": 18,
+                "pj": 10,
+                "pg": 6,
+                "pe": 0,
+                "pp": 4,
+                "gf": 37,
+                "gc": 32,
+                "dg": 5
+              },
+              {
+                "pos": 6,
+                "team": "UD Atalaya",
+                "pts": 15,
+                "pj": 10,
+                "pg": 5,
+                "pe": 0,
+                "pp": 5,
+                "gf": 36,
+                "gc": 36,
+                "dg": 0
+              },
+              {
+                "pos": 7,
+                "team": "Gran Canaria C",
+                "pts": 12,
+                "pj": 10,
+                "pg": 4,
+                "pe": 0,
+                "pp": 6,
+                "gf": 25,
+                "gc": 39,
+                "dg": -14
+              },
+              {
+                "pos": 8,
+                "team": "Valkyrias Bec.",
+                "pts": 7,
+                "pj": 10,
+                "pg": 2,
+                "pe": 1,
+                "pp": 7,
+                "gf": 22,
+                "gc": 52,
+                "dg": -30
+              },
+              {
+                "pos": 9,
+                "team": "CD Goleta",
+                "pts": 7,
+                "pj": 10,
+                "pg": 2,
+                "pe": 1,
+                "pp": 7,
+                "gf": 28,
+                "gc": 89,
+                "dg": -61
+              },
+              {
+                "pos": 10,
+                "team": "UD Moya",
+                "pts": 3,
+                "pj": 10,
+                "pg": 1,
+                "pe": 0,
+                "pp": 9,
+                "gf": 15,
+                "gc": 66,
+                "dg": -51
+              },
+              {
+                "pos": 11,
+                "team": "Santidad",
+                "pts": 1,
+                "pj": 10,
+                "pg": 0,
+                "pe": 1,
+                "pp": 9,
+                "gf": 21,
+                "gc": 72,
+                "dg": -51
+              }
+            ],
+            "last_jornada": "Jornada 22",
+            "matches": {
+              "Jornada 22": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "Gran Canaria C",
+                    "away": "Santidad",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Mundial 82"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "Guayarmina",
+                    "away": "UD Moya",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Andrés Rguez."
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "San Nicolás",
+                    "away": "CD Goleta",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Los Cascajos"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "UD Atalaya",
+                    "away": "UD Valleseco",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Atalaya"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "Unión Viera",
+                    "away": "Arucas CF",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Alfonso Silva"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "A2",
+            "name": "Grupo 2",
+            "full_name": "SEGUNDA FASE BENJAMIN A-G2",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-dos/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "Las Palmas",
+                "pts": 33,
+                "pj": 11,
+                "pg": 11,
+                "pe": 0,
+                "pp": 0,
+                "gf": 138,
+                "gc": 5,
+                "dg": 133
+              },
+              {
+                "pos": 2,
+                "team": "Tamaraceite",
+                "pts": 30,
+                "pj": 11,
+                "pg": 10,
+                "pe": 0,
+                "pp": 1,
+                "gf": 70,
+                "gc": 25,
+                "dg": 45
+              },
+              {
+                "pos": 3,
+                "team": "AD Huracán",
+                "pts": 25,
+                "pj": 11,
+                "pg": 8,
+                "pe": 1,
+                "pp": 2,
+                "gf": 81,
+                "gc": 17,
+                "dg": 64
+              },
+              {
+                "pos": 4,
+                "team": "Las Mesas Hu.",
+                "pts": 22,
+                "pj": 11,
+                "pg": 7,
+                "pe": 1,
+                "pp": 3,
+                "gf": 68,
+                "gc": 36,
+                "dg": 32
+              },
+              {
+                "pos": 5,
+                "team": "Corazón Mª",
+                "pts": 17,
+                "pj": 11,
+                "pg": 5,
+                "pe": 2,
+                "pp": 4,
+                "gf": 62,
+                "gc": 43,
+                "dg": 19
+              },
+              {
+                "pos": 6,
+                "team": "Veteranos",
+                "pts": 17,
+                "pj": 11,
+                "pg": 5,
+                "pe": 2,
+                "pp": 4,
+                "gf": 48,
+                "gc": 53,
+                "dg": -5
+              },
+              {
+                "pos": 7,
+                "team": "RC Victoria",
+                "pts": 16,
+                "pj": 11,
+                "pg": 5,
+                "pe": 1,
+                "pp": 5,
+                "gf": 50,
+                "gc": 30,
+                "dg": 20
+              },
+              {
+                "pos": 8,
+                "team": "Heidelberg",
+                "pts": 16,
+                "pj": 11,
+                "pg": 5,
+                "pe": 1,
+                "pp": 5,
+                "gf": 34,
+                "gc": 45,
+                "dg": -11
+              },
+              {
+                "pos": 9,
+                "team": "Unión Viera B",
+                "pts": 9,
+                "pj": 11,
+                "pg": 3,
+                "pe": 0,
+                "pp": 8,
+                "gf": 22,
+                "gc": 65,
+                "dg": -43
+              },
+              {
+                "pos": 10,
+                "team": "Guiniguada",
+                "pts": 6,
+                "pj": 11,
+                "pg": 2,
+                "pe": 0,
+                "pp": 9,
+                "gf": 23,
+                "gc": 102,
+                "dg": -79
+              },
+              {
+                "pos": 11,
+                "team": "Simusetti",
+                "pts": 3,
+                "pj": 11,
+                "pg": 1,
+                "pe": 0,
+                "pp": 10,
+                "gf": 19,
+                "gc": 94,
+                "dg": -75
+              },
+              {
+                "pos": 12,
+                "team": "Atl. Marzasport",
+                "pts": 0,
+                "pj": 11,
+                "pg": 0,
+                "pe": 0,
+                "pp": 11,
+                "gf": 16,
+                "gc": 116,
+                "dg": -100
+              }
+            ],
+            "last_jornada": "Jornada 22",
+            "matches": {
+              "Jornada 22": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Atl. Marzasport",
+                    "away": "Veteranos",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Marzagán"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Guiniguada",
+                    "away": "Unión Viera B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Lomo Apolinario"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Las Mesas Hu.",
+                    "away": "Simusetti",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Pepe Gonçalvez"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Las Palmas",
+                    "away": "AD Huracán",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Anexo GC"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "RC Victoria",
+                    "away": "Heidelberg",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Puerto Pi"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Tamaraceite",
+                    "away": "Corazón Mª",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Juan Guedes"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "A3",
+            "name": "Grupo 3",
+            "full_name": "SEGUNDA FASE BENJAMIN A-G3",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-tres/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "Acodetti CF",
+                "pts": 33,
+                "pj": 11,
+                "pg": 11,
+                "pe": 0,
+                "pp": 0,
+                "gf": 78,
+                "gc": 16,
+                "dg": 62
+              },
+              {
+                "pos": 2,
+                "team": "Huracán B",
+                "pts": 27,
+                "pj": 11,
+                "pg": 9,
+                "pe": 0,
+                "pp": 2,
+                "gf": 58,
+                "gc": 30,
+                "dg": 28
+              },
+              {
+                "pos": 3,
+                "team": "Gran Canaria",
+                "pts": 23,
+                "pj": 11,
+                "pg": 7,
+                "pe": 2,
+                "pp": 2,
+                "gf": 43,
+                "gc": 26,
+                "dg": 17
+              },
+              {
+                "pos": 4,
+                "team": "UD Telde",
+                "pts": 22,
+                "pj": 11,
+                "pg": 7,
+                "pe": 1,
+                "pp": 3,
+                "gf": 49,
+                "gc": 24,
+                "dg": 25
+              },
+              {
+                "pos": 5,
+                "team": "Las Huesas",
+                "pts": 18,
+                "pj": 11,
+                "pg": 5,
+                "pe": 3,
+                "pp": 3,
+                "gf": 32,
+                "gc": 23,
+                "dg": 9
+              },
+              {
+                "pos": 6,
+                "team": "Unión Viera C",
+                "pts": 17,
+                "pj": 11,
+                "pg": 5,
+                "pe": 2,
+                "pp": 4,
+                "gf": 38,
+                "gc": 41,
+                "dg": -3
+              },
+              {
+                "pos": 7,
+                "team": "Las Longueras",
+                "pts": 14,
+                "pj": 10,
+                "pg": 4,
+                "pe": 2,
+                "pp": 4,
+                "gf": 41,
+                "gc": 43,
+                "dg": -2
+              },
+              {
+                "pos": 8,
+                "team": "Maspa Training B",
+                "pts": 13,
+                "pj": 10,
+                "pg": 4,
+                "pe": 1,
+                "pp": 5,
+                "gf": 52,
+                "gc": 36,
+                "dg": 16
+              },
+              {
+                "pos": 9,
+                "team": "La Garita",
+                "pts": 9,
+                "pj": 10,
+                "pg": 3,
+                "pe": 0,
+                "pp": 7,
+                "gf": 22,
+                "gc": 36,
+                "dg": -14
+              },
+              {
+                "pos": 10,
+                "team": "UD Piletas",
+                "pts": 6,
+                "pj": 11,
+                "pg": 2,
+                "pe": 0,
+                "pp": 9,
+                "gf": 18,
+                "gc": 51,
+                "dg": -33
+              },
+              {
+                "pos": 11,
+                "team": "Doramas B",
+                "pts": 3,
+                "pj": 10,
+                "pg": 1,
+                "pe": 0,
+                "pp": 9,
+                "gf": 26,
+                "gc": 82,
+                "dg": -56
+              },
+              {
+                "pos": 12,
+                "team": "Ingenio B",
+                "pts": 1,
+                "pj": 11,
+                "pg": 0,
+                "pe": 1,
+                "pp": 10,
+                "gf": 12,
+                "gc": 61,
+                "dg": -49
+              }
+            ],
+            "last_jornada": "Jornada 22",
+            "matches": {
+              "Jornada 22": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Acodetti CF",
+                    "away": "Unión Viera C",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Mayordomia 1"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Doramas B",
+                    "away": "La Garita",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Cru. Arinaga"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Ingenio B",
+                    "away": "Gran Canaria",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Cris. Herrera"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Las Huesas",
+                    "away": "Huracán B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Las Huesas"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Las Longueras",
+                    "away": "Maspa Training B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "La Herradura"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "UD Telde",
+                    "away": "UD Piletas",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Pablo Hdez."
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "liga_b_plata": {
+        "groups": [
+          {
+            "id": "B1",
+            "name": "Grupo 1",
+            "full_name": "SEGUNDA FASE BENJAMIN B-G1",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-b-uno/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "Roque Amagro",
+                "pts": 27,
+                "pj": 10,
+                "pg": 9,
+                "pe": 0,
+                "pp": 1,
+                "gf": 59,
+                "gc": 23,
+                "dg": 36
+              },
+              {
+                "pos": 2,
+                "team": "Santa Brígida",
+                "pts": 24,
+                "pj": 10,
+                "pg": 8,
+                "pe": 0,
+                "pp": 2,
+                "gf": 71,
+                "gc": 23,
+                "dg": 48
+              },
+              {
+                "pos": 3,
+                "team": "Arucas B",
+                "pts": 22,
+                "pj": 10,
+                "pg": 7,
+                "pe": 1,
+                "pp": 2,
+                "gf": 82,
+                "gc": 24,
+                "dg": 58
+              },
+              {
+                "pos": 4,
+                "team": "Gáldar CF",
+                "pts": 22,
+                "pj": 10,
+                "pg": 7,
+                "pe": 1,
+                "pp": 2,
+                "gf": 58,
+                "gc": 23,
+                "dg": 35
+              },
+              {
+                "pos": 5,
+                "team": "CD Cardones",
+                "pts": 22,
+                "pj": 10,
+                "pg": 7,
+                "pe": 1,
+                "pp": 2,
+                "gf": 43,
+                "gc": 44,
+                "dg": -1
+              },
+              {
+                "pos": 6,
+                "team": "UD Barrial",
+                "pts": 12,
+                "pj": 10,
+                "pg": 4,
+                "pe": 0,
+                "pp": 6,
+                "gf": 16,
+                "gc": 40,
+                "dg": -24
+              },
+              {
+                "pos": 7,
+                "team": "Corazón Mª D",
+                "pts": 11,
+                "pj": 10,
+                "pg": 3,
+                "pe": 2,
+                "pp": 5,
+                "gf": 40,
+                "gc": 46,
+                "dg": -6
+              },
+              {
+                "pos": 8,
+                "team": "UD Guía",
+                "pts": 9,
+                "pj": 10,
+                "pg": 3,
+                "pe": 0,
+                "pp": 7,
+                "gf": 28,
+                "gc": 42,
+                "dg": -14
+              },
+              {
+                "pos": 9,
+                "team": "UD Teror",
+                "pts": 7,
+                "pj": 10,
+                "pg": 2,
+                "pe": 1,
+                "pp": 7,
+                "gf": 25,
+                "gc": 42,
+                "dg": -17
+              },
+              {
+                "pos": 10,
+                "team": "San Mateo",
+                "pts": 3,
+                "pj": 10,
+                "pg": 1,
+                "pe": 0,
+                "pp": 9,
+                "gf": 30,
+                "gc": 73,
+                "dg": -43
+              },
+              {
+                "pos": 11,
+                "team": "Real Sporting B",
+                "pts": 3,
+                "pj": 10,
+                "pg": 1,
+                "pe": 0,
+                "pp": 9,
+                "gf": 13,
+                "gc": 85,
+                "dg": -72
+              }
+            ],
+            "last_jornada": "Jornada 22",
+            "matches": {
+              "Jornada 22": {
+                "matches": [
+                  {
+                    "date": "22/05",
+                    "time": "18:30",
+                    "home": "Arucas B",
+                    "away": "Real Sporting B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Elías Rizkallal"
+                  },
+                  {
+                    "date": "22/05",
+                    "time": "18:30",
+                    "home": "Gáldar CF",
+                    "away": "UD Guía",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Venancio Monzón"
+                  },
+                  {
+                    "date": "22/05",
+                    "time": "18:30",
+                    "home": "San Mateo",
+                    "away": "Corazón Mª D",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "San Mateo"
+                  },
+                  {
+                    "date": "22/05",
+                    "time": "18:30",
+                    "home": "Santa Brígida",
+                    "away": "UD Barrial",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Los Olivos"
+                  },
+                  {
+                    "date": "22/05",
+                    "time": "18:30",
+                    "home": "UD Teror",
+                    "away": "CD Cardones",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "El Pino"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "B2",
+            "name": "Grupo 2",
+            "full_name": "SEGUNDA FASE BENJAMIN B-G2",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-b-dos/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "Las Torres",
+                "pts": 33,
+                "pj": 11,
+                "pg": 11,
+                "pe": 0,
+                "pp": 0,
+                "gf": 107,
+                "gc": 16,
+                "dg": 91
+              },
+              {
+                "pos": 2,
+                "team": "Arucas D",
+                "pts": 28,
+                "pj": 11,
+                "pg": 9,
+                "pe": 1,
+                "pp": 1,
+                "gf": 107,
+                "gc": 33,
+                "dg": 74
+              },
+              {
+                "pos": 3,
+                "team": "Muelle Grande",
+                "pts": 26,
+                "pj": 11,
+                "pg": 8,
+                "pe": 2,
+                "pp": 1,
+                "gf": 48,
+                "gc": 29,
+                "dg": 19
+              },
+              {
+                "pos": 4,
+                "team": "Puertos LP",
+                "pts": 22,
+                "pj": 11,
+                "pg": 7,
+                "pe": 1,
+                "pp": 3,
+                "gf": 53,
+                "gc": 37,
+                "dg": 16
+              },
+              {
+                "pos": 5,
+                "team": "Inter/Pilar",
+                "pts": 17,
+                "pj": 11,
+                "pg": 5,
+                "pe": 2,
+                "pp": 4,
+                "gf": 42,
+                "gc": 54,
+                "dg": -12
+              },
+              {
+                "pos": 6,
+                "team": "Santa Brígida",
+                "pts": 16,
+                "pj": 11,
+                "pg": 4,
+                "pe": 4,
+                "pp": 3,
+                "gf": 36,
+                "gc": 43,
+                "dg": -7
+              },
+              {
+                "pos": 7,
+                "team": "Acodetti B",
+                "pts": 14,
+                "pj": 11,
+                "pg": 4,
+                "pe": 2,
+                "pp": 5,
+                "gf": 40,
+                "gc": 51,
+                "dg": -11
+              },
+              {
+                "pos": 8,
+                "team": "San Lázaro",
+                "pts": 13,
+                "pj": 11,
+                "pg": 4,
+                "pe": 1,
+                "pp": 6,
+                "gf": 42,
+                "gc": 61,
+                "dg": -19
+              },
+              {
+                "pos": 9,
+                "team": "Fundación Guini.",
+                "pts": 12,
+                "pj": 11,
+                "pg": 3,
+                "pe": 3,
+                "pp": 5,
+                "gf": 46,
+                "gc": 55,
+                "dg": -9
+              },
+              {
+                "pos": 10,
+                "team": "Carnevali B",
+                "pts": 6,
+                "pj": 11,
+                "pg": 2,
+                "pe": 0,
+                "pp": 9,
+                "gf": 32,
+                "gc": 60,
+                "dg": -28
+              },
+              {
+                "pos": 11,
+                "team": "Siete Palmas",
+                "pts": 3,
+                "pj": 11,
+                "pg": 1,
+                "pe": 0,
+                "pp": 10,
+                "gf": 21,
+                "gc": 67,
+                "dg": -46
+              },
+              {
+                "pos": 12,
+                "team": "Las Mesas B",
+                "pts": 0,
+                "pj": 11,
+                "pg": 0,
+                "pe": 0,
+                "pp": 11,
+                "gf": 17,
+                "gc": 85,
+                "dg": -68
+              }
+            ],
+            "last_jornada": "Jornada 22",
+            "matches": {
+              "Jornada 22": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "Carnevali B",
+                    "away": "Acodetti B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Mayordomía 2"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "Inter/Pilar",
+                    "away": "Arucas D",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "El Pilar"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "Muelle Grande",
+                    "away": "Las Mesas B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "MN Sosa 1"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "San Lázaro",
+                    "away": "Fundación Guini.",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "López Socas"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "Santa Brígida",
+                    "away": "Puertos LP",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Los Olivos"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "10:30",
+                    "home": "Siete Palmas",
+                    "away": "Las Torres",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Anexo GC"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "B3",
+            "name": "Grupo 3",
+            "full_name": "SEGUNDA FASE BENJAMIN B-G3",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-b-tres/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "CD Carnevali",
+                "pts": 30,
+                "pj": 11,
+                "pg": 10,
+                "pe": 0,
+                "pp": 1,
+                "gf": 94,
+                "gc": 16,
+                "dg": 78
+              },
+              {
+                "pos": 2,
+                "team": "Tamaraceite B",
+                "pts": 30,
+                "pj": 11,
+                "pg": 10,
+                "pe": 0,
+                "pp": 1,
+                "gf": 97,
+                "gc": 20,
+                "dg": 77
+              },
+              {
+                "pos": 3,
+                "team": "UD Valsequillo",
+                "pts": 24,
+                "pj": 11,
+                "pg": 8,
+                "pe": 0,
+                "pp": 3,
+                "gf": 65,
+                "gc": 19,
+                "dg": 46
+              },
+              {
+                "pos": 4,
+                "team": "Longueras B",
+                "pts": 22,
+                "pj": 11,
+                "pg": 7,
+                "pe": 1,
+                "pp": 3,
+                "gf": 32,
+                "gc": 25,
+                "dg": 7
+              },
+              {
+                "pos": 5,
+                "team": "CD Vallinamar",
+                "pts": 18,
+                "pj": 11,
+                "pg": 6,
+                "pe": 0,
+                "pp": 5,
+                "gf": 45,
+                "gc": 52,
+                "dg": -7
+              },
+              {
+                "pos": 6,
+                "team": "Pedro Hidalgo",
+                "pts": 17,
+                "pj": 11,
+                "pg": 5,
+                "pe": 2,
+                "pp": 4,
+                "gf": 50,
+                "gc": 34,
+                "dg": 16
+              },
+              {
+                "pos": 7,
+                "team": "Ojos de Garza",
+                "pts": 13,
+                "pj": 11,
+                "pg": 4,
+                "pe": 1,
+                "pp": 6,
+                "gf": 45,
+                "gc": 63,
+                "dg": -18
+              },
+              {
+                "pos": 8,
+                "team": "Vecindario C",
+                "pts": 12,
+                "pj": 10,
+                "pg": 4,
+                "pe": 0,
+                "pp": 6,
+                "gf": 25,
+                "gc": 54,
+                "dg": -29
+              },
+              {
+                "pos": 9,
+                "team": "Corazón Mª C",
+                "pts": 11,
+                "pj": 10,
+                "pg": 3,
+                "pe": 2,
+                "pp": 5,
+                "gf": 38,
+                "gc": 45,
+                "dg": -7
+              },
+              {
+                "pos": 10,
+                "team": "Telde B",
+                "pts": 10,
+                "pj": 11,
+                "pg": 3,
+                "pe": 1,
+                "pp": 7,
+                "gf": 20,
+                "gc": 43,
+                "dg": -23
+              },
+              {
+                "pos": 11,
+                "team": "Futboltec",
+                "pts": 4,
+                "pj": 11,
+                "pg": 1,
+                "pe": 1,
+                "pp": 9,
+                "gf": 15,
+                "gc": 97,
+                "dg": -82
+              },
+              {
+                "pos": 12,
+                "team": "Arinaga B",
+                "pts": 0,
+                "pj": 11,
+                "pg": 0,
+                "pe": 0,
+                "pp": 11,
+                "gf": 18,
+                "gc": 76,
+                "dg": -58
+              }
+            ],
+            "last_jornada": "Jornada 22",
+            "matches": {
+              "Jornada 22": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Arinaga B",
+                    "away": "CD Vallinamar",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Mun. Arinaga"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Corazón Mª C",
+                    "away": "Vecindario C",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Colegio Claret"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Futboltec",
+                    "away": "Tamaraceite B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Capellanía"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Pedro Hidalgo",
+                    "away": "Ojos de Garza",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "V. Sepúlveda"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Telde B",
+                    "away": "Longueras B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Pablo Hdez."
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "UD Valsequillo",
+                    "away": "CD Carnevali",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Valsequillo"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "liga_c_bronce": {
+        "groups": [
+          {
+            "id": "C1",
+            "name": "Grupo 1",
+            "full_name": "SEGUNDA FASE BENJAMIN C-G1",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-c-uno/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "CD Firgas",
+                "pts": 27,
+                "pj": 10,
+                "pg": 9,
+                "pe": 0,
+                "pp": 1,
+                "gf": 91,
+                "gc": 22,
+                "dg": 69
+              },
+              {
+                "pos": 2,
+                "team": "Atl. Angostura",
+                "pts": 24,
+                "pj": 10,
+                "pg": 8,
+                "pe": 0,
+                "pp": 2,
+                "gf": 51,
+                "gc": 19,
+                "dg": 32
+              },
+              {
+                "pos": 3,
+                "team": "RC Victoria B",
+                "pts": 22,
+                "pj": 10,
+                "pg": 7,
+                "pe": 1,
+                "pp": 2,
+                "gf": 85,
+                "gc": 23,
+                "dg": 62
+              },
+              {
+                "pos": 4,
+                "team": "Bañaderos",
+                "pts": 22,
+                "pj": 10,
+                "pg": 7,
+                "pe": 1,
+                "pp": 2,
+                "gf": 88,
+                "gc": 27,
+                "dg": 61
+              },
+              {
+                "pos": 5,
+                "team": "Arucas C",
+                "pts": 21,
+                "pj": 10,
+                "pg": 7,
+                "pe": 0,
+                "pp": 3,
+                "gf": 76,
+                "gc": 35,
+                "dg": 41
+              },
+              {
+                "pos": 6,
+                "team": "Atalaya B",
+                "pts": 12,
+                "pj": 10,
+                "pg": 4,
+                "pe": 0,
+                "pp": 6,
+                "gf": 33,
+                "gc": 61,
+                "dg": -28
+              },
+              {
+                "pos": 7,
+                "team": "Guayarmina B",
+                "pts": 12,
+                "pj": 10,
+                "pg": 4,
+                "pe": 0,
+                "pp": 6,
+                "gf": 24,
+                "gc": 64,
+                "dg": -40
+              },
+              {
+                "pos": 8,
+                "team": "Santa Brígida C",
+                "pts": 4,
+                "pj": 10,
+                "pg": 1,
+                "pe": 1,
+                "pp": 8,
+                "gf": 21,
+                "gc": 76,
+                "dg": -55
+              },
+              {
+                "pos": 9,
+                "team": "Moya B",
+                "pts": 3,
+                "pj": 10,
+                "pg": 1,
+                "pe": 0,
+                "pp": 9,
+                "gf": 23,
+                "gc": 95,
+                "dg": -72
+              },
+              {
+                "pos": 10,
+                "team": "San Lázaro B",
+                "pts": 1,
+                "pj": 10,
+                "pg": 0,
+                "pe": 1,
+                "pp": 9,
+                "gf": 8,
+                "gc": 78,
+                "dg": -70
+              }
+            ],
+            "last_jornada": "Jornada 18",
+            "matches": {
+              "Jornada 18": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "12:00",
+                    "home": "Atalaya B",
+                    "away": "Moya B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Atalaya"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "12:00",
+                    "home": "Bañaderos",
+                    "away": "RC Victoria B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Manuel Pablo"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "12:00",
+                    "home": "Guayarmina B",
+                    "away": "CD Firgas",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Andrés Rguez."
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "12:00",
+                    "home": "San Lázaro B",
+                    "away": "Atl. Angostura",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "López Socas"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "12:00",
+                    "home": "Santa Brígida C",
+                    "away": "Arucas C",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Los Olivos"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "C2",
+            "name": "Grupo 2",
+            "full_name": "SEGUNDA FASE BENJAMIN C-G2",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-c-dos/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "San Antonio",
+                "pts": 30,
+                "pj": 10,
+                "pg": 10,
+                "pe": 0,
+                "pp": 0,
+                "gf": 67,
+                "gc": 9,
+                "dg": 58
+              },
+              {
+                "pos": 2,
+                "team": "Veteranos B",
+                "pts": 27,
+                "pj": 10,
+                "pg": 9,
+                "pe": 0,
+                "pp": 1,
+                "gf": 54,
+                "gc": 19,
+                "dg": 35
+              },
+              {
+                "pos": 3,
+                "team": "Costa Ayala",
+                "pts": 24,
+                "pj": 10,
+                "pg": 8,
+                "pe": 0,
+                "pp": 2,
+                "gf": 47,
+                "gc": 37,
+                "dg": 10
+              },
+              {
+                "pos": 4,
+                "team": "Lomo Blanco",
+                "pts": 15,
+                "pj": 10,
+                "pg": 5,
+                "pe": 0,
+                "pp": 5,
+                "gf": 52,
+                "gc": 34,
+                "dg": 18
+              },
+              {
+                "pos": 5,
+                "team": "Pedro Hidalgo B",
+                "pts": 14,
+                "pj": 10,
+                "pg": 4,
+                "pe": 2,
+                "pp": 4,
+                "gf": 25,
+                "gc": 18,
+                "dg": 7
+              },
+              {
+                "pos": 6,
+                "team": "Atl. Isleta",
+                "pts": 13,
+                "pj": 10,
+                "pg": 4,
+                "pe": 1,
+                "pp": 5,
+                "gf": 48,
+                "gc": 32,
+                "dg": 16
+              },
+              {
+                "pos": 7,
+                "team": "Heidelberg B",
+                "pts": 13,
+                "pj": 10,
+                "pg": 4,
+                "pe": 1,
+                "pp": 5,
+                "gf": 43,
+                "gc": 35,
+                "dg": 8
+              },
+              {
+                "pos": 8,
+                "team": "Gran Canaria B",
+                "pts": 10,
+                "pj": 10,
+                "pg": 3,
+                "pe": 1,
+                "pp": 6,
+                "gf": 24,
+                "gc": 43,
+                "dg": -19
+              },
+              {
+                "pos": 9,
+                "team": "CD Batán",
+                "pts": 7,
+                "pj": 10,
+                "pg": 2,
+                "pe": 1,
+                "pp": 7,
+                "gf": 45,
+                "gc": 65,
+                "dg": -20
+              },
+              {
+                "pos": 10,
+                "team": "Atl. Isleta B",
+                "pts": 5,
+                "pj": 10,
+                "pg": 1,
+                "pe": 2,
+                "pp": 7,
+                "gf": 22,
+                "gc": 46,
+                "dg": -24
+              },
+              {
+                "pos": 11,
+                "team": "CD Batán B",
+                "pts": 3,
+                "pj": 10,
+                "pg": 1,
+                "pe": 0,
+                "pp": 9,
+                "gf": 29,
+                "gc": 118,
+                "dg": -89
+              }
+            ],
+            "last_jornada": "Jornada 22",
+            "matches": {
+              "Jornada 22": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Atl. Isleta",
+                    "away": "San Antonio",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Jardin Infancia"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "CD Batán B",
+                    "away": "Veteranos B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Ortiz Wiot"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Costa Ayala",
+                    "away": "Heidelberg B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Costa Ayala"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Lomo Blanco",
+                    "away": "Gran Canaria B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Ruano Tejera"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Pedro Hidalgo B",
+                    "away": "Atl. Isleta B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "V. Sepúlveda"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "C3",
+            "name": "Grupo 3",
+            "full_name": "SEGUNDA FASE BENJAMIN C-G3",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-c-tres/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "La Garita B",
+                "pts": 30,
+                "pj": 10,
+                "pg": 10,
+                "pe": 0,
+                "pp": 0,
+                "gf": 80,
+                "gc": 4,
+                "dg": 76
+              },
+              {
+                "pos": 2,
+                "team": "Unión Marina",
+                "pts": 24,
+                "pj": 10,
+                "pg": 8,
+                "pe": 0,
+                "pp": 2,
+                "gf": 52,
+                "gc": 22,
+                "dg": 30
+              },
+              {
+                "pos": 3,
+                "team": "Los Vélez",
+                "pts": 18,
+                "pj": 9,
+                "pg": 6,
+                "pe": 0,
+                "pp": 3,
+                "gf": 44,
+                "gc": 17,
+                "dg": 27
+              },
+              {
+                "pos": 4,
+                "team": "UD Jinámar",
+                "pts": 18,
+                "pj": 10,
+                "pg": 6,
+                "pe": 0,
+                "pp": 4,
+                "gf": 36,
+                "gc": 19,
+                "dg": 17
+              },
+              {
+                "pos": 5,
+                "team": "Corazón Mª B",
+                "pts": 18,
+                "pj": 9,
+                "pg": 6,
+                "pe": 0,
+                "pp": 3,
+                "gf": 32,
+                "gc": 24,
+                "dg": 8
+              },
+              {
+                "pos": 6,
+                "team": "Real Sporting",
+                "pts": 15,
+                "pj": 10,
+                "pg": 6,
+                "pe": 0,
+                "pp": 4,
+                "gf": 42,
+                "gc": 39,
+                "dg": 3
+              },
+              {
+                "pos": 7,
+                "team": "Las Huesas B",
+                "pts": 10,
+                "pj": 10,
+                "pg": 3,
+                "pe": 1,
+                "pp": 6,
+                "gf": 27,
+                "gc": 33,
+                "dg": -6
+              },
+              {
+                "pos": 8,
+                "team": "CD Calero",
+                "pts": 9,
+                "pj": 10,
+                "pg": 2,
+                "pe": 3,
+                "pp": 5,
+                "gf": 29,
+                "gc": 36,
+                "dg": -7
+              },
+              {
+                "pos": 9,
+                "team": "Las Rosas B",
+                "pts": 7,
+                "pj": 9,
+                "pg": 2,
+                "pe": 1,
+                "pp": 6,
+                "gf": 17,
+                "gc": 63,
+                "dg": -46
+              },
+              {
+                "pos": 10,
+                "team": "Playa D.H.",
+                "pts": 3,
+                "pj": 10,
+                "pg": 1,
+                "pe": 0,
+                "pp": 9,
+                "gf": 19,
+                "gc": 93,
+                "dg": -74
+              },
+              {
+                "pos": 11,
+                "team": "Valdecasas",
+                "pts": 1,
+                "pj": 9,
+                "pg": 0,
+                "pe": 1,
+                "pp": 8,
+                "gf": 11,
+                "gc": 39,
+                "dg": -28
+              }
+            ],
+            "last_jornada": "Jornada 22",
+            "matches": {
+              "Jornada 22": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Corazón Mª B",
+                    "away": "Las Rosas B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Colegio Claret"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "La Garita B",
+                    "away": "Unión Marina",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Las Remudas"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Playa D.H.",
+                    "away": "CD Calero",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "MM Naño"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Real Sporting",
+                    "away": "UD Jinámar",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Chano Cruz"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Valdecasas",
+                    "away": "Los Vélez",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Las Huesas"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "C4",
+            "name": "Grupo 4",
+            "full_name": "SEGUNDA FASE BENJAMIN C-G4",
+            "url": "https://futbolaspalmas.com/benjamin-segunda-fase-c-cuatro/",
+            "standings": [
+              {
+                "pos": 1,
+                "team": "Agüimes CF",
+                "pts": 25,
+                "pj": 9,
+                "pg": 8,
+                "pe": 1,
+                "pp": 0,
+                "gf": 56,
+                "gc": 11,
+                "dg": 45
+              },
+              {
+                "pos": 2,
+                "team": "UD Balos",
+                "pts": 22,
+                "pj": 9,
+                "pg": 7,
+                "pe": 1,
+                "pp": 1,
+                "gf": 57,
+                "gc": 16,
+                "dg": 41
+              },
+              {
+                "pos": 3,
+                "team": "Cerruda B",
+                "pts": 19,
+                "pj": 9,
+                "pg": 6,
+                "pe": 1,
+                "pp": 2,
+                "gf": 62,
+                "gc": 20,
+                "dg": 42
+              },
+              {
+                "pos": 4,
+                "team": "Maspalomas B",
+                "pts": 19,
+                "pj": 9,
+                "pg": 6,
+                "pe": 1,
+                "pp": 2,
+                "gf": 56,
+                "gc": 25,
+                "dg": 31
+              },
+              {
+                "pos": 5,
+                "team": "Casa Pastores B",
+                "pts": 12,
+                "pj": 9,
+                "pg": 4,
+                "pe": 0,
+                "pp": 5,
+                "gf": 36,
+                "gc": 22,
+                "dg": 14
+              },
+              {
+                "pos": 6,
+                "team": "San Pedro B",
+                "pts": 11,
+                "pj": 9,
+                "pg": 3,
+                "pe": 2,
+                "pp": 4,
+                "gf": 36,
+                "gc": 29,
+                "dg": 7
+              },
+              {
+                "pos": 7,
+                "team": "Tablero B",
+                "pts": 11,
+                "pj": 9,
+                "pg": 3,
+                "pe": 2,
+                "pp": 4,
+                "gf": 21,
+                "gc": 36,
+                "dg": -15
+              },
+              {
+                "pos": 8,
+                "team": "Arguineguín B",
+                "pts": 9,
+                "pj": 9,
+                "pg": 3,
+                "pe": 0,
+                "pp": 6,
+                "gf": 24,
+                "gc": 45,
+                "dg": -21
+              },
+              {
+                "pos": 9,
+                "team": "Mogán B",
+                "pts": 3,
+                "pj": 9,
+                "pg": 1,
+                "pe": 0,
+                "pp": 8,
+                "gf": 17,
+                "gc": 85,
+                "dg": -68
+              },
+              {
+                "pos": 10,
+                "team": "Castillo CF",
+                "pts": 0,
+                "pj": 9,
+                "pg": 0,
+                "pe": 0,
+                "pp": 9,
+                "gf": 16,
+                "gc": 92,
+                "dg": -76
+              }
+            ],
+            "last_jornada": "Jornada 18",
+            "matches": {
+              "Jornada 18": {
+                "matches": [
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Agüimes CF",
+                    "away": "San Pedro B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Las Crucitas"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Casa Pastores B",
+                    "away": "Maspalomas B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "La Madera"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Cerruda B",
+                    "away": "UD Balos",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Mun. Vecindario"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Mogán B",
+                    "away": "Castillo CF",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Mogán"
+                  },
+                  {
+                    "date": "23/05",
+                    "time": "09:00",
+                    "home": "Tablero B",
+                    "away": "Arguineguín B",
+                    "home_score": null,
+                    "away_score": null,
+                    "venue": "Eleuterio V."
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "fuerteventura": {
+      "groups": [
+        {
+          "id": "FB",
+          "name": "Liga Bronce",
+          "full_name": "Benjamin Fuerteventura Liga Bronce",
+          "url": "https://futbolaspalmas.com/benjamin-segunda-grupo-tres-fuerteventura",
+          "standings": [
+            {
+              "pos": 1,
+              "team": "UD Tarajalejo",
+              "pts": 22,
+              "pj": 8,
+              "pg": 7,
+              "pe": 1,
+              "pp": 0,
+              "gf": 51,
+              "gc": 18,
+              "dg": 33
+            },
+            {
+              "pos": 2,
+              "team": "Sotavento B",
+              "pts": 16,
+              "pj": 8,
+              "pg": 5,
+              "pe": 1,
+              "pp": 2,
+              "gf": 47,
+              "gc": 10,
+              "dg": 37
+            },
+            {
+              "pos": 3,
+              "team": "Breñamen B",
+              "pts": 16,
+              "pj": 8,
+              "pg": 5,
+              "pe": 1,
+              "pp": 2,
+              "gf": 37,
+              "gc": 12,
+              "dg": 25
+            },
+            {
+              "pos": 4,
+              "team": "Euro Lajares",
+              "pts": 14,
+              "pj": 7,
+              "pg": 4,
+              "pe": 2,
+              "pp": 1,
+              "gf": 36,
+              "gc": 14,
+              "dg": 22
+            },
+            {
+              "pos": 5,
+              "team": "CD 35600 C",
+              "pts": 13,
+              "pj": 7,
+              "pg": 4,
+              "pe": 1,
+              "pp": 2,
+              "gf": 36,
+              "gc": 24,
+              "dg": 12
+            },
+            {
+              "pos": 6,
+              "team": "CD Tamasite",
+              "pts": 11,
+              "pj": 7,
+              "pg": 3,
+              "pe": 2,
+              "pp": 2,
+              "gf": 19,
+              "gc": 16,
+              "dg": 3
+            },
+            {
+              "pos": 7,
+              "team": "CD Teguinte",
+              "pts": 9,
+              "pj": 8,
+              "pg": 3,
+              "pe": 0,
+              "pp": 5,
+              "gf": 31,
+              "gc": 31,
+              "dg": 0
+            },
+            {
+              "pos": 8,
+              "team": "Balompédica B",
+              "pts": 6,
+              "pj": 8,
+              "pg": 2,
+              "pe": 0,
+              "pp": 6,
+              "gf": 34,
+              "gc": 31,
+              "dg": 3
+            },
+            {
+              "pos": 9,
+              "team": "Atisachi FTV B",
+              "pts": 3,
+              "pj": 7,
+              "pg": 1,
+              "pe": 0,
+              "pp": 6,
+              "gf": 8,
+              "gc": 71,
+              "dg": -63
+            },
+            {
+              "pos": 10,
+              "team": "Corralejo 35",
+              "pts": 0,
+              "pj": 8,
+              "pg": 0,
+              "pe": 0,
+              "pp": 8,
+              "gf": 8,
+              "gc": 80,
+              "dg": -72
+            }
+          ],
+          "last_jornada": "Jornada 18",
+          "matches": {
+            "Jornada 18": {
+              "matches": [
+                {
+                  "date": "21/05",
+                  "time": "17:00",
+                  "home": "Euro Lajares",
+                  "away": "Breñamen B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Lajares"
+                },
+                {
+                  "date": "23/05",
+                  "time": "09:00",
+                  "home": "Balompédica B",
+                  "away": "Sotavento B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Valles Ortega"
+                },
+                {
+                  "date": "23/05",
+                  "time": "10:00",
+                  "home": "CD Tamasite",
+                  "away": "Atisachi FTV B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Gran Tarajal"
+                },
+                {
+                  "date": "23/05",
+                  "time": "10:30",
+                  "home": "CD Teguinte",
+                  "away": "CD 35600 C",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Fco. Melián 2"
+                },
+                {
+                  "date": "24/05",
+                  "time": "10:00",
+                  "home": "Corralejo 35",
+                  "away": "UD Tarajalejo",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Jonathan Sesma"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "FO",
+          "name": "Liga Oro",
+          "full_name": "Benjamin Fuerteventura Liga Oro",
+          "url": "https://futbolaspalmas.com/benjamin-segunda-grupo-uno-fuerteventura",
+          "standings": [
+            {
+              "pos": 1,
+              "team": "CD 35600",
+              "pts": 24,
+              "pj": 8,
+              "pg": 8,
+              "pe": 0,
+              "pp": 0,
+              "gf": 59,
+              "gc": 4,
+              "dg": 55
+            },
+            {
+              "pos": 2,
+              "team": "UD Sotavento",
+              "pts": 18,
+              "pj": 8,
+              "pg": 6,
+              "pe": 0,
+              "pp": 2,
+              "gf": 54,
+              "gc": 17,
+              "dg": 37
+            },
+            {
+              "pos": 3,
+              "team": "CD Breñamen",
+              "pts": 17,
+              "pj": 8,
+              "pg": 5,
+              "pe": 2,
+              "pp": 1,
+              "gf": 30,
+              "gc": 20,
+              "dg": 10
+            },
+            {
+              "pos": 4,
+              "team": "La Oliva",
+              "pts": 15,
+              "pj": 8,
+              "pg": 5,
+              "pe": 0,
+              "pp": 3,
+              "gf": 28,
+              "gc": 28,
+              "dg": 0
+            },
+            {
+              "pos": 5,
+              "team": "Unión Tetir",
+              "pts": 14,
+              "pj": 8,
+              "pg": 4,
+              "pe": 2,
+              "pp": 2,
+              "gf": 29,
+              "gc": 31,
+              "dg": -2
+            },
+            {
+              "pos": 6,
+              "team": "Inter FTV",
+              "pts": 12,
+              "pj": 8,
+              "pg": 4,
+              "pe": 0,
+              "pp": 4,
+              "gf": 23,
+              "gc": 28,
+              "dg": -5
+            },
+            {
+              "pos": 7,
+              "team": "CD Herbania",
+              "pts": 11,
+              "pj": 8,
+              "pg": 3,
+              "pe": 2,
+              "pp": 3,
+              "gf": 34,
+              "gc": 24,
+              "dg": 10
+            },
+            {
+              "pos": 8,
+              "team": "Villaverde",
+              "pts": 10,
+              "pj": 9,
+              "pg": 3,
+              "pe": 1,
+              "pp": 5,
+              "gf": 33,
+              "gc": 50,
+              "dg": -17
+            },
+            {
+              "pos": 9,
+              "team": "El Charco",
+              "pts": 7,
+              "pj": 8,
+              "pg": 2,
+              "pe": 1,
+              "pp": 5,
+              "gf": 28,
+              "gc": 41,
+              "dg": -13
+            },
+            {
+              "pos": 10,
+              "team": "CD 35600 B",
+              "pts": 3,
+              "pj": 9,
+              "pg": 1,
+              "pe": 0,
+              "pp": 8,
+              "gf": 22,
+              "gc": 60,
+              "dg": -38
+            },
+            {
+              "pos": 11,
+              "team": "Unión Tetir B",
+              "pts": 0,
+              "pj": 8,
+              "pg": 0,
+              "pe": 0,
+              "pp": 8,
+              "gf": 5,
+              "gc": 42,
+              "dg": -37
+            }
+          ],
+          "last_jornada": "Jornada 22",
+          "matches": {
+            "Jornada 22": {
+              "matches": [
+                {
+                  "date": "29/05",
+                  "time": "17:00",
+                  "home": "CD Breñamen",
+                  "away": "Unión Tetir B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Las Playitas"
+                },
+                {
+                  "date": "30/05",
+                  "time": "09:00",
+                  "home": "CD Herbania",
+                  "away": "Inter FTV",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Fco. Melián 1"
+                },
+                {
+                  "date": "30/05",
+                  "time": "10:00",
+                  "home": "Unión Tetir",
+                  "away": "La Oliva",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Tetir"
+                },
+                {
+                  "date": "30/05",
+                  "time": "17:00",
+                  "home": "CD 35600",
+                  "away": "Villaverde",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Fco. Melián 1"
+                },
+                {
+                  "date": "31/05",
+                  "time": "10:30",
+                  "home": "UD Sotavento",
+                  "away": "El Charco",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Morro Jable"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "FP",
+          "name": "Liga Plata",
+          "full_name": "Benjamin Fuerteventura Liga Plata",
+          "url": "https://futbolaspalmas.com/benjamin-segunda-grupo-dos-fuerteventura",
+          "standings": [
+            {
+              "pos": 1,
+              "team": "Balompédica",
+              "pts": 24,
+              "pj": 8,
+              "pg": 8,
+              "pe": 0,
+              "pp": 0,
+              "gf": 64,
+              "gc": 5,
+              "dg": 59
+            },
+            {
+              "pos": 2,
+              "team": "Fuerteklub",
+              "pts": 18,
+              "pj": 8,
+              "pg": 6,
+              "pe": 0,
+              "pp": 2,
+              "gf": 51,
+              "gc": 27,
+              "dg": 24
+            },
+            {
+              "pos": 3,
+              "team": "UD Jandía",
+              "pts": 16,
+              "pj": 8,
+              "pg": 5,
+              "pe": 1,
+              "pp": 2,
+              "gf": 31,
+              "gc": 19,
+              "dg": 12
+            },
+            {
+              "pos": 4,
+              "team": "European FU",
+              "pts": 15,
+              "pj": 8,
+              "pg": 5,
+              "pe": 0,
+              "pp": 3,
+              "gf": 43,
+              "gc": 17,
+              "dg": 26
+            },
+            {
+              "pos": 5,
+              "team": "Atisachi FTV",
+              "pts": 13,
+              "pj": 8,
+              "pg": 4,
+              "pe": 1,
+              "pp": 3,
+              "gf": 34,
+              "gc": 25,
+              "dg": 9
+            },
+            {
+              "pos": 6,
+              "team": "Peña B",
+              "pts": 13,
+              "pj": 7,
+              "pg": 4,
+              "pe": 1,
+              "pp": 2,
+              "gf": 22,
+              "gc": 19,
+              "dg": 3
+            },
+            {
+              "pos": 7,
+              "team": "CD Corralejo",
+              "pts": 7,
+              "pj": 8,
+              "pg": 2,
+              "pe": 1,
+              "pp": 5,
+              "gf": 20,
+              "gc": 39,
+              "dg": -19
+            },
+            {
+              "pos": 8,
+              "team": "Peña Amistad",
+              "pts": 6,
+              "pj": 8,
+              "pg": 2,
+              "pe": 0,
+              "pp": 6,
+              "gf": 23,
+              "gc": 42,
+              "dg": -19
+            },
+            {
+              "pos": 9,
+              "team": "Villaverde B",
+              "pts": 3,
+              "pj": 7,
+              "pg": 1,
+              "pe": 0,
+              "pp": 6,
+              "gf": 16,
+              "gc": 54,
+              "dg": -38
+            },
+            {
+              "pos": 10,
+              "team": "El Charco B",
+              "pts": 0,
+              "pj": 8,
+              "pg": 0,
+              "pe": 0,
+              "pp": 8,
+              "gf": 14,
+              "gc": 71,
+              "dg": -57
+            }
+          ],
+          "last_jornada": "Jornada 18",
+          "matches": {
+            "Jornada 18": {
+              "matches": [
+                {
+                  "date": "23/05",
+                  "time": "09:00",
+                  "home": "El Charco B",
+                  "away": "Peña B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Fco. Melián 2"
+                },
+                {
+                  "date": "23/05",
+                  "time": "10:00",
+                  "home": "European FU",
+                  "away": "Balompédica",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Costa Calma"
+                },
+                {
+                  "date": "23/05",
+                  "time": "10:00",
+                  "home": "Villaverde B",
+                  "away": "Atisachi FTV",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Villaverde"
+                },
+                {
+                  "date": "23/05",
+                  "time": "11:00",
+                  "home": "UD Jandía",
+                  "away": "Fuerteklub",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Morro jable"
+                },
+                {
+                  "date": "23/05",
+                  "time": "12:00",
+                  "home": "Peña Amistad",
+                  "away": "CD Corralejo",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Fabelo"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "lanzarote": {
+      "groups": [
+        {
+          "id": "LZ1",
+          "name": "Grupo 1",
+          "full_name": "Benjamin Lanzarote Grupo 1",
+          "url": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/",
+          "standings": [
+            {
+              "pos": 1,
+              "team": "CD Tahiche",
+              "pts": 15,
+              "pj": 5,
+              "pg": 5,
+              "pe": 0,
+              "pp": 0,
+              "gf": 32,
+              "gc": 10,
+              "dg": 22
+            },
+            {
+              "pos": 2,
+              "team": "Sporting Tías",
+              "pts": 9,
+              "pj": 4,
+              "pg": 3,
+              "pe": 0,
+              "pp": 1,
+              "gf": 15,
+              "gc": 9,
+              "dg": 6
+            },
+            {
+              "pos": 3,
+              "team": "UD Lanzarote",
+              "pts": 9,
+              "pj": 4,
+              "pg": 3,
+              "pe": 0,
+              "pp": 1,
+              "gf": 14,
+              "gc": 8,
+              "dg": 6
+            },
+            {
+              "pos": 4,
+              "team": "Pto.del Carmen",
+              "pts": 9,
+              "pj": 4,
+              "pg": 3,
+              "pe": 0,
+              "pp": 1,
+              "gf": 14,
+              "gc": 13,
+              "dg": 1
+            },
+            {
+              "pos": 5,
+              "team": "Internacional PH",
+              "pts": 9,
+              "pj": 5,
+              "pg": 3,
+              "pe": 0,
+              "pp": 2,
+              "gf": 23,
+              "gc": 25,
+              "dg": -2
+            },
+            {
+              "pos": 6,
+              "team": "US Yaiza",
+              "pts": 6,
+              "pj": 4,
+              "pg": 2,
+              "pe": 0,
+              "pp": 2,
+              "gf": 13,
+              "gc": 11,
+              "dg": 2
+            },
+            {
+              "pos": 7,
+              "team": "O. Marítima",
+              "pts": 3,
+              "pj": 4,
+              "pg": 1,
+              "pe": 0,
+              "pp": 3,
+              "gf": 17,
+              "gc": 19,
+              "dg": -2
+            },
+            {
+              "pos": 8,
+              "team": "San Bartolomé",
+              "pts": 3,
+              "pj": 4,
+              "pg": 1,
+              "pe": 0,
+              "pp": 3,
+              "gf": 15,
+              "gc": 17,
+              "dg": -2
+            },
+            {
+              "pos": 9,
+              "team": "CD Tinajo",
+              "pts": 3,
+              "pj": 5,
+              "pg": 1,
+              "pe": 0,
+              "pp": 4,
+              "gf": 9,
+              "gc": 24,
+              "dg": -15
+            },
+            {
+              "pos": 10,
+              "team": "CD Lomo",
+              "pts": 0,
+              "pj": 5,
+              "pg": 0,
+              "pe": 0,
+              "pp": 5,
+              "gf": 8,
+              "gc": 24,
+              "dg": -16
+            }
+          ],
+          "last_jornada": "Jornada 18",
+          "matches": {
+            "Jornada 18": {
+              "matches": [
+                {
+                  "date": "06/06",
+                  "time": "09:00",
+                  "home": "Pto.del Carmen",
+                  "away": "Sporting Tías",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Manuel Arrocha"
+                },
+                {
+                  "date": "06/06",
+                  "time": "09:00",
+                  "home": "San Bartolomé",
+                  "away": "O. Marítima",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Pedro Espinosa"
+                },
+                {
+                  "date": "06/06",
+                  "time": "09:00",
+                  "home": "US Yaiza",
+                  "away": "Internacional PH",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Mun. Yaiza"
+                },
+                {
+                  "date": "06/06",
+                  "time": "11:00",
+                  "home": "CD Lomo",
+                  "away": "CD Tinajo",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Agapito Reyes"
+                },
+                {
+                  "date": "07/06",
+                  "time": "09:00",
+                  "home": "UD Lanzarote",
+                  "away": "CD Tahiche",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Mun. Argana"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "LZ2",
+          "name": "Grupo 2",
+          "full_name": "Benjamin Lanzarote Grupo 2",
+          "url": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/",
+          "standings": [
+            {
+              "pos": 1,
+              "team": "UD Palmeiros",
+              "pts": 12,
+              "pj": 4,
+              "pg": 4,
+              "pe": 0,
+              "pp": 0,
+              "gf": 27,
+              "gc": 9,
+              "dg": 18
+            },
+            {
+              "pos": 2,
+              "team": "CD Tite",
+              "pts": 11,
+              "pj": 5,
+              "pg": 3,
+              "pe": 2,
+              "pp": 0,
+              "gf": 26,
+              "gc": 14,
+              "dg": 12
+            },
+            {
+              "pos": 3,
+              "team": "CD Arrecife",
+              "pts": 9,
+              "pj": 4,
+              "pg": 3,
+              "pe": 0,
+              "pp": 1,
+              "gf": 29,
+              "gc": 11,
+              "dg": 18
+            },
+            {
+              "pos": 4,
+              "team": "San Bartolomé B",
+              "pts": 7,
+              "pj": 4,
+              "pg": 2,
+              "pe": 1,
+              "pp": 1,
+              "gf": 15,
+              "gc": 11,
+              "dg": 4
+            },
+            {
+              "pos": 5,
+              "team": "Sporting Tías B",
+              "pts": 7,
+              "pj": 4,
+              "pg": 2,
+              "pe": 1,
+              "pp": 1,
+              "gf": 14,
+              "gc": 10,
+              "dg": 4
+            },
+            {
+              "pos": 6,
+              "team": "CD Teguise",
+              "pts": 6,
+              "pj": 5,
+              "pg": 1,
+              "pe": 3,
+              "pp": 1,
+              "gf": 15,
+              "gc": 17,
+              "dg": -2
+            },
+            {
+              "pos": 7,
+              "team": "San Bartolomé C",
+              "pts": 3,
+              "pj": 4,
+              "pg": 1,
+              "pe": 0,
+              "pp": 3,
+              "gf": 8,
+              "gc": 21,
+              "dg": -13
+            },
+            {
+              "pos": 8,
+              "team": "CD Adassa",
+              "pts": 1,
+              "pj": 4,
+              "pg": 0,
+              "pe": 1,
+              "pp": 3,
+              "gf": 16,
+              "gc": 25,
+              "dg": -9
+            },
+            {
+              "pos": 9,
+              "team": "Tahiche B",
+              "pts": 1,
+              "pj": 4,
+              "pg": 0,
+              "pe": 1,
+              "pp": 3,
+              "gf": 8,
+              "gc": 17,
+              "dg": -9
+            },
+            {
+              "pos": 10,
+              "team": "O. Marítima C",
+              "pts": 1,
+              "pj": 4,
+              "pg": 0,
+              "pe": 1,
+              "pp": 3,
+              "gf": 3,
+              "gc": 26,
+              "dg": -23
+            }
+          ],
+          "last_jornada": "Jornada 18",
+          "matches": {
+            "Jornada 18": {
+              "matches": [
+                {
+                  "date": "04/06",
+                  "time": "17:30",
+                  "home": "San Bartolomé C",
+                  "away": "San Bartolomé B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Pedro Espinosa"
+                },
+                {
+                  "date": "06/06",
+                  "time": "09:00",
+                  "home": "Tahiche B",
+                  "away": "CD Tite",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Mun. Tahiche"
+                },
+                {
+                  "date": "06/06",
+                  "time": "09:30",
+                  "home": "UD Palmeiros",
+                  "away": "Sporting Tías B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Teguise"
+                },
+                {
+                  "date": "06/06",
+                  "time": "11:00",
+                  "home": "CD Arrecife",
+                  "away": "CD Teguise",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Agapito Reyes"
+                },
+                {
+                  "date": "06/06",
+                  "time": "12:00",
+                  "home": "O. Marítima C",
+                  "away": "CD Adassa",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "J.D. Contreras"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "LZ3",
+          "name": "Grupo 3",
+          "full_name": "Benjamin Lanzarote Grupo 3",
+          "url": "https://futbolaspalmas.com/benjamin-primera-grupo-tres-lanzarote/",
+          "standings": [
+            {
+              "pos": 1,
+              "team": "Internacional D",
+              "pts": 13,
+              "pj": 5,
+              "pg": 4,
+              "pe": 1,
+              "pp": 0,
+              "gf": 37,
+              "gc": 8,
+              "dg": 29
+            },
+            {
+              "pos": 2,
+              "team": "Haría CF",
+              "pts": 11,
+              "pj": 5,
+              "pg": 3,
+              "pe": 2,
+              "pp": 0,
+              "gf": 23,
+              "gc": 12,
+              "dg": 11
+            },
+            {
+              "pos": 3,
+              "team": "Maciot Sport",
+              "pts": 10,
+              "pj": 5,
+              "pg": 3,
+              "pe": 1,
+              "pp": 1,
+              "gf": 20,
+              "gc": 15,
+              "dg": 5
+            },
+            {
+              "pos": 4,
+              "team": "Tahiche C",
+              "pts": 9,
+              "pj": 5,
+              "pg": 3,
+              "pe": 0,
+              "pp": 2,
+              "gf": 31,
+              "gc": 19,
+              "dg": 12
+            },
+            {
+              "pos": 5,
+              "team": "Palmeiros B",
+              "pts": 8,
+              "pj": 5,
+              "pg": 2,
+              "pe": 2,
+              "pp": 1,
+              "gf": 13,
+              "gc": 9,
+              "dg": 4
+            },
+            {
+              "pos": 6,
+              "team": "Sporting C",
+              "pts": 6,
+              "pj": 5,
+              "pg": 2,
+              "pe": 0,
+              "pp": 3,
+              "gf": 13,
+              "gc": 22,
+              "dg": -9
+            },
+            {
+              "pos": 7,
+              "team": "Internacional B",
+              "pts": 4,
+              "pj": 5,
+              "pg": 1,
+              "pe": 1,
+              "pp": 3,
+              "gf": 16,
+              "gc": 27,
+              "dg": -11
+            },
+            {
+              "pos": 8,
+              "team": "Lanzarote B",
+              "pts": 3,
+              "pj": 4,
+              "pg": 1,
+              "pe": 0,
+              "pp": 3,
+              "gf": 10,
+              "gc": 19,
+              "dg": -9
+            },
+            {
+              "pos": 9,
+              "team": "Tinajo B",
+              "pts": 3,
+              "pj": 4,
+              "pg": 1,
+              "pe": 0,
+              "pp": 3,
+              "gf": 9,
+              "gc": 19,
+              "dg": -10
+            },
+            {
+              "pos": 10,
+              "team": "Arrecife B",
+              "pts": 1,
+              "pj": 5,
+              "pg": 0,
+              "pe": 1,
+              "pp": 4,
+              "gf": 8,
+              "gc": 30,
+              "dg": -22
+            }
+          ],
+          "last_jornada": "Jornada 18",
+          "matches": {
+            "Jornada 18": {
+              "matches": [
+                {
+                  "date": "06/06",
+                  "time": "09:00",
+                  "home": "Internacional D",
+                  "away": "Palmeiros B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Playa Honda"
+                },
+                {
+                  "date": "06/06",
+                  "time": "09:00",
+                  "home": "Tinajo B",
+                  "away": "Arrecife B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Los Volcanes"
+                },
+                {
+                  "date": "06/06",
+                  "time": "09:30",
+                  "home": "Maciot Sport",
+                  "away": "Tahiche C",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "SF Javier"
+                },
+                {
+                  "date": "06/06",
+                  "time": "11:00",
+                  "home": "Lanzarote B",
+                  "away": "Haría CF",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Mun. Argana"
+                },
+                {
+                  "date": "07/06",
+                  "time": "10:00",
+                  "home": "Sporting C",
+                  "away": "Internacional B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Mun. Tias"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "LZ4",
+          "name": "Grupo 4",
+          "full_name": "Benjamin Lanzarote Grupo 4",
+          "url": "https://futbolaspalmas.com/benjamin-primera-grupo-cuatro-lanzarote/",
+          "standings": [
+            {
+              "pos": 1,
+              "team": "US Yaiza B",
+              "pts": 12,
+              "pj": 4,
+              "pg": 4,
+              "pe": 0,
+              "pp": 0,
+              "gf": 27,
+              "gc": 6,
+              "dg": 21
+            },
+            {
+              "pos": 2,
+              "team": "Lomo B",
+              "pts": 7,
+              "pj": 4,
+              "pg": 2,
+              "pe": 1,
+              "pp": 1,
+              "gf": 20,
+              "gc": 9,
+              "dg": 11
+            },
+            {
+              "pos": 3,
+              "team": "Lomo C",
+              "pts": 7,
+              "pj": 3,
+              "pg": 2,
+              "pe": 1,
+              "pp": 0,
+              "gf": 15,
+              "gc": 8,
+              "dg": 7
+            },
+            {
+              "pos": 4,
+              "team": "Teguise B",
+              "pts": 7,
+              "pj": 5,
+              "pg": 2,
+              "pe": 1,
+              "pp": 2,
+              "gf": 17,
+              "gc": 16,
+              "dg": 1
+            },
+            {
+              "pos": 5,
+              "team": "San Bartolomé D",
+              "pts": 6,
+              "pj": 4,
+              "pg": 2,
+              "pe": 0,
+              "pp": 2,
+              "gf": 15,
+              "gc": 16,
+              "dg": -1
+            },
+            {
+              "pos": 6,
+              "team": "Tite B",
+              "pts": 4,
+              "pj": 4,
+              "pg": 1,
+              "pe": 1,
+              "pp": 2,
+              "gf": 8,
+              "gc": 9,
+              "dg": -1
+            },
+            {
+              "pos": 7,
+              "team": "Pto. del Carmen B",
+              "pts": 3,
+              "pj": 4,
+              "pg": 1,
+              "pe": 0,
+              "pp": 3,
+              "gf": 11,
+              "gc": 16,
+              "dg": -5
+            },
+            {
+              "pos": 8,
+              "team": "O. Marítima B",
+              "pts": 3,
+              "pj": 3,
+              "pg": 1,
+              "pe": 0,
+              "pp": 2,
+              "gf": 3,
+              "gc": 15,
+              "dg": -12
+            },
+            {
+              "pos": 9,
+              "team": "Internacional C",
+              "pts": 3,
+              "pj": 5,
+              "pg": 1,
+              "pe": 0,
+              "pp": 4,
+              "gf": 10,
+              "gc": 31,
+              "dg": -21
+            }
+          ],
+          "last_jornada": "Jornada 18",
+          "matches": {
+            "Jornada 18": {
+              "matches": [
+                {
+                  "date": "06/06",
+                  "time": "09:00",
+                  "home": "San Bartolomé D",
+                  "away": "Pto. del Carmen B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Pedro Espinosa"
+                },
+                {
+                  "date": "06/06",
+                  "time": "09:30",
+                  "home": "Lomo B",
+                  "away": "US Yaiza B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Agapito Reyes"
+                },
+                {
+                  "date": "06/06",
+                  "time": "10:30",
+                  "home": "O. Marítima B",
+                  "away": "Teguise B",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "J.D. Contreras"
+                },
+                {
+                  "date": "06/06",
+                  "time": "11:00",
+                  "home": "Tite B",
+                  "away": "Lomo C",
+                  "home_score": null,
+                  "away_score": null,
+                  "venue": "Mun. Argana"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "prebenjamin": {
+    "groups": [
+      {
+        "id": "PG1",
+        "name": "Grupo 1",
+        "full_name": "PREBENJAMIN PRIMERA GRAN CANARIA G-1",
+        "url": "https://futbolaspalmas.com/1prebenjamin1",
+        "standings": [
+          {
+            "pos": 1,
+            "team": "Valkyrias Bec.",
+            "pts": 43,
+            "pj": 16,
+            "pg": 14,
+            "pe": 1,
+            "pp": 1,
+            "gf": 99,
+            "gc": 49,
+            "dg": 50
+          },
+          {
+            "pos": 2,
+            "team": "UD Moya",
+            "pts": 42,
+            "pj": 16,
+            "pg": 14,
+            "pe": 0,
+            "pp": 2,
+            "gf": 87,
+            "gc": 40,
+            "dg": 47
+          },
+          {
+            "pos": 3,
+            "team": "Gáldar CF",
+            "pts": 35,
+            "pj": 16,
+            "pg": 11,
+            "pe": 2,
+            "pp": 3,
+            "gf": 100,
+            "gc": 62,
+            "dg": 38
+          },
+          {
+            "pos": 4,
+            "team": "Tamaraceite",
+            "pts": 33,
+            "pj": 16,
+            "pg": 10,
+            "pe": 3,
+            "pp": 3,
+            "gf": 80,
+            "gc": 43,
+            "dg": 37
+          },
+          {
+            "pos": 5,
+            "team": "UD Barrial",
+            "pts": 29,
+            "pj": 16,
+            "pg": 9,
+            "pe": 2,
+            "pp": 5,
+            "gf": 55,
+            "gc": 48,
+            "dg": 7
+          },
+          {
+            "pos": 6,
+            "team": "UD Atalaya",
+            "pts": 27,
+            "pj": 15,
+            "pg": 8,
+            "pe": 3,
+            "pp": 4,
+            "gf": 59,
+            "gc": 41,
+            "dg": 18
+          },
+          {
+            "pos": 7,
+            "team": "San Mateo",
+            "pts": 26,
+            "pj": 16,
+            "pg": 8,
+            "pe": 2,
+            "pp": 6,
+            "gf": 85,
+            "gc": 71,
+            "dg": 14
+          },
+          {
+            "pos": 8,
+            "team": "Arucas CF",
+            "pts": 21,
+            "pj": 15,
+            "pg": 6,
+            "pe": 3,
+            "pp": 6,
+            "gf": 61,
+            "gc": 61,
+            "dg": 0
+          },
+          {
+            "pos": 9,
+            "team": "CD Firgas",
+            "pts": 21,
+            "pj": 16,
+            "pg": 6,
+            "pe": 3,
+            "pp": 7,
+            "gf": 52,
+            "gc": 48,
+            "dg": 4
+          },
+          {
+            "pos": 10,
+            "team": "Santidad",
+            "pts": 18,
+            "pj": 16,
+            "pg": 5,
+            "pe": 3,
+            "pp": 8,
+            "gf": 57,
+            "gc": 84,
+            "dg": -27
+          },
+          {
+            "pos": 11,
+            "team": "Costa Ayala",
+            "pts": 16,
+            "pj": 16,
+            "pg": 5,
+            "pe": 1,
+            "pp": 10,
+            "gf": 46,
+            "gc": 77,
+            "dg": -31
+          },
+          {
+            "pos": 12,
+            "team": "San Isidro",
+            "pts": 14,
+            "pj": 16,
+            "pg": 4,
+            "pe": 2,
+            "pp": 10,
+            "gf": 63,
+            "gc": 85,
+            "dg": -22
+          },
+          {
+            "pos": 13,
+            "team": "Acodetti B",
+            "pts": 7,
+            "pj": 16,
+            "pg": 2,
+            "pe": 1,
+            "pp": 13,
+            "gf": 37,
+            "gc": 64,
+            "dg": -27
+          },
+          {
+            "pos": 14,
+            "team": "Guayarmina",
+            "pts": 6,
+            "pj": 16,
+            "pg": 1,
+            "pe": 3,
+            "pp": 12,
+            "gf": 30,
+            "gc": 82,
+            "dg": -52
+          },
+          {
+            "pos": 15,
+            "team": "Roque Amagro",
+            "pts": 4,
+            "pj": 16,
+            "pg": 1,
+            "pe": 1,
+            "pp": 14,
+            "gf": 19,
+            "gc": 75,
+            "dg": -56
+          }
+        ],
+        "last_jornada": "Jornada 30",
+        "matches": {
+          "Jornada 30": {
+            "matches": [
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Arucas CF",
+                "away": "Roque Amagro",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Elías Rizkallal"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "CD Firgas",
+                "away": "San Isidro",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Dom. Ponce"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Costa Ayala",
+                "away": "San Mateo",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Costa Ayala"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Gáldar CF",
+                "away": "UD Atalaya",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Venancio Monzón"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Santidad",
+                "away": "Guayarmina",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Javier Armas"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Tamaraceite",
+                "away": "Valkyrias Bec.",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Juan Guedes"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "UD Moya",
+                "away": "UD Barrial",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Moya"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "PG2",
+        "name": "Grupo 2",
+        "full_name": "PREBENJAMIN PRIMERA GRAN CANARIA G-2",
+        "url": "https://futbolaspalmas.com/1prebenjamin2",
+        "standings": [
+          {
+            "pos": 1,
+            "team": "Unión Viera",
+            "pts": 45,
+            "pj": 15,
+            "pg": 15,
+            "pe": 0,
+            "pp": 0,
+            "gf": 117,
+            "gc": 14,
+            "dg": 103
+          },
+          {
+            "pos": 2,
+            "team": "AD Huracán",
+            "pts": 40,
+            "pj": 15,
+            "pg": 13,
+            "pe": 1,
+            "pp": 1,
+            "gf": 125,
+            "gc": 21,
+            "dg": 104
+          },
+          {
+            "pos": 3,
+            "team": "Acodetti CF",
+            "pts": 39,
+            "pj": 15,
+            "pg": 13,
+            "pe": 0,
+            "pp": 2,
+            "gf": 110,
+            "gc": 33,
+            "dg": 77
+          },
+          {
+            "pos": 4,
+            "team": "La Garita",
+            "pts": 31,
+            "pj": 15,
+            "pg": 10,
+            "pe": 1,
+            "pp": 4,
+            "gf": 79,
+            "gc": 40,
+            "dg": 39
+          },
+          {
+            "pos": 5,
+            "team": "Veteranos",
+            "pts": 30,
+            "pj": 15,
+            "pg": 10,
+            "pe": 0,
+            "pp": 5,
+            "gf": 83,
+            "gc": 36,
+            "dg": 47
+          },
+          {
+            "pos": 6,
+            "team": "RC Victoria",
+            "pts": 28,
+            "pj": 15,
+            "pg": 9,
+            "pe": 1,
+            "pp": 5,
+            "gf": 71,
+            "gc": 42,
+            "dg": 29
+          },
+          {
+            "pos": 7,
+            "team": "Gran Canaria",
+            "pts": 28,
+            "pj": 15,
+            "pg": 9,
+            "pe": 1,
+            "pp": 5,
+            "gf": 52,
+            "gc": 38,
+            "dg": 14
+          },
+          {
+            "pos": 8,
+            "team": "UD Telde",
+            "pts": 18,
+            "pj": 15,
+            "pg": 6,
+            "pe": 0,
+            "pp": 9,
+            "gf": 47,
+            "gc": 65,
+            "dg": -18
+          },
+          {
+            "pos": 9,
+            "team": "Las Mesas Hu.",
+            "pts": 18,
+            "pj": 15,
+            "pg": 6,
+            "pe": 0,
+            "pp": 9,
+            "gf": 48,
+            "gc": 73,
+            "dg": -25
+          },
+          {
+            "pos": 10,
+            "team": "Las Huesas",
+            "pts": 13,
+            "pj": 15,
+            "pg": 4,
+            "pe": 1,
+            "pp": 10,
+            "gf": 33,
+            "gc": 90,
+            "dg": -57
+          },
+          {
+            "pos": 11,
+            "team": "Santa Brígida",
+            "pts": 10,
+            "pj": 15,
+            "pg": 3,
+            "pe": 1,
+            "pp": 11,
+            "gf": 35,
+            "gc": 90,
+            "dg": -55
+          },
+          {
+            "pos": 12,
+            "team": "UD Jinámar",
+            "pts": 3,
+            "pj": 15,
+            "pg": 1,
+            "pe": 0,
+            "pp": 14,
+            "gf": 12,
+            "gc": 90,
+            "dg": -78
+          },
+          {
+            "pos": 13,
+            "team": "Arucas B",
+            "pts": 3,
+            "pj": 14,
+            "pg": 1,
+            "pe": 0,
+            "pp": 13,
+            "gf": 21,
+            "gc": 108,
+            "dg": -87
+          },
+          {
+            "pos": 14,
+            "team": "CD Calero",
+            "pts": 3,
+            "pj": 14,
+            "pg": 1,
+            "pe": 0,
+            "pp": 13,
+            "gf": 21,
+            "gc": 114,
+            "dg": -93
+          }
+        ],
+        "last_jornada": "Jornada 30",
+        "matches": {
+          "Jornada 30": {
+            "matches": [
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Acodetti CF",
+                "away": "Santa Brígida",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Mayordomía 1"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Gran Canaria",
+                "away": "Veteranos",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Mundial 82"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "La Garita",
+                "away": "Unión Viera",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Las Remudas"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Las Huesas",
+                "away": "UD Jinámar",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Las Huesas"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Las Mesas Hu.",
+                "away": "AD Huracán",
+                "home_score": null,
+                "away_score": null,
+                "venue": "C.M. La Suerte"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "UD Telde",
+                "away": "CD Calero",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Pablo Hdez."
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "PG3",
+        "name": "Grupo 3",
+        "full_name": "PREBENJAMIN PRIMERA GRAN CANARIA G-3",
+        "url": "https://futbolaspalmas.com/1prebenjamin3",
+        "standings": [
+          {
+            "pos": 1,
+            "team": "UD Vecindario",
+            "pts": 42,
+            "pj": 14,
+            "pg": 14,
+            "pe": 0,
+            "pp": 0,
+            "gf": 112,
+            "gc": 16,
+            "dg": 96
+          },
+          {
+            "pos": 2,
+            "team": "CD Ingenio",
+            "pts": 39,
+            "pj": 14,
+            "pg": 13,
+            "pe": 0,
+            "pp": 1,
+            "gf": 93,
+            "gc": 27,
+            "dg": 66
+          },
+          {
+            "pos": 3,
+            "team": "Maspa Training",
+            "pts": 33,
+            "pj": 14,
+            "pg": 11,
+            "pe": 0,
+            "pp": 3,
+            "gf": 75,
+            "gc": 24,
+            "dg": 51
+          },
+          {
+            "pos": 4,
+            "team": "San Pedro",
+            "pts": 28,
+            "pj": 14,
+            "pg": 9,
+            "pe": 1,
+            "pp": 4,
+            "gf": 61,
+            "gc": 31,
+            "dg": 30
+          },
+          {
+            "pos": 5,
+            "team": "Unión Carrizal",
+            "pts": 27,
+            "pj": 14,
+            "pg": 9,
+            "pe": 0,
+            "pp": 5,
+            "gf": 57,
+            "gc": 42,
+            "dg": 15
+          },
+          {
+            "pos": 6,
+            "team": "CD Doramas",
+            "pts": 24,
+            "pj": 14,
+            "pg": 8,
+            "pe": 0,
+            "pp": 6,
+            "gf": 75,
+            "gc": 56,
+            "dg": 19
+          },
+          {
+            "pos": 7,
+            "team": "Maspalomas",
+            "pts": 23,
+            "pj": 14,
+            "pg": 7,
+            "pe": 2,
+            "pp": 5,
+            "gf": 54,
+            "gc": 53,
+            "dg": 1
+          },
+          {
+            "pos": 8,
+            "team": "Arguineguín",
+            "pts": 19,
+            "pj": 14,
+            "pg": 6,
+            "pe": 1,
+            "pp": 7,
+            "gf": 50,
+            "gc": 52,
+            "dg": -2
+          },
+          {
+            "pos": 9,
+            "team": "CD Arinaga",
+            "pts": 16,
+            "pj": 14,
+            "pg": 5,
+            "pe": 1,
+            "pp": 8,
+            "gf": 52,
+            "gc": 49,
+            "dg": 3
+          },
+          {
+            "pos": 10,
+            "team": "CD Cerruda",
+            "pts": 13,
+            "pj": 13,
+            "pg": 4,
+            "pe": 1,
+            "pp": 8,
+            "gf": 57,
+            "gc": 68,
+            "dg": -11
+          },
+          {
+            "pos": 11,
+            "team": "Maspa Training B",
+            "pts": 13,
+            "pj": 14,
+            "pg": 4,
+            "pe": 1,
+            "pp": 9,
+            "gf": 43,
+            "gc": 74,
+            "dg": -31
+          },
+          {
+            "pos": 12,
+            "team": "CD Tablero",
+            "pts": 7,
+            "pj": 13,
+            "pg": 2,
+            "pe": 1,
+            "pp": 10,
+            "gf": 25,
+            "gc": 81,
+            "dg": -56
+          },
+          {
+            "pos": 13,
+            "team": "Estrella CF",
+            "pts": 3,
+            "pj": 14,
+            "pg": 1,
+            "pe": 0,
+            "pp": 13,
+            "gf": 15,
+            "gc": 93,
+            "dg": -78
+          },
+          {
+            "pos": 14,
+            "team": "CD Ingenio B",
+            "pts": 0,
+            "pj": 14,
+            "pg": 0,
+            "pe": 0,
+            "pp": 14,
+            "gf": 21,
+            "gc": 124,
+            "dg": -103
+          }
+        ],
+        "last_jornada": "Jornada 30",
+        "matches": {
+          "Jornada 30": {
+            "matches": [
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "CD Arinaga",
+                "away": "UD Vecindario",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Mun. Arinaga"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "CD Cerruda",
+                "away": "Maspa Training",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Mun. Vecindario"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "CD Ingenio B",
+                "away": "CD Doramas",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Cris. Herrera"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "CD Tablero",
+                "away": "Arguineguín",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Eleuterio V."
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Estrella CF",
+                "away": "CD Ingenio",
+                "home_score": null,
+                "away_score": null,
+                "venue": "Las Palmitas"
+              },
+              {
+                "date": "06/06",
+                "time": "09:00",
+                "home": "Unión Carrizal",
+                "away": "San Pedro",
+                "home_score": null,
+                "away_score": null,
+                "venue": "El Toril"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

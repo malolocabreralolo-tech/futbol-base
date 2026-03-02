@@ -176,6 +176,48 @@ body {
   font-weight: 700;
 }
 
+/* Season + Category row */
+.season-cat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+/* Season selector */
+.season-selector select {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 28px 6px 10px;
+  background: var(--bg);
+  color: var(--text2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238892a4' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.season-selector select:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.season-selector .historical-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--amber);
+  background: rgba(255,193,7,0.12);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
 /* Category Toggle */
 .category-toggle {
   display: flex;
@@ -183,7 +225,6 @@ body {
   border-radius: var(--radius-pill);
   padding: 4px;
   border: 1px solid var(--border);
-  margin-bottom: 12px;
   width: fit-content;
 }
 .cat-btn {
@@ -245,8 +286,25 @@ body {
   height: 2px;
   background: var(--accent);
 }
-.section-tab:hover:not(.active) {
+.section-tab:hover:not(.active):not(.disabled) {
   color: var(--text);
+}
+.section-tab.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Historical banner */
+.historical-banner {
+  background: rgba(255,193,7,0.08);
+  border: 1px solid rgba(255,193,7,0.2);
+  color: var(--amber);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
 /* ====== SEARCH ====== */
@@ -736,7 +794,8 @@ body {
   .brand-icon { width: 36px; height: 36px; font-size: 18px; }
   .brand .subtitle { font-size: 11px; }
   .header-top { margin-bottom: 8px; gap: 6px; }
-  .category-toggle { margin-bottom: 8px; }
+  .season-cat-row { margin-bottom: 8px; }
+  .season-selector select { font-size: 12px; padding: 5px 24px 5px 8px; }
   .cat-btn { font-size: 14px; padding: 6px 16px; }
   .section-tab { padding: 8px 14px; font-size: 13px; }
   .main { padding: 8px 12px 32px; }

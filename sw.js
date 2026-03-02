@@ -10,11 +10,12 @@ const ASSETS = [
   './data-goleadores.js',
   './data-matchdetail.js',
   './data-shields.js',
-  './data-stats.js'
+  './data-stats.js',
+  './data-seasons.js'
 ];
 
 // Data files that should use network-first strategy
-const DATA_FILES = ['data-benjamin', 'data-prebenjamin', 'data-history', 'data-goleadores', 'data-matchdetail', 'data-shields', 'data-stats'];
+const DATA_FILES = ['data-benjamin', 'data-prebenjamin', 'data-history', 'data-goleadores', 'data-matchdetail', 'data-shields', 'data-stats', 'data-seasons'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));

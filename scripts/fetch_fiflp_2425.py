@@ -11,7 +11,7 @@ OUTPUT_PATH  = os.path.join(PROJECT_ROOT, "scripts", "fiflp_2425_raw.json")
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 SEASON = "20"  # CodTemporada for 2024-2025
 
-COMPETITIONS = [
+ALL_COMPETITIONS = [
     # Benjamin Gran Canaria
     {"id": "1576", "name": "Primera Benjamin GC",            "cat": "benjamin",    "island": "grancanaria",   "phase": "Primera Fase"},
     {"id": "1706", "name": "Benjamin GC Segunda Fase A",     "cat": "benjamin",    "island": "grancanaria",   "phase": "Segunda Fase A"},
@@ -30,6 +30,9 @@ COMPETITIONS = [
     {"id": "1712", "name": "Prebenjamin Lanzarote",          "cat": "prebenjamin", "island": "lanzarote",     "phase": "Lanzarote"},
     {"id": "1582", "name": "Prebenjamin Fuerteventura",      "cat": "prebenjamin", "island": "fuerteventura", "phase": "Fuerteventura"},
 ]
+
+# Use resume: if fiflp_2425_raw.json exists, skip already-done competitions
+COMPETITIONS = ALL_COMPETITIONS
 
 
 def delay(extra=0):

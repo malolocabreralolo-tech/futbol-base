@@ -439,6 +439,11 @@ def update_history(all_history_updates):
     for gid, jornadas in all_history_updates.items():
         if gid not in history:
             history[gid] = {}
+        # Clean up old UPPERCASE keys (from legacy mygol scraper) that conflict
+        # with the title-case keys from futbolaspalmas (e.g. "JORNADA 1" → "Jornada 1")
+        old_upper_keys = [k for k in history[gid] if k.startswith("JORNADA ")]
+        for old_key in old_upper_keys:
+            del history[gid][old_key]
         for jor_name, matches in jornadas.items():
             history[gid][jor_name] = matches
 

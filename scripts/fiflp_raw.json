@@ -1,0 +1,2840 @@
+[
+  {
+    "competition_id": "54422954",
+    "competition_name": "Benjamin Fase Liga B GC",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Fase Liga B",
+    "group_id": "54828341",
+    "group_name": "GRUPO 1",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "CLARAVISION-ROQUE AMAGRO, C.D.",
+        "pts": 27,
+        "j": 10,
+        "g": 9,
+        "e": 0,
+        "p": 1,
+        "gf": 59,
+        "gc": 23,
+        "df": 36,
+        "form": "GPGGG"
+      },
+      {
+        "pos": 2,
+        "team": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+        "pts": 24,
+        "j": 10,
+        "g": 8,
+        "e": 0,
+        "p": 2,
+        "gf": 71,
+        "gc": 23,
+        "df": 48,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 3,
+        "team": "ARUCAS C.F. \"B\"",
+        "pts": 22,
+        "j": 10,
+        "g": 7,
+        "e": 1,
+        "p": 2,
+        "gf": 82,
+        "gc": 24,
+        "df": 58,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 4,
+        "team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+        "pts": 22,
+        "j": 10,
+        "g": 7,
+        "e": 1,
+        "p": 2,
+        "gf": 58,
+        "gc": 23,
+        "df": 35,
+        "form": "GGPGG"
+      },
+      {
+        "pos": 5,
+        "team": "CARDONES, C.D. \"A\"",
+        "pts": 22,
+        "j": 10,
+        "g": 7,
+        "e": 1,
+        "p": 2,
+        "gf": 43,
+        "gc": 44,
+        "df": -1,
+        "form": "GPGGG"
+      },
+      {
+        "pos": 6,
+        "team": "BARRIAL, U.D. \"A\"",
+        "pts": 12,
+        "j": 10,
+        "g": 4,
+        "e": 0,
+        "p": 6,
+        "gf": 16,
+        "gc": 40,
+        "df": -24,
+        "form": "PPGGP"
+      },
+      {
+        "pos": 7,
+        "team": "CORAZON DE MARIA, C.D. \"D\"",
+        "pts": 11,
+        "j": 10,
+        "g": 3,
+        "e": 2,
+        "p": 5,
+        "gf": 40,
+        "gc": 46,
+        "df": -6,
+        "form": "GPPPP"
+      },
+      {
+        "pos": 8,
+        "team": "GUIA, U.D.",
+        "pts": 9,
+        "j": 10,
+        "g": 3,
+        "e": 0,
+        "p": 7,
+        "gf": 28,
+        "gc": 42,
+        "df": -14,
+        "form": "PGPPP"
+      },
+      {
+        "pos": 9,
+        "team": "TEROR BALOMPIE, U.D.",
+        "pts": 7,
+        "j": 10,
+        "g": 2,
+        "e": 1,
+        "p": 7,
+        "gf": 25,
+        "gc": 42,
+        "df": -17,
+        "form": "PGPPP"
+      },
+      {
+        "pos": 10,
+        "team": "PANADERIA PULIDO SAN MATEO, C.F.",
+        "pts": 3,
+        "j": 10,
+        "g": 1,
+        "e": 0,
+        "p": 9,
+        "gf": 30,
+        "gc": 73,
+        "df": -43,
+        "form": "PPPPG"
+      },
+      {
+        "pos": 11,
+        "team": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+        "pts": 3,
+        "j": 10,
+        "g": 1,
+        "e": 0,
+        "p": 9,
+        "gf": 13,
+        "gc": 85,
+        "df": -72,
+        "form": "PPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "30-11-2025",
+        "matches": [
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": 2,
+            "as": null,
+            "date": "28-11-2025",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2025",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": 7,
+            "as": 0,
+            "date": "28-11-2025",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": 5,
+            "date": "29-11-2025",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": 3,
+            "as": null,
+            "date": "30-11-2025",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "14-12-2025",
+        "matches": [
+          {
+            "home": "Descansa",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "16-12-2025",
+            "time": "17:20",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": 5,
+            "as": null,
+            "date": "17-12-2025",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": 5,
+            "date": "23-12-2025",
+            "time": "17:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "23-12-2025",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GUIA, U.D.",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "23-12-2025",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "21-12-2025",
+        "matches": [
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2025",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2025",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": 6,
+            "date": "19-12-2025",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": 5,
+            "date": "20-12-2025",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "21-12-2025",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "11-01-2026",
+        "matches": [
+          {
+            "home": "GUIA, U.D.",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-01-2026",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "10-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "11-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "18-01-2026",
+        "matches": [
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": 1,
+            "as": null,
+            "date": "16-01-2026",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "GUIA, U.D.",
+            "hs": 5,
+            "as": null,
+            "date": "17-01-2026",
+            "time": "14:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": 1,
+            "date": "17-01-2026",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "25-01-2026",
+        "matches": [
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "21-01-2026",
+            "time": "19:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GUIA, U.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2026",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "24-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "25-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "01-02-2026",
+        "matches": [
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2026",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GUIA, U.D.",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": 2,
+            "date": "31-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": 5,
+            "as": 2,
+            "date": "01-02-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "08-02-2026",
+        "matches": [
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "07-02-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": 2,
+            "as": 3,
+            "date": "07-02-2026",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 5,
+            "as": null,
+            "date": "08-02-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-02-2026",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "15-02-2026",
+        "matches": [
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "12-02-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GUIA, U.D.",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2026",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": 1,
+            "date": "14-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": 2,
+            "date": "14-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "22-02-2026",
+        "matches": [
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 0,
+            "as": null,
+            "date": "20-02-2026",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": 5,
+            "as": null,
+            "date": "20-02-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": 1,
+            "as": null,
+            "date": "21-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-02-2026",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "GUIA, U.D.",
+            "hs": 5,
+            "as": 2,
+            "date": "22-02-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "01-03-2026",
+        "matches": [
+          {
+            "home": "GUIA, U.D.",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": 0,
+            "as": 9,
+            "date": "27-02-2026",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": 1,
+            "date": "28-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "28-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": 4,
+            "date": "28-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "08-03-2026",
+        "matches": [
+          {
+            "home": "GUIA, U.D.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2026",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "15-03-2026",
+        "matches": [
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2026",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "14-03-2026",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-03-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "22-03-2026",
+        "matches": [
+          {
+            "home": "GUIA, U.D.",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2026",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2026",
+            "time": "12:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "29-03-2026",
+        "matches": [
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "27-03-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "28-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "28-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "28-03-2026",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "29-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "12-04-2026",
+        "matches": [
+          {
+            "home": "GUIA, U.D.",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2026",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "12-04-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "19-04-2026",
+        "matches": [
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2026",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "18-04-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-04-2026",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "19-04-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "26-04-2026",
+        "matches": [
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "25-04-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "25-04-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "26-04-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "26-04-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "19",
+        "date": "03-05-2026",
+        "matches": [
+          {
+            "home": "GUIA, U.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "01-05-2026",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "01-05-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "02-05-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "02-05-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-05-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "20",
+        "date": "10-05-2026",
+        "matches": [
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2026",
+            "time": "18:15",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "09-05-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-05-2026",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "10-05-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "21",
+        "date": "17-05-2026",
+        "matches": [
+          {
+            "home": "GUIA, U.D.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2026",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "away": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-05-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "16-05-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "TEROR BALOMPIE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-05-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"D\"",
+            "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-05-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "22",
+        "date": "24-05-2026",
+        "matches": [
+          {
+            "home": "CLARAVISION-ROQUE AMAGRO, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "SAN JOSE, C.D. REAL SPORTING \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+            "away": "GUIA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "CORAZON DE MARIA, C.D. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "TEROR BALOMPIE, U.D.",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2026",
+            "time": "18:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "54422954",
+    "competition_name": "Benjamin Fase Liga B GC",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Fase Liga B",
+    "group_id": "54828342",
+    "group_name": "GRUPO 2",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "TORRES, U.D. LAS",
+        "pts": 33,
+        "j": 11,
+        "g": 11,
+        "e": 0,
+        "p": 0,
+        "gf": 107,
+        "gc": 16,
+        "df": 91,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 2,
+        "team": "ARUCAS C.F. \"D\"",
+        "pts": 28,
+        "j": 11,
+        "g": 9,
+        "e": 1,
+        "p": 1,
+        "gf": 107,
+        "gc": 33,
+        "df": 74,
+        "form": "EGGGG"
+      },
+      {
+        "pos": 3,
+        "team": "MUELLE GRANDE, U.D.",
+        "pts": 26,
+        "j": 11,
+        "g": 8,
+        "e": 2,
+        "p": 1,
+        "gf": 48,
+        "gc": 29,
+        "df": 19,
+        "form": "EGGPG"
+      },
+      {
+        "pos": 4,
+        "team": "PUERTOS DE L.P., C.E.F.",
+        "pts": 22,
+        "j": 11,
+        "g": 7,
+        "e": 1,
+        "p": 3,
+        "gf": 53,
+        "gc": 37,
+        "df": 16,
+        "form": "GGGEG"
+      },
+      {
+        "pos": 5,
+        "team": "INTERCANARIAS/PILAR C.F. \"A\"",
+        "pts": 17,
+        "j": 11,
+        "g": 5,
+        "e": 2,
+        "p": 4,
+        "gf": 42,
+        "gc": 54,
+        "df": -12,
+        "form": "GGEEP"
+      },
+      {
+        "pos": 6,
+        "team": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+        "pts": 16,
+        "j": 11,
+        "g": 4,
+        "e": 4,
+        "p": 3,
+        "gf": 36,
+        "gc": 43,
+        "df": -7,
+        "form": "GPEGP"
+      },
+      {
+        "pos": 7,
+        "team": "ACODETTI C.F. \"B\"",
+        "pts": 14,
+        "j": 11,
+        "g": 4,
+        "e": 2,
+        "p": 5,
+        "gf": 40,
+        "gc": 51,
+        "df": -11,
+        "form": "PGPGG"
+      },
+      {
+        "pos": 8,
+        "team": "SAN LAZARO, U.D. \"A\"",
+        "pts": 13,
+        "j": 11,
+        "g": 4,
+        "e": 1,
+        "p": 6,
+        "gf": 42,
+        "gc": 61,
+        "df": -19,
+        "form": "PPPPE"
+      },
+      {
+        "pos": 9,
+        "team": "FUNDACION GUINIGUADA, C.D. DE LA",
+        "pts": 12,
+        "j": 11,
+        "g": 3,
+        "e": 3,
+        "p": 5,
+        "gf": 46,
+        "gc": 55,
+        "df": -9,
+        "form": "GPGGE"
+      },
+      {
+        "pos": 10,
+        "team": "DANIEL CARNEVALI, C.D. \"B\"",
+        "pts": 6,
+        "j": 11,
+        "g": 2,
+        "e": 0,
+        "p": 9,
+        "gf": 32,
+        "gc": 60,
+        "df": -28,
+        "form": "PPPPP"
+      },
+      {
+        "pos": 11,
+        "team": "SIETE PALMAS, A.D.",
+        "pts": 3,
+        "j": 11,
+        "g": 1,
+        "e": 0,
+        "p": 10,
+        "gf": 21,
+        "gc": 67,
+        "df": -46,
+        "form": "PPPPP"
+      },
+      {
+        "pos": 12,
+        "team": "MESAS, U.D. LAS \"B\"",
+        "pts": 0,
+        "j": 11,
+        "g": 0,
+        "e": 0,
+        "p": 11,
+        "gf": 17,
+        "gc": 85,
+        "df": -68,
+        "form": "PPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "30-11-2025",
+        "matches": [
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "ARUCAS C.F. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "29-11-2025",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "away": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "hs": 6,
+            "as": 5,
+            "date": "29-11-2025",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN LAZARO, U.D. \"A\"",
+            "away": "ACODETTI C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "29-11-2025",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "DANIEL CARNEVALI, C.D. \"B\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": 7,
+            "date": "29-11-2025",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SIETE PALMAS, A.D.",
+            "away": "MESAS, U.D. LAS \"B\"",
+            "hs": 6,
+            "as": null,
+            "date": "29-11-2025",
+            "time": "12:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": null,
+            "as": 1,
+            "date": "30-11-2025",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "14-12-2025",
+        "matches": [
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-12-2025",
+            "time": "17:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MESAS, U.D. LAS \"B\"",
+            "away": "DANIEL CARNEVALI, C.D. \"B\"",
+            "hs": 1,
+            "as": 5,
+            "date": "17-12-2025",
+            "time": "17:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "17-12-2025",
+            "time": "17:45",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "17-12-2025",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"D\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "23-12-2025",
+            "time": "18:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MUELLE GRANDE, U.D.",
+            "away": "SIETE PALMAS, A.D.",
+            "hs": 7,
+            "as": null,
+            "date": "23-12-2025",
+            "time": "19:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "21-12-2025",
+        "matches": [
+          {
+            "home": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": 2,
+            "date": "20-12-2025",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN LAZARO, U.D. \"A\"",
+            "away": "MESAS, U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "20-12-2025",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "away": "SIETE PALMAS, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-12-2025",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "ACODETTI C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "20-12-2025",
+            "time": "12:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"D\"",
+            "away": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "hs": null,
+            "as": null,
+            "date": "21-12-2025",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "DANIEL CARNEVALI, C.D. \"B\"",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": 1,
+            "as": 5,
+            "date": "21-12-2025",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "11-01-2026",
+        "matches": [
+          {
+            "home": "MESAS, U.D. LAS \"B\"",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-01-2026",
+            "time": "17:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "10-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "10-01-2026",
+            "time": "12:10",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SIETE PALMAS, A.D.",
+            "away": "DANIEL CARNEVALI, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "10-01-2026",
+            "time": "12:35",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MUELLE GRANDE, U.D.",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-01-2026",
+            "time": "13:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "ARUCAS C.F. \"D\"",
+            "hs": 4,
+            "as": 1,
+            "date": "11-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "18-01-2026",
+        "matches": [
+          {
+            "home": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "away": "ACODETTI C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "MESAS, U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN LAZARO, U.D. \"A\"",
+            "away": "SIETE PALMAS, A.D.",
+            "hs": 1,
+            "as": null,
+            "date": "17-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"D\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 4,
+            "as": 1,
+            "date": "18-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "away": "DANIEL CARNEVALI, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "18-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "25-01-2026",
+        "matches": [
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "hs": 0,
+            "as": null,
+            "date": "24-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MESAS, U.D. LAS \"B\"",
+            "away": "ARUCAS C.F. \"D\"",
+            "hs": 1,
+            "as": 1,
+            "date": "24-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SIETE PALMAS, A.D.",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "24-01-2026",
+            "time": "12:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MUELLE GRANDE, U.D.",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "24-01-2026",
+            "time": "13:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "hs": 3,
+            "as": 3,
+            "date": "25-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "DANIEL CARNEVALI, C.D. \"B\"",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "25-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "01-02-2026",
+        "matches": [
+          {
+            "home": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "away": "MESAS, U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "away": "DANIEL CARNEVALI, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "SIETE PALMAS, A.D.",
+            "hs": null,
+            "as": 0,
+            "date": "31-01-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"D\"",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2026",
+            "time": "10:40",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "08-02-2026",
+        "matches": [
+          {
+            "home": "MESAS, U.D. LAS \"B\"",
+            "away": "ACODETTI C.F. \"B\"",
+            "hs": null,
+            "as": 7,
+            "date": "07-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MUELLE GRANDE, U.D.",
+            "away": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "hs": null,
+            "as": null,
+            "date": "07-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "hs": 1,
+            "as": null,
+            "date": "07-02-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "DANIEL CARNEVALI, C.D. \"B\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 2,
+            "as": null,
+            "date": "07-02-2026",
+            "time": "10:35",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SIETE PALMAS, A.D.",
+            "away": "ARUCAS C.F. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "07-02-2026",
+            "time": "16:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN LAZARO, U.D. \"A\"",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "08-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "15-02-2026",
+        "matches": [
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "MESAS, U.D. LAS \"B\"",
+            "hs": 5,
+            "as": 1,
+            "date": "14-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "away": "SIETE PALMAS, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "14-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "14-02-2026",
+            "time": "12:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"D\"",
+            "away": "DANIEL CARNEVALI, C.D. \"B\"",
+            "hs": 13,
+            "as": null,
+            "date": "15-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "15-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "22-02-2026",
+        "matches": [
+          {
+            "home": "MUELLE GRANDE, U.D.",
+            "away": "TORRES, U.D. LAS",
+            "hs": 2,
+            "as": null,
+            "date": "21-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN LAZARO, U.D. \"A\"",
+            "away": "ARUCAS C.F. \"D\"",
+            "hs": null,
+            "as": 18,
+            "date": "21-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "21-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "DANIEL CARNEVALI, C.D. \"B\"",
+            "away": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "hs": null,
+            "as": 8,
+            "date": "21-02-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SIETE PALMAS, A.D.",
+            "away": "ACODETTI C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "21-02-2026",
+            "time": "16:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "away": "MESAS, U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "22-02-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "01-03-2026",
+        "matches": [
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "DANIEL CARNEVALI, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "25-02-2026",
+            "time": "17:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MESAS, U.D. LAS \"B\"",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": null,
+            "as": 5,
+            "date": "28-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "SIETE PALMAS, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "28-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "28-02-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "hs": null,
+            "as": 4,
+            "date": "28-02-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"D\"",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": 13,
+            "as": null,
+            "date": "01-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "08-03-2026",
+        "matches": [
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "DANIEL CARNEVALI, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2026",
+            "time": "17:45",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MESAS, U.D. LAS \"B\"",
+            "away": "SIETE PALMAS, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MUELLE GRANDE, U.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2026",
+            "time": "13:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"D\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "08-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "15-03-2026",
+        "matches": [
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "hs": null,
+            "as": null,
+            "date": "14-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "away": "ACODETTI C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "14-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN LAZARO, U.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "14-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "DANIEL CARNEVALI, C.D. \"B\"",
+            "away": "MESAS, U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "14-03-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SIETE PALMAS, A.D.",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "14-03-2026",
+            "time": "12:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "away": "ARUCAS C.F. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "15-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "22-03-2026",
+        "matches": [
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MESAS, U.D. LAS \"B\"",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "away": "ARUCAS C.F. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2026",
+            "time": "13:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MUELLE GRANDE, U.D.",
+            "away": "DANIEL CARNEVALI, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2026",
+            "time": "13:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SIETE PALMAS, A.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2026",
+            "time": "16:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "29-03-2026",
+        "matches": [
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "28-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "away": "MESAS, U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "28-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SAN LAZARO, U.D. \"A\"",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "28-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "DANIEL CARNEVALI, C.D. \"B\"",
+            "away": "SIETE PALMAS, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "28-03-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "away": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "hs": null,
+            "as": null,
+            "date": "29-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"D\"",
+            "away": "ACODETTI C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "29-03-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "12-04-2026",
+        "matches": [
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "ARUCAS C.F. \"D\"",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MESAS, U.D. LAS \"B\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "MUELLE GRANDE, U.D.",
+            "away": "INTERCANARIAS/PILAR C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2026",
+            "time": "09:00",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "DANIEL CARNEVALI, C.D. \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "SIETE PALMAS, A.D.",
+            "away": "SAN LAZARO, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2026",
+            "time": "12:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"B\"",
+            "away": "FUNDACION GUINIGUADA, C.D. DE LA",
+            "hs": null,
+            "as": null,
+            "date": "12-04-2026",
+            "time": "10:30",
+            "venue": "- Hierba Artificial",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "19-04-2026",
+        "matches": []
+      }
+    ]
+  }
+]

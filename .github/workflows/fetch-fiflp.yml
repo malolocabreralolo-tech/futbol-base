@@ -30,11 +30,11 @@ jobs:
 
       - name: Scraping FIFLP
         run: python3 scripts/fetch_fiflp.py
-        timeout-minutes: 45
+        timeout-minutes: 50
+        continue-on-error: true   # guardar datos parciales aunque haya error
 
       - name: Verificar datos obtenidos
-        run: |
-          python3 scripts/check_fiflp.py
+        run: python3 scripts/check_fiflp.py
 
       - name: Importar datos en SQLite DB
         run: python3 scripts/import_fiflp.py

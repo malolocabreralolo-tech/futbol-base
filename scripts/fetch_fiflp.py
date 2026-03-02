@@ -220,23 +220,36 @@ def scrape_competition(page, comp, done):
 
         try:
             page.select_option('select[name="competicion"]', comp["id"])
-            page.wait_for_timeout(1200)
+            page.wait_for_timeout(1500)
             page.select_option('select[name="grupo"]', grp["value"])
-            page.wait_for_timeout(1200)
+            # Esperar a que el AJAX del grupo termine antes de evaluar
+            try:
+                page.wait_for_load_state("networkidle", timeout=8000)
+            except Exception:
+                page.wait_for_timeout(2000)
         except Exception as e:
             print(f" [select err: {e}]")
             results.append(gdata)
             continue
 
-        jornada_opts = page.evaluate("""
-            () => {
-                const sel = document.querySelector('select[name="jornada"]');
-                if (!sel) return [];
-                return Array.from(sel.options)
-                    .filter(o => o.value && o.value !== '0')
-                    .map(o => ({value: o.value, text: o.text.trim()}));
-            }
-        """)
+        jornada_opts = []
+        for attempt in range(3):
+            try:
+                jornada_opts = page.evaluate("""
+                    () => {
+                        const sel = document.querySelector('select[name="jornada"]');
+                        if (!sel) return [];
+                        return Array.from(sel.options)
+                            .filter(o => o.value && o.value !== '0')
+                            .map(o => ({value: o.value, text: o.text.trim()}));
+                    }
+                """)
+                break
+            except Exception:
+                if attempt < 2:
+                    page.wait_for_timeout(2000)
+                else:
+                    print(" [jornada eval err]", end="", flush=True)
         print(f" | {len(jornada_opts)}J", end="", flush=True)
 
         for jor in jornada_opts:

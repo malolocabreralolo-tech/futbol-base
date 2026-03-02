@@ -1,9 +1,9 @@
-name: Actualización semanal
+name: Actualización automática
 
 on:
   schedule:
-    - cron: '0 8 * * 1'   # Cada lunes a las 08:00 UTC
-  workflow_dispatch:        # También se puede lanzar manualmente desde GitHub
+    - cron: '0 */6 * * *'   # Cada 6 horas (00:00, 06:00, 12:00, 18:00 UTC)
+  workflow_dispatch:          # También se puede lanzar manualmente desde GitHub
 
 permissions:
   contents: write
@@ -32,6 +32,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios."
           else
-            git commit -m "Actualización automática $(date '+%d/%m/%Y')"
+            git commit -m "Actualización automática $(date '+%d/%m/%Y %H:%M UTC')"
             git push
           fi

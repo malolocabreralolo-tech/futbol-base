@@ -13,3 +13,7 @@ __pycache__/
 # Editor
 .vscode/
 .idea/
+
+# SQLite WAL files (DB itself is tracked)
+futbolbase.db-wal
+futbolbase.db-shm

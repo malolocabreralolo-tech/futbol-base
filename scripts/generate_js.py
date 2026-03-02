@@ -277,6 +277,261 @@ def generate_goleadores_js(conn):
     return "\n".join(parts)
 
 
+def generate_stats_js(conn):
+    """Generate data-stats.js with pre-calculated statistics per category."""
+    stats = {}
+
+    for cat_name, cat_key in [("BENJAMIN", "benjamin"), ("PREBENJAMIN", "prebenjamin")]:
+        # Get all group IDs for this category in the current season
+        groups = conn.execute(
+            """SELECT g.id, g.code FROM groups g
+               JOIN categories c ON g.category_id = c.id
+               JOIN seasons s ON g.season_id = s.id
+               WHERE c.name = ? AND s.is_current = 1
+               ORDER BY g.code""",
+            (cat_name,),
+        ).fetchall()
+        group_ids = [g[0] for g in groups]
+
+        if not group_ids:
+            stats[cat_key] = {"season": {}, "teams": {}}
+            continue
+
+        placeholders = ",".join("?" * len(group_ids))
+
+        # --- Season-level stats ---
+
+        # totalMatches (completed only)
+        total_matches = conn.execute(
+            f"SELECT COUNT(*) FROM matches WHERE group_id IN ({placeholders}) AND home_score IS NOT NULL",
+            group_ids,
+        ).fetchone()[0]
+
+        # totalGoals
+        total_goals_row = conn.execute(
+            f"SELECT COALESCE(SUM(home_score + away_score), 0) FROM matches WHERE group_id IN ({placeholders}) AND home_score IS NOT NULL",
+            group_ids,
+        ).fetchone()
+        total_goals = total_goals_row[0]
+
+        # avgGoalsPerMatch
+        avg_goals = round(total_goals / total_matches, 2) if total_matches > 0 else 0
+
+        # topScorer from scorers table
+        top_scorer_row = conn.execute(
+            f"""SELECT s.player_name, t.name, s.goals
+                FROM scorers s
+                JOIN teams t ON s.team_id = t.id
+                WHERE s.group_id IN ({placeholders})
+                ORDER BY s.goals DESC
+                LIMIT 1""",
+            group_ids,
+        ).fetchone()
+        top_scorer = None
+        if top_scorer_row:
+            top_scorer = {"name": top_scorer_row[0], "team": top_scorer_row[1], "goals": top_scorer_row[2]}
+
+        # mostGoals: team with most GF from standings
+        most_goals_row = conn.execute(
+            f"""SELECT t.name, s.gf
+                FROM standings s
+                JOIN teams t ON s.team_id = t.id
+                WHERE s.group_id IN ({placeholders})
+                ORDER BY s.gf DESC
+                LIMIT 1""",
+            group_ids,
+        ).fetchone()
+        most_goals = None
+        if most_goals_row:
+            most_goals = {"team": most_goals_row[0], "gf": most_goals_row[1]}
+
+        # leastConceded: team with least GC (played > 0)
+        least_conceded_row = conn.execute(
+            f"""SELECT t.name, s.gc
+                FROM standings s
+                JOIN teams t ON s.team_id = t.id
+                WHERE s.group_id IN ({placeholders}) AND s.played > 0
+                ORDER BY s.gc ASC
+                LIMIT 1""",
+            group_ids,
+        ).fetchone()
+        least_conceded = None
+        if least_conceded_row:
+            least_conceded = {"team": least_conceded_row[0], "gc": least_conceded_row[1]}
+
+        # biggestWin: match with biggest score difference
+        biggest_win_row = conn.execute(
+            f"""SELECT h.name, a.name, m.home_score || '-' || m.away_score, m.date,
+                       ABS(m.home_score - m.away_score) as diff
+                FROM matches m
+                JOIN teams h ON m.home_team_id = h.id
+                JOIN teams a ON m.away_team_id = a.id
+                WHERE m.group_id IN ({placeholders}) AND m.home_score IS NOT NULL
+                ORDER BY diff DESC, (m.home_score + m.away_score) DESC
+                LIMIT 1""",
+            group_ids,
+        ).fetchone()
+        biggest_win = None
+        if biggest_win_row:
+            biggest_win = {"home": biggest_win_row[0], "away": biggest_win_row[1],
+                           "score": biggest_win_row[2], "date": biggest_win_row[3]}
+
+        # mostGoalsMatch: match with most total goals
+        most_goals_match_row = conn.execute(
+            f"""SELECT h.name, a.name, m.home_score || '-' || m.away_score,
+                       (m.home_score + m.away_score) as total, m.date
+                FROM matches m
+                JOIN teams h ON m.home_team_id = h.id
+                JOIN teams a ON m.away_team_id = a.id
+                WHERE m.group_id IN ({placeholders}) AND m.home_score IS NOT NULL
+                ORDER BY total DESC, ABS(m.home_score - m.away_score) DESC
+                LIMIT 1""",
+            group_ids,
+        ).fetchone()
+        most_goals_match = None
+        if most_goals_match_row:
+            most_goals_match = {"home": most_goals_match_row[0], "away": most_goals_match_row[1],
+                                "score": most_goals_match_row[2], "totalGoals": most_goals_match_row[3],
+                                "date": most_goals_match_row[4]}
+
+        season_stats = {
+            "totalMatches": total_matches,
+            "totalGoals": total_goals,
+            "avgGoalsPerMatch": avg_goals,
+            "topScorer": top_scorer,
+            "mostGoals": most_goals,
+            "leastConceded": least_conceded,
+            "biggestWin": biggest_win,
+            "mostGoalsMatch": most_goals_match,
+        }
+
+        # --- Team-level stats ---
+        # Get all teams that appear in standings for this category
+        team_rows = conn.execute(
+            f"""SELECT DISTINCT t.id, t.name
+                FROM standings s
+                JOIN teams t ON s.team_id = t.id
+                WHERE s.group_id IN ({placeholders})
+                ORDER BY t.name""",
+            group_ids,
+        ).fetchall()
+
+        teams_stats = {}
+        for team_id, team_name in team_rows:
+            # Get all completed matches for this team in these groups, ordered by date/jornada
+            matches = conn.execute(
+                f"""SELECT m.jornada, m.date, h.name, a.name, m.home_score, m.away_score,
+                           CASE WHEN m.home_team_id = ? THEN 'H' ELSE 'A' END as side
+                    FROM matches m
+                    JOIN teams h ON m.home_team_id = h.id
+                    JOIN teams a ON m.away_team_id = a.id
+                    WHERE m.group_id IN ({placeholders})
+                      AND (m.home_team_id = ? OR m.away_team_id = ?)
+                      AND m.home_score IS NOT NULL
+                    ORDER BY m.date, m.jornada""",
+                [team_id] + group_ids + [team_id, team_id],
+            ).fetchall()
+
+            if not matches:
+                continue
+
+            # Compute home/away records, streaks, points history, biggest win/worst loss
+            home_w, home_d, home_l = 0, 0, 0
+            away_w, away_d, away_l = 0, 0, 0
+            total_gf, total_gc = 0, 0
+            results = []  # list of 'W', 'D', 'L'
+            points_history = []
+            cumulative_pts = 0
+            best_diff = -999
+            best_match = None
+            worst_diff = 999
+            worst_match = None
+
+            for jornada, dt, home, away, hs, as_, side in matches:
+                if side == "H":
+                    gf, gc = hs, as_
+                    opponent = away
+                else:
+                    gf, gc = as_, hs
+                    opponent = home
+
+                total_gf += gf
+                total_gc += gc
+                diff = gf - gc
+
+                if diff > 0:
+                    result = "W"
+                    pts = 3
+                elif diff == 0:
+                    result = "D"
+                    pts = 1
+                else:
+                    result = "L"
+                    pts = 0
+
+                results.append(result)
+                cumulative_pts += pts
+                points_history.append(cumulative_pts)
+
+                if side == "H":
+                    if result == "W":
+                        home_w += 1
+                    elif result == "D":
+                        home_d += 1
+                    else:
+                        home_l += 1
+                else:
+                    if result == "W":
+                        away_w += 1
+                    elif result == "D":
+                        away_d += 1
+                    else:
+                        away_l += 1
+
+                score_str = f"{hs}-{as_}"
+                if diff > best_diff or (diff == best_diff and best_match is None):
+                    best_diff = diff
+                    best_match = {"vs": opponent, "score": score_str, "date": dt}
+                if diff < worst_diff or (diff == worst_diff and worst_match is None):
+                    worst_diff = diff
+                    worst_match = {"vs": opponent, "score": score_str, "date": dt}
+
+            # Current streak (from most recent)
+            streak_type = results[-1] if results else None
+            streak_count = 0
+            for r in reversed(results):
+                if r == streak_type:
+                    streak_count += 1
+                else:
+                    break
+
+            n_matches = len(matches)
+            home_total = home_w + home_d + home_l
+            away_total = away_w + away_d + away_l
+
+            team_stat = {
+                "streak": {"type": streak_type, "count": streak_count} if streak_type else None,
+                "homeRecord": {
+                    "w": home_w, "d": home_d, "l": home_l,
+                    "pct": round(home_w / home_total * 100) if home_total > 0 else 0,
+                },
+                "awayRecord": {
+                    "w": away_w, "d": away_d, "l": away_l,
+                    "pct": round(away_w / away_total * 100) if away_total > 0 else 0,
+                },
+                "avgGF": round(total_gf / n_matches, 1),
+                "avgGC": round(total_gc / n_matches, 1),
+                "biggestWin": best_match,
+                "worstLoss": worst_match,
+                "pointsHistory": points_history,
+            }
+            teams_stats[team_name] = team_stat
+
+        stats[cat_key] = {"season": season_stats, "teams": teams_stats}
+
+    return "const STATS=" + json.dumps(stats, ensure_ascii=False, separators=(",", ":")) + ";\n"
+
+
 def bump_cache_version():
     """Update ?v=YYYYMMDD in index.html to today's date."""
     index_path = os.path.join(PROJECT_ROOT, "index.html")
@@ -330,7 +585,10 @@ def main():
     print("6. data-shields.js")
     write_file("data-shields.js", generate_shields_js(conn))
 
-    print("\n7. Bumping cache version in index.html")
+    print("7. data-stats.js")
+    write_file("data-stats.js", generate_stats_js(conn))
+
+    print("\n8. Bumping cache version in index.html")
     bump_cache_version()
 
     conn.close()

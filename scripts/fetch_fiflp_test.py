@@ -133,29 +133,12 @@ def main():
             sys.exit(1)
 
         # 2. Seleccionar temporada 2024-2025
-        # The select likely triggers an onchange that reloads competitions.
-        # We need to trigger the change event and wait for the page to update.
+        # The onchange calls: BuscarCompeticiones(value)
         page.select_option('select[name="temporada"]', SEASON_VALUE)
-        print("Temporada seleccionada: 2024-2025")
-
-        # Trigger the onchange event explicitly and wait
-        page.evaluate("""
-            () => {
-                const sel = document.querySelector('select[name="temporada"]');
-                if (sel) {
-                    sel.dispatchEvent(new Event('change', {bubbles: true}));
-                }
-            }
-        """)
-        # Wait for the page to reload or AJAX to complete
-        try:
-            page.wait_for_load_state("networkidle", timeout=10000)
-        except Exception:
-            page.wait_for_timeout(5000)
-        page.wait_for_timeout(3000)  # Extra safety wait
-
-        # Check if the page navigated (some sites do full reload on season change)
-        print(f"URL actual: {page.url}")
+        page.evaluate(f"BuscarCompeticiones('{SEASON_VALUE}')")
+        print("Temporada seleccionada: 2024-2025 (BuscarCompeticiones called)")
+        wait_after_select(page)
+        page.wait_for_timeout(3000)  # Extra wait for AJAX
 
         # 3. Listar competiciones disponibles
         all_comps = page.evaluate("""
@@ -171,71 +154,8 @@ def main():
         for c in all_comps:
             print(f"  [{c['id']}] {c['name']}")
 
-        # If no competitions, try submitting the form or clicking a button
         if not all_comps:
-            print("\nNo competitions found. Trying form submit...")
-            # Maybe the page does a full form submit on season change
-            # Try evaluating the onchange handler directly
-            page.evaluate("""
-                () => {
-                    const sel = document.querySelector('select[name="temporada"]');
-                    if (sel && sel.onchange) {
-                        sel.onchange();
-                    }
-                }
-            """)
-            page.wait_for_timeout(5000)
-            try:
-                page.wait_for_load_state("networkidle", timeout=10000)
-            except Exception:
-                pass
-
-            # Try again
-            all_comps = page.evaluate("""
-                () => {
-                    const sel = document.querySelector('select[name="competicion"]');
-                    if (!sel) return [];
-                    return Array.from(sel.options)
-                        .filter(o => o.value && o.value !== '0')
-                        .map(o => ({id: o.value, name: o.text.trim()}));
-                }
-            """)
-            print(f"After form submit: {len(all_comps)} competitions")
-
-        if not all_comps:
-            print("\nStill no competitions. Trying page reload with season param...")
-            # Some FIFLP pages accept temporada as URL param
-            goto(page, f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&temporada={SEASON_VALUE}")
-            all_comps = page.evaluate("""
-                () => {
-                    const sel = document.querySelector('select[name="competicion"]');
-                    if (!sel) return [];
-                    return Array.from(sel.options)
-                        .filter(o => o.value && o.value !== '0')
-                        .map(o => ({id: o.value, name: o.text.trim()}));
-                }
-            """)
-            # Also check what the temporada select shows now
-            current_temp = page.evaluate("""
-                () => {
-                    const sel = document.querySelector('select[name="temporada"]');
-                    return sel ? sel.value : 'not found';
-                }
-            """)
-            print(f"After URL reload: {len(all_comps)} competitions, temporada={current_temp}")
-            for c in all_comps:
-                print(f"  [{c['id']}] {c['name']}")
-
-        if not all_comps:
-            # Last resort: dump all form HTML for debugging
-            form_html = page.evaluate("""
-                () => {
-                    const form = document.querySelector('form');
-                    return form ? form.innerHTML.substring(0, 2000) : 'no form found';
-                }
-            """)
-            print(f"\nForm HTML dump:\n{form_html}")
-            print("\nERROR: Could not load competitions for 2024-2025")
+            print("\nERROR: No competitions found for 2024-2025")
             browser.close()
             sys.exit(1)
 
@@ -327,7 +247,9 @@ def main():
         # Re-seleccionar temporada, competicion y grupo
         try:
             page.select_option('select[name="temporada"]', SEASON_VALUE)
+            page.evaluate(f"BuscarCompeticiones('{SEASON_VALUE}')")
             wait_after_select(page)
+            page.wait_for_timeout(2000)
             page.select_option('select[name="competicion"]', target["id"])
             wait_after_select(page)
             page.select_option('select[name="grupo"]', target_grp["value"])

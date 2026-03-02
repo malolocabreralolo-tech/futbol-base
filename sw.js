@@ -1,19 +1,21 @@
-const CACHE_NAME = 'futbolbase-v20260302c';
+const CACHE_NAME = 'futbolbase-v20260302d';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
+  './icons.svg',
   './data-benjamin.js',
   './data-prebenjamin.js',
   './data-history.js',
   './data-goleadores.js',
   './data-matchdetail.js',
-  './data-shields.js'
+  './data-shields.js',
+  './data-stats.js'
 ];
 
 // Data files that should use network-first strategy
-const DATA_FILES = ['data-benjamin', 'data-prebenjamin', 'data-history', 'data-goleadores', 'data-matchdetail', 'data-shields'];
+const DATA_FILES = ['data-benjamin', 'data-prebenjamin', 'data-history', 'data-goleadores', 'data-matchdetail', 'data-shields', 'data-stats'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));

@@ -48,6 +48,14 @@ def fetch_json(url):
         return json.loads(r.read().decode("utf-8"))
 
 
+def fetch_classification(stage_id):
+    """Fetch classification — API returns object with leagueClassification key."""
+    data = fetch_json(f"{BASE_URL}/tournaments/stageclassification/{stage_id}")
+    if isinstance(data, list):
+        return data
+    return data.get("leagueClassification", [])
+
+
 def build_team_map(tournament_data):
     """Returns {team_id: team_name}"""
     return {t["id"]: t["name"].title() for t in tournament_data.get("teams", [])}
@@ -136,8 +144,9 @@ def process_tournament(config):
     # Clasificación por fase
     all_classification = []
     for sid in stages_map:
-        clasi = fetch_json(f"{BASE_URL}/tournaments/stageclassification/{sid}")
+        clasi = fetch_classification(sid)
         all_classification.extend(clasi)
+    print(f"  Clasificación: {len(all_classification)} entradas")
 
     # Organizar por grupo
     clasi_by_group = {}

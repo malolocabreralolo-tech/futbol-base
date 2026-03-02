@@ -1,13 +1,1153 @@
 [
   {
-    "competition_id": "1727",
-    "competition_name": "copa de campeones categoria benjamin fase a",
+    "competition_id": "1706",
+    "competition_name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A",
     "cat": "benjamin",
     "island": "grancanaria",
-    "phase": "copa de campeones categoria benjamin fase a",
-    "group_id": "196992",
-    "group_name": "GRUPO 1",
-    "standings": [],
-    "jornadas": []
+    "phase": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A",
+    "group_id": "194101",
+    "group_name": "GRUPO 2",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "TELDE, U.D. \"A\"",
+        "pts": 45,
+        "j": 18,
+        "g": 14,
+        "e": 3,
+        "p": 1,
+        "gf": 84,
+        "gc": 28,
+        "df": 56,
+        "form": "PGGGG"
+      },
+      {
+        "pos": 2,
+        "team": "UNION VIERA, C.F. \"A\"",
+        "pts": 41,
+        "j": 18,
+        "g": 13,
+        "e": 2,
+        "p": 3,
+        "gf": 88,
+        "gc": 33,
+        "df": 55,
+        "form": "GGGGE"
+      },
+      {
+        "pos": 3,
+        "team": "TORRES, U.D. LAS",
+        "pts": 36,
+        "j": 18,
+        "g": 12,
+        "e": 0,
+        "p": 6,
+        "gf": 83,
+        "gc": 39,
+        "df": 44,
+        "form": "GGPGG"
+      },
+      {
+        "pos": 4,
+        "team": "HEIDELBERG, C.F. \"A\"",
+        "pts": 34,
+        "j": 18,
+        "g": 10,
+        "e": 4,
+        "p": 4,
+        "gf": 76,
+        "gc": 39,
+        "df": 37,
+        "form": "EGGGP"
+      },
+      {
+        "pos": 5,
+        "team": "CORAZON DE MARIA, C.D. \"A\"",
+        "pts": 33,
+        "j": 18,
+        "g": 11,
+        "e": 0,
+        "p": 7,
+        "gf": 80,
+        "gc": 48,
+        "df": 32,
+        "form": "PGPPG"
+      },
+      {
+        "pos": 6,
+        "team": "DORAMAS, CD \"B\"",
+        "pts": 32,
+        "j": 18,
+        "g": 10,
+        "e": 2,
+        "p": 6,
+        "gf": 62,
+        "gc": 45,
+        "df": 17,
+        "form": "GPGPE"
+      },
+      {
+        "pos": 7,
+        "team": "PUERTOS DE L.P., C.E.F.",
+        "pts": 17,
+        "j": 18,
+        "g": 5,
+        "e": 2,
+        "p": 11,
+        "gf": 80,
+        "gc": 95,
+        "df": -15,
+        "form": "EPGPP"
+      },
+      {
+        "pos": 8,
+        "team": "SIMUSETTI C. F. \"A\"",
+        "pts": 13,
+        "j": 18,
+        "g": 4,
+        "e": 1,
+        "p": 13,
+        "gf": 25,
+        "gc": 69,
+        "df": -44,
+        "form": "PPPGP"
+      },
+      {
+        "pos": 9,
+        "team": "LOMO BLANCO S.J.A., C.D. \"A\"",
+        "pts": 8,
+        "j": 18,
+        "g": 2,
+        "e": 2,
+        "p": 14,
+        "gf": 22,
+        "gc": 92,
+        "df": -70,
+        "form": "EPPPG"
+      },
+      {
+        "pos": 10,
+        "team": "MASPA TRAINING, C.D. \"B\"",
+        "pts": 2,
+        "j": 18,
+        "g": 0,
+        "e": 2,
+        "p": 16,
+        "gf": 18,
+        "gc": 130,
+        "df": -112,
+        "form": "EPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "18-01-2025",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "18-01-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "18-01-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "18-01-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 7,
+            "as": null,
+            "date": "18-01-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": null,
+            "as": 10,
+            "date": "18-01-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "25-01-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "25-01-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "25-01-2025",
+            "time": "11:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": 0,
+            "date": "25-01-2025",
+            "time": "13:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 5,
+            "as": null,
+            "date": "25-01-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "26-01-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "01-02-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 4,
+            "as": 2,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "08-02-2025",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "08-02-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-02-2025",
+            "time": "12:45",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "08-02-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-02-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 1,
+            "as": null,
+            "date": "09-02-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "15-02-2025",
+        "matches": [
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 5,
+            "as": null,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-02-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": null,
+            "as": 2,
+            "date": "15-02-2025",
+            "time": "13:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "23-02-2025",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "22-02-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": 3,
+            "date": "22-02-2025",
+            "time": "12:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-02-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-02-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-02-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "01-03-2025",
+        "matches": [
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 0,
+            "as": null,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "01-03-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "08-03-2025",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "08-03-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "08-03-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 8,
+            "as": null,
+            "date": "08-03-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "08-03-2025",
+            "time": "13:30",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 0,
+            "as": null,
+            "date": "09-03-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "15-03-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "15-03-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 0,
+            "as": null,
+            "date": "15-03-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "15-03-2025",
+            "time": "13:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 7,
+            "as": null,
+            "date": "15-03-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 2",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "16-03-2025",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "22-03-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 3,
+            "as": null,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-03-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "29-03-2025",
+        "matches": [
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "29-03-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": null,
+            "as": 0,
+            "date": "29-03-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "29-03-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "29-03-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 0,
+            "as": 13,
+            "date": "29-03-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "05-04-2025",
+        "matches": [
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "05-04-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "05-04-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": null,
+            "as": 6,
+            "date": "05-04-2025",
+            "time": "10:21",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": 3,
+            "date": "05-04-2025",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "TORRES, U.D. LAS",
+            "hs": 1,
+            "as": null,
+            "date": "05-04-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "12-04-2025",
+        "matches": [
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": null,
+            "as": 2,
+            "date": "12-04-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "12-04-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": 8,
+            "date": "12-04-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "26-04-2025",
+        "matches": [
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "26-04-2025",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": 4,
+            "date": "26-04-2025",
+            "time": "12:00",
+            "venue": "COLEGIO CLARET F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "26-04-2025",
+            "time": "12:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "26-04-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": 2,
+            "date": "27-04-2025",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "03-05-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "03-05-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 2,
+            "as": null,
+            "date": "03-05-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": null,
+            "date": "03-05-2025",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": null,
+            "as": 0,
+            "date": "03-05-2025",
+            "time": "12:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": null,
+            "as": 6,
+            "date": "03-05-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "10-05-2025",
+        "matches": [
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 5,
+            "as": null,
+            "date": "09-05-2025",
+            "time": "19:43",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "10-05-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-05-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "10-05-2025",
+            "time": "12:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-05-2025",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "17-05-2025",
+        "matches": [
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 5,
+            "as": null,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "17-05-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 2,
+            "as": 1,
+            "date": "17-05-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "24-05-2025",
+        "matches": [
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": null,
+            "as": 1,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 3,
+            "as": 2,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 6,
+            "as": null,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
   }
 ]

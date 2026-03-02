@@ -115,7 +115,7 @@ def import_group(conn, g, season_id):
         phase=phase,
         island=g["island"],
         url="",
-        current_jornada=f"Jornada {cur_jor}" if cur_jor else None,
+        current_jornada=cur_jor,
     )
 
     # Limpiar datos anteriores de este grupo

@@ -190,32 +190,22 @@ body {
 .season-selector select {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
-  font-weight: 500;
-  padding: 6px 28px 6px 10px;
+  font-weight: 600;
+  padding: 6px 26px 6px 10px;
   background: var(--bg);
-  color: var(--text2);
+  color: var(--accent);
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238892a4' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2300e676' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
+  background-position: right 8px center;
+  transition: var(--transition);
 }
 .season-selector select:hover {
   border-color: var(--accent);
-  color: var(--text);
-}
-.season-selector .historical-badge {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--amber);
-  background: rgba(255,193,7,0.12);
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  margin-left: 8px;
-  vertical-align: middle;
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 /* Category Toggle */
@@ -795,7 +785,7 @@ body {
   .brand .subtitle { font-size: 11px; }
   .header-top { margin-bottom: 8px; gap: 6px; }
   .season-cat-row { margin-bottom: 8px; }
-  .season-selector select { font-size: 12px; padding: 5px 24px 5px 8px; }
+  .season-selector select { font-size: 12px; padding: 5px 22px 5px 8px; }
   .cat-btn { font-size: 14px; padding: 6px 16px; }
   .section-tab { padding: 8px 14px; font-size: 13px; }
   .main { padding: 8px 12px 32px; }

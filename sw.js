@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260302e';
+const CACHE_NAME = 'futbolbase-v20260302f';
 const ASSETS = [
   './',
   './index.html',

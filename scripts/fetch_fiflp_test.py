@@ -132,54 +132,19 @@ def main():
             browser.close()
             sys.exit(1)
 
-        # 2. Debug: inspect BuscarCompeticiones function
-        func_source = page.evaluate("""
-            () => {
-                if (typeof BuscarCompeticiones === 'function') {
-                    return BuscarCompeticiones.toString().substring(0, 500);
-                }
-                return 'BuscarCompeticiones not found';
-            }
-        """)
-        print(f"BuscarCompeticiones source:\n{func_source}\n")
+        # 2. Navigate directly with CodTemporada parameter
+        # BuscarPartidos uses: NFG_CmpJornada?cod_primaria=1000120&CodTemporada=20
+        # This should load the page with 2024-2025 season already selected
+        season_url = f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={SEASON_VALUE}"
+        print(f"Loading season URL: {season_url}")
+        if not goto(page, season_url):
+            print("ERROR: Could not load season URL")
+            browser.close()
+            sys.exit(1)
 
-        # Also check BuscarPartidos for reference
-        func2 = page.evaluate("""
-            () => {
-                if (typeof BuscarPartidos === 'function') {
-                    return BuscarPartidos.toString().substring(0, 500);
-                }
-                return 'not found';
-            }
-        """)
-        print(f"BuscarPartidos source:\n{func2}\n")
-
-        # 2. Seleccionar temporada 2024-2025
-        # The onchange calls: BuscarCompeticiones(value)
-        # This likely submits the form or does AJAX that changes the page
-        page.select_option('select[name="temporada"]', SEASON_VALUE)
-
-        # Use page.evaluate to call the function and wait for navigation
-        try:
-            page.evaluate(f"BuscarCompeticiones('{SEASON_VALUE}')")
-        except Exception as e:
-            print(f"BuscarCompeticiones threw: {e}")
-
-        # If BuscarCompeticiones does a form submit, wait for navigation
-        try:
-            page.wait_for_load_state("load", timeout=15000)
-        except Exception:
-            pass
-        try:
-            page.wait_for_load_state("networkidle", timeout=10000)
-        except Exception:
-            pass
-        page.wait_for_timeout(3000)
-
-        # Check current URL and temporada value
-        print(f"URL after season change: {page.url}")
+        # Check temporada value
         temp_val = page.evaluate("() => document.querySelector('select[name=\"temporada\"]')?.value || 'none'")
-        print(f"Current temporada value: {temp_val}")
+        print(f"Temporada value: {temp_val}")
 
         # 3. Listar competiciones disponibles
         all_comps = page.evaluate("""

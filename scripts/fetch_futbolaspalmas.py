@@ -248,7 +248,10 @@ def parse_shields(html):
     for filename, team in pattern.findall(html):
         team = team.strip()
         if team and filename:
-            shields[team] = filename
+            # Strip size prefixes like "100x100" or "200x200" from filenames
+            # so they match the local escudos/ files (e.g. "100x100arucas.png" → "arucas.png")
+            clean = re.sub(r'^\d+x\d+', '', filename)
+            shields[team] = clean
     return shields
 
 

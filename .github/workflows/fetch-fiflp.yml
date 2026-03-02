@@ -28,10 +28,20 @@ jobs:
       - name: Instalar navegador Chromium
         run: playwright install chromium --with-deps
 
-      - name: Scraping FIFLP
+      - name: Test scraping (2 grupos)
+        run: python3 scripts/fetch_fiflp_test.py
+        timeout-minutes: 10
+
+      - name: Test importación y generación JS
+        run: |
+          python3 scripts/import_fiflp.py
+          python3 scripts/generate_js.py
+        timeout-minutes: 5
+
+      - name: Scraping completo
         run: python3 scripts/fetch_fiflp.py
         timeout-minutes: 50
-        continue-on-error: true   # guardar datos parciales aunque haya error
+        continue-on-error: true
 
       - name: Verificar datos obtenidos
         run: python3 scripts/check_fiflp.py
@@ -41,7 +51,6 @@ jobs:
 
       - name: Regenerar archivos JS
         run: python3 scripts/generate_js.py
-        continue-on-error: true
 
       - name: Commit y push si hay cambios
         run: |

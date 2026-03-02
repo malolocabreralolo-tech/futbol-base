@@ -9,7 +9,7 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -25,18 +25,18 @@ jobs:
           pip install playwright
           playwright install chromium --with-deps
 
-      - name: Test scraping Benjamin Fase A G2 2024/2025
-        run: python3 scripts/fetch_fiflp_test.py
-        timeout-minutes: 10
+      - name: Explorar FIFLP (temporadas anteriores)
+        run: python3 scripts/fiflp_explore.py
+        timeout-minutes: 8
 
       - name: Guardar resultado
         run: |
           git config user.name  "GitHub Actions"
           git config user.email "actions@github.com"
-          git add scripts/fiflp_raw.json
+          git add scripts/fiflp_explore.json
           if git diff --cached --quiet; then
             echo "Sin cambios."
           else
-            git commit -m "test: FIFLP Benjamin Fase A G2 2024/2025"
+            git commit -m "explore: FIFLP season navigation"
             git push
           fi

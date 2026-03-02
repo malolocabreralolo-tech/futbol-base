@@ -593,7 +593,7 @@ def bump_cache_version():
     with open(index_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    new_content = re.sub(r"\?v=\d{8}", f"?v={today}", content)
+    new_content = re.sub(r"\?v=\d{8}[a-z]?", f"?v={today}", content)
     if new_content != content:
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(new_content)

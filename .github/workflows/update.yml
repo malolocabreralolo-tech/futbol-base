@@ -21,9 +21,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Instalar dependencias
-        run: pip install requests beautifulsoup4 lxml
-
       - name: Actualizar datos desde futbolaspalmas.com
         run: python3 scripts/fetch_futbolaspalmas.py
 

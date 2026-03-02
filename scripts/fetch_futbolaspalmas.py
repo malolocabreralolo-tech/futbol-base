@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-fetch_futbolaspalmas.py — Reconstruye data-benjamin.js, data-prebenjamin.js y data-history.js
-scrapeando futbolaspalmas.com: clasificación, jornadas históricas, partidos y campos.
+fetch_futbolaspalmas.py — Scrapes futbolaspalmas.com for standings, matches,
+shields and goals, writes everything to SQLite, then generates JS data files.
 
 Sin dependencias externas. Uso: python3 scripts/fetch_futbolaspalmas.py
 """
 
-import datetime
 import json
 import os
 import re
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -23,11 +23,12 @@ FILES = [
     (os.path.join(PROJECT_ROOT, "data-prebenjamin.js"), "PREBENJAMIN", "PREBENJ_STATS"),
 ]
 
-HISTORY_PATH = os.path.join(PROJECT_ROOT, "data-history.js")
-MATCHDETAIL_PATH = os.path.join(PROJECT_ROOT, "data-matchdetail.js")
-SHIELDS_PATH = os.path.join(PROJECT_ROOT, "data-shields.js")
-SHIELDS_BASE = "https://futbolaspalmas.com/escudos/"
 GOALS_URL = "https://futbolaspalmas.com/mostrar-mas-datos-estadisticas.php"
+
+# ── DB imports ────────────────────────────────────────────────────────────────
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from db import (get_connection, init_db, get_or_create_season, get_or_create_category,
+                get_or_create_team, get_or_create_group, DB_PATH)
 
 
 # ─── FETCH ─────────────────────────────────────────────────────────────────────
@@ -363,169 +364,111 @@ def parse_goals(html, hs, as_):
     return result
 
 
-def load_matchdetail():
-    """Load existing MATCH_DETAIL from data-matchdetail.js. Returns dict."""
-    try:
-        with open(MATCHDETAIL_PATH, encoding="utf-8") as f:
-            content = f.read()
-        m = re.search(r"const MATCH_DETAIL\s*=\s*(\{.*?\});", content, re.DOTALL)
-        if m:
-            return json.loads(m.group(1))
-    except Exception:
-        pass
-    return {}
+# ─── PROCESS FILE (writes to SQLite) ──────────────────────────────────────────
 
-
-def update_matchdetail(new_entries):
+def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
     """
-    Merge new_entries into data-matchdetail.js WITHOUT overwriting existing entries.
-    Existing entries (e.g. from FIFLP with better quality) are preserved.
+    Read group config from existing JS file, scrape each group,
+    and write results to SQLite.
     """
-    if not new_entries:
-        print("  Sin nuevos detalles de goles.")
-        return
-
-    try:
-        with open(MATCHDETAIL_PATH, encoding="utf-8") as f:
-            content = f.read()
-    except FileNotFoundError:
-        content = "const MATCH_DETAIL = {};\n"
-
-    m = re.search(r"const MATCH_DETAIL\s*=\s*(\{.*?\});", content, re.DOTALL)
-    if m:
-        existing = json.loads(m.group(1))
-        tail = content[m.end():]
-        prefix = content[:m.start()]
-    else:
-        existing = {}
-        tail = "\n"
-        prefix = ""
-
-    added = 0
-    for key, val in new_entries.items():
-        if key not in existing:
-            existing[key] = val
-            added += 1
-
-    new_content = (
-        prefix
-        + "const MATCH_DETAIL="
-        + json.dumps(existing, ensure_ascii=False, separators=(",", ":"))
-        + ";"
-        + tail
-    )
-    with open(MATCHDETAIL_PATH, "w", encoding="utf-8") as f:
-        f.write(new_content)
-
-    print(f"  → Goles: {added} nuevos partidos añadidos ({len(existing)} total en MATCH_DETAIL).")
-
-
-# ─── HISTORY UPDATE ─────────────────────────────────────────────────────────────
-
-def update_history(all_history_updates):
-    """Merge all jornada history updates into data-history.js."""
-    if not all_history_updates:
-        print("  Sin datos históricos para actualizar.")
-        return
-
-    with open(HISTORY_PATH, encoding="utf-8") as f:
-        content = f.read()
-
-    m = re.match(r"const HISTORY=(\{.*?\});", content, re.DOTALL)
-    if not m:
-        print("  ERROR: HISTORY no encontrado en data-history.js")
-        return
-
-    history = json.loads(m.group(1))
-    tail = content[m.end():]
-
-    for gid, jornadas in all_history_updates.items():
-        if gid not in history:
-            history[gid] = {}
-        # Clean up old UPPERCASE keys (from legacy mygol scraper) that conflict
-        # with the title-case keys from futbolaspalmas (e.g. "JORNADA 1" → "Jornada 1")
-        old_upper_keys = [k for k in history[gid] if k.startswith("JORNADA ")]
-        for old_key in old_upper_keys:
-            del history[gid][old_key]
-        for jor_name, matches in jornadas.items():
-            history[gid][jor_name] = matches
-
-    # Count total matches
-    total_matches = sum(
-        len(ms) for grp in history.values() for ms in grp.values()
-    )
-
-    # Update HIST_MATCHES constant
-    tail = re.sub(r'const HIST_MATCHES=\d+;', f'const HIST_MATCHES={total_matches};', tail)
-
-    new_content = (
-        "const HISTORY="
-        + json.dumps(history, ensure_ascii=False, separators=(",", ":"))
-        + ";"
-        + tail
-    )
-    with open(HISTORY_PATH, "w", encoding="utf-8") as f:
-        f.write(new_content)
-
-    groups_updated = len(all_history_updates)
-    jornadas_updated = sum(len(v) for v in all_history_updates.values())
-    print(f"  → Historia: {total_matches} partidos totales ({groups_updated} grupos, {jornadas_updated} jornadas actualizadas).")
-
-
-# ─── PROCESS FILE ───────────────────────────────────────────────────────────────
-
-def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
     with open(js_path, encoding="utf-8") as f:
         content = f.read()
 
     m = re.match(r"const " + var_name + r"=(\[.*?\]);", content, re.DOTALL)
     if not m:
         print(f"  ERROR: {var_name} no encontrado en {os.path.basename(js_path)}")
-        return {}, {}, {}
+        return
 
     groups = json.loads(m.group(1))
-    tail = content[m.end():]
 
     updated_matches = 0
     updated_standings = 0
-    history_updates = {}
-    new_goal_entries = {}
-    all_shields = {}
-
-    if existing_matchdetail is None:
-        existing_matchdetail = {}
 
     for group in groups:
         url = group.get("url", "")
         if not url:
             continue
 
-        print(f"  [{group['id']}] {url}")
+        group_code = group["id"]
+        group_id = get_or_create_group(
+            conn, season_id, category_id, group_code,
+            name=group.get("name"),
+            full_name=group.get("fullName"),
+            phase=group.get("phase"),
+            island=group.get("island"),
+            url=url,
+        )
+
+        print(f"  [{group_code}] {url}")
 
         try:
             html = fetch(url)
         except Exception as e:
-            print(f"    ⚠ error: {e}")
+            print(f"    ! error: {e}")
             continue
         time.sleep(DELAY)
 
         # ── Partidos + campos (jornada actual) ────────────────────────────
         jornada_name, matches = parse_matches(html)
         if jornada_name and matches:
-            group["jornada"] = jornada_name
-            group["matches"] = matches
+            # Update current_jornada in groups table
+            conn.execute(
+                "UPDATE groups SET current_jornada=? WHERE id=?",
+                (jornada_name, group_id),
+            )
+            # Insert current jornada matches
+            for match in matches:
+                date_str, t, home, away, hs, as_, venue = match
+                home_id = get_or_create_team(conn, home)
+                away_id = get_or_create_team(conn, away)
+                conn.execute(
+                    """INSERT OR IGNORE INTO matches
+                       (group_id, jornada, date, time, home_team_id, away_team_id,
+                        home_score, away_score, venue)
+                       VALUES (?,?,?,?,?,?,?,?,?)""",
+                    (group_id, jornada_name, date_str, t, home_id, away_id, hs, as_, venue),
+                )
+                # If already exists but score was NULL and now we have it, update
+                if hs is not None:
+                    conn.execute(
+                        """UPDATE matches SET home_score=?, away_score=?, venue=?
+                           WHERE group_id=? AND jornada=? AND home_team_id=? AND away_team_id=?
+                           AND home_score IS NULL""",
+                        (hs, as_, venue, group_id, jornada_name, home_id, away_id),
+                    )
             updated_matches += len(matches)
             print(f"    {jornada_name}: {len(matches)} partidos")
         else:
-            print(f"    ⚠ sin partidos")
+            print(f"    ! sin partidos")
 
         # ── Historia (todas las jornadas completadas) ─────────────────────
         all_hist = parse_all_matches(html)
         if all_hist:
-            history_updates[group["id"]] = all_hist
-            print(f"    Historia: {len(all_hist)} jornadas con resultados")
+            hist_count = 0
+            for jor_name, jor_matches in all_hist.items():
+                for entry in jor_matches:
+                    full_date, home, away, hs, as_ = entry
+                    home_id = get_or_create_team(conn, home)
+                    away_id = get_or_create_team(conn, away)
+                    conn.execute(
+                        """INSERT OR IGNORE INTO matches
+                           (group_id, jornada, date, time, home_team_id, away_team_id,
+                            home_score, away_score, venue)
+                           VALUES (?,?,?,NULL,?,?,?,?,NULL)""",
+                        (group_id, jor_name, full_date, home_id, away_id, hs, as_),
+                    )
+                    # Update score if it was NULL before
+                    if hs is not None:
+                        conn.execute(
+                            """UPDATE matches SET home_score=?, away_score=?, date=?
+                               WHERE group_id=? AND jornada=? AND home_team_id=? AND away_team_id=?
+                               AND home_score IS NULL""",
+                            (hs, as_, full_date, group_id, jor_name, home_id, away_id),
+                        )
+                    hist_count += 1
+            print(f"    Historia: {len(all_hist)} jornadas, {hist_count} partidos")
 
-        # ── Clasificación ──────────────────────────────────────────────────
+        # ── Clasificacion ──────────────────────────────────────────────────
         clasi_url = url.rstrip("/") + "/mostrar_clasi.php"
         clasi_html = None
         try:
@@ -533,19 +476,30 @@ def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
             time.sleep(DELAY)
             standings = parse_standings(clasi_html)
             if standings:
-                group["standings"] = standings
+                # DELETE old standings for this group, INSERT new ones
+                conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
+                for row in standings:
+                    pos, team_name, pts, j, g, e, perd, gf, gc, df = row
+                    team_id = get_or_create_team(conn, team_name)
+                    conn.execute(
+                        """INSERT INTO standings
+                           (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+                           VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+                        (group_id, team_id, pos, pts, j, g, e, perd, gf, gc, df),
+                    )
                 updated_standings += 1
-                print(f"    Clasificación: {len(standings)} equipos")
+                print(f"    Clasificacion: {len(standings)} equipos")
             else:
-                print(f"    ⚠ clasificación no parseada")
+                print(f"    ! clasificacion no parseada")
         except Exception as e:
-            print(f"    ⚠ clasificación error: {e}")
+            print(f"    ! clasificacion error: {e}")
 
         # ── Escudos ──────────────────────────────────────────────────────
         if clasi_html:
             shields = parse_shields(clasi_html)
             if shields:
-                all_shields.update(shields)
+                for team_name, shield_file in shields.items():
+                    get_or_create_team(conn, team_name, shield_filename=shield_file)
                 print(f"    Escudos: {len(shields)} encontrados")
 
         # ── Goles por partido (incremental) ───────────────────────────────
@@ -555,16 +509,34 @@ def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
             if team_codes and cat:
                 fetched = 0
                 skipped = 0
-                for jor_matches in all_hist.values():
+                for jor_name, jor_matches in all_hist.items():
                     for entry in jor_matches:
-                        # entry: [date, home, away, hs, as]
                         if entry[3] is None:
                             continue  # partido sin resultado
-                        home_t, away_t, hs, as_ = entry[1], entry[2], entry[3], entry[4]
-                        key = f"{home_t}|{away_t}|{hs}-{as_}"
-                        if key in existing_matchdetail or key in new_goal_entries:
+                        full_date, home_t, away_t, hs, as_ = entry
+                        home_id = get_or_create_team(conn, home_t)
+                        away_id = get_or_create_team(conn, away_t)
+
+                        # Check if match exists and already has goals
+                        match_row = conn.execute(
+                            """SELECT m.id FROM matches m
+                               WHERE m.group_id=? AND m.jornada=?
+                               AND m.home_team_id=? AND m.away_team_id=?""",
+                            (group_id, jor_name, home_id, away_id),
+                        ).fetchone()
+                        if not match_row:
                             skipped += 1
                             continue
+                        match_id = match_row[0]
+
+                        # Skip if goals already exist for this match
+                        goal_count = conn.execute(
+                            "SELECT COUNT(*) FROM goals WHERE match_id=?", (match_id,)
+                        ).fetchone()[0]
+                        if goal_count > 0:
+                            skipped += 1
+                            continue
+
                         lcode = team_codes.get(home_t)
                         vcode = team_codes.get(away_t)
                         if not lcode or not vcode:
@@ -573,97 +545,54 @@ def process_file(js_path, var_name, stats_var, existing_matchdetail=None):
                             goals_html = fetch_match_goals(lcode, vcode, cat, clasi)
                             goals = parse_goals(goals_html, hs, as_)
                             if goals:
-                                new_goal_entries[key] = {"g": goals}
+                                for g in goals:
+                                    minute, player, running, side, gtype = g
+                                    conn.execute(
+                                        """INSERT INTO goals
+                                           (match_id, minute, player_name, running_score, side, type)
+                                           VALUES (?,?,?,?,?,?)""",
+                                        (match_id, minute, player, running, side, gtype),
+                                    )
                                 fetched += 1
                             time.sleep(DELAY)
                         except Exception as e:
-                            print(f"    ⚠ goles {key}: {e}")
+                            print(f"    ! goles {home_t} vs {away_t}: {e}")
                 if fetched or skipped:
                     print(f"    Goles: {fetched} nuevos, {skipped} ya existentes")
 
-    # Write back
-    new_content = (
-        f"const {var_name}="
-        + json.dumps(groups, ensure_ascii=False, separators=(",", ":"))
-        + ";"
-        + tail
-    )
-    with open(js_path, "w", encoding="utf-8") as f:
-        f.write(new_content)
+        # Commit after each group
+        conn.commit()
 
-    print(f"  → {updated_matches} partidos, {updated_standings} clasificaciones actualizadas.\n")
-    return history_updates, new_goal_entries, all_shields
+    print(f"  -> {updated_matches} partidos, {updated_standings} clasificaciones actualizadas.\n")
 
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────
 
-def write_shields(all_shields):
-    """Write data-shields.js with team name → shield filename mapping."""
-    if not all_shields:
-        print("  Sin escudos encontrados.")
-        return
-
-    content = (
-        "const SHIELDS="
-        + json.dumps(all_shields, ensure_ascii=False, separators=(",", ":"))
-        + ";\n"
-    )
-    with open(SHIELDS_PATH, "w", encoding="utf-8") as f:
-        f.write(content)
-    print(f"  → {len(all_shields)} escudos escritos en data-shields.js.")
-
-
 def main():
-    all_history_updates = {}
-    all_goal_entries = {}
-    all_shields = {}
-
-    # Load existing matchdetail once so all process_file calls can skip already-scraped matches
-    existing_matchdetail = load_matchdetail()
-    print(f"MATCH_DETAIL existente: {len(existing_matchdetail)} partidos")
+    conn = get_connection()
+    init_db(conn)
+    season_id = get_or_create_season(conn, "2025-2026", 2025, 2026, is_current=True)
 
     for js_path, var_name, stats_var in FILES:
+        category_name = var_name  # "BENJAMIN" or "PREBENJAMIN"
+        category_id = get_or_create_category(conn, category_name)
+
         print(f"\n{'='*50}")
         print(f"{os.path.basename(js_path)}")
         print(f"{'='*50}")
-        history_updates, goal_entries, shields = process_file(js_path, var_name, stats_var, existing_matchdetail)
-        all_history_updates.update(history_updates)
-        all_goal_entries.update(goal_entries)
-        all_shields.update(shields)
-        # Keep running matchdetail up to date so subsequent groups don't re-fetch same match
-        existing_matchdetail.update(goal_entries)
+        process_file(conn, js_path, var_name, stats_var, season_id, category_id)
 
+    conn.commit()
+    conn.close()
+
+    # Generate JS files from DB
     print(f"\n{'='*50}")
-    print("data-history.js")
+    print("Generating JS files from SQLite")
     print(f"{'='*50}")
-    update_history(all_history_updates)
+    from generate_js import main as generate_main
+    generate_main()
 
-    print(f"\n{'='*50}")
-    print("data-matchdetail.js")
-    print(f"{'='*50}")
-    update_matchdetail(all_goal_entries)
-
-    print(f"\n{'='*50}")
-    print("data-shields.js")
-    print(f"{'='*50}")
-    write_shields(all_shields)
-
-    bump_cache_version()
-
-    print("✓ Terminado.")
-
-
-def bump_cache_version():
-    """Update ?v=YYYYMMDD in index.html script tags so browsers fetch fresh data."""
-    index_path = os.path.join(PROJECT_ROOT, "index.html")
-    today = datetime.date.today().strftime("%Y%m%d")
-    with open(index_path, encoding="utf-8") as f:
-        content = f.read()
-    new_content = re.sub(r'\?v=\d{8}', f'?v={today}', content)
-    if new_content != content:
-        with open(index_path, "w", encoding="utf-8") as f:
-            f.write(new_content)
-        print(f"  index.html: versión de caché actualizada a {today}.")
+    print("\nTerminado.")
 
 
 if __name__ == "__main__":

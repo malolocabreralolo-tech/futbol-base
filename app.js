@@ -21,22 +21,6 @@ function el(tag, cls, html) {
   if (html !== undefined) e.innerHTML = html;
   return e;
 }
-function icon(name, size) {
-  size = size || 20;
-  return '<svg width="' + size + '" height="' + size + '"><use href="icons.svg#icon-' + name + '"/></svg>';
-}
-
-/* ====== TAB INDICATOR ====== */
-function updateTabIndicator() {
-  var activeTab = $('.section-tab.active');
-  var indicator = $('.tab-indicator');
-  if (!activeTab || !indicator) return;
-  var nav = activeTab.parentElement;
-  var navRect = nav.getBoundingClientRect();
-  var tabRect = activeTab.getBoundingClientRect();
-  indicator.style.width = tabRect.width + 'px';
-  indicator.style.left = (tabRect.left - navRect.left + nav.scrollLeft) + 'px';
-}
 
 /* Team badge — real shield from SHIELDS or fallback to initials */
 function teamBadgeFallback(name) {
@@ -49,11 +33,9 @@ function teamBadgeFallback(name) {
   const hue = Math.abs(hash) % 360;
   return `<span class="team-badge" style="background:hsl(${hue},55%,45%)">${initials}</span>`;
 }
-function teamBadge(name, size) {
-  size = size || 24;
-  var sizeAttr = ' width="' + size + '" height="' + size + '"';
+function teamBadge(name) {
   if (typeof SHIELDS !== 'undefined' && SHIELDS[name]) {
-    return '<img class="team-badge"' + sizeAttr + ' src="./escudos/' + SHIELDS[name] + '" alt="' + name + '" onerror="this.outerHTML=teamBadgeFallback(this.alt)">';
+    return `<img class="team-badge" src="./escudos/${SHIELDS[name]}" alt="${name}" onerror="this.outerHTML=teamBadgeFallback(this.alt)">`;
   }
   return teamBadgeFallback(name);
 }
@@ -112,14 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Apply saved theme
   if (localStorage.getItem('theme') === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
-    var t = document.getElementById('themeToggle');
-    if (t) t.innerHTML = icon('sun', 18);
+    const t = document.getElementById('themeToggle');
+    if (t) t.textContent = '☀️';
   }
   updateStats();
   renderSection();
   bindEvents();
-  updateTabIndicator();
-  window.addEventListener('resize', updateTabIndicator);
 });
 
 function bindEvents() {
@@ -151,20 +131,6 @@ function bindEvents() {
       S.section = tab.dataset.section;
       if (S.section === 'jornadas') S.jorNum = '';
       $$('.section-tab').forEach(t => t.classList.toggle('active', t === tab));
-      $$('.bottom-tab').forEach(b => b.classList.toggle('active', b.dataset.section === S.section));
-      updateTabIndicator();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      renderSection();
-    });
-  });
-  // Bottom tabs
-  $$('.bottom-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      S.section = btn.dataset.section;
-      if (S.section === 'jornadas') S.jorNum = '';
-      $$('.bottom-tab').forEach(b => b.classList.toggle('active', b === btn));
-      $$('.section-tab').forEach(t => t.classList.toggle('active', t.dataset.section === S.section));
-      updateTabIndicator();
       window.scrollTo({ top: 0, behavior: 'smooth' });
       renderSection();
     });
@@ -177,17 +143,17 @@ function bindEvents() {
     }
   });
   // Theme toggle
-  var themeToggle = $('#themeToggle');
+  const themeToggle = $('#themeToggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
-      var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       if (isLight) {
         document.documentElement.removeAttribute('data-theme');
-        themeToggle.innerHTML = icon('moon', 18);
+        themeToggle.textContent = '🌙';
         localStorage.setItem('theme', 'dark');
       } else {
         document.documentElement.setAttribute('data-theme', 'light');
-        themeToggle.innerHTML = icon('sun', 18);
+        themeToggle.textContent = '☀️';
         localStorage.setItem('theme', 'light');
       }
     });
@@ -247,10 +213,7 @@ function renderClasif() {
   // Event delegation: click on team name in standings → open team profile
   container.onclick = e => {
     const td = e.target.closest('.team-name-cell');
-    if (!td) return;
-    var nameSpan = td.querySelector('.team-name');
-    var name = nameSpan ? nameSpan.textContent.trim() : td.textContent.trim();
-    openTeamDetail(name, td.dataset.group);
+    if (td) openTeamDetail(td.textContent.trim(), td.dataset.group);
   };
 }
 
@@ -282,33 +245,33 @@ function buildGroupCard(g, forceOpen) {
 }
 
 function buildStandingsTable(standings, groupId) {
-  var html = '<div class="table-wrap"><table class="standings-table"><thead><tr>';
+  let html = '<div class="table-wrap"><table class="standings-table"><thead><tr>';
   html += '<th>#</th><th>Equipo</th><th>F</th><th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DF</th>';
   html += '</tr></thead><tbody>';
-  standings.forEach(function(row) {
+  standings.forEach(row => {
     // row: [pos, team, pts, j, g, e, p, gf, gc, df]
-    var pos = row[0];
-    var cls = pos <= 3 ? 'pos-' + pos : '';
-    var df = row[9];
-    var dfCls = df > 0 ? 'gd-positive' : (df < 0 ? 'gd-negative' : '');
-    var dfStr = df > 0 ? '+' + df : df;
-    var highlight = S.search && row[1].toLowerCase().includes(S.search) ? ' style="background:var(--accent-dim)"' : '';
-    html += '<tr class="' + cls + '"' + highlight + '>';
-    html += '<td>' + pos + '</td>';
-    html += '<td class="team-cell team-name-cell" data-group="' + groupId + '">' + teamBadge(row[1]) + ' <span class="team-name">' + row[1] + '</span></td>';
+    const pos = row[0];
+    const cls = pos <= 3 ? `pos-${pos}` : '';
+    const df = row[9];
+    const dfCls = df > 0 ? 'df-pos' : (df < 0 ? 'df-neg' : '');
+    const dfStr = df > 0 ? `+${df}` : df;
+    const highlight = S.search && row[1].toLowerCase().includes(S.search) ? ' style="background:var(--accent-dim)"' : '';
+    html += `<tr class="${cls}"${highlight}>`;
+    html += `<td>${pos}</td>`;
+    html += `<td class="team-name-cell" data-group="${groupId}">${teamBadge(row[1])} ${row[1]}</td>`;
     // Form column
-    var form = getTeamForm(row[1], groupId);
+    const form = getTeamForm(row[1], groupId);
     html += '<td class="form-col">';
     if (form.length) {
       html += '<div class="form-mini">';
-      form.forEach(function(f) { html += '<span class="form-dot ' + f.result + '">' + f.result + '</span>'; });
+      form.forEach(f => { html += `<span class="form-dot ${f.result}">${f.result}</span>`; });
       html += '</div>';
     } else { html += '-'; }
     html += '</td>';
-    html += '<td class="pts-cell">' + row[2] + '</td>';
-    html += '<td>' + row[3] + '</td><td>' + row[4] + '</td><td>' + row[5] + '</td><td>' + row[6] + '</td>';
-    html += '<td>' + row[7] + '</td><td>' + row[8] + '</td>';
-    html += '<td class="' + dfCls + '">' + dfStr + '</td>';
+    html += `<td class="pts-col">${row[2]}</td>`;
+    html += `<td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td><td>${row[6]}</td>`;
+    html += `<td>${row[7]}</td><td>${row[8]}</td>`;
+    html += `<td class="${dfCls}">${dfStr}</td>`;
     html += '</tr>';
   });
   html += '</tbody></table></div>';
@@ -482,53 +445,51 @@ function getJornadaMatches(jorName) {
 function renderMatchCards(container, matches, type) {
   container.innerHTML = '';
   if (matches.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">' + icon('ball', 32) + '</div><p>No hay partidos en esta jornada</p></div>';
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚽</div><p>No hay partidos en esta jornada</p></div>';
     return;
   }
-  var grid = el('div', 'match-grid');
-  matches.forEach(function(m) {
-    var hasScore = m.hs !== null && m.hs !== undefined && m.as !== null && m.as !== undefined;
-    var borderCls = '';
+  const grid = el('div', 'match-grid');
+  matches.forEach(m => {
+    const hasScore = m.hs !== null && m.hs !== undefined && m.as !== null && m.as !== undefined;
+    const card = el('div', `match-card ${hasScore ? 'completed' : 'upcoming'}`);
+    
+    let scoreHtml;
     if (hasScore) {
-      if (m.hs > m.as) borderCls = ' border-win';
-      else if (m.hs < m.as) borderCls = ' border-loss';
-      else borderCls = ' border-draw';
-    }
-    var card = el('div', 'match-card ' + (hasScore ? 'completed' : 'upcoming') + borderCls);
-
-    var scoreHtml;
-    if (hasScore) {
-      scoreHtml = '<span class="score-num">' + m.hs + '</span><span class="score-sep">-</span><span class="score-num">' + m.as + '</span>';
+      scoreHtml = `<span class="score-num">${m.hs}</span><span class="score-sep">-</span><span class="score-num">${m.as}</span>`;
     } else {
-      var timeTag = m.time ? '<span class="match-time-tag">' + m.time + '</span>' : '';
-      scoreHtml = '<span class="score-vs">VS</span>' + timeTag;
+      const timeTag = m.time ? `<span class="match-time-tag">${m.time}</span>` : '';
+      scoreHtml = `<span class="score-vs">VS</span>${timeTag}`;
     }
 
-    var dateStr = m.date || '';
+    let dateStr = m.date || '';
+    // Format date nicely
     if (type === 'history' && dateStr.includes('-')) {
-      var parts = dateStr.split('-');
-      dateStr = parts[2] + '/' + parts[1] + '/' + parts[0];
+      // Format: 2025-11-28
+      const parts = dateStr.split('-');
+      dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
     } else if (type === 'current' && m.time) {
-      dateStr = m.date + ' \u00b7 ' + m.time;
+      dateStr = `${m.date} · ${m.time}`;
     }
 
-    var detailKey = m.home + '|' + m.away + '|' + m.hs + '-' + m.as;
-    var hasDetail = hasScore
+    const detailKey = `${m.home}|${m.away}|${m.hs}-${m.as}`;
+    const hasDetail = hasScore
       && typeof MATCH_DETAIL !== 'undefined'
-      && MATCH_DETAIL[detailKey] && MATCH_DETAIL[detailKey].g && MATCH_DETAIL[detailKey].g.length > 0;
+      && MATCH_DETAIL[detailKey]?.g?.length > 0;
 
-    var venueHtml = m.venue ? '<div class="match-venue">' + icon('field', 14) + ' ' + m.venue + '</div>' : '';
-    card.innerHTML =
-      '<div class="match-teams">' +
-        '<div class="match-team home">' + teamBadge(m.home, 32) + ' <span class="team-name">' + m.home + '</span></div>' +
-        '<div class="match-score">' + scoreHtml + '</div>' +
-        '<div class="match-team away"><span class="team-name">' + m.away + '</span> ' + teamBadge(m.away, 32) + '</div>' +
-      '</div>' +
-      '<div class="match-date">' + icon('calendar', 14) + ' ' + dateStr + (hasDetail ? ' <span class="detail-badge" title="Ver cronolog\u00eda de goles">\u26bd</span>' : '') + '</div>' +
-      venueHtml;
+    const venueHtml = m.venue ? `<div class="match-venue">📍 ${m.venue}</div>` : '';
+    card.innerHTML = `
+      <div class="match-teams">
+        <div class="match-team home">${m.home} ${teamBadge(m.home)}</div>
+        <div class="match-score">${scoreHtml}</div>
+        <div class="match-team away">${teamBadge(m.away)} ${m.away}</div>
+      </div>
+      <div class="match-date">${dateStr}${hasDetail ? ' <span class="detail-badge" title="Ver cronología de goles">⚽</span>' : ''}</div>
+      ${venueHtml}
+    `;
 
+    // Click handler for completed matches
     if (hasScore) {
-      card.addEventListener('click', function() {
+      card.addEventListener('click', () => {
         openMatchDetail({
           home: m.home,
           away: m.away,
@@ -542,13 +503,14 @@ function renderMatchCards(container, matches, type) {
       });
     }
 
-    var homeEl = card.querySelector('.match-team.home');
-    var awayEl = card.querySelector('.match-team.away');
-    if (homeEl) homeEl.addEventListener('click', function(e) {
+    // Team name clicks → open team profile (stop propagation so match modal doesn't open)
+    const homeEl = card.querySelector('.match-team.home');
+    const awayEl = card.querySelector('.match-team.away');
+    if (homeEl) homeEl.addEventListener('click', e => {
       e.stopPropagation();
       openTeamDetail(m.home, S.jorGroup);
     });
-    if (awayEl) awayEl.addEventListener('click', function(e) {
+    if (awayEl) awayEl.addEventListener('click', e => {
       e.stopPropagation();
       openTeamDetail(m.away, S.jorGroup);
     });
@@ -721,52 +683,6 @@ function renderIsla() {
       isFirstIsla = false;
     });
   });
-}
-
-/* ====== STATS ====== */
-function recordCard(iconHtml, value, label) {
-  return '<div class="record-card">' +
-    '<div class="record-icon">' + iconHtml + '</div>' +
-    '<div class="record-value">' + value + '</div>' +
-    '<div class="record-label">' + label + '</div>' +
-  '</div>';
-}
-
-function renderStats() {
-  var container = $('#sec-stats');
-  container.innerHTML = '';
-
-  if (typeof STATS === 'undefined' || !STATS[S.cat]) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">' + icon('stats', 32) + '</div><p>No hay estad\u00edsticas disponibles</p></div>';
-    return;
-  }
-
-  var data = STATS[S.cat];
-  var s = data.season;
-
-  // Season overview
-  var hdr1 = el('div', 'phase-header', icon('chart', 20) + ' Resumen de temporada');
-  container.appendChild(hdr1);
-
-  var grid1 = el('div', 'stats-grid');
-  grid1.innerHTML =
-    recordCard(icon('ball', 28), s.totalMatches, 'Partidos jugados') +
-    recordCard(icon('ball', 28), s.totalGoals, 'Goles totales') +
-    recordCard(icon('stats', 28), s.avgGoalsPerMatch.toFixed(1), 'Goles / partido') +
-    recordCard(icon('trophy', 28), s.topScorer.goals + ' goles', s.topScorer.name + ' (' + s.topScorer.team + ')');
-  container.appendChild(grid1);
-
-  // Records
-  var hdr2 = el('div', 'phase-header', icon('trophy', 20) + ' R\u00e9cords');
-  container.appendChild(hdr2);
-
-  var grid2 = el('div', 'stats-grid');
-  grid2.innerHTML =
-    recordCard(icon('ball', 28), s.mostGoals.gf + ' GF', 'M\u00e1s goleador: ' + s.mostGoals.team) +
-    recordCard(icon('chart', 28), s.leastConceded.gc + ' GC', 'Menos goleado: ' + s.leastConceded.team) +
-    recordCard(icon('field', 28), s.biggestWin.score, 'Mayor goleada: ' + s.biggestWin.home + ' vs ' + s.biggestWin.away) +
-    recordCard(icon('stats', 28), s.mostGoalsMatch.totalGoals + ' goles', 'M\u00e1s goles: ' + s.mostGoalsMatch.home + ' vs ' + s.mostGoalsMatch.away);
-  container.appendChild(grid2);
 }
 
 /* ====== SEARCH COUNT ====== */
@@ -967,21 +883,19 @@ function openMatchDetail(match) {
     }
   }
 
-  // Streaks from STATS
+  // Streaks comparison from STATS
   if (typeof STATS !== 'undefined' && STATS[S.cat] && STATS[S.cat].teams) {
-    var homeTeamStats = STATS[S.cat].teams[home];
-    var awayTeamStats = STATS[S.cat].teams[away];
-    if (homeTeamStats && awayTeamStats && homeTeamStats.streak && awayTeamStats.streak) {
-      var mapLabel = function(t) { return t === 'W' ? 'V' : t === 'D' ? 'E' : 'D'; };
-      var mapColor = function(t) { return t === 'W' ? 'var(--green)' : t === 'L' ? 'var(--red)' : 'var(--text-2)'; };
-      var hs1 = homeTeamStats.streak;
-      var as1 = awayTeamStats.streak;
-      bodyHtml += '<div class="modal-stats-header">Rachas</div>';
-      bodyHtml += '<div class="comparison-streaks">';
-      bodyHtml += '<div class="streak-badge" style="border-color:' + mapColor(hs1.type) + '">' + hs1.count + mapLabel(hs1.type) + '</div>';
-      bodyHtml += '<div class="streak-label">Racha actual</div>';
-      bodyHtml += '<div class="streak-badge" style="border-color:' + mapColor(as1.type) + '">' + as1.count + mapLabel(as1.type) + '</div>';
-      bodyHtml += '</div>';
+    const hTeam = STATS[S.cat].teams[home];
+    const aTeam = STATS[S.cat].teams[away];
+    if (hTeam && aTeam && hTeam.streak && aTeam.streak) {
+      const streakColor = s => s.type === 'W' ? 'var(--accent)' : s.type === 'L' ? 'var(--red)' : 'var(--text3)';
+      const streakText = s => s.type === 'W' ? 'victorias' : s.type === 'L' ? 'derrotas' : 'empates';
+      bodyHtml += '<div class="modal-section-title">Rachas actuales</div>';
+      bodyHtml += `<div class="comparison-streaks">
+        <div><span class="streak-badge" style="border-color:${streakColor(hTeam.streak)};color:${streakColor(hTeam.streak)}">${hTeam.streak.count}${hTeam.streak.type}</span><br><span class="streak-label">${hTeam.streak.count} ${streakText(hTeam.streak)}</span></div>
+        <div style="font-size:12px;color:var(--text3)">VS</div>
+        <div><span class="streak-badge" style="border-color:${streakColor(aTeam.streak)};color:${streakColor(aTeam.streak)}">${aTeam.streak.count}${aTeam.streak.type}</span><br><span class="streak-label">${aTeam.streak.count} ${streakText(aTeam.streak)}</span></div>
+      </div>`;
     }
   }
 
@@ -991,29 +905,6 @@ function openMatchDetail(match) {
 
   modalBody.innerHTML = bodyHtml;
   modalOverlay.classList.add('open');
-}
-
-/* ====== SPARKLINE ====== */
-function buildSparkline(data) {
-  if (!data || data.length < 2) return '';
-  var w = 280, h = 60, pad = 10;
-  var maxVal = Math.max.apply(null, data) || 1;
-  var n = data.length;
-  var stepX = (w - 2 * pad) / (n - 1);
-  var points = data.map(function(v, i) {
-    var x = pad + i * stepX;
-    var y = h - pad - ((v / maxVal) * (h - 2 * pad));
-    return x.toFixed(1) + ',' + y.toFixed(1);
-  });
-  var lastX = (pad + (n - 1) * stepX).toFixed(1);
-  var lastY = (h - pad - ((data[n - 1] / maxVal) * (h - 2 * pad))).toFixed(1);
-  return '<div class="sparkline-wrap">' +
-    '<svg viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '">' +
-      '<polyline fill="none" stroke="var(--accent)" stroke-width="2" points="' + points.join(' ') + '"/>' +
-      '<circle cx="' + lastX + '" cy="' + lastY + '" r="3" fill="var(--accent)"/>' +
-    '</svg>' +
-    '<div class="sparkline-labels"><span>J1</span><span>J' + n + '</span></div>' +
-  '</div>';
 }
 
 /* ====== TEAM DETAIL MODAL ====== */
@@ -1094,38 +985,202 @@ function openTeamDetail(teamName, groupId) {
       </div>`;
     });
   } else {
-    body += '<div class="modal-h2h-empty">No hay resultados registrados a\u00fan</div>';
+    body += '<div class="modal-h2h-empty">No hay resultados registrados aún</div>';
   }
 
-  // STATS enrichment
+  // Enrich with STATS data if available
   if (typeof STATS !== 'undefined' && STATS[S.cat] && STATS[S.cat].teams && STATS[S.cat].teams[teamName]) {
-    var ts = STATS[S.cat].teams[teamName];
-    var streakLabel = ts.streak.type === 'W' ? 'V' : ts.streak.type === 'D' ? 'E' : 'D';
-    var streakColor = ts.streak.type === 'W' ? 'color:var(--green)' : ts.streak.type === 'L' ? 'color:var(--red)' : 'color:var(--text-2)';
-    body += '<div class="modal-stats-header">An\u00e1lisis</div>';
+    const ts = STATS[S.cat].teams[teamName];
+    body += '<div class="modal-section-title">Análisis avanzado</div>';
+
+    // Streak
+    if (ts.streak) {
+      const streakColor = ts.streak.type === 'W' ? 'var(--accent)' : ts.streak.type === 'L' ? 'var(--red)' : 'var(--text3)';
+      const streakLabel = ts.streak.type === 'W' ? 'victorias' : ts.streak.type === 'L' ? 'derrotas' : 'empates';
+      body += `<div style="margin-bottom:12px"><span class="streak-badge" style="border-color:${streakColor};color:${streakColor}">${ts.streak.count}${ts.streak.type}</span> <span class="streak-label">racha de ${ts.streak.count} ${streakLabel}</span></div>`;
+    }
+
+    // Home/Away stats grid
     body += '<div class="team-stat-grid">';
-    body += '<div class="team-stat"><span class="team-stat-value" style="' + streakColor + '">' + ts.streak.count + streakLabel + '</span><span class="team-stat-label">Racha</span></div>';
-    body += '<div class="team-stat"><span class="team-stat-value">' + ts.homeRecord.pct + '%</span><span class="team-stat-label">Victoria casa (' + ts.homeRecord.w + 'G ' + ts.homeRecord.d + 'E ' + ts.homeRecord.l + 'P)</span></div>';
-    body += '<div class="team-stat"><span class="team-stat-value">' + ts.awayRecord.pct + '%</span><span class="team-stat-label">Victoria fuera (' + ts.awayRecord.w + 'G ' + ts.awayRecord.d + 'E ' + ts.awayRecord.l + 'P)</span></div>';
-    body += '<div class="team-stat"><span class="team-stat-value">' + ts.avgGF.toFixed(1) + ' / ' + ts.avgGC.toFixed(1) + '</span><span class="team-stat-label">Prom. GF / GC</span></div>';
+    if (ts.homeRecord) {
+      body += `<div class="stat-card"><div class="stat-value">${ts.homeRecord.pct}%</div><div class="stat-label">Casa<small>${ts.homeRecord.w}G ${ts.homeRecord.d}E ${ts.homeRecord.l}P</small></div></div>`;
+    }
+    if (ts.awayRecord) {
+      body += `<div class="stat-card"><div class="stat-value">${ts.awayRecord.pct}%</div><div class="stat-label">Fuera<small>${ts.awayRecord.w}G ${ts.awayRecord.d}E ${ts.awayRecord.l}P</small></div></div>`;
+    }
+    if (ts.avgGF !== undefined) {
+      body += `<div class="stat-card"><div class="stat-value">${ts.avgGF}</div><div class="stat-label">Goles/partido</div></div>`;
+    }
+    if (ts.avgGC !== undefined) {
+      body += `<div class="stat-card"><div class="stat-value">${ts.avgGC}</div><div class="stat-label">Enc./partido</div></div>`;
+    }
     body += '</div>';
 
     // Sparkline
     if (ts.pointsHistory && ts.pointsHistory.length > 1) {
-      body += '<div class="modal-stats-header">Evoluci\u00f3n de puntos</div>';
+      body += '<div class="modal-stats-header">Evolución de puntos</div>';
       body += buildSparkline(ts.pointsHistory);
     }
 
-    // Biggest win
-    if (ts.biggestWin && ts.biggestWin.score) {
-      body += '<div class="result-highlight win">' + icon('trophy', 16) + ' Mayor victoria: <b>' + ts.biggestWin.score + '</b> vs ' + ts.biggestWin.vs + '</div>';
+    // Best win / Worst loss
+    if (ts.biggestWin) {
+      body += `<div class="result-highlight win">🏆 Mayor victoria: <strong>${ts.biggestWin.score}</strong> vs ${ts.biggestWin.vs} (${ts.biggestWin.date})</div>`;
     }
-    // Worst loss
-    if (ts.worstLoss && ts.worstLoss.score) {
-      body += '<div class="result-highlight loss">' + icon('ball', 16) + ' Peor derrota: <b>' + ts.worstLoss.score + '</b> vs ' + ts.worstLoss.vs + '</div>';
+    if (ts.worstLoss) {
+      body += `<div class="result-highlight loss">💔 Peor derrota: <strong>${ts.worstLoss.score}</strong> vs ${ts.worstLoss.vs} (${ts.worstLoss.date})</div>`;
     }
   }
 
   modalBody.innerHTML = body;
   modalOverlay.classList.add('open');
+}
+
+/* ====== STATS SECTION ====== */
+function recordCard(icon, value, label, sublabel) {
+  return `<div class="record-card">
+    <div class="record-icon">${icon}</div>
+    <div class="record-value">${value}</div>
+    <div class="record-label">${label}${sublabel ? `<small>${sublabel}</small>` : ''}</div>
+  </div>`;
+}
+
+function renderStats() {
+  const container = $('#sec-stats');
+  container.innerHTML = '';
+
+  if (typeof STATS === 'undefined' || !STATS[S.cat]) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>No hay estadísticas disponibles</p></div>';
+    return;
+  }
+
+  const ss = STATS[S.cat].season;
+  if (!ss) return;
+
+  const hdr = el('div', 'phase-header', '<span class="phase-icon">📊</span> Récords de temporada');
+  container.appendChild(hdr);
+
+  let grid = '<div class="stats-grid">';
+  grid += recordCard('⚽', ss.totalMatches, 'Partidos jugados');
+  grid += recordCard('🥅', ss.totalGoals, 'Goles totales', ss.avgGoalsPerMatch ? `${ss.avgGoalsPerMatch} por partido` : '');
+  if (ss.topScorer) {
+    grid += recordCard('👑', ss.topScorer.goals, 'Máximo goleador', `${ss.topScorer.name} (${ss.topScorer.team})`);
+  }
+  if (ss.mostGoals) {
+    grid += recordCard('💪', ss.mostGoals.gf, 'Más goles (equipo)', ss.mostGoals.team);
+  }
+  if (ss.leastConceded) {
+    grid += recordCard('🧤', ss.leastConceded.gc, 'Menos goles enc.', ss.leastConceded.team);
+  }
+  if (ss.biggestWin) {
+    grid += recordCard('🏆', ss.biggestWin.score, 'Mayor goleada', `${ss.biggestWin.home} vs ${ss.biggestWin.away}`);
+  }
+  if (ss.mostGoalsMatch) {
+    grid += recordCard('🔥', ss.mostGoalsMatch.totalGoals, 'Más goles en partido', `${ss.mostGoalsMatch.home} vs ${ss.mostGoalsMatch.away}`);
+  }
+  grid += '</div>';
+  container.innerHTML += grid;
+
+  // Top streaks section
+  const teams = STATS[S.cat].teams;
+  if (teams) {
+    const teamList = Object.entries(teams);
+
+    // Best current winning streaks
+    const winStreaks = teamList
+      .filter(([, t]) => t.streak && t.streak.type === 'W')
+      .sort((a, b) => b[1].streak.count - a[1].streak.count)
+      .slice(0, 5);
+
+    if (winStreaks.length > 0) {
+      const hdr2 = el('div', 'phase-header', '<span class="phase-icon">🔥</span> Mejores rachas actuales');
+      container.appendChild(hdr2);
+      let streakHtml = '<div class="stats-grid">';
+      winStreaks.forEach(([name, t]) => {
+        streakHtml += recordCard('🏆', `${t.streak.count}W`, name, `${t.streak.count} victorias seguidas`);
+      });
+      streakHtml += '</div>';
+      container.innerHTML += streakHtml;
+    }
+
+    // Best home records
+    const homeRecords = teamList
+      .filter(([, t]) => t.homeRecord && (t.homeRecord.w + t.homeRecord.d + t.homeRecord.l) >= 3)
+      .sort((a, b) => b[1].homeRecord.pct - a[1].homeRecord.pct)
+      .slice(0, 5);
+
+    if (homeRecords.length > 0) {
+      const hdr3 = el('div', 'phase-header', '<span class="phase-icon">🏠</span> Mejores locales');
+      container.appendChild(hdr3);
+      let homeHtml = '<div class="stats-grid">';
+      homeRecords.forEach(([name, t]) => {
+        homeHtml += recordCard('🏠', `${t.homeRecord.pct}%`, name, `${t.homeRecord.w}G ${t.homeRecord.d}E ${t.homeRecord.l}P`);
+      });
+      homeHtml += '</div>';
+      container.innerHTML += homeHtml;
+    }
+
+    // Best away records
+    const awayRecords = teamList
+      .filter(([, t]) => t.awayRecord && (t.awayRecord.w + t.awayRecord.d + t.awayRecord.l) >= 3)
+      .sort((a, b) => b[1].awayRecord.pct - a[1].awayRecord.pct)
+      .slice(0, 5);
+
+    if (awayRecords.length > 0) {
+      const hdr4 = el('div', 'phase-header', '<span class="phase-icon">✈️</span> Mejores visitantes');
+      container.appendChild(hdr4);
+      let awayHtml = '<div class="stats-grid">';
+      awayRecords.forEach(([name, t]) => {
+        awayHtml += recordCard('✈️', `${t.awayRecord.pct}%`, name, `${t.awayRecord.w}G ${t.awayRecord.d}E ${t.awayRecord.l}P`);
+      });
+      awayHtml += '</div>';
+      container.innerHTML += awayHtml;
+    }
+
+    // Most goals per match
+    const topAttack = teamList
+      .filter(([, t]) => t.avgGF !== undefined)
+      .sort((a, b) => b[1].avgGF - a[1].avgGF)
+      .slice(0, 5);
+
+    if (topAttack.length > 0) {
+      const hdr5 = el('div', 'phase-header', '<span class="phase-icon">⚽</span> Mejores ataques (goles/partido)');
+      container.appendChild(hdr5);
+      let attackHtml = '<div class="stats-grid">';
+      topAttack.forEach(([name, t]) => {
+        attackHtml += recordCard('⚽', t.avgGF, name, `${t.avgGC} enc./partido`);
+      });
+      attackHtml += '</div>';
+      container.innerHTML += attackHtml;
+    }
+  }
+}
+
+/* ====== SPARKLINE ====== */
+function buildSparkline(data) {
+  if (!data || data.length < 2) return '';
+  const w = 300, h = 60, pad = 4;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+  const stepX = (w - pad * 2) / (data.length - 1);
+
+  const points = data.map((v, i) => {
+    const x = pad + i * stepX;
+    const y = h - pad - ((v - min) / range) * (h - pad * 2);
+    return `${x},${y}`;
+  });
+
+  const fillPoints = `${pad},${h - pad} ${points.join(' ')} ${pad + (data.length - 1) * stepX},${h - pad}`;
+
+  let svg = `<div class="sparkline-wrap">`;
+  svg += `<svg class="sparkline" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">`;
+  svg += `<polygon points="${fillPoints}" fill="rgba(0,230,118,0.1)" />`;
+  svg += `<polyline points="${points.join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`;
+  // End dot
+  const lastPt = points[points.length - 1].split(',');
+  svg += `<circle cx="${lastPt[0]}" cy="${lastPt[1]}" r="3" fill="var(--accent)" />`;
+  svg += '</svg>';
+  svg += `<div class="sparkline-labels"><span>J1: ${data[0]} pts</span><span>J${data.length}: ${data[data.length - 1]} pts</span></div>`;
+  svg += '</div>';
+  return svg;
 }

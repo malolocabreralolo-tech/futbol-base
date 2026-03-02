@@ -21,14 +21,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Actualizar datos desde tusligascanarias.mygol.es
-        run: python3 scripts/fetch_mygol.py
+      - name: Instalar dependencias
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Actualizar datos desde futbolaspalmas.com
+        run: python3 scripts/fetch_futbolaspalmas.py
 
       - name: Commit y push si hay cambios
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add data-benjamin.js data-prebenjamin.js data-history.js index.html
+          git add data-benjamin.js data-prebenjamin.js data-matchdetail.js data-history.js index.html
           if git diff --cached --quiet; then
             echo "Sin cambios."
           else

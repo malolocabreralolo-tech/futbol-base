@@ -165,20 +165,35 @@ def main():
             browser.close()
             sys.exit(1)
 
-        # 4. Buscar Benjamin Fase A / Liga A
+        # 4. Buscar Benjamin liga (not copa, not sala)
+        # For 2024-2025: "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A" (id 1706)
+        # For 2025-2026: "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A" (id 54422953)
         target = None
-        for c in all_comps:
-            name_lower = c["name"].lower()
-            if "benjamin" in name_lower and ("fase a" in name_lower or "liga a" in name_lower or "fase liga a" in name_lower):
+        benjamin_comps = [c for c in all_comps
+                          if "benjamin" in c["name"].lower()
+                          and "sala" not in c["name"].lower()
+                          and "copa" not in c["name"].lower()
+                          and "torneo" not in c["name"].lower()]
+        print(f"\nBenjamin football competitions (no sala/copa): {len(benjamin_comps)}")
+        for c in benjamin_comps:
+            print(f"  [{c['id']}] {c['name']}")
+
+        # Priority: "fase a" or "segunda fase a" or "liga a"
+        for c in benjamin_comps:
+            nl = c["name"].lower()
+            if "fase a" in nl or "fase liga a" in nl or "segunda fase a" in nl:
                 target = c
                 break
 
         if not target:
-            # Fallback: any benjamin competition
-            for c in all_comps:
-                if "benjamin" in c["name"].lower() and "sala" not in c["name"].lower():
+            # Fallback: primera benjamin or first benjamin comp
+            for c in benjamin_comps:
+                if "primera" in c["name"].lower() and "gran canaria" in c["name"].lower():
                     target = c
                     break
+
+        if not target and benjamin_comps:
+            target = benjamin_comps[0]
 
         if not target:
             print("\nERROR: No hay competicion Benjamin en 2024-2025")
@@ -232,6 +247,7 @@ def main():
         # 7. Clasificacion
         print("Obteniendo clasificacion...", end="", flush=True)
         clasif_url = (f"{BASE}/NFG_VisClasificacion?cod_primaria=1000120"
+                      f"&CodTemporada={SEASON_VALUE}"
                       f"&codcompeticion={target['id']}&codgrupo={target_grp['value']}&codjornada=99")
         if goto(page, clasif_url):
             gdata["standings"] = parse_standings(page)
@@ -242,24 +258,25 @@ def main():
             print(" TIMEOUT")
         delay()
 
-        # 8. Jornadas - volver a pagina principal y seleccionar todo de nuevo
+        # 8. Jornadas - use CodTemporada + CodCompeticion + CodGrupo in URL
         print("\nObteniendo jornadas...", flush=True)
-        if not goto(page, f"{BASE}/NFG_CmpJornada?cod_primaria=1000120"):
+        jornada_url = (f"{BASE}/NFG_CmpJornada?cod_primaria=1000120"
+                       f"&CodTemporada={SEASON_VALUE}"
+                       f"&CodCompeticion={target['id']}"
+                       f"&CodGrupo={target_grp['value']}")
+        print(f"URL: {jornada_url}")
+        if not goto(page, jornada_url):
             print("ERROR: no se pudo cargar pagina de jornadas")
             save([gdata])
             browser.close()
             return
 
-        # Re-seleccionar temporada, competicion y grupo
+        # Verify selects have correct values
         try:
-            page.select_option('select[name="temporada"]', SEASON_VALUE)
-            page.evaluate(f"BuscarCompeticiones('{SEASON_VALUE}')")
-            wait_after_select(page)
-            page.wait_for_timeout(2000)
-            page.select_option('select[name="competicion"]', target["id"])
-            wait_after_select(page)
-            page.select_option('select[name="grupo"]', target_grp["value"])
-            wait_after_select(page)
+            temp_check = page.evaluate("() => document.querySelector('select[name=\"temporada\"]')?.value")
+            comp_check = page.evaluate("() => document.querySelector('select[name=\"competicion\"]')?.value")
+            grp_check = page.evaluate("() => document.querySelector('select[name=\"grupo\"]')?.value")
+            print(f"Verified: temporada={temp_check}, comp={comp_check}, grupo={grp_check}")
         except Exception as e:
             print(f"ERROR seleccionando: {e}")
             save([gdata])

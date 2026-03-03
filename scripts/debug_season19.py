@@ -111,6 +111,20 @@ def main():
             }).map(el => ({text: el.innerText.trim(), href: el.href||'', onclick: el.getAttribute('onclick')||''}))
         """)
 
+        # Check if BuscarPartidos exists and what all links/buttons are on this page
+        out["js_functions"] = page.evaluate("""
+            () => ({
+                BuscarPartidos: typeof BuscarPartidos === 'function' ? BuscarPartidos.toString().slice(0, 300) : 'NOT FOUND',
+                IrA: typeof IrA === 'function' ? IrA.toString().slice(0, 300) : 'NOT FOUND',
+            })
+        """)
+        out["all_links"] = page.evaluate("""
+            () => Array.from(document.querySelectorAll('a')).map(a => ({
+                text: a.innerText.trim().slice(0, 50),
+                href: a.href.slice(0, 100),
+                onclick: a.getAttribute('onclick') || ''
+            })).filter(a => a.text && !a.text.includes('Patrocinadores') && !a.text.includes('cookies'))
+        """)
         # Try clicking "Resultados" button
         try:
             page.click("a:has-text('Resultados')", timeout=3000)

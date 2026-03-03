@@ -194,6 +194,19 @@
     }
   ],
   "jornada_body_snippet": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada 2023-2024\nLIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE GRUPO 1\n  Anterior\n Provisional  Definitivo\nResultados\n   Anterior\nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
+  "ira_test": {
+    "url_after": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169838&CodTemporada=19&CodJornada=1&Sch_Codigo_Delegacion=&Sch_Tipo_Juego=",
+    "title_after": "Federación de Fútbol de Las Palmas - Visualización de Partidos",
+    "body_snippet": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada 2023-2024\nLIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE GRUPO 1\nJornada 1\nSiguiente  \n Provisional  Definitivo\nResultados\nSiguiente   \nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
+    "tables": [
+      {
+        "rows": 0,
+        "cells_in_first": 0,
+        "sample": ""
+      }
+    ]
+  },
+  "ira_source": "function IrA(jornada){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169838&CodTemporada=19&CodJornada=\"+jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value;location=url}",
   "jornada_elements": {
     "jornada_select_outer": "<select name=\"jornada\" class=\" form-control\" id=\"jornada\" onchange=\"BuscarPartidos(this.options[this.selectedIndex].value)\" data-nova-procesed=\"1\"> <option value=\"0\">-- Seleccione --</option> </select>",
     "nav_links": [

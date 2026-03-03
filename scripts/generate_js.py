@@ -551,7 +551,11 @@ def get_historical_jornadas(conn, group_id):
     for jornada, dt, home, away, hs, as_ in rows:
         jornadas.setdefault(jornada, []).append([dt, home, away, hs, as_])
 
-    return dict(sorted(jornadas.items()))
+    def _jor_num(j):
+        m = re.search(r'\d+', str(j))
+        return int(m.group()) if m else 0
+
+    return dict(sorted(jornadas.items(), key=lambda x: _jor_num(x[0])))
 
 
 def generate_seasons_js(conn):

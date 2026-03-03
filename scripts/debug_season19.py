@@ -114,10 +114,35 @@ def main():
         # Check if BuscarPartidos exists and what all links/buttons are on this page
         out["js_functions"] = page.evaluate("""
             () => ({
-                BuscarPartidos: typeof BuscarPartidos === 'function' ? BuscarPartidos.toString().slice(0, 300) : 'NOT FOUND',
-                IrA: typeof IrA === 'function' ? IrA.toString().slice(0, 300) : 'NOT FOUND',
+                BuscarPartidos: typeof BuscarPartidos === 'function' ? BuscarPartidos.toString() : 'NOT FOUND',
+                IrA: typeof IrA === 'function' ? IrA.toString() : 'NOT FOUND',
             })
         """)
+        # Try calling BuscarPartidos directly
+        # First set form values
+        page.evaluate("""
+            () => {
+                try {
+                    document.BuscaNFG_CMP.competicion.value = '1328';
+                    document.BuscaNFG_CMP.grupo.value = '169838';
+                    document.BuscaNFG_CMP.temporada.value = '19';
+                } catch(e) {}
+            }
+        """)
+        # Also try setting top.document values (in case BuscarPartidos uses top)
+        try:
+            page.evaluate("BuscarPartidos('1')")
+            page.wait_for_timeout(4000)
+            out["after_buscar_1_body"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
+            out["after_buscar_1_tables"] = page.evaluate("""
+                () => Array.from(document.querySelectorAll('table')).map(t => ({
+                    rows: t.querySelectorAll('tr').length, cells: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
+                    sample: t.innerText.trim().slice(0, 300)
+                }))
+            """)
+            out["after_buscar_1_url"] = page.url
+        except Exception as e:
+            out["buscar_1_error"] = str(e)
         out["all_links"] = page.evaluate("""
             () => Array.from(document.querySelectorAll('a')).map(a => ({
                 text: a.innerText.trim().slice(0, 50),

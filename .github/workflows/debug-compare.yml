@@ -1,0 +1,34 @@
+name: Debug Compare Seasons
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install playwright && playwright install chromium --with-deps
+      - run: python3 scripts/debug_compare_seasons.py
+      - name: Guardar resultado
+        if: always()
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git stash
+          git pull --rebase origin main
+          git stash pop || true
+          git add scripts/debug_compare_seasons.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios"
+          else
+            git commit -m "debug: compare seasons match data"
+            git push
+          fi

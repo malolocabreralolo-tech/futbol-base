@@ -229,16 +229,24 @@
       "name": "__dsaLocator"
     },
     {
+      "src": "https://585d2302b436d686915deea82b7ca89b.safeframe.googlesyndication.com/safeframe/1-0-45/html/container.html",
+      "name": ""
+    },
+    {
       "src": "about:blank",
       "name": "__pb_locator__"
     },
     {
-      "src": "https://ap.lijit.com/beacon/prebid-server/?gdpr=0&gdpr_consent=&url=https%3A%2F%2Fu.4dex.io%2Fsetuid%3Fbidder%3Dsovrn%26it%3Dadg-pb-clt%26uid%3D%24UID",
+      "src": "https://user-sync.fwmrm.net/ad/u?mode=echo&cr=https%3A%2F%2Fu-las.4dex.io%2Fsetuid%3Fbidder%3Dfreewheeltv%26it%3Dadg-pb-clt%26uid%3D%23%7Buser.id%7D",
       "name": ""
     },
     {
       "src": "https://www.google.com/recaptcha/api2/aframe",
       "name": ""
+    },
+    {
+      "src": "",
+      "name": "google_ads_top_frame"
     },
     {
       "src": "https://onetag-sys.com/usync/?pubId=6b859b96c564fbe&gdpr=0&gdpr_consent=&us_privacy=",
@@ -253,11 +261,15 @@
       "name": ""
     },
     {
+      "src": "https://gum.criteo.com/syncframe?origin=criteoPrebidAdapter&topUrl=www.fiflp.com&gdpr_consent=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&gpp=#{%22bundle%22:%22le5hn19vOW9PTSUyQjRSdmRXM0ZqMGpoQWlSYXR1b1l4d0xKMXMyVEtkQ1R0MU0ycW82bnN1MGNEUmRhQnUxSnhWMkY5aEw5YWczVXI0bTREazlhQXglMkZUajVjbExqcHB4Zjdlc04lMkZxb0dPVERBOEloaWNlTlcyZVRKVWlWTkRpRVNRc0R4YllCQlBxNU9rb2o5NUpzdWdINlk3SVRaNVhoTjdaNDRQbThzVU81RDJWU2dwTEJSTHZ5QzUxSEFjaXN3NkhDVWQ%22,%22cw%22:true,%22lsw%22:true,%22origin%22:%22criteoPrebidAdapter%22,%22requestId%22:%220.9716202059288268%22,%22tld%22:%22www.fiflp.com%22,%22topUrl%22:%22www.fiflp.com%22,%22version%22:%2210_20_0%22}",
+      "name": ""
+    },
+    {
       "src": "https://acdn.adnxs.com/dmp/async_usersync.html",
       "name": ""
     },
     {
-      "src": "https://gum.criteo.com/syncframe?origin=criteoPrebidAdapter&topUrl=www.fiflp.com&gdpr_consent=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&gpp=#{%22bundle%22:%22OVUoLF9rZDVTaTBWUVRHZ25TaHZnb3NtdDVCblc1Z1dsdXp2Qm55WnlDNjJvYmFQS0w1b2JXeUl3alkyYzJ5RnJtaTE2dCUyQlBIbXU0Z2FLV2FUUk5IUkMlMkJSZTVXcDNKUkZaNDVsc1hPSkY3S3BkN1VkWFNpdmgzJTJCYm5NWWZOMFNGSTlDZXlHU0lWNG9CY1B6VmVyNmNrMHpYR1pvT09ieTZEbWQwbEVsWW03amVLZlVBNkklMkJnbVZsaGQwRFpOdXhoQUJBRQ%22,%22cw%22:true,%22lsw%22:true,%22origin%22:%22criteoPrebidAdapter%22,%22requestId%22:%220.5675043551484727%22,%22tld%22:%22www.fiflp.com%22,%22topUrl%22:%22www.fiflp.com%22,%22version%22:%2210_20_0%22}",
+      "src": "https://cs.seedtag.com/cs.html?pt=8840-6320-01&pc=ZZ&cmp=true&cd=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&uid=019cb39b-3042-732a-b85f-962d60e10800&sct=HeaderBidding",
       "name": ""
     }
   ],
@@ -290,9 +302,18 @@
     }
   ],
   "js_functions": {
-    "BuscarPartidos": "function BuscarPartidos(Jornada){if(Jornada!=0){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120\"+\"&CodCompeticion=\"+top.document.BuscaNFG_CMP.competicion.value+\"&CodGrupo=\"+top.document.BuscaNFG_CMP.grupo.value+\"&CodTemporada=\"+top.document.BuscaNFG_CMP.temporada.value+\"&cod_agrupacion=\"+top.doc",
-    "IrA": "function IrA(jornada){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169838&CodTemporada=19&CodJornada=\"+jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value"
+    "BuscarPartidos": "function BuscarPartidos(Jornada){if(Jornada!=0){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120\"+\"&CodCompeticion=\"+top.document.BuscaNFG_CMP.competicion.value+\"&CodGrupo=\"+top.document.BuscaNFG_CMP.grupo.value+\"&CodTemporada=\"+top.document.BuscaNFG_CMP.temporada.value+\"&cod_agrupacion=\"+top.document.BuscaNFG_CMP.Sch_Cod_Agrupacion.value+\"&CodJornada=\"+Jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value;location=url}}",
+    "IrA": "function IrA(jornada){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169838&CodTemporada=19&CodJornada=\"+jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value;location=url}"
   },
+  "after_buscar_1_body": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada 2023-2024\nLIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE GRUPO 1\nJornada 1\nSiguiente  \n Provisional  Definitivo\nResultados\nSiguiente   \nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
+  "after_buscar_1_tables": [
+    {
+      "rows": 0,
+      "cells": 0,
+      "sample": ""
+    }
+  ],
+  "after_buscar_1_url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169838&CodTemporada=19&cod_agrupacion=&CodJornada=1&Sch_Codigo_Delegacion=&Sch_Tipo_Juego=",
   "all_links": [
     {
       "text": "Fundación",
@@ -1025,23 +1046,13 @@
       "onclick": ""
     },
     {
-      "text": "Anterior",
-      "href": "javascript:IrA(4);",
+      "text": "Siguiente",
+      "href": "javascript:IrA(2);",
       "onclick": ""
     },
     {
       "text": "Siguiente",
-      "href": "javascript:IrA(6);",
-      "onclick": ""
-    },
-    {
-      "text": "Anterior",
-      "href": "javascript:IrA(4);",
-      "onclick": ""
-    },
-    {
-      "text": "Siguiente",
-      "href": "javascript:IrA(6);",
+      "href": "javascript:IrA(2);",
       "onclick": ""
     },
     {

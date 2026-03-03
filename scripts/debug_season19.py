@@ -57,29 +57,44 @@ def main():
             }))
         """)
         out["jornada_body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
-        # Try IrA(1) to load jornada 1
-        out["ira_test"] = {}
-        try:
-            page.evaluate("IrA(1)")
-            page.wait_for_load_state("domcontentloaded", timeout=10000)
-            page.wait_for_timeout(2000)
-            out["ira_test"]["url_after"] = page.url
-            out["ira_test"]["title_after"] = page.title()
-            out["ira_test"]["body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 1000)")
-            out["ira_test"]["tables"] = page.evaluate("""
-                () => Array.from(document.querySelectorAll('table')).slice(0, 5).map(t => ({
-                    rows: t.querySelectorAll('tr').length,
-                    cells_in_first: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
-                    sample: t.innerText.trim().slice(0, 200)
-                }))
-            """)
-        except Exception as e:
-            out["ira_test"]["error"] = str(e)
-
         # Also find IrA function source
         out["ira_source"] = page.evaluate("""
             () => typeof IrA === 'function' ? IrA.toString().slice(0, 500) : 'NOT FOUND'
         """)
+
+        # Navigate directly with CodJornada=5 to check match structure
+        for jnum in [1, 2, 5, 10]:
+            direct_url = (f"{BASE}/NFG_CmpJornada?cod_primaria=1000120"
+                          f"&CodCompeticion={COMP}&CodGrupo={GROUP}"
+                          f"&CodTemporada={SEASON}&CodJornada={jnum}")
+            page.goto(direct_url, wait_until="domcontentloaded")
+            page.wait_for_timeout(3000)
+            tables = page.evaluate("""
+                () => Array.from(document.querySelectorAll('table')).map(t => ({
+                    rows: t.querySelectorAll('tr').length,
+                    cells_r0: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
+                    sample: t.innerText.trim().slice(0, 300)
+                }))
+            """)
+            body_snip = page.evaluate("() => document.body.innerText.slice(0, 800)")
+            html_content = page.evaluate("""
+                () => {
+                    // find main content after header
+                    const all = document.body.innerHTML;
+                    const idx = all.indexOf('CodJornada');
+                    if (idx > 0) return all.slice(Math.max(0, idx-100), idx+3000);
+                    return all.slice(8000, 14000);
+                }
+            """)
+            out[f"jornada_{jnum}"] = {
+                "tables": tables,
+                "body": body_snip,
+                "html": html_content
+            }
+            print(f"  Jornada {jnum}: {len(tables)} tables, body snippet: {body_snip[100:200]}")
+            if any(t['rows'] > 0 for t in tables):
+                print(f"  --> Found {sum(t['rows'] for t in tables)} rows total!")
+                break
 
         # Reload jornada page
         page.goto(jornada_url, wait_until="domcontentloaded")

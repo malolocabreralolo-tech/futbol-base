@@ -168,8 +168,8 @@ function buildSeasonSelector() {
   select.addEventListener('change', () => {
     S.season = select.value;
     localStorage.setItem('season', S.season);
-    // When switching to historical, force to clasif (only available section)
-    if (isHistorical() && S.section !== 'clasif') {
+    // When switching to historical, if on goleadores tab force to clasif
+    if (isHistorical() && S.section === 'goleadores') {
       S.section = 'clasif';
       $$('.section-tab').forEach(t => t.classList.toggle('active', t.dataset.section === 'clasif'));
     }
@@ -191,9 +191,9 @@ function updateSeasonUI() {
   }
   // Disable tabs that have no data for historical seasons
   $$('.section-tab').forEach(tab => {
-    if (tab.dataset.section === 'clasif') return;
-    tab.classList.toggle('disabled', hist);
-    tab.disabled = hist;
+    const disable = hist && tab.dataset.section === 'goleadores';
+    tab.classList.toggle('disabled', disable);
+    tab.disabled = disable;
   });
 }
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260303f';
+const CACHE_NAME = 'futbolbase-v20260303g';
 
 // All files to precache on install
 const ASSETS = [

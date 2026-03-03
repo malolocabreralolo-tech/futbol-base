@@ -56,7 +56,8 @@ def main():
                 options: Array.from(s.options).map(o => ({value: o.value, text: o.text.trim()})).slice(0, 10)
             }))
         """)
-        out["jornada_body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 1000)")
+        out["jornada_body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
+        out["jornada_html_snippet"] = page.evaluate("() => document.body.innerHTML.slice(0, 5000)")
 
         # 3. Try selecting first jornada if available
         jornada_opts = page.evaluate("""
@@ -82,6 +83,12 @@ def main():
                     sample: t.innerText.trim().slice(0, 300)
                 }))
             """)
+
+        # 4. Also dump clasif page HTML
+        page.goto(clasif_url, wait_until="domcontentloaded")
+        page.wait_for_timeout(3000)
+        out["clasif_html_snippet"] = page.evaluate("() => document.body.innerHTML.slice(0, 5000)")
+        out["clasif_body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
 
         with open("scripts/debug_season19.json", "w", encoding="utf-8") as f:
             json.dump(out, f, ensure_ascii=False, indent=2)

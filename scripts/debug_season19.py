@@ -111,6 +111,73 @@ def main():
             }).map(el => ({text: el.innerText.trim(), href: el.href||'', onclick: el.getAttribute('onclick')||''}))
         """)
 
+        # Try clicking "Resultados" button
+        try:
+            page.click("a:has-text('Resultados')", timeout=3000)
+            page.wait_for_timeout(4000)
+            out["after_resultados_click_body"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
+            out["after_resultados_click_tables"] = page.evaluate("""
+                () => Array.from(document.querySelectorAll('table')).map(t => ({
+                    rows: t.querySelectorAll('tr').length,
+                    cells_r0: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
+                    sample: t.innerText.trim().slice(0, 300)
+                }))
+            """)
+            out["after_resultados_click_url"] = page.url
+        except Exception as e:
+            out["resultados_click_error"] = str(e)
+            # Reload and try form submit
+            page.goto(direct_url, wait_until="domcontentloaded")
+            page.wait_for_timeout(3000)
+            try:
+                page.evaluate("""
+                    () => {
+                        const form = document.querySelector('form[name="BuscaNFG_CMP"]');
+                        if (form) {
+                            // Add CodJornada hidden input if not exists
+                            let ji = form.querySelector('input[name="CodJornada"]');
+                            if (!ji) {
+                                ji = document.createElement('input');
+                                ji.type = 'hidden';
+                                ji.name = 'CodJornada';
+                                form.appendChild(ji);
+                            }
+                            ji.value = '5';
+                            form.submit();
+                        }
+                    }
+                """)
+                page.wait_for_load_state("domcontentloaded", timeout=10000)
+                page.wait_for_timeout(3000)
+                out["after_form_submit_url"] = page.url
+                out["after_form_submit_body"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
+                out["after_form_submit_tables"] = page.evaluate("""
+                    () => Array.from(document.querySelectorAll('table')).map(t => ({
+                        rows: t.querySelectorAll('tr').length,
+                        cells_r0: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
+                        sample: t.innerText.trim().slice(0, 300)
+                    }))
+                """)
+            except Exception as e2:
+                out["form_submit_error"] = str(e2)
+
+        # Also try NFG_CmpJornada_Exec directly via GET
+        exec_url = (f"{BASE}/NFG_CmpJornada_Exec?cod_primaria=1000120"
+                    f"&CodCompeticion={COMP}&CodGrupo={GROUP}"
+                    f"&CodTemporada={SEASON}&CodJornada=5&NPcd_Pdf=0")
+        try:
+            page.goto(exec_url, wait_until="domcontentloaded")
+            page.wait_for_timeout(3000)
+            out["exec_url_body"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
+            out["exec_url_tables"] = page.evaluate("""
+                () => Array.from(document.querySelectorAll('table')).map(t => ({
+                    rows: t.querySelectorAll('tr').length, sample: t.innerText.trim().slice(0, 300)
+                }))
+            """)
+            out["exec_url"] = exec_url
+        except Exception as e:
+            out["exec_url_error"] = str(e)
+
         # THE KEY: read the iframe content (NFG_ControlExec)
         # Wait for frame to attach
         iframe_frame = None

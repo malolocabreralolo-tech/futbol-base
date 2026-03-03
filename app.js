@@ -106,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const t = document.getElementById('themeToggle');
     if (t) t.textContent = '☀️';
   }
+  // Restore saved season
+  const savedSeason = localStorage.getItem('season') || '';
+  S.season = savedSeason;
   buildSeasonSelector();
   updateStats();
   renderSection();
@@ -130,6 +133,7 @@ function buildSeasonSelector() {
 
   select.addEventListener('change', () => {
     S.season = select.value;
+    localStorage.setItem('season', S.season);
     // When switching to historical, force to clasif (only available section)
     if (isHistorical() && S.section !== 'clasif') {
       S.section = 'clasif';
@@ -139,6 +143,9 @@ function buildSeasonSelector() {
     updateStats();
     renderSection();
   });
+
+  // Restore saved value in the select
+  if (S.season) select.value = S.season;
 }
 
 function updateSeasonUI() {

@@ -1,0 +1,35 @@
+[
+  {
+    "competition_id": "1328",
+    "competition_name": "Benjamin Lanzarote Preferente",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Preferente",
+    "group_id": "169838",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1330",
+    "competition_name": "Benjamin Lanzarote Primera",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Primera",
+    "group_id": "170786",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1330",
+    "competition_name": "Benjamin Lanzarote Primera",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Primera",
+    "group_id": "170968",
+    "group_name": "GRUPO 2",
+    "standings": [],
+    "jornadas": []
+  }
+]

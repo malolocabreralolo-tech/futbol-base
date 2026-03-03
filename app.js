@@ -34,14 +34,17 @@ function teamBadgeFallback(name) {
   const hue = Math.abs(hash) % 360;
   return `<span class="team-badge" style="background:hsl(${hue},55%,45%)">${initials}</span>`;
 }
+function normalizeTeamName(s) {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['".,]/g, '').replace(/\b(CF|UD|CD|AD|SD|AFC|SC|CP|CE|CEF|SSD|ATLETICO|ATL)\b/gi, '').toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
 let _shieldsNorm = null;
 function getShieldsNorm() {
   if (_shieldsNorm) return _shieldsNorm;
   if (typeof SHIELDS === 'undefined') return (_shieldsNorm = {});
-  const STRIP = /\b(cf|ud|cd|ad|sd|ce|cef|ssd|atletico|atl)\b/gi;
   _shieldsNorm = {};
   Object.keys(SHIELDS).forEach(k => {
-    const norm = k.toLowerCase().replace(STRIP, '').replace(/\s+/g, ' ').trim();
+    const norm = normalizeTeamName(k);
     if (norm && !_shieldsNorm[norm]) _shieldsNorm[norm] = SHIELDS[k];
   });
   return _shieldsNorm;
@@ -53,19 +56,17 @@ function teamBadge(name) {
     if (SHIELDS[name]) {
       return '<img class="team-badge" src="./escudos/' + SHIELDS[name] + '" alt="' + name + '" onerror="this.outerHTML=teamBadgeFallback(this.alt)">';
     }
-    // 2. Normalized match (strip common suffixes)
-    const STRIP = /\b(cf|ud|cd|ad|sd|ce|cef|ssd|atletico|atl)\b/gi;
-    const norm = name.toLowerCase().replace(STRIP, '').replace(/\s+/g, ' ').trim();
+    // 2. Normalized match (strip diacritics + common suffixes)
+    const norm = normalizeTeamName(name);
     const shNorm = getShieldsNorm();
     if (norm && shNorm[norm]) {
       return '<img class="team-badge" src="./escudos/' + shNorm[norm] + '" alt="' + name + '" onerror="this.outerHTML=teamBadgeFallback(this.alt)">';
     }
-    // 3. Substring match (short name inside long key)
+    // 3. Substring match (short name inside long key, using normalized forms)
     if (norm.length >= 4) {
-      const STRIP2 = /\b(cf|ud|cd|ad|sd|ce|cef|ssd|atletico|atl)\b/gi;
       const found = Object.keys(SHIELDS).find(k => {
-        const kn = k.toLowerCase().replace(STRIP2, '').replace(/\s+/g, ' ').trim();
-        return kn.includes(norm) || norm.includes(kn);
+        const kn = normalizeTeamName(k);
+        return kn.length >= 4 && (kn.includes(norm) || norm.includes(kn));
       });
       if (found) {
         return '<img class="team-badge" src="./escudos/' + SHIELDS[found] + '" alt="' + name + '" onerror="this.outerHTML=teamBadgeFallback(this.alt)">';

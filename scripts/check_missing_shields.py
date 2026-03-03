@@ -3,16 +3,22 @@
 check_missing_shields.py - Lista equipos sin escudo en data-shields.js.
 Util para identificar equipos historicos que necesitan escudo manual.
 """
-import json, os, re
+import json, os, re, unicodedata
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHIELDS_PATH = os.path.join(ROOT, 'data-shields.js')
 SEASONS_PATH = os.path.join(ROOT, 'data-seasons.js')
 
-STRIP = re.compile(r'\b(cf|ud|cd|ad|sd|ce|cef|ssd|atletico|atl)\b', re.IGNORECASE)
+STRIP = re.compile(r'\b(CF|UD|CD|AD|SD|AFC|SC|CP|CE|CEF|SSD|ATLETICO|ATL)\b', re.IGNORECASE)
 
 def normalize(name):
-    return STRIP.sub('', name.lower()).replace('"', '').replace("'", '').strip()
+    # Strip diacritics/accents
+    name = unicodedata.normalize('NFD', name)
+    name = ''.join(c for c in name if unicodedata.category(c) != 'Mn')
+    # Strip punctuation and common suffixes
+    name = re.sub(r"['\",.]", '', name)
+    name = STRIP.sub('', name)
+    return re.sub(r'\s+', ' ', name.lower()).strip()
 
 def load_json_var(path, varname):
     with open(path, encoding='utf-8') as f:
@@ -32,7 +38,7 @@ def has_shield(name, shields, shields_norm):
     if len(n) >= 4:
         for k in shields:
             kn = normalize(k)
-            if n in kn or (kn and kn in n):
+            if len(kn) >= 4 and (n in kn or kn in n):
                 return True
     return False
 

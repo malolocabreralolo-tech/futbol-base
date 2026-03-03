@@ -450,6 +450,41 @@ function renderJornadaContent() {
   const group = getData().find(g => g.id === S.jorGroup);
   if (!group) return;
 
+  // HISTORICAL PATH
+  if (isHistorical() && group.jornadas && Object.keys(group.jornadas).length > 0) {
+    var jorNums = Object.keys(group.jornadas).map(Number).sort(function(a,b){return a-b;});
+    if (!S.jorNum || !jorNums.includes(Number(S.jorNum))) {
+      var lastPlayed = jorNums[jorNums.length - 1];
+      for (var i = jorNums.length - 1; i >= 0; i--) {
+        var ms = group.jornadas[jorNums[i]] || [];
+        if (ms.some(function(m){return m[3] !== null && m[3] !== undefined;})) {
+          lastPlayed = jorNums[i]; break;
+        }
+      }
+      S.jorNum = String(lastPlayed);
+    }
+    jorNums.forEach(function(num) {
+      var key = String(num);
+      var pill = el('button', 'jornada-pill' + (key === S.jorNum ? ' active' : ''), 'J' + num);
+      pill.addEventListener('click', (function(n, k) {
+        return function() {
+          S.jorNum = k;
+          $$('.jornada-pill').forEach(function(p){p.classList.remove('active');});
+          pill.classList.add('active');
+          renderMatchCards(matchesDiv, getHistoricalJornadaMatches(group, n), 'history');
+        };
+      })(num, key));
+      pillsDiv.appendChild(pill);
+    });
+    setTimeout(function() {
+      var active = pillsDiv.querySelector('.active');
+      if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }, 50);
+    renderMatchCards(matchesDiv, getHistoricalJornadaMatches(group, Number(S.jorNum)), 'history');
+    return;
+  }
+  // END HISTORICAL PATH
+
   // Use HISTORY data if available for this group (Benjamin and Prebenjamín)
   if (typeof HISTORY !== 'undefined' && HISTORY[S.jorGroup]) {
     const hist = HISTORY[S.jorGroup];
@@ -545,6 +580,13 @@ function getJornadaMatches(jorName) {
   return HISTORY[S.jorGroup][jorName].map(m => ({
     date: m[0], home: m[1], away: m[2], hs: m[3], as: m[4]
   }));
+}
+
+function getHistoricalJornadaMatches(group, jorNum) {
+  if (!group || !group.jornadas || !group.jornadas[jorNum]) return [];
+  return group.jornadas[jorNum].map(function(m) {
+    return { date: m[0], home: m[1], away: m[2], hs: m[3], as: m[4] };
+  });
 }
 
 function renderMatchCards(container, matches, type) {

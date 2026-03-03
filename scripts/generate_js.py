@@ -660,8 +660,7 @@ def main():
     print("5. data-goleadores.js")
     write_file("data-goleadores.js", generate_goleadores_js(conn))
 
-    print("6. data-shields.js")
-    write_file("data-shields.js", generate_shields_js(conn))
+    print("6. data-shields.js  [skipped - maintained manually]")
 
     print("7. data-stats.js")
     write_file("data-stats.js", generate_stats_js(conn))

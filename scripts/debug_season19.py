@@ -62,39 +62,54 @@ def main():
             () => typeof IrA === 'function' ? IrA.toString().slice(0, 500) : 'NOT FOUND'
         """)
 
-        # Navigate directly with CodJornada=5 to check match structure
-        for jnum in [1, 2, 5, 10]:
-            direct_url = (f"{BASE}/NFG_CmpJornada?cod_primaria=1000120"
-                          f"&CodCompeticion={COMP}&CodGrupo={GROUP}"
-                          f"&CodTemporada={SEASON}&CodJornada={jnum}")
-            page.goto(direct_url, wait_until="domcontentloaded")
-            page.wait_for_timeout(3000)
-            tables = page.evaluate("""
-                () => Array.from(document.querySelectorAll('table')).map(t => ({
-                    rows: t.querySelectorAll('tr').length,
-                    cells_r0: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
-                    sample: t.innerText.trim().slice(0, 300)
-                }))
-            """)
-            body_snip = page.evaluate("() => document.body.innerText.slice(0, 800)")
-            html_content = page.evaluate("""
-                () => {
-                    // find main content after header
-                    const all = document.body.innerHTML;
-                    const idx = all.indexOf('CodJornada');
-                    if (idx > 0) return all.slice(Math.max(0, idx-100), idx+3000);
-                    return all.slice(8000, 14000);
+        # Navigate directly with CodJornada=5 - try different waits and strategies
+        direct_url = (f"{BASE}/NFG_CmpJornada?cod_primaria=1000120"
+                      f"&CodCompeticion={COMP}&CodGrupo={GROUP}"
+                      f"&CodTemporada={SEASON}&CodJornada=5")
+        print(f"Loading jornada 5 direct: {direct_url}")
+        page.goto(direct_url, wait_until="domcontentloaded")
+        # Try network idle
+        try:
+            page.wait_for_load_state("networkidle", timeout=8000)
+        except Exception:
+            pass
+        page.wait_for_timeout(5000)
+
+        out["jornada5_tables"] = page.evaluate("""
+            () => Array.from(document.querySelectorAll('table')).map(t => ({
+                rows: t.querySelectorAll('tr').length,
+                cells_r0: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
+                sample: t.innerText.trim().slice(0, 300)
+            }))
+        """)
+        out["jornada5_body"] = page.evaluate("() => document.body.innerText")
+        out["jornada5_iframes"] = page.evaluate("""
+            () => Array.from(document.querySelectorAll('iframe')).map(f => ({src: f.src, name: f.name}))
+        """)
+        # Get the full main content by looking for team-like content or match containers
+        out["jornada5_content_html"] = page.evaluate("""
+            () => {
+                // Find div that contains match content
+                const all = document.querySelectorAll('div, section, article');
+                for (const el of all) {
+                    const txt = el.innerText;
+                    // look for football team name patterns
+                    if (txt.length > 200 && txt.length < 5000 &&
+                        (txt.includes(' - ') || txt.includes('Jornada')) &&
+                        !txt.includes('dropdown') && !txt.includes('navbar')) {
+                        return el.outerHTML.slice(0, 5000);
+                    }
                 }
-            """)
-            out[f"jornada_{jnum}"] = {
-                "tables": tables,
-                "body": body_snip,
-                "html": html_content
+                // Fallback: everything after position 10000 in body
+                return document.body.innerHTML.slice(10000, 18000);
             }
-            print(f"  Jornada {jnum}: {len(tables)} tables, body snippet: {body_snip[100:200]}")
-            if any(t['rows'] > 0 for t in tables):
-                print(f"  --> Found {sum(t['rows'] for t in tables)} rows total!")
-                break
+        """)
+        out["jornada5_nav_links"] = page.evaluate("""
+            () => Array.from(document.querySelectorAll('a, button')).filter(el => {
+                const txt = el.innerText || '';
+                return ['Anterior','Siguiente','Resultados','Provisional','Definitivo'].some(k => txt.includes(k));
+            }).map(el => ({text: el.innerText.trim(), href: el.href||'', onclick: el.getAttribute('onclick')||''}))
+        """)
 
         # Reload jornada page
         page.goto(jornada_url, wait_until="domcontentloaded")

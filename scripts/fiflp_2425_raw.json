@@ -1,0 +1,1623 @@
+[
+  {
+    "competition_id": "1575",
+    "competition_name": "Benjamin Lanzarote Preferente",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Preferente",
+    "group_id": "190745",
+    "group_name": "GRUPO 1",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "LANZAROTE, U.D. \"A\"",
+        "pts": 61,
+        "j": 22,
+        "g": 20,
+        "e": 1,
+        "p": 1,
+        "gf": 136,
+        "gc": 28,
+        "df": 108,
+        "form": "GGGGE"
+      },
+      {
+        "pos": 2,
+        "team": "SAN BARTOLOME, C.F. \"A\"",
+        "pts": 55,
+        "j": 22,
+        "g": 18,
+        "e": 1,
+        "p": 3,
+        "gf": 134,
+        "gc": 26,
+        "df": 108,
+        "form": "PGGGG"
+      },
+      {
+        "pos": 3,
+        "team": "INTERNACIONAL PH \"A\"",
+        "pts": 53,
+        "j": 22,
+        "g": 16,
+        "e": 5,
+        "p": 1,
+        "gf": 145,
+        "gc": 36,
+        "df": 109,
+        "form": "GGGGE"
+      },
+      {
+        "pos": 4,
+        "team": "SPORTING TIAS, C.F. \"A\"",
+        "pts": 49,
+        "j": 22,
+        "g": 15,
+        "e": 4,
+        "p": 3,
+        "gf": 94,
+        "gc": 43,
+        "df": 51,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 5,
+        "team": "JUVENTUD MARITIMA, C.D. \"A\"",
+        "pts": 34,
+        "j": 22,
+        "g": 11,
+        "e": 1,
+        "p": 10,
+        "gf": 78,
+        "gc": 83,
+        "df": -5,
+        "form": "GPGGG"
+      },
+      {
+        "pos": 6,
+        "team": "TAHICHE, C.D. \"A\"",
+        "pts": 29,
+        "j": 22,
+        "g": 9,
+        "e": 2,
+        "p": 11,
+        "gf": 77,
+        "gc": 78,
+        "df": -1,
+        "form": "PGPGP"
+      },
+      {
+        "pos": 7,
+        "team": "TEGUISE, C.D. \"A\"",
+        "pts": 23,
+        "j": 22,
+        "g": 7,
+        "e": 2,
+        "p": 13,
+        "gf": 46,
+        "gc": 78,
+        "df": -32,
+        "form": "PPPPG"
+      },
+      {
+        "pos": 8,
+        "team": "LOMO, C.D. \"A\"",
+        "pts": 20,
+        "j": 22,
+        "g": 5,
+        "e": 5,
+        "p": 12,
+        "gf": 33,
+        "gc": 79,
+        "df": -46,
+        "form": "GGPPE"
+      },
+      {
+        "pos": 9,
+        "team": "UNION SUR YAIZA, C.D.",
+        "pts": 19,
+        "j": 22,
+        "g": 5,
+        "e": 4,
+        "p": 13,
+        "gf": 50,
+        "gc": 97,
+        "df": -47,
+        "form": "GPPPP"
+      },
+      {
+        "pos": 10,
+        "team": "TITE, C.D. \"A\"",
+        "pts": 16,
+        "j": 22,
+        "g": 5,
+        "e": 1,
+        "p": 16,
+        "gf": 42,
+        "gc": 105,
+        "df": -63,
+        "form": "PPPPE"
+      },
+      {
+        "pos": 11,
+        "team": "TINAJO, C.D. \"A\"",
+        "pts": 10,
+        "j": 22,
+        "g": 2,
+        "e": 4,
+        "p": 16,
+        "gf": 41,
+        "gc": 130,
+        "df": -89,
+        "form": "PPGPP"
+      },
+      {
+        "pos": 12,
+        "team": "PALMEIROS DE COSTA T., U.D. \"A\"",
+        "pts": 10,
+        "j": 22,
+        "g": 2,
+        "e": 4,
+        "p": 16,
+        "gf": 46,
+        "gc": 139,
+        "df": -93,
+        "form": "PPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "16-11-2024",
+        "matches": [
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "15-11-2024",
+            "time": "17:45",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": 1,
+            "as": null,
+            "date": "16-11-2024",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "16-11-2024",
+            "time": "11:00",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "16-11-2024",
+            "time": "11:00",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "16-11-2024",
+            "time": "11:00",
+            "venue": "PUERTO ARRECIFE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": null,
+            "as": 2,
+            "date": "17-11-2024",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "23-11-2024",
+        "matches": [
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2024",
+            "time": "19:18",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-11-2024",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-11-2024",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-11-2024",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-11-2024",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "23-11-2024",
+            "time": "11:00",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "30-11-2024",
+        "matches": [
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "29-11-2024",
+            "time": "18:20",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "30-11-2024",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": 8,
+            "as": null,
+            "date": "30-11-2024",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "30-11-2024",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "30-11-2024",
+            "time": "09:30",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "01-12-2024",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "14-12-2024",
+        "matches": [
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": 3,
+            "as": 1,
+            "date": "13-12-2024",
+            "time": "18:56",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "14-12-2024",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": 3,
+            "as": 8,
+            "date": "14-12-2024",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "TITE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "14-12-2024",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "14-12-2024",
+            "time": "09:30",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": 5,
+            "as": null,
+            "date": "15-12-2024",
+            "time": "11:00",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "21-12-2024",
+        "matches": [
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": null,
+            "as": 0,
+            "date": "18-12-2024",
+            "time": "17:00",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "18-12-2024",
+            "time": "18:58",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-12-2024",
+            "time": "11:00",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": 3,
+            "as": null,
+            "date": "21-12-2024",
+            "time": "11:00",
+            "venue": "MUNICIPAL DE TAHICHE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-12-2024",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-12-2024",
+            "time": "09:30",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "11-01-2025",
+        "matches": [
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": null,
+            "as": 2,
+            "date": "11-01-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-01-2025",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-01-2025",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-01-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-01-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-01-2025",
+            "time": "11:00",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "18-01-2025",
+        "matches": [
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "15-01-2025",
+            "time": "18:16",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": 3,
+            "date": "17-01-2025",
+            "time": "16:30",
+            "venue": "PUERTO ARRECIFE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-01-2025",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "18-01-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "18-01-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "19-01-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "25-01-2025",
+        "matches": [
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "22-01-2025",
+            "time": "19:06",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-01-2025",
+            "time": "17:00",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "25-01-2025",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "25-01-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "25-01-2025",
+            "time": "11:00",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "26-01-2025",
+            "time": "09:30",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "01-02-2025",
+        "matches": [
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2025",
+            "time": "18:08",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2025",
+            "time": "18:39",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": null,
+            "as": 11,
+            "date": "01-02-2025",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "01-02-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": 0,
+            "as": null,
+            "date": "02-02-2025",
+            "time": "09:30",
+            "venue": "PUERTO ARRECIFE F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "08-02-2025",
+        "matches": [
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": 8,
+            "as": null,
+            "date": "08-02-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-02-2025",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-02-2025",
+            "time": "09:30",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-02-2025",
+            "time": "11:00",
+            "venue": "LOS VOLCANES F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-02-2025",
+            "time": "09:00",
+            "venue": "AGAPITO REYES VIERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": null,
+            "as": 2,
+            "date": "09-02-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "16-02-2025",
+        "matches": [
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": 3,
+            "date": "15-02-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "15-02-2025",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": null,
+            "as": 3,
+            "date": "15-02-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "15-02-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-02-2025",
+            "time": "11:00",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "16-02-2025",
+            "time": "11:00",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "21-02-2025",
+        "matches": [
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-02-2025",
+            "time": "16:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-02-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-02-2025",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "22-02-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-02-2025",
+            "time": "09:30",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-02-2025",
+            "time": "11:00",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "01-03-2025",
+        "matches": [
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2025",
+            "time": "19:30",
+            "venue": "LOS VOLCANES F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-03-2025",
+            "time": "09:30",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "01-03-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "01-03-2025",
+            "time": "09:30",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "02-03-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "15-03-2025",
+        "matches": [
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "15-03-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": null,
+            "as": 2,
+            "date": "15-03-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TEGUISE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": null,
+            "as": 2,
+            "date": "15-03-2025",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "15-03-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": 6,
+            "as": null,
+            "date": "16-03-2025",
+            "time": "09:30",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "16-03-2025",
+            "time": "11:00",
+            "venue": "AGAPITO REYES VIERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "22-03-2025",
+        "matches": [
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "22-03-2025",
+            "time": "09:30",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2025",
+            "time": "11:00",
+            "venue": "LOS VOLCANES F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "23-03-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "29-03-2025",
+        "matches": [
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": null,
+            "as": 6,
+            "date": "26-03-2025",
+            "time": "19:34",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": 1,
+            "as": 0,
+            "date": "27-03-2025",
+            "time": "19:18",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "29-03-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "29-03-2025",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "30-03-2025",
+            "time": "09:00",
+            "venue": "AGAPITO REYES VIERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "30-03-2025",
+            "time": "09:30",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "05-04-2025",
+        "matches": [
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": 1,
+            "as": 8,
+            "date": "05-04-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "05-04-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "05-04-2025",
+            "time": "09:30",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "05-04-2025",
+            "time": "11:00",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": null,
+            "as": 0,
+            "date": "05-04-2025",
+            "time": "11:00",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-04-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "12-04-2025",
+        "matches": [
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "08-04-2025",
+            "time": "23:04",
+            "venue": "AGAPITO REYES VIERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": 7,
+            "as": 4,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": 7,
+            "as": null,
+            "date": "12-04-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "12-04-2025",
+            "time": "11:00",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": null,
+            "as": 0,
+            "date": "13-04-2025",
+            "time": "09:30",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "19",
+        "date": "26-04-2025",
+        "matches": [
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-04-2025",
+            "time": "18:39",
+            "venue": "MUNICIPAL DE TEGUISE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "26-04-2025",
+            "time": "09:30",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "26-04-2025",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "26-04-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "26-04-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-04-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "20",
+        "date": "03-05-2025",
+        "matches": [
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "30-04-2025",
+            "time": "18:40",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": 13,
+            "as": null,
+            "date": "03-05-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "03-05-2025",
+            "time": "11:00",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "03-05-2025",
+            "time": "11:00",
+            "venue": "LOS VOLCANES F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "04-05-2025",
+            "time": "09:00",
+            "venue": "AGAPITO REYES VIERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "04-05-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "21",
+        "date": "11-05-2025",
+        "matches": [
+          {
+            "home": "TAHICHE, C.D. \"A\"",
+            "away": "TINAJO, C.D. \"A\"",
+            "hs": 5,
+            "as": 1,
+            "date": "07-05-2025",
+            "time": "19:38",
+            "venue": "MUNICIPAL DE TAHICHE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA, C.D.",
+            "away": "INTERNACIONAL PH \"A\"",
+            "hs": 1,
+            "as": 1,
+            "date": "07-05-2025",
+            "time": "19:46",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "away": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-05-2025",
+            "time": "09:30",
+            "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D. \"A\"",
+            "away": "SAN BARTOLOME, C.F. \"A\"",
+            "hs": 0,
+            "as": null,
+            "date": "10-05-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE TEGUISE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TITE, C.D. \"A\"",
+            "away": "SPORTING TIAS, C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-05-2025",
+            "time": "09:30",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE, U.D. \"A\"",
+            "away": "LOMO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-05-2025",
+            "time": "11:00",
+            "venue": "MUNICIPAL ARGANA F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "22",
+        "date": "17-05-2025",
+        "matches": [
+          {
+            "home": "SPORTING TIAS, C.F. \"A\"",
+            "away": "TAHICHE, C.D. \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "14-05-2025",
+            "time": "18:53",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO, C.D. \"A\"",
+            "away": "TITE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2025",
+            "time": "18:22",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO, C.D. \"A\"",
+            "away": "TEGUISE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "16-05-2025",
+            "time": "18:24",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "INTERNACIONAL PH \"A\"",
+            "away": "LANZAROTE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE PLAYA HONDA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME, C.F. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "JUVENTUD MARITIMA, C.D. \"A\"",
+            "away": "UNION SUR YAIZA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-05-2025",
+            "time": "09:30",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  }
+]

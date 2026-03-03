@@ -1,0 +1,199 @@
+{
+  "clasif_url": "https://www.fiflp.com/pnfg/NPcd/NFG_VisClasificacion?cod_primaria=1000120&CodTemporada=19&codcompeticion=1328&codgrupo=169838&codjornada=99",
+  "clasif_title": "Federación de Fútbol de Las Palmas - Visualización de Clasificación",
+  "clasif_tables": [],
+  "jornada_url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=19&CodCompeticion=1328&CodGrupo=169838",
+  "jornada_title": "Federación de Fútbol de Las Palmas - Visualización de Partidos",
+  "jornada_selects": [
+    {
+      "name": "temporada",
+      "options": [
+        {
+          "value": "21",
+          "text": "2025-2026"
+        },
+        {
+          "value": "20",
+          "text": "2024-2025"
+        },
+        {
+          "value": "19",
+          "text": "2023-2024"
+        },
+        {
+          "value": "18",
+          "text": "2022-2023"
+        },
+        {
+          "value": "17",
+          "text": "2021-2022"
+        },
+        {
+          "value": "16",
+          "text": "2020-2021"
+        },
+        {
+          "value": "15",
+          "text": "2019-2020"
+        },
+        {
+          "value": "14",
+          "text": "2018-2019"
+        },
+        {
+          "value": "13",
+          "text": "2017-2018"
+        },
+        {
+          "value": "12",
+          "text": "2016-2017"
+        }
+      ]
+    },
+    {
+      "name": "Sch_Codigo_Delegacion",
+      "options": [
+        {
+          "value": "",
+          "text": "-- Todas --"
+        },
+        {
+          "value": "1",
+          "text": "GRAN CANARIA"
+        },
+        {
+          "value": "3",
+          "text": "FUERTEVENTURA"
+        },
+        {
+          "value": "2",
+          "text": "LANZAROTE"
+        }
+      ]
+    },
+    {
+      "name": "Sch_Tipo_Juego",
+      "options": [
+        {
+          "value": "",
+          "text": "-- Todos --"
+        },
+        {
+          "value": "1",
+          "text": "Futbol-11"
+        },
+        {
+          "value": "2",
+          "text": "Futbol-7"
+        },
+        {
+          "value": "3",
+          "text": "Futbol Sala"
+        },
+        {
+          "value": "4",
+          "text": "Futbol-8"
+        },
+        {
+          "value": "5",
+          "text": "Futbol Playa"
+        },
+        {
+          "value": "6",
+          "text": "Futbol-5"
+        }
+      ]
+    },
+    {
+      "name": "Sch_Cod_Agrupacion",
+      "options": [
+        {
+          "value": "",
+          "text": "-- Todas --"
+        },
+        {
+          "value": "1",
+          "text": "Competiciones Federadas"
+        },
+        {
+          "value": "900085381",
+          "text": "Competiciones Escolares FutSal"
+        },
+        {
+          "value": "900434360",
+          "text": "Selecciones Territoriales"
+        }
+      ]
+    },
+    {
+      "name": "competicion",
+      "options": [
+        {
+          "value": "0",
+          "text": "-- Seleccione --"
+        },
+        {
+          "value": "1436",
+          "text": "COPA JOSE ANTONIO RUIZ CABALLERO"
+        },
+        {
+          "value": "1437",
+          "text": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA"
+        },
+        {
+          "value": "1438",
+          "text": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE"
+        },
+        {
+          "value": "1211",
+          "text": "ELIMINATORIA AUTONÓMICA C.S.M. EL REY"
+        },
+        {
+          "value": "1208",
+          "text": "FASE ASCENSO A 2ª RFEF"
+        },
+        {
+          "value": "1216",
+          "text": "LIGA TERCERA FEDERACIÓN GRUPO 12"
+        },
+        {
+          "value": "1218",
+          "text": "LIGA DIVISION DE HONOR JUVENIL GRUPO 6"
+        },
+        {
+          "value": "1210",
+          "text": "SEGUNDA FEDERACION FUTBOL FEMENINO"
+        },
+        {
+          "value": "1240",
+          "text": "FINAL COPA FEMENINA MANOLO SANTANA"
+        }
+      ]
+    },
+    {
+      "name": "grupo",
+      "options": [
+        {
+          "value": "0",
+          "text": "-- Seleccione --"
+        },
+        {
+          "value": "169838",
+          "text": "GRUPO 1"
+        }
+      ]
+    },
+    {
+      "name": "jornada",
+      "options": [
+        {
+          "value": "0",
+          "text": "-- Seleccione --"
+        }
+      ]
+    }
+  ],
+  "jornada_body_snippet": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada 2023-2024\nLIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE GRUPO 1\n  Anterior\n Provisional  Definitivo\nResultados\n   Anterior\nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
+  "jornada_opts_count": 0,
+  "jornada_opts": []
+}

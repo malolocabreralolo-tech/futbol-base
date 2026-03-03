@@ -10649,6 +10649,1423 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "1prebenjamin1",
+      "url": "https://futbolaspalmas.com/1prebenjamin1/",
+      "wayback_timestamp": "20240507041022",
+      "category": "prebenjamin",
+      "group_name": "Grupo 1",
+      "phase": "Primera Fase GC",
+      "island": "gran_canaria",
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Roque Amagro",
+          "pts": 61,
+          "j": 23,
+          "g": 20,
+          "e": 1,
+          "p": 2,
+          "gf": 169,
+          "gc": 42,
+          "df": 127
+        },
+        {
+          "pos": 2,
+          "team": "Arucas C",
+          "pts": 56,
+          "j": 22,
+          "g": 18,
+          "e": 2,
+          "p": 2,
+          "gf": 191,
+          "gc": 44,
+          "df": 147
+        },
+        {
+          "pos": 3,
+          "team": "Valleseco",
+          "pts": 55,
+          "j": 23,
+          "g": 18,
+          "e": 1,
+          "p": 4,
+          "gf": 192,
+          "gc": 32,
+          "df": 160
+        },
+        {
+          "pos": 4,
+          "team": "Santidad",
+          "pts": 50,
+          "j": 23,
+          "g": 16,
+          "e": 2,
+          "p": 5,
+          "gf": 138,
+          "gc": 73,
+          "df": 65
+        },
+        {
+          "pos": 5,
+          "team": "Guayarmina",
+          "pts": 45,
+          "j": 23,
+          "g": 15,
+          "e": 0,
+          "p": 8,
+          "gf": 107,
+          "gc": 80,
+          "df": 27
+        },
+        {
+          "pos": 6,
+          "team": "Atalaya",
+          "pts": 40,
+          "j": 23,
+          "g": 13,
+          "e": 1,
+          "p": 9,
+          "gf": 76,
+          "gc": 88,
+          "df": -12
+        },
+        {
+          "pos": 7,
+          "team": "Gáldar",
+          "pts": 30,
+          "j": 23,
+          "g": 9,
+          "e": 3,
+          "p": 11,
+          "gf": 65,
+          "gc": 78,
+          "df": -13
+        },
+        {
+          "pos": 8,
+          "team": "Moya",
+          "pts": 29,
+          "j": 23,
+          "g": 8,
+          "e": 5,
+          "p": 10,
+          "gf": 61,
+          "gc": 96,
+          "df": -35
+        },
+        {
+          "pos": 9,
+          "team": "Becerril",
+          "pts": 27,
+          "j": 23,
+          "g": 9,
+          "e": 0,
+          "p": 14,
+          "gf": 73,
+          "gc": 115,
+          "df": -42
+        },
+        {
+          "pos": 10,
+          "team": "Goleta",
+          "pts": 23,
+          "j": 22,
+          "g": 7,
+          "e": 2,
+          "p": 13,
+          "gf": 71,
+          "gc": 112,
+          "df": -41
+        },
+        {
+          "pos": 11,
+          "team": "Guía",
+          "pts": 15,
+          "j": 23,
+          "g": 4,
+          "e": 3,
+          "p": 16,
+          "gf": 49,
+          "gc": 127,
+          "df": -78
+        },
+        {
+          "pos": 12,
+          "team": "R. Amagro At.",
+          "pts": 4,
+          "j": 24,
+          "g": 1,
+          "e": 1,
+          "p": 22,
+          "gf": 22,
+          "gc": 183,
+          "df": -161
+        },
+        {
+          "pos": 13,
+          "team": "Barrial",
+          "pts": 1,
+          "j": 23,
+          "g": 0,
+          "e": 1,
+          "p": 22,
+          "gf": 37,
+          "gc": 181,
+          "df": -144
+        }
+      ],
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2023-10-20",
+              "home": "Gáldar",
+              "away": "R. Amagro At.",
+              "hs": 8,
+              "as_": 0
+            },
+            {
+              "date": "2023-10-20",
+              "home": "Guía",
+              "away": "Moya",
+              "hs": 1,
+              "as_": 1
+            },
+            {
+              "date": "2023-10-20",
+              "home": "Santidad",
+              "away": "Barrial",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2023-10-21",
+              "home": "Roque Amagro",
+              "away": "Atalaya",
+              "hs": 9,
+              "as_": 2
+            },
+            {
+              "date": "2023-10-25",
+              "home": "Valleseco",
+              "away": "Goleta",
+              "hs": 8,
+              "as_": 0
+            },
+            {
+              "date": "2023-10-22",
+              "home": "Arucas C",
+              "away": "Guayarmina",
+              "hs": 11,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2023-10-27",
+              "home": "Barrial",
+              "away": "Valleseco",
+              "hs": 0,
+              "as_": 12
+            },
+            {
+              "date": "2023-10-27",
+              "home": "Guayarmina",
+              "away": "Santidad",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2023-10-27",
+              "home": "Atalaya",
+              "away": "Gáldar",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2023-10-27",
+              "home": "Moya",
+              "away": "Arucas C",
+              "hs": 0,
+              "as_": 6
+            },
+            {
+              "date": "2023-10-27",
+              "home": "R. Amagro At.",
+              "away": "Becerril",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2023-10-29",
+              "home": "Goleta",
+              "away": "Roque Amagro",
+              "hs": 1,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2023-11-03",
+              "home": "Gáldar",
+              "away": "Becerril",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-03",
+              "home": "Guía",
+              "away": "R. Amagro At.",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2023-11-03",
+              "home": "Santidad",
+              "away": "Moya",
+              "hs": 4,
+              "as_": 7
+            },
+            {
+              "date": "2023-11-03",
+              "home": "Atalaya",
+              "away": "Goleta",
+              "hs": 7,
+              "as_": 5
+            },
+            {
+              "date": "2023-11-04",
+              "home": "Roque Amagro",
+              "away": "Barrial",
+              "hs": 7,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-04",
+              "home": "Valleseco",
+              "away": "Guayarmina",
+              "hs": 11,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2023-11-10",
+              "home": "Barrial",
+              "away": "Atalaya",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2023-11-10",
+              "home": "Guayarmina",
+              "away": "Roque Amagro",
+              "hs": 1,
+              "as_": 9
+            },
+            {
+              "date": "2023-11-10",
+              "home": "Moya",
+              "away": "Valleseco",
+              "hs": 0,
+              "as_": 10
+            },
+            {
+              "date": "2023-11-10",
+              "home": "R. Amagro At.",
+              "away": "Arucas C",
+              "hs": 0,
+              "as_": 18
+            },
+            {
+              "date": "2023-11-10",
+              "home": "Becerril",
+              "away": "Guía",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2023-11-12",
+              "home": "Goleta",
+              "away": "Gáldar",
+              "hs": 3,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2023-11-17",
+              "home": "Gáldar",
+              "away": "Guía",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-17",
+              "home": "Santidad",
+              "away": "R. Amagro At.",
+              "hs": 10,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-17",
+              "home": "Atalaya",
+              "away": "Guayarmina",
+              "hs": 0,
+              "as_": 6
+            },
+            {
+              "date": "2023-11-17",
+              "home": "Roque Amagro",
+              "away": "Moya",
+              "hs": 10,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-19",
+              "home": "Arucas C",
+              "away": "Becerril",
+              "hs": 12,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-19",
+              "home": "Goleta",
+              "away": "Barrial",
+              "hs": 5,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "name": "Jornada 6",
+          "matches": [
+            {
+              "date": "2023-11-24",
+              "home": "Barrial",
+              "away": "Gáldar",
+              "hs": 3,
+              "as_": 5
+            },
+            {
+              "date": "2023-11-24",
+              "home": "Guayarmina",
+              "away": "Goleta",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2023-11-24",
+              "home": "Guía",
+              "away": "Arucas C",
+              "hs": 0,
+              "as_": 9
+            },
+            {
+              "date": "2023-11-24",
+              "home": "Moya",
+              "away": "Atalaya",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-24",
+              "home": "R. Amagro At.",
+              "away": "Valleseco",
+              "hs": 0,
+              "as_": 15
+            },
+            {
+              "date": "2023-11-24",
+              "home": "Becerril",
+              "away": "Santidad",
+              "hs": 3,
+              "as_": 7
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "name": "Jornada 7",
+          "matches": [
+            {
+              "date": "2023-12-01",
+              "home": "Barrial",
+              "away": "Guayarmina",
+              "hs": 1,
+              "as_": 7
+            },
+            {
+              "date": "2023-12-01",
+              "home": "Gáldar",
+              "away": "Arucas C",
+              "hs": 4,
+              "as_": 8
+            },
+            {
+              "date": "2023-12-01",
+              "home": "Santidad",
+              "away": "Guía",
+              "hs": 10,
+              "as_": 3
+            },
+            {
+              "date": "2023-12-01",
+              "home": "Roque Amagro",
+              "away": "R. Amagro At.",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2023-12-02",
+              "home": "Valleseco",
+              "away": "Becerril",
+              "hs": 14,
+              "as_": 0
+            },
+            {
+              "date": "2023-12-03",
+              "home": "Goleta",
+              "away": "Moya",
+              "hs": 2,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "name": "Jornada 8",
+          "matches": [
+            {
+              "date": "2023-12-05",
+              "home": "Guayarmina",
+              "away": "Gáldar",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2023-12-09",
+              "home": "Guía",
+              "away": "Valleseco",
+              "hs": 0,
+              "as_": 8
+            },
+            {
+              "date": "2023-12-07",
+              "home": "Moya",
+              "away": "Barrial",
+              "hs": 6,
+              "as_": 4
+            },
+            {
+              "date": "2023-12-09",
+              "home": "R. Amagro At.",
+              "away": "Atalaya",
+              "hs": 0,
+              "as_": 7
+            },
+            {
+              "date": "2023-12-08",
+              "home": "Becerril",
+              "away": "Roque Amagro",
+              "hs": 0,
+              "as_": 11
+            },
+            {
+              "date": "2023-12-06",
+              "home": "Arucas C",
+              "away": "Santidad",
+              "hs": 6,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "name": "Jornada 9",
+          "matches": [
+            {
+              "date": "2023-12-15",
+              "home": "Guayarmina",
+              "away": "Moya",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2023-12-15",
+              "home": "Gáldar",
+              "away": "Santidad",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2023-12-15",
+              "home": "Atalaya",
+              "away": "Becerril",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2023-12-15",
+              "home": "Roque Amagro",
+              "away": "Guía",
+              "hs": 9,
+              "as_": 1
+            },
+            {
+              "date": "2023-12-16",
+              "home": "Valleseco",
+              "away": "Arucas C",
+              "hs": 3,
+              "as_": 7
+            },
+            {
+              "date": "2023-12-17",
+              "home": "Goleta",
+              "away": "R. Amagro At.",
+              "hs": 8,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 10,
+          "name": "Jornada 10",
+          "matches": [
+            {
+              "date": "2024-01-12",
+              "home": "Guía",
+              "away": "Atalaya",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2024-01-12",
+              "home": "Santidad",
+              "away": "Valleseco",
+              "hs": 6,
+              "as_": 4
+            },
+            {
+              "date": "2024-01-12",
+              "home": "Moya",
+              "away": "Gáldar",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2024-01-12",
+              "home": "Becerril",
+              "away": "Goleta",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2024-01-13",
+              "home": "R. Amagro At.",
+              "away": "Barrial",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2024-01-14",
+              "home": "Arucas C",
+              "away": "Roque Amagro",
+              "hs": 7,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 11,
+          "name": "Jornada 11",
+          "matches": [
+            {
+              "date": "2024-01-19",
+              "home": "Guayarmina",
+              "away": "R. Amagro At.",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2024-01-19",
+              "home": "Gáldar",
+              "away": "Valleseco",
+              "hs": 1,
+              "as_": 9
+            },
+            {
+              "date": "2024-01-19",
+              "home": "Atalaya",
+              "away": "Arucas C",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2024-01-19",
+              "home": "Roque Amagro",
+              "away": "Santidad",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2024-01-20",
+              "home": "Barrial",
+              "away": "Becerril",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2024-01-21",
+              "home": "Goleta",
+              "away": "Guía",
+              "hs": 9,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 12,
+          "name": "Jornada 12",
+          "matches": [
+            {
+              "date": "2024-01-26",
+              "home": "Guía",
+              "away": "Barrial",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2024-01-26",
+              "home": "Santidad",
+              "away": "Atalaya",
+              "hs": 10,
+              "as_": 0
+            },
+            {
+              "date": "2024-01-26",
+              "home": "R. Amagro At.",
+              "away": "Moya",
+              "hs": 2,
+              "as_": 6
+            },
+            {
+              "date": "2024-01-26",
+              "home": "Becerril",
+              "away": "Guayarmina",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2024-01-27",
+              "home": "Valleseco",
+              "away": "Roque Amagro",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2024-01-28",
+              "home": "Arucas C",
+              "away": "Goleta",
+              "hs": 10,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 13,
+          "name": "Jornada 13",
+          "matches": [
+            {
+              "date": "2024-02-02",
+              "home": "Guayarmina",
+              "away": "Guía",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2024-02-02",
+              "home": "Barrial",
+              "away": "Arucas C",
+              "hs": 0,
+              "as_": 16
+            },
+            {
+              "date": "2024-02-02",
+              "home": "Moya",
+              "away": "Becerril",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2024-02-02",
+              "home": "Atalaya",
+              "away": "Valleseco",
+              "hs": 0,
+              "as_": 8
+            },
+            {
+              "date": "2024-02-02",
+              "home": "Roque Amagro",
+              "away": "Gáldar",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2024-02-04",
+              "home": "Goleta",
+              "away": "Santidad",
+              "hs": 4,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 14,
+          "name": "Jornada 14",
+          "matches": [
+            {
+              "date": "2024-02-09",
+              "home": "Barrial",
+              "away": "Santidad",
+              "hs": 4,
+              "as_": 9
+            },
+            {
+              "date": "2024-02-09",
+              "home": "Guayarmina",
+              "away": "Arucas C",
+              "hs": 2,
+              "as_": 8
+            },
+            {
+              "date": "2024-02-09",
+              "home": "Atalaya",
+              "away": "Roque Amagro",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2024-02-09",
+              "home": "Moya",
+              "away": "Guía",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-09",
+              "home": "R. Amagro At.",
+              "away": "Gáldar",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2024-02-11",
+              "home": "Goleta",
+              "away": "Valleseco",
+              "hs": 1,
+              "as_": 14
+            }
+          ]
+        },
+        {
+          "num": 15,
+          "name": "Jornada 15",
+          "matches": [
+            {
+              "date": "2024-02-16",
+              "home": "Gáldar",
+              "away": "Atalaya",
+              "hs": 0,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-16",
+              "home": "Santidad",
+              "away": "Guayarmina",
+              "hs": 4,
+              "as_": 9
+            },
+            {
+              "date": "2024-02-16",
+              "home": "Roque Amagro",
+              "away": "Goleta",
+              "hs": 10,
+              "as_": 1
+            },
+            {
+              "date": "2024-02-16",
+              "home": "Becerril",
+              "away": "R. Amagro At.",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2024-02-17",
+              "home": "Valleseco",
+              "away": "Barrial",
+              "hs": 17,
+              "as_": 0
+            },
+            {
+              "date": "2024-02-18",
+              "home": "Arucas C",
+              "away": "Moya",
+              "hs": 9,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 16,
+          "name": "Jornada 16",
+          "matches": [
+            {
+              "date": "2024-02-23",
+              "home": "Barrial",
+              "away": "Roque Amagro",
+              "hs": 0,
+              "as_": 11
+            },
+            {
+              "date": "2024-02-23",
+              "home": "Guayarmina",
+              "away": "Valleseco",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2024-02-23",
+              "home": "Moya",
+              "away": "Santidad",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2024-02-23",
+              "home": "R. Amagro At.",
+              "away": "Guía",
+              "hs": 1,
+              "as_": 3
+            },
+            {
+              "date": "2024-02-22",
+              "home": "Becerril",
+              "away": "Gáldar",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-25",
+              "home": "Goleta",
+              "away": "Atalaya",
+              "hs": 2,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 17,
+          "name": "Jornada 17",
+          "matches": [
+            {
+              "date": "2024-03-01",
+              "home": "Gáldar",
+              "away": "Goleta",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2024-03-01",
+              "home": "Guía",
+              "away": "Becerril",
+              "hs": 2,
+              "as_": 6
+            },
+            {
+              "date": "2024-03-01",
+              "home": "Atalaya",
+              "away": "Barrial",
+              "hs": 8,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-01",
+              "home": "Roque Amagro",
+              "away": "Guayarmina",
+              "hs": 6,
+              "as_": 4
+            },
+            {
+              "date": "2024-03-02",
+              "home": "Valleseco",
+              "away": "Moya",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-03",
+              "home": "Arucas C",
+              "away": "R. Amagro At.",
+              "hs": 11,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 18,
+          "name": "Jornada 18",
+          "matches": [
+            {
+              "date": "2024-03-08",
+              "home": "Barrial",
+              "away": "Goleta",
+              "hs": 4,
+              "as_": 8
+            },
+            {
+              "date": "2024-03-08",
+              "home": "Guayarmina",
+              "away": "Atalaya",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2024-03-08",
+              "home": "Guía",
+              "away": "Gáldar",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2024-03-08",
+              "home": "Moya",
+              "away": "Roque Amagro",
+              "hs": 0,
+              "as_": 8
+            },
+            {
+              "date": "2024-03-08",
+              "home": "R. Amagro At.",
+              "away": "Santidad",
+              "hs": 0,
+              "as_": 10
+            },
+            {
+              "date": "2024-03-08",
+              "home": "Becerril",
+              "away": "Arucas C",
+              "hs": 1,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 19,
+          "name": "Jornada 19",
+          "matches": [
+            {
+              "date": "2024-03-15",
+              "home": "Gáldar",
+              "away": "Barrial",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2024-03-15",
+              "home": "Santidad",
+              "away": "Becerril",
+              "hs": 7,
+              "as_": 3
+            },
+            {
+              "date": "2024-03-15",
+              "home": "Atalaya",
+              "away": "Moya",
+              "hs": 1,
+              "as_": 1
+            },
+            {
+              "date": "2024-03-16",
+              "home": "Valleseco",
+              "away": "R. Amagro At.",
+              "hs": 13,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-17",
+              "home": "Arucas C",
+              "away": "Guía",
+              "hs": 13,
+              "as_": 1
+            },
+            {
+              "date": "2024-03-17",
+              "home": "Goleta",
+              "away": "Guayarmina",
+              "hs": 1,
+              "as_": 8
+            }
+          ]
+        },
+        {
+          "num": 20,
+          "name": "Jornada 20",
+          "matches": [
+            {
+              "date": "2024-03-22",
+              "home": "Guayarmina",
+              "away": "Barrial",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-22",
+              "home": "Guía",
+              "away": "Santidad",
+              "hs": 0,
+              "as_": 4
+            },
+            {
+              "date": "2024-03-22",
+              "home": "Moya",
+              "away": "Goleta",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2024-03-22",
+              "home": "R. Amagro At.",
+              "away": "Roque Amagro",
+              "hs": 1,
+              "as_": 9
+            },
+            {
+              "date": "2024-03-22",
+              "home": "Becerril",
+              "away": "Valleseco",
+              "hs": 0,
+              "as_": 7
+            },
+            {
+              "date": "2024-03-24",
+              "home": "Arucas C",
+              "away": "Gáldar",
+              "hs": 8,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 21,
+          "name": "Jornada 21",
+          "matches": [
+            {
+              "date": "2024-04-05",
+              "home": "Gáldar",
+              "away": "Guayarmina",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2024-04-05",
+              "home": "Barrial",
+              "away": "Moya",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2024-04-05",
+              "home": "Santidad",
+              "away": "Arucas C",
+              "hs": 6,
+              "as_": 4
+            },
+            {
+              "date": "2024-04-05",
+              "home": "Atalaya",
+              "away": "R. Amagro At.",
+              "hs": 8,
+              "as_": 1
+            },
+            {
+              "date": "2024-04-05",
+              "home": "Roque Amagro",
+              "away": "Becerril",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2024-04-06",
+              "home": "Valleseco",
+              "away": "Guía",
+              "hs": 7,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 22,
+          "name": "Jornada 22",
+          "matches": [
+            {
+              "date": "2024-04-12",
+              "home": "Guía",
+              "away": "Roque Amagro",
+              "hs": 1,
+              "as_": 9
+            },
+            {
+              "date": "2024-04-12",
+              "home": "Santidad",
+              "away": "Gáldar",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2024-04-12",
+              "home": "Moya",
+              "away": "Guayarmina",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2024-04-12",
+              "home": "R. Amagro At.",
+              "away": "Goleta",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2024-04-12",
+              "home": "Becerril",
+              "away": "Atalaya",
+              "hs": 1,
+              "as_": 3
+            },
+            {
+              "date": "2024-04-14",
+              "home": "Arucas C",
+              "away": "Valleseco",
+              "hs": 3,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 23,
+          "name": "Jornada 23",
+          "matches": [
+            {
+              "date": "2024-04-19",
+              "home": "Gáldar",
+              "away": "Moya",
+              "hs": 1,
+              "as_": 1
+            },
+            {
+              "date": "2024-04-19",
+              "home": "Barrial",
+              "away": "R. Amagro At.",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2024-04-19",
+              "home": "Atalaya",
+              "away": "Guía",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2024-04-19",
+              "home": "Roque Amagro",
+              "away": "Arucas C",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2024-04-20",
+              "home": "Valleseco",
+              "away": "Santidad",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2024-04-20",
+              "home": "Goleta",
+              "away": "Becerril",
+              "hs": 2,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 24,
+          "name": "Jornada 24",
+          "matches": [
+            {
+              "date": "2024-04-26",
+              "home": "Guía",
+              "away": "Goleta",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2024-04-26",
+              "home": "Santidad",
+              "away": "Roque Amagro",
+              "hs": 4,
+              "as_": 6
+            },
+            {
+              "date": "2024-04-26",
+              "home": "R. Amagro At.",
+              "away": "Guayarmina",
+              "hs": 0,
+              "as_": 6
+            },
+            {
+              "date": "2024-04-26",
+              "home": "Becerril",
+              "away": "Barrial",
+              "hs": 9,
+              "as_": 2
+            },
+            {
+              "date": "2024-04-27",
+              "home": "Valleseco",
+              "away": "Gáldar",
+              "hs": 7,
+              "as_": 0
+            },
+            {
+              "date": "2024-04-28",
+              "home": "Arucas C",
+              "away": "Atalaya",
+              "hs": 11,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 25,
+          "name": "Jornada 25",
+          "matches": [
+            {
+              "date": "2024-05-03",
+              "home": "Guayarmina",
+              "away": "Becerril",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2024-05-03",
+              "home": "Barrial",
+              "away": "Guía",
+              "hs": 2,
+              "as_": 8
+            },
+            {
+              "date": "2024-05-03",
+              "home": "Moya",
+              "away": "R. Amagro At.",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2024-05-03",
+              "home": "Atalaya",
+              "away": "Santidad",
+              "hs": 3,
+              "as_": 6
+            },
+            {
+              "date": "2024-05-03",
+              "home": "Roque Amagro",
+              "away": "Valleseco",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2024-05-07",
+              "home": "Goleta",
+              "away": "Arucas C",
+              "hs": null,
+              "as_": null
+            }
+          ]
+        },
+        {
+          "num": 26,
+          "name": "Jornada 26",
+          "matches": [
+            {
+              "date": "2024-05-10",
+              "home": "Becerril",
+              "away": "Moya",
+              "hs": null,
+              "as_": null
+            },
+            {
+              "date": "2024-05-10",
+              "home": "Guía",
+              "away": "Guayarmina",
+              "hs": null,
+              "as_": null
+            },
+            {
+              "date": "2024-05-10",
+              "home": "Arucas C",
+              "away": "Barrial",
+              "hs": null,
+              "as_": null
+            },
+            {
+              "date": "2024-05-10",
+              "home": "Santidad",
+              "away": "Goleta",
+              "hs": null,
+              "as_": null
+            },
+            {
+              "date": "2024-05-10",
+              "home": "Valleseco",
+              "away": "Atalaya",
+              "hs": null,
+              "as_": null
+            },
+            {
+              "date": "2024-05-10",
+              "home": "Gáldar",
+              "away": "Roque Amagro",
+              "hs": null,
+              "as_": null
+            }
+          ]
+        }
+      ]
     }
   ],
   "errors": [

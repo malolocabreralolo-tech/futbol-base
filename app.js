@@ -1194,6 +1194,57 @@ function openTeamDetail(teamName, groupId) {
 }
 
 /* ====== STATS SECTION ====== */
+function calcHistoricalStats() {
+  var groups = getData();
+  var totalMatches = 0, totalGoals = 0;
+  var biggestDiff = -1, biggestWin = null;
+  var mostGoalsTotal = -1, mostGoalsMatch = null;
+  var teamGF = {}, teamGC = {};
+
+  groups.forEach(function(g) {
+    (g.standings || []).forEach(function(row) {
+      var team = row[1];
+      teamGF[team] = (teamGF[team] || 0) + (row[7] || 0);
+      teamGC[team] = (teamGC[team] || 0) + (row[8] || 0);
+    });
+    Object.values(g.jornadas || {}).forEach(function(matches) {
+      matches.forEach(function(m) {
+        var hs = m[3], as_ = m[4];
+        if (hs === null || hs === undefined || as_ === null || as_ === undefined) return;
+        totalMatches++;
+        var goals = hs + as_;
+        totalGoals += goals;
+        var diff = Math.abs(hs - as_);
+        if (diff > biggestDiff || (diff === biggestDiff && goals > ((biggestWin && biggestWin._goals) || 0))) {
+          biggestDiff = diff;
+          biggestWin = { home: m[1], away: m[2], score: hs + '-' + as_, date: m[0], _goals: goals };
+        }
+        if (goals > mostGoalsTotal) {
+          mostGoalsTotal = goals;
+          mostGoalsMatch = { home: m[1], away: m[2], score: hs + '-' + as_, totalGoals: goals, date: m[0] };
+        }
+      });
+    });
+  });
+
+  var gfEntries = Object.entries(teamGF).sort(function(a,b){return b[1]-a[1];});
+  var gcEntries = Object.entries(teamGC).sort(function(a,b){return a[1]-b[1];});
+
+  return {
+    season: {
+      totalMatches: totalMatches,
+      totalGoals: totalGoals,
+      avgGoalsPerMatch: totalMatches > 0 ? Math.round(totalGoals / totalMatches * 100) / 100 : 0,
+      topScorer: null,
+      mostGoals: gfEntries[0] ? { team: gfEntries[0][0], gf: gfEntries[0][1] } : null,
+      leastConceded: gcEntries[0] ? { team: gcEntries[0][0], gc: gcEntries[0][1] } : null,
+      biggestWin: biggestWin ? { home: biggestWin.home, away: biggestWin.away, score: biggestWin.score, date: biggestWin.date } : null,
+      mostGoalsMatch: mostGoalsMatch,
+    },
+    teams: {}
+  };
+}
+
 function recordCard(icon, value, label, sublabel) {
   return `<div class="record-card">
     <div class="record-icon">${icon}</div>
@@ -1206,12 +1257,18 @@ function renderStats() {
   const container = $('#sec-stats');
   container.innerHTML = '';
 
-  if (typeof STATS === 'undefined' || !STATS[S.cat]) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>No hay estadísticas disponibles</p></div>';
-    return;
+  let stats;
+  if (isHistorical()) {
+    stats = calcHistoricalStats();
+  } else {
+    if (typeof STATS === 'undefined' || !STATS[S.cat]) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">\ud83d\udcca</div><p>No hay estad\u00edsticas disponibles</p></div>';
+      return;
+    }
+    stats = STATS[S.cat];
   }
 
-  const ss = STATS[S.cat].season;
+  const ss = stats.season;
   if (!ss) return;
 
   const hdr = el('div', 'phase-header', '<span class="phase-icon">📊</span> Récords de temporada');
@@ -1239,7 +1296,7 @@ function renderStats() {
   container.innerHTML += grid;
 
   // Top streaks section
-  const teams = STATS[S.cat].teams;
+  const teams = stats.teams;
   if (teams) {
     const teamList = Object.entries(teams);
 

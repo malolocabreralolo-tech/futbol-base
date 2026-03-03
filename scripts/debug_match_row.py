@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright
 BASE   = "https://www.fiflp.com/pnfg/NPcd"
 SEASON = "20"
 COMP   = "1575"
-GROUP  = "186624"  # Grupo 1 Preferente Lanzarote
+GROUP  = "190745"  # Grupo 1 Preferente Lanzarote
 
 def main():
     with sync_playwright() as p:

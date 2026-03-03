@@ -6808,60 +6808,217 @@
       ]
     },
     {
-      "slug": "1prebenjamin1",
-      "url": "https://futbolaspalmas.com/1prebenjamin1/",
-      "wayback_timestamp": "20240507041022",
+      "slug": "1prebenjamin2",
+      "url": "https://futbolaspalmas.com/1prebenjamin2/",
+      "wayback_timestamp": "20240506225231",
       "category": "prebenjamin",
-      "group_name": "Grupo 1",
+      "group_name": "Grupo 2",
       "phase": "Primera Fase GC",
       "island": "gran_canaria",
-      "standings": [],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Acodetti",
+          "pts": 66,
+          "j": 24,
+          "g": 22,
+          "e": 0,
+          "p": 2,
+          "gf": 143,
+          "gc": 29,
+          "df": 114
+        },
+        {
+          "pos": 2,
+          "team": "Tamaraceite",
+          "pts": 58,
+          "j": 23,
+          "g": 19,
+          "e": 1,
+          "p": 3,
+          "gf": 131,
+          "gc": 25,
+          "df": 106
+        },
+        {
+          "pos": 3,
+          "team": "Unión Viera",
+          "pts": 56,
+          "j": 23,
+          "g": 18,
+          "e": 2,
+          "p": 3,
+          "gf": 135,
+          "gc": 32,
+          "df": 103
+        },
+        {
+          "pos": 4,
+          "team": "Atco. Huracán",
+          "pts": 51,
+          "j": 23,
+          "g": 16,
+          "e": 3,
+          "p": 4,
+          "gf": 104,
+          "gc": 29,
+          "df": 75
+        },
+        {
+          "pos": 5,
+          "team": "Victoria",
+          "pts": 47,
+          "j": 23,
+          "g": 15,
+          "e": 2,
+          "p": 6,
+          "gf": 115,
+          "gc": 51,
+          "df": 64
+        },
+        {
+          "pos": 6,
+          "team": "Veteranos",
+          "pts": 44,
+          "j": 23,
+          "g": 14,
+          "e": 2,
+          "p": 7,
+          "gf": 129,
+          "gc": 77,
+          "df": 52
+        },
+        {
+          "pos": 7,
+          "team": "Santa Brígida",
+          "pts": 26,
+          "j": 23,
+          "g": 7,
+          "e": 5,
+          "p": 11,
+          "gf": 70,
+          "gc": 98,
+          "df": -28
+        },
+        {
+          "pos": 8,
+          "team": "Arucas B",
+          "pts": 23,
+          "j": 22,
+          "g": 7,
+          "e": 2,
+          "p": 13,
+          "gf": 63,
+          "gc": 85,
+          "df": -22
+        },
+        {
+          "pos": 9,
+          "team": "San Mateo",
+          "pts": 21,
+          "j": 23,
+          "g": 6,
+          "e": 3,
+          "p": 14,
+          "gf": 48,
+          "gc": 102,
+          "df": -54
+        },
+        {
+          "pos": 10,
+          "team": "Simusetti",
+          "pts": 19,
+          "j": 23,
+          "g": 6,
+          "e": 1,
+          "p": 16,
+          "gf": 61,
+          "gc": 142,
+          "df": -81
+        },
+        {
+          "pos": 11,
+          "team": "Cardones",
+          "pts": 14,
+          "j": 23,
+          "g": 4,
+          "e": 2,
+          "p": 17,
+          "gf": 42,
+          "gc": 143,
+          "df": -101
+        },
+        {
+          "pos": 12,
+          "team": "Barrio Atlan.",
+          "pts": 5,
+          "j": 22,
+          "g": 1,
+          "e": 2,
+          "p": 19,
+          "gf": 34,
+          "gc": 148,
+          "df": -114
+        },
+        {
+          "pos": 13,
+          "team": "Arucas C.F.",
+          "pts": 3,
+          "j": 23,
+          "g": 0,
+          "e": 3,
+          "p": 20,
+          "gf": 21,
+          "gc": 135,
+          "df": -114
+        }
+      ],
       "jornadas": [
         {
           "num": 1,
           "name": "Jornada 1",
           "matches": [
             {
-              "date": "2023-10-20",
-              "home": "Gáldar",
-              "away": "R. Amagro At.",
-              "hs": 8,
-              "as_": 0
-            },
-            {
-              "date": "2023-10-20",
-              "home": "Guía",
-              "away": "Moya",
-              "hs": 1,
-              "as_": 1
-            },
-            {
-              "date": "2023-10-20",
-              "home": "Santidad",
-              "away": "Barrial",
-              "hs": 9,
-              "as_": 0
-            },
-            {
               "date": "2023-10-21",
-              "home": "Roque Amagro",
-              "away": "Atalaya",
-              "hs": 9,
-              "as_": 2
+              "home": "Atco. Huracán",
+              "away": "Arucas B",
+              "hs": 3,
+              "as_": 0
             },
             {
               "date": "2023-10-25",
-              "home": "Valleseco",
-              "away": "Goleta",
-              "hs": 8,
-              "as_": 0
+              "home": "Victoria",
+              "away": "Simusetti",
+              "hs": 10,
+              "as_": 2
+            },
+            {
+              "date": "2023-10-21",
+              "home": "Santa Brígida",
+              "away": "Arucas C.F.",
+              "hs": 6,
+              "as_": 3
             },
             {
               "date": "2023-10-22",
-              "home": "Arucas C",
-              "away": "Guayarmina",
-              "hs": 11,
+              "home": "San Mateo",
+              "away": "Barrio Atlan.",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2023-10-22",
+              "home": "Acodetti",
+              "away": "Veteranos",
+              "hs": 6,
               "as_": 1
+            },
+            {
+              "date": "2023-10-22",
+              "home": "Tamaraceite",
+              "away": "Cardones",
+              "hs": 8,
+              "as_": 0
             }
           ]
         },
@@ -6870,46 +7027,46 @@
           "name": "Jornada 2",
           "matches": [
             {
-              "date": "2023-10-27",
-              "home": "Barrial",
-              "away": "Valleseco",
+              "date": "2023-10-28",
+              "home": "Cardones",
+              "away": "Acodetti",
               "hs": 0,
-              "as_": 12
+              "as_": 7
             },
             {
-              "date": "2023-10-27",
-              "home": "Guayarmina",
-              "away": "Santidad",
-              "hs": 6,
-              "as_": 3
-            },
-            {
-              "date": "2023-10-27",
-              "home": "Atalaya",
-              "away": "Gáldar",
-              "hs": 4,
-              "as_": 3
-            },
-            {
-              "date": "2023-10-27",
-              "home": "Moya",
-              "away": "Arucas C",
+              "date": "2023-10-28",
+              "home": "Arucas C.F.",
+              "away": "Tamaraceite",
               "hs": 0,
-              "as_": 6
+              "as_": 7
             },
             {
-              "date": "2023-10-27",
-              "home": "R. Amagro At.",
-              "away": "Becerril",
-              "hs": 1,
+              "date": "2023-10-28",
+              "home": "Veteranos",
+              "away": "Unión Viera",
+              "hs": 3,
               "as_": 6
             },
             {
               "date": "2023-10-29",
-              "home": "Goleta",
-              "away": "Roque Amagro",
+              "home": "Simusetti",
+              "away": "Atco. Huracán",
               "hs": 1,
-              "as_": 6
+              "as_": 13
+            },
+            {
+              "date": "2023-10-29",
+              "home": "Arucas B",
+              "away": "Santa Brígida",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2023-10-29",
+              "home": "Barrio Atlan.",
+              "away": "Victoria",
+              "hs": 0,
+              "as_": 10
             }
           ]
         },
@@ -6918,46 +7075,46 @@
           "name": "Jornada 3",
           "matches": [
             {
-              "date": "2023-11-03",
-              "home": "Gáldar",
-              "away": "Becerril",
+              "date": "2023-11-04",
+              "home": "Atco. Huracán",
+              "away": "Barrio Atlan.",
               "hs": 6,
-              "as_": 2
-            },
-            {
-              "date": "2023-11-03",
-              "home": "Guía",
-              "away": "R. Amagro At.",
-              "hs": 4,
               "as_": 1
             },
             {
-              "date": "2023-11-03",
-              "home": "Santidad",
-              "away": "Moya",
-              "hs": 4,
-              "as_": 7
+              "date": "2023-11-04",
+              "home": "Santa Brígida",
+              "away": "Simusetti",
+              "hs": 8,
+              "as_": 4
             },
             {
-              "date": "2023-11-03",
-              "home": "Atalaya",
-              "away": "Goleta",
-              "hs": 7,
+              "date": "2023-11-04",
+              "home": "Unión Viera",
+              "away": "Cardones",
+              "hs": 10,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-05",
+              "home": "Tamaraceite",
+              "away": "Acodetti",
+              "hs": 1,
+              "as_": 3
+            },
+            {
+              "date": "2023-11-05",
+              "home": "San Mateo",
+              "away": "Veteranos",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2023-11-02",
+              "home": "Arucas C.F.",
+              "away": "Arucas B",
+              "hs": 0,
               "as_": 5
-            },
-            {
-              "date": "2023-11-04",
-              "home": "Roque Amagro",
-              "away": "Barrial",
-              "hs": 7,
-              "as_": 0
-            },
-            {
-              "date": "2023-11-04",
-              "home": "Valleseco",
-              "away": "Guayarmina",
-              "hs": 11,
-              "as_": 0
             }
           ]
         },
@@ -6966,46 +7123,46 @@
           "name": "Jornada 4",
           "matches": [
             {
-              "date": "2023-11-10",
-              "home": "Barrial",
-              "away": "Atalaya",
-              "hs": 3,
+              "date": "2023-11-11",
+              "home": "Barrio Atlan.",
+              "away": "Santa Brígida",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2023-11-15",
+              "home": "Cardones",
+              "away": "San Mateo",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-11",
+              "home": "Veteranos",
+              "away": "Victoria",
+              "hs": 4,
               "as_": 4
             },
             {
-              "date": "2023-11-10",
-              "home": "Guayarmina",
-              "away": "Roque Amagro",
-              "hs": 1,
-              "as_": 9
+              "date": "2023-11-13",
+              "home": "Simusetti",
+              "away": "Arucas C.F.",
+              "hs": 6,
+              "as_": 1
             },
             {
-              "date": "2023-11-10",
-              "home": "Moya",
-              "away": "Valleseco",
-              "hs": 0,
-              "as_": 10
-            },
-            {
-              "date": "2023-11-10",
-              "home": "R. Amagro At.",
-              "away": "Arucas C",
-              "hs": 0,
-              "as_": 18
-            },
-            {
-              "date": "2023-11-10",
-              "home": "Becerril",
-              "away": "Guía",
-              "hs": 5,
+              "date": "2023-11-12",
+              "home": "Acodetti",
+              "away": "Unión Viera",
+              "hs": 4,
               "as_": 3
             },
             {
               "date": "2023-11-12",
-              "home": "Goleta",
-              "away": "Gáldar",
-              "hs": 3,
-              "as_": 1
+              "home": "Arucas B",
+              "away": "Tamaraceite",
+              "hs": 1,
+              "as_": 8
             }
           ]
         },
@@ -7014,46 +7171,46 @@
           "name": "Jornada 5",
           "matches": [
             {
-              "date": "2023-11-17",
-              "home": "Gáldar",
-              "away": "Guía",
-              "hs": 5,
+              "date": "2023-11-18",
+              "home": "Atco. Huracán",
+              "away": "Veteranos",
+              "hs": 7,
+              "as_": 4
+            },
+            {
+              "date": "2023-11-18",
+              "home": "Victoria",
+              "away": "Cardones",
+              "hs": 7,
               "as_": 0
             },
             {
-              "date": "2023-11-17",
-              "home": "Santidad",
-              "away": "R. Amagro At.",
-              "hs": 10,
-              "as_": 0
+              "date": "2023-11-19",
+              "home": "Tamaraceite",
+              "away": "Unión Viera",
+              "hs": 3,
+              "as_": 3
             },
             {
-              "date": "2023-11-17",
-              "home": "Atalaya",
-              "away": "Guayarmina",
+              "date": "2023-11-19",
+              "home": "San Mateo",
+              "away": "Acodetti",
               "hs": 0,
-              "as_": 6
+              "as_": 4
             },
             {
-              "date": "2023-11-17",
-              "home": "Roque Amagro",
-              "away": "Moya",
-              "hs": 10,
+              "date": "2023-11-21",
+              "home": "Arucas B",
+              "away": "Simusetti",
+              "hs": 7,
               "as_": 2
             },
             {
-              "date": "2023-11-19",
-              "home": "Arucas C",
-              "away": "Becerril",
-              "hs": 12,
-              "as_": 0
-            },
-            {
-              "date": "2023-11-19",
-              "home": "Goleta",
-              "away": "Barrial",
-              "hs": 5,
-              "as_": 1
+              "date": "2023-11-18",
+              "home": "Arucas C.F.",
+              "away": "Barrio Atlan.",
+              "hs": 1,
+              "as_": 4
             }
           ]
         },
@@ -7062,46 +7219,46 @@
           "name": "Jornada 6",
           "matches": [
             {
-              "date": "2023-11-24",
-              "home": "Barrial",
-              "away": "Gáldar",
-              "hs": 3,
-              "as_": 5
-            },
-            {
-              "date": "2023-11-24",
-              "home": "Guayarmina",
-              "away": "Goleta",
-              "hs": 5,
-              "as_": 1
-            },
-            {
-              "date": "2023-11-24",
-              "home": "Guía",
-              "away": "Arucas C",
+              "date": "2023-11-25",
+              "home": "Barrio Atlan.",
+              "away": "Arucas B",
               "hs": 0,
-              "as_": 9
+              "as_": 4
             },
             {
-              "date": "2023-11-24",
-              "home": "Moya",
-              "away": "Atalaya",
-              "hs": 3,
-              "as_": 2
-            },
-            {
-              "date": "2023-11-24",
-              "home": "R. Amagro At.",
-              "away": "Valleseco",
+              "date": "2023-11-25",
+              "home": "Cardones",
+              "away": "Atco. Huracán",
               "hs": 0,
-              "as_": 15
-            },
-            {
-              "date": "2023-11-24",
-              "home": "Becerril",
-              "away": "Santidad",
-              "hs": 3,
               "as_": 7
+            },
+            {
+              "date": "2023-11-25",
+              "home": "Veteranos",
+              "away": "Santa Brígida",
+              "hs": 9,
+              "as_": 6
+            },
+            {
+              "date": "2023-11-26",
+              "home": "Simusetti",
+              "away": "Tamaraceite",
+              "hs": 1,
+              "as_": 7
+            },
+            {
+              "date": "2023-11-26",
+              "home": "Acodetti",
+              "away": "Victoria",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-25",
+              "home": "Unión Viera",
+              "away": "San Mateo",
+              "hs": 10,
+              "as_": 0
             }
           ]
         },
@@ -7110,46 +7267,46 @@
           "name": "Jornada 7",
           "matches": [
             {
-              "date": "2023-12-01",
-              "home": "Barrial",
-              "away": "Guayarmina",
-              "hs": 1,
-              "as_": 7
-            },
-            {
-              "date": "2023-12-01",
-              "home": "Gáldar",
-              "away": "Arucas C",
-              "hs": 4,
-              "as_": 8
-            },
-            {
-              "date": "2023-12-01",
-              "home": "Santidad",
-              "away": "Guía",
-              "hs": 10,
-              "as_": 3
-            },
-            {
-              "date": "2023-12-01",
-              "home": "Roque Amagro",
-              "away": "R. Amagro At.",
-              "hs": 7,
-              "as_": 1
+              "date": "2023-12-02",
+              "home": "Atco. Huracán",
+              "away": "Acodetti",
+              "hs": 3,
+              "as_": 2
             },
             {
               "date": "2023-12-02",
-              "home": "Valleseco",
-              "away": "Becerril",
-              "hs": 14,
+              "home": "Victoria",
+              "away": "Unión Viera",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2023-12-02",
+              "home": "Santa Brígida",
+              "away": "Cardones",
+              "hs": 2,
+              "as_": 1
+            },
+            {
+              "date": "2023-12-03",
+              "home": "Simusetti",
+              "away": "Barrio Atlan.",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2023-12-03",
+              "home": "Tamaraceite",
+              "away": "San Mateo",
+              "hs": 5,
               "as_": 0
             },
             {
               "date": "2023-12-03",
-              "home": "Goleta",
-              "away": "Moya",
-              "hs": 2,
-              "as_": 2
+              "home": "Arucas C.F.",
+              "away": "Veteranos",
+              "hs": 1,
+              "as_": 13
             }
           ]
         },
@@ -7158,46 +7315,46 @@
           "name": "Jornada 8",
           "matches": [
             {
-              "date": "2023-12-05",
-              "home": "Guayarmina",
-              "away": "Gáldar",
-              "hs": 3,
-              "as_": 4
-            },
-            {
               "date": "2023-12-09",
-              "home": "Guía",
-              "away": "Valleseco",
+              "home": "Barrio Atlan.",
+              "away": "Tamaraceite",
               "hs": 0,
-              "as_": 8
+              "as_": 12
             },
             {
-              "date": "2023-12-07",
-              "home": "Moya",
-              "away": "Barrial",
+              "date": "2023-12-13",
+              "home": "Cardones",
+              "away": "Arucas C.F.",
               "hs": 6,
-              "as_": 4
+              "as_": 1
             },
             {
-              "date": "2023-12-09",
-              "home": "R. Amagro At.",
-              "away": "Atalaya",
+              "date": "2023-12-12",
+              "home": "Veteranos",
+              "away": "Arucas B",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2023-12-10",
+              "home": "Acodetti",
+              "away": "Santa Brígida",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2023-12-10",
+              "home": "Unión Viera",
+              "away": "Atco. Huracán",
               "hs": 0,
+              "as_": 2
+            },
+            {
+              "date": "2023-12-10",
+              "home": "San Mateo",
+              "away": "Victoria",
+              "hs": 2,
               "as_": 7
-            },
-            {
-              "date": "2023-12-08",
-              "home": "Becerril",
-              "away": "Roque Amagro",
-              "hs": 0,
-              "as_": 11
-            },
-            {
-              "date": "2023-12-06",
-              "home": "Arucas C",
-              "away": "Santidad",
-              "hs": 6,
-              "as_": 6
             }
           ]
         },
@@ -7206,46 +7363,46 @@
           "name": "Jornada 9",
           "matches": [
             {
-              "date": "2023-12-15",
-              "home": "Guayarmina",
-              "away": "Moya",
-              "hs": 5,
-              "as_": 3
-            },
-            {
-              "date": "2023-12-15",
-              "home": "Gáldar",
-              "away": "Santidad",
-              "hs": 2,
-              "as_": 3
-            },
-            {
-              "date": "2023-12-15",
-              "home": "Atalaya",
-              "away": "Becerril",
-              "hs": 5,
-              "as_": 4
-            },
-            {
-              "date": "2023-12-15",
-              "home": "Roque Amagro",
-              "away": "Guía",
-              "hs": 9,
-              "as_": 1
+              "date": "2023-12-14",
+              "home": "Atco. Huracán",
+              "away": "San Mateo",
+              "hs": 8,
+              "as_": 0
             },
             {
               "date": "2023-12-16",
-              "home": "Valleseco",
-              "away": "Arucas C",
-              "hs": 3,
+              "home": "Santa Brígida",
+              "away": "Unión Viera",
+              "hs": 0,
               "as_": 7
             },
             {
               "date": "2023-12-17",
-              "home": "Goleta",
-              "away": "R. Amagro At.",
+              "home": "Simusetti",
+              "away": "Veteranos",
+              "hs": 4,
+              "as_": 9
+            },
+            {
+              "date": "2023-12-17",
+              "home": "Tamaraceite",
+              "away": "Victoria",
+              "hs": 4,
+              "as_": 0
+            },
+            {
+              "date": "2023-12-20",
+              "home": "Arucas C.F.",
+              "away": "Acodetti",
+              "hs": 0,
+              "as_": 8
+            },
+            {
+              "date": "2023-12-16",
+              "home": "Arucas B",
+              "away": "Cardones",
               "hs": 8,
-              "as_": 1
+              "as_": 3
             }
           ]
         },
@@ -7254,46 +7411,46 @@
           "name": "Jornada 10",
           "matches": [
             {
-              "date": "2024-01-12",
-              "home": "Guía",
-              "away": "Atalaya",
-              "hs": 0,
-              "as_": 5
-            },
-            {
-              "date": "2024-01-12",
-              "home": "Santidad",
-              "away": "Valleseco",
-              "hs": 6,
-              "as_": 4
-            },
-            {
-              "date": "2024-01-12",
-              "home": "Moya",
-              "away": "Gáldar",
+              "date": "2024-01-13",
+              "home": "Cardones",
+              "away": "Simusetti",
               "hs": 3,
+              "as_": 6
+            },
+            {
+              "date": "2024-01-13",
+              "home": "Victoria",
+              "away": "Atco. Huracán",
+              "hs": 4,
               "as_": 3
             },
             {
-              "date": "2024-01-12",
-              "home": "Becerril",
-              "away": "Goleta",
-              "hs": 5,
+              "date": "2024-01-13",
+              "home": "Veteranos",
+              "away": "Barrio Atlan.",
+              "hs": 10,
+              "as_": 2
+            },
+            {
+              "date": "2024-01-14",
+              "home": "Acodetti",
+              "away": "Arucas B",
+              "hs": 12,
               "as_": 2
             },
             {
               "date": "2024-01-13",
-              "home": "R. Amagro At.",
-              "away": "Barrial",
-              "hs": 4,
-              "as_": 4
+              "home": "Unión Viera",
+              "away": "Arucas C.F.",
+              "hs": 13,
+              "as_": 0
             },
             {
               "date": "2024-01-14",
-              "home": "Arucas C",
-              "away": "Roque Amagro",
-              "hs": 7,
-              "as_": 5
+              "home": "San Mateo",
+              "away": "Santa Brígida",
+              "hs": 2,
+              "as_": 2
             }
           ]
         },
@@ -7302,46 +7459,46 @@
           "name": "Jornada 11",
           "matches": [
             {
-              "date": "2024-01-19",
-              "home": "Guayarmina",
-              "away": "R. Amagro At.",
-              "hs": 5,
-              "as_": 0
-            },
-            {
-              "date": "2024-01-19",
-              "home": "Gáldar",
-              "away": "Valleseco",
-              "hs": 1,
-              "as_": 9
-            },
-            {
-              "date": "2024-01-19",
-              "home": "Atalaya",
-              "away": "Arucas C",
-              "hs": 2,
+              "date": "2024-01-20",
+              "home": "Barrio Atlan.",
+              "away": "Cardones",
+              "hs": 4,
               "as_": 7
-            },
-            {
-              "date": "2024-01-19",
-              "home": "Roque Amagro",
-              "away": "Santidad",
-              "hs": 3,
-              "as_": 3
             },
             {
               "date": "2024-01-20",
-              "home": "Barrial",
-              "away": "Becerril",
-              "hs": 2,
-              "as_": 7
+              "home": "Santa Brígida",
+              "away": "Victoria",
+              "hs": 5,
+              "as_": 6
             },
             {
               "date": "2024-01-21",
-              "home": "Goleta",
-              "away": "Guía",
-              "hs": 9,
+              "home": "Simusetti",
+              "away": "Acodetti",
+              "hs": 0,
+              "as_": 8
+            },
+            {
+              "date": "2024-01-21",
+              "home": "Tamaraceite",
+              "away": "Atco. Huracán",
+              "hs": 2,
+              "as_": 0
+            },
+            {
+              "date": "2024-01-20",
+              "home": "Arucas B",
+              "away": "Unión Viera",
+              "hs": 1,
               "as_": 4
+            },
+            {
+              "date": "2024-01-22",
+              "home": "Arucas C.F.",
+              "away": "San Mateo",
+              "hs": 2,
+              "as_": 3
             }
           ]
         },
@@ -7350,46 +7507,46 @@
           "name": "Jornada 12",
           "matches": [
             {
-              "date": "2024-01-26",
-              "home": "Guía",
-              "away": "Barrial",
-              "hs": 5,
-              "as_": 2
-            },
-            {
-              "date": "2024-01-26",
-              "home": "Santidad",
-              "away": "Atalaya",
-              "hs": 10,
-              "as_": 0
-            },
-            {
-              "date": "2024-01-26",
-              "home": "R. Amagro At.",
-              "away": "Moya",
-              "hs": 2,
-              "as_": 6
-            },
-            {
-              "date": "2024-01-26",
-              "home": "Becerril",
-              "away": "Guayarmina",
-              "hs": 2,
-              "as_": 7
+              "date": "2024-01-27",
+              "home": "Victoria",
+              "away": "Arucas C.F.",
+              "hs": 6,
+              "as_": 1
             },
             {
               "date": "2024-01-27",
-              "home": "Valleseco",
-              "away": "Roque Amagro",
-              "hs": 5,
-              "as_": 4
+              "home": "Atco. Huracán",
+              "away": "Santa Brígida",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-01-30",
+              "home": "San Mateo",
+              "away": "Arucas B",
+              "hs": 3,
+              "as_": 0
             },
             {
               "date": "2024-01-28",
-              "home": "Arucas C",
-              "away": "Goleta",
-              "hs": 10,
+              "home": "Tamaraceite",
+              "away": "Veteranos",
+              "hs": 4,
               "as_": 2
+            },
+            {
+              "date": "2024-01-28",
+              "home": "Acodetti",
+              "away": "Barrio Atlan.",
+              "hs": 9,
+              "as_": 2
+            },
+            {
+              "date": "2024-01-28",
+              "home": "Unión Viera",
+              "away": "Simusetti",
+              "hs": 8,
+              "as_": 1
             }
           ]
         },
@@ -7398,46 +7555,46 @@
           "name": "Jornada 13",
           "matches": [
             {
-              "date": "2024-02-02",
-              "home": "Guayarmina",
-              "away": "Guía",
-              "hs": 6,
-              "as_": 3
-            },
-            {
-              "date": "2024-02-02",
-              "home": "Barrial",
-              "away": "Arucas C",
+              "date": "2024-02-03",
+              "home": "Barrio Atlan.",
+              "away": "Unión Viera",
               "hs": 0,
-              "as_": 16
+              "as_": 11
             },
             {
-              "date": "2024-02-02",
-              "home": "Moya",
-              "away": "Becerril",
-              "hs": 1,
-              "as_": 5
-            },
-            {
-              "date": "2024-02-02",
-              "home": "Atalaya",
-              "away": "Valleseco",
+              "date": "2024-02-03",
+              "home": "Santa Brígida",
+              "away": "Tamaraceite",
               "hs": 0,
-              "as_": 8
+              "as_": 6
             },
             {
-              "date": "2024-02-02",
-              "home": "Roque Amagro",
-              "away": "Gáldar",
-              "hs": 5,
+              "date": "2024-02-03",
+              "home": "Veteranos",
+              "away": "Cardones",
+              "hs": 8,
               "as_": 1
             },
             {
               "date": "2024-02-04",
-              "home": "Goleta",
-              "away": "Santidad",
-              "hs": 4,
-              "as_": 2
+              "home": "Simusetti",
+              "away": "San Mateo",
+              "hs": 1,
+              "as_": 7
+            },
+            {
+              "date": "2024-02-06",
+              "home": "Arucas B",
+              "away": "Victoria",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2024-02-03",
+              "home": "Arucas C.F.",
+              "away": "Atco. Huracán",
+              "hs": 1,
+              "as_": 6
             }
           ]
         },
@@ -7446,46 +7603,46 @@
           "name": "Jornada 14",
           "matches": [
             {
-              "date": "2024-02-09",
-              "home": "Barrial",
-              "away": "Santidad",
-              "hs": 4,
-              "as_": 9
+              "date": "2024-02-10",
+              "home": "Barrio Atlan.",
+              "away": "San Mateo",
+              "hs": 3,
+              "as_": 6
             },
             {
-              "date": "2024-02-09",
-              "home": "Guayarmina",
-              "away": "Arucas C",
-              "hs": 2,
-              "as_": 8
-            },
-            {
-              "date": "2024-02-09",
-              "home": "Atalaya",
-              "away": "Roque Amagro",
+              "date": "2024-02-10",
+              "home": "Cardones",
+              "away": "Tamaraceite",
               "hs": 1,
-              "as_": 5
+              "as_": 10
             },
             {
-              "date": "2024-02-09",
-              "home": "Moya",
-              "away": "Guía",
+              "date": "2024-02-10",
+              "home": "Veteranos",
+              "away": "Acodetti",
               "hs": 4,
-              "as_": 2
-            },
-            {
-              "date": "2024-02-09",
-              "home": "R. Amagro At.",
-              "away": "Gáldar",
-              "hs": 0,
-              "as_": 5
+              "as_": 7
             },
             {
               "date": "2024-02-11",
-              "home": "Goleta",
-              "away": "Valleseco",
+              "home": "Arucas C.F.",
+              "away": "Santa Brígida",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-11",
+              "home": "Simusetti",
+              "away": "Victoria",
               "hs": 1,
-              "as_": 14
+              "as_": 10
+            },
+            {
+              "date": "2024-02-11",
+              "home": "Arucas B",
+              "away": "Atco. Huracán",
+              "hs": 0,
+              "as_": 6
             }
           ]
         },
@@ -7494,45 +7651,45 @@
           "name": "Jornada 15",
           "matches": [
             {
-              "date": "2024-02-16",
-              "home": "Gáldar",
-              "away": "Atalaya",
-              "hs": 0,
-              "as_": 2
-            },
-            {
-              "date": "2024-02-16",
-              "home": "Santidad",
-              "away": "Guayarmina",
-              "hs": 4,
-              "as_": 9
-            },
-            {
-              "date": "2024-02-16",
-              "home": "Roque Amagro",
-              "away": "Goleta",
-              "hs": 10,
-              "as_": 1
-            },
-            {
-              "date": "2024-02-16",
-              "home": "Becerril",
-              "away": "R. Amagro At.",
-              "hs": 6,
+              "date": "2024-02-20",
+              "home": "Atco. Huracán",
+              "away": "Simusetti",
+              "hs": 5,
               "as_": 0
             },
             {
               "date": "2024-02-17",
-              "home": "Valleseco",
-              "away": "Barrial",
-              "hs": 17,
+              "home": "Victoria",
+              "away": "Barrio Atlan.",
+              "hs": 8,
+              "as_": 1
+            },
+            {
+              "date": "2024-02-17",
+              "home": "Unión Viera",
+              "away": "Veteranos",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2024-02-21",
+              "home": "Santa Brígida",
+              "away": "Arucas B",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-15",
+              "home": "Tamaraceite",
+              "away": "Arucas C.F.",
+              "hs": 8,
               "as_": 0
             },
             {
               "date": "2024-02-18",
-              "home": "Arucas C",
-              "away": "Moya",
-              "hs": 9,
+              "home": "Acodetti",
+              "away": "Cardones",
+              "hs": 12,
               "as_": 0
             }
           ]
@@ -7542,46 +7699,46 @@
           "name": "Jornada 16",
           "matches": [
             {
-              "date": "2024-02-23",
-              "home": "Barrial",
-              "away": "Roque Amagro",
+              "date": "2024-02-24",
+              "home": "Cardones",
+              "away": "Unión Viera",
               "hs": 0,
-              "as_": 11
+              "as_": 13
             },
             {
-              "date": "2024-02-23",
-              "home": "Guayarmina",
-              "away": "Valleseco",
-              "hs": 0,
-              "as_": 5
-            },
-            {
-              "date": "2024-02-23",
-              "home": "Moya",
-              "away": "Santidad",
-              "hs": 2,
-              "as_": 5
-            },
-            {
-              "date": "2024-02-23",
-              "home": "R. Amagro At.",
-              "away": "Guía",
+              "date": "2024-02-24",
+              "home": "Barrio Atlan.",
+              "away": "Atco. Huracán",
               "hs": 1,
-              "as_": 3
+              "as_": 7
             },
             {
-              "date": "2024-02-22",
-              "home": "Becerril",
-              "away": "Gáldar",
-              "hs": 1,
+              "date": "2024-02-24",
+              "home": "Veteranos",
+              "away": "San Mateo",
+              "hs": 6,
               "as_": 2
             },
             {
               "date": "2024-02-25",
-              "home": "Goleta",
-              "away": "Atalaya",
-              "hs": 2,
-              "as_": 4
+              "home": "Simusetti",
+              "away": "Santa Brígida",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2024-02-25",
+              "home": "Acodetti",
+              "away": "Tamaraceite",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2024-02-22",
+              "home": "Arucas B",
+              "away": "Arucas C.F.",
+              "hs": 5,
+              "as_": 0
             }
           ]
         },
@@ -7590,46 +7747,46 @@
           "name": "Jornada 17",
           "matches": [
             {
-              "date": "2024-03-01",
-              "home": "Gáldar",
-              "away": "Goleta",
+              "date": "2024-03-02",
+              "home": "Victoria",
+              "away": "Veteranos",
+              "hs": 3,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-02",
+              "home": "Unión Viera",
+              "away": "Acodetti",
               "hs": 4,
               "as_": 3
             },
             {
-              "date": "2024-03-01",
-              "home": "Guía",
-              "away": "Becerril",
-              "hs": 2,
-              "as_": 6
+              "date": "2024-03-05",
+              "home": "Santa Brígida",
+              "away": "Barrio Atlan.",
+              "hs": 7,
+              "as_": 2
             },
             {
-              "date": "2024-03-01",
-              "home": "Atalaya",
-              "away": "Barrial",
-              "hs": 8,
-              "as_": 0
+              "date": "2024-03-05",
+              "home": "San Mateo",
+              "away": "Cardones",
+              "hs": 5,
+              "as_": 2
             },
             {
-              "date": "2024-03-01",
-              "home": "Roque Amagro",
-              "away": "Guayarmina",
-              "hs": 6,
-              "as_": 4
-            },
-            {
-              "date": "2024-03-02",
-              "home": "Valleseco",
-              "away": "Moya",
+              "date": "2024-03-03",
+              "home": "Tamaraceite",
+              "away": "Arucas B",
               "hs": 5,
               "as_": 0
             },
             {
-              "date": "2024-03-03",
-              "home": "Arucas C",
-              "away": "R. Amagro At.",
-              "hs": 11,
-              "as_": 0
+              "date": "2024-03-06",
+              "home": "Arucas C.F.",
+              "away": "Simusetti",
+              "hs": 1,
+              "as_": 4
             }
           ]
         },
@@ -7638,46 +7795,46 @@
           "name": "Jornada 18",
           "matches": [
             {
-              "date": "2024-03-08",
-              "home": "Barrial",
-              "away": "Goleta",
-              "hs": 4,
-              "as_": 8
-            },
-            {
-              "date": "2024-03-08",
-              "home": "Guayarmina",
-              "away": "Atalaya",
+              "date": "2024-03-09",
+              "home": "Barrio Atlan.",
+              "away": "Arucas C.F.",
               "hs": 1,
-              "as_": 2
+              "as_": 1
             },
             {
-              "date": "2024-03-08",
-              "home": "Guía",
-              "away": "Gáldar",
+              "date": "2024-03-09",
+              "home": "Cardones",
+              "away": "Victoria",
               "hs": 2,
-              "as_": 2
-            },
-            {
-              "date": "2024-03-08",
-              "home": "Moya",
-              "away": "Roque Amagro",
-              "hs": 0,
-              "as_": 8
-            },
-            {
-              "date": "2024-03-08",
-              "home": "R. Amagro At.",
-              "away": "Santidad",
-              "hs": 0,
               "as_": 10
             },
             {
-              "date": "2024-03-08",
-              "home": "Becerril",
-              "away": "Arucas C",
-              "hs": 1,
+              "date": "2024-03-09",
+              "home": "Veteranos",
+              "away": "Atco. Huracán",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2024-03-10",
+              "home": "Simusetti",
+              "away": "Arucas B",
+              "hs": 6,
               "as_": 4
+            },
+            {
+              "date": "2024-03-10",
+              "home": "Acodetti",
+              "away": "San Mateo",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-03-09",
+              "home": "Unión Viera",
+              "away": "Tamaraceite",
+              "hs": 2,
+              "as_": 1
             }
           ]
         },
@@ -7686,46 +7843,46 @@
           "name": "Jornada 19",
           "matches": [
             {
-              "date": "2024-03-15",
-              "home": "Gáldar",
-              "away": "Barrial",
-              "hs": 5,
-              "as_": 1
-            },
-            {
-              "date": "2024-03-15",
-              "home": "Santidad",
-              "away": "Becerril",
-              "hs": 7,
-              "as_": 3
-            },
-            {
-              "date": "2024-03-15",
-              "home": "Atalaya",
-              "away": "Moya",
-              "hs": 1,
-              "as_": 1
-            },
-            {
               "date": "2024-03-16",
-              "home": "Valleseco",
-              "away": "R. Amagro At.",
-              "hs": 13,
+              "home": "Atco. Huracán",
+              "away": "Cardones",
+              "hs": 5,
               "as_": 0
             },
             {
-              "date": "2024-03-17",
-              "home": "Arucas C",
-              "away": "Guía",
-              "hs": 13,
-              "as_": 1
+              "date": "2024-03-16",
+              "home": "Victoria",
+              "away": "Acodetti",
+              "hs": 0,
+              "as_": 2
+            },
+            {
+              "date": "2024-03-19",
+              "home": "Santa Brígida",
+              "away": "Veteranos",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2024-03-19",
+              "home": "San Mateo",
+              "away": "Unión Viera",
+              "hs": 0,
+              "as_": 5
             },
             {
               "date": "2024-03-17",
-              "home": "Goleta",
-              "away": "Guayarmina",
-              "hs": 1,
-              "as_": 8
+              "home": "Tamaraceite",
+              "away": "Simusetti",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-05-07",
+              "home": "Arucas B",
+              "away": "Barrio Atlan.",
+              "hs": null,
+              "as_": null
             }
           ]
         },
@@ -7734,46 +7891,46 @@
           "name": "Jornada 20",
           "matches": [
             {
-              "date": "2024-03-22",
-              "home": "Guayarmina",
-              "away": "Barrial",
-              "hs": 9,
-              "as_": 0
+              "date": "2024-03-23",
+              "home": "Barrio Atlan.",
+              "away": "Simusetti",
+              "hs": 3,
+              "as_": 4
             },
             {
-              "date": "2024-03-22",
-              "home": "Guía",
-              "away": "Santidad",
-              "hs": 0,
+              "date": "2024-03-23",
+              "home": "Cardones",
+              "away": "Santa Brígida",
+              "hs": 2,
               "as_": 4
             },
             {
               "date": "2024-03-22",
-              "home": "Moya",
-              "away": "Goleta",
-              "hs": 6,
-              "as_": 2
-            },
-            {
-              "date": "2024-03-22",
-              "home": "R. Amagro At.",
-              "away": "Roque Amagro",
-              "hs": 1,
-              "as_": 9
-            },
-            {
-              "date": "2024-03-22",
-              "home": "Becerril",
-              "away": "Valleseco",
-              "hs": 0,
-              "as_": 7
+              "home": "Veteranos",
+              "away": "Arucas C.F.",
+              "hs": 8,
+              "as_": 1
             },
             {
               "date": "2024-03-24",
-              "home": "Arucas C",
-              "away": "Gáldar",
-              "hs": 8,
+              "home": "Acodetti",
+              "away": "Atco. Huracán",
+              "hs": 2,
               "as_": 1
+            },
+            {
+              "date": "2024-03-23",
+              "home": "Unión Viera",
+              "away": "Victoria",
+              "hs": 2,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-24",
+              "home": "San Mateo",
+              "away": "Tamaraceite",
+              "hs": 0,
+              "as_": 5
             }
           ]
         },
@@ -7782,46 +7939,46 @@
           "name": "Jornada 21",
           "matches": [
             {
-              "date": "2024-04-05",
-              "home": "Gáldar",
-              "away": "Guayarmina",
-              "hs": 2,
-              "as_": 5
-            },
-            {
-              "date": "2024-04-05",
-              "home": "Barrial",
-              "away": "Moya",
+              "date": "2024-04-04",
+              "home": "Atco. Huracán",
+              "away": "Unión Viera",
               "hs": 1,
-              "as_": 6
-            },
-            {
-              "date": "2024-04-05",
-              "home": "Santidad",
-              "away": "Arucas C",
-              "hs": 6,
-              "as_": 4
-            },
-            {
-              "date": "2024-04-05",
-              "home": "Atalaya",
-              "away": "R. Amagro At.",
-              "hs": 8,
               "as_": 1
             },
             {
-              "date": "2024-04-05",
-              "home": "Roque Amagro",
-              "away": "Becerril",
-              "hs": 9,
-              "as_": 0
+              "date": "2024-04-06",
+              "home": "Victoria",
+              "away": "San Mateo",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2024-04-09",
+              "home": "Santa Brígida",
+              "away": "Acodetti",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2024-04-07",
+              "home": "Tamaraceite",
+              "away": "Barrio Atlan.",
+              "hs": 10,
+              "as_": 1
+            },
+            {
+              "date": "2024-04-07",
+              "home": "Arucas B",
+              "away": "Veteranos",
+              "hs": 1,
+              "as_": 4
             },
             {
               "date": "2024-04-06",
-              "home": "Valleseco",
-              "away": "Guía",
-              "hs": 7,
-              "as_": 0
+              "home": "Arucas C.F.",
+              "away": "Cardones",
+              "hs": 2,
+              "as_": 3
             }
           ]
         },
@@ -7830,46 +7987,46 @@
           "name": "Jornada 22",
           "matches": [
             {
-              "date": "2024-04-12",
-              "home": "Guía",
-              "away": "Roque Amagro",
-              "hs": 1,
-              "as_": 9
+              "date": "2024-04-13",
+              "home": "Cardones",
+              "away": "Arucas B",
+              "hs": 3,
+              "as_": 7
             },
             {
-              "date": "2024-04-12",
-              "home": "Santidad",
-              "away": "Gáldar",
-              "hs": 5,
-              "as_": 0
-            },
-            {
-              "date": "2024-04-12",
-              "home": "Moya",
-              "away": "Guayarmina",
-              "hs": 1,
-              "as_": 5
-            },
-            {
-              "date": "2024-04-12",
-              "home": "R. Amagro At.",
-              "away": "Goleta",
+              "date": "2024-04-13",
+              "home": "Victoria",
+              "away": "Tamaraceite",
               "hs": 2,
               "as_": 5
             },
             {
-              "date": "2024-04-12",
-              "home": "Becerril",
-              "away": "Atalaya",
-              "hs": 1,
-              "as_": 3
+              "date": "2024-04-17",
+              "home": "Veteranos",
+              "away": "Simusetti",
+              "hs": 10,
+              "as_": 4
+            },
+            {
+              "date": "2024-04-15",
+              "home": "Acodetti",
+              "away": "Arucas C.F.",
+              "hs": 9,
+              "as_": 0
             },
             {
               "date": "2024-04-14",
-              "home": "Arucas C",
-              "away": "Valleseco",
-              "hs": 3,
-              "as_": 3
+              "home": "Unión Viera",
+              "away": "Santa Brígida",
+              "hs": 9,
+              "as_": 1
+            },
+            {
+              "date": "2024-04-14",
+              "home": "San Mateo",
+              "away": "Atco. Huracán",
+              "hs": 0,
+              "as_": 7
             }
           ]
         },
@@ -7878,46 +8035,46 @@
           "name": "Jornada 23",
           "matches": [
             {
-              "date": "2024-04-19",
-              "home": "Gáldar",
-              "away": "Moya",
+              "date": "2024-04-20",
+              "home": "Atco. Huracán",
+              "away": "Victoria",
               "hs": 1,
               "as_": 1
             },
             {
-              "date": "2024-04-19",
-              "home": "Barrial",
-              "away": "R. Amagro At.",
+              "date": "2024-04-18",
+              "home": "Barrio Atlan.",
+              "away": "Veteranos",
+              "hs": 1,
+              "as_": 10
+            },
+            {
+              "date": "2024-04-16",
+              "home": "Santa Brígida",
+              "away": "San Mateo",
+              "hs": 7,
+              "as_": 4
+            },
+            {
+              "date": "2024-04-21",
+              "home": "Simusetti",
+              "away": "Cardones",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2024-04-21",
+              "home": "Arucas B",
+              "away": "Acodetti",
               "hs": 3,
               "as_": 4
             },
             {
-              "date": "2024-04-19",
-              "home": "Atalaya",
-              "away": "Guía",
-              "hs": 5,
-              "as_": 2
-            },
-            {
-              "date": "2024-04-19",
-              "home": "Roque Amagro",
-              "away": "Arucas C",
-              "hs": 6,
+              "date": "2024-04-20",
+              "home": "Arucas C.F.",
+              "away": "Unión Viera",
+              "hs": 0,
               "as_": 3
-            },
-            {
-              "date": "2024-04-20",
-              "home": "Valleseco",
-              "away": "Santidad",
-              "hs": 4,
-              "as_": 5
-            },
-            {
-              "date": "2024-04-20",
-              "home": "Goleta",
-              "away": "Becerril",
-              "hs": 2,
-              "as_": 4
             }
           ]
         },
@@ -7926,45 +8083,45 @@
           "name": "Jornada 24",
           "matches": [
             {
-              "date": "2024-04-26",
-              "home": "Guía",
-              "away": "Goleta",
+              "date": "2024-04-27",
+              "home": "Cardones",
+              "away": "Barrio Atlan.",
               "hs": 4,
               "as_": 4
             },
             {
-              "date": "2024-04-26",
-              "home": "Santidad",
-              "away": "Roque Amagro",
-              "hs": 4,
-              "as_": 6
+              "date": "2024-04-27",
+              "home": "Victoria",
+              "away": "Santa Brígida",
+              "hs": 5,
+              "as_": 0
             },
             {
-              "date": "2024-04-26",
-              "home": "R. Amagro At.",
-              "away": "Guayarmina",
-              "hs": 0,
-              "as_": 6
-            },
-            {
-              "date": "2024-04-26",
-              "home": "Becerril",
-              "away": "Barrial",
-              "hs": 9,
-              "as_": 2
+              "date": "2024-04-25",
+              "home": "Atco. Huracán",
+              "away": "Tamaraceite",
+              "hs": 2,
+              "as_": 4
             },
             {
               "date": "2024-04-27",
-              "home": "Valleseco",
-              "away": "Gáldar",
-              "hs": 7,
+              "home": "San Mateo",
+              "away": "Arucas C.F.",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2024-04-28",
+              "home": "Acodetti",
+              "away": "Simusetti",
+              "hs": 6,
               "as_": 0
             },
             {
               "date": "2024-04-28",
-              "home": "Arucas C",
-              "away": "Atalaya",
-              "hs": 11,
+              "home": "Unión Viera",
+              "away": "Arucas B",
+              "hs": 4,
               "as_": 1
             }
           ]
@@ -7974,46 +8131,46 @@
           "name": "Jornada 25",
           "matches": [
             {
-              "date": "2024-05-03",
-              "home": "Guayarmina",
-              "away": "Becerril",
-              "hs": 6,
-              "as_": 3
-            },
-            {
-              "date": "2024-05-03",
-              "home": "Barrial",
-              "away": "Guía",
-              "hs": 2,
-              "as_": 8
-            },
-            {
-              "date": "2024-05-03",
-              "home": "Moya",
-              "away": "R. Amagro At.",
-              "hs": 6,
-              "as_": 3
-            },
-            {
-              "date": "2024-05-03",
-              "home": "Atalaya",
-              "away": "Santidad",
-              "hs": 3,
+              "date": "2024-05-04",
+              "home": "Barrio Atlan.",
+              "away": "Acodetti",
+              "hs": 0,
               "as_": 6
             },
             {
-              "date": "2024-05-03",
-              "home": "Roque Amagro",
-              "away": "Valleseco",
-              "hs": 5,
-              "as_": 3
+              "date": "2024-05-04",
+              "home": "Arucas C.F.",
+              "away": "Victoria",
+              "hs": 1,
+              "as_": 7
             },
             {
-              "date": "2024-05-07",
-              "home": "Goleta",
-              "away": "Arucas C",
-              "hs": null,
-              "as_": null
+              "date": "2024-05-04",
+              "home": "Veteranos",
+              "away": "Tamaraceite",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2024-05-04",
+              "home": "Santa Brígida",
+              "away": "Atco. Huracán",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2024-05-05",
+              "home": "Simusetti",
+              "away": "Unión Viera",
+              "hs": 4,
+              "as_": 10
+            },
+            {
+              "date": "2024-05-05",
+              "home": "Arucas B",
+              "away": "San Mateo",
+              "hs": 4,
+              "as_": 1
             }
           ]
         },
@@ -8022,44 +8179,44 @@
           "name": "Jornada 26",
           "matches": [
             {
-              "date": "2024-05-10",
-              "home": "Becerril",
-              "away": "Moya",
+              "date": "2024-05-12",
+              "home": "Cardones",
+              "away": "Veteranos",
               "hs": null,
               "as_": null
             },
             {
-              "date": "2024-05-10",
-              "home": "Guía",
-              "away": "Guayarmina",
+              "date": "2024-05-11",
+              "home": "Unión Viera",
+              "away": "Barrio Atlan.",
               "hs": null,
               "as_": null
             },
             {
-              "date": "2024-05-10",
-              "home": "Arucas C",
-              "away": "Barrial",
+              "date": "2024-05-12",
+              "home": "San Mateo",
+              "away": "Simusetti",
               "hs": null,
               "as_": null
             },
             {
-              "date": "2024-05-10",
-              "home": "Santidad",
-              "away": "Goleta",
+              "date": "2024-05-12",
+              "home": "Victoria",
+              "away": "Arucas B",
               "hs": null,
               "as_": null
             },
             {
-              "date": "2024-05-10",
-              "home": "Valleseco",
-              "away": "Atalaya",
+              "date": "2024-05-12",
+              "home": "Atco. Huracán",
+              "away": "Arucas C.F.",
               "hs": null,
               "as_": null
             },
             {
-              "date": "2024-05-10",
-              "home": "Gáldar",
-              "away": "Roque Amagro",
+              "date": "2024-05-12",
+              "home": "Tamaraceite",
+              "away": "Santa Brígida",
               "hs": null,
               "as_": null
             }
@@ -8075,7 +8232,152 @@
       "group_name": "Grupo 3",
       "phase": "Primera Fase GC",
       "island": "gran_canaria",
-      "standings": [],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Ingenio",
+          "pts": 66,
+          "j": 22,
+          "g": 22,
+          "e": 0,
+          "p": 0,
+          "gf": 116,
+          "gc": 19,
+          "df": 97
+        },
+        {
+          "pos": 2,
+          "team": "Las Huesas",
+          "pts": 51,
+          "j": 22,
+          "g": 17,
+          "e": 0,
+          "p": 5,
+          "gf": 72,
+          "gc": 38,
+          "df": 34
+        },
+        {
+          "pos": 3,
+          "team": "Telde",
+          "pts": 49,
+          "j": 22,
+          "g": 16,
+          "e": 1,
+          "p": 5,
+          "gf": 82,
+          "gc": 40,
+          "df": 42
+        },
+        {
+          "pos": 4,
+          "team": "Heidelberg",
+          "pts": 38,
+          "j": 22,
+          "g": 12,
+          "e": 2,
+          "p": 8,
+          "gf": 83,
+          "gc": 62,
+          "df": 21
+        },
+        {
+          "pos": 5,
+          "team": "La Garita",
+          "pts": 36,
+          "j": 22,
+          "g": 11,
+          "e": 3,
+          "p": 8,
+          "gf": 58,
+          "gc": 41,
+          "df": 17
+        },
+        {
+          "pos": 6,
+          "team": "Unión Carrizal",
+          "pts": 33,
+          "j": 22,
+          "g": 10,
+          "e": 3,
+          "p": 9,
+          "gf": 58,
+          "gc": 53,
+          "df": 5
+        },
+        {
+          "pos": 7,
+          "team": "Valsequillo",
+          "pts": 33,
+          "j": 22,
+          "g": 10,
+          "e": 3,
+          "p": 9,
+          "gf": 44,
+          "gc": 29,
+          "df": 15
+        },
+        {
+          "pos": 8,
+          "team": "Vallinamar",
+          "pts": 32,
+          "j": 22,
+          "g": 10,
+          "e": 2,
+          "p": 10,
+          "gf": 62,
+          "gc": 54,
+          "df": 8
+        },
+        {
+          "pos": 9,
+          "team": "Gran Canaria",
+          "pts": 31,
+          "j": 22,
+          "g": 10,
+          "e": 1,
+          "p": 11,
+          "gf": 73,
+          "gc": 58,
+          "df": 15
+        },
+        {
+          "pos": 10,
+          "team": "Acodetti B",
+          "pts": 11,
+          "j": 22,
+          "g": 3,
+          "e": 2,
+          "p": 17,
+          "gf": 32,
+          "gc": 94,
+          "df": -62
+        },
+        {
+          "pos": 11,
+          "team": "Ingenio B",
+          "pts": 4,
+          "j": 22,
+          "g": 1,
+          "e": 1,
+          "p": 20,
+          "gf": 17,
+          "gc": 101,
+          "df": -84
+        },
+        {
+          "pos": 12,
+          "team": "Ojos de Garza",
+          "pts": 3,
+          "j": 22,
+          "g": 1,
+          "e": 0,
+          "p": 21,
+          "gf": 15,
+          "gc": 123,
+          "df": -108
+        }
+      ],
       "jornadas": [
         {
           "num": 1,
@@ -9134,7 +9436,1225 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "1prebenjamin4",
+      "url": "https://futbolaspalmas.com/1prebenjamin4/",
+      "wayback_timestamp": "20240506202838",
+      "category": "prebenjamin",
+      "group_name": "Grupo 4",
+      "phase": "Primera Fase GC",
+      "island": "gran_canaria",
+      "standings": [
+        {
+          "pos": 1,
+          "team": "UD Vecindario",
+          "pts": 64,
+          "j": 22,
+          "g": 21,
+          "e": 1,
+          "p": 0,
+          "gf": 141,
+          "gc": 29,
+          "df": 112
+        },
+        {
+          "pos": 2,
+          "team": "Maspa Training",
+          "pts": 61,
+          "j": 22,
+          "g": 20,
+          "e": 1,
+          "p": 1,
+          "gf": 135,
+          "gc": 29,
+          "df": 106
+        },
+        {
+          "pos": 3,
+          "team": "Los Vélez",
+          "pts": 45,
+          "j": 22,
+          "g": 14,
+          "e": 3,
+          "p": 5,
+          "gf": 111,
+          "gc": 68,
+          "df": 43
+        },
+        {
+          "pos": 4,
+          "team": "Doramas",
+          "pts": 45,
+          "j": 22,
+          "g": 14,
+          "e": 3,
+          "p": 5,
+          "gf": 83,
+          "gc": 58,
+          "df": 25
+        },
+        {
+          "pos": 5,
+          "team": "San Pedro",
+          "pts": 35,
+          "j": 22,
+          "g": 10,
+          "e": 5,
+          "p": 7,
+          "gf": 91,
+          "gc": 74,
+          "df": 17
+        },
+        {
+          "pos": 6,
+          "team": "Arguineguín",
+          "pts": 32,
+          "j": 22,
+          "g": 10,
+          "e": 2,
+          "p": 10,
+          "gf": 69,
+          "gc": 78,
+          "df": -9
+        },
+        {
+          "pos": 7,
+          "team": "San Fernando",
+          "pts": 30,
+          "j": 22,
+          "g": 9,
+          "e": 3,
+          "p": 10,
+          "gf": 65,
+          "gc": 69,
+          "df": -4
+        },
+        {
+          "pos": 8,
+          "team": "Tablero",
+          "pts": 22,
+          "j": 22,
+          "g": 7,
+          "e": 1,
+          "p": 14,
+          "gf": 71,
+          "gc": 96,
+          "df": -25
+        },
+        {
+          "pos": 9,
+          "team": "Las Rosas",
+          "pts": 20,
+          "j": 22,
+          "g": 6,
+          "e": 2,
+          "p": 14,
+          "gf": 71,
+          "gc": 108,
+          "df": -37
+        },
+        {
+          "pos": 10,
+          "team": "Maspalomas",
+          "pts": 15,
+          "j": 22,
+          "g": 4,
+          "e": 3,
+          "p": 15,
+          "gf": 45,
+          "gc": 94,
+          "df": -49
+        },
+        {
+          "pos": 11,
+          "team": "Cerruda",
+          "pts": 15,
+          "j": 22,
+          "g": 5,
+          "e": 0,
+          "p": 17,
+          "gf": 52,
+          "gc": 105,
+          "df": -53
+        },
+        {
+          "pos": 12,
+          "team": "Arguineguín B",
+          "pts": 0,
+          "j": 22,
+          "g": 0,
+          "e": 0,
+          "p": 22,
+          "gf": 34,
+          "gc": 160,
+          "df": -126
+        }
+      ],
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2023-10-20",
+              "home": "Arguineguín B",
+              "away": "Arguineguín",
+              "hs": 4,
+              "as_": 7
+            },
+            {
+              "date": "2023-10-20",
+              "home": "UD Vecindario",
+              "away": "Doramas",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2023-10-24",
+              "home": "Cerruda",
+              "away": "Tablero",
+              "hs": 5,
+              "as_": 6
+            },
+            {
+              "date": "2023-10-21",
+              "home": "Maspa Training",
+              "away": "San Fernando",
+              "hs": 8,
+              "as_": 0
+            },
+            {
+              "date": "2023-10-21",
+              "home": "Los Vélez",
+              "away": "Las Rosas",
+              "hs": 8,
+              "as_": 6
+            },
+            {
+              "date": "2023-10-21",
+              "home": "Maspalomas",
+              "away": "San Pedro",
+              "hs": 0,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2023-10-27",
+              "home": "Tablero",
+              "away": "Maspalomas",
+              "hs": 3,
+              "as_": 1
+            },
+            {
+              "date": "2023-10-27",
+              "home": "Arguineguín",
+              "away": "Los Vélez",
+              "hs": 1,
+              "as_": 8
+            },
+            {
+              "date": "2023-10-27",
+              "home": "Doramas",
+              "away": "Arguineguín B",
+              "hs": 8,
+              "as_": 0
+            },
+            {
+              "date": "2023-10-27",
+              "home": "San Pedro",
+              "away": "Maspa Training",
+              "hs": 4,
+              "as_": 8
+            },
+            {
+              "date": "2023-10-26",
+              "home": "Las Rosas",
+              "away": "Cerruda",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2023-10-28",
+              "home": "San Fernando",
+              "away": "UD Vecindario",
+              "hs": 0,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2023-11-03",
+              "home": "Tablero",
+              "away": "Las Rosas",
+              "hs": 2,
+              "as_": 6
+            },
+            {
+              "date": "2023-11-03",
+              "home": "Arguineguín B",
+              "away": "San Fernando",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2023-11-03",
+              "home": "UD Vecindario",
+              "away": "San Pedro",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2023-11-04",
+              "home": "Cerruda",
+              "away": "Arguineguín",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2023-11-04",
+              "home": "Los Vélez",
+              "away": "Doramas",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2023-11-04",
+              "home": "Maspalomas",
+              "away": "Maspa Training",
+              "hs": 0,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2023-11-10",
+              "home": "Arguineguín",
+              "away": "Tablero",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2023-11-10",
+              "home": "Doramas",
+              "away": "Cerruda",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-10",
+              "home": "San Pedro",
+              "away": "Arguineguín B",
+              "hs": 8,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-11",
+              "home": "Maspa Training",
+              "away": "UD Vecindario",
+              "hs": 1,
+              "as_": 3
+            },
+            {
+              "date": "2023-11-11",
+              "home": "Las Rosas",
+              "away": "Maspalomas",
+              "hs": 3,
+              "as_": 5
+            },
+            {
+              "date": "2023-11-11",
+              "home": "San Fernando",
+              "away": "Los Vélez",
+              "hs": 3,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2023-11-17",
+              "home": "Tablero",
+              "away": "Doramas",
+              "hs": 0,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-17",
+              "home": "Arguineguín B",
+              "away": "Maspa Training",
+              "hs": 2,
+              "as_": 8
+            },
+            {
+              "date": "2023-11-18",
+              "home": "Cerruda",
+              "away": "San Fernando",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-18",
+              "home": "Los Vélez",
+              "away": "San Pedro",
+              "hs": 11,
+              "as_": 5
+            },
+            {
+              "date": "2023-11-18",
+              "home": "Maspalomas",
+              "away": "UD Vecindario",
+              "hs": 0,
+              "as_": 7
+            },
+            {
+              "date": "2023-11-18",
+              "home": "Las Rosas",
+              "away": "Arguineguín",
+              "hs": 5,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "name": "Jornada 6",
+          "matches": [
+            {
+              "date": "2023-11-24",
+              "home": "Arguineguín",
+              "away": "Maspalomas",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2023-11-24",
+              "home": "Doramas",
+              "away": "Las Rosas",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-24",
+              "home": "San Pedro",
+              "away": "Cerruda",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2023-11-24",
+              "home": "UD Vecindario",
+              "away": "Arguineguín B",
+              "hs": 13,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-25",
+              "home": "Maspa Training",
+              "away": "Los Vélez",
+              "hs": 4,
+              "as_": 0
+            },
+            {
+              "date": "2023-11-25",
+              "home": "San Fernando",
+              "away": "Tablero",
+              "hs": 5,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "name": "Jornada 7",
+          "matches": [
+            {
+              "date": "2023-12-01",
+              "home": "Tablero",
+              "away": "San Pedro",
+              "hs": 2,
+              "as_": 8
+            },
+            {
+              "date": "2023-12-01",
+              "home": "Arguineguín",
+              "away": "Doramas",
+              "hs": 0,
+              "as_": 2
+            },
+            {
+              "date": "2023-12-02",
+              "home": "Cerruda",
+              "away": "Maspa Training",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2023-12-02",
+              "home": "Las Rosas",
+              "away": "San Fernando",
+              "hs": 0,
+              "as_": 6
+            },
+            {
+              "date": "2023-11-30",
+              "home": "Los Vélez",
+              "away": "UD Vecindario",
+              "hs": 4,
+              "as_": 8
+            },
+            {
+              "date": "2023-12-02",
+              "home": "Maspalomas",
+              "away": "Arguineguín B",
+              "hs": 6,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "name": "Jornada 8",
+          "matches": [
+            {
+              "date": "2023-12-07",
+              "home": "Doramas",
+              "away": "Maspalomas",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2023-12-07",
+              "home": "San Pedro",
+              "away": "Las Rosas",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2023-12-07",
+              "home": "UD Vecindario",
+              "away": "Cerruda",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2023-12-08",
+              "home": "Arguineguín B",
+              "away": "Los Vélez",
+              "hs": 0,
+              "as_": 8
+            },
+            {
+              "date": "2023-12-09",
+              "home": "Maspa Training",
+              "away": "Tablero",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2023-12-09",
+              "home": "San Fernando",
+              "away": "Arguineguín",
+              "hs": 0,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "name": "Jornada 9",
+          "matches": [
+            {
+              "date": "2023-12-15",
+              "home": "Tablero",
+              "away": "UD Vecindario",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2023-12-15",
+              "home": "Doramas",
+              "away": "San Fernando",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2023-12-15",
+              "home": "Arguineguín",
+              "away": "San Pedro",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2023-12-16",
+              "home": "Cerruda",
+              "away": "Arguineguín B",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2023-12-16",
+              "home": "Las Rosas",
+              "away": "Maspa Training",
+              "hs": 5,
+              "as_": 9
+            },
+            {
+              "date": "2023-12-16",
+              "home": "Maspalomas",
+              "away": "Los Vélez",
+              "hs": 1,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 10,
+          "name": "Jornada 10",
+          "matches": [
+            {
+              "date": "2024-01-12",
+              "home": "San Pedro",
+              "away": "Doramas",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2024-01-12",
+              "home": "UD Vecindario",
+              "away": "Las Rosas",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-01-12",
+              "home": "Arguineguín B",
+              "away": "Tablero",
+              "hs": 4,
+              "as_": 9
+            },
+            {
+              "date": "2024-01-13",
+              "home": "Maspa Training",
+              "away": "Arguineguín",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2024-01-13",
+              "home": "Los Vélez",
+              "away": "Cerruda",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2024-01-13",
+              "home": "Maspalomas",
+              "away": "San Fernando",
+              "hs": 1,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 11,
+          "name": "Jornada 11",
+          "matches": [
+            {
+              "date": "2024-01-19",
+              "home": "Tablero",
+              "away": "Los Vélez",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2024-01-19",
+              "home": "Doramas",
+              "away": "Maspa Training",
+              "hs": 4,
+              "as_": 9
+            },
+            {
+              "date": "2024-01-19",
+              "home": "Arguineguín",
+              "away": "UD Vecindario",
+              "hs": 1,
+              "as_": 7
+            },
+            {
+              "date": "2024-01-20",
+              "home": "Cerruda",
+              "away": "Maspalomas",
+              "hs": 7,
+              "as_": 4
+            },
+            {
+              "date": "2024-01-20",
+              "home": "Las Rosas",
+              "away": "Arguineguín B",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2024-01-20",
+              "home": "San Fernando",
+              "away": "San Pedro",
+              "hs": 3,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 12,
+          "name": "Jornada 12",
+          "matches": [
+            {
+              "date": "2024-01-26",
+              "home": "Tablero",
+              "away": "Cerruda",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2024-01-26",
+              "home": "Arguineguín",
+              "away": "Arguineguín B",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2024-01-26",
+              "home": "Doramas",
+              "away": "UD Vecindario",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2024-01-26",
+              "home": "San Pedro",
+              "away": "Maspalomas",
+              "hs": 1,
+              "as_": 1
+            },
+            {
+              "date": "2024-01-27",
+              "home": "Las Rosas",
+              "away": "Los Vélez",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2024-01-30",
+              "home": "San Fernando",
+              "away": "Maspa Training",
+              "hs": 1,
+              "as_": 7
+            }
+          ]
+        },
+        {
+          "num": 13,
+          "name": "Jornada 13",
+          "matches": [
+            {
+              "date": "2024-02-02",
+              "home": "Arguineguín B",
+              "away": "Doramas",
+              "hs": 0,
+              "as_": 6
+            },
+            {
+              "date": "2024-02-02",
+              "home": "UD Vecindario",
+              "away": "San Fernando",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-02-03",
+              "home": "Cerruda",
+              "away": "Las Rosas",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2024-02-03",
+              "home": "Maspa Training",
+              "away": "San Pedro",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2024-02-03",
+              "home": "Los Vélez",
+              "away": "Arguineguín",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-03",
+              "home": "Maspalomas",
+              "away": "Tablero",
+              "hs": 1,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 14,
+          "name": "Jornada 14",
+          "matches": [
+            {
+              "date": "2024-02-09",
+              "home": "Arguineguín",
+              "away": "Cerruda",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-02-09",
+              "home": "Doramas",
+              "away": "Los Vélez",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-09",
+              "home": "San Pedro",
+              "away": "UD Vecindario",
+              "hs": 5,
+              "as_": 6
+            },
+            {
+              "date": "2024-02-10",
+              "home": "Maspa Training",
+              "away": "Maspalomas",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2024-02-09",
+              "home": "Las Rosas",
+              "away": "Tablero",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2024-02-10",
+              "home": "San Fernando",
+              "away": "Arguineguín B",
+              "hs": 5,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 15,
+          "name": "Jornada 15",
+          "matches": [
+            {
+              "date": "2024-02-16",
+              "home": "Tablero",
+              "away": "Arguineguín",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-16",
+              "home": "Arguineguín B",
+              "away": "San Pedro",
+              "hs": 1,
+              "as_": 7
+            },
+            {
+              "date": "2024-02-15",
+              "home": "UD Vecindario",
+              "away": "Maspa Training",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2024-02-17",
+              "home": "Cerruda",
+              "away": "Doramas",
+              "hs": 1,
+              "as_": 4
+            },
+            {
+              "date": "2024-02-17",
+              "home": "Los Vélez",
+              "away": "San Fernando",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2024-02-17",
+              "home": "Maspalomas",
+              "away": "Las Rosas",
+              "hs": 4,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 16,
+          "name": "Jornada 16",
+          "matches": [
+            {
+              "date": "2024-02-23",
+              "home": "Arguineguín",
+              "away": "Las Rosas",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2024-02-23",
+              "home": "Doramas",
+              "away": "Tablero",
+              "hs": 6,
+              "as_": 4
+            },
+            {
+              "date": "2024-02-23",
+              "home": "San Pedro",
+              "away": "Los Vélez",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2024-02-23",
+              "home": "UD Vecindario",
+              "away": "Maspalomas",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2024-02-24",
+              "home": "Maspa Training",
+              "away": "Arguineguín B",
+              "hs": 9,
+              "as_": 1
+            },
+            {
+              "date": "2024-02-24",
+              "home": "San Fernando",
+              "away": "Cerruda",
+              "hs": 5,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 17,
+          "name": "Jornada 17",
+          "matches": [
+            {
+              "date": "2024-02-29",
+              "home": "Tablero",
+              "away": "San Fernando",
+              "hs": 2,
+              "as_": 1
+            },
+            {
+              "date": "2024-03-01",
+              "home": "Arguineguín B",
+              "away": "UD Vecindario",
+              "hs": 0,
+              "as_": 11
+            },
+            {
+              "date": "2024-03-02",
+              "home": "Cerruda",
+              "away": "San Pedro",
+              "hs": 3,
+              "as_": 5
+            },
+            {
+              "date": "2024-03-02",
+              "home": "Las Rosas",
+              "away": "Doramas",
+              "hs": 3,
+              "as_": 5
+            },
+            {
+              "date": "2024-03-02",
+              "home": "Los Vélez",
+              "away": "Maspa Training",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2024-03-02",
+              "home": "Maspalomas",
+              "away": "Arguineguín",
+              "hs": 1,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 18,
+          "name": "Jornada 18",
+          "matches": [
+            {
+              "date": "2024-03-08",
+              "home": "Doramas",
+              "away": "Arguineguín",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2024-03-08",
+              "home": "San Pedro",
+              "away": "Tablero",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2024-03-08",
+              "home": "Arguineguín B",
+              "away": "Maspalomas",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2024-03-08",
+              "home": "UD Vecindario",
+              "away": "Los Vélez",
+              "hs": 4,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-09",
+              "home": "Maspa Training",
+              "away": "Cerruda",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-09",
+              "home": "San Fernando",
+              "away": "Las Rosas",
+              "hs": 7,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 19,
+          "name": "Jornada 19",
+          "matches": [
+            {
+              "date": "2024-03-14",
+              "home": "Tablero",
+              "away": "Maspa Training",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2024-03-15",
+              "home": "Arguineguín",
+              "away": "San Fernando",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2024-03-16",
+              "home": "Cerruda",
+              "away": "UD Vecindario",
+              "hs": 0,
+              "as_": 7
+            },
+            {
+              "date": "2024-03-15",
+              "home": "Las Rosas",
+              "away": "San Pedro",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2024-03-16",
+              "home": "Los Vélez",
+              "away": "Arguineguín B",
+              "hs": 7,
+              "as_": 3
+            },
+            {
+              "date": "2024-03-16",
+              "home": "Maspalomas",
+              "away": "Doramas",
+              "hs": 1,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 20,
+          "name": "Jornada 20",
+          "matches": [
+            {
+              "date": "2024-04-09",
+              "home": "San Pedro",
+              "away": "Arguineguín",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2024-03-22",
+              "home": "Arguineguín B",
+              "away": "Cerruda",
+              "hs": 3,
+              "as_": 6
+            },
+            {
+              "date": "2024-04-09",
+              "home": "UD Vecindario",
+              "away": "Tablero",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2024-03-23",
+              "home": "Maspa Training",
+              "away": "Las Rosas",
+              "hs": 7,
+              "as_": 0
+            },
+            {
+              "date": "2024-03-23",
+              "home": "Los Vélez",
+              "away": "Maspalomas",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-03-23",
+              "home": "San Fernando",
+              "away": "Doramas",
+              "hs": 1,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 21,
+          "name": "Jornada 21",
+          "matches": [
+            {
+              "date": "2024-04-05",
+              "home": "Tablero",
+              "away": "Arguineguín B",
+              "hs": 8,
+              "as_": 2
+            },
+            {
+              "date": "2024-04-05",
+              "home": "Doramas",
+              "away": "San Pedro",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2024-04-05",
+              "home": "Arguineguín",
+              "away": "Maspa Training",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2024-04-06",
+              "home": "Cerruda",
+              "away": "Los Vélez",
+              "hs": 1,
+              "as_": 8
+            },
+            {
+              "date": "2024-04-06",
+              "home": "Las Rosas",
+              "away": "UD Vecindario",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2024-04-06",
+              "home": "San Fernando",
+              "away": "Maspalomas",
+              "hs": 4,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 22,
+          "name": "Jornada 22",
+          "matches": [
+            {
+              "date": "2024-04-12",
+              "home": "Maspalomas",
+              "away": "Cerruda",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2024-04-12",
+              "home": "San Pedro",
+              "away": "San Fernando",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2024-04-18",
+              "home": "Maspa Training",
+              "away": "Doramas",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2024-04-12",
+              "home": "UD Vecindario",
+              "away": "Arguineguín",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2024-04-12",
+              "home": "Arguineguín B",
+              "away": "Las Rosas",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2024-04-12",
+              "home": "Los Vélez",
+              "away": "Tablero",
+              "hs": 8,
+              "as_": 3
+            }
+          ]
+        }
+      ]
     }
   ],
-  "errors": []
+  "errors": [
+    {
+      "slug": "1prebenjamin1",
+      "error": "<urlopen error _ssl.c:999: The handshake operation timed out>"
+    }
+  ]
 }

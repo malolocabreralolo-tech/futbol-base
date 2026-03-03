@@ -57,18 +57,34 @@ def main():
             }))
         """)
         out["jornada_body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
-        out["jornada_html_full"] = page.evaluate("""
+        out["jornada_elements"] = page.evaluate("""
             () => {
-                // Get main content area
-                const main = document.querySelector('.container-fluid.content, #contenido, main, .main, [id*=content]');
-                if (main) return main.innerHTML.slice(0, 8000);
-                // Fallback: look for section with jornada data
-                for (const div of document.querySelectorAll('div')) {
-                    if (div.innerText.includes('Anterior') || div.innerText.includes('Provisional')) {
-                        return div.outerHTML.slice(0, 8000);
+                const result = {};
+                // jornada select
+                const jSel = document.querySelector('select[name="jornada"]');
+                result.jornada_select_outer = jSel ? jSel.outerHTML : null;
+                // all links/buttons with 'Anterior', 'Provisional', 'Definitivo', 'Resultados'
+                result.nav_links = [];
+                for (const el of document.querySelectorAll('a, button, input[type=button]')) {
+                    const txt = el.innerText || el.value || '';
+                    if (['Anterior','Provisional','Definitivo','Resultados','Siguiente'].some(k => txt.includes(k))) {
+                        result.nav_links.push({tag: el.tagName, text: txt.trim(), href: el.href||'', onclick: el.getAttribute('onclick')||''});
                     }
                 }
-                return document.body.innerHTML.slice(5000, 13000);
+                // All forms on page
+                result.forms = Array.from(document.querySelectorAll('form')).map(f => ({
+                    action: f.action, method: f.method, inputs: Array.from(f.querySelectorAll('input[type=hidden]')).map(i => ({name: i.name, value: i.value})).slice(0, 10)
+                }));
+                // The content section (after header)
+                const sections = document.querySelectorAll('.card-body, .row');
+                for (const s of sections) {
+                    const txt = s.innerText;
+                    if (txt.includes('LIGA') && txt.includes('LANZAROTE')) {
+                        result.comp_section = s.innerHTML.slice(0, 3000);
+                        break;
+                    }
+                }
+                return result;
             }
         """)
 

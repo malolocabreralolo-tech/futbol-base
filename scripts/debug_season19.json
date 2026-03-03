@@ -1,8 +1,19 @@
 {
-  "clasif_url": "https://www.fiflp.com/pnfg/NPcd/NFG_VisClasificacion?cod_primaria=1000120&CodTemporada=19&codcompeticion=1329&codgrupo=168500&codjornada=99",
+  "clasif_url": "https://www.fiflp.com/pnfg/NPcd/NFG_VisClasificacion?cod_primaria=1000120&CodTemporada=20&codcompeticion=1575&codgrupo=190745&codjornada=99",
   "clasif_title": "Federación de Fútbol de Las Palmas - Visualización de Clasificación",
-  "clasif_tables": [],
-  "jornada_url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=19&CodCompeticion=1329&CodGrupo=168500",
+  "clasif_tables": [
+    {
+      "rows": 14,
+      "firstRowCells": 0,
+      "sample": "Equipos Partidos Casa Partidos Fuera Goles Últimos Sanción     Ordenar por   Pts  J  G  E  P  J  G  E  P  F  C   Puntos       1    LANZAROTE, U.D. \"A\"     61 11 11 0 0 11 9 1 1 136 28   G G G G E   0       2    SAN BARTOLOME, C.F. \"A\"     55 11 9 1 1 11 9 0 2 134 26   P G G G G   0       3    INTERN"
+    },
+    {
+      "rows": 14,
+      "firstRowCells": 0,
+      "sample": "Equipos\tPartidos\tÚltimos\tSanción\nOrdenar por \t Pts\tJ\tG\tE\tP\t \tPuntos\n \t1\tLANZAROTE, U.D. \"A\"\t61\t22\t20\t1\t1\t G G G G E \t0 \n \t2\tSAN BARTOLOME, C.F. \"A\"\t55\t22\t18\t1\t3\t P G G G G \t0 \n \t3\tINTERNACIONAL PH \"A\"\t53\t22\t16\t5\t1\t G G G G E \t0 \n \t4\tSPORTING TIAS, C.F. \"A\"\t49\t22\t15\t4\t3\t G G G G G \t0 \n \t5\tJUVENTUD MA"
+    }
+  ],
+  "jornada_url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=20&CodCompeticion=1575&CodGrupo=190745",
   "jornada_title": "Federación de Fútbol de Las Palmas - Visualización de Partidos",
   "jornada_selects": [
     {
@@ -133,40 +144,40 @@
           "text": "-- Seleccione --"
         },
         {
-          "value": "1436",
+          "value": "1474",
+          "text": "LIGA SEGUNDA FEDERACIÓN"
+        },
+        {
+          "value": "1530",
           "text": "COPA JOSE ANTONIO RUIZ CABALLERO"
         },
         {
-          "value": "1437",
-          "text": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA"
-        },
-        {
-          "value": "1438",
-          "text": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE"
-        },
-        {
-          "value": "1211",
-          "text": "ELIMINATORIA AUTONÓMICA C.S.M. EL REY"
-        },
-        {
-          "value": "1208",
-          "text": "FASE ASCENSO A 2ª RFEF"
-        },
-        {
-          "value": "1216",
+          "value": "1455",
           "text": "LIGA TERCERA FEDERACIÓN GRUPO 12"
         },
         {
-          "value": "1218",
+          "value": "1447",
+          "text": "FASE ASCENSO A 2ª RFEF"
+        },
+        {
+          "value": "1532",
+          "text": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE"
+        },
+        {
+          "value": "1531",
+          "text": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA"
+        },
+        {
+          "value": "1457",
           "text": "LIGA DIVISION DE HONOR JUVENIL GRUPO 6"
         },
         {
-          "value": "1210",
+          "value": "1449",
           "text": "SEGUNDA FEDERACION FUTBOL FEMENINO"
         },
         {
-          "value": "1240",
-          "text": "FINAL COPA FEMENINA MANOLO SANTANA"
+          "value": "1697",
+          "text": "COPA FEMENINA MANOLO SANTANA FASE SECTOR FUERTEVENTURA"
         }
       ]
     },
@@ -178,39 +189,7 @@
           "text": "-- Seleccione --"
         },
         {
-          "value": "167903",
-          "text": "GRUPO 12"
-        },
-        {
-          "value": "167969",
-          "text": "GRUPO 11"
-        },
-        {
-          "value": "168035",
-          "text": "GRUPO 10"
-        },
-        {
-          "value": "168191",
-          "text": "GRUPO 7"
-        },
-        {
-          "value": "168236",
-          "text": "GRUPO 6"
-        },
-        {
-          "value": "168302",
-          "text": "GRUPO 5"
-        },
-        {
-          "value": "168368",
-          "text": "GRUPO 3"
-        },
-        {
-          "value": "168434",
-          "text": "GRUPO 2"
-        },
-        {
-          "value": "168500",
+          "value": "190745",
           "text": "GRUPO 1"
         }
       ]
@@ -221,27 +200,93 @@
         {
           "value": "0",
           "text": "-- Seleccione --"
+        },
+        {
+          "value": "1",
+          "text": "1 - 16-11-2024"
+        },
+        {
+          "value": "2",
+          "text": "2 - 23-11-2024"
+        },
+        {
+          "value": "3",
+          "text": "3 - 30-11-2024"
+        },
+        {
+          "value": "4",
+          "text": "4 - 14-12-2024"
+        },
+        {
+          "value": "5",
+          "text": "5 - 21-12-2024"
+        },
+        {
+          "value": "6",
+          "text": "6 - 11-01-2025"
+        },
+        {
+          "value": "7",
+          "text": "7 - 18-01-2025"
+        },
+        {
+          "value": "8",
+          "text": "8 - 25-01-2025"
+        },
+        {
+          "value": "9",
+          "text": "9 - 01-02-2025"
         }
       ]
     }
   ],
-  "jornada_body_snippet": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada 2023-2024\nLIGA PRIMERA BENJAMIN F-8 GRAN CANARIA GRUPO 1\n  Anterior\n Provisional  Definitivo\nResultados\n   Anterior\nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
-  "ira_source": "function IrA(jornada){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1329&CodGrupo=168500&CodTemporada=19&CodJornada=\"+jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value;location=url}",
+  "jornada_body_snippet": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada 2024-2025\nLIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE GRUPO 1\n  Anterior\n Provisional  Definitivo\n Calendario\n Clasificación\n Tabla Cruzada\n Goleadores\nResultados\n  SPORTING TIAS, C.F. \"A\"\n\t\n4 - \n\n  \n \n14-05-2025\n18:53\t\nTAHICHE, C.D. \"A\"\n\n\nMUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)\n\n\n  \nÁrbitro:\n LORENZO PÉREZ, JOSÉ MANUEL\n\n\n  LOMO, C.D. \"A\"\n\t\n - 2\n\n  \n \n15-05-2025\n18:22\t\nTITE, C.D. \"A\"\n\n\nPUERTO ARRECIFE F8(1)\n\n\n  \nÁrbitro:\n MARRERO GARCÍA, ÁLVARO\n\n\n  TINAJO, C.D. \"A\"\n\t\n2 - \n\n  \n \n16-05-2025\n18:24\t\nTEGUISE, C.D. \"A\"\n\n\nLOS VOLCANES F8(1)\n\n\n  \nÁrbitro:\n LORENZO PÉREZ, JOSÉ MANUEL\n\n\n\n\n  INTERNACIONAL PH \"A\"\n\t\n - \n\n  \n \n17-05-2025\n09:00\t\nLANZAROTE, U.D. \"A\"\n\n\nMUNICIPAL DE PLAYA HONDA F8(1)\n\n\n  \nÁrbitro:\n PARRADO GORINA, POL\n\n\n  SAN BARTOLOME, C.F. \"A\"\n\t\n - \n\n  \n \n17-05-2025\n09:00\t\nPALMEIROS DE COSTA T., U.D. \"A\"\n\n\nPEDRO ESPINOSA DE LEON \"COLON\" F8(1)\n\n\n  \nÁrbitro:\n EL OUAHBI LAARAB, MOHAMED\n\n\n  JUVENTUD MARITIMA, C.D. \"A\"\n\t\n - 2\n\n  \n \n17-05-2025\n09:30\t\nUNION SUR YAIZA, C.D.\n\n\nAGAPITO REYES VIERA F8(1)\n\n\n  \nÁrbitro:\n MARTÍN REYES, ARIDANI\n\n\n   Anterior\nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
+  "ira_source": "function IrA(jornada){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1575&CodGrupo=190745&CodTemporada=20&CodJornada=\"+jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value;location=url}",
   "jornada5_tables": [
     {
-      "rows": 0,
-      "cells_r0": 0,
-      "sample": ""
+      "rows": 20,
+      "cells_r0": 5,
+      "sample": "TITE, C.D. \"A\"\n\t\n - 1\n\n  \n \n18-12-2024\n17:00\t\nLANZAROTE, U.D. \"A\"\n\n\nMUNICIPAL ARGANA F8(1)\n\n\n  \nÁrbitro:\n CABRERA DEL ROSARIO, JOSÉ DOMINGO\n\n\n  TINAJO, C.D. \"A\"\n\t\n - \n\n  \n \n18-12-2024\n18:58\t\nJUVENTUD MARITIMA, C.D. \"A\"\n\n\nLOS VOLCANES F8(1)\n\n\n  \nÁrbitro:\n DÍAZ MARTÍN, SOLEICA DESIRE\n\n\n  TEGUISE, C.D."
+    },
+    {
+      "rows": 2,
+      "cells_r0": 3,
+      "sample": "TITE, C.D. \"A\"\n\t\n - 1\n\n  \n \n18-12-2024\n17:00\t\nLANZAROTE, U.D. \"A\"\n\n\nMUNICIPAL ARGANA F8(1)\n\n\n  \nÁrbitro:\n CABRERA DEL ROSARIO, JOSÉ DOMINGO"
+    },
+    {
+      "rows": 2,
+      "cells_r0": 3,
+      "sample": "TINAJO, C.D. \"A\"\n\t\n - \n\n  \n \n18-12-2024\n18:58\t\nJUVENTUD MARITIMA, C.D. \"A\"\n\n\nLOS VOLCANES F8(1)\n\n\n  \nÁrbitro:\n DÍAZ MARTÍN, SOLEICA DESIRE"
+    },
+    {
+      "rows": 2,
+      "cells_r0": 3,
+      "sample": "TEGUISE, C.D. \"A\"\n\t\n - \n\n  \n \n21-12-2024\n11:00\t\nPALMEIROS DE COSTA T., U.D. \"A\"\n\n\nMUNICIPAL DE TEGUISE F8(1)\n\n\n  \nÁrbitro:\n RAMÍREZ OROZCO, JOSÉ LUIS"
+    },
+    {
+      "rows": 2,
+      "cells_r0": 3,
+      "sample": "TAHICHE, C.D. \"A\"\n\t\n - \n\n  \n \n21-12-2024\n11:00\t\nUNION SUR YAIZA, C.D.\n\n\nMUNICIPAL DE TAHICHE F8(2)\n\n\n  \nÁrbitro:\n CARBALLO CARBALLO, CHRISTIAN"
+    },
+    {
+      "rows": 2,
+      "cells_r0": 3,
+      "sample": "SPORTING TIAS, C.F. \"A\"\n\t\n - \n\n  \n \n22-12-2024\n09:00\t\nINTERNACIONAL PH \"A\"\n\n\nMUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)\n\n\n  \nÁrbitro:\n CABRERA MARTÍN, LORETO"
+    },
+    {
+      "rows": 2,
+      "cells_r0": 3,
+      "sample": "LOMO, C.D. \"A\"\n\t\n - \n\n  \n \n22-12-2024\n09:30\t\nSAN BARTOLOME, C.F. \"A\"\n\n\nPUERTO ARRECIFE F8(1)\n\n\n  \nÁrbitro:\n GONZÁLEZ SÁNCHEZ, AINHOA"
     }
   ],
-  "jornada5_body": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada 2023-2024\nLIGA PRIMERA BENJAMIN F-8 GRAN CANARIA GRUPO 1\n  Anterior\nJornada 5\nSiguiente  \n Provisional  Definitivo\nResultados\n   Anterior\nSiguiente   \nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
+  "jornada5_body": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada 2024-2025\nLIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE GRUPO 1\n  Anterior\nJornada 5\nSiguiente  \n Provisional  Definitivo\n Calendario\n Clasificación\n Tabla Cruzada\n Goleadores\nResultados\n  TITE, C.D. \"A\"\n\t\n - 1\n\n  \n \n18-12-2024\n17:00\t\nLANZAROTE, U.D. \"A\"\n\n\nMUNICIPAL ARGANA F8(1)\n\n\n  \nÁrbitro:\n CABRERA DEL ROSARIO, JOSÉ DOMINGO\n\n\n  TINAJO, C.D. \"A\"\n\t\n - \n\n  \n \n18-12-2024\n18:58\t\nJUVENTUD MARITIMA, C.D. \"A\"\n\n\nLOS VOLCANES F8(1)\n\n\n  \nÁrbitro:\n DÍAZ MARTÍN, SOLEICA DESIRE\n\n\n  TEGUISE, C.D. \"A\"\n\t\n - \n\n  \n \n21-12-2024\n11:00\t\nPALMEIROS DE COSTA T., U.D. \"A\"\n\n\nMUNICIPAL DE TEGUISE F8(1)\n\n\n  \nÁrbitro:\n RAMÍREZ OROZCO, JOSÉ LUIS\n\n\n\n\n  TAHICHE, C.D. \"A\"\n\t\n - \n\n  \n \n21-12-2024\n11:00\t\nUNION SUR YAIZA, C.D.\n\n\nMUNICIPAL DE TAHICHE F8(2)\n\n\n  \nÁrbitro:\n CARBALLO CARBALLO, CHRISTIAN\n\n\n  SPORTING TIAS, C.F. \"A\"\n\t\n - \n\n  \n \n22-12-2024\n09:00\t\nINTERNACIONAL PH \"A\"\n\n\nMUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)\n\n\n  \nÁrbitro:\n CABRERA MARTÍN, LORETO\n\n\n  LOMO, C.D. \"A\"\n\t\n - \n\n  \n \n22-12-2024\n09:30\t\nSAN BARTOLOME, C.F. \"A\"\n\n\nPUERTO ARRECIFE F8(1)\n\n\n  \nÁrbitro:\n GONZÁLEZ SÁNCHEZ, AINHOA\n\n\n   Anterior\nSiguiente   \nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
   "jornada5_iframes": [
     {
-      "src": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1329&CodGrupo=168500&CodTemporada=19&CodJornada=5",
+      "src": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1575&CodGrupo=190745&CodTemporada=20&CodJornada=5",
       "name": "NFG_ControlExec"
     },
     {
-      "src": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1329&CodGrupo=168500&CodTemporada=19&CodJornada=5",
+      "src": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1575&CodGrupo=190745&CodTemporada=20&CodJornada=5",
       "name": "ImpresionPDFGenerico"
     },
     {
@@ -261,15 +306,11 @@
       "name": "__dsaLocator"
     },
     {
-      "src": "https://406a6d693887a04a3df0d4c6f418cf5c.safeframe.googlesyndication.com/safeframe/1-0-45/html/container.html",
-      "name": ""
-    },
-    {
       "src": "about:blank",
       "name": "__pb_locator__"
     },
     {
-      "src": "https://user-sync.fwmrm.net/ad/u?mode=echo&cr=https%3A%2F%2Fu-las.4dex.io%2Fsetuid%3Fbidder%3Dfreewheeltv%26it%3Dadg-pb-clt%26uid%3D%23%7Buser.id%7D",
+      "src": "https://secure-assets.rubiconproject.com/utils/xapi/multi-sync.html?p=onfocus&endpoint=us-west",
       "name": ""
     },
     {
@@ -285,11 +326,11 @@
       "name": ""
     },
     {
-      "src": "https://cm.g.doubleclick.net/partnerpixels?gdpr_consent=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&gdpr=0&addtl_consent=2~1.3188.2198.1964.1765.1633.3139.28031.611.2008.3111.236.3224.2913.2044.1040.1268.2710.3043.2366.1032.1152.2177.1070.2501.3185.2081.2822.1960.1939.827.429.2614.3168.2645.3053.46.840.3169.2286.2950.931.55.3121.57.999.2629.2511.2893.3150.938.1049.1560.70.1863.1115.314.7.1686.2357.2238.1301.1082.2577.2406.83.3088.3044.1792.1192.93.1030.95.1317.2069.2003.23031.1239.2596.864.2526.2387.2421.1987.3296.108.109.1019.1549.3112.1993.122.2370.3200.2453.2107.130.2898.1516.1078.3126.136.1896.1097.3119.2831.3066.141.2926.143.3170.147.3323.3148.1345.2253.2504.550.159.2849.3172.1738.2133.2571.3140.2839.117.311.1225.1712.3109.2305.2842.3076.208.184.1276.188.797.1329.460.192.817.2147.196.2316.1204.202.203.1963.89.206.2715.3051.1495.2440.2981.2397.211.1810.1365.1998.2533.4331.2016.2947.3310.1215.223.2922.7131.3018.1220.2904.3090.229.229.229.1745.2072.1201.241.3292.149.338.3213.4131.856.253.255.3001.3219.2314.1631.2739.272.2224.2878.1969.1583.2135.2213.2225.2046.2039.980.1674.2186.1598.3095.1616.609.3214.1799.986.2661.2537.2027.2882.2824.1211.13431.723.1095.2568.1299.436.313.771.318.2271.3331.3135.326.2376.2942.1065.1651.1653.2555.1742.1922.329.1031.1449.1344.2604.2517.1570.1205.1051.2579.342.3330.2885.358.2325.1682.2217.1859.2068.2299.2778.1186.3099.1025.368.3100.3008.3281.2181.1699.2544.385.3104.2783.388.2618.3136.1074.3276.395.3206.2547.402.1415.3014.787.2873.973.11631.3163.415.1902.2410.1943.1465.161.1721.1435.1611.2402.2106.1873.1034.1126.2643.3137.1048.1870.1129.2333.3159.3003.2160.1934.449.2691.1307.459.462.216.2052.624.3151.959.1149.1769.469.1985.3326.1579.3130.13731.1118.1944.2002.1607.2602.2729.2634.904.486.3002.2631.803.1558.495.494.2432.2887.2010.3025.2070.1626.3234.510.2481.3201.853.2343.259.2113.1771.482.3205.2465.2677.583.2776.1800.981.1512.2492.2707.2811.3107.1092.1889.1103.3133.1885.347.1720.2074.1033.1440.2083.540.1555.1722.544.798.586.3033.323.3155.1456~dv.&gpp=DBABM~CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA&gpp_sid=2&url=https%3A%2F%2Fwww.fiflp.com%2Fpnfg%2FNPcd%2FNFG_CmpJornada%3Fcod_primaria%3D1000120%26CodCompeticion%3D1329%26CodGrupo%3D168500%26CodTemporada%3D19%26CodJornada%3D5",
+      "src": "https://cm.g.doubleclick.net/partnerpixels?gdpr_consent=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&gdpr=0&addtl_consent=2~1.3188.2198.1964.1765.1633.3139.28031.611.2008.3111.236.3224.2913.2044.1040.1268.2710.3043.2366.1032.1152.2177.1070.2501.3185.2081.2822.1960.1939.827.429.2614.3168.2645.3053.46.840.3169.2286.2950.931.55.3121.57.999.2629.2511.2893.3150.938.1049.1560.70.1863.1115.314.7.1686.2357.2238.1301.1082.2577.2406.83.3088.3044.1792.1192.93.1030.95.1317.2069.2003.23031.1239.2596.864.2526.2387.2421.1987.3296.108.109.1019.1549.3112.1993.122.2370.3200.2453.2107.130.2898.1516.1078.3126.136.1896.1097.3119.2831.3066.141.2926.143.3170.147.3323.3148.1345.2253.2504.550.159.2849.3172.1738.2133.2571.3140.2839.117.311.1225.1712.3109.2305.2842.3076.208.184.1276.188.797.1329.460.192.817.2147.196.2316.1204.202.203.1963.89.206.2715.3051.1495.2440.2981.2397.211.1810.1365.1998.2533.4331.2016.2947.3310.1215.223.2922.7131.3018.1220.2904.3090.229.229.229.1745.2072.1201.241.3292.149.338.3213.4131.856.253.255.3001.3219.2314.1631.2739.272.2224.2878.1969.1583.2135.2213.2225.2046.2039.980.1674.2186.1598.3095.1616.609.3214.1799.986.2661.2537.2027.2882.2824.1211.13431.723.1095.2568.1299.436.313.771.318.2271.3331.3135.326.2376.2942.1065.1651.1653.2555.1742.1922.329.1031.1449.1344.2604.2517.1570.1205.1051.2579.342.3330.2885.358.2325.1682.2217.1859.2068.2299.2778.1186.3099.1025.368.3100.3008.3281.2181.1699.2544.385.3104.2783.388.2618.3136.1074.3276.395.3206.2547.402.1415.3014.787.2873.973.11631.3163.415.1902.2410.1943.1465.161.1721.1435.1611.2402.2106.1873.1034.1126.2643.3137.1048.1870.1129.2333.3159.3003.2160.1934.449.2691.1307.459.462.216.2052.624.3151.959.1149.1769.469.1985.3326.1579.3130.13731.1118.1944.2002.1607.2602.2729.2634.904.486.3002.2631.803.1558.495.494.2432.2887.2010.3025.2070.1626.3234.510.2481.3201.853.2343.259.2113.1771.482.3205.2465.2677.583.2776.1800.981.1512.2492.2707.2811.3107.1092.1889.1103.3133.1885.347.1720.2074.1033.1440.2083.540.1555.1722.544.798.586.3033.323.3155.1456~dv.&gpp=DBABM~CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA&gpp_sid=2&url=https%3A%2F%2Fwww.fiflp.com%2Fpnfg%2FNPcd%2FNFG_CmpJornada%3Fcod_primaria%3D1000120%26CodCompeticion%3D1575%26CodGrupo%3D190745%26CodTemporada%3D20%26CodJornada%3D5",
       "name": ""
     },
     {
-      "src": "https://gum.criteo.com/syncframe?origin=criteoPrebidAdapter&topUrl=www.fiflp.com&gdpr_consent=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&gpp=#{%22bundle%22:%22sAytFl9MOUg2b1RmUFlzb2JQR1lvYkdRaUtzZ0dIMjFKZ0ExWjh6ZWppV2FjTGQwY3J4ZUJ5WmV5RHhtR2tlYnMlMkIwOExXOGp1RHZQZ3BkTHp1b1JYanNtZmtlY2ZDc1dySmhydmdkdktGS1NVJTJGcHdZc1RWeTlpVHV3SHVtdDR6byUyQlM1QWhMSTJrVkVIcVBJNEJtdVBoZiUyRjV1ODFBTlVYOVNWTkg5Y0lCaEZ5Q3pHaEUwMlRmVFlkaXZUaiUyQlNtT1ZRUHp4%22,%22cw%22:true,%22lsw%22:true,%22origin%22:%22criteoPrebidAdapter%22,%22requestId%22:%220.16783021898825656%22,%22tld%22:%22www.fiflp.com%22,%22topUrl%22:%22www.fiflp.com%22,%22version%22:%2210_20_0%22}",
+      "src": "https://gum.criteo.com/syncframe?origin=criteoPrebidAdapter&topUrl=www.fiflp.com&gdpr_consent=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&gpp=#{%22bundle%22:%22vprvgV8yaFYwRUsxUVYlMkJoUFViZnpxTFEyODZwclklMkJuMWpMMmZvZ2ZXblh2VHElMkZRUmU3VmpQV2dNMXRtRGZNb2dIT1Q4VXAlMkJBVXU3eVQ5WEh5JTJCNlBnN0lNampLbnolMkZ0MTZleGklMkJ2UkNPeVBWSjd6TTlTQTdSVWpRdXRzaGElMkJtOUEzSVdqUk81SWlmN1lRbmpsV0Z1ekhvcEE3a1RVb25kVXlseXYlMkZWUkYlMkZnMEc2bnpKSEtnV2pRR1BTcmZRek03Z0Q2Uw%22,%22cw%22:true,%22lsw%22:true,%22origin%22:%22criteoPrebidAdapter%22,%22requestId%22:%220.35506414985645873%22,%22tld%22:%22www.fiflp.com%22,%22topUrl%22:%22www.fiflp.com%22,%22version%22:%2210_20_0%22}",
       "name": ""
     },
     {
@@ -327,9 +368,9 @@
   ],
   "js_functions": {
     "BuscarPartidos": "function BuscarPartidos(Jornada){if(Jornada!=0){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120\"+\"&CodCompeticion=\"+top.document.BuscaNFG_CMP.competicion.value+\"&CodGrupo=\"+top.document.BuscaNFG_CMP.grupo.value+\"&CodTemporada=\"+top.document.BuscaNFG_CMP.temporada.value+\"&cod_agrupacion=\"+top.document.BuscaNFG_CMP.Sch_Cod_Agrupacion.value+\"&CodJornada=\"+Jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value;location=url}}",
-    "IrA": "function IrA(jornada){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1329&CodGrupo=168500&CodTemporada=19&CodJornada=\"+jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value;location=url}"
+    "IrA": "function IrA(jornada){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1575&CodGrupo=190745&CodTemporada=20&CodJornada=\"+jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value;location=url}"
   },
-  "after_buscar_1_body": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nJornada 1\n Provisional  Definitivo\nResultados\nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
+  "after_buscar_1_body": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nCalendario, Clasificaciones y Resultados\n    \nTemporada\n2025-2026\n2024-2025\n2023-2024\n2022-2023\n2021-2022\n2020-2021\n2019-2020\n2018-2019\n2017-2018\n2016-2017\n2015-2016\nDelegación\n-- Todas --\nGRAN CANARIA\nFUERTEVENTURA\nLANZAROTE\nTipo de Juego\n-- Todos --\nFutbol-11\nFutbol-7\nFutbol Sala\nFutbol-8\nFutbol Playa\nFutbol-5\nAgrupación\n-- Todas --\nCompeticiones Federadas\nCompeticiones Escolares FutSal\nSelecciones Territoriales\nCompetición\n-- Seleccione --\nCOPA JOSE ANTONIO RUIZ CABALLERO\nCOPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA\nCOPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE\nELIMINATORIA AUTONÓMICA C.S.M. EL REY\nFASE ASCENSO A 2ª RFEF\nLIGA TERCERA FEDERACIÓN GRUPO 12\nLIGA DIVISION DE HONOR JUVENIL GRUPO 6\nSEGUNDA FEDERACION FUTBOL FEMENINO\nFINAL COPA FEMENINA MANOLO SANTANA\nLIGA TERCERA FEDERACIÓN DE FÚTBOL FEMENINO GRUPO 6\nCOPA FIFLP FUTBOL SALA MASCULINO\nFASE ASCENSO A 2ª DIVISION SALA MASCULINA\nLIGA SEGUNDA DIVISION B NACIONAL FUTBOL SALA GRUPO 6\nTERCERA DIVISION NACIONAL FUTBOL SALA\nCOPA FIFLP JUVENIL FÚTBOL SALA.\nLIGA JUVENIL DIVISION DE HONOR FUTBOL SALA GRUPO 8\nCOPA JUVENIL FUTBOL SALA\nLIGA REGIONAL PREFERENTE\nFASE ASCENSO A REGIONAL PREFERENTE\nFINAL COPA PRIMERA REGIONAL FUERTEVENTURA\nLIGA PRIMERA REGIONAL DE GRAN CANARIA\nLIGA PRIMERA REGIONAL DE LANZAROTE\nELIMINATORIAS DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE/FUERTEVENTURA)\nELIMINATORIAS DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE)\nLIGA PRIMERA REGIONAL DE FUERTEVENTURA\nFASE ASCENSO A REGIONAL PREFERENTE - FUERTEVENTURA\nCOPA PRIMERA REGIONAL DE FUERTEVENTURA\nCOPA CABILDO DE LANZAROTE PRIMERA REGIONAL\nFINAL COPA CABILDO DE LANZAROTE PRIMERA REGIONAL\nFASE DE ASCENSO A PRIMERA REGIONAL GRAN CANARIA\nLIGA SEGUNDA REGIONAL DE GRAN CANARIA\nLIGA PREFERENTE FEMENINA\nCOPA FEMENINA GRAN CANARIA MANOLO SANTANA\nFASE ASCENSO A TERCERA FEDERACIÓN DE FÚTBOL FEMENINO\nFASE DE ASCENSO PREFE",
   "after_buscar_1_tables": [
     {
       "rows": 0,
@@ -337,7 +378,7 @@
       "sample": ""
     }
   ],
-  "after_buscar_1_url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&CodTemporada=19&cod_agrupacion=&CodJornada=1&Sch_Codigo_Delegacion=&Sch_Tipo_Juego=",
+  "after_buscar_1_url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTemporada=19&cod_agrupacion=&CodJornada=1&Sch_Codigo_Delegacion=&Sch_Tipo_Juego=",
   "all_links": [
     {
       "text": "Fundación",
@@ -346,7 +387,7 @@
     },
     {
       "text": "Información General",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -366,7 +407,7 @@
     },
     {
       "text": "Información Organizativa",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -386,7 +427,7 @@
     },
     {
       "text": "Procedimientos",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -396,7 +437,7 @@
     },
     {
       "text": "Subvenciones",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -411,7 +452,7 @@
     },
     {
       "text": "Información General",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -441,7 +482,7 @@
     },
     {
       "text": "Información Organizativa",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -481,7 +522,7 @@
     },
     {
       "text": "Procedimientos",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -501,7 +542,7 @@
     },
     {
       "text": "Ayudas y Subvenciones",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -511,7 +552,7 @@
     },
     {
       "text": "Información Económica",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -521,7 +562,7 @@
     },
     {
       "text": "Convenios y/o Encomiendas de Gestión",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -531,7 +572,7 @@
     },
     {
       "text": "Contratos",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -551,7 +592,7 @@
     },
     {
       "text": "Temporada 25/26",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -661,7 +702,7 @@
     },
     {
       "text": "Circulares FIFLP",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -701,7 +742,7 @@
     },
     {
       "text": "Circulares FCF",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -716,7 +757,7 @@
     },
     {
       "text": "Catálogo de Trámites Correo Web Interno",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -726,7 +767,7 @@
     },
     {
       "text": "Formularios",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -776,7 +817,7 @@
     },
     {
       "text": "RFEF",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -791,7 +832,7 @@
     },
     {
       "text": "Resoluciones Aprobación Calendarios 2526",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -806,7 +847,7 @@
     },
     {
       "text": "Listado de Sancionados Temporada 24-25",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -816,7 +857,7 @@
     },
     {
       "text": "Equipos retirados y/o excluidos",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -831,7 +872,7 @@
     },
     {
       "text": "Clubes y equipos",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -841,7 +882,7 @@
     },
     {
       "text": "Competición",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -871,7 +912,7 @@
     },
     {
       "text": "Sanciones",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -881,7 +922,7 @@
     },
     {
       "text": "Boletín Informativo Órganos Disciplinarios FIFLP",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -891,7 +932,7 @@
     },
     {
       "text": "Listado Semanal de Sancionados",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -916,7 +957,7 @@
     },
     {
       "text": "Estatutos",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -926,7 +967,7 @@
     },
     {
       "text": "Reglamentos",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -951,7 +992,7 @@
     },
     {
       "text": "Normas Reguladoras/Bases de Competición",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -961,7 +1002,7 @@
     },
     {
       "text": "Protocolos de Actuación de la FIFLP",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -976,7 +1017,7 @@
     },
     {
       "text": "Códigos Federativos",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -1006,7 +1047,7 @@
     },
     {
       "text": "Tarifas Mutualidad",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -1016,7 +1057,7 @@
     },
     {
       "text": "Circulares",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -1031,7 +1072,7 @@
     },
     {
       "text": "Formularios",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -1046,7 +1087,7 @@
     },
     {
       "text": "Comité Entrenadores",
-      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=&Co",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=&CodGrupo=&CodTem",
       "onclick": ""
     },
     {
@@ -1086,18 +1127,18 @@
   "after_form_submit_tables": [],
   "exec_url_body": "",
   "exec_url_tables": [],
-  "exec_url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada_Exec?cod_primaria=1000120&CodCompeticion=1329&CodGrupo=168500&CodTemporada=19&CodJornada=5&NPcd_Pdf=0",
+  "exec_url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada_Exec?cod_primaria=1000120&CodCompeticion=1575&CodGrupo=190745&CodTemporada=20&CodJornada=5&NPcd_Pdf=0",
   "all_frames": [
     {
       "name": "",
-      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada_Exec?cod_primaria=1000120&CodCompeticion=1329&CodGrupo=168500&CodTemporada=19&CodJornada=5&NPcd_Pdf=0"
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada_Exec?cod_primaria=1000120&CodCompeticion=1575&CodGrupo=190745&CodTemporada=20&CodJornada=5&NPcd_Pdf=0"
     }
   ],
   "iframe_body": "",
   "iframe_tables": [],
   "iframe_html": "",
   "jornada_elements": {
-    "jornada_select_outer": "<select name=\"jornada\" class=\" form-control\" id=\"jornada\" onchange=\"BuscarPartidos(this.options[this.selectedIndex].value)\" data-nova-procesed=\"1\"> <option value=\"0\">-- Seleccione --</option> </select>",
+    "jornada_select_outer": "<select name=\"jornada\" class=\" form-control\" id=\"jornada\" onchange=\"BuscarPartidos(this.options[this.selectedIndex].value)\" data-nova-procesed=\"1\"> <option value=\"0\">-- Seleccione --</option> <option value=\"1\"> 1 - 16-11-2024 </option> <option value=\"2\"> 2 - 23-11-2024 </option> <option value=\"3\"> 3 - 30-11-2024 </option> <option value=\"4\"> 4 - 14-12-2024 </option> <option value=\"5\"> 5 - 21-12-2024 </option> <option value=\"6\"> 6 - 11-01-2025 </option> <option value=\"7\"> 7 - 18-01-2025 </option> <option value=\"8\"> 8 - 25-01-2025 </option> <option value=\"9\"> 9 - 01-02-2025 </option> <option value=\"10\"> 10 - 08-02-2025 </option> <option value=\"11\"> 11 - 16-02-2025 </option> <option value=\"12\"> 12 - 21-02-2025 </option> <option value=\"13\"> 13 - 01-03-2025 </option> <option value=\"14\"> 14 - 15-03-2025 </option> <option value=\"15\"> 15 - 22-03-2025 </option> <option value=\"16\"> 16 - 29-03-2025 </option> <option value=\"17\"> 17 - 05-04-2025 </option> <option value=\"18\"> 18 - 12-04-2025 </option> <option value=\"19\"> 19 - 26-04-2025 </option> <option value=\"20\"> 20 - 03-05-2025 </option> <option value=\"21\"> 21 - 11-05-2025 </option> <option value=\"22\"> 22 - 17-05-2025 </option> </select>",
     "nav_links": [
       {
         "tag": "A",
@@ -1108,13 +1149,13 @@
       {
         "tag": "A",
         "text": "Anterior",
-        "href": "javascript:IrA(10);",
+        "href": "javascript:IrA(21);",
         "onclick": ""
       },
       {
         "tag": "A",
         "text": "Anterior",
-        "href": "javascript:IrA(10);",
+        "href": "javascript:IrA(21);",
         "onclick": ""
       }
     ],
@@ -1144,10 +1185,53 @@
         ]
       }
     ],
-    "comp_section": " <div class=\"form-row\"> <div class=\"form-group col-sm-2 col-6\"> <label>Temporada</label> <select name=\"temporada\" class=\" form-control \" onchange=\"BuscarCompeticiones(this.options[this.selectedIndex].value)\" id=\"temporada\" data-nova-procesed=\"1\"> <option value=\"21\"> 2025-2026 </option> <option value=\"20\"> 2024-2025 </option> <option value=\"19\"> 2023-2024 </option> <option value=\"18\"> 2022-2023 </option> <option value=\"17\"> 2021-2022 </option> <option value=\"16\"> 2020-2021 </option> <option value=\"15\"> 2019-2020 </option> <option value=\"14\"> 2018-2019 </option> <option value=\"13\"> 2017-2018 </option> <option value=\"12\"> 2016-2017 </option> <option value=\"11\"> 2015-2016 </option> </select> <script>document.BuscaNFG_CMP.temporada.value=19;</script> </div> <div class=\"form-group col-sm-4 col-6\"> <label>Delegación</label> <select name=\"Sch_Codigo_Delegacion\" class=\"form-control \" onchange=\"BuscarCompeticiones(this.value)\" id=\"Sch_Codigo_Delegacion\" data-nova-procesed=\"1\"> <option value=\"\">-- Todas --</option> <option value=\"1\"> GRAN CANARIA </option> <option value=\"3\"> FUERTEVENTURA </option> <option value=\"2\"> LANZAROTE </option> </select> </div> <div class=\"form-group col-sm-3 col-6\"> <label>Tipo de Juego</label> <select name=\"Sch_Tipo_Juego\" id=\"Sch_Tipo_Juego\" class=\" form-control \" onchange=\"BuscarCompeticiones(this.value)\" data-nova-procesed=\"1\"> <option value=\"\">-- Todos --</option> <option value=\"1\"> Futbol-11 </option> <option value=\"2\"> Futbol-7 </option> <option value=\"3\"> Futbol Sala </option> <option value=\"4\"> Futbol-8 </option> <option value=\"5\"> Futbol Playa </option> <option value=\"6\"> Futbol-5 </option> </select> </div> <div class=\"form-group col-sm-3 col-6\"> <label>Agrupación</label> <span id=\"agrupacion\"> <select name=\"Sch_Cod_Agrupacion\" class=\" form-control\" id=\"Sch_Cod_Agrupacion\" onchange=\"leerCompAgrupacion(this.value)\" data-nova-procesed=\"1\"> <option value=\"\">-- Todas --</option> <option value=\"1\">Competiciones Federadas</option> <option value=\"900085381\">Competiciones Escolares FutSal</option> <option value=\"900434360\">Selecciones Territoriales</option> </select> </span> </div> </div> <div class=\"form-row\"> <div class=\"form-group col-sm-8 col-6\"> <label>Competición</label> <span id=\"competiciones\"> <select name=\"competicion\" class=\" form-control\" id=\"competicion\" onchange=\"BuscarGrupos(this.options[this.selectedIndex].value)\" data-nova-procesed=\"1\"> <option value=\"0\">-- Seleccione --</option> <optgroup label=\"NACIONAL FUTBOL CAMPO MASCULINO \"> <option value=\"1436\"> COPA JOSE ANTONIO RUIZ CABALLERO </option> <option value=\"1437\"> COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA </option> <option value=\"1438\"> COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE </option> <option value=\"1211\"> ELIMINATORIA AUTONÓMICA C.S.M. EL REY </option> <option value=\"1208\"> FASE ASCENSO A 2ª RFEF </option> <option value=\"1216\"> LIGA TERCERA FEDERACIÓN GRUPO 12 </option> <option value=\"1218\"> LIGA DIVISION DE HONOR JUVENIL GRUP"
+    "comp_section": " <div class=\"form-row\"> <div class=\"form-group col-sm-2 col-6\"> <label>Temporada</label> <select name=\"temporada\" class=\" form-control \" onchange=\"BuscarCompeticiones(this.options[this.selectedIndex].value)\" id=\"temporada\" data-nova-procesed=\"1\"> <option value=\"21\"> 2025-2026 </option> <option value=\"20\"> 2024-2025 </option> <option value=\"19\"> 2023-2024 </option> <option value=\"18\"> 2022-2023 </option> <option value=\"17\"> 2021-2022 </option> <option value=\"16\"> 2020-2021 </option> <option value=\"15\"> 2019-2020 </option> <option value=\"14\"> 2018-2019 </option> <option value=\"13\"> 2017-2018 </option> <option value=\"12\"> 2016-2017 </option> <option value=\"11\"> 2015-2016 </option> </select> <script>document.BuscaNFG_CMP.temporada.value=20;</script> </div> <div class=\"form-group col-sm-4 col-6\"> <label>Delegación</label> <select name=\"Sch_Codigo_Delegacion\" class=\"form-control \" onchange=\"BuscarCompeticiones(this.value)\" id=\"Sch_Codigo_Delegacion\" data-nova-procesed=\"1\"> <option value=\"\">-- Todas --</option> <option value=\"1\"> GRAN CANARIA </option> <option value=\"3\"> FUERTEVENTURA </option> <option value=\"2\"> LANZAROTE </option> </select> </div> <div class=\"form-group col-sm-3 col-6\"> <label>Tipo de Juego</label> <select name=\"Sch_Tipo_Juego\" id=\"Sch_Tipo_Juego\" class=\" form-control \" onchange=\"BuscarCompeticiones(this.value)\" data-nova-procesed=\"1\"> <option value=\"\">-- Todos --</option> <option value=\"1\"> Futbol-11 </option> <option value=\"2\"> Futbol-7 </option> <option value=\"3\"> Futbol Sala </option> <option value=\"4\"> Futbol-8 </option> <option value=\"5\"> Futbol Playa </option> <option value=\"6\"> Futbol-5 </option> </select> </div> <div class=\"form-group col-sm-3 col-6\"> <label>Agrupación</label> <span id=\"agrupacion\"> <select name=\"Sch_Cod_Agrupacion\" class=\" form-control\" id=\"Sch_Cod_Agrupacion\" onchange=\"leerCompAgrupacion(this.value)\" data-nova-procesed=\"1\"> <option value=\"\">-- Todas --</option> <option value=\"1\">Competiciones Federadas</option> <option value=\"900085381\">Competiciones Escolares FutSal</option> <option value=\"900434360\">Selecciones Territoriales</option> </select> </span> </div> </div> <div class=\"form-row\"> <div class=\"form-group col-sm-8 col-6\"> <label>Competición</label> <span id=\"competiciones\"> <select name=\"competicion\" class=\" form-control\" id=\"competicion\" onchange=\"BuscarGrupos(this.options[this.selectedIndex].value)\" data-nova-procesed=\"1\"> <option value=\"0\">-- Seleccione --</option> <optgroup label=\"NACIONAL FUTBOL CAMPO MASCULINO \"> <option value=\"1474\"> LIGA SEGUNDA FEDERACIÓN </option> <option value=\"1530\"> COPA JOSE ANTONIO RUIZ CABALLERO </option> <option value=\"1455\"> LIGA TERCERA FEDERACIÓN GRUPO 12 </option> <option value=\"1447\"> FASE ASCENSO A 2ª RFEF </option> <option value=\"1532\"> COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE </option> <option value=\"1531\"> COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA </option> <option value=\"1457\"> LIGA DIVISION DE HONOR JUVENIL GRUPO 6 </option> "
   },
-  "jornada_opts_count": 0,
-  "jornada_opts": [],
-  "clasif_body_snippet": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nClasificación\nLIGA PRIMERA BENJAMIN F-8 GRAN CANARIA\nTemporada 2023-2024\nGRUPO 1\n No hay clasificación para la jornada solicitada\nResultados\n\n\nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
+  "jornada_opts_count": 22,
+  "jornada_opts": [
+    {
+      "value": "1",
+      "text": "1 - 16-11-2024"
+    },
+    {
+      "value": "2",
+      "text": "2 - 23-11-2024"
+    },
+    {
+      "value": "3",
+      "text": "3 - 30-11-2024"
+    },
+    {
+      "value": "4",
+      "text": "4 - 14-12-2024"
+    },
+    {
+      "value": "5",
+      "text": "5 - 21-12-2024"
+    }
+  ],
+  "first_jornada_tables": [
+    {
+      "rows": 20,
+      "sample": "JUVENTUD MARITIMA, C.D. \"A\"\n\t\n3 - \n\n  \n \n15-11-2024\n17:45\t\nLANZAROTE, U.D. \"A\"\n\n\nAGAPITO REYES VIERA F8(1)\n\n\n  \nÁrbitro:\n CABRERA DEL ROSARIO, JOSÉ DOMINGO\n\n\n  SAN BARTOLOME, C.F. \"A\"\n\t\n1 - \n\n  \n \n16-11-2024\n09:00\t\nUNION SUR YAIZA, C.D.\n\n\nPEDRO ESPINOSA DE LEON \"COLON\" F8(1)\n\n\n  \nÁrbitro:\n GUERRA GI"
+    },
+    {
+      "rows": 2,
+      "sample": "JUVENTUD MARITIMA, C.D. \"A\"\n\t\n3 - \n\n  \n \n15-11-2024\n17:45\t\nLANZAROTE, U.D. \"A\"\n\n\nAGAPITO REYES VIERA F8(1)\n\n\n  \nÁrbitro:\n CABRERA DEL ROSARIO, JOSÉ DOMINGO"
+    },
+    {
+      "rows": 2,
+      "sample": "SAN BARTOLOME, C.F. \"A\"\n\t\n1 - \n\n  \n \n16-11-2024\n09:00\t\nUNION SUR YAIZA, C.D.\n\n\nPEDRO ESPINOSA DE LEON \"COLON\" F8(1)\n\n\n  \nÁrbitro:\n GUERRA GIL, LUIS"
+    },
+    {
+      "rows": 2,
+      "sample": "TITE, C.D. \"A\"\n\t\n2 - \n\n  \n \n16-11-2024\n11:00\t\nTAHICHE, C.D. \"A\"\n\n\nMUNICIPAL ARGANA F8(1)\n\n\n  \nÁrbitro:\n JALIH OUJANI, HICHAM"
+    },
+    {
+      "rows": 2,
+      "sample": "TINAJO, C.D. \"A\"\n\t\n - 4\n\n  \n \n16-11-2024\n11:00\t\nPALMEIROS DE COSTA T., U.D. \"A\"\n\n\nLOS VOLCANES F8(1)\n\n\n  \nÁrbitro:\n LORENZO PÉREZ, JOSÉ MANUEL"
+    }
+  ],
+  "clasif_body_snippet": "  \nFundación\nPortal de Transparencia\nAyudas\nOrganización\nComunicación\nCompeticiones\nNormativa\nMutualidad\nComités\nAcciones \nClasificación\nLIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE\nTemporada 2024-2025\nGRUPO 1\n Ver Calendario\n Ver Resultados\n Tabla Goleadores\n Tabla Cruzada\n Tabla Detallada\nEquipos\tPartidos\tÚltimos\tSanción\nOrdenar por \t Pts\tJ\tG\tE\tP\t \tPuntos\n \t1\tLANZAROTE, U.D. \"A\"\t61\t22\t20\t1\t1\t G G G G E \t0 \n \t2\tSAN BARTOLOME, C.F. \"A\"\t55\t22\t18\t1\t3\t P G G G G \t0 \n \t3\tINTERNACIONAL PH \"A\"\t53\t22\t16\t5\t1\t G G G G E \t0 \n \t4\tSPORTING TIAS, C.F. \"A\"\t49\t22\t15\t4\t3\t G G G G G \t0 \n \t5\tJUVENTUD MARITIMA, C.D. \"A\"\t34\t22\t11\t1\t10\t G P G G G \t0 \n \t6\tTAHICHE, C.D. \"A\"\t29\t22\t9\t2\t11\t P G P G P \t0 \n \t7\tTEGUISE, C.D. \"A\"\t23\t22\t7\t2\t13\t P P P P G \t0 \n \t8\tLOMO, C.D. \"A\"\t20\t22\t5\t5\t12\t G G P P E \t0 \n \t9\tUNION SUR YAIZA, C.D.\t19\t22\t5\t4\t13\t G P P P P \t0 \n \t10\tTITE, C.D. \"A\"\t16\t22\t5\t1\t16\t P P P P E \t0 \n \t11\tTINAJO, C.D. \"A\"\t10\t22\t2\t4\t16\t P P G P P \t0 \n \t12\tPALMEIROS DE COSTA T., U.D. \"A\"\t10\t22\t2\t4\t16\t P P P P P \t0 \n Jornada Anterior\n\n\nPatrocinadores oficiales\n\nINFORMACIÓN GENERAL\n\nPolítica de cookies\n\nPolítica de privacidad\n\nAviso legal\n\nCONTACTO\n\n   Ángel Guimerá, 107\n(esq. Paseo de Madrid)\n\n35005 Las Palmas de Gran Canaria\n\n   federacion@fiflp.com\n\n  928 247 962 / 928 247 347\n\nFederación Interinsular de Fútbol de Las Palmas ©2026\n\n\n\n\n",
   "clasif_html_content": "<div style=\"position:relative;min-height: 100vh;\"> <a id=\"botontop\" class=\"show\"></a> <div class=\"container-fluid header\" style=\"background-color: #004b9c\"> <div class=\"page-logo\"> <a alt=\"escudo del club\" class=\"logocabecera\" href=\"/pnfg/NPortada\"><img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/logo(FFLasPalmas).png\" class=\"logocabecera\"></a> </div> <div class=\"container-fluid\"> <script>$(document).ready(function(){$(\"#navigation1\").navigation({showDuration:100,hideDuration:0,effect:\"fade\",submenuTrigger:\"hover\"})});</script> <script id=\"prefix1\">$(document).ready(function(){var $screensize=$(window).width();$(\".dropdown\").on(\"mouseover\",function(){$(this).find(\"> .nav-dropdown\").stop(true,true).slideDown(\"fast\");$(this).bind(\"mouseleave\",function(){$(this).find(\"> .nav-dropdown\").stop(true,true).css(\"display\",\"none\")})});$(function(){$(\".dropdown li\").on(\"mouseenter mouseleave\",function(e){if($(\".nav-dropdown\",this).length){var elm=$(\".nav-dropdown\",this);var off=elm.offset();var l=off.left;var w=elm.width();var docW=$(window).width();var isEntirelyVisible=(l+w<=docW);if(!isEntirelyVisible){$(elm).addClass(\"dropdown-reverse\")}else{$(elm).removeClass(\"dropdown-reverse\")}}})})});</script> <style>.logo_header{height:55px}.nav-dropdown{min-width:250px!important}@media only screen and (max-width:600px){.logo_header{height:40px}}.dropdown-reverse{left:auto!important;right:100%!important}</style> <nav id=\"navigation1\" class=\"navigation navigation-landscape\"> <div class=\"nav-header\"> <a class=\"nav-brand\" href=\"/pnfg/NPortada\"><img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/logo(FFLasPalmas).png\" class=\"logo_header\"></a> <div class=\"nav-toggle\"></div> </div> <script>function buscarNews(){if(PulsadoEnter()){var url_action=\"/pnfg/NPcd/N_SearchLstNews?search=1&texto_noticia=\"+$(\"#txt_search_news\").val();window.location.href=url_action}};</script> <div class=\"nav-search\"> <div class=\"nav-search-button\"> <i class=\"nav-search-icon\"></i> </div> <form action=\"/pnfg/NPcd/N_SearchLstNews?search=1\" name=\"frm_search\"><span class=\"nav-search-close-button\" tabindex=\"0\">✕</span> <input type=\"hidden\" name=\"search\" value=\"1\"> <div class=\"nav-search-inner\"> <input onkeypress=\"buscarNews();\" type=\"search\" name=\"texto_noticia\" id=\"txt_search_news\" placeholder=\"Escribe y pulsa &quot;Enter&quot;\" data-nova-procesed=\"1\"> </div> </form> </div> <div class=\"nav-menus-wrapper\"><span class=\"nav-menus-wrapper-close-button\">✕</span> <div id=\"html_unico\"><ul class=\"nav-menu nav-menu-social custom align-to-right\"> <li><a href=\"/admin.html\" title=\"ACCESO DENEGADO\"><i class=\"fa-solid fa-lock\"></i></a></li> <li><a href=\"https://intranet.fiflp.com\" title=\"Intranet\" target=\"_blank\" style=\"border-left: solid 0px #f0f0f0;\"><i class=\"fa-solid fa-network-wired\"></i></a></li> <li> <a href=\"https://federadolaspalmas.novanet.es/fnfg/\" title=\"Portal Federado\" target=\"_blank\"> <i class=\"fa-regular fa-user\"></i> </a> </li> </ul></div> <script>Nova_Ajax(\"html_unico\",\"/pnfg/NSendHtml/SistemaNavegacion/html/N_redes.html\",\"\",'<span style=\"float:right;margin-top:10px;\"><strong style=\"color:white;\">Cargando </strong>&nbsp;<img src=\"/images/ajax-grande.gif\" style=\"width: 25px\"></span>');</script> <ul class=\"nav-menu\"> <li class=\"dropdown\"><a href=\"javascript:;\">Fundación<span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li class=\"dropdown\"><a href=\"#\">Información General <span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059799&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Saluda</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059800&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Información de la Entidad</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059811&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Normativa</a></li> </ul> </li> <li class=\"dropdown\"><a href=\"#\">Información Organizativa <span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059803&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Órganos de Gobierno Fundación</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059802&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Organigrama Fundación</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059804&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Unidades Administrativas Fundación</a></li> </ul> </li> <li class=\"dropdown\"><a href=\"#\">Procedimientos <span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059812&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Ayuda Gobierno de Canarias</a></li> </ul> </li> <li class=\"dropdown\"><a href=\"#\">Subvenciones <span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059813&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Gobierno de Canarias</a></li> </ul> </li> </ul> </li> <li class=\"dropdown\"><a href=\"javascript:;\">Portal de Transparencia<span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li class=\"dropdown\"><a href=\"#\">Información General <span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059690&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Saluda del Presidente</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059691&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Información General de la Entidad</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059693&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Marco Normativo</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059695&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Formación</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059758&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Licencias</a></li> </ul> </li> <li class=\"dropdown\"><a href=\"#\">Información Organizativa<span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059696&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Organigrama</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059697&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Órganos de Representación</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059698&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Órganos de Gobierno</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059700&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Órganos Deportivos y Técnicos</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059699&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Órganos Disciplinarios</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059701&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Otros órganos de relevancia Estatutaria</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059702&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Unidades Administrativa</a></li> </ul> </li> <li class=\"dropdown\"><a href=\"#\">Procedimientos<span class=\"submenu-indicator\"><span class=\"submenu-indicator-chevron\"></span></span></a> <ul class=\"nav-dropdown nav-submenu\"> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059703&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Catálogo de Trámites</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059704&amp;cod_primaria=3001855&amp;cod_secundaria=3001855\">Procedimiento para sugerencias y quejas</a></li> <li><a href=\"/pnfg/NNws_ShwNewDup?codigo=1059705&amp;cod_primaria=3001855&am"
 }

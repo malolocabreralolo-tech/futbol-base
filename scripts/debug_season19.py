@@ -7,10 +7,9 @@ import json
 from playwright.sync_api import sync_playwright
 
 BASE   = "https://www.fiflp.com/pnfg/NPcd"
-SEASON = "19"
-# Try GC Primera Benjamin which should have lots of data
-COMP   = "1329"   # Liga Primera Benjamin GC 2023-2024
-GROUP  = "168500" # Grupo 1
+SEASON = "20"
+COMP   = "1575"   # Liga Preferente Benjamin Lanzarote 2024-2025
+GROUP  = "190745" # Grupo 1
 
 def main():
     with sync_playwright() as p:

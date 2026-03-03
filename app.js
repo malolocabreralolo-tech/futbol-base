@@ -34,9 +34,43 @@ function teamBadgeFallback(name) {
   const hue = Math.abs(hash) % 360;
   return `<span class="team-badge" style="background:hsl(${hue},55%,45%)">${initials}</span>`;
 }
+let _shieldsNorm = null;
+function getShieldsNorm() {
+  if (_shieldsNorm) return _shieldsNorm;
+  if (typeof SHIELDS === 'undefined') return (_shieldsNorm = {});
+  const STRIP = /\b(cf|ud|cd|ad|sd|ce|cef|ssd|atletico|atl)\b/gi;
+  _shieldsNorm = {};
+  Object.keys(SHIELDS).forEach(k => {
+    const norm = k.toLowerCase().replace(STRIP, '').replace(/\s+/g, ' ').trim();
+    if (norm && !_shieldsNorm[norm]) _shieldsNorm[norm] = SHIELDS[k];
+  });
+  return _shieldsNorm;
+}
+
 function teamBadge(name) {
-  if (typeof SHIELDS !== 'undefined' && SHIELDS[name]) {
-    return `<img class="team-badge" src="./escudos/${SHIELDS[name]}" alt="${name}" onerror="this.outerHTML=teamBadgeFallback(this.alt)">`;
+  if (typeof SHIELDS !== 'undefined') {
+    // 1. Exact match
+    if (SHIELDS[name]) {
+      return '<img class="team-badge" src="./escudos/' + SHIELDS[name] + '" alt="' + name + '" onerror="this.outerHTML=teamBadgeFallback(this.alt)">';
+    }
+    // 2. Normalized match (strip common suffixes)
+    const STRIP = /\b(cf|ud|cd|ad|sd|ce|cef|ssd|atletico|atl)\b/gi;
+    const norm = name.toLowerCase().replace(STRIP, '').replace(/\s+/g, ' ').trim();
+    const shNorm = getShieldsNorm();
+    if (norm && shNorm[norm]) {
+      return '<img class="team-badge" src="./escudos/' + shNorm[norm] + '" alt="' + name + '" onerror="this.outerHTML=teamBadgeFallback(this.alt)">';
+    }
+    // 3. Substring match (short name inside long key)
+    if (norm.length >= 4) {
+      const STRIP2 = /\b(cf|ud|cd|ad|sd|ce|cef|ssd|atletico|atl)\b/gi;
+      const found = Object.keys(SHIELDS).find(k => {
+        const kn = k.toLowerCase().replace(STRIP2, '').replace(/\s+/g, ' ').trim();
+        return kn.includes(norm) || norm.includes(kn);
+      });
+      if (found) {
+        return '<img class="team-badge" src="./escudos/' + SHIELDS[found] + '" alt="' + name + '" onerror="this.outerHTML=teamBadgeFallback(this.alt)">';
+      }
+    }
   }
   return teamBadgeFallback(name);
 }

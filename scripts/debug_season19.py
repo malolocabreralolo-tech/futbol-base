@@ -57,6 +57,34 @@ def main():
             }))
         """)
         out["jornada_body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
+        # Try IrA(1) to load jornada 1
+        out["ira_test"] = {}
+        try:
+            page.evaluate("IrA(1)")
+            page.wait_for_load_state("domcontentloaded", timeout=10000)
+            page.wait_for_timeout(2000)
+            out["ira_test"]["url_after"] = page.url
+            out["ira_test"]["title_after"] = page.title()
+            out["ira_test"]["body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 1000)")
+            out["ira_test"]["tables"] = page.evaluate("""
+                () => Array.from(document.querySelectorAll('table')).slice(0, 5).map(t => ({
+                    rows: t.querySelectorAll('tr').length,
+                    cells_in_first: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
+                    sample: t.innerText.trim().slice(0, 200)
+                }))
+            """)
+        except Exception as e:
+            out["ira_test"]["error"] = str(e)
+
+        # Also find IrA function source
+        out["ira_source"] = page.evaluate("""
+            () => typeof IrA === 'function' ? IrA.toString().slice(0, 500) : 'NOT FOUND'
+        """)
+
+        # Reload jornada page
+        page.goto(jornada_url, wait_until="domcontentloaded")
+        page.wait_for_timeout(3000)
+
         out["jornada_elements"] = page.evaluate("""
             () => {
                 const result = {};

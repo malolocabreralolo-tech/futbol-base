@@ -111,6 +111,25 @@ def main():
             }).map(el => ({text: el.innerText.trim(), href: el.href||'', onclick: el.getAttribute('onclick')||''}))
         """)
 
+        # THE KEY: read the iframe content (NFG_ControlExec)
+        for frame in page.frames:
+            if frame.name == "NFG_ControlExec":
+                print(f"  Found iframe NFG_ControlExec: {frame.url}")
+                out["iframe_body"] = frame.evaluate("() => document.body.innerText")
+                out["iframe_tables"] = frame.evaluate("""
+                    () => Array.from(document.querySelectorAll('table')).map(t => ({
+                        rows: t.querySelectorAll('tr').length,
+                        cells_r0: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
+                        sample: t.innerText.trim().slice(0, 400)
+                    }))
+                """)
+                out["iframe_html"] = frame.evaluate("() => document.body.innerHTML.slice(0, 8000)")
+                break
+        else:
+            out["iframe_body"] = "IFRAME NFG_ControlExec NOT FOUND"
+            # List all frames
+            out["all_frames"] = [{"name": f.name, "url": f.url} for f in page.frames]
+
         # Reload jornada page
         page.goto(jornada_url, wait_until="domcontentloaded")
         page.wait_for_timeout(3000)

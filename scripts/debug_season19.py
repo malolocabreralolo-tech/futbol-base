@@ -112,23 +112,45 @@ def main():
         """)
 
         # THE KEY: read the iframe content (NFG_ControlExec)
-        for frame in page.frames:
-            if frame.name == "NFG_ControlExec":
-                print(f"  Found iframe NFG_ControlExec: {frame.url}")
-                out["iframe_body"] = frame.evaluate("() => document.body.innerText")
-                out["iframe_tables"] = frame.evaluate("""
+        # Wait for frame to attach
+        iframe_frame = None
+        for attempt in range(10):
+            page.wait_for_timeout(1000)
+            for frame in page.frames:
+                if "NFG_ControlExec" in frame.name or "NFG_CmpJornada" in frame.url:
+                    iframe_frame = frame
+                    break
+            if iframe_frame:
+                break
+
+        out["all_frames"] = [{"name": f.name, "url": f.url} for f in page.frames]
+        print(f"  Frames found: {len(page.frames)}")
+        for f in page.frames:
+            print(f"    frame name={f.name!r} url={f.url[:80]!r}")
+
+        if iframe_frame:
+            print(f"  Found target frame: {iframe_frame.name!r} {iframe_frame.url[:80]!r}")
+            try:
+                out["iframe_body"] = iframe_frame.evaluate("() => document.body.innerText")
+                out["iframe_tables"] = iframe_frame.evaluate("""
                     () => Array.from(document.querySelectorAll('table')).map(t => ({
                         rows: t.querySelectorAll('tr').length,
                         cells_r0: t.querySelector('tr') ? t.querySelector('tr').querySelectorAll('td').length : 0,
                         sample: t.innerText.trim().slice(0, 400)
                     }))
                 """)
-                out["iframe_html"] = frame.evaluate("() => document.body.innerHTML.slice(0, 8000)")
-                break
+                out["iframe_html"] = iframe_frame.evaluate("() => document.body.innerHTML.slice(0, 8000)")
+            except Exception as e:
+                out["iframe_error"] = str(e)
         else:
-            out["iframe_body"] = "IFRAME NFG_ControlExec NOT FOUND"
-            # List all frames
-            out["all_frames"] = [{"name": f.name, "url": f.url} for f in page.frames]
+            out["iframe_body"] = "IFRAME NOT FOUND after waiting"
+            # Try using frame_locator
+            try:
+                iframe_el = page.locator("iframe[name='NFG_ControlExec']")
+                content_frame = iframe_el.content_frame
+                out["iframe_via_locator_body"] = content_frame.evaluate("() => document.body.innerText")
+            except Exception as e:
+                out["iframe_via_locator_error"] = str(e)
 
         # Reload jornada page
         page.goto(jornada_url, wait_until="domcontentloaded")

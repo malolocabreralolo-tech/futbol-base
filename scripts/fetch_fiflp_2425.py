@@ -32,7 +32,9 @@ ALL_COMPETITIONS = [
 ]
 
 # Use resume: if fiflp_2425_raw.json exists, skip already-done competitions
-COMPETITIONS = ALL_COMPETITIONS
+# Filter by SCRAPE_IDS env var (comma-separated IDs) if set
+_ids_env = os.environ.get("SCRAPE_IDS", "")
+COMPETITIONS = [c for c in ALL_COMPETITIONS if c["id"] in _ids_env.split(",")] if _ids_env else ALL_COMPETITIONS
 
 
 def delay(extra=0):

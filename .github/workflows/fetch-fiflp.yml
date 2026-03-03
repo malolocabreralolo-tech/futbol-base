@@ -2,6 +2,11 @@ name: Scraping FIFLP
 
 on:
   workflow_dispatch:
+    inputs:
+      ids:
+        description: 'IDs de competición separados por coma (vacío = todas)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -26,6 +31,8 @@ jobs:
           playwright install chromium --with-deps
 
       - name: Scrape Benjamin + Prebenjamin 2024-2025
+        env:
+          SCRAPE_IDS: ${{ github.event.inputs.ids }}
         run: python3 scripts/fetch_fiflp_2425.py
         timeout-minutes: 45
 

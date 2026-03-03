@@ -78,20 +78,29 @@ function teamBadge(name) {
 /* Get last N results for a team from HISTORY */
 function getTeamForm(teamName, groupId, n) {
   n = n || 5;
-  if (typeof HISTORY === 'undefined' || !HISTORY[groupId]) return [];
-  const hist = HISTORY[groupId];
-  const all = [];
-  Object.entries(hist).forEach(([jorName, matches]) => {
-    const jorNum = parseInt(jorName.replace(/\D/g, ''));
-    matches.forEach(m => {
-      if (m[3] === null || m[4] === null) return;
-      if (m[1] !== teamName && m[2] !== teamName) return;
-      const isHome = m[1] === teamName;
-      const gf = isHome ? m[3] : m[4], gc = isHome ? m[4] : m[3];
-      all.push({ jorNum, date: m[0], result: gf > gc ? 'W' : gf < gc ? 'L' : 'D' });
+  var jornadas = null;
+  if (isHistorical()) {
+    var group = getData().find(function(g){return g.id === groupId;});
+    if (group && group.jornadas) jornadas = group.jornadas;
+  } else {
+    if (typeof HISTORY === 'undefined' || !HISTORY[groupId]) return [];
+    jornadas = HISTORY[groupId];
+  }
+  if (!jornadas) return [];
+  var all = [];
+  Object.entries(jornadas).forEach(function(entry) {
+    var jorKey = entry[0], matches = entry[1];
+    var jorNum = parseInt(jorKey);
+    matches.forEach(function(m) {
+      var date = m[0], home = m[1], away = m[2], hs = m[3], as_ = m[4];
+      if (hs === null || hs === undefined || as_ === null || as_ === undefined) return;
+      if (home !== teamName && away !== teamName) return;
+      var isHome = home === teamName;
+      var gf = isHome ? hs : as_, gc = isHome ? as_ : hs;
+      all.push({ jorNum: jorNum, date: date, result: gf > gc ? 'W' : gf < gc ? 'L' : 'D' });
     });
   });
-  all.sort((a, b) => a.jorNum - b.jorNum || a.date.localeCompare(b.date));
+  all.sort(function(a,b){return a.jorNum - b.jorNum || a.date.localeCompare(b.date);});
   return all.slice(-n);
 }
 
@@ -343,10 +352,12 @@ function buildStandingsTable(standings, groupId) {
   // Check if data has GF/GC/DF (row[7] exists and is not null)
   const hasGoalData = standings.length > 0 && standings[0].length > 7 && standings[0][7] != null;
   const hist = isHistorical();
+  const histHasJornadas = hist && getData().some(function(g){ return g.jornadas && Object.keys(g.jornadas).length > 0; });
+  const showForm = !hist || histHasJornadas;
 
   let html = '<div class="table-wrap"><table class="standings-table"><thead><tr>';
   html += '<th>#</th><th>Equipo</th>';
-  if (!hist) html += '<th>F</th>';
+  if (showForm) html += '<th>F</th>';
   html += '<th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th>';
   if (hasGoalData) html += '<th>GF</th><th>GC</th><th>DF</th>';
   html += '</tr></thead><tbody>';
@@ -357,7 +368,7 @@ function buildStandingsTable(standings, groupId) {
     html += `<tr class="${cls}">`;
     html += `<td>${pos}</td>`;
     html += `<td class="team-name-cell" data-group="${groupId}">${teamBadge(row[1])} ${row[1]}</td>`;
-    if (!hist) {
+    if (showForm) {
       // Form column
       const form = getTeamForm(row[1], groupId);
       html += '<td class="form-col">';

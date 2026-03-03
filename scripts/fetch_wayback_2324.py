@@ -297,13 +297,16 @@ def main():
     groups = discover_groups()
 
     # Load existing results for incremental mode
+    # Skip only groups that already have standings data (equipos > 0) and match data
     existing = {}
     if os.path.exists(OUTPUT_PATH):
         with open(OUTPUT_PATH, encoding="utf-8") as f:
             prev = json.load(f)
         for g in prev.get("groups", []):
-            existing[g["slug"]] = g
-        print(f"Loaded {len(existing)} existing groups from {OUTPUT_PATH}\n")
+            has_data = len(g.get("standings", [])) > 0 and len(g.get("jornadas", [])) > 0
+            if has_data:
+                existing[g["slug"]] = g
+        print(f"Loaded {len(existing)} complete groups from {OUTPUT_PATH} (re-scraping incomplete ones)\n")
 
     results = list(existing.values())
     errors = []
@@ -349,26 +352,20 @@ def main():
                 ]
             })
 
-        # Fetch standings from mostrar_clasi.php
-        clasi_url = original_url + "mostrar_clasi.php"
+        # Parse standings from main page HTML (mostrar_clasi.php not archived)
         standings_out = []
-        try:
-            clasi_html = fetch_wayback(ts, clasi_url)
-            time.sleep(DELAY)
-            standings = parse_standings(clasi_html)
-            if standings:
-                for row in standings:
-                    pos, name, pts, j, g_, e, perd, gf, gc, df = row
-                    standings_out.append({
-                        "pos": pos, "team": name, "pts": pts,
-                        "j": j, "g": g_, "e": e, "p": perd,
-                        "gf": gf, "gc": gc, "df": df,
-                    })
-                print(f"  Clasificacion: {len(standings_out)} equipos")
-            else:
-                print(f"  ! clasificacion no parseada")
-        except Exception as e:
-            print(f"  ! clasificacion error: {e}")
+        standings = parse_standings(html)
+        if standings:
+            for row in standings:
+                pos, name, pts, j, g_, e, perd, gf, gc, df = row
+                standings_out.append({
+                    "pos": pos, "team": name, "pts": pts,
+                    "j": j, "g": g_, "e": e, "p": perd,
+                    "gf": gf, "gc": gc, "df": df,
+                })
+            print(f"  Clasificacion: {len(standings_out)} equipos")
+        else:
+            print(f"  ! clasificacion no parseada")
 
         results.append({
             "slug": slug,

@@ -229,15 +229,11 @@
       "name": "__dsaLocator"
     },
     {
-      "src": "https://ac6eaed91911a9b7ce360f8e2c8983a7.safeframe.googlesyndication.com/safeframe/1-0-45/html/container.html",
-      "name": ""
-    },
-    {
       "src": "about:blank",
       "name": "__pb_locator__"
     },
     {
-      "src": "https://ssc-cms.33across.com/ps/?m=xch&rt=html&id=0015a00002oUk4aAAC&ru=https%3A%2F%2Fu.4dex.io%2Fsetuid%3Fbidder%3D33across%26it%3Dadg-pb-clt%26uid%3D33XUSERID33X",
+      "src": "https://ap.lijit.com/beacon/prebid-server/?gdpr=0&gdpr_consent=&url=https%3A%2F%2Fu.4dex.io%2Fsetuid%3Fbidder%3Dsovrn%26it%3Dadg-pb-clt%26uid%3D%24UID",
       "name": ""
     },
     {
@@ -257,15 +253,11 @@
       "name": ""
     },
     {
-      "src": "https://cs.seedtag.com/cs.html?pt=8840-6320-01&pc=ZZ&cmp=true&cd=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&uid=019cb396-6dde-70c3-8e63-d1b8532349e4&sct=HeaderBidding",
-      "name": ""
-    },
-    {
-      "src": "https://gum.criteo.com/syncframe?origin=criteoPrebidAdapter&topUrl=www.fiflp.com&gdpr_consent=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&gpp=#{%22bundle%22:%22TZscd19wVGxJbUgzcmVFSVdjUW9EVjRkMFgxZHNXa0QwY20wbGxCNXZVYzIzSmtPMiUyRkRHS2o2MHYxS0J4Vk5pVERYSUZXJTJGZVRjY2ZWOTg1b0VmdjZuRmJrJTJCeFI3WFVMOU12aERqVnMlMkJKd3NnMlZsTEFSMEZyU1kzV2dlam8ya0hpVDJLUHF4ZmtsSnVwVGdQM1VLdUt3RXdSSGc1Q0dldnVtYWU0MVB3dWFLN2hwa3Qwc25QNyUyQmRRdjFWT1BnRG8xVWty%22,%22cw%22:true,%22lsw%22:true,%22origin%22:%22criteoPrebidAdapter%22,%22requestId%22:%220.10711339436747569%22,%22tld%22:%22www.fiflp.com%22,%22topUrl%22:%22www.fiflp.com%22,%22version%22:%2210_20_0%22}",
-      "name": ""
-    },
-    {
       "src": "https://acdn.adnxs.com/dmp/async_usersync.html",
+      "name": ""
+    },
+    {
+      "src": "https://gum.criteo.com/syncframe?origin=criteoPrebidAdapter&topUrl=www.fiflp.com&gdpr_consent=CQgfW0AQgfW0AAfNWBENCUFsAP_gAEPgAAigLPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAgreACYKFRBCWBAAEAgYQQIAFBWEAFAgCAAAIGiAgAMGBDkDABVYTIAQAIAAAgBAACCAAEAAAkACEQAQAEAgBAgACgABAAAAAgAYEAAMAFCABAACAaBikABAIFAAkBhEGCBCAAgEALYUABAECAsAIQBoABAiAgIAAAQACgAAAHgsBCSQErEggCwgmgAAIAAAogRIEUhRgAAAAAEACAAACAEAAAAAAAABAAAAAAAAAAACAAA.ILPtR_C_fbWlj-TL3afskeYxf99hr4sQxBgLJo04BjDrW5JwD12EyNEzShqAKmRIAqnRBIQFtGAjURUABIIAVJSDsYESUgRNIJuBAgHMRQwNYCFhnmYtBGQCRwkpzcRZgmRsM6Vru2NxAw5gjPUSVI6QlUJgNCYMoGQmsZBKT87IU9-x-_4vw9MboEm-eSVv_tStt41YIABAAJAAgAAAgBAAAAAAABIQAAAAAQAAAEAgEAAAAAAg&gpp=#{%22bundle%22:%22OVUoLF9rZDVTaTBWUVRHZ25TaHZnb3NtdDVCblc1Z1dsdXp2Qm55WnlDNjJvYmFQS0w1b2JXeUl3alkyYzJ5RnJtaTE2dCUyQlBIbXU0Z2FLV2FUUk5IUkMlMkJSZTVXcDNKUkZaNDVsc1hPSkY3S3BkN1VkWFNpdmgzJTJCYm5NWWZOMFNGSTlDZXlHU0lWNG9CY1B6VmVyNmNrMHpYR1pvT09ieTZEbWQwbEVsWW03amVLZlVBNkklMkJnbVZsaGQwRFpOdXhoQUJBRQ%22,%22cw%22:true,%22lsw%22:true,%22origin%22:%22criteoPrebidAdapter%22,%22requestId%22:%220.5675043551484727%22,%22tld%22:%22www.fiflp.com%22,%22topUrl%22:%22www.fiflp.com%22,%22version%22:%2210_20_0%22}",
       "name": ""
     }
   ],
@@ -294,6 +286,772 @@
     {
       "text": "Siguiente",
       "href": "javascript:IrA(6);",
+      "onclick": ""
+    }
+  ],
+  "js_functions": {
+    "BuscarPartidos": "function BuscarPartidos(Jornada){if(Jornada!=0){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120\"+\"&CodCompeticion=\"+top.document.BuscaNFG_CMP.competicion.value+\"&CodGrupo=\"+top.document.BuscaNFG_CMP.grupo.value+\"&CodTemporada=\"+top.document.BuscaNFG_CMP.temporada.value+\"&cod_agrupacion=\"+top.doc",
+    "IrA": "function IrA(jornada){url=\"/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169838&CodTemporada=19&CodJornada=\"+jornada;url=url+\"&Sch_Codigo_Delegacion=\"+document.BuscaNFG_CMP.Sch_Codigo_Delegacion.value;url=url+\"&Sch_Tipo_Juego=\"+document.BuscaNFG_CMP.Sch_Tipo_Juego.value"
+  },
+  "all_links": [
+    {
+      "text": "Fundación",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Información General",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Saluda",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059799&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Información de la Entidad",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059800&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Normativa",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059811&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Información Organizativa",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Órganos de Gobierno Fundación",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059803&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Organigrama Fundación",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059802&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Unidades Administrativas Fundación",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059804&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Procedimientos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Ayuda Gobierno de Canarias",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059812&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Subvenciones",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Gobierno de Canarias",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059813&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Portal de Transparencia",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Información General",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Saluda del Presidente",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059690&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Información General de la Entidad",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059691&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Marco Normativo",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059693&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Formación",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059695&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Licencias",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059758&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Información Organizativa",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Organigrama",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059696&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Órganos de Representación",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059697&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Órganos de Gobierno",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059698&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Órganos Deportivos y Técnicos",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059700&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Órganos Disciplinarios",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059699&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Otros órganos de relevancia Estatutaria",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059701&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Unidades Administrativa",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059702&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Procedimientos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Catálogo de Trámites",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059703&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Procedimiento para sugerencias y quejas",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059704&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Protección de Datos",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059705&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Ayudas y Subvenciones",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Subvenciones",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059733&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Información Económica",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Presupuestos y Cuentas Anuales",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059737&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Convenios y/o Encomiendas de Gestión",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Convenios y Protocolos",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059736&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Contratos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Contratos",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059735&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Identidad corporativa",
+      "href": "https://www.fiflp.com/pnfg/NPortada?CodPortada=1000257",
+      "onclick": ""
+    },
+    {
+      "text": "Ayudas",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 25/26",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Gastos Arbitrales Competiciones 25-26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002134",
+      "onclick": ""
+    },
+    {
+      "text": "Gastos Arbitrales FUTureFEM 25-26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002146",
+      "onclick": ""
+    },
+    {
+      "text": "Convocatoria Ayudas Alumnos E.E. 25-26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002148",
+      "onclick": ""
+    },
+    {
+      "text": "Convocatoria de Ayudas Fútbol Aficionado 25-26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002157",
+      "onclick": ""
+    },
+    {
+      "text": "Convocatoria de Ayudas Categoría Prebenjamín",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002235",
+      "onclick": ""
+    },
+    {
+      "text": "Organización",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Asamblea General FIFLP (Periodo 22-26)",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058932&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Asamblea General FCF (Periodo 22-26)",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058933&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Comisión Permanente",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058935&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Junta de Gobierno",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058934&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Comité Técnico de Entrenadores",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058937&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Comité de Fútbol Aficionado",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058938&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Comité de Fútbol sala",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058939&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Órganos Disciplinarios y Comité Jurisdiccional",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058940&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Escuela Canaria de Entrenadores",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058941&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Comisión de Fútbol Femenino",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058942&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Comisión de Fútbol Playa",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058943&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Delegación Insular de Fuerteventura",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058944&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Delegación insular de Lanzarote",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058945&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Delegado/a de Protección a la infancia y a la adol",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058946&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Comunicación",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Circulares FIFLP",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 25/26",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002050",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 24/25",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001825",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 23/24",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001826",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 22/23",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001827",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 21/22",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001828",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 20/21",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001829",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 19/20",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001830",
+      "onclick": ""
+    },
+    {
+      "text": "Circulares FCF",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 2025/26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002121",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 2024/25",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001838",
+      "onclick": ""
+    },
+    {
+      "text": "Catálogo de Trámites Correo Web Interno",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Versión vigente (V.01 - 14.07.2025)",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002054",
+      "onclick": ""
+    },
+    {
+      "text": "Formularios",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Nueva Temporada 25-26",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001920",
+      "onclick": ""
+    },
+    {
+      "text": "Clubes",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&accion=1&cod_secundaria=300",
+      "onclick": ""
+    },
+    {
+      "text": "Jugadores/as",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002068",
+      "onclick": ""
+    },
+    {
+      "text": "Protección a la Infancia y Adolescencia de la FIFL",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002073",
+      "onclick": ""
+    },
+    {
+      "text": "Contratos (Otros modelos)",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002083",
+      "onclick": ""
+    },
+    {
+      "text": "Jugadores Procedentes del Exterior",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001922",
+      "onclick": ""
+    },
+    {
+      "text": "Noticias de prensa",
+      "href": "https://www.fiflp.com/pnfg/NNws_LstNews?cod_primaria=3001834",
+      "onclick": ""
+    },
+    {
+      "text": "Publicaciones",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001845",
+      "onclick": ""
+    },
+    {
+      "text": "Hemeroteca",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001847",
+      "onclick": ""
+    },
+    {
+      "text": "RFEF",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Ayuda Cantera con Valores (18-19)",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001850",
+      "onclick": ""
+    },
+    {
+      "text": "Ayuda Covid-19 (19-20)",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001851",
+      "onclick": ""
+    },
+    {
+      "text": "Resoluciones Aprobación Calendarios 2526",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Modalidad Fútbol",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002093",
+      "onclick": ""
+    },
+    {
+      "text": "Modalidad Fútbol Sala",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002095",
+      "onclick": ""
+    },
+    {
+      "text": "Listado de Sancionados Temporada 24-25",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Listado de Sancionados Temporada 24-25",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002132",
+      "onclick": ""
+    },
+    {
+      "text": "Equipos retirados y/o excluidos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 2025-2026",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002137",
+      "onclick": ""
+    },
+    {
+      "text": "Competiciones",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Clubes y equipos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Directorio de Equipos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_LstDirectorioEquipos?cod_primaria=1000117",
+      "onclick": ""
+    },
+    {
+      "text": "Competición",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Calendarios, Clasificaciones y Resultados",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120",
+      "onclick": ""
+    },
+    {
+      "text": "Horarios de Partidos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_LstPartidos?cod_primaria=1000121",
+      "onclick": ""
+    },
+    {
+      "text": "Consulta de Campos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_LstCampos?cod_primaria=1000122",
+      "onclick": ""
+    },
+    {
+      "text": "Buscador de Competiciones",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_LstCompeticiones_Vis?cod_primaria=1000123",
+      "onclick": ""
+    },
+    {
+      "text": "Comparativa de Equipos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_LstComparativaEquipos?cod_primaria=3000327",
+      "onclick": ""
+    },
+    {
+      "text": "Sanciones",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Sanciones",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_ConsultaSanciones?cod_primaria=1000152",
+      "onclick": ""
+    },
+    {
+      "text": "Boletín Informativo Órganos Disciplinarios FIFLP",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "BIOD 25-26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002136",
+      "onclick": ""
+    },
+    {
+      "text": "Listado Semanal de Sancionados",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Categorías Territoriales FIFLP 25-26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002217",
+      "onclick": ""
+    },
+    {
+      "text": "Tercera División Sala Grupo LP 25-26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002219",
+      "onclick": ""
+    },
+    {
+      "text": "Clasificaciones nacionales",
+      "href": "https://www.fiflp.com/pnfg/NPortada?CodPortada=1000254",
+      "onclick": ""
+    },
+    {
+      "text": "Normativa",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Estatutos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Estatutos de la FCF",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001913",
+      "onclick": ""
+    },
+    {
+      "text": "Reglamentos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Reglamento General Deportivo",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001881",
+      "onclick": ""
+    },
+    {
+      "text": "Reglamento Régimen Disciplinario Fútbol",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001879",
+      "onclick": ""
+    },
+    {
+      "text": "Reglamento Régimen Disciplinario F.Sala",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001880",
+      "onclick": ""
+    },
+    {
+      "text": "Reglamento Electoral",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001915",
+      "onclick": ""
+    },
+    {
+      "text": "Normas Reguladoras/Bases de Competición",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Normas Reguladoras de las Competiciones Interinsul",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001882",
+      "onclick": ""
+    },
+    {
+      "text": "Protocolos de Actuación de la FIFLP",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "P. Protección Infancia y Adolescencia",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002075",
+      "onclick": ""
+    },
+    {
+      "text": "Protocolo de Actuación ante Fenómenos Metereológic",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002159",
+      "onclick": ""
+    },
+    {
+      "text": "Códigos Federativos",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Código Ético FIFLP",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002077",
+      "onclick": ""
+    },
+    {
+      "text": "Código de Buen Gobierno de la FCF",
+      "href": "https://www.fiflp.com/pnfg/NBdd_DesDocumento?cod_primaria=142&cod_documento=1059714&descargar=1",
+      "onclick": ""
+    },
+    {
+      "text": "Mutualidad",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Información general",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1058947&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Reglamento de prestaciones",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001873",
+      "onclick": ""
+    },
+    {
+      "text": "Tarifas Mutualidad",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Temporada 2025-2026",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002140",
+      "onclick": ""
+    },
+    {
+      "text": "Circulares",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Circulares mutualidad 25/26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002128",
+      "onclick": ""
+    },
+    {
+      "text": "Circulares mutualidad 24/25",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3001875",
+      "onclick": ""
+    },
+    {
+      "text": "Formularios",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Modelos 25-26",
+      "href": "https://www.fiflp.com/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002129",
+      "onclick": ""
+    },
+    {
+      "text": "Comités",
+      "href": "javascript:;",
+      "onclick": ""
+    },
+    {
+      "text": "Comité Entrenadores",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodCompeticion=1328&CodGrupo=169",
+      "onclick": ""
+    },
+    {
+      "text": "Inscripción entrenadores",
+      "href": "https://www.fiflp.com/pnfg/NPcd/NFG_CE_GstInscripcion?cod_primaria=3001906",
+      "onclick": ""
+    },
+    {
+      "text": "Formularios 25/26",
+      "href": "https://weblaspalmas.novanet.es/pnfg/NBdd_LstDocumentos?cod_primaria=142&cod_secundaria=3002056&cod_",
+      "onclick": ""
+    },
+    {
+      "text": "Comité Árbitros",
+      "href": "https://www.fiflp.com/pnfg/NPortada?CodPortada=1000259",
+      "onclick": ""
+    },
+    {
+      "text": "Generar PDF",
+      "href": "javascript:Nova_Pdf();",
+      "onclick": ""
+    },
+    {
+      "text": "Anterior",
+      "href": "javascript:IrA(4);",
+      "onclick": ""
+    },
+    {
+      "text": "Siguiente",
+      "href": "javascript:IrA(6);",
+      "onclick": ""
+    },
+    {
+      "text": "Anterior",
+      "href": "javascript:IrA(4);",
+      "onclick": ""
+    },
+    {
+      "text": "Siguiente",
+      "href": "javascript:IrA(6);",
+      "onclick": ""
+    },
+    {
+      "text": "Política de privacidad",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059081&cod_primaria=3001855&cod_secundaria=3001855",
+      "onclick": ""
+    },
+    {
+      "text": "Aviso legal",
+      "href": "https://www.fiflp.com/pnfg/NNws_ShwNewDup?codigo=1059080&cod_primaria=3001855&cod_secundaria=3001855",
       "onclick": ""
     }
   ],

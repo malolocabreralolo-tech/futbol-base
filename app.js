@@ -287,7 +287,7 @@ function renderClasif() {
       container.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div><p>No hay datos disponibles para esta categoría en la temporada ' + S.season.replace('-', '/') + '</p></div>';
       return;
     }
-    const banner = el('div', 'historical-banner', '📋 Datos históricos · Temporada ' + S.season.replace('-', '/') + ' · Solo clasificaciones disponibles');
+    const banner = el('div', 'historical-banner', '📋 Datos históricos · Temporada ' + S.season.replace('-', '/') + ' · Sin goleadores individuales');
     container.appendChild(banner);
   }
 
@@ -295,7 +295,9 @@ function renderClasif() {
   const phaseIcons = {
     'Segunda Fase A': '🏆', 'Segunda Fase B': '🥈', 'Segunda Fase C': '🥉',
     'Lanzarote': '🌋', 'Fuerteventura': '🏝️',
-    'Gran Canaria': '🏔️'
+    'Gran Canaria': '🏔️',
+    'Primera Fase GC': '🏟️',
+    'Primera Fase': '🏟️',
   };
 
   const defaultGroup = S.jorGroup || (S.cat === 'benjamin' ? 'A2' : 'PG2');

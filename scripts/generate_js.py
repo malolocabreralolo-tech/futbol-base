@@ -532,6 +532,28 @@ def generate_stats_js(conn):
     return "const STATS=" + json.dumps(stats, ensure_ascii=False, separators=(",", ":")) + ";\n"
 
 
+def get_historical_jornadas(conn, group_id):
+    """Return matches grouped by jornada num for historical groups.
+    Format: {jornada_num: [[date, home, away, hs, as_], ...]}
+    Only includes jornadas with at least one match.
+    """
+    rows = conn.execute(
+        """SELECT m.jornada, m.date, h.name, a.name, m.home_score, m.away_score
+           FROM matches m
+           JOIN teams h ON m.home_team_id = h.id
+           JOIN teams a ON m.away_team_id = a.id
+           WHERE m.group_id = ?
+           ORDER BY m.jornada, m.date, h.name""",
+        (group_id,),
+    ).fetchall()
+
+    jornadas = {}
+    for jornada, dt, home, away, hs, as_ in rows:
+        jornadas.setdefault(jornada, []).append([dt, home, away, hs, as_])
+
+    return dict(sorted(jornadas.items()))
+
+
 def generate_seasons_js(conn):
     """Generate data-seasons.js with list of available seasons and historical data."""
     # Get all seasons
@@ -556,7 +578,7 @@ def generate_seasons_js(conn):
 
                 placeholders = ",".join("?" * len(cat_ids))
                 groups = conn.execute(
-                    f"""SELECT g.id, g.code, g.name, g.full_name, g.phase, g.island
+                    f"""SELECT g.id, g.code, g.name, g.full_name, g.phase, g.island, g.current_jornada
                        FROM groups g
                        WHERE g.season_id = ? AND g.category_id IN ({placeholders})
                        ORDER BY g.code""",
@@ -564,16 +586,18 @@ def generate_seasons_js(conn):
                 ).fetchall()
 
                 groups_data = []
-                for gid, code, name, full_name, phase, island in groups:
+                for gid, code, name, full_name, phase, island, current_jornada in groups:
                     standings = get_standings(conn, gid)
+                    hist_jornadas = get_historical_jornadas(conn, gid)
                     groups_data.append({
                         "id": code,
                         "name": name,
                         "fullName": full_name,
                         "phase": phase or island or "Gran Canaria",
                         "island": island,
+                        "current_jornada": current_jornada,
                         "standings": standings,
-                        "matches": [],
+                        "jornadas": hist_jornadas,
                     })
                 entry[cat_key] = groups_data
 

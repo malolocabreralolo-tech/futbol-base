@@ -8,8 +8,9 @@ from playwright.sync_api import sync_playwright
 
 BASE   = "https://www.fiflp.com/pnfg/NPcd"
 SEASON = "19"
-COMP   = "1328"   # Liga Preferente Benjamin Lanzarote 2023-2024
-GROUP  = "169838" # Grupo 1
+# Try GC Primera Benjamin which should have lots of data
+COMP   = "1329"   # Liga Primera Benjamin GC 2023-2024
+GROUP  = "168500" # Grupo 1
 
 def main():
     with sync_playwright() as p:

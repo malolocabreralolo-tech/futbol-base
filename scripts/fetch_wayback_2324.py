@@ -119,7 +119,7 @@ def categorize(slug):
 
 # ─── FETCH (via Wayback) ───────────────────────────────────────────────────────
 
-def fetch_wayback(timestamp, original_url):
+def fetch_wayback(timestamp, original_url, retries=3):
     wb_url = f"{WAYBACK}/{timestamp}/{original_url}"
     req = urllib.request.Request(wb_url, headers={
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -127,12 +127,21 @@ def fetch_wayback(timestamp, original_url):
         "Accept": "text/html,*/*",
         "Accept-Language": "es-ES,es;q=0.9",
     })
-    with urllib.request.urlopen(req, timeout=30) as r:
-        raw = r.read()
-    try:
-        return raw.decode("utf-8")
-    except UnicodeDecodeError:
-        return raw.decode("iso-8859-1", errors="replace")
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                raw = r.read()
+            try:
+                return raw.decode("utf-8")
+            except UnicodeDecodeError:
+                return raw.decode("iso-8859-1", errors="replace")
+        except Exception as e:
+            if attempt < retries - 1:
+                wait = (attempt + 1) * 5
+                print(f"  Retry {attempt+1}/{retries-1} after {wait}s: {e}")
+                time.sleep(wait)
+            else:
+                raise
 
 
 # ─── PARSERS (same logic as fetch_futbolaspalmas.py) ──────────────────────────
@@ -217,30 +226,36 @@ def parse_all_matches(html):
 
 def parse_standings(html):
     """
-    Parsea clasificacion de mostrar_clasi.php.
+    Parsea clasificacion de la página principal del grupo (versión 2023-2024).
+    - Team names: extraídos de ganadosEmpatadosPerdidos(...,'EQUIPO','cargaN')
+    - Points: fw-bold bg-* divs
+    - Stats: border-start divs (primeros n_teams*7)
     Returns list of [pos, team, pts, J, G, E, P, GF, GC, DF].
     """
-    names = re.findall(r'fw-bolder[^>]*>([^<]+)', html)
-    names = [n.strip() for n in names if n.strip()]
+    # Extract teams ordered by carga index
+    carga_teams = re.findall(r"ganadosEmpatadosPerdidos\('[^']+','([^']+)','carga(\d+)'\)", html)
+    teams_by_carga = {}
+    for name, idx in carga_teams:
+        i = int(idx)
+        if i not in teams_by_carga:
+            teams_by_carga[i] = name
+    names = [teams_by_carga[i] for i in sorted(teams_by_carga.keys())]
 
     pts_list = [int(x) for x in re.findall(r'fw-bold[^"]*bg-[^"]*"[^>]*>\s*(\d+)\s*<', html)]
 
     all_stats = [int(x) for x in re.findall(r'border-start[^"]*"[^>]*>\s*(-?\d+)\s*<', html)]
 
-    n_teams = len(pts_list)
-    if not names or not n_teams or len(all_stats) < n_teams * 7:
+    n_teams = min(len(names), len(pts_list))
+    if not n_teams or len(all_stats) < n_teams * 7:
         return []
 
-    names = names[:n_teams]
     result = []
-    for i, name in enumerate(names):
-        if i >= n_teams:
-            break
+    for i in range(n_teams):
         stats = all_stats[i * 7: i * 7 + 7]
         if len(stats) < 7:
             break
         j, g, e, perd, gf, gc, df = stats
-        result.append([i + 1, name, pts_list[i], j, g, e, perd, gf, gc, df])
+        result.append([i + 1, names[i], pts_list[i], j, g, e, perd, gf, gc, df])
 
     return result
 
@@ -281,11 +296,24 @@ def main():
 
     groups = discover_groups()
 
-    results = []
+    # Load existing results for incremental mode
+    existing = {}
+    if os.path.exists(OUTPUT_PATH):
+        with open(OUTPUT_PATH, encoding="utf-8") as f:
+            prev = json.load(f)
+        for g in prev.get("groups", []):
+            existing[g["slug"]] = g
+        print(f"Loaded {len(existing)} existing groups from {OUTPUT_PATH}\n")
+
+    results = list(existing.values())
     errors = []
+    done_slugs = set(existing.keys())
 
     for g in groups:
         slug = g["slug"]
+        if slug in done_slugs:
+            print(f"[{slug}] skipped (already done)")
+            continue
         ts = g["timestamp"]
         original_url = g["url"].rstrip("/") + "/"
         category = g["category"]

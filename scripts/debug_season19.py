@@ -57,7 +57,20 @@ def main():
             }))
         """)
         out["jornada_body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
-        out["jornada_html_snippet"] = page.evaluate("() => document.body.innerHTML.slice(0, 5000)")
+        out["jornada_html_full"] = page.evaluate("""
+            () => {
+                // Get main content area
+                const main = document.querySelector('.container-fluid.content, #contenido, main, .main, [id*=content]');
+                if (main) return main.innerHTML.slice(0, 8000);
+                // Fallback: look for section with jornada data
+                for (const div of document.querySelectorAll('div')) {
+                    if (div.innerText.includes('Anterior') || div.innerText.includes('Provisional')) {
+                        return div.outerHTML.slice(0, 8000);
+                    }
+                }
+                return document.body.innerHTML.slice(5000, 13000);
+            }
+        """)
 
         # 3. Try selecting first jornada if available
         jornada_opts = page.evaluate("""
@@ -87,8 +100,17 @@ def main():
         # 4. Also dump clasif page HTML
         page.goto(clasif_url, wait_until="domcontentloaded")
         page.wait_for_timeout(3000)
-        out["clasif_html_snippet"] = page.evaluate("() => document.body.innerHTML.slice(0, 5000)")
         out["clasif_body_snippet"] = page.evaluate("() => document.body.innerText.slice(0, 2000)")
+        out["clasif_html_content"] = page.evaluate("""
+            () => {
+                for (const div of document.querySelectorAll('div')) {
+                    if (div.innerText.includes('clasificacion') || div.innerText.includes('Clasificación') || div.innerText.includes('No hay')) {
+                        return div.outerHTML.slice(0, 8000);
+                    }
+                }
+                return document.body.innerHTML.slice(5000, 13000);
+            }
+        """)
 
         with open("scripts/debug_season19.json", "w", encoding="utf-8") as f:
             json.dump(out, f, ensure_ascii=False, indent=2)

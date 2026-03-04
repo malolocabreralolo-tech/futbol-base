@@ -35,8 +35,6 @@ CODE_PREFIX = {
     "1583": "FV2",   # Fase 2 Fuerteventura
     # Prebenjamin
     "1581": "PGC",   # Prebenjamin Gran Canaria
-    "1712": "PLZ",   # Prebenjamin Lanzarote
-    "1582": "PFV",   # Prebenjamin Fuerteventura
 }
 
 CAT_MAP = {
@@ -56,8 +54,6 @@ PHASE_MAP = {
     "1579": "Fase 1 Fuerteventura",
     "1583": "Fase 2 Fuerteventura",
     "1581": "Gran Canaria",
-    "1712": "Lanzarote",
-    "1582": "Fuerteventura",
 }
 
 

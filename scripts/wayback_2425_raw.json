@@ -1,0 +1,970 @@
+{
+  "season": "2024-2025",
+  "scraped_from": "20250401",
+  "scraped_to": "20250731",
+  "groups": [
+    {
+      "slug": "1benjamin9",
+      "url": "https://futbolaspalmas.com/1benjamin9/",
+      "wayback_timestamp": "20250619154700",
+      "category": "benjamin",
+      "group_name": "Grupo 9",
+      "phase": "Primera Fase GC",
+      "island": "gran_canaria",
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Las Palmas",
+          "pts": 24,
+          "j": 8,
+          "g": 8,
+          "e": 0,
+          "p": 0,
+          "gf": 150,
+          "gc": 0,
+          "df": 150
+        },
+        {
+          "pos": 2,
+          "team": "Gran Canaria",
+          "pts": 19,
+          "j": 8,
+          "g": 6,
+          "e": 1,
+          "p": 1,
+          "gf": 52,
+          "gc": 15,
+          "df": 37
+        },
+        {
+          "pos": 3,
+          "team": "Simusetti B",
+          "pts": 16,
+          "j": 8,
+          "g": 5,
+          "e": 1,
+          "p": 2,
+          "gf": 43,
+          "gc": 35,
+          "df": 8
+        },
+        {
+          "pos": 4,
+          "team": "Atco. Marzasport",
+          "pts": 16,
+          "j": 8,
+          "g": 5,
+          "e": 1,
+          "p": 2,
+          "gf": 37,
+          "gc": 38,
+          "df": -1
+        },
+        {
+          "pos": 5,
+          "team": "L.Mesas Hu. B",
+          "pts": 13,
+          "j": 8,
+          "g": 4,
+          "e": 1,
+          "p": 3,
+          "gf": 25,
+          "gc": 39,
+          "df": -14
+        },
+        {
+          "pos": 6,
+          "team": "San Juan",
+          "pts": 9,
+          "j": 8,
+          "g": 3,
+          "e": 0,
+          "p": 5,
+          "gf": 13,
+          "gc": 43,
+          "df": -30
+        },
+        {
+          "pos": 7,
+          "team": "Valsequillo B",
+          "pts": 6,
+          "j": 8,
+          "g": 2,
+          "e": 0,
+          "p": 6,
+          "gf": 23,
+          "gc": 49,
+          "df": -26
+        },
+        {
+          "pos": 8,
+          "team": "Telde C",
+          "pts": 3,
+          "j": 8,
+          "g": 1,
+          "e": 0,
+          "p": 7,
+          "gf": 7,
+          "gc": 63,
+          "df": -56
+        },
+        {
+          "pos": 9,
+          "team": "Pedro Hidalgo B",
+          "pts": 0,
+          "j": 8,
+          "g": 0,
+          "e": 0,
+          "p": 8,
+          "gf": 7,
+          "gc": 75,
+          "df": -68
+        }
+      ],
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2024-10-25",
+              "home": "Pedro Hidalgo B",
+              "away": "Simusetti B",
+              "hs": 1,
+              "as_": 9
+            },
+            {
+              "date": "2024-10-26",
+              "home": "San Juan",
+              "away": "Gran Canaria",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2024-10-26",
+              "home": "Valsequillo B",
+              "away": "L.Mesas Hu. B",
+              "hs": 3,
+              "as_": 6
+            },
+            {
+              "date": "2024-10-27",
+              "home": "Telde C",
+              "away": "Atco. Marzasport",
+              "hs": 0,
+              "as_": 9
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2024-10-31",
+              "home": "Atco. Marzasport",
+              "away": "Valsequillo B",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2024-11-01",
+              "home": "Gran Canaria",
+              "away": "Pedro Hidalgo B",
+              "hs": 15,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-02",
+              "home": "Las Palmas",
+              "away": "San Juan",
+              "hs": 16,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-03",
+              "home": "Simusetti B",
+              "away": "Telde C",
+              "hs": 8,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2024-11-08",
+              "home": "Pedro Hidalgo B",
+              "away": "Las Palmas",
+              "hs": 0,
+              "as_": 24
+            },
+            {
+              "date": "2024-11-09",
+              "home": "San Juan",
+              "away": "L.Mesas Hu. B",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2024-11-10",
+              "home": "Telde C",
+              "away": "Valsequillo B",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2024-11-10",
+              "home": "Simusetti B",
+              "away": "Gran Canaria",
+              "hs": 0,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2024-11-15",
+              "home": "Atco. Marzasport",
+              "away": "San Juan",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-16",
+              "home": "Gran Canaria",
+              "away": "Telde C",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-16",
+              "home": "Las Palmas",
+              "away": "Simusetti B",
+              "hs": 16,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-17",
+              "home": "L.Mesas Hu. B",
+              "away": "Pedro Hidalgo B",
+              "hs": 4,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2024-11-22",
+              "home": "Pedro Hidalgo B",
+              "away": "Atco. Marzasport",
+              "hs": 0,
+              "as_": 9
+            },
+            {
+              "date": "2024-11-22",
+              "home": "Gran Canaria",
+              "away": "Las Palmas",
+              "hs": 0,
+              "as_": 11
+            },
+            {
+              "date": "2024-11-23",
+              "home": "San Juan",
+              "away": "Valsequillo B",
+              "hs": 3,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-24",
+              "home": "Simusetti B",
+              "away": "L.Mesas Hu. B",
+              "hs": 5,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "name": "Jornada 6",
+          "matches": [
+            {
+              "date": "2024-11-29",
+              "home": "Atco. Marzasport",
+              "away": "Simusetti B",
+              "hs": 5,
+              "as_": 5
+            },
+            {
+              "date": "2024-11-30",
+              "home": "Valsequillo B",
+              "away": "Pedro Hidalgo B",
+              "hs": 7,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-30",
+              "home": "Las Palmas",
+              "away": "Telde C",
+              "hs": 25,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-01",
+              "home": "L.Mesas Hu. B",
+              "away": "Gran Canaria",
+              "hs": 2,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "name": "Jornada 7",
+          "matches": [
+            {
+              "date": "2024-12-04",
+              "home": "Las Palmas",
+              "away": "L.Mesas Hu. B",
+              "hs": 21,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-05",
+              "home": "Gran Canaria",
+              "away": "Atco. Marzasport",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-12-08",
+              "home": "Telde C",
+              "away": "San Juan",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2024-12-08",
+              "home": "Simusetti B",
+              "away": "Valsequillo B",
+              "hs": 7,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "name": "Jornada 8",
+          "matches": [
+            {
+              "date": "2024-12-13",
+              "home": "Atco. Marzasport",
+              "away": "Las Palmas",
+              "hs": 0,
+              "as_": 19
+            },
+            {
+              "date": "2024-12-14",
+              "home": "San Juan",
+              "away": "Pedro Hidalgo B",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2024-12-11",
+              "home": "Valsequillo B",
+              "away": "Gran Canaria",
+              "hs": 0,
+              "as_": 8
+            },
+            {
+              "date": "2024-12-17",
+              "home": "Telde C",
+              "away": "L.Mesas Hu. B",
+              "hs": 1,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "name": "Jornada 9",
+          "matches": [
+            {
+              "date": "2024-12-21",
+              "home": "L.Mesas Hu. B",
+              "away": "Atco. Marzasport",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2024-12-21",
+              "home": "Las Palmas",
+              "away": "Valsequillo B",
+              "hs": 18,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-21",
+              "home": "Simusetti B",
+              "away": "San Juan",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-21",
+              "home": "Pedro Hidalgo B",
+              "away": "Telde C",
+              "hs": 2,
+              "as_": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "1benjamin10",
+      "url": "https://futbolaspalmas.com/1benjamin10/",
+      "wayback_timestamp": "20250322055849",
+      "category": "benjamin",
+      "group_name": "Grupo 10",
+      "phase": "Primera Fase GC",
+      "island": "gran_canaria",
+      "standings": [
+        {
+          "pos": 1,
+          "team": "UD Telde",
+          "pts": 27,
+          "j": 9,
+          "g": 9,
+          "e": 0,
+          "p": 0,
+          "gf": 86,
+          "gc": 9,
+          "df": 77
+        },
+        {
+          "pos": 2,
+          "team": "Playa D.H.",
+          "pts": 22,
+          "j": 9,
+          "g": 7,
+          "e": 1,
+          "p": 1,
+          "gf": 53,
+          "gc": 10,
+          "df": 43
+        },
+        {
+          "pos": 3,
+          "team": "Valsequillo",
+          "pts": 19,
+          "j": 9,
+          "g": 6,
+          "e": 1,
+          "p": 2,
+          "gf": 56,
+          "gc": 11,
+          "df": 45
+        },
+        {
+          "pos": 4,
+          "team": "Las Longueras",
+          "pts": 18,
+          "j": 9,
+          "g": 5,
+          "e": 3,
+          "p": 1,
+          "gf": 64,
+          "gc": 13,
+          "df": 51
+        },
+        {
+          "pos": 5,
+          "team": "Las Huesas",
+          "pts": 16,
+          "j": 9,
+          "g": 5,
+          "e": 1,
+          "p": 3,
+          "gf": 42,
+          "gc": 13,
+          "df": 29
+        },
+        {
+          "pos": 6,
+          "team": "La Garita",
+          "pts": 12,
+          "j": 9,
+          "g": 4,
+          "e": 0,
+          "p": 5,
+          "gf": 47,
+          "gc": 28,
+          "df": 19
+        },
+        {
+          "pos": 7,
+          "team": "Vallinamar",
+          "pts": 9,
+          "j": 9,
+          "g": 3,
+          "e": 0,
+          "p": 6,
+          "gf": 29,
+          "gc": 28,
+          "df": 1
+        },
+        {
+          "pos": 8,
+          "team": "Unión Marina",
+          "pts": 6,
+          "j": 9,
+          "g": 2,
+          "e": 0,
+          "p": 7,
+          "gf": 17,
+          "gc": 63,
+          "df": -46
+        },
+        {
+          "pos": 9,
+          "team": "Calero",
+          "pts": 3,
+          "j": 9,
+          "g": 1,
+          "e": 0,
+          "p": 8,
+          "gf": 7,
+          "gc": 97,
+          "df": -90
+        },
+        {
+          "pos": 10,
+          "team": "Valdecasas",
+          "pts": 0,
+          "j": 9,
+          "g": 0,
+          "e": 0,
+          "p": 9,
+          "gf": 4,
+          "gc": 133,
+          "df": -129
+        }
+      ],
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2024-10-25",
+              "home": "Playa D.H.",
+              "away": "Vallinamar",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2024-10-29",
+              "home": "Valdecasas",
+              "away": "Valsequillo",
+              "hs": 0,
+              "as_": 22
+            },
+            {
+              "date": "2024-10-26",
+              "home": "Las Longueras",
+              "away": "Calero",
+              "hs": 20,
+              "as_": 0
+            },
+            {
+              "date": "2024-10-26",
+              "home": "La Garita",
+              "away": "Las Huesas",
+              "hs": 1,
+              "as_": 3
+            },
+            {
+              "date": "2024-10-26",
+              "home": "UD Telde",
+              "away": "Unión Marina",
+              "hs": 11,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2024-10-31",
+              "home": "Unión Marina",
+              "away": "La Garita",
+              "hs": 0,
+              "as_": 10
+            },
+            {
+              "date": "2024-11-02",
+              "home": "Valsequillo",
+              "away": "Playa D.H.",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2024-11-02",
+              "home": "Calero",
+              "away": "Valdecasas",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-02",
+              "home": "Las Huesas",
+              "away": "Las Longueras",
+              "hs": 1,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-02",
+              "home": "Vallinamar",
+              "away": "UD Telde",
+              "hs": 0,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2024-11-08",
+              "home": "Playa D.H.",
+              "away": "UD Telde",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2024-11-09",
+              "home": "Valsequillo",
+              "away": "Calero",
+              "hs": 12,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-09",
+              "home": "Las Longueras",
+              "away": "Unión Marina",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-10",
+              "home": "La Garita",
+              "away": "Vallinamar",
+              "hs": 3,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-09",
+              "home": "Valdecasas",
+              "away": "Las Huesas",
+              "hs": 0,
+              "as_": 14
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2024-11-15",
+              "home": "Unión Marina",
+              "away": "Valdecasas",
+              "hs": 8,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-16",
+              "home": "Calero",
+              "away": "Playa D.H.",
+              "hs": 0,
+              "as_": 12
+            },
+            {
+              "date": "2024-11-16",
+              "home": "Las Huesas",
+              "away": "Valsequillo",
+              "hs": 0,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-16",
+              "home": "UD Telde",
+              "away": "La Garita",
+              "hs": 10,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-16",
+              "home": "Vallinamar",
+              "away": "Las Longueras",
+              "hs": 0,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2024-11-22",
+              "home": "Playa D.H.",
+              "away": "La Garita",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-20",
+              "home": "Calero",
+              "away": "Las Huesas",
+              "hs": 0,
+              "as_": 9
+            },
+            {
+              "date": "2024-11-23",
+              "home": "Valsequillo",
+              "away": "Unión Marina",
+              "hs": 11,
+              "as_": 1
+            },
+            {
+              "date": "2024-11-23",
+              "home": "Las Longueras",
+              "away": "UD Telde",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2024-11-23",
+              "home": "Valdecasas",
+              "away": "Vallinamar",
+              "hs": 1,
+              "as_": 10
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "name": "Jornada 6",
+          "matches": [
+            {
+              "date": "2024-11-29",
+              "home": "Unión Marina",
+              "away": "Calero",
+              "hs": 4,
+              "as_": 0
+            },
+            {
+              "date": "2024-11-30",
+              "home": "Las Huesas",
+              "away": "Playa D.H.",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2024-12-19",
+              "home": "UD Telde",
+              "away": "Valdecasas",
+              "hs": 21,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-01",
+              "home": "La Garita",
+              "away": "Las Longueras",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2024-11-30",
+              "home": "Vallinamar",
+              "away": "Valsequillo",
+              "hs": 0,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "name": "Jornada 7",
+          "matches": [
+            {
+              "date": "2024-12-05",
+              "home": "Playa D.H.",
+              "away": "Las Longueras",
+              "hs": 1,
+              "as_": 1
+            },
+            {
+              "date": "2024-12-07",
+              "home": "Las Huesas",
+              "away": "Unión Marina",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-07",
+              "home": "Calero",
+              "away": "Vallinamar",
+              "hs": 0,
+              "as_": 11
+            },
+            {
+              "date": "2024-12-10",
+              "home": "Valsequillo",
+              "away": "UD Telde",
+              "hs": 0,
+              "as_": 2
+            },
+            {
+              "date": "2024-12-07",
+              "home": "Valdecasas",
+              "away": "La Garita",
+              "hs": 1,
+              "as_": 23
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "name": "Jornada 8",
+          "matches": [
+            {
+              "date": "2024-12-13",
+              "home": "Playa D.H.",
+              "away": "Unión Marina",
+              "hs": 7,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-14",
+              "home": "Las Longueras",
+              "away": "Valdecasas",
+              "hs": 17,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-14",
+              "home": "Vallinamar",
+              "away": "Las Huesas",
+              "hs": 0,
+              "as_": 3
+            },
+            {
+              "date": "2024-12-14",
+              "home": "UD Telde",
+              "away": "Calero",
+              "hs": 21,
+              "as_": 0
+            },
+            {
+              "date": "2024-12-15",
+              "home": "La Garita",
+              "away": "Valsequillo",
+              "hs": 0,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "name": "Jornada 9",
+          "matches": [
+            {
+              "date": "2024-12-21",
+              "home": "Unión Marina",
+              "away": "Vallinamar",
+              "hs": 1,
+              "as_": 8
+            },
+            {
+              "date": "2024-12-21",
+              "home": "Las Huesas",
+              "away": "UD Telde",
+              "hs": 1,
+              "as_": 7
+            },
+            {
+              "date": "2024-12-21",
+              "home": "Calero",
+              "away": "La Garita",
+              "hs": 0,
+              "as_": 7
+            },
+            {
+              "date": "2024-12-21",
+              "home": "Valsequillo",
+              "away": "Las Longueras",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2024-12-21",
+              "home": "Valdecasas",
+              "away": "Playa D.H.",
+              "hs": 1,
+              "as_": 12
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "slug": "1benjamin1",
+      "error": "no snapshot found"
+    },
+    {
+      "slug": "1benjamin2",
+      "error": "no snapshot found"
+    },
+    {
+      "slug": "1benjamin3",
+      "error": "no snapshot found"
+    },
+    {
+      "slug": "1benjamin4",
+      "error": "<urlopen error _ssl.c:999: The handshake operation timed out>"
+    },
+    {
+      "slug": "1benjamin5",
+      "error": "no snapshot found"
+    },
+    {
+      "slug": "1benjamin6",
+      "error": "no snapshot found"
+    },
+    {
+      "slug": "1benjamin7",
+      "error": "no snapshot found"
+    },
+    {
+      "slug": "1benjamin8",
+      "error": "no snapshot found"
+    }
+  ]
+}

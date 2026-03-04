@@ -1,0 +1,49 @@
+name: Fetch Wayback 2024-2025
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch desde Wayback Machine
+        run: python3 scripts/fetch_wayback_2425.py
+        timeout-minutes: 50
+
+      - name: Importar a DB y regenerar JS
+        run: |
+          python3 scripts/import_wayback_2425.py
+          python3 scripts/generate_js.py
+
+      - name: Commit y push
+        if: always()
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add scripts/wayback_2425_raw.json futbolbase.db \
+            data-benjamin.js data-prebenjamin.js data-seasons.js \
+            data-history.js data-goleadores.js data-shields.js \
+            data-stats.js data-matchdetail.js index.html
+          if git diff --cached --quiet; then
+            echo "Sin cambios."
+          else
+            git stash
+            git pull --rebase origin main
+            git stash pop || true
+            git add scripts/wayback_2425_raw.json futbolbase.db \
+              data-benjamin.js data-prebenjamin.js data-seasons.js \
+              data-history.js data-goleadores.js data-shields.js \
+              data-stats.js data-matchdetail.js index.html
+            git commit -m "data: Wayback Machine 2024-2025 resultados"
+            git push
+          fi

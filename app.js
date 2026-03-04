@@ -124,6 +124,11 @@ function getPhases() {
     if (!map[g.phase]) map[g.phase] = [];
     map[g.phase].push(g);
   });
+  Object.values(map).forEach(arr => arr.sort((a, b) => {
+    const na = parseInt(a.name.replace(/\D/g, '')) || 0;
+    const nb = parseInt(b.name.replace(/\D/g, '')) || 0;
+    return na - nb;
+  }));
   return map;
 }
 
@@ -158,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedSeason = localStorage.getItem('season') || '';
   S.season = savedSeason;
   buildSeasonSelector();
+  updateSeasonUI();
   updateStats();
   renderSection();
   bindEvents();
@@ -406,7 +412,7 @@ function renderJornadas() {
   const container = $('#sec-jornadas');
   container.innerHTML = '';
 
-  const data = getData();
+  const data = Object.values(getPhases()).flat();
   
   // Group selector
   const selectorRow = el('div', 'selector-row');

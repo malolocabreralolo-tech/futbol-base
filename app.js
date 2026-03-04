@@ -133,7 +133,11 @@ function countStats() {
   let teams = 0, matches = 0;
   data.forEach(g => {
     teams += g.standings.length;
-    matches += (g.matches || []).length;
+    if (g.matches) {
+      matches += g.matches.length;
+    } else if (g.jornadas) {
+      Object.values(g.jornadas).forEach(function(jor) { matches += jor.length; });
+    }
   });
   // Add history matches for benjamin (current season only)
   if (!isHistorical() && S.cat === 'benjamin' && typeof HIST_MATCHES !== 'undefined') {

@@ -35,7 +35,7 @@ function teamBadgeFallback(name) {
   return `<span class="team-badge" style="background:hsl(${hue},55%,45%)">${initials}</span>`;
 }
 function normalizeTeamName(s) {
-  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['".,]/g, '').replace(/\b(CF|UD|CD|AD|SD|AFC|SC|CP|CE|CEF|SSD|ATLETICO|ATL)\b/gi, '').toLowerCase().trim().replace(/\s+/g, ' ');
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['".,‘’“”]/g, '').replace(/\b(CF|UD|CD|AD|SD|AFC|SC|CP|CE|CEF|SSD|ATLETICO|ATL)\b/gi, '').toLowerCase().trim().replace(/\s+/g, ' ');
 }
 
 let _shieldsNorm = null;

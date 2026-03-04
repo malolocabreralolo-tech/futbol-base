@@ -16,7 +16,7 @@ def normalize(name):
     name = unicodedata.normalize('NFD', name)
     name = ''.join(c for c in name if unicodedata.category(c) != 'Mn')
     # Strip punctuation and common suffixes
-    name = re.sub(r"['\",.]", '', name)
+    name = re.sub(r"['\",.‘’“”]", '', name)
     name = STRIP.sub('', name)
     return re.sub(r'\s+', ' ', name.lower()).strip()
 

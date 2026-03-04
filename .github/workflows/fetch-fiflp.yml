@@ -52,7 +52,9 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios."
           else
+            git stash
             git pull --rebase origin main
+            git stash pop
             git add scripts/fiflp_2425_raw.json futbolbase.db \
               data-benjamin.js data-prebenjamin.js data-seasons.js \
               data-history.js data-goleadores.js data-shields.js \

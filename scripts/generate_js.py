@@ -618,10 +618,16 @@ def bump_cache_version():
         return
 
     today = date.today().strftime("%Y%m%d")
+    today_display = date.today().strftime("%d/%m/%Y")
     with open(index_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     new_content = re.sub(r"\?v=\d{8}[a-z]?", f"?v={today}", content)
+    new_content = re.sub(
+        r"Última actualización: \d{2}/\d{2}/\d{4}",
+        f"Última actualización: {today_display}",
+        new_content
+    )
     if new_content != content:
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(new_content)

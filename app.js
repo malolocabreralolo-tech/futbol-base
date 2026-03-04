@@ -1234,8 +1234,8 @@ function calcHistoricalStats() {
     });
   });
 
-  var gfEntries = Object.entries(teamGF).sort(function(a,b){return b[1]-a[1];});
-  var gcEntries = Object.entries(teamGC).sort(function(a,b){return a[1]-b[1];});
+  var gfEntries = Object.entries(teamGF).filter(function(e){return e[1] > 0;}).sort(function(a,b){return b[1]-a[1];});
+  var gcEntries = Object.entries(teamGC).filter(function(e){return e[1] >= 0;}).sort(function(a,b){return a[1]-b[1];});
 
   return {
     season: {

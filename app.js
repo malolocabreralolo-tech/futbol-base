@@ -162,6 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Restore saved season
   const savedSeason = localStorage.getItem('season') || '';
   S.season = savedSeason;
+  // Restore saved category
+  const savedCat = localStorage.getItem('cat') || '';
+  if (savedCat === 'benjamin' || savedCat === 'prebenjamin') {
+    S.cat = savedCat;
+    $$('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === S.cat));
+  }
   buildSeasonSelector();
   updateSeasonUI();
   updateStats();
@@ -229,6 +235,7 @@ function bindEvents() {
   $$('.cat-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       S.cat = btn.dataset.cat;
+      localStorage.setItem('cat', S.cat);
       $$('.cat-btn').forEach(b => b.classList.toggle('active', b === btn));
       S.jorGroup = S.cat === 'benjamin' ? 'A2' : 'PG2';
       S.jorNum = '';

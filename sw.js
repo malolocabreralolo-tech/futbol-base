@@ -31,14 +31,8 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Network-first for everything: always try fresh, fall back to cache when offline
+  // Always fetch from network, no caching during development
   e.respondWith(
-    fetch(e.request).then(resp => {
-      if (resp.ok && e.request.url.startsWith(self.location.origin)) {
-        const clone = resp.clone();
-        caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
-      }
-      return resp;
-    }).catch(() => caches.match(e.request).then(cached => cached || caches.match('./index.html')))
+    fetch(e.request).catch(() => caches.match(e.request).then(cached => cached || caches.match('./index.html')))
   );
 });

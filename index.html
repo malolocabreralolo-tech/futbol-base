@@ -104,6 +104,15 @@
   <script src="./data-seasons.js?v=20260328"></script>
   <!-- APP -->
   <script src="./app.js?v=20260328"></script>
-  <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});</script>
+  <script>
+    // Force update Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(r => r.unregister());
+      }).then(() => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>

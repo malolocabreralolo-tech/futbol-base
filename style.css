@@ -780,12 +780,13 @@ body {
 @media (max-width: 768px) {
   .header { padding: 12px 12px 0; }
   .stats-bar { display: none; }
+  .season-selector { margin-top: 6px; text-align: center; }
+  .season-selector select { font-size: 12px; padding: 5px 22px 5px 8px; }
   .brand h1 { font-size: 20px; letter-spacing: 1px; }
   .brand-icon { width: 36px; height: 36px; font-size: 18px; }
   .brand .subtitle { font-size: 11px; }
   .header-top { margin-bottom: 8px; gap: 6px; }
   .season-cat-row { margin-bottom: 8px; }
-  .season-selector select { font-size: 12px; padding: 5px 22px 5px 8px; }
   .cat-btn { font-size: 14px; padding: 6px 16px; }
   .section-tab { padding: 8px 14px; font-size: 13px; }
   .main { padding: 8px 12px 32px; }

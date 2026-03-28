@@ -1293,3 +1293,28 @@ img.team-badge {
 .streak-label { font-size: 11px; color: var(--text2); }
 
 .modal-section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text2); padding: 16px 0 8px; border-top: 1px solid var(--border); margin-top: 12px; }
+
+/* ════ UNIFIED PREBENJAMIN TABLE ════ */
+.unified-table td:nth-child(3), .unified-table th:nth-child(3) {
+  text-align: center;
+  min-width: 28px;
+}
+.unified-table td:nth-child(4) {
+  font-weight: 700;
+  color: var(--accent);
+}
+.unified-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 11px;
+  color: var(--text2);
+  justify-content: center;
+}
+.unified-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}

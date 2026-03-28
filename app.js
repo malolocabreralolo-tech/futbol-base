@@ -274,6 +274,72 @@ function updateStats() {
   $('#statMatches').textContent = st.matches;
 }
 
+/* ====== CLASIFICACION UNIFICADA PREBENJAMIN ====== */
+function buildUnifiedPrebenjamin() {
+  const allTeams = [];
+  const groupSymbols = { 1: '●', 2: '▲', 3: '■', 4: '◆', 5: '★', 6: '⬟' };
+  const groupColors = { 1: '#4285F4', 2: '#EA4335', 3: '#FBBC05', 4: '#34A853', 5: '#FF6D01', 6: '#46BDC6' };
+  
+  if (typeof PREBENJAMIN === 'undefined') return document.createElement('div');
+  
+  PREBENJAMIN.forEach((g, idx) => {
+    if (!g.standings || !g.standings.length) return;
+    const groupNum = idx + 1;
+    const sym = groupSymbols[groupNum] || '○';
+    const color = groupColors[groupNum] || '#888';
+    
+    g.standings.forEach(row => {
+      const pts = row[2];
+      const j = row[3];
+      const ppg = j > 0 ? (pts / j) : 0;
+      allTeams.push({
+        name: row[1], pts, j, g_wins: row[4], e: row[5], p: row[6],
+        gf: row[7] || 0, gc: row[8] || 0, df: row[9] || 0,
+        ppg: Math.round(ppg * 100) / 100,
+        groupNum, sym, color, groupName: g.name
+      });
+    });
+  });
+  
+  // Sort by PPG first, then total points, then GD
+  allTeams.sort((a, b) => b.ppg - a.ppg || b.pts - a.pts || b.df - a.df);
+  
+  const wrapper = document.createElement('div');
+  let html = `<div class="phase-header"><span class="phase-icon">🏆</span> CLASIFICACIÓN UNIFICADA PREBENJAMÍN</div>`;
+  html += '<div class="table-wrap"><table class="standings-table unified-table"><thead><tr>';
+  html += '<th>#</th><th>Equipo</th><th>GRP</th><th>PPJ</th><th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DF</th>';
+  html += '</tr></thead><tbody>';
+  
+  allTeams.forEach((t, i) => {
+    const pos = i + 1;
+    const cls = pos <= 3 ? 'pos-' + pos : '';
+    const dfCls = t.df > 0 ? 'df-pos' : (t.df < 0 ? 'df-neg' : '');
+    const dfStr = t.df > 0 ? '+' + t.df : t.df;
+    html += `<tr class="${cls}">`;
+    html += `<td>${pos}</td>`;
+    html += `<td class="team-name-cell" data-group="${PREBENJAMIN[t.groupNum - 1].id}">${teamBadge(t.name)} ${t.name}</td>`;
+    html += `<td style="color:${t.color};font-weight:700;text-align:center" title="${t.groupName}">${t.sym}</td>`;
+    html += `<td class="pts-col">${t.ppg}</td>`;
+    html += `<td>${t.pts}</td><td>${t.j}</td><td>${t.g_wins}</td><td>${t.e}</td><td>${t.p}</td>`;
+    html += `<td>${t.gf}</td><td>${t.gc}</td>`;
+    html += `<td class="${dfCls}">${dfStr}</td>`;
+    html += '</tr>';
+  });
+  
+  html += '</tbody></table></div>';
+  html += '<div class="unified-legend">';
+  html += '<span>PPJ = Puntos por partido</span>';
+  Object.entries(groupSymbols).forEach(([num, sym]) => {
+    if (PREBENJAMIN[num - 1]) {
+      html += `<span style="color:${groupColors[num]}">${sym} ${PREBENJAMIN[num - 1].name}</span>`;
+    }
+  });
+  html += '</div>';
+  
+  wrapper.innerHTML = html;
+  return wrapper;
+}
+
 /* ====== RENDER ROUTER ====== */
 function renderSection() {
   $$('.section').forEach(s => s.classList.remove('active'));
@@ -291,6 +357,11 @@ function renderSection() {
 function renderClasif() {
   const container = $('#sec-clasif');
   container.innerHTML = '';
+
+  // Unified PreBenjamin classification for current season
+  if (S.cat === 'prebenjamin' && !isHistorical()) {
+    container.appendChild(buildUnifiedPrebenjamin());
+  }
 
   if (isHistorical()) {
     const data = getData();

@@ -277,14 +277,15 @@ function updateStats() {
 /* ====== CLASIFICACION UNIFICADA PREBENJAMIN ====== */
 function buildUnifiedPrebenjamin() {
   const allTeams = [];
-  const groupSymbols = { 1: '●', 2: '▲', 3: '■', 4: '◆', 5: '★', 6: '⬟' };
-  const groupColors = { 1: '#4285F4', 2: '#EA4335', 3: '#FBBC05', 4: '#34A853', 5: '#FF6D01', 6: '#46BDC6' };
+  const groupSymbols = { 1: '①', 2: '②', 3: '③' };
+  const groupColors = { 1: '#4285F4', 2: '#EA4335', 3: '#34A853' };
   
   if (typeof PREBENJAMIN === 'undefined') return document.createElement('div');
   
   PREBENJAMIN.forEach((g, idx) => {
     if (!g.standings || !g.standings.length) return;
     const groupNum = idx + 1;
+    if (groupNum > 3) return; // Solo grupos 1, 2, 3
     const sym = groupSymbols[groupNum] || '○';
     const color = groupColors[groupNum] || '#888';
     
@@ -329,11 +330,11 @@ function buildUnifiedPrebenjamin() {
   html += '</tbody></table></div>';
   html += '<div class="unified-legend">';
   html += '<span>PPJ = Puntos por partido</span>';
-  Object.entries(groupSymbols).forEach(([num, sym]) => {
-    if (PREBENJAMIN[num - 1]) {
-      html += `<span style="color:${groupColors[num]}">${sym} ${PREBENJAMIN[num - 1].name}</span>`;
+  for (let n = 1; n <= 3; n++) {
+    if (PREBENJAMIN[n - 1]) {
+      html += `<span style="color:${groupColors[n]}">${groupSymbols[n]} ${PREBENJAMIN[n - 1].name}</span>`;
     }
-  });
+  }
   html += '</div>';
   
   wrapper.innerHTML = html;

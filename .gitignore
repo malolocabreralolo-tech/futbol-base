@@ -1,19 +1,33 @@
-# Datos sensibles
-datos-fuente/fiflp_cookies.txt
-
 # Python
 __pycache__/
 *.pyc
 *.pyo
-.env
-
-# macOS
-.DS_Store
 
 # Editor
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# SQLite WAL files (DB itself is tracked)
-futbolbase.db-wal
-futbolbase.db-shm
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Datos sensibles
+datos-fuente/fiflp_cookies.txt
+
+# SQLite transients (futbolbase.db itself is tracked)
+*.db-wal
+*.db-shm
+database.db
+
+# Test cache
+.pytest_cache/

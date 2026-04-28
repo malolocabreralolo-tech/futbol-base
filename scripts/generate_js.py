@@ -247,7 +247,16 @@ def _goleadores_group_name(code, full_name, category_name):
 
 
 def generate_goleadores_js(conn):
-    """Generate data-goleadores.js with top scorers per group."""
+    """Generate data-goleadores.js with top scorers per group.
+
+    Aggregated from the goals event table (refreshed by fetch_futbolaspalmas.py)
+    rather than the legacy `scorers` aggregate table, which was loaded once
+    from the original data-goleadores.js and never updated.
+
+    Group by (player_name, team) — same first name in different teams stays
+    distinct. `games` is COUNT(DISTINCT match_id), an approximation of
+    matches scored in (not played in), which is what we have available.
+    """
     parts = []
 
     for cat_name, var_name in [("BENJAMIN", "GOL_BENJ"), ("PREBENJAMIN", "GOL_PREBENJ")]:
@@ -258,11 +267,23 @@ def generate_goleadores_js(conn):
             gol_name = _goleadores_group_name(code, full_name, cat_name)
 
             scorers = conn.execute(
-                """SELECT s.player_name, t.name, s.goals, s.games
-                   FROM scorers s
-                   JOIN teams t ON s.team_id = t.id
-                   WHERE s.group_id = ?
-                   ORDER BY s.goals DESC, s.games ASC""",
+                """SELECT
+                       g.player_name,
+                       t.name,
+                       COUNT(*) as goals,
+                       COUNT(DISTINCT g.match_id) as games
+                   FROM goals g
+                   JOIN matches m ON g.match_id = m.id
+                   LEFT JOIN teams t ON
+                       CASE WHEN g.side = 'h' THEN m.home_team_id
+                            ELSE m.away_team_id END = t.id
+                   WHERE m.group_id = ?
+                     AND g.player_name IS NOT NULL
+                     AND g.player_name != ''
+                     AND t.name IS NOT NULL
+                   GROUP BY g.player_name, t.id
+                   HAVING goals > 0
+                   ORDER BY goals DESC, games ASC""",
                 (gid,),
             ).fetchall()
 
@@ -611,7 +632,11 @@ def generate_seasons_js(conn):
 
 
 def bump_cache_version():
-    """Update ?v=YYYYMMDD in index.html to today's date."""
+    """Update ?v=YYYYMMDD[<suffix>] in index.html.
+
+    Same-day reruns preserve any manual <suffix> (e.g. `b`) so an emergency
+    cache bust within the same day isn't reverted by the next cron tick.
+    """
     index_path = os.path.join(PROJECT_ROOT, "index.html")
     if not os.path.exists(index_path):
         print("  WARNING: index.html not found, skipping cache bump")
@@ -622,7 +647,12 @@ def bump_cache_version():
     with open(index_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    new_content = re.sub(r"\?v=\d{8}[a-z]?", f"?v={today}", content)
+    existing = re.search(r"\?v=(\d{8})([a-z]?)", content)
+    if existing and existing.group(1) == today:
+        new_content = content  # already today, keep any suffix
+    else:
+        new_content = re.sub(r"\?v=\d{8}[a-z]?", f"?v={today}", content)
+
     new_content = re.sub(
         r"Última actualización: \d{2}/\d{2}/\d{4}",
         f"Última actualización: {today_display}",
@@ -631,9 +661,10 @@ def bump_cache_version():
     if new_content != content:
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(new_content)
-        print(f"  index.html cache version bumped to ?v={today}")
+        bumped = re.search(r"\?v=(\d{8}[a-z]?)", new_content)
+        print(f"  index.html cache version bumped to ?v={bumped.group(1) if bumped else today}")
     else:
-        print(f"  index.html already at ?v={today}")
+        print(f"  index.html already at ?v={today}{(existing.group(2) if existing else '')}")
 
 
 def write_file(filename, content):

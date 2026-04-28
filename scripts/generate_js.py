@@ -249,13 +249,8 @@ def _goleadores_group_name(code, full_name, category_name):
 def generate_goleadores_js(conn):
     """Generate data-goleadores.js with top scorers per group.
 
-    Aggregated from the goals event table (refreshed by fetch_futbolaspalmas.py)
-    rather than the legacy `scorers` aggregate table, which was loaded once
-    from the original data-goleadores.js and never updated.
-
-    Group by (player_name, team) — same first name in different teams stays
-    distinct. `games` is COUNT(DISTINCT match_id), an approximation of
-    matches scored in (not played in), which is what we have available.
+    Reads from the `scorers` table, refreshed each scrape from the
+    goleadores-base.php endpoint of futbolaspalmas.com.
     """
     parts = []
 
@@ -267,23 +262,11 @@ def generate_goleadores_js(conn):
             gol_name = _goleadores_group_name(code, full_name, cat_name)
 
             scorers = conn.execute(
-                """SELECT
-                       g.player_name,
-                       t.name,
-                       COUNT(*) as goals,
-                       COUNT(DISTINCT g.match_id) as games
-                   FROM goals g
-                   JOIN matches m ON g.match_id = m.id
-                   LEFT JOIN teams t ON
-                       CASE WHEN g.side = 'h' THEN m.home_team_id
-                            ELSE m.away_team_id END = t.id
-                   WHERE m.group_id = ?
-                     AND g.player_name IS NOT NULL
-                     AND g.player_name != ''
-                     AND t.name IS NOT NULL
-                   GROUP BY g.player_name, t.id
-                   HAVING goals > 0
-                   ORDER BY goals DESC, games ASC""",
+                """SELECT s.player_name, t.name, s.goals, s.games
+                   FROM scorers s
+                   JOIN teams t ON s.team_id = t.id
+                   WHERE s.group_id = ?
+                   ORDER BY s.goals DESC, s.games ASC""",
                 (gid,),
             ).fetchall()
 

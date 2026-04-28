@@ -24,6 +24,7 @@ FILES = [
 ]
 
 GOALS_URL = "https://futbolaspalmas.com/mostrar-mas-datos-estadisticas.php"
+TOP_SCORERS_URL = "https://futbolaspalmas.com/include2019/goleadores-base.php"
 
 # ── DB imports ────────────────────────────────────────────────────────────────
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -364,6 +365,56 @@ def parse_goals(html, hs, as_):
     return result
 
 
+def fetch_top_scorers(categoria, clasificacion):
+    """POST to goleadores-base.php. Returns HTML string with the full ranking."""
+    data = urllib.parse.urlencode({
+        "categoria": categoria,
+        "clasificacion": clasificacion,
+    }).encode()
+    req = urllib.request.Request(
+        TOP_SCORERS_URL,
+        data=data,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "text/html,*/*",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=30) as r:
+        raw = r.read()
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return raw.decode("iso-8859-1", errors="replace")
+
+
+_TOP_SCORERS_RE = re.compile(
+    r"data-bs-title=[\"']<div [^>]*>([^<]+)<br>"          # 1: team name
+    r".*?data-bs-content=[\"']<b>\s*([^<]+?)\s*</b>"       # 2: player "Apellido, Nombre"
+    r".*?</button>\s*</div>\s*"
+    r"<div [^>]*btn btn-outline-primary[^>]*>\s*(\d+)"     # 3: jugados
+    r".*?<div class=\"btn active btn-primary[^>]*>(\d+)",  # 4: goles
+    re.DOTALL,
+)
+
+
+def parse_top_scorers(html):
+    """Parse the goleadores-base.php response into [(player, team, jugados, goles), ...]."""
+    rows = []
+    for m in _TOP_SCORERS_RE.finditer(html):
+        team = m.group(1).strip()
+        player = re.sub(r'\s+', ' ', m.group(2)).strip()
+        try:
+            jugados = int(m.group(3))
+            goles = int(m.group(4))
+        except ValueError:
+            continue
+        if player and team and goles >= 0:
+            rows.append((player, team, jugados, goles))
+    return rows
+
+
 # ─── PROCESS FILE (writes to SQLite) ──────────────────────────────────────────
 
 def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
@@ -559,6 +610,29 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
                             print(f"    ! goles {home_t} vs {away_t}: {e}")
                 if fetched or skipped:
                     print(f"    Goles: {fetched} nuevos, {skipped} ya existentes")
+
+        # ── Tabla de máximos goleadores (refresh completo) ───────────────────
+        if clasi_html:
+            cat_top, clasi_top = extract_categoria(clasi_html)
+            if cat_top and clasi_top:
+                try:
+                    top_html = fetch_top_scorers(cat_top, clasi_top)
+                    rows = parse_top_scorers(top_html)
+                    if rows:
+                        conn.execute("DELETE FROM scorers WHERE group_id=?", (group_id,))
+                        for player, team, jugados, goles in rows:
+                            team_id = get_or_create_team(conn, team)
+                            conn.execute(
+                                """INSERT INTO scorers (group_id, player_name, team_id, goals, games)
+                                   VALUES (?,?,?,?,?)""",
+                                (group_id, player, team_id, goles, jugados),
+                            )
+                        print(f"    Tabla goleadores: {len(rows)} jugadores")
+                    else:
+                        print(f"    ! tabla goleadores vacía")
+                    time.sleep(DELAY)
+                except Exception as e:
+                    print(f"    ! tabla goleadores error: {e}")
 
         # Commit after each group
         conn.commit()

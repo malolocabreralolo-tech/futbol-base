@@ -1,0 +1,46 @@
+name: Debug FIFLP Copa de Campeones
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: Dump FIFLP Copa HTML structure
+        run: python3 scripts/debug_fiflp_copa.py
+        timeout-minutes: 5
+
+      - name: Commit debug output
+        run: |
+          git config user.name  "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add scripts/debug_fiflp_copa.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git stash
+            git pull --rebase origin main
+            git stash pop || true
+            git add scripts/debug_fiflp_copa.json
+            git commit -m "debug: FIFLP Copa de Campeones HTML dump"
+            git push
+          fi

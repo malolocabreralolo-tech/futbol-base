@@ -104,13 +104,88 @@ def parse_standings(page):
     return results
 
 
+def _extract_score_from_html(score_html):
+    """Parse home/away scores from FIFLP's anti-scrape obfuscated score cell.
+
+    FIFLP renders each score inside `<span class="wid2_resultado_cerrada ...">`
+    using several techniques to defeat naive scraping:
+      A) Plain digit:           <i class="fa-solid">N</i>
+      B) Hidden fallback span:  <span style="display:none;">N</span>
+      C) JS class transform:    ntype(id, X, Y, "fa-N")  (final class encodes N)
+      D) CSS pseudo-element:    <style>#ID:before{content:"N"}</style>
+      E) Packed JS injection that resolves at runtime
+
+    For each score span we try A→D in order; if all fail (case E), pull any
+    leftover standalone digit from the span markup.
+    """
+    spans = re.findall(
+        r'<span\s+class="wid2_resultado_cerrada[^"]*"[^>]*>(.*?)</span>\s*'
+        r'(?=<span\s+class="wid2_resultado_cerrada|</strong>)',
+        score_html, re.DOTALL,
+    )
+    out = []
+    for s in spans:
+        m = re.search(r'<span\s+style="display:\s*none;?"\s*>(\d+)</span>', s)
+        if m: out.append(int(m.group(1))); continue
+        m = re.search(r'ntype\([^)]*?,"fa-(\d+)"\)', s)
+        if m: out.append(int(m.group(1))); continue
+        m = re.search(r'<i class="fa-solid">\s*(\d+)\s*</i>', s)
+        if m: out.append(int(m.group(1))); continue
+        m = re.search(r':before\s*\{[^}]*content:\s*"(\d+)"', s)
+        if m: out.append(int(m.group(1))); continue
+        # Last resort: any standalone digit in the span markup that isn't
+        # part of an ntype id/arg or fa-X class.
+        candidates = re.findall(r'(?<![\w-])(\d)(?![\w-])', re.sub(
+            r'(?:ntype\([^)]*\))|(?:fa-\d)|(?:idh\d+)|(?:id="[^"]*")', '', s))
+        out.append(int(candidates[0]) if candidates else None)
+    if len(out) >= 2: return out[0], out[1]
+    if len(out) == 1: return out[0], None
+    return None, None
+
+
+def _scores_from_browser(score_cell):
+    """Last-resort: ask the browser for the actually-rendered score digits.
+
+    Reads each `.wid2_resultado_cerrada` span's :before/inner content as
+    computed by the browser AFTER FIFLP's anti-scrape JS has run.
+    """
+    try:
+        return score_cell.evaluate("""(cell) => {
+            const spans = cell.querySelectorAll('.wid2_resultado_cerrada');
+            const out = [];
+            for (const span of spans) {
+                let digit = null;
+                // 1) inner text (post-JS)
+                const txt = (span.innerText || span.textContent || '').trim();
+                let m = txt.match(/(\\d+)/);
+                if (m) { out.push(parseInt(m[1])); continue; }
+                // 2) CSS ::before content of inner elements
+                for (const el of span.querySelectorAll('*')) {
+                    const c = window.getComputedStyle(el, '::before').content;
+                    const cm = (c || '').match(/(\\d+)/);
+                    if (cm) { digit = parseInt(cm[1]); break; }
+                }
+                out.push(digit);
+            }
+            return out;
+        }""")
+    except Exception:
+        return []
+
+
 def parse_matches(page):
     matches, seen = [], set()
     for table in page.query_selector_all('table'):
         rows = table.query_selector_all('tr')
-        if len(rows) != 2: continue
+        if len(rows) not in (2, 3): continue
         r0 = rows[0].query_selector_all('td')
-        r1 = rows[1].query_selector_all('td')
+        # Some Copa de Campeones rows have 5 cells; for those, treat row 1 as
+        # the standard 3-cell match row and ignore row 0.
+        if len(r0) == 5 and len(rows) >= 2:
+            r0 = rows[1].query_selector_all('td')
+            r1 = rows[2].query_selector_all('td') if len(rows) >= 3 else []
+        else:
+            r1 = rows[1].query_selector_all('td') if len(rows) >= 2 else []
         if len(r0) != 3: continue
         home = re.sub(r'\s+', ' ', r0[0].inner_text().strip().replace('\xa0', ' ')).strip()
         away = re.sub(r'\s+', ' ', r0[2].inner_text().strip().replace('\xa0', ' ')).strip()
@@ -118,16 +193,30 @@ def parse_matches(page):
         key = f"{home}|{away}"
         if key in seen: continue
         seen.add(key)
+        # Prefer parsing the INNER HTML of the score cell — FIFLP's anti-scrape
+        # obfuscation leaves digits visible only in HTML (CSS pseudo-elements,
+        # hidden fallback spans, JS-transformed classes), not in inner_text.
+        score_html = r0[1].inner_html()
+        hs, as_ = _extract_score_from_html(score_html)
+        # Fallback: ask the browser for computed/rendered scores when the
+        # static HTML extraction missed them (packed runtime JS injection).
+        if hs is None or as_ is None:
+            browser_scores = _scores_from_browser(r0[1])
+            if len(browser_scores) >= 2:
+                if hs is None: hs = browser_scores[0]
+                if as_ is None: as_ = browser_scores[1]
         score_raw = r0[1].inner_text().strip().replace('\xa0', ' ')
         lines = [l.strip() for l in score_raw.split('\n') if l.strip()]
-        hs = as_ = None
         date_str = time_str = ''
         for line in lines:
-            m = re.match(r'^(\d*)\s*-\s*(\d*)$', line)
-            if m:
-                hs  = int(m.group(1)) if m.group(1) else None
-                as_ = int(m.group(2)) if m.group(2) else None
-            elif re.match(r'^\d{2}-\d{2}-\d{4}$', line): date_str = line
+            if hs is None and as_ is None:
+                # Fallback — only use inner_text scores if HTML extraction failed.
+                m = re.match(r'^(\d*)\s*-\s*(\d*)$', line)
+                if m:
+                    hs  = int(m.group(1)) if m.group(1) else None
+                    as_ = int(m.group(2)) if m.group(2) else None
+                    continue
+            if re.match(r'^\d{2}-\d{2}-\d{4}$', line): date_str = line
             elif re.match(r'^\d{2}:\d{2}$', line):       time_str = line
         venue = referee = ''
         if r1:

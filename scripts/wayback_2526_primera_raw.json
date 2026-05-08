@@ -1,0 +1,7444 @@
+{
+  "season": "2025-2026",
+  "groups": [
+    {
+      "phase_num": 2,
+      "group_num": 1,
+      "slug": "benjamin-primera-fase-uno",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 1",
+      "island": "gran_canaria",
+      "group_code": "FF1",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-uno/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-10",
+              "home": "San Nicolás",
+              "away": "UD Barrial",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Guayarmina",
+              "away": "UD Guía",
+              "hs": 8,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "UD Atalaya B",
+              "away": "San Nicolás",
+              "hs": 5,
+              "as_": 11
+            },
+            {
+              "date": "2025-10-16",
+              "home": "UD Barrial",
+              "away": "Guayarmina",
+              "hs": 4,
+              "as_": 9
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "UD Atalaya B",
+              "away": "UD Guía",
+              "hs": 1,
+              "as_": 10
+            },
+            {
+              "date": "2025-10-25",
+              "home": "San Nicolás",
+              "away": "Guayarmina",
+              "hs": 4,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "San Nicolás",
+              "away": "UD Guía",
+              "hs": 8,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-30",
+              "home": "UD Barrial",
+              "away": "UD Atalaya B",
+              "hs": 5,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-07",
+              "home": "UD Guía",
+              "away": "UD Barrial",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2025-11-07",
+              "home": "UD Atalaya B",
+              "away": "Guayarmina",
+              "hs": 0,
+              "as_": 11
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Guayarmina",
+          "pts": 12,
+          "j": 4,
+          "g": 4,
+          "e": 0,
+          "p": 0,
+          "gf": 33,
+          "gc": 9,
+          "df": 24
+        },
+        {
+          "pos": 2,
+          "team": "San Nicolás",
+          "pts": 9,
+          "j": 4,
+          "g": 3,
+          "e": 0,
+          "p": 1,
+          "gf": 32,
+          "gc": 11,
+          "df": 21
+        },
+        {
+          "pos": 3,
+          "team": "UD Guía",
+          "pts": 4,
+          "j": 4,
+          "g": 1,
+          "e": 1,
+          "p": 2,
+          "gf": 15,
+          "gc": 20,
+          "df": -5
+        },
+        {
+          "pos": 4,
+          "team": "UD Barrial",
+          "pts": 4,
+          "j": 4,
+          "g": 1,
+          "e": 1,
+          "p": 2,
+          "gf": 12,
+          "gc": 23,
+          "df": -11
+        },
+        {
+          "pos": 5,
+          "team": "UD Atalaya B",
+          "pts": 0,
+          "j": 4,
+          "g": 0,
+          "e": 0,
+          "p": 4,
+          "gf": 8,
+          "gc": 37,
+          "df": -29
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 2,
+      "slug": "benjamin-primera-fase-dos",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 2",
+      "island": "gran_canaria",
+      "group_code": "FF2",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-dos/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-10",
+              "home": "UD Moya",
+              "away": "UD Valleseco",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Roque Amagro",
+              "away": "Guayarmina B",
+              "hs": 19,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Santa Brígida C",
+              "away": "Gáldar CF",
+              "hs": 0,
+              "as_": 19
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-17",
+              "home": "Gáldar CF",
+              "away": "UD Moya",
+              "hs": 5,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Guayarmina B",
+              "away": "Santa Brígida C",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-18",
+              "home": "UD Valleseco",
+              "away": "Roque Amagro",
+              "hs": 7,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-24",
+              "home": "Guayarmina B",
+              "away": "UD Valleseco",
+              "hs": 0,
+              "as_": 16
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Roque Amagro",
+              "away": "Gáldar CF",
+              "hs": 8,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Santa Brígida C",
+              "away": "UD Moya",
+              "hs": 1,
+              "as_": 12
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "UD Moya",
+              "away": "Roque Amagro",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-31",
+              "home": "Gáldar CF",
+              "away": "Guayarmina B",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Santa Brígida C",
+              "away": "UD Valleseco",
+              "hs": 0,
+              "as_": 12
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "UD Valleseco",
+              "away": "Gáldar CF",
+              "hs": 7,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Guayarmina B",
+              "away": "UD Moya",
+              "hs": 0,
+              "as_": 14
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Roque Amagro",
+              "away": "Santa Brígida C",
+              "hs": 16,
+              "as_": 1
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "UD Valleseco",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 47,
+          "gc": 0,
+          "df": 47
+        },
+        {
+          "pos": 2,
+          "team": "UD Moya",
+          "pts": 10,
+          "j": 5,
+          "g": 3,
+          "e": 1,
+          "p": 1,
+          "gf": 37,
+          "gc": 12,
+          "df": 25
+        },
+        {
+          "pos": 3,
+          "team": "Roque Amagro",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 44,
+          "gc": 17,
+          "df": 27
+        },
+        {
+          "pos": 4,
+          "team": "Gáldar CF",
+          "pts": 7,
+          "j": 5,
+          "g": 2,
+          "e": 1,
+          "p": 2,
+          "gf": 31,
+          "gc": 21,
+          "df": 10
+        },
+        {
+          "pos": 5,
+          "team": "Guayarmina B",
+          "pts": 1,
+          "j": 5,
+          "g": 0,
+          "e": 1,
+          "p": 4,
+          "gf": 3,
+          "gc": 55,
+          "df": -52
+        },
+        {
+          "pos": 6,
+          "team": "Santa Brígida C",
+          "pts": 1,
+          "j": 5,
+          "g": 0,
+          "e": 1,
+          "p": 4,
+          "gf": 4,
+          "gc": 61,
+          "df": -57
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 3,
+      "slug": "benjamin-primera-fase-tres",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 3",
+      "island": "gran_canaria",
+      "group_code": "FF3",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-tres/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-10",
+              "home": "Valkyrias Bec.",
+              "away": "CD Firgas",
+              "hs": 19,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Arucas C",
+              "away": "Cardones",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Santa Brígida B",
+              "away": "UD Atalaya",
+              "hs": 0,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "UD Atalaya",
+              "away": "Valkyrias Bec.",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Cardones",
+              "away": "Santa Brígida B",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-18",
+              "home": "CD Firgas",
+              "away": "Arucas C",
+              "hs": 3,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Cardones",
+              "away": "CD Firgas",
+              "hs": 10,
+              "as_": 6
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Arucas C",
+              "away": "UD Atalaya",
+              "hs": 6,
+              "as_": 13
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Santa Brígida B",
+              "away": "Valkyrias Bec.",
+              "hs": 3,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "UD Atalaya",
+              "away": "Cardones",
+              "hs": 9,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-31",
+              "home": "Valkyrias Bec.",
+              "away": "Arucas C",
+              "hs": 9,
+              "as_": 7
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Santa Brígida B",
+              "away": "CD Firgas",
+              "hs": 9,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "CD Firgas",
+              "away": "UD Atalaya",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Cardones",
+              "away": "Valkyrias Bec.",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Arucas C",
+              "away": "Santa Brígida B",
+              "hs": 5,
+              "as_": 6
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "UD Atalaya",
+          "pts": 13,
+          "j": 5,
+          "g": 4,
+          "e": 1,
+          "p": 0,
+          "gf": 34,
+          "gc": 15,
+          "df": 19
+        },
+        {
+          "pos": 2,
+          "team": "Valkyrias Bec.",
+          "pts": 11,
+          "j": 5,
+          "g": 3,
+          "e": 2,
+          "p": 0,
+          "gf": 39,
+          "gc": 19,
+          "df": 20
+        },
+        {
+          "pos": 3,
+          "team": "Santa Brígida B",
+          "pts": 10,
+          "j": 5,
+          "g": 3,
+          "e": 1,
+          "p": 1,
+          "gf": 23,
+          "gc": 15,
+          "df": 8
+        },
+        {
+          "pos": 4,
+          "team": "Cardones",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 23,
+          "gc": 27,
+          "df": -4
+        },
+        {
+          "pos": 5,
+          "team": "Arucas C",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 26,
+          "gc": 36,
+          "df": -10
+        },
+        {
+          "pos": 6,
+          "team": "CD Firgas",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 16,
+          "gc": 49,
+          "df": -33
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 4,
+      "slug": "benjamin-primera-fase-cuatro",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 4",
+      "island": "gran_canaria",
+      "group_code": "FF4",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-cuatro/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-10",
+              "home": "Bañaderos",
+              "away": "Moya B",
+              "hs": 10,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-10",
+              "home": "UD Teror",
+              "away": "Goleta",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-11",
+              "home": "San Mateo",
+              "away": "Santidad",
+              "hs": 4,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-17",
+              "home": "Moya B",
+              "away": "UD Teror",
+              "hs": 1,
+              "as_": 12
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Goleta",
+              "away": "San Mateo",
+              "hs": 7,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Santidad",
+              "away": "Bañaderos",
+              "hs": 7,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-24",
+              "home": "Moya B",
+              "away": "Santidad",
+              "hs": 0,
+              "as_": 14
+            },
+            {
+              "date": "2025-10-24",
+              "home": "Bañaderos",
+              "away": "Goleta",
+              "hs": 4,
+              "as_": 9
+            },
+            {
+              "date": "2025-10-24",
+              "home": "UD Teror",
+              "away": "San Mateo",
+              "hs": 7,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "UD Teror",
+              "away": "Santidad",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Goleta",
+              "away": "Moya B",
+              "hs": 18,
+              "as_": 1
+            },
+            {
+              "date": "2025-11-01",
+              "home": "San Mateo",
+              "away": "Bañaderos",
+              "hs": 3,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-07",
+              "home": "Santidad",
+              "away": "Goleta",
+              "hs": 6,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Moya B",
+              "away": "San Mateo",
+              "hs": 4,
+              "as_": 12
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Bañaderos",
+              "away": "UD Teror",
+              "hs": 2,
+              "as_": 8
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Goleta",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 43,
+          "gc": 17,
+          "df": 26
+        },
+        {
+          "pos": 2,
+          "team": "Santidad",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 33,
+          "gc": 13,
+          "df": 20
+        },
+        {
+          "pos": 3,
+          "team": "UD Teror",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 31,
+          "gc": 15,
+          "df": 16
+        },
+        {
+          "pos": 4,
+          "team": "San Mateo",
+          "pts": 7,
+          "j": 5,
+          "g": 2,
+          "e": 1,
+          "p": 2,
+          "gf": 28,
+          "gc": 24,
+          "df": 4
+        },
+        {
+          "pos": 5,
+          "team": "Bañaderos",
+          "pts": 4,
+          "j": 5,
+          "g": 1,
+          "e": 1,
+          "p": 3,
+          "gf": 21,
+          "gc": 27,
+          "df": -6
+        },
+        {
+          "pos": 6,
+          "team": "Moya B",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 6,
+          "gc": 66,
+          "df": -60
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 5,
+      "slug": "benjamin-primera-fase-cinco",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 5",
+      "island": "gran_canaria",
+      "group_code": "FF5",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-cinco/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Corazón Mª C",
+              "away": "Costa Ayala",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Acodetti B",
+              "away": "Atl. Angostura",
+              "hs": 13,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Las Mesas Hu.",
+              "away": "Arucas CF",
+              "hs": 8,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-15",
+              "home": "Costa Ayala",
+              "away": "Acodetti B",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Atl. Angostura",
+              "away": "Las Mesas Hu.",
+              "hs": 0,
+              "as_": 14
+            },
+            {
+              "date": "2025-10-19",
+              "home": "Arucas CF",
+              "away": "Corazón Mª C",
+              "hs": 21,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Atl. Angostura",
+              "away": "Costa Ayala",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Acodetti B",
+              "away": "Arucas CF",
+              "hs": 1,
+              "as_": 15
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Las Mesas Hu.",
+              "away": "Corazón Mª C",
+              "hs": 11,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "Corazón Mª C",
+              "away": "Acodetti B",
+              "hs": 7,
+              "as_": 6
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Las Mesas Hu.",
+              "away": "Costa Ayala",
+              "hs": 11,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Arucas CF",
+              "away": "Atl. Angostura",
+              "hs": 14,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-07",
+              "home": "Costa Ayala",
+              "away": "Arucas CF",
+              "hs": 0,
+              "as_": 10
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Atl. Angostura",
+              "away": "Corazón Mª C",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Acodetti B",
+              "away": "Las Mesas Hu.",
+              "hs": 3,
+              "as_": 7
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Las Mesas Hu.",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 51,
+          "gc": 8,
+          "df": 43
+        },
+        {
+          "pos": 2,
+          "team": "Arucas CF",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 65,
+          "gc": 10,
+          "df": 55
+        },
+        {
+          "pos": 3,
+          "team": "Corazón Mª C",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 20,
+          "gc": 44,
+          "df": -24
+        },
+        {
+          "pos": 4,
+          "team": "Acodetti B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 26,
+          "gc": 34,
+          "df": -8
+        },
+        {
+          "pos": 5,
+          "team": "Costa Ayala",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 10,
+          "gc": 32,
+          "df": -22
+        },
+        {
+          "pos": 6,
+          "team": "Atl. Angostura",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 6,
+          "gc": 50,
+          "df": -44
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 6,
+      "slug": "benjamin-primera-fase-seis",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 6",
+      "island": "gran_canaria",
+      "group_code": "FF6",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-seis/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Acodetti CF",
+              "away": "Heidelberg",
+              "hs": 11,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-12",
+              "home": "San Lázaro B",
+              "away": "Muelle Grande",
+              "hs": 0,
+              "as_": 13
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Arucas B",
+              "away": "Veteranos B",
+              "hs": 12,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Heidelberg",
+              "away": "Arucas B",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Muelle Grande",
+              "away": "Acodetti CF",
+              "hs": 3,
+              "as_": 15
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Veteranos B",
+              "away": "San Lázaro B",
+              "hs": 13,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Heidelberg",
+              "away": "Muelle Grande",
+              "hs": 6,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Acodetti CF",
+              "away": "Veteranos B",
+              "hs": 20,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Arucas B",
+              "away": "San Lázaro B",
+              "hs": 19,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-02",
+              "home": "Veteranos B",
+              "away": "Heidelberg",
+              "hs": 1,
+              "as_": 19
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Arucas B",
+              "away": "Muelle Grande",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2025-11-02",
+              "home": "San Lázaro B",
+              "away": "Acodetti CF",
+              "hs": 1,
+              "as_": 24
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Muelle Grande",
+              "away": "Veteranos B",
+              "hs": 7,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Heidelberg",
+              "away": "San Lázaro B",
+              "hs": 30,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Acodetti CF",
+              "away": "Arucas B",
+              "hs": 9,
+              "as_": 2
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Acodetti CF",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 79,
+          "gc": 9,
+          "df": 70
+        },
+        {
+          "pos": 2,
+          "team": "Heidelberg",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 60,
+          "gc": 19,
+          "df": 41
+        },
+        {
+          "pos": 3,
+          "team": "Arucas B",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 40,
+          "gc": 19,
+          "df": 21
+        },
+        {
+          "pos": 4,
+          "team": "Muelle Grande",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 30,
+          "gc": 30,
+          "df": 0
+        },
+        {
+          "pos": 5,
+          "team": "Veteranos B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 23,
+          "gc": 58,
+          "df": -35
+        },
+        {
+          "pos": 6,
+          "team": "San Lázaro B",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 2,
+          "gc": 99,
+          "df": -97
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 7,
+      "slug": "benjamin-primera-fase-siete",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 7",
+      "island": "gran_canaria",
+      "group_code": "FF7",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-siete/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Unión Viera C",
+              "away": "Carnevali",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-16",
+              "home": "San Antonio",
+              "away": "Tamaraceite B",
+              "hs": 2,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Corazón Mª",
+              "away": "Unión Viera C",
+              "hs": 7,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-19",
+              "home": "Carnevali",
+              "away": "San Antonio",
+              "hs": 6,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Corazón Mª",
+              "away": "Tamaraceite B",
+              "hs": 9,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Unión Viera C",
+              "away": "San Antonio",
+              "hs": 10,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-02",
+              "home": "Unión Viera C",
+              "away": "Tamaraceite B",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Carnevali",
+              "away": "Corazón Mª",
+              "hs": 1,
+              "as_": 8
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Tamaraceite B",
+              "away": "Carnevali",
+              "hs": 5,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Corazón Mª",
+              "away": "San Antonio",
+              "hs": 13,
+              "as_": 0
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Corazón Mª",
+          "pts": 12,
+          "j": 4,
+          "g": 4,
+          "e": 0,
+          "p": 0,
+          "gf": 37,
+          "gc": 8,
+          "df": 29
+        },
+        {
+          "pos": 2,
+          "team": "Unión Viera C",
+          "pts": 9,
+          "j": 4,
+          "g": 3,
+          "e": 0,
+          "p": 1,
+          "gf": 23,
+          "gc": 15,
+          "df": 8
+        },
+        {
+          "pos": 3,
+          "team": "Tamaraceite B",
+          "pts": 4,
+          "j": 4,
+          "g": 1,
+          "e": 1,
+          "p": 2,
+          "gf": 17,
+          "gc": 21,
+          "df": -4
+        },
+        {
+          "pos": 4,
+          "team": "Carnevali",
+          "pts": 4,
+          "j": 4,
+          "g": 1,
+          "e": 1,
+          "p": 2,
+          "gf": 16,
+          "gc": 20,
+          "df": -4
+        },
+        {
+          "pos": 5,
+          "team": "San Antonio",
+          "pts": 0,
+          "j": 4,
+          "g": 0,
+          "e": 0,
+          "p": 4,
+          "gf": 5,
+          "gc": 34,
+          "df": -29
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 8,
+      "slug": "benjamin-primera-fase-ocho",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 8",
+      "island": "gran_canaria",
+      "group_code": "FF8",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-ocho/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Inter/Pilar CF",
+              "away": "Unión Viera B",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-11",
+              "home": "RC Victoria B",
+              "away": "Atl. Isleta",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Arucas D",
+              "away": "Las Palmas",
+              "hs": 1,
+              "as_": 17
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Unión Viera B",
+              "away": "Arucas D",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Atl. Isleta",
+              "away": "Inter/Pilar CF",
+              "hs": 8,
+              "as_": 9
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Las Palmas",
+              "away": "RC Victoria B",
+              "hs": 18,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "RC Victoria B",
+              "away": "Inter/Pilar CF",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Las Palmas",
+              "away": "Unión Viera B",
+              "hs": 22,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Arucas D",
+              "away": "Atl. Isleta",
+              "hs": 18,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "RC Victoria B",
+              "away": "Unión Viera B",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Atl. Isleta",
+              "away": "Las Palmas",
+              "hs": 0,
+              "as_": 24
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Inter/Pilar CF",
+              "away": "Arucas D",
+              "hs": 7,
+              "as_": 10
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Unión Viera B",
+              "away": "Atl. Isleta",
+              "hs": 14,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Las Palmas",
+              "away": "Inter/Pilar CF",
+              "hs": 16,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Arucas D",
+              "away": "RC Victoria B",
+              "hs": 11,
+              "as_": 3
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Las Palmas",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 97,
+          "gc": 2,
+          "df": 95
+        },
+        {
+          "pos": 2,
+          "team": "Unión Viera B",
+          "pts": 10,
+          "j": 5,
+          "g": 3,
+          "e": 1,
+          "p": 1,
+          "gf": 27,
+          "gc": 30,
+          "df": -3
+        },
+        {
+          "pos": 3,
+          "team": "Arucas D",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 43,
+          "gc": 32,
+          "df": 11
+        },
+        {
+          "pos": 4,
+          "team": "Inter/Pilar CF",
+          "pts": 7,
+          "j": 5,
+          "g": 2,
+          "e": 1,
+          "p": 2,
+          "gf": 25,
+          "gc": 38,
+          "df": -13
+        },
+        {
+          "pos": 5,
+          "team": "RC Victoria B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 11,
+          "gc": 41,
+          "df": -30
+        },
+        {
+          "pos": 6,
+          "team": "Atl. Isleta",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 11,
+          "gc": 71,
+          "df": -60
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 9,
+      "slug": "benjamin-primera-fase-nueve",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 9",
+      "island": "gran_canaria",
+      "group_code": "FF9",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-nueve/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Heidelberg B",
+              "away": "Pedro Hidalgo B",
+              "hs": 3,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-11",
+              "home": "San Lázaro",
+              "away": "Santa Brígida",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-12",
+              "home": "RC Victoria",
+              "away": "AD Huracán",
+              "hs": 0,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Pedro Hidalgo B",
+              "away": "RC Victoria",
+              "hs": 0,
+              "as_": 12
+            },
+            {
+              "date": "2025-10-19",
+              "home": "Santa Brígida",
+              "away": "Heidelberg B",
+              "hs": 12,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-19",
+              "home": "AD Huracán",
+              "away": "San Lázaro",
+              "hs": 13,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Pedro Hidalgo B",
+              "away": "Santa Brígida",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Heidelberg B",
+              "away": "AD Huracán",
+              "hs": 0,
+              "as_": 14
+            },
+            {
+              "date": "2025-10-26",
+              "home": "RC Victoria",
+              "away": "San Lázaro",
+              "hs": 6,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-02",
+              "home": "San Lázaro",
+              "away": "Heidelberg B",
+              "hs": 10,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-02",
+              "home": "RC Victoria",
+              "away": "Santa Brígida",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2025-11-02",
+              "home": "AD Huracán",
+              "away": "Pedro Hidalgo B",
+              "hs": 12,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Pedro Hidalgo B",
+              "away": "San Lázaro",
+              "hs": 0,
+              "as_": 3
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Heidelberg B",
+              "away": "RC Victoria",
+              "hs": 0,
+              "as_": 19
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Santa Brígida",
+              "away": "AD Huracán",
+              "hs": 1,
+              "as_": 5
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "AD Huracán",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 50,
+          "gc": 2,
+          "df": 48
+        },
+        {
+          "pos": 2,
+          "team": "RC Victoria",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 43,
+          "gc": 9,
+          "df": 34
+        },
+        {
+          "pos": 3,
+          "team": "San Lázaro",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 21,
+          "gc": 21,
+          "df": 0
+        },
+        {
+          "pos": 4,
+          "team": "Santa Brígida",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 23,
+          "gc": 19,
+          "df": 4
+        },
+        {
+          "pos": 5,
+          "team": "Heidelberg B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 4,
+          "gc": 56,
+          "df": -52
+        },
+        {
+          "pos": 6,
+          "team": "Pedro Hidalgo B",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 2,
+          "gc": 36,
+          "df": -34
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 10,
+      "slug": "benjamin-primera-fase-diez",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 10",
+      "island": "gran_canaria",
+      "group_code": "FF10",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-diez/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "CD Batán",
+              "away": "Real Sporting B",
+              "hs": 0,
+              "as_": 25
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Unión Viera",
+              "away": "Atl. Isleta B",
+              "hs": 22,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Tamaraceite",
+              "away": "Las Torres",
+              "hs": 7,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Real Sporting B",
+              "away": "Unión Viera",
+              "hs": 2,
+              "as_": 21
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Atl. Isleta B",
+              "away": "Tamaraceite",
+              "hs": 0,
+              "as_": 20
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Las Torres",
+              "away": "CD Batán",
+              "hs": 30,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Real Sporting B",
+              "away": "Las Torres",
+              "hs": 1,
+              "as_": 20
+            },
+            {
+              "date": "2025-10-25",
+              "home": "CD Batán",
+              "away": "Atl. Isleta B",
+              "hs": 2,
+              "as_": 14
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Unión Viera",
+              "away": "Tamaraceite",
+              "hs": 4,
+              "as_": 7
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "Unión Viera",
+              "away": "Las Torres",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Atl. Isleta B",
+              "away": "Real Sporting B",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Tamaraceite",
+              "away": "CD Batán",
+              "hs": 10,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Las Torres",
+              "away": "Atl. Isleta B",
+              "hs": 21,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Real Sporting B",
+              "away": "Tamaraceite",
+              "hs": 2,
+              "as_": 21
+            },
+            {
+              "date": "2025-11-08",
+              "home": "CD Batán",
+              "away": "Unión Viera",
+              "hs": 0,
+              "as_": 41
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Tamaraceite",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 65,
+          "gc": 9,
+          "df": 56
+        },
+        {
+          "pos": 2,
+          "team": "Unión Viera",
+          "pts": 10,
+          "j": 5,
+          "g": 3,
+          "e": 1,
+          "p": 1,
+          "gf": 91,
+          "gc": 12,
+          "df": 79
+        },
+        {
+          "pos": 3,
+          "team": "Las Torres",
+          "pts": 10,
+          "j": 5,
+          "g": 3,
+          "e": 1,
+          "p": 1,
+          "gf": 75,
+          "gc": 11,
+          "df": 64
+        },
+        {
+          "pos": 4,
+          "team": "Real Sporting B",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 35,
+          "gc": 66,
+          "df": -31
+        },
+        {
+          "pos": 5,
+          "team": "Atl. Isleta B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 18,
+          "gc": 70,
+          "df": -52
+        },
+        {
+          "pos": 6,
+          "team": "CD Batán",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 4,
+          "gc": 120,
+          "df": -116
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 11,
+      "slug": "benjamin-primera-fase-once",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 11",
+      "island": "gran_canaria",
+      "group_code": "FF11",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-once/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Simusetti CF",
+              "away": "Corazón Mª B",
+              "hs": 18,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Gran Canaria C",
+              "away": "Fundación Guini.",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Carnevali B",
+              "away": "Lomo Blanco",
+              "hs": 5,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Fundación Guini.",
+              "away": "Simusetti CF",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Corazón Mª B",
+              "away": "Carnevali B",
+              "hs": 3,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-19",
+              "home": "Lomo Blanco",
+              "away": "Gran Canaria C",
+              "hs": 1,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Simusetti CF",
+              "away": "Carnevali B",
+              "hs": 8,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-29",
+              "home": "Gran Canaria C",
+              "away": "Corazón Mª B",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-29",
+              "home": "Fundación Guini.",
+              "away": "Lomo Blanco",
+              "hs": 8,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "Simusetti CF",
+              "away": "Lomo Blanco",
+              "hs": 11,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Corazón Mª B",
+              "away": "Fundación Guini.",
+              "hs": 3,
+              "as_": 6
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Carnevali B",
+              "away": "Gran Canaria C",
+              "hs": 2,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Lomo Blanco",
+              "away": "Corazón Mª B",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Fundación Guini.",
+              "away": "Carnevali B",
+              "hs": 10,
+              "as_": 4
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Gran Canaria C",
+              "away": "Simusetti CF",
+              "hs": 1,
+              "as_": 1
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Simusetti CF",
+          "pts": 11,
+          "j": 5,
+          "g": 3,
+          "e": 2,
+          "p": 0,
+          "gf": 41,
+          "gc": 10,
+          "df": 31
+        },
+        {
+          "pos": 2,
+          "team": "Gran Canaria C",
+          "pts": 11,
+          "j": 5,
+          "g": 3,
+          "e": 2,
+          "p": 0,
+          "gf": 16,
+          "gc": 9,
+          "df": 7
+        },
+        {
+          "pos": 3,
+          "team": "Fundación Guini.",
+          "pts": 10,
+          "j": 5,
+          "g": 3,
+          "e": 1,
+          "p": 1,
+          "gf": 31,
+          "gc": 17,
+          "df": 14
+        },
+        {
+          "pos": 4,
+          "team": "Carnevali B",
+          "pts": 5,
+          "j": 5,
+          "g": 1,
+          "e": 2,
+          "p": 2,
+          "gf": 21,
+          "gc": 28,
+          "df": -7
+        },
+        {
+          "pos": 5,
+          "team": "Lomo Blanco",
+          "pts": 4,
+          "j": 5,
+          "g": 1,
+          "e": 1,
+          "p": 3,
+          "gf": 15,
+          "gc": 28,
+          "df": -13
+        },
+        {
+          "pos": 6,
+          "team": "Corazón Mª B",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 10,
+          "gc": 42,
+          "df": -32
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 12,
+      "slug": "benjamin-primera-fase-doce",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 12",
+      "island": "gran_canaria",
+      "group_code": "FF12",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-doce/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "UD Piletas",
+              "away": "Corazón Mª D",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Siete Palmas",
+              "away": "CD Batán",
+              "hs": 7,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-17",
+              "home": "CD Batán",
+              "away": "Huracán B",
+              "hs": 0,
+              "as_": 24
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Corazón Mª D",
+              "away": "Siete Palmas",
+              "hs": 9,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-24",
+              "home": "CD Batán",
+              "away": "Corazón Mª D",
+              "hs": 2,
+              "as_": 9
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Huracán B",
+              "away": "UD Piletas",
+              "hs": 5,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "Huracán B",
+              "away": "Corazón Mª D",
+              "hs": 10,
+              "as_": 2
+            },
+            {
+              "date": "2025-11-01",
+              "home": "UD Piletas",
+              "away": "Siete Palmas",
+              "hs": 5,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "CD Batán",
+              "away": "UD Piletas",
+              "hs": 0,
+              "as_": 12
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Siete Palmas",
+              "away": "Huracán B",
+              "hs": 3,
+              "as_": 12
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Huracán B",
+          "pts": 12,
+          "j": 4,
+          "g": 4,
+          "e": 0,
+          "p": 0,
+          "gf": 51,
+          "gc": 9,
+          "df": 42
+        },
+        {
+          "pos": 2,
+          "team": "UD Piletas",
+          "pts": 9,
+          "j": 4,
+          "g": 3,
+          "e": 0,
+          "p": 1,
+          "gf": 28,
+          "gc": 6,
+          "df": 22
+        },
+        {
+          "pos": 3,
+          "team": "Corazón Mª D",
+          "pts": 6,
+          "j": 4,
+          "g": 2,
+          "e": 0,
+          "p": 2,
+          "gf": 21,
+          "gc": 22,
+          "df": -1
+        },
+        {
+          "pos": 4,
+          "team": "Siete Palmas",
+          "pts": 3,
+          "j": 4,
+          "g": 1,
+          "e": 0,
+          "p": 3,
+          "gf": 13,
+          "gc": 28,
+          "df": -15
+        },
+        {
+          "pos": 5,
+          "team": "CD Batán",
+          "pts": 0,
+          "j": 4,
+          "g": 0,
+          "e": 0,
+          "p": 4,
+          "gf": 4,
+          "gc": 52,
+          "df": -48
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 13,
+      "slug": "benjamin-primera-fase-trece",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 13",
+      "island": "gran_canaria",
+      "group_code": "FF13",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-trece/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Pedro Hidalgo",
+              "away": "Real Sporting",
+              "hs": 10,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Veteranos",
+              "away": "Gran Canaria B",
+              "hs": 21,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Guiniguada",
+              "away": "Las Mesas Hu. B",
+              "hs": 8,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Las Mesas Hu. B",
+              "away": "Veteranos",
+              "hs": 0,
+              "as_": 12
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Real Sporting",
+              "away": "Guiniguada",
+              "hs": 2,
+              "as_": 10
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Gran Canaria B",
+              "away": "Pedro Hidalgo",
+              "hs": 1,
+              "as_": 8
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Guiniguada",
+              "away": "Gran Canaria B",
+              "hs": 15,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Veteranos",
+              "away": "Pedro Hidalgo",
+              "hs": 12,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Las Mesas Hu. B",
+              "away": "Real Sporting",
+              "hs": 5,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "Pedro Hidalgo",
+              "away": "Guiniguada",
+              "hs": 4,
+              "as_": 10
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Gran Canaria B",
+              "away": "Las Mesas Hu. B",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Veteranos",
+              "away": "Real Sporting",
+              "hs": 22,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Real Sporting",
+              "away": "Gran Canaria B",
+              "hs": 7,
+              "as_": 3
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Las Mesas Hu. B",
+              "away": "Pedro Hidalgo",
+              "hs": 1,
+              "as_": 7
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Guiniguada",
+              "away": "Veteranos",
+              "hs": 0,
+              "as_": 6
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Veteranos",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 73,
+          "gc": 3,
+          "df": 70
+        },
+        {
+          "pos": 2,
+          "team": "Guiniguada",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 43,
+          "gc": 14,
+          "df": 29
+        },
+        {
+          "pos": 3,
+          "team": "Pedro Hidalgo",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 30,
+          "gc": 25,
+          "df": 5
+        },
+        {
+          "pos": 4,
+          "team": "Las Mesas Hu. B",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 12,
+          "gc": 31,
+          "df": -19
+        },
+        {
+          "pos": 5,
+          "team": "Real Sporting",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 13,
+          "gc": 50,
+          "df": -37
+        },
+        {
+          "pos": 6,
+          "team": "Gran Canaria B",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 7,
+          "gc": 55,
+          "df": -48
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 14,
+      "slug": "benjamin-primera-fase-catorce",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 14",
+      "island": "gran_canaria",
+      "group_code": "FF14",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-catorce/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-10",
+              "home": "Gran Canaria",
+              "away": "Atl. Marzasport",
+              "hs": 9,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-11",
+              "home": "UD Jinámar",
+              "away": "UD Valsequillo",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Puertos LP",
+              "away": "La Garita B",
+              "hs": 5,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-16",
+              "home": "Atl. Marzasport",
+              "away": "Puertos LP",
+              "hs": 3,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-18",
+              "home": "UD Valsequillo",
+              "away": "Gran Canaria",
+              "hs": 1,
+              "as_": 14
+            },
+            {
+              "date": "2025-10-18",
+              "home": "La Garita B",
+              "away": "UD Jinámar",
+              "hs": 7,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-24",
+              "home": "Atl. Marzasport",
+              "away": "UD Valsequillo",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-24",
+              "home": "Gran Canaria",
+              "away": "La Garita B",
+              "hs": 3,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Puertos LP",
+              "away": "UD Jinámar",
+              "hs": 5,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "La Garita B",
+              "away": "Atl. Marzasport",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-01",
+              "home": "UD Jinámar",
+              "away": "Gran Canaria",
+              "hs": 0,
+              "as_": 9
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Puertos LP",
+              "away": "UD Valsequillo",
+              "hs": 9,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-07",
+              "home": "UD Valsequillo",
+              "away": "La Garita B",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Atl. Marzasport",
+              "away": "UD Jinámar",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Gran Canaria",
+              "away": "Puertos LP",
+              "hs": 6,
+              "as_": 3
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Gran Canaria",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 41,
+          "gc": 6,
+          "df": 35
+        },
+        {
+          "pos": 2,
+          "team": "Atl. Marzasport",
+          "pts": 10,
+          "j": 5,
+          "g": 3,
+          "e": 1,
+          "p": 1,
+          "gf": 15,
+          "gc": 13,
+          "df": 2
+        },
+        {
+          "pos": 3,
+          "team": "Puertos LP",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 22,
+          "gc": 14,
+          "df": 8
+        },
+        {
+          "pos": 4,
+          "team": "UD Valsequillo",
+          "pts": 4,
+          "j": 5,
+          "g": 1,
+          "e": 1,
+          "p": 3,
+          "gf": 12,
+          "gc": 30,
+          "df": -18
+        },
+        {
+          "pos": 5,
+          "team": "La Garita B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 11,
+          "gc": 21,
+          "df": -10
+        },
+        {
+          "pos": 6,
+          "team": "UD Jinámar",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 10,
+          "gc": 27,
+          "df": -17
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 15,
+      "slug": "benjamin-primera-fase-quince",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 15",
+      "island": "gran_canaria",
+      "group_code": "FF15",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-quince/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-10",
+              "home": "CD Calero",
+              "away": "Las Huesas B",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-10",
+              "home": "Ojos de Garza",
+              "away": "Longueras B",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Telde C",
+              "away": "La Garita",
+              "hs": 3,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Las Huesas B",
+              "away": "Telde C",
+              "hs": 1,
+              "as_": 13
+            },
+            {
+              "date": "2025-10-18",
+              "home": "La Garita",
+              "away": "Ojos de Garza",
+              "hs": 12,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Longueras B",
+              "away": "CD Calero",
+              "hs": 5,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-24",
+              "home": "CD Calero",
+              "away": "La Garita",
+              "hs": 1,
+              "as_": 11
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Las Huesas B",
+              "away": "Longueras B",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-26",
+              "home": "Telde C",
+              "away": "Ojos de Garza",
+              "hs": 9,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "Ojos de Garza",
+              "away": "CD Calero",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-11-01",
+              "home": "La Garita",
+              "away": "Las Huesas B",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-02",
+              "home": "Telde C",
+              "away": "Longueras B",
+              "hs": 8,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Longueras B",
+              "away": "La Garita",
+              "hs": 2,
+              "as_": 9
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Las Huesas B",
+              "away": "Ojos de Garza",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-08",
+              "home": "CD Calero",
+              "away": "Telde C",
+              "hs": 0,
+              "as_": 11
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "La Garita",
+          "pts": 13,
+          "j": 5,
+          "g": 4,
+          "e": 1,
+          "p": 0,
+          "gf": 44,
+          "gc": 6,
+          "df": 38
+        },
+        {
+          "pos": 2,
+          "team": "Telde C",
+          "pts": 13,
+          "j": 5,
+          "g": 4,
+          "e": 1,
+          "p": 0,
+          "gf": 44,
+          "gc": 6,
+          "df": 38
+        },
+        {
+          "pos": 3,
+          "team": "Ojos de Garza",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 18,
+          "gc": 27,
+          "df": -9
+        },
+        {
+          "pos": 4,
+          "team": "Longueras B",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 15,
+          "gc": 25,
+          "df": -10
+        },
+        {
+          "pos": 5,
+          "team": "Las Huesas B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 5,
+          "gc": 33,
+          "df": -28
+        },
+        {
+          "pos": 6,
+          "team": "CD Calero",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 7,
+          "gc": 36,
+          "df": -29
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 16,
+      "slug": "benjamin-primera-fase-dieciseis",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 16",
+      "island": "gran_canaria",
+      "group_code": "FF16",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-dieciseis/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Las Huesas",
+              "away": "Playa D.H.",
+              "hs": 17,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Telde B",
+              "away": "Las Longueras",
+              "hs": 0,
+              "as_": 11
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Vallinamar",
+              "away": "Unión Marina",
+              "hs": 7,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-17",
+              "home": "Unión Marina",
+              "away": "Telde B",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Playa D.H.",
+              "away": "Vallinamar",
+              "hs": 0,
+              "as_": 9
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Las Longueras",
+              "away": "Las Huesas",
+              "hs": 2,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Las Huesas",
+              "away": "Unión Marina",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Vallinamar",
+              "away": "Telde B",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-28",
+              "home": "Playa D.H.",
+              "away": "Las Longueras",
+              "hs": 2,
+              "as_": 20
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "Unión Marina",
+              "away": "Playa D.H.",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Telde B",
+              "away": "Las Huesas",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Vallinamar",
+              "away": "Las Longueras",
+              "hs": 1,
+              "as_": 8
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Las Longueras",
+              "away": "Unión Marina",
+              "hs": 11,
+              "as_": 3
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Playa D.H.",
+              "away": "Telde B",
+              "hs": 2,
+              "as_": 10
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Las Huesas",
+              "away": "Vallinamar",
+              "hs": 13,
+              "as_": 0
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Las Huesas",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 41,
+          "gc": 5,
+          "df": 36
+        },
+        {
+          "pos": 2,
+          "team": "Las Longueras",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 52,
+          "gc": 9,
+          "df": 43
+        },
+        {
+          "pos": 3,
+          "team": "Vallinamar",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 21,
+          "gc": 24,
+          "df": -3
+        },
+        {
+          "pos": 4,
+          "team": "Telde B",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 17,
+          "gc": 22,
+          "df": -5
+        },
+        {
+          "pos": 5,
+          "team": "Unión Marina",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 13,
+          "gc": 28,
+          "df": -15
+        },
+        {
+          "pos": 6,
+          "team": "Playa D.H.",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 6,
+          "gc": 62,
+          "df": -56
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 17,
+      "slug": "benjamin-primera-fase-diecisiete",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 17",
+      "island": "gran_canaria",
+      "group_code": "FF17",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-diecisiete/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Unión Carrizal",
+              "away": "UD Telde",
+              "hs": 4,
+              "as_": 7
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Valdecasas",
+              "away": "Valsequillo",
+              "hs": 0,
+              "as_": 15
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "Las Majoreras",
+              "away": "Valdecasas",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Valsequillo",
+              "away": "Unión Carrizal",
+              "hs": 2,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-24",
+              "home": "Unión Carrizal",
+              "away": "Las Majoreras",
+              "hs": 8,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-25",
+              "home": "UD Telde",
+              "away": "Valsequillo",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-29",
+              "home": "Las Majoreras",
+              "away": "UD Telde",
+              "hs": 3,
+              "as_": 16
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Valdecasas",
+              "away": "Unión Carrizal",
+              "hs": 0,
+              "as_": 11
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Valsequillo",
+              "away": "Las Majoreras",
+              "hs": 15,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-08",
+              "home": "UD Telde",
+              "away": "Valdecasas",
+              "hs": 14,
+              "as_": 0
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "UD Telde",
+          "pts": 12,
+          "j": 4,
+          "g": 4,
+          "e": 0,
+          "p": 0,
+          "gf": 44,
+          "gc": 8,
+          "df": 36
+        },
+        {
+          "pos": 2,
+          "team": "Unión Carrizal",
+          "pts": 9,
+          "j": 4,
+          "g": 3,
+          "e": 0,
+          "p": 1,
+          "gf": 27,
+          "gc": 9,
+          "df": 18
+        },
+        {
+          "pos": 3,
+          "team": "Valsequillo",
+          "pts": 6,
+          "j": 4,
+          "g": 2,
+          "e": 0,
+          "p": 2,
+          "gf": 33,
+          "gc": 11,
+          "df": 22
+        },
+        {
+          "pos": 4,
+          "team": "Las Majoreras",
+          "pts": 3,
+          "j": 4,
+          "g": 1,
+          "e": 0,
+          "p": 3,
+          "gf": 9,
+          "gc": 42,
+          "df": -33
+        },
+        {
+          "pos": 5,
+          "team": "Valdecasas",
+          "pts": 0,
+          "j": 4,
+          "g": 0,
+          "e": 0,
+          "p": 4,
+          "gf": 3,
+          "gc": 46,
+          "df": -43
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 18,
+      "slug": "benjamin-primera-fase-dieciocho",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 18",
+      "island": "gran_canaria",
+      "group_code": "FF18",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-dieciocho/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Futboltec",
+              "away": "Castillo CF",
+              "hs": 14,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Las Rosas B",
+              "away": "Arinaga B",
+              "hs": 1,
+              "as_": 8
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Doramas B",
+              "away": "Ingenio B",
+              "hs": 6,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-17",
+              "home": "Castillo CF",
+              "away": "Las Rosas B",
+              "hs": 6,
+              "as_": 11
+            },
+            {
+              "date": "2025-10-17",
+              "home": "Ingenio B",
+              "away": "Futboltec",
+              "hs": 7,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-17",
+              "home": "Arinaga B",
+              "away": "Doramas B",
+              "hs": 0,
+              "as_": 14
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-24",
+              "home": "Castillo CF",
+              "away": "Ingenio B",
+              "hs": 2,
+              "as_": 13
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Futboltec",
+              "away": "Arinaga B",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Las Rosas B",
+              "away": "Doramas B",
+              "hs": 0,
+              "as_": 13
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-04",
+              "home": "Las Rosas B",
+              "away": "Ingenio B",
+              "hs": 1,
+              "as_": 13
+            },
+            {
+              "date": "2025-11-05",
+              "home": "Arinaga B",
+              "away": "Castillo CF",
+              "hs": 10,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-31",
+              "home": "Doramas B",
+              "away": "Futboltec",
+              "hs": 12,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-07",
+              "home": "Ingenio B",
+              "away": "Arinaga B",
+              "hs": 12,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Castillo CF",
+              "away": "Doramas B",
+              "hs": 0,
+              "as_": 10
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Futboltec",
+              "away": "Las Rosas B",
+              "hs": 6,
+              "as_": 1
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Doramas B",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 55,
+          "gc": 3,
+          "df": 52
+        },
+        {
+          "pos": 2,
+          "team": "Ingenio B",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 47,
+          "gc": 12,
+          "df": 35
+        },
+        {
+          "pos": 3,
+          "team": "Futboltec",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 31,
+          "gc": 23,
+          "df": 8
+        },
+        {
+          "pos": 4,
+          "team": "Arinaga B",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 19,
+          "gc": 34,
+          "df": -15
+        },
+        {
+          "pos": 5,
+          "team": "Las Rosas B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 14,
+          "gc": 46,
+          "df": -32
+        },
+        {
+          "pos": 6,
+          "team": "Castillo CF",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 10,
+          "gc": 58,
+          "df": -48
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 19,
+      "slug": "benjamin-primera-fase-diecinueve",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 19",
+      "island": "gran_canaria",
+      "group_code": "FF19",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-diecinueve/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-10",
+              "home": "CD Ingenio",
+              "away": "Vecindario C",
+              "hs": 9,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-11",
+              "home": "San Pedro B",
+              "away": "Agüimes CF",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2025-10-11",
+              "home": "CD Cerruda",
+              "away": "Doramas",
+              "hs": 0,
+              "as_": 8
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-17",
+              "home": "Agüimes CF",
+              "away": "CD Ingenio",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Doramas",
+              "away": "San Pedro B",
+              "hs": 12,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Vecindario C",
+              "away": "CD Cerruda",
+              "hs": 2,
+              "as_": 8
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Doramas",
+              "away": "Vecindario C",
+              "hs": 10,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-25",
+              "home": "CD Cerruda",
+              "away": "Agüimes CF",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-25",
+              "home": "San Pedro B",
+              "away": "CD Ingenio",
+              "hs": 1,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "Agüimes CF",
+              "away": "Doramas",
+              "hs": 0,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-31",
+              "home": "CD Ingenio",
+              "away": "CD Cerruda",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-31",
+              "home": "San Pedro B",
+              "away": "Vecindario C",
+              "hs": 1,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Vecindario C",
+              "away": "Agüimes CF",
+              "hs": 7,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Doramas",
+              "away": "CD Ingenio",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-11-08",
+              "home": "CD Cerruda",
+              "away": "San Pedro B",
+              "hs": 9,
+              "as_": 0
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Doramas",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 38,
+          "gc": 4,
+          "df": 34
+        },
+        {
+          "pos": 2,
+          "team": "CD Ingenio",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 26,
+          "gc": 11,
+          "df": 15
+        },
+        {
+          "pos": 3,
+          "team": "CD Cerruda",
+          "pts": 7,
+          "j": 5,
+          "g": 2,
+          "e": 1,
+          "p": 2,
+          "gf": 24,
+          "gc": 19,
+          "df": 5
+        },
+        {
+          "pos": 4,
+          "team": "Vecindario C",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 14,
+          "gc": 33,
+          "df": -19
+        },
+        {
+          "pos": 5,
+          "team": "Agüimes CF",
+          "pts": 4,
+          "j": 5,
+          "g": 1,
+          "e": 1,
+          "p": 3,
+          "gf": 18,
+          "gc": 24,
+          "df": -6
+        },
+        {
+          "pos": 6,
+          "team": "San Pedro B",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 5,
+          "gc": 34,
+          "df": -29
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 20,
+      "slug": "benjamin-primera-fase-veinte",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 20",
+      "island": "gran_canaria",
+      "group_code": "FF20",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-veinte/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-10",
+              "home": "Loz Vélez",
+              "away": "Casa Pastores",
+              "hs": 0,
+              "as_": 10
+            },
+            {
+              "date": "2025-10-11",
+              "home": "CD Arinaga",
+              "away": "Cerruda B",
+              "hs": 5,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-15",
+              "home": "Las Rosas",
+              "away": "UD Vecindario",
+              "hs": 1,
+              "as_": 16
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-17",
+              "home": "Casa Pastores",
+              "away": "Las Rosas",
+              "hs": 2,
+              "as_": 1
+            },
+            {
+              "date": "2025-10-17",
+              "home": "UD Vecindario",
+              "away": "CD Arinaga",
+              "hs": 16,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Cerruda B",
+              "away": "Loz Vélez",
+              "hs": 4,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-28",
+              "home": "Loz Vélez",
+              "away": "Las Rosas",
+              "hs": 3,
+              "as_": 8
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Cerruda B",
+              "away": "UD Vecindario",
+              "hs": 0,
+              "as_": 14
+            },
+            {
+              "date": "2025-10-25",
+              "home": "CD Arinaga",
+              "away": "Casa Pastores",
+              "hs": 1,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "Loz Vélez",
+              "away": "UD Vecindario",
+              "hs": 0,
+              "as_": 17
+            },
+            {
+              "date": "2025-11-03",
+              "home": "Las Rosas",
+              "away": "CD Arinaga",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-30",
+              "home": "Casa Pastores",
+              "away": "Cerruda B",
+              "hs": 4,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-07",
+              "home": "UD Vecindario",
+              "away": "Casa Pastores",
+              "hs": 5,
+              "as_": 0
+            },
+            {
+              "date": "2025-11-07",
+              "home": "Cerruda B",
+              "away": "Las Rosas",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-07",
+              "home": "CD Arinaga",
+              "away": "Loz Vélez",
+              "hs": 6,
+              "as_": 4
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "UD Vecindario",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 68,
+          "gc": 1,
+          "df": 67
+        },
+        {
+          "pos": 2,
+          "team": "Casa Pastores",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 21,
+          "gc": 9,
+          "df": 12
+        },
+        {
+          "pos": 3,
+          "team": "CD Arinaga",
+          "pts": 7,
+          "j": 5,
+          "g": 2,
+          "e": 1,
+          "p": 2,
+          "gf": 17,
+          "gc": 34,
+          "df": -17
+        },
+        {
+          "pos": 4,
+          "team": "Las Rosas",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 19,
+          "gc": 27,
+          "df": -8
+        },
+        {
+          "pos": 5,
+          "team": "Cerruda B",
+          "pts": 4,
+          "j": 5,
+          "g": 1,
+          "e": 1,
+          "p": 3,
+          "gf": 12,
+          "gc": 31,
+          "df": -19
+        },
+        {
+          "pos": 6,
+          "team": "Loz Vélez",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 10,
+          "gc": 45,
+          "df": -35
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 21,
+      "slug": "benjamin-primera-fase-veintiuno",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 21",
+      "island": "gran_canaria",
+      "group_code": "FF21",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-veintiuno/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "UD Balos",
+              "away": "Estrella CF",
+              "hs": 1,
+              "as_": 8
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Vecindario B",
+              "away": "M. Training B",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-11",
+              "home": "San Pedro",
+              "away": "C. Pastores B",
+              "hs": 4,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "C. Pastores B",
+              "away": "Vecindario B",
+              "hs": 1,
+              "as_": 13
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Estrella CF",
+              "away": "San Pedro",
+              "hs": 6,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-18",
+              "home": "M. Training B",
+              "away": "UD Balos",
+              "hs": 7,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "UD Balos",
+              "away": "C. Pastores B",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-25",
+              "home": "San Pedro",
+              "away": "Vecindario B",
+              "hs": 3,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Estrella CF",
+              "away": "M. Training B",
+              "hs": 4,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-10-31",
+              "home": "San Pedro",
+              "away": "M. Training B",
+              "hs": 2,
+              "as_": 11
+            },
+            {
+              "date": "2025-10-31",
+              "home": "C. Pastores B",
+              "away": "Estrella CF",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-31",
+              "home": "Vecindario B",
+              "away": "UD Balos",
+              "hs": 5,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "M. Training B",
+              "away": "C. Pastores B",
+              "hs": 10,
+              "as_": 1
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Estrella CF",
+              "away": "Vecindario B",
+              "hs": 6,
+              "as_": 5
+            },
+            {
+              "date": "2025-11-08",
+              "home": "UD Balos",
+              "away": "San Pedro",
+              "hs": 2,
+              "as_": 7
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "M. Training B",
+          "pts": 13,
+          "j": 5,
+          "g": 4,
+          "e": 1,
+          "p": 0,
+          "gf": 38,
+          "gc": 12,
+          "df": 26
+        },
+        {
+          "pos": 2,
+          "team": "Estrella CF",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 28,
+          "gc": 19,
+          "df": 9
+        },
+        {
+          "pos": 3,
+          "team": "Vecindario B",
+          "pts": 10,
+          "j": 5,
+          "g": 3,
+          "e": 1,
+          "p": 1,
+          "gf": 32,
+          "gc": 17,
+          "df": 15
+        },
+        {
+          "pos": 4,
+          "team": "San Pedro",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 20,
+          "gc": 26,
+          "df": -6
+        },
+        {
+          "pos": 5,
+          "team": "C. Pastores B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 11,
+          "gc": 34,
+          "df": -23
+        },
+        {
+          "pos": 6,
+          "team": "UD Balos",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 10,
+          "gc": 31,
+          "df": -21
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 22,
+      "slug": "benjamin-primera-fase-veintidos",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 22",
+      "island": "gran_canaria",
+      "group_code": "FF22",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-veintidos/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-11",
+              "home": "Maspalomas B",
+              "away": "CF Mogán",
+              "hs": 3,
+              "as_": 5
+            },
+            {
+              "date": "2025-10-11",
+              "home": "CD Tablero",
+              "away": "San Fernando",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2025-10-12",
+              "home": "Arguineguín B",
+              "away": "Femarguín",
+              "hs": 1,
+              "as_": 13
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-18",
+              "home": "CF Mogán",
+              "away": "Arguineguín B",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-18",
+              "home": "San Fernando",
+              "away": "Maspalomas B",
+              "hs": 8,
+              "as_": 3
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Femarguín",
+              "away": "CD Tablero",
+              "hs": 10,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "Arguineguín B",
+              "away": "San Fernando",
+              "hs": 1,
+              "as_": 13
+            },
+            {
+              "date": "2025-10-25",
+              "home": "CD Tablero",
+              "away": "Maspalomas B",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Femarguín",
+              "away": "CF Mogán",
+              "hs": 7,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "CD Tablero",
+              "away": "CF Mogán",
+              "hs": 9,
+              "as_": 1
+            },
+            {
+              "date": "2025-11-01",
+              "home": "San Fernando",
+              "away": "Femarguín",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Maspalomas B",
+              "away": "Arguineguín B",
+              "hs": 9,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "CF Mogán",
+              "away": "San Fernando",
+              "hs": 2,
+              "as_": 9
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Femarguín",
+              "away": "Maspalomas B",
+              "hs": 12,
+              "as_": 2
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Arguineguín B",
+              "away": "CD Tablero",
+              "hs": 0,
+              "as_": 13
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "San Fernando",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 37,
+          "gc": 11,
+          "df": 26
+        },
+        {
+          "pos": 2,
+          "team": "Femarguín",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 44,
+          "gc": 9,
+          "df": 35
+        },
+        {
+          "pos": 3,
+          "team": "CD Tablero",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 31,
+          "gc": 17,
+          "df": 14
+        },
+        {
+          "pos": 4,
+          "team": "CF Mogán",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 16,
+          "gc": 30,
+          "df": -14
+        },
+        {
+          "pos": 5,
+          "team": "Maspalomas B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 19,
+          "gc": 29,
+          "df": -10
+        },
+        {
+          "pos": 6,
+          "team": "Arguineguín B",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 4,
+          "gc": 55,
+          "df": -51
+        }
+      ]
+    },
+    {
+      "phase_num": 2,
+      "group_num": 23,
+      "slug": "benjamin-primera-fase-veintitres",
+      "category": "benjamin",
+      "phase": "Fase Final GC",
+      "group_name": "BENJAMIN FASE FINAL GC - GRUPO 23",
+      "island": "gran_canaria",
+      "group_code": "FF23",
+      "source": "live",
+      "url": "https://futbolaspalmas.com/benjamin-primera-fase-veintitres/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-10-16",
+              "home": "Tablero B",
+              "away": "Arguineguín",
+              "hs": 1,
+              "as_": 12
+            },
+            {
+              "date": "2025-10-11",
+              "home": "San Fernando B",
+              "away": "Maspalomas",
+              "hs": 1,
+              "as_": 15
+            },
+            {
+              "date": "2025-10-11",
+              "home": "Maspa Training",
+              "away": "Mogán B",
+              "hs": 18,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-10-22",
+              "home": "Maspalomas",
+              "away": "Tablero B",
+              "hs": 17,
+              "as_": 2
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Mogán B",
+              "away": "San Fernando B",
+              "hs": 1,
+              "as_": 16
+            },
+            {
+              "date": "2025-10-18",
+              "home": "Arguineguín",
+              "away": "Maspa Training",
+              "hs": 2,
+              "as_": 11
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-10-25",
+              "home": "San Fernando B",
+              "away": "Arguineguín",
+              "hs": 3,
+              "as_": 9
+            },
+            {
+              "date": "2025-10-25",
+              "home": "Maspalomas",
+              "away": "Mogán B",
+              "hs": 22,
+              "as_": 0
+            },
+            {
+              "date": "2025-10-29",
+              "home": "Tablero B",
+              "away": "Maspa Training",
+              "hs": 0,
+              "as_": 16
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-11-01",
+              "home": "Tablero B",
+              "away": "Mogán B",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2025-11-05",
+              "home": "Arguineguín",
+              "away": "Maspalomas",
+              "hs": 4,
+              "as_": 12
+            },
+            {
+              "date": "2025-11-01",
+              "home": "Maspa Training",
+              "away": "San Fernando B",
+              "hs": 18,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-11-08",
+              "home": "Mogán B",
+              "away": "Arguineguín",
+              "hs": 1,
+              "as_": 12
+            },
+            {
+              "date": "2025-11-08",
+              "home": "Maspalomas",
+              "away": "Maspa Training",
+              "hs": 2,
+              "as_": 12
+            },
+            {
+              "date": "2025-11-08",
+              "home": "San Fernando B",
+              "away": "Tablero B",
+              "hs": 6,
+              "as_": 1
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Maspa Training",
+          "pts": 15,
+          "j": 5,
+          "g": 5,
+          "e": 0,
+          "p": 0,
+          "gf": 75,
+          "gc": 4,
+          "df": 71
+        },
+        {
+          "pos": 2,
+          "team": "Maspalomas",
+          "pts": 12,
+          "j": 5,
+          "g": 4,
+          "e": 0,
+          "p": 1,
+          "gf": 68,
+          "gc": 19,
+          "df": 49
+        },
+        {
+          "pos": 3,
+          "team": "Arguineguín",
+          "pts": 9,
+          "j": 5,
+          "g": 3,
+          "e": 0,
+          "p": 2,
+          "gf": 39,
+          "gc": 28,
+          "df": 11
+        },
+        {
+          "pos": 4,
+          "team": "San Fernando B",
+          "pts": 6,
+          "j": 5,
+          "g": 2,
+          "e": 0,
+          "p": 3,
+          "gf": 26,
+          "gc": 44,
+          "df": -18
+        },
+        {
+          "pos": 5,
+          "team": "Tablero B",
+          "pts": 3,
+          "j": 5,
+          "g": 1,
+          "e": 0,
+          "p": 4,
+          "gf": 9,
+          "gc": 53,
+          "df": -44
+        },
+        {
+          "pos": 6,
+          "team": "Mogán B",
+          "pts": 0,
+          "j": 5,
+          "g": 0,
+          "e": 0,
+          "p": 5,
+          "gf": 4,
+          "gc": 73,
+          "df": -69
+        }
+      ]
+    },
+    {
+      "phase_num": 1,
+      "group_num": 1,
+      "slug": "benjamin-gran-canaria-uno",
+      "category": "benjamin",
+      "phase": "Primera Fase GC",
+      "group_name": "BENJAMIN PRIMERA FASE GC - GRUPO 1",
+      "island": "gran_canaria",
+      "group_code": "P1",
+      "source": "wayback",
+      "wayback_timestamp": "20251018140133",
+      "url": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-01-17",
+              "home": "UD Barrial",
+              "away": "Atco. Huracán",
+              "hs": 1,
+              "as_": 11
+            },
+            {
+              "date": "2025-01-18",
+              "home": "Garepa Viera",
+              "away": "Acodetti CF",
+              "hs": 0,
+              "as_": 4
+            },
+            {
+              "date": "2025-01-18",
+              "home": "UD Moya",
+              "away": "Veteranos",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2025-01-18",
+              "home": "Cardones",
+              "away": "Las Mesas Hu.",
+              "hs": 2,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-01-25",
+              "home": "Acodetti CF",
+              "away": "UD Barrial",
+              "hs": 8,
+              "as_": 3
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Atco. Huracán",
+              "away": "UD Moya",
+              "hs": 3,
+              "as_": 0
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Santidad",
+              "away": "Cardones",
+              "hs": 7,
+              "as_": 4
+            },
+            {
+              "date": "2025-01-26",
+              "home": "Las Mesas Hu.",
+              "away": "Garepa Viera",
+              "hs": 0,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-01-31",
+              "home": "UD Barrial",
+              "away": "Las Mesas Hu.",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2025-02-01",
+              "home": "Veteranos",
+              "away": "Atco. Huracán",
+              "hs": 1,
+              "as_": 4
+            },
+            {
+              "date": "2025-02-01",
+              "home": "UD Moya",
+              "away": "Acodetti CF",
+              "hs": 0,
+              "as_": 7
+            },
+            {
+              "date": "2025-02-01",
+              "home": "Garepa Viera",
+              "away": "Santidad",
+              "hs": 5,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-02-08",
+              "home": "Acodetti CF",
+              "away": "Veteranos",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2025-02-08",
+              "home": "Cardones",
+              "away": "Garepa Viera",
+              "hs": 1,
+              "as_": 3
+            },
+            {
+              "date": "2025-02-06",
+              "home": "Santidad",
+              "away": "UD Barrial",
+              "hs": 4,
+              "as_": 9
+            },
+            {
+              "date": "2025-02-09",
+              "home": "Las Mesas Hu.",
+              "away": "UD Moya",
+              "hs": 2,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-02-14",
+              "home": "UD Barrial",
+              "away": "Cardones",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-15",
+              "home": "Veteranos",
+              "away": "Las Mesas Hu.",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-18",
+              "home": "Atco. Huracán",
+              "away": "Acodetti CF",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-15",
+              "home": "UD Moya",
+              "away": "Santidad",
+              "hs": 3,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "name": "Jornada 6",
+          "matches": [
+            {
+              "date": "2025-02-22",
+              "home": "Cardones",
+              "away": "UD Moya",
+              "hs": 3,
+              "as_": 5
+            },
+            {
+              "date": "2025-02-22",
+              "home": "Santidad",
+              "away": "Veteranos",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2025-02-23",
+              "home": "Las Mesas Hu.",
+              "away": "Atco. Huracán",
+              "hs": 1,
+              "as_": 10
+            },
+            {
+              "date": "2025-02-23",
+              "home": "Garepa Viera",
+              "away": "UD Barrial",
+              "hs": 2,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "name": "Jornada 7",
+          "matches": [
+            {
+              "date": "2025-03-01",
+              "home": "Acodetti CF",
+              "away": "Las Mesas Hu.",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2025-02-28",
+              "home": "UD Moya",
+              "away": "Garepa Viera",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Atco. Huracán",
+              "away": "Santidad",
+              "hs": 20,
+              "as_": 0
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Veteranos",
+              "away": "Cardones",
+              "hs": 11,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "name": "Jornada 8",
+          "matches": [
+            {
+              "date": "2025-03-07",
+              "home": "UD Barrial",
+              "away": "UD Moya",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-08",
+              "home": "Garepa Viera",
+              "away": "Veteranos",
+              "hs": 1,
+              "as_": 7
+            },
+            {
+              "date": "2025-03-08",
+              "home": "Cardones",
+              "away": "Atco. Huracán",
+              "hs": 0,
+              "as_": 10
+            },
+            {
+              "date": "2025-03-08",
+              "home": "Santidad",
+              "away": "Acodetti CF",
+              "hs": 3,
+              "as_": 7
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "name": "Jornada 9",
+          "matches": [
+            {
+              "date": "2025-03-15",
+              "home": "Veteranos",
+              "away": "UD Barrial",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-15",
+              "home": "Acodetti CF",
+              "away": "Cardones",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-16",
+              "home": "Las Mesas Hu.",
+              "away": "Santidad",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-16",
+              "home": "Atco. Huracán",
+              "away": "Garepa Viera",
+              "hs": 7,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 10,
+          "name": "Jornada 10",
+          "matches": [
+            {
+              "date": "2025-03-22",
+              "home": "Acodetti CF",
+              "away": "Garepa Viera",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Veteranos",
+              "away": "UD Moya",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Atco. Huracán",
+              "away": "UD Barrial",
+              "hs": 14,
+              "as_": 0
+            },
+            {
+              "date": "2025-03-21",
+              "home": "Las Mesas Hu.",
+              "away": "Cardones",
+              "hs": 2,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 11,
+          "name": "Jornada 11",
+          "matches": [
+            {
+              "date": "2025-03-28",
+              "home": "UD Barrial",
+              "away": "Acodetti CF",
+              "hs": 5,
+              "as_": 5
+            },
+            {
+              "date": "2025-03-29",
+              "home": "UD Moya",
+              "away": "Atco. Huracán",
+              "hs": 0,
+              "as_": 9
+            },
+            {
+              "date": "2025-03-28",
+              "home": "Cardones",
+              "away": "Santidad",
+              "hs": 2,
+              "as_": 6
+            },
+            {
+              "date": "2025-03-30",
+              "home": "Garepa Viera",
+              "away": "Las Mesas Hu.",
+              "hs": 0,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 12,
+          "name": "Jornada 12",
+          "matches": [
+            {
+              "date": "2025-04-05",
+              "home": "Acodetti CF",
+              "away": "UD Moya",
+              "hs": 11,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-05",
+              "home": "Atco. Huracán",
+              "away": "Veteranos",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2025-04-05",
+              "home": "Santidad",
+              "away": "Garepa Viera",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2025-04-06",
+              "home": "Las Mesas Hu.",
+              "away": "UD Barrial",
+              "hs": 1,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 13,
+          "name": "Jornada 13",
+          "matches": [
+            {
+              "date": "2025-04-11",
+              "home": "UD Barrial",
+              "away": "Santidad",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Veteranos",
+              "away": "Acodetti CF",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2025-04-12",
+              "home": "UD Moya",
+              "away": "Las Mesas Hu.",
+              "hs": 1,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-13",
+              "home": "Garepa Viera",
+              "away": "Cardones",
+              "hs": 2,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 14,
+          "name": "Jornada 14",
+          "matches": [
+            {
+              "date": "2025-04-23",
+              "home": "Acodetti CF",
+              "away": "Atco. Huracán",
+              "hs": 2,
+              "as_": 6
+            },
+            {
+              "date": "2025-04-25",
+              "home": "Cardones",
+              "away": "UD Barrial",
+              "hs": 1,
+              "as_": 6
+            },
+            {
+              "date": "2025-04-24",
+              "home": "Santidad",
+              "away": "UD Moya",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2025-04-27",
+              "home": "Las Mesas Hu.",
+              "away": "Veteranos",
+              "hs": 1,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 15,
+          "name": "Jornada 15",
+          "matches": [
+            {
+              "date": "2025-05-02",
+              "home": "UD Barrial",
+              "away": "Garepa Viera",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2025-05-03",
+              "home": "Veteranos",
+              "away": "Santidad",
+              "hs": 13,
+              "as_": 0
+            },
+            {
+              "date": "2025-05-03",
+              "home": "UD Moya",
+              "away": "Cardones",
+              "hs": 7,
+              "as_": 4
+            },
+            {
+              "date": "2025-05-05",
+              "home": "Atco. Huracán",
+              "away": "Las Mesas Hu.",
+              "hs": 8,
+              "as_": 0
+            }
+          ]
+        },
+        {
+          "num": 16,
+          "name": "Jornada 16",
+          "matches": [
+            {
+              "date": "2025-05-10",
+              "home": "Cardones",
+              "away": "Veteranos",
+              "hs": 3,
+              "as_": 9
+            },
+            {
+              "date": "2025-05-10",
+              "home": "Santidad",
+              "away": "Atco. Huracán",
+              "hs": 1,
+              "as_": 10
+            },
+            {
+              "date": "2025-05-13",
+              "home": "Garepa Viera",
+              "away": "UD Moya",
+              "hs": 4,
+              "as_": 0
+            },
+            {
+              "date": "2025-05-11",
+              "home": "Las Mesas Hu.",
+              "away": "Acodetti CF",
+              "hs": 1,
+              "as_": 9
+            }
+          ]
+        },
+        {
+          "num": 17,
+          "name": "Jornada 17",
+          "matches": [
+            {
+              "date": "2025-05-17",
+              "home": "Acodetti CF",
+              "away": "Santidad",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2025-05-19",
+              "home": "Veteranos",
+              "away": "Garepa Viera",
+              "hs": 10,
+              "as_": 1
+            },
+            {
+              "date": "2025-05-14",
+              "home": "Atco. Huracán",
+              "away": "Cardones",
+              "hs": 13,
+              "as_": 0
+            },
+            {
+              "date": "2025-05-17",
+              "home": "UD Moya",
+              "away": "UD Barrial",
+              "hs": 1,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 18,
+          "name": "Jornada 18",
+          "matches": [
+            {
+              "date": "2025-05-27",
+              "home": "UD Barrial",
+              "away": "Veteranos",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-05-24",
+              "home": "Cardones",
+              "away": "Acodetti CF",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2025-05-24",
+              "home": "Santidad",
+              "away": "Las Mesas Hu.",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2025-05-24",
+              "home": "Garepa Viera",
+              "away": "Atco. Huracán",
+              "hs": 0,
+              "as_": 12
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Atco. Huracán",
+          "pts": 46,
+          "j": 16,
+          "g": 15,
+          "e": 1,
+          "p": 0,
+          "gf": 144,
+          "gc": 9,
+          "df": 135
+        },
+        {
+          "pos": 2,
+          "team": "Acodetti CF",
+          "pts": 40,
+          "j": 16,
+          "g": 13,
+          "e": 1,
+          "p": 2,
+          "gf": 87,
+          "gc": 33,
+          "df": 54
+        },
+        {
+          "pos": 3,
+          "team": "Veteranos",
+          "pts": 33,
+          "j": 16,
+          "g": 10,
+          "e": 3,
+          "p": 3,
+          "gf": 83,
+          "gc": 30,
+          "df": 53
+        },
+        {
+          "pos": 4,
+          "team": "UD Barrial",
+          "pts": 28,
+          "j": 16,
+          "g": 9,
+          "e": 1,
+          "p": 6,
+          "gf": 57,
+          "gc": 65,
+          "df": -8
+        },
+        {
+          "pos": 5,
+          "team": "Garepa Viera",
+          "pts": 18,
+          "j": 16,
+          "g": 6,
+          "e": 0,
+          "p": 10,
+          "gf": 33,
+          "gc": 67,
+          "df": -34
+        },
+        {
+          "pos": 6,
+          "team": "UD Moya",
+          "pts": 18,
+          "j": 16,
+          "g": 5,
+          "e": 3,
+          "p": 8,
+          "gf": 36,
+          "gc": 60,
+          "df": -24
+        },
+        {
+          "pos": 7,
+          "team": "Las Mesas Hu.",
+          "pts": 13,
+          "j": 16,
+          "g": 3,
+          "e": 4,
+          "p": 9,
+          "gf": 23,
+          "gc": 64,
+          "df": -41
+        },
+        {
+          "pos": 8,
+          "team": "Santidad",
+          "pts": 7,
+          "j": 16,
+          "g": 2,
+          "e": 1,
+          "p": 13,
+          "gf": 36,
+          "gc": 107,
+          "df": -71
+        },
+        {
+          "pos": 9,
+          "team": "Cardones",
+          "pts": 6,
+          "j": 16,
+          "g": 2,
+          "e": 0,
+          "p": 14,
+          "gf": 34,
+          "gc": 98,
+          "df": -64
+        }
+      ]
+    },
+    {
+      "phase_num": 1,
+      "group_num": 13,
+      "slug": "benjamin-gran-canaria-trece",
+      "category": "benjamin",
+      "phase": "Primera Fase GC",
+      "group_name": "BENJAMIN PRIMERA FASE GC - GRUPO 13",
+      "island": "gran_canaria",
+      "group_code": "P13",
+      "source": "wayback",
+      "wayback_timestamp": "20251011193918",
+      "url": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-01-17",
+              "home": "UD Guía",
+              "away": "Lomo Blanco B",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2025-01-17",
+              "home": "Bañaderos B",
+              "away": "Corazón Mª B",
+              "hs": 2,
+              "as_": 12
+            },
+            {
+              "date": "2025-01-17",
+              "home": "UD Teror",
+              "away": "Cardones B",
+              "hs": 3,
+              "as_": 8
+            },
+            {
+              "date": "2025-01-18",
+              "home": "R. Amagro Atl.",
+              "away": "San Nicolás",
+              "hs": 3,
+              "as_": 8
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-01-24",
+              "home": "San Nicolás",
+              "away": "UD Guía",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Corazón Mª B",
+              "away": "R. Amagro Atl.",
+              "hs": 15,
+              "as_": 0
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Lomo Blanco B",
+              "away": "UD Teror",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Cardones B",
+              "away": "Bañaderos B",
+              "hs": 4,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-01-31",
+              "home": "Bañaderos B",
+              "away": "Lomo Blanco B",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2025-01-31",
+              "home": "UD Teror",
+              "away": "San Nicolás",
+              "hs": 0,
+              "as_": 11
+            },
+            {
+              "date": "2025-02-01",
+              "home": "Corazón Mª B",
+              "away": "Cardones B",
+              "hs": 6,
+              "as_": 2
+            },
+            {
+              "date": "2025-02-01",
+              "home": "R. Amagro Atl.",
+              "away": "UD Guía",
+              "hs": 0,
+              "as_": 10
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-02-07",
+              "home": "UD Guía",
+              "away": "UD Teror",
+              "hs": 12,
+              "as_": 2
+            },
+            {
+              "date": "2025-02-08",
+              "home": "San Nicolás",
+              "away": "Bañaderos B",
+              "hs": 9,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-08",
+              "home": "Cardones B",
+              "away": "R. Amagro Atl.",
+              "hs": 9,
+              "as_": 0
+            },
+            {
+              "date": "2025-02-08",
+              "home": "Lomo Blanco B",
+              "away": "Corazón Mª B",
+              "hs": 2,
+              "as_": 14
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-02-14",
+              "home": "Bañaderos B",
+              "away": "UD Guía",
+              "hs": 1,
+              "as_": 8
+            },
+            {
+              "date": "2025-02-15",
+              "home": "Corazón Mª B",
+              "away": "San Nicolás",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2025-02-15",
+              "home": "R. Amagro Atl.",
+              "away": "UD Teror",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2025-02-15",
+              "home": "Cardones B",
+              "away": "Lomo Blanco B",
+              "hs": 7,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "name": "Jornada 6",
+          "matches": [
+            {
+              "date": "2025-02-21",
+              "home": "UD Guía",
+              "away": "Corazón Mª B",
+              "hs": 2,
+              "as_": 9
+            },
+            {
+              "date": "2025-02-20",
+              "home": "UD Teror",
+              "away": "Bañaderos B",
+              "hs": 1,
+              "as_": 3
+            },
+            {
+              "date": "2025-02-21",
+              "home": "San Nicolás",
+              "away": "Cardones B",
+              "hs": 8,
+              "as_": 3
+            },
+            {
+              "date": "2025-02-22",
+              "home": "R. Amagro Atl.",
+              "away": "Lomo Blanco B",
+              "hs": 1,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "name": "Jornada 7",
+          "matches": [
+            {
+              "date": "2025-02-28",
+              "home": "Bañaderos B",
+              "away": "R. Amagro Atl.",
+              "hs": 6,
+              "as_": 3
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Corazón Mª B",
+              "away": "UD Teror",
+              "hs": 11,
+              "as_": 3
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Lomo Blanco B",
+              "away": "San Nicolás",
+              "hs": 2,
+              "as_": 8
+            },
+            {
+              "date": "2025-02-27",
+              "home": "Cardones B",
+              "away": "UD Guía",
+              "hs": 2,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "name": "Jornada 8",
+          "matches": [
+            {
+              "date": "2025-03-07",
+              "home": "San Nicolás",
+              "away": "R. Amagro Atl.",
+              "hs": 11,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-08",
+              "home": "Cardones B",
+              "away": "UD Teror",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2025-03-11",
+              "home": "Lomo Blanco B",
+              "away": "UD Guía",
+              "hs": 3,
+              "as_": 8
+            },
+            {
+              "date": "2025-03-11",
+              "home": "Corazón Mª B",
+              "away": "Bañaderos B",
+              "hs": 8,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "name": "Jornada 9",
+          "matches": [
+            {
+              "date": "2025-03-14",
+              "home": "UD Guía",
+              "away": "San Nicolás",
+              "hs": 0,
+              "as_": 3
+            },
+            {
+              "date": "2025-03-14",
+              "home": "Bañaderos B",
+              "away": "Cardones B",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-03-14",
+              "home": "UD Teror",
+              "away": "Lomo Blanco B",
+              "hs": 4,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-15",
+              "home": "R. Amagro Atl.",
+              "away": "Corazón Mª B",
+              "hs": 1,
+              "as_": 12
+            }
+          ]
+        },
+        {
+          "num": 10,
+          "name": "Jornada 10",
+          "matches": [
+            {
+              "date": "2025-03-20",
+              "home": "UD Guía",
+              "away": "R. Amagro Atl.",
+              "hs": 2,
+              "as_": 0
+            },
+            {
+              "date": "2025-03-21",
+              "home": "San Nicolás",
+              "away": "UD Teror",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Lomo Blanco B",
+              "away": "Bañaderos B",
+              "hs": 4,
+              "as_": 0
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Cardones B",
+              "away": "Corazón Mª B",
+              "hs": 1,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 11,
+          "name": "Jornada 11",
+          "matches": [
+            {
+              "date": "2025-03-28",
+              "home": "Bañaderos B",
+              "away": "San Nicolás",
+              "hs": 0,
+              "as_": 5
+            },
+            {
+              "date": "2025-03-28",
+              "home": "UD Teror",
+              "away": "UD Guía",
+              "hs": 3,
+              "as_": 4
+            },
+            {
+              "date": "2025-03-29",
+              "home": "R. Amagro Atl.",
+              "away": "Cardones B",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-29",
+              "home": "Corazón Mª B",
+              "away": "Lomo Blanco B",
+              "hs": 8,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 12,
+          "name": "Jornada 12",
+          "matches": [
+            {
+              "date": "2025-04-04",
+              "home": "UD Guía",
+              "away": "Bañaderos B",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-04",
+              "home": "UD Teror",
+              "away": "R. Amagro Atl.",
+              "hs": 8,
+              "as_": 2
+            },
+            {
+              "date": "2025-04-04",
+              "home": "San Nicolás",
+              "away": "Corazón Mª B",
+              "hs": 3,
+              "as_": 0
+            },
+            {
+              "date": "2025-04-05",
+              "home": "Lomo Blanco B",
+              "away": "Cardones B",
+              "hs": 4,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 13,
+          "name": "Jornada 13",
+          "matches": [
+            {
+              "date": "2025-04-11",
+              "home": "Bañaderos B",
+              "away": "UD Teror",
+              "hs": 3,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Corazón Mª B",
+              "away": "UD Guía",
+              "hs": 11,
+              "as_": 3
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Lomo Blanco B",
+              "away": "R. Amagro Atl.",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Cardones B",
+              "away": "San Nicolás",
+              "hs": 2,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 14,
+          "name": "Jornada 14",
+          "matches": [
+            {
+              "date": "2025-04-25",
+              "home": "R. Amagro Atl.",
+              "away": "Bañaderos B",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2025-04-22",
+              "home": "UD Guía",
+              "away": "Cardones B",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2025-04-26",
+              "home": "San Nicolás",
+              "away": "Lomo Blanco B",
+              "hs": 10,
+              "as_": 0
+            },
+            {
+              "date": "2025-04-28",
+              "home": "UD Teror",
+              "away": "Corazón Mª B",
+              "hs": 2,
+              "as_": 4
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "San Nicolás",
+          "pts": 40,
+          "j": 14,
+          "g": 13,
+          "e": 1,
+          "p": 0,
+          "gf": 96,
+          "gc": 19,
+          "df": 77
+        },
+        {
+          "pos": 2,
+          "team": "Corazón Mª B",
+          "pts": 37,
+          "j": 14,
+          "g": 12,
+          "e": 1,
+          "p": 1,
+          "gf": 120,
+          "gc": 31,
+          "df": 89
+        },
+        {
+          "pos": 3,
+          "team": "UD Guía",
+          "pts": 30,
+          "j": 14,
+          "g": 10,
+          "e": 0,
+          "p": 4,
+          "gf": 67,
+          "gc": 43,
+          "df": 24
+        },
+        {
+          "pos": 4,
+          "team": "Cardones B",
+          "pts": 24,
+          "j": 14,
+          "g": 8,
+          "e": 0,
+          "p": 6,
+          "gf": 59,
+          "gc": 43,
+          "df": 16
+        },
+        {
+          "pos": 5,
+          "team": "Lomo Blanco B",
+          "pts": 13,
+          "j": 14,
+          "g": 4,
+          "e": 1,
+          "p": 9,
+          "gf": 44,
+          "gc": 79,
+          "df": -35
+        },
+        {
+          "pos": 6,
+          "team": "Bañaderos B",
+          "pts": 10,
+          "j": 14,
+          "g": 3,
+          "e": 1,
+          "p": 10,
+          "gf": 27,
+          "gc": 74,
+          "df": -47
+        },
+        {
+          "pos": 7,
+          "team": "UD Teror",
+          "pts": 10,
+          "j": 14,
+          "g": 3,
+          "e": 1,
+          "p": 10,
+          "gf": 37,
+          "gc": 74,
+          "df": -37
+        },
+        {
+          "pos": 8,
+          "team": "R. Amagro Atl.",
+          "pts": 1,
+          "j": 14,
+          "g": 0,
+          "e": 1,
+          "p": 13,
+          "gf": 18,
+          "gc": 105,
+          "df": -87
+        }
+      ]
+    },
+    {
+      "phase_num": 1,
+      "group_num": 14,
+      "slug": "benjamin-gran-canaria-catorce",
+      "category": "benjamin",
+      "phase": "Primera Fase GC",
+      "group_name": "BENJAMIN PRIMERA FASE GC - GRUPO 14",
+      "island": "gran_canaria",
+      "group_code": "P14",
+      "source": "wayback",
+      "wayback_timestamp": "20251011202049",
+      "url": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-01-17",
+              "home": "Pedro Hidalgo B",
+              "away": "Victoria C",
+              "hs": 6,
+              "as_": 4
+            },
+            {
+              "date": "2025-01-18",
+              "home": "Inter Colonia B",
+              "away": "Muelle Grande",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2025-01-18",
+              "home": "Las Coloradas",
+              "away": "Atco. Isleta B",
+              "hs": 7,
+              "as_": 4
+            },
+            {
+              "date": "2025-01-18",
+              "home": "Alcotán Can.",
+              "away": "Guiniguada B",
+              "hs": 4,
+              "as_": 8
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-01-24",
+              "home": "Guiniguada B",
+              "away": "Pedro Hidalgo B",
+              "hs": 5,
+              "as_": 3
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Muelle Grande",
+              "away": "Alcotán Can.",
+              "hs": 4,
+              "as_": 4
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Victoria C",
+              "away": "Las Coloradas",
+              "hs": 2,
+              "as_": 11
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Atco. Isleta B",
+              "away": "Inter Colonia B",
+              "hs": 4,
+              "as_": 7
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-01-31",
+              "home": "Pedro Hidalgo B",
+              "away": "Muelle Grande",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-02-01",
+              "home": "Inter Colonia B",
+              "away": "Alcotán Can.",
+              "hs": 2,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-01",
+              "home": "Las Coloradas",
+              "away": "Guiniguada B",
+              "hs": 8,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-01",
+              "home": "Atco. Isleta B",
+              "away": "Victoria C",
+              "hs": 7,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-02-07",
+              "home": "Guiniguada B",
+              "away": "Atco. Isleta B",
+              "hs": 13,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-08",
+              "home": "Muelle Grande",
+              "away": "Las Coloradas",
+              "hs": 4,
+              "as_": 8
+            },
+            {
+              "date": "2025-02-08",
+              "home": "Victoria C",
+              "away": "Inter Colonia B",
+              "hs": 6,
+              "as_": 8
+            },
+            {
+              "date": "2025-02-08",
+              "home": "Alcotán Can.",
+              "away": "Pedro Hidalgo B",
+              "hs": 6,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-02-15",
+              "home": "Inter Colonia B",
+              "away": "Pedro Hidalgo B",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2025-02-15",
+              "home": "Las Coloradas",
+              "away": "Alcotán Can.",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2025-02-15",
+              "home": "Atco. Isleta B",
+              "away": "Muelle Grande",
+              "hs": 2,
+              "as_": 8
+            },
+            {
+              "date": "2025-02-15",
+              "home": "Victoria C",
+              "away": "Guiniguada B",
+              "hs": 3,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "name": "Jornada 6",
+          "matches": [
+            {
+              "date": "2025-02-21",
+              "home": "Pedro Hidalgo B",
+              "away": "Las Coloradas",
+              "hs": 0,
+              "as_": 7
+            },
+            {
+              "date": "2025-02-22",
+              "home": "Muelle Grande",
+              "away": "Victoria C",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-02-22",
+              "home": "Inter Colonia B",
+              "away": "Guiniguada B",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2025-02-22",
+              "home": "Alcotán Can.",
+              "away": "Atco. Isleta B",
+              "hs": 5,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "name": "Jornada 7",
+          "matches": [
+            {
+              "date": "2025-02-28",
+              "home": "Guiniguada B",
+              "away": "Muelle Grande",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Las Coloradas",
+              "away": "Inter Colonia B",
+              "hs": 10,
+              "as_": 3
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Atco. Isleta B",
+              "away": "Pedro Hidalgo B",
+              "hs": 5,
+              "as_": 6
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Victoria C",
+              "away": "Alcotán Can.",
+              "hs": 4,
+              "as_": 2
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "name": "Jornada 8",
+          "matches": [
+            {
+              "date": "2025-03-07",
+              "home": "Guiniguada B",
+              "away": "Alcotán Can.",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-08",
+              "home": "Muelle Grande",
+              "away": "Inter Colonia B",
+              "hs": 8,
+              "as_": 3
+            },
+            {
+              "date": "2025-03-06",
+              "home": "Victoria C",
+              "away": "Pedro Hidalgo B",
+              "hs": 4,
+              "as_": 3
+            },
+            {
+              "date": "2025-03-07",
+              "home": "Atco. Isleta B",
+              "away": "Las Coloradas",
+              "hs": 0,
+              "as_": 9
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "name": "Jornada 9",
+          "matches": [
+            {
+              "date": "2025-03-14",
+              "home": "Pedro Hidalgo B",
+              "away": "Guiniguada B",
+              "hs": 3,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-15",
+              "home": "Las Coloradas",
+              "away": "Victoria C",
+              "hs": 5,
+              "as_": 4
+            },
+            {
+              "date": "2025-03-15",
+              "home": "Inter Colonia B",
+              "away": "Atco. Isleta B",
+              "hs": 7,
+              "as_": 0
+            },
+            {
+              "date": "2025-03-15",
+              "home": "Alcotán Can.",
+              "away": "Muelle Grande",
+              "hs": 1,
+              "as_": 7
+            }
+          ]
+        },
+        {
+          "num": 10,
+          "name": "Jornada 10",
+          "matches": [
+            {
+              "date": "2025-03-21",
+              "home": "Guiniguada B",
+              "away": "Las Coloradas",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Muelle Grande",
+              "away": "Pedro Hidalgo B",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Alcotán Can.",
+              "away": "Inter Colonia B",
+              "hs": 5,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Victoria C",
+              "away": "Atco. Isleta B",
+              "hs": 7,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 11,
+          "name": "Jornada 11",
+          "matches": [
+            {
+              "date": "2025-03-28",
+              "home": "Pedro Hidalgo B",
+              "away": "Alcotán Can.",
+              "hs": 0,
+              "as_": 4
+            },
+            {
+              "date": "2025-03-29",
+              "home": "Inter Colonia B",
+              "away": "Victoria C",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-29",
+              "home": "Las Coloradas",
+              "away": "Muelle Grande",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2025-03-29",
+              "home": "Atco. Isleta B",
+              "away": "Guiniguada B",
+              "hs": 4,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 12,
+          "name": "Jornada 12",
+          "matches": [
+            {
+              "date": "2025-04-04",
+              "home": "Pedro Hidalgo B",
+              "away": "Inter Colonia B",
+              "hs": 1,
+              "as_": 0
+            },
+            {
+              "date": "2025-04-04",
+              "home": "Guiniguada B",
+              "away": "Victoria C",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-05",
+              "home": "Muelle Grande",
+              "away": "Atco. Isleta B",
+              "hs": 13,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-05",
+              "home": "Alcotán Can.",
+              "away": "Las Coloradas",
+              "hs": 1,
+              "as_": 9
+            }
+          ]
+        },
+        {
+          "num": 13,
+          "name": "Jornada 13",
+          "matches": [
+            {
+              "date": "2025-04-11",
+              "home": "Guiniguada B",
+              "away": "Inter Colonia B",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Las Coloradas",
+              "away": "Pedro Hidalgo B",
+              "hs": 7,
+              "as_": 3
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Atco. Isleta B",
+              "away": "Alcotán Can.",
+              "hs": 1,
+              "as_": 8
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Victoria C",
+              "away": "Muelle Grande",
+              "hs": 2,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 14,
+          "name": "Jornada 14",
+          "matches": [
+            {
+              "date": "2025-04-26",
+              "home": "Inter Colonia B",
+              "away": "Las Coloradas",
+              "hs": 0,
+              "as_": 9
+            },
+            {
+              "date": "2025-04-26",
+              "home": "Pedro Hidalgo B",
+              "away": "Atco. Isleta B",
+              "hs": 3,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-26",
+              "home": "Muelle Grande",
+              "away": "Guiniguada B",
+              "hs": 7,
+              "as_": 0
+            },
+            {
+              "date": "2025-04-26",
+              "home": "Alcotán Can.",
+              "away": "Victoria C",
+              "hs": 6,
+              "as_": 3
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Muelle Grande",
+          "pts": 37,
+          "j": 14,
+          "g": 12,
+          "e": 1,
+          "p": 1,
+          "gf": 86,
+          "gc": 31,
+          "df": 55
+        },
+        {
+          "pos": 2,
+          "team": "Las Coloradas",
+          "pts": 36,
+          "j": 14,
+          "g": 12,
+          "e": 0,
+          "p": 2,
+          "gf": 97,
+          "gc": 32,
+          "df": 65
+        },
+        {
+          "pos": 3,
+          "team": "Guiniguada B",
+          "pts": 30,
+          "j": 14,
+          "g": 10,
+          "e": 0,
+          "p": 4,
+          "gf": 64,
+          "gc": 47,
+          "df": 17
+        },
+        {
+          "pos": 4,
+          "team": "Inter Colonia B",
+          "pts": 18,
+          "j": 14,
+          "g": 6,
+          "e": 0,
+          "p": 8,
+          "gf": 52,
+          "gc": 62,
+          "df": -10
+        },
+        {
+          "pos": 5,
+          "team": "Alcotán Can.",
+          "pts": 17,
+          "j": 14,
+          "g": 5,
+          "e": 2,
+          "p": 7,
+          "gf": 51,
+          "gc": 55,
+          "df": -4
+        },
+        {
+          "pos": 6,
+          "team": "Pedro Hidalgo B",
+          "pts": 15,
+          "j": 14,
+          "g": 5,
+          "e": 0,
+          "p": 9,
+          "gf": 35,
+          "gc": 59,
+          "df": -24
+        },
+        {
+          "pos": 7,
+          "team": "Victoria C",
+          "pts": 9,
+          "j": 14,
+          "g": 3,
+          "e": 0,
+          "p": 11,
+          "gf": 46,
+          "gc": 80,
+          "df": -34
+        },
+        {
+          "pos": 8,
+          "team": "Atco. Isleta B",
+          "pts": 4,
+          "j": 14,
+          "g": 1,
+          "e": 1,
+          "p": 12,
+          "gf": 36,
+          "gc": 101,
+          "df": -65
+        }
+      ]
+    },
+    {
+      "phase_num": 1,
+      "group_num": 15,
+      "slug": "benjamin-gran-canaria-quince",
+      "category": "benjamin",
+      "phase": "Primera Fase GC",
+      "group_name": "BENJAMIN PRIMERA FASE GC - GRUPO 15",
+      "island": "gran_canaria",
+      "group_code": "P15",
+      "source": "wayback",
+      "wayback_timestamp": "20250916002848",
+      "url": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/",
+      "jornadas": [
+        {
+          "num": 1,
+          "name": "Jornada 1",
+          "matches": [
+            {
+              "date": "2025-01-18",
+              "home": "Futboltec",
+              "away": "Calero",
+              "hs": 4,
+              "as_": 5
+            },
+            {
+              "date": "2025-01-18",
+              "home": "Tablero B",
+              "away": "Estrella B",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2025-01-18",
+              "home": "Valdecasas",
+              "away": "San Fernando B",
+              "hs": 0,
+              "as_": 9
+            },
+            {
+              "date": "2025-01-18",
+              "home": "Mogán",
+              "away": "Vecindario C",
+              "hs": 9,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "name": "Jornada 2",
+          "matches": [
+            {
+              "date": "2025-01-24",
+              "home": "Estrella B",
+              "away": "Valdecasas",
+              "hs": 7,
+              "as_": 1
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Vecindario C",
+              "away": "Futboltec",
+              "hs": 11,
+              "as_": 1
+            },
+            {
+              "date": "2025-01-25",
+              "home": "Calero",
+              "away": "Tablero B",
+              "hs": 2,
+              "as_": 7
+            },
+            {
+              "date": "2025-01-25",
+              "home": "San Fernando B",
+              "away": "Mogán",
+              "hs": 2,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "name": "Jornada 3",
+          "matches": [
+            {
+              "date": "2025-02-01",
+              "home": "Futboltec",
+              "away": "Tablero B",
+              "hs": 1,
+              "as_": 8
+            },
+            {
+              "date": "2025-02-01",
+              "home": "Vecindario C",
+              "away": "San Fernando B",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2025-02-01",
+              "home": "Mogán",
+              "away": "Estrella B",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2025-02-02",
+              "home": "Valdecasas",
+              "away": "Calero",
+              "hs": 1,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "name": "Jornada 4",
+          "matches": [
+            {
+              "date": "2025-02-07",
+              "home": "Estrella B",
+              "away": "Vecindario C",
+              "hs": 3,
+              "as_": 3
+            },
+            {
+              "date": "2025-02-08",
+              "home": "Tablero B",
+              "away": "Valdecasas",
+              "hs": 15,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-08",
+              "home": "Calero",
+              "away": "Mogán",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2025-02-08",
+              "home": "San Fernando B",
+              "away": "Futboltec",
+              "hs": 9,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "name": "Jornada 5",
+          "matches": [
+            {
+              "date": "2025-02-15",
+              "home": "Futboltec",
+              "away": "Valdecasas",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-02-15",
+              "home": "Mogán",
+              "away": "Tablero B",
+              "hs": 1,
+              "as_": 9
+            },
+            {
+              "date": "2025-02-15",
+              "home": "Vecindario C",
+              "away": "Calero",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2025-02-15",
+              "home": "San Fernando B",
+              "away": "Estrella B",
+              "hs": 2,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "name": "Jornada 6",
+          "matches": [
+            {
+              "date": "2025-02-22",
+              "home": "Futboltec",
+              "away": "Estrella B",
+              "hs": 2,
+              "as_": 3
+            },
+            {
+              "date": "2025-02-22",
+              "home": "Tablero B",
+              "away": "Vecindario C",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-02-22",
+              "home": "Calero",
+              "away": "San Fernando B",
+              "hs": 1,
+              "as_": 4
+            },
+            {
+              "date": "2025-02-22",
+              "home": "Valdecasas",
+              "away": "Mogán",
+              "hs": 0,
+              "as_": 9
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "name": "Jornada 7",
+          "matches": [
+            {
+              "date": "2025-02-28",
+              "home": "Estrella B",
+              "away": "Calero",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Mogán",
+              "away": "Futboltec",
+              "hs": 9,
+              "as_": 3
+            },
+            {
+              "date": "2025-03-01",
+              "home": "Vecindario C",
+              "away": "Valdecasas",
+              "hs": 6,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-01",
+              "home": "San Fernando B",
+              "away": "Tablero B",
+              "hs": 2,
+              "as_": 5
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "name": "Jornada 8",
+          "matches": [
+            {
+              "date": "2025-03-06",
+              "home": "Calero",
+              "away": "Futboltec",
+              "hs": 1,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-08",
+              "home": "Estrella B",
+              "away": "Tablero B",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2025-03-08",
+              "home": "San Fernando B",
+              "away": "Valdecasas",
+              "hs": 8,
+              "as_": 0
+            },
+            {
+              "date": "2025-03-08",
+              "home": "Vecindario C",
+              "away": "Mogán",
+              "hs": 4,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "name": "Jornada 9",
+          "matches": [
+            {
+              "date": "2025-03-14",
+              "home": "Tablero B",
+              "away": "Calero",
+              "hs": 11,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-15",
+              "home": "Mogán",
+              "away": "San Fernando B",
+              "hs": 3,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-15",
+              "home": "Futboltec",
+              "away": "Vecindario C",
+              "hs": 3,
+              "as_": 7
+            },
+            {
+              "date": "2025-03-15",
+              "home": "Valdecasas",
+              "away": "Estrella B",
+              "hs": 0,
+              "as_": 6
+            }
+          ]
+        },
+        {
+          "num": 10,
+          "name": "Jornada 10",
+          "matches": [
+            {
+              "date": "2025-03-21",
+              "home": "Estrella B",
+              "away": "Mogán",
+              "hs": 1,
+              "as_": 5
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Tablero B",
+              "away": "Futboltec",
+              "hs": 12,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-22",
+              "home": "Calero",
+              "away": "Valdecasas",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2025-03-22",
+              "home": "San Fernando B",
+              "away": "Vecindario C",
+              "hs": 6,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 11,
+          "name": "Jornada 11",
+          "matches": [
+            {
+              "date": "2025-03-29",
+              "home": "Futboltec",
+              "away": "San Fernando B",
+              "hs": 0,
+              "as_": 7
+            },
+            {
+              "date": "2025-03-29",
+              "home": "Mogán",
+              "away": "Calero",
+              "hs": 7,
+              "as_": 2
+            },
+            {
+              "date": "2025-03-29",
+              "home": "Vecindario C",
+              "away": "Estrella B",
+              "hs": 3,
+              "as_": 13
+            },
+            {
+              "date": "2025-03-27",
+              "home": "Valdecasas",
+              "away": "Tablero B",
+              "hs": 0,
+              "as_": 4
+            }
+          ]
+        },
+        {
+          "num": 12,
+          "name": "Jornada 12",
+          "matches": [
+            {
+              "date": "2025-04-08",
+              "home": "Estrella B",
+              "away": "San Fernando B",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-05",
+              "home": "Calero",
+              "away": "Vecindario C",
+              "hs": 4,
+              "as_": 6
+            },
+            {
+              "date": "2025-04-05",
+              "home": "Valdecasas",
+              "away": "Futboltec",
+              "hs": 0,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-05",
+              "home": "Tablero B",
+              "away": "Mogán",
+              "hs": 6,
+              "as_": 3
+            }
+          ]
+        },
+        {
+          "num": 13,
+          "name": "Jornada 13",
+          "matches": [
+            {
+              "date": "2025-04-12",
+              "home": "Mogán",
+              "away": "Valdecasas",
+              "hs": 6,
+              "as_": 0
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Vecindario C",
+              "away": "Tablero B",
+              "hs": 2,
+              "as_": 5
+            },
+            {
+              "date": "2025-04-12",
+              "home": "Estrella B",
+              "away": "Futboltec",
+              "hs": 4,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-12",
+              "home": "San Fernando B",
+              "away": "Calero",
+              "hs": 4,
+              "as_": 1
+            }
+          ]
+        },
+        {
+          "num": 14,
+          "name": "Jornada 14",
+          "matches": [
+            {
+              "date": "2025-04-25",
+              "home": "Futboltec",
+              "away": "Mogán",
+              "hs": 2,
+              "as_": 4
+            },
+            {
+              "date": "2025-04-25",
+              "home": "Tablero B",
+              "away": "San Fernando B",
+              "hs": 5,
+              "as_": 1
+            },
+            {
+              "date": "2025-04-25",
+              "home": "Calero",
+              "away": "Estrella B",
+              "hs": 2,
+              "as_": 2
+            },
+            {
+              "date": "2025-04-25",
+              "home": "Valdecasas",
+              "away": "Vecindario C",
+              "hs": 0,
+              "as_": 6
+            }
+          ]
+        }
+      ],
+      "standings": [
+        {
+          "pos": 1,
+          "team": "Tablero B",
+          "pts": 42,
+          "j": 14,
+          "g": 14,
+          "e": 0,
+          "p": 0,
+          "gf": 103,
+          "gc": 21,
+          "df": 82
+        },
+        {
+          "pos": 2,
+          "team": "Mogán",
+          "pts": 33,
+          "j": 14,
+          "g": 11,
+          "e": 0,
+          "p": 3,
+          "gf": 72,
+          "gc": 37,
+          "df": 35
+        },
+        {
+          "pos": 3,
+          "team": "Estrella B",
+          "pts": 26,
+          "j": 14,
+          "g": 8,
+          "e": 2,
+          "p": 4,
+          "gf": 53,
+          "gc": 33,
+          "df": 20
+        },
+        {
+          "pos": 4,
+          "team": "San Fernando B",
+          "pts": 24,
+          "j": 14,
+          "g": 8,
+          "e": 0,
+          "p": 6,
+          "gf": 61,
+          "gc": 29,
+          "df": 32
+        },
+        {
+          "pos": 5,
+          "team": "Vecindario C",
+          "pts": 16,
+          "j": 14,
+          "g": 5,
+          "e": 1,
+          "p": 8,
+          "gf": 56,
+          "gc": 65,
+          "df": -9
+        },
+        {
+          "pos": 6,
+          "team": "Calero",
+          "pts": 16,
+          "j": 14,
+          "g": 5,
+          "e": 1,
+          "p": 8,
+          "gf": 35,
+          "gc": 57,
+          "df": -22
+        },
+        {
+          "pos": 7,
+          "team": "Futboltec",
+          "pts": 9,
+          "j": 14,
+          "g": 3,
+          "e": 0,
+          "p": 11,
+          "gf": 27,
+          "gc": 81,
+          "df": -54
+        },
+        {
+          "pos": 8,
+          "team": "Valdecasas",
+          "pts": 0,
+          "j": 14,
+          "g": 0,
+          "e": 0,
+          "p": 14,
+          "gf": 6,
+          "gc": 90,
+          "df": -84
+        }
+      ]
+    }
+  ]
+}

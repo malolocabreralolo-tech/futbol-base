@@ -35,6 +35,7 @@ CODE_PREFIX = {
     "1583": "FV2",   # Fase 2 Fuerteventura
     # Prebenjamin
     "1581": "PGC",   # Prebenjamin Gran Canaria
+    "1469": "PCC",   # Prebenjamin Copa de Campeones (final phase: champions of each group)
 }
 
 CAT_MAP = {
@@ -54,6 +55,7 @@ PHASE_MAP = {
     "1579": "Fase 1 Fuerteventura",
     "1583": "Fase 2 Fuerteventura",
     "1581": "Gran Canaria",
+    "1469": "Copa de Campeones",
 }
 
 

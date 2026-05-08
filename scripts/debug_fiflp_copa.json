@@ -1,0 +1,329 @@
+{
+  "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=20&CodCompeticion=1469&CodGrupo=196763",
+  "jornadas": [
+    {
+      "value": "1",
+      "text": "25-04-2025 ( Ronda 1 )",
+      "table_count": 5,
+      "interesting_tables": [
+        {
+          "idx": 1,
+          "row_count": 2,
+          "outer_html": "<table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000002402_1___ARUCAS_C.F._1401003_escudo_png.PNG\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; ARUCAS C.F. \"A\" </h4> </div> </div> </td> <td width=\"20%\" align=\"center\" style=\"white-space:nowrap;border-bottom: 0px; line-height: 1;\"> <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));</script><i class=\"fa-solid\"><i id=\"idh14347\" style=\"font-style:normal\" class=\"fa-3\"><script>ntype(\"idh14347\",8,0,\"fa-4\");</script></i></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14348\" style=\"font-style:normal\" class=\"fa-0\"><script>ntype(\"idh14348\",5,0,\"fa-1\");</script></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196763&amp;cod_acta=196763\" title=\"Acta del partido\"><i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i></a><br><span class=\"icon_text\">&nbsp;</span> </div> <div class=\"div_icono_resultados\"> </div> <br> <span class=\"horario\" style=\"margin-top:5px;\"> 25-04-2025 </span> <br><span class=\"horario\" style=\"margin-top:5px;\"> 17:15 </span> </td> <td width=\"40%\" align=\"right\" class=\"td_widget\" style=\"border-bottom: 0px\"><div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> ARGUINEGUIN, C.D. \"A\" </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000037533_ESCUDO_NUEVO__CD_ARGUINEGUIN_2.png\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div></td> </tr> <tr> <td colspan=\"9\" align=\"center\"> <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;PÉREZ DE AGUSTÍN, ERICK JESÚS </span> </span> </span></td> </tr> </tbody> </table>",
+          "rows": [
+            {
+              "cell_count": 3,
+              "cells": [
+                {
+                  "text": "ARUCAS C.F. \"A\"",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000002402_1___ARUCAS_C.F._1401003_escudo_png.PNG\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; ARUCAS C.F. \"A\" </h4> </div> </div> "
+                },
+                {
+                  "text": "- \n\n  \n25-04-2025\n17:15",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||"
+                },
+                {
+                  "text": "ARGUINEGUIN, C.D. \"A\"",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> ARGUINEGUIN, C.D. \"A\" </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000037533_ESCUDO_NUEVO__CD_ARGUINEGUIN_2.png\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                }
+              ]
+            },
+            {
+              "cell_count": 1,
+              "cells": [
+                {
+                  "text": "EL TORIL F8 (1)\n\n\n  \nÁrbitro:\n PÉREZ DE AGUSTÍN, ERICK JESÚS",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;PÉREZ DE AGUSTÍN, ERICK JESÚS </span> </span> </span>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "idx": 2,
+          "row_count": 2,
+          "outer_html": "<table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; CARRIZAL, C.F. UNION </h4> </div> </div> </td> <td width=\"20%\" align=\"center\" style=\"white-space:nowrap;border-bottom: 0px; line-height: 1;\"> <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14349\" style=\"font-style:normal\" class=\"fa-3\"><script>ntype(\"idh14349\",8,0,\"fa-4\");</script><span style=\"display:none;\">4</span></i></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\">0</i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196764&amp;cod_acta=196764\" title=\"Acta del partido\"><i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i></a><br><span class=\"icon_text\">&nbsp;</span> </div> <div class=\"div_icono_resultados\"> </div> <br> <span class=\"horario\" style=\"margin-top:5px;\"> 25-04-2025 </span> <br><span class=\"horario\" style=\"margin-top:5px;\"> 17:15 </span> </td> <td width=\"40%\" align=\"right\" class=\"td_widget\" style=\"border-bottom: 0px\"><div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> SANTIDAD BANOT, C.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div></td> </tr> <tr> <td colspan=\"9\" align=\"center\"> <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=31\"> EL TORIL F8 (2) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;DOMÍNGUEZ CERQUEIRAS, YERAY </span> </span> </span></td> </tr> </tbody> </table>",
+          "rows": [
+            {
+              "cell_count": 3,
+              "cells": [
+                {
+                  "text": "CARRIZAL, C.F. UNION",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; CARRIZAL, C.F. UNION </h4> </div> </div> "
+                },
+                {
+                  "text": "- 0\n\n  \n25-04-2025\n17:15",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14349\" style=\"font-style:normal\" class=\"fa-3\"><script>ntype(\"idh14349\",8,0,\"fa-4\");</script><span style=\"display:none;\">4</span></i></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\">0</i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196764&amp;cod_acta=196764\" title=\"Acta d"
+                },
+                {
+                  "text": "SANTIDAD BANOT, C.D.",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> SANTIDAD BANOT, C.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                }
+              ]
+            },
+            {
+              "cell_count": 1,
+              "cells": [
+                {
+                  "text": "EL TORIL F8 (2)\n\n\n  \nÁrbitro:\n DOMÍNGUEZ CERQUEIRAS, YERAY",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=31\"> EL TORIL F8 (2) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;DOMÍNGUEZ CERQUEIRAS, YERAY </span> </span> </span>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "idx": 3,
+          "row_count": 2,
+          "outer_html": "<table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" width=\"20\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; MASPA TRAINING, C.D. </h4> </div> </div> </td> <td width=\"20%\" align=\"center\" style=\"white-space:nowrap;border-bottom: 0px; line-height: 1;\"> <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14351\" style=\"font-style:normal\" class=\"fa-2\"><script>ntype(\"idh14351\",0,0,\"fa-4\");</script></i></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14352\" style=\"font-style:normal\" class=\"fa-2\"><script>ntype(\"idh14352\",0,0,\"fa-0\");</script><span style=\"display:none;\">0</span></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196765&amp;cod_acta=196765\" title=\"Acta del partido\"><i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i></a><br><span class=\"icon_text\">&nbsp;</span> </div> <div class=\"div_icono_resultados\"> </div> <br> <span class=\"horario\" style=\"margin-top:5px;\"> 25-04-2025 </span> <br><span class=\"horario\" style=\"margin-top:5px;\"> 18:45 </span> </td> <td width=\"40%\" align=\"right\" class=\"td_widget\" style=\"border-bottom: 0px\"><div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> ATLETICO HURACAN, A.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div></td> </tr> <tr> <td colspan=\"9\" align=\"center\"> <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;PÉREZ DE AGUSTÍN, ERICK JESÚS </span> </span> </span></td> </tr> </tbody> </table>",
+          "rows": [
+            {
+              "cell_count": 3,
+              "cells": [
+                {
+                  "text": "MASPA TRAINING, C.D.",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" width=\"20\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; MASPA TRAINING, C.D. </h4> </div> </div> "
+                },
+                {
+                  "text": "- \n\n  \n25-04-2025\n18:45",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14351\" style=\"font-style:normal\" class=\"fa-2\"><script>ntype(\"idh14351\",0,0,\"fa-4\");</script></i></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14352\" style=\"font-style:normal\" class=\"fa-2\"><script>ntype(\"idh14352\",0,0,\"fa-0\");</script><span style=\"display:none;\">0</span></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" h"
+                },
+                {
+                  "text": "ATLETICO HURACAN, A.D.",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> ATLETICO HURACAN, A.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                }
+              ]
+            },
+            {
+              "cell_count": 1,
+              "cells": [
+                {
+                  "text": "EL TORIL F8 (1)\n\n\n  \nÁrbitro:\n PÉREZ DE AGUSTÍN, ERICK JESÚS",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;PÉREZ DE AGUSTÍN, ERICK JESÚS </span> </span> </span>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "idx": 4,
+          "row_count": 2,
+          "outer_html": "<table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000001356_UNION_VIERA_1162_CalidadVectorial.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; UNION VIERA, C.F. </h4> </div> </div> </td> <td width=\"20%\" align=\"center\" style=\"white-space:nowrap;border-bottom: 0px; line-height: 1;\"> <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14353\" style=\"font-style:normal\" class=\"fa-1\"><script>ntype(\"idh14353\",4,0,\"fa-1\");</script><span style=\"display:none;\">1</span></i></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14354\" style=\"font-style:normal\" class=\"fa-1\"><script>ntype(\"idh14354\",4,0,\"fa-3\");</script><span style=\"display:none;\">3</span></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196766&amp;cod_acta=196766\" title=\"Acta del partido\"><i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i></a><br><span class=\"icon_text\">&nbsp;</span> </div> <div class=\"div_icono_resultados\"> </div> <br> <span class=\"horario\" style=\"margin-top:5px;\"> 25-04-2025 </span> <br><span class=\"horario\" style=\"margin-top:5px;\"> 18:45 </span> </td> <td width=\"40%\" align=\"right\" class=\"td_widget\" style=\"border-bottom: 0px\"><div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> GARITA, C.F.S. LA </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div></td> </tr> <tr> <td colspan=\"9\" align=\"center\"> <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=31\"> EL TORIL F8 (2) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;DOMÍNGUEZ CERQUEIRAS, YERAY </span> </span> </span></td> </tr> </tbody> </table>",
+          "rows": [
+            {
+              "cell_count": 3,
+              "cells": [
+                {
+                  "text": "UNION VIERA, C.F.",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000001356_UNION_VIERA_1162_CalidadVectorial.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; UNION VIERA, C.F. </h4> </div> </div> "
+                },
+                {
+                  "text": "- \n\n  \n25-04-2025\n18:45",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14353\" style=\"font-style:normal\" class=\"fa-1\"><script>ntype(\"idh14353\",4,0,\"fa-1\");</script><span style=\"display:none;\">1</span></i></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14354\" style=\"font-style:normal\" class=\"fa-1\"><script>ntype(\"idh14354\",4,0,\"fa-3\");</script><span style=\"display:none;\">3</span></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\">"
+                },
+                {
+                  "text": "GARITA, C.F.S. LA",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> GARITA, C.F.S. LA </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                }
+              ]
+            },
+            {
+              "cell_count": 1,
+              "cells": [
+                {
+                  "text": "EL TORIL F8 (2)\n\n\n  \nÁrbitro:\n DOMÍNGUEZ CERQUEIRAS, YERAY",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=31\"> EL TORIL F8 (2) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;DOMÍNGUEZ CERQUEIRAS, YERAY </span> </span> </span>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "2",
+      "text": "26-04-2025 ( Ronda 2 )",
+      "table_count": 3,
+      "interesting_tables": [
+        {
+          "idx": 1,
+          "row_count": 2,
+          "outer_html": "<table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000002402_1___ARUCAS_C.F._1401003_escudo_png.PNG\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; ARUCAS C.F. \"A\" </h4> </div> </div> </td> <td width=\"20%\" align=\"center\" style=\"white-space:nowrap;border-bottom: 0px; line-height: 1;\"> <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14355:before{content:\"1\"}</style><span id=\"idh14355\"><span style=\"display:none;\">4</span></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));</script><i class=\"fa-solid\"><i id=\"idh14356\" style=\"font-style:normal\" class=\"fa-3\"><script>ntype(\"idh14356\",8,0,\"fa-7\");</script></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196775&amp;cod_acta=196775\" title=\"Acta del partido\"><i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i></a><br><span class=\"icon_text\">&nbsp;</span> </div> <div class=\"div_icono_resultados\"> </div> <br> <span class=\"horario\" style=\"margin-top:5px;\"> 26-04-2025 </span> <br><span class=\"horario\" style=\"margin-top:5px;\"> 10:00 </span> </td> <td width=\"40%\" align=\"right\" class=\"td_widget\" style=\"border-bottom: 0px\"><div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> CARRIZAL, C.F. UNION </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div></td> </tr> <tr> <td colspan=\"9\" align=\"center\"> <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;OMAR HERNÁNDEZ, AARÓN DEL PINO </span> </span> </span></td> </tr> </tbody> </table>",
+          "rows": [
+            {
+              "cell_count": 3,
+              "cells": [
+                {
+                  "text": "ARUCAS C.F. \"A\"",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000002402_1___ARUCAS_C.F._1401003_escudo_png.PNG\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; ARUCAS C.F. \"A\" </h4> </div> </div> "
+                },
+                {
+                  "text": "- \n\n  \n26-04-2025\n10:00",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14355:before{content:\"1\"}</style><span id=\"idh14355\"><span style=\"display:none;\">4</span></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e("
+                },
+                {
+                  "text": "CARRIZAL, C.F. UNION",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> CARRIZAL, C.F. UNION </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                }
+              ]
+            },
+            {
+              "cell_count": 1,
+              "cells": [
+                {
+                  "text": "EL TORIL F8 (1)\n\n\n  \nÁrbitro:\n OMAR HERNÁNDEZ, AARÓN DEL PINO",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;OMAR HERNÁNDEZ, AARÓN DEL PINO </span> </span> </span>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "idx": 2,
+          "row_count": 2,
+          "outer_html": "<table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" width=\"20\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; MASPA TRAINING, C.D. </h4> </div> </div> </td> <td width=\"20%\" align=\"center\" style=\"white-space:nowrap;border-bottom: 0px; line-height: 1;\"> <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14357:after{content:\"\\0033\"}</style><span id=\"idh14357\"><span style=\"display:none;\">5</span></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14358\" style=\"font-style:normal\" class=\"fa-1\"><script>ntype(\"idh14358\",4,0,\"fa-0\");</script><span style=\"display:none;\">0</span></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196776&amp;cod_acta=196776\" title=\"Acta del partido\"><i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i></a><br><span class=\"icon_text\">&nbsp;</span> </div> <div class=\"div_icono_resultados\"> </div> <br> <span class=\"horario\" style=\"margin-top:5px;\"> 26-04-2025 </span> <br><span class=\"horario\" style=\"margin-top:5px;\"> 10:00 </span> </td> <td width=\"40%\" align=\"right\" class=\"td_widget\" style=\"border-bottom: 0px\"><div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> GARITA, C.F.S. LA </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div></td> </tr> <tr> <td colspan=\"9\" align=\"center\"> <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=31\"> EL TORIL F8 (2) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;RODRÍGUEZ ORTEGA, CRISTO AYOSE </span> </span> </span></td> </tr> </tbody> </table>",
+          "rows": [
+            {
+              "cell_count": 3,
+              "cells": [
+                {
+                  "text": "MASPA TRAINING, C.D.",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" width=\"20\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; MASPA TRAINING, C.D. </h4> </div> </div> "
+                },
+                {
+                  "text": "- \n\n  \n26-04-2025\n10:00",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14357:after{content:\"\\0033\"}</style><span id=\"idh14357\"><span style=\"display:none;\">5</span></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><i id=\"idh14358\" style=\"font-style:normal\" class=\"fa-1\"><script>ntype(\"idh14358\",4,0,\"fa-0\");</script><span style=\"display:none;\">0</span></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-s"
+                },
+                {
+                  "text": "GARITA, C.F.S. LA",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> GARITA, C.F.S. LA </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                }
+              ]
+            },
+            {
+              "cell_count": 1,
+              "cells": [
+                {
+                  "text": "EL TORIL F8 (2)\n\n\n  \nÁrbitro:\n RODRÍGUEZ ORTEGA, CRISTO AYOSE",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=31\"> EL TORIL F8 (2) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;RODRÍGUEZ ORTEGA, CRISTO AYOSE </span> </span> </span>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "3",
+      "text": "26-04-2025 ( Ronda 3 )",
+      "table_count": 2,
+      "interesting_tables": [
+        {
+          "idx": 0,
+          "row_count": 3,
+          "outer_html": "<table class=\"table table-bordered table-striped table-light\"> <tbody><tr><td> <table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; CARRIZAL, C.F. UNION </h4> </div> </div> </td> <td width=\"20%\" align=\"center\" style=\"white-space:nowrap;border-bottom: 0px; line-height: 1;\"> <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14359:before{content:\"1\"}</style><span id=\"idh14359\"></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));</script><i class=\"fa-solid\"><i id=\"idh14360\" style=\"font-style:normal\" class=\"fa-2\"><script>ntype(\"idh14360\",0,0,\"fa-6\");</script><span style=\"display:none;\">6</span></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196777&amp;cod_acta=196777\" title=\"Acta del partido\"><i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i></a><br><span class=\"icon_text\">&nbsp;</span> </div> <div class=\"div_icono_resultados\"> </div> <br> <span class=\"horario\" style=\"margin-top:5px;\"> 26-04-2025 </span> <br><span class=\"horario\" style=\"margin-top:5px;\"> 11:45 </span> </td> <td width=\"40%\" align=\"right\" class=\"td_widget\" style=\"border-bottom: 0px\"><div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> MASPA TRAINING, C.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div></td> </tr> <tr> <td colspan=\"9\" align=\"center\"> <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;RODRÍGUEZ ORTEGA, CRISTO AYOSE </span> </span> </span></td> </tr> </tbody> </table> </td></tr> </tbody></table>",
+          "rows": [
+            {
+              "cell_count": 5,
+              "cells": [
+                {
+                  "text": "CARRIZAL, C.F. UNION\n\t\n - \n\n  \n26-04-2025\n11:45\t\nMASPA TRAINING, C.D.\n\n\nEL TORIL F8 (1)\n\n\n  \nÁrbitro:\n RODRÍGUEZ ORTEGA, CRISTO AYOSE",
+                  "html": " <table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; CARRIZAL, C.F. UNION </h4> </div> </div> </td> <td width=\"20%\" align=\"center"
+                },
+                {
+                  "text": "CARRIZAL, C.F. UNION",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; CARRIZAL, C.F. UNION </h4> </div> </div> "
+                },
+                {
+                  "text": "- \n\n  \n26-04-2025\n11:45",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14359:before{content:\"1\"}</style><span id=\"idh14359\"></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o("
+                },
+                {
+                  "text": "MASPA TRAINING, C.D.",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> MASPA TRAINING, C.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                },
+                {
+                  "text": "EL TORIL F8 (1)\n\n\n  \nÁrbitro:\n RODRÍGUEZ ORTEGA, CRISTO AYOSE",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;RODRÍGUEZ ORTEGA, CRISTO AYOSE </span> </span> </span>"
+                }
+              ]
+            },
+            {
+              "cell_count": 3,
+              "cells": [
+                {
+                  "text": "CARRIZAL, C.F. UNION",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; CARRIZAL, C.F. UNION </h4> </div> </div> "
+                },
+                {
+                  "text": "- \n\n  \n26-04-2025\n11:45",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14359:before{content:\"1\"}</style><span id=\"idh14359\"></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o("
+                },
+                {
+                  "text": "MASPA TRAINING, C.D.",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> MASPA TRAINING, C.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                }
+              ]
+            },
+            {
+              "cell_count": 1,
+              "cells": [
+                {
+                  "text": "EL TORIL F8 (1)\n\n\n  \nÁrbitro:\n RODRÍGUEZ ORTEGA, CRISTO AYOSE",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;RODRÍGUEZ ORTEGA, CRISTO AYOSE </span> </span> </span>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "idx": 1,
+          "row_count": 2,
+          "outer_html": "<table width=\"100%\"> <tbody> <tr style=\"background-color: #ffffff00;\"> <td width=\"40%\" align=\"left\" class=\"td_widget\" style=\"border-bottom: 0px\"> <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; CARRIZAL, C.F. UNION </h4> </div> </div> </td> <td width=\"20%\" align=\"center\" style=\"white-space:nowrap;border-bottom: 0px; line-height: 1;\"> <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14359:before{content:\"1\"}</style><span id=\"idh14359\"></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));</script><i class=\"fa-solid\"><i id=\"idh14360\" style=\"font-style:normal\" class=\"fa-2\"><script>ntype(\"idh14360\",0,0,\"fa-6\");</script><span style=\"display:none;\">6</span></i></i></span> </strong> </h4> <div class=\"div_icono_resultados\"> <a class=\"btn btn-success btn-sm\" href=\"/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&amp;CodActa=196777&amp;cod_acta=196777\" title=\"Acta del partido\"><i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i></a><br><span class=\"icon_text\">&nbsp;</span> </div> <div class=\"div_icono_resultados\"> </div> <br> <span class=\"horario\" style=\"margin-top:5px;\"> 26-04-2025 </span> <br><span class=\"horario\" style=\"margin-top:5px;\"> 11:45 </span> </td> <td width=\"40%\" align=\"right\" class=\"td_widget\" style=\"border-bottom: 0px\"><div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> MASPA TRAINING, C.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div></td> </tr> <tr> <td colspan=\"9\" align=\"center\"> <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;RODRÍGUEZ ORTEGA, CRISTO AYOSE </span> </span> </span></td> </tr> </tbody> </table>",
+          "rows": [
+            {
+              "cell_count": 3,
+              "cells": [
+                {
+                  "text": "CARRIZAL, C.F. UNION",
+                  "html": " <div class=\"wrapper_widget\" style=\"padding: 5px;\"> <div class=\"escudo_widgetL\"> <img src=\"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png\" align=\"absmiddle\" class=\"escudo_widget2\"> </div> <div class=\"font_widgetL\"> <h4> &nbsp; CARRIZAL, C.F. UNION </h4> </div> </div> "
+                },
+                {
+                  "text": "- \n\n  \n26-04-2025\n11:45",
+                  "html": " <h4><strong> <span class=\"wid2_resultado_cerrada ntype\"><i class=\"fa-solid\"><style>#idh14359:before{content:\"1\"}</style><span id=\"idh14359\"></span></i> -</span> <span class=\"wid2_resultado_cerrada ntype\"><script>eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o("
+                },
+                {
+                  "text": "MASPA TRAINING, C.D.",
+                  "html": "<div class=\"wrapper_widget2\"> <div class=\"font_widgetV\"> <h4> MASPA TRAINING, C.D. </h4> </div> <div class=\"escudo_widgetV\"> <img src=\"https://files.fiflp.com/pnfg/img/web_responsive_2/ESP/escudo_sm_resultados_.jpg\" class=\"escudo_widget2\" align=\"absmiddle\"> </div> </div>"
+                }
+              ]
+            },
+            {
+              "cell_count": 1,
+              "cells": [
+                {
+                  "text": "EL TORIL F8 (1)\n\n\n  \nÁrbitro:\n RODRÍGUEZ ORTEGA, CRISTO AYOSE",
+                  "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=30\"> EL TORIL F8 (1) </a> <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;RODRÍGUEZ ORTEGA, CRISTO AYOSE </span> </span> </span>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "jornada_options": [
+    {
+      "value": "1",
+      "text": "25-04-2025 ( Ronda 1 )"
+    },
+    {
+      "value": "2",
+      "text": "26-04-2025 ( Ronda 2 )"
+    },
+    {
+      "value": "3",
+      "text": "26-04-2025 ( Ronda 3 )"
+    }
+  ]
+}

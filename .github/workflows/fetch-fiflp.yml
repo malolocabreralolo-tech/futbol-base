@@ -39,6 +39,10 @@ jobs:
       - name: Importar a DB y regenerar JS
         run: |
           python3 scripts/import_fiflp_2425.py
+          # FIFLP solo expone parte de los partidos jugados — Wayback de
+          # futbolaspalmas.com los tiene completos. Re-importar Wayback
+          # encima recupera los played counts que FIFLP sobrescribió.
+          python3 scripts/import_wayback_2425.py
           python3 scripts/generate_js.py
 
       - name: Commit y push

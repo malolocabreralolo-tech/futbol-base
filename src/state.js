@@ -112,7 +112,9 @@ const _seasonCache = {};
 async function loadSeasonData(seasonName) {
   if (_seasonCache[seasonName]) return _seasonCache[seasonName];
   const slug = seasonName.replace(/-/g, '_');
-  const url = `./data-season-${seasonName}.js`;
+  // Cache-bust per-season files alongside index.html ?v= parameter
+  const ver = (document.querySelector('script[src*="data-seasons.js"]')?.src.match(/v=([^&]+)/)?.[1]) || '';
+  const url = `./data-season-${seasonName}.js${ver ? `?v=${ver}` : ''}`;
   try {
     const r = await fetch(url);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);

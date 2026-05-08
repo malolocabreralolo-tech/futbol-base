@@ -1,4 +1,4 @@
-import { el, $, getData, teamBadge, isHistorical, buildSparkline, S } from './state.js';
+import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S } from './state.js';
 
 /* ====== MATCH DETAIL MODAL ====== */
 const modalOverlay = document.getElementById('matchModal');
@@ -329,6 +329,109 @@ export function openTeamDetail(teamName, groupId) {
     }
   }
 
+  // Cross-season history placeholder — populated lazily after modal opens
+  body += `
+    <div class="modal-stats-header" id="histAllSeasonsHeader">
+      <span>Histórico todas las temporadas</span>
+      <span class="hist-loading" id="histAllSeasonsLoading" style="font-size:11px;opacity:.6;font-weight:400">cargando…</span>
+    </div>
+    <div id="histAllSeasonsBody"></div>`;
+
   modalBody.innerHTML = body;
   modalOverlay.classList.add('open');
+
+  // Fire-and-forget: fetch all historical seasons in parallel and render a
+  // cross-season table for this team. Same trust model as the rest of this
+  // file — data comes from our own DB-generated JSON, not user input.
+  loadCrossSeasonHistory(teamName);
+}
+
+// Escape user-derived strings before interpolating into innerHTML.
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+const _seasonCache = {};
+
+async function loadAllHistoricalSeasons() {
+  if (typeof SEASONS === 'undefined') return [];
+  const historic = SEASONS.filter(s => !s.current);
+  // Inherit ?v= cache buster from data-seasons.js script tag
+  const ver = (document.querySelector('script[src*="data-seasons.js"]')?.src.match(/v=([^&]+)/)?.[1]) || '';
+  const ext = ver ? `?v=${ver}` : '';
+  const out = [];
+  await Promise.all(historic.map(async s => {
+    if (_seasonCache[s.name]) { out.push(_seasonCache[s.name]); return; }
+    try {
+      const r = await fetch(`./data-season-${s.name}.js${ext}`);
+      if (!r.ok) return;
+      const txt = await r.text();
+      const m = txt.match(/const SEASON_\w+=(.+);/);
+      if (!m) return;
+      const obj = JSON.parse(m[1]);
+      _seasonCache[s.name] = obj;
+      out.push(obj);
+    } catch (e) { /* skip */ }
+  }));
+  return out;
+}
+
+async function loadCrossSeasonHistory(teamName) {
+  const headerLoading = document.getElementById('histAllSeasonsLoading');
+  const container = document.getElementById('histAllSeasonsBody');
+  if (!container) return;
+
+  const target = normalizeTeamName(teamName);
+  const seasons = await loadAllHistoricalSeasons();
+  if (headerLoading) headerLoading.remove();
+
+  if (!seasons.length) {
+    container.innerHTML = '<div class="modal-h2h-empty" style="font-size:12px">Sin temporadas históricas disponibles</div>';
+    return;
+  }
+
+  // Find the team in each season — fuzzy match on normalized name
+  const rows = [];
+  for (const s of seasons.sort((a, b) => b.name.localeCompare(a.name))) {
+    let found = null;
+    for (const cat of ['benjamin', 'prebenjamin']) {
+      for (const g of (s[cat] || [])) {
+        const match = (g.standings || []).find(r => normalizeTeamName(r[1]) === target);
+        if (match) { found = { group: g, row: match, cat }; break; }
+      }
+      if (found) break;
+    }
+    if (found) {
+      const r = found.row;
+      const [pos, _, pts, J, G, E, P, GF, GC, DF] = r;
+      rows.push({ season: s.name, group: found.group, pos, pts, J, G, E, P, GF, GC, DF });
+    }
+  }
+
+  if (!rows.length) {
+    container.innerHTML = `<div class="modal-h2h-empty" style="font-size:12px">No aparece "${escHtml(teamName)}" en temporadas anteriores</div>`;
+    return;
+  }
+
+  let html = '<div class="table-wrap"><table class="standings-table"><thead><tr>';
+  html += '<th>Temporada</th><th>Grupo</th><th>Pos</th><th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DF</th>';
+  html += '</tr></thead><tbody>';
+  for (const r of rows) {
+    const dfCls = r.DF > 0 ? 'df-pos' : (r.DF < 0 ? 'df-neg' : '');
+    const dfStr = r.DF > 0 ? `+${r.DF}` : r.DF;
+    const phaseShort = escHtml(((r.group.phase || '')
+      .replace(/Primera Fase /, '').replace(/Segunda Fase /, '2ª-')).slice(0, 16));
+    html += `<tr>
+      <td><b>${escHtml(r.season.replace('-', '/'))}</b></td>
+      <td style="font-size:11px;opacity:.85">${phaseShort} ${escHtml(r.group.name)}</td>
+      <td>${r.pos}º</td>
+      <td class="pts-col">${r.pts}</td>
+      <td>${r.J}</td><td>${r.G}</td><td>${r.E}</td><td>${r.P}</td>
+      <td>${r.GF}</td><td>${r.GC}</td>
+      <td class="${dfCls}">${dfStr}</td>
+    </tr>`;
+  }
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
 }

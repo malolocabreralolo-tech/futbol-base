@@ -24,5 +24,15 @@ jobs:
           python-version: '3.12'
       - name: Install pytest
         run: pip install pytest
-      - name: Run tests
+      - name: Run Python tests
         run: python -m pytest scripts/tests/ -v
+
+  node-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run Node tests
+        run: node --test scripts/tests/test_js_modules.mjs

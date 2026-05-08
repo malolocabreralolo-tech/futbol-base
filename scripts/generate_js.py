@@ -563,18 +563,31 @@ def get_historical_jornadas(conn, group_id):
 
 
 def generate_seasons_js(conn):
-    """Generate data-seasons.js with list of available seasons and historical data."""
-    # Get all seasons
+    """Generate data-seasons.js with list of available seasons + historical data.
+
+    Returns (js_string_for_lean_file, full_seasons_list_with_groups).
+
+    The lean file (data-seasons.js) only contains [{name, current}] entries —
+    enough for the season selector dropdown. Per-season group/match data is
+    written to data-season-YYYY-YYYY.js by generate_per_season_files() and
+    fetched lazily by src/state.js loadSeasonData() when the user switches
+    to a historical season. This keeps initial page load small (was 484KB,
+    now ~200B for season list).
+    """
     seasons = conn.execute(
         "SELECT id, name, is_current FROM seasons ORDER BY start_year DESC"
     ).fetchall()
 
+    # Lean version for the eager-loaded data-seasons.js
+    lean_list = [{"name": n, "current": bool(c)} for _, n, c in seasons]
+
+    # Full version (with group data) used by generate_per_season_files
     seasons_list = []
     for season_id, season_name, is_current in seasons:
         entry = {"name": season_name, "current": bool(is_current)}
 
         if not is_current:
-            # Include historical standings data inline
+            # Include historical standings data inline (for per-season files)
             for cat_name, cat_key in [("BENJAMIN", "benjamin"), ("PREBENJAMIN", "prebenjamin")]:
                 # Match category by case-insensitive name (import may use lowercase)
                 cat_ids = [r[0] for r in conn.execute(
@@ -611,7 +624,7 @@ def generate_seasons_js(conn):
 
         seasons_list.append(entry)
 
-    return "const SEASONS=" + js_val(seasons_list) + ";\n", seasons_list
+    return "const SEASONS=" + js_val(lean_list) + ";\n", seasons_list
 
 
 def generate_per_season_files(seasons_list):

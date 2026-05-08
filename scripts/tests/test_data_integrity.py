@@ -127,10 +127,23 @@ class TestGeneratedFiles:
         assert isinstance(s, list)
         assert all("name" in entry for entry in s)
 
-    def test_per_season_files_match_seasons_js(self):
-        """Per-season lazy-load files must contain the same data as the inline
-        history in data-seasons.js. This is the regression we fixed in
-        2026-05-08 (GC1 missing in per-season file)."""
+    def test_per_season_files_exist_for_each_historical(self):
+        """Every non-current season in data-seasons.js must have a corresponding
+        data-season-YYYY-YYYY.js file (otherwise the lazy loader 404s)."""
+        seasons = _load_seasons_js()
+        for entry in seasons:
+            if entry.get("current"):
+                continue
+            name = entry["name"]
+            assert _load_per_season_js(name) is not None, (
+                f"data-season-{name}.js missing for season in seasons.js"
+            )
+
+    def test_per_season_files_match_db_codes(self):
+        """Codes in each per-season file must match codes in DB for that season.
+        Catches the regression we fixed 2026-05-08 (GC1 in DB but missing in
+        per-season file because the file was hand-maintained, not auto-gen)."""
+        c = _conn()
         seasons = _load_seasons_js()
         for entry in seasons:
             if entry.get("current"):
@@ -139,39 +152,23 @@ class TestGeneratedFiles:
             per_season = _load_per_season_js(name)
             if per_season is None:
                 pytest.fail(f"data-season-{name}.js missing")
-            for cat in ("benjamin", "prebenjamin"):
-                seasons_groups = entry.get(cat, [])
-                per_groups = per_season.get(cat, [])
-                seasons_ids = sorted(g["id"] for g in seasons_groups)
-                per_ids = sorted(g["id"] for g in per_groups)
-                assert seasons_ids == per_ids, (
-                    f"{name}/{cat}: seasons.js={seasons_ids} != per-season={per_ids}"
-                )
-
-    def test_seasons_js_groups_match_db_codes(self):
-        seasons = _load_seasons_js()
-        c = _conn()
-        for entry in seasons:
-            if entry.get("current"):
-                continue
-            name = entry["name"]
-            season_id = c.execute(
+            season_row = c.execute(
                 "SELECT id FROM seasons WHERE name=?", (name,)
             ).fetchone()
-            if not season_id:
-                pytest.fail(f"Season {name} in JS but missing in DB")
+            if not season_row:
+                pytest.fail(f"Season {name} in JS but not in DB")
             db_codes = sorted(
                 r[0] for r in c.execute(
-                    "SELECT code FROM groups WHERE season_id=?", (season_id[0],)
+                    "SELECT code FROM groups WHERE season_id=?", (season_row[0],)
                 )
             )
             js_codes = sorted(
                 g["id"]
                 for cat in ("benjamin", "prebenjamin")
-                for g in entry.get(cat, [])
+                for g in per_season.get(cat, [])
             )
             assert db_codes == js_codes, (
-                f"{name}: DB groups {db_codes} != JS {js_codes}"
+                f"{name}: DB={db_codes} != per-season-js={js_codes}"
             )
 
     def test_standings_canonical_format(self):
@@ -182,8 +179,11 @@ class TestGeneratedFiles:
         for entry in seasons:
             if entry.get("current"):
                 continue
+            per_season = _load_per_season_js(entry["name"])
+            if per_season is None:
+                continue
             for cat in ("benjamin", "prebenjamin"):
-                for g in entry.get(cat, []):
+                for g in per_season.get(cat, []):
                     for row in g.get("standings", []):
                         assert isinstance(row, list), (
                             f"{entry['name']}/{g['id']}: standings row not a list: {row}"

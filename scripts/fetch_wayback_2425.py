@@ -25,7 +25,11 @@ CDX_URL   = "https://web.archive.org/cdx/search/cdx"
 WAYBACK   = "https://web.archive.org/web"
 SITE      = "futbolaspalmas.com"
 FROM_DATE = "20250401"
-TO_DATE   = "20250731"
+TO_DATE   = "20250930"
+# Some groups only got archived once during the season — fall back to early
+# snapshots (Sep 2024–Mar 2025) if the post-season range yields nothing.
+EARLY_FROM = "20240901"
+EARLY_TO   = "20250331"
 
 DELAY = 1.5  # seconds between Wayback requests
 
@@ -311,11 +315,11 @@ def main():
 
         print(f"\n[{slug}] Querying CDX...")
 
-        # Find best snapshot
+        # Find best snapshot — try post-season first, then mid-season fallback
         snap = cdx_best_snapshot(slug)
         if not snap:
-            # Try wider date range as fallback
-            snap = cdx_best_snapshot(slug, from_date="20250101", to_date="20250831")
+            time.sleep(0.4)
+            snap = cdx_best_snapshot(slug, from_date=EARLY_FROM, to_date=EARLY_TO)
         if not snap:
             print(f"  ! No snapshot found")
             errors.append({"slug": slug, "error": "no snapshot found"})

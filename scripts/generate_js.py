@@ -611,7 +611,28 @@ def generate_seasons_js(conn):
 
         seasons_list.append(entry)
 
-    return "const SEASONS=" + js_val(seasons_list) + ";\n"
+    return "const SEASONS=" + js_val(seasons_list) + ";\n", seasons_list
+
+
+def generate_per_season_files(seasons_list):
+    """Write data-season-YYYY-YYYY.js for each historical season.
+
+    The app fetches these lazily via state.js loadSeasonData() — keeping them
+    in sync with data-seasons.js prevents drift bugs (e.g. 2026-05-08 GC1
+    invisible because per-season file lagged behind DB).
+    """
+    written = []
+    for s in seasons_list:
+        if s.get("current"):
+            continue
+        name = s["name"]  # "2021-2022"
+        var_name = "SEASON_" + name.replace("-", "_")
+        out_path = os.path.join(PROJECT_ROOT, f"data-season-{name}.js")
+        content = f"const {var_name}=" + js_val(s) + ";\n"
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        written.append((name, len(content)))
+    return written
 
 
 def bump_cache_version():
@@ -686,9 +707,15 @@ def main():
     write_file("data-stats.js", generate_stats_js(conn))
 
     print("8. data-seasons.js")
-    write_file("data-seasons.js", generate_seasons_js(conn))
+    seasons_js, seasons_list = generate_seasons_js(conn)
+    write_file("data-seasons.js", seasons_js)
 
-    print("\n9. Bumping cache version in index.html")
+    print("9. data-season-*.js (per-season lazy-loaded files)")
+    written = generate_per_season_files(seasons_list)
+    for name, sz in written:
+        print(f"  data-season-{name}.js: {sz:,} bytes")
+
+    print("\n10. Bumping cache version in index.html")
     bump_cache_version()
 
     conn.close()

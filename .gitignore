@@ -31,3 +31,4 @@ database.db
 
 # Test cache
 .pytest_cache/
+.hypothesis/

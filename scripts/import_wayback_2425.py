@@ -71,7 +71,12 @@ def import_group(conn, g, season_id):
     cat_name = CAT_MAP.get(g["category"], "BENJAMIN")
     cat_id   = get_or_create_category(conn, cat_name)
 
+    # Normalise phase name — some retry scripts saved "Primera Fase" without
+    # the GC suffix; align to match the canonical FIFLP import value so the
+    # frontend groups all P1-P14 under a single phase header.
     phase    = g["phase"]
+    if g["category"] == "benjamin" and phase == "Primera Fase":
+        phase = "Primera Fase GC"
     num_str  = re.search(r"\d+$", slug)
     grp_name = f"Grupo {num_str.group(0)}" if num_str else slug
 

@@ -31,5 +31,3330 @@
     "group_name": "GRUPO 2",
     "standings": [],
     "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171190",
+    "group_name": "GRUPO 1",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "ARUCAS C.F. A \"A\"",
+        "pts": 52,
+        "j": 18,
+        "g": 17,
+        "e": 1,
+        "p": 0,
+        "gf": 141,
+        "gc": 17,
+        "df": 124,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 2,
+        "team": "GAREPA VIERA, C.F.",
+        "pts": 43,
+        "j": 18,
+        "g": 13,
+        "e": 4,
+        "p": 1,
+        "gf": 93,
+        "gc": 39,
+        "df": 54,
+        "form": "EGPGG"
+      },
+      {
+        "pos": 3,
+        "team": "MESAS HURACAN A, U.D. LAS \"A\"",
+        "pts": 39,
+        "j": 18,
+        "g": 12,
+        "e": 3,
+        "p": 3,
+        "gf": 79,
+        "gc": 37,
+        "df": 42,
+        "form": "EGGGG"
+      },
+      {
+        "pos": 4,
+        "team": "BECERRIL, C.D.",
+        "pts": 34,
+        "j": 18,
+        "g": 11,
+        "e": 1,
+        "p": 6,
+        "gf": 67,
+        "gc": 53,
+        "df": 14,
+        "form": "GPGGP"
+      },
+      {
+        "pos": 5,
+        "team": "GUAYARMINA, C.D.",
+        "pts": 28,
+        "j": 18,
+        "g": 9,
+        "e": 1,
+        "p": 8,
+        "gf": 68,
+        "gc": 67,
+        "df": 1,
+        "form": "PGGPG"
+      },
+      {
+        "pos": 6,
+        "team": "CORAZON DE MARIA A, C.D. \"A\"",
+        "pts": 24,
+        "j": 18,
+        "g": 7,
+        "e": 3,
+        "p": 8,
+        "gf": 89,
+        "gc": 78,
+        "df": 11,
+        "form": "PPPEP"
+      },
+      {
+        "pos": 7,
+        "team": "COSTA AYALA A, UNION JUVENIL \"A\"",
+        "pts": 21,
+        "j": 18,
+        "g": 7,
+        "e": 0,
+        "p": 11,
+        "gf": 42,
+        "gc": 61,
+        "df": -19,
+        "form": "GGGPG"
+      },
+      {
+        "pos": 8,
+        "team": "BARRIAL A, U.D. \"A\"",
+        "pts": 12,
+        "j": 18,
+        "g": 3,
+        "e": 3,
+        "p": 12,
+        "gf": 31,
+        "gc": 86,
+        "df": -55,
+        "form": "PPPEP"
+      },
+      {
+        "pos": 9,
+        "team": "SAN NICOLAS, U.D.",
+        "pts": 5,
+        "j": 18,
+        "g": 1,
+        "e": 2,
+        "p": 15,
+        "gf": 26,
+        "gc": 97,
+        "df": -71,
+        "form": "GPPPP"
+      },
+      {
+        "pos": 10,
+        "team": "GOLETA, C.D.",
+        "pts": 3,
+        "j": 18,
+        "g": 1,
+        "e": 0,
+        "p": 17,
+        "gf": 24,
+        "gc": 125,
+        "df": -101,
+        "form": "PPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "03-02-2024",
+        "matches": [
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "01-02-2024",
+            "time": "19:55",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GUAYARMINA, C.D.",
+            "away": "BECERRIL, C.D.",
+            "hs": null,
+            "as": 5,
+            "date": "02-02-2024",
+            "time": "17:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "away": "GOLETA, C.D.",
+            "hs": 1,
+            "as": null,
+            "date": "03-02-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "away": "SAN NICOLAS, U.D.",
+            "hs": 3,
+            "as": null,
+            "date": "03-02-2024",
+            "time": "09:00",
+            "venue": "COSTA AYALA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "04-02-2024",
+            "time": "09:00",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "10-02-2024",
+        "matches": [
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-02-2024",
+            "time": "20:19",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-02-2024",
+            "time": "18:00",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "GUAYARMINA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-02-2024",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "GOLETA, C.D.",
+            "away": "BARRIAL \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "10-02-2024",
+            "time": "09:00",
+            "venue": "Cirilo Lorenzo Alonso F-8",
+            "referee": ""
+          },
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-02-2024",
+            "time": "09:00",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "18-02-2024",
+        "matches": [
+          {
+            "home": "GUAYARMINA, C.D.",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": 2,
+            "as": 0,
+            "date": "16-02-2024",
+            "time": "17:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "away": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-02-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "away": "BECERRIL, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-02-2024",
+            "time": "09:00",
+            "venue": "COSTA AYALA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "SAN NICOLAS, U.D.",
+            "hs": null,
+            "as": 3,
+            "date": "17-02-2024",
+            "time": "10:30",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "GOLETA, C.D.",
+            "hs": 11,
+            "as": null,
+            "date": "18-02-2024",
+            "time": "16:30",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "24-02-2024",
+        "matches": [
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 0,
+            "as": 10,
+            "date": "23-02-2024",
+            "time": "18:00",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-02-2024",
+            "time": "19:52",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "GOLETA, C.D.",
+            "away": "GUAYARMINA, C.D.",
+            "hs": null,
+            "as": 8,
+            "date": "24-02-2024",
+            "time": "09:00",
+            "venue": "Cirilo Lorenzo Alonso F-8",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "BARRIAL \"A\", U.D. \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "25-02-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": null,
+            "as": 0,
+            "date": "25-02-2024",
+            "time": "09:00",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "02-03-2024",
+        "matches": [
+          {
+            "home": "GUAYARMINA, C.D.",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-03-2024",
+            "time": "17:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "GOLETA, C.D.",
+            "away": "SAN NICOLAS, U.D.",
+            "hs": null,
+            "as": 1,
+            "date": "02-03-2024",
+            "time": "09:00",
+            "venue": "Cirilo Lorenzo Alonso F-8",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "02-03-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "BECERRIL, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "02-03-2024",
+            "time": "10:30",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "03-03-2024",
+            "time": "16:30",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "08-03-2024",
+        "matches": [
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "GUAYARMINA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "08-03-2024",
+            "time": "18:00",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-03-2024",
+            "time": "09:00",
+            "venue": "COSTA AYALA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "GOLETA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-03-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 1,
+            "as": null,
+            "date": "10-03-2024",
+            "time": "09:00",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "BARRIAL \"A\", U.D. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "10-03-2024",
+            "time": "09:00",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "15-03-2024",
+        "matches": [
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "14-03-2024",
+            "time": "20:17",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GUAYARMINA, C.D.",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-03-2024",
+            "time": "17:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-03-2024",
+            "time": "18:00",
+            "venue": "LOS CASCAJOS F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "GOLETA, C.D.",
+            "away": "BECERRIL, C.D.",
+            "hs": 1,
+            "as": 10,
+            "date": "16-03-2024",
+            "time": "09:00",
+            "venue": "Cirilo Lorenzo Alonso F-8",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": 0,
+            "as": null,
+            "date": "16-03-2024",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "22-03-2024",
+        "matches": [
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "GOLETA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "19-03-2024",
+            "time": "19:14",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "GUAYARMINA, C.D.",
+            "away": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2024",
+            "time": "17:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "SAN NICOLAS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-03-2024",
+            "time": "19:40",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 5,
+            "as": null,
+            "date": "23-03-2024",
+            "time": "09:00",
+            "venue": "COSTA AYALA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "away": "BARRIAL \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "23-03-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "07-04-2024",
+        "matches": [
+          {
+            "home": "GOLETA, C.D.",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "05-04-2024",
+            "time": "19:48",
+            "venue": "Cirilo Lorenzo Alonso F-8",
+            "referee": ""
+          },
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "10:00",
+            "venue": "LOS CASCAJOS F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "GUAYARMINA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "10:30",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "BECERRIL, C.D.",
+            "hs": 3,
+            "as": 1,
+            "date": "07-04-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "07-04-2024",
+            "time": "12:30",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "14-04-2024",
+        "matches": [
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "12-04-2024",
+            "time": "18:00",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "GUAYARMINA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-04-2024",
+            "time": "20:13",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "GOLETA, C.D.",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": 0,
+            "date": "13-04-2024",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "14-04-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "BARRIAL \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 0,
+            "date": "14-04-2024",
+            "time": "16:30",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "19-04-2024",
+        "matches": [
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "BECERRIL, C.D.",
+            "hs": 1,
+            "as": null,
+            "date": "16-04-2024",
+            "time": "19:30",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "away": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "18-04-2024",
+            "time": "19:22",
+            "venue": "COSTA AYALA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "GOLETA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-04-2024",
+            "time": "19:54",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GUAYARMINA, C.D.",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 3,
+            "as": 3,
+            "date": "19-04-2024",
+            "time": "17:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "away": "SAN NICOLAS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-04-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "27-04-2024",
+        "matches": [
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "BARRIAL \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "26-04-2024",
+            "time": "18:00",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "26-04-2024",
+            "time": "19:26",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "GOLETA, C.D.",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": null,
+            "as": 8,
+            "date": "27-04-2024",
+            "time": "09:00",
+            "venue": "Cirilo Lorenzo Alonso F-8",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "28-04-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "GUAYARMINA, C.D.",
+            "hs": null,
+            "as": 1,
+            "date": "28-04-2024",
+            "time": "10:30",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "03-05-2024",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "away": "BECERRIL, C.D.",
+            "hs": 5,
+            "as": 2,
+            "date": "01-05-2024",
+            "time": "12:00",
+            "venue": "COLEGIO CLARET F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "02-05-2024",
+            "time": "19:51",
+            "venue": "COSTA AYALA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "hs": null,
+            "as": 6,
+            "date": "02-05-2024",
+            "time": "20:08",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GUAYARMINA, C.D.",
+            "away": "GOLETA, C.D.",
+            "hs": null,
+            "as": 2,
+            "date": "03-05-2024",
+            "time": "17:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "SAN NICOLAS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "04-05-2024",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "10-05-2024",
+        "matches": [
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "BARRIAL \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "07-05-2024",
+            "time": "18:57",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "away": "GUAYARMINA, C.D.",
+            "hs": 3,
+            "as": null,
+            "date": "08-05-2024",
+            "time": "18:19",
+            "venue": "COSTA AYALA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": 12,
+            "as": 3,
+            "date": "09-05-2024",
+            "time": "19:16",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "GOLETA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-05-2024",
+            "time": "18:00",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "12-05-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "17-05-2024",
+        "matches": [
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": 6,
+            "date": "14-05-2024",
+            "time": "19:57",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GUAYARMINA, C.D.",
+            "away": "SAN NICOLAS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-05-2024",
+            "time": "17:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "BECERRIL, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-05-2024",
+            "time": "18:17",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "GOLETA, C.D.",
+            "away": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "hs": null,
+            "as": 10,
+            "date": "18-05-2024",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "18-05-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "26-05-2024",
+        "matches": [
+          {
+            "home": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "away": "BARRIAL \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-05-2024",
+            "time": "18:25",
+            "venue": "COSTA AYALA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "23-05-2024",
+            "time": "19:26",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "GOLETA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-05-2024",
+            "time": "19:33",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "away": "GUAYARMINA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "25-05-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "SAN NICOLAS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "25-05-2024",
+            "time": "12:15",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "02-06-2024",
+        "matches": [
+          {
+            "home": "GOLETA, C.D.",
+            "away": "ARUCAS C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": 11,
+            "date": "28-05-2024",
+            "time": "19:21",
+            "venue": "Cirilo Lorenzo Alonso F-8",
+            "referee": ""
+          },
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "BECERRIL, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "31-05-2024",
+            "time": "18:00",
+            "venue": "LOS CASCAJOS F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "COSTA AYALA \"A\", UNION JUVENIL \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "01-06-2024",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL \"A\", U.D. \"A\"",
+            "away": "CORAZON DE MARIA \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-06-2024",
+            "time": "10:30",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN \"A\", U.D. LAS \"A\"",
+            "away": "GUAYARMINA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "02-06-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171280",
+    "group_name": "GRUPO 2",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "PALMAS, U.D. LAS",
+        "pts": 54,
+        "j": 18,
+        "g": 18,
+        "e": 0,
+        "p": 0,
+        "gf": 202,
+        "gc": 12,
+        "df": 190,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 2,
+        "team": "ATLETICO HURACAN A, A.D. \"A\"",
+        "pts": 48,
+        "j": 18,
+        "g": 16,
+        "e": 0,
+        "p": 2,
+        "gf": 143,
+        "gc": 30,
+        "df": 113,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 3,
+        "team": "ACODETTI C.F. A \"A\"",
+        "pts": 42,
+        "j": 18,
+        "g": 14,
+        "e": 0,
+        "p": 4,
+        "gf": 108,
+        "gc": 40,
+        "df": 68,
+        "form": "GPGGP"
+      },
+      {
+        "pos": 4,
+        "team": "VETERANOS DEL PILA.A, C.D. \"A\"",
+        "pts": 33,
+        "j": 18,
+        "g": 11,
+        "e": 0,
+        "p": 7,
+        "gf": 81,
+        "gc": 62,
+        "df": 19,
+        "form": "PGPGG"
+      },
+      {
+        "pos": 5,
+        "team": "SIMUSETTI C. F. A \"A\"",
+        "pts": 30,
+        "j": 18,
+        "g": 10,
+        "e": 0,
+        "p": 8,
+        "gf": 78,
+        "gc": 58,
+        "df": 20,
+        "form": "PGGPG"
+      },
+      {
+        "pos": 6,
+        "team": "PUERTOS DE L.P. B, C.E.F. \"B\"",
+        "pts": 19,
+        "j": 18,
+        "g": 6,
+        "e": 1,
+        "p": 11,
+        "gf": 66,
+        "gc": 130,
+        "df": -64,
+        "form": "GGPGG"
+      },
+      {
+        "pos": 7,
+        "team": "HEIDELBERG B, C.F. \"B\"",
+        "pts": 15,
+        "j": 18,
+        "g": 4,
+        "e": 3,
+        "p": 11,
+        "gf": 27,
+        "gc": 87,
+        "df": -60,
+        "form": "GPGPP"
+      },
+      {
+        "pos": 8,
+        "team": "CORAZON DE MARIA B, C.D. \"B\"",
+        "pts": 9,
+        "j": 18,
+        "g": 2,
+        "e": 3,
+        "p": 13,
+        "gf": 27,
+        "gc": 116,
+        "df": -89,
+        "form": "PPPPP"
+      },
+      {
+        "pos": 9,
+        "team": "VILLA DE SANTA BRIGIDA A, U.D. \"A\"",
+        "pts": 9,
+        "j": 18,
+        "g": 2,
+        "e": 3,
+        "p": 13,
+        "gf": 27,
+        "gc": 92,
+        "df": -65,
+        "form": "PPPPP"
+      },
+      {
+        "pos": 10,
+        "team": "ARUCAS C.F. B \"B\"",
+        "pts": 5,
+        "j": 18,
+        "g": 1,
+        "e": 2,
+        "p": 15,
+        "gf": 23,
+        "gc": 155,
+        "df": -132,
+        "form": "PPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "03-02-2024",
+        "matches": [
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "03-02-2024",
+            "time": "09:00",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-02-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-02-2024",
+            "time": "09:00",
+            "venue": "JUNTA DE OBRAS F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-02-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "04-02-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "11-02-2024",
+        "matches": [
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-02-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": 1,
+            "date": "10-02-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "10-02-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "10-02-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": null,
+            "as": 8,
+            "date": "11-02-2024",
+            "time": "09:00",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "17-02-2024",
+        "matches": [
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": 13,
+            "as": null,
+            "date": "15-02-2024",
+            "time": "20:47",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": 2,
+            "as": 12,
+            "date": "17-02-2024",
+            "time": "09:00",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": 1,
+            "as": 1,
+            "date": "17-02-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-02-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": 2,
+            "as": null,
+            "date": "17-02-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "24-02-2024",
+        "matches": [
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-02-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "24-02-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "24-02-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": 1,
+            "date": "24-02-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-02-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "02-03-2024",
+        "matches": [
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "02-03-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "02-03-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": 7,
+            "as": null,
+            "date": "02-03-2024",
+            "time": "13:00",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": 0,
+            "as": null,
+            "date": "03-03-2024",
+            "time": "10:30",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "03-03-2024",
+            "time": "13:00",
+            "venue": "JUNTA DE OBRAS F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "09-03-2024",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-03-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": 0,
+            "as": 10,
+            "date": "09-03-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": null,
+            "as": 8,
+            "date": "09-03-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "09-03-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-03-2024",
+            "time": "13:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "16-03-2024",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "16-03-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": null,
+            "as": 3,
+            "date": "16-03-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": null,
+            "as": 6,
+            "date": "16-03-2024",
+            "time": "10:26",
+            "venue": "ELIAS RISKALL F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "16-03-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "16-03-2024",
+            "time": "10:30",
+            "venue": "JUNTA DE OBRAS F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "23-03-2024",
+        "matches": [
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "23-03-2024",
+            "time": "09:00",
+            "venue": "JUNTA DE OBRAS F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "23-03-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-03-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-03-2024",
+            "time": "09:00",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": 14,
+            "as": null,
+            "date": "23-03-2024",
+            "time": "13:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "06-04-2024",
+        "matches": [
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "06-04-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": 1,
+            "date": "07-04-2024",
+            "time": "09:00",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "13-04-2024",
+        "matches": [
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": null,
+            "as": 8,
+            "date": "12-04-2024",
+            "time": "21:17",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "13-04-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "13-04-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": null,
+            "as": 4,
+            "date": "13-04-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "13-04-2024",
+            "time": "10:30",
+            "venue": "ELIAS RISKALL F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "20-04-2024",
+        "matches": [
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": null,
+            "as": 0,
+            "date": "20-04-2024",
+            "time": "09:00",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": 8,
+            "as": null,
+            "date": "20-04-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": null,
+            "as": 1,
+            "date": "20-04-2024",
+            "time": "10:30",
+            "venue": "JUNTA DE OBRAS F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "20-04-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": 2,
+            "as": null,
+            "date": "21-04-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "27-04-2024",
+        "matches": [
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": null,
+            "as": 0,
+            "date": "27-04-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "27-04-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "27-04-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-04-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-04-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "04-05-2024",
+        "matches": [
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "03-05-2024",
+            "time": "18:06",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "04-05-2024",
+            "time": "09:00",
+            "venue": "JUNTA DE OBRAS F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "04-05-2024",
+            "time": "10:30",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "04-05-2024",
+            "time": "13:00",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "05-05-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "11-05-2024",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-05-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "11-05-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 5,
+            "date": "11-05-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "11-05-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "11-05-2024",
+            "time": "11:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "18-05-2024",
+        "matches": [
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": 11,
+            "as": 1,
+            "date": "18-05-2024",
+            "time": "09:00",
+            "venue": "JUNTA DE OBRAS F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "18-05-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "18-05-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "18-05-2024",
+            "time": "11:49",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": 6,
+            "as": null,
+            "date": "18-05-2024",
+            "time": "13:00",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "25-05-2024",
+        "matches": [
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "24-05-2024",
+            "time": "20:16",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": 5,
+            "as": null,
+            "date": "25-05-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "25-05-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": 5,
+            "as": null,
+            "date": "25-05-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": 5,
+            "as": null,
+            "date": "25-05-2024",
+            "time": "11:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "01-06-2024",
+        "matches": [
+          {
+            "home": "HEIDELBERG \"B\", C.F. \"B\"",
+            "away": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-06-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "away": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "hs": null,
+            "as": 5,
+            "date": "01-06-2024",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\" \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "01-06-2024",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": null,
+            "as": 7,
+            "date": "01-06-2024",
+            "time": "10:30",
+            "venue": "LOS OLIVOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\" \"B\"",
+            "away": "ACODETTI C.F. \"A\" \"A\"",
+            "hs": null,
+            "as": 13,
+            "date": "02-06-2024",
+            "time": "09:00",
+            "venue": "ELIAS RISKALL F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "08-06-2024",
+        "matches": [
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "ARUCAS C.F. \"B\" \"B\"",
+            "hs": 20,
+            "as": 1,
+            "date": "06-06-2024",
+            "time": "20:22",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"B\", C.E.F. \"B\"",
+            "away": "HEIDELBERG \"B\", C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "08-06-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\" \"A\"",
+            "away": "CORAZON DE MARIA \"B\", C.D. \"B\"",
+            "hs": 8,
+            "as": null,
+            "date": "08-06-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\" \"A\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-06-2024",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA.\"A\", C.D. \"A\"",
+            "away": "VILLA DE SANTA BRIGIDA \"A\", U.D. \"A\"",
+            "hs": 5,
+            "as": null,
+            "date": "08-06-2024",
+            "time": "09:00",
+            "venue": "JUNTA DE OBRAS F8 (2)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171370",
+    "group_name": "GRUPO 3",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "UNION VIERA A, C.F. \"A\"",
+        "pts": 42,
+        "j": 16,
+        "g": 14,
+        "e": 0,
+        "p": 2,
+        "gf": 81,
+        "gc": 28,
+        "df": 53,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 2,
+        "team": "TORRES, U.D. LAS",
+        "pts": 33,
+        "j": 16,
+        "g": 10,
+        "e": 3,
+        "p": 3,
+        "gf": 52,
+        "gc": 21,
+        "df": 31,
+        "form": "GEGGG"
+      },
+      {
+        "pos": 3,
+        "team": "HEIDELBERG A, C.F. \"A\"",
+        "pts": 31,
+        "j": 16,
+        "g": 9,
+        "e": 4,
+        "p": 3,
+        "gf": 66,
+        "gc": 43,
+        "df": 23,
+        "form": "GPEGE"
+      },
+      {
+        "pos": 4,
+        "team": "TAMARACEITE A, U.D. \"A\"",
+        "pts": 27,
+        "j": 16,
+        "g": 8,
+        "e": 3,
+        "p": 5,
+        "gf": 61,
+        "gc": 31,
+        "df": 30,
+        "form": "GGEPG"
+      },
+      {
+        "pos": 5,
+        "team": "SAN ANTONIO A, U.D. \"A\"",
+        "pts": 26,
+        "j": 16,
+        "g": 8,
+        "e": 2,
+        "p": 6,
+        "gf": 56,
+        "gc": 37,
+        "df": 19,
+        "form": "PPGGP"
+      },
+      {
+        "pos": 6,
+        "team": "PUERTOS DE L.P. A, C.E.F. \"A\"",
+        "pts": 23,
+        "j": 16,
+        "g": 7,
+        "e": 2,
+        "p": 7,
+        "gf": 53,
+        "gc": 59,
+        "df": -6,
+        "form": "GGEPP"
+      },
+      {
+        "pos": 7,
+        "team": "LOMO BLANCO S.J.A. A, C.D. \"A\"",
+        "pts": 13,
+        "j": 16,
+        "g": 4,
+        "e": 1,
+        "p": 11,
+        "gf": 43,
+        "gc": 74,
+        "df": -31,
+        "form": "GPPPP"
+      },
+      {
+        "pos": 8,
+        "team": "GUINIGUADA APOLINARIO A, C.D. \"A\"",
+        "pts": 12,
+        "j": 16,
+        "g": 3,
+        "e": 3,
+        "p": 10,
+        "gf": 22,
+        "gc": 54,
+        "df": -32,
+        "form": "GPPPE"
+      },
+      {
+        "pos": 9,
+        "team": "HUESAS B, U.D. LAS \"B\"",
+        "pts": 0,
+        "j": 16,
+        "g": 0,
+        "e": 0,
+        "p": 16,
+        "gf": 10,
+        "gc": 97,
+        "df": -87,
+        "form": "PPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "04-02-2024",
+        "matches": [
+          {
+            "home": "HEIDELBERG \"A\", C.F. \"A\"",
+            "away": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "03-02-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "03-02-2024",
+            "time": "09:00",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA \"A\", C.F. \"A\"",
+            "away": "HUESAS \"B\", U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-02-2024",
+            "time": "16:30",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "away": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "04-02-2024",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "10-02-2024",
+        "matches": [
+          {
+            "home": "HUESAS \"B\", U.D. LAS \"B\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "10-02-2024",
+            "time": "09:00",
+            "venue": "LAS HUESAS F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE \"A\", U.D. \"A\"",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": 2,
+            "date": "10-02-2024",
+            "time": "09:00",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "away": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-02-2024",
+            "time": "10:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "away": "HEIDELBERG \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-02-2024",
+            "time": "18:41",
+            "venue": "LOPEZ SOCAS F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "17-02-2024",
+        "matches": [
+          {
+            "home": "HEIDELBERG \"A\", C.F. \"A\"",
+            "away": "HUESAS \"B\", U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-02-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "away": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-02-2024",
+            "time": "10:30",
+            "venue": "LOMO APOLINARIO F8",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "TAMARACEITE \"A\", U.D. \"A\"",
+            "hs": 1,
+            "as": null,
+            "date": "17-02-2024",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "away": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 3,
+            "date": "18-02-2024",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "24-02-2024",
+        "matches": [
+          {
+            "home": "HUESAS \"B\", U.D. LAS \"B\"",
+            "away": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-02-2024",
+            "time": "09:00",
+            "venue": "LAS HUESAS F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE \"A\", U.D. \"A\"",
+            "away": "HEIDELBERG \"A\", C.F. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "24-02-2024",
+            "time": "09:00",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA \"A\", C.F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 2,
+            "as": null,
+            "date": "24-02-2024",
+            "time": "11:47",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "away": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "25-02-2024",
+            "time": "09:00",
+            "venue": "LOPEZ SOCAS F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "02-03-2024",
+        "matches": [
+          {
+            "home": "HEIDELBERG \"A\", C.F. \"A\"",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "28-02-2024",
+            "time": "19:14",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "away": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "02-03-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "away": "HUESAS \"B\", U.D. LAS \"B\"",
+            "hs": 4,
+            "as": 1,
+            "date": "03-03-2024",
+            "time": "09:00",
+            "venue": "LOMO APOLINARIO F8",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "away": "TAMARACEITE \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "03-03-2024",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "10-03-2024",
+        "matches": [
+          {
+            "home": "HUESAS \"B\", U.D. LAS \"B\"",
+            "away": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-03-2024",
+            "time": "09:00",
+            "venue": "LAS HUESAS F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE \"A\", U.D. \"A\"",
+            "away": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-03-2024",
+            "time": "09:00",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "HEIDELBERG \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-03-2024",
+            "time": "12:00",
+            "venue": "LAS TORRES F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA \"A\", C.F. \"A\"",
+            "away": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-03-2024",
+            "time": "20:01",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "17-03-2024",
+        "matches": [
+          {
+            "home": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "away": "TAMARACEITE \"A\", U.D. \"A\"",
+            "hs": 1,
+            "as": 4,
+            "date": "16-03-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "16-03-2024",
+            "time": "10:30",
+            "venue": "LOMO APOLINARIO F8",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "16-03-2024",
+            "time": "11:42",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "away": "HUESAS \"B\", U.D. LAS \"B\"",
+            "hs": null,
+            "as": 1,
+            "date": "17-03-2024",
+            "time": "10:30",
+            "venue": "LOPEZ SOCAS F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "23-03-2024",
+        "matches": [
+          {
+            "home": "TAMARACEITE \"A\", U.D. \"A\"",
+            "away": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2024",
+            "time": "18:18",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"A\", C.F. \"A\"",
+            "away": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "hs": 0,
+            "as": null,
+            "date": "23-03-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": 0,
+            "date": "23-03-2024",
+            "time": "12:00",
+            "venue": "LAS TORRES F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA \"A\", C.F. \"A\"",
+            "away": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "hs": 5,
+            "as": 0,
+            "date": "24-03-2024",
+            "time": "14:45",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "06-04-2024",
+        "matches": [
+          {
+            "home": "HUESAS \"B\", U.D. LAS \"B\"",
+            "away": "TAMARACEITE \"A\", U.D. \"A\"",
+            "hs": 0,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "09:00",
+            "venue": "LAS HUESAS F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 3,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "10:24",
+            "venue": "LOPEZ SOCAS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "away": "HEIDELBERG \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-04-2024",
+            "time": "10:30",
+            "venue": "LOMO APOLINARIO F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "13-04-2024",
+        "matches": [
+          {
+            "home": "HUESAS \"B\", U.D. LAS \"B\"",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "13-04-2024",
+            "time": "09:00",
+            "venue": "LAS HUESAS F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "13-04-2024",
+            "time": "10:25",
+            "venue": "LOPEZ SOCAS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "away": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "13-04-2024",
+            "time": "10:30",
+            "venue": "LOMO APOLINARIO F8",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "away": "HEIDELBERG \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "13-04-2024",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "21-04-2024",
+        "matches": [
+          {
+            "home": "UNION VIERA \"A\", C.F. \"A\"",
+            "away": "TAMARACEITE \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "18-04-2024",
+            "time": "18:48",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"A\", C.F. \"A\"",
+            "away": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "20-04-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "HUESAS \"B\", U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "20-04-2024",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "away": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "hs": 2,
+            "as": null,
+            "date": "21-04-2024",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "27-04-2024",
+        "matches": [
+          {
+            "home": "HUESAS \"B\", U.D. LAS \"B\"",
+            "away": "HEIDELBERG \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-04-2024",
+            "time": "09:00",
+            "venue": "LAS HUESAS F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE \"A\", U.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "27-04-2024",
+            "time": "09:00",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "away": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-04-2024",
+            "time": "10:31",
+            "venue": "LOPEZ SOCAS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "away": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-04-2024",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "04-05-2024",
+        "matches": [
+          {
+            "home": "HEIDELBERG \"A\", C.F. \"A\"",
+            "away": "TAMARACEITE \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "04-05-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "04-05-2024",
+            "time": "09:00",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "away": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "hs": 2,
+            "as": 1,
+            "date": "04-05-2024",
+            "time": "10:30",
+            "venue": "LOMO APOLINARIO F8",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "away": "HUESAS \"B\", U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "05-05-2024",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "12-05-2024",
+        "matches": [
+          {
+            "home": "UNION VIERA \"A\", C.F. \"A\"",
+            "away": "HEIDELBERG \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-05-2024",
+            "time": "18:51",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS \"B\", U.D. LAS \"B\"",
+            "away": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-05-2024",
+            "time": "09:00",
+            "venue": "LAS HUESAS F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE \"A\", U.D. \"A\"",
+            "away": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-05-2024",
+            "time": "09:00",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "away": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "12-05-2024",
+            "time": "10:30",
+            "venue": "LOPEZ SOCAS F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "18-05-2024",
+        "matches": [
+          {
+            "home": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "away": "HUESAS \"B\", U.D. LAS \"B\"",
+            "hs": 7,
+            "as": null,
+            "date": "18-05-2024",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"A\", C.F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "18-05-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "away": "TAMARACEITE \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 3,
+            "date": "18-05-2024",
+            "time": "10:30",
+            "venue": "LOMO APOLINARIO F8",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": 3,
+            "as": null,
+            "date": "19-05-2024",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "25-05-2024",
+        "matches": [
+          {
+            "home": "UNION VIERA \"A\", C.F. \"A\"",
+            "away": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-05-2024",
+            "time": "18:59",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS \"B\", U.D. LAS \"B\"",
+            "away": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "25-05-2024",
+            "time": "09:00",
+            "venue": "LAS HUESAS F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE \"A\", U.D. \"A\"",
+            "away": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "25-05-2024",
+            "time": "09:00",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "25-05-2024",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "01-06-2024",
+        "matches": [
+          {
+            "home": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "away": "TAMARACEITE \"A\", U.D. \"A\"",
+            "hs": null,
+            "as": 1,
+            "date": "01-06-2024",
+            "time": "10:24",
+            "venue": "LOPEZ SOCAS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": null,
+            "as": 7,
+            "date": "01-06-2024",
+            "time": "10:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"",
+            "away": "HEIDELBERG \"A\", C.F. \"A\"",
+            "hs": 4,
+            "as": null,
+            "date": "01-06-2024",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "01-06-2024",
+            "time": "12:00",
+            "venue": "LOMO APOLINARIO F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "08-06-2024",
+        "matches": [
+          {
+            "home": "TAMARACEITE \"A\", U.D. \"A\"",
+            "away": "HUESAS \"B\", U.D. LAS \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "07-06-2024",
+            "time": "19:33",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA \"A\", C.F. \"A\"",
+            "away": "SAN ANTONIO \"A\", U.D. \"A\"",
+            "hs": 4,
+            "as": 2,
+            "date": "08-06-2024",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "PUERTOS DE L.P. \"A\", C.E.F. \"A\"",
+            "hs": 6,
+            "as": null,
+            "date": "08-06-2024",
+            "time": "09:00",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG \"A\", C.F. \"A\"",
+            "away": "GUINIGUADA APOLINARIO \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": 3,
+            "date": "08-06-2024",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171460",
+    "group_name": "GRUPO 4",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171550",
+    "group_name": "GRUPO 5",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171640",
+    "group_name": "GRUPO 6",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171730",
+    "group_name": "GRUPO 7",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171820",
+    "group_name": "GRUPO 8",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "171910",
+    "group_name": "GRUPO 9",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "172000",
+    "group_name": "GRUPO 10",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "172090",
+    "group_name": "GRUPO 11",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "172146",
+    "group_name": "GRUPO 12",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "172202",
+    "group_name": "GRUPO 13",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1439",
+    "competition_name": "Benjamin GC Segunda Fase",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase",
+    "group_id": "172258",
+    "group_name": "GRUPO 14",
+    "standings": [],
+    "jornadas": []
   }
 ]

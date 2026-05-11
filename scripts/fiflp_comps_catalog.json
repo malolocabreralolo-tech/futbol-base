@@ -1,0 +1,3950 @@
+{
+  "2021-2022": {
+    "season_code": "17",
+    "total": 112,
+    "relevant": [
+      {
+        "id": "796",
+        "name": "COPA FIFLP FUTBOL SALA MASCULINO"
+      },
+      {
+        "id": "806",
+        "name": "TERCERA DIVISION NACIONAL FUTBOL SALA"
+      },
+      {
+        "id": "946",
+        "name": "COPA JUVENIL FUTBOL SALA"
+      },
+      {
+        "id": "853",
+        "name": "FASE ASCENSO A TERCERA RFEF"
+      },
+      {
+        "id": "807",
+        "name": "FINAL COPA REGIONAL FUERTEVENTURA"
+      },
+      {
+        "id": "918",
+        "name": "COPA PRIMERA AFICIONADO FUERTEVENTURA"
+      },
+      {
+        "id": "797",
+        "name": "COPA FIFLP FUTBOL SALA FEMENINO"
+      },
+      {
+        "id": "821",
+        "name": "COPA FIFLP FEMENINO SALA"
+      },
+      {
+        "id": "957",
+        "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "819",
+        "name": "COPA FIFLP JUVENIL TERRITORIAL"
+      },
+      {
+        "id": "916",
+        "name": "COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "940",
+        "name": "SEMIFINALES COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "941",
+        "name": "FINAL COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "938",
+        "name": "COPA DELEGACION CADETE LANZAROTE"
+      },
+      {
+        "id": "939",
+        "name": "FINAL COPA DELEGACION CADETE LANZAROTE"
+      },
+      {
+        "id": "965",
+        "name": "COPA DELEGACION INFANTIL LANZAROTE"
+      },
+      {
+        "id": "966",
+        "name": "SEMIFINAL COPA DELEGACION INFANTIL LANZAROTE"
+      },
+      {
+        "id": "967",
+        "name": "FINAL COPA DELEGACION INFANTIL LANZAROTE"
+      },
+      {
+        "id": "801",
+        "name": "FINAL COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "884",
+        "name": "COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "961",
+        "name": "FINAL LIGA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "825",
+        "name": "COPA CANARIAS INFANTIL SALA"
+      },
+      {
+        "id": "811",
+        "name": "COPA DE CAMPEONES INFANTIL SALA"
+      },
+      {
+        "id": "814",
+        "name": "COPA FIFLP INFANTIL SALA"
+      },
+      {
+        "id": "934",
+        "name": "COPA FIFLP INFANTIL FUTBOL SALA"
+      },
+      {
+        "id": "968",
+        "name": "COPA DELEGACION ALEVIN LANZAROTE"
+      },
+      {
+        "id": "969",
+        "name": "SEMIFINAL COPA DELEGACION ALEVIN LANZAROTE"
+      },
+      {
+        "id": "970",
+        "name": "FINAL COPA DELEGACION ALEVIN LANZAROTE"
+      },
+      {
+        "id": "802",
+        "name": "FINAL COPA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "890",
+        "name": "COPA ALEVIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "954",
+        "name": "FINAL LIGA PRIMERA ALEVIN LANZAROTE"
+      },
+      {
+        "id": "826",
+        "name": "COPA CANARIAS ALEVIN SALA"
+      },
+      {
+        "id": "812",
+        "name": "COPA DE CAMPEONES ALEVIN SALA"
+      },
+      {
+        "id": "815",
+        "name": "COPA FIFLP ALEVIN SALA"
+      },
+      {
+        "id": "935",
+        "name": "COPA FIFLP ALEVIN FUTBOL SALA"
+      },
+      {
+        "id": "891",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "892",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "971",
+        "name": "COPA DELEGACION BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "973",
+        "name": "FINAL COPA DELEGACION BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "895",
+        "name": "LIGA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "962",
+        "name": "FINAL LIGA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "803",
+        "name": "FINAL COPA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "893",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "894",
+        "name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "896",
+        "name": "COPA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "956",
+        "name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "827",
+        "name": "COPA CANARIAS BENJAMIN SALA"
+      },
+      {
+        "id": "813",
+        "name": "COPA DE CAMPEONES BENJAMIN SALA"
+      },
+      {
+        "id": "816",
+        "name": "COPA FIFLP BENJAMIN SALA"
+      },
+      {
+        "id": "912",
+        "name": "LIGA PRIMERA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "936",
+        "name": "COPA FIFLP BENJAMIN FUTBOL SALA"
+      },
+      {
+        "id": "897",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "959",
+        "name": "COPA RFEF"
+      },
+      {
+        "id": "780",
+        "name": "LIGA TERCERA DIVISION NACIONAL GRUPO 12"
+      },
+      {
+        "id": "864",
+        "name": "COPA FEMENINA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "824",
+        "name": "COPA CANARIAS CADETE SALA"
+      },
+      {
+        "id": "817",
+        "name": "COPA FIFLP CADETE PRIMERA"
+      },
+      {
+        "id": "947",
+        "name": "COPA PRIMERA CADETE SALA"
+      }
+    ],
+    "all": [
+      {
+        "id": "782",
+        "name": "LIGA DIVISION DE HONOR JUVENIL GRUPO 6"
+      },
+      {
+        "id": "796",
+        "name": "COPA FIFLP FUTBOL SALA MASCULINO"
+      },
+      {
+        "id": "982",
+        "name": "FASE ASCENSO A 2ª DIVISION SALA MASCULINA"
+      },
+      {
+        "id": "783",
+        "name": "LIGA SEGUNDA DIVISION B NACIONAL FUTBOL SALA GRUPO 6"
+      },
+      {
+        "id": "806",
+        "name": "TERCERA DIVISION NACIONAL FUTBOL SALA"
+      },
+      {
+        "id": "784",
+        "name": "LIGA JUVENIL DIVISION DE HONOR FUTBOL SALA GRUPO 8"
+      },
+      {
+        "id": "946",
+        "name": "COPA JUVENIL FUTBOL SALA"
+      },
+      {
+        "id": "852",
+        "name": "LIGA PREFERENTE INTERINSULAR"
+      },
+      {
+        "id": "853",
+        "name": "FASE ASCENSO A TERCERA RFEF"
+      },
+      {
+        "id": "790",
+        "name": "FASE ASCENSO A REGIONAL PREFERENTE GRAN CANARIA"
+      },
+      {
+        "id": "807",
+        "name": "FINAL COPA REGIONAL FUERTEVENTURA"
+      },
+      {
+        "id": "855",
+        "name": "LIGA PRIMERA AFICIONADO DE GRAN CANARIA"
+      },
+      {
+        "id": "857",
+        "name": "LIGA PRIMERA AFICIONADO LANZAROTE"
+      },
+      {
+        "id": "859",
+        "name": "ELIMINATORIAS DE ASCENSO A PREFERENTE REGIONAL LANZAROTE"
+      },
+      {
+        "id": "860",
+        "name": "PLAY OFF DE ASCENSO A REGIONAL PREFERENTE-FUERTEVENTURA"
+      },
+      {
+        "id": "861",
+        "name": "LIGA PRIMERA AFICIONADO FUERTEVENTURA"
+      },
+      {
+        "id": "918",
+        "name": "COPA PRIMERA AFICIONADO FUERTEVENTURA"
+      },
+      {
+        "id": "854",
+        "name": "LIGA PREFERENTE TERRITORIAL FEMENINA"
+      },
+      {
+        "id": "974",
+        "name": "FASE ASCENSO A PRIMERA NACIONAL FEMENINA"
+      },
+      {
+        "id": "900",
+        "name": "LIGA PREFERENTE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "901",
+        "name": "LIGA PREFERENTE FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "797",
+        "name": "COPA FIFLP FUTBOL SALA FEMENINO"
+      },
+      {
+        "id": "902",
+        "name": "LIGA PREFERENTE FUTBOL SALA FEMENINO GRAN CANARIA"
+      },
+      {
+        "id": "821",
+        "name": "COPA FIFLP FEMENINO SALA"
+      },
+      {
+        "id": "977",
+        "name": "FASE ASCENSO A 2ª DIVISION SALA FEMENINA"
+      },
+      {
+        "id": "866",
+        "name": "LIGA JUVENIL INTERINSULAR DE LAS PALMAS"
+      },
+      {
+        "id": "867",
+        "name": "LIGA PREFERENTE JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "868",
+        "name": "LIGA JUVENIL PREFERENTE DE LANZAROTE"
+      },
+      {
+        "id": "869",
+        "name": "LIGA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "957",
+        "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "976",
+        "name": "ELIMINATORIAS DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE)"
+      },
+      {
+        "id": "870",
+        "name": "LIGA PRIMERA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "786",
+        "name": "FASE ASCENSO A PRIMERA JUVENIL GRAN CANARIA"
+      },
+      {
+        "id": "871",
+        "name": "LIGA SEGUNDA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "819",
+        "name": "COPA FIFLP JUVENIL TERRITORIAL"
+      },
+      {
+        "id": "903",
+        "name": "LIGA JUVENIL FÚTBOL SALA"
+      },
+      {
+        "id": "904",
+        "name": "LIGA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "916",
+        "name": "COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "940",
+        "name": "SEMIFINALES COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "941",
+        "name": "FINAL COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "960",
+        "name": "LIGA CADETE AUTONÓMICA"
+      },
+      {
+        "id": "872",
+        "name": "LIGA CADETE INTERINSULAR DE LAS PALMAS"
+      },
+      {
+        "id": "938",
+        "name": "COPA DELEGACION CADETE LANZAROTE"
+      },
+      {
+        "id": "939",
+        "name": "FINAL COPA DELEGACION CADETE LANZAROTE"
+      },
+      {
+        "id": "873",
+        "name": "LIGA CADETE INSULAR DE GRAN CANARIA"
+      },
+      {
+        "id": "874",
+        "name": "LIGA CADETE INSULAR DE LANZAROTE"
+      },
+      {
+        "id": "877",
+        "name": "LIGA CADETE INSULAR DE FUERTEVENTURA"
+      },
+      {
+        "id": "958",
+        "name": "FASE DE ASCENSO A CADETE INTERINSULAR"
+      },
+      {
+        "id": "975",
+        "name": "ELIMINATORIAS DE ASCENSO A CADETE INTERINSULAR (LANZAROTE)"
+      },
+      {
+        "id": "879",
+        "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA"
+      },
+      {
+        "id": "880",
+        "name": "LIGA PREFERENTE INFANTIL LANZAROTE"
+      },
+      {
+        "id": "965",
+        "name": "COPA DELEGACION INFANTIL LANZAROTE"
+      },
+      {
+        "id": "966",
+        "name": "SEMIFINAL COPA DELEGACION INFANTIL LANZAROTE"
+      },
+      {
+        "id": "967",
+        "name": "FINAL COPA DELEGACION INFANTIL LANZAROTE"
+      },
+      {
+        "id": "801",
+        "name": "FINAL COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "881",
+        "name": "LIGA PRIMERA INFANTIL DE GRAN CANARIA"
+      },
+      {
+        "id": "882",
+        "name": "LIGA PRIMERA INFANTIL DE LANZAROTE"
+      },
+      {
+        "id": "884",
+        "name": "COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "883",
+        "name": "LIGA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "961",
+        "name": "FINAL LIGA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "825",
+        "name": "COPA CANARIAS INFANTIL SALA"
+      },
+      {
+        "id": "811",
+        "name": "COPA DE CAMPEONES INFANTIL SALA"
+      },
+      {
+        "id": "814",
+        "name": "COPA FIFLP INFANTIL SALA"
+      },
+      {
+        "id": "908",
+        "name": "LIGA PRIMERA INFANTIL FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "934",
+        "name": "COPA FIFLP INFANTIL FUTBOL SALA"
+      },
+      {
+        "id": "885",
+        "name": "LIGA PREFERENTE ALEVIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "886",
+        "name": "LIGA PREFERENTE ALEVIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "968",
+        "name": "COPA DELEGACION ALEVIN LANZAROTE"
+      },
+      {
+        "id": "969",
+        "name": "SEMIFINAL COPA DELEGACION ALEVIN LANZAROTE"
+      },
+      {
+        "id": "970",
+        "name": "FINAL COPA DELEGACION ALEVIN LANZAROTE"
+      },
+      {
+        "id": "802",
+        "name": "FINAL COPA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "887",
+        "name": "LIGA PRIMERA ALEVIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "888",
+        "name": "LIGA PRIMERA ALEVIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "890",
+        "name": "COPA ALEVIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "926",
+        "name": "SUPERLIGA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "954",
+        "name": "FINAL LIGA PRIMERA ALEVIN LANZAROTE"
+      },
+      {
+        "id": "889",
+        "name": "LIGA ALEVIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "826",
+        "name": "COPA CANARIAS ALEVIN SALA"
+      },
+      {
+        "id": "812",
+        "name": "COPA DE CAMPEONES ALEVIN SALA"
+      },
+      {
+        "id": "815",
+        "name": "COPA FIFLP ALEVIN SALA"
+      },
+      {
+        "id": "910",
+        "name": "LIGA PRIMERA ALEVIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "935",
+        "name": "COPA FIFLP ALEVIN FUTBOL SALA"
+      },
+      {
+        "id": "891",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "892",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "971",
+        "name": "COPA DELEGACION BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "973",
+        "name": "FINAL COPA DELEGACION BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "895",
+        "name": "LIGA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "962",
+        "name": "FINAL LIGA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "803",
+        "name": "FINAL COPA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "893",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "894",
+        "name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "896",
+        "name": "COPA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "956",
+        "name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "827",
+        "name": "COPA CANARIAS BENJAMIN SALA"
+      },
+      {
+        "id": "813",
+        "name": "COPA DE CAMPEONES BENJAMIN SALA"
+      },
+      {
+        "id": "816",
+        "name": "COPA FIFLP BENJAMIN SALA"
+      },
+      {
+        "id": "912",
+        "name": "LIGA PRIMERA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "936",
+        "name": "COPA FIFLP BENJAMIN FUTBOL SALA"
+      },
+      {
+        "id": "897",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "799",
+        "name": "LIGA SEGUNDA DIVISION B"
+      },
+      {
+        "id": "959",
+        "name": "COPA RFEF"
+      },
+      {
+        "id": "844",
+        "name": "FASE ASCENSO A 2ª RFEF"
+      },
+      {
+        "id": "780",
+        "name": "LIGA TERCERA DIVISION NACIONAL GRUPO 12"
+      },
+      {
+        "id": "781",
+        "name": "LIGA PRIMERA NACIONAL FEMENINA GRUPO 6"
+      },
+      {
+        "id": "863",
+        "name": "LIGA FEMENINA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "864",
+        "name": "COPA FEMENINA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "824",
+        "name": "COPA CANARIAS CADETE SALA"
+      },
+      {
+        "id": "817",
+        "name": "COPA FIFLP CADETE PRIMERA"
+      },
+      {
+        "id": "905",
+        "name": "LIGA PRIMERA CADETE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "947",
+        "name": "COPA PRIMERA CADETE SALA"
+      },
+      {
+        "id": "842",
+        "name": "SEGUNDA FASE PRIMERA CADETE SALA GRAN CANARIA GRUPO C"
+      },
+      {
+        "id": "843",
+        "name": "SEGUNDA FASE PRIMERA CADETE SALA GRAN CANARIA GRUPO D"
+      }
+    ]
+  },
+  "2022-2023": {
+    "season_code": "18",
+    "total": 130,
+    "relevant": [
+      {
+        "id": "1052",
+        "name": "COPA RFEF"
+      },
+      {
+        "id": "991",
+        "name": "LIGA TERCERA DIVISION NACIONAL GRUPO 12"
+      },
+      {
+        "id": "1007",
+        "name": "COPA FIFLP FUTBOL SALA MASCULINO"
+      },
+      {
+        "id": "1017",
+        "name": "TERCERA DIVISION NACIONAL FUTBOL SALA"
+      },
+      {
+        "id": "1030",
+        "name": "COPA FIFLP JUVENIL FÚTBOL SALA."
+      },
+      {
+        "id": "1147",
+        "name": "COPA JUVENIL FUTBOL SALA"
+      },
+      {
+        "id": "1056",
+        "name": "FASE ASCENSO A TERCERA RFEF"
+      },
+      {
+        "id": "1018",
+        "name": "FINAL COPA REGIONAL FUERTEVENTURA"
+      },
+      {
+        "id": "1119",
+        "name": "COPA PRIMERA AFICIONADO FUERTEVENTURA"
+      },
+      {
+        "id": "1185",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA AFICIONADO"
+      },
+      {
+        "id": "1186",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA AFICIONADO"
+      },
+      {
+        "id": "1191",
+        "name": "COPA SENIOR FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "1200",
+        "name": "SEMIFINALES COPA SENIOR FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "1201",
+        "name": "FINAL COPA SENIOR FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "1008",
+        "name": "COPA FIFLP FUTBOL SALA FEMENINO"
+      },
+      {
+        "id": "1161",
+        "name": "COPA FIFLP FEMENINO SALA"
+      },
+      {
+        "id": "1038",
+        "name": "FINAL COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "1158",
+        "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "1132",
+        "name": "COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "1141",
+        "name": "SEMIFINALES COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "1142",
+        "name": "FINAL COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "1139",
+        "name": "COPA CADETE INSULAR DE LANZAROTE"
+      },
+      {
+        "id": "1140",
+        "name": "FINAL COPA CADETE INSULAR LANZAROTE"
+      },
+      {
+        "id": "990",
+        "name": "COPA DELEGACION CADETE FUERTEVENTURA"
+      },
+      {
+        "id": "1188",
+        "name": "FINAL COPA CADETE FUERTEVENTURA"
+      },
+      {
+        "id": "1079",
+        "name": "COPA CADETE FUERTEVENTURA"
+      },
+      {
+        "id": "1028",
+        "name": "COPA FIFLP CADETE PRIMERA"
+      },
+      {
+        "id": "1189",
+        "name": "COPA FIFLP CADETE FUTBOL SALA"
+      },
+      {
+        "id": "1190",
+        "name": "COPA DE CAMPEONES CADETE SALA"
+      },
+      {
+        "id": "1167",
+        "name": "COPA CABILDO DE LANZAROTE INFANTIL"
+      },
+      {
+        "id": "1168",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE INFANTIL"
+      },
+      {
+        "id": "1169",
+        "name": "FINAL COPA CABILDO DE LANZAROTE INFANTIL"
+      },
+      {
+        "id": "1012",
+        "name": "FINAL COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1085",
+        "name": "COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1153",
+        "name": "FINAL LIGA PRIMERA INFANTIL LANZAROTE"
+      },
+      {
+        "id": "1126",
+        "name": "COPA DELEGACION INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1160",
+        "name": "FINAL LIGA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1022",
+        "name": "COPA DE CAMPEONES INFANTIL SALA"
+      },
+      {
+        "id": "1025",
+        "name": "COPA FIFLP INFANTIL SALA"
+      },
+      {
+        "id": "1135",
+        "name": "COPA FIFLP INFANTIL FUTBOL SALA"
+      },
+      {
+        "id": "1091",
+        "name": "COPA ALEVIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1155",
+        "name": "FINAL LIGA PRIMERA ALEVIN LANZAROTE"
+      },
+      {
+        "id": "1204",
+        "name": "FINAL LIGA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "1164",
+        "name": "FINAL SUPERLIGA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "1023",
+        "name": "COPA DE CAMPEONES ALEVIN SALA"
+      },
+      {
+        "id": "1026",
+        "name": "COPA FIFLP ALEVIN SALA"
+      },
+      {
+        "id": "1136",
+        "name": "COPA FIFLP ALEVIN FUTBOL SALA"
+      },
+      {
+        "id": "1092",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1093",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1096",
+        "name": "LIGA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1165",
+        "name": "FINAL LIGA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1014",
+        "name": "FINAL COPA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1094",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1095",
+        "name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1097",
+        "name": "COPA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1128",
+        "name": "COPA DELEGACION BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1157",
+        "name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "1024",
+        "name": "COPA DE CAMPEONES BENJAMIN SALA"
+      },
+      {
+        "id": "1027",
+        "name": "COPA FIFLP BENJAMIN SALA"
+      },
+      {
+        "id": "1113",
+        "name": "LIGA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1137",
+        "name": "COPA FIFLP BENJAMIN FUTBOL SALA"
+      },
+      {
+        "id": "1098",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "1115",
+        "name": "LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (PBS)"
+      },
+      {
+        "id": "1068",
+        "name": "COPA FEMENINA FUERTEVENTURA"
+      },
+      {
+        "id": "1194",
+        "name": "COPA FEMENINA F8 LANZAROTE"
+      },
+      {
+        "id": "1198",
+        "name": "SEMIFINAL COPA FEMENINA F8 LANZAROTE"
+      },
+      {
+        "id": "1199",
+        "name": "FINAL COPA FEMENINA F8 LANZAROTE"
+      }
+    ],
+    "all": [
+      {
+        "id": "1052",
+        "name": "COPA RFEF"
+      },
+      {
+        "id": "983",
+        "name": "FASE ASCENSO A 2ª RFEF"
+      },
+      {
+        "id": "991",
+        "name": "LIGA TERCERA DIVISION NACIONAL GRUPO 12"
+      },
+      {
+        "id": "993",
+        "name": "LIGA DIVISION DE HONOR JUVENIL GRUPO 6"
+      },
+      {
+        "id": "1007",
+        "name": "COPA FIFLP FUTBOL SALA MASCULINO"
+      },
+      {
+        "id": "994",
+        "name": "LIGA SEGUNDA DIVISION B NACIONAL FUTBOL SALA GRUPO 6"
+      },
+      {
+        "id": "1017",
+        "name": "TERCERA DIVISION NACIONAL FUTBOL SALA"
+      },
+      {
+        "id": "1030",
+        "name": "COPA FIFLP JUVENIL FÚTBOL SALA."
+      },
+      {
+        "id": "995",
+        "name": "LIGA JUVENIL DIVISION DE HONOR FUTBOL SALA GRUPO 8"
+      },
+      {
+        "id": "1147",
+        "name": "COPA JUVENIL FUTBOL SALA"
+      },
+      {
+        "id": "1055",
+        "name": "LIGA PREFERENTE INTERINSULAR"
+      },
+      {
+        "id": "1056",
+        "name": "FASE ASCENSO A TERCERA RFEF"
+      },
+      {
+        "id": "1001",
+        "name": "FASE ASCENSO A PREFERENTE INTERINSULAR"
+      },
+      {
+        "id": "1018",
+        "name": "FINAL COPA REGIONAL FUERTEVENTURA"
+      },
+      {
+        "id": "1058",
+        "name": "LIGA PRIMERA AFICIONADO DE GRAN CANARIA"
+      },
+      {
+        "id": "1060",
+        "name": "LIGA PRIMERA AFICIONADO LANZAROTE"
+      },
+      {
+        "id": "1061",
+        "name": "FASE DE ASCENSO A PREFERENTE INTERINSULAR - LANZAROTE/FUERTEVENTURA"
+      },
+      {
+        "id": "1062",
+        "name": "ELIMINATORIAS DE ASCENSO A PREFERENTE INTERINSULAR (LANZAROTE)"
+      },
+      {
+        "id": "1064",
+        "name": "LIGA PRIMERA AFICIONADO FUERTEVENTURA"
+      },
+      {
+        "id": "1065",
+        "name": "FASE ASCENSO A REGIONAL PREFERENTE - FUERTEVENTURA"
+      },
+      {
+        "id": "1119",
+        "name": "COPA PRIMERA AFICIONADO FUERTEVENTURA"
+      },
+      {
+        "id": "1185",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA AFICIONADO"
+      },
+      {
+        "id": "1186",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA AFICIONADO"
+      },
+      {
+        "id": "1202",
+        "name": "FASE DE ASCENSO A PRIMERA AFICIONADO GRAN CANARIA"
+      },
+      {
+        "id": "1059",
+        "name": "LIGA SEGUNDA REGIONAL DE GRAN CANARIA"
+      },
+      {
+        "id": "1057",
+        "name": "LIGA PREFERENTE INTERINSULAR FEMENINA"
+      },
+      {
+        "id": "1176",
+        "name": "FASE ASCENSO A PRIMERA NACIONAL FEMENINA"
+      },
+      {
+        "id": "1205",
+        "name": "FASE DE ASCENSO PREFERENTE INTERINSULAR FEMENINA"
+      },
+      {
+        "id": "1187",
+        "name": "PRIMERA TERRITORIAL FEMENINA"
+      },
+      {
+        "id": "1101",
+        "name": "LIGA PREFERENTE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1102",
+        "name": "LIGA PREFERENTE FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "1191",
+        "name": "COPA SENIOR FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "1200",
+        "name": "SEMIFINALES COPA SENIOR FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "1201",
+        "name": "FINAL COPA SENIOR FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "1008",
+        "name": "COPA FIFLP FUTBOL SALA FEMENINO"
+      },
+      {
+        "id": "1103",
+        "name": "LIGA PREFERENTE FUTBOL SALA FEMENINO GRAN CANARIA"
+      },
+      {
+        "id": "1161",
+        "name": "COPA FIFLP FEMENINO SALA"
+      },
+      {
+        "id": "1069",
+        "name": "LIGA JUVENIL INTERINSULAR DE LAS PALMAS"
+      },
+      {
+        "id": "1151",
+        "name": "FASE ASCENSO A DIVISION DE HONOR JUVENIL"
+      },
+      {
+        "id": "1207",
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR"
+      },
+      {
+        "id": "1203",
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR FUERTEVENTURA"
+      },
+      {
+        "id": "1038",
+        "name": "FINAL COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "1070",
+        "name": "LIGA PREFERENTE JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1071",
+        "name": "LIGA JUVENIL PREFERENTE DE LANZAROTE"
+      },
+      {
+        "id": "1072",
+        "name": "LIGA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "1158",
+        "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "1177",
+        "name": "ELIMINATORIAS DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE)"
+      },
+      {
+        "id": "1206",
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR - LANZAROTE/FUERTEVENTURA"
+      },
+      {
+        "id": "1196",
+        "name": "FASE DE ASCENSO A JUVENIL PREFERENTE GRAN CANARIA"
+      },
+      {
+        "id": "1073",
+        "name": "LIGA PRIMERA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "997",
+        "name": "FASE ASCENSO A PRIMERA JUVENIL GRAN CANARIA"
+      },
+      {
+        "id": "1074",
+        "name": "LIGA SEGUNDA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1104",
+        "name": "LIGA JUVENIL FÚTBOL SALA"
+      },
+      {
+        "id": "1105",
+        "name": "LIGA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "1132",
+        "name": "COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "1141",
+        "name": "SEMIFINALES COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "1142",
+        "name": "FINAL COPA JUVENIL SALA LANZAROTE"
+      },
+      {
+        "id": "1053",
+        "name": "LIGA CADETE AUTONÓMICA"
+      },
+      {
+        "id": "1195",
+        "name": "FASE DE ASCENSO A CADETE AUTONÓMICO"
+      },
+      {
+        "id": "1075",
+        "name": "LIGA CADETE INTERINSULAR DE LAS PALMAS"
+      },
+      {
+        "id": "1139",
+        "name": "COPA CADETE INSULAR DE LANZAROTE"
+      },
+      {
+        "id": "1140",
+        "name": "FINAL COPA CADETE INSULAR LANZAROTE"
+      },
+      {
+        "id": "990",
+        "name": "COPA DELEGACION CADETE FUERTEVENTURA"
+      },
+      {
+        "id": "1192",
+        "name": "FASE ASCENSO CADETE INSULAR DE FUERTEVENTURA"
+      },
+      {
+        "id": "1188",
+        "name": "FINAL COPA CADETE FUERTEVENTURA"
+      },
+      {
+        "id": "1076",
+        "name": "LIGA CADETE INSULAR DE GRAN CANARIA"
+      },
+      {
+        "id": "1077",
+        "name": "LIGA CADETE INSULAR DE LANZAROTE"
+      },
+      {
+        "id": "1078",
+        "name": "LIGA CADETE INSULAR DE FUERTEVENTURA"
+      },
+      {
+        "id": "1079",
+        "name": "COPA CADETE FUERTEVENTURA"
+      },
+      {
+        "id": "1159",
+        "name": "FASE DE ASCENSO A CADETE INTERINSULAR"
+      },
+      {
+        "id": "1178",
+        "name": "ELIMINATORIAS DE ASCENSO A CADETE INTERINSULAR (LANZAROTE)"
+      },
+      {
+        "id": "1197",
+        "name": "ELIMINATORIAS DE ASCENSO A CADETE INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+      },
+      {
+        "id": "1028",
+        "name": "COPA FIFLP CADETE PRIMERA"
+      },
+      {
+        "id": "1106",
+        "name": "LIGA CADETE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1189",
+        "name": "COPA FIFLP CADETE FUTBOL SALA"
+      },
+      {
+        "id": "1190",
+        "name": "COPA DE CAMPEONES CADETE SALA"
+      },
+      {
+        "id": "1080",
+        "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA"
+      },
+      {
+        "id": "1081",
+        "name": "LIGA PREFERENTE INFANTIL LANZAROTE"
+      },
+      {
+        "id": "1167",
+        "name": "COPA CABILDO DE LANZAROTE INFANTIL"
+      },
+      {
+        "id": "1168",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE INFANTIL"
+      },
+      {
+        "id": "1169",
+        "name": "FINAL COPA CABILDO DE LANZAROTE INFANTIL"
+      },
+      {
+        "id": "1012",
+        "name": "FINAL COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1082",
+        "name": "LIGA PRIMERA INFANTIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1083",
+        "name": "LIGA PRIMERA INFANTIL DE LANZAROTE"
+      },
+      {
+        "id": "1085",
+        "name": "COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1153",
+        "name": "FINAL LIGA PRIMERA INFANTIL LANZAROTE"
+      },
+      {
+        "id": "1084",
+        "name": "LIGA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1126",
+        "name": "COPA DELEGACION INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1160",
+        "name": "FINAL LIGA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1022",
+        "name": "COPA DE CAMPEONES INFANTIL SALA"
+      },
+      {
+        "id": "1025",
+        "name": "COPA FIFLP INFANTIL SALA"
+      },
+      {
+        "id": "1109",
+        "name": "LIGA INFANTIL FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1135",
+        "name": "COPA FIFLP INFANTIL FUTBOL SALA"
+      },
+      {
+        "id": "1086",
+        "name": "LIGA PREFERENTE ALEVIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1087",
+        "name": "LIGA PREFERENTE ALEVIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1088",
+        "name": "LIGA PRIMERA ALEVIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1089",
+        "name": "LIGA PRIMERA ALEVIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1091",
+        "name": "COPA ALEVIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1127",
+        "name": "2ª FASE LIGA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "1155",
+        "name": "FINAL LIGA PRIMERA ALEVIN LANZAROTE"
+      },
+      {
+        "id": "1204",
+        "name": "FINAL LIGA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "1090",
+        "name": "LIGA ALEVIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1164",
+        "name": "FINAL SUPERLIGA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "1023",
+        "name": "COPA DE CAMPEONES ALEVIN SALA"
+      },
+      {
+        "id": "1026",
+        "name": "COPA FIFLP ALEVIN SALA"
+      },
+      {
+        "id": "1111",
+        "name": "LIGA ALEVIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1136",
+        "name": "COPA FIFLP ALEVIN FUTBOL SALA"
+      },
+      {
+        "id": "1092",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1093",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1096",
+        "name": "LIGA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1165",
+        "name": "FINAL LIGA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1014",
+        "name": "FINAL COPA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1094",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1095",
+        "name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1097",
+        "name": "COPA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1128",
+        "name": "COPA DELEGACION BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1157",
+        "name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "1024",
+        "name": "COPA DE CAMPEONES BENJAMIN SALA"
+      },
+      {
+        "id": "1027",
+        "name": "COPA FIFLP BENJAMIN SALA"
+      },
+      {
+        "id": "1113",
+        "name": "LIGA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1137",
+        "name": "COPA FIFLP BENJAMIN FUTBOL SALA"
+      },
+      {
+        "id": "1098",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "1115",
+        "name": "LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (PBS)"
+      },
+      {
+        "id": "1010",
+        "name": "LIGA SEGUNDA DIVISION B"
+      },
+      {
+        "id": "992",
+        "name": "LIGA PRIMERA NACIONAL FEMENINA GRUPO 6"
+      },
+      {
+        "id": "1066",
+        "name": "LIGA FEMENINA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1068",
+        "name": "COPA FEMENINA FUERTEVENTURA"
+      },
+      {
+        "id": "1194",
+        "name": "COPA FEMENINA F8 LANZAROTE"
+      },
+      {
+        "id": "1198",
+        "name": "SEMIFINAL COPA FEMENINA F8 LANZAROTE"
+      },
+      {
+        "id": "1199",
+        "name": "FINAL COPA FEMENINA F8 LANZAROTE"
+      }
+    ]
+  },
+  "2023-2024": {
+    "season_code": "19",
+    "total": 137,
+    "relevant": [
+      {
+        "id": "1436",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO"
+      },
+      {
+        "id": "1437",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA"
+      },
+      {
+        "id": "1438",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE"
+      },
+      {
+        "id": "1216",
+        "name": "LIGA TERCERA FEDERACIÓN GRUPO 12"
+      },
+      {
+        "id": "1240",
+        "name": "FINAL COPA FEMENINA MANOLO SANTANA"
+      },
+      {
+        "id": "1217",
+        "name": "LIGA TERCERA FEDERACIÓN DE FÚTBOL FEMENINO GRUPO 6"
+      },
+      {
+        "id": "1232",
+        "name": "COPA FIFLP FUTBOL SALA MASCULINO"
+      },
+      {
+        "id": "1242",
+        "name": "TERCERA DIVISION NACIONAL FUTBOL SALA"
+      },
+      {
+        "id": "1255",
+        "name": "COPA FIFLP JUVENIL FÚTBOL SALA."
+      },
+      {
+        "id": "1381",
+        "name": "COPA JUVENIL FUTBOL SALA"
+      },
+      {
+        "id": "1435",
+        "name": "FINAL COPA PRIMERA REGIONAL FUERTEVENTURA"
+      },
+      {
+        "id": "1353",
+        "name": "COPA PRIMERA REGIONAL DE FUERTEVENTURA"
+      },
+      {
+        "id": "1418",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA REGIONAL"
+      },
+      {
+        "id": "1419",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA REGIONAL"
+      },
+      {
+        "id": "1380",
+        "name": "COPA FEMENINA GRAN CANARIA MANOLO SANTANA"
+      },
+      {
+        "id": "1410",
+        "name": "FASE ASCENSO A TERCERA FEDERACIÓN DE FÚTBOL FEMENINO"
+      },
+      {
+        "id": "1303",
+        "name": "COPA PRIMERA FEMENINA DE FUERTEVENTURA"
+      },
+      {
+        "id": "1423",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA FEMENINA"
+      },
+      {
+        "id": "1425",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA FEMENINA"
+      },
+      {
+        "id": "1426",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA FEMENINA"
+      },
+      {
+        "id": "1358",
+        "name": "COPA PREFERENTE SALA MASCULINO GRAN CANARIA"
+      },
+      {
+        "id": "1422",
+        "name": "COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1427",
+        "name": "SEMIFINALES COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1428",
+        "name": "FINAL COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1233",
+        "name": "COPA FIFLP FUTBOL SALA FEMENINO"
+      },
+      {
+        "id": "1395",
+        "name": "COPA FIFLP FEMENINO SALA"
+      },
+      {
+        "id": "1446",
+        "name": "FASE FINAL FÚTBOL PLAYA"
+      },
+      {
+        "id": "1366",
+        "name": "COPA JUVENIL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1376",
+        "name": "FINAL COPA JUVENIL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1373",
+        "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "1374",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "1253",
+        "name": "COPA FIFLP CADETE PRIMERA"
+      },
+      {
+        "id": "1420",
+        "name": "COPA FIFLP CADETE FUTBOL SALA"
+      },
+      {
+        "id": "1227",
+        "name": "COPA DE CAMPEONES INFANTIL GRAN CANARIA"
+      },
+      {
+        "id": "1401",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE INFANTIL"
+      },
+      {
+        "id": "1403",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE INFANTIL"
+      },
+      {
+        "id": "1320",
+        "name": "COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1368",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA INFANTIL"
+      },
+      {
+        "id": "1377",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA INFANTIL"
+      },
+      {
+        "id": "1387",
+        "name": "FINAL LIGA PRIMERA INFANTIL LANZAROTE"
+      },
+      {
+        "id": "1250",
+        "name": "COPA FIFLP INFANTIL SALA"
+      },
+      {
+        "id": "1369",
+        "name": "COPA FIFLP INFANTIL FUTBOL SALA"
+      },
+      {
+        "id": "1228",
+        "name": "COPA DE CAMPEONES ALEVIN GRAN CANARIA"
+      },
+      {
+        "id": "1404",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1406",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1326",
+        "name": "COPA ALEVIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1389",
+        "name": "FINAL LIGA PRIMERA ALEVIN LANZAROTE"
+      },
+      {
+        "id": "1405",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1431",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1248",
+        "name": "COPA DE CAMPEONES ALEVIN SALA"
+      },
+      {
+        "id": "1251",
+        "name": "COPA FIFLP ALEVIN SALA"
+      },
+      {
+        "id": "1370",
+        "name": "COPA FIFLP ALEVIN FUTBOL SALA"
+      },
+      {
+        "id": "1229",
+        "name": "COPA DE CAMPEONES BENJAMIN GRAN CANARIA"
+      },
+      {
+        "id": "1445",
+        "name": "TORNEO PRE-BENJAMIN CIERRE TEMPORADA"
+      },
+      {
+        "id": "1328",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1407",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1409",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1330",
+        "name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1391",
+        "name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "1432",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1433",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1329",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1439",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE"
+      },
+      {
+        "id": "1331",
+        "name": "LIGA BENJAMIN F-8 DE FUERTEVENTURA"
+      },
+      {
+        "id": "1332",
+        "name": "COPA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1442",
+        "name": "2ª FASE LIGA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1252",
+        "name": "COPA FIFLP BENJAMIN SALA"
+      },
+      {
+        "id": "1348",
+        "name": "LIGA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1371",
+        "name": "COPA FIFLP BENJAMIN FUTBOL SALA"
+      },
+      {
+        "id": "1230",
+        "name": "COPA DE CAMPEONES PREBENJAMIN GRAN CANARIA"
+      },
+      {
+        "id": "1333",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "1434",
+        "name": "LIGA PREBENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1350",
+        "name": "LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (PBS)"
+      }
+    ],
+    "all": [
+      {
+        "id": "1436",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO"
+      },
+      {
+        "id": "1437",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA"
+      },
+      {
+        "id": "1438",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE"
+      },
+      {
+        "id": "1211",
+        "name": "ELIMINATORIA AUTONÓMICA C.S.M. EL REY"
+      },
+      {
+        "id": "1208",
+        "name": "FASE ASCENSO A 2ª RFEF"
+      },
+      {
+        "id": "1216",
+        "name": "LIGA TERCERA FEDERACIÓN GRUPO 12"
+      },
+      {
+        "id": "1218",
+        "name": "LIGA DIVISION DE HONOR JUVENIL GRUPO 6"
+      },
+      {
+        "id": "1210",
+        "name": "SEGUNDA FEDERACION FUTBOL FEMENINO"
+      },
+      {
+        "id": "1240",
+        "name": "FINAL COPA FEMENINA MANOLO SANTANA"
+      },
+      {
+        "id": "1217",
+        "name": "LIGA TERCERA FEDERACIÓN DE FÚTBOL FEMENINO GRUPO 6"
+      },
+      {
+        "id": "1232",
+        "name": "COPA FIFLP FUTBOL SALA MASCULINO"
+      },
+      {
+        "id": "1279",
+        "name": "FASE ASCENSO A 2ª DIVISION SALA MASCULINA"
+      },
+      {
+        "id": "1219",
+        "name": "LIGA SEGUNDA DIVISION B NACIONAL FUTBOL SALA GRUPO 6"
+      },
+      {
+        "id": "1242",
+        "name": "TERCERA DIVISION NACIONAL FUTBOL SALA"
+      },
+      {
+        "id": "1255",
+        "name": "COPA FIFLP JUVENIL FÚTBOL SALA."
+      },
+      {
+        "id": "1220",
+        "name": "LIGA JUVENIL DIVISION DE HONOR FUTBOL SALA GRUPO 8"
+      },
+      {
+        "id": "1381",
+        "name": "COPA JUVENIL FUTBOL SALA"
+      },
+      {
+        "id": "1290",
+        "name": "LIGA REGIONAL PREFERENTE"
+      },
+      {
+        "id": "1226",
+        "name": "FASE ASCENSO A REGIONAL PREFERENTE"
+      },
+      {
+        "id": "1435",
+        "name": "FINAL COPA PRIMERA REGIONAL FUERTEVENTURA"
+      },
+      {
+        "id": "1293",
+        "name": "LIGA PRIMERA REGIONAL DE GRAN CANARIA"
+      },
+      {
+        "id": "1295",
+        "name": "LIGA PRIMERA REGIONAL DE LANZAROTE"
+      },
+      {
+        "id": "1296",
+        "name": "ELIMINATORIAS DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE/FUERTEVENTURA)"
+      },
+      {
+        "id": "1297",
+        "name": "ELIMINATORIAS DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE)"
+      },
+      {
+        "id": "1299",
+        "name": "LIGA PRIMERA REGIONAL DE FUERTEVENTURA"
+      },
+      {
+        "id": "1300",
+        "name": "FASE ASCENSO A REGIONAL PREFERENTE - FUERTEVENTURA"
+      },
+      {
+        "id": "1353",
+        "name": "COPA PRIMERA REGIONAL DE FUERTEVENTURA"
+      },
+      {
+        "id": "1418",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA REGIONAL"
+      },
+      {
+        "id": "1419",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA REGIONAL"
+      },
+      {
+        "id": "1284",
+        "name": "FASE DE ASCENSO A PRIMERA REGIONAL GRAN CANARIA"
+      },
+      {
+        "id": "1294",
+        "name": "LIGA SEGUNDA REGIONAL DE GRAN CANARIA"
+      },
+      {
+        "id": "1292",
+        "name": "LIGA PREFERENTE FEMENINA"
+      },
+      {
+        "id": "1380",
+        "name": "COPA FEMENINA GRAN CANARIA MANOLO SANTANA"
+      },
+      {
+        "id": "1410",
+        "name": "FASE ASCENSO A TERCERA FEDERACIÓN DE FÚTBOL FEMENINO"
+      },
+      {
+        "id": "1287",
+        "name": "FASE DE ASCENSO PREFERENTE FEMENINA"
+      },
+      {
+        "id": "1280",
+        "name": "LIGA PRIMERA FEMENINA GRAN CANARIA"
+      },
+      {
+        "id": "1301",
+        "name": "LIGA PRIMERA FEMENINA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1303",
+        "name": "COPA PRIMERA FEMENINA DE FUERTEVENTURA"
+      },
+      {
+        "id": "1423",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA FEMENINA"
+      },
+      {
+        "id": "1425",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA FEMENINA"
+      },
+      {
+        "id": "1426",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA FEMENINA"
+      },
+      {
+        "id": "1336",
+        "name": "LIGA PREFERENTE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1337",
+        "name": "LIGA PREFERENTE FUTBOL SALA MASCULINA LANZAROTE Y FUERTEVENTURA"
+      },
+      {
+        "id": "1358",
+        "name": "COPA PREFERENTE SALA MASCULINO GRAN CANARIA"
+      },
+      {
+        "id": "1422",
+        "name": "COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1427",
+        "name": "SEMIFINALES COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1428",
+        "name": "FINAL COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1233",
+        "name": "COPA FIFLP FUTBOL SALA FEMENINO"
+      },
+      {
+        "id": "1338",
+        "name": "LIGA PREFERENTE FUTBOL SALA FEMENINO GRAN CANARIA"
+      },
+      {
+        "id": "1395",
+        "name": "COPA FIFLP FEMENINO SALA"
+      },
+      {
+        "id": "1446",
+        "name": "FASE FINAL FÚTBOL PLAYA"
+      },
+      {
+        "id": "1440",
+        "name": "LIGA TERRITORIAL FÚTBOL PLAYA"
+      },
+      {
+        "id": "1304",
+        "name": "LIGA JUVENIL INTERINSULAR DE LAS PALMAS"
+      },
+      {
+        "id": "1385",
+        "name": "FASE ASCENSO A DIVISION DE HONOR JUVENIL"
+      },
+      {
+        "id": "1289",
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR"
+      },
+      {
+        "id": "1285",
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR FUERTEVENTURA"
+      },
+      {
+        "id": "1305",
+        "name": "LIGA PREFERENTE JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1306",
+        "name": "LIGA JUVENIL PREFERENTE DE LANZAROTE"
+      },
+      {
+        "id": "1307",
+        "name": "LIGA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "1411",
+        "name": "ELIMINATORIAS DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE)"
+      },
+      {
+        "id": "1444",
+        "name": "ELIMINATORIAS DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+      },
+      {
+        "id": "1283",
+        "name": "FASE DE ASCENSO A JUVENIL PREFERENTE GRAN CANARIA"
+      },
+      {
+        "id": "1308",
+        "name": "LIGA PRIMERA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1222",
+        "name": "FASE ASCENSO A PRIMERA JUVENIL GRAN CANARIA"
+      },
+      {
+        "id": "1309",
+        "name": "LIGA SEGUNDA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1339",
+        "name": "LIGA JUVENIL TERRITORIAL FÚTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1340",
+        "name": "LIGA JUVENIL TERRITORIAL FUTBOL SALA DE LANZAROTE Y FUERTEVENTURA"
+      },
+      {
+        "id": "1366",
+        "name": "COPA JUVENIL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1376",
+        "name": "FINAL COPA JUVENIL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1278",
+        "name": "LIGA CADETE AUTONÓMICA"
+      },
+      {
+        "id": "1282",
+        "name": "FASE DE ASCENSO A CADETE AUTONÓMICO"
+      },
+      {
+        "id": "1310",
+        "name": "LIGA CADETE INTERINSULAR"
+      },
+      {
+        "id": "1288",
+        "name": "FASE ASCENSO CADETE INSULAR DE FUERTEVENTURA"
+      },
+      {
+        "id": "1311",
+        "name": "LIGA CADETE INSULAR GRAN CANARIA"
+      },
+      {
+        "id": "1312",
+        "name": "LIGA CADETE INSULAR DE LANZAROTE"
+      },
+      {
+        "id": "1313",
+        "name": "LIGA CADETE INSULAR DE FUERTEVENTURA"
+      },
+      {
+        "id": "1373",
+        "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "1374",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "1393",
+        "name": "FASE DE ASCENSO A CADETE INTERINSULAR"
+      },
+      {
+        "id": "1424",
+        "name": "ELIMINATORIAS DE ASCENSO A CADETE INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+      },
+      {
+        "id": "1430",
+        "name": "LIGA CADETE INSULAR B DE LANZAROTE"
+      },
+      {
+        "id": "1253",
+        "name": "COPA FIFLP CADETE PRIMERA"
+      },
+      {
+        "id": "1341",
+        "name": "LIGA CADETE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1420",
+        "name": "COPA FIFLP CADETE FUTBOL SALA"
+      },
+      {
+        "id": "1227",
+        "name": "COPA DE CAMPEONES INFANTIL GRAN CANARIA"
+      },
+      {
+        "id": "1315",
+        "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA"
+      },
+      {
+        "id": "1316",
+        "name": "LIGA PREFERENTE INFANTIL LANZAROTE"
+      },
+      {
+        "id": "1401",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE INFANTIL"
+      },
+      {
+        "id": "1403",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE INFANTIL"
+      },
+      {
+        "id": "1317",
+        "name": "LIGA PRIMERA INFANTIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1318",
+        "name": "LIGA PRIMERA INFANTIL DE LANZAROTE"
+      },
+      {
+        "id": "1320",
+        "name": "COPA INFANTIL FUERTEVENTURA"
+      },
+      {
+        "id": "1368",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA INFANTIL"
+      },
+      {
+        "id": "1377",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA INFANTIL"
+      },
+      {
+        "id": "1387",
+        "name": "FINAL LIGA PRIMERA INFANTIL LANZAROTE"
+      },
+      {
+        "id": "1319",
+        "name": "LIGA INFANTIL DE FUERTEVENTURA"
+      },
+      {
+        "id": "1250",
+        "name": "COPA FIFLP INFANTIL SALA"
+      },
+      {
+        "id": "1344",
+        "name": "LIGA INFANTIL FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1369",
+        "name": "COPA FIFLP INFANTIL FUTBOL SALA"
+      },
+      {
+        "id": "1228",
+        "name": "COPA DE CAMPEONES ALEVIN GRAN CANARIA"
+      },
+      {
+        "id": "1321",
+        "name": "LIGA PREFERENTE ALEVIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1322",
+        "name": "LIGA PREFERENTE ALEVIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1404",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1406",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1323",
+        "name": "LIGA PRIMERA ALEVIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1324",
+        "name": "LIGA PRIMERA ALEVIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1326",
+        "name": "COPA ALEVIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1361",
+        "name": "2ª FASE LIGA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "1389",
+        "name": "FINAL LIGA PRIMERA ALEVIN LANZAROTE"
+      },
+      {
+        "id": "1405",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1431",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1325",
+        "name": "LIGA ALEVIN F-8 DE FUERTEVENTURA"
+      },
+      {
+        "id": "1248",
+        "name": "COPA DE CAMPEONES ALEVIN SALA"
+      },
+      {
+        "id": "1251",
+        "name": "COPA FIFLP ALEVIN SALA"
+      },
+      {
+        "id": "1346",
+        "name": "LIGA ALEVIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1370",
+        "name": "COPA FIFLP ALEVIN FUTBOL SALA"
+      },
+      {
+        "id": "1229",
+        "name": "COPA DE CAMPEONES BENJAMIN GRAN CANARIA"
+      },
+      {
+        "id": "1445",
+        "name": "TORNEO PRE-BENJAMIN CIERRE TEMPORADA"
+      },
+      {
+        "id": "1328",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1407",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1409",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1330",
+        "name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1391",
+        "name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "1432",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1433",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1329",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1439",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE"
+      },
+      {
+        "id": "1331",
+        "name": "LIGA BENJAMIN F-8 DE FUERTEVENTURA"
+      },
+      {
+        "id": "1332",
+        "name": "COPA BENJAMIN F-8 FUERTEVENTURA"
+      },
+      {
+        "id": "1442",
+        "name": "2ª FASE LIGA BENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1252",
+        "name": "COPA FIFLP BENJAMIN SALA"
+      },
+      {
+        "id": "1348",
+        "name": "LIGA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1371",
+        "name": "COPA FIFLP BENJAMIN FUTBOL SALA"
+      },
+      {
+        "id": "1230",
+        "name": "COPA DE CAMPEONES PREBENJAMIN GRAN CANARIA"
+      },
+      {
+        "id": "1333",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "1434",
+        "name": "LIGA PREBENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1350",
+        "name": "LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (PBS)"
+      }
+    ]
+  },
+  "2024-2025": {
+    "season_code": "20",
+    "total": 165,
+    "relevant": [
+      {
+        "id": "1530",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO"
+      },
+      {
+        "id": "1455",
+        "name": "LIGA TERCERA FEDERACIÓN GRUPO 12"
+      },
+      {
+        "id": "1532",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE"
+      },
+      {
+        "id": "1531",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA"
+      },
+      {
+        "id": "1697",
+        "name": "COPA FEMENINA MANOLO SANTANA FASE SECTOR FUERTEVENTURA"
+      },
+      {
+        "id": "1456",
+        "name": "LIGA TERCERA FEDERACIÓN DE FÚTBOL FEMENINO GRUPO 6"
+      },
+      {
+        "id": "1630",
+        "name": "COPA FEMENINA MANOLO SANTANA"
+      },
+      {
+        "id": "1471",
+        "name": "COPA TOMAS ALCÁNTARA FUTBOL SALA"
+      },
+      {
+        "id": "1481",
+        "name": "TERCERA DIVISION NACIONAL FUTBOL SALA"
+      },
+      {
+        "id": "1603",
+        "name": "COPA PRIMERA REGIONAL DE FUERTEVENTURA (ELIMINAR)"
+      },
+      {
+        "id": "1660",
+        "name": "FASE ASCENSO A TERCERA FEDERACIÓN DE FÚTBOL FEMENINO"
+      },
+      {
+        "id": "1696",
+        "name": "COPA FEMENINA MANOLO SANTANA FASE SECTOR LANZAROTE"
+      },
+      {
+        "id": "1479",
+        "name": "FINAL COPA FEMENINA MANOLO SANTANA"
+      },
+      {
+        "id": "1550",
+        "name": "COPA PRIMERA FEMENINA DE FUERTEVENTURA"
+      },
+      {
+        "id": "1608",
+        "name": "COPA PREFERENTE SALA MASCULINO GRAN CANARIA"
+      },
+      {
+        "id": "1672",
+        "name": "COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1677",
+        "name": "SEMIFINALES COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1609",
+        "name": "COPA FIFLP PREFERENTE FEMENINA SALA"
+      },
+      {
+        "id": "1645",
+        "name": "COPA FIFLP FEMENINO SALA"
+      },
+      {
+        "id": "1642",
+        "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "1732",
+        "name": "copa isla de gran canaria juvenil sala"
+      },
+      {
+        "id": "1716",
+        "name": "copa juvenil isla de gran canaria fs"
+      },
+      {
+        "id": "1718",
+        "name": "copa juvenil territorial gran canaria sala"
+      },
+      {
+        "id": "1631",
+        "name": "COPA JUVENIL GRAN CANARIA FUTBOL SALA"
+      },
+      {
+        "id": "1616",
+        "name": "COPA JUVENIL LANZAROTE-FUERTEVENTURA FUTBOL SALA"
+      },
+      {
+        "id": "1625",
+        "name": "SEMIFINALES COPA JUVENIL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1626",
+        "name": "FINAL COPA JUVENIL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1623",
+        "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "1624",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "1692",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE INSULAR B"
+      },
+      {
+        "id": "1691",
+        "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR B"
+      },
+      {
+        "id": "1664",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA CADETE"
+      },
+      {
+        "id": "1492",
+        "name": "COPA FIFLP CADETE FÚTBOL SALA"
+      },
+      {
+        "id": "1651",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE INFANTIL"
+      },
+      {
+        "id": "1653",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE INFANTIL"
+      },
+      {
+        "id": "1637",
+        "name": "FINAL LIGA PRIMERA INFANTIL LANZAROTE"
+      },
+      {
+        "id": "1466",
+        "name": "COPA DE CAMPEONES INFANTIL GRAN CANARIA"
+      },
+      {
+        "id": "1618",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA INFANTIL"
+      },
+      {
+        "id": "1652",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA INFANTILL"
+      },
+      {
+        "id": "1693",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA INFANTIL"
+      },
+      {
+        "id": "1619",
+        "name": "COPA FIFLP INFANTIL FUTBOL SALA"
+      },
+      {
+        "id": "1489",
+        "name": "COPA FIFLP INFANTIL SALA"
+      },
+      {
+        "id": "1654",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1656",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1722",
+        "name": "copa de campeones categoria alevin fase c"
+      },
+      {
+        "id": "1694",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1639",
+        "name": "FINAL LIGA PRIMERA ALEVIN LANZAROTE"
+      },
+      {
+        "id": "1681",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1655",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1720",
+        "name": "copa de campeones categoria alevin fase a"
+      },
+      {
+        "id": "1721",
+        "name": "copa de campeones categoria alevin fase b"
+      },
+      {
+        "id": "1723",
+        "name": "copa de campeones categoria alevin fase d"
+      },
+      {
+        "id": "1724",
+        "name": "copa de campeones categoria alevin fase e"
+      },
+      {
+        "id": "1534",
+        "name": "MINI COPA JOSE ANTONIO RUIZ CABALLERO [MINI COPA]"
+      },
+      {
+        "id": "1620",
+        "name": "COPA FIFLP ALEVIN FUTBOL SALA"
+      },
+      {
+        "id": "1490",
+        "name": "COPA FIFLP ALEVIN SALA"
+      },
+      {
+        "id": "1575",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1657",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1659",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1578",
+        "name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1641",
+        "name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "1682",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1695",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1683",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1727",
+        "name": "copa de campeones categoria benjamin fase a"
+      },
+      {
+        "id": "1728",
+        "name": "copa de campeones categoria benjamin fase b"
+      },
+      {
+        "id": "1729",
+        "name": "copa de campeones categoria benjamin fase c"
+      },
+      {
+        "id": "1730",
+        "name": "copa de campeones categoria benjamin fase d"
+      },
+      {
+        "id": "1719",
+        "name": "copa de campeones categoria benjamin fase e"
+      },
+      {
+        "id": "1706",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A"
+      },
+      {
+        "id": "1707",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE B"
+      },
+      {
+        "id": "1708",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE C"
+      },
+      {
+        "id": "1709",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE D"
+      },
+      {
+        "id": "1710",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE E"
+      },
+      {
+        "id": "1579",
+        "name": "LIGA BENJAMIN F-8 DE FUERTEVENTURA PRIMERA FASE"
+      },
+      {
+        "id": "1583",
+        "name": "LIGA BENJAMIN FUERTEVENTURA 2ª FASE"
+      },
+      {
+        "id": "1576",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1621",
+        "name": "COPA FIFLP BENJAMIN FUTBOL SALA"
+      },
+      {
+        "id": "1705",
+        "name": "LIGA BENJAMÍN FUTBOL SALA GRAN CANARIA 2ªFASE"
+      },
+      {
+        "id": "1598",
+        "name": "LIGA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1491",
+        "name": "COPA FIFLP BENJAMIN SALA"
+      },
+      {
+        "id": "1731",
+        "name": "torneo pre-benjamin cierre temporada fuerteventura-lanzarote"
+      },
+      {
+        "id": "1712",
+        "name": "LIGA PREBENJAMIN LANZAROTE"
+      },
+      {
+        "id": "1581",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "1582",
+        "name": "LIGA PREBENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1469",
+        "name": "COPA DE CAMPEONES PREBENJAMIN GRAN CANARIA"
+      },
+      {
+        "id": "1734",
+        "name": "COPA FÚTBOL SALA PREBENJAMÍN"
+      },
+      {
+        "id": "1725",
+        "name": "copa prebenjamin fútbol sala"
+      },
+      {
+        "id": "1600",
+        "name": "LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (PBS)"
+      }
+    ],
+    "all": [
+      {
+        "id": "1474",
+        "name": "LIGA SEGUNDA FEDERACIÓN"
+      },
+      {
+        "id": "1530",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO"
+      },
+      {
+        "id": "1455",
+        "name": "LIGA TERCERA FEDERACIÓN GRUPO 12"
+      },
+      {
+        "id": "1447",
+        "name": "FASE ASCENSO A 2ª RFEF"
+      },
+      {
+        "id": "1532",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR LANZAROTE"
+      },
+      {
+        "id": "1531",
+        "name": "COPA JOSE ANTONIO RUIZ CABALLERO FASE SECTOR FUERTEVENTURA"
+      },
+      {
+        "id": "1457",
+        "name": "LIGA DIVISION DE HONOR JUVENIL GRUPO 6"
+      },
+      {
+        "id": "1449",
+        "name": "SEGUNDA FEDERACION FUTBOL FEMENINO"
+      },
+      {
+        "id": "1697",
+        "name": "COPA FEMENINA MANOLO SANTANA FASE SECTOR FUERTEVENTURA"
+      },
+      {
+        "id": "1456",
+        "name": "LIGA TERCERA FEDERACIÓN DE FÚTBOL FEMENINO GRUPO 6"
+      },
+      {
+        "id": "1630",
+        "name": "COPA FEMENINA MANOLO SANTANA"
+      },
+      {
+        "id": "1458",
+        "name": "LIGA SEGUNDA DIVISION B NACIONAL FUTBOL SALA GRUPO 6"
+      },
+      {
+        "id": "1518",
+        "name": "FASE ASCENSO A 2ª DIVISION SALA MASCULINA"
+      },
+      {
+        "id": "1471",
+        "name": "COPA TOMAS ALCÁNTARA FUTBOL SALA"
+      },
+      {
+        "id": "1717",
+        "name": "fase ascenso 2ªb sala masculina"
+      },
+      {
+        "id": "1481",
+        "name": "TERCERA DIVISION NACIONAL FUTBOL SALA"
+      },
+      {
+        "id": "1459",
+        "name": "LIGA JUVENIL DIVISION DE HONOR FUTBOL SALA GRUPO 8"
+      },
+      {
+        "id": "1450",
+        "name": "ELIMINATORIA AUTONÓMICA C.S.M. EL REY"
+      },
+      {
+        "id": "1537",
+        "name": "LIGA REGIONAL PREFERENTE"
+      },
+      {
+        "id": "1540",
+        "name": "LIGA PRIMERA REGIONAL DE GRAN CANARIA"
+      },
+      {
+        "id": "1542",
+        "name": "LIGA PRIMERA REGIONAL DE LANZAROTE"
+      },
+      {
+        "id": "1546",
+        "name": "LIGA PRIMERA REGIONAL DE FUERTEVENTURA"
+      },
+      {
+        "id": "1465",
+        "name": "FASE ASCENSO A REGIONAL PREFERENTE"
+      },
+      {
+        "id": "1544",
+        "name": "ELIMINATORIAS DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE)"
+      },
+      {
+        "id": "1545",
+        "name": "PLAY OFF DE ASCENSO A REGIONAL PREFERENTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1543",
+        "name": "ELIMINATORIAS DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE/FUERTEVENTURA)"
+      },
+      {
+        "id": "1603",
+        "name": "COPA PRIMERA REGIONAL DE FUERTEVENTURA (ELIMINAR)"
+      },
+      {
+        "id": "1541",
+        "name": "LIGA SEGUNDA REGIONAL DE GRAN CANARIA"
+      },
+      {
+        "id": "1523",
+        "name": "FASE DE ASCENSO A PRIMERA REGIONAL GRAN CANARIA"
+      },
+      {
+        "id": "1539",
+        "name": "LIGA PREFERENTE FEMENINA"
+      },
+      {
+        "id": "1660",
+        "name": "FASE ASCENSO A TERCERA FEDERACIÓN DE FÚTBOL FEMENINO"
+      },
+      {
+        "id": "1696",
+        "name": "COPA FEMENINA MANOLO SANTANA FASE SECTOR LANZAROTE"
+      },
+      {
+        "id": "1479",
+        "name": "FINAL COPA FEMENINA MANOLO SANTANA"
+      },
+      {
+        "id": "1519",
+        "name": "LIGA PRIMERA FEMENINA GRAN CANARIA"
+      },
+      {
+        "id": "1548",
+        "name": "LIGA PRIMERA FEMENINA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1526",
+        "name": "FASE DE ASCENSO PREFERENTE FEMENINA"
+      },
+      {
+        "id": "1550",
+        "name": "COPA PRIMERA FEMENINA DE FUERTEVENTURA"
+      },
+      {
+        "id": "1715",
+        "name": "PLAY OFF ASCENSO PREFERENTE SALA"
+      },
+      {
+        "id": "1586",
+        "name": "LIGA PREFERENTE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1587",
+        "name": "LIGA PREFERENTE FUTBOL SALA MASCULINA LANZAROTE Y FUERTEVENTURA"
+      },
+      {
+        "id": "1608",
+        "name": "COPA PREFERENTE SALA MASCULINO GRAN CANARIA"
+      },
+      {
+        "id": "1672",
+        "name": "COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1677",
+        "name": "SEMIFINALES COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1588",
+        "name": "LIGA PREFERENTE FUTBOL SALA FEMENINO GRAN CANARIA"
+      },
+      {
+        "id": "1609",
+        "name": "COPA FIFLP PREFERENTE FEMENINA SALA"
+      },
+      {
+        "id": "1645",
+        "name": "COPA FIFLP FEMENINO SALA"
+      },
+      {
+        "id": "1551",
+        "name": "LIGA JUVENIL INTERINSULAR"
+      },
+      {
+        "id": "1635",
+        "name": "FASE ASCENSO A DIVISION DE HONOR JUVENIL"
+      },
+      {
+        "id": "1642",
+        "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "1552",
+        "name": "LIGA JUVENIL PREFERENTE DE GRAN CANARIA"
+      },
+      {
+        "id": "1553",
+        "name": "LIGA JUVENIL PREFERENTE DE LANZAROTE"
+      },
+      {
+        "id": "1554",
+        "name": "LIGA JUVENIL PREFERENTE DE FUERTEVENTURA"
+      },
+      {
+        "id": "1528",
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR"
+      },
+      {
+        "id": "1661",
+        "name": "ELIMINATORIAS DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE)"
+      },
+      {
+        "id": "1524",
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR FUERTEVENTURA"
+      },
+      {
+        "id": "1684",
+        "name": "ELIMINATORIAS DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+      },
+      {
+        "id": "1555",
+        "name": "LIGA PRIMERA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1522",
+        "name": "FASE DE ASCENSO A JUVENIL PREFERENTE GRAN CANARIA"
+      },
+      {
+        "id": "1556",
+        "name": "LIGA SEGUNDA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1461",
+        "name": "FASE ASCENSO A PRIMERA JUVENIL GRAN CANARIA"
+      },
+      {
+        "id": "1732",
+        "name": "copa isla de gran canaria juvenil sala"
+      },
+      {
+        "id": "1716",
+        "name": "copa juvenil isla de gran canaria fs"
+      },
+      {
+        "id": "1718",
+        "name": "copa juvenil territorial gran canaria sala"
+      },
+      {
+        "id": "1714",
+        "name": "PLAY OFF ASCENSO JUVENIL TERRITORIAL SALA"
+      },
+      {
+        "id": "1589",
+        "name": "LIGA JUVENIL TERRITORIAL FÚTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1590",
+        "name": "LIGA JUVENIL TERRITORIAL FUTBOL SALA DE LANZAROTE Y FUERTEVENTURA"
+      },
+      {
+        "id": "1631",
+        "name": "COPA JUVENIL GRAN CANARIA FUTBOL SALA"
+      },
+      {
+        "id": "1616",
+        "name": "COPA JUVENIL LANZAROTE-FUERTEVENTURA FUTBOL SALA"
+      },
+      {
+        "id": "1625",
+        "name": "SEMIFINALES COPA JUVENIL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1626",
+        "name": "FINAL COPA JUVENIL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "1517",
+        "name": "LIGA CADETE AUTONÓMICA"
+      },
+      {
+        "id": "1557",
+        "name": "LIGA CADETE INTERINSULAR"
+      },
+      {
+        "id": "1521",
+        "name": "FASE DE ASCENSO A CADETE AUTONÓMICO"
+      },
+      {
+        "id": "1558",
+        "name": "LIGA CADETE INSULAR GRAN CANARIA"
+      },
+      {
+        "id": "1559",
+        "name": "LIGA CADETE INSULAR DE LANZAROTE"
+      },
+      {
+        "id": "1560",
+        "name": "LIGA CADETE INSULAR DE FUERTEVENTURA"
+      },
+      {
+        "id": "1643",
+        "name": "FASE DE ASCENSO A CADETE INTERINSULAR"
+      },
+      {
+        "id": "1662",
+        "name": "ELIMINATORIAS DE ASCENSO A CADETE INTERINSULAR (LANZAROTE)"
+      },
+      {
+        "id": "1527",
+        "name": "FASE ASCENSO CADETE INSULAR DE FUERTEVENTURA"
+      },
+      {
+        "id": "1674",
+        "name": "ELIMINATORIAS DE ASCENSO A CADETE INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+      },
+      {
+        "id": "1623",
+        "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "1624",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "1692",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE INSULAR B"
+      },
+      {
+        "id": "1680",
+        "name": "LIGA CADETE INSULAR B DE LANZAROTE"
+      },
+      {
+        "id": "1691",
+        "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR B"
+      },
+      {
+        "id": "1733",
+        "name": "liga cadete sala gran canaria"
+      },
+      {
+        "id": "1664",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA CADETE"
+      },
+      {
+        "id": "1492",
+        "name": "COPA FIFLP CADETE FÚTBOL SALA"
+      },
+      {
+        "id": "1591",
+        "name": "LIGA CADETE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1562",
+        "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA"
+      },
+      {
+        "id": "1563",
+        "name": "LIGA INFANTIL PREFERENTE DE LANZAROTE"
+      },
+      {
+        "id": "1651",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE INFANTIL"
+      },
+      {
+        "id": "1653",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE INFANTIL"
+      },
+      {
+        "id": "1564",
+        "name": "LIGA PRIMERA INFANTIL DE GRAN CANARIA"
+      },
+      {
+        "id": "1565",
+        "name": "LIGA PRIMERA INFANTIL DE LANZAROTE"
+      },
+      {
+        "id": "1637",
+        "name": "FINAL LIGA PRIMERA INFANTIL LANZAROTE"
+      },
+      {
+        "id": "1466",
+        "name": "COPA DE CAMPEONES INFANTIL GRAN CANARIA"
+      },
+      {
+        "id": "1618",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA INFANTIL"
+      },
+      {
+        "id": "1652",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA INFANTILL"
+      },
+      {
+        "id": "1693",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA INFANTIL"
+      },
+      {
+        "id": "1711",
+        "name": "LIGA INFANTIL FUERTEVENTURA 2ª FASE"
+      },
+      {
+        "id": "1566",
+        "name": "LIGA INFANTIL DE FUERTEVENTURA PRIMERA FASE"
+      },
+      {
+        "id": "1703",
+        "name": "LIGA INFANTIL FUTBOL SALA GRAN CANARIA 2ªFASE"
+      },
+      {
+        "id": "1619",
+        "name": "COPA FIFLP INFANTIL FUTBOL SALA"
+      },
+      {
+        "id": "1594",
+        "name": "LIGA INFANTIL FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1489",
+        "name": "COPA FIFLP INFANTIL SALA"
+      },
+      {
+        "id": "1569",
+        "name": "LIGA ALEVÍN PREFERENTE FÚTBOL-8 DE LANZAROTE"
+      },
+      {
+        "id": "1654",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1656",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1722",
+        "name": "copa de campeones categoria alevin fase c"
+      },
+      {
+        "id": "1698",
+        "name": "LIGA ALEVIN F8 GRAN CANARIA SEGUNDA FASE A"
+      },
+      {
+        "id": "1699",
+        "name": "LIGA ALEVIN F8 GRAN CANARIA SEGUNDA FASE B"
+      },
+      {
+        "id": "1700",
+        "name": "LIGA ALEVIN F8 GRAN CANARIA SEGUNDA FASE C"
+      },
+      {
+        "id": "1701",
+        "name": "LIGA ALEVIN F8 GRAN CANARIA SEGUNDA FASE D"
+      },
+      {
+        "id": "1702",
+        "name": "LIGA ALEVIN F8 GRAN CANARIA SEGUNDA FASE E"
+      },
+      {
+        "id": "1694",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1572",
+        "name": "LIGA ALEVIN F-8 DE FUERTEVENTURA PRIMERA FASE"
+      },
+      {
+        "id": "1570",
+        "name": "LIGA PRIMERA ALEVIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1571",
+        "name": "LIGA PRIMERA ALEVIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1639",
+        "name": "FINAL LIGA PRIMERA ALEVIN LANZAROTE"
+      },
+      {
+        "id": "1681",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1655",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8"
+      },
+      {
+        "id": "1720",
+        "name": "copa de campeones categoria alevin fase a"
+      },
+      {
+        "id": "1721",
+        "name": "copa de campeones categoria alevin fase b"
+      },
+      {
+        "id": "1723",
+        "name": "copa de campeones categoria alevin fase d"
+      },
+      {
+        "id": "1724",
+        "name": "copa de campeones categoria alevin fase e"
+      },
+      {
+        "id": "1611",
+        "name": "2ª FASE LIGA ALEVIN FUERTEVENTURA"
+      },
+      {
+        "id": "1534",
+        "name": "MINI COPA JOSE ANTONIO RUIZ CABALLERO [MINI COPA]"
+      },
+      {
+        "id": "1704",
+        "name": "LIGA ALEVÍN FUTBOL SALA GRAN CANARIA 2ªFASE"
+      },
+      {
+        "id": "1620",
+        "name": "COPA FIFLP ALEVIN FUTBOL SALA"
+      },
+      {
+        "id": "1596",
+        "name": "LIGA ALEVIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1490",
+        "name": "COPA FIFLP ALEVIN SALA"
+      },
+      {
+        "id": "1575",
+        "name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1657",
+        "name": "COPA CABILDO DE LANZAROTE PREFERENTE BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1659",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PREFERENTE BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1578",
+        "name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE"
+      },
+      {
+        "id": "1641",
+        "name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE"
+      },
+      {
+        "id": "1682",
+        "name": "COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1695",
+        "name": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1683",
+        "name": "FINAL COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8"
+      },
+      {
+        "id": "1727",
+        "name": "copa de campeones categoria benjamin fase a"
+      },
+      {
+        "id": "1728",
+        "name": "copa de campeones categoria benjamin fase b"
+      },
+      {
+        "id": "1729",
+        "name": "copa de campeones categoria benjamin fase c"
+      },
+      {
+        "id": "1730",
+        "name": "copa de campeones categoria benjamin fase d"
+      },
+      {
+        "id": "1719",
+        "name": "copa de campeones categoria benjamin fase e"
+      },
+      {
+        "id": "1706",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A"
+      },
+      {
+        "id": "1707",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE B"
+      },
+      {
+        "id": "1708",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE C"
+      },
+      {
+        "id": "1709",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE D"
+      },
+      {
+        "id": "1710",
+        "name": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE E"
+      },
+      {
+        "id": "1579",
+        "name": "LIGA BENJAMIN F-8 DE FUERTEVENTURA PRIMERA FASE"
+      },
+      {
+        "id": "1583",
+        "name": "LIGA BENJAMIN FUERTEVENTURA 2ª FASE"
+      },
+      {
+        "id": "1576",
+        "name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA"
+      },
+      {
+        "id": "1621",
+        "name": "COPA FIFLP BENJAMIN FUTBOL SALA"
+      },
+      {
+        "id": "1705",
+        "name": "LIGA BENJAMÍN FUTBOL SALA GRAN CANARIA 2ªFASE"
+      },
+      {
+        "id": "1598",
+        "name": "LIGA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "1491",
+        "name": "COPA FIFLP BENJAMIN SALA"
+      },
+      {
+        "id": "1731",
+        "name": "torneo pre-benjamin cierre temporada fuerteventura-lanzarote"
+      },
+      {
+        "id": "1712",
+        "name": "LIGA PREBENJAMIN LANZAROTE"
+      },
+      {
+        "id": "1581",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "1582",
+        "name": "LIGA PREBENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "1469",
+        "name": "COPA DE CAMPEONES PREBENJAMIN GRAN CANARIA"
+      },
+      {
+        "id": "1734",
+        "name": "COPA FÚTBOL SALA PREBENJAMÍN"
+      },
+      {
+        "id": "1725",
+        "name": "copa prebenjamin fútbol sala"
+      },
+      {
+        "id": "1600",
+        "name": "LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (PBS)"
+      }
+    ]
+  },
+  "2025-2026": {
+    "season_code": "21",
+    "total": 102,
+    "relevant": [
+      {
+        "id": "54950233",
+        "name": "TERCERA DIVISIÓN DE FÚTBOL SALA. 2ª FASE"
+      },
+      {
+        "id": "54476353",
+        "name": "TERCERA DIVISIÓN DE FÚTBOL SALA"
+      },
+      {
+        "id": "54422846",
+        "name": "COPA JOSÉ ANTONIO RUIZ CABALLERO"
+      },
+      {
+        "id": "54549246",
+        "name": "COPA PRIMERA REGIONAL DE FUERTEVENTURA"
+      },
+      {
+        "id": "54422920",
+        "name": "COPA MANOLO SANTANA FUTUREFEM LAS PALMAS"
+      },
+      {
+        "id": "54422862",
+        "name": "COPA PRIMERA FEMENINA DE FUERTEVENTURA"
+      },
+      {
+        "id": "54422827",
+        "name": "COPA TOMÁS ALCANTARA PRIMERA FASE"
+      },
+      {
+        "id": "54890665",
+        "name": "COPA TOMÁS ALCANTARA"
+      },
+      {
+        "id": "54905835",
+        "name": "COPA FIFLP SENIOR FÚTBOL SALA DE GRAN CANARIA"
+      },
+      {
+        "id": "54422933",
+        "name": "COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "54422828",
+        "name": "COPA FEMENINA ISLA DE GRAN CANARIA"
+      },
+      {
+        "id": "54422924",
+        "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "54422834",
+        "name": "COPA ISLA DE GRAN CANARIA JUVENIL FÚTBOL SALA."
+      },
+      {
+        "id": "54906068",
+        "name": "COPA FIFLP JUVENIL FÚTBOL SALA DE GRAN CANARIA"
+      },
+      {
+        "id": "54422910",
+        "name": "COPA JUVENIL LANZAROTE-FUERTEVENTURA FUTBOL SALA"
+      },
+      {
+        "id": "54948197",
+        "name": "COPA JUVENIL LANZAROTE-FUERTEVENTURA FUTBOL SALA FASE FINAL"
+      },
+      {
+        "id": "54523543",
+        "name": "COPA CABILDO DE LANZAROTE CADETE PREFERENTE"
+      },
+      {
+        "id": "54774501",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE PREFERENTE"
+      },
+      {
+        "id": "54948182",
+        "name": "COPA CADETE INSULAR GRAN CANARIA"
+      },
+      {
+        "id": "54422919",
+        "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "54774523",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "54959491",
+        "name": "CADETE FUTBOL SALA FASE FINAL"
+      },
+      {
+        "id": "54422833",
+        "name": "COPA FIFLP CADETE FÚTBOL SALA"
+      },
+      {
+        "id": "54422823",
+        "name": "COPA CADETE FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54957993",
+        "name": "INFANTIL FUTBOL SALA FASE FINAL"
+      },
+      {
+        "id": "54896918",
+        "name": "COPA INFANTIL FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54958023",
+        "name": "ALEVIN FUTBOL SALA FASE FINAL"
+      },
+      {
+        "id": "54896919",
+        "name": "COPA ALEVIN FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54422885",
+        "name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA"
+      },
+      {
+        "id": "54422953",
+        "name": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A"
+      },
+      {
+        "id": "54422954",
+        "name": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA B"
+      },
+      {
+        "id": "54422955",
+        "name": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA C"
+      },
+      {
+        "id": "54422884",
+        "name": "LIGA BENJAMIN DE LANZAROTE FASE 1"
+      },
+      {
+        "id": "54422886",
+        "name": "LIGA BENJAMIN DE LANZAROTE FASE 2"
+      },
+      {
+        "id": "54422887",
+        "name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE"
+      },
+      {
+        "id": "54422890",
+        "name": "LIGA BENJAMIN F-7 FUERTEVENTURA 2ª FASE"
+      },
+      {
+        "id": "54422904",
+        "name": "LIGA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "54422950",
+        "name": "LIGA BENJAMÍN FUTBOL SALA GRAN CANARIA 2ªFASE"
+      },
+      {
+        "id": "54958394",
+        "name": "BENJAMIN FUTBOL SALA FINAL"
+      },
+      {
+        "id": "54896920",
+        "name": "COPA BENJAMIN FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54422888",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "54422959",
+        "name": "LIGA PREBENJAMIN LANZAROTE"
+      },
+      {
+        "id": "54422889",
+        "name": "LIGA PREBENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "54422907",
+        "name": "LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (LPFS)"
+      }
+    ],
+    "all": [
+      {
+        "id": "54950233",
+        "name": "TERCERA DIVISIÓN DE FÚTBOL SALA. 2ª FASE"
+      },
+      {
+        "id": "54476353",
+        "name": "TERCERA DIVISIÓN DE FÚTBOL SALA"
+      },
+      {
+        "id": "54422848",
+        "name": "LIGA REGIONAL PREFERENTE"
+      },
+      {
+        "id": "54422846",
+        "name": "COPA JOSÉ ANTONIO RUIZ CABALLERO"
+      },
+      {
+        "id": "54422851",
+        "name": "LIGA PRIMERA REGIONAL GRAN CANARIA"
+      },
+      {
+        "id": "54422855",
+        "name": "LIGA PRIMERA REGIONAL DE LANZAROTE"
+      },
+      {
+        "id": "54422859",
+        "name": "LIGA PRIMERA REGIONAL DE FUERTEVENTURA"
+      },
+      {
+        "id": "54422856",
+        "name": "ELIMINATORIAS DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE/FUERTEVENTURA)"
+      },
+      {
+        "id": "54549246",
+        "name": "COPA PRIMERA REGIONAL DE FUERTEVENTURA"
+      },
+      {
+        "id": "54422854",
+        "name": "LIGA SEGUNDA REGIONAL GRAN CANARIA"
+      },
+      {
+        "id": "54422840",
+        "name": "FASE DE ASCENSO A PRIMERA REGIONAL GRAN CANARIA"
+      },
+      {
+        "id": "54422849",
+        "name": "LIGA PREFERENTE FEMENINA"
+      },
+      {
+        "id": "54422920",
+        "name": "COPA MANOLO SANTANA FUTUREFEM LAS PALMAS"
+      },
+      {
+        "id": "54422836",
+        "name": "LIGA PRIMERA FEMENINA GRAN CANARIA"
+      },
+      {
+        "id": "54422861",
+        "name": "LIGA PRIMERA FEMENINA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "54845606",
+        "name": "PRIMERA FEMENINA SEGUNDA FASE"
+      },
+      {
+        "id": "54422862",
+        "name": "COPA PRIMERA FEMENINA DE FUERTEVENTURA"
+      },
+      {
+        "id": "54422891",
+        "name": "LIGA PREFERENTE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "54422892",
+        "name": "LIGA PREFERENTE FUTBOL SALA MASCULINA LANZAROTE Y FUERTEVENTURA"
+      },
+      {
+        "id": "54422961",
+        "name": "PLAY OFF ASCENSO PREFERENTE SALA"
+      },
+      {
+        "id": "54422827",
+        "name": "COPA TOMÁS ALCANTARA PRIMERA FASE"
+      },
+      {
+        "id": "54890665",
+        "name": "COPA TOMÁS ALCANTARA"
+      },
+      {
+        "id": "54905835",
+        "name": "COPA FIFLP SENIOR FÚTBOL SALA DE GRAN CANARIA"
+      },
+      {
+        "id": "54422933",
+        "name": "COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
+      },
+      {
+        "id": "54766356",
+        "name": "LIGA AUTONOMICA FEMENINA FUTBOL SALA"
+      },
+      {
+        "id": "54422828",
+        "name": "COPA FEMENINA ISLA DE GRAN CANARIA"
+      },
+      {
+        "id": "54422863",
+        "name": "LIGA JUVENIL INTERINSULAR"
+      },
+      {
+        "id": "54422864",
+        "name": "LIGA JUVENIL PREFERENTE DE GRAN CANARIA"
+      },
+      {
+        "id": "54422865",
+        "name": "LIGA JUVENIL PREFERENTE DE LANZAROTE"
+      },
+      {
+        "id": "54422866",
+        "name": "LIGA JUVENIL PREFERENTE DE FUERTEVENTURA"
+      },
+      {
+        "id": "54422924",
+        "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "54422844",
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR"
+      },
+      {
+        "id": "54422937",
+        "name": "ELIMINATORIAS DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+      },
+      {
+        "id": "54422867",
+        "name": "LIGA PRIMERA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "54422839",
+        "name": "FASE DE ASCENSO A JUVENIL PREFERENTE GRAN CANARIA"
+      },
+      {
+        "id": "54422870",
+        "name": "LIGA SEGUNDA JUVENIL DE GRAN CANARIA"
+      },
+      {
+        "id": "54422824",
+        "name": "FASE ASCENSO A PRIMERA JUVENIL GRAN CANARIA"
+      },
+      {
+        "id": "54660927",
+        "name": "FUTUREFEM LAS PALMAS"
+      },
+      {
+        "id": "54422895",
+        "name": "LIGA JUVENIL TERRITORIAL FÚTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "54422897",
+        "name": "LIGA JUVENIL TERRITORIAL FUTBOL SALA DE LANZAROTE Y FUERTEVENTURA"
+      },
+      {
+        "id": "54422960",
+        "name": "PLAY OFF ASCENSO JUVENIL TERRITORIAL SALA"
+      },
+      {
+        "id": "54422834",
+        "name": "COPA ISLA DE GRAN CANARIA JUVENIL FÚTBOL SALA."
+      },
+      {
+        "id": "54906068",
+        "name": "COPA FIFLP JUVENIL FÚTBOL SALA DE GRAN CANARIA"
+      },
+      {
+        "id": "54422910",
+        "name": "COPA JUVENIL LANZAROTE-FUERTEVENTURA FUTBOL SALA"
+      },
+      {
+        "id": "54948197",
+        "name": "COPA JUVENIL LANZAROTE-FUERTEVENTURA FUTBOL SALA FASE FINAL"
+      },
+      {
+        "id": "54422871",
+        "name": "LIGA CADETE INTERINSULAR"
+      },
+      {
+        "id": "54545623",
+        "name": "CADETE PREFERENTE GRAN CANARIA"
+      },
+      {
+        "id": "54422873",
+        "name": "LIGA CADETE PREFERENTE DE LANZAROTE"
+      },
+      {
+        "id": "54422935",
+        "name": "ELIMINATORIAS DE ASCENSO A CADETE INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+      },
+      {
+        "id": "54523543",
+        "name": "COPA CABILDO DE LANZAROTE CADETE PREFERENTE"
+      },
+      {
+        "id": "54774501",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE PREFERENTE"
+      },
+      {
+        "id": "54422872",
+        "name": "LIGA CADETE INSULAR GRAN CANARIA"
+      },
+      {
+        "id": "54422936",
+        "name": "LIGA CADETE INSULAR DE LANZAROTE"
+      },
+      {
+        "id": "54422874",
+        "name": "LIGA CADETE INSULAR DE FUERTEVENTURA"
+      },
+      {
+        "id": "54957478",
+        "name": "ELIMINATORIAS DE ASCENSO A CADETE PREFERENTE"
+      },
+      {
+        "id": "54948182",
+        "name": "COPA CADETE INSULAR GRAN CANARIA"
+      },
+      {
+        "id": "54422919",
+        "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "54774523",
+        "name": "FINAL COPA CABILDO DE LANZAROTE CADETE INSULAR"
+      },
+      {
+        "id": "54422898",
+        "name": "LIGA CADETE FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "54959491",
+        "name": "CADETE FUTBOL SALA FASE FINAL"
+      },
+      {
+        "id": "54422833",
+        "name": "COPA FIFLP CADETE FÚTBOL SALA"
+      },
+      {
+        "id": "54422823",
+        "name": "COPA CADETE FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54422875",
+        "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA"
+      },
+      {
+        "id": "54887047",
+        "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA FASE ORO"
+      },
+      {
+        "id": "54887052",
+        "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA FASE PLATA"
+      },
+      {
+        "id": "54422877",
+        "name": "LIGA PRIMERA INFANTIL DE GRAN CANARIA"
+      },
+      {
+        "id": "54422876",
+        "name": "LIGA INFANTIL LANZAROTE FASE 1"
+      },
+      {
+        "id": "54422878",
+        "name": "LIGA INFANTIL DE LANZAROTE FASE 2"
+      },
+      {
+        "id": "54422879",
+        "name": "LIGA INFANTIL DE FUERTEVENTURA 1ª FASE"
+      },
+      {
+        "id": "54422958",
+        "name": "LIGA INFANTIL FUERTEVENTURA 2ª FASE"
+      },
+      {
+        "id": "54422900",
+        "name": "LIGA INFANTIL FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "54422944",
+        "name": "LIGA INFANTIL FUTBOL SALA GRAN CANARIA 2ªFASE"
+      },
+      {
+        "id": "54957993",
+        "name": "INFANTIL FUTBOL SALA FASE FINAL"
+      },
+      {
+        "id": "54896918",
+        "name": "COPA INFANTIL FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54422881",
+        "name": "LIGA ALEVIN GRAN CANARIA FASE PREVIA"
+      },
+      {
+        "id": "54422939",
+        "name": "LIGA ALEVIN F7 GRAN CANARIA FASE LIGA A"
+      },
+      {
+        "id": "54422940",
+        "name": "LIGA ALEVIN F7 GRAN CANARIA FASE LIGA B"
+      },
+      {
+        "id": "54422941",
+        "name": "LIGA ALEVIN F7 GRAN CANARIA FASE LIGA C"
+      },
+      {
+        "id": "54422880",
+        "name": "LIGA ALEVIN LANZAROTE FASE 1"
+      },
+      {
+        "id": "54422882",
+        "name": "LIGA ALEVIN LANZAROTE FASE 2"
+      },
+      {
+        "id": "54422883",
+        "name": "LIGA ALEVIN FUERTEVENTURA F7 1ª FASE"
+      },
+      {
+        "id": "54422909",
+        "name": "LIGA ALEVIN FUERTEVENTURA 2ª FASE"
+      },
+      {
+        "id": "54422903",
+        "name": "LIGA ALEVIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "54422947",
+        "name": "LIGA ALEVÍN FUTBOL SALA GRAN CANARIA 2ªFASE"
+      },
+      {
+        "id": "54958023",
+        "name": "ALEVIN FUTBOL SALA FASE FINAL"
+      },
+      {
+        "id": "54896919",
+        "name": "COPA ALEVIN FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54422885",
+        "name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA"
+      },
+      {
+        "id": "54422953",
+        "name": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A"
+      },
+      {
+        "id": "54422954",
+        "name": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA B"
+      },
+      {
+        "id": "54422955",
+        "name": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA C"
+      },
+      {
+        "id": "54422884",
+        "name": "LIGA BENJAMIN DE LANZAROTE FASE 1"
+      },
+      {
+        "id": "54422886",
+        "name": "LIGA BENJAMIN DE LANZAROTE FASE 2"
+      },
+      {
+        "id": "54422887",
+        "name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE"
+      },
+      {
+        "id": "54422890",
+        "name": "LIGA BENJAMIN F-7 FUERTEVENTURA 2ª FASE"
+      },
+      {
+        "id": "54422904",
+        "name": "LIGA BENJAMIN FUTBOL SALA GRAN CANARIA"
+      },
+      {
+        "id": "54422950",
+        "name": "LIGA BENJAMÍN FUTBOL SALA GRAN CANARIA 2ªFASE"
+      },
+      {
+        "id": "54958394",
+        "name": "BENJAMIN FUTBOL SALA FINAL"
+      },
+      {
+        "id": "54896920",
+        "name": "COPA BENJAMIN FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54422888",
+        "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "54422959",
+        "name": "LIGA PREBENJAMIN LANZAROTE"
+      },
+      {
+        "id": "54422889",
+        "name": "LIGA PREBENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "54422907",
+        "name": "LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (LPFS)"
+      }
+    ]
+  }
+}

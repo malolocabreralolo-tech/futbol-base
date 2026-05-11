@@ -1,0 +1,40 @@
+name: Discover FIFLP competitions
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+      - name: Discover competitions across all seasons
+        run: python3 scripts/discover_fiflp_comps.py
+        timeout-minutes: 10
+      - name: Commit catalog
+        run: |
+          git config user.name  "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add scripts/fiflp_comps_catalog.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git stash
+            git pull --rebase origin main
+            git stash pop || true
+            git add scripts/fiflp_comps_catalog.json
+            git commit -m "discover: FIFLP competitions catalog (all seasons)"
+            git push
+          fi

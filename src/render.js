@@ -90,24 +90,119 @@ function filterGroups(groups) {
   );
 }
 
+/** HTML-escape user-derived strings (team names from FIFLP can contain
+ * `"`, `&`, etc). The rest of the file uses innerHTML on our own data,
+ * but here the strings come straight from the source so we escape. */
+function _esc(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/** Returns true if this group is a knockout/cup tournament (not a league).
+ * Detected via: phase contains "Copa" / "Campeon", group id starts with
+ * PCC or BC, or jornadas keys look like "( Ronda N )" instead of integers. */
+function isKnockoutGroup(g) {
+  const id = (g.id || '').toUpperCase();
+  if (id.startsWith('PCC') || id.startsWith('BC')) return true;
+  const phase = (g.phase || '').toLowerCase();
+  if (phase.includes('copa') || phase.includes('campeon')) return true;
+  const keys = g.jornadas ? Object.keys(g.jornadas) : [];
+  if (keys.length && keys.every(k => /ronda/i.test(k))) return true;
+  return false;
+}
+
 export function buildGroupCard(g, forceOpen) {
   const card = el('div', forceOpen ? 'group-card open' : 'group-card');
+  const knockout = isKnockoutGroup(g);
   const teamCount = g.standings.length;
+  // For knockouts, show the champion next to the group name instead of
+  // "N equipos" (uninformative for a bracket).
+  const champion = knockout && g.standings.length ? g.standings[0][1] : null;
+  const headerBadge = knockout && champion
+    ? `<span class="group-badge cup-badge" title="Campeón">🏆 ${_esc(champion)}</span>`
+    : `<span class="group-badge">${teamCount} equipos</span>`;
   card.innerHTML = `
     <div class="group-header">
       <div class="group-title">
-        ${g.name} <span class="group-badge">${teamCount} equipos</span>${g.jornada ? ` <span class="jornada-badge">${g.jornada}</span>` : ''}
+        ${_esc(g.name)} ${headerBadge}${g.jornada && !knockout ? ` <span class="jornada-badge">${_esc(g.jornada)}</span>` : ''}
       </div>
       <span class="group-chevron">▾</span>
     </div>
     <div class="group-body">
-      ${buildStandingsTable(g.standings, g.id)}
+      ${knockout ? buildKnockoutBracket(g) : buildStandingsTable(g.standings, g.id)}
     </div>
   `;
   card.querySelector('.group-header').addEventListener('click', () => {
     card.classList.toggle('open');
   });
   return card;
+}
+
+/** Render a knockout tournament as a vertical bracket — one column per round
+ * (Cuartos / Semis / Final), each match showing home/away with score and the
+ * winning team in green. No points / J / G / E / P columns. */
+function buildKnockoutBracket(g) {
+  const rounds = g.jornadas ? Object.keys(g.jornadas) : [];
+  if (!rounds.length) {
+    return '<div class="modal-h2h-empty" style="padding:16px;text-align:center;opacity:.7">Sin partidos registrados</div>';
+  }
+
+  // Friendly round label inferred from position relative to the final.
+  // The LAST round is always the final, second-to-last is semis, etc.
+  // (We can't trust matches.length because brackets with byes have unusual
+  // shapes — Fase A is 6 teams: R1 has 2 matches, R2 has 2, R3 has 1.)
+  const roundLabel = (raw, matchesInRound, idx, total) => {
+    const fromEnd = total - 1 - idx;  // 0 = final, 1 = semis, 2 = quarters, …
+    if (fromEnd === 0) return 'Final';
+    if (fromEnd === 1) return 'Semifinales';
+    if (fromEnd === 2) return 'Cuartos';
+    if (fromEnd === 3) return 'Octavos';
+    const m = raw.match(/Ronda\s+(\d+)/i);
+    return m ? `Ronda ${m[1]}` : raw.replace(/\d{2}-\d{2}-\d{4}\s*/, '').trim();
+  };
+
+  const champion = g.standings.length ? g.standings[0][1] : null;
+
+  let html = '<div class="bracket">';
+  rounds.forEach((rkey, idx) => {
+    const matches = g.jornadas[rkey] || [];
+    const label = roundLabel(rkey, matches.length, idx, rounds.length);
+    const dateMatch = rkey.match(/(\d{2}-\d{2}-\d{4})/);
+    const date = dateMatch ? dateMatch[1] : '';
+    html += `<div class="bracket-round">
+      <div class="bracket-round-title">
+        <span>${_esc(label)}</span>
+        ${date ? `<span class="bracket-round-date">${_esc(date)}</span>` : ''}
+      </div>`;
+    matches.forEach(m => {
+      const [, home, away, hs, as] = m;
+      const played = hs != null && as != null;
+      let homeWin = false, awayWin = false;
+      if (played) {
+        if (hs > as) homeWin = true;
+        else if (as > hs) awayWin = true;
+      }
+      const isFinalMatch = matches.length === 1;
+      const draw = played && !homeWin && !awayWin;
+      const homeClass = `bracket-team${homeWin ? ' winner' : ''}${draw ? ' draw' : ''}`;
+      const awayClass = `bracket-team${awayWin ? ' winner' : ''}${draw ? ' draw' : ''}`;
+      const homeIsChamp = isFinalMatch && homeWin && home === champion;
+      const awayIsChamp = isFinalMatch && awayWin && away === champion;
+      html += `<div class="bracket-match${isFinalMatch ? ' bracket-match-final' : ''}">
+        <div class="${homeClass}${homeIsChamp ? ' champion' : ''}">
+          <span class="bracket-team-name">${teamBadge(home)} ${_esc(home)}${homeIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-score">${hs != null ? hs : '–'}</span>
+        </div>
+        <div class="${awayClass}${awayIsChamp ? ' champion' : ''}">
+          <span class="bracket-team-name">${teamBadge(away)} ${_esc(away)}${awayIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-score">${as != null ? as : '–'}</span>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
 }
 
 export function buildStandingsTable(standings, groupId) {

@@ -1318,3 +1318,106 @@ img.team-badge {
   gap: 4px;
   font-weight: 600;
 }
+
+/* ====== KNOCKOUT BRACKET (Copa de Campeones) ====== */
+.bracket {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px;
+}
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bracket-round-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--card-border);
+}
+.bracket-round-date {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text2);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.bracket-match {
+  background: var(--card-bg-2, rgba(255,255,255,0.02));
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.bracket-match-final {
+  border-color: var(--accent);
+  border-width: 2px;
+  box-shadow: 0 0 0 1px rgba(0,200,150,0.15) inset;
+}
+.bracket-team {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--card-border);
+}
+.bracket-team:last-child {
+  border-bottom: none;
+}
+.bracket-team-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+.bracket-team.winner {
+  color: var(--text);
+  font-weight: 700;
+  background: rgba(0,200,150,0.07);
+}
+.bracket-team.winner .bracket-score {
+  color: var(--accent);
+}
+.bracket-team.draw {
+  color: var(--text2);
+}
+.bracket-team.champion {
+  background: linear-gradient(90deg, rgba(255,196,40,0.15), rgba(255,196,40,0.03));
+  color: #ffc428;
+}
+.bracket-team.champion .bracket-score {
+  color: #ffc428;
+}
+.bracket-score {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 28px;
+  text-align: right;
+}
+.group-badge.cup-badge {
+  background: linear-gradient(90deg, rgba(255,196,40,0.18), rgba(255,196,40,0.05));
+  color: #ffc428;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .bracket {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 24px;
+  }
+  .bracket-round {
+    flex: 1;
+    min-width: 0;
+  }
+}

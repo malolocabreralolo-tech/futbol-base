@@ -42519,5 +42519,405 @@
         ]
       }
     ]
+  },
+  {
+    "competition_id": "1727",
+    "competition_name": "Copa Campeones Benjamin Fase A",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Copa Campeones A",
+    "group_id": "196992",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "08-06-2025 ( Ronda 1 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 0,
+            "as": 2,
+            "date": "08-06-2025",
+            "time": "09:30",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 0,
+            "as": 1,
+            "date": "08-06-2025",
+            "time": "09:30",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "08-06-2025 ( Ronda 2 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 1,
+            "as": 4,
+            "date": "08-06-2025",
+            "time": "10:45",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 7,
+            "as": 5,
+            "date": "08-06-2025",
+            "time": "10:45",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "08-06-2025 ( Ronda 3 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 2,
+            "as": 7,
+            "date": "08-06-2025",
+            "time": "12:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1728",
+    "competition_name": "Copa Campeones Benjamin Fase B",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Copa Campeones B",
+    "group_id": "196994",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "08-06-2025 ( Ronda 1 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D. \"A\"",
+            "away": "VALLESECO, U.D.",
+            "hs": null,
+            "as": 3,
+            "date": "08-06-2025",
+            "time": "10:00",
+            "venue": "JUAN GUEDES F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN, A.D. \"B\"",
+            "away": "ESTRELLA C.F. \"A\"",
+            "hs": 4,
+            "as": 4,
+            "date": "08-06-2025",
+            "time": "10:00",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "08-06-2025 ( Ronda 2 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "TAMARACEITE, U.D. \"A\"",
+            "away": "TAMARACEITE , U.D. \"B\"",
+            "hs": 6,
+            "as": 3,
+            "date": "08-06-2025",
+            "time": "11:30",
+            "venue": "JUAN GUEDES F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ESTRELLA C.F. \"A\"",
+            "away": "SAN PEDRO MARTIR, C.D. \"A\"",
+            "hs": 3,
+            "as": 1,
+            "date": "08-06-2025",
+            "time": "11:30",
+            "venue": "JUAN GUEDES F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "08-06-2025 ( Ronda 3 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "TAMARACEITE, U.D. \"A\"",
+            "away": "SAN PEDRO MARTIR, C.D. \"A\"",
+            "hs": 1,
+            "as": 0,
+            "date": "08-06-2025",
+            "time": "13:00",
+            "venue": "JUAN GUEDES F8 (1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1729",
+    "competition_name": "Copa Campeones Benjamin Fase C",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Copa Campeones C",
+    "group_id": "196997",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "07-06-2025 ( Ronda 1 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "LA UNION DE VECINDARIO \"B\"",
+            "away": "PEDRO HIDALGO, U.D. \"A\"",
+            "hs": 8,
+            "as": 4,
+            "date": "07-06-2025",
+            "time": "09:30",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "GUAYARMINA, C.D.",
+            "hs": 2,
+            "as": 1,
+            "date": "07-06-2025",
+            "time": "09:30",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "07-06-2025 ( Ronda 2 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "LA UNION DE VECINDARIO \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+            "hs": 0,
+            "as": 1,
+            "date": "07-06-2025",
+            "time": "10:30",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F. \"C\"",
+            "away": "GUAYARMINA, C.D.",
+            "hs": 3,
+            "as": 5,
+            "date": "07-06-2025",
+            "time": "10:30",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "07-06-2025 ( Ronda 3 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "LA UNION DE VECINDARIO \"B\"",
+            "away": "GUAYARMINA, C.D.",
+            "hs": 2,
+            "as": 0,
+            "date": "07-06-2025",
+            "time": "12:00",
+            "venue": "ALCALDE ANDRES RGUEZ.MARTIN F8(1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1730",
+    "competition_name": "Copa Campeones Benjamin Fase D",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Copa Campeones D",
+    "group_id": "196999",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "06-06-2025 ( Ronda 1 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "BECERRIL, C.D.",
+            "away": "SAN LAZARO, U.D.",
+            "hs": 2,
+            "as": 5,
+            "date": "06-06-2025",
+            "time": "17:30",
+            "venue": "CMF LA ATALAYA F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D. \"C\"",
+            "away": "MASPALOMAS, C.D. \"A\"",
+            "hs": 4,
+            "as": 0,
+            "date": "06-06-2025",
+            "time": "17:30",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "06-06-2025 ( Ronda 2 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "VETERANOS DEL PILA, C.D. \"B\"",
+            "away": "VETERANOS DEL PILA, C.D. \"C\"",
+            "hs": 1,
+            "as": 2,
+            "date": "06-06-2025",
+            "time": "18:45",
+            "venue": "CMF LA ATALAYA F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D. \"A\"",
+            "away": "BECERRIL, C.D.",
+            "hs": 1,
+            "as": 3,
+            "date": "06-06-2025",
+            "time": "18:45",
+            "venue": "CMF LA ATALAYA F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "06-06-2025 ( Ronda 3 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "VETERANOS DEL PILA, C.D. \"C\"",
+            "away": "BECERRIL, C.D.",
+            "hs": 0,
+            "as": 4,
+            "date": "06-06-2025",
+            "time": "20:00",
+            "venue": "CMF LA ATALAYA F8 (1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1719",
+    "competition_name": "Copa Campeones Benjamin Fase E",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Copa Campeones E",
+    "group_id": "196818",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "11-05-2025 ( Ronda 1 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "TABLERO, C.D. \"B\"",
+            "away": "CORAZON DE MARIA, C.D. \"B\"",
+            "hs": 3,
+            "as": 4,
+            "date": "11-05-2025",
+            "time": "10:00",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "MOGAN, C.F.",
+            "away": "COLORADAS, U.D. LAS",
+            "hs": 3,
+            "as": 1,
+            "date": "11-05-2025",
+            "time": "10:00",
+            "venue": "LOS CASCAJOS F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11-05-2025 ( Ronda 2 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "CORAZON DE MARIA, C.D. \"B\"",
+            "hs": 6,
+            "as": 2,
+            "date": "11-05-2025",
+            "time": "11:30",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "COLORADAS, U.D. LAS",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": 7,
+            "as": 4,
+            "date": "11-05-2025",
+            "time": "11:30",
+            "venue": "LOS CASCAJOS F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11-05-2025 ( Ronda 3 Ida )",
+        "date": "",
+        "matches": [
+          {
+            "home": "SAN NICOLAS, U.D.",
+            "away": "MUELLE GRANDE, U.D.",
+            "hs": 3,
+            "as": 5,
+            "date": "11-05-2025",
+            "time": "13:00",
+            "venue": "LOS CASCAJOS F8 (1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
   }
 ]

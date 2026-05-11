@@ -43,6 +43,10 @@ jobs:
           # futbolaspalmas.com los tiene completos. Re-importar Wayback
           # encima recupera los played counts que FIFLP sobrescribió.
           python3 scripts/import_wayback_2425.py
+          # Knockout tournaments (Copa de Campeones) don't have native
+          # standings — synthesize them from match results so each cup card
+          # shows champion/finalist/etc ordering.
+          python3 scripts/synth_copa_campeones.py
           python3 scripts/generate_js.py
 
       - name: Commit y push

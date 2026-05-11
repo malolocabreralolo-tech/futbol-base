@@ -22,6 +22,9 @@ ALL_COMPETITIONS = [
     # Benjamin Fuerteventura
     {"id": "1331", "name": "Benjamin Fuerteventura Fase 1",  "cat": "benjamin",    "island": "fuerteventura", "phase": "Fase 1"},
     {"id": "1442", "name": "Benjamin Fuerteventura Fase 2",  "cat": "benjamin",    "island": "fuerteventura", "phase": "Fase 2"},
+    # Prebenjamin Gran Canaria
+    {"id": "1333", "name": "Prebenjamin Gran Canaria",       "cat": "prebenjamin", "island": "grancanaria",   "phase": "Gran Canaria"},
+    {"id": "1230", "name": "Copa Campeones Prebenjamin GC",  "cat": "prebenjamin", "island": "grancanaria",   "phase": "Copa de Campeones"},
 ]
 
 # Filter by SCRAPE_IDS env var (comma-separated IDs) if set

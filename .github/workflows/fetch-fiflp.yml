@@ -14,7 +14,7 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 150
 
     steps:
       - name: Checkout
@@ -34,7 +34,7 @@ jobs:
         env:
           SCRAPE_IDS: ${{ github.event.inputs.ids }}
         run: python3 scripts/fetch_fiflp_2425.py
-        timeout-minutes: 50
+        timeout-minutes: 130
 
       - name: Importar a DB y regenerar JS
         run: |

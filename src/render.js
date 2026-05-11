@@ -188,13 +188,17 @@ function buildKnockoutBracket(g) {
       const awayClass = `bracket-team${awayWin ? ' winner' : ''}${draw ? ' draw' : ''}`;
       const homeIsChamp = isFinalMatch && homeWin && home === champion;
       const awayIsChamp = isFinalMatch && awayWin && away === champion;
+      // team-name-cell + data-group makes these clickable via the existing
+      // delegated handler in renderClasif → openTeamDetail (modals.js). The
+      // 🏆 sits OUTSIDE the cell so the textContent stays equal to the team
+      // name in standings (otherwise the lookup misses).
       html += `<div class="bracket-match${isFinalMatch ? ' bracket-match-final' : ''}">
         <div class="${homeClass}${homeIsChamp ? ' champion' : ''}">
-          <span class="bracket-team-name">${teamBadge(home)} ${_esc(home)}${homeIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-team-name"><span class="team-name-cell" data-group="${_esc(g.id)}">${teamBadge(home)} ${_esc(home)}</span>${homeIsChamp ? ' 🏆' : ''}</span>
           <span class="bracket-score">${hs != null ? hs : '–'}</span>
         </div>
         <div class="${awayClass}${awayIsChamp ? ' champion' : ''}">
-          <span class="bracket-team-name">${teamBadge(away)} ${_esc(away)}${awayIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-team-name"><span class="team-name-cell" data-group="${_esc(g.id)}">${teamBadge(away)} ${_esc(away)}</span>${awayIsChamp ? ' 🏆' : ''}</span>
           <span class="bracket-score">${as != null ? as : '–'}</span>
         </div>
       </div>`;

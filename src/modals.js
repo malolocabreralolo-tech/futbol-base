@@ -209,8 +209,12 @@ export function openMatchDetail(match) {
 export function openTeamDetail(teamName, groupId) {
   if (!modalOverlay || !modalContent || !modalBody) return;
 
-  // Find group — search both categories so it works from any context
-  const allGroups = (typeof BENJAMIN !== 'undefined' ? BENJAMIN : [])
+  // Find group across both current globals and historical season data.
+  // getData() returns the active category's groups for whichever season is
+  // selected — covers historical lazy-loaded data too.
+  const dataGroups = (typeof getData === 'function') ? getData() : [];
+  const allGroups = dataGroups
+    .concat(typeof BENJAMIN !== 'undefined' ? BENJAMIN : [])
     .concat(typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : []);
   const group = allGroups.find(g => g.id === groupId);
   if (!group) return;
@@ -218,12 +222,23 @@ export function openTeamDetail(teamName, groupId) {
   const row = group.standings.find(r => r[1] === teamName);
   // row: [pos, name, pts, j, g, e, p, gf, gc, df]
 
-  // Collect all completed matches for this team from HISTORY
-  const hist = (typeof HISTORY !== 'undefined' && HISTORY[groupId]) ? HISTORY[groupId] : {};
+  // Match source: current season uses the HISTORY global (per-group archive
+  // accumulated over time). Historical seasons store matches directly on
+  // each group's `jornadas` field. Same row shape in both cases:
+  // [date, home, away, hs, as].
+  let matchSource = {};
+  if (typeof HISTORY !== 'undefined' && HISTORY[groupId]) {
+    matchSource = HISTORY[groupId];
+  } else if (group.jornadas && typeof group.jornadas === 'object'
+             && !Array.isArray(group.jornadas)) {
+    matchSource = group.jornadas;
+  }
+
   const matches = [];
-  Object.entries(hist).forEach(([jorName, jMatches]) => {
+  Object.entries(matchSource).forEach(([jorName, jMatches]) => {
+    if (!Array.isArray(jMatches)) return;
     jMatches.forEach(m => {
-      if ((m[1] === teamName || m[2] === teamName) && m[3] !== null) {
+      if ((m[1] === teamName || m[2] === teamName) && m[3] !== null && m[4] !== null) {
         const isHome = m[1] === teamName;
         const gf = isHome ? m[3] : m[4];
         const gc = isHome ? m[4] : m[3];
@@ -233,7 +248,16 @@ export function openTeamDetail(teamName, groupId) {
       }
     });
   });
-  matches.sort((a, b) => a.date.localeCompare(b.date));
+  // Sort chronologically. Date can be DD/MM (current) or YYYY-MM-DD (some
+  // historical seasons) — convert to YYYY-MM-DD-ish for stable ordering.
+  const toSortable = (d) => {
+    if (!d) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+    const m = d.match(/^(\d{2})\/(\d{2})(?:\/(\d{2,4}))?$/);
+    if (m) return `${m[3] || ''}-${m[2]}-${m[1]}`;
+    return d;
+  };
+  matches.sort((a, b) => toSortable(a.date).localeCompare(toSortable(b.date)));
 
   // Header
   const groupLabel = `${group.phase} · ${group.name}`;

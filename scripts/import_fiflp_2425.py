@@ -27,6 +27,12 @@ CODE_PREFIX = {
     "1708": "C",     # Segunda Fase C GC
     "1709": "D",     # Segunda Fase D GC
     "1710": "E",     # Segunda Fase E GC
+    # Benjamin Copa de Campeones (knockout) — one per Segunda Fase tier
+    "1727": "BCA",   # Benjamin Copa Campeones Fase A (oro)
+    "1728": "BCB",   # Benjamin Copa Campeones Fase B
+    "1729": "BCC",   # Benjamin Copa Campeones Fase C
+    "1730": "BCD",   # Benjamin Copa Campeones Fase D
+    "1719": "BCE",   # Benjamin Copa Campeones Fase E
     # Benjamin Lanzarote
     "1575": "LZP",   # Preferente Lanzarote
     "1578": "LZ1",   # Primera Lanzarote
@@ -52,6 +58,11 @@ PHASE_MAP = {
     "1708": "Segunda Fase C GC",
     "1709": "Segunda Fase D GC",
     "1710": "Segunda Fase E GC",
+    "1727": "Copa Campeones Benjamin A",
+    "1728": "Copa Campeones Benjamin B",
+    "1729": "Copa Campeones Benjamin C",
+    "1730": "Copa Campeones Benjamin D",
+    "1719": "Copa Campeones Benjamin E",
     "1575": "Preferente Lanzarote",
     "1578": "Primera Lanzarote",
     "1579": "Fase 1 Fuerteventura",

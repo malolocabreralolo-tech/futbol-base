@@ -19,6 +19,12 @@ ALL_COMPETITIONS = [
     {"id": "1708", "name": "Benjamin GC Segunda Fase C",     "cat": "benjamin",    "island": "grancanaria",   "phase": "Segunda Fase C"},
     {"id": "1709", "name": "Benjamin GC Segunda Fase D",     "cat": "benjamin",    "island": "grancanaria",   "phase": "Segunda Fase D"},
     {"id": "1710", "name": "Benjamin GC Segunda Fase E",     "cat": "benjamin",    "island": "grancanaria",   "phase": "Segunda Fase E"},
+    # Benjamin Copa de Campeones (one per Segunda Fase tier, knockout final phase)
+    {"id": "1727", "name": "Copa Campeones Benjamin Fase A", "cat": "benjamin",    "island": "grancanaria",   "phase": "Copa Campeones A"},
+    {"id": "1728", "name": "Copa Campeones Benjamin Fase B", "cat": "benjamin",    "island": "grancanaria",   "phase": "Copa Campeones B"},
+    {"id": "1729", "name": "Copa Campeones Benjamin Fase C", "cat": "benjamin",    "island": "grancanaria",   "phase": "Copa Campeones C"},
+    {"id": "1730", "name": "Copa Campeones Benjamin Fase D", "cat": "benjamin",    "island": "grancanaria",   "phase": "Copa Campeones D"},
+    {"id": "1719", "name": "Copa Campeones Benjamin Fase E", "cat": "benjamin",    "island": "grancanaria",   "phase": "Copa Campeones E"},
     # Benjamin Lanzarote
     {"id": "1575", "name": "Benjamin Lanzarote Preferente",  "cat": "benjamin",    "island": "lanzarote",     "phase": "Preferente"},
     {"id": "1578", "name": "Benjamin Lanzarote Primera",     "cat": "benjamin",    "island": "lanzarote",     "phase": "Primera"},

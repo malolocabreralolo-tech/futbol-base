@@ -286,7 +286,11 @@ body {
 }
 body[data-section="miequipo"] .season-cat-row,
 body[data-section="miequipo"] .season-selector,
-body[data-section="miequipo"] .stats-bar { display: none; }
+body[data-section="miequipo"] .stats-bar {
+  display: none;
+}
+.section-tab[data-section="miequipo"] { color: var(--accent); opacity: .75; }
+.section-tab[data-section="miequipo"].active { opacity: 1; }
 
 /* Historical banner */
 .historical-banner {
@@ -497,6 +501,7 @@ body[data-section="miequipo"] .stats-bar { display: none; }
 .match-card.featured-team { border-color: var(--green-border); box-shadow: inset 0 0 0 1px var(--accent-dim); }
 .bracket-team.featured-team { box-shadow: inset 3px 0 0 var(--accent); }
 .bracket-team.featured-team .bracket-team-name { font-weight: 700; }
+.match-card.featured-team:hover { box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--accent-dim); }
 
 /* ====== JORNADAS SECTION ====== */
 .selector-row {
@@ -786,6 +791,59 @@ body[data-section="miequipo"] .stats-bar { display: none; }
   font-size: 14px;
 }
 
+/* ====== MI EQUIPO DASHBOARD ====== */
+#sec-miequipo { display: none; }
+#sec-miequipo.active { display: flex; flex-direction: column; gap: 14px; max-width: 760px; margin: 0 auto; }
+.me-hero { display: flex; align-items: center; gap: 15px; background: linear-gradient(150deg, var(--card-hover) 0%, var(--card) 60%); border: 1px solid var(--border); border-radius: 18px; padding: 18px; position: relative; overflow: hidden; }
+.me-hero::after { content: ""; position: absolute; right: -40px; top: -30px; width: 170px; height: 170px; background: radial-gradient(circle, var(--accent-dim), transparent 70%); }
+.me-crest .team-badge { width: 64px; height: 64px; font-size: 22px; border-radius: 15px; }
+.me-id h2 { font-size: 21px; font-weight: 700; line-height: 1.15; }
+.me-meta { color: var(--text2); font-size: 12.5px; margin-top: 4px; }
+.me-pos { margin-left: auto; text-align: center; }
+.me-pos-n { font-size: 34px; font-weight: 800; color: var(--accent); line-height: 1; }
+.me-pos-l { font-size: 10.5px; color: var(--text3); letter-spacing: .5px; margin-top: 2px; }
+.me-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; }
+.me-ct { font-size: 11px; letter-spacing: .7px; color: var(--text3); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; }
+.me-mut { color: var(--text3); font-weight: 600; letter-spacing: 0; text-transform: none; }
+.me-empty { color: var(--text2); font-size: 13px; padding: 10px 2px; }
+.me-link { margin-top: 10px; font-size: 12px; color: var(--accent); font-weight: 700; cursor: pointer; }
+.me-link:hover { text-decoration: underline; }
+.me-cal { display: flex; flex-direction: column; max-height: 320px; overflow-y: auto; }
+.me-crow { display: flex; align-items: center; gap: 9px; padding: 9px 4px; border-top: 1px solid var(--border); font-size: 12.5px; }
+.me-crow:first-child { border-top: 0; }
+.me-crow.me-dim { opacity: .5; }
+.me-crow.me-last { background: rgba(127,127,127,.06); }
+.me-crow[data-mi] { cursor: pointer; }
+.me-crow[data-mi]:hover { background: var(--card-hover); }
+.me-jn { font-size: 10px; color: var(--text3); width: 32px; flex: 0 0 32px; }
+.me-hv { font-size: 9px; font-weight: 800; width: 14px; color: var(--text3); }
+.me-o { flex: 1; color: var(--text); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.me-res { font-weight: 800; width: 46px; text-align: right; }
+.me-res.G { color: var(--accent); }
+.me-res.E { color: var(--text2); }
+.me-res.P { color: var(--red); }
+.me-res.me-next-min { color: var(--text3); font-size: 11px; font-weight: 700; }
+.me-taglast { font-size: 9px; color: var(--text3); font-weight: 700; margin-left: 6px; border: 1px solid var(--border); padding: 1px 5px; border-radius: 5px; }
+.me-detail { opacity: .8; }
+.me-divnow { display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; }
+.me-ln { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--amber), transparent); }
+.me-divt { font-size: 9.5px; font-weight: 800; letter-spacing: 1px; color: var(--amber); }
+.me-next { background: rgba(255,193,7,.08); border: 1px solid rgba(255,193,7,.35); border-radius: 12px; padding: 12px; margin: 2px 0; }
+.me-next-top { display: flex; align-items: center; gap: 9px; }
+.me-next-j { font-size: 10px; font-weight: 800; color: var(--amber); }
+.me-next-cd { margin-left: auto; font-size: 10px; font-weight: 800; color: var(--amber); background: rgba(255,193,7,.16); padding: 3px 7px; border-radius: 6px; }
+.me-next-opp { font-size: 16px; font-weight: 700; margin-top: 7px; }
+.me-next-opp .team-badge { width: 22px; height: 22px; font-size: 8px; vertical-align: -5px; }
+.me-next-loc { color: var(--text3); font-weight: 600; font-size: 13px; }
+.me-next-when { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.me-mini tr.me-leadrow td { border-bottom: 2px solid var(--border); }
+.me-scrow { display: flex; align-items: center; gap: 10px; padding: 8px 2px; border-top: 1px solid var(--border); font-size: 13px; }
+.me-ct + .me-scrow { border-top: 0; }
+.me-scrk { width: 18px; color: var(--text3); font-size: 12px; text-align: center; }
+.me-scnm { flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.me-scg { font-weight: 800; color: var(--accent); width: 30px; text-align: right; }
+.me-scpj { font-size: 11px; color: var(--text3); width: 50px; text-align: right; }
+
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
   .header { padding: 12px 12px 0; }
@@ -807,6 +865,12 @@ body[data-section="miequipo"] .stats-bar { display: none; }
   .custom-select { min-width: 100%; }
   .search-wrap { padding: 0 12px; }
   .team-badge { width: 20px; height: 20px; font-size: 8px; }
+  #sec-miequipo.active { gap: 12px; }
+  .me-hero { padding: 14px; gap: 12px; }
+  .me-crest .team-badge { width: 54px; height: 54px; }
+  .me-id h2 { font-size: 18px; }
+  .me-pos-n { font-size: 28px; }
+  .section-tabs { -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent); mask-image: linear-gradient(90deg, #000 90%, transparent); }
 }
 
 @media (max-width: 480px) {

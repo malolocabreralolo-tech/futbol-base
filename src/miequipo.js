@@ -1,5 +1,5 @@
 import {
-  $, el, teamBadge, S, FEATURED,
+  $, el, teamBadge, S, FEATURED, isFeatured,
   featuredStandingFrom, featuredMatchesFrom, featuredScorersFrom,
 } from './state.js';
 import { openMatchDetail } from './modals.js';
@@ -64,7 +64,7 @@ function standingTr(r, isLeader) {
   const df = r[9];
   const dfCls = df > 0 ? 'df-pos' : df < 0 ? 'df-neg' : '';
   const dfStr = df > 0 ? '+' + df : df;
-  const featured = r[1] === FEATURED.name;
+  const featured = isFeatured(r[1]);
   const trCls = ((r[0] <= 3 ? 'pos-' + r[0] + ' ' : '')
     + (featured ? 'featured-team ' : '')
     + (isLeader ? 'me-leadrow' : '')).trim();

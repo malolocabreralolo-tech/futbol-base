@@ -1,5 +1,6 @@
 import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
+import { renderMiEquipo } from './miequipo.js';
 
 /* ====== SEARCH COUNT ====== */
 export function updateSearchCount() {
@@ -22,9 +23,11 @@ export function updateSearchCount() {
 export function renderSection() {
   $$('.section').forEach(s => s.classList.remove('active'));
   const sec = S.section;
+  document.body.dataset.section = sec;
   $(`#sec-${sec}`).classList.add('active');
 
-  if (sec === 'clasif') renderClasif();
+  if (sec === 'miequipo') renderMiEquipo();
+  else if (sec === 'clasif') renderClasif();
   else if (sec === 'jornadas') renderJornadas();
   else if (sec === 'goleadores') renderGoleadores();
   else if (sec === 'isla') renderIsla();

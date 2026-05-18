@@ -284,6 +284,9 @@ body {
   pointer-events: none;
   cursor: default;
 }
+body[data-section="miequipo"] .season-cat-row,
+body[data-section="miequipo"] .season-selector,
+body[data-section="miequipo"] .stats-bar { display: none; }
 
 /* Historical banner */
 .historical-banner {

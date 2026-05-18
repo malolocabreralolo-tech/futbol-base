@@ -1,7 +1,7 @@
 /* ====== APP STATE ====== */
 const S = {
   cat: 'benjamin',      // 'benjamin' | 'prebenjamin'
-  section: 'clasif',    // 'clasif' | 'jornadas' | 'goleadores' | 'isla'
+  section: 'miequipo',  // 'miequipo'|'clasif'|'jornadas'|'goleadores'|'isla'|'stats'
   season: '',           // '' = current season, or '2024-2025' etc.
   search: '',  // unused, kept for compat
   // jornadas

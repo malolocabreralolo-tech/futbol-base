@@ -24,6 +24,62 @@ export function isFeatured(name) {
   return strip(name) === strip(FEATURED.name);
 }
 
+/* Standings row of the featured team within a PREBENJAMIN-shaped array.
+ * Returns { group, row, pos, total } or null. */
+export function featuredStandingFrom(prebenjamin) {
+  if (!Array.isArray(prebenjamin)) return null;
+  const group = prebenjamin.find(g => g.id === FEATURED.groupId);
+  if (!group || !Array.isArray(group.standings)) return null;
+  const row = group.standings.find(r => isFeatured(r[1]));
+  if (!row) return null;
+  return { group, row, pos: row[0], total: group.standings.length };
+}
+
+/* All matches of the featured team from a HISTORY[groupId]-shaped object,
+ * sorted by jornada then date. Entry: { jor, jorNum, date, home, away,
+ * hs, as, isHome, opp, played, result } -- result 'W'|'D'|'L' or null. */
+export function featuredMatchesFrom(historyGroup) {
+  if (!historyGroup || typeof historyGroup !== 'object') return [];
+  const out = [];
+  Object.entries(historyGroup).forEach(([jor, matches]) => {
+    if (!Array.isArray(matches)) return;
+    const jorNum = parseInt(String(jor).replace(/\D/g, ''), 10) || 0;
+    matches.forEach(m => {
+      const [date, home, away, hs, as] = m;
+      if (!isFeatured(home) && !isFeatured(away)) return;
+      const isHome = isFeatured(home);
+      const played = hs !== null && hs !== undefined
+        && as !== null && as !== undefined;
+      let result = null;
+      if (played) {
+        const gf = isHome ? hs : as;
+        const gc = isHome ? as : hs;
+        result = gf > gc ? 'W' : gf < gc ? 'L' : 'D';
+      }
+      out.push({ jor, jorNum, date, home, away, hs, as, isHome,
+        opp: isHome ? away : home, played, result });
+    });
+  });
+  out.sort((a, b) => a.jorNum - b.jorNum
+    || String(a.date).localeCompare(String(b.date)));
+  return out;
+}
+
+/* Featured team's scorers from a GOL_PREBENJ-shaped array. Entry shape in
+ * data: [name, team, goals, games]. Sorted goals desc, games asc. */
+export function featuredScorersFrom(golPrebenj) {
+  if (!Array.isArray(golPrebenj)) return [];
+  // 'PREBENJAMIN GC GRUPO 2' = the data-goleadores.js display key for
+  // FEATURED.groupId ('PG2'). No PG2->name mapping exists, so this literal
+  // is intentional; if it ever mismatches, this safely returns [].
+  const grp = golPrebenj.find(g => g.g === 'PREBENJAMIN GC GRUPO 2');
+  if (!grp || !Array.isArray(grp.s)) return [];
+  return grp.s
+    .filter(s => isFeatured(s[1]))
+    .map(s => ({ name: s[0], goals: s[2], games: s[3] }))
+    .sort((a, b) => b.goals - a.goals || a.games - b.games);
+}
+
 /* ====== HELPERS ====== */
 export function $(sel, ctx) { return (ctx||document).querySelector(sel); }
 export function $$(sel, ctx) { return Array.from((ctx||document).querySelectorAll(sel)); }

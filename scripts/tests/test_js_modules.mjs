@@ -28,6 +28,7 @@ function loadDataFile(filename) {
     'SEASONS', 'BENJAMIN', 'PREBENJAMIN', 'SHIELDS',
     'SEASON_2021_2022', 'SEASON_2022_2023', 'SEASON_2023_2024',
     'SEASON_2024_2025', 'SEASON_2025_2026',
+    'GOL_BENJ', 'GOL_PREBENJ',
   ];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
@@ -162,4 +163,65 @@ test('isFeatured matches the team and variants, not B teams', () => {
   assert.equal(isFeatured('AD Huracan'), false);
   assert.equal(isFeatured(''), false);
   assert.equal(isFeatured(undefined), false);
+});
+
+// featured data extraction
+import {
+  featuredStandingFrom, featuredMatchesFrom, featuredScorersFrom,
+} from '../../src/state.js';
+
+test('featuredStandingFrom finds Las Mesas in PREBENJAMIN PG2', () => {
+  const { PREBENJAMIN } = loadDataFile('data-prebenjamin.js');
+  const r = featuredStandingFrom(PREBENJAMIN);
+  assert.ok(r);
+  assert.equal(r.row[1], 'Las Mesas Hu.');
+  assert.equal(r.pos, r.row[0]);
+  assert.ok(r.total >= r.pos);
+  assert.equal(r.group.id, 'PG2');
+});
+
+test('featuredStandingFrom returns null when team absent', () => {
+  assert.equal(featuredStandingFrom([{ id: 'PG2', name: 'G2',
+    standings: [[1, 'Otro', 0, 0, 0, 0, 0, 0, 0, 0]] }]), null);
+  assert.equal(featuredStandingFrom([]), null);
+});
+
+test('featuredMatchesFrom builds a sorted played/upcoming list', () => {
+  const hist = {
+    'Jornada 2': [['2026-01-10', 'Rival X', 'Las Mesas Hu.', 1, 3]],
+    'Jornada 1': [['2026-01-03', 'Las Mesas Hu.', 'Rival Y', 2, 2],
+                  ['2026-01-03', 'Otro', 'Mas', 0, 0]],
+    'Jornada 3': [['06/06', 'Las Mesas Hu.', 'Rival Z', null, null]],
+  };
+  const m = featuredMatchesFrom(hist);
+  assert.equal(m.length, 3);
+  assert.deepEqual(m.map(x => x.jorNum), [1, 2, 3]);
+  assert.equal(m[0].opp, 'Rival Y');
+  assert.equal(m[0].isHome, true);
+  assert.equal(m[0].result, 'D');
+  assert.equal(m[0].played, true);
+  assert.equal(m[1].opp, 'Rival X');
+  assert.equal(m[1].isHome, false);
+  assert.equal(m[1].result, 'W');
+  assert.equal(m[2].played, false);
+  assert.equal(m[2].result, null);
+});
+
+test('featuredMatchesFrom on empty/missing history -> []', () => {
+  assert.deepEqual(featuredMatchesFrom(undefined), []);
+  assert.deepEqual(featuredMatchesFrom({}), []);
+});
+
+test('featuredScorersFrom returns Las Mesas players sorted by goals', () => {
+  const { GOL_PREBENJ } = loadDataFile('data-goleadores.js');
+  const s = featuredScorersFrom(GOL_PREBENJ);
+  assert.ok(s.length >= 1);
+  for (let i = 1; i < s.length; i++)
+    assert.ok(s[i - 1].goals >= s[i].goals);
+  assert.ok(s.every(p => typeof p.name === 'string' && typeof p.goals === 'number'));
+});
+
+test('featuredScorersFrom handles missing group -> []', () => {
+  assert.deepEqual(featuredScorersFrom([{ g: 'OTRO GRUPO', s: [] }]), []);
+  assert.deepEqual(featuredScorersFrom(undefined), []);
 });

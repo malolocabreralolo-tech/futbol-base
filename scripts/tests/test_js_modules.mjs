@@ -225,3 +225,19 @@ test('featuredScorersFrom handles missing group -> []', () => {
   assert.deepEqual(featuredScorersFrom([{ g: 'OTRO GRUPO', s: [] }]), []);
   assert.deepEqual(featuredScorersFrom(undefined), []);
 });
+
+// regression: miequipo.js must read data globals as bare identifiers
+// (typeof-guarded), NOT via globalThis/window — top-level `const` in the
+// classic data-*.js scripts is a global LEXICAL binding, not a property of
+// globalThis. See systematic-debugging root cause 2026-05-18.
+test('miequipo.js does not read data via globalThis/window', () => {
+  const src = readFileSync(join(ROOT, 'src/miequipo.js'), 'utf8');
+  assert.ok(!/globalThis/.test(src), 'miequipo.js must not use globalThis for data');
+  assert.ok(!/\bwindow\.\s*(PREBENJAMIN|HISTORY|GOL_PREBENJ|MATCH_DETAIL)\b/.test(src),
+    'miequipo.js must not use window.<DATA>');
+  assert.ok(!/const\s+G\s*=\s*\(\)\s*=>/.test(src), 'the globalThis G() helper must be gone');
+  for (const g of ['PREBENJAMIN', 'HISTORY', 'GOL_PREBENJ', 'MATCH_DETAIL']) {
+    assert.ok(new RegExp(`typeof\\s+${g}\\s*!==\\s*['"]undefined['"]`).test(src),
+      `miequipo.js must guard ${g} with typeof ${g} !== 'undefined'`);
+  }
+});

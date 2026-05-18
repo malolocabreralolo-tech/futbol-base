@@ -4,7 +4,9 @@ import {
 } from './state.js';
 import { openMatchDetail } from './modals.js';
 
-const G = () => globalThis;
+// data-*.js use top-level `const` (classic scripts) -> global LEXICAL bindings,
+// NOT properties of the global object. Read them as bare identifiers, typeof-guarded,
+// exactly like src/render.js & src/modals.js do.
 let _showAllScorers = false;
 
 function esc(s) {
@@ -54,7 +56,7 @@ function venueTimeFor(next, group) {
 }
 
 function hasDetail(m) {
-  const MD = G().MATCH_DETAIL;
+  const MD = typeof MATCH_DETAIL !== 'undefined' ? MATCH_DETAIL : null;
   if (!MD || !m.played) return false;
   const d = MD[m.home + '|' + m.away + '|' + m.hs + '-' + m.as];
   return !!(d && d.g && d.g.length);
@@ -116,16 +118,16 @@ export function renderMiEquipo() {
   if (!c) return;
   c.innerHTML = '';
 
-  const stand = featuredStandingFrom(G().PREBENJAMIN);
+  const stand = featuredStandingFrom(typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : null);
   if (!stand) {
     c.innerHTML = '<div class="empty-state"><div class="empty-icon">&#11088;</div>'
       + '<p>No hay datos del equipo esta temporada</p></div>';
     return;
   }
   const group = stand.group, pos = stand.pos, total = stand.total;
-  const HISTORY = G().HISTORY;
-  const matches = featuredMatchesFrom(HISTORY ? HISTORY[FEATURED.groupId] : null);
-  const scorers = featuredScorersFrom(G().GOL_PREBENJ);
+  const hist = typeof HISTORY !== 'undefined' && HISTORY ? HISTORY[FEATURED.groupId] : null;
+  const matches = featuredMatchesFrom(hist);
+  const scorers = featuredScorersFrom(typeof GOL_PREBENJ !== 'undefined' ? GOL_PREBENJ : null);
 
   const hero = el('div', 'me-hero');
   hero.innerHTML =

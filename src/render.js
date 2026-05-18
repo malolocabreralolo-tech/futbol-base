@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo } from './miequipo.js';
 
@@ -187,8 +187,8 @@ function buildKnockoutBracket(g) {
       }
       const isFinalMatch = matches.length === 1;
       const draw = played && !homeWin && !awayWin;
-      const homeClass = `bracket-team${homeWin ? ' winner' : ''}${draw ? ' draw' : ''}`;
-      const awayClass = `bracket-team${awayWin ? ' winner' : ''}${draw ? ' draw' : ''}`;
+      const homeClass = `bracket-team${homeWin ? ' winner' : ''}${draw ? ' draw' : ''}${isFeatured(home) ? ' featured-team' : ''}`;
+      const awayClass = `bracket-team${awayWin ? ' winner' : ''}${draw ? ' draw' : ''}${isFeatured(away) ? ' featured-team' : ''}`;
       const homeIsChamp = isFinalMatch && homeWin && home === champion;
       const awayIsChamp = isFinalMatch && awayWin && away === champion;
       // team-name-cell + data-group makes these clickable via the existing
@@ -228,8 +228,8 @@ export function buildStandingsTable(standings, groupId) {
   standings.forEach(row => {
     // row: [pos, team, pts, j, g, e, p, gf, gc, df]
     const pos = row[0];
-    const cls = pos <= 3 ? `pos-${pos}` : '';
-    html += `<tr class="${cls}">`;
+    const cls = (pos <= 3 ? `pos-${pos}` : '') + (isFeatured(row[1]) ? ' featured-team' : '');
+    html += `<tr class="${cls.trim()}">`;
     html += `<td>${pos}</td>`;
     html += `<td class="team-name-cell" data-group="${groupId}">${teamBadge(row[1])} ${row[1]}</td>`;
     if (showForm) {
@@ -472,7 +472,8 @@ export function renderMatchCards(container, matches, type) {
   const grid = el('div', 'match-grid');
   matches.forEach(m => {
     const hasScore = m.hs !== null && m.hs !== undefined && m.as !== null && m.as !== undefined;
-    const card = el('div', `match-card ${hasScore ? 'completed' : 'upcoming'}`);
+    const featuredCls = (isFeatured(m.home) || isFeatured(m.away)) ? ' featured-team' : '';
+    const card = el('div', `match-card ${hasScore ? 'completed' : 'upcoming'}${featuredCls}`);
     
     let scoreHtml;
     if (hasScore) {

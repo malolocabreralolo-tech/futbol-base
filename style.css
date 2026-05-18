@@ -491,6 +491,13 @@ body[data-section="miequipo"] .stats-bar { display: none; }
 .standings-table .df-pos { color: var(--accent); }
 .standings-table .df-neg { color: var(--red); }
 
+/* ====== FEATURED TEAM HIGHLIGHT ====== */
+.standings-table tr.featured-team td { background: var(--accent-dim); color: var(--text); }
+.standings-table tr.featured-team td:nth-child(2) { font-weight: 700; box-shadow: inset 3px 0 0 var(--accent); }
+.match-card.featured-team { border-color: var(--green-border); box-shadow: inset 0 0 0 1px var(--accent-dim); }
+.bracket-team.featured-team { box-shadow: inset 3px 0 0 var(--accent); }
+.bracket-team.featured-team .bracket-team-name { font-weight: 700; }
+
 /* ====== JORNADAS SECTION ====== */
 .selector-row {
   display: flex;

@@ -291,10 +291,10 @@ export function buildUnifiedPrebenjamin() {
   
   allTeams.forEach((t, i) => {
     const pos = i + 1;
-    const cls = pos <= 3 ? 'pos-' + pos : '';
+    const cls = (pos <= 3 ? 'pos-' + pos : '') + (isFeatured(t.name) ? ' featured-team' : '');
     const dfCls = t.df > 0 ? 'df-pos' : (t.df < 0 ? 'df-neg' : '');
     const dfStr = t.df > 0 ? '+' + t.df : t.df;
-    html += `<tr class="${cls}">`;
+    html += `<tr class="${cls.trim()}">`;
     html += `<td>${pos}</td>`;
     html += `<td class="team-name-cell" data-group="${PREBENJAMIN[t.groupNum - 1].id}">${teamBadge(t.name)} ${t.name}</td>`;
     html += `<td style="color:${t.color};font-weight:700;text-align:center" title="${t.groupName}">${t.sym}</td>`;

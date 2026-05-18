@@ -32,3 +32,6 @@ database.db
 # Test cache
 .pytest_cache/
 .hypothesis/
+
+# Visual brainstorming companion
+.superpowers/

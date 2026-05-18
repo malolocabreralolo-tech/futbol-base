@@ -10,6 +10,7 @@
 
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
+import { isFeatured, FEATURED } from '../../src/state.js';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -143,4 +144,22 @@ test('per-season groups have valid standings + jornadas shape', () => {
       }
     }
   }
+});
+
+// FEATURED / isFeatured
+test('FEATURED points at Las Mesas Hu. Prebenjamin PG2', () => {
+  assert.equal(FEATURED.cat, 'prebenjamin');
+  assert.equal(FEATURED.groupId, 'PG2');
+  assert.equal(FEATURED.name, 'Las Mesas Hu.');
+});
+
+test('isFeatured matches the team and variants, not B teams', () => {
+  assert.equal(isFeatured('Las Mesas Hu.'), true);
+  assert.equal(isFeatured('Las Mesas Hu'), true);
+  assert.equal(isFeatured('CD Las Mesas Hu.'), true);
+  assert.equal(isFeatured('Las Mesas B'), false);
+  assert.equal(isFeatured('Las Mesas Hu. B'), false);
+  assert.equal(isFeatured('AD Huracan'), false);
+  assert.equal(isFeatured(''), false);
+  assert.equal(isFeatured(undefined), false);
 });

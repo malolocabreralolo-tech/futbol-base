@@ -13,6 +13,17 @@ const S = {
   island: 'grancanaria'
 };
 
+/* ====== FEATURED TEAM (fixed personal portal) ====== */
+export const FEATURED = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' };
+
+/* True when `name` is the featured team (normalized match). Covers club
+ * prefixes and the dot in "Hu." but NOT B teams. */
+export function isFeatured(name) {
+  if (!name) return false;
+  const strip = s => normalizeTeamName(s).replace(/\./g, '').replace(/\s+/g, ' ').trim();
+  return strip(name) === strip(FEATURED.name);
+}
+
 /* ====== HELPERS ====== */
 export function $(sel, ctx) { return (ctx||document).querySelector(sel); }
 export function $$(sel, ctx) { return Array.from((ctx||document).querySelectorAll(sel)); }

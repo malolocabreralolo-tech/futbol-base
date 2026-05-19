@@ -193,6 +193,26 @@ def generate_matchdetail_js(conn):
     return js
 
 
+def generate_matchdetail_keys_js(conn):
+    """Generate data-matchdetail-keys.js: an O(1) presence map of the match
+    keys that have a goal timeline, so the ⚽ badge can render without loading
+    the full (~359 KB) data-matchdetail.js. Same JOIN as
+    generate_matchdetail_js, so the key set is identical by construction."""
+    header = (
+        "// data-matchdetail-keys.js — generado por scripts/generate_js.py\n"
+        "// NO editar manualmente — usar scripts/update.sh para regenerar\n\n"
+    )
+    rows = conn.execute(
+        """SELECT DISTINCT h.name, a.name, m.home_score, m.away_score
+           FROM matches m
+           JOIN teams h ON m.home_team_id = h.id
+           JOIN teams a ON m.away_team_id = a.id
+           JOIN goals g ON g.match_id = m.id""",
+    ).fetchall()
+    keys = {f"{home}|{away}|{hs}-{as_}": 1 for home, away, hs, as_ in rows}
+    return header + "const MATCH_DETAIL_KEYS=" + js_val(keys) + ";"
+
+
 def generate_shields_js(conn):
     """Generate data-shields.js with team shield filenames."""
     rows = conn.execute(
@@ -710,6 +730,8 @@ def main():
 
     print("4. data-matchdetail.js")
     write_file("data-matchdetail.js", generate_matchdetail_js(conn))
+    print("4b. data-matchdetail-keys.js")
+    write_file("data-matchdetail-keys.js", generate_matchdetail_keys_js(conn))
 
     print("5. data-goleadores.js")
     write_file("data-goleadores.js", generate_goleadores_js(conn))

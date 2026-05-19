@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260518a';
+const CACHE_NAME = 'futbolbase-v20260519a';
 const OFFLINE_URL = './index.html';
 
 // Static assets — cached on install, served cache-first
@@ -15,7 +15,7 @@ const STATIC_ASSETS = [
   './data-prebenjamin.js',
   './data-history.js',
   './data-goleadores.js',
-  './data-matchdetail.js',
+  './data-matchdetail-keys.js',
   './data-shields.js',
   './data-stats.js',
   './data-seasons.js',

@@ -254,6 +254,20 @@ test('state.js exports a single-flight ensureMatchDetail loader', () => {
     'must not use globalThis/window for matchdetail');
 });
 
+// wiring: eager keys file, lazy heavy file, sw not precaching the heavy one
+test('index.html + sw.js wired for lazy matchdetail', () => {
+  const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const sw = readFileSync(join(ROOT, 'sw.js'), 'utf8');
+  assert.ok(/<script src="\.\/data-matchdetail-keys\.js\?v=/.test(idx),
+    'index.html must eager-load data-matchdetail-keys.js');
+  assert.ok(!/<script src="\.\/data-matchdetail\.js\?v=/.test(idx),
+    'index.html must NOT eager-load the heavy data-matchdetail.js');
+  assert.ok(!/['"]\.\/data-matchdetail\.js['"]/.test(sw),
+    'sw.js STATIC_ASSETS must not precache data-matchdetail.js');
+  assert.ok(/['"]\.\/data-matchdetail-keys\.js['"]/.test(sw),
+    'sw.js must precache data-matchdetail-keys.js');
+});
+
 // badge must use the lightweight keys map, never the full object
 test('badge consumers use MATCH_DETAIL_KEYS, not full MATCH_DETAIL', () => {
   const render = readFileSync(join(ROOT, 'src/render.js'), 'utf8');

@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, dirname, normalize, extname, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { spawnSync } from 'node:child_process';
+import { spawnSync, spawn } from 'node:child_process';
 
 /**
  * Render smoke test for the futbol-base SPA.
@@ -97,6 +97,35 @@ function findChrome() {
   return null;
 }
 
+/* Run Chrome ASYNC (node:child_process spawn), NOT spawnSync. spawnSync
+ * blocks Node's event loop for the whole Chrome run, so the in-process
+ * static server can never accept Chrome's connections → every request
+ * deadlocks → ETIMEDOUT/empty DOM → false SKIP (root cause 2026-05-19,
+ * proven in CI). With async spawn the event loop stays free and the
+ * server serves Chrome (real render in ~1s). Collect stdout, hard-kill
+ * on timeout. Resolves { stdout, stderr, code, signal, timedOut,
+ * spawnErr } — never rejects. */
+function runChrome(bin, args, ms) {
+  return new Promise((resolve) => {
+    let stdout = '', stderr = '', done = false;
+    const ch = spawn(bin, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    const finish = (extra) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      resolve({ stdout, stderr, ...extra });
+    };
+    const timer = setTimeout(() => {
+      try { ch.kill('SIGKILL'); } catch { /* already gone */ }
+      finish({ timedOut: true });
+    }, ms);
+    ch.stdout.on('data', (d) => { stdout += d; });
+    ch.stderr.on('data', (d) => { stderr += d; });
+    ch.on('close', (code, signal) => finish({ code, signal, timedOut: false }));
+    ch.on('error', (e) => finish({ spawnErr: (e && e.code) || String(e) }));
+  });
+}
+
 async function main() {
   const chrome = findChrome();
   if (!chrome) {
@@ -108,11 +137,11 @@ async function main() {
   const port = srv.address().port;
   const url = `http://127.0.0.1:${port}/index.html`;
   try {
-    const r = spawnSync(chrome, [
+    const r = await runChrome(chrome, [
       '--headless=new', '--no-sandbox', '--disable-gpu',
       '--disable-dev-shm-usage', '--virtual-time-budget=8000',
       '--dump-dom', url,
-    ], { encoding: 'utf8', timeout: 60000, maxBuffer: 64 * 1024 * 1024 });
+    ], 45000);
 
     const dom = r.stdout || '';
     // A Chrome error interstitial (ERR_CONNECTION_REFUSED, etc.) also contains
@@ -122,8 +151,8 @@ async function main() {
     if (!ranOk) {
       console.log(
         `SKIP: headless browser produced no DOM (env). ` +
-        `status=${r.status} signal=${r.signal} ` +
-        `err=${r.error && r.error.code} domLen=${dom.length}`);
+        `timedOut=${r.timedOut} code=${r.code} signal=${r.signal} ` +
+        `spawnErr=${r.spawnErr} domLen=${dom.length}`);
       process.exit(0);
     }
 

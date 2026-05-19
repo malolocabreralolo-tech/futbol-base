@@ -296,3 +296,40 @@ test('badge consumers use MATCH_DETAIL_KEYS, not full MATCH_DETAIL', () => {
   assert.ok(!/\bMATCH_DETAIL\b/.test(mieq),
     'miequipo.js must not reference full MATCH_DETAIL');
 });
+
+// render smoke: pure DOM checker (deterministic, no browser)
+import { checkRenderedDom } from './render-smoke.mjs';
+
+const SMOKE_GOOD_DOM = `<!DOCTYPE html><html><body><main>
+<div id="sec-miequipo" class="section active">
+ <div class="me-hero"><h2>Las Mesas Hu.</h2><div class="me-meta">Prebenjamín</div></div>
+ <div class="me-card"><div class="me-cal" id="meCal"><div class="me-crow"><span>J1</span></div></div></div>
+ <div class="me-card">Su posición en el Grupo 2<table class="standings-table me-mini"></table></div>
+ <div class="me-card">Goleadores del equipo<div class="me-scrow"><span>P</span></div></div>
+ ${/* pads #sec-miequipo inner content above the 500-char smoke threshold */ ''}${'<span>padpadpad</span>'.repeat(60)}
+</div><div id="sec-clasif" class="section"></div></main></body></html>`;
+
+test('checkRenderedDom: healthy MI EQUIPO render passes', () => {
+  const { ok, failures } = checkRenderedDom(SMOKE_GOOD_DOM);
+  assert.deepEqual(failures, []);
+  assert.equal(ok, true);
+});
+
+test('checkRenderedDom: globalThis-class empty-state fails', () => {
+  const bad = `<!DOCTYPE html><html><body><main>
+<div id="sec-miequipo" class="section active"><div class="empty-state"><div class="empty-icon">x</div><p>No hay datos del equipo esta temporada</p></div></div>
+<div id="sec-clasif" class="section"></div></main></body></html>`;
+  const { ok, failures } = checkRenderedDom(bad);
+  assert.equal(ok, false);
+  assert.ok(failures.length >= 1);
+  assert.ok(failures.some(f => /empty-state|hero|datos/.test(f)));
+});
+
+test('checkRenderedDom: empty #sec-miequipo (JS threw) fails', () => {
+  const empty = '<html><body><main><div id="sec-miequipo" class="section active"></div><div id="sec-clasif" class="section"></div></main></body></html>';
+  const { ok, failures } = checkRenderedDom(empty);
+  assert.equal(ok, false);
+  assert.ok(failures.length >= 1);
+  assert.ok(failures.some(f => /content too small/.test(f)),
+    'empty section must flag the content-too-small failure');
+});

@@ -1,4 +1,4 @@
-import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S } from './state.js';
+import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail } from './state.js';
 
 /* ====== MATCH DETAIL MODAL ====== */
 const modalOverlay = document.getElementById('matchModal');
@@ -21,6 +21,38 @@ document.addEventListener('keydown', (e) => {
 
 export function closeModal() {
   if (modalOverlay) modalOverlay.classList.remove('open');
+}
+
+/* Build the goal-timeline section HTML for a match detail entry.
+ * Extracted so it can be rendered after the lazy ensureMatchDetail() fetch.
+ * Markup identical to the previous inline version. */
+function buildGoalsHtml(detail, venue) {
+  let h = '<div class="modal-goals-section">';
+  h += '<div class="modal-stats-header">⚽ Cronología de goles</div>';
+  const venueToShow = detail.v || venue;
+  if (venueToShow) h += `<div class="modal-venue">📍 ${venueToShow}</div>`;
+  if (detail.r) h += `<div class="modal-venue">📝 Árbitro: ${detail.r}</div>`;
+  h += '<div class="goals-timeline">';
+  detail.g.forEach(g => {
+    // g: [minute, name, running, 'h'/'a', type_char]
+    const min = g[0];
+    const scorer = g[1];
+    const running = g[2];
+    const side = g[3];
+    const gtype = g[4];
+    const isHome = side === 'h';
+    const typeIcon = gtype === 'p' ? ' (pen.)' : gtype === 'o' ? ' (p.p.)' : '';
+    const sideClass = isHome ? 'goal-home' : 'goal-away';
+    h += `<div class="goal-event ${sideClass}">
+      <div class="goal-minute">${min}'</div>
+      <div class="goal-info">
+        <span class="goal-scorer">${scorer}${typeIcon}</span>
+        <span class="goal-running">${running}</span>
+      </div>
+    </div>`;
+  });
+  h += '</div></div>';
+  return h;
 }
 
 export function openMatchDetail(match) {
@@ -148,39 +180,6 @@ export function openMatchDetail(match) {
     }
   }
 
-  // Match detail: goal scorers and minutes from FIFLP data
-  if (typeof MATCH_DETAIL !== 'undefined') {
-    const detailKey = `${home}|${away}|${hs}-${as}`;
-    const detail = MATCH_DETAIL[detailKey];
-    if (detail && detail.g && detail.g.length > 0) {
-      bodyHtml += '<div class="modal-goals-section">';
-      bodyHtml += '<div class="modal-stats-header">⚽ Cronología de goles</div>';
-      const venueToShow = detail.v || venue;
-      if (venueToShow) bodyHtml += `<div class="modal-venue">📍 ${venueToShow}</div>`;
-      if (detail.r) bodyHtml += `<div class="modal-venue">📝 Árbitro: ${detail.r}</div>`;
-      bodyHtml += '<div class="goals-timeline">';
-      detail.g.forEach(g => {
-        // g: [minute, name, running, 'h'/'a', type_char]
-        const min = g[0];
-        const scorer = g[1];
-        const running = g[2];
-        const side = g[3]; // 'h' or 'a'
-        const gtype = g[4]; // 'r', 'p', 'o'
-        const isHome = side === 'h';
-        const typeIcon = gtype === 'p' ? ' (pen.)' : gtype === 'o' ? ' (p.p.)' : '';
-        const sideClass = isHome ? 'goal-home' : 'goal-away';
-        bodyHtml += `<div class="goal-event ${sideClass}">
-          <div class="goal-minute">${min}'</div>
-          <div class="goal-info">
-            <span class="goal-scorer">${scorer}${typeIcon}</span>
-            <span class="goal-running">${running}</span>
-          </div>
-        </div>`;
-      });
-      bodyHtml += '</div></div>';
-    }
-  }
-
   // Streaks comparison from STATS
   if (typeof STATS !== 'undefined' && STATS[S.cat] && STATS[S.cat].teams) {
     const hTeam = STATS[S.cat].teams[home];
@@ -201,8 +200,31 @@ export function openMatchDetail(match) {
     bodyHtml = '<div class="modal-h2h-empty">No hay datos adicionales disponibles para este partido</div>';
   }
 
+  // Goal timeline is lazy: placeholder now, fill after ensureMatchDetail().
+  // Placed after the empty-state check so it never suppresses that message;
+  // the timeline renders at the end of the modal body (was between h2h and
+  // streaks — minor, intentional reorder to keep the empty-state correct).
+  bodyHtml += '<div id="modalGoalsSection"></div>';
+
   modalBody.innerHTML = bodyHtml;
   modalOverlay.classList.add('open');
+
+  // Fire-and-forget, same pattern as loadCrossSeasonHistory(): the modal is
+  // already open; fill the goals section once the lazy data resolves.
+  // Stamp the slot with this match's key so a slow first-load fetch can't
+  // inject match A's goals into match B's modal (rapid successive opens).
+  const _detailKey = `${home}|${away}|${hs}-${as}`;
+  const _gSlot = document.getElementById('modalGoalsSection');
+  if (_gSlot) _gSlot.dataset.key = _detailKey;
+  ensureMatchDetail().then(md => {
+    const detail = md && md[_detailKey];
+    if (detail && detail.g && detail.g.length > 0) {
+      const slot = document.getElementById('modalGoalsSection');
+      if (slot && slot.dataset.key === _detailKey) {
+        slot.innerHTML = buildGoalsHtml(detail, venue);
+      }
+    }
+  });
 }
 
 /* ====== TEAM DETAIL MODAL ====== */

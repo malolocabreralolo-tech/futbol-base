@@ -29,6 +29,7 @@ function loadDataFile(filename) {
     'SEASON_2021_2022', 'SEASON_2022_2023', 'SEASON_2023_2024',
     'SEASON_2024_2025', 'SEASON_2025_2026',
     'GOL_BENJ', 'GOL_PREBENJ',
+    'MATCH_DETAIL', 'MATCH_DETAIL_KEYS',
   ];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
@@ -266,6 +267,22 @@ test('index.html + sw.js wired for lazy matchdetail', () => {
     'sw.js STATIC_ASSETS must not precache data-matchdetail.js');
   assert.ok(/['"]\.\/data-matchdetail-keys\.js['"]/.test(sw),
     'sw.js must precache data-matchdetail-keys.js');
+});
+
+// build invariant: keys index == exactly the matches with a goal timeline
+test('data-matchdetail-keys.js exactly mirrors keys with goal timelines', () => {
+  const { MATCH_DETAIL } = loadDataFile('data-matchdetail.js');
+  const { MATCH_DETAIL_KEYS } = loadDataFile('data-matchdetail-keys.js');
+  assert.ok(MATCH_DETAIL && typeof MATCH_DETAIL === 'object', 'MATCH_DETAIL object');
+  assert.ok(MATCH_DETAIL_KEYS && typeof MATCH_DETAIL_KEYS === 'object',
+    'MATCH_DETAIL_KEYS object');
+  const expected = Object.keys(MATCH_DETAIL)
+    .filter(k => MATCH_DETAIL[k] && MATCH_DETAIL[k].g && MATCH_DETAIL[k].g.length > 0)
+    .sort();
+  const got = Object.keys(MATCH_DETAIL_KEYS).sort();
+  assert.deepEqual(got, expected);
+  assert.ok(got.length > 0, 'expected a non-empty key set');
+  for (const k of got) assert.ok(MATCH_DETAIL_KEYS[k], `truthy value for ${k}`);
 });
 
 // badge must use the lightweight keys map, never the full object

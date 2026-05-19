@@ -495,8 +495,8 @@ export function renderMatchCards(container, matches, type) {
 
     const detailKey = `${m.home}|${m.away}|${m.hs}-${m.as}`;
     const hasDetail = hasScore
-      && typeof MATCH_DETAIL !== 'undefined'
-      && MATCH_DETAIL[detailKey]?.g?.length > 0;
+      && typeof MATCH_DETAIL_KEYS !== 'undefined'
+      && !!MATCH_DETAIL_KEYS[detailKey];
 
     const venueHtml = m.venue ? `<div class="match-venue">📍 ${m.venue}</div>` : '';
     card.innerHTML = `

@@ -233,10 +233,10 @@ test('featuredScorersFrom handles missing group -> []', () => {
 test('miequipo.js does not read data via globalThis/window', () => {
   const src = readFileSync(join(ROOT, 'src/miequipo.js'), 'utf8');
   assert.ok(!/globalThis/.test(src), 'miequipo.js must not use globalThis for data');
-  assert.ok(!/\bwindow\.\s*(PREBENJAMIN|HISTORY|GOL_PREBENJ|MATCH_DETAIL)\b/.test(src),
+  assert.ok(!/\bwindow\.\s*(PREBENJAMIN|HISTORY|GOL_PREBENJ|MATCH_DETAIL|MATCH_DETAIL_KEYS)\b/.test(src),
     'miequipo.js must not use window.<DATA>');
   assert.ok(!/const\s+G\s*=\s*\(\)\s*=>/.test(src), 'the globalThis G() helper must be gone');
-  for (const g of ['PREBENJAMIN', 'HISTORY', 'GOL_PREBENJ', 'MATCH_DETAIL']) {
+  for (const g of ['PREBENJAMIN', 'HISTORY', 'GOL_PREBENJ', 'MATCH_DETAIL_KEYS']) {
     assert.ok(new RegExp(`typeof\\s+${g}\\s*!==\\s*['"]undefined['"]`).test(src),
       `miequipo.js must guard ${g} with typeof ${g} !== 'undefined'`);
   }
@@ -252,4 +252,16 @@ test('state.js exports a single-flight ensureMatchDetail loader', () => {
     'must fetch ./data-matchdetail.js');
   assert.ok(!/globalThis|window\.\s*MATCH_DETAIL/.test(s),
     'must not use globalThis/window for matchdetail');
+});
+
+// badge must use the lightweight keys map, never the full object
+test('badge consumers use MATCH_DETAIL_KEYS, not full MATCH_DETAIL', () => {
+  const render = readFileSync(join(ROOT, 'src/render.js'), 'utf8');
+  const mieq = readFileSync(join(ROOT, 'src/miequipo.js'), 'utf8');
+  assert.ok(/MATCH_DETAIL_KEYS/.test(render), 'render.js uses MATCH_DETAIL_KEYS');
+  assert.ok(/MATCH_DETAIL_KEYS/.test(mieq), 'miequipo.js uses MATCH_DETAIL_KEYS');
+  assert.ok(!/\bMATCH_DETAIL\b/.test(render),
+    'render.js must not reference full MATCH_DETAIL (\\b excludes _KEYS)');
+  assert.ok(!/\bMATCH_DETAIL\b/.test(mieq),
+    'miequipo.js must not reference full MATCH_DETAIL');
 });

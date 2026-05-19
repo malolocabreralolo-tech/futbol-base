@@ -56,10 +56,9 @@ function venueTimeFor(next, group) {
 }
 
 function hasDetail(m) {
-  const MD = typeof MATCH_DETAIL !== 'undefined' ? MATCH_DETAIL : null;
-  if (!MD || !m.played) return false;
-  const d = MD[m.home + '|' + m.away + '|' + m.hs + '-' + m.as];
-  return !!(d && d.g && d.g.length);
+  if (!m.played) return false;
+  return typeof MATCH_DETAIL_KEYS !== 'undefined'
+    && !!MATCH_DETAIL_KEYS[m.home + '|' + m.away + '|' + m.hs + '-' + m.as];
 }
 
 function standingTr(r, isLeader) {

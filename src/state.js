@@ -144,6 +144,35 @@ export function teamBadge(name) {
   return teamBadgeFallback(name);
 }
 
+/* Lazy loader for the full goal-timeline data. data-matchdetail.js is no
+ * longer an eager <script> (it is ~359 KB); fetch+parse it on demand the
+ * first time a match modal needs it. Single-flight + module cache. Mirrors
+ * loadAllHistoricalSeasons() in modals.js. ?v= is inherited from the eager
+ * data-matchdetail-keys.js script tag so cache-busting stays aligned. */
+let _matchDetail = null;
+let _matchDetailPromise = null;
+export async function ensureMatchDetail() {
+  if (_matchDetail) return _matchDetail;
+  if (_matchDetailPromise) return _matchDetailPromise;
+  _matchDetailPromise = (async () => {
+    const ver = (document.querySelector('script[src*="data-matchdetail-keys.js"]')
+      ?.src.match(/v=([^&]+)/)?.[1]) || '';
+    try {
+      const r = await fetch(`./data-matchdetail.js${ver ? `?v=${ver}` : ''}`);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const txt = await r.text();
+      const m = txt.match(/const MATCH_DETAIL=(\{[\s\S]*\});/);
+      if (!m) throw new Error('MATCH_DETAIL not found in data-matchdetail.js');
+      _matchDetail = JSON.parse(m[1]);
+    } catch (e) {
+      console.error('[state] ensureMatchDetail failed:', e);
+      _matchDetail = {};
+    }
+    return _matchDetail;
+  })();
+  return _matchDetailPromise;
+}
+
 /* Get last N results for a team from HISTORY */
 export function getTeamForm(teamName, groupId, n) {
   n = n || 5;

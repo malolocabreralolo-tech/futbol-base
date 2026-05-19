@@ -241,3 +241,15 @@ test('miequipo.js does not read data via globalThis/window', () => {
       `miequipo.js must guard ${g} with typeof ${g} !== 'undefined'`);
   }
 });
+
+// lazy matchdetail loader contract
+test('state.js exports a single-flight ensureMatchDetail loader', () => {
+  const s = readFileSync(join(ROOT, 'src/state.js'), 'utf8');
+  assert.ok(/export async function ensureMatchDetail\s*\(/.test(s),
+    'state.js must export async ensureMatchDetail()');
+  assert.ok(/_matchDetailPromise/.test(s), 'must single-flight via a cached promise');
+  assert.ok(/fetch\(`?\.\/data-matchdetail\.js/.test(s),
+    'must fetch ./data-matchdetail.js');
+  assert.ok(!/globalThis|window\.\s*MATCH_DETAIL/.test(s),
+    'must not use globalThis/window for matchdetail');
+});

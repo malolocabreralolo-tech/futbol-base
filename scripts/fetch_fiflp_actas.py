@@ -109,20 +109,32 @@ def enumerate_actas_main(page, season, comp_id):
     BuscarPartidos(jornada) → scan anchors for CodActa.
     """
     out = []
-    url = (f"{BASE}/NFG_CmpJornada?cod_primaria=1000120"
-           f"&CodTemporada={season}&CodCompeticion={comp_id}")
-    if not goto(page, url):
+    # IMPORTANT: navigate WITHOUT comp_id in URL, then use page.select_option
+    # to trigger the FIFLP AJAX. Putting comp_id in the URL skips the AJAX and
+    # the grupo/jornada selects load empty / null. Pattern matches the proven
+    # fetch_fiflp.py::scrape_competition.
+    if not goto(page, f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"):
+        return out
+    try:
+        page.select_option('select[name="competicion"]', comp_id)
+        page.wait_for_timeout(2000)
+    except Exception as e:
+        print(f"  WARN season={season} comp={comp_id} could not select competition: {e}")
         return out
     grupos = page.evaluate("""
         () => Array.from(document.querySelectorAll('select[name="grupo"] option'))
                    .filter(o => o.value && o.value !== '0')
                    .map(o => o.value)""")
     for grupo in grupos:
-        page.evaluate(
-            f"document.querySelector('select[name=\"grupo\"]').value='{grupo}';"
-            "document.querySelector('select[name=\"grupo\"]').dispatchEvent(new Event('change'))"
-        )
-        delay()
+        try:
+            page.select_option('select[name="grupo"]', grupo)
+            try:
+                page.wait_for_load_state("networkidle", timeout=8000)
+            except Exception:
+                page.wait_for_timeout(2000)
+        except Exception as e:
+            print(f"  WARN season={season} comp={comp_id} grupo={grupo} select failed: {e}")
+            continue
         jornadas = page.evaluate("""
             () => Array.from(document.querySelectorAll('select[name="jornada"] option'))
                        .filter(o => o.value && o.value !== '0')

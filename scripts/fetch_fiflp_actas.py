@@ -103,7 +103,11 @@ def discover_comps(page, season_code):
 # ── Enumeration: Strategy 1 — main path (comp→grupo→jornada→anchor) ──────────
 
 def enumerate_actas_main(page, season, comp_id):
-    """Returns list of dicts: [{cod_acta, comp_id, grupo, jornada}, ...]."""
+    """Returns list of dicts: [{cod_acta, comp_id, grupo, jornada}, ...].
+
+    Navigates the NFG_CmpJornada dropdown tree: comp → grupo → jornada →
+    BuscarPartidos(jornada) → scan anchors for CodActa.
+    """
     out = []
     url = (f"{BASE}/NFG_CmpJornada?cod_primaria=1000120"
            f"&CodTemporada={season}&CodCompeticion={comp_id}")
@@ -320,7 +324,7 @@ def main():
             all_targets += actas
             delay()
 
-        # Dedupe all_targets by cod_acta
+        # Dedupe all_targets by cod_acta (multiple comps may reference same acta)
         seen_t: set = set()
         deduped = []
         for t in all_targets:
@@ -329,9 +333,9 @@ def main():
                 deduped.append(t)
         all_targets = deduped
 
-        # Filter already scraped
+        # Filter out already scraped (resume support)
         pending = [t for t in all_targets if t["cod_acta"] not in raw]
-        print(f"Enumerated {len(all_targets)} actas, {len(pending)} pending")
+        print(f"Enumerated {len(all_targets)} actas total, {len(pending)} pending")
 
         # --- Fetch + parse loop ---
         BUDGET = 5.5 * 3600   # leave headroom under GitHub Actions 6h timeout

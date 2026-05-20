@@ -39,8 +39,10 @@ la DB, las reconcilia con los partidos ya existentes y genera ficheros de datos
   temporada; instala Playwright; corre el scraper; commitea el raw JSON.
 - `scripts/import_fiflp_actas.py`: importador idempotente raw JSON → DB
   (reconcilia acta ↔ `matches`, upserta jugadores/alineaciones/staff).
-- Nuevas tablas: `players`, `appearances`, `match_staff`; nueva columna
-  `matches.cod_acta`.
+- Nuevas tablas: `players`, `appearances`, `match_events`, `match_staff`; nueva
+  columna `matches.cod_acta`. Los eventos (goles, **cambios** con minuto, y
+  **tarjetas amarilla/roja con minuto**) se modelan como eventos timeline para
+  poder presentar la cronología completa en SP-2.
 - `scripts/generate_js.py`: nuevas funciones que emiten `data-lineups-<season>.js`
   y `data-players-<season>.js` (por temporada, **lazy**, mismo patrón que los
   `data-season-*.js`).
@@ -102,16 +104,30 @@ Por cada `(temporada, competición)`:
    lista de `CodActa` de la temporada se obtiene navegando jornadas, no
    adivinando rangos.)
 
-**Fallback 2024-25 (riesgo explícito):** en el discovery, para 2024-25 la lista de
-jornadas vino vacía vía la competición probada (comp 1581). Estrategia: el
-scraper, si tras seleccionar comp+grupo obtiene **0 jornadas**, lo registra
-(`WARN season=NN comp=ID grupo=G jornadas:0`) e intenta la ruta alternativa de
-listado de partidos (`NFG_LstPartidos?cod_primaria=…` / la página "Horarios de
-Partidos" enlazada desde la jornada) para extraer los mismos anchors de acta. Si
-ninguna ruta da actas para una comp, se reporta esa comp como **no cubierta** (no
-se finge cobertura). Esta es la única parte de enumeración con riesgo conocido y
-se trata como tal en el plan (tarea de spike dedicada con verificación en CI antes
-de escalar a toda la temporada).
+**Enumeración 2024-25 (spike obligatorio, sin opción a abandonar):** en el
+discovery la lista de jornadas vino vacía vía la competición probada (comp 1581
+de 2024-25). El usuario confirmó que las actas **existen** para esa temporada
+(URL directa funciona), así que la enumeración tiene que resolverse. El scraper
+prueba, **en este orden**, hasta que una dé actas:
+1. Camino principal (comp→grupo→jornada→`BuscarPartidos`) — el que ya funciona en
+   las demás temporadas.
+2. **Listado de partidos de la temporada** (`NFG_LstPartidos` / "Horarios de
+   Partidos") seleccionando comp+grupo y leyendo todos los anchors `CodActa=…`
+   de la página completa, no jornada-a-jornada.
+3. **Página de equipo** (`NFG_CmpEquipo` / detalle de club por temporada): para
+   cada equipo del grupo, la página de su calendario lista los partidos jugados
+   con anchor al acta — recolectar `CodActa` desde ahí y deduplicar.
+4. **Barrido por rango de `CodActa`** acotado por los valores conocidos de 2023-24
+   y 2025-26 (el discovery dio acta `190080` ⇒ 2025-26; los rangos por temporada
+   son contiguos en FIFLP). Barrer el rango candidato, abrir cada acta, leer la
+   temporada de la cabecera y descartar las que no son 2024-25; útil como
+   último recurso, más costoso pero exhaustivo.
+
+El scraper registra qué estrategia funcionó por (comp, grupo). Una temporada
+**no se da por cerrada** hasta que la enumeración produce actas para todas sus
+comps relevantes; si la #1 da 0, se prueba la #2, etc. **Sin coverage fingida y
+sin abandonar la temporada.** Este es un spike dedicado en el plan, con
+verificación en CI sobre una comp pequeña antes de escalar.
 
 ### 3.4 Parseo del acta
 
@@ -129,6 +145,15 @@ localizar el frame de contenido del acta) y extraer:
   `getComputedStyle(el,'::before').content`). Si un minuto no se puede
   desofuscar limpio, se guarda el gol con `minute = NULL` (no se inventa) y se
   cuenta igual para el agregado de goleador.
+- **Cambios (sustituciones):** evento `sub_in`/`sub_out` con jugador + minuto
+  (mismo desofuscador `::before`). Si el acta solo indica "suplente utilizado"
+  sin minuto, se registra el evento con `minute = NULL` (rol del jugador queda
+  en `sub` igualmente, pero el evento informa que **sí entró al campo**, distinto
+  de un suplente que no jugó).
+- **Tarjetas:** eventos `yellow`/`red` con jugador + minuto (mismo desofuscador).
+  Se mantiene además el conteo agregado en `appearances.yellow`/`red` (denormal.
+  para queries rápidas) — los counts deben coincidir con el nº de eventos
+  amarilla/roja del jugador en ese partido (invariante testada).
 - **Staff:** árbitro y entrenador(es) → `match_staff`.
 - **Campo/ciudad** (informativo; `matches.venue` ya existe — no se sobrescribe,
   solo se usa para desempate en la reconciliación).
@@ -190,6 +215,20 @@ CREATE INDEX idx_appearances_match  ON appearances(match_id);
 CREATE INDEX idx_appearances_player ON appearances(player_id);
 CREATE INDEX idx_appearances_team   ON appearances(team_id);
 
+CREATE TABLE match_events (
+  id         INTEGER PRIMARY KEY,
+  match_id   INTEGER NOT NULL REFERENCES matches(id),
+  team_id    INTEGER NOT NULL REFERENCES teams(id),
+  player_id  INTEGER NOT NULL REFERENCES players(id),
+  kind       TEXT NOT NULL CHECK(kind IN ('goal','sub_in','sub_out','yellow','red')),
+  minute     INTEGER,                -- NULL si el acta no lo da limpio
+  goal_type  TEXT CHECK(goal_type IN ('normal','penalty','own')), -- solo para kind='goal'
+  pair_id    INTEGER REFERENCES match_events(id) -- enlaza sub_in ↔ sub_out (NULL si no se puede emparejar)
+);
+CREATE INDEX idx_match_events_match  ON match_events(match_id);
+CREATE INDEX idx_match_events_player ON match_events(player_id);
+CREATE INDEX idx_match_events_kind   ON match_events(kind);
+
 CREATE TABLE match_staff (
   id         INTEGER PRIMARY KEY,
   match_id   INTEGER NOT NULL REFERENCES matches(id),
@@ -240,13 +279,17 @@ players/appearances/staff insertados.
   las `generate_*_js` existentes (misma cabecera "generado automáticamente, no
   editar"):
   - `data-lineups-<season>.js` → `const LINEUPS_<SEASON> = { "<match_key>": {
-    home:[{n,dn,r,g,y,rd}], away:[…], coachH, coachA, ref } , … };` donde
-    `match_key` es la **misma clave** que ya usan los consumidores del repo
+    home:[{n,dn,r,g,y,rd}], away:[…], coachH, coachA, ref,
+    events:[{t:'goal'|'sub'|'yellow'|'red', s:'h'|'a', n, n2?, m, gt?}, …] }, … };`
+    donde `match_key` es la **misma clave** que ya usan los consumidores del repo
     (`home|away|hs-as`) para encajar con `MATCH_DETAIL`/badges sin reinventar
-    indexado.
+    indexado, y `events` es la cronología ordenada por minuto (cambios se emiten
+    como un único evento `sub` con `n` saliendo y `n2` entrando cuando están
+    emparejados; si no, dos eventos separados con `t:'sub_in'`/`'sub_out'`).
   - `data-players-<season>.js` → `const PLAYERS_<SEASON> = { "<team_id>":
-    [{n, ap, g, y, rd}], … };` (agregado por jugador y equipo: apariciones,
-    goles, amarillas, rojas — derivado de `appearances`).
+    [{n, ap, st, g, y, rd}], … };` (agregado por jugador y equipo: apariciones
+    totales, titularidades, goles, amarillas, rojas — derivado de
+    `appearances`+`match_events`).
 - Ambos son **`const` léxicos de nivel superior** → en SP-2 se leerán con
   **identificador desnudo guardado** (`typeof X !== 'undefined'`), nunca
   `globalThis`/`window.` (bug 2026-05-18, registrado en memoria). SP-1 solo emite
@@ -270,13 +313,19 @@ players/appearances/staff insertados.
 
 - **pytest** `scripts/tests/test_fiflp_acta_parser.py`: parsea un **fixture HTML
   real de acta** → asierta alineaciones (titulares/suplentes de ambos equipos,
-  dorsales, nombres), goles (goleador, tipo, minuto desofuscado), árbitro,
-  entrenador, cabecera. El fixture se captura en CI durante el **primer run** del
-  scraper (el scraper, con `--dump-fixture <CodActa>`, vuelca el HTML del acta a
+  dorsales, nombres), goles (goleador, tipo, minuto desofuscado), **cambios
+  (sub_in/sub_out con minuto)**, **tarjetas amarillas y rojas con minuto**,
+  árbitro, entrenador, cabecera. **Invariante de consistencia:** suma de eventos
+  `goal` del jugador en el partido == `appearances.goals`; ídem para
+  `yellow`/`red` (los counts en `appearances` son derivación de los eventos). El
+  fixture se captura en CI durante el **primer run** del scraper (el scraper, con
+  `--dump-fixture <CodActa>`, vuelca el HTML del acta a
   `scripts/tests/fixtures/acta_<CodActa>.html`, que se commitea como fixture; no
-  se intenta capturar en local porque la IP está bloqueada). Una de las primeras
-  tareas del plan es justamente generar y commitear ese fixture antes de escribir
-  el resto del parser-test.
+  se intenta capturar en local porque la IP está bloqueada). **Se capturan al
+  menos 2 fixtures** (un acta con cambios y tarjetas para cubrir el parser
+  completo, y un acta antigua de 2021-22 para confirmar que el formato histórico
+  no rompe el parser). Generar y commitear los fixtures es una de las primeras
+  tareas del plan, antes de escribir el resto del parser-test.
 - **Node** (test runner existente `scripts/tests/test_js_modules.mjs`): invariante
   de build — cargar un `data-lineups-<season>.js` y su `data-players-<season>.js`;
   cada `match_key` de LINEUPS referencia jugadores válidos; el agregado
@@ -299,16 +348,25 @@ players/appearances/staff insertados.
 - SP-1 **no** toca `src/`, `index.html`, `sw.js`, `style.css` → **no** aplica bump
   de `CACHE_NAME`/`?v=` (eso será SP-2).
 
-### 6.3 Honestidad de cobertura
+### 6.3 Cobertura de temporadas — las 5 son requisito
 
-Cobertura esperada por temporada (a confirmar/medir en implementación, **se
-reporta lo real, no lo deseado**):
-- 2025-26, 2022-23, 2021-22: camino principal (jornadas pobladas) — sólido.
-- 2023-24: probable por camino principal — confirmar en el primer run.
-- 2024-25: **enumeración alternativa**, posible cobertura parcial — riesgo
-  explícito, spike dedicado en el plan.
+**Las 5 temporadas son in-scope obligatorio** (2021-22, 2022-23, 2023-24,
+2024-25, 2025-26). El usuario confirmó que las actas existen en FIFLP para todas,
+así que ninguna se da por perdida. Estrategia por temporada:
+- 2025-26, 2022-23, 2021-22: camino principal (jornadas pobladas) — confirmado en
+  el discovery.
+- 2023-24: camino principal probable; si una comp da 0 jornadas, escala a los
+  fallbacks del §3.3.
+- 2024-25: **spike obligatorio** que prueba las 4 estrategias del §3.3 en orden
+  hasta cubrir todas las comps relevantes. No se acepta cerrar la temporada con
+  comps no cubiertas si las actas existen; si ninguna de las 4 estrategias
+  funcionara para una comp concreta (improbable), se documenta el caso con
+  evidencia (qué se intentó, qué respondió FIFLP) y se trata como bug a resolver,
+  no como cobertura aceptable.
 
-Toda comp/temporada sin actas se reporta como no cubierta; nada se finge.
+El reporte de cobertura sigue siendo **honesto** (se publica lo realmente
+scrapeado, no lo deseado), pero el **objetivo** es 100% de las actas que FIFLP
+sirve para benjamín/prebenjamín en esas 5 temporadas.
 
 ## 7. Criterios de aceptación
 
@@ -319,12 +377,16 @@ Toda comp/temporada sin actas se reporta como no cubierta; nada se finge.
 2. `.github/workflows/fetch-fiflp-actas.yml` existe (workflow_dispatch, input
    temporada), corre el scraper en CI y commitea solo
    `scripts/fiflp_actas_<season>_raw.json`. (Verificado en CI, no en local.)
-3. El parser extrae correctamente, contra el fixture real commiteado:
-   alineaciones titulares+suplentes de ambos equipos (dorsal+nombre), goles
-   (goleador, tipo, minuto desofuscado o NULL honesto), árbitro y entrenador.
-   `pytest scripts/tests/test_fiflp_acta_parser.py` verde.
-4. Esquema aplicado: tablas `players`, `appearances`, `match_staff` y columna
-   `matches.cod_acta` creadas con sus índices/constraints.
+3. El parser extrae correctamente, contra los fixtures reales commiteados (≥2,
+   uno moderno y uno de 2021-22): alineaciones titulares+suplentes de ambos
+   equipos (dorsal+nombre), goles (goleador, tipo, minuto desofuscado o NULL
+   honesto), **cambios** (sub_in/sub_out con minuto), **tarjetas** amarillas y
+   rojas con minuto, árbitro y entrenador. Invariante: counts en `appearances`
+   coinciden con la suma de eventos de cada jugador en el partido. `pytest
+   scripts/tests/test_fiflp_acta_parser.py` verde.
+4. Esquema aplicado: tablas `players`, `appearances`, `match_events`,
+   `match_staff` y columna `matches.cod_acta` creadas con sus índices/
+   constraints.
 5. `scripts/import_fiflp_actas.py` es idempotente (re-importar el mismo raw no
    duplica filas), reconcilia por (temporada+grupo+fecha+equipos
    normalizados+marcador), setea `matches.cod_acta`, guarda no-reconciliadas en
@@ -337,7 +399,11 @@ Toda comp/temporada sin actas se reporta como no cubierta; nada se finge.
 7. Test Node de invariante de build verde: claves de LINEUPS referencian
    jugadores válidos y los agregados de PLAYERS == suma de appearances; suite
    Node y pytest existentes sin regresiones.
-8. Reporte de cobertura real por temporada generado y honesto (2024-25 marcada
-   como parcial/riesgo si así resulta). Ninguna cobertura fingida.
+8. **Las 5 temporadas cubiertas** (2021-22 … 2025-26). Para cada temporada, el
+   reporte de cobertura muestra: actas vistas, scrapeadas, reconciliadas, no
+   reconciliadas, y la estrategia de enumeración usada por (comp, grupo). Si
+   alguna comp queda sin cubrir tras agotar las 4 estrategias del §3.3, se
+   documenta con evidencia de lo intentado (no se cierra como "parcial
+   aceptable"; queda como bug abierto a resolver). Ninguna cobertura fingida.
 9. SP-1 **no** introduce cambios de UI ni en `src/`/`index.html`/`sw.js`/
    `style.css`; sin dependencias npm nuevas; el scraper solo corre en Actions.

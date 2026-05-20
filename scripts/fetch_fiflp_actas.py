@@ -282,7 +282,12 @@ def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None):
            f"&CodActa={cod_acta}&cod_acta={cod_acta}")
     if not goto(page, url):
         return None
-    page.wait_for_timeout(2000)
+    # Frameset actas need a longer settle: the content frame issues its own
+    # request after the outer frameset loads. 2s was too short — the smoke
+    # run got empty parses because the inner frame's body was not yet there
+    # when we called page.content(). 4s tracks the fixture-capture timing
+    # that gave a valid parse.
+    page.wait_for_timeout(4000)
     html = page.content()
     for fr in page.frames:
         if fr is page.main_frame:

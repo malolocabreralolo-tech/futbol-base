@@ -1,5 +1,8 @@
 name: _capture-acta-fixtures
 on:
+  push:
+    branches: [worktree-fiflp-actas-pipeline]
+    paths: ['.github/workflows/_capture-acta-fixtures.yml']
   workflow_dispatch:
 permissions:
   contents: write

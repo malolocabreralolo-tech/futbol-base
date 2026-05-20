@@ -36,3 +36,38 @@ test('plantilla: empty data renders empty-state', () => {
   assert.ok(/plant-empty/.test(html));
   assert.ok(/no hay datos de plantilla/i.test(html));
 });
+
+function makeStubContainer() {
+  let html = '';
+  const events = [];
+  return {
+    set innerHTML(v) { html = v; },
+    get innerHTML() { return html; },
+    addEventListener(name, fn) { events.push({ name, fn }); },
+    querySelectorAll(sel) {
+      if (!sel.includes('plant-th')) return [];
+      const ths = [...html.matchAll(/<th[^>]*data-sort-key="([^"]+)"/g)];
+      return ths.map(m => ({
+        dataset: { sortKey: m[1] },
+        addEventListener(n, f) { events.push({ name: n, fn: f, key: m[1] }); },
+      }));
+    },
+    _click(k) {
+      const ev = events.find(e => e.key === k && e.name === 'click');
+      ev && ev.fn({ currentTarget: { dataset: { sortKey: k } } });
+    },
+  };
+}
+
+test('renderPlantillaInto: header click re-sorts and updates arrow', async () => {
+  const { renderPlantillaInto } = await import('../../src/plantilla.js');
+  const c = makeStubContainer();
+  renderPlantillaInto(c, [
+    { n: "A", ap: 5, st: 0, g: 1, y: 0, rd: 0 },
+    { n: "B", ap: 10, st: 5, g: 1, y: 0, rd: 0 },
+  ], { teamId: '1', season: '2024-2025' });
+  assert.ok(/A/.test(c.innerHTML) && /B/.test(c.innerHTML));
+  c._click('ap');
+  assert.ok(/data-sort-key="ap"[^>]*>PJ\s*[▾▴]/.test(c.innerHTML),
+    'PJ header shows arrow after click');
+});

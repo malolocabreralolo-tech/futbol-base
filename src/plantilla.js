@@ -74,3 +74,24 @@ export function renderPlantillaTable(rows, opts) {
   return '<table class="plant-table" data-team-id="' + escHtml(teamId) + '" data-season="' + escHtml(season) + '">'
        + head + body + '</table>';
 }
+
+export function renderPlantillaInto(container, rows, opts) {
+  opts = opts || {};
+  const state = { sortKey: 'g', sortDir: 'desc' };
+  const draw = () => {
+    const tableHtml = renderPlantillaTable(rows, Object.assign({}, opts, state));
+    const title = opts.title ? '<div class="plant-title">' + escHtml(opts.title) + '</div>' : '';
+    // container.innerHTML mounts the rendered HTML string into the DOM element
+    container.innerHTML = title + tableHtml;
+    container.querySelectorAll('.plant-th').forEach(th => {
+      th.addEventListener('click', (e) => {
+        const k = e.currentTarget.dataset.sortKey;
+        if (!k || k === 'dorsal') return;
+        if (state.sortKey === k) state.sortDir = state.sortDir === 'desc' ? 'asc' : 'desc';
+        else { state.sortKey = k; state.sortDir = (k === 'n') ? 'asc' : 'desc'; }
+        draw();
+      });
+    });
+  };
+  draw();
+}

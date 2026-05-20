@@ -296,3 +296,39 @@ def test_generate_players_js_aggregates(tmp_path):
     assert re.search(r"const PLAYERS_[\w]+\s*=", js)
     # Should reflect 2 goals for PEREZ, JUAN
     assert '"g": 2' in js or '"g":2' in js
+
+
+def test_generate_players_js_emits_teams_mapping(tmp_path):
+    """data-players-<S>.js incluye TEAMS_<S> = {<norm_name>: team_id}."""
+    import shutil, sqlite3, json, re, os
+    from scripts.migrate_actas_schema import migrate
+    from scripts.import_fiflp_actas import import_raw
+    from scripts.generate_js import generate_players_js
+    from scripts.acta_reconciler import normalize_team_name
+    ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    DB_PATH = os.path.join(ROOT, "futbolbase.db")
+    db = tmp_path / "fb.db"; shutil.copy(DB_PATH, db)
+    conn = sqlite3.connect(str(db)); migrate(conn)
+    real = conn.execute("""SELECT m.id, s.name, t1.name, t2.name, m.date, m.home_score, m.away_score, m.home_team_id, m.away_team_id
+        FROM matches m JOIN groups g ON g.id=m.group_id JOIN seasons s ON s.id=g.season_id
+        JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
+        WHERE m.home_score IS NOT NULL LIMIT 1""").fetchone()
+    raw = {str(real[0]+700000): {
+        "cod_acta": real[0]+700000,
+        "header": {"season": real[1].replace("-","/"), "jornada":"1", "date":real[4],
+                   "home_team":real[2],"away_team":real[3],
+                   "home_score":real[5],"away_score":real[6],"competition":"x"},
+        "lineups":{"home":[{"name":"PEREZ, JUAN","dorsal":1,"role":"starter"}],"away":[]},
+        "events":[{"kind":"goal","side":"home","player_name":"PEREZ, JUAN","minute":5,"goal_type":"normal"}],
+        "staff":{"referee":"R","coach_home":"H","coach_away":"A"}}}
+    p = tmp_path / "raw.json"; p.write_text(json.dumps(raw))
+    import_raw(conn, str(p))
+    js = generate_players_js(conn, real[1])
+    suffix = real[1].replace("-", "_")
+    assert f"const PLAYERS_{suffix}" in js
+    assert f"const TEAMS_{suffix}" in js, "generate_players_js must emit TEAMS_<S>"
+    m = re.search(rf"const TEAMS_{suffix}\s*=\s*(\{{.*?\}});", js, re.DOTALL)
+    assert m, "TEAMS_<S> declaration not parseable"
+    teams = json.loads(m.group(1))
+    assert normalize_team_name(real[2]) in teams
+    assert teams[normalize_team_name(real[2])] == real[7]

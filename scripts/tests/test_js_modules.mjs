@@ -30,6 +30,10 @@ function loadDataFile(filename) {
     'SEASON_2024_2025', 'SEASON_2025_2026',
     'GOL_BENJ', 'GOL_PREBENJ',
     'MATCH_DETAIL', 'MATCH_DETAIL_KEYS',
+    'LINEUPS_2021_2022', 'LINEUPS_2022_2023', 'LINEUPS_2023_2024',
+    'LINEUPS_2024_2025', 'LINEUPS_2025_2026',
+    'PLAYERS_2021_2022', 'PLAYERS_2022_2023', 'PLAYERS_2023_2024',
+    'PLAYERS_2024_2025', 'PLAYERS_2025_2026',
   ];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
@@ -332,4 +336,54 @@ test('checkRenderedDom: empty #sec-miequipo (JS threw) fails', () => {
   assert.ok(failures.length >= 1);
   assert.ok(failures.some(f => /content too small/.test(f)),
     'empty section must flag the content-too-small failure');
+});
+
+
+// ─── data-lineups-*.js / data-players-*.js invariants ─────────────────────
+// SP-1 actas data files. Tests only run when at least one season has been
+// scraped + imported + generated (the files exist in the repo). Skipped
+// otherwise so the suite stays green before the first scrape.
+import { readdirSync, existsSync } from 'node:fs';
+
+test('actas data files: lineups events reference players in the same match', () => {
+  const files = readdirSync(ROOT).filter(f => /^data-lineups-\d{4}-\d{4}\.js$/.test(f));
+  if (files.length === 0) { console.log('  (skip: no data-lineups-*.js files yet)'); return; }
+  for (const f of files) {
+    const season = f.match(/data-lineups-(\d{4}-\d{4})\.js/)[1];
+    const playersFile = `data-players-${season}.js`;
+    assert.ok(existsSync(join(ROOT, playersFile)), `${playersFile} must exist alongside ${f}`);
+    const linVar = `LINEUPS_${season.replace('-', '_')}`;
+    const plaVar = `PLAYERS_${season.replace('-', '_')}`;
+    const Lin = loadDataFile(f)[linVar];
+    const Pla = loadDataFile(playersFile)[plaVar];
+    assert.ok(Lin && typeof Lin === 'object', `${linVar} must load`);
+    assert.ok(Pla && typeof Pla === 'object', `${plaVar} must load`);
+    // Invariant 1: every event in LINEUPS references a player in the same match's lineup
+    for (const [matchKey, match] of Object.entries(Lin)) {
+      const homeNames = new Set((match.home || []).map(p => p.n));
+      const awayNames = new Set((match.away || []).map(p => p.n));
+      for (const ev of match.events || []) {
+        const pool = ev.s === 'h' ? homeNames : awayNames;
+        // Some events have n (single) and some have n+n2 (paired subs). The
+        // 'extra-event-player auto-add' rule in the importer means events can
+        // refer to players who DID get an appearance row for that match —
+        // so the LINEUPS payload should include them in home/away. Check both.
+        for (const name of [ev.n, ev.n2].filter(Boolean)) {
+          assert.ok(pool.has(name), `${f} ${matchKey}: event "${ev.t}" refs unknown player "${name}" (side=${ev.s})`);
+        }
+      }
+    }
+    // Invariant 2: every team_id in PLAYERS has a well-formed roster array
+    for (const [tid, list] of Object.entries(Pla)) {
+      assert.ok(Array.isArray(list) && list.length > 0, `${plaVar} team ${tid} must have a non-empty list`);
+      for (const pl of list) {
+        assert.equal(typeof pl.n, 'string', `${plaVar} ${tid} player n must be string: ${JSON.stringify(pl)}`);
+        for (const k of ['ap', 'st', 'g', 'y', 'rd']) {
+          assert.equal(typeof pl[k], 'number', `${plaVar} ${tid} player ${pl.n}: ${k} must be number`);
+          assert.ok(pl[k] >= 0, `${plaVar} ${tid} player ${pl.n}: ${k} >= 0`);
+        }
+        assert.ok(pl.st <= pl.ap, `${plaVar} ${tid} ${pl.n}: starters <= appearances`);
+      }
+    }
+  }
 });

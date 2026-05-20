@@ -66,8 +66,21 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add scripts/fiflp_actas_*_raw.json scripts/fiflp_actas_unmatched.json futbolbase.db \
-                  data-lineups-*.js data-players-*.js index.html 2>/dev/null || true
+          # Defensive: git add aborts atomically on the first unmatched pathspec,
+          # so we add each pattern/path separately with shopt nullglob and an
+          # existence check. Without this the raw JSON would be lost.
+          shopt -s nullglob
+          add_if_exists() {
+            for f in "$@"; do
+              [ -e "$f" ] && git add "$f"
+            done
+          }
+          add_if_exists scripts/fiflp_actas_*_raw.json
+          add_if_exists scripts/fiflp_actas_unmatched.json
+          add_if_exists futbolbase.db
+          add_if_exists data-lineups-*.js
+          add_if_exists data-players-*.js
+          add_if_exists index.html
           if git diff --cached --quiet; then
             echo "no changes to commit"
           else

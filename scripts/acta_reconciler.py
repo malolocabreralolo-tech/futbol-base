@@ -15,20 +15,70 @@ import unicodedata
 from datetime import datetime, timedelta
 
 
+_CLUB_SUFFIX = re.compile(
+    # Common Spanish football club abbreviations as standalone tokens.
+    # Strip them aggressively: FIFLP writes "ARUCAS, C.F." while Wayback DB has "Arucas CF" — same team.
+    r"\b(c\s*f|c\s*d|c\s*d\s*f|u\s*d|a\s*d|s\s*d|s\s*c|s\s*a\s*d|e\s*f|c\s*p|c\s*e|club|"
+    r"deportivo|atletico|atletico\s+c\s*f|deportiva|sociedad|union|f\s*c)\b"
+)
+
+
 def normalize_team_name(s: str) -> str:
-    """Accent-strip, lowercase, strip trailing team-letter suffix (A/B/C/D)
-    in quotes or bare, collapse whitespace."""
+    """Aggressively normalize a team name so FIFLP acta spellings and Wayback DB
+    spellings of the same team collapse to the same string.
+
+    Pipeline: NFKD accent-strip -> lowercase -> punctuation -> club-suffix
+    tokens stripped -> trailing single-letter team marker (A/B/C/D) removed ->
+    whitespace collapsed.
+
+    Examples:
+        "ARUCAS, C.F."         -> "arucas"
+        "Arucas CF"            -> "arucas"
+        "ATLETICO HURACAN, A.D." -> "huracan"        (atletico stripped as club prefix)
+        "Atletico Huracan A"   -> "huracan"
+        "UD Moya"              -> "moya"
+        "U.D. MOYA"            -> "moya"
+        "Valkyrias Bec."       -> "valkyrias bec"    (abbreviated; matched via prefix below)
+        "VALKYRIAS BECERRIL"   -> "valkyrias becerril"
+    """
     if not s:
         return ""
     # Remove accents via NFKD decomposition
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode()
+    # Lowercase early so all subsequent regex are simpler
+    s = s.lower()
     # Strip quote chars (both straight and curly-like)
     s = re.sub(r'["\'‘’“”]', " ", s)
-    # Strip trailing team-letter suffix like "A", "B", "C", "D" (bare or previously quoted)
-    s = re.sub(r"\s+[ABCD]\s*$", "", s, flags=re.IGNORECASE).strip()
-    # Lowercase and collapse whitespace
-    s = re.sub(r"\s+", " ", s).strip().lower()
+    # Punctuation -> space (handles "C.F.", "A.D.", commas, hyphens-as-separators)
+    s = re.sub(r"[.,;:]", " ", s)
+    # Strip common club suffix/prefix tokens
+    s = _CLUB_SUFFIX.sub(" ", s)
+    # Strip trailing single-letter team-letter (A/B/C/D)
+    s = re.sub(r"\b[abcd]\b\s*$", "", s).strip()
+    # Collapse whitespace
+    s = re.sub(r"\s+", " ", s).strip()
     return s
+
+
+def _names_match(acta_norm: str, db_norm: str) -> bool:
+    """True if two normalized team names refer to the same team.
+
+    Equality first. Then prefix-rescue: a Wayback DB name may be truncated
+    (e.g. "valkyrias bec" stored from a column with a char limit) while FIFLP
+    has the full "valkyrias becerril". Accept the match when one is a strict
+    prefix of the other AND the shared prefix is at least 5 chars (to avoid
+    false-positives on very short names).
+    """
+    if not acta_norm or not db_norm:
+        return False
+    if acta_norm == db_norm:
+        return True
+    # Prefix rescue: shorter prefixes the longer, shared >= 5 chars
+    if len(db_norm) >= 5 and acta_norm.startswith(db_norm):
+        return True
+    if len(acta_norm) >= 5 and db_norm.startswith(acta_norm):
+        return True
+    return False
 
 
 def _season_id(conn, header: dict):
@@ -80,10 +130,10 @@ def reconcile_acta(conn, header: dict):
         (sid,),
     ).fetchall()
 
-    # Filter by normalized team names
+    # Filter by normalized team names (with prefix-rescue for abbreviated DB grafías)
     candidates = [
         r for r in rows
-        if normalize_team_name(r[1]) == nh and normalize_team_name(r[2]) == na
+        if _names_match(nh, normalize_team_name(r[1])) and _names_match(na, normalize_team_name(r[2]))
     ]
 
     if len(candidates) == 1:

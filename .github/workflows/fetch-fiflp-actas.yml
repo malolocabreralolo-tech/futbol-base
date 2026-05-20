@@ -20,6 +20,10 @@ on:
         description: 'Optional cap on actas scraped this run (0 = unlimited; useful for spike runs)'
         required: false
         default: '0'
+      dump_fixture:
+        description: 'Optional CodActa to dump live HTML to scripts/tests/fixtures/ (diagnostic)'
+        required: false
+        default: ''
 permissions:
   contents: write
 concurrency:
@@ -43,18 +47,24 @@ jobs:
       - name: Scrape actas (incremental, resumable)
         env:
           PYTHONPATH: ${{ github.workspace }}
+          TEMP_INPUT: ${{ inputs.temporada }}
+          COMPS_INPUT: ${{ inputs.comps }}
+          MAX_INPUT: ${{ inputs.max_actas }}
+          DUMP_INPUT: ${{ inputs.dump_fixture }}
         run: |
-          ARGS="--temporada ${{ inputs.temporada }}"
-          if [ -n "${{ inputs.comps }}" ]; then ARGS="$ARGS --comps ${{ inputs.comps }}"; fi
-          if [ "${{ inputs.max_actas }}" != "0" ] && [ -n "${{ inputs.max_actas }}" ]; then ARGS="$ARGS --max-actas ${{ inputs.max_actas }}"; fi
+          ARGS="--temporada $TEMP_INPUT"
+          if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
+          if [ "$MAX_INPUT" != "0" ] && [ -n "$MAX_INPUT" ]; then ARGS="$ARGS --max-actas $MAX_INPUT"; fi
+          if [ -n "$DUMP_INPUT" ]; then ARGS="$ARGS --dump-fixture $DUMP_INPUT"; fi
           python3 scripts/fetch_fiflp_actas.py $ARGS
       - name: Import + generate (if requested)
         if: ${{ inputs.do_import == true }}
         env:
           PYTHONPATH: ${{ github.workspace }}
+          TEMP_INPUT: ${{ inputs.temporada }}
         run: |
           python3 scripts/migrate_actas_schema.py
-          SEASON_LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['${{ inputs.temporada }}'])")
+          SEASON_LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME[\"$TEMP_INPUT\"])")
           RAW="scripts/fiflp_actas_${SEASON_LABEL}_raw.json"
           if [ -f "$RAW" ]; then
             python3 scripts/import_fiflp_actas.py "$RAW"
@@ -63,12 +73,11 @@ jobs:
             echo "  ! no raw file at $RAW (scraper produced nothing); skipping import"
           fi
       - name: Commit
+        env:
+          TEMP_INPUT: ${{ inputs.temporada }}
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          # Defensive: git add aborts atomically on the first unmatched pathspec,
-          # so we add each pattern/path separately with shopt nullglob and an
-          # existence check. Without this the raw JSON would be lost.
           shopt -s nullglob
           add_if_exists() {
             for f in "$@"; do
@@ -80,13 +89,12 @@ jobs:
           add_if_exists futbolbase.db
           add_if_exists data-lineups-*.js
           add_if_exists data-players-*.js
+          add_if_exists scripts/tests/fixtures/acta_*.html
           add_if_exists index.html
           if git diff --cached --quiet; then
             echo "no changes to commit"
           else
-            git commit -m "chore(fiflp): actas season ${{ inputs.temporada }} (scrape+import+generate)"
-            # If origin moved while we ran (e.g. another push), rebase before pushing.
-            # Without this the lost-update problem aborts the push and we lose the raw JSON.
+            git commit -m "chore(fiflp): actas season $TEMP_INPUT (scrape+import+generate)"
             for attempt in 1 2 3; do
               git pull --rebase origin main && git push && break || sleep 5
             done

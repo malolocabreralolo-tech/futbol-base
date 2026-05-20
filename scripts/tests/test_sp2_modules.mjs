@@ -71,3 +71,60 @@ test('renderPlantillaInto: header click re-sorts and updates arrow', async () =>
   assert.ok(/data-sort-key="ap"[^>]*>PJ\s*[▾▴]/.test(c.innerHTML),
     'PJ header shows arrow after click');
 });
+
+import { renderLineupsHtml, mergeAndOrderEvents, renderTimelineHtml } from '../../src/matchdetail-rich.js';
+
+const M = {
+  home: [
+    { n: "GUTIERREZ, J", dn: 1, r: 'starter', g: 0, y: 0, rd: 0 },
+    { n: "SANTANA, A",   dn: 4, r: 'starter', g: 0, y: 0, rd: 0 },
+    { n: "YANEZ, S",     dn: 12, r: 'sub',     g: 0, y: 0, rd: 0 },
+  ],
+  away: [
+    { n: "PEREZ, M", dn: 1, r: 'starter', g: 0, y: 0, rd: 0 },
+    { n: "LOPEZ, B", dn: 2, r: 'starter', g: 0, y: 1, rd: 0 },
+  ],
+  events: [
+    { t: 'goal',   s: 'h', n: 'SANTANA, A', m: 12, gt: 'normal' },
+    { t: 'yellow', s: 'a', n: 'LOPEZ, B',   m: 34 },
+    { t: 'sub',    s: 'h', n: 'GUTIERREZ, J', n2: 'YANEZ, S', m: 55 },
+  ],
+  coachH: 'PEPE',
+  coachA: 'JUAN',
+  ref:    'ARBITRO X',
+};
+
+test('lineups: both teams with starter/sub split + coaches', () => {
+  const html = renderLineupsHtml(M);
+  assert.ok(/match-lineups/.test(html));
+  assert.ok(/match-line-side[^"]*home/.test(html));
+  assert.ok(/match-line-side[^"]*away/.test(html));
+  assert.ok(/match-sub-divider/.test(html));
+  assert.ok(/Entrenador.*PEPE/.test(html));
+  assert.ok(/Entrenador.*JUAN/.test(html));
+});
+
+test('timeline: events sorted by minute, null minutes last', () => {
+  const ord = mergeAndOrderEvents([
+    { t:'goal',s:'h',n:'X',m:30 },
+    { t:'yellow',s:'a',n:'Y',m:null },
+    { t:'goal',s:'h',n:'Z',m:10 },
+  ]);
+  assert.equal(ord[0].n, 'Z');
+  assert.equal(ord[1].n, 'X');
+  assert.equal(ord[2].n, 'Y');
+});
+
+test('timeline: renders icons (goal/yellow/sub) + minutes', () => {
+  const html = renderTimelineHtml(M.events);
+  assert.ok(/⚽/.test(html), 'goal icon');
+  assert.ok(/🟨/.test(html), 'yellow icon');
+  assert.ok(/🔄/.test(html), 'sub icon');
+  assert.ok(/YANEZ, S/.test(html) && /GUTIERREZ, J/.test(html), 'sub shows both names');
+  const html2 = renderTimelineHtml([{ t:'goal', s:'h', n:'P', m:5, gt:'penalty' }]);
+  assert.ok(/penalti/i.test(html2));
+});
+
+test('timeline: empty -> empty-state', () => {
+  assert.ok(/timeline-empty/.test(renderTimelineHtml([])));
+});

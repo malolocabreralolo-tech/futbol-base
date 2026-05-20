@@ -1,4 +1,5 @@
-import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail } from './state.js';
+import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail, ensureLineups, ensurePlayers, getCurrentSeason } from './state.js';
+import { renderPlantillaInto } from './plantilla.js';
 
 /* ====== MATCH DETAIL MODAL ====== */
 const modalOverlay = document.getElementById('matchModal');
@@ -292,7 +293,10 @@ export function openTeamDetail(teamName, groupId) {
   `;
 
   // Body
-  let body = '';
+  let body = '<div class="modal-stats-header">Plantilla</div>'
+           + '<div id="plant-modal-host" class="plant-host">'
+           + '<div class="plant-empty plant-empty-loading">Cargando plantilla…</div>'
+           + '</div>';
 
   if (row) {
     body += `<div class="modal-stats-header">Temporada</div>
@@ -385,6 +389,31 @@ export function openTeamDetail(teamName, groupId) {
 
   modalBody.innerHTML = body;
   modalOverlay.classList.add('open');
+
+  // SP-2: lazy-fetch players + lineups; render Plantilla section.
+  const season = getCurrentSeason();
+  const host = document.getElementById('plant-modal-host');
+  if (host) {
+    Promise.all([ensurePlayers(season), ensureLineups(season)]).then(([pdata, ldata]) => {
+      if (!pdata) {
+        host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para esta temporada.</div>';
+        return;
+      }
+      const norm = String(teamName).normalize('NFKD').replace(/[̀-ͯ]/g,'')
+                                    .replace(/[.,;:'"]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+      const teamId = pdata.teams[norm];
+      if (teamId == null) {
+        host.innerHTML = '<div class="plant-empty">\u24d8 No hay datos de plantilla para este equipo en esta temporada.</div>';
+        return;
+      }
+      const rows = pdata.players[String(teamId)] || [];
+      renderPlantillaInto(host, rows, {
+        teamId: String(teamId),
+        season,
+        lineupsForExpand: ldata || undefined,
+      });
+    });
+  }
 
   // Fire-and-forget: fetch all historical seasons in parallel and render a
   // cross-season table for this team. Same trust model as the rest of this

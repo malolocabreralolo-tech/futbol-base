@@ -228,8 +228,19 @@ def enumerate_actas_by_range(page, season, comp_id, lo, hi):
 # ── Enumeration: Cascade (strategies 1 → 2 → 3; 4 is manual) ────────────────
 
 def enumerate_actas_cascade(page, season, comp_id):
-    """Try strategies 1→3; return first non-empty result.
-    Strategy 4 (range scan) is intentionally NOT auto-invoked due to cost."""
+    """Try enumeration strategies 1→3; return first non-empty result.
+
+    Strategy precedence:
+      1. main       — NFG_CmpJornada dropdown (grupo→jornada→BuscarPartidos)
+      2. lstpart.   — NFG_LstPartidos flat list
+      3. teams      — walk each team's NFG_CmpEquipo page
+
+    Strategy 4 (enumerate_actas_by_range) is NOT auto-invoked: it fetches
+    every CodActa in a numeric range and is expensive. Invoke it manually
+    when strategies 1-3 yield nothing for an old season.
+
+    Returns (list_of_target_dicts, strategy_label_str).
+    """
     for label, fn in (
         ("main",      lambda: enumerate_actas_main(page, season, comp_id)),
         ("lstpart.",  lambda: enumerate_actas_lstpartidos(page, season, comp_id)),

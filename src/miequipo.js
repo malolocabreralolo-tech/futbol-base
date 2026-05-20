@@ -1,8 +1,10 @@
 import {
   $, el, teamBadge, S, FEATURED, isFeatured,
   featuredStandingFrom, featuredMatchesFrom, featuredScorersFrom,
+  ensureLineups, ensurePlayers, getCurrentSeason,
 } from './state.js';
 import { openMatchDetail } from './modals.js';
+import { renderPlantillaInto } from './plantilla.js';
 
 // data-*.js use top-level `const` (classic scripts) -> global LEXICAL bindings,
 // NOT properties of the global object. Read them as bare identifiers, typeof-guarded,
@@ -226,6 +228,37 @@ export function renderMiEquipo() {
     + '<div class="me-link" id="meGoGroup">Ver grupo completo &rarr;</div>';
   c.appendChild(miniCard);
   $('#meGoGroup').addEventListener('click', jumpToFullGroup);
+
+  // SP-2: Plantilla card
+  const plantCard = el('div', 'me-card me-plant-card');
+  const season = getCurrentSeason();
+  plantCard.innerHTML = '<div class="me-ct">Plantilla ' + season.replace('-20', '-') + '</div>'
+    + '<div id="me-plant-host" class="plant-host">'
+    + '<div class="plant-empty plant-empty-loading">Cargando plantilla…</div>'
+    + '</div>';
+  c.appendChild(plantCard);
+  Promise.all([ensurePlayers(season), ensureLineups(season)]).then(([pdata, ldata]) => {
+    const host = document.getElementById('me-plant-host');
+    if (!host) return;
+    if (!pdata) {
+      host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para esta temporada.</div>';
+      return;
+    }
+    const teamName = (typeof FEATURED !== 'undefined' && FEATURED.team) ? FEATURED.team : 'Las Mesas Hu.';
+    const norm = String(teamName).normalize('NFKD').replace(/[̀-ͯ]/g,'')
+                                  .replace(/[.,;:'"]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+    const teamId = pdata.teams[norm];
+    if (teamId == null) {
+      host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para este equipo en esta temporada.</div>';
+      return;
+    }
+    const rows = pdata.players[String(teamId)] || [];
+    renderPlantillaInto(host, rows, {
+      teamId: String(teamId),
+      season,
+      lineupsForExpand: ldata || undefined,
+    });
+  });
 
   const golCard = el('div', 'me-card');
   const wireToggle = () => {

@@ -35,6 +35,8 @@ export function checkRenderedDom(dom) {
     failures.push('calendar rendered no rows and no "Sin partidos" (.me-crow/.me-next)');
   if (!has('me-mini') && !has('Su posición'))
     failures.push('mini-table (.me-mini / "Su posición") missing');
+  if (!has('me-plant-card') && !has('Plantilla 2'))
+    failures.push('SP-2 Plantilla card (.me-plant-card / "Plantilla 2XXX") missing');
   if (!has('me-scrow') && !has('Goleadores del equipo'))
     failures.push('scorers (.me-scrow / "Goleadores del equipo") missing');
   if (has('No hay datos del equipo esta temporada'))

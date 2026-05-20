@@ -309,6 +309,7 @@ const SMOKE_GOOD_DOM = `<!DOCTYPE html><html><body><main>
  <div class="me-hero"><h2>Las Mesas Hu.</h2><div class="me-meta">Prebenjamín</div></div>
  <div class="me-card"><div class="me-cal" id="meCal"><div class="me-crow"><span>J1</span></div></div></div>
  <div class="me-card">Su posición en el Grupo 2<table class="standings-table me-mini"></table></div>
+ <div class="me-card me-plant-card"><div class="me-ct">Plantilla 2024-25</div><div class="plant-empty">No data</div></div>
  <div class="me-card">Goleadores del equipo<div class="me-scrow"><span>P</span></div></div>
  ${/* pads #sec-miequipo inner content above the 500-char smoke threshold */ ''}${'<span>padpadpad</span>'.repeat(60)}
 </div><div id="sec-clasif" class="section"></div></main></body></html>`;

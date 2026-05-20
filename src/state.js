@@ -243,6 +243,82 @@ export async function ensureSeasonData(seasonName) {
   await loadSeasonData(seasonName);
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+ * SP-2: lazy-loaders for data-lineups-<S>.js and data-players-<S>.js.
+ * Same shape as ensureMatchDetail. Parse data file text with a regex
+ * and JSON.parse the const value — never read via the global object.
+ * (Lesson 2026-05-18: const top-level declarations don't become
+ *  properties of the global object, so text-parsing is the canonical
+ *  pattern — see systematic-debugging root cause 2026-05-18.)
+ * Returns null on missing file or parse failure — UI shows empty-state.
+ * ────────────────────────────────────────────────────────────────────── */
+
+const _lineups = {};
+const _lineupsPromise = {};
+const _players = {};
+const _playersPromise = {};
+
+function _seasonSuffix(season) { return season.replace('-', '_'); }
+
+function _versionFromMatchDetailKeys() {
+  return (document.querySelector('script[src*="data-matchdetail-keys.js"]')
+    ?.src.match(/v=([^&]+)/)?.[1]) || '';
+}
+
+export async function ensureLineups(season) {
+  if (_lineups[season] !== undefined) return _lineups[season];
+  if (_lineupsPromise[season]) return _lineupsPromise[season];
+  _lineupsPromise[season] = (async () => {
+    const ver = _versionFromMatchDetailKeys();
+    const suffix = _seasonSuffix(season);
+    try {
+      const r = await fetch('./data-lineups-' + season + '.js' + (ver ? '?v=' + ver : ''));
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const txt = await r.text();
+      const re = new RegExp('const LINEUPS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*\\});');
+      const m = txt.match(re);
+      if (!m) throw new Error('LINEUPS_' + suffix + ' not parseable');
+      _lineups[season] = JSON.parse(m[1]);
+    } catch (e) {
+      console.warn('[state] ensureLineups failed:', e.message);
+      _lineups[season] = null;
+    }
+    return _lineups[season];
+  })();
+  return _lineupsPromise[season];
+}
+
+export async function ensurePlayers(season) {
+  if (_players[season] !== undefined) return _players[season];
+  if (_playersPromise[season]) return _playersPromise[season];
+  _playersPromise[season] = (async () => {
+    const ver = _versionFromMatchDetailKeys();
+    const suffix = _seasonSuffix(season);
+    try {
+      const r = await fetch('./data-players-' + season + '.js' + (ver ? '?v=' + ver : ''));
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const txt = await r.text();
+      const reP = new RegExp('const PLAYERS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*?\\});');
+      const reT = new RegExp('const TEAMS_'   + suffix + '\\s*=\\s*(\\{[\\s\\S]*?\\});');
+      const mp = txt.match(reP);
+      const mt = txt.match(reT);
+      if (!mp || !mt) throw new Error('PLAYERS_/TEAMS_' + suffix + ' not parseable');
+      _players[season] = { players: JSON.parse(mp[1]), teams: JSON.parse(mt[1]) };
+    } catch (e) {
+      console.warn('[state] ensurePlayers failed:', e.message);
+      _players[season] = null;
+    }
+    return _players[season];
+  })();
+  return _playersPromise[season];
+}
+
+export function getCurrentSeason() {
+  // Default: featured season for the portal. If S.season is set (jornadas
+  // selector) prefer that; otherwise '2025-2026' (current season).
+  return (typeof S !== 'undefined' && S && S.season) || '2025-2026';
+}
+
 export function isHistorical() {
   return !!S.season;
 }

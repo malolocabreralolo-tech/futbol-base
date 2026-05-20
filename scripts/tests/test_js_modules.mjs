@@ -339,6 +339,23 @@ test('checkRenderedDom: empty #sec-miequipo (JS threw) fails', () => {
 });
 
 
+test('state.js exports ensureLineups, ensurePlayers, getCurrentSeason (SP-2)', () => {
+  const src = readFileSync(join(ROOT, 'src', 'state.js'), 'utf8');
+  assert.ok(/export\s+async\s+function\s+ensureLineups\b/.test(src),
+    'state.js must export ensureLineups');
+  assert.ok(/export\s+async\s+function\s+ensurePlayers\b/.test(src),
+    'state.js must export ensurePlayers');
+  assert.ok(/export\s+function\s+getCurrentSeason\b/.test(src),
+    'state.js must export getCurrentSeason');
+  for (const f of ['state.js']) {
+    const s = readFileSync(join(ROOT, 'src', f), 'utf8');
+    assert.ok(!/globalThis\.(LINEUPS_|PLAYERS_|TEAMS_)/.test(s),
+      f + ': must not read LINEUPS_/PLAYERS_/TEAMS_ via globalThis');
+    assert.ok(!/window\.(LINEUPS_|PLAYERS_|TEAMS_)/.test(s),
+      f + ': must not read LINEUPS_/PLAYERS_/TEAMS_ via window.');
+  }
+});
+
 // ─── data-lineups-*.js / data-players-*.js invariants ─────────────────────
 // SP-1 actas data files. Tests only run when at least one season has been
 // scraped + imported + generated (the files exist in the repo). Skipped

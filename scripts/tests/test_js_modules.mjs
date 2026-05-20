@@ -405,3 +405,16 @@ test('actas data files: lineups events reference players in the same match', () 
     }
   }
 });
+
+test('source-contract: SP-2 consts not read via globalThis/window in src/', () => {
+  const files = ['app.js','init.js','state.js','modals.js','miequipo.js','render.js','plantilla.js','matchdetail-rich.js'];
+  for (const f of files) {
+    let s;
+    try { s = readFileSync(join(ROOT, 'src', f), 'utf8'); }
+    catch { continue; }
+    for (const g of ['LINEUPS_', 'PLAYERS_', 'TEAMS_']) {
+      assert.ok(!new RegExp('globalThis\\.' + g).test(s), f + ': no globalThis.' + g);
+      assert.ok(!new RegExp('window\\.' + g).test(s),     f + ': no window.'     + g);
+    }
+  }
+});

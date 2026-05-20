@@ -246,6 +246,15 @@ def enumerate_actas_cascade(page, season, comp_id):
 # ── Fetch + parse single acta ─────────────────────────────────────────────────
 
 def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None):
+    """Fetch one acta page (frameset + frames), optionally dump fixture, parse.
+
+    The acta lives in a frameset: we capture main frame content then
+    concatenate each child frame's HTML (marked with <!--FRAME url-->).
+    If dump_fixture_for matches cod_acta the raw HTML is written to
+    scripts/tests/fixtures/acta_<cod>.html for offline TDD use.
+
+    Returns parsed dict from acta_parser.parse_acta, or None on failure.
+    """
     url = (f"{BASE}/NFG_CmpPartido?cod_primaria=1000120"
            f"&CodActa={cod_acta}&cod_acta={cod_acta}")
     if not goto(page, url):

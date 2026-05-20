@@ -199,3 +199,24 @@ class TestGeneratedFiles:
                                 f"{entry['name']}/{g['id']}/{team}: pts={pts} > 3*J={J*3} "
                                 f"— probably format drift"
                             )
+
+
+# ─── Actas pipeline schema ───────────────────────────────────────────────────
+
+def test_actas_migration_idempotent(tmp_path):
+    """Aplicar la migración dos veces no debe fallar ni cambiar el esquema."""
+    import shutil
+    import sqlite3
+    from scripts.migrate_actas_schema import migrate
+    db = tmp_path / "fb.db"
+    shutil.copy(DB_PATH, db)
+    conn = sqlite3.connect(db)
+    migrate(conn)
+    schema1 = sorted(r[0] for r in conn.execute("SELECT sql FROM sqlite_master WHERE type IN ('table','index') AND sql IS NOT NULL"))
+    migrate(conn)  # second run must be a no-op
+    schema2 = sorted(r[0] for r in conn.execute("SELECT sql FROM sqlite_master WHERE type IN ('table','index') AND sql IS NOT NULL"))
+    assert schema1 == schema2
+    tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    assert {'players', 'appearances', 'match_events', 'match_staff'} <= tables
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(matches)")}
+    assert 'cod_acta' in cols

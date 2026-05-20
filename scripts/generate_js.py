@@ -847,6 +847,19 @@ def main():
     print("\n10. Bumping cache version in index.html")
     bump_cache_version()
 
+    # SP-1: per-season actas data files (only emitted for seasons with any cod_acta set)
+    for sid, sname in conn.execute("SELECT id, name FROM seasons ORDER BY id").fetchall():
+        has_actas = conn.execute(
+            "SELECT 1 FROM matches m JOIN groups g ON g.id=m.group_id "
+            "WHERE g.season_id=? AND m.cod_acta IS NOT NULL LIMIT 1", (sid,)
+        ).fetchone()
+        if not has_actas:
+            continue
+        print(f"  data-lineups-{sname}.js")
+        write_file(f"data-lineups-{sname}.js", generate_lineups_js(conn, sname))
+        print(f"  data-players-{sname}.js")
+        write_file(f"data-players-{sname}.js", generate_players_js(conn, sname))
+
     conn.close()
     print("\nDone!")
 

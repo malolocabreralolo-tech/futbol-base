@@ -126,25 +126,46 @@ def enumerate_actas_main(page, season, comp_id):
                    .filter(o => o.value && o.value !== '0')
                    .map(o => o.value)""")
     for grupo in grupos:
-        try:
-            page.select_option('select[name="grupo"]', grupo)
-        except Exception as e:
-            print(f"  WARN season={season} comp={comp_id} grupo={grupo} select failed: {e}")
-            continue
-        # Wait explicitly for the jornada select to populate via AJAX. networkidle
-        # alone was flaky (FIFLP races our read). Poll the DOM with a 12s budget.
-        try:
-            page.wait_for_function(
-                "document.querySelectorAll('select[name=\"jornada\"] option').length > 1",
-                timeout=12000,
-            )
-        except Exception:
-            # Fall back to a hard sleep — better than ranging immediately.
-            page.wait_for_timeout(3000)
-        jornadas = page.evaluate("""
-            () => Array.from(document.querySelectorAll('select[name="jornada"] option'))
-                       .filter(o => o.value && o.value !== '0')
-                       .map(o => o.value)""")
+        # Select grupo + wait for AJAX/navigation to settle, then poll for jornadas
+        # to populate. Up to 3 attempts since FIFLP races our read on flaky days.
+        jornadas = []
+        for attempt in range(3):
+            try:
+                page.select_option('select[name="grupo"]', grupo)
+            except Exception as e:
+                print(f"  WARN season={season} comp={comp_id} grupo={grupo} select failed: {e}")
+                break
+            # Settle: navigation or AJAX
+            try:
+                page.wait_for_load_state("networkidle", timeout=10000)
+            except Exception:
+                page.wait_for_timeout(3000)
+            # Poll the DOM until jornada select is populated, max 8s total
+            try:
+                page.wait_for_function(
+                    "document.querySelectorAll('select[name=\"jornada\"] option').length > 1",
+                    timeout=8000,
+                )
+            except Exception:
+                pass  # may still be empty; we'll check below
+            try:
+                jornadas = page.evaluate("""
+                    () => Array.from(document.querySelectorAll('select[name="jornada"] option'))
+                               .filter(o => o.value && o.value !== '0')
+                               .map(o => o.value)""")
+            except Exception:
+                jornadas = []
+            if jornadas:
+                break
+            # Empty: re-load the comp page and retry grupo selection
+            print(f"  retry season={season} comp={comp_id} grupo={grupo} attempt={attempt+1}")
+            if not goto(page, f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"):
+                break
+            try:
+                page.select_option('select[name="competicion"]', comp_id)
+                page.wait_for_timeout(2000)
+            except Exception:
+                break
         if not jornadas:
             print(f"  WARN season={season} comp={comp_id} grupo={grupo} jornadas:0")
             continue

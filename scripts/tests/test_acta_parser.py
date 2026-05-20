@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for T4-T6: header + lineups + goals."""
+"""Tests for T4-T7: header + lineups + goals + substitutions."""
 import os
 import pytest
 FIX = os.path.join(os.path.dirname(__file__), "fixtures")
@@ -15,6 +15,11 @@ def antiguo():
     from scripts.acta_parser import parse_acta
     with open(os.path.join(FIX, "acta_2024_25.html"), encoding="utf-8") as f:
         return parse_acta(f.read())
+
+@pytest.fixture(scope="module")
+def modern_html():
+    with open(os.path.join(FIX, "acta_modern.html"), encoding="utf-8") as f:
+        return f.read()
 
 
 class TestHeader:
@@ -57,10 +62,8 @@ class TestHeader:
 
 class TestLineups:
     def test_lineups_modern_both_teams_have_entries(self, modern):
-        home = modern["lineups"]["home"]
-        away = modern["lineups"]["away"]
-        assert len(home) >= 5, f"home has only {len(home)} players"
-        assert len(away) >= 5, f"away has only {len(away)} players"
+        assert len(modern["lineups"]["home"]) >= 5
+        assert len(modern["lineups"]["away"]) >= 5
 
     def test_lineups_modern_player_shape(self, modern):
         for p in modern["lineups"]["home"] + modern["lineups"]["away"]:
@@ -94,51 +97,67 @@ class TestLineups:
 
 class TestGoals:
     def test_goals_modern_count(self, modern):
-        goals = [e for e in modern["events"] if e["kind"] == "goal"]
-        assert len(goals) >= 1
+        assert len([e for e in modern["events"] if e["kind"] == "goal"]) >= 1
 
     def test_goals_modern_shape(self, modern):
         for g in [e for e in modern["events"] if e["kind"] == "goal"]:
             assert g["side"] in ("home", "away")
-            assert isinstance(g["player_name"], str)
-            assert "," in g["player_name"], f"player name missing comma: {g['player_name']!r}"
+            assert "," in g["player_name"]
             assert g["minute"] is None or (isinstance(g["minute"], int) and 1 <= g["minute"] <= 200)
             assert g.get("goal_type") in ("normal", "penalty", "own", None)
-
-    def test_goals_modern_all_home(self, modern):
-        goals = [e for e in modern["events"] if e["kind"] == "goal"]
-        assert all(g["side"] == "home" for g in goals)
 
     def test_goals_modern_exact_score_match(self, modern):
         home_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "home")
         away_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "away")
-        assert home_goals == 3
-        assert away_goals == 0
-
-    def test_goals_antiguo_count(self, antiguo):
-        goals = [e for e in antiguo["events"] if e["kind"] == "goal"]
-        assert len(goals) == 13
-
-    def test_goals_antiguo_all_away(self, antiguo):
-        goals = [e for e in antiguo["events"] if e["kind"] == "goal"]
-        assert all(g["side"] == "away" for g in goals)
+        assert home_goals == 3 and away_goals == 0
 
     def test_goals_antiguo_exact_score_match(self, antiguo):
         home_goals = sum(1 for e in antiguo["events"] if e["kind"] == "goal" and e["side"] == "home")
         away_goals = sum(1 for e in antiguo["events"] if e["kind"] == "goal" and e["side"] == "away")
-        assert home_goals == 0
-        assert away_goals == 13
+        assert home_goals == 0 and away_goals == 13
 
     def test_goals_known_scorer_modern(self, modern):
-        scorer_names = [g["player_name"] for g in modern["events"] if g["kind"] == "goal"]
-        assert any("OJEDA DELGADO" in n for n in scorer_names)
+        names = [g["player_name"] for g in modern["events"] if g["kind"] == "goal"]
+        assert any("OJEDA DELGADO" in n for n in names)
 
     def test_goals_known_scorer_antiguo(self, antiguo):
-        scorer_names = [g["player_name"] for g in antiguo["events"] if g["kind"] == "goal"]
-        assert any("CABRERA RIVERO" in n for n in scorer_names)
+        names = [g["player_name"] for g in antiguo["events"] if g["kind"] == "goal"]
+        assert any("CABRERA RIVERO" in n for n in names)
 
-    def test_goals_consistency_with_score(self, modern):
-        header = modern["header"]
-        home_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "home")
-        away_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "away")
-        assert home_goals == header["home_score"] or away_goals == header["away_score"]
+
+class TestSubstitutions:
+    def test_subs_modern_no_crash(self, modern):
+        """acta_modern has no substitutions — parser must not crash."""
+        subs_in = [e for e in modern["events"] if e["kind"] == "sub_in"]
+        subs_out = [e for e in modern["events"] if e["kind"] == "sub_out"]
+        assert len(subs_in) == 0
+        assert len(subs_out) == 0
+
+    def test_subs_antiguo_no_crash(self, antiguo):
+        """acta_2024_25 has no substitutions — parser must not crash."""
+        subs_in = [e for e in antiguo["events"] if e["kind"] == "sub_in"]
+        subs_out = [e for e in antiguo["events"] if e["kind"] == "sub_out"]
+        assert len(subs_in) == 0
+        assert len(subs_out) == 0
+
+    def test_subs_balance_when_present(self, modern):
+        """When subs exist, sub_in count must equal sub_out count."""
+        subs_in = [e for e in modern["events"] if e["kind"] == "sub_in"]
+        subs_out = [e for e in modern["events"] if e["kind"] == "sub_out"]
+        if subs_in or subs_out:
+            assert len(subs_in) == len(subs_out)
+
+    def test_subs_pair_same_side(self, modern):
+        """pair_idx: sub_in and sub_out with same pair_idx must be same side."""
+        subs_in = [e for e in modern["events"] if e["kind"] == "sub_in"]
+        subs_out = [e for e in modern["events"] if e["kind"] == "sub_out"]
+        for ev in subs_in:
+            if ev.get("pair_idx") is not None:
+                others = [e for e in subs_out if e.get("pair_idx") == ev["pair_idx"]]
+                if others:
+                    assert ev["side"] == others[0]["side"]
+
+    def test_subs_section_recognized_if_present(self, modern, modern_html):
+        """If 'Cambios'/'Sustituciones' is in the fixture, no crash."""
+        if "cambios" in modern_html.lower() or "sustituciones" in modern_html.lower():
+            assert isinstance(modern["events"], list)

@@ -128,13 +128,19 @@ def enumerate_actas_main(page, season, comp_id):
     for grupo in grupos:
         try:
             page.select_option('select[name="grupo"]', grupo)
-            try:
-                page.wait_for_load_state("networkidle", timeout=8000)
-            except Exception:
-                page.wait_for_timeout(2000)
         except Exception as e:
             print(f"  WARN season={season} comp={comp_id} grupo={grupo} select failed: {e}")
             continue
+        # Wait explicitly for the jornada select to populate via AJAX. networkidle
+        # alone was flaky (FIFLP races our read). Poll the DOM with a 12s budget.
+        try:
+            page.wait_for_function(
+                "document.querySelectorAll('select[name=\"jornada\"] option').length > 1",
+                timeout=12000,
+            )
+        except Exception:
+            # Fall back to a hard sleep — better than ranging immediately.
+            page.wait_for_timeout(3000)
         jornadas = page.evaluate("""
             () => Array.from(document.querySelectorAll('select[name="jornada"] option'))
                        .filter(o => o.value && o.value !== '0')

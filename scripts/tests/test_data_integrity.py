@@ -260,3 +260,39 @@ def test_generate_lineups_js_shape(tmp_path):
     assert "PEREZ" in js and "GOMEZ" in js
     # Contains an events array with at least one goal
     assert '"goal"' in js or "'goal'" in js
+
+
+def test_generate_players_js_aggregates(tmp_path):
+    """Aggregates per (team, player) match the sum of appearances."""
+    import shutil
+    import sqlite3
+    import json
+    import re
+    from scripts.migrate_actas_schema import migrate
+    from scripts.import_fiflp_actas import import_raw
+    from scripts.generate_js import generate_players_js
+    db = tmp_path / "fb.db"
+    shutil.copy(DB_PATH, db)
+    conn = sqlite3.connect(str(db))
+    migrate(conn)
+    # use real match + fixture as before
+    real = conn.execute("""SELECT m.id, s.name, t1.name, t2.name, m.date, m.home_score, m.away_score
+        FROM matches m JOIN groups g ON g.id=m.group_id JOIN seasons s ON s.id=g.season_id
+        JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
+        WHERE m.home_score IS NOT NULL LIMIT 1""").fetchone()
+    raw = {str(real[0]+800000): {
+        "cod_acta": real[0]+800000,
+        "header": {"season": real[1].replace("-", "/"), "jornada": "1", "date": real[4],
+                   "home_team": real[2], "away_team": real[3],
+                   "home_score": real[5], "away_score": real[6], "competition": "x"},
+        "lineups": {"home": [{"name": "PEREZ, JUAN", "dorsal": 1, "role": "starter"}], "away": []},
+        "events": [{"kind": "goal", "side": "home", "player_name": "PEREZ, JUAN", "minute": 5, "goal_type": "normal"},
+                   {"kind": "goal", "side": "home", "player_name": "PEREZ, JUAN", "minute": 50, "goal_type": "normal"}],
+        "staff": {"referee": "R", "coach_home": "H", "coach_away": "A"}}}
+    p = tmp_path / "raw.json"
+    p.write_text(json.dumps(raw))
+    import_raw(conn, str(p))
+    js = generate_players_js(conn, real[1])
+    assert re.search(r"const PLAYERS_[\w]+\s*=", js)
+    # Should reflect 2 goals for PEREZ, JUAN
+    assert '"g": 2' in js or '"g":2' in js

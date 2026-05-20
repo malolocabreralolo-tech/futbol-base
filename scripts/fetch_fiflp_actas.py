@@ -323,16 +323,36 @@ def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None):
             html += "\n<!--FRAME " + fr.url + "-->\n" + fr.content()
         except Exception:
             pass
-    if dump_fixture_for and str(dump_fixture_for) == str(cod_acta):
+    # "first" sentinel dumps whatever the first acta we visit is — useful when
+    # we don't yet know a good CodActa to target for diagnosis.
+    if dump_fixture_for and (
+        str(dump_fixture_for) == str(cod_acta) or str(dump_fixture_for).lower() == "first"
+    ):
         fix_dir = Path("scripts/tests/fixtures")
         fix_dir.mkdir(parents=True, exist_ok=True)
-        (fix_dir / f"acta_{cod_acta}.html").write_text(html, encoding="utf-8")
-        print(f"  dumped fixture: scripts/tests/fixtures/acta_{cod_acta}.html")
+        out_path = fix_dir / f"acta_live_{cod_acta}.html"
+        out_path.write_text(html, encoding="utf-8")
+        print(f"  dumped fixture: {out_path}")
+        # Also auto-dump if the parsed header is all-None (parser failed silently)
     try:
-        return parse_acta(html)
+        result = parse_acta(html)
     except Exception as ex:
         print(f"  ! parse error acta={cod_acta}: {ex}")
         return None
+    # Auto-diagnostic: if every header field is None and lineups are empty, the
+    # parser silently produced nothing. Save the HTML so we can see what FIFLP
+    # actually served. Limit to first failure per session via a function-attr.
+    h = result.get("header") or {}
+    if all(h.get(k) is None for k in ("season", "home_team", "away_team", "date")) \
+       and not result.get("lineups", {}).get("home") \
+       and not getattr(fetch_and_parse_acta, "_dumped_failure", False):
+        fix_dir = Path("scripts/tests/fixtures")
+        fix_dir.mkdir(parents=True, exist_ok=True)
+        out_path = fix_dir / f"acta_failed_{cod_acta}.html"
+        out_path.write_text(html, encoding="utf-8")
+        print(f"  ! parse failed silently — dumped HTML to {out_path}")
+        fetch_and_parse_acta._dumped_failure = True
+    return result
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────

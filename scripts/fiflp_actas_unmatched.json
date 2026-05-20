@@ -102,5 +102,31 @@
       "season": null
     },
     "reason": "no candidate match"
+  },
+  "238638": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "238639": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
   }
 }

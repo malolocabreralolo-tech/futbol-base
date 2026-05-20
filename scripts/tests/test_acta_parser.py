@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for T4-T5: header + lineup parsing."""
+"""Tests for T4-T6: header + lineups + goals."""
 import os
 import pytest
 FIX = os.path.join(os.path.dirname(__file__), "fixtures")
@@ -90,3 +90,55 @@ class TestLineups:
     def test_lineups_antiguo_known_players(self, antiguo):
         away_names = [p["name"] for p in antiguo["lineups"]["away"]]
         assert any("CABRERA RIVERO" in n for n in away_names)
+
+
+class TestGoals:
+    def test_goals_modern_count(self, modern):
+        goals = [e for e in modern["events"] if e["kind"] == "goal"]
+        assert len(goals) >= 1
+
+    def test_goals_modern_shape(self, modern):
+        for g in [e for e in modern["events"] if e["kind"] == "goal"]:
+            assert g["side"] in ("home", "away")
+            assert isinstance(g["player_name"], str)
+            assert "," in g["player_name"], f"player name missing comma: {g['player_name']!r}"
+            assert g["minute"] is None or (isinstance(g["minute"], int) and 1 <= g["minute"] <= 200)
+            assert g.get("goal_type") in ("normal", "penalty", "own", None)
+
+    def test_goals_modern_all_home(self, modern):
+        goals = [e for e in modern["events"] if e["kind"] == "goal"]
+        assert all(g["side"] == "home" for g in goals)
+
+    def test_goals_modern_exact_score_match(self, modern):
+        home_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "home")
+        away_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "away")
+        assert home_goals == 3
+        assert away_goals == 0
+
+    def test_goals_antiguo_count(self, antiguo):
+        goals = [e for e in antiguo["events"] if e["kind"] == "goal"]
+        assert len(goals) == 13
+
+    def test_goals_antiguo_all_away(self, antiguo):
+        goals = [e for e in antiguo["events"] if e["kind"] == "goal"]
+        assert all(g["side"] == "away" for g in goals)
+
+    def test_goals_antiguo_exact_score_match(self, antiguo):
+        home_goals = sum(1 for e in antiguo["events"] if e["kind"] == "goal" and e["side"] == "home")
+        away_goals = sum(1 for e in antiguo["events"] if e["kind"] == "goal" and e["side"] == "away")
+        assert home_goals == 0
+        assert away_goals == 13
+
+    def test_goals_known_scorer_modern(self, modern):
+        scorer_names = [g["player_name"] for g in modern["events"] if g["kind"] == "goal"]
+        assert any("OJEDA DELGADO" in n for n in scorer_names)
+
+    def test_goals_known_scorer_antiguo(self, antiguo):
+        scorer_names = [g["player_name"] for g in antiguo["events"] if g["kind"] == "goal"]
+        assert any("CABRERA RIVERO" in n for n in scorer_names)
+
+    def test_goals_consistency_with_score(self, modern):
+        header = modern["header"]
+        home_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "home")
+        away_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "away")
+        assert home_goals == header["home_score"] or away_goals == header["away_score"]

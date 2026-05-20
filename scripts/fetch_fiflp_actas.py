@@ -14,8 +14,11 @@ Designed to run only in GitHub Actions (FIFLP blocks the local IP).
 """
 import os, sys, re, json, time, random, argparse
 from pathlib import Path
-from playwright.sync_api import sync_playwright
 from scripts.acta_parser import parse_acta
+
+# Playwright is only needed at runtime (inside main()). Importing it at module
+# level made the Tests CI pytest job red because the runner doesn't install
+# Playwright. Lazy-import in main() instead.
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -375,6 +378,11 @@ def parse_args():
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
+    # Lazy import — keeps the module importable in environments without playwright
+    # (the Tests CI pytest job doesn't install it).
+    global sync_playwright
+    from playwright.sync_api import sync_playwright  # noqa: F401
+
     args = parse_args()
     season = args.temporada
 

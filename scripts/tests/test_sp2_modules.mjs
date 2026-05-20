@@ -128,3 +128,40 @@ test('timeline: renders icons (goal/yellow/sub) + minutes', () => {
 test('timeline: empty -> empty-state', () => {
   assert.ok(/timeline-empty/.test(renderTimelineHtml([])));
 });
+
+import { aggregatePlayerFromLineups, renderPlayerDetailHtml } from '../../src/plantilla.js';
+
+test('aggregatePlayerFromLineups: counts apps/starters/goals/cards', () => {
+  const lineups = {
+    'A|B|2-1': {
+      home: [{ n:'X', dn:10, r:'starter', g:1, y:0, rd:0 }],
+      away: [{ n:'Y', dn:7,  r:'starter', g:1, y:1, rd:0 }],
+      events: [
+        { t:'goal',s:'h',n:'X',m:5 },
+        { t:'goal',s:'a',n:'Y',m:50 },
+        { t:'yellow',s:'a',n:'Y',m:60 },
+      ],
+    },
+    'A|C|0-0': {
+      home: [{ n:'X', dn:10, r:'sub', g:0, y:0, rd:0 }],
+      away: [],
+      events: [],
+    },
+  };
+  const x = aggregatePlayerFromLineups(lineups, 'X');
+  assert.equal(x.appearances, 2);
+  assert.equal(x.starters, 1);
+  assert.equal(x.goals, 1);
+  assert.equal(x.matches.length, 2);
+  assert.equal(x.matches[0].matchKey, 'A|B|2-1');
+});
+
+test('renderPlayerDetailHtml: shows name, stats, matches', () => {
+  const html = renderPlayerDetailHtml('PEPE', {
+    appearances: 5, starters: 4, goals: 2, yellow: 1, red: 0,
+    matches: [{ matchKey: 'A|B|1-0', side:'home', g:1, y:0, rd:0 }],
+  });
+  assert.ok(/PEPE/.test(html));
+  assert.ok(/<b>5<\/b>\s*PJ/.test(html));
+  assert.ok(/player-detail-match/.test(html));
+});

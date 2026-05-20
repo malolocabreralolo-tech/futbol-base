@@ -75,13 +75,64 @@ export function renderPlantillaTable(rows, opts) {
        + head + body + '</table>';
 }
 
+export function aggregatePlayerFromLineups(lineups, playerName) {
+  let appearances = 0, starters = 0, goals = 0, yellow = 0, red = 0;
+  const matches = [];
+  for (const [matchKey, m] of Object.entries(lineups || {})) {
+    const inHome = (m.home || []).find(p => p.n === playerName);
+    const inAway = (m.away || []).find(p => p.n === playerName);
+    const app = inHome || inAway;
+    if (!app) continue;
+    appearances += 1;
+    if (app.r === 'starter') starters += 1;
+    goals  += app.g  | 0;
+    yellow += app.y  | 0;
+    red    += app.rd | 0;
+    matches.push({ matchKey, side: inHome ? 'home' : 'away',
+                   g: app.g|0, y: app.y|0, rd: app.rd|0 });
+  }
+  return { appearances, starters, goals, yellow, red, matches };
+}
+
+export function renderPlayerDetailHtml(playerName, agg) {
+  if (!agg) return '<div class="plant-empty">Sin datos para este jugador.</div>';
+  const rowsHtml = agg.matches.length === 0
+    ? '<div class="player-detail-no-matches">Sin partidos registrados.</div>'
+    : agg.matches.slice(0, 30).map(r => {
+        const parts = String(r.matchKey).split('|');
+        const home = parts[0] || '', away = parts[1] || '', score = parts[2] || '';
+        const vsHtml = r.side === 'home'
+          ? '<span class="pdm-vs">' + escHtml(home) + ' <i>vs</i> ' + escHtml(away) + '</span>'
+          : '<span class="pdm-vs">' + escHtml(away) + ' <i>vs</i> ' + escHtml(home) + '</span>';
+        return '<div class="player-detail-match">'
+             + vsHtml
+             + '<span class="pdm-score">' + escHtml(score) + '</span>'
+             + (r.g  > 0 ? '<span class="pdm-tag tag-g">⚽' + r.g + '</span>' : '')
+             + (r.y  > 0 ? '<span class="pdm-tag tag-y">🟨' + r.y + '</span>' : '')
+             + (r.rd > 0 ? '<span class="pdm-tag tag-r">🟥' + r.rd + '</span>' : '')
+             + '</div>';
+      }).join('');
+  return '<div class="player-detail">'
+       + '<div class="player-detail-head">' + escHtml(playerName) + '</div>'
+       + '<div class="player-detail-stats">'
+       + '<span><b>' + agg.appearances + '</b> PJ</span>'
+       + '<span><b>' + agg.starters + '</b> TIT</span>'
+       + '<span><b>' + agg.goals + '</b> G</span>'
+       + '<span><b>' + agg.yellow + '</b> A</span>'
+       + '<span><b>' + agg.red + '</b> R</span>'
+       + '</div>'
+       + '<div class="player-detail-matches">' + rowsHtml + '</div>'
+       + '<button class="player-detail-close" type="button">← Cerrar</button>'
+       + '</div>';
+}
+
 export function renderPlantillaInto(container, rows, opts) {
   opts = opts || {};
   const state = { sortKey: 'g', sortDir: 'desc' };
+  const memo = new Map();
   const draw = () => {
     const tableHtml = renderPlantillaTable(rows, Object.assign({}, opts, state));
     const title = opts.title ? '<div class="plant-title">' + escHtml(opts.title) + '</div>' : '';
-    // container.innerHTML mounts the rendered HTML string into the DOM element
     container.innerHTML = title + tableHtml;
     container.querySelectorAll('.plant-th').forEach(th => {
       th.addEventListener('click', (e) => {
@@ -92,6 +143,37 @@ export function renderPlantillaInto(container, rows, opts) {
         draw();
       });
     });
+    if (opts.lineupsForExpand) {
+      container.querySelectorAll('.plant-row').forEach(tr => {
+        tr.addEventListener('click', () => {
+          const next = tr.nextElementSibling;
+          if (next && next.classList && next.classList.contains('player-detail-tr')) {
+            next.remove();
+            tr.classList.remove('plant-row-active');
+            return;
+          }
+          container.querySelectorAll('.player-detail-tr').forEach(n => n.remove());
+          container.querySelectorAll('.plant-row-active').forEach(n => n.classList.remove('plant-row-active'));
+          const name = tr.dataset.playerName;
+          let agg = memo.get(name);
+          if (!agg) { agg = aggregatePlayerFromLineups(opts.lineupsForExpand, name); memo.set(name, agg); }
+          const detailHtml = renderPlayerDetailHtml(name, agg);
+          const detailTr = document.createElement('tr');
+          detailTr.className = 'player-detail-tr';
+          const td = document.createElement('td');
+          td.colSpan = 7;
+          td.innerHTML = detailHtml;
+          detailTr.appendChild(td);
+          tr.parentNode.insertBefore(detailTr, tr.nextSibling);
+          tr.classList.add('plant-row-active');
+          const closeBtn = detailTr.querySelector('.player-detail-close');
+          if (closeBtn) closeBtn.addEventListener('click', () => {
+            detailTr.remove();
+            tr.classList.remove('plant-row-active');
+          });
+        });
+      });
+    }
   };
   draw();
 }

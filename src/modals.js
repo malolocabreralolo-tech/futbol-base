@@ -1,5 +1,6 @@
 import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail, ensureLineups, ensurePlayers, getCurrentSeason } from './state.js';
 import { renderPlantillaInto } from './plantilla.js';
+import { renderLineupsAndTimeline } from './matchdetail-rich.js';
 
 /* ====== MATCH DETAIL MODAL ====== */
 const modalOverlay = document.getElementById('matchModal');
@@ -210,20 +211,28 @@ export function openMatchDetail(match) {
   modalBody.innerHTML = bodyHtml;
   modalOverlay.classList.add('open');
 
-  // Fire-and-forget, same pattern as loadCrossSeasonHistory(): the modal is
-  // already open; fill the goals section once the lazy data resolves.
-  // Stamp the slot with this match's key so a slow first-load fetch can't
-  // inject match A's goals into match B's modal (rapid successive opens).
-  const _detailKey = `${home}|${away}|${hs}-${as}`;
-  const _gSlot = document.getElementById('modalGoalsSection');
-  if (_gSlot) _gSlot.dataset.key = _detailKey;
-  ensureMatchDetail().then(md => {
-    const detail = md && md[_detailKey];
-    if (detail && detail.g && detail.g.length > 0) {
-      const slot = document.getElementById('modalGoalsSection');
-      if (slot && slot.dataset.key === _detailKey) {
-        slot.innerHTML = buildGoalsHtml(detail, venue);
+  // SP-2: add the lineups+timeline section above the existing goals section.
+  const goalsSection = document.getElementById('modalGoalsSection');
+  if (goalsSection && !document.getElementById('modalLineupsSection')) {
+    const lineupsHost = document.createElement('div');
+    lineupsHost.id = 'modalLineupsSection';
+    lineupsHost.className = 'match-rich-host';
+    goalsSection.parentNode.insertBefore(lineupsHost, goalsSection);
+  }
+  const season = getCurrentSeason();
+  const matchKey = match.home + '|' + match.away + '|' + match.hs + '-' + match.as;
+  Promise.all([ensureLineups(season), ensureMatchDetail()]).then(([lineups, details]) => {
+    const lineupsHost = document.getElementById('modalLineupsSection');
+    const m = lineups && lineups[matchKey];
+    if (lineupsHost && m) renderLineupsAndTimeline(lineupsHost, m);
+    const goalsHost = document.getElementById('modalGoalsSection');
+    if (goalsHost && (!m || !(m.events && m.events.length > 0))) {
+      const detail = details && details[matchKey];
+      if (detail && detail.g && detail.g.length > 0) {
+        goalsHost.innerHTML = buildGoalsHtml(detail, match.venue);
       }
+    } else if (goalsHost) {
+      goalsHost.innerHTML = '';
     }
   });
 }

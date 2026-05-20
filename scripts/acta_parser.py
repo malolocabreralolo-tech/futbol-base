@@ -56,9 +56,14 @@ _RE_NTYPE = re.compile(r'ntype\("[^"]+",\s*(\d+),\s*(\d+),\s*"[^"]+"\)')
 
 
 def _decode_ntype(match: re.Match) -> int:
-    """Return the digit encoded by a single ntype() call."""
+    """Decode the obfuscated score digit. FIFLP serves digits via `ntype(i, n)`
+    JS calls; the lookup table has 4 rows of 10. Defensive: if i/n exceed the
+    table, return 0 (the visible HTML wins via the fallback path)."""
     n, i = int(match.group(1)), int(match.group(2))
-    return _NTYPE_D[(i * 10) + n]
+    idx = (i * 10) + n
+    if idx < 0 or idx >= len(_NTYPE_D):
+        return 0
+    return _NTYPE_D[idx]
 
 
 # ---------------------------------------------------------------------------
@@ -474,7 +479,8 @@ def parse_acta(html: str) -> dict:
     """Parse a FIFLP acta HTML string.
 
     Returns dict with keys: header, lineups, events, staff.
-    All minute values are None (CSS obfuscation; see module docstring).
+    Most minute values are None; some recovered from inline `<style>` rules
+    when present (see module docstring).
     """
     header = _parse_header(html)
     lineups = _parse_lineups(html)

@@ -174,10 +174,12 @@ class TestGoals:
         assert any("CABRERA RIVERO" in n for n in names)
 
     def test_goals_consistency_with_score(self, modern):
+        """Both home and away goal counts must match the header score."""
         header = modern["header"]
         home_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "home")
         away_goals = sum(1 for e in modern["events"] if e["kind"] == "goal" and e["side"] == "away")
-        assert home_goals == header["home_score"] or away_goals == header["away_score"]
+        assert home_goals == header["home_score"] and away_goals == header["away_score"], \
+            f"home {home_goals} vs {header['home_score']}, away {away_goals} vs {header['away_score']}"
 
 
 # ─── Task 7: Substitutions ───────────────────────────────────────────────────
@@ -256,10 +258,10 @@ class TestStaff:
         assert "SUÁREZ" in s["referee"].upper() or "SUAREZ" in s["referee"].upper()
 
     def test_staff_coaches_no_presenta(self, modern):
-        """Both coaches say 'No presenta' in acta_modern -> stored as None."""
+        """acta_modern says 'No presenta' for both coaches → parser stores None."""
         s = modern["staff"]
-        assert s["coach_home"] is None or isinstance(s["coach_home"], str)
-        assert s["coach_away"] is None or isinstance(s["coach_away"], str)
+        assert s["coach_home"] is None, f"expected None, got {s['coach_home']!r}"
+        assert s["coach_away"] is None, f"expected None, got {s['coach_away']!r}"
 
     def test_staff_staff_dict_complete(self, antiguo):
         assert "referee" in antiguo["staff"]

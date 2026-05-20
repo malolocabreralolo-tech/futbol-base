@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for T4-T7: header + lineups + goals + substitutions."""
+"""Tests for T4-T8: header + lineups + goals + subs + cards."""
 import os
 import pytest
 FIX = os.path.join(os.path.dirname(__file__), "fixtures")
@@ -128,27 +128,20 @@ class TestGoals:
 class TestSubstitutions:
     def test_subs_modern_no_crash(self, modern):
         """acta_modern has no substitutions — parser must not crash."""
-        subs_in = [e for e in modern["events"] if e["kind"] == "sub_in"]
-        subs_out = [e for e in modern["events"] if e["kind"] == "sub_out"]
-        assert len(subs_in) == 0
-        assert len(subs_out) == 0
+        assert len([e for e in modern["events"] if e["kind"] == "sub_in"]) == 0
+        assert len([e for e in modern["events"] if e["kind"] == "sub_out"]) == 0
 
     def test_subs_antiguo_no_crash(self, antiguo):
-        """acta_2024_25 has no substitutions — parser must not crash."""
-        subs_in = [e for e in antiguo["events"] if e["kind"] == "sub_in"]
-        subs_out = [e for e in antiguo["events"] if e["kind"] == "sub_out"]
-        assert len(subs_in) == 0
-        assert len(subs_out) == 0
+        assert len([e for e in antiguo["events"] if e["kind"] == "sub_in"]) == 0
+        assert len([e for e in antiguo["events"] if e["kind"] == "sub_out"]) == 0
 
     def test_subs_balance_when_present(self, modern):
-        """When subs exist, sub_in count must equal sub_out count."""
         subs_in = [e for e in modern["events"] if e["kind"] == "sub_in"]
         subs_out = [e for e in modern["events"] if e["kind"] == "sub_out"]
         if subs_in or subs_out:
             assert len(subs_in) == len(subs_out)
 
     def test_subs_pair_same_side(self, modern):
-        """pair_idx: sub_in and sub_out with same pair_idx must be same side."""
         subs_in = [e for e in modern["events"] if e["kind"] == "sub_in"]
         subs_out = [e for e in modern["events"] if e["kind"] == "sub_out"]
         for ev in subs_in:
@@ -157,7 +150,27 @@ class TestSubstitutions:
                 if others:
                     assert ev["side"] == others[0]["side"]
 
-    def test_subs_section_recognized_if_present(self, modern, modern_html):
-        """If 'Cambios'/'Sustituciones' is in the fixture, no crash."""
-        if "cambios" in modern_html.lower() or "sustituciones" in modern_html.lower():
+
+class TestCards:
+    def test_cards_modern_no_crash(self, modern):
+        """acta_modern has no cards section — parser must return empty."""
+        assert len([e for e in modern["events"] if e["kind"] == "yellow"]) == 0
+        assert len([e for e in modern["events"] if e["kind"] == "red"]) == 0
+
+    def test_cards_antiguo_no_crash(self, antiguo):
+        assert len([e for e in antiguo["events"] if e["kind"] == "yellow"]) == 0
+        assert len([e for e in antiguo["events"] if e["kind"] == "red"]) == 0
+
+    def test_cards_shape_when_present(self, modern):
+        """If cards exist, verify side and player_name structure."""
+        for ev in modern["events"]:
+            if ev["kind"] in ("yellow", "red"):
+                assert ev["side"] in ("home", "away")
+                assert "," in ev["player_name"]
+                assert ev["minute"] is None or (1 <= ev["minute"] <= 200)
+
+    def test_cards_section_recognized_if_present(self, modern, modern_html):
+        """If 'Amonestaciones'/'Tarjetas' is in the fixture, no crash."""
+        raw = modern_html.lower()
+        if "tarjet" in raw or "amonest" in raw:
             assert isinstance(modern["events"], list)

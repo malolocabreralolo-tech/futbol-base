@@ -220,3 +220,43 @@ def test_actas_migration_idempotent(tmp_path):
     assert {'players', 'appearances', 'match_events', 'match_staff'} <= tables
     cols = {r[1] for r in conn.execute("PRAGMA table_info(matches)")}
     assert 'cod_acta' in cols
+
+
+def test_generate_lineups_js_shape(tmp_path):
+    """generate_lineups_js produces a const var with the documented shape."""
+    import shutil
+    import sqlite3
+    import json
+    import re
+    from scripts.migrate_actas_schema import migrate
+    from scripts.import_fiflp_actas import import_raw
+    from scripts.generate_js import generate_lineups_js
+    db = tmp_path / "fb.db"
+    shutil.copy(DB_PATH, db)
+    conn = sqlite3.connect(str(db))
+    migrate(conn)
+    # use the importer test fixture pattern (inline mini raw)
+    real = conn.execute("""SELECT m.id, s.name, t1.name, t2.name, m.date, m.home_score, m.away_score
+        FROM matches m JOIN groups g ON g.id=m.group_id JOIN seasons s ON s.id=g.season_id
+        JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
+        WHERE m.home_score IS NOT NULL LIMIT 1""").fetchone()
+    raw = {str(real[0]+900000): {
+        "cod_acta": real[0]+900000,
+        "header": {"season": real[1].replace("-", "/"), "jornada": "1", "date": real[4],
+                   "home_team": real[2], "away_team": real[3],
+                   "home_score": real[5], "away_score": real[6], "competition": "x"},
+        "lineups": {"home": [{"name": "PEREZ, JUAN", "dorsal": 1, "role": "starter"}],
+                    "away": [{"name": "GOMEZ, RAUL", "dorsal": 1, "role": "starter"}]},
+        "events": [{"kind": "goal", "side": "home", "player_name": "PEREZ, JUAN", "minute": 10, "goal_type": "normal"}],
+        "staff": {"referee": "R", "coach_home": "H", "coach_away": "A"},
+    }}
+    p = tmp_path / "raw.json"
+    p.write_text(json.dumps(raw))
+    import_raw(conn, str(p))
+    js = generate_lineups_js(conn, real[1])
+    # Has a const var and our match key
+    assert re.search(r"const LINEUPS_[\w]+\s*=", js)
+    # Contains both player names (acta lineups present)
+    assert "PEREZ" in js and "GOMEZ" in js
+    # Contains an events array with at least one goal
+    assert '"goal"' in js or "'goal'" in js

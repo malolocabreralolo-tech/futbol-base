@@ -1,1 +1,184 @@
-{}
+{
+  "125780": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "125781": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "125782": {
+    "header": {
+      "away_score": null,
+      "away_team": "GARITA \"A\", C.F.S. LA A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "07-11-2021",
+      "home_score": null,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "1",
+      "season": "2021/2022"
+    },
+    "reason": "no candidate match"
+  },
+  "125783": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "125784": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "125785": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "125786": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "125787": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "125788": {
+    "header": {
+      "away_score": 2,
+      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "13-11-2021",
+      "home_score": 1,
+      "home_team": "HUESAS \"A\", U.D. LAS A",
+      "jornada": "2",
+      "season": "2021/2022"
+    },
+    "reason": "no candidate match"
+  },
+  "125789": {
+    "header": {
+      "away_score": 3,
+      "away_team": "HEIDELBERG, C.F.",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "13-11-2021",
+      "home_score": 9,
+      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "jornada": "2",
+      "season": "2021/2022"
+    },
+    "reason": "no candidate match"
+  },
+  "125790": {
+    "header": {
+      "away_score": null,
+      "away_team": "VICTORIA \"A\", REAL CLUB A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "13-11-2021",
+      "home_score": 0,
+      "home_team": "GARITA \"A\", C.F.S. LA A",
+      "jornada": "2",
+      "season": "2021/2022"
+    },
+    "reason": "no candidate match"
+  },
+  "125791": {
+    "header": {
+      "away_score": 0,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "13-11-2021",
+      "home_score": 12,
+      "home_team": "PALMAS, U.D. LAS",
+      "jornada": "2",
+      "season": "2021/2022"
+    },
+    "reason": "no candidate match"
+  },
+  "125793": {
+    "header": {
+      "away_score": null,
+      "away_team": "ACODETTI C.F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "14-11-2021",
+      "home_score": 2,
+      "home_team": "ARUCAS C.F. \"A\" A",
+      "jornada": "2",
+      "season": "2021/2022"
+    },
+    "reason": "no candidate match"
+  },
+  "125795": {
+    "header": {
+      "away_score": null,
+      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "12-11-2021",
+      "home_score": 1,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "2",
+      "season": "2021/2022"
+    },
+    "reason": "no candidate match"
+  }
+}

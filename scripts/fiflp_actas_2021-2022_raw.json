@@ -1,0 +1,1671 @@
+{
+  "125781": {
+    "header": {
+      "season": null,
+      "jornada": null,
+      "date": null,
+      "home_team": null,
+      "away_team": null,
+      "home_score": null,
+      "away_score": null,
+      "competition": null
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125781,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "1"
+    }
+  },
+  "125783": {
+    "header": {
+      "season": null,
+      "jornada": null,
+      "date": null,
+      "home_team": null,
+      "away_team": null,
+      "home_score": null,
+      "away_score": null,
+      "competition": null
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125783,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "1"
+    }
+  },
+  "125784": {
+    "header": {
+      "season": null,
+      "jornada": null,
+      "date": null,
+      "home_team": null,
+      "away_team": null,
+      "home_score": null,
+      "away_score": null,
+      "competition": null
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125784,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "1"
+    }
+  },
+  "125785": {
+    "header": {
+      "season": null,
+      "jornada": null,
+      "date": null,
+      "home_team": null,
+      "away_team": null,
+      "home_score": null,
+      "away_score": null,
+      "competition": null
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125785,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "1"
+    }
+  },
+  "125786": {
+    "header": {
+      "season": null,
+      "jornada": null,
+      "date": null,
+      "home_team": null,
+      "away_team": null,
+      "home_score": null,
+      "away_score": null,
+      "competition": null
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125786,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "1"
+    }
+  },
+  "125780": {
+    "header": {
+      "season": null,
+      "jornada": null,
+      "date": null,
+      "home_team": null,
+      "away_team": null,
+      "home_score": null,
+      "away_score": null,
+      "competition": null
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125780,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "1"
+    }
+  },
+  "125787": {
+    "header": {
+      "season": null,
+      "jornada": null,
+      "date": null,
+      "home_team": null,
+      "away_team": null,
+      "home_score": null,
+      "away_score": null,
+      "competition": null
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125787,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "1"
+    }
+  },
+  "125782": {
+    "header": {
+      "season": "2021/2022",
+      "jornada": "1",
+      "date": "07-11-2021",
+      "home_team": "GAREPA VIERA, C.F.",
+      "away_team": "GARITA \"A\", C.F.S. LA A",
+      "home_score": null,
+      "away_score": null,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "PEDROSA ROBAINA, DYLAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "BOLAÑOS GUTIERREZ, ALVARO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "MORALES VEGA, HUGO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "DOMINGUEZ GARCIA, PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "SMITH PALAVECINO, DECOURCY EVERTON",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "ZAPATA RODRIGUEZ, YURIAN JESUS",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "CURBELO GONZALEZ, JAIME",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "DIAZ REYES, IKER THIAGO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "GARCIA PEREZ, DAREY",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "DE LLANOS ROMERO, EIRIK",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "GARCIA DOCE, LAZARO EYDAN",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "CASTELLANO HERNANDEZ, PABLO",
+          "role": "sub"
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "RECIO NOE, RAUL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "LOPEZ SANTANA, HIMAR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "HERNANDEZ GARCIA, GABRIEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "AGUIAR MARTIN, PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "PEREZ LOPEZ, AIMAR AYOZE",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "SANTANA RAMIREZ, EIDAN JOSE",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "RODRIGUEZ ALEJANDRO, CARLOS",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "FLORIDO GONZALEZ, ADRIAN",
+          "role": "sub"
+        },
+        {
+          "dorsal": 13,
+          "name": "SUAREZ SUAREZ, DYLAN",
+          "role": "sub"
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "DE LLANOS ROMERO, EIRIK",
+        "minute": 4,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "MORALES VEGA, HUGO",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "BOLAÑOS GUTIERREZ, ALVARO",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "MORALES VEGA, HUGO",
+        "minute": 31,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "DE LLANOS ROMERO, EIRIK",
+        "minute": 33,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "AGUIAR MARTIN, PABLO",
+        "minute": null,
+        "goal_type": "normal"
+      }
+    ],
+    "staff": {
+      "referee": "SUÁREZ PERDOMO, PEDRO DAVID",
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125782,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "1"
+    }
+  },
+  "125795": {
+    "header": {
+      "season": "2021/2022",
+      "jornada": "2",
+      "date": "12-11-2021",
+      "home_team": "ATLETICO G.C., C.F.",
+      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "home_score": 1,
+      "away_score": null,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "TOMENO CHIRINO, NEYMAR MANUEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "COLLADO VIEJO, ZULIVAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "ORTEGA MARRERO, LUIS MIGUEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "BOSA VIERA, RAUL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "HERNANDEZ HERNANDEZ, GABRIEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "DOMINGUEZ CASTELLANO, BORJA",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "SANTOS RUIZ, TAYLOR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "MARTIN RIVERO, GUILLERMO YAHEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "SANTANA MELIAN, ADRIEL",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "ALVARADO GOMEZ, HUGO DANIEL",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "TEJERA GARCIA, SAMUEL",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "SANTANA LORENZO, ANDY DEL CRISTO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 13,
+          "name": "PERDOMO ARENCIBIA, GARIRAYGUA DE JESUS",
+          "role": "sub"
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "RIAÑO TORENA, JOSE ANGEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "YAHEL ALEJANDRO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "VELAZQUEZ HERNANDEZ, JUAN PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "GORDILLO URBANO, GUAYRE",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "ADAMO, ACHILLE",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "LEO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "EGGELINE MORALES, HADES",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "ALONSO QUINTANA, DARIO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 10,
+          "name": "SANTANA LOPEZ, JOSE IMAR",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "EGGELINE MORALES, LEE",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "FERRERA RODRIGUEZ, JEYKO",
+          "role": "sub"
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "SANTANA LOPEZ, JOSE IMAR",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "ALONSO QUINTANA, DARIO",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "ADAMO, ACHILLE",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "ORTEGA MARRERO, LUIS MIGUEL",
+        "minute": null,
+        "goal_type": "normal"
+      }
+    ],
+    "staff": {
+      "referee": "GONZÁLEZ PÁEZ, MARIO",
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125795,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "2"
+    }
+  },
+  "125789": {
+    "header": {
+      "season": "2021/2022",
+      "jornada": "2",
+      "date": "13-11-2021",
+      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "away_team": "HEIDELBERG, C.F.",
+      "home_score": 9,
+      "away_score": 3,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 3,
+          "name": "SEISDEDOS SUAREZ, ANDER",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "ROMAN ARISTI, PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "SEISDEDOS SUAREZ, ION",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "MORENO ARBELO, JORGE",
+          "role": "starter"
+        },
+        {
+          "dorsal": 10,
+          "name": "MENDOZA ALONSO, LUCAS",
+          "role": "starter"
+        },
+        {
+          "dorsal": 11,
+          "name": "ALAMO PERCAZ, ALVARO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 13,
+          "name": "SANTANA SANTIAGO, CESAR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 14,
+          "name": "CASTELLANO CABRERA, FRANCISCO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "TEJEDOR FERNANDEZ, FERNANDO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 6,
+          "name": "BETANCOR MENDOZA, GABRIEL",
+          "role": "sub"
+        },
+        {
+          "dorsal": 9,
+          "name": "SANTANA MUÑOZ, DIEGO JOSE",
+          "role": "sub"
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "JIMENEZ SOSA, IZAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "MARTIN HERNANDEZ, ALEJANDRO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "DEL CASTILLO-OLIVARES CEREZO, ANTONIO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "CORCOLES CUYAS, CARLOS",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "RODRIGUEZ-BATLLORI RAMIREZ, GONZALO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "ACOSTA HERNANDEZ, AITOR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 14,
+          "name": "OJEDA BUSTOS, CARLOS",
+          "role": "starter"
+        },
+        {
+          "dorsal": 15,
+          "name": "NAVARRO LIDÒN, DANIEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "NOVALBOS PONTE, ALVARO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 7,
+          "name": "LLINARES MELIAN, LUIS",
+          "role": "sub"
+        },
+        {
+          "dorsal": 8,
+          "name": "SANTANA ARIZA, LUCAS",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "ACOSTA HERNANDEZ, HUGO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "BERNARD RUIZ, JORGE",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "GOMEZ INFANTE, CARLOS",
+          "role": "sub"
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "ALAMO PERCAZ, ALVARO",
+        "minute": 3,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "SANTANA ARIZA, LUCAS",
+        "minute": 3,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "MENDOZA ALONSO, LUCAS",
+        "minute": 31,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "SANTANA MUÑOZ, DIEGO JOSE",
+        "minute": 37,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "ALAMO PERCAZ, ALVARO",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "ALAMO PERCAZ, ALVARO",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "LLINARES MELIAN, LUIS",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "RODRIGUEZ-BATLLORI RAMIREZ, GONZALO",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "CASTELLANO CABRERA, FRANCISCO",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "CASTELLANO CABRERA, FRANCISCO",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "CASTELLANO CABRERA, FRANCISCO",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "MENDOZA ALONSO, LUCAS",
+        "minute": null,
+        "goal_type": "normal"
+      }
+    ],
+    "staff": {
+      "referee": "ORTEGA GARCÍA, PEDRO JESÚS",
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125789,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "2"
+    }
+  },
+  "125791": {
+    "header": {
+      "season": "2021/2022",
+      "jornada": "2",
+      "date": "13-11-2021",
+      "home_team": "PALMAS, U.D. LAS",
+      "away_team": "GAREPA VIERA, C.F.",
+      "home_score": 12,
+      "away_score": 0,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "ROSSI, JONAS",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "MORENO GUTIERREZ, YADIEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "CRUZ MEDINA, NEIZAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "RODRIGUEZ HERNANDEZ, BRIAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "GUERRA SANTANA, ADRIAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "AQUINO CABRERA, CONNOR FEDERICO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "TRUJILLO HERNANDEZ, CHRISTIAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "TANDON SANSO RUBERT, LUIS",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "PONCE PEREZ, ADRIANO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "GUEDES HERNANDEZ, NEYMAR",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "LLARENA MORENO, DANIEL",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "PEREZ PEREZ, HUGO NICOLAS",
+          "role": "sub"
+        },
+        {
+          "dorsal": 13,
+          "name": "ARMAS BARRA, DIEGO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 14,
+          "name": "TRAVIESO RUANO, BORJA",
+          "role": "sub"
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "PEDROSA ROBAINA, DYLAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "DOMINGUEZ GARCIA, PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "CASTELLANO HERNANDEZ, PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "CURBELO GONZALEZ, JAIME",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "DIAZ REYES, IKER THIAGO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "DE LLANOS ROMERO, EIRIK",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "MORALES VEGA, HUGO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "GARCIA PEREZ, DAREY",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "GARCIA DOCE, LAZARO EYDAN",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "BOLAÑOS GUTIERREZ, ALVARO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "ZAPATA RODRIGUEZ, YURIAN JESUS",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "SMITH PALAVECINO, DECOURCY EVERTON",
+          "role": "sub"
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "PONCE PEREZ, ADRIANO",
+        "minute": 0,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "GUERRA SANTANA, ADRIAN",
+        "minute": 0,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "TANDON SANSO RUBERT, LUIS",
+        "minute": 0,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "AQUINO CABRERA, CONNOR FEDERICO",
+        "minute": 1,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "GUERRA SANTANA, ADRIAN",
+        "minute": 7,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "TANDON SANSO RUBERT, LUIS",
+        "minute": 11,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "LLARENA MORENO, DANIEL",
+        "minute": 32,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "TRUJILLO HERNANDEZ, CHRISTIAN",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "PONCE PEREZ, ADRIANO",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "GUERRA SANTANA, ADRIAN",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "GUEDES HERNANDEZ, NEYMAR",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "TANDON SANSO RUBERT, LUIS",
+        "minute": null,
+        "goal_type": "normal"
+      }
+    ],
+    "staff": {
+      "referee": "ÁLAMO MUÑOZ, ROBERTO ADRIÁN",
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125791,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "2"
+    }
+  },
+  "125790": {
+    "header": {
+      "season": "2021/2022",
+      "jornada": "2",
+      "date": "13-11-2021",
+      "home_team": "GARITA \"A\", C.F.S. LA A",
+      "away_team": "VICTORIA \"A\", REAL CLUB A",
+      "home_score": 0,
+      "away_score": null,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "RECIO NOE, RAUL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "LOPEZ SANTANA, HIMAR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "HERNANDEZ GARCIA, GABRIEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "AGUIAR MARTIN, PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "PEREZ LOPEZ, AIMAR AYOZE",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "SANTANA RAMIREZ, EIDAN JOSE",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "RODRIGUEZ ALEJANDRO, CARLOS",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "SUAREZ SUAREZ, DYLAN",
+          "role": "sub"
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "MEDINA SANTANA, JONAS",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "BOLAÑOS RODRIGUEZ, NAUZET",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "CEBALLOS ACOSTA, GABRIEL FERNANDO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "MARTIN DOMINGUEZ, ALVARO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "BATISTA RIVERO, ALBERTO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "RUIZ DE MARTIN-ESTEBAN DIAZ, FABIO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "TRUJILLO RIVERO, VICTORIA",
+          "role": "sub"
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "RUIZ DE MARTIN-ESTEBAN DIAZ, FABIO",
+        "minute": 31,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "RUIZ DE MARTIN-ESTEBAN DIAZ, FABIO",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "CEBALLOS ACOSTA, GABRIEL FERNANDO",
+        "minute": null,
+        "goal_type": "normal"
+      }
+    ],
+    "staff": {
+      "referee": "DOMINGUEZ MONZON, CARLOS JAVIER",
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125790,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "2"
+    }
+  },
+  "125788": {
+    "header": {
+      "season": "2021/2022",
+      "jornada": "2",
+      "date": "13-11-2021",
+      "home_team": "HUESAS \"A\", U.D. LAS A",
+      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "home_score": 1,
+      "away_score": 2,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 2,
+          "name": "ROBAINA LUCANO, FRANCISCO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "SUAREZ RODRIGUEZ, IKER JOSE",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "HERNANDEZ LAMAS, ELOY AZAEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "OJEDA ALBORS, LUIS ANGEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 10,
+          "name": "ROJAS HERNANDEZ, ALFREDO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 13,
+          "name": "SANTANA GARCIA, SEBASTIAN ALEXANDER",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "NARANJO DIAZ, SAMUEL",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "GONZALEZ DAVIDA, ALBERTO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 14,
+          "name": "MENA CASTRO, JOSE JAVIER",
+          "role": "sub"
+        },
+        {
+          "dorsal": 15,
+          "name": "AARON",
+          "role": "sub"
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 2,
+          "name": "TAWIAH ABEKAH, JAMES",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "SUAREZ BRITO, YAEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "BOLAÑOS SUAREZ, MARIO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 10,
+          "name": "RUIZ RIVERA, JUAN PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "SOSA NOE, DAREK JOSE",
+          "role": "sub"
+        },
+        {
+          "dorsal": 7,
+          "name": "TRUJILLO RUIZ, THIAGO YAEL",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "CABRERA VEGA, YAHEL JOSE",
+          "role": "sub"
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "OJEDA ALBORS, LUIS ANGEL",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "RUIZ RIVERA, JUAN PABLO",
+        "minute": null,
+        "goal_type": "normal"
+      }
+    ],
+    "staff": {
+      "referee": "PATINO PALLARES, ALEX",
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125788,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "2"
+    }
+  },
+  "125792": {
+    "header": {
+      "season": "2021/2022",
+      "jornada": "2",
+      "date": "14-11-2021",
+      "home_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "away_team": "TAMARACEITE, U.D.",
+      "home_score": 5,
+      "away_score": 0,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "RODRIGUEZ DOMINGUEZ, ABEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "GUILLEN QUINTERO, VICTOR MANUEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "MARRERO DELGADO, AYMAR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "JUAREZ SANTANA, ADRIAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "HERNANDEZ ARAUJO, TOMAS",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "DE LEON LUZARDO, ABRAHAM",
+          "role": "starter"
+        },
+        {
+          "dorsal": 11,
+          "name": "LARA PALMES, NESTOR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 14,
+          "name": "FERRER VIERA, NEIZAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "ALFONSO HERRERA, ALVARO JUNIOR",
+          "role": "sub"
+        },
+        {
+          "dorsal": 8,
+          "name": "DAMASO SILVA, IZAN",
+          "role": "sub"
+        },
+        {
+          "dorsal": 9,
+          "name": "DURAN JIMENEZ, DENNIS",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "MARQUEZ JIMENEZ, JAIME",
+          "role": "sub"
+        },
+        {
+          "dorsal": 15,
+          "name": "BETHENCOURT TREJO, NEYMAR",
+          "role": "sub"
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "VEGA HERNANDEZ, NAUZET",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "URQUIOLA GONZALEZ, RUBEN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "SAMPEDRO RODRIGUEZ, PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "HERNANDEZ HERNANDEZ, GABRIEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "JIMENEZ RAMIREZ, DORIAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "RAMIREZ GARCIA, LORENZO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "ALEMAN SANTANA, ALVARO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "VIERA CANALES, BRIAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "ALEJANDRO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "CANO SEGURA, HUGO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "FALCON MORENO, ALEJANDRO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "SANTANA TEJERA, DYLAN",
+          "role": "sub"
+        },
+        {
+          "dorsal": 13,
+          "name": "RAMIREZ GUTIERREZ, EIDAN",
+          "role": "sub"
+        },
+        {
+          "dorsal": 14,
+          "name": "BOLAÑOS VIZCAINO, HUGO",
+          "role": "sub"
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "ALFONSO HERRERA, ALVARO JUNIOR",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "FERRER VIERA, NEIZAN",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "HERNANDEZ ARAUJO, TOMAS",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "FERRER VIERA, NEIZAN",
+        "minute": 32,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "ALFONSO HERRERA, ALVARO JUNIOR",
+        "minute": null,
+        "goal_type": "normal"
+      }
+    ],
+    "staff": {
+      "referee": "BARRIOS RODRÍGUEZ, CARELY MARÍA",
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125792,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "2"
+    }
+  },
+  "125793": {
+    "header": {
+      "season": "2021/2022",
+      "jornada": "2",
+      "date": "14-11-2021",
+      "home_team": "ARUCAS C.F. \"A\" A",
+      "away_team": "ACODETTI C.F. \"A\" A",
+      "home_score": 2,
+      "away_score": null,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "CARREÑO SANTANA, IVAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "GONZALEZ ALONSO, HIMAR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "BERNABIDE RAMIREZ, ROMAN AGUSTIN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "MONAGAS REYES, HIMAR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "GONZALEZ MEDINA, AITOR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "VILABOA GARCIA, ENZO GABRIEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "SUAREZ NAVARRO, PABLO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 10,
+          "name": "NAVAJO NAVARRO, DIEGO",
+          "role": "sub"
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "CORZO VELAZQUEZ, ADRIAN",
+          "role": "starter"
+        },
+        {
+          "dorsal": 2,
+          "name": "RODRIGUEZ CURBELO, IKER ANDRES",
+          "role": "starter"
+        },
+        {
+          "dorsal": 3,
+          "name": "NARANJO SANCHEZ, NEYMAR ALEXANDRE",
+          "role": "starter"
+        },
+        {
+          "dorsal": 4,
+          "name": "FALCON MARTIN, AIMAR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 5,
+          "name": "HERNANDEZ NAVARRO, AITOR",
+          "role": "starter"
+        },
+        {
+          "dorsal": 6,
+          "name": "MARRERO SUAREZ, NOAH",
+          "role": "starter"
+        },
+        {
+          "dorsal": 7,
+          "name": "QUINTANA VALIDO, HUGO",
+          "role": "starter"
+        },
+        {
+          "dorsal": 8,
+          "name": "ALVARADO CAPELLA, MIKEL",
+          "role": "starter"
+        },
+        {
+          "dorsal": 9,
+          "name": "DOMINGUEZ ALBA, IAN",
+          "role": "sub"
+        },
+        {
+          "dorsal": 10,
+          "name": "REYES ORTEGA, DARIO",
+          "role": "sub"
+        },
+        {
+          "dorsal": 11,
+          "name": "LOPEZ DIAZ, JOEL",
+          "role": "sub"
+        },
+        {
+          "dorsal": 12,
+          "name": "HERNANDEZ PEÑA, ADRIAN",
+          "role": "sub"
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "MONAGAS REYES, HIMAR",
+        "minute": 2,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "MARRERO SUAREZ, NOAH",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "DOMINGUEZ ALBA, IAN",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "HERNANDEZ NAVARRO, AITOR",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "NARANJO SANCHEZ, NEYMAR ALEXANDRE",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "VILABOA GARCIA, ENZO GABRIEL",
+        "minute": null,
+        "goal_type": "normal"
+      }
+    ],
+    "staff": {
+      "referee": "MEJÍAS GARCÍA, ANTONIO JOSÉ",
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 125793,
+    "enumeration": {
+      "comp_id": "891",
+      "grupo": "125780",
+      "jornada": "2"
+    }
+  }
+}

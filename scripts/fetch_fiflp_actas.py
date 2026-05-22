@@ -298,24 +298,14 @@ def enumerate_actas_cascade(page, season, comp_id):
 
 # ── Fetch + parse single acta ─────────────────────────────────────────────────
 
-def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None):
-    """Fetch one acta page (frameset + frames), optionally dump fixture, parse.
-
-    The acta lives in a frameset: we capture main frame content then
-    concatenate each child frame's HTML (marked with <!--FRAME url-->).
-    If dump_fixture_for matches cod_acta the raw HTML is written to
-    scripts/tests/fixtures/acta_<cod>.html for offline TDD use.
-
-    Returns parsed dict from acta_parser.parse_acta, or None on failure.
-    """
+def _fetch_acta_html(page, cod_acta):
+    """Navigate to one acta URL and return concatenated frameset HTML, or '' on goto failure."""
     url = (f"{BASE}/NFG_CmpPartido?cod_primaria=1000120"
            f"&CodActa={cod_acta}&cod_acta={cod_acta}")
     if not goto(page, url):
-        return None
+        return ""
     # Frameset actas need a longer settle: the content frame issues its own
-    # request after the outer frameset loads. 2s was too short — the smoke
-    # run got empty parses because the inner frame's body was not yet there
-    # when we called page.content(). 4s tracks the fixture-capture timing
+    # request after the outer frameset loads. 4s tracks the fixture-capture timing
     # that gave a valid parse.
     page.wait_for_timeout(4000)
     html = page.content()
@@ -326,6 +316,35 @@ def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None):
             html += "\n<!--FRAME " + fr.url + "-->\n" + fr.content()
         except Exception:
             pass
+    return html
+
+
+def _is_empty_html(html):
+    """FIFLP sometimes returns ~40-byte blank framesets as anti-scrape. Detect it."""
+    return len(html) < 200 or "<body></body>" in html or "<body> </body>" in html
+
+
+def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None, max_retries=2):
+    """Fetch one acta (with retry-on-empty), optionally dump fixture, parse.
+
+    FIFLP returns ~40-byte empty framesets ~50% of the time as anti-scrape. We
+    retry up to `max_retries` times with a longer delay before giving up. This
+    multiplies the harvest yield meaningfully (probe showed ~50% loss without
+    retry; with 2 retries the loss drops substantially).
+
+    Returns parsed dict from acta_parser.parse_acta, or None on goto failure.
+    """
+    html = ""
+    for attempt in range(max_retries + 1):
+        html = _fetch_acta_html(page, cod_acta)
+        if not html:
+            # goto itself failed — abandon (network-level), no point retrying
+            return None
+        if not _is_empty_html(html):
+            break  # got real content
+        if attempt < max_retries:
+            # Longer cool-down before retry; FIFLP rate-limiter may relax
+            delay(8 + 4 * attempt)
     # "first" sentinel dumps whatever the first acta we visit is — useful when
     # we don't yet know a good CodActa to target for diagnosis.
     if dump_fixture_for and (
@@ -336,15 +355,14 @@ def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None):
         out_path = fix_dir / f"acta_live_{cod_acta}.html"
         out_path.write_text(html, encoding="utf-8")
         print(f"  dumped fixture: {out_path}")
-        # Also auto-dump if the parsed header is all-None (parser failed silently)
     try:
         result = parse_acta(html)
     except Exception as ex:
         print(f"  ! parse error acta={cod_acta}: {ex}")
         return None
     # Auto-diagnostic: if every header field is None and lineups are empty, the
-    # parser silently produced nothing. Save the HTML so we can see what FIFLP
-    # actually served. Limit to first failure per session via a function-attr.
+    # parser silently produced nothing. Save the HTML for one occurrence per
+    # session so we can see what FIFLP actually served.
     h = result.get("header") or {}
     if all(h.get(k) is None for k in ("season", "home_team", "away_team", "date")) \
        and not result.get("lineups", {}).get("home") \
@@ -353,7 +371,7 @@ def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None):
         fix_dir.mkdir(parents=True, exist_ok=True)
         out_path = fix_dir / f"acta_failed_{cod_acta}.html"
         out_path.write_text(html, encoding="utf-8")
-        print(f"  ! parse failed silently — dumped HTML to {out_path}")
+        print(f"  ! parse failed silently (after {max_retries} retries) — dumped HTML to {out_path}")
         fetch_and_parse_acta._dumped_failure = True
     return result
 

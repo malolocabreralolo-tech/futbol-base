@@ -74,28 +74,71 @@ jobs:
           fi
       - name: Commit
         env:
+          PYTHONPATH: ${{ github.workspace }}
           TEMP_INPUT: ${{ inputs.temporada }}
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           shopt -s nullglob
+
+          # Snapshot OUR raw_json + unmatched before any rebase/reset.
+          # We may need to re-apply them on top of a fresh origin/main when
+          # other parallel runs race us on the binary futbolbase.db.
+          SEASON_LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME[\"$TEMP_INPUT\"])")
+          RAW="scripts/fiflp_actas_${SEASON_LABEL}_raw.json"
+          SNAPSHOT=/tmp/sp1-snap
+          mkdir -p "$SNAPSHOT"
+          [ -f "$RAW" ] && cp "$RAW" "$SNAPSHOT/" && echo "  snapshotted $RAW"
+          [ -f scripts/fiflp_actas_unmatched.json ] && cp scripts/fiflp_actas_unmatched.json "$SNAPSHOT/"
+
           add_if_exists() {
             for f in "$@"; do
               [ -e "$f" ] && git add "$f"
             done
           }
-          add_if_exists scripts/fiflp_actas_*_raw.json
-          add_if_exists scripts/fiflp_actas_unmatched.json
-          add_if_exists futbolbase.db
-          add_if_exists data-lineups-*.js
-          add_if_exists data-players-*.js
-          add_if_exists scripts/tests/fixtures/acta_*.html
-          add_if_exists index.html
+          stage_all() {
+            add_if_exists scripts/fiflp_actas_*_raw.json
+            add_if_exists scripts/fiflp_actas_unmatched.json
+            add_if_exists futbolbase.db
+            add_if_exists data-lineups-*.js
+            add_if_exists data-players-*.js
+            add_if_exists scripts/tests/fixtures/acta_*.html
+            add_if_exists index.html
+          }
+
+          stage_all
           if git diff --cached --quiet; then
             echo "no changes to commit"
-          else
-            git commit -m "chore(fiflp): actas season $TEMP_INPUT (scrape+import+generate)"
-            for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break || sleep 5
-            done
+            exit 0
           fi
+          git commit -m "chore(fiflp): actas season $TEMP_INPUT (scrape+import+generate)"
+
+          # Push with retry. On failure (binary conflict on futbolbase.db when
+          # parallel runs race), reset to fresh origin/main, restore our
+          # snapshot raw_json, re-run import + generate, re-commit, push.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main 2>&1; then
+              echo "Push succeeded on attempt $attempt"
+              exit 0
+            fi
+            echo "Push failed on attempt $attempt — reconciling against fresh origin/main"
+            git rebase --abort 2>/dev/null || true
+            git fetch origin main
+            git reset --hard origin/main
+            # Restore our raw_json + unmatched on top of fresh origin
+            cp "$SNAPSHOT"/*.json scripts/ 2>/dev/null || true
+            python3 scripts/migrate_actas_schema.py
+            if [ -f "$RAW" ]; then
+              python3 scripts/import_fiflp_actas.py "$RAW"
+              python3 scripts/generate_js.py
+            fi
+            stage_all
+            if git diff --cached --quiet; then
+              echo "After re-apply, no diff vs origin — our work is already there. Exiting clean."
+              exit 0
+            fi
+            git commit -m "chore(fiflp): actas season $TEMP_INPUT (scrape+import+generate)"
+            sleep $((attempt * 5))
+          done
+          echo "ERROR: failed to push after 5 attempts"
+          exit 1

@@ -27,7 +27,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: scrape-fiflp-actas-${{ github.ref }}
+  group: scrape-fiflp-actas-${{ inputs.temporada }}
   cancel-in-progress: false
 jobs:
   scrape:

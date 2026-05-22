@@ -180,5 +180,746 @@
       "season": "2021/2022"
     },
     "reason": "no candidate match"
+  },
+  "146122": {
+    "header": {
+      "away_score": null,
+      "away_team": null,
+      "competition": null,
+      "date": null,
+      "home_score": null,
+      "home_team": null,
+      "jornada": null,
+      "season": null
+    },
+    "reason": "no candidate match"
+  },
+  "146124": {
+    "header": {
+      "away_score": 3,
+      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "23-10-2022",
+      "home_score": 3,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "1",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146126": {
+    "header": {
+      "away_score": null,
+      "away_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "22-10-2022",
+      "home_score": 5,
+      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "jornada": "1",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146128": {
+    "header": {
+      "away_score": 3,
+      "away_team": "SIMUSETTI C. F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "22-10-2022",
+      "home_score": null,
+      "home_team": "TORRES, U.D. LAS",
+      "jornada": "1",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146129": {
+    "header": {
+      "away_score": 3,
+      "away_team": "TORRES, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "26-10-2022",
+      "home_score": 6,
+      "home_team": "ARUCAS C.F. \"A\" A",
+      "jornada": "2",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146130": {
+    "header": {
+      "away_score": null,
+      "away_team": "ACODETTI C.F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "29-10-2022",
+      "home_score": null,
+      "home_team": "VICTORIA \"A\", REAL CLUB A",
+      "jornada": "2",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146131": {
+    "header": {
+      "away_score": 7,
+      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "29-10-2022",
+      "home_score": 2,
+      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "jornada": "2",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146132": {
+    "header": {
+      "away_score": 0,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "28-10-2022",
+      "home_score": null,
+      "home_team": "TAMARACEITE \"A\", U.D. A",
+      "jornada": "2",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146135": {
+    "header": {
+      "away_score": 0,
+      "away_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "29-10-2022",
+      "home_score": null,
+      "home_team": "SIMUSETTI C. F. \"A\" A",
+      "jornada": "2",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146137": {
+    "header": {
+      "away_score": null,
+      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "05-11-2022",
+      "home_score": 5,
+      "home_team": "ACODETTI C.F. \"A\" A",
+      "jornada": "3",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146141": {
+    "header": {
+      "away_score": null,
+      "away_team": "SIMUSETTI C. F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "05-11-2022",
+      "home_score": null,
+      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "jornada": "3",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146142": {
+    "header": {
+      "away_score": 0,
+      "away_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "05-11-2022",
+      "home_score": null,
+      "home_team": "TORRES, U.D. LAS",
+      "jornada": "3",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146143": {
+    "header": {
+      "away_score": 3,
+      "away_team": "TORRES, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "12-11-2022",
+      "home_score": null,
+      "home_team": "VICTORIA \"A\", REAL CLUB A",
+      "jornada": "4",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146144": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ARUCAS C.F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "12-11-2022",
+      "home_score": null,
+      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "jornada": "4",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146146": {
+    "header": {
+      "away_score": 6,
+      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "13-11-2022",
+      "home_score": null,
+      "home_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
+      "jornada": "4",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146149": {
+    "header": {
+      "away_score": 4,
+      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "12-11-2022",
+      "home_score": 1,
+      "home_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "jornada": "4",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146150": {
+    "header": {
+      "away_score": null,
+      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "19-11-2022",
+      "home_score": null,
+      "home_team": "VICTORIA \"A\", REAL CLUB A",
+      "jornada": "5",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146151": {
+    "header": {
+      "away_score": 5,
+      "away_team": "TAMARACEITE \"A\", U.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "20-11-2022",
+      "home_score": null,
+      "home_team": "ARUCAS C.F. \"A\" A",
+      "jornada": "5",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146152": {
+    "header": {
+      "away_score": null,
+      "away_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "19-11-2022",
+      "home_score": 8,
+      "home_team": "ACODETTI C.F. \"A\" A",
+      "jornada": "5",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146156": {
+    "header": {
+      "away_score": 6,
+      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "19-11-2022",
+      "home_score": 3,
+      "home_team": "TORRES, U.D. LAS",
+      "jornada": "5",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146157": {
+    "header": {
+      "away_score": null,
+      "away_team": "TORRES, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "26-11-2022",
+      "home_score": null,
+      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "jornada": "6",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146158": {
+    "header": {
+      "away_score": null,
+      "away_team": "VICTORIA \"A\", REAL CLUB A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "25-11-2022",
+      "home_score": null,
+      "home_team": "TAMARACEITE \"A\", U.D. A",
+      "jornada": "6",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146159": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ARUCAS C.F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "27-11-2022",
+      "home_score": null,
+      "home_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
+      "jornada": "6",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146161": {
+    "header": {
+      "away_score": null,
+      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "26-11-2022",
+      "home_score": null,
+      "home_team": "SIMUSETTI C. F. \"A\" A",
+      "jornada": "6",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146162": {
+    "header": {
+      "away_score": null,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "26-11-2022",
+      "home_score": null,
+      "home_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "jornada": "6",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146163": {
+    "header": {
+      "away_score": 7,
+      "away_team": "PALMAS, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "26-11-2022",
+      "home_score": null,
+      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "jornada": "6",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146164": {
+    "header": {
+      "away_score": null,
+      "away_team": "TAMARACEITE \"A\", U.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "03-12-2022",
+      "home_score": null,
+      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "jornada": "7",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146167": {
+    "header": {
+      "away_score": 0,
+      "away_team": "SIMUSETTI C. F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "03-12-2022",
+      "home_score": null,
+      "home_team": "ACODETTI C.F. \"A\" A",
+      "jornada": "7",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146168": {
+    "header": {
+      "away_score": null,
+      "away_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "03-12-2022",
+      "home_score": 1,
+      "home_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "jornada": "7",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146169": {
+    "header": {
+      "away_score": 2,
+      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "03-12-2022",
+      "home_score": 2,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "7",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146170": {
+    "header": {
+      "away_score": null,
+      "away_team": "PALMAS, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "03-12-2022",
+      "home_score": 0,
+      "home_team": "TORRES, U.D. LAS",
+      "jornada": "7",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146171": {
+    "header": {
+      "away_score": 0,
+      "away_team": "TORRES, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "09-12-2022",
+      "home_score": null,
+      "home_team": "TAMARACEITE \"A\", U.D. A",
+      "jornada": "8",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146172": {
+    "header": {
+      "away_score": 3,
+      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "11-12-2022",
+      "home_score": null,
+      "home_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
+      "jornada": "8",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146174": {
+    "header": {
+      "away_score": null,
+      "away_team": "ARUCAS C.F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "10-12-2022",
+      "home_score": 6,
+      "home_team": "SIMUSETTI C. F. \"A\" A",
+      "jornada": "8",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146175": {
+    "header": {
+      "away_score": null,
+      "away_team": "ACODETTI C.F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "10-12-2022",
+      "home_score": 0,
+      "home_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "jornada": "8",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146176": {
+    "header": {
+      "away_score": null,
+      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "10-12-2022",
+      "home_score": 4,
+      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "jornada": "8",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146178": {
+    "header": {
+      "away_score": 1,
+      "away_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "16-12-2022",
+      "home_score": null,
+      "home_team": "TAMARACEITE \"A\", U.D. A",
+      "jornada": "9",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146180": {
+    "header": {
+      "away_score": 1,
+      "away_team": "SIMUSETTI C. F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "17-12-2022",
+      "home_score": null,
+      "home_team": "VICTORIA \"A\", REAL CLUB A",
+      "jornada": "9",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146181": {
+    "header": {
+      "away_score": null,
+      "away_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "18-12-2022",
+      "home_score": null,
+      "home_team": "ARUCAS C.F. \"A\" A",
+      "jornada": "9",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146182": {
+    "header": {
+      "away_score": 0,
+      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "17-12-2022",
+      "home_score": 5,
+      "home_team": "ACODETTI C.F. \"A\" A",
+      "jornada": "9",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146184": {
+    "header": {
+      "away_score": 6,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "17-12-2022",
+      "home_score": null,
+      "home_team": "TORRES, U.D. LAS",
+      "jornada": "9",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146185": {
+    "header": {
+      "away_score": 4,
+      "away_team": "TORRES, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "15-01-2023",
+      "home_score": 4,
+      "home_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
+      "jornada": "10",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146187": {
+    "header": {
+      "away_score": 3,
+      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "14-01-2023",
+      "home_score": 7,
+      "home_team": "SIMUSETTI C. F. \"A\" A",
+      "jornada": "10",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146189": {
+    "header": {
+      "away_score": 3,
+      "away_team": "ARUCAS C.F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "14-01-2023",
+      "home_score": null,
+      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "jornada": "10",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146191": {
+    "header": {
+      "away_score": null,
+      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "14-01-2023",
+      "home_score": 1,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "10",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146194": {
+    "header": {
+      "away_score": 3,
+      "away_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "21-01-2023",
+      "home_score": null,
+      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "jornada": "11",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146195": {
+    "header": {
+      "away_score": 4,
+      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "21-01-2023",
+      "home_score": 8,
+      "home_team": "VICTORIA \"A\", REAL CLUB A",
+      "jornada": "11",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146197": {
+    "header": {
+      "away_score": null,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "21-01-2023",
+      "home_score": null,
+      "home_team": "ACODETTI C.F. \"A\" A",
+      "jornada": "11",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146198": {
+    "header": {
+      "away_score": 3,
+      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "21-01-2023",
+      "home_score": 2,
+      "home_team": "TORRES, U.D. LAS",
+      "jornada": "11",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146200": {
+    "header": {
+      "away_score": null,
+      "away_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "28-01-2023",
+      "home_score": 8,
+      "home_team": "SIMUSETTI C. F. \"A\" A",
+      "jornada": "12",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146201": {
+    "header": {
+      "away_score": 2,
+      "away_team": "TAMARACEITE \"A\", U.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "28-01-2023",
+      "home_score": null,
+      "home_team": "VETERANOS DEL PILA.\"A\", C.D. A",
+      "jornada": "12",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146202": {
+    "header": {
+      "away_score": 1,
+      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "28-01-2023",
+      "home_score": 0,
+      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "jornada": "12",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146204": {
+    "header": {
+      "away_score": 4,
+      "away_team": "ARUCAS C.F. \"A\" A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "28-01-2023",
+      "home_score": null,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "12",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146208": {
+    "header": {
+      "away_score": 3,
+      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "03-02-2023",
+      "home_score": 3,
+      "home_team": "TAMARACEITE \"A\", U.D. A",
+      "jornada": "13",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146209": {
+    "header": {
+      "away_score": null,
+      "away_team": "PALMAS, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "04-02-2023",
+      "home_score": 0,
+      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
+      "jornada": "13",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146210": {
+    "header": {
+      "away_score": 4,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "04-02-2023",
+      "home_score": null,
+      "home_team": "VICTORIA \"A\", REAL CLUB A",
+      "jornada": "13",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
+  },
+  "146212": {
+    "header": {
+      "away_score": 0,
+      "away_team": "TORRES, U.D. LAS",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "04-02-2023",
+      "home_score": 2,
+      "home_team": "ACODETTI C.F. \"A\" A",
+      "jornada": "13",
+      "season": "2022/2023"
+    },
+    "reason": "no candidate match"
   }
 }

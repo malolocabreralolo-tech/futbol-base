@@ -253,6 +253,23 @@ export async function ensureSeasonData(seasonName) {
  * Returns null on missing file or parse failure — UI shows empty-state.
  * ────────────────────────────────────────────────────────────────────── */
 
+/* SP-2: normalizer that mirrors scripts/acta_reconciler.py::normalize_team_name
+ * exactly. Used to look up team_id in TEAMS_<S> from a team name as it appears
+ * in clasificaciones / miequipo. The existing normalizeTeamName above is for
+ * shield matching and has different semantics; do NOT reuse it here. */
+const _SP1_CLUB_SUFFIX = /\b(c\s*f|c\s*d|c\s*d\s*f|u\s*d|a\s*d|s\s*d|s\s*c|s\s*a\s*d|e\s*f|c\s*p|c\s*e|club|deportivo|atletico|atletico\s+c\s*f|deportiva|sociedad|union|f\s*c)\b/g;
+export function normalizeForTeamsMapping(s) {
+  if (!s) return "";
+  s = String(s).normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+  s = s.toLowerCase();
+  s = s.replace(/["'\u2018\u2019\u201C\u201D]/g, " ");
+  s = s.replace(/[.,;:]/g, " ");
+  s = s.replace(_SP1_CLUB_SUFFIX, " ");
+  s = s.replace(/\b[abcd]\b\s*$/, "");
+  s = s.replace(/\s+/g, " ").trim();
+  return s;
+}
+
 const _lineups = {};
 const _lineupsPromise = {};
 const _players = {};

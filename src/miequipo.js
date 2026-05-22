@@ -1,8 +1,7 @@
 import {
   $, el, teamBadge, S, FEATURED, isFeatured,
   featuredStandingFrom, featuredMatchesFrom, featuredScorersFrom,
-  ensureLineups, ensurePlayers, getCurrentSeason,
-} from './state.js';
+  ensureLineups, ensurePlayers, getCurrentSeason, normalizeForTeamsMapping} from './state.js';
 import { openMatchDetail } from './modals.js';
 import { renderPlantillaInto } from './plantilla.js';
 
@@ -245,9 +244,7 @@ export function renderMiEquipo() {
       return;
     }
     const teamName = (typeof FEATURED !== 'undefined' && FEATURED.team) ? FEATURED.team : 'Las Mesas Hu.';
-    const norm = String(teamName).normalize('NFKD').replace(/[̀-ͯ]/g,'')
-                                  .replace(/[.,;:'"]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
-    const teamId = pdata.teams[norm];
+    const teamId = pdata.teams[normalizeForTeamsMapping(teamName)];
     if (teamId == null) {
       host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para este equipo en esta temporada.</div>';
       return;

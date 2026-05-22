@@ -1,4 +1,4 @@
-import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail, ensureLineups, ensurePlayers, getCurrentSeason } from './state.js';
+import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail, ensureLineups, ensurePlayers, getCurrentSeason, normalizeForTeamsMapping } from './state.js';
 import { renderPlantillaInto } from './plantilla.js';
 import { renderLineupsAndTimeline } from './matchdetail-rich.js';
 
@@ -408,9 +408,7 @@ export function openTeamDetail(teamName, groupId) {
         host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para esta temporada.</div>';
         return;
       }
-      const norm = String(teamName).normalize('NFKD').replace(/[̀-ͯ]/g,'')
-                                    .replace(/[.,;:'"]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
-      const teamId = pdata.teams[norm];
+      const teamId = pdata.teams[normalizeForTeamsMapping(teamName)];
       if (teamId == null) {
         host.innerHTML = '<div class="plant-empty">\u24d8 No hay datos de plantilla para este equipo en esta temporada.</div>';
         return;

@@ -19,6 +19,14 @@ import re
 import sys
 from datetime import date
 
+# normalize_team_name lives in scripts/acta_reconciler.py. Make the import work
+# whether generate_js.py is run as `python3 scripts/generate_js.py` (sys.path[0]
+# is scripts/) or imported as `scripts.generate_js` (project root in sys.path).
+try:
+    from scripts.acta_reconciler import normalize_team_name
+except ImportError:
+    from acta_reconciler import normalize_team_name
+
 # Allow importing db.py from the same directory
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from db import get_connection, PROJECT_ROOT
@@ -282,7 +290,6 @@ def generate_players_js(conn, season_name):
        const PLAYERS_<YYYY_YYYY> = { "<team_id>": [{n, ap, st, g, y, rd}, ...] };
        const TEAMS_<YYYY_YYYY>   = { "<norm_team_name>": team_id, ... };
     """
-    from scripts.acta_reconciler import normalize_team_name
     season_id = conn.execute("SELECT id FROM seasons WHERE name=?", (season_name,)).fetchone()
     if not season_id:
         return f"// no season {season_name}\n"

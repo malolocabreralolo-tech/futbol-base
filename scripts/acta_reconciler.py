@@ -78,6 +78,22 @@ def _names_match(acta_norm: str, db_norm: str) -> bool:
         return True
     if len(acta_norm) >= 5 and db_norm.startswith(acta_norm):
         return True
+    # Token-set rescue: FIFLP writes "GARITA \"A\", C.F.S. LA" while DB has
+    # "La Garita" — same team in different word order. Compare as token sets;
+    # accept when the smaller set is a subset of the larger AND the smaller has
+    # >= 2 tokens with at least one >= 5 chars (avoids false-positives on
+    # generic words like "atletico de la").
+    acta_tokens = {t for t in re.split(r"\s+", acta_norm) if len(t) >= 2}
+    db_tokens   = {t for t in re.split(r"\s+", db_norm)   if len(t) >= 2}
+    if not acta_tokens or not db_tokens:
+        return False
+    smaller, larger = (acta_tokens, db_tokens) if len(acta_tokens) <= len(db_tokens) else (db_tokens, acta_tokens)
+    if smaller.issubset(larger) and len(smaller) >= 1 and any(len(t) >= 5 for t in smaller):
+        return True
+    # Also accept high overlap (>=2 tokens, one >=5 chars) — e.g. partial truncation.
+    common = acta_tokens & db_tokens
+    if len(common) >= 2 and any(len(t) >= 5 for t in common):
+        return True
     return False
 
 

@@ -922,7 +922,46 @@
     },
     "reason": "no candidate match"
   },
-  "239827": {
+  "189450": {
+    "header": {
+      "away_score": 4,
+      "away_team": "GUAYARMINA, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "25-10-2024",
+      "home_score": null,
+      "home_team": "BECERRIL, C.D.",
+      "jornada": "1",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189451": {
+    "header": {
+      "away_score": 4,
+      "away_team": "MOYA, U.D. A",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "25-10-2024",
+      "home_score": null,
+      "home_team": "BARRIAL, U.D. A",
+      "jornada": "1",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189452": {
+    "header": {
+      "away_score": 6,
+      "away_team": "ROQUE AMAGRO-CLARAVISION, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "26-10-2024",
+      "home_score": null,
+      "home_team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+      "jornada": "1",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189453": {
     "header": {
       "away_score": null,
       "away_team": null,
@@ -935,367 +974,861 @@
     },
     "reason": "no candidate match"
   },
-  "239837": {
+  "189456": {
+    "header": {
+      "away_score": 1,
+      "away_team": "BECERRIL, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "02-11-2024",
+      "home_score": null,
+      "home_team": "MOYA, U.D. A",
+      "jornada": "2",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189457": {
+    "header": {
+      "away_score": 6,
+      "away_team": "BARRIAL, U.D. A",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "02-11-2024",
+      "home_score": null,
+      "home_team": "ROQUE AMAGRO-CLARAVISION, C.D.",
+      "jornada": "2",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189460": {
+    "header": {
+      "away_score": null,
+      "away_team": "MOYA, U.D. A",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "09-11-2024",
+      "home_score": 2,
+      "home_team": "GUAYARMINA, C.D.",
+      "jornada": "3",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189466": {
+    "header": {
+      "away_score": 3,
+      "away_team": "GUAYARMINA, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "16-11-2024",
+      "home_score": null,
+      "home_team": "ROQUE AMAGRO-CLARAVISION, C.D.",
+      "jornada": "4",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189472": {
+    "header": {
+      "away_score": 2,
+      "away_team": "ATALAYA, U.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "22-11-2024",
+      "home_score": null,
+      "home_team": "BECERRIL, C.D.",
+      "jornada": "5",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189475": {
+    "header": {
+      "away_score": null,
+      "away_team": "SAN NICOLAS, U.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "30-11-2024",
+      "home_score": null,
+      "home_team": "ROQUE AMAGRO-CLARAVISION, C.D.",
+      "jornada": "6",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189477": {
+    "header": {
+      "away_score": 0,
+      "away_team": "GUAYARMINA, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "29-11-2024",
+      "home_score": null,
+      "home_team": "ATALAYA, U.D.",
+      "jornada": "6",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189479": {
     "header": {
       "away_score": 3,
       "away_team": "BARRIAL, U.D. A",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 1)",
-      "date": "07-11-2025",
-      "home_score": 3,
-      "home_team": "GUIA, U.D.",
-      "jornada": "5",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "239838": {
-    "header": {
-      "away_score": null,
-      "away_team": "GUAYARMINA, C.D.",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 1)",
-      "date": "07-11-2025",
-      "home_score": 0,
-      "home_team": "ATALAYA, U.D. B",
-      "jornada": "5",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246970": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ARUCAS C.F. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "28-11-2025",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "30-11-2024",
       "home_score": null,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "1",
-      "season": "2025/2026"
+      "home_team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+      "jornada": "6",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "246974": {
+  "189480": {
     "header": {
       "away_score": null,
       "away_team": "VALLESECO, U.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "29-11-2025",
-      "home_score": 0,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "1",
-      "season": "2025/2026"
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "07-12-2024",
+      "home_score": null,
+      "home_team": "ROQUE AMAGRO-CLARAVISION, C.D.",
+      "jornada": "7",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "246983": {
+  "189481": {
+    "header": {
+      "away_score": null,
+      "away_team": "ATALAYA, U.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "05-12-2024",
+      "home_score": 4,
+      "home_team": "MOYA, U.D. A",
+      "jornada": "7",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189483": {
+    "header": {
+      "away_score": null,
+      "away_team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "05-12-2024",
+      "home_score": 0,
+      "home_team": "BECERRIL, C.D.",
+      "jornada": "7",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189486": {
+    "header": {
+      "away_score": null,
+      "away_team": "ROQUE AMAGRO-CLARAVISION, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "13-12-2024",
+      "home_score": null,
+      "home_team": "ATALAYA, U.D.",
+      "jornada": "8",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189488": {
+    "header": {
+      "away_score": null,
+      "away_team": "GUAYARMINA, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "14-12-2024",
+      "home_score": 3,
+      "home_team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+      "jornada": "8",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189489": {
+    "header": {
+      "away_score": null,
+      "away_team": "BECERRIL, C.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "14-12-2024",
+      "home_score": 7,
+      "home_team": "BARRIAL, U.D. A",
+      "jornada": "8",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "189491": {
+    "header": {
+      "away_score": null,
+      "away_team": "GUIA, U.D.",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
+      "date": "21-12-2024",
+      "home_score": 6,
+      "home_team": "ROQUE AMAGRO-CLARAVISION, C.D.",
+      "jornada": "9",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194012": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ATLETICO HURACAN, A.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "17-01-2025",
+      "home_score": null,
+      "home_team": "BARRIAL, U.D. A",
+      "jornada": "1",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194013": {
+    "header": {
+      "away_score": 4,
+      "away_team": "ACODETTI C.F. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "18-01-2025",
+      "home_score": null,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "1",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194014": {
+    "header": {
+      "away_score": null,
+      "away_team": "MESAS HURACAN, U.D. LAS A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "18-01-2025",
+      "home_score": 2,
+      "home_team": "CARDONES, C.D. A",
+      "jornada": "1",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194017": {
     "header": {
       "away_score": null,
       "away_team": "MOYA, U.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "20-12-2025",
-      "home_score": 3,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "3",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246990": {
-    "header": {
-      "away_score": null,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "12-01-2026",
-      "home_score": 2,
-      "home_team": "SANTIDAD BANOT, C.D.",
-      "jornada": "4",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246993": {
-    "header": {
-      "away_score": null,
-      "away_team": "GUAYARMINA, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "10-01-2026",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "4",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246996": {
-    "header": {
-      "away_score": 2,
-      "away_team": "VALLESECO, U.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "17-01-2026",
-      "home_score": 0,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "5",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246998": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "16-01-2026",
-      "home_score": 3,
-      "home_team": "SAN NICOLAS, U.D.",
-      "jornada": "5",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247003": {
-    "header": {
-      "away_score": null,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "24-01-2026",
-      "home_score": 4,
-      "home_team": "ATALAYA, U.D. A",
-      "jornada": "6",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247004": {
-    "header": {
-      "away_score": 5,
-      "away_team": "UNION VIERA, C.F. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "24-01-2026",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "25-01-2025",
       "home_score": null,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "6",
-      "season": "2025/2026"
+      "home_team": "ATLETICO HURACAN, A.D. A",
+      "jornada": "2",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "247009": {
+  "194019": {
     "header": {
-      "away_score": 6,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "31-01-2026",
-      "home_score": 2,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "7",
-      "season": "2025/2026"
+      "away_score": null,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "26-01-2025",
+      "home_score": null,
+      "home_team": "MESAS HURACAN, U.D. LAS A",
+      "jornada": "2",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "247015": {
+  "194021": {
+    "header": {
+      "away_score": 4,
+      "away_team": "ATLETICO HURACAN, A.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "01-02-2025",
+      "home_score": 1,
+      "home_team": "VETERANOS DEL PILA., C.D. A",
+      "jornada": "3",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194022": {
     "header": {
       "away_score": 7,
-      "away_team": "ARUCAS C.F. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-02-2026",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "8",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247016": {
-    "header": {
-      "away_score": null,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-02-2026",
-      "home_score": 4,
-      "home_team": "GUAYARMINA, C.D.",
-      "jornada": "8",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247019": {
-    "header": {
-      "away_score": 4,
-      "away_team": "ATALAYA, U.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "13-02-2026",
-      "home_score": null,
-      "home_team": "MOYA, U.D. A",
-      "jornada": "9",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247020": {
-    "header": {
-      "away_score": 8,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "14-02-2026",
-      "home_score": 3,
-      "home_team": "GOLETA, C.D. A",
-      "jornada": "9",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247022": {
-    "header": {
-      "away_score": 4,
-      "away_team": "SAN NICOLAS, U.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "14-02-2026",
-      "home_score": null,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "9",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247026": {
-    "header": {
-      "away_score": 0,
-      "away_team": "MOYA, U.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "21-02-2026",
-      "home_score": 3,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "10",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247029": {
-    "header": {
-      "away_score": 1,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "21-02-2026",
-      "home_score": 11,
-      "home_team": "UNION VIERA, C.F. A",
-      "jornada": "10",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247031": {
-    "header": {
-      "away_score": 3,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "28-02-2026",
-      "home_score": 2,
-      "home_team": "SANTIDAD BANOT, C.D.",
-      "jornada": "11",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247036": {
-    "header": {
-      "away_score": 2,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-03-2026",
-      "home_score": 5,
-      "home_team": "ARUCAS C.F. A",
-      "jornada": "12",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247040": {
-    "header": {
-      "away_score": 0,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-03-2026",
+      "away_team": "ACODETTI C.F. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "01-02-2025",
       "home_score": 0,
-      "home_team": "VALLESECO, U.D.",
-      "jornada": "12",
-      "season": "2025/2026"
+      "home_team": "MOYA, U.D. A",
+      "jornada": "3",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "247043": {
+  "194023": {
     "header": {
-      "away_score": 3,
-      "away_team": "GOLETA, C.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "14-03-2026",
-      "home_score": 7,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "13",
-      "season": "2025/2026"
+      "away_score": null,
+      "away_team": "MESAS HURACAN, U.D. LAS A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "31-01-2025",
+      "home_score": 3,
+      "home_team": "BARRIAL, U.D. A",
+      "jornada": "3",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "247047": {
+  "194027": {
     "header": {
-      "away_score": 1,
-      "away_team": "ATALAYA, U.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "14-03-2026",
-      "home_score": null,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "13",
-      "season": "2025/2026"
+      "away_score": null,
+      "away_team": "VETERANOS DEL PILA., C.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "08-02-2025",
+      "home_score": 4,
+      "home_team": "ACODETTI C.F. A",
+      "jornada": "4",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "254065": {
+  "194028": {
     "header": {
       "away_score": 2,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "22-12-2025",
-      "home_score": null,
-      "home_team": "ATALAYA, U.D. A",
-      "jornada": "2",
-      "season": "2025/2026"
+      "away_team": "MOYA, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "09-02-2025",
+      "home_score": 2,
+      "home_team": "MESAS HURACAN, U.D. LAS A",
+      "jornada": "4",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "254213": {
+  "194029": {
+    "header": {
+      "away_score": 9,
+      "away_team": "BARRIAL, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "06-02-2025",
+      "home_score": 4,
+      "home_team": "SANTIDAD BANOT, C.D.",
+      "jornada": "4",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194030": {
     "header": {
       "away_score": null,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "16-12-2025",
-      "home_score": 7,
-      "home_team": "GOLETA, C.D. A",
-      "jornada": "2",
-      "season": "2025/2026"
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "08-02-2025",
+      "home_score": null,
+      "home_team": "CARDONES, C.D. A",
+      "jornada": "4",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "258319": {
+  "194031": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ACODETTI C.F. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "15-02-2025",
+      "home_score": null,
+      "home_team": "ATLETICO HURACAN, A.D. A",
+      "jornada": "5",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194032": {
+    "header": {
+      "away_score": 1,
+      "away_team": "MESAS HURACAN, U.D. LAS A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "15-02-2025",
+      "home_score": 6,
+      "home_team": "VETERANOS DEL PILA., C.D. A",
+      "jornada": "5",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194033": {
+    "header": {
+      "away_score": 1,
+      "away_team": "SANTIDAD BANOT, C.D.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "15-02-2025",
+      "home_score": 3,
+      "home_team": "MOYA, U.D. A",
+      "jornada": "5",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194037": {
     "header": {
       "away_score": null,
-      "away_team": "GUAYARMINA, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "01-04-2026",
+      "away_team": "ATLETICO HURACAN, A.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "23-02-2025",
       "home_score": null,
-      "home_team": "ATALAYA, U.D. A",
-      "jornada": "14",
-      "season": "2025/2026"
+      "home_team": "MESAS HURACAN, U.D. LAS A",
+      "jornada": "6",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   },
-  "258443": {
+  "194039": {
     "header": {
-      "away_score": 4,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-04-2026",
+      "away_score": 5,
+      "away_team": "MOYA, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "22-02-2025",
+      "home_score": null,
+      "home_team": "CARDONES, C.D. A",
+      "jornada": "6",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194041": {
+    "header": {
+      "away_score": null,
+      "away_team": "MESAS HURACAN, U.D. LAS A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "01-03-2025",
+      "home_score": 6,
+      "home_team": "ACODETTI C.F. A",
+      "jornada": "7",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194042": {
+    "header": {
+      "away_score": 0,
+      "away_team": "SANTIDAD BANOT, C.D.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "01-03-2025",
+      "home_score": 0,
+      "home_team": "ATLETICO HURACAN, A.D. A",
+      "jornada": "7",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194044": {
+    "header": {
+      "away_score": 1,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "28-02-2025",
       "home_score": null,
       "home_team": "MOYA, U.D. A",
+      "jornada": "7",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194048": {
+    "header": {
+      "away_score": null,
+      "away_team": "ATLETICO HURACAN, A.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "08-03-2025",
+      "home_score": 0,
+      "home_team": "CARDONES, C.D. A",
+      "jornada": "8",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194049": {
+    "header": {
+      "away_score": null,
+      "away_team": "VETERANOS DEL PILA., C.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "08-03-2025",
+      "home_score": null,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "8",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194050": {
+    "header": {
+      "away_score": null,
+      "away_team": "MOYA, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "07-03-2025",
+      "home_score": 4,
+      "home_team": "BARRIAL, U.D. A",
+      "jornada": "8",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194051": {
+    "header": {
+      "away_score": null,
+      "away_team": "SANTIDAD BANOT, C.D.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "16-03-2025",
+      "home_score": null,
+      "home_team": "MESAS HURACAN, U.D. LAS A",
+      "jornada": "9",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194053": {
+    "header": {
+      "away_score": null,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "16-03-2025",
+      "home_score": 7,
+      "home_team": "ATLETICO HURACAN, A.D. A",
+      "jornada": "9",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194057": {
+    "header": {
+      "away_score": 0,
+      "away_team": "BARRIAL, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "22-03-2025",
+      "home_score": 14,
+      "home_team": "ATLETICO HURACAN, A.D. A",
+      "jornada": "10",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194058": {
+    "header": {
+      "away_score": 2,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "22-03-2025",
+      "home_score": null,
+      "home_team": "ACODETTI C.F. A",
+      "jornada": "10",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194059": {
+    "header": {
+      "away_score": 3,
+      "away_team": "CARDONES, C.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "21-03-2025",
+      "home_score": 2,
+      "home_team": "MESAS HURACAN, U.D. LAS A",
+      "jornada": "10",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194062": {
+    "header": {
+      "away_score": 9,
+      "away_team": "ATLETICO HURACAN, A.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "29-03-2025",
+      "home_score": null,
+      "home_team": "MOYA, U.D. A",
+      "jornada": "11",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194064": {
+    "header": {
+      "away_score": null,
+      "away_team": "MESAS HURACAN, U.D. LAS A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "29-03-2025",
+      "home_score": 0,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "11",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194065": {
+    "header": {
+      "away_score": 6,
+      "away_team": "SANTIDAD BANOT, C.D.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "28-03-2025",
+      "home_score": 2,
+      "home_team": "CARDONES, C.D. A",
+      "jornada": "11",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194066": {
+    "header": {
+      "away_score": 2,
+      "away_team": "VETERANOS DEL PILA., C.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "05-04-2025",
+      "home_score": 2,
+      "home_team": "ATLETICO HURACAN, A.D. A",
+      "jornada": "12",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194067": {
+    "header": {
+      "away_score": null,
+      "away_team": "MOYA, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "05-04-2025",
+      "home_score": 1,
+      "home_team": "ACODETTI C.F. A",
+      "jornada": "12",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194068": {
+    "header": {
+      "away_score": 2,
+      "away_team": "BARRIAL, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "06-04-2025",
+      "home_score": 1,
+      "home_team": "MESAS HURACAN, U.D. LAS A",
+      "jornada": "12",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194072": {
+    "header": {
+      "away_score": null,
+      "away_team": "ACODETTI C.F. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "12-04-2025",
+      "home_score": 1,
+      "home_team": "VETERANOS DEL PILA., C.D. A",
+      "jornada": "13",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194073": {
+    "header": {
+      "away_score": 1,
+      "away_team": "MESAS HURACAN, U.D. LAS A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "12-04-2025",
+      "home_score": 1,
+      "home_team": "MOYA, U.D. A",
+      "jornada": "13",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194074": {
+    "header": {
+      "away_score": null,
+      "away_team": "SANTIDAD BANOT, C.D.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "11-04-2025",
+      "home_score": 6,
+      "home_team": "BARRIAL, U.D. A",
+      "jornada": "13",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194076": {
+    "header": {
+      "away_score": null,
+      "away_team": "ATLETICO HURACAN, A.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "23-04-2025",
+      "home_score": null,
+      "home_team": "ACODETTI C.F. A",
       "jornada": "14",
-      "season": "2025/2026"
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194077": {
+    "header": {
+      "away_score": 1,
+      "away_team": "VETERANOS DEL PILA., C.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "27-04-2025",
+      "home_score": 1,
+      "home_team": "MESAS HURACAN, U.D. LAS A",
+      "jornada": "14",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194078": {
+    "header": {
+      "away_score": 5,
+      "away_team": "MOYA, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "24-04-2025",
+      "home_score": null,
+      "home_team": "SANTIDAD BANOT, C.D.",
+      "jornada": "14",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194079": {
+    "header": {
+      "away_score": 6,
+      "away_team": "BARRIAL, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "25-04-2025",
+      "home_score": 1,
+      "home_team": "CARDONES, C.D. A",
+      "jornada": "14",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194082": {
+    "header": {
+      "away_score": null,
+      "away_team": "MESAS HURACAN, U.D. LAS A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "04-05-2025",
+      "home_score": null,
+      "home_team": "ATLETICO HURACAN, A.D. A",
+      "jornada": "15",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194086": {
+    "header": {
+      "away_score": null,
+      "away_team": "ACODETTI C.F. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "11-05-2025",
+      "home_score": null,
+      "home_team": "MESAS HURACAN, U.D. LAS A",
+      "jornada": "16",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194087": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ATLETICO HURACAN, A.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "10-05-2025",
+      "home_score": 1,
+      "home_team": "SANTIDAD BANOT, C.D.",
+      "jornada": "16",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194089": {
+    "header": {
+      "away_score": null,
+      "away_team": "MOYA, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "10-05-2025",
+      "home_score": 4,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "16",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194093": {
+    "header": {
+      "away_score": 0,
+      "away_team": "CARDONES, C.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "15-05-2025",
+      "home_score": 1,
+      "home_team": "ATLETICO HURACAN, A.D. A",
+      "jornada": "17",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194094": {
+    "header": {
+      "away_score": null,
+      "away_team": "GAREPA VIERA, C.F.",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "17-05-2025",
+      "home_score": 10,
+      "home_team": "VETERANOS DEL PILA., C.D. A",
+      "jornada": "17",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194095": {
+    "header": {
+      "away_score": 2,
+      "away_team": "BARRIAL, U.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "17-05-2025",
+      "home_score": 1,
+      "home_team": "MOYA, U.D. A",
+      "jornada": "17",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194096": {
+    "header": {
+      "away_score": 5,
+      "away_team": "MESAS HURACAN, U.D. LAS A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "24-05-2025",
+      "home_score": null,
+      "home_team": "SANTIDAD BANOT, C.D.",
+      "jornada": "18",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194097": {
+    "header": {
+      "away_score": null,
+      "away_team": "ACODETTI C.F. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "24-05-2025",
+      "home_score": null,
+      "home_team": "CARDONES, C.D. A",
+      "jornada": "18",
+      "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "194098": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ATLETICO HURACAN, A.D. A",
+      "competition": "LIGA BENJAMIN F8 GRAN CANARIA SEGUNDA FASE A (GRUPO 1)",
+      "date": "24-05-2025",
+      "home_score": 0,
+      "home_team": "GAREPA VIERA, C.F.",
+      "jornada": "18",
+      "season": "2024/2025"
     },
     "reason": "no candidate match"
   }

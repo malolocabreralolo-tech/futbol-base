@@ -64,7 +64,9 @@
   --tint-bronze: rgba(139,90,43,0.10);
 }
 [data-theme="light"] body {
-  background-image: radial-gradient(circle at 20% 50%, rgba(0,168,84,0.04) 0%, transparent 50%),
+  /* Light variant of the stadium-light top glow (much fainter, daylight) */
+  background-image: radial-gradient(80% 36% at 50% 0%, rgba(0,168,84,0.04) 0%, transparent 70%),
+                    radial-gradient(circle at 20% 50%, rgba(0,168,84,0.04) 0%, transparent 50%),
                     radial-gradient(circle at 80% 20%, rgba(230,168,0,0.03) 0%, transparent 50%);
   background-repeat: no-repeat;
 }
@@ -113,10 +115,11 @@ body {
   /* Night-stadium atmosphere: floodlight glow from the top + the original
      soft radials + an ultra-subtle SVG noise grain (data-URI, ~330B). */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
+                    radial-gradient(80% 36% at 50% 0%, rgba(0,230,118,0.05) 0%, transparent 70%),
                     radial-gradient(circle at 20% 50%, rgba(0,230,118,0.03) 0%, transparent 50%),
                     radial-gradient(circle at 80% 20%, rgba(255,193,7,0.02) 0%, transparent 50%),
                     radial-gradient(140% 90% at 50% -20%, #101a30 0%, var(--bg) 55%, #070b13 100%);
-  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
   background-attachment: fixed;
 }
 
@@ -166,10 +169,12 @@ body {
 }
 .brand h1 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
-  letter-spacing: 2px;
+  font-size: 30px;
+  letter-spacing: 3px;
   line-height: 1;
   color: var(--text);
+  /* Floodlit wordmark: ultra-subtle accent halo (token-driven, both themes) */
+  text-shadow: 0 0 26px var(--accent-dim);
 }
 .brand .subtitle {
   font-size: 12px;
@@ -291,6 +296,11 @@ body {
 .section-tab.active {
   color: var(--accent);
 }
+/* Tab icons: app-nav glyphs. On desktop the tabs keep their classic text-only
+   look — only MI EQUIPO keeps its inline ⭐ (pre-existing identity). On mobile
+   the icons stack above the labels (see the bottom-nav media query). */
+.section-tab .tab-ico { display: none; }
+.section-tab[data-section="miequipo"] .tab-ico { display: inline; margin-right: 5px; }
 /* Active indicator: always present, revealed with a transform (no width
    animation) so it feels like a sliding scoreboard cursor. */
 .section-tab::after {
@@ -689,15 +699,6 @@ body[data-section="miequipo"] .stats-bar {
   font-size: 24px;
   letter-spacing: 1px;
 }
-.match-score .score-num {
-  color: var(--amber);
-  min-width: 24px;
-  text-align: center;
-}
-.match-score .score-sep {
-  color: var(--text3);
-  font-size: 18px;
-}
 .match-score .score-vs {
   color: var(--text3);
   font-size: 16px;
@@ -726,6 +727,37 @@ body[data-section="miequipo"] .stats-bar {
   border-radius: var(--radius-pill);
   margin-left: 4px;
 }
+
+/* ── LED SCOREBOARD PILL (played matches) ──
+   Bebas tabular digits recessed into a darker face (inset bezel): the
+   winner's digit lights up accent, the loser dims, draws glow neutral amber.
+   Shared digit language with the modal header (.scoreboard-xl below). */
+.match-score.scoreboard {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 5px 10px;
+  gap: 5px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.45), inset 0 -1px 0 var(--card-hi);
+}
+.sb-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  min-width: 20px;
+  text-align: center;
+  letter-spacing: 1px;
+  font-variant-numeric: tabular-nums;
+}
+.sb-sep { color: var(--text3); font-size: 15px; line-height: 1; }
+.sb-num.win { color: var(--accent); text-shadow: 0 0 14px var(--accent-dim); }
+.sb-num.lose { color: var(--text3); }
+.sb-num.draw { color: var(--amber); }
+[data-theme="light"] .match-score.scoreboard {
+  background: var(--bg2);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.10);
+}
+[data-theme="light"] .sb-num.win { text-shadow: none; }
 
 /* ====== GOLEADORES ====== */
 .scorers-table {
@@ -787,6 +819,139 @@ body[data-section="miequipo"] .stats-bar {
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ── PICHICHI PODIUM (top 3) ──
+   Medal cards laid out 2º-1º-3º, gold in the middle and taller — goals as
+   XL Bebas scoreboard digits. align-items:end keeps the steps grounded. */
+.gol-podium {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+.gol-pod {
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 10px 12px;
+  text-align: center;
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
+}
+.gol-pod-medal { display: block; font-size: 22px; line-height: 1; }
+.gol-pod-name {
+  font-weight: 700;
+  font-size: 13px;
+  margin-top: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gol-pod-team {
+  font-size: 11px;
+  color: var(--text2);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gol-pod-goals {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  line-height: 1;
+  margin-top: 10px;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.gol-pod-lbl { font-size: 9px; font-weight: 800; letter-spacing: 1.2px; color: var(--text3); margin-top: 2px; }
+.gol-pod-2 .gol-pod-goals { color: var(--silver); }
+.gol-pod-3 .gol-pod-goals { color: var(--bronze); }
+/* 1º: the floodlight hits the middle step */
+.gol-pod-1 {
+  padding: 22px 10px 18px;
+  border-color: rgba(255,215,0,0.35);
+  background: linear-gradient(170deg, rgba(255,215,0,0.08) 0%, var(--card) 55%);
+}
+.gol-pod-1 .gol-pod-medal { font-size: 30px; }
+.gol-pod-1 .gol-pod-goals { font-size: 54px; color: var(--gold); text-shadow: 0 0 24px rgba(255,215,0,0.22); }
+[data-theme="light"] .gol-pod-1 {
+  border-color: rgba(184,134,11,0.35);
+  background: linear-gradient(170deg, rgba(184,134,11,0.08) 0%, var(--card) 55%);
+}
+[data-theme="light"] .gol-pod-1 .gol-pod-goals { text-shadow: none; }
+
+/* ── SCORER LIST (rest of the ranking, below the podium) ──
+   App list instead of a table: no horizontal scroll on mobile, the bar and
+   the goals stay on screen. Same row language as MI EQUIPO's scorers card. */
+.gol-list {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2px 12px;
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
+}
+.gol-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 2px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.gol-row:first-child { border-top: 0; }
+.gol-rk {
+  width: 22px;
+  flex: 0 0 22px;
+  text-align: center;
+  color: var(--text3);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.gol-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.gol-nm { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gol-tm { font-size: 11px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gol-grp { color: var(--text3); }
+.gol-main .gol-bar-track { margin-top: 2px; max-width: 340px; }
+.gol-g {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--accent);
+  width: 34px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.gol-pj { font-size: 11px; color: var(--text3); width: 44px; text-align: right; flex-shrink: 0; }
+@media (hover: hover) {
+  .gol-row:hover { background: var(--card-hover); }
+}
+
+/* ── PROPORTIONAL GOAL BARS (goleadores list + MI EQUIPO card) ──
+   Width % injected inline (goalBarPct, relative to the section max). The
+   growth animation scales from the left and only runs with motion allowed. */
+.gol-bar-track {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+}
+.gol-bar {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  transform-origin: left;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .gol-bar { animation: gol-bar-grow 0.6s cubic-bezier(0.22, 0.8, 0.3, 1) backwards; }
+}
+@keyframes gol-bar-grow {
+  from { transform: scaleX(0); }
 }
 
 /* ====== POR ISLA ====== */
@@ -930,17 +1095,21 @@ body[data-section="miequipo"] .stats-bar {
 #sec-miequipo.active { display: flex; flex-direction: column; gap: 14px; max-width: 760px; margin: 0 auto; }
 .me-hero { display: flex; align-items: center; gap: 16px; background: linear-gradient(150deg, var(--card-hover) 0%, var(--card) 60%); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 18px; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm); }
 .me-hero::after { content: ""; position: absolute; right: -40px; top: -30px; width: 170px; height: 170px; background: radial-gradient(circle, var(--accent-dim), transparent 70%); }
-/* Crest with a soft radial floodlight glow behind it */
+/* Crest XL with an accent ring + floodlight glow behind it */
 .me-crest { position: relative; flex-shrink: 0; }
-.me-crest::before { content: ""; position: absolute; inset: -18px; border-radius: 50%; background: radial-gradient(circle, var(--accent-dim) 0%, transparent 68%); pointer-events: none; }
-.me-crest .team-badge { width: 76px; height: 76px; font-size: 24px; border-radius: 16px; position: relative; filter: drop-shadow(0 4px 10px rgba(0,0,0,.35)); }
+.me-crest::before { content: ""; position: absolute; inset: -22px; border-radius: 50%; background: radial-gradient(circle, var(--accent-dim) 0%, transparent 68%); pointer-events: none; }
+.me-crest .team-badge {
+  width: 104px; height: 104px; font-size: 34px; border-radius: 22px; position: relative;
+  box-shadow: 0 0 0 2px var(--green-border), 0 0 26px var(--accent-dim);
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.35));
+}
 .me-id { min-width: 0; }
-.me-id h2 { font-size: 21px; font-weight: 700; line-height: 1.15; }
-.me-meta { color: var(--text2); font-size: 12.5px; margin-top: 4px; }
-/* Position as a big ordinal chip — scoreboard digits in Bebas */
-.me-pos { margin-left: auto; flex-shrink: 0; text-align: center; background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 10px 16px 8px; box-shadow: inset 0 1px 0 var(--card-hi); position: relative; }
-.me-pos-n { font-family: 'Bebas Neue', sans-serif; font-size: 40px; font-weight: 400; color: var(--accent); line-height: .9; letter-spacing: 1px; font-variant-numeric: tabular-nums; text-shadow: 0 0 18px var(--accent-dim); }
-.me-pos-l { font-size: 10px; color: var(--text3); letter-spacing: .8px; margin-top: 4px; font-weight: 700; }
+.me-id h2 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; font-weight: 400; letter-spacing: 1.2px; line-height: .95; }
+.me-meta { color: var(--text2); font-size: 12.5px; margin-top: 6px; }
+/* Position as an XL ordinal chip — LED scoreboard digits in Bebas */
+.me-pos { margin-left: auto; flex-shrink: 0; text-align: center; background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 12px 18px 10px; box-shadow: inset 0 1px 0 var(--card-hi); position: relative; }
+.me-pos-n { font-family: 'Bebas Neue', sans-serif; font-size: 62px; font-weight: 400; color: var(--accent); line-height: .85; letter-spacing: 1px; font-variant-numeric: tabular-nums; text-shadow: 0 0 22px var(--accent-dim); }
+.me-pos-l { font-size: 10px; color: var(--text3); letter-spacing: .8px; margin-top: 5px; font-weight: 700; }
 .me-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm); }
 
 /* ── Season-over closing card (sober celebration, scoreboard digits) ── */
@@ -948,23 +1117,23 @@ body[data-section="miequipo"] .stats-bar {
 .me-over-flag { display: flex; align-items: center; gap: 10px; }
 .me-over-flag .me-ln { background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .55; }
 .me-over-t { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2.5px; color: var(--gold); white-space: nowrap; }
-.me-over-main { display: flex; align-items: center; gap: 16px; margin: 14px 2px 13px; flex-wrap: wrap; }
-.me-over-pos { display: flex; align-items: center; gap: 9px; }
-.me-over-n { font-family: 'Bebas Neue', sans-serif; font-size: 54px; line-height: .85; color: var(--text); font-variant-numeric: tabular-nums; text-shadow: 0 2px 16px rgba(255,215,0,.18); }
-.me-over-of { font-size: 11px; color: var(--text2); line-height: 1.3; font-weight: 600; }
-.me-over-stats { display: flex; align-items: center; gap: 14px; margin-left: auto; }
-.me-over-stat { text-align: center; min-width: 26px; }
-.me-over-stat .n { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 25px; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+/* The hero above already shouts the final position XL — this card owns the
+   season BALANCE (PTS + G/E/P + goals) and the last result instead. */
+.me-over-main { display: flex; align-items: center; justify-content: center; margin: 16px 2px 15px; }
+.me-over-stats { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.me-over-stat { text-align: center; min-width: 30px; }
+.me-over-stat .n { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+.me-over-stat .n.pts { color: var(--gold); text-shadow: 0 2px 16px rgba(255,215,0,.18); }
 .me-over-stat .n.w { color: var(--accent); }
 .me-over-stat .n.p { color: var(--red); }
 .me-over-stat .l { font-size: 9.5px; font-weight: 800; letter-spacing: 1px; color: var(--text3); }
-.me-over-sep { width: 1px; height: 28px; background: var(--border); }
+.me-over-sep { width: 1px; height: 30px; background: var(--border); }
+[data-theme="light"] .me-over-stat .n.pts { text-shadow: none; }
 .me-over-last { border-top: 1px solid var(--border); padding-top: 10px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 12.5px; }
 .me-over-last-l { font-size: 10px; font-weight: 800; letter-spacing: .8px; color: var(--text3); text-transform: uppercase; }
 .me-over-last-m { font-weight: 600; }
 .me-over-last-m .me-res { width: auto; padding: 0 3px; font-variant-numeric: tabular-nums; }
 [data-theme="light"] .me-over { border-color: rgba(184,134,11,.3); background: linear-gradient(165deg, rgba(184,134,11,.07) 0%, var(--card) 52%); }
-[data-theme="light"] .me-over-n { text-shadow: none; }
 .me-ct { font-size: 11px; letter-spacing: .7px; color: var(--text3); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; }
 .me-mut { color: var(--text3); font-weight: 600; letter-spacing: 0; text-transform: none; }
 .me-empty { color: var(--text2); font-size: 13px; padding: 10px 2px; }
@@ -980,7 +1149,7 @@ body[data-section="miequipo"] .stats-bar {
 .me-jn { font-size: 10px; color: var(--text3); width: 32px; flex: 0 0 32px; }
 .me-hv { font-size: 9px; font-weight: 800; width: 14px; color: var(--text3); }
 .me-o { flex: 1; color: var(--text); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.me-res { font-weight: 800; width: 46px; text-align: right; }
+.me-res { font-weight: 800; width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
 .me-res.G { color: var(--accent); }
 .me-res.E { color: var(--text2); }
 .me-res.P { color: var(--red); }
@@ -1027,23 +1196,28 @@ body[data-section="miequipo"] .stats-bar {
 .me-scrow { display: flex; align-items: center; gap: 10px; padding: 8px 2px; border-top: 1px solid var(--border); font-size: 13px; }
 .me-ct + .me-scrow { border-top: 0; }
 .me-scrk { width: 18px; color: var(--text3); font-size: 12px; text-align: center; }
-.me-scnm { flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Name + goal bar stacked (the ellipsis moved to the inner .me-scnm-t) */
+.me-scnm { flex: 1; min-width: 0; font-weight: 600; display: flex; flex-direction: column; gap: 4px; }
+.me-scnm-t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.me-scnm .gol-bar-track { max-width: 240px; height: 4px; }
 .me-scg { font-weight: 800; color: var(--accent); width: 30px; text-align: right; }
 .me-scpj { font-size: 11px; color: var(--text3); width: 50px; text-align: right; }
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
-  .header { padding: 12px 12px 0; }
+  /* Content must never hide behind the fixed bottom nav (footer included) */
+  body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+  /* Compact header: wordmark + theme toggle */
+  .header { padding: 10px 12px 2px; }
   .stats-bar { display: none; }
   .season-selector { margin-top: 6px; text-align: center; }
   .season-selector select { font-size: 12px; padding: 5px 22px 5px 8px; }
-  .brand h1 { font-size: 20px; letter-spacing: 1px; }
+  .brand h1 { font-size: 22px; letter-spacing: 1.5px; }
   .brand-icon { width: 36px; height: 36px; font-size: 18px; }
   .brand .subtitle { font-size: 11px; }
   .header-top { margin-bottom: 8px; gap: 6px; }
   .season-cat-row { margin-bottom: 8px; }
   .cat-btn { font-size: 14px; padding: 6px 16px; min-height: 44px; }
-  .section-tab { padding: 8px 14px; font-size: 13px; min-height: 44px; }
   .jornada-pill, .island-tab { min-height: 44px; }
   .theme-toggle { width: 44px; height: 44px; }
   .modal-close { width: 44px; height: 44px; top: 8px; right: 8px; }
@@ -1060,23 +1234,88 @@ body[data-section="miequipo"] .stats-bar {
   .team-badge { width: 20px; height: 20px; font-size: 8px; }
   #sec-miequipo.active { gap: 12px; }
   .me-hero { padding: 16px 14px; gap: 12px; }
-  .me-crest .team-badge { width: 62px; height: 62px; }
-  .me-crest::before { inset: -12px; }
-  .me-id h2 { font-size: 18px; }
-  .me-pos { padding: 8px 12px 7px; }
-  .me-pos-n { font-size: 32px; }
-  .me-over-n { font-size: 46px; }
-  .me-over-stats { gap: 11px; }
-  .section-tabs { -webkit-mask-image: linear-gradient(90deg, #000, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(90deg, #000, #000 calc(100% - 32px), transparent); }
+  .me-crest .team-badge { width: 96px; height: 96px; font-size: 30px; }
+  .me-crest::before { inset: -16px; }
+  .me-id h2 { font-size: 26px; }
+  .me-pos { padding: 10px 13px 8px; }
+  .me-pos-n { font-size: 56px; }
+  .me-over-stats { gap: 12px; }
+  .me-over-stat .n { font-size: 28px; }
+
+  /* ── BOTTOM APP NAV: the SAME .section-tabs element, repositioned. ──
+     Native-app navigation in the thumb zone: fixed bottom bar, six equal
+     columns, icon over label, elevated blur surface, safe-area aware. */
+  .section-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    display: flex;
+    border-bottom: none;
+    border-top: 1px solid var(--border);
+    background: var(--bg2); /* opaque fallback when backdrop-filter unsupported */
+    padding-bottom: env(safe-area-inset-bottom);
+    overflow: visible;
+    box-shadow: 0 -10px 28px rgba(0,0,0,0.35);
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .section-tabs {
+      background: rgba(14,20,37,0.86);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4);
+      backdrop-filter: blur(14px) saturate(1.4);
+    }
+    [data-theme="light"] .section-tabs { background: rgba(244,246,249,0.88); }
+  }
+  [data-theme="light"] .section-tabs { box-shadow: 0 -8px 24px rgba(0,0,0,0.10); }
+  /* Label activo 9px sobre superficie clara: --accent daba 2.88:1 (QA 11/6) */
+  [data-theme="light"] .section-tab.active { color: #00753f; }
+  .section-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 7px 1px 6px;
+    min-height: 56px;
+    font-size: 9.5px;
+    letter-spacing: .4px;
+    color: var(--text3);
+  }
+  .section-tab .tab-ico { display: block; font-size: 18px; line-height: 1; margin-right: 0; }
+  .section-tab:not(.active) .tab-ico { filter: grayscale(1); opacity: .55; }
+  /* overflow:hidden guards against fallback-font overlap if Bebas fails */
+  .section-tab .tab-label { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; }
+  /* One uniform dimmed state in the bar (desktop keeps MI EQUIPO's accent) */
+  .section-tab[data-section="miequipo"]:not(.active) { color: var(--text3); opacity: 1; }
+  /* Active indicator slides along the TOP edge of the bar */
+  .section-tab::after {
+    top: 0;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    width: 38px;
+    margin-left: -19px;
+    height: 3px;
+    border-radius: 0 0 4px 4px;
+  }
+  /* Scroll-to-top floats above the bar. Doubled class = specificity bump:
+     the base .scroll-top rule (bottom:24px) is declared LATER in the file
+     and would otherwise win on source order. */
+  .scroll-top.scroll-top { bottom: calc(76px + env(safe-area-inset-bottom)); right: 16px; }
 }
 
 @media (max-width: 480px) {
-  .brand h1 { font-size: 17px; }
+  .brand h1 { font-size: 19px; }
   .brand-icon { width: 32px; height: 32px; font-size: 16px; }
   .cat-btn { font-size: 13px; padding: 5px 12px; }
-  .section-tab { padding: 7px 10px; font-size: 12px; }
+  .section-tab { font-size: 9px; letter-spacing: .3px; }
   .match-team { font-size: 12px; }
-  .match-score .score-num { font-size: 20px; }
+  .match-score .sb-num { font-size: 22px; }
   .team-badge { width: 18px; height: 18px; font-size: 7px; }
   .match-team .team-badge { width: 16px; height: 16px; font-size: 7px; }
 }
@@ -1195,6 +1434,9 @@ body[data-section="miequipo"] .stats-bar {
   color: var(--text);
   background: rgba(255,255,255,0.1);
 }
+/* Sheet drag handle: desktop hides it — it only exists for the mobile
+   bottom sheet (see the dedicated max-width block after the modal styles). */
+.sheet-handle { display: none; }
 .modal-group-label {
   font-size: 11px;
   color: var(--accent);
@@ -1207,7 +1449,7 @@ body[data-section="miequipo"] .stats-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 8px;
 }
 .modal-team-name {
@@ -1239,11 +1481,29 @@ body[data-section="miequipo"] .stats-bar {
   text-align: center;
   line-height: 1;
 }
-.modal-big-score .score-dash {
-  color: var(--text3);
-  font-size: 32px;
-  margin: 0 2px;
+/* Scoreboard XL: the header score recessed into the same LED bezel as the
+   jornada cards — digits reuse .sb-num (winner accent / loser dim / draw). */
+.modal-big-score.scoreboard-xl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 12px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), inset 0 -1px 0 var(--card-hi);
 }
+/* 34px (no 40) y padding contenido: el pill ancho empujaba el nombre del
+   local a dos líneas en desktop (QA 11/6). */
+.modal-big-score.scoreboard-xl .sb-num { font-size: 34px; min-width: 26px; }
+.modal-big-score.scoreboard-xl .sb-sep { font-size: 20px; }
+[data-theme="light"] .modal-big-score.scoreboard-xl {
+  background: var(--bg2);
+  box-shadow: inset 0 1px 5px rgba(0,0,0,0.10);
+}
+/* Empate ámbar AA sobre el pill claro: #e6a800/#e4e6eb era 1.69:1 (QA 11/6) */
+[data-theme="light"] .sb-num.draw { color: #8a6400; }
 .modal-match-date {
   font-size: 12px;
   color: var(--text3);
@@ -1437,9 +1697,71 @@ body[data-section="miequipo"] .stats-bar {
 @media (max-width: 480px) {
   .modal-team-name { font-size: 13px; }
   .modal-big-score { font-size: 36px; min-width: 64px; }
+  .modal-big-score.scoreboard-xl { padding: 6px 10px; min-width: 0; }
+  .modal-big-score.scoreboard-xl .sb-num { font-size: 34px; min-width: 24px; }
   .modal-top { padding: 16px 14px 12px; }
   .modal-body { padding: 12px 14px 16px; }
   .modal-pos-card .pos-num { font-size: 24px; }
+  /* podium tightens on narrow phones */
+  .gol-podium { gap: 7px; }
+  .gol-pod { padding: 12px 7px 10px; }
+  .gol-pod-1 { padding: 18px 7px 14px; }
+  .gol-pod-goals { font-size: 32px; }
+  .gol-pod-1 .gol-pod-goals { font-size: 44px; }
+  .gol-pod-name { font-size: 12px; }
+}
+
+/* ── BOTTOM SHEET MODALS (mobile) ──
+   The SAME modal element, re-anchored: it rests below the viewport and
+   slides up from the bottom edge, top-rounded, with a drag handle. This is
+   a SECOND (max-width:768px) block on purpose — it must sit AFTER the modal
+   base rules above or their equal-specificity declarations would win on
+   source order (the A1 scroll-top lesson). Slide-up motion itself lives in
+   the gated block below; the default here is no animation. */
+@media (max-width: 768px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  /* darker, subtly blurred backdrop behind the sheet (opaque-ish fallback
+     is the base rgba(0,0,0,0.75) overlay) */
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .modal-overlay {
+      background: rgba(4,8,16,0.6);
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+    }
+    [data-theme="light"] .modal-overlay { background: rgba(26,26,46,0.45); }
+  }
+  .modal {
+    max-width: 100%;
+    max-height: 92vh; /* fallback for browsers without dvh */
+    max-height: 92dvh;
+    border-radius: 20px 20px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    transform: translateY(100%);
+    transition: none;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  /* the inline transform tracks the finger — no transition mid-drag */
+  .modal.sheet-dragging { transition: none; }
+  .sheet-handle {
+    display: block;
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--text3);
+    opacity: 0.55;
+    margin: -8px auto 10px;
+  }
+  /* body padding clears the home-indicator area */
+  .modal-body { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+}
+/* 250ms slide-up, only when the user allows motion */
+@media (max-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .modal { transition: transform 0.25s ease; }
 }
 
 /* Scroll to top button */
@@ -1918,4 +2240,16 @@ img.team-badge {
   font-size: 11px;
   color: var(--muted, #888);
   font-style: italic;
+}
+
+/* ── Móviles estrechos (<=374px): el hero XL se estrangulaba — nombre Bebas
+   en 3 líneas a 360px, meta palabra-por-línea a 320px (QA 11/6). ── */
+@media (max-width: 374px) {
+  .me-hero { gap: 10px; padding: 14px 12px; }
+  .me-crest .team-badge { width: 72px; height: 72px; font-size: 24px; }
+  .me-crest::before { inset: -12px; }
+  .me-id h2 { font-size: 21px; }
+  .me-pos { padding: 8px 10px 6px; }
+  .me-pos-n { font-size: 42px; }
+  .me-pos-l { font-size: 9px; }
 }

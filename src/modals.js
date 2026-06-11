@@ -30,6 +30,65 @@ if (_doc) {
 // (C2: escHtml/escAttr are the shared escapeHtml/escapeAttr from state.js,
 //  aliased in the import above — no local escape helpers in this module.)
 
+/* ── Bottom-sheet swipe-down (mobile) ──
+ * Pure pieces of the gesture, TDD'd in test_uxui2_fixes.mjs. The sheet only
+ * follows the finger DOWNWARD (an upward drag clamps to 0 — it never lifts
+ * above its resting place) and closes when released past SHEET_CLOSE_PX. */
+export const SHEET_CLOSE_PX = 80;
+
+export function sheetDragOffset(startY, currentY) {
+  const d = Number(currentY) - Number(startY);
+  return Number.isFinite(d) && d > 0 ? d : 0;
+}
+
+export function sheetShouldClose(offset, threshold) {
+  const t = threshold == null ? SHEET_CLOSE_PX : threshold;
+  return offset > t;
+}
+
+/* Swipe-down to close: wired on the drag handle + the sheet header only
+ * (NEVER the scrollable body, which keeps its native scroll). Presentation
+ * concern of the modal container — the content logic is untouched. The
+ * transform tracks the finger live (.sheet-dragging suspends the CSS
+ * transition); on release past the threshold the modal closes and the
+ * mobile sheet CSS animates it back down. Passive listeners: we never
+ * preventDefault. Desktop is unaffected (no touch events). */
+const _modalBox = modalOverlay ? modalOverlay.querySelector('.modal') : null;
+if (_modalBox) {
+  let startY = null;
+  let offset = 0;
+  const onStart = (e) => {
+    if (!e.touches || e.touches.length !== 1) return;
+    // Solo en el layout sheet (móvil): en desktops táctiles el modal va
+    // centrado y arrastrarlo lo desplazaría sin cerrar (QA 11/6).
+    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    startY = e.touches[0].clientY;
+    offset = 0;
+    _modalBox.classList.add('sheet-dragging');
+  };
+  const onMove = (e) => {
+    if (startY === null || !e.touches || !e.touches.length) return;
+    offset = sheetDragOffset(startY, e.touches[0].clientY);
+    _modalBox.style.transform = offset > 0 ? 'translateY(' + offset + 'px)' : '';
+  };
+  const onEnd = () => {
+    if (startY === null) return;
+    _modalBox.classList.remove('sheet-dragging');
+    _modalBox.style.transform = '';
+    if (sheetShouldClose(offset)) closeModal();
+    startY = null;
+    offset = 0;
+  };
+  [_modalBox.querySelector('.sheet-handle'), _modalBox.querySelector('.modal-top')]
+    .filter(Boolean)
+    .forEach(surface => {
+      surface.addEventListener('touchstart', onStart, { passive: true });
+      surface.addEventListener('touchmove', onMove, { passive: true });
+      surface.addEventListener('touchend', onEnd);
+      surface.addEventListener('touchcancel', onEnd);
+    });
+}
+
 /* Resolve which dataset (matches + streak stats) the modals must read for
  * the active season. Group IDs collide across seasons (A1..C3 exist both in
  * data-season-2024-2025.js and in the current-season HISTORY global), so:
@@ -152,13 +211,17 @@ export function openMatchDetail(match) {
   // Format jornada
   const jorLabel = jornada ? jornada : '';
 
-  // Top section: score + teams (scraped names → escaped)
+  // Top section: score + teams (scraped names → escaped).
+  // Scoreboard XL: same LED language as the jornada cards (.sb-num) — the
+  // winner's digit lights up accent, the loser dims, draws stay neutral.
+  const sbHomeCls = homeWin ? ' win' : awayWin ? ' lose' : ' draw';
+  const sbAwayCls = awayWin ? ' win' : homeWin ? ' lose' : ' draw';
   modalContent.innerHTML = `
     <div class="modal-group-label">${escHtml(groupLabel)}</div>
     ${jorLabel ? `<div class="modal-match-jornada">${escHtml(jorLabel)}</div>` : ''}
     <div class="modal-match">
       <div class="modal-team-name home">${escHtml(home)} ${teamBadge(home)}${homeTag}${draw ? drawLabel : ''}</div>
-      <div class="modal-big-score">${hs}<span class="score-dash">-</span>${as}</div>
+      <div class="modal-big-score scoreboard-xl"><span class="sb-num${sbHomeCls}">${hs}</span><span class="sb-sep">-</span><span class="sb-num${sbAwayCls}">${as}</span></div>
       <div class="modal-team-name away">${teamBadge(away)} ${escHtml(away)}${awayTag}${draw && !homeTag ? '' : ''}</div>
     </div>
     <div class="modal-match-date">${escHtml(date)}</div>
@@ -276,6 +339,9 @@ export function openMatchDetail(match) {
 
   modalBody.innerHTML = bodyHtml;
   modalOverlay.classList.add('open');
+  // Reset del scroll: si el modal anterior quedó scrolleado, el siguiente
+  // abría a mitad de contenido (QA 11/6).
+  modalBody.scrollTop = 0;
 
   // SP-2: add the lineups+timeline section above the existing goals section.
   const matchKey = match.home + '|' + match.away + '|' + match.hs + '-' + match.as;
@@ -484,6 +550,9 @@ export function openTeamDetail(teamName, groupId) {
 
   modalBody.innerHTML = body;
   modalOverlay.classList.add('open');
+  // Reset del scroll: si el modal anterior quedó scrolleado, el siguiente
+  // abría a mitad de contenido (QA 11/6).
+  modalBody.scrollTop = 0;
 
   // SP-2: lazy-fetch players + lineups; render Plantilla section.
   // Stale-slot guard: key the host so a slow fetch for a previously opened

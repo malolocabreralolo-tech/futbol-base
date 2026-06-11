@@ -1,6 +1,6 @@
 import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
-import { renderMiEquipo, matchDateISO, localTodayISO } from './miequipo.js';
+import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
 /* ====== SEARCH COUNT ====== */
 export function updateSearchCount() {
@@ -523,9 +523,15 @@ export function renderMatchCards(container, matches, type) {
     const featuredCls = (isFeatured(m.home) || isFeatured(m.away)) ? ' featured-team' : '';
     const card = el('div', `match-card ${hasScore ? 'completed' : 'upcoming'}${featuredCls}`);
     
+    // Played matches get the LED scoreboard pill: Bebas tabular digits on an
+    // inset dark face — winner lit in accent, loser dimmed, draws neutral.
     let scoreHtml;
+    let scoreCls = 'match-score';
     if (hasScore) {
-      scoreHtml = `<span class="score-num">${m.hs}</span><span class="score-sep">-</span><span class="score-num">${m.as}</span>`;
+      scoreCls = 'match-score scoreboard';
+      const sbH = m.hs > m.as ? ' win' : m.hs < m.as ? ' lose' : ' draw';
+      const sbA = m.as > m.hs ? ' win' : m.as < m.hs ? ' lose' : ' draw';
+      scoreHtml = `<span class="sb-num${sbH}">${m.hs}</span><span class="sb-sep">-</span><span class="sb-num${sbA}">${m.as}</span>`;
     } else {
       const timeTag = m.time ? `<span class="match-time-tag">${escapeHtml(m.time)}</span>` : '';
       scoreHtml = `<span class="score-vs">VS</span>${timeTag}`;
@@ -552,7 +558,7 @@ export function renderMatchCards(container, matches, type) {
     card.innerHTML = `
       <div class="match-teams">
         <div class="match-team home">${escapeHtml(m.home)} ${teamBadge(m.home)}</div>
-        <div class="match-score">${scoreHtml}</div>
+        <div class="${scoreCls}">${scoreHtml}</div>
         <div class="match-team away">${teamBadge(m.away)} ${escapeHtml(m.away)}</div>
       </div>
       <div class="match-date">${escapeHtml(dateStr)}${hasDetail ? ' <span class="detail-badge" title="Ver cronología de goles">⚽</span>' : ''}</div>
@@ -687,27 +693,49 @@ export function renderGolTable() {
     return;
   }
 
-  let html = '<div class="table-wrap"><table class="scorers-table"><thead><tr>';
-  html += '<th>#</th><th>Jugador</th><th>Equipo</th>';
-  if (isGlobal) html += '<th>Grupo</th>';
-  html += '<th>Goles</th><th>PJ</th>';
-  html += '</tr></thead><tbody>';
+  // Pichichi podium: the top 3 step out onto medal cards laid out 2º-1º-3º
+  // (gold in the middle, taller). Only when there is a full podium — with
+  // fewer than 3 scorers everyone renders in the .gol-list below, where the
+  // 👑 still marks the leader.
+  const maxGoals = scorers.reduce((mx, s) => Math.max(mx, s.goals || 0), 0);
+  const hasPodium = scorers.length >= 3;
+  let html = '';
+  if (hasPodium) {
+    const pod = (s, n, medal) =>
+      `<div class="gol-pod gol-pod-${n}">
+        <span class="gol-pod-medal" aria-hidden="true">${medal}</span>
+        <div class="gol-pod-name">${escapeHtml(s.name)}</div>
+        <div class="gol-pod-team">${escapeHtml(s.team)}${s.group ? ` · ${escapeHtml(s.group)}` : ''}</div>
+        <div class="gol-pod-goals">${s.goals}</div>
+        <div class="gol-pod-lbl">GOLES</div>
+      </div>`;
+    const [p1, p2, p3] = scorers;
+    html += `<div class="gol-podium">${pod(p2, 2, '🥈')}${pod(p1, 1, '🥇')}${pod(p3, 3, '🥉')}</div>`;
+  }
 
-  scorers.forEach((s, i) => {
-    const pos = i + 1;
-    const cls = pos <= 3 ? `pos-${pos}` : '';
-    const trophy = pos === 1 ? ' <span class="trophy">👑</span>' : '';
-    html += `<tr class="${cls}">`;
-    html += `<td>${pos}</td>`;
-    html += `<td>${escapeHtml(s.name)}${trophy}</td>`;
-    html += `<td>${escapeHtml(s.team)}</td>`;
-    if (isGlobal) html += `<td class="group-col">${escapeHtml(s.group)}</td>`;
-    html += `<td class="goals-col">${s.goals}</td>`;
-    html += `<td>${s.games || '-'}</td>`;
-    html += '</tr>';
-  });
-
-  html += '</tbody></table></div>';
+  // Rest of the ranking as an app-style list (no horizontal scroll on
+  // mobile): rank · name + team with the proportional bar underneath ·
+  // goals as accent digits · PJ. Same row language as MI EQUIPO's scorers.
+  const rest = hasPodium ? scorers.slice(3) : scorers;
+  if (rest.length) {
+    html += '<div class="gol-list">';
+    rest.forEach((s, i) => {
+      const pos = i + 1 + (hasPodium ? 3 : 0);
+      const trophy = pos === 1 ? ' <span class="trophy">👑</span>' : '';
+      const teamLine = escapeHtml(s.team) + (isGlobal && s.group ? ` <span class="gol-grp">· ${escapeHtml(s.group)}</span>` : '');
+      html += `<div class="gol-row">
+        <span class="gol-rk">${pos}</span>
+        <span class="gol-main">
+          <span class="gol-nm">${escapeHtml(s.name)}${trophy}</span>
+          <span class="gol-tm">${teamLine}</span>
+          <span class="gol-bar-track"><span class="gol-bar" style="width:${goalBarPct(s.goals, maxGoals)}%"></span></span>
+        </span>
+        <span class="gol-g">${s.goals}</span>
+        <span class="gol-pj">${s.games || '-'} PJ</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
   container.innerHTML = html;
 }
 

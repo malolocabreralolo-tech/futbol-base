@@ -122,17 +122,31 @@ function standingTr(r, isLeader) {
     + '</tr>';
 }
 
+/* Pure: width % for a scorer's goal bar, proportional to the section max.
+ * Rounded to integer and clamped to [0,100]; a positive share floors at 3 so
+ * a 1-goal bar stays a visible sliver. max<=0 (empty section) or goals<=0 or
+ * non-finite input → 0, never a division by zero. Shared with render.js
+ * (goleadores podium/table). TDD in test_uxui2_fixes.mjs. */
+export function goalBarPct(goals, max) {
+  const g = Number(goals), m = Number(max);
+  if (!Number.isFinite(g) || !Number.isFinite(m) || g <= 0 || m <= 0) return 0;
+  return Math.max(3, Math.round(Math.min(g / m, 1) * 100));
+}
+
 function renderScorers(scorers) {
   if (!scorers.length)
     return '<div class="me-ct">Goleadores del equipo</div>'
       + '<div class="me-empty">Sin goleadores registrados</div>';
   const list = _showAllScorers ? scorers : scorers.slice(0, 5);
+  const maxGoals = scorers.reduce((mx, p) => Math.max(mx, p.goals || 0), 0);
   let rows = '';
   list.forEach((p, i) => {
     rows += '<div class="me-scrow">'
       + '<span class="me-scrk">' + (i + 1) + '</span>'
-      + '<span class="me-scnm">' + esc(p.name)
+      + '<span class="me-scnm"><span class="me-scnm-t">' + esc(p.name)
         + (i === 0 ? ' &#128081;' : '') + '</span>'
+        + '<span class="gol-bar-track"><span class="gol-bar" style="width:'
+        + goalBarPct(p.goals, maxGoals) + '%"></span></span></span>'
       + '<span class="me-scg">' + p.goals + '</span>'
       + '<span class="me-scpj">' + p.games + ' PJ</span>'
       + '</div>';
@@ -206,15 +220,17 @@ export function renderMiEquipo() {
     const r = stand.row; // [pos, team, pts, j, g, e, p, gf, gc, df]
     const last = matches[outlook.lastPlayedIdx];
     const lastCls = last.result === 'W' ? 'G' : last.result === 'L' ? 'P' : 'E';
+    // The hero above already carries the XL final position — this card owns
+    // the season balance (PTS + G/E/P + goals) and the closing result.
     const overCard = el('div', 'me-card me-over');
     overCard.innerHTML =
       '<div class="me-over-flag"><span class="me-ln"></span>'
       + '<span class="me-over-t">&#127937; Temporada finalizada</span>'
       + '<span class="me-ln"></span></div>'
       + '<div class="me-over-main">'
-      + '<div class="me-over-pos"><span class="me-over-n">' + pos + '&ordm;</span>'
-      + '<span class="me-over-of">de ' + total + '<br>equipos</span></div>'
       + '<div class="me-over-stats">'
+      + '<div class="me-over-stat"><span class="n pts">' + r[2] + '</span><span class="l">PTS</span></div>'
+      + '<div class="me-over-sep"></div>'
       + '<div class="me-over-stat"><span class="n w">' + r[4] + '</span><span class="l">G</span></div>'
       + '<div class="me-over-stat"><span class="n d">' + r[5] + '</span><span class="l">E</span></div>'
       + '<div class="me-over-stat"><span class="n p">' + r[6] + '</span><span class="l">P</span></div>'

@@ -14,6 +14,13 @@ PREBENJAMIN_PATH = os.path.join(ROOT, 'data-prebenjamin.js')
 STRIP = re.compile(r'\b(CF|UD|CD|AD|SD|AFC|SC|CP|CE|CEF|SSD|ATLETICO|ATL)\b', re.IGNORECASE)
 
 def normalize(name):
+    """Mirror of src/state.js::normalizeTeamName — keep both in sync.
+
+    Pipeline (same as JS): NFD accent-strip -> strip quotes (straight+curly),
+    dots and commas -> strip club tokens (STRIP) -> lowercase -> collapse
+    whitespace. Verified equivalent against the JS side on every team name in
+    data-benjamin/prebenjamin + the 4 season files + SHIELDS keys (2026-06-11).
+    """
     # Strip diacritics/accents
     name = unicodedata.normalize('NFD', name)
     name = ''.join(c for c in name if unicodedata.category(c) != 'Mn')

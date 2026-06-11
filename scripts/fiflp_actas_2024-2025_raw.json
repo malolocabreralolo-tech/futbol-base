@@ -1,32 +1,4 @@
 {
-  "189453": {
-    "header": {
-      "season": null,
-      "jornada": null,
-      "date": null,
-      "home_team": null,
-      "away_team": null,
-      "home_score": null,
-      "away_score": null,
-      "competition": null
-    },
-    "lineups": {
-      "home": [],
-      "away": []
-    },
-    "events": [],
-    "staff": {
-      "referee": null,
-      "coach_home": null,
-      "coach_away": null
-    },
-    "cod_acta": 189453,
-    "enumeration": {
-      "comp_id": "1576",
-      "grupo": "189450",
-      "jornada": "1"
-    }
-  },
   "189450": {
     "header": {
       "season": "2024/2025",

@@ -53,11 +53,12 @@ jobs:
         run: |
           git config user.name  "GitHub Actions"
           git config user.email "actions@github.com"
+          # generate_js.py reescribe TODOS los data-*.js (incl.
+          # data-matchdetail-keys.js, data-seasons.js, data-season-*.js),
+          # bumpea ?v= en index.html y CACHE_NAME en sw.js: glob estable en
+          # vez de lista frágil, idéntico en los dos sitios de git add.
           git add scripts/fiflp_2425_raw.json futbolbase.db \
-            data-benjamin.js data-prebenjamin.js data-seasons.js \
-            data-history.js data-goleadores.js data-shields.js \
-            data-stats.js data-matchdetail.js index.html \
-            'data-season-*.js'
+            'data-*.js' index.html sw.js
           if git diff --cached --quiet; then
             echo "Sin cambios."
           else
@@ -65,9 +66,7 @@ jobs:
             git pull --rebase origin main
             git stash pop
             git add scripts/fiflp_2425_raw.json futbolbase.db \
-              data-benjamin.js data-prebenjamin.js data-seasons.js \
-              data-history.js data-goleadores.js data-shields.js \
-              data-stats.js data-matchdetail.js index.html
+              'data-*.js' index.html sw.js
             git commit -m "data: FIFLP 2024-2025 con resultados completos"
             git push
           fi

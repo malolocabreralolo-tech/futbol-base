@@ -1,12 +1,10 @@
 // src/matchdetail-rich.js — SP-2: alineaciones + cronología unificada.
+// C2: shared escape helper from state.js (no local duplicates).
+import { escapeHtml as esc } from './state.js';
+
 const ICONS = { goal: '⚽', yellow: '🟨', red: '🟥',
                 sub: '🔄', sub_in: '↑', sub_out: '↓' };
 const GOAL_LABEL = { penalty: ' (penalti)', own: ' (en propia)' };
-
-function esc(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g,
-    c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
-}
 
 function renderSidePlayers(players, side) {
   const starters = players.filter(p => p.r === 'starter');

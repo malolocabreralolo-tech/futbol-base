@@ -1,19 +1,16 @@
 import {
   $, el, teamBadge, S, FEATURED, isFeatured,
   featuredStandingFrom, featuredMatchesFrom, featuredScorersFrom,
-  ensureLineups, ensurePlayers, getCurrentSeason, normalizeForTeamsMapping} from './state.js';
+  ensureLineups, ensurePlayers, normalizeForTeamsMapping,
+  escapeHtml as esc} from './state.js';
 import { openMatchDetail } from './modals.js';
 import { renderPlantillaInto } from './plantilla.js';
 
 // data-*.js use top-level `const` (classic scripts) -> global LEXICAL bindings,
 // NOT properties of the global object. Read them as bare identifiers, typeof-guarded,
 // exactly like src/render.js & src/modals.js do.
+// (C2: `esc` is the shared escapeHtml from state.js, aliased above.)
 let _showAllScorers = false;
-
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, c =>
-    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
 
 function parseMatchDate(d) {
   if (!d) return null;
@@ -102,6 +99,21 @@ function renderScorers(scorers) {
   return '<div class="me-ct">Goleadores del equipo '
     + '<span class="me-mut">' + scorers.length + ' jugadores</span></div>'
     + rows + more;
+}
+
+/* MI EQUIPO is pinned to the CURRENT season: its standings/calendar/scorers
+ * read the current-season globals (PREBENJAMIN/HISTORY/GOL_PREBENJ), so the
+ * Plantilla card must use the current season too — NOT the season selected
+ * in the jornadas selector (S.season). Exported for tests. */
+export function miEquipoSeason(seasons) {
+  const cur = Array.isArray(seasons) ? seasons.find(s => s && s.current) : null;
+  return (cur && cur.name) || '2025-2026';
+}
+
+/* Team name used to look up the plantilla mapping. FEATURED has `name`
+ * (there is no `team` property). Exported for tests. */
+export function plantillaTeamName(featured) {
+  return (featured && featured.name) || '';
 }
 
 function jumpToFullGroup() {
@@ -228,9 +240,9 @@ export function renderMiEquipo() {
   c.appendChild(miniCard);
   $('#meGoGroup').addEventListener('click', jumpToFullGroup);
 
-  // SP-2: Plantilla card
+  // SP-2: Plantilla card — always the CURRENT season (see miEquipoSeason)
   const plantCard = el('div', 'me-card me-plant-card');
-  const season = getCurrentSeason();
+  const season = miEquipoSeason(typeof SEASONS !== 'undefined' ? SEASONS : null);
   plantCard.innerHTML = '<div class="me-ct">Plantilla ' + season.replace('-20', '-') + '</div>'
     + '<div id="me-plant-host" class="plant-host">'
     + '<div class="plant-empty plant-empty-loading">Cargando plantilla…</div>'
@@ -243,7 +255,7 @@ export function renderMiEquipo() {
       host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para esta temporada.</div>';
       return;
     }
-    const teamName = (typeof FEATURED !== 'undefined' && FEATURED.team) ? FEATURED.team : 'Las Mesas Hu.';
+    const teamName = plantillaTeamName(FEATURED);
     const teamId = pdata.teams[normalizeForTeamsMapping(teamName)];
     if (teamId == null) {
       host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para este equipo en esta temporada.</div>';

@@ -62,6 +62,30 @@ def group_num(group_name):
     return m.group(0) if m else ""
 
 
+# Tablas cuyas filas referencian matches(id): hay que borrarlas ANTES que los
+# propios matches (con FK ON via db.get_connection el DELETE crashearía).
+ACTA_CHILD_TABLES = ("appearances", "match_events", "match_staff", "goals")
+
+
+def _table_exists(conn, name):
+    return conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)
+    ).fetchone() is not None
+
+
+def delete_group_matches(conn, group_id):
+    """Borra los matches de un grupo y todas las filas que los referencian
+    (datos de actas y goles). NO commitea — el caller controla la transacción."""
+    for tbl in ACTA_CHILD_TABLES:
+        if _table_exists(conn, tbl):
+            conn.execute(
+                f"DELETE FROM {tbl} WHERE match_id IN "
+                f"(SELECT id FROM matches WHERE group_id=?)",
+                (group_id,),
+            )
+    conn.execute("DELETE FROM matches WHERE group_id=?", (group_id,))
+
+
 def current_jornada_for_group(jornadas):
     """
     Devuelve el número de jornada a mostrar como 'actual':
@@ -108,6 +132,16 @@ def import_group(conn, g, season_id):
 
     cur_jor = current_jornada_for_group(g["jornadas"])
 
+    # Scrape vacío (0 partidos — p.ej. timeout en la página de jornadas dejó un
+    # raw parcial): nunca borrar lo existente sin nada con que reemplazarlo.
+    n_scraped = sum(
+        1 for j in g["jornadas"] for m in j["matches"]
+        if m.get("home") and m.get("away")
+    )
+    if n_scraped == 0:
+        print(f"  [{code}] {grp_name} ({phase}): scrape vacío (0 partidos) — SKIP, se conserva lo existente")
+        return
+
     group_id = get_or_create_group(
         conn, season_id, cat_id, code,
         name=grp_name,
@@ -118,48 +152,61 @@ def import_group(conn, g, season_id):
         current_jornada=f"Jornada {cur_jor}" if cur_jor else None,
     )
 
-    # Limpiar datos anteriores de este grupo
-    conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
-    conn.execute("DELETE FROM matches   WHERE group_id=?", (group_id,))
-    conn.commit()
-
-    # Clasificación
+    # Pre-resolver todos los team ids ANTES de la sección destructiva:
+    # get_or_create_team() commitea internamente al crear un equipo, lo que
+    # commitearía los DELETE antes de los INSERT.
+    team_ids = {}
     for s in g["standings"]:
-        team_id = get_or_create_team(conn, s["team"])
-        conn.execute(
-            """INSERT OR REPLACE INTO standings
-               (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
-            (group_id, team_id,
-             s["pos"], s["pts"], s["j"], s["g"], s["e"], s["p"],
-             s["gf"] or 0, s["gc"] or 0, s["df"] or 0),
-        )
-    conn.commit()
-
-    # Partidos de todas las jornadas
+        team_ids[s["team"]] = get_or_create_team(conn, s["team"])
     for jor in g["jornadas"]:
         for m in jor["matches"]:
-            if not m["home"] or not m["away"]:
-                continue
-            home_id = get_or_create_team(conn, m["home"])
-            away_id = get_or_create_team(conn, m["away"])
-            # Solo almacenar marcador si ambos goles están presentes
-            hs = m.get("hs")
-            as_ = m.get("as")
-            score_h = hs if (hs is not None and as_ is not None) else None
-            score_a = as_ if (hs is not None and as_ is not None) else None
+            for name in (m.get("home"), m.get("away")):
+                if name and name not in team_ids:
+                    team_ids[name] = get_or_create_team(conn, name)
+
+    # Sección destructiva: UNA transacción por grupo (DELETE + INSERT se
+    # commitean juntos; un crash a mitad hace rollback y el grupo queda intacto).
+    try:
+        # Limpiar datos anteriores de este grupo (hijos primero: FK)
+        conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
+        delete_group_matches(conn, group_id)
+
+        # Clasificación
+        for s in g["standings"]:
             conn.execute(
-                """INSERT OR IGNORE INTO matches
-                   (group_id, jornada, date, time, home_team_id, away_team_id,
-                    home_score, away_score, venue)
-                   VALUES (?,?,?,?,?,?,?,?,?)""",
-                (group_id, jor["num"],
-                 fmt_date(m.get("date", "")), m.get("time", ""),
-                 home_id, away_id,
-                 score_h, score_a,
-                 m.get("venue", "")),
+                """INSERT OR REPLACE INTO standings
+                   (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+                (group_id, team_ids[s["team"]],
+                 s["pos"], s["pts"], s["j"], s["g"], s["e"], s["p"],
+                 s["gf"] or 0, s["gc"] or 0, s["df"] or 0),
             )
-    conn.commit()
+
+        # Partidos de todas las jornadas
+        for jor in g["jornadas"]:
+            for m in jor["matches"]:
+                if not m["home"] or not m["away"]:
+                    continue
+                # Solo almacenar marcador si ambos goles están presentes
+                hs = m.get("hs")
+                as_ = m.get("as")
+                score_h = hs if (hs is not None and as_ is not None) else None
+                score_a = as_ if (hs is not None and as_ is not None) else None
+                conn.execute(
+                    """INSERT OR IGNORE INTO matches
+                       (group_id, jornada, date, time, home_team_id, away_team_id,
+                        home_score, away_score, venue)
+                       VALUES (?,?,?,?,?,?,?,?,?)""",
+                    (group_id, jor["num"],
+                     fmt_date(m.get("date", "")), m.get("time", ""),
+                     team_ids[m["home"]], team_ids[m["away"]],
+                     score_h, score_a,
+                     m.get("venue", "")),
+                )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
 
     played = sum(1 for j in g["jornadas"] for m in j["matches"] if m["hs"] is not None)
     total  = sum(len(j["matches"]) for j in g["jornadas"])

@@ -57,8 +57,10 @@ def synth_group(conn, group_id, code):
 
     for h, a, hs, aas, _, _ in matches:
         _init(h); _init(a)
-        stats[h]["j"] += 1; stats[a]["j"] += 1
         if hs is not None and aas is not None:
+            # J counts PLAYED matches only — scheduled/unplayed fixtures
+            # (score NULL) must not inflate it.
+            stats[h]["j"] += 1; stats[a]["j"] += 1
             stats[h]["gf"] += hs; stats[h]["gc"] += aas
             stats[a]["gf"] += aas; stats[a]["gc"] += hs
             if hs > aas:

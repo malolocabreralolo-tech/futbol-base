@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/**.py'
+      - 'scripts/**.json'
+      - 'scripts/**.sh'
       - 'scripts/tests/**'
       - 'futbolbase.db'
       - 'data-*.js'
@@ -14,9 +16,12 @@ on:
       - 'sw.js'
       - 'manifest.json'
       - '.github/workflows/tests.yml'
+      - '.github/workflows/update.yml'
   pull_request:
     paths:
       - 'scripts/**.py'
+      - 'scripts/**.json'
+      - 'scripts/**.sh'
       - 'scripts/tests/**'
       - 'futbolbase.db'
       - 'data-*.js'
@@ -25,6 +30,14 @@ on:
       - 'style.css'
       - 'sw.js'
       - 'manifest.json'
+      - '.github/workflows/tests.yml'
+      - '.github/workflows/update.yml'
+  # Red de seguridad: los push del bot con GITHUB_TOKEN no disparan este
+  # workflow (anti-recursión de GitHub), así que un cron diario garantiza
+  # que las suites corren sobre main al menos una vez al día.
+  schedule:
+    - cron: '30 5 * * *'
+  workflow_dispatch:
 
 jobs:
   pytest:
@@ -35,7 +48,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install pytest
-        run: pip install pytest
+        run: pip install pytest pyyaml
       - name: Run Python tests
         run: python -m pytest scripts/tests/ -v
 
@@ -47,7 +60,9 @@ jobs:
         with:
           node-version: '22'
       - name: Run Node tests
-        run: node --test scripts/tests/test_js_modules.mjs
+        # Glob (contrato C5): coge todas las suites test_*.mjs presentes y
+        # futuras (render-smoke.mjs no matchea, corre en su propio job).
+        run: node --test scripts/tests/test_*.mjs
 
   render-smoke:
     runs-on: ubuntu-latest

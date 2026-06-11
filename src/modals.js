@@ -1,12 +1,15 @@
-import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail, ensureLineups, ensurePlayers, getCurrentSeason, normalizeForTeamsMapping } from './state.js';
+import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail, ensureLineups, ensurePlayers, getCurrentSeason, normalizeForTeamsMapping, escapeHtml as escHtml, escapeAttr as escAttr } from './state.js';
 import { renderPlantillaInto } from './plantilla.js';
 import { renderLineupsAndTimeline } from './matchdetail-rich.js';
 
 /* ====== MATCH DETAIL MODAL ====== */
-const modalOverlay = document.getElementById('matchModal');
-const modalClose = document.getElementById('modalClose');
-const modalContent = document.getElementById('modalContent');
-const modalBody = document.getElementById('modalBody');
+// typeof-guarded so the module stays importable under node (tests of the
+// pure helpers below). In the browser this is always the real document.
+const _doc = typeof document !== 'undefined' ? document : null;
+const modalOverlay = _doc ? _doc.getElementById('matchModal') : null;
+const modalClose = _doc ? _doc.getElementById('modalClose') : null;
+const modalContent = _doc ? _doc.getElementById('modalContent') : null;
+const modalBody = _doc ? _doc.getElementById('modalBody') : null;
 
 // Close modal
 if (modalClose) {
@@ -17,9 +20,54 @@ if (modalOverlay) {
     if (e.target === modalOverlay) closeModal();
   });
 }
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
-});
+if (_doc) {
+  _doc.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+}
+
+/* ====== PURE HELPERS (exported for tests) ====== */
+// (C2: escHtml/escAttr are the shared escapeHtml/escapeAttr from state.js,
+//  aliased in the import above — no local escape helpers in this module.)
+
+/* Resolve which dataset (matches + streak stats) the modals must read for
+ * the active season. Group IDs collide across seasons (A1..C3 exist both in
+ * data-season-2024-2025.js and in the current-season HISTORY global), so:
+ *   - historical season selected (state.season truthy): matches come from
+ *     the group's own `jornadas` — NEVER from HISTORY — and STATS (current
+ *     season only) is suppressed (stats: null).
+ *   - current season: HISTORY[groupId] first, falling back to the group's
+ *     `jornadas` (knockout/copa groups have no HISTORY entry).
+ * Both shapes are { 'Jornada N': [[date, home, away, hs, as], ...] }. */
+export function resolveSeasonDataset(state, opts) {
+  opts = opts || {};
+  const group = opts.group || null;
+  const historical = !!(state && state.season);
+  const groupJornadas =
+    (group && group.jornadas && typeof group.jornadas === 'object'
+     && !Array.isArray(group.jornadas)) ? group.jornadas : null;
+  if (historical) {
+    return { historical: true, matchSource: groupJornadas || {}, stats: null };
+  }
+  const history = opts.history || null;
+  const groupId = opts.groupId != null ? opts.groupId : (group && group.id);
+  const fromHistory = (history && groupId != null) ? history[groupId] : null;
+  return {
+    historical: false,
+    matchSource: fromHistory || groupJornadas || {},
+    stats: opts.stats || null,
+  };
+}
+
+/* Stale-slot guard for async insertions: an in-flight fetch callback may
+ * only write into `slot` if the modal still shows the content it was
+ * launched for. Hosts are tagged with dataset.key when the modal opens;
+ * the callback re-resolves the host by id and compares keys. */
+export function fillIfCurrent(slot, key, render) {
+  if (!slot || !slot.dataset || slot.dataset.key !== key) return false;
+  render(slot);
+  return true;
+}
 
 export function closeModal() {
   if (modalOverlay) modalOverlay.classList.remove('open');
@@ -27,13 +75,14 @@ export function closeModal() {
 
 /* Build the goal-timeline section HTML for a match detail entry.
  * Extracted so it can be rendered after the lazy ensureMatchDetail() fetch.
- * Markup identical to the previous inline version. */
-function buildGoalsHtml(detail, venue) {
+ * Exported for tests. Scorer/venue/referee come from scraped actas →
+ * always escaped before interpolation. */
+export function buildGoalsHtml(detail, venue) {
   let h = '<div class="modal-goals-section">';
   h += '<div class="modal-stats-header">⚽ Cronología de goles</div>';
   const venueToShow = detail.v || venue;
-  if (venueToShow) h += `<div class="modal-venue">📍 ${venueToShow}</div>`;
-  if (detail.r) h += `<div class="modal-venue">📝 Árbitro: ${detail.r}</div>`;
+  if (venueToShow) h += `<div class="modal-venue">📍 ${escHtml(venueToShow)}</div>`;
+  if (detail.r) h += `<div class="modal-venue">📝 Árbitro: ${escHtml(detail.r)}</div>`;
   h += '<div class="goals-timeline">';
   detail.g.forEach(g => {
     // g: [minute, name, running, 'h'/'a', type_char]
@@ -46,10 +95,10 @@ function buildGoalsHtml(detail, venue) {
     const typeIcon = gtype === 'p' ? ' (pen.)' : gtype === 'o' ? ' (p.p.)' : '';
     const sideClass = isHome ? 'goal-home' : 'goal-away';
     h += `<div class="goal-event ${sideClass}">
-      <div class="goal-minute">${min}'</div>
+      <div class="goal-minute">${escHtml(min)}'</div>
       <div class="goal-info">
-        <span class="goal-scorer">${scorer}${typeIcon}</span>
-        <span class="goal-running">${running}</span>
+        <span class="goal-scorer">${escHtml(scorer)}${typeIcon}</span>
+        <span class="goal-running">${escHtml(running)}</span>
       </div>
     </div>`;
   });
@@ -67,10 +116,23 @@ export function openMatchDetail(match) {
   let awayWin = as > hs;
   let draw = hs === as;
 
-  // Find group data
-  const allGroups = isHistorical() ? getData() : (S.cat === 'benjamin' ? BENJAMIN : PREBENJAMIN);
+  // Find group data (data-*.js globals are lexical consts → bare identifier
+  // reads must be typeof-guarded or a missing file throws ReferenceError)
+  const allGroups = isHistorical() ? getData()
+    : (S.cat === 'benjamin'
+        ? (typeof BENJAMIN !== 'undefined' ? BENJAMIN : [])
+        : (typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : []));
   const group = allGroups.find(g => g.id === groupId);
   const groupLabel = group ? `${group.phase} - ${group.name}` : '';
+
+  // Season-aware dataset: historical seasons must never read the
+  // current-season HISTORY/STATS globals (group IDs collide across seasons).
+  const dataset = resolveSeasonDataset(S, {
+    group,
+    groupId,
+    history: typeof HISTORY !== 'undefined' ? HISTORY : null,
+    stats: typeof STATS !== 'undefined' ? STATS : null,
+  });
 
   // Find team standings
   let homeStats = null, awayStats = null;
@@ -90,16 +152,16 @@ export function openMatchDetail(match) {
   // Format jornada
   const jorLabel = jornada ? jornada : '';
 
-  // Top section: score + teams
+  // Top section: score + teams (scraped names → escaped)
   modalContent.innerHTML = `
-    <div class="modal-group-label">${groupLabel}</div>
-    ${jorLabel ? `<div class="modal-match-jornada">${jorLabel}</div>` : ''}
+    <div class="modal-group-label">${escHtml(groupLabel)}</div>
+    ${jorLabel ? `<div class="modal-match-jornada">${escHtml(jorLabel)}</div>` : ''}
     <div class="modal-match">
-      <div class="modal-team-name home">${home} ${teamBadge(home)}${homeTag}${draw ? drawLabel : ''}</div>
+      <div class="modal-team-name home">${escHtml(home)} ${teamBadge(home)}${homeTag}${draw ? drawLabel : ''}</div>
       <div class="modal-big-score">${hs}<span class="score-dash">-</span>${as}</div>
-      <div class="modal-team-name away">${teamBadge(away)} ${away}${awayTag}${draw && !homeTag ? '' : ''}</div>
+      <div class="modal-team-name away">${teamBadge(away)} ${escHtml(away)}${awayTag}${draw && !homeTag ? '' : ''}</div>
     </div>
-    <div class="modal-match-date">${date}</div>
+    <div class="modal-match-date">${escHtml(date)}</div>
   `;
 
   // Body: team comparison stats + head-to-head
@@ -134,22 +196,24 @@ export function openMatchDetail(match) {
     bodyHtml += `<div class="modal-pos-row">
       <div class="modal-pos-card">
         <div class="pos-num">${homeStats[0]}º</div>
-        <div class="pos-team">${home}</div>
+        <div class="pos-team">${escHtml(home)}</div>
         <div class="pos-pts">${homeStats[2]} pts</div>
       </div>
       <div class="modal-pos-card">
         <div class="pos-num">${awayStats[0]}º</div>
-        <div class="pos-team">${away}</div>
+        <div class="pos-team">${escHtml(away)}</div>
         <div class="pos-pts">${awayStats[2]} pts</div>
       </div>
     </div>`;
   }
 
-  // Head-to-head: find all matches between these two teams in history
-  if (typeof HISTORY !== 'undefined' && HISTORY[groupId]) {
+  // Head-to-head: all matches between these two teams in the ACTIVE season's
+  // dataset (HISTORY for the current season, group.jornadas for historical).
+  const h2hSource = dataset.matchSource;
+  if (Object.keys(h2hSource).length > 0) {
     const h2hMatches = [];
-    const hist = HISTORY[groupId];
-    Object.entries(hist).forEach(([jorName, matches]) => {
+    Object.entries(h2hSource).forEach(([jorName, matches]) => {
+      if (!Array.isArray(matches)) return;
       matches.forEach(m => {
         // m: [date, home, away, hs, as]
         if (m[3] !== null && m[4] !== null) {
@@ -170,10 +234,10 @@ export function openMatchDetail(match) {
           hDate = `${p[2]}/${p[1]}`;
         }
         bodyHtml += `<div class="modal-h2h-match">
-          <span class="h2h-team home">${h.home}</span>
+          <span class="h2h-team home">${escHtml(h.home)}</span>
           <span class="h2h-score">${h.hs} - ${h.as}</span>
-          <span class="h2h-team away">${h.away}</span>
-          <span class="h2h-jornada">${h.jornada} · ${hDate}</span>
+          <span class="h2h-team away">${escHtml(h.away)}</span>
+          <span class="h2h-jornada">${escHtml(h.jornada)} · ${escHtml(hDate)}</span>
         </div>`;
       });
       bodyHtml += '</div>';
@@ -182,10 +246,12 @@ export function openMatchDetail(match) {
     }
   }
 
-  // Streaks comparison from STATS
-  if (typeof STATS !== 'undefined' && STATS[S.cat] && STATS[S.cat].teams) {
-    const hTeam = STATS[S.cat].teams[home];
-    const aTeam = STATS[S.cat].teams[away];
+  // Streaks comparison from STATS (current season only — dataset.stats is
+  // null when a historical season is selected)
+  const statsAll = dataset.stats;
+  if (statsAll && statsAll[S.cat] && statsAll[S.cat].teams) {
+    const hTeam = statsAll[S.cat].teams[home];
+    const aTeam = statsAll[S.cat].teams[away];
     if (hTeam && aTeam && hTeam.streak && aTeam.streak) {
       const streakColor = s => s.type === 'W' ? 'var(--accent)' : s.type === 'L' ? 'var(--red)' : 'var(--text3)';
       const streakText = s => s.type === 'W' ? 'victorias' : s.type === 'L' ? 'derrotas' : 'empates';
@@ -212,6 +278,7 @@ export function openMatchDetail(match) {
   modalOverlay.classList.add('open');
 
   // SP-2: add the lineups+timeline section above the existing goals section.
+  const matchKey = match.home + '|' + match.away + '|' + match.hs + '-' + match.as;
   const goalsSection = document.getElementById('modalGoalsSection');
   if (goalsSection && !document.getElementById('modalLineupsSection')) {
     const lineupsHost = document.createElement('div');
@@ -219,21 +286,27 @@ export function openMatchDetail(match) {
     lineupsHost.className = 'match-rich-host';
     goalsSection.parentNode.insertBefore(lineupsHost, goalsSection);
   }
+  // Stale-slot guard: tag the hosts with this match's key so an in-flight
+  // fetch for a previously opened match can never paint into this modal.
+  if (goalsSection) goalsSection.dataset.key = matchKey;
+  const lineupsHostNow = document.getElementById('modalLineupsSection');
+  if (lineupsHostNow) lineupsHostNow.dataset.key = matchKey;
   const season = getCurrentSeason();
-  const matchKey = match.home + '|' + match.away + '|' + match.hs + '-' + match.as;
   Promise.all([ensureLineups(season), ensureMatchDetail()]).then(([lineups, details]) => {
-    const lineupsHost = document.getElementById('modalLineupsSection');
     const m = lineups && lineups[matchKey];
-    if (lineupsHost && m) renderLineupsAndTimeline(lineupsHost, m);
-    const goalsHost = document.getElementById('modalGoalsSection');
-    if (goalsHost && (!m || !(m.events && m.events.length > 0))) {
-      const detail = details && details[matchKey];
-      if (detail && detail.g && detail.g.length > 0) {
-        goalsHost.innerHTML = buildGoalsHtml(detail, match.venue);
+    fillIfCurrent(document.getElementById('modalLineupsSection'), matchKey, host => {
+      if (m) renderLineupsAndTimeline(host, m);
+    });
+    fillIfCurrent(document.getElementById('modalGoalsSection'), matchKey, host => {
+      if (!m || !(m.events && m.events.length > 0)) {
+        const detail = details && details[matchKey];
+        if (detail && detail.g && detail.g.length > 0) {
+          host.innerHTML = buildGoalsHtml(detail, match.venue);
+        }
+      } else {
+        host.innerHTML = '';
       }
-    } else if (goalsHost) {
-      goalsHost.innerHTML = '';
-    }
+    });
   });
 }
 
@@ -256,15 +329,16 @@ export function openTeamDetail(teamName, groupId) {
 
   // Match source: current season uses the HISTORY global (per-group archive
   // accumulated over time). Historical seasons store matches directly on
-  // each group's `jornadas` field. Same row shape in both cases:
-  // [date, home, away, hs, as].
-  let matchSource = {};
-  if (typeof HISTORY !== 'undefined' && HISTORY[groupId]) {
-    matchSource = HISTORY[groupId];
-  } else if (group.jornadas && typeof group.jornadas === 'object'
-             && !Array.isArray(group.jornadas)) {
-    matchSource = group.jornadas;
-  }
+  // each group's `jornadas` field — and must NEVER fall through to HISTORY,
+  // whose group IDs (A1..C3) collide with past seasons. Same row shape in
+  // both cases: [date, home, away, hs, as].
+  const dataset = resolveSeasonDataset(S, {
+    group,
+    groupId,
+    history: typeof HISTORY !== 'undefined' ? HISTORY : null,
+    stats: typeof STATS !== 'undefined' ? STATS : null,
+  });
+  const matchSource = dataset.matchSource;
 
   const matches = [];
   Object.entries(matchSource).forEach(([jorName, jMatches]) => {
@@ -294,9 +368,9 @@ export function openTeamDetail(teamName, groupId) {
   // Header
   const groupLabel = `${group.phase} · ${group.name}`;
   modalContent.innerHTML = `
-    <div class="modal-group-label">${groupLabel}</div>
+    <div class="modal-group-label">${escHtml(groupLabel)}</div>
     <div class="modal-team-header">
-      <div class="modal-team-title">${teamBadge(teamName)} ${teamName}</div>
+      <div class="modal-team-title">${teamBadge(teamName)} ${escHtml(teamName)}</div>
       ${row ? `<div class="modal-team-pos">${row[0]}º clasificado · ${row[2]} pts</div>` : ''}
     </div>
   `;
@@ -324,7 +398,7 @@ export function openTeamDetail(teamName, groupId) {
     const form = matches.slice(-5);
     body += `<div class="modal-stats-header">Forma (últimos ${form.length})</div>
     <div class="form-strip">${form.map(m =>
-      `<span class="form-badge ${m.result}" title="${m.opp}">${m.result}</span>`
+      `<span class="form-badge ${m.result}" title="${escAttr(m.opp)}">${m.result}</span>`
     ).join('')}</div>`;
 
     body += `<div class="modal-stats-header">Resultados (${matches.length} partidos)</div>`;
@@ -334,20 +408,22 @@ export function openTeamDetail(teamName, groupId) {
       const resultCls = m.result === 'W' ? 'res-w' : m.result === 'L' ? 'res-l' : 'res-d';
       const locLabel = m.isHome ? 'Casa' : 'Fuera';
       body += `<div class="team-result-row">
-        <span class="tr-jornada">${m.jornada.replace('Jornada ', 'J')}</span>
+        <span class="tr-jornada">${escHtml(m.jornada.replace('Jornada ', 'J'))}</span>
         <span class="tr-loc">${locLabel}</span>
-        <span class="tr-opp">${m.opp}</span>
+        <span class="tr-opp">${escHtml(m.opp)}</span>
         <span class="tr-score ${resultCls}">${m.gf}-${m.gc}</span>
-        <span class="tr-date">${dateStr}</span>
+        <span class="tr-date">${escHtml(dateStr)}</span>
       </div>`;
     });
   } else {
     body += '<div class="modal-h2h-empty">No hay resultados registrados aún</div>';
   }
 
-  // Enrich with STATS data if available
-  if (typeof STATS !== 'undefined' && STATS[S.cat] && STATS[S.cat].teams && STATS[S.cat].teams[teamName]) {
-    const ts = STATS[S.cat].teams[teamName];
+  // Enrich with STATS data if available (current season only — suppressed
+  // via dataset.stats=null when a historical season is selected)
+  const teamStatsAll = dataset.stats;
+  if (teamStatsAll && teamStatsAll[S.cat] && teamStatsAll[S.cat].teams && teamStatsAll[S.cat].teams[teamName]) {
+    const ts = teamStatsAll[S.cat].teams[teamName];
     body += '<div class="modal-section-title">Análisis avanzado</div>';
 
     // Streak
@@ -381,10 +457,10 @@ export function openTeamDetail(teamName, groupId) {
 
     // Best win / Worst loss
     if (ts.biggestWin) {
-      body += `<div class="result-highlight win">🏆 Mayor victoria: <strong>${ts.biggestWin.score}</strong> vs ${ts.biggestWin.vs} (${ts.biggestWin.date})</div>`;
+      body += `<div class="result-highlight win">🏆 Mayor victoria: <strong>${escHtml(ts.biggestWin.score)}</strong> vs ${escHtml(ts.biggestWin.vs)} (${escHtml(ts.biggestWin.date)})</div>`;
     }
     if (ts.worstLoss) {
-      body += `<div class="result-highlight loss">💔 Peor derrota: <strong>${ts.worstLoss.score}</strong> vs ${ts.worstLoss.vs} (${ts.worstLoss.date})</div>`;
+      body += `<div class="result-highlight loss">💔 Peor derrota: <strong>${escHtml(ts.worstLoss.score)}</strong> vs ${escHtml(ts.worstLoss.vs)} (${escHtml(ts.worstLoss.date)})</div>`;
     }
   }
 
@@ -400,10 +476,16 @@ export function openTeamDetail(teamName, groupId) {
   modalOverlay.classList.add('open');
 
   // SP-2: lazy-fetch players + lineups; render Plantilla section.
+  // Stale-slot guard: key the host so a slow fetch for a previously opened
+  // team can never paint its plantilla into this modal. The callback param
+  // shadows the outer `host` on purpose: it is the re-resolved live node.
   const season = getCurrentSeason();
+  const plantKey = season + '|' + teamName;
   const host = document.getElementById('plant-modal-host');
   if (host) {
+    host.dataset.key = plantKey;
     Promise.all([ensurePlayers(season), ensureLineups(season)]).then(([pdata, ldata]) => {
+      fillIfCurrent(document.getElementById('plant-modal-host'), plantKey, (host) => {
       if (!pdata) {
         host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para esta temporada.</div>';
         return;
@@ -419,6 +501,7 @@ export function openTeamDetail(teamName, groupId) {
         season,
         lineupsForExpand: ldata || undefined,
       });
+      });
     });
   }
 
@@ -426,12 +509,6 @@ export function openTeamDetail(teamName, groupId) {
   // cross-season table for this team. Same trust model as the rest of this
   // file — data comes from our own DB-generated JSON, not user input.
   loadCrossSeasonHistory(teamName);
-}
-
-// Escape user-derived strings before interpolating into innerHTML.
-function escHtml(s) {
-  return String(s).replace(/[&<>"']/g, c =>
-    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 const _seasonCache = {};
@@ -460,16 +537,23 @@ async function loadAllHistoricalSeasons() {
 }
 
 async function loadCrossSeasonHistory(teamName) {
-  const headerLoading = document.getElementById('histAllSeasonsLoading');
-  const container = document.getElementById('histAllSeasonsBody');
+  // Stale-slot guard: key the container before awaiting so a slow fetch for
+  // a previously opened team modal can never paint into a newer one.
+  let container = document.getElementById('histAllSeasonsBody');
   if (!container) return;
+  container.dataset.key = teamName;
 
   const target = normalizeTeamName(teamName);
   const seasons = await loadAllHistoricalSeasons();
+  container = document.getElementById('histAllSeasonsBody');
+  if (!container || container.dataset.key !== teamName) return; // stale
+  const headerLoading = document.getElementById('histAllSeasonsLoading');
   if (headerLoading) headerLoading.remove();
 
   if (!seasons.length) {
-    container.innerHTML = '<div class="modal-h2h-empty" style="font-size:12px">Sin temporadas históricas disponibles</div>';
+    fillIfCurrent(container, teamName, host => {
+      host.innerHTML = '<div class="modal-h2h-empty" style="font-size:12px">Sin temporadas históricas disponibles</div>';
+    });
     return;
   }
 

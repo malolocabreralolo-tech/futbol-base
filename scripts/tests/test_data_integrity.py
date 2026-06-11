@@ -299,12 +299,16 @@ def test_generate_players_js_aggregates(tmp_path):
 
 
 def test_generate_players_js_emits_teams_mapping(tmp_path):
-    """data-players-<S>.js incluye TEAMS_<S> = {<norm_name>: team_id}."""
+    """data-players-<S>.js incluye TEAMS_<S> = {<norm_name>: team_id}.
+
+    Contrato C1: las claves se normalizan con normalize_for_teams_mapping
+    (conserva la letra de filial: 'UD Atalaya'→'atalaya', 'UD Atalaya B'→
+    'atalaya b'), NO con acta_reconciler.normalize_team_name (que colapsa
+    filiales y provocaba colisiones last-wins)."""
     import shutil, sqlite3, json, re, os
     from scripts.migrate_actas_schema import migrate
     from scripts.import_fiflp_actas import import_raw
-    from scripts.generate_js import generate_players_js
-    from scripts.acta_reconciler import normalize_team_name
+    from scripts.generate_js import generate_players_js, normalize_for_teams_mapping
     ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     DB_PATH = os.path.join(ROOT, "futbolbase.db")
     db = tmp_path / "fb.db"; shutil.copy(DB_PATH, db)
@@ -330,5 +334,5 @@ def test_generate_players_js_emits_teams_mapping(tmp_path):
     m = re.search(rf"const TEAMS_{suffix}\s*=\s*(\{{.*?\}});", js, re.DOTALL)
     assert m, "TEAMS_<S> declaration not parseable"
     teams = json.loads(m.group(1))
-    assert normalize_team_name(real[2]) in teams
-    assert teams[normalize_team_name(real[2])] == real[7]
+    assert normalize_for_teams_mapping(real[2]) in teams
+    assert teams[normalize_for_teams_mapping(real[2])] == real[7]

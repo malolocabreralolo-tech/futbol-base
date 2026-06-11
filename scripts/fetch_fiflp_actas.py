@@ -72,9 +72,37 @@ def raw_path(season_code):
     return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_raw.json"
 
 
+def is_empty_acta(acta):
+    """True when a parsed acta carries no data at all (the FIFLP anti-scrape
+    empty frameset parsed into an all-None header with empty lineups).
+
+    Such entries must never be treated as successfully scraped: persisting
+    them poisons the resume state and the acta is skipped forever.
+    """
+    if not acta:
+        return True
+    h = acta.get("header") or {}
+    lineups = acta.get("lineups") or {}
+    return (
+        all(h.get(k) is None for k in ("season", "home_team", "away_team", "date"))
+        and not lineups.get("home")
+        and not lineups.get("away")
+    )
+
+
 def load_raw(season_code):
     p = raw_path(season_code)
-    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+    if not p.exists():
+        return {}
+    data = json.loads(p.read_text(encoding="utf-8"))
+    # Purge empty entries persisted by older runs so the resume logic treats
+    # them as pending again (they were anti-scrape blanks, not real data).
+    dead = [k for k, v in data.items() if is_empty_acta(v)]
+    for k in dead:
+        del data[k]
+    if dead:
+        print(f"  purged {len(dead)} empty acta(s) from resume state — will retry")
+    return data
 
 
 def save_raw(season_code, data):
@@ -463,6 +491,11 @@ def main():
             cod = t["cod_acta"]
             acta = fetch_and_parse_acta(page, cod, args.dump_fixture)
             if acta is None:
+                continue
+            if is_empty_acta(acta):
+                # Anti-scrape blank survived all retries: do NOT persist it as
+                # done, so the next incremental run retries this acta.
+                print(f"  ! acta {cod} empty after retries — not persisted (will retry next run)")
                 continue
             acta["cod_acta"]    = int(cod)
             acta["enumeration"] = {

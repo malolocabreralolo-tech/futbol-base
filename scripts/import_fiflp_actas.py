@@ -14,7 +14,13 @@ import sqlite3
 import sys
 import unicodedata
 
-from scripts.acta_reconciler import reconcile_acta
+try:
+    from scripts.acta_reconciler import reconcile_acta
+except ImportError:
+    # Direct CLI run (`python3 scripts/import_fiflp_actas.py`): sys.path[0] is
+    # scripts/, so the `scripts.` package is not importable. Add the repo root.
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from scripts.acta_reconciler import reconcile_acta
 
 UNMATCHED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_actas_unmatched.json")
 
@@ -50,19 +56,40 @@ def _team_id_by_side(conn, mid: int, side: str) -> int:
 # Core import logic for a single acta
 # ---------------------------------------------------------------------------
 
-def _import_one(conn, cod_acta: int, acta: dict) -> bool:
-    """Import one parsed acta into the DB. Returns True if reconciled."""
-    mid = reconcile_acta(conn, acta.get("header") or {})
+def _clear_acta_rows(conn, mid: int) -> None:
+    """Delete every acta-derived row of a match (appearances/events/staff)."""
+    conn.execute("DELETE FROM appearances  WHERE match_id=?", (mid,))
+    conn.execute("DELETE FROM match_events WHERE match_id=?", (mid,))
+    conn.execute("DELETE FROM match_staff  WHERE match_id=?", (mid,))
+
+
+def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
+    """Import one parsed acta into the DB. Returns True if reconciled.
+
+    `mid` may be precomputed by the caller (import_raw reconciles first for
+    duplicate detection); when None, it is resolved here.
+    """
+    if mid is None:
+        mid = reconcile_acta(conn, acta.get("header") or {})
     if not mid:
         return False
+
+    # If this acta was previously assigned to a DIFFERENT match (reconciliation
+    # changed between runs), clear the stale assignment and its stale rows —
+    # otherwise the old match would keep publishing obsolete lineups.
+    for (old_mid,) in conn.execute(
+        "SELECT id FROM matches WHERE cod_acta=? AND id<>?", (cod_acta, mid)
+    ).fetchall():
+        _clear_acta_rows(conn, old_mid)
+        conn.execute("UPDATE matches SET cod_acta=NULL WHERE id=?", (old_mid,))
+        print(f"  ! cleared stale cod_acta={cod_acta} from match {old_mid} "
+              f"(acta now reconciles to match {mid})")
 
     # Mark the match with its acta code
     conn.execute("UPDATE matches SET cod_acta=? WHERE id=?", (cod_acta, mid))
 
     # Idempotency: wipe prior rows for this match before re-inserting
-    conn.execute("DELETE FROM appearances  WHERE match_id=?", (mid,))
-    conn.execute("DELETE FROM match_events WHERE match_id=?", (mid,))
-    conn.execute("DELETE FROM match_staff  WHERE match_id=?", (mid,))
+    _clear_acta_rows(conn, mid)
 
     # Insert appearances and build name -> (player_id, team_id) map
     name_to_pid: dict = {}
@@ -184,34 +211,97 @@ def _save_unmatched(d: dict) -> None:
 # Public API
 # ---------------------------------------------------------------------------
 
+def _purge_orphan_cod_actas(conn, raw: dict) -> int:
+    """NULL out matches.cod_acta (and drop their stale acta rows) when the
+    acta no longer exists in the raw being imported.
+
+    Scoped to the seasons covered by the raw's headers, so importing one
+    season's raw never touches other seasons' assignments. Assumes the raw is
+    the COMPLETE harvest for its season(s).
+    """
+    season_ids = set()
+    for acta in raw.values():
+        s = ((acta.get("header") or {}).get("season") or "").replace("/", "-")
+        if not s:
+            continue
+        r = conn.execute("SELECT id FROM seasons WHERE name=?", (s,)).fetchone()
+        if r:
+            season_ids.add(r[0])
+    if not season_ids:
+        return 0
+    known = set()
+    for k in raw.keys():
+        try:
+            known.add(int(k))
+        except (TypeError, ValueError):
+            pass
+    qmarks = ",".join("?" * len(season_ids))
+    rows = conn.execute(
+        f"""SELECT m.id, m.cod_acta
+              FROM matches m
+              JOIN groups g ON g.id=m.group_id
+             WHERE g.season_id IN ({qmarks}) AND m.cod_acta IS NOT NULL""",
+        tuple(season_ids),
+    ).fetchall()
+    cleared = 0
+    for mid, cod in rows:
+        if cod not in known:
+            _clear_acta_rows(conn, mid)
+            conn.execute("UPDATE matches SET cod_acta=NULL WHERE id=?", (mid,))
+            print(f"  ! orphan cod_acta={cod} on match {mid} (acta no longer in raw) — cleared")
+            cleared += 1
+    return cleared
+
+
 def import_raw(conn, raw_path: str) -> dict:
     """Read raw_path JSON and import each acta into conn.
 
-    Returns {"matched": int, "unmatched": int}.
-    Commits the connection after processing all actas.
+    Returns {"matched": int, "unmatched": int, "duplicates": int,
+    "orphans_cleared": int}. Commits the connection after processing all actas.
     Unmatched actas are written to fiflp_actas_unmatched.json (by cod_acta key).
+    Two actas reconciling to the same match are reported as duplicates (first
+    one wins, the rest are skipped with a warning). Matches holding a cod_acta
+    that no longer exists in the raw (same seasons) get it cleared.
     """
     with open(raw_path, encoding="utf-8") as f:
         raw = json.load(f)
 
     matched = 0
     unmatched = 0
+    duplicates = 0
     um = _load_unmatched()
+    claimed = {}  # match_id -> cod_acta that claimed it in this run
+
+    orphans_cleared = _purge_orphan_cod_actas(conn, raw)
 
     for cod_acta_str, acta in raw.items():
-        ok = _import_one(conn, int(cod_acta_str), acta)
-        if ok:
-            matched += 1
-        else:
+        cod_acta = int(cod_acta_str)
+        mid = reconcile_acta(conn, acta.get("header") or {})
+        if not mid:
             unmatched += 1
             um[str(cod_acta_str)] = {
                 "header": (acta.get("header") or {}),
                 "reason": "no candidate match",
             }
+            continue
+        prev = claimed.get(mid)
+        if prev is not None and prev != cod_acta:
+            duplicates += 1
+            print(f"  ! DUPLICATE: acta {cod_acta} reconciles to match {mid} "
+                  f"already claimed by acta {prev} in this run — skipped")
+            continue
+        claimed[mid] = cod_acta
+        _import_one(conn, cod_acta, acta, mid=mid)
+        matched += 1
 
     conn.commit()
     _save_unmatched(um)
-    return {"matched": matched, "unmatched": unmatched}
+    return {
+        "matched": matched,
+        "unmatched": unmatched,
+        "duplicates": duplicates,
+        "orphans_cleared": orphans_cleared,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -230,7 +320,8 @@ def main() -> None:
         db_path = sys.argv[idx + 1]
     conn = sqlite3.connect(db_path)
     rpt = import_raw(conn, raw_path)
-    print(f"Imported {raw_path}: matched={rpt['matched']} unmatched={rpt['unmatched']}")
+    print(f"Imported {raw_path}: matched={rpt['matched']} unmatched={rpt['unmatched']} "
+          f"duplicates={rpt['duplicates']} orphans_cleared={rpt['orphans_cleared']}")
 
 
 if __name__ == "__main__":

@@ -82,13 +82,15 @@ def _names_match(acta_norm: str, db_norm: str) -> bool:
     # "La Garita" — same team in different word order. Compare as token sets;
     # accept when the smaller set is a subset of the larger AND the smaller has
     # >= 2 tokens with at least one >= 5 chars (avoids false-positives on
-    # generic words like "atletico de la").
+    # different clubs sharing one word, e.g. "viera" vs "garepa viera" or
+    # "sporting" vs "real sporting"). 1-token names still match via the
+    # equality / prefix-rescue paths above.
     acta_tokens = {t for t in re.split(r"\s+", acta_norm) if len(t) >= 2}
     db_tokens   = {t for t in re.split(r"\s+", db_norm)   if len(t) >= 2}
     if not acta_tokens or not db_tokens:
         return False
     smaller, larger = (acta_tokens, db_tokens) if len(acta_tokens) <= len(db_tokens) else (db_tokens, acta_tokens)
-    if smaller.issubset(larger) and len(smaller) >= 1 and any(len(t) >= 5 for t in smaller):
+    if smaller.issubset(larger) and len(smaller) >= 2 and any(len(t) >= 5 for t in smaller):
         return True
     # Also accept high overlap (>=2 tokens, one >=5 chars) — e.g. partial truncation.
     common = acta_tokens & db_tokens
@@ -123,8 +125,37 @@ def _parse_date(s: str):
     return None
 
 
+def _contradicts(header: dict, row) -> bool:
+    """True if the acta header's date or score CONTRADICT a candidate match row.
+
+    row = (id, home_name, away_name, date, home_score, away_score).
+    Only fields present and parseable on BOTH sides are compared; missing or
+    unparseable data never counts as a contradiction.
+    """
+    target = _parse_date(header.get("date"))
+    if target:
+        d = _parse_date(row[3])
+        if d and abs((d - target).days) > 1:
+            return True
+    hs = header.get("home_score")
+    asc_ = header.get("away_score")
+    if (hs is not None and asc_ is not None
+            and row[4] is not None and row[5] is not None
+            and (row[4], row[5]) != (hs, asc_)):
+        return True
+    return False
+
+
 def reconcile_acta(conn, header: dict):
-    """Return matches.id if exactly one match can be identified, else None."""
+    """Return matches.id if exactly one match can be identified, else None.
+
+    A single name-based candidate is NOT accepted blindly: if the acta header
+    carries a parseable date and/or a score and either one contradicts the
+    candidate match (date off by more than 1 day, or different score), the
+    acta is left unreconciled (returns None) and a warning is logged. This
+    prevents actas of games absent from the DB from being written over an
+    unrelated match that merely shares the team names.
+    """
     sid = _season_id(conn, header)
     if not sid:
         return None
@@ -153,7 +184,16 @@ def reconcile_acta(conn, header: dict):
     ]
 
     if len(candidates) == 1:
-        return candidates[0][0]
+        cand = candidates[0]
+        if _contradicts(header, cand):
+            print(
+                f"  ! reconcile rejected: acta '{header.get('home_team')}' vs "
+                f"'{header.get('away_team')}' ({header.get('date')}, "
+                f"{header.get('home_score')}-{header.get('away_score')}) contradicts "
+                f"unique candidate match id={cand[0]} ({cand[3]}, {cand[4]}-{cand[5]})"
+            )
+            return None
+        return cand[0]
     if len(candidates) == 0:
         return None
 

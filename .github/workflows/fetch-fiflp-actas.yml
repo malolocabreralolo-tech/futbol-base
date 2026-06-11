@@ -96,14 +96,17 @@ jobs:
               [ -e "$f" ] && git add "$f"
             done
           }
+          # generate_js.py reescribe TODOS los data-*.js (no solo lineups/
+          # players), bumpea ?v= en index.html y CACHE_NAME en sw.js: hay que
+          # stagear todos sus outputs o el runner los descarta.
           stage_all() {
             add_if_exists scripts/fiflp_actas_*_raw.json
             add_if_exists scripts/fiflp_actas_unmatched.json
             add_if_exists futbolbase.db
-            add_if_exists data-lineups-*.js
-            add_if_exists data-players-*.js
+            add_if_exists data-*.js
             add_if_exists scripts/tests/fixtures/acta_*.html
             add_if_exists index.html
+            add_if_exists sw.js
           }
 
           stage_all

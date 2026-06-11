@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo } from './miequipo.js';
 
@@ -34,6 +34,26 @@ export function renderSection() {
   else if (sec === 'stats') renderStats();
 }
 
+/* Honest error state when a historical season failed to load: message +
+ * retry button (ensureSeasonData clears its single-flight on failure, so
+ * the retry actually refetches). Returns null when there is no error. */
+function seasonErrorBox() {
+  if (!isHistorical()) return null;
+  const err = getSeasonError(S.season);
+  if (!err) return null;
+  const seasonLabel = escapeHtml(S.season.replace('-', '/'));
+  const box = el('div', 'empty-state season-error',
+    '<div class="empty-icon">⚠️</div><p>No se pudieron cargar los datos de la temporada '
+    + seasonLabel + ' — reintentar</p>');
+  const btn = el('button', 'season-retry-btn', 'Reintentar');
+  btn.addEventListener('click', async () => {
+    await ensureSeasonData(S.season);
+    renderSection();
+  });
+  box.appendChild(btn);
+  return box;
+}
+
 /* ====== CLASIFICACIONES ====== */
 export function renderClasif() {
   const container = $('#sec-clasif');
@@ -45,12 +65,17 @@ export function renderClasif() {
   }
 
   if (isHistorical()) {
-    const data = getData();
-    if (!data.length) {
-      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div><p>No hay datos disponibles para esta categoría en la temporada ' + S.season.replace('-', '/') + '</p></div>';
+    const errBox = seasonErrorBox();
+    if (errBox) {
+      container.appendChild(errBox);
       return;
     }
-    const banner = el('div', 'historical-banner', '📋 Datos históricos · Temporada ' + S.season.replace('-', '/') + ' · Sin goleadores individuales');
+    const data = getData();
+    if (!data.length) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div><p>No hay datos disponibles para esta categoría en la temporada ' + escapeHtml(S.season.replace('-', '/')) + '</p></div>';
+      return;
+    }
+    const banner = el('div', 'historical-banner', '📋 Datos históricos · Temporada ' + escapeHtml(S.season.replace('-', '/')) + ' · Sin goleadores individuales');
     container.appendChild(banner);
   }
 
@@ -66,7 +91,7 @@ export function renderClasif() {
   const defaultGroup = S.jorGroup || (S.cat === 'benjamin' ? 'A2' : 'PG2');
   Object.entries(phases).forEach(([phase, groups]) => {
     const filteredGroups = filterGroups(groups);
-    const hdr = el('div', 'phase-header', `<span class="phase-icon">${phaseIcons[phase]||'⚽'}</span> ${phase}`);
+    const hdr = el('div', 'phase-header', `<span class="phase-icon">${phaseIcons[phase]||'⚽'}</span> ${escapeHtml(phase)}`);
     container.appendChild(hdr);
 
     groups.forEach(g => {
@@ -93,13 +118,8 @@ function filterGroups(groups) {
   );
 }
 
-/** HTML-escape user-derived strings (team names from FIFLP can contain
- * `"`, `&`, etc). The rest of the file uses innerHTML on our own data,
- * but here the strings come straight from the source so we escape. */
-function _esc(s) {
-  return String(s).replace(/[&<>"']/g, c =>
-    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
+/* HTML escaping: import escapeHtml/escapeAttr from state.js (C2 — single
+ * shared implementation; scraped names contain quotes, see state.js). */
 
 /** Returns true if this group is a knockout/cup tournament (not a league).
  * Detected via: phase contains "Copa" / "Campeon", group id starts with
@@ -122,12 +142,12 @@ export function buildGroupCard(g, forceOpen) {
   // "N equipos" (uninformative for a bracket).
   const champion = knockout && g.standings.length ? g.standings[0][1] : null;
   const headerBadge = knockout && champion
-    ? `<span class="group-badge cup-badge" title="Campeón">🏆 ${_esc(champion)}</span>`
+    ? `<span class="group-badge cup-badge" title="Campeón">🏆 ${escapeHtml(champion)}</span>`
     : `<span class="group-badge">${teamCount} equipos</span>`;
   card.innerHTML = `
     <div class="group-header">
       <div class="group-title">
-        ${_esc(g.name)} ${headerBadge}${g.jornada && !knockout ? ` <span class="jornada-badge">${_esc(g.jornada)}</span>` : ''}
+        ${escapeHtml(g.name)} ${headerBadge}${g.jornada && !knockout ? ` <span class="jornada-badge">${escapeHtml(g.jornada)}</span>` : ''}
       </div>
       <span class="group-chevron">▾</span>
     </div>
@@ -174,8 +194,8 @@ function buildKnockoutBracket(g) {
     const date = dateMatch ? dateMatch[1] : '';
     html += `<div class="bracket-round">
       <div class="bracket-round-title">
-        <span>${_esc(label)}</span>
-        ${date ? `<span class="bracket-round-date">${_esc(date)}</span>` : ''}
+        <span>${escapeHtml(label)}</span>
+        ${date ? `<span class="bracket-round-date">${escapeHtml(date)}</span>` : ''}
       </div>`;
     matches.forEach(m => {
       const [, home, away, hs, as] = m;
@@ -197,11 +217,11 @@ function buildKnockoutBracket(g) {
       // name in standings (otherwise the lookup misses).
       html += `<div class="bracket-match${isFinalMatch ? ' bracket-match-final' : ''}">
         <div class="${homeClass}${homeIsChamp ? ' champion' : ''}">
-          <span class="bracket-team-name"><span class="team-name-cell" data-group="${_esc(g.id)}">${teamBadge(home)} ${_esc(home)}</span>${homeIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}">${teamBadge(home)} ${escapeHtml(home)}</span>${homeIsChamp ? ' 🏆' : ''}</span>
           <span class="bracket-score">${hs != null ? hs : '–'}</span>
         </div>
         <div class="${awayClass}${awayIsChamp ? ' champion' : ''}">
-          <span class="bracket-team-name"><span class="team-name-cell" data-group="${_esc(g.id)}">${teamBadge(away)} ${_esc(away)}</span>${awayIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}">${teamBadge(away)} ${escapeHtml(away)}</span>${awayIsChamp ? ' 🏆' : ''}</span>
           <span class="bracket-score">${as != null ? as : '–'}</span>
         </div>
       </div>`;
@@ -231,7 +251,7 @@ export function buildStandingsTable(standings, groupId) {
     const cls = (pos <= 3 ? `pos-${pos}` : '') + (isFeatured(row[1]) ? ' featured-team' : '');
     html += `<tr class="${cls.trim()}">`;
     html += `<td>${pos}</td>`;
-    html += `<td class="team-name-cell" data-group="${groupId}">${teamBadge(row[1])} ${row[1]}</td>`;
+    html += `<td class="team-name-cell" data-group="${escapeAttr(groupId)}">${teamBadge(row[1])} ${escapeHtml(row[1])}</td>`;
     if (showForm) {
       // Form column
       const form = getTeamForm(row[1], groupId);
@@ -326,35 +346,37 @@ export function renderJornadaContent() {
 
   // HISTORICAL PATH
   if (isHistorical() && group.jornadas && Object.keys(group.jornadas).length > 0) {
-    var jorNums = Object.keys(group.jornadas).map(Number).sort(function(a,b){return a-b;});
-    if (!S.jorNum || !jorNums.includes(Number(S.jorNum))) {
-      var lastPlayed = jorNums[jorNums.length - 1];
-      for (var i = jorNums.length - 1; i >= 0; i--) {
-        var ms = group.jornadas[jorNums[i]] || [];
+    // Keys may be numeric ('5'), 'Jornada 5' or non-numeric copa rounds
+    // ('08-06-2025 ( Ronda 1 Ida )'): keep the RAW key for lookups and let
+    // jornadaLabel decide the pill text (never 'J' + NaN).
+    var jorKeys = sortJornadaKeys(Object.keys(group.jornadas));
+    if (!S.jorNum || jorKeys.indexOf(String(S.jorNum)) === -1) {
+      var lastPlayed = jorKeys[jorKeys.length - 1];
+      for (var i = jorKeys.length - 1; i >= 0; i--) {
+        var ms = group.jornadas[jorKeys[i]] || [];
         if (ms.some(function(m){return m[3] !== null && m[3] !== undefined;})) {
-          lastPlayed = jorNums[i]; break;
+          lastPlayed = jorKeys[i]; break;
         }
       }
       S.jorNum = String(lastPlayed);
     }
-    jorNums.forEach(function(num) {
-      var key = String(num);
-      var pill = el('button', 'jornada-pill' + (key === S.jorNum ? ' active' : ''), 'J' + num);
-      pill.addEventListener('click', (function(n, k) {
+    jorKeys.forEach(function(key) {
+      var pill = el('button', 'jornada-pill' + (key === S.jorNum ? ' active' : ''), escapeHtml(jornadaLabel(key)));
+      pill.addEventListener('click', (function(k) {
         return function() {
           S.jorNum = k;
           $$('.jornada-pill').forEach(function(p){p.classList.remove('active');});
           pill.classList.add('active');
-          renderMatchCards(matchesDiv, getHistoricalJornadaMatches(group, n), 'history');
+          renderMatchCards(matchesDiv, getHistoricalJornadaMatches(group, k), 'history');
         };
-      })(num, key));
+      })(key));
       pillsDiv.appendChild(pill);
     });
     setTimeout(function() {
       var active = pillsDiv.querySelector('.active');
       if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }, 50);
-    renderMatchCards(matchesDiv, getHistoricalJornadaMatches(group, Number(S.jorNum)), 'history');
+    renderMatchCards(matchesDiv, getHistoricalJornadaMatches(group, S.jorNum), 'history');
     return;
   }
   // END HISTORICAL PATH
@@ -362,11 +384,7 @@ export function renderJornadaContent() {
   // Use HISTORY data if available for this group (Benjamin and Prebenjamín)
   if (typeof HISTORY !== 'undefined' && HISTORY[S.jorGroup]) {
     const hist = HISTORY[S.jorGroup];
-    const jornadas = Object.keys(hist).sort((a, b) => {
-      const na = parseInt(a.replace(/\D/g, ''));
-      const nb = parseInt(b.replace(/\D/g, ''));
-      return na - nb;
-    });
+    const jornadas = sortJornadaKeys(Object.keys(hist));
 
     if (jornadas.length === 0) {
       matchesDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>No hay jornadas disponibles</p></div>';
@@ -391,7 +409,7 @@ export function renderJornadaContent() {
     let hasCurrentInHistory = jornadas.includes(currentJor);
 
     jornadas.forEach(j => {
-      const pill = el('button', `jornada-pill${j === S.jorNum ? ' active' : ''}`, j.replace('Jornada ', 'J'));
+      const pill = el('button', `jornada-pill${j === S.jorNum ? ' active' : ''}`, escapeHtml(jornadaLabel(j)));
       pill.addEventListener('click', () => {
         S.jorNum = j;
         $$('.jornada-pill').forEach(p => p.classList.remove('active'));
@@ -403,7 +421,7 @@ export function renderJornadaContent() {
 
     // If current matchday not in history, add it
     if (!hasCurrentInHistory && currentJor) {
-      const pill = el('button', `jornada-pill${currentJor === S.jorNum ? ' active' : ''}`, currentJor.replace('Jornada ', 'J') + ' ★');
+      const pill = el('button', `jornada-pill${currentJor === S.jorNum ? ' active' : ''}`, escapeHtml(jornadaLabel(currentJor)) + ' ★');
       pill.addEventListener('click', () => {
         S.jorNum = currentJor;
         $$('.jornada-pill').forEach(p => p.classList.remove('active'));
@@ -435,7 +453,7 @@ export function renderJornadaContent() {
   } else {
     // Prebenjamín: only current matchday
     if (group.jornada) {
-      const pill = el('button', 'jornada-pill active', group.jornada.replace('Jornada ', 'J'));
+      const pill = el('button', 'jornada-pill active', escapeHtml(jornadaLabel(group.jornada)));
       pillsDiv.appendChild(pill);
     }
     
@@ -479,7 +497,7 @@ export function renderMatchCards(container, matches, type) {
     if (hasScore) {
       scoreHtml = `<span class="score-num">${m.hs}</span><span class="score-sep">-</span><span class="score-num">${m.as}</span>`;
     } else {
-      const timeTag = m.time ? `<span class="match-time-tag">${m.time}</span>` : '';
+      const timeTag = m.time ? `<span class="match-time-tag">${escapeHtml(m.time)}</span>` : '';
       scoreHtml = `<span class="score-vs">VS</span>${timeTag}`;
     }
 
@@ -493,19 +511,21 @@ export function renderMatchCards(container, matches, type) {
       dateStr = `${m.date} · ${m.time}`;
     }
 
-    const detailKey = `${m.home}|${m.away}|${m.hs}-${m.as}`;
+    // Data lookup key — uses RAW (unescaped) names on purpose; it must match
+    // the keys generated in data-matchdetail-keys.js. Same style as modals.js.
+    const detailKey = m.home + '|' + m.away + '|' + m.hs + '-' + m.as;
     const hasDetail = hasScore
       && typeof MATCH_DETAIL_KEYS !== 'undefined'
       && !!MATCH_DETAIL_KEYS[detailKey];
 
-    const venueHtml = m.venue ? `<div class="match-venue">📍 ${m.venue}</div>` : '';
+    const venueHtml = m.venue ? `<div class="match-venue">📍 ${escapeHtml(m.venue)}</div>` : '';
     card.innerHTML = `
       <div class="match-teams">
-        <div class="match-team home">${m.home} ${teamBadge(m.home)}</div>
+        <div class="match-team home">${escapeHtml(m.home)} ${teamBadge(m.home)}</div>
         <div class="match-score">${scoreHtml}</div>
-        <div class="match-team away">${teamBadge(m.away)} ${m.away}</div>
+        <div class="match-team away">${teamBadge(m.away)} ${escapeHtml(m.away)}</div>
       </div>
-      <div class="match-date">${dateStr}${hasDetail ? ' <span class="detail-badge" title="Ver cronología de goles">⚽</span>' : ''}</div>
+      <div class="match-date">${escapeHtml(dateStr)}${hasDetail ? ' <span class="detail-badge" title="Ver cronología de goles">⚽</span>' : ''}</div>
       ${venueHtml}
     `;
 
@@ -543,12 +563,21 @@ export function renderMatchCards(container, matches, type) {
 }
 
 /* ====== GOLEADORES ====== */
+/* GOL_BENJ/GOL_PREBENJ are top-level lexical consts from data-goleadores.js:
+ * guard with bare-identifier typeof (NOT globalThis/window) so a missing
+ * script tag degrades to the empty-state instead of a ReferenceError. */
+function getGolData() {
+  return S.cat === 'benjamin'
+    ? (typeof GOL_BENJ !== 'undefined' ? GOL_BENJ : null)
+    : (typeof GOL_PREBENJ !== 'undefined' ? GOL_PREBENJ : null);
+}
+
 export function renderGoleadores() {
   const container = $('#sec-goleadores');
   container.innerHTML = '';
 
-  const golData = S.cat === 'benjamin' ? GOL_BENJ : GOL_PREBENJ;
-  
+  const golData = getGolData();
+
   if (!golData || golData.length === 0) {
     container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚽</div><p>No hay datos de goleadores disponibles</p></div>';
     return;
@@ -595,10 +624,15 @@ export function renderGoleadores() {
 export function renderGolTable() {
   const container = $('#golTable');
   if (!container) return;
-  
-  const golData = S.cat === 'benjamin' ? GOL_BENJ : GOL_PREBENJ;
+
+  const golData = getGolData();
   const isGlobal = S.golGroup === '__GLOBAL__';
-  
+
+  if (!golData) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚽</div><p>No hay datos de goleadores disponibles</p></div>';
+    return;
+  }
+
   let scorers = [];
   if (isGlobal) {
     // Merge all groups, keep group info
@@ -635,9 +669,9 @@ export function renderGolTable() {
     const trophy = pos === 1 ? ' <span class="trophy">👑</span>' : '';
     html += `<tr class="${cls}">`;
     html += `<td>${pos}</td>`;
-    html += `<td>${s.name}${trophy}</td>`;
-    html += `<td>${s.team}</td>`;
-    if (isGlobal) html += `<td class="group-col">${s.group}</td>`;
+    html += `<td>${escapeHtml(s.name)}${trophy}</td>`;
+    html += `<td>${escapeHtml(s.team)}</td>`;
+    if (isGlobal) html += `<td class="group-col">${escapeHtml(s.group)}</td>`;
     html += `<td class="goals-col">${s.goals}</td>`;
     html += `<td>${s.games || '-'}</td>`;
     html += '</tr>';
@@ -698,7 +732,7 @@ export function renderIsla() {
 
   let isFirstIsla = true;
   Object.entries(byPhase).forEach(([phase, groups]) => {
-    const hdr = el('div', 'phase-header', `⚽ ${phase}`);
+    const hdr = el('div', 'phase-header', `⚽ ${escapeHtml(phase)}`);
     container.appendChild(hdr);
     groups.forEach(g => {
       container.appendChild(buildGroupCard(g, isFirstIsla));
@@ -759,11 +793,13 @@ export function calcHistoricalStats() {
   };
 }
 
+/* value/label/sublabel may carry scraped team names — escape here so every
+ * caller is covered. icon is our own emoji literal. */
 export function recordCard(icon, value, label, sublabel) {
   return `<div class="record-card">
     <div class="record-icon">${icon}</div>
-    <div class="record-value">${value}</div>
-    <div class="record-label">${label}${sublabel ? `<small>${sublabel}</small>` : ''}</div>
+    <div class="record-value">${escapeHtml(value)}</div>
+    <div class="record-label">${escapeHtml(label)}${sublabel ? `<small>${escapeHtml(sublabel)}</small>` : ''}</div>
   </div>`;
 }
 

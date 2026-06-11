@@ -1,10 +1,8 @@
 // src/plantilla.js — SP-2: render de plantilla (tabla sobria, estilo A).
 // Pure render: HTML string from {rows, opts}. No DOM access in renderPlantillaTable.
 
-function escHtml(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g,
-    c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
+// C2: shared escape helper from state.js (no local duplicates).
+import { escapeHtml as escHtml } from './state.js';
 
 export function sortPlantillaRows(rows, key, dir) {
   key = key || 'g';

@@ -64,6 +64,30 @@ def fmt_date(raw_date):
     return raw_date
 
 
+# Tables whose rows reference matches(id) and must be deleted BEFORE the
+# matches themselves (FK ON via db.get_connection would otherwise crash).
+ACTA_CHILD_TABLES = ("appearances", "match_events", "match_staff", "goals")
+
+
+def _table_exists(conn, name):
+    return conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)
+    ).fetchone() is not None
+
+
+def delete_group_matches(conn, group_id):
+    """Delete a group's matches and every row referencing them (acta data and
+    goals). Does NOT commit — the caller controls the transaction."""
+    for tbl in ACTA_CHILD_TABLES:
+        if _table_exists(conn, tbl):
+            conn.execute(
+                f"DELETE FROM {tbl} WHERE match_id IN "
+                f"(SELECT id FROM matches WHERE group_id=?)",
+                (group_id,),
+            )
+    conn.execute("DELETE FROM matches WHERE group_id=?", (group_id,))
+
+
 def import_group(conn, g, season_id):
     slug = g["slug"]
     code = slug_to_code(slug)
@@ -87,6 +111,16 @@ def import_group(conn, g, season_id):
 
     cur_jor = current_jornada_for_group(g.get("jornadas", []))
 
+    # Empty scrape (0 matches): never wipe existing data with nothing to
+    # replace it.
+    n_scraped = sum(
+        1 for j in g.get("jornadas", []) for m in j["matches"]
+        if m.get("home") and m.get("away")
+    )
+    if n_scraped == 0:
+        print(f"  [{code}] {grp_name} ({phase}): scrape vacío (0 partidos) — SKIP, se conserva lo existente")
+        return
+
     group_id = get_or_create_group(
         conn, season_id, cat_id, code,
         name=grp_name,
@@ -97,47 +131,60 @@ def import_group(conn, g, season_id):
         current_jornada=cur_jor,
     )
 
-    # Clean previous data for this group
-    conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
-    conn.execute("DELETE FROM matches   WHERE group_id=?", (group_id,))
-    conn.commit()
-
-    # Standings
+    # Pre-resolve every team id BEFORE the destructive transaction:
+    # get_or_create_team() commits internally when it creates a team, which
+    # would otherwise commit our DELETEs before the INSERTs run.
+    team_ids = {}
     for s in g.get("standings", []):
-        team_id = get_or_create_team(conn, s["team"])
-        conn.execute(
-            """INSERT OR REPLACE INTO standings
-               (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
-            (group_id, team_id,
-             s["pos"], s["pts"], s["j"], s["g"], s["e"], s["p"],
-             s.get("gf", 0), s.get("gc", 0), s.get("df", 0)),
-        )
-    conn.commit()
-
-    # Matches — wayback uses "as_" (not "as") for away score
+        team_ids[s["team"]] = get_or_create_team(conn, s["team"])
     for jor in g.get("jornadas", []):
         for m in jor["matches"]:
-            if not m.get("home") or not m.get("away"):
-                continue
-            home_id = get_or_create_team(conn, m["home"])
-            away_id = get_or_create_team(conn, m["away"])
-            hs  = m.get("hs")
-            as_ = m.get("as_")
-            score_h = hs  if (hs is not None and as_ is not None) else None
-            score_a = as_ if (hs is not None and as_ is not None) else None
+            for name in (m.get("home"), m.get("away")):
+                if name and name not in team_ids:
+                    team_ids[name] = get_or_create_team(conn, name)
+
+    # Destructive section: one transaction per group (DELETE + INSERT commit
+    # together; a crash midway rolls back and leaves the group intact).
+    try:
+        # Clean previous data for this group (children first: FK)
+        conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
+        delete_group_matches(conn, group_id)
+
+        # Standings
+        for s in g.get("standings", []):
             conn.execute(
-                """INSERT OR IGNORE INTO matches
-                   (group_id, jornada, date, time, home_team_id, away_team_id,
-                    home_score, away_score, venue)
-                   VALUES (?,?,?,?,?,?,?,?,?)""",
-                (group_id, jor["num"],
-                 fmt_date(m.get("date", "")), m.get("time", ""),
-                 home_id, away_id,
-                 score_h, score_a,
-                 m.get("venue", "")),
+                """INSERT OR REPLACE INTO standings
+                   (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+                (group_id, team_ids[s["team"]],
+                 s["pos"], s["pts"], s["j"], s["g"], s["e"], s["p"],
+                 s.get("gf", 0), s.get("gc", 0), s.get("df", 0)),
             )
-    conn.commit()
+
+        # Matches — wayback uses "as_" (not "as") for away score
+        for jor in g.get("jornadas", []):
+            for m in jor["matches"]:
+                if not m.get("home") or not m.get("away"):
+                    continue
+                hs  = m.get("hs")
+                as_ = m.get("as_")
+                score_h = hs  if (hs is not None and as_ is not None) else None
+                score_a = as_ if (hs is not None and as_ is not None) else None
+                conn.execute(
+                    """INSERT OR IGNORE INTO matches
+                       (group_id, jornada, date, time, home_team_id, away_team_id,
+                        home_score, away_score, venue)
+                       VALUES (?,?,?,?,?,?,?,?,?)""",
+                    (group_id, jor["num"],
+                     fmt_date(m.get("date", "")), m.get("time", ""),
+                     team_ids[m["home"]], team_ids[m["away"]],
+                     score_h, score_a,
+                     m.get("venue", "")),
+                )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
 
     played = sum(1 for j in g.get("jornadas", []) for m in j["matches"]
                  if m.get("hs") is not None)

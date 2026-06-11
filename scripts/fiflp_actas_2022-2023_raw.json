@@ -1,32 +1,4 @@
 {
-  "146122": {
-    "header": {
-      "season": null,
-      "jornada": null,
-      "date": null,
-      "home_team": null,
-      "away_team": null,
-      "home_score": null,
-      "away_score": null,
-      "competition": null
-    },
-    "lineups": {
-      "home": [],
-      "away": []
-    },
-    "events": [],
-    "staff": {
-      "referee": null,
-      "coach_home": null,
-      "coach_away": null
-    },
-    "cod_acta": 146122,
-    "enumeration": {
-      "comp_id": "1092",
-      "grupo": "146122",
-      "jornada": "1"
-    }
-  },
   "146123": {
     "header": {
       "season": "2022/2023",

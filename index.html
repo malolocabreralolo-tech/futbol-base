@@ -97,24 +97,26 @@
   </div>
 
   <!-- DATA FILES -->
-  <script src="./data-benjamin.js?v=20260611"></script>
-  <script src="./data-prebenjamin.js?v=20260611"></script>
-  <script src="./data-history.js?v=20260611"></script>
-  <script src="./data-goleadores.js?v=20260611"></script>
-  <script src="./data-matchdetail-keys.js?v=20260611"></script>
-  <script src="./data-shields.js?v=20260611"></script>
-  <script src="./data-stats.js?v=20260611"></script>
-  <script src="./data-seasons.js?v=20260611"></script>
+  <script src="./data-benjamin.js?v=20260611b"></script>
+  <script src="./data-prebenjamin.js?v=20260611b"></script>
+  <script src="./data-history.js?v=20260611b"></script>
+  <script src="./data-goleadores.js?v=20260611b"></script>
+  <script src="./data-matchdetail-keys.js?v=20260611b"></script>
+  <script src="./data-shields.js?v=20260611b"></script>
+  <script src="./data-stats.js?v=20260611b"></script>
+  <script src="./data-seasons.js?v=20260611b"></script>
   <!-- APP -->
-  <script type="module" src="./src/app.js?v=20260611"></script>
+  <script type="module" src="./src/app.js?v=20260611b"></script>
   <script>
-    // Force update Service Worker
+    // Standard SW registration: the browser's update cycle detects a
+    // byte-different sw.js; skipWaiting+clients.claim in sw.js make the new
+    // version take over immediately. registration.update() forces a check on
+    // every load. (Never unregister here: that re-installed the full ~500KB
+    // precache on EVERY visit.)
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(regs => {
-        regs.forEach(r => r.unregister());
-      }).then(() => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
-      });
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => reg.update())
+        .catch(() => {});
     }
   </script>
 </body>

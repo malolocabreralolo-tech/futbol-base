@@ -10,22 +10,28 @@ Reads futbolbase.db and produces:
   - data-goleadores.js
   - data-shields.js
 
-Also bumps the cache version in index.html to today's date.
+Also bumps the cache version (?v= + footer date in index.html, CACHE_NAME in
+sw.js — contrato C3) but ONLY if the content of some data-*.js actually
+changed in this run (contrato C4), so no-op cron runs produce no diff.
 """
 
+import glob
+import hashlib
 import json
 import os
 import re
 import sys
+import unicodedata
 from datetime import date
 
-# normalize_team_name lives in scripts/acta_reconciler.py. Make the import work
-# whether generate_js.py is run as `python3 scripts/generate_js.py` (sys.path[0]
-# is scripts/) or imported as `scripts.generate_js` (project root in sys.path).
+# _CLUB_SUFFIX (the canonical club-token list) lives in scripts/acta_reconciler.py.
+# Make the import work whether generate_js.py is run as `python3
+# scripts/generate_js.py` (sys.path[0] is scripts/) or imported as
+# `scripts.generate_js` (project root in sys.path).
 try:
-    from scripts.acta_reconciler import normalize_team_name
+    from scripts.acta_reconciler import _CLUB_SUFFIX
 except ImportError:
-    from acta_reconciler import normalize_team_name
+    from acta_reconciler import _CLUB_SUFFIX
 
 # Allow importing db.py from the same directory
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -48,6 +54,52 @@ def js_val(v):
         items = ",".join(f"{json.dumps(k, ensure_ascii=False)}:{js_val(val)}" for k, val in v.items())
         return "{" + items + "}"
     return json.dumps(v, ensure_ascii=False)
+
+
+MAX_SANE_SCORE = 50
+
+
+def sanitize_score(score, context=""):
+    """Defense in depth: a goal count outside [0, MAX_SANE_SCORE] is corrupt
+    source data (e.g. the 2024-25 away_score=41736 IDs), never a real score.
+    Emit it as null and warn on stderr so the corrupt row is visible in CI logs
+    without poisoning the published data files."""
+    if score is None:
+        return None
+    if 0 <= score <= MAX_SANE_SCORE:
+        return score
+    print(
+        f"  WARNING: marcador fuera de rango ({score}) {context} — emitido como null",
+        file=sys.stderr,
+    )
+    return None
+
+
+def normalize_for_teams_mapping(s):
+    """Normalizer for the TEAMS_<S> key map (contrato C1).
+
+    Same pipeline as acta_reconciler.normalize_team_name (lowercase -> NFKD
+    accent-strip -> quotes/punctuation removed -> club tokens stripped via the
+    shared _CLUB_SUFFIX list -> whitespace collapsed) EXCEPT it KEEPS the
+    trailing filial letter, so 'UD Atalaya' -> 'atalaya' and 'UD Atalaya B' ->
+    'atalaya b' get distinct keys instead of last-wins colliding.
+
+    MIRROR: src/state.js normalizeForTeamsMapping must implement exactly the
+    same pipeline — keep both sides in sync (C1).
+    """
+    if not s:
+        return ""
+    # Comillas/puntuación -> espacio ANTES del pase ascii-ignore: las comillas
+    # curvas no son descomponibles a ascii, así que codificar primero se las
+    # tragaría sin dejar separador y divergiría del espejo JS
+    # ('VET“C”' -> 'vetc' en vez de 'vet c').
+    s = re.sub(r'["\'‘’“”]', " ", s)
+    s = re.sub(r"[.,;:]", " ", s)
+    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode()
+    s = s.lower()
+    s = _CLUB_SUFFIX.sub(" ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
 
 
 def get_groups_for_category(conn, category_name):
@@ -78,6 +130,99 @@ def get_standings(conn, group_id):
     return [list(r) for r in rows]
 
 
+def compute_standings_from_matches(conn, group_id):
+    """Recompute a league table from the matches of a group.
+
+    Rows in the canonical standings format [pos, team, pts, J, G, E, P, GF,
+    GC, DF]; 3/1/0 points; order pts desc, DF desc, GF desc, name asc.
+    Teams appearing only in unplayed fixtures still get a zeroed row.
+    Out-of-range scores are ignored (match treated as unplayed)."""
+    rows = conn.execute(
+        """SELECT h.name, a.name, m.home_score, m.away_score
+           FROM matches m
+           JOIN teams h ON m.home_team_id = h.id
+           JOIN teams a ON m.away_team_id = a.id
+           WHERE m.group_id = ?
+           ORDER BY m.id""",
+        (group_id,),
+    ).fetchall()
+
+    table = {}
+
+    def _entry(team):
+        return table.setdefault(team, {"pts": 0, "j": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0})
+
+    for home, away, hs, as_ in rows:
+        th, ta = _entry(home), _entry(away)
+        ctx = f"en {home} vs {away} (grupo {group_id})"
+        hs = sanitize_score(hs, ctx)
+        as_ = sanitize_score(as_, ctx)
+        if hs is None or as_ is None:
+            continue
+        th["j"] += 1
+        ta["j"] += 1
+        th["gf"] += hs
+        th["gc"] += as_
+        ta["gf"] += as_
+        ta["gc"] += hs
+        if hs > as_:
+            th["g"] += 1
+            th["pts"] += 3
+            ta["p"] += 1
+        elif hs < as_:
+            ta["g"] += 1
+            ta["pts"] += 3
+            th["p"] += 1
+        else:
+            th["e"] += 1
+            ta["e"] += 1
+            th["pts"] += 1
+            ta["pts"] += 1
+
+    ordered = sorted(
+        table.items(),
+        key=lambda kv: (-kv[1]["pts"], -(kv[1]["gf"] - kv[1]["gc"]), -kv[1]["gf"], kv[0]),
+    )
+    return [
+        [i + 1, name, st["pts"], st["j"], st["g"], st["e"], st["p"],
+         st["gf"], st["gc"], st["gf"] - st["gc"]]
+        for i, (name, st) in enumerate(ordered)
+    ]
+
+
+def _is_league_group(code, phase):
+    """True for regular league groups. Knockouts (Copa de Campeones, whose
+    standings are synthesized by synth_copa_campeones.py with its own ranking
+    semantics) must never be recomputed as a league table."""
+    if "copa" in (phase or "").lower():
+        return False
+    if (code or "").upper().startswith(("PCC", "BC")):
+        return False
+    return True
+
+
+def get_effective_standings(conn, group_id, code=None, phase=None):
+    """Standings for a CURRENT-season group, recomputed from matches when the
+    stored table went stale (the source kept publishing results after it
+    stopped publishing standings — e.g. frozen since ~25/04 while results ran
+    to J29). If the stored table is up to date it wins, because the official
+    one may carry sanctions a recompute can't know about."""
+    stored = get_standings(conn, group_id)
+    if not stored or not _is_league_group(code, phase):
+        return stored
+    computed = compute_standings_from_matches(conn, group_id)
+    stored_j = sum((r[3] or 0) for r in stored)
+    computed_j = sum(r[3] for r in computed)
+    if computed_j > stored_j:
+        print(
+            f"  WARNING: standings desfasados en grupo {code or group_id} "
+            f"(J almacenada {stored_j} < J jugada {computed_j}) — recalculados desde matches",
+            file=sys.stderr,
+        )
+        return computed
+    return stored
+
+
 def get_current_jornada_matches(conn, group_id, current_jornada):
     """Return matches for the current jornada as [date, time, home, away, hs, as, venue]."""
     if not current_jornada:
@@ -91,7 +236,14 @@ def get_current_jornada_matches(conn, group_id, current_jornada):
            ORDER BY m.date, m.time, h.name""",
         (group_id, current_jornada),
     ).fetchall()
-    return [list(r) for r in rows]
+    out = []
+    for r in rows:
+        r = list(r)
+        ctx = f"en {r[2]} vs {r[3]} ({r[0]})"
+        r[4] = sanitize_score(r[4], ctx)
+        r[5] = sanitize_score(r[5], ctx)
+        out.append(r)
+    return out
 
 
 def generate_category_js(conn, category_name, var_name, stats_var):
@@ -101,7 +253,7 @@ def generate_category_js(conn, category_name, var_name, stats_var):
     total_teams = 0
 
     for gid, code, name, full_name, phase, island, url, current_jornada in groups:
-        standings = get_standings(conn, gid)
+        standings = get_effective_standings(conn, gid, code, phase)
         matches = get_current_jornada_matches(conn, gid, current_jornada)
         total_teams += len(standings)
 
@@ -152,7 +304,10 @@ def generate_history_js(conn):
         for jornada, dt, home, away, hs, as_ in rows:
             if jornada not in jornadas:
                 jornadas[jornada] = []
-            jornadas[jornada].append([dt, home, away, hs, as_])
+            ctx = f"en {home} vs {away} ({dt})"
+            jornadas[jornada].append(
+                [dt, home, away, sanitize_score(hs, ctx), sanitize_score(as_, ctx)]
+            )
             total_matches += 1
 
         # Sort jornadas by number
@@ -248,24 +403,27 @@ def generate_lineups_js(conn, season_name):
         home = [{"n": r[1], "dn": r[2], "r": r[3], "g": r[4], "y": r[5], "rd": r[6]} for r in apps if r[0] == home_team_id]
         away = [{"n": r[1], "dn": r[2], "r": r[3], "g": r[4], "y": r[5], "rd": r[6]} for r in apps if r[0] != home_team_id]
         evs = conn.execute("""
-          SELECT e.kind, e.team_id, p.full_name, e.minute, e.goal_type, e.pair_id
+          SELECT e.id, e.kind, e.team_id, p.full_name, e.minute, e.goal_type, e.pair_id
             FROM match_events e JOIN players p ON p.id=e.player_id
-           WHERE e.match_id=? ORDER BY COALESCE(e.minute,9999)""", (mid,)).fetchall()
+           WHERE e.match_id=? ORDER BY COALESCE(e.minute,9999), e.id""", (mid,)).fetchall()
         events = []
-        seen_pairs = set()
-        for kind, tid, name, mn, gt, pid in evs:
+        handled = set()  # event ids already emitted as half of a sub pair
+        for eid, kind, tid, name, mn, gt, pid in evs:
             side = "h" if tid == home_team_id else "a"
             if kind in ("sub_in", "sub_out") and pid:
-                if pid in seen_pairs:
+                if eid in handled:
                     continue
-                # find paired event
-                pair = next((e for e in evs if e[5] == pid and e is not None), None)
-                pair_name = pair[2] if pair else None
+                # pair ids are MUTUAL (out.pair_id = in.id and vice versa,
+                # see import_fiflp_actas.py), so the partner is the event
+                # whose id == pid — never this event itself.
+                pair = next((e for e in evs if e[0] == pid), None)
+                pair_name = pair[3] if pair else None
                 ev = {"t": "sub", "s": side, "m": mn,
                       "n": name if kind == "sub_out" else pair_name,
                       "n2": name if kind == "sub_in" else pair_name}
                 events.append(ev)
-                seen_pairs.add(pid)
+                handled.add(eid)
+                handled.add(pid)
             elif kind in ("sub_in", "sub_out"):
                 events.append({"t": kind, "s": side, "n": name, "m": mn})
             elif kind == "goal":
@@ -306,7 +464,7 @@ def generate_players_js(conn, season_name):
         JOIN groups g  ON g.id=m.group_id
        WHERE g.season_id=?
        GROUP BY a.team_id, a.player_id
-       ORDER BY a.team_id, gl DESC""", (season_id[0],)).fetchall()
+       ORDER BY a.team_id, gl DESC, p.full_name""", (season_id[0],)).fetchall()
     obj = {}
     for tid, name, ap, st, gl, y, rd in rows:
         obj.setdefault(str(tid), []).append(
@@ -318,8 +476,21 @@ def generate_players_js(conn, season_name):
         JOIN appearances a ON a.team_id=t.id
         JOIN matches m ON m.id=a.match_id
         JOIN groups g ON g.id=m.group_id
-       WHERE g.season_id=?""", (season_id[0],)).fetchall()
-    teams = {normalize_team_name(name): tid for tid, name in team_rows}
+       WHERE g.season_id=?
+       ORDER BY t.id""", (season_id[0],)).fetchall()
+    # C1: letter-preserving normalizer so first team and filial B/C/D don't
+    # collide on the same key (last-wins used to hide 'UD Atalaya' behind
+    # 'UD Atalaya B'). ORDER BY t.id makes any residual collision deterministic.
+    teams = {}
+    for tid, name in team_rows:
+        key = normalize_for_teams_mapping(name)
+        if key in teams and teams[key] != tid:
+            print(
+                f"  WARNING: clave TEAMS duplicada en {season_name}: "
+                f"'{key}' (team ids {teams[key]} y {tid}) — gana el último",
+                file=sys.stderr,
+            )
+        teams[key] = tid
     suffix = _season_const_suffix(season_name)
     return ("// Auto-generated by scripts/generate_js.py — do not edit\n"
             "const PLAYERS_" + suffix + " = " + json.dumps(obj, ensure_ascii=False) + ";\n"
@@ -686,7 +857,10 @@ def get_historical_jornadas(conn, group_id):
 
     jornadas = {}
     for jornada, dt, home, away, hs, as_ in rows:
-        jornadas.setdefault(jornada, []).append([dt, home, away, hs, as_])
+        ctx = f"en {home} vs {away} ({dt})"
+        jornadas.setdefault(jornada, []).append(
+            [dt, home, away, sanitize_score(hs, ctx), sanitize_score(as_, ctx)]
+        )
 
     def _jor_num(j):
         m = re.search(r'\d+', str(j))
@@ -781,28 +955,48 @@ def generate_per_season_files(seasons_list):
     return written
 
 
-def bump_cache_version():
-    """Update ?v=YYYYMMDD[<suffix>] in index.html.
+def snapshot_data_files(root=None):
+    """C4: content hash of every data-*.js under root, used to decide whether
+    this run actually changed any published data."""
+    root = root or PROJECT_ROOT
+    snap = {}
+    for path in sorted(glob.glob(os.path.join(root, "data-*.js"))):
+        with open(path, "rb") as f:
+            snap[os.path.basename(path)] = hashlib.sha256(f.read()).hexdigest()
+    return snap
 
-    Same-day reruns preserve any manual <suffix> (e.g. `b`) so an emergency
-    cache bust within the same day isn't reverted by the next cron tick.
-    """
-    index_path = os.path.join(PROJECT_ROOT, "index.html")
+
+def _next_version(index_content):
+    """New cache-bust version string: YYYYMMDD, or YYYYMMDD + next letter
+    suffix (b, c, ...) if index.html already carries today's version."""
+    today = date.today().strftime("%Y%m%d")
+    existing = re.search(r"\?v=(\d{8})([a-z]?)", index_content)
+    if existing and existing.group(1) == today:
+        suffix = existing.group(2)
+        if not suffix:
+            return today + "b"
+        if suffix < "z":
+            return today + chr(ord(suffix) + 1)
+        return today + "z"  # cap — 26 same-day data changes won't happen
+    return today
+
+
+def bump_cache_version(root=None):
+    """Bump ?v=, footer date (index.html) and CACHE_NAME (sw.js, contrato C3)
+    to the SAME version string. Only call when data content changed — the
+    decision lives in bump_if_changed() (contrato C4)."""
+    root = root or PROJECT_ROOT
+    index_path = os.path.join(root, "index.html")
     if not os.path.exists(index_path):
         print("  WARNING: index.html not found, skipping cache bump")
         return
 
-    today = date.today().strftime("%Y%m%d")
-    today_display = date.today().strftime("%d/%m/%Y")
     with open(index_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    existing = re.search(r"\?v=(\d{8})([a-z]?)", content)
-    if existing and existing.group(1) == today:
-        new_content = content  # already today, keep any suffix
-    else:
-        new_content = re.sub(r"\?v=\d{8}[a-z]?", f"?v={today}", content)
-
+    version = _next_version(content)
+    today_display = date.today().strftime("%d/%m/%Y")
+    new_content = re.sub(r"\?v=\d{8}[a-z]?", f"?v={version}", content)
     new_content = re.sub(
         r"Última actualización: \d{2}/\d{2}/\d{4}",
         f"Última actualización: {today_display}",
@@ -811,10 +1005,33 @@ def bump_cache_version():
     if new_content != content:
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(new_content)
-        bumped = re.search(r"\?v=(\d{8}[a-z]?)", new_content)
-        print(f"  index.html cache version bumped to ?v={bumped.group(1) if bumped else today}")
+        print(f"  index.html cache version bumped to ?v={version}")
+
+    # C3: keep sw.js CACHE_NAME (first line, /futbolbase-v[0-9a-z]+/) in sync
+    # with the same version string so the SW cache rotates with the data.
+    sw_path = os.path.join(root, "sw.js")
+    if os.path.exists(sw_path):
+        with open(sw_path, "r", encoding="utf-8") as f:
+            sw = f.read()
+        new_sw = re.sub(r"futbolbase-v[0-9a-z]+", f"futbolbase-v{version}", sw, count=1)
+        if new_sw != sw:
+            with open(sw_path, "w", encoding="utf-8") as f:
+                f.write(new_sw)
+            print(f"  sw.js CACHE_NAME bumped to futbolbase-v{version}")
     else:
-        print(f"  index.html already at ?v={today}{(existing.group(2) if existing else '')}")
+        print("  WARNING: sw.js not found, skipping CACHE_NAME bump")
+
+
+def bump_if_changed(before_snapshot, root=None):
+    """C4: compare the data-*.js snapshot taken BEFORE regeneration with the
+    current tree; bump ?v=/footer/CACHE_NAME only if some content changed.
+    Avoids the daily no-op commit that only touched index.html."""
+    after = snapshot_data_files(root)
+    if after == before_snapshot:
+        print("  data-*.js sin cambios — no se bumpea ?v= / footer / CACHE_NAME (C4)")
+        return False
+    bump_cache_version(root)
+    return True
 
 
 def write_file(filename, content):
@@ -831,6 +1048,10 @@ def main():
     conn.row_factory = None  # ensure tuples
 
     print("=== Generating JS data files from SQLite ===\n")
+
+    # C4: hash all data-*.js BEFORE regenerating, to bump versions only if
+    # some content actually changes during this run.
+    before_snapshot = snapshot_data_files()
 
     print("1. data-benjamin.js")
     write_file("data-benjamin.js", generate_category_js(conn, "BENJAMIN", "BENJAMIN", "BENJ_STATS"))
@@ -863,10 +1084,8 @@ def main():
     for name, sz in written:
         print(f"  data-season-{name}.js: {sz:,} bytes")
 
-    print("\n10. Bumping cache version in index.html")
-    bump_cache_version()
-
     # SP-1: per-season actas data files (only emitted for seasons with any cod_acta set)
+    print("\n10. data-lineups-*.js / data-players-*.js (actas)")
     for sid, sname in conn.execute("SELECT id, name FROM seasons ORDER BY id").fetchall():
         has_actas = conn.execute(
             "SELECT 1 FROM matches m JOIN groups g ON g.id=m.group_id "
@@ -878,6 +1097,9 @@ def main():
         write_file(f"data-lineups-{sname}.js", generate_lineups_js(conn, sname))
         print(f"  data-players-{sname}.js")
         write_file(f"data-players-{sname}.js", generate_players_js(conn, sname))
+
+    print("\n11. Cache version (only if data changed — C4)")
+    bump_if_changed(before_snapshot)
 
     conn.close()
     print("\nDone!")

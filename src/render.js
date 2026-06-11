@@ -1,6 +1,6 @@
 import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
-import { renderMiEquipo } from './miequipo.js';
+import { renderMiEquipo, matchDateISO, localTodayISO } from './miequipo.js';
 
 /* ====== SEARCH COUNT ====== */
 export function updateSearchCount() {
@@ -43,14 +43,22 @@ function seasonErrorBox() {
   if (!err) return null;
   const seasonLabel = escapeHtml(S.season.replace('-', '/'));
   const box = el('div', 'empty-state season-error',
-    '<div class="empty-icon">⚠️</div><p>No se pudieron cargar los datos de la temporada '
-    + seasonLabel + ' — reintentar</p>');
-  const btn = el('button', 'season-retry-btn', 'Reintentar');
+    '<div class="empty-icon">⚠️</div>'
+    + '<p class="season-error-title">No se pudieron cargar los datos de la temporada '
+    + seasonLabel + '</p>'
+    + '<p class="season-error-hint">Comprueba tu conexión e inténtalo de nuevo.</p>');
+  const btn = el('button', 'season-retry-btn', '↻ Reintentar');
   btn.addEventListener('click', async () => {
     await ensureSeasonData(S.season);
     renderSection();
   });
   box.appendChild(btn);
+  // Los chips de la stats-bar mostrarían '0 grupos · 0 equipos · 0 partidos'
+  // junto a la tarjeta de error (QA 11/6) — em-dash mientras no haya datos.
+  ['statGroups', 'statTeams', 'statMatches'].forEach(id => {
+    const n = document.getElementById(id);
+    if (n) n.textContent = '—';
+  });
   return box;
 }
 
@@ -152,7 +160,7 @@ export function buildGroupCard(g, forceOpen) {
       <span class="group-chevron">▾</span>
     </div>
     <div class="group-body">
-      ${knockout ? buildKnockoutBracket(g) : buildStandingsTable(g.standings, g.id)}
+      ${knockout ? buildKnockoutBracket(g) : buildStandingsTable(g.standings, g.id, g)}
     </div>
   `;
   card.querySelector('.group-header').addEventListener('click', () => {
@@ -232,14 +240,34 @@ function buildKnockoutBracket(g) {
   return html;
 }
 
-export function buildStandingsTable(standings, groupId) {
+/* Pure-ish: true when a group's season is over — historical seasons always,
+ * current season when its last listed jornada has no fixture left that is
+ * today or later (group.matches = the CURRENT jornada's fixtures; an unplayed
+ * fixture whose date already passed will never be played). todayISO is
+ * injected (UI edge: localTodayISO). Gates the podium row tints: full
+ * gold/silver/bronze only when the standings are final. */
+export function groupFinished(g, todayISO) {
+  if (!g || !Array.isArray(g.matches) || !g.matches.length) return false;
+  return g.matches.every(m => {
+    const played = m[4] !== null && m[4] !== undefined;
+    if (played) return true;
+    const iso = matchDateISO(m[0], todayISO);
+    return iso !== null && iso < todayISO;
+  });
+}
+
+export function buildStandingsTable(standings, groupId, group) {
   // Check if data has GF/GC/DF (row[7] exists and is not null)
   const hasGoalData = standings.length > 0 && standings[0].length > 7 && standings[0][7] != null;
   const hist = isHistorical();
   const histHasJornadas = hist && getData().some(function(g){ return g.jornadas && Object.keys(g.jornadas).length > 0; });
   const showForm = !hist || histHasJornadas;
+  // Podium tints (gold/silver/bronze on rows 1-3) only on FINAL standings;
+  // in-progress groups carry the leader accent alone (CSS default).
+  const podium = hist || groupFinished(group, localTodayISO());
 
-  let html = '<div class="table-wrap"><table class="standings-table"><thead><tr>';
+  let html = '<div class="table-wrap"><table class="standings-table'
+    + (podium ? ' podium-table' : '') + '"><thead><tr>';
   html += '<th>#</th><th>Equipo</th>';
   if (showForm) html += '<th>F</th>';
   html += '<th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th>';
@@ -258,7 +286,9 @@ export function buildStandingsTable(standings, groupId) {
       html += '<td class="form-col">';
       if (form.length) {
         html += '<div class="form-mini">';
-        form.forEach(f => { html += `<span class="form-dot ${f.result}">${f.result}</span>`; });
+        // Letras visibles en español (G/E/P) — las clases CSS conservan W/D/L.
+        const FORM_LETTER = { W: 'G', D: 'E', L: 'P' };
+        form.forEach(f => { html += `<span class="form-dot ${f.result}">${FORM_LETTER[f.result] || f.result}</span>`; });
         html += '</div>';
       } else { html += '-'; }
       html += '</td>';

@@ -11,17 +11,28 @@
   --silver: #c0c0c0;
   --bronze: #cd7f32;
   --text: #ffffff;
-  --text2: #8892a4;
-  --text3: #5a6478;
+  /* AA: >=4.5:1 over --card (#141b2d) for small text — text2 5.86:1, text3 4.80:1 */
+  --text2: #8e97ac;
+  --text3: #7d889c;
   --border: #1e2a42;
   --green-border: rgba(0,230,118,0.3);
   --red: #ff5252;
   --radius: 12px;
   --radius-sm: 8px;
+  --radius-lg: 16px;
   --radius-pill: 50px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.3);
-  --shadow-sm: 0 2px 12px rgba(0,0,0,0.2);
+  /* Stadium-at-night depth: softer, deeper shadows + a 1px inner top
+     highlight on cards (the scoreboard bezel). */
+  --shadow: 0 8px 32px rgba(0,0,0,0.45);
+  --shadow-sm: 0 3px 16px rgba(0,0,0,0.3);
+  --card-hi: rgba(255,255,255,0.05);
+  /* QA 11/6: .dor usaba var(--chip,#333) sin definir — ilegible en claro */
+  --chip: #2b3650;
   --transition: 0.2s ease;
+  /* Podium row tints (final standings only) */
+  --tint-gold: rgba(255,215,0,0.10);
+  --tint-silver: rgba(192,192,192,0.09);
+  --tint-bronze: rgba(205,127,50,0.10);
 }
 
 /* Light theme */
@@ -34,20 +45,28 @@
   --accent-dim: rgba(0,168,84,0.12);
   --amber: #e6a800;
   --gold: #b8860b;
-  --silver: #808080;
+  /* QA 11/6: #808080 daba 3.9:1 sobre blanco en nombres del 2º clasificado */
+  --silver: #6b7280;
   --bronze: #8b5a2b;
   --text: #1a1a2e;
+  /* AA: text2 6.34:1 sobre #fff; text3 5.27:1 sobre --bg #f0f2f5 (QA 11/6) */
   --text2: #5a5f72;
-  --text3: #8a8fa2;
+  --text3: #5d6477;
   --border: #d1d5de;
   --green-border: rgba(0,168,84,0.3);
   --red: #d32f2f;
   --shadow: 0 4px 24px rgba(0,0,0,0.08);
   --shadow-sm: 0 2px 12px rgba(0,0,0,0.05);
+  --card-hi: rgba(255,255,255,0.65);
+  --chip: #e2e5ec;
+  --tint-gold: rgba(184,134,11,0.10);
+  --tint-silver: rgba(112,112,112,0.08);
+  --tint-bronze: rgba(139,90,43,0.10);
 }
 [data-theme="light"] body {
   background-image: radial-gradient(circle at 20% 50%, rgba(0,168,84,0.04) 0%, transparent 50%),
                     radial-gradient(circle at 80% 20%, rgba(230,168,0,0.03) 0%, transparent 50%);
+  background-repeat: no-repeat;
 }
 [data-theme="light"] .header {
   background: linear-gradient(135deg, #e8eaf0 0%, #ffffff 100%);
@@ -91,8 +110,13 @@ body {
   min-height: 100vh;
   line-height: 1.5;
   overflow-x: hidden;
-  background-image: radial-gradient(circle at 20% 50%, rgba(0,230,118,0.03) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255,193,7,0.02) 0%, transparent 50%);
+  /* Night-stadium atmosphere: floodlight glow from the top + the original
+     soft radials + an ultra-subtle SVG noise grain (data-URI, ~330B). */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
+                    radial-gradient(circle at 20% 50%, rgba(0,230,118,0.03) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255,193,7,0.02) 0%, transparent 50%),
+                    radial-gradient(140% 90% at 50% -20%, #101a30 0%, var(--bg) 55%, #070b13 100%);
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
   background-attachment: fixed;
 }
 
@@ -267,14 +291,26 @@ body {
 .section-tab.active {
   color: var(--accent);
 }
-.section-tab.active::after {
+/* Active indicator: always present, revealed with a transform (no width
+   animation) so it feels like a sliding scoreboard cursor. */
+.section-tab::after {
   content: '';
   position: absolute;
   bottom: -2px;
-  left: 0;
-  right: 0;
+  left: 12px;
+  right: 12px;
   height: 2px;
   background: var(--accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: center;
+}
+.section-tab.active::after {
+  transform: scaleX(1);
+  box-shadow: 0 0 8px var(--accent-dim);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .section-tab::after { transition: transform 0.25s ease; }
 }
 .section-tab:hover:not(.active):not(.disabled) {
   color: var(--text);
@@ -379,6 +415,7 @@ body[data-section="miequipo"] .stats-bar {
   margin-bottom: 16px;
   overflow: hidden;
   transition: var(--transition);
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
 }
 .group-card:hover {
   border-color: var(--green-border);
@@ -440,6 +477,8 @@ body[data-section="miequipo"] .stats-bar {
 /* ====== STANDINGS TABLE ====== */
 .table-wrap {
   overflow-x: auto;
+  /* Sin tope de altura: un scroll anidado oculta filas sin pista visual
+     (QA 11/6: la fila 11 de 12 quedaba alineada con el borde de la caja). */
   -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
@@ -449,6 +488,8 @@ body[data-section="miequipo"] .stats-bar {
   border-collapse: collapse;
   font-size: 13px;
   min-width: 640px;
+  /* scoreboard digits: every numeric column aligns */
+  font-variant-numeric: tabular-nums;
 }
 .standings-table th {
   background: var(--bg);
@@ -462,6 +503,8 @@ body[data-section="miequipo"] .stats-bar {
   white-space: nowrap;
   position: sticky;
   top: 0;
+  z-index: 2;
+  box-shadow: 0 1px 0 var(--border);
 }
 .standings-table th:nth-child(2) { text-align: left; }
 .standings-table td {
@@ -478,11 +521,13 @@ body[data-section="miequipo"] .stats-bar {
   text-overflow: ellipsis;
 }
 .standings-table tr:nth-child(even) td {
-  background: rgba(255,255,255,0.02);
+  background: rgba(255,255,255,0.025);
 }
 .standings-table tr:hover td {
   background: rgba(0,230,118,0.04);
 }
+[data-theme="light"] .standings-table tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+[data-theme="light"] .standings-table tr:hover td { background: rgba(0,168,84,0.06); }
 
 /* Position medals */
 .standings-table tr.pos-1 td:first-child { color: var(--gold); font-weight: 700; }
@@ -491,13 +536,22 @@ body[data-section="miequipo"] .stats-bar {
 .standings-table tr.pos-1 td:nth-child(2) { color: var(--gold); }
 .standings-table tr.pos-2 td:nth-child(2) { color: var(--silver); }
 .standings-table tr.pos-3 td:nth-child(2) { color: var(--bronze); }
+/* Podium lateral tint. The LEADER always carries the gold accent; silver and
+   bronze rows only light up on FINAL standings (.podium-table — historical
+   seasons or groups with no fixtures left, see render.js groupFinished).
+   td zebra backgrounds are near-transparent, so the row gradient shows through. */
+.standings-table tr.pos-1 { background-image: linear-gradient(90deg, var(--tint-gold), transparent 60%); }
+.podium-table tr.pos-2 { background-image: linear-gradient(90deg, var(--tint-silver), transparent 60%); }
+.podium-table tr.pos-3 { background-image: linear-gradient(90deg, var(--tint-bronze), transparent 60%); }
 .standings-table .pts-col { color: var(--accent); font-weight: 700; font-size: 14px; }
 .standings-table .df-pos { color: var(--accent); }
 .standings-table .df-neg { color: var(--red); }
 
 /* ====== FEATURED TEAM HIGHLIGHT ====== */
 .standings-table tr.featured-team td { background: var(--accent-dim); color: var(--text); }
-.standings-table tr.featured-team td:nth-child(2) { font-weight: 700; box-shadow: inset 3px 0 0 var(--accent); }
+.standings-table tr.featured-team td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+.standings-table tr.featured-team td:nth-child(2) { font-weight: 700; }
+.standings-table tr.featured-team .pts-col { text-shadow: 0 0 12px var(--accent-dim); }
 .match-card.featured-team { border-color: var(--green-border); box-shadow: inset 0 0 0 1px var(--accent-dim); }
 .bracket-team.featured-team { box-shadow: inset 3px 0 0 var(--accent); }
 .bracket-team.featured-team .bracket-team-name { font-weight: 700; }
@@ -597,11 +651,12 @@ body[data-section="miequipo"] .stats-bar {
   border: 1px solid var(--border);
   padding: 16px;
   transition: var(--transition);
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
 }
 .match-card:hover {
   border-color: var(--green-border);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow);
 }
 .match-card.completed {
   border-left: 3px solid var(--accent);
@@ -678,6 +733,7 @@ body[data-section="miequipo"] .stats-bar {
   border-collapse: collapse;
   font-size: 13px;
   min-width: 480px;
+  font-variant-numeric: tabular-nums;
 }
 .scorers-table th {
   background: var(--bg);
@@ -713,6 +769,7 @@ body[data-section="miequipo"] .stats-bar {
   text-overflow: ellipsis;
 }
 .scorers-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+[data-theme="light"] .scorers-table tr:nth-child(even) td { background: rgba(0,0,0,0.025); }
 .scorers-table tr:hover td { background: rgba(0,230,118,0.04); }
 .scorers-table tr.pos-1 td:first-child { color: var(--gold); font-weight: 700; }
 .scorers-table tr.pos-2 td:first-child { color: var(--silver); font-weight: 700; }
@@ -791,18 +848,123 @@ body[data-section="miequipo"] .stats-bar {
   font-size: 14px;
 }
 
+/* ====== SEASON LOAD ERROR (honest error + retry) ====== */
+.season-error {
+  max-width: 440px;
+  margin: 28px auto;
+  padding: 32px 22px 26px;
+  background: var(--card);
+  border: 1px solid rgba(255,82,82,0.3);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
+}
+.season-error .empty-icon { font-size: 38px; margin-bottom: 10px; }
+.season-error .season-error-title {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+.season-error .season-error-hint {
+  color: var(--text2);
+  font-size: 12.5px;
+  margin-top: 6px;
+}
+.season-retry-btn {
+  margin-top: 18px;
+  min-height: 44px;
+  padding: 10px 26px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0a0f1a;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  box-shadow: 0 0 16px var(--accent-dim);
+  transition: var(--transition);
+}
+.season-retry-btn:hover { box-shadow: 0 0 24px rgba(0,230,118,0.4); filter: brightness(1.05); }
+/* QA 11/6: #fff sobre --accent claro #00a854 = 3.12:1; fondo más oscuro → 5.81:1 */
+[data-theme="light"] .season-retry-btn { color: #fff; background: #00753f; }
+[data-theme="light"] .season-retry-btn:hover { box-shadow: 0 0 24px rgba(0,168,84,0.35); }
+
+/* ====== SKELETON SHIMMER (lazy-load placeholders, CSS-only) ====== */
+.skeleton-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 0;
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+}
+.skeleton-row { height: 28px; }
+.skeleton-row:nth-child(2) { opacity: .72; }
+.skeleton-row:nth-child(3) { opacity: .5; }
+.skeleton-row:nth-child(4) { opacity: .3; }
+[data-theme="light"] .skeleton { background: rgba(0,0,0,0.06); }
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+    animation: skeleton-shimmer 1.4s ease infinite;
+  }
+  [data-theme="light"] .skeleton::after {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+  }
+}
+@keyframes skeleton-shimmer {
+  100% { transform: translateX(100%); }
+}
+
 /* ====== MI EQUIPO DASHBOARD ====== */
 #sec-miequipo { display: none; }
 #sec-miequipo.active { display: flex; flex-direction: column; gap: 14px; max-width: 760px; margin: 0 auto; }
-.me-hero { display: flex; align-items: center; gap: 15px; background: linear-gradient(150deg, var(--card-hover) 0%, var(--card) 60%); border: 1px solid var(--border); border-radius: 18px; padding: 18px; position: relative; overflow: hidden; }
+.me-hero { display: flex; align-items: center; gap: 16px; background: linear-gradient(150deg, var(--card-hover) 0%, var(--card) 60%); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 18px; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm); }
 .me-hero::after { content: ""; position: absolute; right: -40px; top: -30px; width: 170px; height: 170px; background: radial-gradient(circle, var(--accent-dim), transparent 70%); }
-.me-crest .team-badge { width: 64px; height: 64px; font-size: 22px; border-radius: 15px; }
+/* Crest with a soft radial floodlight glow behind it */
+.me-crest { position: relative; flex-shrink: 0; }
+.me-crest::before { content: ""; position: absolute; inset: -18px; border-radius: 50%; background: radial-gradient(circle, var(--accent-dim) 0%, transparent 68%); pointer-events: none; }
+.me-crest .team-badge { width: 76px; height: 76px; font-size: 24px; border-radius: 16px; position: relative; filter: drop-shadow(0 4px 10px rgba(0,0,0,.35)); }
+.me-id { min-width: 0; }
 .me-id h2 { font-size: 21px; font-weight: 700; line-height: 1.15; }
 .me-meta { color: var(--text2); font-size: 12.5px; margin-top: 4px; }
-.me-pos { margin-left: auto; text-align: center; }
-.me-pos-n { font-size: 34px; font-weight: 800; color: var(--accent); line-height: 1; }
-.me-pos-l { font-size: 10.5px; color: var(--text3); letter-spacing: .5px; margin-top: 2px; }
-.me-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; }
+/* Position as a big ordinal chip — scoreboard digits in Bebas */
+.me-pos { margin-left: auto; flex-shrink: 0; text-align: center; background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 10px 16px 8px; box-shadow: inset 0 1px 0 var(--card-hi); position: relative; }
+.me-pos-n { font-family: 'Bebas Neue', sans-serif; font-size: 40px; font-weight: 400; color: var(--accent); line-height: .9; letter-spacing: 1px; font-variant-numeric: tabular-nums; text-shadow: 0 0 18px var(--accent-dim); }
+.me-pos-l { font-size: 10px; color: var(--text3); letter-spacing: .8px; margin-top: 4px; font-weight: 700; }
+.me-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm); }
+
+/* ── Season-over closing card (sober celebration, scoreboard digits) ── */
+.me-over { border-color: rgba(255,215,0,.28); background: linear-gradient(165deg, rgba(255,215,0,.07) 0%, var(--card) 52%); }
+.me-over-flag { display: flex; align-items: center; gap: 10px; }
+.me-over-flag .me-ln { background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .55; }
+.me-over-t { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2.5px; color: var(--gold); white-space: nowrap; }
+.me-over-main { display: flex; align-items: center; gap: 16px; margin: 14px 2px 13px; flex-wrap: wrap; }
+.me-over-pos { display: flex; align-items: center; gap: 9px; }
+.me-over-n { font-family: 'Bebas Neue', sans-serif; font-size: 54px; line-height: .85; color: var(--text); font-variant-numeric: tabular-nums; text-shadow: 0 2px 16px rgba(255,215,0,.18); }
+.me-over-of { font-size: 11px; color: var(--text2); line-height: 1.3; font-weight: 600; }
+.me-over-stats { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+.me-over-stat { text-align: center; min-width: 26px; }
+.me-over-stat .n { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 25px; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+.me-over-stat .n.w { color: var(--accent); }
+.me-over-stat .n.p { color: var(--red); }
+.me-over-stat .l { font-size: 9.5px; font-weight: 800; letter-spacing: 1px; color: var(--text3); }
+.me-over-sep { width: 1px; height: 28px; background: var(--border); }
+.me-over-last { border-top: 1px solid var(--border); padding-top: 10px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 12.5px; }
+.me-over-last-l { font-size: 10px; font-weight: 800; letter-spacing: .8px; color: var(--text3); text-transform: uppercase; }
+.me-over-last-m { font-weight: 600; }
+.me-over-last-m .me-res { width: auto; padding: 0 3px; font-variant-numeric: tabular-nums; }
+[data-theme="light"] .me-over { border-color: rgba(184,134,11,.3); background: linear-gradient(165deg, rgba(184,134,11,.07) 0%, var(--card) 52%); }
+[data-theme="light"] .me-over-n { text-shadow: none; }
 .me-ct { font-size: 11px; letter-spacing: .7px; color: var(--text3); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; }
 .me-mut { color: var(--text3); font-weight: 600; letter-spacing: 0; text-transform: none; }
 .me-empty { color: var(--text2); font-size: 13px; padding: 10px 2px; }
@@ -822,6 +984,28 @@ body[data-section="miequipo"] .stats-bar {
 .me-res.G { color: var(--accent); }
 .me-res.E { color: var(--text2); }
 .me-res.P { color: var(--red); }
+/* Fixture vencido sin disputar con la temporada cerrada */
+.me-res-nd { width: auto; flex-shrink: 0; }
+.me-nd {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+/* Hueco entre el líder y la ventana de la mini-tabla de MI EQUIPO */
+.me-gaprow td {
+  text-align: center;
+  color: var(--text3);
+  font-size: 14px;
+  letter-spacing: 4px;
+  padding: 2px 0 4px;
+  background: transparent !important;
+}
 .me-res.me-next-min { color: var(--text3); font-size: 11px; font-weight: 700; }
 .me-taglast { font-size: 9px; color: var(--text3); font-weight: 700; margin-left: 6px; border: 1px solid var(--border); padding: 1px 5px; border-radius: 5px; }
 .me-detail { opacity: .8; }
@@ -836,6 +1020,9 @@ body[data-section="miequipo"] .stats-bar {
 .me-next-opp .team-badge { width: 22px; height: 22px; font-size: 8px; vertical-align: -5px; }
 .me-next-loc { color: var(--text3); font-weight: 600; font-size: 13px; }
 .me-next-when { font-size: 12px; color: var(--text2); margin-top: 4px; }
+/* Mini-table fits the dashboard column — never forces horizontal scroll */
+.standings-table.me-mini { min-width: 100%; }
+.me-mini td, .me-mini th { padding: 9px 7px; }
 .me-mini tr.me-leadrow td { border-bottom: 2px solid var(--border); }
 .me-scrow { display: flex; align-items: center; gap: 10px; padding: 8px 2px; border-top: 1px solid var(--border); font-size: 13px; }
 .me-ct + .me-scrow { border-top: 0; }
@@ -855,8 +1042,14 @@ body[data-section="miequipo"] .stats-bar {
   .brand .subtitle { font-size: 11px; }
   .header-top { margin-bottom: 8px; gap: 6px; }
   .season-cat-row { margin-bottom: 8px; }
-  .cat-btn { font-size: 14px; padding: 6px 16px; }
-  .section-tab { padding: 8px 14px; font-size: 13px; }
+  .cat-btn { font-size: 14px; padding: 6px 16px; min-height: 44px; }
+  .section-tab { padding: 8px 14px; font-size: 13px; min-height: 44px; }
+  .jornada-pill, .island-tab { min-height: 44px; }
+  .theme-toggle { width: 44px; height: 44px; }
+  .modal-close { width: 44px; height: 44px; top: 8px; right: 8px; }
+  .me-link { min-height: 44px; display: flex; align-items: center; }
+  .me-crow[data-mi] { min-height: 44px; }
+  .standings-table td { padding: 12px 8px; }
   .main { padding: 8px 12px 32px; }
   .phase-header { font-size: 18px; margin: 20px 0 10px; }
   .group-title { font-size: 15px; }
@@ -866,11 +1059,15 @@ body[data-section="miequipo"] .stats-bar {
   .search-wrap { padding: 0 12px; }
   .team-badge { width: 20px; height: 20px; font-size: 8px; }
   #sec-miequipo.active { gap: 12px; }
-  .me-hero { padding: 14px; gap: 12px; }
-  .me-crest .team-badge { width: 54px; height: 54px; }
+  .me-hero { padding: 16px 14px; gap: 12px; }
+  .me-crest .team-badge { width: 62px; height: 62px; }
+  .me-crest::before { inset: -12px; }
   .me-id h2 { font-size: 18px; }
-  .me-pos-n { font-size: 28px; }
-  .section-tabs { -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent); mask-image: linear-gradient(90deg, #000 90%, transparent); }
+  .me-pos { padding: 8px 12px 7px; }
+  .me-pos-n { font-size: 32px; }
+  .me-over-n { font-size: 46px; }
+  .me-over-stats { gap: 11px; }
+  .section-tabs { -webkit-mask-image: linear-gradient(90deg, #000, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(90deg, #000, #000 calc(100% - 32px), transparent); }
 }
 
 @media (max-width: 480px) {
@@ -884,16 +1081,48 @@ body[data-section="miequipo"] .stats-bar {
   .match-team .team-badge { width: 16px; height: 16px; font-size: 7px; }
 }
 
-/* Animation */
+/* ====== MOTION (all gated behind prefers-reduced-motion) ====== */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.section.active {
-  animation: fadeIn 0.3s ease;
+@media (prefers-reduced-motion: no-preference) {
+  /* Section entry: subtle stagger on direct children (caps at 240ms,
+     total animation well under 400ms). */
+  .section.active > * { animation: fadeIn 0.3s ease backwards; }
+  .section.active > :nth-child(2) { animation-delay: 60ms; }
+  .section.active > :nth-child(3) { animation-delay: 120ms; }
+  .section.active > :nth-child(4) { animation-delay: 180ms; }
+  .section.active > :nth-child(n+5) { animation-delay: 240ms; }
+  .group-body { animation: fadeIn 0.2s ease; }
+
+  /* Press feedback on tappable surfaces */
+  .me-crow[data-mi]:active,
+  .match-card.completed:active,
+  .group-header:active,
+  .jornada-pill:active,
+  .cat-btn:active,
+  .island-tab:active,
+  .section-tab:active,
+  .season-retry-btn:active,
+  .theme-toggle:active,
+  .me-link:active,
+  .team-result-row:active,
+  .scroll-top:active {
+    transform: scale(0.98);
+  }
 }
-.group-body {
-  animation: fadeIn 0.2s ease;
+
+/* Desktop-only hover affordances (avoid sticky hover on touch) */
+@media (hover: hover) {
+  .me-crow[data-mi]:hover .me-o { color: var(--accent); }
+  .me-scrow:hover { background: var(--card-hover); }
+}
+
+/* ====== FOCUS VISIBLE (keyboard a11y) ====== */
+:where(button, select, a, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* Loading shimmer */
@@ -1327,6 +1556,7 @@ img.team-badge {
   border: 1px solid var(--border);
   padding: 20px;
   text-align: center;
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
 }
 .record-icon { font-size: 28px; margin-bottom: 8px; }
 .record-value { font-size: 28px; font-weight: 700; color: var(--text); font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
@@ -1499,12 +1729,18 @@ img.team-badge {
 /* ─── SP-2: Plantilla table ─────────────────────────────────────── */
 .plant-host { margin: 8px 0 4px; }
 .plant-empty {
-  padding: 12px 14px;
-  background: rgba(255,255,255,.04);
-  border-radius: 8px;
-  color: var(--muted, #888);
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text2);
+  font-size: 12.5px;
+  line-height: 1.4;
 }
+.plant-empty-ico { font-size: 18px; flex-shrink: 0; opacity: .8; }
 .plant-empty-hint { display: block; font-size: 11px; opacity: .8; margin-top: 4px; }
 .plant-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; opacity: .8; }
 .plant-table { width: 100%; border-collapse: collapse; font-size: 13px; }

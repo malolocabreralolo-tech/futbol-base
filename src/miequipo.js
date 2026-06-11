@@ -12,31 +12,77 @@ import { renderPlantillaInto } from './plantilla.js';
 // (C2: `esc` is the shared escapeHtml from state.js, aliased above.)
 let _showAllScorers = false;
 
-function parseMatchDate(d) {
+/* Today's LOCAL date as YYYY-MM-DD. This is the ONLY place renderMiEquipo
+ * touches the browser clock — the date is then injected into the pure
+ * helpers below so they stay testable with a fixed day. Exported for
+ * render.js (groupFinished), same UI-edge rule applies there. */
+export function localTodayISO() {
+  const n = new Date();
+  return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0')
+    + '-' + String(n.getDate()).padStart(2, '0');
+}
+
+/* Pure: resolve a fixture date ('YYYY-MM-DD' or 'DD/MM') to ISO, relative to
+ * the injected todayISO. DD/MM rollover rule: season fixtures never sit more
+ * than ~6 months in the past, so only a date >180 days behind today rolls to
+ * NEXT year (Dec→Jan mid-season crossing). A fixture 5 days ago is an EXPIRED
+ * fixture — never next June's (the 06/06 PRÓXIMO bug). Exported for tests. */
+export function matchDateISO(d, todayISO) {
   if (!d) return null;
-  let m = String(d).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
-  m = String(d).match(/^(\d{2})\/(\d{2})$/);
-  if (m) {
-    const now = new Date();
-    let dt = new Date(now.getFullYear(), +m[2] - 1, +m[1]);
-    if (dt < new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1))
-      dt = new Date(now.getFullYear() + 1, +m[2] - 1, +m[1]);
-    return dt;
+  const s = String(d);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const m = s.match(/^(\d{2})\/(\d{2})$/);
+  if (!m || !todayISO) return null;
+  const t = String(todayISO);
+  const ty = +t.slice(0, 4);
+  const diffDays = (Date.UTC(ty, +t.slice(5, 7) - 1, +t.slice(8, 10))
+    - Date.UTC(ty, +m[2] - 1, +m[1])) / 86400000;
+  // >180 días en el pasado → cruce dic→ene hacia el año siguiente; la regla
+  // simétrica (>180 días en el futuro → año anterior) cubre el caso inverso:
+  // un 20/12 aplazado visto en enero es del diciembre pasado, no del próximo.
+  const y = diffDays > 180 ? ty + 1 : diffDays < -180 ? ty - 1 : ty;
+  return y + '-' + m[2] + '-' + m[1];
+}
+
+/* Pure end-of-season classifier for the featured team's calendar.
+ * `matches` is the featuredMatchesFrom() shape; todayISO is injected by the
+ * caller (see localTodayISO — never read the clock in here).
+ * Returns { state, nextIdx, lastPlayedIdx }:
+ *   'upcoming' — there is a real future (or undated) unplayed match; nextIdx
+ *                points at it. Expired unplayed fixtures are skipped.
+ *   'finished' — nothing left to play but the season had matches;
+ *                lastPlayedIdx is the final result's index.
+ *   'empty'    — nothing played and nothing upcoming. */
+export function seasonOutlook(matches, todayISO) {
+  const list = Array.isArray(matches) ? matches : [];
+  for (let i = 0; i < list.length; i++) {
+    const m = list[i];
+    if (m.played) continue;
+    const iso = matchDateISO(m.date, todayISO);
+    if (iso === null || iso >= todayISO)
+      return { state: 'upcoming', nextIdx: i, lastPlayedIdx: -1 };
   }
-  return null;
+  for (let i = list.length - 1; i >= 0; i--)
+    if (list[i].played)
+      return { state: 'finished', nextIdx: -1, lastPlayedIdx: i };
+  return { state: 'empty', nextIdx: -1, lastPlayedIdx: -1 };
 }
 
 function fmtDate(d) {
-  const dt = parseMatchDate(d);
-  if (!dt) return esc(d || '');
+  // Resuelve el año con matchDateISO (parseMatchDate hacía rollover al año
+  // siguiente para fechas vencidas → día de semana incorrecto, QA 11/6:
+  // 'dom, 06/06' para un sábado).
+  const iso = matchDateISO(d, localTodayISO());
+  if (!iso) return esc(d || '');
+  const dt = new Date(iso + 'T12:00:00');
   return dt.toLocaleDateString('es-ES',
     { weekday: 'short', day: '2-digit', month: '2-digit' });
 }
 
 function countdownLabel(d) {
-  const dt = parseMatchDate(d);
-  if (!dt) return '';
+  const iso = matchDateISO(d, localTodayISO());
+  if (!iso) return '';
+  const dt = new Date(iso + 'T00:00:00');
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const days = Math.round((dt - today) / 86400000);
   if (days < 0) return '';
@@ -151,11 +197,44 @@ export function renderMiEquipo() {
     + '<div class="me-pos-l">DE ' + total + ' EQUIPOS</div></div>';
   c.appendChild(hero);
 
+  // End-of-season state: the browser clock is read ONCE here (UI edge) and
+  // injected into the pure classifier. 'finished' replaces the PRÓXIMO card
+  // with a sober closing card (see below).
+  const outlook = seasonOutlook(matches, localTodayISO());
+
+  if (outlook.state === 'finished') {
+    const r = stand.row; // [pos, team, pts, j, g, e, p, gf, gc, df]
+    const last = matches[outlook.lastPlayedIdx];
+    const lastCls = last.result === 'W' ? 'G' : last.result === 'L' ? 'P' : 'E';
+    const overCard = el('div', 'me-card me-over');
+    overCard.innerHTML =
+      '<div class="me-over-flag"><span class="me-ln"></span>'
+      + '<span class="me-over-t">&#127937; Temporada finalizada</span>'
+      + '<span class="me-ln"></span></div>'
+      + '<div class="me-over-main">'
+      + '<div class="me-over-pos"><span class="me-over-n">' + pos + '&ordm;</span>'
+      + '<span class="me-over-of">de ' + total + '<br>equipos</span></div>'
+      + '<div class="me-over-stats">'
+      + '<div class="me-over-stat"><span class="n w">' + r[4] + '</span><span class="l">G</span></div>'
+      + '<div class="me-over-stat"><span class="n d">' + r[5] + '</span><span class="l">E</span></div>'
+      + '<div class="me-over-stat"><span class="n p">' + r[6] + '</span><span class="l">P</span></div>'
+      + '<div class="me-over-sep"></div>'
+      + '<div class="me-over-stat"><span class="n">' + r[7] + '</span><span class="l">GF</span></div>'
+      + '<div class="me-over-stat"><span class="n">' + r[8] + '</span><span class="l">GC</span></div>'
+      + '</div></div>'
+      + '<div class="me-over-last">'
+      + '<span class="me-over-last-l">&Uacute;ltimo partido &middot; J' + last.jorNum + '</span>'
+      + '<span class="me-over-last-m">' + esc(last.home)
+      + ' <b class="me-res ' + lastCls + '">' + last.hs + '-' + last.as + '</b> '
+      + esc(last.away) + '</span></div>';
+    c.appendChild(overCard);
+  }
+
   const calCard = el('div', 'me-card');
   let lastPlayedIdx = -1;
   for (let i = matches.length - 1; i >= 0; i--)
     if (matches[i].played) { lastPlayedIdx = i; break; }
-  const nextIdx = matches.findIndex(m => !m.played);
+  const nextIdx = outlook.nextIdx;
 
   let calRows = '';
   matches.forEach((m, i) => {
@@ -180,7 +259,12 @@ export function renderMiEquipo() {
     const cls = played
       ? 'me-res ' + (m.result === 'W' ? 'G' : m.result === 'L' ? 'P' : 'E')
       : 'me-res me-next-min';
-    const score = played ? (m.hs + '-' + m.as) : fmtDate(m.date);
+    // Temporada finalizada: un fixture vencido sin jugar no es 'pendiente'
+    // ni lleva fecha — chip 'no disputado' (QA 11/6: 'dom, 06/06' partido en
+    // dos líneas y contradictorio bajo la tarjeta TEMPORADA FINALIZADA).
+    const notPlayedOver = !played && outlook.state === 'finished';
+    const score = played ? (m.hs + '-' + m.as) : notPlayedOver ? null : fmtDate(m.date);
+    const resCls = score === null ? cls + ' me-res-nd' : cls;
     const rowCls = ('me-crow' + (!played ? ' me-dim' : '')
       + (i === lastPlayedIdx ? ' me-last' : '')).trim();
     const tappable = played && hasDetail(m);
@@ -191,13 +275,12 @@ export function renderMiEquipo() {
       + '<span class="me-o">' + esc(m.opp)
       + (i === lastPlayedIdx ? '<span class="me-taglast">último</span>' : '')
       + (tappable ? ' <span class="me-detail">&#9917;</span>' : '')
-      + '</span><span class="' + cls + '">' + esc(score) + '</span></div>';
+      + '</span><span class="' + resCls + '">'
+      + (score === null ? '<span class="me-nd">no disputado</span>' : esc(score))
+      + '</span></div>';
   });
-  if (nextIdx === -1 && matches.length)
-    calRows += '<div class="me-crow me-dim"><span class="me-jn">&mdash;</span>'
-      + '<span class="me-hv">&middot;</span>'
-      + '<span class="me-o">Temporada finalizada</span>'
-      + '<span class="me-res">&mdash;</span></div>';
+  // (When the season is over the .me-over card above is the closing state —
+  //  no extra filler row needed here.)
   calCard.innerHTML = '<div class="me-ct">Calendario '
     + '<span class="me-mut">' + matches.length + ' partidos</span></div>'
     + '<div class="me-cal" id="meCal">'
@@ -230,6 +313,10 @@ export function renderMiEquipo() {
   const showLeader = lo > 0;
   let bodyRows = '';
   if (showLeader) bodyRows += standingTr(st[0], true);
+  // Separador cuando hay hueco entre el líder y la ventana (QA 11/6: la
+  // tabla saltaba de la posición 1 a la 6 y parecía consecutiva).
+  if (lo > 1) bodyRows += '<tr class="me-gaprow" aria-hidden="true">'
+    + '<td colspan="5">&#8943;</td></tr>';
   win.forEach(r => { bodyRows += standingTr(r, false); });
   miniCard.innerHTML = '<div class="me-ct">Su posición en el '
     + esc(group.name) + '</div><div class="table-wrap">'
@@ -245,20 +332,23 @@ export function renderMiEquipo() {
   const season = miEquipoSeason(typeof SEASONS !== 'undefined' ? SEASONS : null);
   plantCard.innerHTML = '<div class="me-ct">Plantilla ' + season.replace('-20', '-') + '</div>'
     + '<div id="me-plant-host" class="plant-host">'
-    + '<div class="plant-empty plant-empty-loading">Cargando plantilla…</div>'
-    + '</div>';
+    // CSS-only skeleton with the silhouette of the plantilla table rows
+    + '<div class="skeleton-rows" aria-hidden="true">'
+    + '<div class="skeleton skeleton-row"></div><div class="skeleton skeleton-row"></div>'
+    + '<div class="skeleton skeleton-row"></div><div class="skeleton skeleton-row"></div>'
+    + '</div></div>';
   c.appendChild(plantCard);
   Promise.all([ensurePlayers(season), ensureLineups(season)]).then(([pdata, ldata]) => {
     const host = document.getElementById('me-plant-host');
     if (!host) return;
     if (!pdata) {
-      host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para esta temporada.</div>';
+      host.innerHTML = '<div class="plant-empty"><span class="plant-empty-ico">&#128203;</span> No hay datos de plantilla para esta temporada.</div>';
       return;
     }
     const teamName = plantillaTeamName(FEATURED);
     const teamId = pdata.teams[normalizeForTeamsMapping(teamName)];
     if (teamId == null) {
-      host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para este equipo en esta temporada.</div>';
+      host.innerHTML = '<div class="plant-empty"><span class="plant-empty-ico">&#128203;</span> No hay datos de plantilla para este equipo en esta temporada.</div>';
       return;
     }
     const rows = pdata.players[String(teamId)] || [];

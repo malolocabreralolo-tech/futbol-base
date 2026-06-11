@@ -376,10 +376,14 @@ export function openTeamDetail(teamName, groupId) {
   `;
 
   // Body
+  // CSS-only skeleton with the silhouette of the plantilla rows (presentation
+  // of the intermediate state only — the fetch logic below is untouched).
   let body = '<div class="modal-stats-header">Plantilla</div>'
            + '<div id="plant-modal-host" class="plant-host">'
-           + '<div class="plant-empty plant-empty-loading">Cargando plantilla…</div>'
-           + '</div>';
+           + '<div class="skeleton-rows" aria-hidden="true">'
+           + '<div class="skeleton skeleton-row"></div><div class="skeleton skeleton-row"></div>'
+           + '<div class="skeleton skeleton-row"></div>'
+           + '</div></div>';
 
   if (row) {
     body += `<div class="modal-stats-header">Temporada</div>
@@ -464,13 +468,19 @@ export function openTeamDetail(teamName, groupId) {
     }
   }
 
-  // Cross-season history placeholder — populated lazily after modal opens
+  // Cross-season history placeholder — populated lazily after modal opens.
+  // Skeleton rows mimic the table that will land here.
   body += `
     <div class="modal-stats-header" id="histAllSeasonsHeader">
       <span>Histórico todas las temporadas</span>
-      <span class="hist-loading" id="histAllSeasonsLoading" style="font-size:11px;opacity:.6;font-weight:400">cargando…</span>
     </div>
-    <div id="histAllSeasonsBody"></div>`;
+    <div id="histAllSeasonsBody">
+      <div class="skeleton-rows" id="histAllSeasonsLoading" aria-hidden="true">
+        <div class="skeleton skeleton-row"></div>
+        <div class="skeleton skeleton-row"></div>
+        <div class="skeleton skeleton-row"></div>
+      </div>
+    </div>`;
 
   modalBody.innerHTML = body;
   modalOverlay.classList.add('open');
@@ -487,12 +497,12 @@ export function openTeamDetail(teamName, groupId) {
     Promise.all([ensurePlayers(season), ensureLineups(season)]).then(([pdata, ldata]) => {
       fillIfCurrent(document.getElementById('plant-modal-host'), plantKey, (host) => {
       if (!pdata) {
-        host.innerHTML = '<div class="plant-empty">ⓘ No hay datos de plantilla para esta temporada.</div>';
+        host.innerHTML = '<div class="plant-empty"><span class="plant-empty-ico">&#128203;</span> No hay datos de plantilla para esta temporada.</div>';
         return;
       }
       const teamId = pdata.teams[normalizeForTeamsMapping(teamName)];
       if (teamId == null) {
-        host.innerHTML = '<div class="plant-empty">\u24d8 No hay datos de plantilla para este equipo en esta temporada.</div>';
+        host.innerHTML = '<div class="plant-empty"><span class="plant-empty-ico">&#128203;</span> No hay datos de plantilla para este equipo en esta temporada.</div>';
         return;
       }
       const rows = pdata.players[String(teamId)] || [];

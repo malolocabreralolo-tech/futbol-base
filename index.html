@@ -56,7 +56,7 @@
 
       <!-- Section Tabs -->
       <nav class="section-tabs">
-        <button class="section-tab active" data-section="miequipo">⭐ MI EQUIPO</button>
+        <button class="section-tab active" data-section="miequipo" aria-current="page">⭐ MI EQUIPO</button>
         <button class="section-tab" data-section="clasif">CLASIFICACIONES</button>
         <button class="section-tab" data-section="jornadas">JORNADAS</button>
         <button class="section-tab" data-section="goleadores">GOLEADORES</button>
@@ -89,7 +89,7 @@
   <div class="modal-overlay" id="matchModal">
     <div class="modal">
       <div class="modal-top">
-        <button class="modal-close" id="modalClose">✕</button>
+        <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
         <div id="modalContent"></div>
       </div>
       <div class="modal-body" id="modalBody"></div>
@@ -97,16 +97,16 @@
   </div>
 
   <!-- DATA FILES -->
-  <script src="./data-benjamin.js?v=20260611b"></script>
-  <script src="./data-prebenjamin.js?v=20260611b"></script>
-  <script src="./data-history.js?v=20260611b"></script>
-  <script src="./data-goleadores.js?v=20260611b"></script>
-  <script src="./data-matchdetail-keys.js?v=20260611b"></script>
-  <script src="./data-shields.js?v=20260611b"></script>
-  <script src="./data-stats.js?v=20260611b"></script>
-  <script src="./data-seasons.js?v=20260611b"></script>
+  <script src="./data-benjamin.js?v=20260611d"></script>
+  <script src="./data-prebenjamin.js?v=20260611d"></script>
+  <script src="./data-history.js?v=20260611d"></script>
+  <script src="./data-goleadores.js?v=20260611d"></script>
+  <script src="./data-matchdetail-keys.js?v=20260611d"></script>
+  <script src="./data-shields.js?v=20260611d"></script>
+  <script src="./data-stats.js?v=20260611d"></script>
+  <script src="./data-seasons.js?v=20260611d"></script>
   <!-- APP -->
-  <script type="module" src="./src/app.js?v=20260611b"></script>
+  <script type="module" src="./src/app.js?v=20260611d"></script>
   <script>
     // Standard SW registration: the browser's update cycle detects a
     // byte-different sw.js; skipWaiting+clients.claim in sw.js make the new

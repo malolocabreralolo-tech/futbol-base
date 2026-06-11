@@ -2,6 +2,15 @@ import { S, $, $$, el, isHistorical, ensureSeasonData } from './state.js';
 import { renderSection, renderClasif, renderJornadas, renderGoleadores, renderIsla, renderStats, updateSearchCount } from './render.js';
 import { countStats } from './state.js';
 
+/* Keep the <meta name="theme-color"> in sync with the active theme so the
+ * mobile browser chrome matches the app surface (a11y/PWA polish). */
+function syncThemeColor() {
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) return;
+  const light = document.documentElement.getAttribute('data-theme') === 'light';
+  meta.setAttribute('content', light ? '#f0f2f5' : '#0a0f1a');
+}
+
 /* ====== INIT ====== */
 document.addEventListener('DOMContentLoaded', async () => {
   // Apply saved theme
@@ -10,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const t = document.getElementById('themeToggle');
     if (t) t.textContent = '☀️';
   }
+  syncThemeColor();
   // Restore saved season
   const savedSeason = localStorage.getItem('season') || '';
   S.season = savedSeason;
@@ -104,7 +114,13 @@ export function bindEvents() {
     tab.addEventListener('click', () => {
       S.section = tab.dataset.section;
       if (S.section === 'jornadas') S.jorNum = '';
-      $$('.section-tab').forEach(t => t.classList.toggle('active', t === tab));
+      $$('.section-tab').forEach(t => {
+        const active = t === tab;
+        t.classList.toggle('active', active);
+        // a11y: announce the selected tab to AT
+        if (active) t.setAttribute('aria-current', 'page');
+        else t.removeAttribute('aria-current');
+      });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       renderSection();
     });
@@ -124,6 +140,7 @@ export function bindEvents() {
         themeToggle.textContent = '☀️';
         localStorage.setItem('theme', 'light');
       }
+      syncThemeColor();
     });
   }
 }

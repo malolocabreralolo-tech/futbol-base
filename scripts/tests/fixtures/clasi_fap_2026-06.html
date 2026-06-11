@@ -1,0 +1,5449 @@
+<script type="text/javascript">
+$(document).ready(function()
+	{
+	$("div.orden55:lt(1)").css("background","LimeGreen").css("color","#FFF");
+	   //$("div.orden55:eq(1)").css("background","#33CC99").css("color","#FFF");
+	    //$("div.orden55:eq(11)").css("background","ORANGE").css("color","#FFF");
+		//$("div.orden55:gt(11)").css("background","#B00 ").css("color","#fff");
+	})
+</script>
+<script>
+const element = document.getElementById('my-element');
+
+element.addEventListener('mouseenter', () => {
+    element.style.color = 'red';
+    // JavaScript can optionally call PHP here via AJAX/fetch
+});
+
+element.addEventListener('mouseleave', () => {
+    element.style.color = 'black';
+});
+</script>
+<script>
+function modalUl(categoria, equipo, modalUltimos){
+        var parametros = {
+                "categoria" : categoria,
+			"equipo" : equipo,
+                "modalUltimos" : modalUltimos
+                };
+        $.ajax({
+                data:  parametros,
+                url:   'https://futbolaspalmas.com/include2019/calendario-en-clasi2.php',
+                type:  'post',
+                
+                success:  function (response) {
+                        $("#modalUltimos").html(response);
+					
+					
+                }
+        });
+}
+
+
+</script>
+
+
+<script>
+	function ganadosEmpatadosPerdidos(categoria, equipo, cargas){
+        var parametros = {
+                "categoria" : categoria,
+			"equipo" : equipo,
+                "cargas" : cargas
+                };
+        $.ajax({
+                data:  parametros,
+                url:   'https://futbolaspalmas.com/include2019/ganado-empatado-perdido-2026.php',
+                type:  'post',
+                
+                success:  function (response) {
+                        $("#cargas").html(response);
+                }
+        });
+}
+</script>
+
+
+
+
+<!--
+<script>
+	function ganadosEmpatadosPerdidos(categoria, equipo, carga){
+        var parametros = {
+                "categoria" : categoria,
+			"equipo" : equipo,
+                "carga" : carga
+                };
+        $.ajax({
+                data:  parametros,
+                url:   'https://futbolaspalmas.com/include2019/ganado-empatado-perdido-2.php',
+                type:  'get',
+                
+                success:  function (response) {
+                        $("#"+carga).html(response);
+                }
+        });
+}
+</script>
+
+-->
+
+<script>
+	function calendarioClasificacion(categoria, equipo, clasidiv){
+        var parametros = {
+                "categoria" : categoria,
+			"equipo" : equipo,
+                "clasidiv" : clasidiv
+                };
+        $.ajax({
+                data:  parametros,
+                url:   'https://futbolaspalmas.com/include2019/calendario-en-clasi.php',
+                type:  'get',
+                
+                success:  function (response) {
+                        $("#"+clasidiv).html(response);
+                }
+        });
+}
+</script>
+
+
+
+
+
+
+<style>
+	.orden {
+		font-size: 12pxSS;
+	    color: #666;
+		text-align: center;
+		width: 15px;
+		padding-top:7.5px;}
+
+.p:nth-child(even) {
+			background: red;
+		}
+
+		.p:nth-last-child(odd) {
+			background: blue;
+		}
+	
+.roja {
+
+	width:10px;
+     height: 10px;
+	background-image: url("../escudos/flechaabajo.png")
+  	
+z-index:  3000;
+	
+
+	}
+	
+	.puntillos {
+	
+	float:left; background: -prefix-linear-gradient(0deg, Silver WhiteSmoke,);background: linear-gradient(0deg, Silver, WhiteSmoke);color:black
+	
+	
+	}	
+	
+
+.contenedor-scroll {
+  display: flex; /* Alinea los elementos hijos horizontalmente */
+  flex-wrap: nowrap; /* Evita que los elementos bajen a la siguiente línea */
+  overflow-x: auto; /* Activa el scroll horizontal solo cuando sea necesario */
+  overflow-y: hidden; /* Oculta cualquier scroll vertical no deseado */
+  -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+  gap: 0px; /* Espacio opcional entre elementos */
+  padding-left: 1px;
+	/* 1. Definir el borde izquierdo */
+  /*border-left: 1px solid #ddd; /* Puedes cambiar #000 por el color que quieras */
+
+}
+
+.item {
+  flex: 0 0 auto; /* Impide que los elementos se encojan */
+  /*width: 80%; /* Ancho de cada elemento (ej. para que se vea el siguiente) */
+}	
+	
+
+	
+	
+/* Para Firefox (Estándar) */
+  html {
+  scrollbar-color: #e30052 #e0e0e0; /* color-thumb color-track */
+  scrollbar-width: thin; /* Opcional: auto o thin */
+}
+
+/* Para Chrome, Edge y Safari */
+::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra*/
+} 
+
+::-webkit-scrollbar-track {
+  background: #e0e0e0; /* Color del fondo */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #6969dd; /* Color del controlador */
+  border-radius: 10px; /* Borde redondeado */
+  border: 3px solid #e0e0e0; /* Borde alrededor del controlador */
+}	
+	
+	
+/* Estilo de la línea divisoria */
+  .casa-fuera {
+  position: sticky;
+  left: 30%; /* Se posiciona en la mitad del contenedor visible */
+  margin-top: 35%;
+  width: 70px;
+  content: url("../escudos/logo-circular-casa-fuera.png") / "This is the alt text"; 
+	  
+  height: 100%; /* Altura total del contenedor */
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
+  z-index: 10;
+  display: none; /* Oculta inicialmente */
+}
+
+.rotated {
+  transform: rotate(-45deg); /* Equal to rotateZ(45deg) */
+  /*background-color: pink;*/
+}
+/* Estilo de la línea divisoria */
+  .linea-divisoria {
+  position: sticky;
+  left: 0%; /* Se posiciona en la mitad del contenedor visible */
+  top: 0;
+  width: 1px;
+  height: 100%; /* Altura total del contenedor */
+  background-color: #D6D3D1; /* Color de la línea */
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
+  z-index: 10;
+  display: none; /* Oculta inicialmente */
+}	
+/* CSS: Eliminar estilos de botón */
+.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+	
+/* Selecciona los elementos impares */
+.contenedor__item:nth-of-type(odd) {
+  /*background-color: GhostWhite;*/
+	
+	
+}
+
+/* Selecciona los elementos pares */
+.contenedor__item:nth-of-type(even) {
+  /*background-color: WhiteSmoke;*/
+	
+
+  
+	
+}	
+	.contenedor__iteme{
+		color: Gold;
+	}
+	.contenedor__item:hover{
+		color: black;
+		background-color: Gold;
+  /*opacity: 1;  Opacidad al pasar el ratón */
+		color: black;
+		font-weight: bolder;
+		border-radius: 10% / 25%;
+		font-size:13px;
+}
+	.escudo img {
+    max-width: 100%; /* La imagen no superará el ancho de su contenedor */
+    height: auto;    /* Mantiene la proporción original de la imagen */
+    display: block;  /* Evita espacios en blanco no deseados debajo de la imagen */
+}
+	
+
+</style>
+
+
+
+
+
+
+	
+	
+	
+<div class="bg-danger text-white rounded-top">C L A S I F I C A C I O N&nbsp;&nbsp;&nbsp;G E N E R A L</div>
+
+
+
+
+
+<div class="rounded-bottom item" style="width:100%; float:left; background: -prefix-linear-gradient(0deg, Silver WhiteSmoke,);background: linear-gradient(0deg, Silver, WhiteSmoke);color:black ">
+	
+	
+	<div style="width:100%; text-align:center; font-size:12pxLL; color: black; margin-bottom:1px;margin-top:5px;  padding-left:5px;"> 
+		<img src="../escudos/Mundial-espana.png" width="auto" height="11" />
+		
+				
+<img src="../escudos/logo-federaciones-3.png" width="auto" height="25" />	Prebenjamín Grupo 1 FIFLP	</div>
+
+	</div> 
+   
+	   
+	
+		<div class="rounded-bottom pb-1 mb-1" style="width:56%;padding-top:2.6px; float:left; background: -prefix-linear-gradient(30deg, AliceBlue WhiteSmoke,);background: linear-gradient(0deg, Silver, WhiteSmoke);color:black ">
+		
+	
+	        <div style="width:5%; float:left; text-align:left; color:#000;padding-left:5px;">P</div>
+			<div style="width:3%; float:left; text-align:center; color:#000">&nbsp;</div>
+	        <div style="width:70%; float:left; text-align:left; color:#000"> Futbol Las Palmas</div>
+	        <div style="width:15%; float:left; text-align:center; color:#000">Puntos</div> 
+	        
+     
+</div>
+		
+		
+
+
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			1</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','UD Moya','0');return false;"
+		
+		>
+ <img src="../escudos/100x100moya.png" title=" Calendario UD Moya" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">UD Moya		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">72 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			2</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Gáldar CF','0');return false;"
+		
+		>
+ <img src="../escudos/galdarEscudoColor.png" title=" Calendario Gáldar CF" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Gáldar CF		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">71 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			3</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','San Mateo','0');return false;"
+		
+		>
+ <img src="../escudos/100x100sanmateo.png" title=" Calendario San Mateo" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="parria">1</span>
+
+			<!--<img src="https://futboltenerife.com/images/flechaarriba.png" width="10" height="10">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">San Mateo		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">53 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			4</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','UD Atalaya','0');return false;"
+		
+		>
+ <img src="../escudos/200x200AtalayaSanPablo.png" title=" Calendario UD Atalaya" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+	<span class="pabajo">1</span>
+
+			<!--<img src="https://futboltenerife.com/images/flechaabajo.png" width="10" height="10">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">UD Atalaya		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">52 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			5</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Tamaraceite','0');return false;"
+		
+		>
+ <img src="../escudos/100x100tamaraceite.png" title=" Calendario Tamaraceite" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Tamaraceite		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">50 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			6</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','UD Barrial','0');return false;"
+		
+		>
+ <img src="../escudos/200x200udbarrial.png" title=" Calendario UD Barrial" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">UD Barrial		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">45 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			7</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','CD Firgas','0');return false;"
+		
+		>
+ <img src="../escudos/100x100firgas.png" title=" Calendario CD Firgas" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">CD Firgas		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">42 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			8</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Santidad','0');return false;"
+		
+		>
+ <img src="../escudos/100x100santidad.png" title=" Calendario Santidad" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Santidad		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">40 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			9</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','San Isidro','0');return false;"
+		
+		>
+ <img src="../escudos/sanIsidroEscudo.png" title=" Calendario San Isidro" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">San Isidro		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">37 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			10</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Arucas CF','0');return false;"
+		
+		>
+ <img src="../escudos/100x100arucas.png" title=" Calendario Arucas CF" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Arucas CF		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">36 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			11</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Costa Ayala','0');return false;"
+		
+		>
+ <img src="../escudos/100x100costayala.png" title=" Calendario Costa Ayala" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Costa Ayala		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">24 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			12</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Acodetti B','0');return false;"
+		
+		>
+ <img src="../escudos/200x200acodetti.png" title=" Calendario Acodetti B" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Acodetti B		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">23 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			13</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Roque Amagro','0');return false;"
+		
+		>
+ <img src="../escudos/escudoRoqueAmagro.png" title=" Calendario Roque Amagro" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Roque Amagro		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">8 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			14</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Guayarmina','0');return false;"
+		
+		>
+ <img src="../escudos/escudoGuayarmina.png" title=" Calendario Guayarmina" width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Guayarmina		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">6 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+   	
+	<div class="border-bottom border-endll" style="width:56%; float:left;">
+		<!--<div class="border-top" style="width:100%; float:left; margin-bottom:0px; ">-->
+		
+		
+		<div class="pt-3 pb-3 orden55" style="width:0.9%; float:left; text-align:center"></div>
+		<div class="pt-2 pb-2" style="width:6%; float:left; text-align:center;
+									  
+									  
+									  
+									   ">
+			
+			
+			
+			15</div>
+	
+		
+		
+		 <!-- Button trigger modal -->
+		<div class="escudo5" style="width:13%; float:left;padding-left:3px;padding-top:5px;text-align:center;margin-top:0px ">
+<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModalultimos"
+		
+	 onclick="modalUl('calendario_prebenjamin_g1','Valkyrias Bec.','0');return false;"
+		
+		>
+ <img src="../escudos/valkyriasEscudo.png" title=" Calendario Valkyrias Bec." width="" height="25"/> 
+</button>
+		</div>
+		
+		
+		
+		
+		<!-- Fin div zona escudo-->
+		<div  class="pt-1 ps-2 me-1" style="width:16%;float:left;"><style>
+.parria {
+    color: #2db200;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+  
+}
+
+.parria::before {
+    top: 50%;
+    margin-top: -7px;
+    border-color: transparent transparent #2db200;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+
+.pabajo {
+    color: #d90000;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}
+
+.pabajo::before {
+    top: 50%;
+    margin-top: -2px;
+    border-color:  #d90000 transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}
+.paladerecha {
+    color: #ccc;
+    font-weight: 000;
+    padding-left: 14px;
+    position: relative;
+    font-size: 10px;
+   
+}	
+.paladerecha::before {	
+	
+top: 50%;
+    margin-top: -5px;
+    border-color:   transparent transparent transparent #ccc ;
+    border-style: solid;
+    border-width: 5px;
+    content: " ";
+    left: 0;
+    position:absolute
+}	
+</style>
+
+   <span class="paladerecha">=</span>
+
+			<!--<img src="https://futbolaspalmas.com/images/flechaderechas.png" width="10" height="17.5">-->
+           </div>
+		<!-- div zona nombreEquipo y últimos 5 jugados-->
+		<div class="fw-bolderr pt-2" style="width:109px; float:left; text-align:left; padding-left:1%; ">Valkyrias Bec.		</div>
+			<!-- div zona nombreEquipo y últimos 5 jugados-->
+
+			
+		
+	<div style="width:5%; float:left; text-align:center;" class="pt-2 pb-2 fw-bold text-warning-emphasis">0 </div>
+		
+		
+		
+		
+		
+		</div>
+
+        
+
+
+		
+<div class="rounded-top pb-1 mb-1" style="width:56%;padding-top:2.6px; float:left; background: -prefix-linear-gradient(0deg, AliceBlue WhiteSmoke,);background: linear-gradient(0deg, Silver, WhiteSmoke);color:black ">
+		
+	
+	        <div style="width:5%; float:left; text-align:left; color:#000;padding-left:5px;">&nbsp;</div>
+			<div style="width:3%; float:left; text-align:center; color:#000">&nbsp;</div>
+	        <div style="width:70%; float:left; text-align:left; color:#000"><img src="../escudos/logo-federaciones-3.png"width="auto" height="15"></div>
+	        <div style="width:15%; float:left; text-align:center; color:#000">Puntos</div> 
+	        
+     
+</div>
+	
+	
+	
+	<!-- div zona scroll-->
+    <!-- div zona scroll-->
+    <!-- div zona scroll-->
+	
+
+		
+		<div class="contenedor-scroll">
+			<div class="ccasa-fuera rotated"></div>
+	<div class="item" style="width:615%; float:left;">
+		
+		
+			<div class="rounded-bottom mb-1" style="width:100%;padding-top:4px;padding-bootom:0px; float:left; background: -prefix-linear-gradient(30deg, AliceBlue WhiteSmoke,);background: linear-gradient(0deg, Silver, WhiteSmoke);color:black ">
+		    <div style="width:2%; float:left; text-align:center; color:#000">J</div>
+			<div style="width:2%; float:left; text-align:center; color:#000">G</div>
+			<div style="width:2%; float:left; text-align:center; color:#000">E</div>
+			<div style="width:2%; float:left; text-align:center; color:#000">P</div>
+			<div style="width:3%; float:left; text-align:center; color:#000">GF</div>
+			<div style="width:3%; float:left; text-align:center; color:#000">GC</div>
+			<div style="width:2%; float:left; text-align:center; color:#000">DIF</div>
+			<div style="width:8%; float:left; text-align:center; color:#000">Últimos 5</div>
+			<div style="width:8%; float:left; text-align:center; color:#000">Coeficiente</div>
+			<div style="width:9%; float:left; text-align:center; color:#000">Sanción
+			<img src="../escudos/comite-sancionados.png" title=" sanciones" width="auto" height="22"/></div>
+		
+			
+				<div class="text-end" style="width:14%; float:left; text-align:center; color:black"><b class="text-primary">Casa =></b> Puntos</div>
+			<div style="width:3%; float:left; text-align:center; color:black">G</div>
+			<div style="width:3%; float:left; text-align:center; color:black">E</div>
+			<div style="width:3%; float:left; text-align:center; color:black">P</div>
+			<div style="width:3%; float:left; text-align:center; color:black">GF</div>
+			<div style="width:3%; float:left; text-align:center; color:black">GC</div>
+		
+		
+			<div class="" style="width:14%; float:left; text-align:center; color:black">&nbsp;&nbsp;&nbsp;<b class="text-primary">Fuera =></b> Puntos</div>
+			<div style="width:3%; float:left; text-align:center; color:black">G</div>
+			<div style="width:3%; float:left; text-align:center; color:black">E</div>
+			<div style="width:3%; float:left; text-align:center; color:black">P</div>
+			<div style="width:3%; float:left; text-align:center; color:black">GF</div>
+			<div style="width:3%; float:left; text-align:center; color:black">GC</div>
+		
+		
+		</div>
+		
+		
+			
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >24</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">0</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">4</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">150</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">76</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">74</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Moya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Moya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Moya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Moya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Moya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			2,5714			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				30			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			10	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			0	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			4	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			77	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			44	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			42	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			14	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			0	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			0	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			73	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			32	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >23</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">2</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">3</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">181</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">98</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">83</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Gáldar CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Gáldar CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Gáldar CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Gáldar CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Gáldar CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			2,5357			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				34			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			11	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			1	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			2	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			89	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			50	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			37	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			12	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			1	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			1	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			92	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			48	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >17</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">2</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">9</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">152</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">104</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">48</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Mateo');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Mateo');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Mateo');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Mateo');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Mateo');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			1,8929			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				27			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			9	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			0	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			5	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			84	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			52	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			26	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			8	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			2	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			4	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			68	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			52	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >16</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">4</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">8</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">111</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">74</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">37</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Atalaya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Atalaya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Atalaya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Atalaya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Atalaya');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			1,8571			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				26			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			8	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			2	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			4	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			56	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			32	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			26	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			8	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			2	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			4	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			55	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			42	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >15</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">5</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">8</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">127</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">84</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">43</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Tamaraceite');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Tamaraceite');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Tamaraceite');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Tamaraceite');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Tamaraceite');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			1,7857			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				27			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			8	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			3	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			3	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			65	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			44	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			23	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			7	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			2	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			5	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			62	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			40	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >13</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">6</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">9</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">86</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">88</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">-2</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Barrial');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Barrial');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Barrial');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="empate"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Barrial');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','UD Barrial');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			1,6071			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				26			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			8	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			2	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			4	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			44	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			42	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			19	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			5	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			4	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			5	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			42	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			46	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >13</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">3</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">12</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">93</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">87</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">6</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','CD Firgas');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','CD Firgas');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','CD Firgas');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','CD Firgas');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','CD Firgas');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			1,5000			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				18			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			5	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			3	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			6	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			45	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			46	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			24	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			8	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			0	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			6	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			48	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			41	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >12</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">4</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">12</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">120</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">130</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">-10</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Santidad');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Santidad');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Santidad');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Santidad');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Santidad');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			1,4286			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				23			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			7	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			2	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			5	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			64	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			64	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			17	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			5	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			2	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			7	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			56	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			66	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >11</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">4</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">13</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">122</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">132</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">-10</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Isidro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Isidro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Isidro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Isidro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','San Isidro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			1,3214			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				21			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			6	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			3	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			5	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			60	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			52	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			16	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			5	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			1	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			8	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			62	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			80	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >11</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">3</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">14</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">118</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">115</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">3</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Arucas CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Arucas CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Arucas CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Arucas CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Arucas CF');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			1,2857			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				20			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			6	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			2	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			6	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			52	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			44	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			16	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			5	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			1	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			8	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			66	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			71	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >7</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">3</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">18</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">85</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">136</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">-51</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Costa Ayala');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Costa Ayala');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Costa Ayala');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="empate"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Costa Ayala');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Costa Ayala');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			0,8571			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				14			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			4	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			2	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			8	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			46	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			73	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			10	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			3	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			1	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			10	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			40	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			63	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >7</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">2</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">19</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">89</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">107</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">-18</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Acodetti B');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Acodetti B');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Acodetti B');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Acodetti B');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Acodetti B');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			0,8214			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				13			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			4	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			1	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			9	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			47	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			52	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			10	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			3	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			1	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			10	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			42	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			55	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >2</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">2</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">24</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">36</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">145</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">-109</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Roque Amagro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Roque Amagro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Roque Amagro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Roque Amagro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="victoria"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Roque Amagro');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="empate"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			0,2857			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				3			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			1	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			0	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			13	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			23	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			74	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			5	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			1	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			2	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			11	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			13	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			71	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >1</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">3</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">24</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">58</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">173</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">-115</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Guayarmina');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Guayarmina');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Guayarmina');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Guayarmina');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Guayarmina');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			0,2143			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				4			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			1	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			1	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			12	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			30	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			88	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			2	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			0	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			2	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			12	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			28	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			85	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="border-bottom contenedor__item" style="width:100%; float:left">
+		
+		
+		
+		
+		
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">28</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;" >16</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">1</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center;">11</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">118</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:3%; float:left; text-align:center; ">98</div>
+		<div class="pt-2 pb-2 borderr-start" style="width:2%; float:left; text-align:center; ">20</div>
+		
+		  
+			
+			<div style="width:9%;" class="ps-3 pt-2 borderr-start float-start text-center">
+			<style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+	
+	.btn-imagen {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Opcional: Ajustar el tamaño de la imagen */
+.btn-imagen img {
+    /* width: 50px; /* Ajusta a tu necesidad 
+    height: auto;*/
+}
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<button type="button" class="btn-imagen" data-bs-toggle="modal" data-bs-target="#exampleModal5ultimos"
+		
+	 onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;"
+		
+		> <div style="float:left;margin-right:2px"class="derrota"></div>
+	</button>
+	
+                        </div>
+		
+        </div> </div>
+	
+        				
+				</div>
+			
+			
+			<div style="width:6%; float:left;" class="pt-2">
+			0,0000			</div>
+			
+			
+			
+		<div style="width:15%; float:left;" class="pt-2">
+			<span class="border pt-2 pb-2 ps-3 pe-3" style="font-size:13px">0</span> 
+			</div>
+			
+			
+			    
+			
+			<div  class="pt-2 pb-2  fw-bolder text-end pe-3 text-warning-emphasis" style="width:9%; float:left;color:redFF">
+				27			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			9	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			0	
+			</div>
+			<div //class="pt-2" style="width:3%; float:left;">
+			5	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;" >
+			61	
+			</div>
+			<div class="pt-2" style="width:3%; float:left;">
+			47	
+			</div>
+			
+			
+			
+			
+			<div class="border-start text-end pt-2 pb-2  fw-bolder p-2 pe-4 text-warning-emphasis" style="width:14%; float:left">
+			22	
+			</div>
+			
+			
+			
+			
+			<div style="width:3%; float:left;" class="p-2">
+			7	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			1	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			6	
+			</div>
+			
+			<div style="width:3%; float:left;" class="p-2">
+			57	
+			</div>
+			<div style="width:3%; float:left;" class="p-2">
+			51	
+			</div>
+			
+			
+			
+		
+		</div>
+		
+		
+		
+		
+		
+		<div class="rounded-top mb-1" style="width:100%;padding-top:4px;padding-bootom:0px; float:left; background: -prefix-linear-gradient(30deg, AliceBlue WhiteSmoke,);background: linear-gradient(0deg, Silver, WhiteSmoke);color:black ">
+		    <div style="width:2%; float:left; text-align:center; color:#000">J</div>
+			<div style="width:2%; float:left; text-align:center; color:#000">G</div>
+			<div style="width:2%; float:left; text-align:center; color:#000">E</div>
+			<div style="width:2%; float:left; text-align:center; color:#000">P</div>
+			<div style="width:3%; float:left; text-align:center; color:#000">GF</div>
+			<div style="width:3%; float:left; text-align:center; color:#000">GC</div>
+			<div style="width:2%; float:left; text-align:center; color:#000">DIF</div>
+			<div style="width:8%; float:left; text-align:center; color:#000">Últimos 5</div>
+			<div style="width:8%; float:left; text-align:center; color:#000">Coeficiente</div>
+			<div style="width:9%; float:left; text-align:center; color:#000">Sanción
+			<img src="../escudos/comite-sancionados.png" title=" sanciones" width="auto" height="22"/></div>
+		
+			
+				<div class="text-end" style="width:14%; float:left; text-align:center; color:black"><b class="text-primary">Casa =></b> Puntos</div>
+			<div style="width:3%; float:left; text-align:center; color:black">G</div>
+			<div style="width:3%; float:left; text-align:center; color:black">E</div>
+			<div style="width:3%; float:left; text-align:center; color:black">P</div>
+			<div style="width:3%; float:left; text-align:center; color:black">GF</div>
+			<div style="width:3%; float:left; text-align:center; color:black">GC</div>
+		
+		
+			<div class="" style="width:14%; float:left; text-align:center; color:black">&nbsp;&nbsp;&nbsp;<b class="text-primary">Fuera =></b> Puntos</div>
+			<div style="width:3%; float:left; text-align:center; color:black">G</div>
+			<div style="width:3%; float:left; text-align:center; color:black">E</div>
+			<div style="width:3%; float:left; text-align:center; color:black">P</div>
+			<div style="width:3%; float:left; text-align:center; color:black">GF</div>
+			<div style="width:3%; float:left; text-align:center; color:black">GC</div>
+		
+		
+		</div>
+		
+		
+	<div class="linea-divisoria"></div>		
+		
+		
+    </div>	
+		
+		
+			
+			
+			
+			
+	</div>
+	
+ <!-- cierre div scroll -->
+<!-- cierre div scroll -->
+<!-- cierre div scroll -->
+<!-- cierre div scroll -->
+
+
+		
+		
+	<div class="border border-danger p-2 w-100 float-start"><center><span style="color:gray">
+		<div class="w-100 float-start d-none d-sm-none d-lg-block">Shift + Rueda del ratón para scroll en clasificación</div>
+		© Futbol Las Palmas</span></center></div>
+
+<script type="text/javascript">
+const contenedor = document.querySelector('.contenedor-scroll');
+const linea = document.querySelector('.linea-divisoria');
+contenedor.addEventListener('scroll', () => {
+ // Muestra la línea cuando empieza el scroll
+  if (contenedor.scrollLeft > 5) {
+    linea.style.display = 'block';
+   }else {
+    // La oculta si vuelve al principio
+    linea.style.display = 'none';
+  }
+});
+</script>
+
+
+
+<script type="text/javascript">
+const contenedor2 = document.querySelector('.contenedor-scroll');
+const casa = document.querySelector('.casa-fuera');
+contenedor2.addEventListener('scroll', () => {
+ // Muestra la línea cuando empieza el scroll
+  if (contenedor2.scrollLeft > 450) {
+    casa.style.display = 'block';
+   }else {
+    // La oculta si vuelve al principio
+    casa.style.display = 'none';
+  }
+});
+</script>
+
+<style>
+.victorias {
+
+	width:16px;
+      height: 16px;
+  	
+background-image: url("../escudos/victoria.svg");
+	
+
+	}
+.empates {
+	
+background-image: url("../escudos/empate.svg");	
+	width:16px;
+	height:16px;
+	}
+.derrotas {
+	
+background-image: url("../escudos/derrota.svg");	
+	width:16px;
+	height:16px;
+	}
+	.posicion {
+	
+background-image: url("../escudos/posicion.png");	
+	width:50px;
+	height:10px;
+	}
+.victoriasCinco {
+
+	width:16px;
+      height: 16px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empatesCinco {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrotasCinco {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+
+.rotate {
+-webkit-animation: rotation 2s infinite linear;
+-moz-animation: rotation 2s infinite linear;	
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+	
+@-moz-keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@-webkit-keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}		
+
+</style>
+
+
+
+
+
+
+<div style="width:100%; float:left ">
+    
+ <div style="float:left">  
+		<b><div style="float:left; margin:2px">Competiciones</div> </b>
+		<div style="float:left; margin:2px; clear: both"> <div style="float:left;background-color:LimeGreen">&nbsp;</div>         <div style="float:left; margin:2px">Campeón de liga</div> </div>
+	   <!-- <div style="float:left; color:#555;margin:2px; clear: both"> <div style="float:left;background-color:MediumAquamarine">&nbsp;</div> <div style="float:left; color:#555;margin:2px">Fase de grupos de Europa League</div> </div>
+		<div style="float:left; color:#555;margin:2px; clear: both"> <div style="float:left;background-color:Gold">&nbsp;</div> <div style="float:left; color:#555;margin:2px">Conferencia </div> </div>
+		<div style="float:left; color:#555;margin:2px; clear: both"> <div style="float:left;background-color:red">&nbsp;</div> <div style="float:left; color:#555;margin:2px">Descenso</div> </div> -->
+	 
+	<!-- 
+	<div style="float:left; margin:2px; clear: both"> <div style="float:left;background-color:LightSlateGray">&nbsp;</div> <div style="float:left; margin:2px">Excluido de la competición</div> </div> -->
+	</div>    
+	
+	    <div style="float:right">  
+		<b><div style="float:left; margin:2px">Últimos 5&nbsp;partidos</div> </b>
+		<div style="float:left; clear: both;margin:3px"> <div class="victorias" style="float:left;margin:2px">  </div> &nbsp;<div style="float:left; margin:2px">Victoria</div> </div> 
+		<div style="float:left; clear: both;margin:3px"> <div  class="empates" style="float:left;margin:2px"> </div> &nbsp;<div style="float:left; margin:2px">Empate</div> </div> 
+		<div style="float:left; clear: both; margin:3px"> <div class="derrotas" style="float:left;margin:2px"></div> &nbsp;<div style="float:left; margin:2px">Derrota</div> </div>
+	   </div>  
+	
+	
+<div style="width:100%; float:left;text-align: left; clear:both;margin-left:3px;"><div style="width:15%; float:left;text-align: left;margin-top:6px; clear:both"><style>
+.victoria {
+
+	width:9px;
+      height: 9px;
+  	
+background-image: url("../escudos/victoria9.svg");
+	
+
+	}
+.empate {
+	
+background-image: url("../escudos/empate9.svg");	
+	width:9px;
+	height:9px;
+	}
+.derrota {
+	
+background-image: url("../escudos/derrota9.svg");	
+	width:9px;
+	height:9px;
+	}
+	
+#girarBaloncitos
+{
+   -webkit-transform: rotate(-180deg); 
+   -moz-transform: rotate(-180deg);    
+float:left;
+    
+}	
+</style>
+
+
+ 	
+<div style="width:100%;height:0.20px;float:left; margin-bottom:0px;clear:both" >
+	
+	
+	<div id="girarBaloncitos">
+	
+	
+<div id="girarBaloncitos">
+	
+	 
+	<a href="javascript:;" onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;">
+		<div style="float:left;margin-right:2px"class="derrota"></div></a>
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<a href="javascript:;" onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;">
+		<div style="float:left;margin-right:2px"class="derrota"></div></a>
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<a href="javascript:;" onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;">
+		<div style="float:left;margin-right:2px"class="derrota"></div></a>
+                        </div>
+
+<div id="girarBaloncitos">
+	
+		<a href="javascript:;" onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;">
+		<div style="float:left;margin-right:2px"class="derrota"></div></a>
+                        </div>
+
+<div id="girarBaloncitos">
+	
+	 
+	<a href="javascript:;" onclick="ganadosEmpatadosPerdidos('calendario_prebenjamin_g1','Valkyrias Bec.');return false;">
+		<div style="float:left;margin-right:2px"class="derrota"></div></a>
+                        </div>
+		
+        </div> </div>
+	
+        </div><div style="width:85%; float:left; margin-top:1px;margin-bottom:10px;text-align: left"> &nbsp;clic en los iconos de la clasi para más información </div>
+	
+	<div style="width:100%; float:left; margin-bottom:10px;text-align: left;clear:both"><span class="btn btn-outline-success btn-sm"  >1646</span> goles se han marcados durante el campeonato  	
+
+</div>
+<!--<div class="fw-bolder" style="width:100%; float:left; font-size:12px; text-align:left;padding-left:3%;padding-top:2%;;padding-bottom:2%; ">Equipos retirados en el grupo y consecuencias clasificatorias:</div>-->
+
+	</div>
+	
+	<div style="width:98%; margin-bottom:10px;text-align: left;padding:7px">
+		
+	
+		
+		<span>  
+
+	<div  style="width:100%; float:left;margin-top:2px">
+		
+		
+		
+		<div class="border border-info p-2 mb-1 mt-3" style="width:100%; float:left;margin-top:2px"><a href="descargar-calendario_prebenjamin_g1.pdf-clasi_prebenjamin_g1.html" target="_blank"><img src="../css2016/css/img/descargaPdfLiga.png" width="150" height="auto" /></a>
+			
+			
+			<!--<br>Crea tu propia hemeroteca, descarga la liga actual con los datos en tiempo real de cada momento que elijas.<br> <span class="fw-bolder">Contenido del archivo:</span> Clasificación y calendario completo con los resultados actuales, además como detalle se imprime la fecha y hora de cada descarga. Asegúrate de hacerte con una copia y, sobre todo, no olvides guardarla cada final de liga, obtendrás la clasificación definitiva con todos los resultados de la temporada, su consulta te puede ser de utilidad en un futuro.(formato PDF)<br>-->
+			<br>
+			
+			<div class="float-start mt-2">DESCARGADO <span class="text-success fw-bolder border border-success p-1 rounded">2875</span> VECES</div>
+		
+				
+		<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Ver calendario por pantalla <br>Prebenjamín Grupo 1 FIFLP</button>
+		
+		
+		</div></div>  </span></div>
+	
+	
+	<div class="w-100 float-start p-3"></div>
+	
+	</div>

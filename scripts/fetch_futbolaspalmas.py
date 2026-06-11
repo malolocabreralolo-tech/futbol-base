@@ -207,7 +207,40 @@ def parse_standings(html):
     """
     Parsea la clasificación de mostrar_clasi.php usando regex.
     Returns list of [pos, team, pts, J, G, E, P, GF, GC, DF] or [] on failure.
+
+    Soporta dos formatos: el de 2026-06 (nombres .fw-bolderr, puntos
+    .text-warning-emphasis, stats .contenedor__item/.borderr-start — el cambio
+    upstream de ~25/4 que dejó las clasificaciones congeladas) y el legacy
+    como fallback.
     """
+    return _parse_standings_v2(html) or _parse_standings_v1(html)
+
+
+def _parse_standings_v2(html):
+    """Formato 2026-06. Los puntos oficiales incluyen sanciones (columna
+    Sanción), así que NO se valida pts == 3G+E; sí J == G+E+P por fila."""
+    names = [n.strip() for n in re.findall(r'fw-bolderr[^>]*>\s*([^<]+?)\s*<', html)]
+    pts = [int(x) for x in re.findall(r'text-warning-emphasis[^>]*>\s*(\d+)', html)]
+    stats = []
+    for row in re.split(r'contenedor__item', html)[1:]:
+        nums = re.findall(r'borderr-start[^>]*>\s*(-?\d+)\s*<', row)
+        # primeros 7 = totales [J,G,E,P,GF,GC,DF]; el resto es desglose casa/fuera
+        if len(nums) >= 7:
+            stats.append([int(x) for x in nums[:7]])
+    n = min(len(names), len(stats))
+    # los primeros n text-warning-emphasis son los pts de la sección principal
+    # (los desgloses casa/fuera van después en el documento)
+    if not n or len(pts) < n:
+        return []
+    result = [[i + 1, names[i], pts[i]] + stats[i] for i in range(n)]
+    consistent = sum(1 for r in result if r[3] == r[4] + r[5] + r[6])
+    if consistent < n * 0.8:
+        return []
+    return result
+
+
+def _parse_standings_v1(html):
+    """Formato legacy (pre 2026-04)."""
     # Team names: divs with class fw-bolder
     names = re.findall(r'fw-bolder[^>]*>([^<]+)', html)
     names = [n.strip() for n in names if n.strip()]

@@ -362,6 +362,56 @@
             }
           ]
         }
+      ],
+      "match_scores": [
+        {
+          "home": "BARRIAL, U.D. \"A\"\n\t\n - \n\n  \n \n17-01-2025",
+          "away": "- \n\n  \n \n17-01-2025\n20:00",
+          "scoreHtml": 3084,
+          "rendered": "BARRIAL, U.D. \"A\" eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));1ntype(\"idh6695\",4,0,\"fa-1\");1 - #idh6696:after{content:\"\\0031\\0031\"}7 17-01-2025 20:00 ATLETICO HURACAN, A.D. \"A\" ANTONIO CASTILLO - Hierba Artificial Árbitro: HERRERA SUÁREZ, JOSÉ MANUEL"
+        },
+        {
+          "home": "BARRIAL, U.D. \"A\"",
+          "away": "ATLETICO HURACAN, A.D. \"A\"",
+          "scoreHtml": 1786,
+          "rendered": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));1ntype(\"idh6695\",4,0,\"fa-1\");1 - #idh6696:after{content:\"\\0031\\0031\"}7 17-01-2025 20:00"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.\n\t\n - \n\n  \n \n18-01-202",
+          "away": "- \n\n  \n \n18-01-2025\n09:00",
+          "scoreHtml": 2492,
+          "rendered": "GAREPA VIERA, C.F. 0ntype(\"idh6697\",5,0,\"fa-0\"); - 4ntype(\"idh6698\",3,0,\"fa-6\");6 18-01-2025 09:00 ACODETTI C.F. \"A\" ALFONSO SILVA (F8-1) Árbitro: BARRAGAN HARO, SERGIO ARIEL"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.",
+          "away": "ACODETTI C.F. \"A\"",
+          "scoreHtml": 1219,
+          "rendered": "0ntype(\"idh6697\",5,0,\"fa-0\"); - 4ntype(\"idh6698\",3,0,\"fa-6\");6 18-01-2025 09:00"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"\n\t\n - 3\n\n  \n \n18-01-2025\n1",
+          "away": "- 3\n\n  \n \n18-01-2025\n10:00",
+          "scoreHtml": 2408,
+          "rendered": "MOYA, U.D. \"A\" 3ntype(\"idh6699\",8,0,\"fa-7\");7 - 3 18-01-2025 10:00 VETERANOS DEL PILA., C.D. \"A\" GARCIA HERNANDEZ \"MOYA\" F8(1) Árbitro: MEJÍAS GARCÍA, ANTONIO JOSÉ"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"",
+          "away": "VETERANOS DEL PILA., C.D. \"A\"",
+          "scoreHtml": 1117,
+          "rendered": "3ntype(\"idh6699\",8,0,\"fa-7\");7 - 3 18-01-2025 10:00"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"\n\t\n - \n\n  \n \n18-01-202",
+          "away": "- \n\n  \n \n18-01-2025\n10:30",
+          "scoreHtml": 2520,
+          "rendered": "CARDONES, C.D. \"A\" #idh6701:after{content:\"2\"}4 - 3ntype(\"idh6702\",8,0,\"fa-3\");3 18-01-2025 10:30 MESAS HURACAN, U.D. LAS \"A\" DOMINGO CASTRO F8 - Hierba Artificial Árbitro: BARROSO MOLINA, DIEGO ISMAEL"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"",
+          "away": "MESAS HURACAN, U.D. LAS \"A\"",
+          "scoreHtml": 1218,
+          "rendered": "#idh6701:after{content:\"2\"}4 - 3ntype(\"idh6702\",8,0,\"fa-3\");3 18-01-2025 10:30"
+        }
       ]
     },
     {
@@ -682,6 +732,56 @@
               "before": "none"
             }
           ]
+        }
+      ],
+      "match_scores": [
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"\n\t\n3 - \n\n  \n \n",
+          "away": "3 - \n\n  \n \n25-01-2025\n09:00",
+          "scoreHtml": 2921,
+          "rendered": "ATLETICO HURACAN, A.D. \"A\" 3 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));0ntype(\"idh6704\",5,0,\"fa-3\"); 25-01-2025 09:00 MOYA, U.D. \"A\" PEPE GONÇALVEZ (F8-2) Árbitro: TORRES SANTANA, ANTONIO DANIEL"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"",
+          "away": "MOYA, U.D. \"A\"",
+          "scoreHtml": 1638,
+          "rendered": "3 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));0ntype(\"idh6704\",5,0,\"fa-3\"); 25-01-2025 09:00"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"\n\t\n - 3\n\n  \n \n25-01-202",
+          "away": "- 3\n\n  \n \n25-01-2025\n09:00",
+          "scoreHtml": 2384,
+          "rendered": "ACODETTI C.F. \"A\" 8ntype(\"idh6705\",6,0,\"fa-12\");12 - 3 25-01-2025 09:00 BARRIAL, U.D. \"A\" LA MAYORDOMÍA 1 F8 (1) Árbitro: BARRIOS RODRÍGUEZ, CARELY MARÍA"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"",
+          "away": "BARRIAL, U.D. \"A\"",
+          "scoreHtml": 1117,
+          "rendered": "8ntype(\"idh6705\",6,0,\"fa-12\");12 - 3 25-01-2025 09:00"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.\n\t\n7 - \n\n  \n \n25-01-",
+          "away": "7 - \n\n  \n \n25-01-2025\n11:00",
+          "scoreHtml": 2409,
+          "rendered": "SANTIDAD BANOT, C.D. 7 - 4ntype(\"idh6708\",3,0,\"fa-8\");8 25-01-2025 11:00 CARDONES, C.D. \"A\" JAVIER ARMAS REYES (F8) - Hierba Artificial Árbitro: ARENCIBIA FALCÓN, JORGE"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.",
+          "away": "CARDONES, C.D. \"A\"",
+          "scoreHtml": 1113,
+          "rendered": "7 - 4ntype(\"idh6708\",3,0,\"fa-8\");8 25-01-2025 11:00"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"\n\t\n - \n\n  \n \n",
+          "away": "- \n\n  \n \n26-01-2025\n09:00",
+          "scoreHtml": 2499,
+          "rendered": "MESAS HURACAN, U.D. LAS \"A\" 0ntype(\"idh6709\",5,0,\"fa-0\");0 - 5ntype(\"idh6710\",1,0,\"fa-1\"); 26-01-2025 09:00 GAREPA VIERA, C.F. PEPE GONÇALVEZ (F8-2) Árbitro: GARCÍA AROCAS, DIEGO"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"",
+          "away": "GAREPA VIERA, C.F.",
+          "scoreHtml": 1221,
+          "rendered": "0ntype(\"idh6709\",5,0,\"fa-0\");0 - 5ntype(\"idh6710\",1,0,\"fa-1\"); 26-01-2025 09:00"
         }
       ]
     },
@@ -1027,6 +1127,56 @@
               "before": "none"
             }
           ]
+        }
+      ],
+      "match_scores": [
+        {
+          "home": "BARRIAL, U.D. \"A\"\n\t\n - \n\n  \n \n31-01-2025",
+          "away": "- \n\n  \n \n31-01-2025\n20:00",
+          "scoreHtml": 3077,
+          "rendered": "BARRIAL, U.D. \"A\" eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));3ntype(\"idh6721\",8,0,\"fa-5\");5 - 2ntype(\"idh6722\",0,0,\"fa-6\"); 31-01-2025 20:00 MESAS HURACAN, U.D. LAS \"A\" ANTONIO CASTILLO - Hierba Artificial Árbitro: GARCÍA MEDINA, JOSÉ MANUEL"
+        },
+        {
+          "home": "BARRIAL, U.D. \"A\"",
+          "away": "MESAS HURACAN, U.D. LAS \"A\"",
+          "scoreHtml": 1779,
+          "rendered": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));3ntype(\"idh6721\",8,0,\"fa-5\");5 - 2ntype(\"idh6722\",0,0,\"fa-6\"); 31-01-2025 20:00"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"\n\t\n1 - \n\n  ",
+          "away": "1 - \n\n  \n \n01-02-2025\n09:00",
+          "scoreHtml": 2423,
+          "rendered": "VETERANOS DEL PILA., C.D. \"A\" 1 - 4ntype(\"idh6724\",3,0,\"fa-6\");6 01-02-2025 09:00 ATLETICO HURACAN, A.D. \"A\" MANUEL NARANJO SOSA 2 - Hierba Artificial Árbitro: VEGA SANTANA, ARISAY"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"",
+          "away": "ATLETICO HURACAN, A.D. \"A\"",
+          "scoreHtml": 1115,
+          "rendered": "1 - 4ntype(\"idh6724\",3,0,\"fa-6\");6 01-02-2025 09:00"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"\n\t\n0 - \n\n  \n \n01-02-2025\n0",
+          "away": "0 - \n\n  \n \n01-02-2025\n09:00",
+          "scoreHtml": 2390,
+          "rendered": "MOYA, U.D. \"A\" 0 - 7ntype(\"idh6726\",9,0,\"fa-2\");2 01-02-2025 09:00 ACODETTI C.F. \"A\" GARCIA HERNANDEZ \"MOYA\" F8(1) Árbitro: ARENCIBIA FALCÓN, JESÚS"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"",
+          "away": "ACODETTI C.F. \"A\"",
+          "scoreHtml": 1116,
+          "rendered": "0 - 7ntype(\"idh6726\",9,0,\"fa-2\");2 01-02-2025 09:00"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.\n\t\n - \n\n  \n \n01-02-202",
+          "away": "- \n\n  \n \n01-02-2025\n09:00",
+          "scoreHtml": 2529,
+          "rendered": "GAREPA VIERA, C.F. 5ntype(\"idh6727\",1,0,\"fa-5\");5 - 2ntype(\"idh6728\",0,0,\"fa-5\");5 01-02-2025 09:00 SANTIDAD BANOT, C.D. ALFONSO SILVA (F8-1) Árbitro: LEÓN RAMOS, ANTONIO JESÚS"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.",
+          "away": "SANTIDAD BANOT, C.D.",
+          "scoreHtml": 1254,
+          "rendered": "5ntype(\"idh6727\",1,0,\"fa-5\");5 - 2ntype(\"idh6728\",0,0,\"fa-5\");5 01-02-2025 09:00"
         }
       ]
     },
@@ -1379,6 +1529,56 @@
             }
           ]
         }
+      ],
+      "match_scores": [
+        {
+          "home": "SANTIDAD BANOT, C.D.\n\t\n - \n\n  \n \n06-02-2",
+          "away": "- \n\n  \n \n06-02-2025\n20:13",
+          "scoreHtml": 3003,
+          "rendered": "SANTIDAD BANOT, C.D. #idh6729:after{content:\"\\0034\"} - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));9ntype(\"idh6730\",2,0,\"fa-1\"); 06-02-2025 20:13 BARRIAL, U.D. \"A\" JAVIER ARMAS REYES (F8) - Hierba Artificial Árbitro: MEDINA AFONSO, CARMELO"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.",
+          "away": "BARRIAL, U.D. \"A\"",
+          "scoreHtml": 1709,
+          "rendered": "#idh6729:after{content:\"\\0034\"} - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));9ntype(\"idh6730\",2,0,\"fa-1\"); 06-02-2025 20:13"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"\n\t\n - \n\n  \n \n08-02-2025",
+          "away": "- \n\n  \n \n08-02-2025\n09:00",
+          "scoreHtml": 2490,
+          "rendered": "ACODETTI C.F. \"A\" 4ntype(\"idh6731\",3,0,\"fa-6\");6 - 2ntype(\"idh6732\",0,0,\"fa-4\"); 08-02-2025 09:00 VETERANOS DEL PILA., C.D. \"A\" LA MAYORDOMÍA 1 F8 (1) Árbitro: DÍAZ GARCÍA, CARLA MARÍA"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"",
+          "away": "VETERANOS DEL PILA., C.D. \"A\"",
+          "scoreHtml": 1218,
+          "rendered": "4ntype(\"idh6731\",3,0,\"fa-6\");6 - 2ntype(\"idh6732\",0,0,\"fa-4\"); 08-02-2025 09:00"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"\n\t\n1 - 3\n\n  \n \n08-02-2",
+          "away": "1 - 3\n\n  \n \n08-02-2025\n10:30",
+          "scoreHtml": 2386,
+          "rendered": "CARDONES, C.D. \"A\" #idh6733:after{content:\"\\0030\";display:none}12 - 3 08-02-2025 10:30 GAREPA VIERA, C.F. DOMINGO CASTRO F8 - Hierba Artificial Árbitro: GARCÍA HERNÁNDEZ, YURIAN"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"",
+          "away": "GAREPA VIERA, C.F.",
+          "scoreHtml": 1097,
+          "rendered": "#idh6733:after{content:\"\\0030\";display:none}12 - 3 08-02-2025 10:30"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"\n\t\n - \n\n  \n \n",
+          "away": "- \n\n  \n \n09-02-2025\n09:00",
+          "scoreHtml": 2535,
+          "rendered": "MESAS HURACAN, U.D. LAS \"A\" 2ntype(\"idh6735\",0,0,\"fa-6\");6 - 2ntype(\"idh6736\",0,0,\"fa-2\");2 09-02-2025 09:00 MOYA, U.D. \"A\" PEPE GONÇALVEZ (F8-2) Árbitro: CRUZ AGÜERA, BORJA DANIEL"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"",
+          "away": "MOYA, U.D. \"A\"",
+          "scoreHtml": 1256,
+          "rendered": "2ntype(\"idh6735\",0,0,\"fa-6\");6 - 2ntype(\"idh6736\",0,0,\"fa-2\");2 09-02-2025 09:00"
+        }
       ]
     },
     {
@@ -1723,6 +1923,56 @@
               "before": "none"
             }
           ]
+        }
+      ],
+      "match_scores": [
+        {
+          "home": "BARRIAL, U.D. \"A\"\n\t\n7 - \n\n  \n \n14-02-202",
+          "away": "7 - \n\n  \n \n14-02-2025\n20:00",
+          "scoreHtml": 2967,
+          "rendered": "BARRIAL, U.D. \"A\" 7 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));1ntype(\"idh6738\",4,0,\"fa-3\");3 14-02-2025 20:00 CARDONES, C.D. \"A\" ANTONIO CASTILLO - Hierba Artificial Árbitro: HERNÁNDEZ VEGA, JOSÉ FRANCISCO"
+        },
+        {
+          "home": "BARRIAL, U.D. \"A\"",
+          "away": "CARDONES, C.D. \"A\"",
+          "scoreHtml": 1674,
+          "rendered": "7 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));1ntype(\"idh6738\",4,0,\"fa-3\");3 14-02-2025 20:00"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"\n\t\n5 - \n\n  \n \n",
+          "away": "5 - \n\n  \n \n15-02-2025\n09:00",
+          "scoreHtml": 2393,
+          "rendered": "ATLETICO HURACAN, A.D. \"A\" 5 - 1ntype(\"idh6740\",4,0,\"fa-1\");1 15-02-2025 09:00 ACODETTI C.F. \"A\" PEPE GONÇALVEZ (F8-2) Árbitro: VICENTE VILLA, JORGE LUIS"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"",
+          "away": "ACODETTI C.F. \"A\"",
+          "scoreHtml": 1113,
+          "rendered": "5 - 1ntype(\"idh6740\",4,0,\"fa-1\");1 15-02-2025 09:00"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"\n\t\n - \n\n  \n",
+          "away": "- \n\n  \n \n15-02-2025\n09:00",
+          "scoreHtml": 2529,
+          "rendered": "VETERANOS DEL PILA., C.D. \"A\" 6ntype(\"idh6741\",7,0,\"fa-1\");1 - 1ntype(\"idh6742\",4,0,\"fa-2\"); 15-02-2025 09:00 MESAS HURACAN, U.D. LAS \"A\" MANUEL NARANJO SOSA 1 - Hierba Artificial Árbitro: SILVA NAVARRO, SONIA"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"",
+          "away": "MESAS HURACAN, U.D. LAS \"A\"",
+          "scoreHtml": 1220,
+          "rendered": "6ntype(\"idh6741\",7,0,\"fa-1\");1 - 1ntype(\"idh6742\",4,0,\"fa-2\"); 15-02-2025 09:00"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"\n\t\n - \n\n  \n \n15-02-2025\n10",
+          "away": "- \n\n  \n \n15-02-2025\n10:00",
+          "scoreHtml": 2536,
+          "rendered": "MOYA, U.D. \"A\" 3ntype(\"idh6743\",8,0,\"fa-4\");4 - 1ntype(\"idh6744\",4,0,\"fa-2\");2 15-02-2025 10:00 SANTIDAD BANOT, C.D. GARCIA HERNANDEZ \"MOYA\" F8(1) Árbitro: MEJÍAS GARCÍA, ANTONIO JOSÉ"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"",
+          "away": "SANTIDAD BANOT, C.D.",
+          "scoreHtml": 1254,
+          "rendered": "3ntype(\"idh6743\",8,0,\"fa-4\");4 - 1ntype(\"idh6744\",4,0,\"fa-2\");2 15-02-2025 10:00"
         }
       ]
     },
@@ -2099,6 +2349,56 @@
             }
           ]
         }
+      ],
+      "match_scores": [
+        {
+          "home": "CARDONES, C.D. \"A\"\n\t\n - \n\n  \n \n22-02-202",
+          "away": "- \n\n  \n \n22-02-2025\n10:30",
+          "scoreHtml": 3066,
+          "rendered": "CARDONES, C.D. \"A\" eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));3ntype(\"idh6755\",8,0,\"fa-4\");4 - #idh6756:after{content:\"5\"}1 22-02-2025 10:30 MOYA, U.D. \"A\" DOMINGO CASTRO F8 - Hierba Artificial Árbitro: MEDINA PESTANA, JUAN CARMELO"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"",
+          "away": "MOYA, U.D. \"A\"",
+          "scoreHtml": 1777,
+          "rendered": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));3ntype(\"idh6755\",8,0,\"fa-4\");4 - #idh6756:after{content:\"5\"}1 22-02-2025 10:30"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.\n\t\n - \n\n  \n \n22-02-2",
+          "away": "- \n\n  \n \n22-02-2025\n11:00",
+          "scoreHtml": 2528,
+          "rendered": "SANTIDAD BANOT, C.D. 0ntype(\"idh6757\",5,0,\"fa-1\");1 - 5ntype(\"idh6758\",1,0,\"fa-8\"); 22-02-2025 11:00 VETERANOS DEL PILA., C.D. \"A\" JAVIER ARMAS REYES (F8) - Hierba Artificial Árbitro: SAAVEDRA JIMÉNEZ, JOAQUÍN"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.",
+          "away": "VETERANOS DEL PILA., C.D. \"A\"",
+          "scoreHtml": 1219,
+          "rendered": "0ntype(\"idh6757\",5,0,\"fa-1\");1 - 5ntype(\"idh6758\",1,0,\"fa-8\"); 22-02-2025 11:00"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"\n\t\n - 0\n\n  \n ",
+          "away": "- 0\n\n  \n \n23-02-2025\n09:00",
+          "scoreHtml": 2554,
+          "rendered": "MESAS HURACAN, U.D. LAS \"A\" 1ntype(\"idh6759\",4,0,\"fa-0\");0 - 1ntype(\"idh6760\",4,0,\"fa-11\");011 23-02-2025 09:00 ATLETICO HURACAN, A.D. \"A\" PEPE GONÇALVEZ (F8-2) Árbitro: MONSERRAT FLORES, GADIEL MIGUEL"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"",
+          "away": "ATLETICO HURACAN, A.D. \"A\"",
+          "scoreHtml": 1257,
+          "rendered": "1ntype(\"idh6759\",4,0,\"fa-0\");0 - 1ntype(\"idh6760\",4,0,\"fa-11\");011 23-02-2025 09:00"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.\n\t\n - \n\n  \n \n23-02-202",
+          "away": "- \n\n  \n \n23-02-2025\n09:00",
+          "scoreHtml": 2487,
+          "rendered": "GAREPA VIERA, C.F. 2ntype(\"idh6761\",0,0,\"fa-4\"); - 4ntype(\"idh6762\",3,0,\"fa-0\");0 23-02-2025 09:00 BARRIAL, U.D. \"A\" ALFONSO SILVA (F8-1) Árbitro: GARCÍA AROCAS, DIEGO"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.",
+          "away": "BARRIAL, U.D. \"A\"",
+          "scoreHtml": 1220,
+          "rendered": "2ntype(\"idh6761\",0,0,\"fa-4\"); - 4ntype(\"idh6762\",3,0,\"fa-0\");0 23-02-2025 09:00"
+        }
       ]
     },
     {
@@ -2468,6 +2768,56 @@
             }
           ]
         }
+      ],
+      "match_scores": [
+        {
+          "home": "MOYA, U.D. \"A\"\n\t\n - \n\n  \n \n28-02-2025\n20",
+          "away": "- \n\n  \n \n28-02-2025\n20:42",
+          "scoreHtml": 3088,
+          "rendered": "MOYA, U.D. \"A\" eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));4ntype(\"idh6763\",3,0,\"fa-6\");6 - 1ntype(\"idh6764\",4,0,\"fa-0\");0 28-02-2025 20:42 GAREPA VIERA, C.F. GARCIA HERNANDEZ \"MOYA\" F8(1) Árbitro: GARCÍA MEDINA, RUBÉN"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"",
+          "away": "GAREPA VIERA, C.F.",
+          "scoreHtml": 1815,
+          "rendered": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));4ntype(\"idh6763\",3,0,\"fa-6\");6 - 1ntype(\"idh6764\",4,0,\"fa-0\");0 28-02-2025 20:42"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"\n\t\n - \n\n  \n \n01-03-2025",
+          "away": "- \n\n  \n \n01-03-2025\n09:00",
+          "scoreHtml": 2486,
+          "rendered": "ACODETTI C.F. \"A\" 6ntype(\"idh6765\",7,0,\"fa-4\"); - 0ntype(\"idh6766\",5,0,\"fa-1\");1 01-03-2025 09:00 MESAS HURACAN, U.D. LAS \"A\" LA MAYORDOMÍA 1 F8 (1) Árbitro: BRITO SANTANA, GABRIEL"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"",
+          "away": "MESAS HURACAN, U.D. LAS \"A\"",
+          "scoreHtml": 1218,
+          "rendered": "6ntype(\"idh6765\",7,0,\"fa-4\"); - 0ntype(\"idh6766\",5,0,\"fa-1\");1 01-03-2025 09:00"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"\n\t\n - \n\n  \n \n0",
+          "away": "- \n\n  \n \n01-03-2025\n09:00",
+          "scoreHtml": 2610,
+          "rendered": "ATLETICO HURACAN, A.D. \"A\" 2ntype(\"idh6767\",0,0,\"fa-21\");0ntype(\"idh26767\",5,0,\"fa-21\"); - 0ntype(\"idh6768\",5,0,\"fa-3\");3 01-03-2025 09:00 SANTIDAD BANOT, C.D. PEPE GONÇALVEZ (F8-2) Árbitro: BARRAGAN HARO, SERGIO ARIEL"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"",
+          "away": "SANTIDAD BANOT, C.D.",
+          "scoreHtml": 1324,
+          "rendered": "2ntype(\"idh6767\",0,0,\"fa-21\");0ntype(\"idh26767\",5,0,\"fa-21\"); - 0ntype(\"idh6768\",5,0,\"fa-3\");3 01-03-2025 09:00"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"\n\t\n11 - \n\n ",
+          "away": "11 - \n\n  \n \n01-03-2025\n13:30",
+          "scoreHtml": 2416,
+          "rendered": "VETERANOS DEL PILA., C.D. \"A\" 11 - 3ntype(\"idh6770\",8,0,\"fa-5\");5 01-03-2025 13:30 CARDONES, C.D. \"A\" MANUEL NARANJO SOSA 2 - Hierba Artificial Árbitro: ORTÍZ RAVELO, ASAHEL"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"",
+          "away": "CARDONES, C.D. \"A\"",
+          "scoreHtml": 1116,
+          "rendered": "11 - 3ntype(\"idh6770\",8,0,\"fa-5\");5 01-03-2025 13:30"
+        }
       ]
     },
     {
@@ -2806,6 +3156,56 @@
               "before": "none"
             }
           ]
+        }
+      ],
+      "match_scores": [
+        {
+          "home": "BARRIAL, U.D. \"A\"\n\t\n - 2\n\n  \n \n07-03-202",
+          "away": "- 2\n\n  \n \n07-03-2025\n20:00",
+          "scoreHtml": 2373,
+          "rendered": "BARRIAL, U.D. \"A\" #idh6771:before{content:\"\\0034\"}42 - 2 07-03-2025 20:00 MOYA, U.D. \"A\" ANTONIO CASTILLO - Hierba Artificial Árbitro: CRUZ GIL, FRANCISCO EZEQUIEL"
+        },
+        {
+          "home": "BARRIAL, U.D. \"A\"",
+          "away": "MOYA, U.D. \"A\"",
+          "scoreHtml": 1086,
+          "rendered": "#idh6771:before{content:\"\\0034\"}42 - 2 07-03-2025 20:00"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.\n\t\n - \n\n  \n \n08-03-202",
+          "away": "- \n\n  \n \n08-03-2025\n09:00",
+          "scoreHtml": 3112,
+          "rendered": "GAREPA VIERA, C.F. eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));1ntype(\"idh6773\",4,0,\"fa-4\");4 - 7ntype(\"idh6774\",9,0,\"fa-9\");9 08-03-2025 09:00 VETERANOS DEL PILA., C.D. \"A\" ALFONSO SILVA (F8-1) Árbitro: DOMÍNGUEZ CASTELLANO, GREGORIO EDUARDO"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.",
+          "away": "VETERANOS DEL PILA., C.D. \"A\"",
+          "scoreHtml": 1815,
+          "rendered": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));1ntype(\"idh6773\",4,0,\"fa-4\");4 - 7ntype(\"idh6774\",9,0,\"fa-9\");9 08-03-2025 09:00"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"\n\t\n - 10\n\n  \n \n08-03-2",
+          "away": "- 10\n\n  \n \n08-03-2025\n10:30",
+          "scoreHtml": 2416,
+          "rendered": "CARDONES, C.D. \"A\" 0ntype(\"idh6775\",5,0,\"fa-2\");2 - 10 08-03-2025 10:30 ATLETICO HURACAN, A.D. \"A\" DOMINGO CASTRO F8 - Hierba Artificial Árbitro: MEDINA PESTANA, JUAN CARMELO"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"",
+          "away": "ATLETICO HURACAN, A.D. \"A\"",
+          "scoreHtml": 1115,
+          "rendered": "0ntype(\"idh6775\",5,0,\"fa-2\");2 - 10 08-03-2025 10:30"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.\n\t\n3 - \n\n  \n \n08-03-",
+          "away": "3 - \n\n  \n \n08-03-2025\n11:00",
+          "scoreHtml": 2453,
+          "rendered": "SANTIDAD BANOT, C.D. #idh6777:after{content:\"\\0032\";display:none}3 - 7ntype(\"idh6778\",9,0,\"fa-9\"); 08-03-2025 11:00 ACODETTI C.F. \"A\" JAVIER ARMAS REYES (F8) - Hierba Artificial Árbitro: GARCÍA MEDINA, RUBÉN"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.",
+          "away": "ACODETTI C.F. \"A\"",
+          "scoreHtml": 1162,
+          "rendered": "#idh6777:after{content:\"\\0032\";display:none}3 - 7ntype(\"idh6778\",9,0,\"fa-9\"); 08-03-2025 11:00"
         }
       ]
     },
@@ -3151,6 +3551,56 @@
               "before": "none"
             }
           ]
+        }
+      ],
+      "match_scores": [
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"\n\t\n - \n\n  \n",
+          "away": "- \n\n  \n \n15-03-2025\n09:00",
+          "scoreHtml": 3093,
+          "rendered": "VETERANOS DEL PILA., C.D. \"A\" #idh6779:before{content:\"4\"}45 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));2ntype(\"idh6780\",0,0,\"fa-4\");4 15-03-2025 09:00 BARRIAL, U.D. \"A\" MANUEL NARANJO SOSA 1 - Hierba Artificial Árbitro: ALDANA CASTELLÓN, JAVIER ALEJANDRO"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"",
+          "away": "BARRIAL, U.D. \"A\"",
+          "scoreHtml": 1780,
+          "rendered": "#idh6779:before{content:\"4\"}45 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));2ntype(\"idh6780\",0,0,\"fa-4\");4 15-03-2025 09:00"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"\n\t\n - \n\n  \n \n15-03-2025",
+          "away": "- \n\n  \n \n15-03-2025\n10:16",
+          "scoreHtml": 2515,
+          "rendered": "ACODETTI C.F. \"A\" 4ntype(\"idh6781\",3,0,\"fa-2\");2 - 1ntype(\"idh6782\",4,0,\"fa-4\");4 15-03-2025 10:16 CARDONES, C.D. \"A\" LA MAYORDOMÍA 1 F8 (1) Árbitro: VIZCAINO HERNANDEZ, YANELY"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"",
+          "away": "CARDONES, C.D. \"A\"",
+          "scoreHtml": 1252,
+          "rendered": "4ntype(\"idh6781\",3,0,\"fa-2\");2 - 1ntype(\"idh6782\",4,0,\"fa-4\");4 15-03-2025 10:16"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"\n\t\n2 - 2\n\n  \n",
+          "away": "2 - 2\n\n  \n \n16-03-2025\n09:00",
+          "scoreHtml": 2263,
+          "rendered": "MESAS HURACAN, U.D. LAS \"A\" 2 - 2 16-03-2025 09:00 SANTIDAD BANOT, C.D. PEPE GONÇALVEZ (F8-2) Árbitro: ÁLAMO MUÑOZ, ROBERTO ADRIÁN"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"",
+          "away": "SANTIDAD BANOT, C.D.",
+          "scoreHtml": 976,
+          "rendered": "2 - 2 16-03-2025 09:00"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"\n\t\n - \n\n  \n \n1",
+          "away": "- \n\n  \n \n16-03-2025\n13:00",
+          "scoreHtml": 2506,
+          "rendered": "ATLETICO HURACAN, A.D. \"A\" 7ntype(\"idh6785\",9,0,\"fa-6\"); - 0ntype(\"idh6786\",5,0,\"fa-0\");0 16-03-2025 13:00 GAREPA VIERA, C.F. PEPE GONÇALVEZ (F8-2) Árbitro: MONSERRAT FLORES, GADIEL MIGUEL"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"",
+          "away": "GAREPA VIERA, C.F.",
+          "scoreHtml": 1218,
+          "rendered": "7ntype(\"idh6785\",9,0,\"fa-6\"); - 0ntype(\"idh6786\",5,0,\"fa-0\");0 16-03-2025 13:00"
         }
       ]
     },
@@ -3533,6 +3983,56 @@
             }
           ]
         }
+      ],
+      "match_scores": [
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"\n\t\n - 3\n\n  \n ",
+          "away": "- 3\n\n  \n \n21-03-2025\n20:01",
+          "scoreHtml": 3077,
+          "rendered": "MESAS HURACAN, U.D. LAS \"A\" eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));2ntype(\"idh6787\",0,0,\"fa-1\");1 - #idh6788:after{content:\"\\0030\";display:none}34 21-03-2025 20:01 CARDONES, C.D. \"A\" C.M. LA SUERTE F-8 (1) Árbitro: MORALES MARTINEZ, PABLO"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"",
+          "away": "CARDONES, C.D. \"A\"",
+          "scoreHtml": 1795,
+          "rendered": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));2ntype(\"idh6787\",0,0,\"fa-1\");1 - #idh6788:after{content:\"\\0030\";display:none}34 21-03-2025 20:01"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"\n\t\n - \n\n  \n",
+          "away": "- \n\n  \n \n22-03-2025\n09:00",
+          "scoreHtml": 2516,
+          "rendered": "VETERANOS DEL PILA., C.D. \"A\" 3ntype(\"idh6789\",8,0,\"fa-0\"); - 2ntype(\"idh6790\",0,0,\"fa-6\");6 22-03-2025 09:00 MOYA, U.D. \"A\" MANUEL NARANJO SOSA 2 - Hierba Artificial Árbitro: VEGA SANTANA, ARISAY"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"",
+          "away": "MOYA, U.D. \"A\"",
+          "scoreHtml": 1220,
+          "rendered": "3ntype(\"idh6789\",8,0,\"fa-0\"); - 2ntype(\"idh6790\",0,0,\"fa-6\");6 22-03-2025 09:00"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"\n\t\n - \n\n  \n \n2",
+          "away": "- \n\n  \n \n22-03-2025\n09:00",
+          "scoreHtml": 2611,
+          "rendered": "ATLETICO HURACAN, A.D. \"A\" 1ntype(\"idh6791\",4,0,\"fa-6\");4ntype(\"idh26791\",3,0,\"fa-6\"); - 0ntype(\"idh6792\",5,0,\"fa-0\");0 22-03-2025 09:00 BARRIAL, U.D. \"A\" PEPE GONÇALVEZ (F8-2) Árbitro: GUERRA RODRÍGUEZ, JAIRON ALEXEI"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"",
+          "away": "BARRIAL, U.D. \"A\"",
+          "scoreHtml": 1324,
+          "rendered": "1ntype(\"idh6791\",4,0,\"fa-6\");4ntype(\"idh26791\",3,0,\"fa-6\"); - 0ntype(\"idh6792\",5,0,\"fa-0\");0 22-03-2025 09:00"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"\n\t\n - \n\n  \n \n22-03-2025",
+          "away": "- \n\n  \n \n22-03-2025\n09:00",
+          "scoreHtml": 2454,
+          "rendered": "ACODETTI C.F. \"A\" 7ntype(\"idh6793\",9,0,\"fa-8\");8 - #idh6794:after{content:\"\\0032\"} 22-03-2025 09:00 GAREPA VIERA, C.F. LA MAYORDOMÍA 1 F8 (1) Árbitro: MONSERRAT FLORES, GADIEL MIGUEL"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"",
+          "away": "GAREPA VIERA, C.F.",
+          "scoreHtml": 1186,
+          "rendered": "7ntype(\"idh6793\",9,0,\"fa-8\");8 - #idh6794:after{content:\"\\0032\"} 22-03-2025 09:00"
+        }
       ]
     },
     {
@@ -3859,6 +4359,56 @@
               "before": "none"
             }
           ]
+        }
+      ],
+      "match_scores": [
+        {
+          "home": "CARDONES, C.D. \"A\"\n\t\n2 - \n\n  \n \n28-03-20",
+          "away": "2 - \n\n  \n \n28-03-2025\n18:14",
+          "scoreHtml": 2963,
+          "rendered": "CARDONES, C.D. \"A\" 2 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));6ntype(\"idh6796\",7,0,\"fa-0\");0 28-03-2025 18:14 SANTIDAD BANOT, C.D. DOMINGO CASTRO F8 - Hierba Artificial Árbitro: SUÁREZ VEGA, OWEN MIGUEL"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"",
+          "away": "SANTIDAD BANOT, C.D.",
+          "scoreHtml": 1672,
+          "rendered": "2 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));6ntype(\"idh6796\",7,0,\"fa-0\");0 28-03-2025 18:14"
+        },
+        {
+          "home": "BARRIAL, U.D. \"A\"\n\t\n - \n\n  \n \n28-03-2025",
+          "away": "- \n\n  \n \n28-03-2025\n20:00",
+          "scoreHtml": 2543,
+          "rendered": "BARRIAL, U.D. \"A\" 5ntype(\"idh6797\",1,0,\"fa-0\");0 - 5ntype(\"idh6798\",1,0,\"fa-9\");9 28-03-2025 20:00 ACODETTI C.F. \"A\" ANTONIO CASTILLO - Hierba Artificial Árbitro: CRUZ GIL, FRANCISCO EZEQUIEL"
+        },
+        {
+          "home": "BARRIAL, U.D. \"A\"",
+          "away": "ACODETTI C.F. \"A\"",
+          "scoreHtml": 1254,
+          "rendered": "5ntype(\"idh6797\",1,0,\"fa-0\");0 - 5ntype(\"idh6798\",1,0,\"fa-9\");9 28-03-2025 20:00"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"\n\t\n - 9\n\n  \n \n29-03-2025\n1",
+          "away": "- 9\n\n  \n \n29-03-2025\n10:00",
+          "scoreHtml": 2364,
+          "rendered": "MOYA, U.D. \"A\" 0ntype(\"idh6799\",5,0,\"fa-2\"); - 9 29-03-2025 10:00 ATLETICO HURACAN, A.D. \"A\" GARCIA HERNANDEZ \"MOYA\" F8(1) Árbitro: ARENCIBIA FALCÓN, JESÚS"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"",
+          "away": "ATLETICO HURACAN, A.D. \"A\"",
+          "scoreHtml": 1080,
+          "rendered": "0ntype(\"idh6799\",5,0,\"fa-2\"); - 9 29-03-2025 10:00"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.\n\t\n - 1\n\n  \n \n29-03-20",
+          "away": "- 1\n\n  \n \n29-03-2025\n13:00",
+          "scoreHtml": 2404,
+          "rendered": "GAREPA VIERA, C.F. 0ntype(\"idh6801\",5,0,\"fa-0\");0 - 1 29-03-2025 13:00 MESAS HURACAN, U.D. LAS \"A\" ALFONSO SILVA (F8-1) Árbitro: GUTIÉRREZ GAVIRIA, JUAN PABLO"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.",
+          "away": "MESAS HURACAN, U.D. LAS \"A\"",
+          "scoreHtml": 1118,
+          "rendered": "0ntype(\"idh6801\",5,0,\"fa-0\");0 - 1 29-03-2025 13:00"
         }
       ]
     },
@@ -4204,6 +4754,56 @@
               "before": "none"
             }
           ]
+        }
+      ],
+      "match_scores": [
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"\n\t\n - \n\n  \n \n0",
+          "away": "- \n\n  \n \n05-04-2025\n09:00",
+          "scoreHtml": 3106,
+          "rendered": "ATLETICO HURACAN, A.D. \"A\" eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));2ntype(\"idh6803\",0,0,\"fa-4\");4 - 2ntype(\"idh6804\",0,0,\"fa-6\");6 05-04-2025 09:00 VETERANOS DEL PILA., C.D. \"A\" PEPE GONÇALVEZ (F8-2) Árbitro: VICENTE VILLA, JORGE LUIS"
+        },
+        {
+          "home": "ATLETICO HURACAN, A.D. \"A\"",
+          "away": "VETERANOS DEL PILA., C.D. \"A\"",
+          "scoreHtml": 1813,
+          "rendered": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));2ntype(\"idh6803\",0,0,\"fa-4\");4 - 2ntype(\"idh6804\",0,0,\"fa-6\");6 05-04-2025 09:00"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"\n\t\n11 - \n\n  \n \n05-04-20",
+          "away": "11 - \n\n  \n \n05-04-2025\n09:00",
+          "scoreHtml": 2379,
+          "rendered": "ACODETTI C.F. \"A\" 11 - 1ntype(\"idh6806\",4,0,\"fa-0\");0 05-04-2025 09:00 MOYA, U.D. \"A\" LA MAYORDOMÍA 1 F8 (1) Árbitro: QUESADA SANTANA, ARANTXA ARUMA"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"",
+          "away": "MOYA, U.D. \"A\"",
+          "scoreHtml": 1116,
+          "rendered": "11 - 1ntype(\"idh6806\",4,0,\"fa-0\");0 05-04-2025 09:00"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.\n\t\n - 4\n\n  \n \n05-04-",
+          "away": "- 4\n\n  \n \n05-04-2025\n11:00",
+          "scoreHtml": 2379,
+          "rendered": "SANTIDAD BANOT, C.D. #idh6807:before{content:\"\\0032\"}22 - 4 05-04-2025 11:00 GAREPA VIERA, C.F. JAVIER ARMAS REYES (F8) - Hierba Artificial Árbitro: MEDINA AFONSO, CARMELO"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.",
+          "away": "GAREPA VIERA, C.F.",
+          "scoreHtml": 1084,
+          "rendered": "#idh6807:before{content:\"\\0032\"}22 - 4 05-04-2025 11:00"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"\n\t\n - \n\n  \n \n",
+          "away": "- \n\n  \n \n06-04-2025\n09:00",
+          "scoreHtml": 2508,
+          "rendered": "MESAS HURACAN, U.D. LAS \"A\" 1ntype(\"idh6809\",4,0,\"fa-0\");0 - 2ntype(\"idh6810\",0,0,\"fa-2\"); 06-04-2025 09:00 BARRIAL, U.D. \"A\" PEPE GONÇALVEZ (F8-2) Árbitro: MONSERRAT FLORES, GADIEL MIGUEL"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"",
+          "away": "BARRIAL, U.D. \"A\"",
+          "scoreHtml": 1220,
+          "rendered": "1ntype(\"idh6809\",4,0,\"fa-0\");0 - 2ntype(\"idh6810\",0,0,\"fa-2\"); 06-04-2025 09:00"
         }
       ]
     },
@@ -4586,6 +5186,56 @@
             }
           ]
         }
+      ],
+      "match_scores": [
+        {
+          "home": "BARRIAL, U.D. \"A\"\n\t\n - \n\n  \n \n11-04-2025",
+          "away": "- \n\n  \n \n11-04-2025\n20:00",
+          "scoreHtml": 3100,
+          "rendered": "BARRIAL, U.D. \"A\" eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));6ntype(\"idh6811\",7,0,\"fa-8\");8 - 1ntype(\"idh6812\",4,0,\"fa-0\");0 11-04-2025 20:00 SANTIDAD BANOT, C.D. ANTONIO CASTILLO - Hierba Artificial Árbitro: HERNÁNDEZ GARCÍA, JOSÉ"
+        },
+        {
+          "home": "BARRIAL, U.D. \"A\"",
+          "away": "SANTIDAD BANOT, C.D.",
+          "scoreHtml": 1813,
+          "rendered": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));6ntype(\"idh6811\",7,0,\"fa-8\");8 - 1ntype(\"idh6812\",4,0,\"fa-0\");0 11-04-2025 20:00"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"\n\t\n - \n\n  \n",
+          "away": "- \n\n  \n \n12-04-2025\n09:00",
+          "scoreHtml": 2523,
+          "rendered": "VETERANOS DEL PILA., C.D. \"A\" 1ntype(\"idh6813\",4,0,\"fa-0\");0 - 2ntype(\"idh6814\",0,0,\"fa-6\"); 12-04-2025 09:00 ACODETTI C.F. \"A\" MANUEL NARANJO SOSA 2 - Hierba Artificial Árbitro: BARRAGAN HARO, SERGIO ARIEL"
+        },
+        {
+          "home": "VETERANOS DEL PILA., C.D. \"A\"",
+          "away": "ACODETTI C.F. \"A\"",
+          "scoreHtml": 1218,
+          "rendered": "1ntype(\"idh6813\",4,0,\"fa-0\");0 - 2ntype(\"idh6814\",0,0,\"fa-6\"); 12-04-2025 09:00"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"\n\t\n - \n\n  \n \n12-04-2025\n10",
+          "away": "- \n\n  \n \n12-04-2025\n10:00",
+          "scoreHtml": 2547,
+          "rendered": "MOYA, U.D. \"A\" 1ntype(\"idh6815\",4,0,\"fa-1\");1 - 1ntype(\"idh6816\",4,0,\"fa-1\");1 12-04-2025 10:00 MESAS HURACAN, U.D. LAS \"A\" GARCIA HERNANDEZ \"MOYA\" F8(1) Árbitro: GARCÍA RUIZ, YESENIA DEL PINO"
+        },
+        {
+          "home": "MOYA, U.D. \"A\"",
+          "away": "MESAS HURACAN, U.D. LAS \"A\"",
+          "scoreHtml": 1256,
+          "rendered": "1ntype(\"idh6815\",4,0,\"fa-1\");1 - 1ntype(\"idh6816\",4,0,\"fa-1\");1 12-04-2025 10:00"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.\n\t\n - \n\n  \n \n13-04-202",
+          "away": "- \n\n  \n \n13-04-2025\n15:00",
+          "scoreHtml": 2501,
+          "rendered": "GAREPA VIERA, C.F. 2ntype(\"idh6817\",0,0,\"fa-0\");0 - #idh6818:after{content:\"\\0034\"}3 13-04-2025 15:00 CARDONES, C.D. \"A\" ALFONSO SILVA (F8-1) Árbitro: SÁNCHEZ ARAQUE, JAIME ALEJANDRO"
+        },
+        {
+          "home": "GAREPA VIERA, C.F.",
+          "away": "CARDONES, C.D. \"A\"",
+          "scoreHtml": 1222,
+          "rendered": "2ntype(\"idh6817\",0,0,\"fa-0\");0 - #idh6818:after{content:\"\\0034\"}3 13-04-2025 15:00"
+        }
       ]
     },
     {
@@ -4967,6 +5617,56 @@
             }
           ]
         }
+      ],
+      "match_scores": [
+        {
+          "home": "ACODETTI C.F. \"A\"\n\t\n - \n\n  \n \n23-04-2025",
+          "away": "- \n\n  \n \n23-04-2025\n19:46",
+          "scoreHtml": 3043,
+          "rendered": "ACODETTI C.F. \"A\" #idh6819:before{content:\"2\"}26 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));6ntype(\"idh6820\",7,0,\"fa-7\");7 23-04-2025 19:46 ATLETICO HURACAN, A.D. \"A\" LA MAYORDOMÍA 1 F8 (1) Árbitro: BRITO SANTANA, GABRIEL"
+        },
+        {
+          "home": "ACODETTI C.F. \"A\"",
+          "away": "ATLETICO HURACAN, A.D. \"A\"",
+          "scoreHtml": 1776,
+          "rendered": "#idh6819:before{content:\"2\"}26 - eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));6ntype(\"idh6820\",7,0,\"fa-7\");7 23-04-2025 19:46"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.\n\t\n - \n\n  \n \n24-04-2",
+          "away": "- \n\n  \n \n24-04-2025\n20:57",
+          "scoreHtml": 2511,
+          "rendered": "SANTIDAD BANOT, C.D. 2ntype(\"idh6821\",0,0,\"fa-1\");1 - 5ntype(\"idh6822\",1,0,\"fa-6\"); 24-04-2025 20:57 MOYA, U.D. \"A\" JAVIER ARMAS REYES (F8) - Hierba Artificial Árbitro: SUÁREZ VEGA, OWEN MIGUEL"
+        },
+        {
+          "home": "SANTIDAD BANOT, C.D.",
+          "away": "MOYA, U.D. \"A\"",
+          "scoreHtml": 1218,
+          "rendered": "2ntype(\"idh6821\",0,0,\"fa-1\");1 - 5ntype(\"idh6822\",1,0,\"fa-6\"); 24-04-2025 20:57"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"\n\t\n - \n\n  \n \n25-04-202",
+          "away": "- \n\n  \n \n25-04-2025\n19:28",
+          "scoreHtml": 2509,
+          "rendered": "CARDONES, C.D. \"A\" 1ntype(\"idh6823\",4,0,\"fa-1\");1 - #idh6824:after{content:\"6\"}3 25-04-2025 19:28 BARRIAL, U.D. \"A\" DOMINGO CASTRO F8 - Hierba Artificial Árbitro: ALFONSO VEGA, VÍCTOR MANUEL"
+        },
+        {
+          "home": "CARDONES, C.D. \"A\"",
+          "away": "BARRIAL, U.D. \"A\"",
+          "scoreHtml": 1218,
+          "rendered": "1ntype(\"idh6823\",4,0,\"fa-1\");1 - #idh6824:after{content:\"6\"}3 25-04-2025 19:28"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"\n\t\n - \n\n  \n \n",
+          "away": "- \n\n  \n \n27-04-2025\n09:00",
+          "scoreHtml": 2549,
+          "rendered": "MESAS HURACAN, U.D. LAS \"A\" 1ntype(\"idh6825\",4,0,\"fa-4\");4 - 1ntype(\"idh6826\",4,0,\"fa-0\");0 27-04-2025 09:00 VETERANOS DEL PILA., C.D. \"A\" PEPE GONÇALVEZ (F8-2) Árbitro: SANTANA ACOSTA, HARIDIAN"
+        },
+        {
+          "home": "MESAS HURACAN, U.D. LAS \"A\"",
+          "away": "VETERANOS DEL PILA., C.D. \"A\"",
+          "scoreHtml": 1256,
+          "rendered": "1ntype(\"idh6825\",4,0,\"fa-4\");4 - 1ntype(\"idh6826\",4,0,\"fa-0\");0 27-04-2025 09:00"
+        }
       ]
     },
     {
@@ -4974,28 +5674,32 @@
       "text": "15 - 04-05-2025",
       "table_count": 0,
       "interesting_tables": [],
-      "score_cells": []
+      "score_cells": [],
+      "match_scores": []
     },
     {
       "value": "16",
       "text": "16 - 11-05-2025",
       "table_count": 0,
       "interesting_tables": [],
-      "score_cells": []
+      "score_cells": [],
+      "match_scores": []
     },
     {
       "value": "17",
       "text": "17 - 18-05-2025",
       "table_count": 0,
       "interesting_tables": [],
-      "score_cells": []
+      "score_cells": [],
+      "match_scores": []
     },
     {
       "value": "18",
       "text": "18 - 24-05-2025",
       "table_count": 0,
       "interesting_tables": [],
-      "score_cells": []
+      "score_cells": [],
+      "match_scores": []
     }
   ],
   "jornada_options": [

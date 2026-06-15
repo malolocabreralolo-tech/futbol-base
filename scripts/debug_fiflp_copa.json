@@ -138,6 +138,248 @@
             }
           ]
         }
+      ],
+      "score_cells": [
+        {
+          "innerText": "-",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-5",
+              "txt": "",
+              "before": "\"5\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4865\",1,0,\"fa-4\");",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "4",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-5",
+              "txt": "",
+              "before": "\"5\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4866\",1,0,\"fa-9\");",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "9",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "-",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-4",
+              "txt": "",
+              "before": "\"4\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4867\",3,0,\"fa-6\");",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "6",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "STYLE",
+              "cls": "",
+              "txt": "#idh4868:after{content:\"1\"}",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "0",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "-",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-1",
+              "txt": "",
+              "before": "\"1\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4869\",4,0,\"fa-1\");",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "1",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-2",
+              "txt": "",
+              "before": "\"2\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4870\",0,0,\"fa-1\");",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "1",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "-",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-8",
+              "txt": "",
+              "before": "\"8\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4871\",6,0,\"fa-8\");",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "8",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-0",
+              "txt": "",
+              "before": "\"0\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4872\",5,0,\"fa-2\");",
+              "before": "none"
+            }
+          ]
+        }
       ]
     },
     {
@@ -208,6 +450,110 @@
                   "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=4\"> ARGUINEGUIN </a> - Hierba Artificial <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;CABALLERO ESTUPIÑÁN, JORGE </span> </span> </span>"
                 }
               ]
+            }
+          ]
+        }
+      ],
+      "score_cells": [
+        {
+          "innerText": "1 -",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "1",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "STYLE",
+              "cls": "",
+              "txt": "#idh4874:before{content:\"2\"}",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "",
+              "before": "\"2\""
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "5",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "-",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "STYLE",
+              "cls": "",
+              "txt": "#idh4875:before{content:\"\\0030\"}",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "",
+              "before": "\"0\""
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "4",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "STYLE",
+              "cls": "",
+              "txt": "#idh4876:after{content:\"9\"}",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "8",
+              "before": "none"
             }
           ]
         }
@@ -306,6 +652,74 @@
                   "html": " <span style=\"margin-top:5px;\"> <span class=\"font_widgetL\"> <a href=\"/pnfg/NPcd/NFG_VisCampos?cod_primaria=1000122&amp;Codigo_Campo=4\"> ARGUINEGUIN </a> - Hierba Artificial <br><span class=\"font_widgetL\"> &nbsp;&nbsp;<strong>Árbitro: </strong>&nbsp;CABALLERO ESTUPIÑÁN, JORGE </span> </span> </span>"
                 }
               ]
+            }
+          ]
+        }
+      ],
+      "score_cells": [
+        {
+          "innerText": "-",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!\"\".replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return\"\\\\w+\"};c=1}while(c--){if(k[c]){p=p.replace(new RegExp(\"\\\\b\"+e(c)+\"\\\\b\",\"g\"),k[c])}}return p}(\"k o(a,n,i,f){g d=[2,5,9,4,1,0,8,6,3,7,1,3,5,7,9,0,2,4,6,8,0,2,4,6,8,1,3,5,7,9,7,5,2,0,9,6,3,8,4,1];c.b(a).e.j(f);c.b(a).e.l('m-'+d[(i*h)+n])}\",25,25,\"||||||||||id|getElementById|document|t|classList|oc|var|10||remove|function|add|fa||ntype\".split(\"|\"),0,{}));",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-0",
+              "txt": "",
+              "before": "\"0\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4877\",5,0,\"fa-1\");",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "1",
+              "before": "none"
+            }
+          ]
+        },
+        {
+          "innerText": "1",
+          "cls": "wid2_resultado_cerrada ntype",
+          "els": [
+            {
+              "tag": "I",
+              "cls": "fa-solid",
+              "txt": "1",
+              "before": "none"
+            },
+            {
+              "tag": "I",
+              "cls": "fa-1",
+              "txt": "1",
+              "before": "\"1\""
+            },
+            {
+              "tag": "SCRIPT",
+              "cls": "",
+              "txt": "ntype(\"idh4878\",4,0,\"fa-0\");",
+              "before": "none"
+            },
+            {
+              "tag": "SPAN",
+              "cls": "",
+              "txt": "0",
+              "before": "none"
             }
           ]
         }

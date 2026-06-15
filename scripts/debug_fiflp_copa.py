@@ -146,6 +146,12 @@ def main():
                         if (m) digits += m[0];
                       }
                     }
+                    // 3) no obfuscated digit → the score is plain visible text
+                    //    (innerText excludes the hidden display:none decoys).
+                    if (!digits) {
+                      const m = (span.innerText || '').match(/\d+/);
+                      if (m) digits = m[0];
+                    }
                     return digits;
                   };
                   const out = [];

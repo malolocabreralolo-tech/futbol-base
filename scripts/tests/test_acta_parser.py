@@ -290,3 +290,42 @@ class TestEventsIntegrity:
     def test_no_crash_on_both_fixtures(self, modern, antiguo):
         assert modern is not None
         assert antiguo is not None
+
+
+class TestDecodeScoreOldFormat:
+    """Actas de formato ANTIGUO (técnica anti-scrape B, documentada en
+    memoria futbol-base-state.md): el dígito real es texto plano visible
+    (<i class="fa-solid">5</i>) con un decoy oculto
+    <span style="display:none">9</span>; SIN llamadas ntype(). _decode_score
+    devolvía (None, None) -> degradaba el reconciliador. Debe caer a leer el
+    dígito visible tras quitar el span oculto y los <style> embebidos.
+
+    CAVEAT: el formato sigue las técnicas anti-scrape documentadas, no un acta
+    antigua viva — el pipeline FIFLP está bloqueado (302 → login) y el raw JSON
+    guarda dicts parseados, no HTML. El fallback es defensivo: NUNCA pisa un
+    parse ntype correcto, solo actúa cuando hoy devolvería None.
+    """
+
+    def test_plain_visible_digit_with_hidden_decoy(self):
+        from scripts.acta_parser import _decode_score
+        h2 = ('<i class="fa-solid">5</i><span style="display:none">9</span>'
+              ' - '
+              '<i class="fa-solid">1</i><span style="display:none">7</span>')
+        assert _decode_score(h2) == (5, 1)
+
+    def test_two_digit_visible_score(self):
+        from scripts.acta_parser import _decode_score
+        h2 = '<i class="fa-solid">1</i><i class="fa-solid">2</i> - <i class="fa-solid">0</i>'
+        assert _decode_score(h2) == (12, 0)
+
+    def test_modern_ntype_still_wins_over_decoy(self):
+        # con ntype presente NO se usa el fallback (el decoy oculto se ignora).
+        # ntype(_,0,0,_) -> _NTYPE_D[(0*10)+0] = 2
+        from scripts.acta_parser import _decode_score
+        h2 = ('ntype("a",0,0,"fa")<span style="display:none">9</span>'
+              ' - ntype("b",0,0,"fa")')
+        assert _decode_score(h2) == (2, 2)
+
+    def test_no_digits_anywhere_still_none(self):
+        from scripts.acta_parser import _decode_score
+        assert _decode_score('<i class="fa-solid"></i> - <i class="fa-solid"></i>') == (None, None)

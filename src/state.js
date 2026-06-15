@@ -137,6 +137,15 @@ export function sortJornadaKeys(keys) {
     .map(x => x.k);
 }
 
+/* Keep jorGroup only if it belongs to the active season's groups; otherwise
+ * fall back to the first one. Switching to a historical season used to leave a
+ * stale current-season code (e.g. 'A2') that no historical group has, so the
+ * Jornadas tab rendered blank. Pure + testable. */
+export function validJorGroup(current, groups) {
+  if (current && groups.some(g => g.id === current)) return current;
+  return groups.length ? groups[0].id : '';
+}
+
 /* Team badge — real shield from SHIELDS or fallback to initials */
 export function teamBadgeFallback(name) {
   const words = name.replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]/g, '').trim().split(/\s+/);

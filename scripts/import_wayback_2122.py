@@ -15,7 +15,7 @@ import json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from db import (get_connection, init_db, get_or_create_season,
                 get_or_create_category, get_or_create_team,
-                get_or_create_group, PROJECT_ROOT, DB_PATH)
+                get_or_create_group, delete_group_matches, PROJECT_ROOT, DB_PATH)
 
 RAW_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wayback_2122_raw.json")
 
@@ -108,7 +108,7 @@ def import_group(conn, g, season_id):
 
     # Clean previous data for this group
     conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
-    conn.execute("DELETE FROM matches   WHERE group_id=?", (group_id,))
+    delete_group_matches(conn, group_id)
     conn.commit()
 
     # Standings

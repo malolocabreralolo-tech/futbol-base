@@ -66,6 +66,9 @@ CREATE TABLE match_staff (
 CREATE TABLE scorers (
     id INTEGER PRIMARY KEY, group_id INTEGER NOT NULL, player_name TEXT NOT NULL,
     team_id INTEGER NOT NULL, goals INTEGER, games INTEGER);
+CREATE TABLE goals (
+    id INTEGER PRIMARY KEY, match_id INTEGER NOT NULL, minute INTEGER,
+    player_name TEXT, running_score TEXT, side TEXT, type TEXT);
 """
 
 
@@ -469,6 +472,49 @@ class TestSeasonGoalRecords:
         conn.execute("UPDATE standings SET points=0 WHERE team_id=1")  # Fortaleza pts corrupto
         lc = self._season(conn)["leastConceded"]
         assert lc == {"team": "Fortaleza", "gc": 8}
+
+
+# ─── Fix (2026-06-15): match-detail/lineup keys mirror the frontend (#11) ────
+
+class TestMatchKeySanitize:
+    """Las claves de MATCH_DETAIL/MATCH_DETAIL_KEYS/LINEUPS usaban hs/as_ crudos;
+    el frontend (render.js/miequipo.js/modals.js) las construye con scores
+    sanitizados. Un score fuera de rango → la clave del backend ('41736-0') no
+    casaba con la del frontend ('null-0') → badge ⚽ / alineación invisibles.
+    Latente (0 hoy), pero defensa en profundidad: ambas deben coincidir, usando
+    'null' (JS) no 'None' (Python)."""
+
+    def _seed_goals(self, conn, hs, as_):
+        conn.executescript("""
+          INSERT INTO groups (id, season_id, category_id, code, name, phase)
+            VALUES (1, 1, 1, 'A1', 'Grupo 1', 'Segunda Fase A');
+          INSERT INTO teams (id, name) VALUES (1,'Home FC'),(2,'Away FC');
+          INSERT INTO players (id, full_name, norm_name) VALUES (1,'PEPE','pepe');
+        """)
+        conn.execute("""INSERT INTO matches (id, group_id, jornada, date, home_team_id, away_team_id, home_score, away_score, cod_acta)
+                        VALUES (1, 1, 'Jornada 1', '06/06', 1, 2, ?, ?, 90001)""", (hs, as_))
+        conn.execute("""INSERT INTO goals (match_id, minute, player_name, running_score, side, type)
+                        VALUES (1, 10, 'X', '1-0', 'h', 'goal')""")
+        conn.execute("""INSERT INTO appearances (match_id, team_id, player_id, dorsal, role)
+                        VALUES (1, 1, 1, 7, 'starter')""")
+
+    def test_corrupt_score_key_uses_null_everywhere(self, capsys):
+        from scripts.generate_js import (generate_matchdetail_js,
+                                         generate_matchdetail_keys_js,
+                                         generate_lineups_js)
+        conn = _synth_conn(); self._seed_goals(conn, 41736, 0)
+        for out, what in [(generate_matchdetail_js(conn), "MATCH_DETAIL"),
+                          (generate_matchdetail_keys_js(conn), "MATCH_DETAIL_KEYS"),
+                          (generate_lineups_js(conn, "2025-2026"), "LINEUPS")]:
+            assert "Home FC|Away FC|null-0" in out, f"{what} debe usar 'null' para score corrupto"
+            assert "41736" not in out, f"{what} no debe llevar el score corrupto"
+            assert "None-0" not in out, f"{what} debe usar 'null' (JS), no 'None' (Python)"
+
+    def test_sane_score_key_unchanged(self):
+        from scripts.generate_js import generate_matchdetail_keys_js, generate_lineups_js
+        conn = _synth_conn(); self._seed_goals(conn, 3, 1)
+        assert "Home FC|Away FC|3-1" in generate_matchdetail_keys_js(conn)
+        assert "Home FC|Away FC|3-1" in generate_lineups_js(conn, "2025-2026")
 
 
 # ─── Fix 5: conditional cache/version bump (C3 + C4) ────────────────────────

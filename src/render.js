@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, getSeasonError, ensureSeasonData } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
@@ -346,10 +346,10 @@ export function renderJornadas() {
   matchesDiv.id = 'jornadaMatches';
   container.appendChild(matchesDiv);
 
-  // Default: pick first group if not set
-  if (!S.jorGroup && data.length > 0) {
-    S.jorGroup = data[0].id;
-  }
+  // Validate: keep jorGroup only if it exists in the active season, else fall
+  // back to the first group (a stale current-season code left the tab blank
+  // after switching to a historical season).
+  S.jorGroup = validJorGroup(S.jorGroup, data);
   if (S.jorGroup) {
     select.value = S.jorGroup;
     renderJornadaContent();
@@ -372,7 +372,10 @@ export function renderJornadaContent() {
   if (!S.jorGroup) return;
 
   const group = getData().find(g => g.id === S.jorGroup);
-  if (!group) return;
+  if (!group) {
+    matchesDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>No hay jornadas para este grupo</p></div>';
+    return;
+  }
 
   // HISTORICAL PATH
   if (isHistorical() && group.jornadas && Object.keys(group.jornadas).length > 0) {

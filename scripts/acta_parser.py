@@ -88,8 +88,25 @@ _RE_WIDGET_V = re.compile(r'class="font_widgetV">([^<]+)</div>')
 _RE_NTYPE_H2 = re.compile(r'<h2\s+class="ntype">(.*?)</h2>', re.DOTALL | re.IGNORECASE)
 
 
+# Old-format actas (anti-scrape technique B) render the real digit as visible
+# plain text (e.g. <i class="fa-solid">5</i>) next to a hidden decoy
+# <span style="display:none">9</span>, with NO ntype() call. Strip the hidden
+# decoys + embedded <style> and read the visible digits as a fallback.
+_RE_HIDDEN = re.compile(r'<span[^>]*display\s*:\s*none[^>]*>.*?</span>', re.I | re.S)
+_RE_STYLE = re.compile(r'<style[^>]*>.*?</style>', re.I | re.S)
+
+
+def _visible_digits(part: str) -> str:
+    s = _RE_HIDDEN.sub("", part)
+    s = _RE_STYLE.sub("", s)
+    s = re.sub(r"<[^>]+>", " ", s)
+    return "".join(re.findall(r"\d", s))
+
+
 def _decode_score(h2_content: str) -> tuple:
-    """Extract (home_score, away_score) from the obfuscated ntype h2 block."""
+    """Extract (home_score, away_score) from the obfuscated ntype h2 block.
+    Falls back to the visible plain-text digit for old-format actas that have
+    no ntype() call (see _visible_digits)."""
     sep = " - "
     sep_idx = h2_content.find(sep)
     if sep_idx < 0:
@@ -98,7 +115,8 @@ def _decode_score(h2_content: str) -> tuple:
     away_part = h2_content[sep_idx + len(sep):]
 
     def _digits_from(part: str) -> str:
-        return "".join(str(_decode_ntype(m)) for m in _RE_NTYPE.finditer(part))
+        digits = "".join(str(_decode_ntype(m)) for m in _RE_NTYPE.finditer(part))
+        return digits or _visible_digits(part)  # old-format fallback
 
     home_str = _digits_from(home_part)
     away_str = _digits_from(away_part)

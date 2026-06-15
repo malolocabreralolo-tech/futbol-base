@@ -112,6 +112,32 @@ def init_db(conn):
     conn.commit()
 
 
+# Child tables whose rows reference matches(id). With foreign_keys=ON (see
+# get_connection) they must be cleared BEFORE the matches themselves or the
+# DELETE raises an IntegrityError.
+MATCH_CHILD_TABLES = ("appearances", "match_events", "match_staff", "goals")
+
+
+def _table_exists(conn, name):
+    return conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)
+    ).fetchone() is not None
+
+
+def delete_group_matches(conn, group_id):
+    """Delete a group's matches and every row referencing them (acta data and
+    goals) first, so the DELETE is FK-safe. Does NOT commit — the caller owns
+    the transaction. Mirrors the pattern in import_fiflp.py."""
+    for tbl in MATCH_CHILD_TABLES:
+        if _table_exists(conn, tbl):
+            conn.execute(
+                f"DELETE FROM {tbl} WHERE match_id IN "
+                f"(SELECT id FROM matches WHERE group_id=?)",
+                (group_id,),
+            )
+    conn.execute("DELETE FROM matches WHERE group_id=?", (group_id,))
+
+
 def get_or_create_season(conn, name, start_year, end_year, is_current=False):
     """Return the season id, creating it if needed."""
     cur = conn.execute("SELECT id FROM seasons WHERE name=?", (name,))

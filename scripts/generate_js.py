@@ -116,6 +116,17 @@ def get_groups_for_category(conn, category_name):
     return rows
 
 
+def _match_key(home, away, hs, as_):
+    """Match lookup key, identical to the frontend's
+    (render.js / miequipo.js / modals.js: `home|away|hs-as`). Scores are
+    sanitized (out-of-range -> None) and rendered JS-style ('null', not Python
+    'None') so the ⚽ badge / lineup lookup matches on both sides."""
+    def _js(v):
+        v = sanitize_score(v)
+        return "null" if v is None else str(v)
+    return f"{home}|{away}|{_js(hs)}-{_js(as_)}"
+
+
 def get_standings(conn, group_id):
     """Return standings for a group as list of [pos, team, pts, J, G, E, P, GF, GC, DF]."""
     rows = conn.execute(
@@ -419,7 +430,7 @@ def generate_matchdetail_js(conn):
 
     details = {}
     for match_id, home, away, hs, as_ in rows:
-        key = f"{home}|{away}|{hs}-{as_}"
+        key = _match_key(home, away, hs, as_)
         goals = conn.execute(
             """SELECT minute, player_name, running_score, side, type
                FROM goals WHERE match_id = ? ORDER BY minute, id""",
@@ -449,7 +460,7 @@ def generate_matchdetail_keys_js(conn):
            JOIN teams a ON m.away_team_id = a.id
            JOIN goals g ON g.match_id = m.id""",
     ).fetchall()
-    keys = {f"{home}|{away}|{hs}-{as_}": 1 for home, away, hs, as_ in rows}
+    keys = {_match_key(home, away, hs, as_): 1 for home, away, hs, as_ in rows}
     return header + "const MATCH_DETAIL_KEYS=" + js_val(keys) + ";"
 
 
@@ -471,7 +482,7 @@ def generate_lineups_js(conn, season_name):
        WHERE g.season_id=? AND m.cod_acta IS NOT NULL""", (season_id[0],)).fetchall()
     obj = {}
     for mid, h, a, hs, asc in rows:
-        key = f"{h}|{a}|{hs}-{asc}"
+        key = _match_key(h, a, hs, asc)
         apps = conn.execute("""
           SELECT a.team_id, p.full_name, a.dorsal, a.role, a.goals, a.yellow, a.red
             FROM appearances a JOIN players p ON p.id=a.player_id

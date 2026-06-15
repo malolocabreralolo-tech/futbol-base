@@ -47,12 +47,15 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           # generate_js.py escribe data-*.js (incl. data-seasons.js y
-          # data-season-*.js), bumpea ?v= en index.html y CACHE_NAME en sw.js:
-          # se stagean TODOS sus outputs con glob estable.
-          git add 'data-*.js' index.html sw.js futbolbase.db
+          # data-season-*.js), bumpea ?v= en index.html y CACHE_NAME en sw.js.
+          # futbolbase.db cambia de bytes (cabecera SQLite) en CADA run aunque
+          # no cambie ningún dato publicado: se gatea su commit a que cambie
+          # algún artefacto publicado (evita ~13/14 commits de ruido).
+          git add 'data-*.js' index.html sw.js
           if git diff --cached --quiet; then
-            echo "Sin cambios."
+            echo "Sin cambios en datos publicados — no se commitea (evita churn de futbolbase.db)."
           else
+            git add futbolbase.db
             git commit -m "Actualización automática $(date '+%d/%m/%Y %H:%M UTC')"
             git push
           fi

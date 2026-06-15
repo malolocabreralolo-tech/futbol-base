@@ -72,6 +72,12 @@ jobs:
           else
             echo "  ! no raw file at $RAW (scraper produced nothing); skipping import"
           fi
+      - name: Tests (bloquean el commit si fallan)
+        run: |
+          pip install pytest pyyaml
+          python3 -m pytest scripts/tests/ -q
+          node --test scripts/tests/test_*.mjs
+
       - name: Commit
         env:
           PYTHONPATH: ${{ github.workspace }}

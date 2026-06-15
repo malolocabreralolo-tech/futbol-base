@@ -49,6 +49,12 @@ jobs:
           python3 scripts/synth_copa_campeones.py
           python3 scripts/generate_js.py
 
+      - name: Tests (bloquean el commit si fallan)
+        run: |
+          pip install pytest pyyaml
+          python3 -m pytest scripts/tests/ -q
+          node --test scripts/tests/test_*.mjs
+
       - name: Commit y push
         run: |
           git config user.name  "GitHub Actions"

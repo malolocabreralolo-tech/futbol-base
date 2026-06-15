@@ -532,7 +532,7 @@ export function buildUnifiedPrebenjamin() {
     const dfStr = t.df > 0 ? '+' + t.df : t.df;
     html += `<tr class="${cls.trim()}">`;
     html += `<td>${pos}</td>`;
-    html += `<td class="team-name-cell" data-group="${escapeAttr(PREBENJAMIN[t.groupNum - 1].id)}">${teamBadge(t.name)} ${escapeHtml(t.name)}</td>`;
+    html += `<td class="team-name-cell" data-group="${escapeAttr(PREBENJAMIN[t.groupNum - 1].id)}" data-team="${escapeAttr(t.name)}">${teamBadge(t.name)} ${escapeHtml(t.name)}</td>`;
     html += `<td style="color:${t.color};font-weight:700;text-align:center" title="${escapeAttr(t.groupName)}">${t.sym}</td>`;
     html += `<td class="pts-col">${t.ppg}</td>`;
     html += `<td>${t.pts}</td><td>${t.j}</td><td>${t.g_wins}</td><td>${t.e}</td><td>${t.p}</td>`;

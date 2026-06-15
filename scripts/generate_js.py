@@ -201,12 +201,52 @@ def _is_league_group(code, phase):
     return True
 
 
+# Real-world sanctions seen in the source deduct 3 (occasionally 6) points;
+# the two corruptions found 2026-06-15 were -49 (Valkyrias Bec.: 0 vs 49) and
+# -12 (Lanzarote B: 7 vs 19). A deviation beyond this tolerance, on a row whose
+# W/D/L is self-consistent, is a mis-scraped points column, not a sanction.
+_SANCTION_TOLERANCE = 6
+
+
+def _repair_incoherent_points(stored):
+    """Repair rows whose points are arithmetically impossible.
+
+    The source occasionally mis-scrapes ONLY the points column (anti-scrape
+    obfuscation defeats the parse and it defaults to a wrong number). When a
+    row is otherwise self-consistent (``played == won + drawn + lost``, so
+    ``3*won + drawn`` is trustworthy) but its points deviate beyond a plausible
+    sanction, rewrite just that field and re-rank — keeping every other column.
+
+    Crucially this does NOT recompute the table from ``matches``: the stored
+    table can be MORE complete than the fixtures (it carries the final round
+    and walkover losses that never appear as matches), so a full recompute
+    would regress the other teams. Returns ``(rows, changed)``."""
+    repaired = False
+    out = []
+    for row in stored:
+        pos, name, pts, j, g, e, p, gf, gc, gd = row
+        expected = 3 * g + e
+        if j == g + e + p and abs(pts - expected) > _SANCTION_TOLERANCE:
+            pts = expected
+            repaired = True
+        out.append([pos, name, pts, j, g, e, p, gf, gc, gd])
+    if not repaired:
+        return stored, False
+    # canonical order: pts desc, DF desc, GF desc, name asc
+    out.sort(key=lambda r: (-r[2], -r[9], -r[7], r[1]))
+    for i, r in enumerate(out):
+        r[0] = i + 1
+    return out, True
+
+
 def get_effective_standings(conn, group_id, code=None, phase=None):
     """Standings for a CURRENT-season group, recomputed from matches when the
     stored table went stale (the source kept publishing results after it
     stopped publishing standings — e.g. frozen since ~25/04 while results ran
     to J29). If the stored table is up to date it wins, because the official
-    one may carry sanctions a recompute can't know about."""
+    one may carry sanctions a recompute can't know about. When the stored table
+    is complete but a row's points are impossible (a mis-scraped points
+    column), only that field is repaired (see _repair_incoherent_points)."""
     stored = get_standings(conn, group_id)
     if not stored or not _is_league_group(code, phase):
         return stored
@@ -220,7 +260,44 @@ def get_effective_standings(conn, group_id, code=None, phase=None):
             file=sys.stderr,
         )
         return computed
-    return stored
+    repaired, changed = _repair_incoherent_points(stored)
+    if changed:
+        print(
+            f"  WARNING: puntos incoherentes en grupo {code or group_id} "
+            f"— reparados desde 3·G+E (resto de la tabla intacto)",
+            file=sys.stderr,
+        )
+    return repaired
+
+
+# Season highlight stats (most goals scored / least conceded) must ignore the
+# short qualifying-phase groups: "Primera Fase GC" plays only 4-5 games, so a
+# side that conceded 0 there would beat a full-season defence. Real groups play
+# >=16 games — the gap makes 10 a safe cut.
+_MIN_GAMES_FOR_SEASON_STATS = 10
+
+
+def _season_goal_records(conn, group_meta):
+    """mostGoals / leastConceded across a category's groups, read from EFFECTIVE
+    standings (authoritative and points-repaired, never the incomplete
+    `matches` table) and ignoring qualifying groups of only a handful of games.
+    group_meta is a list of (group_id, code, phase). Returns (mostGoals,
+    leastConceded) dicts (or None)."""
+    most_goals = None       # (team, gf)
+    least_conceded = None   # (team, gc)
+    for gid, code, phase in group_meta:
+        for row in get_effective_standings(conn, gid, code, phase):
+            name, played, gf, gc = row[1], row[3], row[7], row[8]
+            if played < _MIN_GAMES_FOR_SEASON_STATS:
+                continue
+            if most_goals is None or gf > most_goals[1]:
+                most_goals = (name, gf)
+            if least_conceded is None or gc < least_conceded[1]:
+                least_conceded = (name, gc)
+    return (
+        {"team": most_goals[0], "gf": most_goals[1]} if most_goals else None,
+        {"team": least_conceded[0], "gc": least_conceded[1]} if least_conceded else None,
+    )
 
 
 def get_current_jornada_matches(conn, group_id, current_jornada):
@@ -592,7 +669,7 @@ def generate_stats_js(conn):
     for cat_name, cat_key in [("BENJAMIN", "benjamin"), ("PREBENJAMIN", "prebenjamin")]:
         # Get all group IDs for this category in the current season
         groups = conn.execute(
-            """SELECT g.id, g.code FROM groups g
+            """SELECT g.id, g.code, g.phase FROM groups g
                JOIN categories c ON g.category_id = c.id
                JOIN seasons s ON g.season_id = s.id
                WHERE c.name = ? AND s.is_current = 1
@@ -600,6 +677,7 @@ def generate_stats_js(conn):
             (cat_name,),
         ).fetchall()
         group_ids = [g[0] for g in groups]
+        group_meta = [(g[0], g[1], g[2]) for g in groups]
 
         if not group_ids:
             stats[cat_key] = {"season": {}, "teams": {}}
@@ -639,33 +717,10 @@ def generate_stats_js(conn):
         if top_scorer_row:
             top_scorer = {"name": top_scorer_row[0], "team": top_scorer_row[1], "goals": top_scorer_row[2]}
 
-        # mostGoals: team with most GF from standings
-        most_goals_row = conn.execute(
-            f"""SELECT t.name, s.gf
-                FROM standings s
-                JOIN teams t ON s.team_id = t.id
-                WHERE s.group_id IN ({placeholders})
-                ORDER BY s.gf DESC
-                LIMIT 1""",
-            group_ids,
-        ).fetchone()
-        most_goals = None
-        if most_goals_row:
-            most_goals = {"team": most_goals_row[0], "gf": most_goals_row[1]}
-
-        # leastConceded: team with least GC (played > 0)
-        least_conceded_row = conn.execute(
-            f"""SELECT t.name, s.gc
-                FROM standings s
-                JOIN teams t ON s.team_id = t.id
-                WHERE s.group_id IN ({placeholders}) AND s.played > 0
-                ORDER BY s.gc ASC
-                LIMIT 1""",
-            group_ids,
-        ).fetchone()
-        least_conceded = None
-        if least_conceded_row:
-            least_conceded = {"team": least_conceded_row[0], "gc": least_conceded_row[1]}
+        # mostGoals / leastConceded: from EFFECTIVE standings (authoritative,
+        # points-repaired) and ignoring short qualifying-phase groups; never
+        # the incomplete `matches` table.
+        most_goals, least_conceded = _season_goal_records(conn, group_meta)
 
         # biggestWin: match with biggest score difference
         biggest_win_row = conn.execute(

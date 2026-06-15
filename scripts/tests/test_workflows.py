@@ -103,6 +103,29 @@ def test_update_stages_all_generate_js_outputs():
         assert needed in commit_run, f"update.yml git add must stage {needed}"
 
 
+def test_update_gates_db_commit_on_published_changes():
+    """futbolbase.db churns every run (SQLite header) even when no data-*.js
+    changes -> ~13/14 noise commits. The commit must be gated on the published
+    artifacts: stage data-*.js/index.html/sw.js first, and only add the DB (and
+    commit) when that set actually changed (review 2026-06-15, #3)."""
+    runs = _runs(_load("update.yml"), "update")
+    commit_run = next(r for r in runs if "git commit" in r)
+    lines = commit_run.splitlines()
+    pub_idx = next(
+        i for i, l in enumerate(lines)
+        if re.search(r"git add .*data-\*\.js.*index\.html.*sw\.js", l)
+    )
+    assert "futbolbase.db" not in lines[pub_idx], (
+        "the first git add must NOT stage futbolbase.db (that is the churn we gate)"
+    )
+    gate_idx = next(i for i, l in enumerate(lines) if "git diff --cached --quiet" in l)
+    db_idx = next(i for i, l in enumerate(lines) if re.search(r"git add .*futbolbase\.db", l))
+    assert pub_idx < gate_idx < db_idx, (
+        "futbolbase.db must be staged only inside the else branch, after the "
+        "published-artifact gate"
+    )
+
+
 # ---------------------------------------------------------------- tests.yml
 
 def test_tests_yml_has_schedule_and_dispatch():
@@ -172,6 +195,30 @@ def test_fetch_fiflp_pipeline_steps_intact():
         assert script in runs, f"fetch-fiflp.yml lost pipeline step {script}"
 
 
+def test_fetch_fiflp_runs_tests_before_commit():
+    """A dispatch republishes ALL data-*.js to main; it must gate on the suites
+    like update.yml. Its bot push (GITHUB_TOKEN) does not trigger tests.yml
+    (anti-recursion), so a regression would only surface next day (review #7)."""
+    runs = _runs(_load("fetch-fiflp.yml"), "scrape")
+    pytest_idx = next(
+        (i for i, r in enumerate(runs) if re.search(r"python3? -m pytest scripts/tests/", r)), None)
+    node_idx = next(
+        (i for i, r in enumerate(runs) if "node --test scripts/tests/test_*.mjs" in r), None)
+    gen_idx = next((i for i, r in enumerate(runs) if "generate_js.py" in r), None)
+    commit_idx = next((i for i, r in enumerate(runs) if "git commit" in r), None)
+    assert pytest_idx is not None, "fetch-fiflp.yml must run pytest before committing"
+    assert node_idx is not None, "fetch-fiflp.yml must run node --test (glob) before committing"
+    assert gen_idx is not None and commit_idx is not None
+    assert gen_idx < pytest_idx < commit_idx, "pytest must run between generate and commit"
+    assert gen_idx < node_idx < commit_idx, "node suite must run between generate and commit"
+
+
+def test_fetch_fiflp_installs_test_deps():
+    runs = " ".join(_runs(_load("fetch-fiflp.yml"), "scrape"))
+    assert re.search(r"pip install[^\n]*\bpytest\b", runs)
+    assert re.search(r"pip install[^\n]*\bpyyaml\b", runs)
+
+
 # ----------------------------------------------------- fetch-fiflp-actas.yml
 
 def test_actas_stage_all_covers_all_generate_js_outputs():
@@ -196,3 +243,19 @@ def test_actas_snapshot_reset_flow_intact():
     assert "git push origin HEAD:main" in commit_run
     data = _load("fetch-fiflp-actas.yml")
     assert data.get("concurrency", {}).get("cancel-in-progress") is False
+
+
+def test_actas_runs_tests_before_commit():
+    """Same gate as fetch-fiflp.yml: actas publishes to main, so the suites
+    must run before the first commit (review 2026-06-15, #7)."""
+    runs = _runs(_load("fetch-fiflp-actas.yml"), "scrape")
+    pytest_idx = next(
+        (i for i, r in enumerate(runs) if re.search(r"python3? -m pytest scripts/tests/", r)), None)
+    node_idx = next(
+        (i for i, r in enumerate(runs) if "node --test scripts/tests/test_*.mjs" in r), None)
+    commit_idx = next((i for i, r in enumerate(runs) if "git commit" in r), None)
+    assert pytest_idx is not None, "fetch-fiflp-actas.yml must run pytest before committing"
+    assert node_idx is not None, "fetch-fiflp-actas.yml must run node --test (glob) before committing"
+    assert commit_idx is not None
+    assert pytest_idx < commit_idx, "pytest must run before the first commit"
+    assert node_idx < commit_idx, "node suite must run before the first commit"

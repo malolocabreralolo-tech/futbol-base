@@ -115,7 +115,7 @@ export function renderClasif() {
   // Event delegation: click on team name in standings → open team profile
   container.onclick = e => {
     const td = e.target.closest('.team-name-cell');
-    if (td) openTeamDetail(td.textContent.trim(), td.dataset.group);
+    if (td) openTeamDetail(td.dataset.team, td.dataset.group);
   };
 }
 
@@ -219,17 +219,17 @@ function buildKnockoutBracket(g) {
       const awayClass = `bracket-team${awayWin ? ' winner' : ''}${draw ? ' draw' : ''}${isFeatured(away) ? ' featured-team' : ''}`;
       const homeIsChamp = isFinalMatch && homeWin && home === champion;
       const awayIsChamp = isFinalMatch && awayWin && away === champion;
-      // team-name-cell + data-group makes these clickable via the existing
-      // delegated handler in renderClasif → openTeamDetail (modals.js). The
-      // 🏆 sits OUTSIDE the cell so the textContent stays equal to the team
-      // name in standings (otherwise the lookup misses).
+      // team-name-cell + data-group/data-team makes these clickable via the
+      // existing delegated handler in renderClasif → openTeamDetail (modals.js).
+      // data-team carries the clean name (the badge fallback would pollute
+      // textContent with initials); the 🏆 stays outside the cell.
       html += `<div class="bracket-match${isFinalMatch ? ' bracket-match-final' : ''}">
         <div class="${homeClass}${homeIsChamp ? ' champion' : ''}">
-          <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}">${teamBadge(home)} ${escapeHtml(home)}</span>${homeIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}" data-team="${escapeAttr(home)}">${teamBadge(home)} ${escapeHtml(home)}</span>${homeIsChamp ? ' 🏆' : ''}</span>
           <span class="bracket-score">${hs != null ? hs : '–'}</span>
         </div>
         <div class="${awayClass}${awayIsChamp ? ' champion' : ''}">
-          <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}">${teamBadge(away)} ${escapeHtml(away)}</span>${awayIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}" data-team="${escapeAttr(away)}">${teamBadge(away)} ${escapeHtml(away)}</span>${awayIsChamp ? ' 🏆' : ''}</span>
           <span class="bracket-score">${as != null ? as : '–'}</span>
         </div>
       </div>`;
@@ -279,7 +279,7 @@ export function buildStandingsTable(standings, groupId, group) {
     const cls = (pos <= 3 ? `pos-${pos}` : '') + (isFeatured(row[1]) ? ' featured-team' : '');
     html += `<tr class="${cls.trim()}">`;
     html += `<td>${pos}</td>`;
-    html += `<td class="team-name-cell" data-group="${escapeAttr(groupId)}">${teamBadge(row[1])} ${escapeHtml(row[1])}</td>`;
+    html += `<td class="team-name-cell" data-group="${escapeAttr(groupId)}" data-team="${escapeAttr(row[1])}">${teamBadge(row[1])} ${escapeHtml(row[1])}</td>`;
     if (showForm) {
       // Form column
       const form = getTeamForm(row[1], groupId);

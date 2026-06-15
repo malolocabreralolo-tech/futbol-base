@@ -349,6 +349,128 @@ class TestStandingsFreshness:
         assert rows[0] == [1, "Casa", 1, 1, 0, 1, 0, 1, 1, 0]
 
 
+# ─── Fix (2026-06-15): row-level points repair for corrupt-but-complete tables ─
+
+class TestStandingsPointsRepair:
+    """Valkyrias Bec. (PG1) y Lanzarote B (LZ3) se publicaron con 0/7 pts pese
+    a 16/6 victorias: la fuente mal-scrapeó SOLO la columna de puntos. La tabla
+    stored es MÁS completa que `matches` (lleva la última jornada y derrotas por
+    walkover que nunca son fixtures), así que recalcular la tabla entera
+    regresaría a todos los demás equipos. Se repara únicamente el campo de
+    puntos imposible (3·G+E) y se re-ordena, conservando el resto de la tabla."""
+
+    def _seed(self, conn, corrupt_pts):
+        # stored = temporada completa (played=4 cada uno); matches solo cubre 1
+        # partido -> computed_j (2) < stored_j (12): NO es la rama de recompute.
+        conn.execute(
+            """INSERT INTO groups (id, season_id, category_id, code, name, phase, current_jornada)
+               VALUES (1, 1, 1, 'PG1', 'Grupo 1', 'Gran Canaria', 'Jornada 4')""")
+        conn.executescript(
+            "INSERT INTO teams (id, name) VALUES (1,'Alpha'),(2,'Beta'),(3,'Gamma');")
+        conn.execute(
+            """INSERT INTO matches (group_id, jornada, date, home_team_id, away_team_id, home_score, away_score)
+               VALUES (1, 'Jornada 1', '01/02', 1, 2, 2, 0)""")
+        # Gamma: pts corrupto (debería ser 3*3+0 = 9); resto internamente coherente
+        conn.execute(
+            """INSERT INTO standings (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+               VALUES (1, 1, 1, 10, 4, 3, 1, 0, 10, 3, 7),
+                      (1, 2, 3, 4, 4, 1, 1, 2, 5, 8, -3),
+                      (1, 3, 2, ?, 4, 3, 0, 1, 9, 5, 4)""", (corrupt_pts,))
+
+    def test_corrupt_points_repaired_others_kept(self):
+        from scripts.generate_js import generate_category_js
+        conn = _synth_conn()
+        self._seed(conn, corrupt_pts=0)
+        js = generate_category_js(conn, "BENJAMIN", "BENJAMIN", "BENJ_STATS")
+        standings = _parse_const(js, "BENJAMIN")[0]["standings"]
+        assert standings == [
+            [1, "Alpha", 10, 4, 3, 1, 0, 10, 3, 7],
+            [2, "Gamma", 9, 4, 3, 0, 1, 9, 5, 4],   # 0 -> 9, re-ordenado sobre Beta
+            [3, "Beta", 4, 4, 1, 1, 2, 5, 8, -3],
+        ], f"solo se repara la columna de puntos y se re-ordena; got {standings}"
+        # prueba que NO hubo recompute: Alpha conserva GF=10 stored (un recompute
+        # del único match sembrado daría Alpha GF=2, played=1)
+        assert standings[0][3] == 4 and standings[0][7] == 10
+
+    def test_real_valkyrias_value(self):
+        from scripts.generate_js import _repair_incoherent_points
+        stored = [[15, "Valkyrias Bec.", 0, 28, 16, 1, 11, 118, 98, 20],
+                  [5, "Tamaraceite", 50, 28, 15, 5, 8, 127, 84, 43]]
+        repaired, changed = _repair_incoherent_points(stored)
+        assert changed
+        by = {r[1]: r for r in repaired}
+        assert by["Valkyrias Bec."][2] == 49, "16G+1E -> 49 pts"
+        # 49 < 50 -> Tamaraceite sigue primero, Valkyrias segundo
+        assert repaired[0][1] == "Tamaraceite" and repaired[1][1] == "Valkyrias Bec."
+        assert [r[0] for r in repaired] == [1, 2], "posiciones re-numeradas"
+
+    def test_sanction_within_tolerance_preserved(self):
+        from scripts.generate_js import _repair_incoherent_points
+        # -3 sanción: 3G+0E -> esperado 9, stored 6 (delta 3 <= 6) -> conservar
+        stored = [[1, "Sancho", 6, 3, 3, 0, 0, 9, 1, 8]]
+        repaired, changed = _repair_incoherent_points(stored)
+        assert changed is False
+        assert repaired[0][2] == 6, "sanción real (-3) no debe repararse"
+
+    def test_inconsistent_played_not_repaired(self):
+        from scripts.generate_js import _repair_incoherent_points
+        # played != G+E+P -> W/D/L no fiables, no fabricar puntos
+        stored = [[1, "Bad", 0, 9, 3, 0, 1, 5, 5, 0]]  # 3+0+1=4 != 9
+        repaired, changed = _repair_incoherent_points(stored)
+        assert changed is False
+
+
+# ─── Fix (2026-06-15): season most/least stats ignore qualifying mini-groups ──
+
+class TestSeasonGoalRecords:
+    """mostGoals/leastConceded leían `standings` directo incluyendo la fase
+    previa de 5 partidos (UD Valleseco gc=0 ganaba a una defensa de temporada
+    completa). Deben leer standings EFECTIVAS y excluir grupos de pocos
+    partidos. NO re-leen `matches`, que está incompleto (stored es lo
+    autoritativo) — esto cubre el falso positivo del hallazgo #4."""
+
+    def _seed(self, conn):
+        conn.executescript("""
+          INSERT INTO groups (id, season_id, category_id, code, name, phase) VALUES
+            (1, 1, 1, 'A1',  'Grupo A1',  'Segunda Fase A'),
+            (2, 1, 1, 'FF1', 'Grupo FF1', 'Primera Fase GC');
+          INSERT INTO teams (id, name) VALUES
+            (1,'Fortaleza'), (2,'Goleadora'), (3,'Mini Qual'), (4,'Rival');
+          -- A1: temporada completa (played 14)
+          INSERT INTO standings (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+            (1, 2, 1, 36, 14, 12, 0, 2, 60, 12, 48),
+            (1, 1, 2, 30, 14, 10, 0, 4, 25,  8, 17);
+          -- FF1: fase previa de 5 partidos; Mini Qual gf alto y gc 0 (debe ignorarse)
+          INSERT INTO standings (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+            (2, 3, 1, 15, 5, 5, 0, 0, 100,  0, 100),
+            (2, 4, 2,  0, 5, 0, 0, 5,   0,100,-100);
+        """)
+
+    def _season(self, conn):
+        from scripts.generate_js import generate_stats_js
+        return _parse_const(generate_stats_js(conn), "STATS")["benjamin"]["season"]
+
+    def test_least_conceded_ignores_qualifying_phase(self):
+        conn = _synth_conn(); self._seed(conn)
+        lc = self._season(conn)["leastConceded"]
+        assert lc == {"team": "Fortaleza", "gc": 8}, \
+            f"leastConceded debe ignorar grupos de pocos partidos (Mini Qual gc=0 en 5j); got {lc}"
+
+    def test_most_goals_ignores_qualifying_phase(self):
+        conn = _synth_conn(); self._seed(conn)
+        mg = self._season(conn)["mostGoals"]
+        assert mg == {"team": "Goleadora", "gf": 60}, \
+            f"mostGoals no debe salir de un grupo de 5 partidos (Mini Qual gf=100); got {mg}"
+
+    def test_corrupt_points_dont_affect_goal_records(self):
+        # un row con puntos corruptos (reparados por get_effective_standings)
+        # no debe alterar los GF/GC usados aquí
+        conn = _synth_conn(); self._seed(conn)
+        conn.execute("UPDATE standings SET points=0 WHERE team_id=1")  # Fortaleza pts corrupto
+        lc = self._season(conn)["leastConceded"]
+        assert lc == {"team": "Fortaleza", "gc": 8}
+
+
 # ─── Fix 5: conditional cache/version bump (C3 + C4) ────────────────────────
 
 def _synth_site(tmp_path):

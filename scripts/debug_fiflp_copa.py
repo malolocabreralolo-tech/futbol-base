@@ -104,11 +104,29 @@ def main():
                 if t["row_count"] in (1, 2, 3, 4) and len(t["rows"]) > 0:
                     interesting.append(t)
 
+            # Rich post-JS dump of every score span (.wid2_resultado_cerrada):
+            # after FIFLP's packed ntype JS runs, each digit element gets a
+            # 'fa-<digit>' class. Capture each descendant's tag/class/text/
+            # ::before so we can write a correct multi-digit extractor.
+            score_cells = page.evaluate("""
+                () => Array.from(document.querySelectorAll('.wid2_resultado_cerrada'))
+                  .map(span => ({
+                    innerText: (span.innerText || '').trim(),
+                    cls: span.className,
+                    els: Array.from(span.querySelectorAll('*')).map(el => ({
+                      tag: el.tagName, cls: el.className,
+                      txt: (el.innerText || '').trim(),
+                      before: window.getComputedStyle(el, '::before').content,
+                    })),
+                  }))
+            """)
+
             jor_record = {
                 "value": jor["value"],
                 "text": jor["text"],
                 "table_count": len(tables_data),
                 "interesting_tables": interesting[:30],
+                "score_cells": score_cells,
             }
             result["jornadas"].append(jor_record)
             time.sleep(1.0)

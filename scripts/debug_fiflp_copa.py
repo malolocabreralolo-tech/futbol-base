@@ -125,30 +125,36 @@ def main():
             # ::before digit of each element, in DOM order) for each row that
             # has a score cell — shows exactly how home/away/separator are laid
             # out so the static parser can split them.
+            # Simula el extractor robusto candidato: cada partido tiene 2 spans
+            # .wid2_resultado_cerrada (home, away); el dígito REAL está en los
+            # pseudo-elementos ::before/::after (los decoy son texto plano, que
+            # se ignoran). Concatena multi-dígito en orden DOM.
             match_scores = page.evaluate(r"""
                 () => {
+                  const readSpan = (span) => {
+                    let digits = '';
+                    const els = [span, ...span.querySelectorAll('*')];
+                    for (const el of els) {
+                      for (const p of ['::before', '::after']) {
+                        const c = window.getComputedStyle(el, p).content || '';
+                        const m = c.replace(/["']/g,'').match(/\d+/);
+                        if (m) digits += m[0];
+                      }
+                    }
+                    return digits;
+                  };
                   const out = [];
                   for (const tr of document.querySelectorAll('tr')) {
                     const tds = Array.from(tr.querySelectorAll('td'));
                     const scoreTd = tds.find(td => td.querySelector('.wid2_resultado_cerrada'));
                     if (!scoreTd) continue;
-                    let s = '';
-                    const walk = (el) => {
-                      for (const n of el.childNodes) {
-                        if (n.nodeType === 3) s += n.textContent;
-                        else if (n.nodeType === 1) {
-                          const b = window.getComputedStyle(n, '::before').content || '';
-                          const m = b.match(/\d/); if (m) s += m[0];
-                          walk(n);
-                        }
-                      }
-                    };
-                    walk(scoreTd);
+                    const spans = Array.from(scoreTd.querySelectorAll('.wid2_resultado_cerrada'));
                     out.push({
-                      home: tds[0] ? tds[0].innerText.trim().slice(0,40) : '',
-                      away: tds[2] ? tds[2].innerText.trim().slice(0,40) : '',
-                      scoreHtml: scoreTd.innerHTML.length,
-                      rendered: s.replace(/\s+/g,' ').trim(),
+                      home: tds[0] ? tds[0].innerText.trim().slice(0,30) : '',
+                      away: tds[2] ? tds[2].innerText.trim().slice(0,30) : '',
+                      nspans: spans.length,
+                      hs: spans[0] ? readSpan(spans[0]) : '',
+                      as: spans[1] ? readSpan(spans[1]) : '',
                     });
                   }
                   return out;

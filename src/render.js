@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, getSeasonError, ensureSeasonData } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, bracketDrawAdvancer, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
@@ -182,26 +182,12 @@ function buildKnockoutBracket(g) {
     return '<div class="modal-h2h-empty" style="padding:16px;text-align:center;opacity:.7">Sin partidos registrados</div>';
   }
 
-  // Friendly round label inferred from position relative to the final.
-  // The LAST round is always the final, second-to-last is semis, etc.
-  // (We can't trust matches.length because brackets with byes have unusual
-  // shapes — Fase A is 6 teams: R1 has 2 matches, R2 has 2, R3 has 1.)
-  const roundLabel = (raw, matchesInRound, idx, total) => {
-    const fromEnd = total - 1 - idx;  // 0 = final, 1 = semis, 2 = quarters, …
-    if (fromEnd === 0) return 'Final';
-    if (fromEnd === 1) return 'Semifinales';
-    if (fromEnd === 2) return 'Cuartos';
-    if (fromEnd === 3) return 'Octavos';
-    const m = raw.match(/Ronda\s+(\d+)/i);
-    return m ? `Ronda ${m[1]}` : raw.replace(/\d{2}-\d{2}-\d{4}\s*/, '').trim();
-  };
-
   const champion = g.standings.length ? g.standings[0][1] : null;
 
   let html = '<div class="bracket">';
   rounds.forEach((rkey, idx) => {
     const matches = jornadas[rkey] || [];
-    const label = roundLabel(rkey, matches.length, idx, rounds.length);
+    const label = knockoutRoundLabel(rkey, idx, rounds.length);
     const dateMatch = rkey.match(/(\d{2}-\d{2}-\d{4})/);
     const date = dateMatch ? dateMatch[1] : '';
     html += `<div class="bracket-round">
@@ -219,10 +205,14 @@ function buildKnockoutBracket(g) {
       }
       const isFinalMatch = matches.length === 1;
       const draw = played && !homeWin && !awayWin;
-      const homeClass = `bracket-team${homeWin ? ' winner' : ''}${draw ? ' draw' : ''}${isFeatured(home) ? ' featured-team' : ''}`;
-      const awayClass = `bracket-team${awayWin ? ' winner' : ''}${draw ? ' draw' : ''}${isFeatured(away) ? ' featured-team' : ''}`;
-      const homeIsChamp = isFinalMatch && homeWin && home === champion;
-      const awayIsChamp = isFinalMatch && awayWin && away === champion;
+      // On a draw, who advanced on penalties (appears in a later round).
+      const penAdvancer = draw ? bracketDrawAdvancer(jornadas, rounds, idx, home, away) : null;
+      const homeAdv = homeWin || penAdvancer === 'home';
+      const awayAdv = awayWin || penAdvancer === 'away';
+      const homeClass = `bracket-team${homeAdv ? ' winner' : ''}${draw && !homeAdv ? ' draw' : ''}${isFeatured(home) ? ' featured-team' : ''}`;
+      const awayClass = `bracket-team${awayAdv ? ' winner' : ''}${draw && !awayAdv ? ' draw' : ''}${isFeatured(away) ? ' featured-team' : ''}`;
+      const homeIsChamp = isFinalMatch && homeAdv && home === champion;
+      const awayIsChamp = isFinalMatch && awayAdv && away === champion;
       // team-name-cell + data-group/data-team makes these clickable via the
       // existing delegated handler in renderClasif → openTeamDetail (modals.js).
       // data-team carries the clean name (the badge fallback would pollute
@@ -230,11 +220,11 @@ function buildKnockoutBracket(g) {
       html += `<div class="bracket-match${isFinalMatch ? ' bracket-match-final' : ''}">
         <div class="${homeClass}${homeIsChamp ? ' champion' : ''}">
           <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}" data-team="${escapeAttr(home)}">${teamBadge(home)} ${escapeHtml(home)}</span>${homeIsChamp ? ' 🏆' : ''}</span>
-          <span class="bracket-score">${hs != null ? hs : '–'}</span>
+          <span class="bracket-score">${hs != null ? hs : '–'}${penAdvancer === 'home' ? ' <span class="bracket-pen" title="Ganó en la tanda de penaltis">pen</span>' : ''}</span>
         </div>
         <div class="${awayClass}${awayIsChamp ? ' champion' : ''}">
           <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}" data-team="${escapeAttr(away)}">${teamBadge(away)} ${escapeHtml(away)}</span>${awayIsChamp ? ' 🏆' : ''}</span>
-          <span class="bracket-score">${as != null ? as : '–'}</span>
+          <span class="bracket-score">${as != null ? as : '–'}${penAdvancer === 'away' ? ' <span class="bracket-pen" title="Ganó en la tanda de penaltis">pen</span>' : ''}</span>
         </div>
       </div>`;
     });

@@ -68,6 +68,27 @@ class TestTaggedWinner:
         assert tagged_winner('FIRGAS', 'SAN ANTONIO') is None
 
 
+class TestUniqueCodes:
+    """cup_code cae a BC1/PCC1 fijo para grupos sin "FASE X"; dos así
+    colisionarían y delete_group_matches borraría el primero. El import debe
+    fallar ruidosamente antes."""
+
+    def test_collision_raises(self):
+        import pytest
+        from import_fiflp_cups_2526 import assert_unique_codes
+        raw = [{"cat": "prebenjamin", "group_name": "ELIMINATORIAS"},
+               {"cat": "prebenjamin", "group_name": "OTRA RONDA"}]  # ambos → PCC1
+        with pytest.raises(ValueError):
+            assert_unique_codes(raw)
+
+    def test_unique_ok(self):
+        from import_fiflp_cups_2526 import assert_unique_codes
+        raw = [{"cat": "benjamin", "group_name": "FASE A"},
+               {"cat": "benjamin", "group_name": "FASE B"},
+               {"cat": "prebenjamin", "group_name": "ELIMINATORIAS"}]
+        assert_unique_codes(raw)  # no levanta
+
+
 class TestCorrectedScores:
     """El tag es la señal autoritativa de quién ganó. Si el marcador (no empate)
     contradice al equipo que avanzó, el scraper invirtió home/away en esa fila

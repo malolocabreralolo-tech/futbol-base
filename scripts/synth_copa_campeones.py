@@ -71,11 +71,25 @@ def synth_group(conn, group_id, code):
                 stats[h]["pts"] += 1; stats[h]["e"] += 1
                 stats[a]["pts"] += 1; stats[a]["e"] += 1
 
+    # Deepest round reached per team (round order = match insertion order), so a
+    # side that advanced on penalties (a draw) outranks the team it knocked out
+    # even after losing the next round, and semifinalists outrank quarter-
+    # finalists. Within the same round: champion (final winner) first.
+    round_order = []
+    for mm in matches:
+        if mm[4] not in round_order:
+            round_order.append(mm[4])
+    round_idx = {j: i for i, j in enumerate(round_order)}
+    reached = {}
+    for h, a, hs, aas, jor, _ in matches:
+        ri = round_idx.get(jor, 0)
+        reached[h] = max(reached.get(h, -1), ri)
+        reached[a] = max(reached.get(a, -1), ri)
+
     def rank_key(item):
         team, s = item
-        if team == final_winner: return (-100, 0, 0, team)
-        if team == final_loser:  return (-99,  0, 0, team)
-        return (-s["g"], -s["pts"], -(s["gf"] - s["gc"]), team)
+        champ = 1 if team == final_winner else 0
+        return (-reached.get(team, 0), -champ, -s["g"], -s["pts"], -(s["gf"] - s["gc"]), team)
 
     ranked = sorted(stats.items(), key=rank_key)
 

@@ -2016,6 +2016,18 @@ img.team-badge {
 .bracket-team.draw {
   color: var(--text2);
 }
+.bracket-pen {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  background: rgba(0,200,150,0.12);
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-left: 3px;
+  vertical-align: middle;
+}
 .bracket-team.champion {
   background: linear-gradient(90deg, rgba(255,196,40,0.15), rgba(255,196,40,0.03));
   color: #ffc428;

@@ -127,6 +127,29 @@ def _match_key(home, away, hs, as_):
     return f"{home}|{away}|{_js(hs)}-{_js(as_)}"
 
 
+_ROUND_RANK = (
+    ("dieciseisavos", 1), ("octavos", 2), ("cuartos", 3),
+    ("semifinal", 4), ("final", 5),  # "semifinal" also matches "semifinales"
+)
+
+
+def _jornada_sort_key(j):
+    """Sort key for jornadas. Knockout rounds ("( Cuartos )"/"( Semifinales )"/
+    "( Final )", optionally date-prefixed) order by progression (bracket reads
+    Cuartos → Semifinales → Final), NOT by the day number or alphabetically.
+    Regular jornadas ("Jornada 5", "Ronda 2", "5") order by their number."""
+    s = str(j)
+    sl = s.lower()
+    dm = re.search(r"(\d{2})-(\d{2})-(\d{4})", s)
+    datekey = (int(dm.group(3)), int(dm.group(2)), int(dm.group(1))) if dm else (0, 0, 0)
+    for name, rank in _ROUND_RANK:
+        if name in sl:
+            return (datekey, rank)
+    rest = re.sub(r"\d{2}-\d{2}-\d{4}", "", s)
+    m = re.search(r"\d+", rest)
+    return (datekey, int(m.group()) if m else 0)
+
+
 def get_standings(conn, group_id):
     """Return standings for a group as list of [pos, team, pts, J, G, E, P, GF, GC, DF]."""
     rows = conn.execute(
@@ -398,12 +421,8 @@ def generate_history_js(conn):
             )
             total_matches += 1
 
-        # Sort jornadas by number
-        def jornada_sort_key(j):
-            m = re.search(r"(\d+)", j)
-            return int(m.group(1)) if m else 0
-
-        sorted_jornadas = dict(sorted(jornadas.items(), key=lambda x: jornada_sort_key(x[0])))
+        # Sort jornadas by progression (knockout rounds) or number (leagues)
+        sorted_jornadas = dict(sorted(jornadas.items(), key=lambda x: _jornada_sort_key(x[0])))
         history[code] = sorted_jornadas
 
     js = "const HISTORY=" + js_val(history) + ";"
@@ -695,19 +714,24 @@ def generate_stats_js(conn):
             continue
 
         placeholders = ",".join("?" * len(group_ids))
+        # League groups only for season totals — knockout cups aren't part of
+        # the league season (consistent with mostGoals/leastConceded, which
+        # exclude them via the games threshold).
+        liga_ids = [gid for gid, code, phase in group_meta if _is_league_group(code, phase)] or group_ids
+        ph_liga = ",".join("?" * len(liga_ids))
 
-        # --- Season-level stats ---
+        # --- Season-level stats (league only) ---
 
         # totalMatches (completed only)
         total_matches = conn.execute(
-            f"SELECT COUNT(*) FROM matches WHERE group_id IN ({placeholders}) AND home_score IS NOT NULL",
-            group_ids,
+            f"SELECT COUNT(*) FROM matches WHERE group_id IN ({ph_liga}) AND home_score IS NOT NULL",
+            liga_ids,
         ).fetchone()[0]
 
         # totalGoals
         total_goals_row = conn.execute(
-            f"SELECT COALESCE(SUM(home_score + away_score), 0) FROM matches WHERE group_id IN ({placeholders}) AND home_score IS NOT NULL",
-            group_ids,
+            f"SELECT COALESCE(SUM(home_score + away_score), 0) FROM matches WHERE group_id IN ({ph_liga}) AND home_score IS NOT NULL",
+            liga_ids,
         ).fetchone()
         total_goals = total_goals_row[0]
 
@@ -740,10 +764,10 @@ def generate_stats_js(conn):
                 FROM matches m
                 JOIN teams h ON m.home_team_id = h.id
                 JOIN teams a ON m.away_team_id = a.id
-                WHERE m.group_id IN ({placeholders}) AND m.home_score IS NOT NULL
+                WHERE m.group_id IN ({ph_liga}) AND m.home_score IS NOT NULL
                 ORDER BY diff DESC, (m.home_score + m.away_score) DESC
                 LIMIT 1""",
-            group_ids,
+            liga_ids,
         ).fetchone()
         biggest_win = None
         if biggest_win_row:
@@ -757,10 +781,10 @@ def generate_stats_js(conn):
                 FROM matches m
                 JOIN teams h ON m.home_team_id = h.id
                 JOIN teams a ON m.away_team_id = a.id
-                WHERE m.group_id IN ({placeholders}) AND m.home_score IS NOT NULL
+                WHERE m.group_id IN ({ph_liga}) AND m.home_score IS NOT NULL
                 ORDER BY total DESC, ABS(m.home_score - m.away_score) DESC
                 LIMIT 1""",
-            group_ids,
+            liga_ids,
         ).fetchone()
         most_goals_match = None
         if most_goals_match_row:
@@ -928,11 +952,7 @@ def get_historical_jornadas(conn, group_id):
             [dt, home, away, sanitize_score(hs, ctx), sanitize_score(as_, ctx)]
         )
 
-    def _jor_num(j):
-        m = re.search(r'\d+', str(j))
-        return int(m.group()) if m else 0
-
-    return dict(sorted(jornadas.items(), key=lambda x: _jor_num(x[0])))
+    return dict(sorted(jornadas.items(), key=lambda x: _jornada_sort_key(x[0])))
 
 
 def generate_seasons_js(conn):

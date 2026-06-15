@@ -69,6 +69,16 @@ def corrected_scores(home, away, hs, as_):
     return (as_, hs) if score_w != tw else (hs, as_)
 
 
+def assert_unique_codes(raw):
+    """cup_code falls back to BC1/PCC1 for groups without "FASE X"; two such
+    groups would collide and delete_group_matches would wipe the first. Fail
+    loudly before importing anything."""
+    codes = [cup_code(g["cat"], g["group_name"]) for g in raw]
+    dups = sorted({c for c in codes if codes.count(c) > 1})
+    if dups:
+        raise ValueError(f"cup_code colisión {dups}; revisa group_name/cup_code antes de importar")
+
+
 def _norm_jornada(num):
     """Knockout jornada label as stored in 2024-25 cups (e.g.
     '06-06-2026 ( Final )'). The scraper already produced it as `num`."""
@@ -136,6 +146,7 @@ def import_group(conn, g, season_id):
 def main():
     with open(RAW_PATH, encoding="utf-8") as f:
         raw = json.load(f)
+    assert_unique_codes(raw)
     conn = get_connection()
     init_db(conn)
     season_id = get_or_create_season(conn, SEASON_NAME, SEASON_START, SEASON_END)

@@ -474,6 +474,31 @@ class TestSeasonGoalRecords:
         assert lc == {"team": "Fortaleza", "gc": 8}
 
 
+class TestSeasonTotalsExcludeCups:
+    """totalMatches/totalGoals/biggestWin no deben incluir los partidos de cup
+    (knockout), coherente con mostGoals/leastConceded que ya los excluyen."""
+
+    def _seed(self, conn):
+        conn.executescript("""
+          INSERT INTO groups (id, season_id, category_id, code, name, phase) VALUES
+            (1, 1, 1, 'A1', 'Liga', 'Segunda Fase A'),
+            (2, 1, 1, 'BCA1', 'Cup', 'Copa de Campeones');
+          INSERT INTO teams (id, name) VALUES (1,'L1'),(2,'L2'),(3,'C1'),(4,'C2');
+          INSERT INTO matches (group_id, jornada, home_team_id, away_team_id, home_score, away_score)
+            VALUES (1, 'Jornada 1', 1, 2, 2, 1),
+                   (2, 'Final', 3, 4, 9, 0);
+        """)
+
+    def test_totals_and_biggestwin_exclude_cups(self):
+        from scripts.generate_js import generate_stats_js
+        conn = _synth_conn(); self._seed(conn)
+        season = _parse_const(generate_stats_js(conn), "STATS")["benjamin"]["season"]
+        assert season["totalMatches"] == 1, f"solo el partido de liga; got {season['totalMatches']}"
+        assert season["totalGoals"] == 3, f"2+1, sin los 9 del cup; got {season['totalGoals']}"
+        # biggestWin debe ser el de liga (2-1), no el cup 9-0
+        assert season["biggestWin"]["score"] == "2-1", f"got {season['biggestWin']}"
+
+
 # ─── Fix (2026-06-15): match-detail/lineup keys mirror the frontend (#11) ────
 
 class TestMatchKeySanitize:
@@ -515,6 +540,38 @@ class TestMatchKeySanitize:
         conn = _synth_conn(); self._seed_goals(conn, 3, 1)
         assert "Home FC|Away FC|3-1" in generate_matchdetail_keys_js(conn)
         assert "Home FC|Away FC|3-1" in generate_lineups_js(conn, "2025-2026")
+
+
+# ─── Fix (2026-06-15): knockout round ordering (cups) ───────────────────────
+
+class TestJornadaSortKey:
+    """Las rondas de cup ("( Cuartos )"/"( Semifinales )"/"( Final )", mismo día)
+    se ordenaban por el primer número (el día) → empate → orden alfabético
+    (Cuartos, Final, Semifinales). El frontend etiqueta por posición → la final
+    (1 partido) salía como semifinal y viceversa. Deben ordenarse por progresión."""
+
+    def test_knockout_rounds_order_by_progression(self):
+        from scripts.generate_js import _jornada_sort_key
+        keys = ["10-06-2026 ( Final )", "10-06-2026 ( Cuartos )", "10-06-2026 ( Semifinales )"]
+        assert sorted(keys, key=_jornada_sort_key) == [
+            "10-06-2026 ( Cuartos )", "10-06-2026 ( Semifinales )", "10-06-2026 ( Final )"]
+
+    def test_octavos_before_cuartos(self):
+        from scripts.generate_js import _jornada_sort_key
+        keys = ["01-01-2026 ( Cuartos )", "01-01-2026 ( Octavos )", "01-01-2026 ( Final )"]
+        assert sorted(keys, key=_jornada_sort_key) == [
+            "01-01-2026 ( Octavos )", "01-01-2026 ( Cuartos )", "01-01-2026 ( Final )"]
+
+    def test_league_jornadas_by_number(self):
+        from scripts.generate_js import _jornada_sort_key
+        keys = ["Jornada 10", "Jornada 2", "Jornada 1"]
+        assert sorted(keys, key=_jornada_sort_key) == ["Jornada 1", "Jornada 2", "Jornada 10"]
+
+    def test_dated_rounds_order_by_date_then_rank(self):
+        from scripts.generate_js import _jornada_sort_key
+        keys = ["09-06-2025 ( Ronda 2 )", "08-06-2025 ( Ronda 1 )"]
+        assert sorted(keys, key=_jornada_sort_key) == [
+            "08-06-2025 ( Ronda 1 )", "09-06-2025 ( Ronda 2 )"]
 
 
 # ─── Fix 5: conditional cache/version bump (C3 + C4) ────────────────────────

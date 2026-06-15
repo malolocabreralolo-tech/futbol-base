@@ -157,6 +157,62 @@ export function knockoutRoundsSource(g, historical, history) {
   return {};
 }
 
+/* For a DRAWN knockout match, the team that advanced (on penalties) is the one
+ * that appears in a LATER round of the same bracket. Returns 'home'/'away'/null
+ * (the tag is lost at import, so we derive it from the bracket itself). */
+export function bracketDrawAdvancer(jornadas, rounds, idx, home, away) {
+  const later = new Set();
+  for (let r = idx + 1; r < rounds.length; r++) {
+    for (const m of (jornadas[rounds[r]] || [])) { later.add(m[1]); later.add(m[2]); }
+  }
+  const h = later.has(home), a = later.has(away);
+  if (h && !a) return 'home';
+  if (a && !h) return 'away';
+  return null;
+}
+
+/* A cup / knockout group (vs a regular league group). By code prefix
+ * (PCC or BC) or phase ("Copa"/"Campeón"). */
+export function isCupGroup(g) {
+  const id = ((g && g.id) || '').toUpperCase();
+  if (id.startsWith('PCC') || id.startsWith('BC')) return true;
+  const phase = ((g && g.phase) || '').toLowerCase();
+  return phase.includes('copa') || phase.includes('campeon');
+}
+
+/* The (≤3) league prebenjamín groups for the unified table — cups excluded.
+ * buildUnifiedPrebenjamin numbers by position, so a cup group sorted before
+ * PG1 used to take a slot and push PG3 out (and head the table). */
+export function unifiedPrebenLeagueGroups(prebenjamin) {
+  return (prebenjamin || []).filter(g => !isCupGroup(g)).slice(0, 3);
+}
+
+/* Friendly label for a knockout round. Prefers the explicit round name in the
+ * key ("( Semifinales )") — authoritative and order-independent — then
+ * "Ronda N", then position relative to the final (last = Final). Check
+ * semifinal BEFORE final ("Semifinales" contains "final"). */
+export function knockoutRoundLabel(raw, idx, total) {
+  const s = String(raw);
+  // 1) explicit round name in the key (2025-26 cups: "( Semifinales )").
+  //    Check semifinal BEFORE final ("Semifinales" contains "final").
+  if (/dieciseis/i.test(s)) return 'Dieciseisavos';
+  if (/octavos/i.test(s)) return 'Octavos';
+  if (/cuartos/i.test(s)) return 'Cuartos';
+  if (/semifinal/i.test(s)) return 'Semifinales';
+  if (/\bfinal\b/i.test(s)) return 'Final';
+  // 2) position relative to the final (2024-25 "Ronda N" cups, ≤4 rounds →
+  //    friendlier Cuartos/Semis/Final than "Ronda N").
+  const fromEnd = total - 1 - idx;
+  if (fromEnd === 0) return 'Final';
+  if (fromEnd === 1) return 'Semifinales';
+  if (fromEnd === 2) return 'Cuartos';
+  if (fromEnd === 3) return 'Octavos';
+  // 3) deeper brackets: "Ronda N" / stripped key.
+  const r = s.match(/Ronda\s+(\d+)/i);
+  if (r) return 'Ronda ' + r[1];
+  return s.replace(/\d{2}-\d{2}-\d{4}\s*/, '').trim();
+}
+
 /* Team badge — real shield from SHIELDS or fallback to initials */
 export function teamBadgeFallback(name) {
   const words = name.replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]/g, '').trim().split(/\s+/);
@@ -515,11 +571,14 @@ export function buildUnifiedPrebenjamin() {
   const groupColors = { 1: '#4285F4', 2: '#EA4335', 3: '#34A853' };
   
   if (typeof PREBENJAMIN === 'undefined') return document.createElement('div');
-  
-  PREBENJAMIN.forEach((g, idx) => {
+
+  // Only the league groups (PG1/PG2/PG3) — never the Copa de Campeones (PCC*),
+  // which otherwise took a numbered slot and pushed PG3 out of the table.
+  const ligaGroups = unifiedPrebenLeagueGroups(PREBENJAMIN);
+
+  ligaGroups.forEach((g, idx) => {
     if (!g.standings || !g.standings.length) return;
     const groupNum = idx + 1;
-    if (groupNum > 3) return; // Solo grupos 1, 2, 3
     const sym = groupSymbols[groupNum] || '○';
     const color = groupColors[groupNum] || '#888';
     
@@ -552,7 +611,7 @@ export function buildUnifiedPrebenjamin() {
     const dfStr = t.df > 0 ? '+' + t.df : t.df;
     html += `<tr class="${cls.trim()}">`;
     html += `<td>${pos}</td>`;
-    html += `<td class="team-name-cell" data-group="${escapeAttr(PREBENJAMIN[t.groupNum - 1].id)}" data-team="${escapeAttr(t.name)}">${teamBadge(t.name)} ${escapeHtml(t.name)}</td>`;
+    html += `<td class="team-name-cell" data-group="${escapeAttr(ligaGroups[t.groupNum - 1].id)}" data-team="${escapeAttr(t.name)}">${teamBadge(t.name)} ${escapeHtml(t.name)}</td>`;
     html += `<td style="color:${t.color};font-weight:700;text-align:center" title="${escapeAttr(t.groupName)}">${t.sym}</td>`;
     html += `<td class="pts-col">${t.ppg}</td>`;
     html += `<td>${t.pts}</td><td>${t.j}</td><td>${t.g_wins}</td><td>${t.e}</td><td>${t.p}</td>`;
@@ -565,8 +624,8 @@ export function buildUnifiedPrebenjamin() {
   html += '<div class="unified-legend">';
   html += '<span>PPJ = Puntos por partido</span>';
   for (let n = 1; n <= 3; n++) {
-    if (PREBENJAMIN[n - 1]) {
-      html += `<span style="color:${groupColors[n]}">${groupSymbols[n]} ${escapeHtml(PREBENJAMIN[n - 1].name)}</span>`;
+    if (ligaGroups[n - 1]) {
+      html += `<span style="color:${groupColors[n]}">${groupSymbols[n]} ${escapeHtml(ligaGroups[n - 1].name)}</span>`;
     }
   }
   html += '</div>';

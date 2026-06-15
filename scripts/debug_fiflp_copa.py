@@ -135,6 +135,11 @@ def main():
                     let digits = '';
                     const els = [span, ...span.querySelectorAll('*')];
                     for (const el of els) {
+                      // 1) ntype sets the real digit as class 'm-N' (after
+                      //    removing the decoy 'fa-X'). Read it directly.
+                      const cm = (el.className || '').match(/\bm-(\d)\b/);
+                      if (cm) { digits += cm[1]; continue; }
+                      // 2) CSS rule digits in ::before / ::after (e.g. "11").
                       for (const p of ['::before', '::after']) {
                         const c = window.getComputedStyle(el, p).content || '';
                         const m = c.replace(/["']/g,'').match(/\d+/);

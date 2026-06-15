@@ -168,30 +168,34 @@ def _extract_score_from_html(score_html):
 
 
 def _scores_from_browser(score_cell):
-    """Last-resort: ask the browser for the actually-rendered score digits.
-
-    Reads each `.wid2_resultado_cerrada` span's :before/inner content as
-    computed by the browser AFTER FIFLP's anti-scrape JS has run.
-    """
+    """Read the actually-RENDERED score from the browser after FIFLP's anti-
+    scrape JS runs. The score is variably obfuscated PER MATCH — the real digit
+    may be (a) the ntype-computed class 'm-N', (b) CSS ::before/::after content
+    (e.g. "11"), or (c) plain visible text (hidden display:none decoys are
+    excluded by innerText). Each `.wid2_resultado_cerrada` span is one score
+    (home, away), possibly multi-digit. Returns [home, away] (ints or None).
+    This is the AUTHORITATIVE source (what the user sees); the static HTML
+    parser is only a fallback. Verified against official standings (2024-25)."""
     try:
         return score_cell.evaluate("""(cell) => {
-            const spans = cell.querySelectorAll('.wid2_resultado_cerrada');
-            const out = [];
-            for (const span of spans) {
-                let digit = null;
-                // 1) inner text (post-JS)
-                const txt = (span.innerText || span.textContent || '').trim();
-                let m = txt.match(/(\\d+)/);
-                if (m) { out.push(parseInt(m[1])); continue; }
-                // 2) CSS ::before content of inner elements
-                for (const el of span.querySelectorAll('*')) {
-                    const c = window.getComputedStyle(el, '::before').content;
-                    const cm = (c || '').match(/(\\d+)/);
-                    if (cm) { digit = parseInt(cm[1]); break; }
+            const readSpan = (span) => {
+              let digits = '';
+              for (const el of [span, ...span.querySelectorAll('*')]) {
+                const cm = (el.className || '').match(/\\bm-(\\d)\\b/);
+                if (cm) { digits += cm[1]; continue; }
+                for (const p of ['::before', '::after']) {
+                  const c = (window.getComputedStyle(el, p).content || '').replace(/["']/g,'');
+                  const m = c.match(/\\d+/);
+                  if (m) digits += m[0];
                 }
-                out.push(digit);
-            }
-            return out;
+              }
+              if (!digits) {
+                const m = (span.innerText || '').match(/\\d+/);
+                if (m) digits = m[0];
+              }
+              return digits === '' ? null : parseInt(digits);
+            };
+            return Array.from(cell.querySelectorAll('.wid2_resultado_cerrada')).map(readSpan);
         }""")
     except Exception:
         return []
@@ -217,18 +221,21 @@ def parse_matches(page):
         key = f"{home}|{away}"
         if key in seen: continue
         seen.add(key)
-        # Prefer parsing the INNER HTML of the score cell — FIFLP's anti-scrape
-        # obfuscation leaves digits visible only in HTML (CSS pseudo-elements,
-        # hidden fallback spans, JS-transformed classes), not in inner_text.
-        score_html = r0[1].inner_html()
-        hs, as_ = _extract_score_from_html(score_html)
-        # Fallback: ask the browser for computed/rendered scores when the
-        # static HTML extraction missed them (packed runtime JS injection).
+        # PREFER the browser-RENDERED score (authoritative; handles the variable
+        # per-match obfuscation: m-N class / CSS ::before/::after / plain text).
+        # Static HTML parsing is only a fallback (it mis-handles the league
+        # pages' mixed obfuscation — see _scores_from_browser).
+        hs = as_ = None
+        browser_scores = _scores_from_browser(r0[1])
+        if len(browser_scores) >= 2:
+            hs, as_ = browser_scores[0], browser_scores[1]
         if hs is None or as_ is None:
-            browser_scores = _scores_from_browser(r0[1])
-            if len(browser_scores) >= 2:
-                if hs is None: hs = browser_scores[0]
-                if as_ is None: as_ = browser_scores[1]
+            sh, sa = _extract_score_from_html(r0[1].inner_html())
+            if hs is None: hs = sh
+            if as_ is None: as_ = sa
+        # Drop absurd over-reads (obfuscation edge) — store nothing, not garbage.
+        if hs is not None and not (0 <= hs <= 50): hs = None
+        if as_ is not None and not (0 <= as_ <= 50): as_ = None
         score_raw = r0[1].inner_text().strip().replace('\xa0', ' ')
         lines = [l.strip() for l in score_raw.split('\n') if l.strip()]
         date_str = time_str = ''

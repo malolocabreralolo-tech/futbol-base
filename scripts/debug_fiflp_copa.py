@@ -121,12 +121,47 @@ def main():
                   }))
             """)
 
+            # Per-match reconstruction of the RENDERED score (text nodes + the
+            # ::before digit of each element, in DOM order) for each row that
+            # has a score cell — shows exactly how home/away/separator are laid
+            # out so the static parser can split them.
+            match_scores = page.evaluate(r"""
+                () => {
+                  const out = [];
+                  for (const tr of document.querySelectorAll('tr')) {
+                    const tds = Array.from(tr.querySelectorAll('td'));
+                    const scoreTd = tds.find(td => td.querySelector('.wid2_resultado_cerrada'));
+                    if (!scoreTd) continue;
+                    let s = '';
+                    const walk = (el) => {
+                      for (const n of el.childNodes) {
+                        if (n.nodeType === 3) s += n.textContent;
+                        else if (n.nodeType === 1) {
+                          const b = window.getComputedStyle(n, '::before').content || '';
+                          const m = b.match(/\d/); if (m) s += m[0];
+                          walk(n);
+                        }
+                      }
+                    };
+                    walk(scoreTd);
+                    out.push({
+                      home: tds[0] ? tds[0].innerText.trim().slice(0,40) : '',
+                      away: tds[2] ? tds[2].innerText.trim().slice(0,40) : '',
+                      scoreHtml: scoreTd.innerHTML.length,
+                      rendered: s.replace(/\s+/g,' ').trim(),
+                    });
+                  }
+                  return out;
+                }
+            """)
+
             jor_record = {
                 "value": jor["value"],
                 "text": jor["text"],
                 "table_count": len(tables_data),
                 "interesting_tables": interesting[:30],
                 "score_cells": score_cells,
+                "match_scores": match_scores,
             }
             result["jornadas"].append(jor_record)
             time.sleep(1.0)

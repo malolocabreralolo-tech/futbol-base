@@ -2,6 +2,19 @@ name: Debug FIFLP Copa de Campeones
 
 on:
   workflow_dispatch:
+    inputs:
+      comp:
+        description: 'CodCompeticion (default 1469 = preben 2024-25)'
+        required: false
+        default: '1469'
+      grupo:
+        description: 'CodGrupo'
+        required: false
+        default: '196763'
+      season:
+        description: 'CodTemporada (20=2024-25, 21=2025-26)'
+        required: false
+        default: '20'
 
 permissions:
   contents: write
@@ -26,6 +39,10 @@ jobs:
           playwright install chromium --with-deps
 
       - name: Dump FIFLP Copa HTML structure
+        env:
+          DBG_COMP: ${{ inputs.comp }}
+          DBG_GRUPO: ${{ inputs.grupo }}
+          DBG_SEASON: ${{ inputs.season }}
         run: python3 scripts/debug_fiflp_copa.py
         timeout-minutes: 5
 

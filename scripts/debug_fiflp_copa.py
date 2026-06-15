@@ -22,10 +22,11 @@ from playwright.sync_api import sync_playwright
 OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "debug_fiflp_copa.json")
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 
-# Copa de Campeones 2024-25
-COMP_ID = "1469"
-GRUPO_ID = "196763"
-SEASON = "20"
+# Copa de Campeones — parametrizable por env (default: prebenjamín 2024-25).
+# Para las cups 2025-26: DBG_COMP=54968356 DBG_GRUPO=54968357 DBG_SEASON=21
+COMP_ID = os.environ.get("DBG_COMP", "1469")
+GRUPO_ID = os.environ.get("DBG_GRUPO", "196763")
+SEASON = os.environ.get("DBG_SEASON", "20")
 
 
 def main():

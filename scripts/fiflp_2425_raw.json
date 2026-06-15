@@ -37086,5 +37086,3072 @@
         ]
       }
     ]
+  },
+  {
+    "competition_id": "1706",
+    "competition_name": "Benjamin GC Segunda Fase A",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase A",
+    "group_id": "194011",
+    "group_name": "GRUPO 1",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "ATLETICO HURACAN, A.D. \"A\"",
+        "pts": 46,
+        "j": 16,
+        "g": 15,
+        "e": 1,
+        "p": 0,
+        "gf": 144,
+        "gc": 9,
+        "df": 135,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 2,
+        "team": "ACODETTI C.F. \"A\"",
+        "pts": 40,
+        "j": 16,
+        "g": 13,
+        "e": 1,
+        "p": 2,
+        "gf": 87,
+        "gc": 33,
+        "df": 54,
+        "form": "GPGGG"
+      },
+      {
+        "pos": 3,
+        "team": "VETERANOS DEL PILA., C.D. \"A\"",
+        "pts": 33,
+        "j": 16,
+        "g": 10,
+        "e": 3,
+        "p": 3,
+        "gf": 83,
+        "gc": 30,
+        "df": 53,
+        "form": "EGGGG"
+      },
+      {
+        "pos": 4,
+        "team": "BARRIAL, U.D. \"A\"",
+        "pts": 28,
+        "j": 16,
+        "g": 9,
+        "e": 1,
+        "p": 6,
+        "gf": 57,
+        "gc": 65,
+        "df": -8,
+        "form": "GGPGP"
+      },
+      {
+        "pos": 5,
+        "team": "GAREPA VIERA, C.F.",
+        "pts": 18,
+        "j": 16,
+        "g": 6,
+        "e": 0,
+        "p": 10,
+        "gf": 33,
+        "gc": 67,
+        "df": -34,
+        "form": "PGGPP"
+      },
+      {
+        "pos": 6,
+        "team": "MOYA, U.D. \"A\"",
+        "pts": 18,
+        "j": 16,
+        "g": 5,
+        "e": 3,
+        "p": 8,
+        "gf": 36,
+        "gc": 60,
+        "df": -24,
+        "form": "EGGPP"
+      },
+      {
+        "pos": 7,
+        "team": "MESAS HURACAN, U.D. LAS \"A\"",
+        "pts": 13,
+        "j": 16,
+        "g": 3,
+        "e": 4,
+        "p": 9,
+        "gf": 23,
+        "gc": 64,
+        "df": -41,
+        "form": "EEPPG"
+      },
+      {
+        "pos": 8,
+        "team": "SANTIDAD BANOT, C.D.",
+        "pts": 7,
+        "j": 16,
+        "g": 2,
+        "e": 1,
+        "p": 13,
+        "gf": 36,
+        "gc": 107,
+        "df": -71,
+        "form": "PPPPP"
+      },
+      {
+        "pos": 9,
+        "team": "CARDONES, C.D. \"A\"",
+        "pts": 6,
+        "j": 16,
+        "g": 2,
+        "e": 0,
+        "p": 14,
+        "gf": 34,
+        "gc": 98,
+        "df": -64,
+        "form": "PPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "18-01-2025",
+        "matches": [
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 1,
+            "as": 11,
+            "date": "17-01-2025",
+            "time": "20:00",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 0,
+            "as": 4,
+            "date": "18-01-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "MOYA, U.D. \"A\"",
+            "away": "VETERANOS DEL PILA., C.D. \"A\"",
+            "hs": 3,
+            "as": 3,
+            "date": "18-01-2025",
+            "time": "10:00",
+            "venue": "GARCIA HERNANDEZ \"MOYA\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "MESAS HURACAN, U.D. LAS \"A\"",
+            "hs": 2,
+            "as": 3,
+            "date": "18-01-2025",
+            "time": "10:30",
+            "venue": "DOMINGO CASTRO F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "25-01-2025",
+        "matches": [
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "MOYA, U.D. \"A\"",
+            "hs": 3,
+            "as": 0,
+            "date": "25-01-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 8,
+            "as": 3,
+            "date": "25-01-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "SANTIDAD BANOT, C.D.",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 7,
+            "as": 4,
+            "date": "25-01-2025",
+            "time": "11:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 0,
+            "as": 5,
+            "date": "26-01-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "01-02-2025",
+        "matches": [
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "MESAS HURACAN, U.D. LAS \"A\"",
+            "hs": 3,
+            "as": 2,
+            "date": "31-01-2025",
+            "time": "20:00",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA., C.D. \"A\"",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 1,
+            "as": 4,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 2",
+            "referee": ""
+          },
+          {
+            "home": "MOYA, U.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 0,
+            "as": 7,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "GARCIA HERNANDEZ \"MOYA\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "SANTIDAD BANOT, C.D.",
+            "hs": 5,
+            "as": 2,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "08-02-2025",
+        "matches": [
+          {
+            "home": "SANTIDAD BANOT, C.D.",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 4,
+            "as": 9,
+            "date": "06-02-2025",
+            "time": "20:13",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "VETERANOS DEL PILA., C.D. \"A\"",
+            "hs": 4,
+            "as": 2,
+            "date": "08-02-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 0,
+            "as": 3,
+            "date": "08-02-2025",
+            "time": "10:30",
+            "venue": "DOMINGO CASTRO F8",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS \"A\"",
+            "away": "MOYA, U.D. \"A\"",
+            "hs": 2,
+            "as": 2,
+            "date": "09-02-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "15-02-2025",
+        "matches": [
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 7,
+            "as": 1,
+            "date": "14-02-2025",
+            "time": "20:00",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 5,
+            "as": 1,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA., C.D. \"A\"",
+            "away": "MESAS HURACAN, U.D. LAS \"A\"",
+            "hs": 6,
+            "as": 1,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "MOYA, U.D. \"A\"",
+            "away": "SANTIDAD BANOT, C.D.",
+            "hs": 3,
+            "as": 1,
+            "date": "15-02-2025",
+            "time": "10:00",
+            "venue": "GARCIA HERNANDEZ \"MOYA\" F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "22-02-2025",
+        "matches": [
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "MOYA, U.D. \"A\"",
+            "hs": 3,
+            "as": 5,
+            "date": "22-02-2025",
+            "time": "10:30",
+            "venue": "DOMINGO CASTRO F8",
+            "referee": ""
+          },
+          {
+            "home": "SANTIDAD BANOT, C.D.",
+            "away": "VETERANOS DEL PILA., C.D. \"A\"",
+            "hs": 0,
+            "as": 5,
+            "date": "22-02-2025",
+            "time": "11:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS \"A\"",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 1,
+            "as": 1,
+            "date": "23-02-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 2,
+            "as": 4,
+            "date": "23-02-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "01-03-2025",
+        "matches": [
+          {
+            "home": "MOYA, U.D. \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 4,
+            "as": 1,
+            "date": "28-02-2025",
+            "time": "20:42",
+            "venue": "GARCIA HERNANDEZ \"MOYA\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "MESAS HURACAN, U.D. LAS \"A\"",
+            "hs": 6,
+            "as": 0,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "SANTIDAD BANOT, C.D.",
+            "hs": 20,
+            "as": 0,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA., C.D. \"A\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 11,
+            "as": 3,
+            "date": "01-03-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 2",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "08-03-2025",
+        "matches": [
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "MOYA, U.D. \"A\"",
+            "hs": 4,
+            "as": 2,
+            "date": "07-03-2025",
+            "time": "20:00",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "VETERANOS DEL PILA., C.D. \"A\"",
+            "hs": 1,
+            "as": 7,
+            "date": "08-03-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 0,
+            "as": 10,
+            "date": "08-03-2025",
+            "time": "10:30",
+            "venue": "DOMINGO CASTRO F8",
+            "referee": ""
+          },
+          {
+            "home": "SANTIDAD BANOT, C.D.",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 2,
+            "as": 7,
+            "date": "08-03-2025",
+            "time": "11:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "16-03-2025",
+        "matches": [
+          {
+            "home": "VETERANOS DEL PILA., C.D. \"A\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 4,
+            "as": 2,
+            "date": "15-03-2025",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 4,
+            "as": 1,
+            "date": "15-03-2025",
+            "time": "10:16",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS \"A\"",
+            "away": "SANTIDAD BANOT, C.D.",
+            "hs": 2,
+            "as": 2,
+            "date": "16-03-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 7,
+            "as": 0,
+            "date": "16-03-2025",
+            "time": "13:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "22-03-2025",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS \"A\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 2,
+            "as": 0,
+            "date": "21-03-2025",
+            "time": "20:01",
+            "venue": "C.M. LA SUERTE F-8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA., C.D. \"A\"",
+            "away": "MOYA, U.D. \"A\"",
+            "hs": 3,
+            "as": 2,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 2",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 14,
+            "as": 0,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 7,
+            "as": 2,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "29-03-2025",
+        "matches": [
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "SANTIDAD BANOT, C.D.",
+            "hs": 2,
+            "as": 6,
+            "date": "28-03-2025",
+            "time": "18:14",
+            "venue": "DOMINGO CASTRO F8",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 5,
+            "as": 5,
+            "date": "28-03-2025",
+            "time": "20:00",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "MOYA, U.D. \"A\"",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 0,
+            "as": 9,
+            "date": "29-03-2025",
+            "time": "10:00",
+            "venue": "GARCIA HERNANDEZ \"MOYA\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "MESAS HURACAN, U.D. LAS \"A\"",
+            "hs": 0,
+            "as": 1,
+            "date": "29-03-2025",
+            "time": "13:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "05-04-2025",
+        "matches": [
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "VETERANOS DEL PILA., C.D. \"A\"",
+            "hs": 2,
+            "as": 2,
+            "date": "05-04-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "MOYA, U.D. \"A\"",
+            "hs": 11,
+            "as": 1,
+            "date": "05-04-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "SANTIDAD BANOT, C.D.",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 2,
+            "as": 4,
+            "date": "05-04-2025",
+            "time": "11:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS \"A\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 1,
+            "as": 2,
+            "date": "06-04-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "12-04-2025",
+        "matches": [
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "SANTIDAD BANOT, C.D.",
+            "hs": 6,
+            "as": 1,
+            "date": "11-04-2025",
+            "time": "20:00",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA., C.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 1,
+            "as": 2,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 2",
+            "referee": ""
+          },
+          {
+            "home": "MOYA, U.D. \"A\"",
+            "away": "MESAS HURACAN, U.D. LAS \"A\"",
+            "hs": 1,
+            "as": 1,
+            "date": "12-04-2025",
+            "time": "10:00",
+            "venue": "GARCIA HERNANDEZ \"MOYA\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 2,
+            "as": 4,
+            "date": "13-04-2025",
+            "time": "15:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "26-04-2025",
+        "matches": [
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 2,
+            "as": 6,
+            "date": "23-04-2025",
+            "time": "19:46",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "SANTIDAD BANOT, C.D.",
+            "away": "MOYA, U.D. \"A\"",
+            "hs": 2,
+            "as": 5,
+            "date": "24-04-2025",
+            "time": "20:57",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 1,
+            "as": 6,
+            "date": "25-04-2025",
+            "time": "19:28",
+            "venue": "DOMINGO CASTRO F8",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS \"A\"",
+            "away": "VETERANOS DEL PILA., C.D. \"A\"",
+            "hs": 1,
+            "as": 1,
+            "date": "27-04-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "04-05-2025",
+        "matches": [
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 2,
+            "as": 3,
+            "date": "02-05-2025",
+            "time": "20:00",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA., C.D. \"A\"",
+            "away": "SANTIDAD BANOT, C.D.",
+            "hs": 13,
+            "as": 0,
+            "date": "03-05-2025",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 2",
+            "referee": ""
+          },
+          {
+            "home": "MOYA, U.D. \"A\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 7,
+            "as": 4,
+            "date": "03-05-2025",
+            "time": "10:00",
+            "venue": "GARCIA HERNANDEZ \"MOYA\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "MESAS HURACAN, U.D. LAS \"A\"",
+            "hs": 8,
+            "as": 0,
+            "date": "04-05-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "11-05-2025",
+        "matches": [
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "VETERANOS DEL PILA., C.D. \"A\"",
+            "hs": 3,
+            "as": 9,
+            "date": "10-05-2025",
+            "time": "10:30",
+            "venue": "DOMINGO CASTRO F8",
+            "referee": ""
+          },
+          {
+            "home": "SANTIDAD BANOT, C.D.",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 1,
+            "as": 10,
+            "date": "10-05-2025",
+            "time": "11:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "MOYA, U.D. \"A\"",
+            "hs": 4,
+            "as": 0,
+            "date": "10-05-2025",
+            "time": "12:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS \"A\"",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 1,
+            "as": 9,
+            "date": "11-05-2025",
+            "time": "09:00",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "18-05-2025",
+        "matches": [
+          {
+            "home": "ATLETICO HURACAN, A.D. \"A\"",
+            "away": "CARDONES, C.D. \"A\"",
+            "hs": 13,
+            "as": 0,
+            "date": "15-05-2025",
+            "time": "10:06",
+            "venue": "PEPE GONÇALVEZ (F8-2)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F. \"A\"",
+            "away": "SANTIDAD BANOT, C.D.",
+            "hs": 7,
+            "as": 1,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA., C.D. \"A\"",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 10,
+            "as": 1,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 2",
+            "referee": ""
+          },
+          {
+            "home": "MOYA, U.D. \"A\"",
+            "away": "BARRIAL, U.D. \"A\"",
+            "hs": 1,
+            "as": 2,
+            "date": "17-05-2025",
+            "time": "10:00",
+            "venue": "GARCIA HERNANDEZ \"MOYA\" F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "24-05-2025",
+        "matches": [
+          {
+            "home": "SANTIDAD BANOT, C.D.",
+            "away": "MESAS HURACAN, U.D. LAS \"A\"",
+            "hs": 2,
+            "as": 5,
+            "date": "24-05-2025",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CARDONES, C.D. \"A\"",
+            "away": "ACODETTI C.F. \"A\"",
+            "hs": 2,
+            "as": 3,
+            "date": "24-05-2025",
+            "time": "09:00",
+            "venue": "DOMINGO CASTRO F8",
+            "referee": ""
+          },
+          {
+            "home": "GAREPA VIERA, C.F.",
+            "away": "ATLETICO HURACAN, A.D. \"A\"",
+            "hs": 0,
+            "as": 12,
+            "date": "24-05-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "BARRIAL, U.D. \"A\"",
+            "away": "VETERANOS DEL PILA., C.D. \"A\"",
+            "hs": 1,
+            "as": 5,
+            "date": "24-05-2025",
+            "time": "09:00",
+            "venue": "ANTONIO CASTILLO",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1706",
+    "competition_name": "Benjamin GC Segunda Fase A",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase A",
+    "group_id": "194101",
+    "group_name": "GRUPO 2",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "TELDE, U.D. \"A\"",
+        "pts": 45,
+        "j": 18,
+        "g": 14,
+        "e": 3,
+        "p": 1,
+        "gf": 84,
+        "gc": 28,
+        "df": 56,
+        "form": "PGGGG"
+      },
+      {
+        "pos": 2,
+        "team": "UNION VIERA, C.F. \"A\"",
+        "pts": 41,
+        "j": 18,
+        "g": 13,
+        "e": 2,
+        "p": 3,
+        "gf": 88,
+        "gc": 33,
+        "df": 55,
+        "form": "GGGGE"
+      },
+      {
+        "pos": 3,
+        "team": "TORRES, U.D. LAS",
+        "pts": 36,
+        "j": 18,
+        "g": 12,
+        "e": 0,
+        "p": 6,
+        "gf": 83,
+        "gc": 39,
+        "df": 44,
+        "form": "GGPGG"
+      },
+      {
+        "pos": 4,
+        "team": "HEIDELBERG, C.F. \"A\"",
+        "pts": 34,
+        "j": 18,
+        "g": 10,
+        "e": 4,
+        "p": 4,
+        "gf": 76,
+        "gc": 39,
+        "df": 37,
+        "form": "EGGGP"
+      },
+      {
+        "pos": 5,
+        "team": "CORAZON DE MARIA, C.D. \"A\"",
+        "pts": 33,
+        "j": 18,
+        "g": 11,
+        "e": 0,
+        "p": 7,
+        "gf": 80,
+        "gc": 48,
+        "df": 32,
+        "form": "PGPPG"
+      },
+      {
+        "pos": 6,
+        "team": "DORAMAS, CD \"B\"",
+        "pts": 32,
+        "j": 18,
+        "g": 10,
+        "e": 2,
+        "p": 6,
+        "gf": 62,
+        "gc": 45,
+        "df": 17,
+        "form": "GPGPE"
+      },
+      {
+        "pos": 7,
+        "team": "PUERTOS DE L.P., C.E.F.",
+        "pts": 17,
+        "j": 18,
+        "g": 5,
+        "e": 2,
+        "p": 11,
+        "gf": 80,
+        "gc": 95,
+        "df": -15,
+        "form": "EPGPP"
+      },
+      {
+        "pos": 8,
+        "team": "SIMUSETTI C. F. \"A\"",
+        "pts": 13,
+        "j": 18,
+        "g": 4,
+        "e": 1,
+        "p": 13,
+        "gf": 25,
+        "gc": 69,
+        "df": -44,
+        "form": "PPPGP"
+      },
+      {
+        "pos": 9,
+        "team": "LOMO BLANCO S.J.A., C.D. \"A\"",
+        "pts": 8,
+        "j": 18,
+        "g": 2,
+        "e": 2,
+        "p": 14,
+        "gf": 22,
+        "gc": 92,
+        "df": -70,
+        "form": "EPPPG"
+      },
+      {
+        "pos": 10,
+        "team": "MASPA TRAINING, C.D. \"B\"",
+        "pts": 2,
+        "j": 18,
+        "g": 0,
+        "e": 2,
+        "p": 16,
+        "gf": 18,
+        "gc": 130,
+        "df": -112,
+        "form": "EPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "18-01-2025",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 5,
+            "as": 3,
+            "date": "18-01-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 5,
+            "as": 1,
+            "date": "18-01-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 2,
+            "as": 4,
+            "date": "18-01-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 7,
+            "as": 2,
+            "date": "18-01-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 0,
+            "as": 10,
+            "date": "18-01-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "25-01-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 1,
+            "as": 2,
+            "date": "25-01-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 3,
+            "as": 1,
+            "date": "25-01-2025",
+            "time": "11:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 8,
+            "as": 0,
+            "date": "25-01-2025",
+            "time": "13:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 5,
+            "as": 9,
+            "date": "25-01-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 1,
+            "as": 9,
+            "date": "26-01-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "01-02-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 2,
+            "as": 2,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 4,
+            "as": 2,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 5,
+            "as": 3,
+            "date": "01-02-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 3,
+            "as": 0,
+            "date": "01-02-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 0,
+            "as": 5,
+            "date": "01-02-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "08-02-2025",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 3,
+            "as": 4,
+            "date": "08-02-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 0,
+            "as": 6,
+            "date": "08-02-2025",
+            "time": "12:45",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 15,
+            "as": 1,
+            "date": "08-02-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 1,
+            "as": 2,
+            "date": "09-02-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMÍA 1 F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 1,
+            "as": 6,
+            "date": "09-02-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "15-02-2025",
+        "matches": [
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 9,
+            "as": 1,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 8,
+            "as": 2,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 5,
+            "as": 0,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 1,
+            "as": 4,
+            "date": "15-02-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 5,
+            "as": 1,
+            "date": "15-02-2025",
+            "time": "13:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "23-02-2025",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 8,
+            "as": 0,
+            "date": "22-02-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 2,
+            "as": 3,
+            "date": "22-02-2025",
+            "time": "12:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 4,
+            "as": 5,
+            "date": "22-02-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 0,
+            "as": 8,
+            "date": "23-02-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 0,
+            "as": 5,
+            "date": "23-02-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "01-03-2025",
+        "matches": [
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 0,
+            "as": 7,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 7,
+            "as": 1,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 1,
+            "as": 6,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 5,
+            "as": 1,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 1,
+            "as": 4,
+            "date": "01-03-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "08-03-2025",
+        "matches": [
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 3,
+            "as": 2,
+            "date": "08-03-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 0,
+            "as": 1,
+            "date": "08-03-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 8,
+            "as": 0,
+            "date": "08-03-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 3,
+            "as": 3,
+            "date": "08-03-2025",
+            "time": "13:30",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 0,
+            "as": 0,
+            "date": "09-03-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "15-03-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 4,
+            "as": 1,
+            "date": "15-03-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 0,
+            "as": 0,
+            "date": "15-03-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 3,
+            "as": 2,
+            "date": "15-03-2025",
+            "time": "13:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 7,
+            "as": 5,
+            "date": "15-03-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 2",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 0,
+            "as": 5,
+            "date": "16-03-2025",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "22-03-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 0,
+            "as": 0,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 3,
+            "as": 0,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 1,
+            "as": 2,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 3,
+            "as": 7,
+            "date": "22-03-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 1,
+            "as": 6,
+            "date": "23-03-2025",
+            "time": "09:00",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "29-03-2025",
+        "matches": [
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 4,
+            "as": 4,
+            "date": "29-03-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 6,
+            "as": 0,
+            "date": "29-03-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 3,
+            "as": 0,
+            "date": "29-03-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 4,
+            "as": 3,
+            "date": "29-03-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 0,
+            "as": 13,
+            "date": "29-03-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "05-04-2025",
+        "matches": [
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 2,
+            "as": 1,
+            "date": "05-04-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 4,
+            "as": 5,
+            "date": "05-04-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 1,
+            "as": 6,
+            "date": "05-04-2025",
+            "time": "10:21",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 4,
+            "as": 3,
+            "date": "05-04-2025",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "TORRES, U.D. LAS",
+            "hs": 1,
+            "as": 12,
+            "date": "05-04-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "12-04-2025",
+        "matches": [
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 2,
+            "as": 1,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 7,
+            "as": 0,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 9,
+            "as": 2,
+            "date": "12-04-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 1,
+            "as": 5,
+            "date": "12-04-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 3,
+            "as": 8,
+            "date": "12-04-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "26-04-2025",
+        "matches": [
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 2,
+            "as": 5,
+            "date": "26-04-2025",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 0,
+            "as": 4,
+            "date": "26-04-2025",
+            "time": "12:00",
+            "venue": "COLEGIO CLARET F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 4,
+            "as": 3,
+            "date": "26-04-2025",
+            "time": "12:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 5,
+            "as": 5,
+            "date": "26-04-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 2,
+            "as": 2,
+            "date": "27-04-2025",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "03-05-2025",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 8,
+            "as": 1,
+            "date": "03-05-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 2,
+            "as": 0,
+            "date": "03-05-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 8,
+            "as": 2,
+            "date": "03-05-2025",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 0,
+            "as": 0,
+            "date": "03-05-2025",
+            "time": "12:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 3,
+            "as": 6,
+            "date": "03-05-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "10-05-2025",
+        "matches": [
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 5,
+            "as": 3,
+            "date": "09-05-2025",
+            "time": "19:43",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 3,
+            "as": 5,
+            "date": "10-05-2025",
+            "time": "09:00",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 1,
+            "as": 4,
+            "date": "10-05-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 9,
+            "as": 0,
+            "date": "10-05-2025",
+            "time": "12:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 0,
+            "as": 7,
+            "date": "11-05-2025",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "17-05-2025",
+        "matches": [
+          {
+            "home": "SIMUSETTI C. F. \"A\"",
+            "away": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "hs": 1,
+            "as": 0,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1 F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F. \"A\"",
+            "away": "CORAZON DE MARIA, C.D. \"A\"",
+            "hs": 5,
+            "as": 2,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA (F8-1)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F. \"A\"",
+            "away": "DORAMAS, CD \"B\"",
+            "hs": 4,
+            "as": 1,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "MANUEL BETANCOR F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "TORRES, U.D. LAS",
+            "hs": 2,
+            "as": 1,
+            "date": "17-05-2025",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTOS DE L.P., C.E.F.",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": 2,
+            "as": 0,
+            "date": "17-05-2025",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "24-05-2025",
+        "matches": [
+          {
+            "home": "LOMO BLANCO S.J.A., C.D. \"A\"",
+            "away": "PUERTOS DE L.P., C.E.F.",
+            "hs": 2,
+            "as": 1,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "JOSE RUANO TEJERA F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "CORAZON DE MARIA, C.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"A\"",
+            "hs": 3,
+            "as": 2,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "COLEGIO CLARET F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, CD \"B\"",
+            "away": "UNION VIERA, C.F. \"A\"",
+            "hs": 3,
+            "as": 3,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TORRES, U.D. LAS",
+            "away": "HEIDELBERG, C.F. \"A\"",
+            "hs": 6,
+            "as": 2,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "LAS TORRES F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": 1,
+            "as": 1,
+            "date": "24-05-2025",
+            "time": "10:30",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1706",
+    "competition_name": "Benjamin GC Segunda Fase A",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Segunda Fase A",
+    "group_id": "194191",
+    "group_name": "GRUPO 3",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "PALMAS, U.D. LAS",
+        "pts": 48,
+        "j": 16,
+        "g": 16,
+        "e": 0,
+        "p": 0,
+        "gf": 147,
+        "gc": 8,
+        "df": 139,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 2,
+        "team": "MASPA TRAINING, C.D. \"A\"",
+        "pts": 38,
+        "j": 16,
+        "g": 12,
+        "e": 2,
+        "p": 2,
+        "gf": 71,
+        "gc": 29,
+        "df": 42,
+        "form": "GGPGG"
+      },
+      {
+        "pos": 3,
+        "team": "BALOS, U.D. \"A\"",
+        "pts": 37,
+        "j": 16,
+        "g": 12,
+        "e": 1,
+        "p": 3,
+        "gf": 73,
+        "gc": 41,
+        "df": 32,
+        "form": "GGGGP"
+      },
+      {
+        "pos": 4,
+        "team": "DORAMAS, C.D. \"A\"",
+        "pts": 29,
+        "j": 16,
+        "g": 9,
+        "e": 2,
+        "p": 5,
+        "gf": 67,
+        "gc": 53,
+        "df": 14,
+        "form": "GPGPG"
+      },
+      {
+        "pos": 5,
+        "team": "LA UNION DE VECINDARIO \"A\"",
+        "pts": 22,
+        "j": 16,
+        "g": 7,
+        "e": 1,
+        "p": 8,
+        "gf": 32,
+        "gc": 66,
+        "df": -34,
+        "form": "PGGPG"
+      },
+      {
+        "pos": 6,
+        "team": "ATLETICO G.C., C.F. \"A\"",
+        "pts": 12,
+        "j": 16,
+        "g": 4,
+        "e": 0,
+        "p": 12,
+        "gf": 37,
+        "gc": 66,
+        "df": -29,
+        "form": "PPGPP"
+      },
+      {
+        "pos": 7,
+        "team": "PLAYA DEL HOMBRE, C.D.",
+        "pts": 12,
+        "j": 16,
+        "g": 4,
+        "e": 0,
+        "p": 12,
+        "gf": 29,
+        "gc": 71,
+        "df": -42,
+        "form": "GPPPP"
+      },
+      {
+        "pos": 8,
+        "team": "TELDE, U.D. \"B\"",
+        "pts": 9,
+        "j": 16,
+        "g": 3,
+        "e": 0,
+        "p": 13,
+        "gf": 25,
+        "gc": 71,
+        "df": -46,
+        "form": "PPPPP"
+      },
+      {
+        "pos": 9,
+        "team": "TABLERO, C.D. \"A\"",
+        "pts": 6,
+        "j": 16,
+        "g": 2,
+        "e": 0,
+        "p": 14,
+        "gf": 20,
+        "gc": 96,
+        "df": -76,
+        "form": "GPPGP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "18-01-2025",
+        "matches": [
+          {
+            "home": "ATLETICO G.C., C.F. \"A\"",
+            "away": "TABLERO, C.D. \"A\"",
+            "hs": 10,
+            "as": 3,
+            "date": "17-01-2025",
+            "time": "19:30",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D. \"A\"",
+            "away": "LA UNION DE VECINDARIO \"A\"",
+            "hs": 3,
+            "as": 1,
+            "date": "18-01-2025",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D. \"A\"",
+            "away": "PLAYA DEL HOMBRE, C.D.",
+            "hs": 6,
+            "as": 2,
+            "date": "18-01-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"B\"",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 2,
+            "as": 5,
+            "date": "19-01-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "24-01-2025",
+        "matches": [
+          {
+            "home": "PLAYA DEL HOMBRE, C.D.",
+            "away": "TELDE, U.D. \"B\"",
+            "hs": 0,
+            "as": 2,
+            "date": "24-01-2025",
+            "time": "17:30",
+            "venue": "MANUEL MARTIN \"NAÑO\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D. \"A\"",
+            "away": "BALOS, U.D. \"A\"",
+            "hs": 0,
+            "as": 5,
+            "date": "25-01-2025",
+            "time": "09:00",
+            "venue": "ELEUTERIO VALERON F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"A\"",
+            "away": "ATLETICO G.C., C.F. \"A\"",
+            "hs": 7,
+            "as": 0,
+            "date": "25-01-2025",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "DORAMAS, C.D. \"A\"",
+            "hs": 10,
+            "as": 1,
+            "date": "25-01-2025",
+            "time": "12:30",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "31-01-2025",
+        "matches": [
+          {
+            "home": "PLAYA DEL HOMBRE, C.D.",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 0,
+            "as": 2,
+            "date": "31-01-2025",
+            "time": "17:30",
+            "venue": "MANUEL MARTIN \"NAÑO\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D. \"A\"",
+            "away": "LA UNION DE VECINDARIO \"A\"",
+            "hs": 6,
+            "as": 2,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 3,
+            "as": 3,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"B\"",
+            "away": "ATLETICO G.C., C.F. \"A\"",
+            "hs": 3,
+            "as": 6,
+            "date": "01-02-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "08-02-2025",
+        "matches": [
+          {
+            "home": "ATLETICO G.C., C.F. \"A\"",
+            "away": "BALOS, U.D. \"A\"",
+            "hs": 1,
+            "as": 4,
+            "date": "07-02-2025",
+            "time": "19:30",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO \"A\"",
+            "away": "PLAYA DEL HOMBRE, C.D.",
+            "hs": 2,
+            "as": 2,
+            "date": "08-02-2025",
+            "time": "09:00",
+            "venue": "ANEXO VECINDARIO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D. \"A\"",
+            "away": "DORAMAS, C.D. \"A\"",
+            "hs": 1,
+            "as": 6,
+            "date": "08-02-2025",
+            "time": "09:00",
+            "venue": "ELEUTERIO VALERON F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "TELDE, U.D. \"B\"",
+            "hs": 0,
+            "as": 0,
+            "date": "08-02-2025",
+            "time": "12:30",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "15-02-2025",
+        "matches": [
+          {
+            "home": "PLAYA DEL HOMBRE, C.D.",
+            "away": "TABLERO, C.D. \"A\"",
+            "hs": 2,
+            "as": 1,
+            "date": "14-02-2025",
+            "time": "17:30",
+            "venue": "MANUEL MARTIN \"NAÑO\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"B\"",
+            "away": "BALOS, U.D. \"A\"",
+            "hs": 1,
+            "as": 4,
+            "date": "15-02-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 3,
+            "as": 3,
+            "date": "15-02-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "LA UNION DE VECINDARIO \"A\"",
+            "hs": 11,
+            "as": 0,
+            "date": "15-02-2025",
+            "time": "12:30",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "22-02-2025",
+        "matches": [
+          {
+            "home": "TABLERO, C.D. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 0,
+            "as": 6,
+            "date": "20-02-2025",
+            "time": "19:02",
+            "venue": "ELEUTERIO VALERON F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F. \"A\"",
+            "away": "DORAMAS, C.D. \"A\"",
+            "hs": 1,
+            "as": 2,
+            "date": "21-02-2025",
+            "time": "19:30",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO \"A\"",
+            "away": "TELDE, U.D. \"B\"",
+            "hs": 3,
+            "as": 2,
+            "date": "22-02-2025",
+            "time": "09:00",
+            "venue": "ANEXO VECINDARIO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"A\"",
+            "away": "PLAYA DEL HOMBRE, C.D.",
+            "hs": 7,
+            "as": 0,
+            "date": "22-02-2025",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "01-03-2025",
+        "matches": [
+          {
+            "home": "PLAYA DEL HOMBRE, C.D.",
+            "away": "ATLETICO G.C., C.F. \"A\"",
+            "hs": 3,
+            "as": 2,
+            "date": "28-02-2025",
+            "time": "17:30",
+            "venue": "MANUEL MARTIN \"NAÑO\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO \"A\"",
+            "away": "TABLERO, C.D. \"A\"",
+            "hs": 3,
+            "as": 2,
+            "date": "01-03-2025",
+            "time": "09:00",
+            "venue": "ANEXO VECINDARIO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D. \"A\"",
+            "away": "BALOS, U.D. \"A\"",
+            "hs": 2,
+            "as": 7,
+            "date": "01-03-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 9,
+            "as": 3,
+            "date": "01-03-2025",
+            "time": "12:30",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "08-03-2025",
+        "matches": [
+          {
+            "home": "ATLETICO G.C., C.F. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 0,
+            "as": 5,
+            "date": "07-03-2025",
+            "time": "19:30",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"A\"",
+            "away": "LA UNION DE VECINDARIO \"A\"",
+            "hs": 5,
+            "as": 0,
+            "date": "08-03-2025",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D. \"A\"",
+            "away": "PLAYA DEL HOMBRE, C.D.",
+            "hs": 3,
+            "as": 2,
+            "date": "08-03-2025",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"B\"",
+            "away": "TABLERO, C.D. \"A\"",
+            "hs": 4,
+            "as": 1,
+            "date": "08-03-2025",
+            "time": "13:30",
+            "venue": "PABLO HERNANDEZ F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "15-03-2025",
+        "matches": [
+          {
+            "home": "TABLERO, C.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 2,
+            "as": 8,
+            "date": "15-03-2025",
+            "time": "09:00",
+            "venue": "ELEUTERIO VALERON F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO \"A\"",
+            "away": "ATLETICO G.C., C.F. \"A\"",
+            "hs": 5,
+            "as": 4,
+            "date": "15-03-2025",
+            "time": "09:00",
+            "venue": "ANEXO VECINDARIO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D. \"A\"",
+            "away": "TELDE, U.D. \"B\"",
+            "hs": 5,
+            "as": 1,
+            "date": "15-03-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "BALOS, U.D. \"A\"",
+            "hs": 8,
+            "as": 1,
+            "date": "15-03-2025",
+            "time": "12:30",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "21-03-2025",
+        "matches": [
+          {
+            "home": "PLAYA DEL HOMBRE, C.D.",
+            "away": "DORAMAS, C.D. \"A\"",
+            "hs": 4,
+            "as": 0,
+            "date": "21-03-2025",
+            "time": "17:30",
+            "venue": "MANUEL MARTIN \"NAÑO\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO \"A\"",
+            "away": "BALOS, U.D. \"A\"",
+            "hs": 2,
+            "as": 6,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "ANEXO VECINDARIO F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D. \"A\"",
+            "away": "ATLETICO G.C., C.F. \"A\"",
+            "hs": 2,
+            "as": 4,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "ELEUTERIO VALERON F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"A\"",
+            "away": "TELDE, U.D. \"B\"",
+            "hs": 4,
+            "as": 0,
+            "date": "22-03-2025",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "29-03-2025",
+        "matches": [
+          {
+            "home": "BALOS, U.D. \"A\"",
+            "away": "TABLERO, C.D. \"A\"",
+            "hs": 8,
+            "as": 0,
+            "date": "26-03-2025",
+            "time": "18:42",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 0,
+            "as": 5,
+            "date": "27-03-2025",
+            "time": "19:18",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"B\"",
+            "away": "PLAYA DEL HOMBRE, C.D.",
+            "hs": 3,
+            "as": 1,
+            "date": "29-03-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 0,
+            "as": 9,
+            "date": "29-03-2025",
+            "time": "12:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "05-04-2025",
+        "matches": [
+          {
+            "home": "ATLETICO G.C., C.F. \"A\"",
+            "away": "TELDE, U.D. \"B\"",
+            "hs": 0,
+            "as": 2,
+            "date": "04-04-2025",
+            "time": "19:30",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "PLAYA DEL HOMBRE, C.D.",
+            "hs": 5,
+            "as": 0,
+            "date": "04-04-2025",
+            "time": "20:26",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO \"A\"",
+            "away": "DORAMAS, C.D. \"A\"",
+            "hs": 2,
+            "as": 2,
+            "date": "05-04-2025",
+            "time": "09:00",
+            "venue": "ANEXO VECINDARIO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"A\"",
+            "away": "BALOS, U.D. \"A\"",
+            "hs": 3,
+            "as": 1,
+            "date": "05-04-2025",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "12-04-2025",
+        "matches": [
+          {
+            "home": "PLAYA DEL HOMBRE, C.D.",
+            "away": "LA UNION DE VECINDARIO \"A\"",
+            "hs": 3,
+            "as": 0,
+            "date": "11-04-2025",
+            "time": "17:30",
+            "venue": "MANUEL MARTIN \"NAÑO\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"B\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 0,
+            "as": 7,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D. \"A\"",
+            "away": "ATLETICO G.C., C.F. \"A\"",
+            "hs": 5,
+            "as": 0,
+            "date": "12-04-2025",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D. \"A\"",
+            "away": "TABLERO, C.D. \"A\"",
+            "hs": 10,
+            "as": 1,
+            "date": "12-04-2025",
+            "time": "12:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "26-04-2025",
+        "matches": [
+          {
+            "home": "MASPA TRAINING, C.D. \"A\"",
+            "away": "DORAMAS, C.D. \"A\"",
+            "hs": 2,
+            "as": 1,
+            "date": "23-04-2025",
+            "time": "20:21",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 0,
+            "as": 9,
+            "date": "26-04-2025",
+            "time": "09:00",
+            "venue": "ANEXO VECINDARIO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D. \"A\"",
+            "away": "PLAYA DEL HOMBRE, C.D.",
+            "hs": 1,
+            "as": 0,
+            "date": "26-04-2025",
+            "time": "09:00",
+            "venue": "ELEUTERIO VALERON F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D. \"A\"",
+            "away": "TELDE, U.D. \"B\"",
+            "hs": 8,
+            "as": 0,
+            "date": "26-04-2025",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "03-05-2025",
+        "matches": [
+          {
+            "home": "PLAYA DEL HOMBRE, C.D.",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 1,
+            "as": 3,
+            "date": "02-05-2025",
+            "time": "17:30",
+            "venue": "MANUEL MARTIN \"NAÑO\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D. \"A\"",
+            "away": "ATLETICO G.C., C.F. \"A\"",
+            "hs": 5,
+            "as": 1,
+            "date": "03-05-2025",
+            "time": "10:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"B\"",
+            "away": "LA UNION DE VECINDARIO \"A\"",
+            "hs": 1,
+            "as": 4,
+            "date": "03-05-2025",
+            "time": "12:00",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "TABLERO, C.D. \"A\"",
+            "hs": 2,
+            "as": 0,
+            "date": "03-05-2025",
+            "time": "12:30",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "10-05-2025",
+        "matches": [
+          {
+            "home": "ATLETICO G.C., C.F. \"A\"",
+            "away": "PLAYA DEL HOMBRE, C.D.",
+            "hs": 5,
+            "as": 2,
+            "date": "09-05-2025",
+            "time": "19:30",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 2,
+            "as": 5,
+            "date": "10-05-2025",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D. \"A\"",
+            "away": "DORAMAS, C.D. \"A\"",
+            "hs": 5,
+            "as": 0,
+            "date": "10-05-2025",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D. \"A\"",
+            "away": "LA UNION DE VECINDARIO \"A\"",
+            "hs": 1,
+            "as": 2,
+            "date": "10-05-2025",
+            "time": "10:30",
+            "venue": "ELEUTERIO VALERON F8 (2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "17-05-2025",
+        "matches": [
+          {
+            "home": "PLAYA DEL HOMBRE, C.D.",
+            "away": "BALOS, U.D. \"A\"",
+            "hs": 3,
+            "as": 8,
+            "date": "16-05-2025",
+            "time": "17:30",
+            "venue": "MANUEL MARTIN \"NAÑO\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D. \"A\"",
+            "away": "TELDE, U.D. \"B\"",
+            "hs": 5,
+            "as": 2,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "ELEUTERIO VALERON F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO \"A\"",
+            "away": "MASPA TRAINING, C.D. \"A\"",
+            "hs": 1,
+            "as": 7,
+            "date": "17-05-2025",
+            "time": "09:00",
+            "venue": "ANEXO VECINDARIO F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "ATLETICO G.C., C.F. \"A\"",
+            "hs": 7,
+            "as": 1,
+            "date": "17-05-2025",
+            "time": "12:30",
+            "venue": "ANEXO GRAN CANARIA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "24-05-2025",
+        "matches": [
+          {
+            "home": "ATLETICO G.C., C.F. \"A\"",
+            "away": "LA UNION DE VECINDARIO \"A\"",
+            "hs": 2,
+            "as": 4,
+            "date": "21-05-2025",
+            "time": "20:02",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"B\"",
+            "away": "DORAMAS, C.D. \"A\"",
+            "hs": 1,
+            "as": 5,
+            "date": "22-05-2025",
+            "time": "20:00",
+            "venue": "PABLO HERNANDEZ F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"A\"",
+            "away": "TABLERO, C.D. \"A\"",
+            "hs": 4,
+            "as": 0,
+            "date": "24-05-2025",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D. \"A\"",
+            "away": "PALMAS, U.D. LAS",
+            "hs": 0,
+            "as": 12,
+            "date": "24-05-2025",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -3357,7 +3357,7 @@
   },
   "2025-2026": {
     "season_code": "21",
-    "total": 102,
+    "total": 129,
     "relevant": [
       {
         "id": "54950233",
@@ -3366,6 +3366,10 @@
       {
         "id": "54476353",
         "name": "TERCERA DIVISIÓN DE FÚTBOL SALA"
+      },
+      {
+        "id": "54964921",
+        "name": "FASE DE ASCENSO A TERCERA FEDERACIÓN"
       },
       {
         "id": "54422846",
@@ -3400,12 +3404,28 @@
         "name": "COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
       },
       {
+        "id": "54961463",
+        "name": "COPA LANZAROTE FUTBOL SALA MASCULINA FASE FINAL"
+      },
+      {
         "id": "54422828",
         "name": "COPA FEMENINA ISLA DE GRAN CANARIA"
       },
       {
+        "id": "54967899",
+        "name": "COPA FEMENINA ISLA DE GRAN CANARIA. 2ª FASE"
+      },
+      {
         "id": "54422924",
         "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
+      },
+      {
+        "id": "54965891",
+        "name": "FUTUREFEM LAS PALMAS FINAL"
+      },
+      {
+        "id": "54970500",
+        "name": "COPA ISLA DE GRAN CANARIA JUVENIL FUTBOL SALA. 2ª FASE"
       },
       {
         "id": "54422834",
@@ -3413,7 +3433,7 @@
       },
       {
         "id": "54906068",
-        "name": "COPA FIFLP JUVENIL FÚTBOL SALA DE GRAN CANARIA"
+        "name": "COPA FIFLP JUVENIL FÚTBOL SALA DE GRAN CANARIA. 2ª FASE"
       },
       {
         "id": "54422910",
@@ -3436,6 +3456,10 @@
         "name": "COPA CADETE INSULAR GRAN CANARIA"
       },
       {
+        "id": "54967807",
+        "name": "COPA CADETE INSULAR GRAN CANARIA ELIMINATORIAS"
+      },
+      {
         "id": "54422919",
         "name": "COPA CABILDO DE LANZAROTE CADETE INSULAR"
       },
@@ -3456,6 +3480,22 @@
         "name": "COPA CADETE FUTBOL SALA LANZAROTE"
       },
       {
+        "id": "54965831",
+        "name": "COPA CADETE FÚTBOL SALA LANZAROTE. FASE FINAL"
+      },
+      {
+        "id": "54422929",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA CADETE"
+      },
+      {
+        "id": "54965006",
+        "name": "INFANTIL PREFERENTE DE GRAN CANARIA FASE FINAL"
+      },
+      {
+        "id": "54965253",
+        "name": "COPA CAMPEONES INFANTIL"
+      },
+      {
         "id": "54957993",
         "name": "INFANTIL FUTBOL SALA FASE FINAL"
       },
@@ -3464,12 +3504,40 @@
         "name": "COPA INFANTIL FUTBOL SALA LANZAROTE"
       },
       {
+        "id": "54965849",
+        "name": "COPA INFANTIL FUTBOL SALA LANZAROTE. FASE FINAL"
+      },
+      {
+        "id": "54965441",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA INFANTIL"
+      },
+      {
+        "id": "54422830",
+        "name": "COPA ISLA DE GRAN CANARIA INFANTIL SALA"
+      },
+      {
+        "id": "54965212",
+        "name": "COPA CAMPEONES ALEVÍN"
+      },
+      {
         "id": "54958023",
         "name": "ALEVIN FUTBOL SALA FASE FINAL"
       },
       {
         "id": "54896919",
         "name": "COPA ALEVIN FUTBOL SALA LANZAROTE"
+      },
+      {
+        "id": "54965862",
+        "name": "COPA ALEVIN FUTBOL SALA LANZAROTE. FASE FINAL"
+      },
+      {
+        "id": "54422931",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA ALEVIN"
+      },
+      {
+        "id": "54422831",
+        "name": "COPA ISLA DE GRAN CANARIA ALEVIN SALA"
       },
       {
         "id": "54422885",
@@ -3486,6 +3554,10 @@
       {
         "id": "54422955",
         "name": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA C"
+      },
+      {
+        "id": "54968356",
+        "name": "COPA CAMPEONES BENJAMÍN"
       },
       {
         "id": "54422884",
@@ -3520,8 +3592,24 @@
         "name": "COPA BENJAMIN FUTBOL SALA LANZAROTE"
       },
       {
+        "id": "54965876",
+        "name": "COPA BENJAMIN FUTBOL SALA LANZAROTE. FASE FINAL"
+      },
+      {
+        "id": "54422932",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA BENJAMIN"
+      },
+      {
+        "id": "54422832",
+        "name": "COPA ISLA DE GRAN CANARIA BENJAMIN SALA"
+      },
+      {
         "id": "54422888",
         "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "54969313",
+        "name": "COPA CAMPEONES PREBENJAMIN"
       },
       {
         "id": "54422959",
@@ -3530,6 +3618,10 @@
       {
         "id": "54422889",
         "name": "LIGA PREBENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "54969359",
+        "name": "TORNEO CLAUSURA TEMPORADA PREBENJAMIN"
       },
       {
         "id": "54422907",
@@ -3546,12 +3638,20 @@
         "name": "TERCERA DIVISIÓN DE FÚTBOL SALA"
       },
       {
+        "id": "54964921",
+        "name": "FASE DE ASCENSO A TERCERA FEDERACIÓN"
+      },
+      {
         "id": "54422848",
         "name": "LIGA REGIONAL PREFERENTE"
       },
       {
         "id": "54422846",
         "name": "COPA JOSÉ ANTONIO RUIZ CABALLERO"
+      },
+      {
+        "id": "54964931",
+        "name": "FASE DE ASCENSO A REGIONAL PREFERENTE - GRAN CANARIA"
       },
       {
         "id": "54422851",
@@ -3567,7 +3667,7 @@
       },
       {
         "id": "54422856",
-        "name": "ELIMINATORIAS DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE/FUERTEVENTURA)"
+        "name": "FASE DE ASCENSO A REGIONAL PREFERENTE (LANZAROTE/FUERTEVENTURA)"
       },
       {
         "id": "54549246",
@@ -3615,7 +3715,7 @@
       },
       {
         "id": "54422961",
-        "name": "PLAY OFF ASCENSO PREFERENTE SALA"
+        "name": "FASE DE ASCENSO PREFERENTE SALA"
       },
       {
         "id": "54422827",
@@ -3634,20 +3734,36 @@
         "name": "COPA SENIOR FUTBOL SALA LANZAROTE-FUERTEVENTURA"
       },
       {
-        "id": "54766356",
-        "name": "LIGA AUTONOMICA FEMENINA FUTBOL SALA"
+        "id": "54961463",
+        "name": "COPA LANZAROTE FUTBOL SALA MASCULINA FASE FINAL"
       },
       {
         "id": "54422828",
         "name": "COPA FEMENINA ISLA DE GRAN CANARIA"
       },
       {
+        "id": "54967899",
+        "name": "COPA FEMENINA ISLA DE GRAN CANARIA. 2ª FASE"
+      },
+      {
+        "id": "54766356",
+        "name": "LIGA AUTONOMICA FEMENINA FUTBOL SALA"
+      },
+      {
         "id": "54422863",
         "name": "LIGA JUVENIL INTERINSULAR"
       },
       {
+        "id": "54422923",
+        "name": "FASE DE ASCENSO A DIVISION DE HONOR JUVENIL"
+      },
+      {
         "id": "54422864",
         "name": "LIGA JUVENIL PREFERENTE DE GRAN CANARIA"
+      },
+      {
+        "id": "54422844",
+        "name": "-   FASE DE ASCENSO A JUVENIL INTERINSULAR"
       },
       {
         "id": "54422865",
@@ -3662,12 +3778,8 @@
         "name": "COPA JUVENIL PREFERENTE FUERTEVENTURA"
       },
       {
-        "id": "54422844",
-        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR"
-      },
-      {
         "id": "54422937",
-        "name": "ELIMINATORIAS DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+        "name": "FASE DE ASCENSO A JUVENIL INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
       },
       {
         "id": "54422867",
@@ -3683,11 +3795,19 @@
       },
       {
         "id": "54422824",
-        "name": "FASE ASCENSO A PRIMERA JUVENIL GRAN CANARIA"
+        "name": "FASE DE ASCENSO A PRIMERA JUVENIL GRAN CANARIA"
       },
       {
         "id": "54660927",
         "name": "FUTUREFEM LAS PALMAS"
+      },
+      {
+        "id": "54965891",
+        "name": "FUTUREFEM LAS PALMAS FINAL"
+      },
+      {
+        "id": "54970500",
+        "name": "COPA ISLA DE GRAN CANARIA JUVENIL FUTBOL SALA. 2ª FASE"
       },
       {
         "id": "54422895",
@@ -3699,7 +3819,7 @@
       },
       {
         "id": "54422960",
-        "name": "PLAY OFF ASCENSO JUVENIL TERRITORIAL SALA"
+        "name": "FASE DE ASCENSO JUVENIL TERRITORIAL SALA"
       },
       {
         "id": "54422834",
@@ -3707,7 +3827,7 @@
       },
       {
         "id": "54906068",
-        "name": "COPA FIFLP JUVENIL FÚTBOL SALA DE GRAN CANARIA"
+        "name": "COPA FIFLP JUVENIL FÚTBOL SALA DE GRAN CANARIA. 2ª FASE"
       },
       {
         "id": "54422910",
@@ -3722,6 +3842,10 @@
         "name": "LIGA CADETE INTERINSULAR"
       },
       {
+        "id": "54422838",
+        "name": "FASE DE ASCENSO A CADETE AUTONÓMICO"
+      },
+      {
         "id": "54545623",
         "name": "CADETE PREFERENTE GRAN CANARIA"
       },
@@ -3731,7 +3855,7 @@
       },
       {
         "id": "54422935",
-        "name": "ELIMINATORIAS DE ASCENSO A CADETE INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
+        "name": "FASE DE ASCENSO A CADETE INTERINSULAR (LANZAROTE-FUERTEVENTURA)"
       },
       {
         "id": "54523543",
@@ -3740,6 +3864,10 @@
       {
         "id": "54774501",
         "name": "FINAL COPA CABILDO DE LANZAROTE CADETE PREFERENTE"
+      },
+      {
+        "id": "54422925",
+        "name": "FASE DE ASCENSO A CADETE INTERINSULAR"
       },
       {
         "id": "54422872",
@@ -3755,11 +3883,15 @@
       },
       {
         "id": "54957478",
-        "name": "ELIMINATORIAS DE ASCENSO A CADETE PREFERENTE"
+        "name": "FASE DE ASCENSO A CADETE PREFERENTE"
       },
       {
         "id": "54948182",
         "name": "COPA CADETE INSULAR GRAN CANARIA"
+      },
+      {
+        "id": "54967807",
+        "name": "COPA CADETE INSULAR GRAN CANARIA ELIMINATORIAS"
       },
       {
         "id": "54422919",
@@ -3786,6 +3918,14 @@
         "name": "COPA CADETE FUTBOL SALA LANZAROTE"
       },
       {
+        "id": "54965831",
+        "name": "COPA CADETE FÚTBOL SALA LANZAROTE. FASE FINAL"
+      },
+      {
+        "id": "54422929",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA CADETE"
+      },
+      {
         "id": "54422875",
         "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA"
       },
@@ -3798,8 +3938,16 @@
         "name": "LIGA INFANTIL PREFERENTE DE GRAN CANARIA FASE PLATA"
       },
       {
+        "id": "54965006",
+        "name": "INFANTIL PREFERENTE DE GRAN CANARIA FASE FINAL"
+      },
+      {
         "id": "54422877",
         "name": "LIGA PRIMERA INFANTIL DE GRAN CANARIA"
+      },
+      {
+        "id": "54965253",
+        "name": "COPA CAMPEONES INFANTIL"
       },
       {
         "id": "54422876",
@@ -3834,6 +3982,18 @@
         "name": "COPA INFANTIL FUTBOL SALA LANZAROTE"
       },
       {
+        "id": "54965849",
+        "name": "COPA INFANTIL FUTBOL SALA LANZAROTE. FASE FINAL"
+      },
+      {
+        "id": "54965441",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA INFANTIL"
+      },
+      {
+        "id": "54422830",
+        "name": "COPA ISLA DE GRAN CANARIA INFANTIL SALA"
+      },
+      {
         "id": "54422881",
         "name": "LIGA ALEVIN GRAN CANARIA FASE PREVIA"
       },
@@ -3848,6 +4008,10 @@
       {
         "id": "54422941",
         "name": "LIGA ALEVIN F7 GRAN CANARIA FASE LIGA C"
+      },
+      {
+        "id": "54965212",
+        "name": "COPA CAMPEONES ALEVÍN"
       },
       {
         "id": "54422880",
@@ -3882,6 +4046,18 @@
         "name": "COPA ALEVIN FUTBOL SALA LANZAROTE"
       },
       {
+        "id": "54965862",
+        "name": "COPA ALEVIN FUTBOL SALA LANZAROTE. FASE FINAL"
+      },
+      {
+        "id": "54422931",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA ALEVIN"
+      },
+      {
+        "id": "54422831",
+        "name": "COPA ISLA DE GRAN CANARIA ALEVIN SALA"
+      },
+      {
         "id": "54422885",
         "name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA"
       },
@@ -3896,6 +4072,10 @@
       {
         "id": "54422955",
         "name": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA C"
+      },
+      {
+        "id": "54968356",
+        "name": "COPA CAMPEONES BENJAMÍN"
       },
       {
         "id": "54422884",
@@ -3930,8 +4110,24 @@
         "name": "COPA BENJAMIN FUTBOL SALA LANZAROTE"
       },
       {
+        "id": "54965876",
+        "name": "COPA BENJAMIN FUTBOL SALA LANZAROTE. FASE FINAL"
+      },
+      {
+        "id": "54422932",
+        "name": "CAMPEONATO DE CANARIAS DE FÚTBOL SALA BENJAMIN"
+      },
+      {
+        "id": "54422832",
+        "name": "COPA ISLA DE GRAN CANARIA BENJAMIN SALA"
+      },
+      {
         "id": "54422888",
         "name": "LIGA PREBENJAMIN DE GRAN CANARIA"
+      },
+      {
+        "id": "54969313",
+        "name": "COPA CAMPEONES PREBENJAMIN"
       },
       {
         "id": "54422959",
@@ -3940,6 +4136,10 @@
       {
         "id": "54422889",
         "name": "LIGA PREBENJAMIN FUERTEVENTURA"
+      },
+      {
+        "id": "54969359",
+        "name": "TORNEO CLAUSURA TEMPORADA PREBENJAMIN"
       },
       {
         "id": "54422907",

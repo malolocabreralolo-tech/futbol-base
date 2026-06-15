@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, getSeasonError, ensureSeasonData } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
@@ -173,7 +173,11 @@ export function buildGroupCard(g, forceOpen) {
  * (Cuartos / Semis / Final), each match showing home/away with score and the
  * winning team in green. No points / J / G / E / P columns. */
 function buildKnockoutBracket(g) {
-  const rounds = g.jornadas ? Object.keys(g.jornadas) : [];
+  // Current-season cups don't carry jornadas inline — their rounds live in
+  // HISTORY keyed by code (like every current-season group); historical cups
+  // carry them in g.jornadas (per-season file). See knockoutRoundsSource.
+  const jornadas = knockoutRoundsSource(g, isHistorical(), typeof HISTORY !== 'undefined' ? HISTORY : null);
+  const rounds = Object.keys(jornadas);
   if (!rounds.length) {
     return '<div class="modal-h2h-empty" style="padding:16px;text-align:center;opacity:.7">Sin partidos registrados</div>';
   }
@@ -196,7 +200,7 @@ function buildKnockoutBracket(g) {
 
   let html = '<div class="bracket">';
   rounds.forEach((rkey, idx) => {
-    const matches = g.jornadas[rkey] || [];
+    const matches = jornadas[rkey] || [];
     const label = roundLabel(rkey, matches.length, idx, rounds.length);
     const dateMatch = rkey.match(/(\d{2}-\d{2}-\d{4})/);
     const date = dateMatch ? dateMatch[1] : '';

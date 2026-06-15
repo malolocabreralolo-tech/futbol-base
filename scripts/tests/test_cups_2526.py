@@ -66,3 +66,29 @@ class TestTaggedWinner:
         assert tagged_winner('UNION VIERA', 'TAMARACEITE (Clasificado)') == 'away'
         assert tagged_winner('PALMAS (Ganador)', 'ACODETTI') == 'home'
         assert tagged_winner('FIRGAS', 'SAN ANTONIO') is None
+
+
+class TestCorrectedScores:
+    """El tag es la señal autoritativa de quién ganó. Si el marcador (no empate)
+    contradice al equipo que avanzó, el scraper invirtió home/away en esa fila
+    → se orienta el resultado al ganador real (mantiene las magnitudes)."""
+
+    def test_swaps_when_score_contradicts_tag(self):
+        from import_fiflp_cups_2526 import corrected_scores
+        # CLARAVISION (tag) 2-4 SAN PEDRO -> 4-2 (gana CLARAVISION, el que avanzó)
+        assert corrected_scores('(Clasificado) CLARAVISION', 'SAN PEDRO', 2, 4) == (4, 2)
+        # FIRGAS 5-3 SAN ANTONIO (tag) -> 3-5 (gana SAN ANTONIO)
+        assert corrected_scores('FIRGAS', 'SAN ANTONIO (Clasificado)', 5, 3) == (3, 5)
+
+    def test_keeps_when_score_agrees_with_tag(self):
+        from import_fiflp_cups_2526 import corrected_scores
+        assert corrected_scores('TORRES (Ganador)', 'CLARAVISION', 4, 1) == (4, 1)
+
+    def test_leaves_draw_untouched(self):
+        from import_fiflp_cups_2526 import corrected_scores
+        assert corrected_scores('VECINDARIO', 'TELDE (Clasificado)', 1, 1) == (1, 1)
+
+    def test_no_tag_or_no_score_no_change(self):
+        from import_fiflp_cups_2526 import corrected_scores
+        assert corrected_scores('A', 'B', 3, 1) == (3, 1)
+        assert corrected_scores('A (Ganador)', 'B', None, None) == (None, None)

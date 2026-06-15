@@ -146,6 +146,17 @@ export function validJorGroup(current, groups) {
   return groups.length ? groups[0].id : '';
 }
 
+/* Rounds source for a knockout (cup) group's bracket. Historical cups carry
+ * their rounds inline (g.jornadas, from the per-season file); current-season
+ * cups live in HISTORY keyed by code, like every current-season group. The
+ * `historical` guard avoids the cross-season code collision (BCA1 exists in
+ * both 2024-25 and 2025-26). Returns the rounds object (or {}). */
+export function knockoutRoundsSource(g, historical, history) {
+  if (g && g.jornadas && Object.keys(g.jornadas).length) return g.jornadas;
+  if (!historical && history && g && history[g.id]) return history[g.id];
+  return {};
+}
+
 /* Team badge — real shield from SHIELDS or fallback to initials */
 export function teamBadgeFallback(name) {
   const words = name.replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]/g, '').trim().split(/\s+/);

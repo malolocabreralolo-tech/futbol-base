@@ -55,3 +55,39 @@ test('renderJornadaContent emite empty-state si el grupo no existe (no return mu
     'renderJornadaContent debe pintar empty-state cuando el grupo no se encuentra',
   );
 });
+
+/* ─── Cups 2025-26: bracket de knockout en temporada actual ───────────────
+ * buildKnockoutBracket leía g.jornadas, ausente en grupos de temporada actual
+ * (sus rondas viven en HISTORY[code], como toda la temporada actual). Las cups
+ * 2025-26 (BCA1/BCB1/BCC1/PCC1) salían "Sin partidos registrados". Fuente de
+ * rondas extraída a knockoutRoundsSource (puro). */
+
+test('knockoutRoundsSource: histórica usa g.jornadas inline (per-season file)', async () => {
+  const { knockoutRoundsSource } = await import('../../src/state.js');
+  const g = { id: 'BCA1', jornadas: { Final: [['', 'A', 'B', 1, 0, '']] } };
+  assert.deepEqual(knockoutRoundsSource(g, true, { BCA1: { X: [] } }), g.jornadas);
+});
+
+test('knockoutRoundsSource: actual cae a HISTORY[code] (cup sin jornadas inline)', async () => {
+  const { knockoutRoundsSource } = await import('../../src/state.js');
+  const g = { id: 'BCA1', standings: [] };
+  const HIST = { BCA1: { '06-06-2026 ( Final )': [['', 'ACODETTI', 'PALMAS', 0, 1, '']] } };
+  assert.deepEqual(knockoutRoundsSource(g, false, HIST), HIST.BCA1);
+});
+
+test('knockoutRoundsSource: histórica sin jornadas NO usa HISTORY (colisión de código)', async () => {
+  const { knockoutRoundsSource } = await import('../../src/state.js');
+  assert.deepEqual(knockoutRoundsSource({ id: 'BCA1' }, true, { BCA1: { X: [] } }), {});
+});
+
+test('knockoutRoundsSource: {} si no hay fuente', async () => {
+  const { knockoutRoundsSource } = await import('../../src/state.js');
+  assert.deepEqual(knockoutRoundsSource({ id: 'Z' }, false, null), {});
+});
+
+test('buildKnockoutBracket usa knockoutRoundsSource (cups actuales renderizan)', () => {
+  const s = src('render.js');
+  assert.match(s, /knockoutRoundsSource\(/, 'buildKnockoutBracket debe usar knockoutRoundsSource');
+  assert.doesNotMatch(s, /const rounds = g\.jornadas \? Object\.keys/,
+    'ya no debe leer g.jornadas directo para las rondas');
+});

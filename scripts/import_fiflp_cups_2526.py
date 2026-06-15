@@ -54,6 +54,21 @@ def tagged_winner(home, away):
     return None
 
 
+def corrected_scores(home, away, hs, as_):
+    """The (Clasificado)/(Ganador) tag is authoritative for who advanced. If both
+    scores are present, it's not a draw, and the score-winner is NOT the tagged
+    side, the scraper inverted home/away on that row — return the scores oriented
+    to the real winner (magnitudes kept; the tag gives the winner, not the exact
+    score). Takes the RAW (still-tagged) names."""
+    if hs is None or as_ is None or hs == as_:
+        return hs, as_
+    tw = tagged_winner(home, away)
+    if tw is None:
+        return hs, as_
+    score_w = "home" if hs > as_ else "away"
+    return (as_, hs) if score_w != tw else (hs, as_)
+
+
 def _norm_jornada(num):
     """Knockout jornada label as stored in 2024-25 cups (e.g.
     '06-06-2026 ( Final )'). The scraper already produced it as `num`."""
@@ -71,10 +86,11 @@ def import_group(conn, g, season_id):
     matches = []
     for jor in g["jornadas"]:
         for m in jor["matches"]:
-            home, away = clean_team_name(m.get("home")), clean_team_name(m.get("away"))
+            raw_h, raw_a = m.get("home"), m.get("away")
+            home, away = clean_team_name(raw_h), clean_team_name(raw_a)
             if not home or not away or home == away:
                 continue
-            hs, as_ = m.get("hs"), m.get("as")
+            hs, as_ = corrected_scores(raw_h, raw_a, m.get("hs"), m.get("as"))
             matches.append((_norm_jornada(jor["num"]), home, away, hs, as_))
     if not matches:
         print(f"  [{code}] {grp_name}: scrape vacío — SKIP")

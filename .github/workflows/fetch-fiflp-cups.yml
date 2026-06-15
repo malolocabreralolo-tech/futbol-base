@@ -1,0 +1,42 @@
+name: Scrape FIFLP cups 2025-26 (probe)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+      - name: Scrape Copa de Campeones 2025-26 (season 21)
+        run: python3 scripts/fetch_fiflp_cups_2526.py
+        timeout-minutes: 20
+      # Sonda: solo commitea el raw JSON; NO toca la DB ni publica. El import
+      # se hace luego en local contra estos datos reales.
+      - name: Commit raw JSON
+        run: |
+          git config user.name  "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add scripts/fiflp_cups_2526_raw.json
+          if git diff --cached --quiet; then
+            echo "Sin datos (cups vacías / no jugadas aún)."
+          else
+            git stash
+            git pull --rebase origin main
+            git stash pop || true
+            git add scripts/fiflp_cups_2526_raw.json
+            git commit -m "scrape: FIFLP Copa de Campeones 2025-26 raw (sonda)"
+            git push
+          fi

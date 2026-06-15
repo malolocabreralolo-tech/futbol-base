@@ -110,6 +110,14 @@ def parse_standings(page):
     return results
 
 
+# ntype(id, n, i, oldClass) sets the element's class to fa-D[(i*10)+n]; the
+# 4th arg is the DECOY old class. Same lookup table as the actas parser.
+_NTYPE_D = [2, 5, 9, 4, 1, 0, 8, 6, 3, 7,
+            1, 3, 5, 7, 9, 0, 2, 4, 6, 8,
+            0, 2, 4, 6, 8, 1, 3, 5, 7, 9,
+            7, 5, 2, 0, 9, 6, 3, 8, 4, 1]
+
+
 def _extract_score_from_html(score_html):
     """Parse home/away scores from FIFLP's anti-scrape obfuscated score cell.
 
@@ -131,9 +139,19 @@ def _extract_score_from_html(score_html):
     )
     out = []
     for s in spans:
+        # ntype calls are the authoritative obfuscated digits — decode every one
+        # in the span (DOM order) for multi-digit scores, via the D table (NOT
+        # the decoy 4th arg). Check first; league pages without ntype fall through.
+        nts = re.findall(r'ntype\("[^"]*",\s*(\d+),\s*(\d+)\s*,', s)
+        if nts:
+            digits = "".join(
+                str(_NTYPE_D[(int(i) * 10) + int(n)])
+                for n, i in nts
+                if 0 <= (int(i) * 10) + int(n) < len(_NTYPE_D)
+            )
+            out.append(int(digits) if digits else None)
+            continue
         m = re.search(r'<span\s+style="display:\s*none;?"\s*>(\d+)</span>', s)
-        if m: out.append(int(m.group(1))); continue
-        m = re.search(r'ntype\([^)]*?,"fa-(\d+)"\)', s)
         if m: out.append(int(m.group(1))); continue
         m = re.search(r'<i class="fa-solid">\s*(\d+)\s*</i>', s)
         if m: out.append(int(m.group(1))); continue

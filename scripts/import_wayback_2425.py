@@ -10,7 +10,7 @@ import json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from db import (get_connection, init_db, get_or_create_season,
                 get_or_create_category, get_or_create_team,
-                get_or_create_group, PROJECT_ROOT, DB_PATH)
+                get_or_create_group, existing_played_count, PROJECT_ROOT, DB_PATH)
 
 RAW_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wayback_2425_raw.json")
 
@@ -119,6 +119,21 @@ def import_group(conn, g, season_id):
     )
     if n_scraped == 0:
         print(f"  [{code}] {grp_name} ({phase}): scrape vacío (0 partidos) — SKIP, se conserva lo existente")
+        return
+
+    # Guard de NO-REGRESIÓN (idéntico al de import_fiflp_2425): este importador
+    # corre DESPUÉS de FIFLP en el pipeline; sin guard re-pondría P7/P13/P14/PGC*
+    # a sus counts escasos de Wayback y desharía los rellenos FIFLP (lectura
+    # robusta H2). Solo sobrescribir cuando Wayback trae ESTRICTAMENTE más
+    # jugados que lo ya almacenado para este (temporada, code).
+    new_played = sum(
+        1 for j in g.get("jornadas", []) for m in j["matches"]
+        if m.get("hs") is not None and m.get("as_") is not None
+    )
+    prev_played = existing_played_count(conn, season_id, code)
+    if prev_played >= new_played and prev_played > 0:
+        print(f"  [{code}] {grp_name} ({phase}): scrape {new_played}j <= existente "
+              f"{prev_played}j — SKIP (conservar dato existente)")
         return
 
     group_id = get_or_create_group(

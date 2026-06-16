@@ -353,8 +353,17 @@ def test_import_group_rolls_back_on_midway_failure(tmp_path, monkeypatch, mod, g
         raise RuntimeError("simulated crash mid-import")
     monkeypatch.setattr(mod, "fmt_date", boom)
 
+    # El seed tiene 1 jugado; el guard de no-regresión solo entra a la sección
+    # destructiva si el scrape trae MÁS jugados. Damos 2 para ejercitar el
+    # rollback (DELETE+INSERT en una sola transacción).
+    fuller = gmaker(jornadas=[{"num": "1", "matches": [
+        {"home": "Equipo Uno", "away": "Equipo Dos", "hs": 2, "as": 1,
+         "date": "15-12-2024", "time": "10:00", "venue": "Campo"},
+        {"home": "Equipo Tres", "away": "Equipo Cuatro", "hs": 1, "as": 0,
+         "date": "15-12-2024", "time": "11:00", "venue": "Campo"},
+    ]}])
     with pytest.raises(RuntimeError):
-        mod.import_group(conn, gmaker(), sid)
+        mod.import_group(conn, fuller, sid)
 
     rows = conn.execute(
         "SELECT id FROM matches WHERE group_id=?", (gid,)

@@ -138,6 +138,19 @@ def delete_group_matches(conn, group_id):
     conn.execute("DELETE FROM matches WHERE group_id=?", (group_id,))
 
 
+def existing_played_count(conn, season_id, code):
+    """Partidos CON marcador ya almacenados para este (temporada, code).
+    0 si el grupo aún no existe. Helper compartido por los importadores para
+    el guard de NO-REGRESIÓN: solo sobrescribir un grupo cuando el scrape
+    nuevo trae ESTRICTAMENTE más partidos jugados que lo ya guardado."""
+    row = conn.execute(
+        """SELECT COUNT(*) FROM matches m JOIN groups g ON g.id=m.group_id
+           WHERE g.season_id=? AND g.code=? AND m.home_score IS NOT NULL""",
+        (season_id, code),
+    ).fetchone()
+    return row[0] if row else 0
+
+
 def get_or_create_season(conn, name, start_year, end_year, is_current=False):
     """Return the season id, creating it if needed."""
     cur = conn.execute("SELECT id FROM seasons WHERE name=?", (name,))

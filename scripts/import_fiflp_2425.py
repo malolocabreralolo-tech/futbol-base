@@ -10,7 +10,7 @@ import json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from db import (get_connection, init_db, get_or_create_season,
                 get_or_create_category, get_or_create_team,
-                get_or_create_group, PROJECT_ROOT, DB_PATH)
+                get_or_create_group, existing_played_count, PROJECT_ROOT, DB_PATH)
 
 RAW_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_2425_raw.json")
 
@@ -152,6 +152,24 @@ def import_group(conn, g, season_id):
     )
     if n_scraped == 0:
         print(f"  [{code}] {grp_name} ({phase}): scrape vacío (0 partidos) — SKIP, se conserva lo existente")
+        return
+
+    # Guard de NO-REGRESIÓN: solo sobrescribir cuando el scrape trae
+    # ESTRICTAMENTE MÁS partidos jugados que lo ya almacenado para este
+    # (temporada, code). Los comps 1576/1581 mezclan grupos LIMPIOS de Wayback
+    # (P1=45/45, PGC1…) con grupos FIFLP escasos (P2/P5, PFV*, PLZ*). Re-scrapear
+    # el comp entero solo debe RELLENAR los escasos: si FIFLP empata o trae menos
+    # (la lectura robusta H2 aún sub-lee ~10% de marcadores ofuscados) se conserva
+    # el dato limpio existente; si trae más, gana por completitud (objetivo: máx.
+    # cantidad de info). El gate test_no_absurd_scores corta basura.
+    new_played = sum(
+        1 for j in g["jornadas"] for m in j["matches"]
+        if m.get("hs") is not None and m.get("as") is not None
+    )
+    prev_played = existing_played_count(conn, season_id, code)
+    if prev_played >= new_played and prev_played > 0:
+        print(f"  [{code}] {grp_name} ({phase}): scrape {new_played}j <= existente "
+              f"{prev_played}j — SKIP (conservar dato existente)")
         return
 
     group_id = get_or_create_group(

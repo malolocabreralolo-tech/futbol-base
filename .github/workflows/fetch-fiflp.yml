@@ -7,6 +7,10 @@ on:
         description: 'IDs de competición separados por coma (vacío = todas)'
         required: false
         default: ''
+      scrape_only:
+        description: 'true = solo scrapear y commitear el raw JSON (import/verify/publish en local)'
+        required: false
+        default: 'false'
 
 permissions:
   contents: write
@@ -37,11 +41,16 @@ jobs:
         timeout-minutes: 130
 
       - name: Importar a DB y regenerar JS
+        if: ${{ github.event.inputs.scrape_only != 'true' }}
         run: |
           python3 scripts/import_fiflp_2425.py
           # FIFLP solo expone parte de los partidos jugados — Wayback de
           # futbolaspalmas.com los tiene completos. Re-importar Wayback
           # encima recupera los played counts que FIFLP sobrescribió.
+          # Ambos importadores llevan guard de no-regresión (db.existing_played_count):
+          # solo sobrescriben un grupo cuando el scrape trae estrictamente
+          # más partidos jugados, así que el orden FIFLP->Wayback se queda
+          # con el máximo de completitud de cada fuente sin pisar lo bueno.
           python3 scripts/import_wayback_2425.py
           # Knockout tournaments (Copa de Campeones) don't have native
           # standings — synthesize them from match results so each cup card
@@ -50,6 +59,7 @@ jobs:
           python3 scripts/generate_js.py
 
       - name: Tests (bloquean el commit si fallan)
+        if: ${{ github.event.inputs.scrape_only != 'true' }}
         run: |
           pip install pytest pyyaml
           python3 -m pytest scripts/tests/ -q
@@ -63,6 +73,8 @@ jobs:
           # data-matchdetail-keys.js, data-seasons.js, data-season-*.js),
           # bumpea ?v= en index.html y CACHE_NAME en sw.js: glob estable en
           # vez de lista frágil, idéntico en los dos sitios de git add.
+          # En scrape_only solo cambia el raw (import/generate saltados) -> git
+          # add solo lo modificado: commitea unicamente fiflp_2425_raw.json.
           git add scripts/fiflp_2425_raw.json futbolbase.db \
             'data-*.js' index.html sw.js
           if git diff --cached --quiet; then

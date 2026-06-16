@@ -33,6 +33,8 @@ ALL_COMPETITIONS = [
     {"id": "1583", "name": "Benjamin Fuerteventura Fase 2",  "cat": "benjamin",    "island": "fuerteventura", "phase": "Fase 2"},
     # Prebenjamin
     {"id": "1581", "name": "Prebenjamin Gran Canaria",       "cat": "prebenjamin", "island": "grancanaria",   "phase": "Gran Canaria"},
+    {"id": "1582", "name": "Prebenjamin Fuerteventura",      "cat": "prebenjamin", "island": "fuerteventura", "phase": "Fuerteventura"},
+    {"id": "1712", "name": "Prebenjamin Lanzarote",          "cat": "prebenjamin", "island": "lanzarote",     "phase": "Lanzarote"},
     {"id": "1469", "name": "Copa de Campeones Prebenjamin",  "cat": "prebenjamin", "island": "grancanaria",   "phase": "Copa de Campeones"},
 ]
 

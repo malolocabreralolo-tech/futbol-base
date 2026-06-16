@@ -213,6 +213,18 @@ export function knockoutRoundLabel(raw, idx, total) {
   return s.replace(/\d{2}-\d{2}-\d{4}\s*/, '').trim();
 }
 
+/** A cup whose only "round" is a multi-match group stage (round-robin) — e.g.
+ * the 2023-24 Copa de Campeones (one "Ronda 1" with 7 matches per group). It
+ * must render as a classification TABLE, not a one-column bracket (which
+ * knockoutRoundLabel would mislabel "Final" by position). A lone final (1 round,
+ * 1 match) is NOT a round-robin → stays a bracket. */
+export function isRoundRobinCup(jornadas) {
+  if (!jornadas) return false;
+  const keys = Object.keys(jornadas);
+  if (keys.length !== 1) return false;
+  return (jornadas[keys[0]] || []).length > 2;
+}
+
 /* Team badge — real shield from SHIELDS or fallback to initials */
 export function teamBadgeFallback(name) {
   const words = name.replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]/g, '').trim().split(/\s+/);

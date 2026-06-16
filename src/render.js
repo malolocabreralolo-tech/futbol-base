@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, bracketDrawAdvancer, getSeasonError, ensureSeasonData } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, bracketDrawAdvancer, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
@@ -180,6 +180,12 @@ function buildKnockoutBracket(g) {
   const rounds = Object.keys(jornadas);
   if (!rounds.length) {
     return '<div class="modal-h2h-empty" style="padding:16px;text-align:center;opacity:.7">Sin partidos registrados</div>';
+  }
+  // A round-robin group stage (one round, many matches — 2023-24 Copa de
+  // Campeones) is a liguilla, not a bracket: show the classification table
+  // (champion on top) instead of a one-column "bracket" mislabelled "Final".
+  if (isRoundRobinCup(jornadas) && g.standings && g.standings.length) {
+    return buildStandingsTable(g.standings, g.id, g);
   }
 
   const champion = g.standings.length ? g.standings[0][1] : null;

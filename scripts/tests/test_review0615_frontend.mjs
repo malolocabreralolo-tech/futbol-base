@@ -173,3 +173,31 @@ test('buildUnifiedPrebenjamin filtra cups (usa unifiedPrebenLeagueGroups)', () =
   // ya no debe iterar PREBENJAMIN.forEach numerando por idx con corte >3
   assert.doesNotMatch(s, /PREBENJAMIN\.forEach\(\(g, idx\) => \{[\s\S]{0,120}groupNum > 3/);
 });
+
+// ── Copa de Campeones 2023-24: grupos round-robin (1 ronda, >2 partidos) ──
+// Deben renderizarse como TABLA de clasificación, NO como bracket (que
+// knockoutRoundLabel etiquetaría "Final" por posición — bug). Los cups
+// multi-ronda (2024-25/2025-26) siguen siendo brackets.
+test('isRoundRobinCup: 1 ronda con >2 partidos → true (grupo liguilla)', async () => {
+  const { isRoundRobinCup } = await import('../../src/state.js');
+  const rr = { '14-06-2024 ( Ronda 1 )': [['','A','B',1,0,''],['','C','D',2,1,''],['','A','C',3,0,'']] };
+  assert.equal(isRoundRobinCup(rr), true);
+});
+test('isRoundRobinCup: multi-ronda → false (bracket de verdad)', async () => {
+  const { isRoundRobinCup } = await import('../../src/state.js');
+  const bracket = {
+    '08-06-2025 ( Ronda 1 )': [['','A','B',1,0,''],['','C','D',2,1,'']],
+    '08-06-2025 ( Ronda 2 )': [['','A','C',1,0,'']],
+  };
+  assert.equal(isRoundRobinCup(bracket), false);
+});
+test('isRoundRobinCup: 1 ronda con 1 partido (una final suelta) → false', async () => {
+  const { isRoundRobinCup } = await import('../../src/state.js');
+  assert.equal(isRoundRobinCup({ '( Final )': [['','A','B',1,0,'']] }), false);
+  assert.equal(isRoundRobinCup({}), false);
+  assert.equal(isRoundRobinCup(null), false);
+});
+test('buildKnockoutBracket renderiza tabla para cups round-robin', () => {
+  const s = src('render.js');
+  assert.match(s, /isRoundRobinCup\(/, 'buildKnockoutBracket debe usar isRoundRobinCup para elegir tabla vs bracket');
+});

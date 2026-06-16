@@ -1,0 +1,364 @@
+[
+  {
+    "competition_id": "1229",
+    "competition_name": "Copa Campeones Benjamin",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Copa de Campeones",
+    "group_id": "173515",
+    "group_name": "GRUPO 3",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "17-05-2024 ( Ronda 1 )",
+        "date": "",
+        "matches": [
+          {
+            "home": "VALLESECO, U.D.",
+            "away": "MOGAN, C.F.",
+            "hs": 8,
+            "as": 3,
+            "date": "17-05-2024",
+            "time": "19:30",
+            "venue": "Campo Pendiente de asignar",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ISLETA \"A\" \"A\"",
+            "away": "TELDE \"C\", U.D. \"C\"",
+            "hs": 3,
+            "as": 3,
+            "date": "17-05-2024",
+            "time": "19:30",
+            "venue": "Campo Pendiente de asignar",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA SAGRADO CORAZON \"C\", C.D. \"C\"",
+            "away": "DANIEL CARNEVALI \"B\", C.D. \"B\"",
+            "hs": 6,
+            "as": 3,
+            "date": "17-05-2024",
+            "time": "20:45",
+            "venue": "CRISTOBAL HERRERA F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO \"A\", C.D. \"A\"",
+            "away": "SIMUSETTI C. F. \"B\" \"B\"",
+            "hs": 6,
+            "as": 3,
+            "date": "17-05-2024",
+            "time": "20:45",
+            "venue": "CRISTOBAL HERRERA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VALLESECO, U.D.",
+            "away": "TELDE \"C\", U.D. \"C\"",
+            "hs": 6,
+            "as": 1,
+            "date": "18-05-2024",
+            "time": "10:30",
+            "venue": "CRISTOBAL HERRERA F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA SAGRADO CORAZON \"C\", C.D. \"C\"",
+            "away": "TABLERO \"A\", C.D. \"A\"",
+            "hs": 1,
+            "as": 8,
+            "date": "18-05-2024",
+            "time": "10:30",
+            "venue": "CRISTOBAL HERRERA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "VALLESECO, U.D.",
+            "away": "TABLERO \"A\", C.D. \"A\"",
+            "hs": 7,
+            "as": 3,
+            "date": "18-05-2024",
+            "time": "12:30",
+            "venue": "CRISTOBAL HERRERA F8 (2)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1229",
+    "competition_name": "Copa Campeones Benjamin",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Copa de Campeones",
+    "group_id": "173636",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "14-06-2024 ( Ronda 1 )",
+        "date": "",
+        "matches": [
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "GAREPA VIERA, C.F.",
+            "hs": 11,
+            "as": 0,
+            "date": "14-06-2024",
+            "time": "17:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"A\" \"A\"",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": 1,
+            "as": 4,
+            "date": "14-06-2024",
+            "time": "17:30",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE \"A\", U.D. \"A\"",
+            "away": "MASPA TRAINING \"A\", C.D. \"A\"",
+            "hs": 3,
+            "as": 3,
+            "date": "14-06-2024",
+            "time": "19:00",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS \"A\", C.D. \"A\"",
+            "away": "UNION VIERA \"A\", C.F. \"A\"",
+            "hs": 5,
+            "as": 2,
+            "date": "14-06-2024",
+            "time": "19:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "ATLETICO HURACAN \"A\", A.D. \"A\"",
+            "hs": 9,
+            "as": 0,
+            "date": "15-06-2024",
+            "time": "09:00",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "TELDE \"A\", U.D. \"A\"",
+            "away": "DORAMAS \"A\", C.D. \"A\"",
+            "hs": 2,
+            "as": 3,
+            "date": "15-06-2024",
+            "time": "09:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "DORAMAS \"A\", C.D. \"A\"",
+            "hs": 6,
+            "as": 0,
+            "date": "15-06-2024",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1229",
+    "competition_name": "Copa Campeones Benjamin",
+    "cat": "benjamin",
+    "island": "grancanaria",
+    "phase": "Copa de Campeones",
+    "group_id": "173640",
+    "group_name": "GRUPO 2",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "14-06-2024 ( Ronda 1 )",
+        "date": "",
+        "matches": [
+          {
+            "home": "VICTORIA \"A\", REAL CLUB \"A\"",
+            "away": "TELDE \"B\", U.D. \"B\"",
+            "hs": 2,
+            "as": 2,
+            "date": "14-06-2024",
+            "time": "17:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO HURACAN \"B\", A.D. \"B\"",
+            "away": "MOYA \"A\", U.D. \"A\"",
+            "hs": 4,
+            "as": 5,
+            "date": "14-06-2024",
+            "time": "17:30",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "ARGUINEGUIN \"A\", C.D. \"A\"",
+            "away": "AREGRANCA REHOYAS, C.D.",
+            "hs": 1,
+            "as": 1,
+            "date": "14-06-2024",
+            "time": "19:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ROQUE AMAGRO-CLARAVISION, C.D.",
+            "away": "DORAMAS \"B\", CD \"B\"",
+            "hs": 5,
+            "as": 0,
+            "date": "14-06-2024",
+            "time": "19:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA \"A\", REAL CLUB \"A\"",
+            "away": "MOYA \"A\", U.D. \"A\"",
+            "hs": 1,
+            "as": 1,
+            "date": "15-06-2024",
+            "time": "09:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "AREGRANCA REHOYAS, C.D.",
+            "away": "ROQUE AMAGRO-CLARAVISION, C.D.",
+            "hs": 3,
+            "as": 3,
+            "date": "15-06-2024",
+            "time": "09:00",
+            "venue": "CRUCE DE ARINAGA ANEXO F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PALMAS, U.D. LAS",
+            "away": "DORAMAS \"A\", C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-06-2024",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA \"A\", REAL CLUB \"A\"",
+            "away": "ROQUE AMAGRO-CLARAVISION, C.D.",
+            "hs": 4,
+            "as": 4,
+            "date": "15-06-2024",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "1230",
+    "competition_name": "Copa Campeones Prebenjamin",
+    "cat": "prebenjamin",
+    "island": "grancanaria",
+    "phase": "Copa de Campeones",
+    "group_id": "173511",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "17-05-2024 ( Ronda 1 )",
+        "date": "",
+        "matches": [
+          {
+            "home": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": 4,
+            "as": 8,
+            "date": "17-05-2024",
+            "time": "17:00",
+            "venue": "CRISTOBAL HERRERA F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\" \"A\"",
+            "away": "HUESAS, U.D. LAS",
+            "hs": 5,
+            "as": 1,
+            "date": "17-05-2024",
+            "time": "17:00",
+            "venue": "CRISTOBAL HERRERA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO \"A\", C.D. \"A\"",
+            "away": "TAMARACEITE, U.D.",
+            "hs": 0,
+            "as": 4,
+            "date": "17-05-2024",
+            "time": "18:30",
+            "venue": "CRISTOBAL HERRERA F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "ARUCAS C.F. \"C\" \"C\"",
+            "hs": 4,
+            "as": 0,
+            "date": "17-05-2024",
+            "time": "18:30",
+            "venue": "CRISTOBAL HERRERA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "ACODETTI C.F \"A\" \"A\"",
+            "hs": 0,
+            "as": 0,
+            "date": "18-05-2024",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": 8,
+            "as": 3,
+            "date": "18-05-2024",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA F8 (2)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "ACODETTI C.F \"A\" \"A\"",
+            "hs": 4,
+            "as": 3,
+            "date": "18-05-2024",
+            "time": "12:30",
+            "venue": "CRISTOBAL HERRERA F8 (1)",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  }
+]

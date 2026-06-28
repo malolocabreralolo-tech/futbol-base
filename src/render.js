@@ -135,7 +135,7 @@ function filterGroups(groups) {
 function isKnockoutGroup(g) {
   const id = (g.id || '').toUpperCase();
   if (id.startsWith('PCC') || id.startsWith('BC')) return true;
-  if (id.includes('MCKO') || id.endsWith('KO')) return true;
+  if (id.startsWith('MCPK') || id.startsWith('MCBK') || id.endsWith('KO')) return true;
   const phase = (g.phase || '').toLowerCase();
   if (phase.includes('copa') || phase.includes('campeon')) return true;
   const keys = g.jornadas ? Object.keys(g.jornadas) : [];

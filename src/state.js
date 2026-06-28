@@ -176,8 +176,9 @@ export function bracketDrawAdvancer(jornadas, rounds, idx, home, away) {
 export function isCupGroup(g) {
   const id = ((g && g.id) || '').toUpperCase();
   if (id.startsWith('PCC') || id.startsWith('BC')) return true;
+  if (id.startsWith('MCP') || id.startsWith('MCB')) return true;
   const phase = ((g && g.phase) || '').toLowerCase();
-  return phase.includes('copa') || phase.includes('campeon');
+  return phase.includes('copa') || phase.includes('campeon') || phase.includes('maspalomas');
 }
 
 /* The (≤3) league prebenjamín groups for the unified table — cups excluded.
@@ -400,7 +401,17 @@ export function getData() {
   const cur = S.cat === 'benjamin'
     ? (typeof BENJAMIN !== 'undefined' ? BENJAMIN : null)
     : (typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : null);
-  return cur || [];
+  let groups = cur || [];
+  // Maspalomas Cup 2026: concatenate its groups for the current season only,
+  // after the existing league + Copa de Campeones groups (PCC*/BC*). Historical
+  // seasons never include it (separate data files).
+  if (S.season === '') {
+    const cup = S.cat === 'benjamin'
+      ? (typeof MASPALOMAS_CUP_BENJAMIN !== 'undefined' ? MASPALOMAS_CUP_BENJAMIN : null)
+      : (typeof MASPALOMAS_CUP_PREBENJAMIN !== 'undefined' ? MASPALOMAS_CUP_PREBENJAMIN : null);
+    if (cup && cup.length) groups = groups.concat(cup);
+  }
+  return groups;
 }
 
 // Async — call this before renderSection when switching historical seasons.

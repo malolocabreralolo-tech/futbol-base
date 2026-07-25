@@ -547,6 +547,29 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
             continue
         time.sleep(DELAY)
 
+        # ── Guard de cambio de temporada ──────────────────────────────────
+        # Se comprueba ANTES de escribir nada de este grupo. Si el slug ha
+        # pasado a servir otra temporada hay que saltarse el grupo ENTERO: los
+        # partidos entran con INSERT OR IGNORE (mezclarían dos temporadas en el
+        # mismo grupo) y goleadores/clasificación se reemplazan por completo.
+        # Ver docs/temporada-nueva.md.
+        clasi_url = url.rstrip("/") + "/mostrar_clasi.php"
+        clasi_html = None
+        standings = []
+        try:
+            clasi_html = fetch(clasi_url)
+            time.sleep(DELAY)
+            standings = parse_standings(clasi_html)
+        except Exception as e:
+            print(f"    ! clasificacion error: {e}")
+
+        regression = standings_regression(stored_standings(conn, group_id),
+                                          standings) if clasi_html else None
+        if regression:
+            print(f"    ! GRUPO OMITIDO — {regression}")
+            skipped_standings.append((group_code, regression))
+            continue
+
         # ── Partidos + campos (jornada actual) ────────────────────────────
         jornada_name, matches = parse_matches(html)
         if jornada_name and matches:
@@ -608,39 +631,23 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
             print(f"    Historia: {len(all_hist)} jornadas, {hist_count} partidos")
 
         # ── Clasificacion ──────────────────────────────────────────────────
-        clasi_url = url.rstrip("/") + "/mostrar_clasi.php"
-        clasi_html = None
-        try:
-            clasi_html = fetch(clasi_url)
-            time.sleep(DELAY)
-            standings = parse_standings(clasi_html)
-            regression = standings_regression(stored_standings(conn, group_id),
-                                              standings)
-            if regression:
-                # Casi seguro, un cambio de temporada: el slug ahora sirve otra
-                # liga. Se deja intacto lo almacenado y se avisa; hay que
-                # rotar la temporada (ver docs/temporada-nueva.md) en vez de
-                # dejar que el auto-update pise una temporada terminada.
-                print(f"    ! clasificacion RECHAZADA — {regression}")
-                skipped_standings.append((group_code, regression))
-            elif standings:
-                # DELETE old standings for this group, INSERT new ones
-                conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
-                for row in standings:
-                    pos, team_name, pts, j, g, e, perd, gf, gc, df = row
-                    team_id = get_or_create_team(conn, team_name)
-                    conn.execute(
-                        """INSERT INTO standings
-                           (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
-                           VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
-                        (group_id, team_id, pos, pts, j, g, e, perd, gf, gc, df),
-                    )
-                updated_standings += 1
-                print(f"    Clasificacion: {len(standings)} equipos")
-            else:
-                print(f"    ! clasificacion no parseada")
-        except Exception as e:
-            print(f"    ! clasificacion error: {e}")
+        # Ya descargada y validada arriba (guard de cambio de temporada).
+        if standings:
+            # DELETE old standings for this group, INSERT new ones
+            conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
+            for row in standings:
+                pos, team_name, pts, j, g, e, perd, gf, gc, df = row
+                team_id = get_or_create_team(conn, team_name)
+                conn.execute(
+                    """INSERT INTO standings
+                       (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+                    (group_id, team_id, pos, pts, j, g, e, perd, gf, gc, df),
+                )
+            updated_standings += 1
+            print(f"    Clasificacion: {len(standings)} equipos")
+        elif clasi_html:
+            print(f"    ! clasificacion no parseada")
 
         # ── Escudos ──────────────────────────────────────────────────────
         if clasi_html:

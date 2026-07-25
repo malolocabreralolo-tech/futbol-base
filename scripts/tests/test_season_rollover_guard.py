@@ -116,6 +116,22 @@ class TestGuardIsWired:
         assert idx_guard < idx_delete, \
             "el DELETE de standings tiene que ir DESPUÉS de comprobar la regresión"
 
+    def test_the_whole_group_is_skipped_not_just_the_standings(self):
+        # Los partidos se escriben ANTES que la clasificación y entran con
+        # INSERT OR IGNORE: si el guard solo protegiese standings, una
+        # temporada nueva colaría igualmente sus fixtures en los grupos
+        # viejos y quedarían dos temporadas mezcladas en el mismo grupo.
+        src = self._source()
+        body = src[src.index("def process_file"):]
+        idx_guard = body.index("regression = standings_regression(")
+        idx_matches = body.index("jornada_name, matches = parse_matches(html)")
+        assert idx_guard < idx_matches, \
+            "la comprobación debe ir antes de procesar los partidos"
+        # y el rechazo tiene que saltar el grupo entero
+        rechazo = body[idx_guard:idx_matches]
+        assert "continue" in rechazo, \
+            "un grupo rechazado debe saltarse por completo (continue)"
+
     def test_a_full_rejection_fails_the_run(self):
         # update.yml solo publica si el job va verde: un cambio de temporada
         # tiene que salir rojo, no pasar como un run normal sin cambios.

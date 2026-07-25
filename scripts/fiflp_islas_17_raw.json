@@ -1,0 +1,1179 @@
+[
+  {
+    "competition_id": "892",
+    "competition_name": "Benjamin Lanzarote Preferente",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Preferente",
+    "group_id": "118269",
+    "group_name": "GRUPO 1",
+    "standings": [
+      {
+        "pos": 1,
+        "team": "LANZAROTE A, U.D. \"A\"",
+        "pts": 69,
+        "j": 24,
+        "g": 23,
+        "e": 0,
+        "p": 1,
+        "gf": 180,
+        "gc": 36,
+        "df": 144,
+        "form": "GGGPG"
+      },
+      {
+        "pos": 2,
+        "team": "TAHICHE A, C.D. \"A\"",
+        "pts": 64,
+        "j": 24,
+        "g": 21,
+        "e": 1,
+        "p": 2,
+        "gf": 151,
+        "gc": 38,
+        "df": 113,
+        "form": "GGGGG"
+      },
+      {
+        "pos": 3,
+        "team": "SAN BARTOLOME A, C.F. \"A\"",
+        "pts": 54,
+        "j": 24,
+        "g": 18,
+        "e": 0,
+        "p": 6,
+        "gf": 109,
+        "gc": 58,
+        "df": 51,
+        "form": "GPGGG"
+      },
+      {
+        "pos": 4,
+        "team": "TINAJOA, U.D. \"A\"",
+        "pts": 52,
+        "j": 24,
+        "g": 17,
+        "e": 1,
+        "p": 6,
+        "gf": 98,
+        "gc": 78,
+        "df": 20,
+        "form": "GGEGG"
+      },
+      {
+        "pos": 5,
+        "team": "UNION SUR YAIZA A, C.D. \"A\"",
+        "pts": 44,
+        "j": 24,
+        "g": 14,
+        "e": 2,
+        "p": 8,
+        "gf": 110,
+        "gc": 88,
+        "df": 22,
+        "form": "GGEGG"
+      },
+      {
+        "pos": 6,
+        "team": "ALTAVISTA C.F.",
+        "pts": 41,
+        "j": 24,
+        "g": 12,
+        "e": 5,
+        "p": 7,
+        "gf": 89,
+        "gc": 71,
+        "df": 18,
+        "form": "GGGGE"
+      },
+      {
+        "pos": 7,
+        "team": "SPORTING TIAS A, C.F. \"A\"",
+        "pts": 36,
+        "j": 24,
+        "g": 11,
+        "e": 3,
+        "p": 10,
+        "gf": 97,
+        "gc": 98,
+        "df": -1,
+        "form": "GPPPP"
+      },
+      {
+        "pos": 8,
+        "team": "HARIA C.F.",
+        "pts": 28,
+        "j": 24,
+        "g": 8,
+        "e": 4,
+        "p": 12,
+        "gf": 109,
+        "gc": 107,
+        "df": 2,
+        "form": "PEEPE"
+      },
+      {
+        "pos": 9,
+        "team": "PALMEIROS DE COSTA T., U.D.",
+        "pts": 23,
+        "j": 24,
+        "g": 7,
+        "e": 2,
+        "p": 15,
+        "gf": 65,
+        "gc": 110,
+        "df": -45,
+        "form": "GPEPP"
+      },
+      {
+        "pos": 10,
+        "team": "TEGUISE, C.D.",
+        "pts": 18,
+        "j": 24,
+        "g": 5,
+        "e": 3,
+        "p": 16,
+        "gf": 58,
+        "gc": 113,
+        "df": -55,
+        "form": "PEEGP"
+      },
+      {
+        "pos": 11,
+        "team": "LOMO A, C.D. \"A\"",
+        "pts": 12,
+        "j": 24,
+        "g": 4,
+        "e": 0,
+        "p": 20,
+        "gf": 50,
+        "gc": 144,
+        "df": -94,
+        "form": "PPPPG"
+      },
+      {
+        "pos": 12,
+        "team": "PUERTO DEL CARMEN, F.C.",
+        "pts": 10,
+        "j": 24,
+        "g": 3,
+        "e": 1,
+        "p": 20,
+        "gf": 50,
+        "gc": 140,
+        "df": -90,
+        "form": "PPEPP"
+      },
+      {
+        "pos": 13,
+        "team": "MACIOT SPORT, C.D.",
+        "pts": 5,
+        "j": 24,
+        "g": 1,
+        "e": 2,
+        "p": 21,
+        "gf": 47,
+        "gc": 132,
+        "df": -85,
+        "form": "PPPPP"
+      }
+    ],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "16-10-2021",
+        "matches": [
+          {
+            "home": "TAHICHE \"A\", C.D. \"A\"",
+            "away": "TEGUISE, C.D.",
+            "hs": 0,
+            "as": 0,
+            "date": "16-10-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTO DEL CARMEN, F.C.",
+            "away": "ALTAVISTA C.F.",
+            "hs": 0,
+            "as": 6,
+            "date": "16-10-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D.",
+            "away": "LOMO \"A\", C.D. \"A\"",
+            "hs": 8,
+            "as": 1,
+            "date": "16-10-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HARIA C.F.",
+            "away": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "hs": 1,
+            "as": 7,
+            "date": "16-10-2021",
+            "time": "10:00",
+            "venue": "LADISLAO RODRIGUEZ BONILLA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "away": "TINAJO\"A\", U.D. \"A\"",
+            "hs": 4,
+            "as": 6,
+            "date": "17-10-2021",
+            "time": "09:30",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE \"A\", U.D. \"A\"",
+            "away": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "hs": 15,
+            "as": 1,
+            "date": "17-10-2021",
+            "time": "11:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "23-10-2021",
+        "matches": [
+          {
+            "home": "MACIOT SPORT, C.D.",
+            "away": "PALMEIROS DE COSTA T., U.D.",
+            "hs": 0,
+            "as": 5,
+            "date": "22-10-2021",
+            "time": "17:00",
+            "venue": "MCPAL.S.F. JAVIER F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO\"A\", U.D. \"A\"",
+            "away": "LANZAROTE \"A\", U.D. \"A\"",
+            "hs": 3,
+            "as": 7,
+            "date": "23-10-2021",
+            "time": "09:15",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ALTAVISTA C.F.",
+            "away": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "hs": 2,
+            "as": 2,
+            "date": "23-10-2021",
+            "time": "09:15",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "away": "PUERTO DEL CARMEN, F.C.",
+            "hs": 9,
+            "as": 1,
+            "date": "23-10-2021",
+            "time": "09:15",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "away": "TAHICHE \"A\", C.D. \"A\"",
+            "hs": 2,
+            "as": 5,
+            "date": "23-10-2021",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO \"A\", C.D. \"A\"",
+            "away": "HARIA C.F.",
+            "hs": 0,
+            "as": 8,
+            "date": "23-10-2021",
+            "time": "11:15",
+            "venue": "PUERTO ARRECIFE F8(2)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "30-10-2021",
+        "matches": [
+          {
+            "home": "TEGUISE, C.D.",
+            "away": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "hs": 2,
+            "as": 0,
+            "date": "30-10-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTO DEL CARMEN, F.C.",
+            "away": "LOMO \"A\", C.D. \"A\"",
+            "hs": 7,
+            "as": 0,
+            "date": "30-10-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HARIA C.F.",
+            "away": "MACIOT SPORT, C.D.",
+            "hs": 15,
+            "as": 4,
+            "date": "30-10-2021",
+            "time": "10:00",
+            "venue": "LADISLAO RODRIGUEZ BONILLA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE \"A\", C.D. \"A\"",
+            "away": "TINAJO\"A\", U.D. \"A\"",
+            "hs": 8,
+            "as": 2,
+            "date": "30-10-2021",
+            "time": "10:38",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "away": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "hs": 2,
+            "as": 6,
+            "date": "31-10-2021",
+            "time": "09:30",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE \"A\", U.D. \"A\"",
+            "away": "ALTAVISTA C.F.",
+            "hs": 7,
+            "as": 0,
+            "date": "31-10-2021",
+            "time": "11:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "06-11-2021",
+        "matches": [
+          {
+            "home": "MACIOT SPORT, C.D.",
+            "away": "PUERTO DEL CARMEN, F.C.",
+            "hs": 2,
+            "as": 6,
+            "date": "05-11-2021",
+            "time": "17:00",
+            "venue": "MCPAL.S.F. JAVIER F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO\"A\", U.D. \"A\"",
+            "away": "TEGUISE, C.D.",
+            "hs": 4,
+            "as": 2,
+            "date": "06-11-2021",
+            "time": "09:15",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ALTAVISTA C.F.",
+            "away": "TAHICHE \"A\", C.D. \"A\"",
+            "hs": 1,
+            "as": 2,
+            "date": "06-11-2021",
+            "time": "09:15",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "away": "LANZAROTE \"A\", U.D. \"A\"",
+            "hs": 3,
+            "as": 8,
+            "date": "06-11-2021",
+            "time": "09:15",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO \"A\", C.D. \"A\"",
+            "away": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "hs": 0,
+            "as": 5,
+            "date": "06-11-2021",
+            "time": "11:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D.",
+            "away": "HARIA C.F.",
+            "hs": 3,
+            "as": 4,
+            "date": "06-11-2021",
+            "time": "11:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "13-11-2021",
+        "matches": [
+          {
+            "home": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "away": "TINAJO\"A\", U.D. \"A\"",
+            "hs": 2,
+            "as": 5,
+            "date": "11-11-2021",
+            "time": "19:04",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D.",
+            "away": "ALTAVISTA C.F.",
+            "hs": 3,
+            "as": 7,
+            "date": "13-11-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE \"A\", C.D. \"A\"",
+            "away": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "hs": 1,
+            "as": 0,
+            "date": "13-11-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTO DEL CARMEN, F.C.",
+            "away": "PALMEIROS DE COSTA T., U.D.",
+            "hs": 0,
+            "as": 2,
+            "date": "13-11-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE \"A\", U.D. \"A\"",
+            "away": "LOMO \"A\", C.D. \"A\"",
+            "hs": 7,
+            "as": 0,
+            "date": "14-11-2021",
+            "time": "09:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "away": "MACIOT SPORT, C.D.",
+            "hs": 7,
+            "as": 4,
+            "date": "14-11-2021",
+            "time": "09:30",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "20-11-2021",
+        "matches": [
+          {
+            "home": "LOMO \"A\", C.D. \"A\"",
+            "away": "TAHICHE \"A\", C.D. \"A\"",
+            "hs": 0,
+            "as": 0,
+            "date": "19-11-2021",
+            "time": "17:00",
+            "venue": "PUERTO ARRECIFE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "MACIOT SPORT, C.D.",
+            "away": "LANZAROTE \"A\", U.D. \"A\"",
+            "hs": 0,
+            "as": 7,
+            "date": "19-11-2021",
+            "time": "17:00",
+            "venue": "MCPAL.S.F. JAVIER F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "ALTAVISTA C.F.",
+            "away": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "hs": 3,
+            "as": 2,
+            "date": "20-11-2021",
+            "time": "09:15",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "away": "TEGUISE, C.D.",
+            "hs": 10,
+            "as": 0,
+            "date": "20-11-2021",
+            "time": "09:15",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "HARIA C.F.",
+            "away": "PUERTO DEL CARMEN, F.C.",
+            "hs": 1,
+            "as": 4,
+            "date": "20-11-2021",
+            "time": "10:00",
+            "venue": "LADISLAO RODRIGUEZ BONILLA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D.",
+            "away": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "hs": 2,
+            "as": 6,
+            "date": "20-11-2021",
+            "time": "11:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "27-11-2021",
+        "matches": [
+          {
+            "home": "TINAJO\"A\", U.D. \"A\"",
+            "away": "ALTAVISTA C.F.",
+            "hs": 7,
+            "as": 6,
+            "date": "25-11-2021",
+            "time": "17:56",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D.",
+            "away": "LOMO \"A\", C.D. \"A\"",
+            "hs": 5,
+            "as": 2,
+            "date": "27-11-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE \"A\", C.D. \"A\"",
+            "away": "MACIOT SPORT, C.D.",
+            "hs": 8,
+            "as": 1,
+            "date": "27-11-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "away": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "hs": 3,
+            "as": 5,
+            "date": "27-11-2021",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE \"A\", U.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D.",
+            "hs": 2,
+            "as": 2,
+            "date": "27-11-2021",
+            "time": "11:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "away": "HARIA C.F.",
+            "hs": 7,
+            "as": 4,
+            "date": "28-11-2021",
+            "time": "09:30",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "04-12-2021",
+        "matches": [
+          {
+            "home": "PUERTO DEL CARMEN, F.C.",
+            "away": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "hs": 3,
+            "as": 8,
+            "date": "01-12-2021",
+            "time": "19:22",
+            "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO \"A\", C.D. \"A\"",
+            "away": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "hs": 2,
+            "as": 6,
+            "date": "03-12-2021",
+            "time": "17:00",
+            "venue": "PUERTO ARRECIFE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "MACIOT SPORT, C.D.",
+            "away": "TEGUISE, C.D.",
+            "hs": 2,
+            "as": 3,
+            "date": "03-12-2021",
+            "time": "17:00",
+            "venue": "MCPAL.S.F. JAVIER F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D.",
+            "away": "TAHICHE \"A\", C.D. \"A\"",
+            "hs": 0,
+            "as": 5,
+            "date": "04-12-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HARIA C.F.",
+            "away": "LANZAROTE \"A\", U.D. \"A\"",
+            "hs": 5,
+            "as": 6,
+            "date": "04-12-2021",
+            "time": "10:00",
+            "venue": "LADISLAO RODRIGUEZ BONILLA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "away": "TINAJO\"A\", U.D. \"A\"",
+            "hs": 1,
+            "as": 5,
+            "date": "04-12-2021",
+            "time": "11:15",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "11-12-2021",
+        "matches": [
+          {
+            "home": "ALTAVISTA C.F.",
+            "away": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "hs": 1,
+            "as": 3,
+            "date": "11-12-2021",
+            "time": "09:15",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO\"A\", U.D. \"A\"",
+            "away": "LOMO \"A\", C.D. \"A\"",
+            "hs": 7,
+            "as": 0,
+            "date": "11-12-2021",
+            "time": "09:15",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D.",
+            "away": "PALMEIROS DE COSTA T., U.D.",
+            "hs": 4,
+            "as": 4,
+            "date": "11-12-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE \"A\", C.D. \"A\"",
+            "away": "HARIA C.F.",
+            "hs": 5,
+            "as": 1,
+            "date": "11-12-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "away": "MACIOT SPORT, C.D.",
+            "hs": 10,
+            "as": 1,
+            "date": "11-12-2021",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE \"A\", U.D. \"A\"",
+            "away": "PUERTO DEL CARMEN, F.C.",
+            "hs": 3,
+            "as": 1,
+            "date": "11-12-2021",
+            "time": "11:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "18-12-2021",
+        "matches": [
+          {
+            "home": "PUERTO DEL CARMEN, F.C.",
+            "away": "TAHICHE \"A\", C.D. \"A\"",
+            "hs": 0,
+            "as": 10,
+            "date": "15-12-2021",
+            "time": "18:46",
+            "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "MACIOT SPORT, C.D.",
+            "away": "TINAJO\"A\", U.D. \"A\"",
+            "hs": 3,
+            "as": 7,
+            "date": "17-12-2021",
+            "time": "17:00",
+            "venue": "MCPAL.S.F. JAVIER F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "LOMO \"A\", C.D. \"A\"",
+            "away": "ALTAVISTA C.F.",
+            "hs": 0,
+            "as": 7,
+            "date": "18-12-2021",
+            "time": "09:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D.",
+            "away": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "hs": 0,
+            "as": 4,
+            "date": "18-12-2021",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HARIA C.F.",
+            "away": "TEGUISE, C.D.",
+            "hs": 2,
+            "as": 3,
+            "date": "18-12-2021",
+            "time": "10:00",
+            "venue": "LADISLAO RODRIGUEZ BONILLA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "away": "LANZAROTE \"A\", U.D. \"A\"",
+            "hs": 3,
+            "as": 11,
+            "date": "19-12-2021",
+            "time": "09:30",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "08-01-2022",
+        "matches": [
+          {
+            "home": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "away": "LOMO \"A\", C.D. \"A\"",
+            "hs": 5,
+            "as": 1,
+            "date": "08-01-2022",
+            "time": "09:15",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ALTAVISTA C.F.",
+            "away": "MACIOT SPORT, C.D.",
+            "hs": 0,
+            "as": 0,
+            "date": "08-01-2022",
+            "time": "09:15",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO\"A\", U.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D.",
+            "hs": 6,
+            "as": 2,
+            "date": "08-01-2022",
+            "time": "09:15",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D.",
+            "away": "PUERTO DEL CARMEN, F.C.",
+            "hs": 5,
+            "as": 3,
+            "date": "08-01-2022",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "away": "HARIA C.F.",
+            "hs": 11,
+            "as": 4,
+            "date": "08-01-2022",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TAHICHE \"A\", C.D. \"A\"",
+            "away": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "hs": 8,
+            "as": 3,
+            "date": "08-01-2022",
+            "time": "11:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "14-01-2022",
+        "matches": [
+          {
+            "home": "MACIOT SPORT, C.D.",
+            "away": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "hs": 1,
+            "as": 5,
+            "date": "14-01-2022",
+            "time": "17:00",
+            "venue": "MCPAL.S.F. JAVIER F8 (1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D.",
+            "away": "ALTAVISTA C.F.",
+            "hs": 2,
+            "as": 7,
+            "date": "15-01-2022",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTO DEL CARMEN, F.C.",
+            "away": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "hs": 3,
+            "as": 8,
+            "date": "15-01-2022",
+            "time": "09:15",
+            "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HARIA C.F.",
+            "away": "TINAJO\"A\", U.D. \"A\"",
+            "hs": 8,
+            "as": 5,
+            "date": "15-01-2022",
+            "time": "10:00",
+            "venue": "LADISLAO RODRIGUEZ BONILLA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE \"A\", U.D. \"A\"",
+            "away": "TAHICHE \"A\", C.D. \"A\"",
+            "hs": 5,
+            "as": 2,
+            "date": "15-01-2022",
+            "time": "11:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "away": "TEGUISE, C.D.",
+            "hs": 5,
+            "as": 1,
+            "date": "16-01-2022",
+            "time": "09:30",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "21-01-2022",
+        "matches": [
+          {
+            "home": "LOMO \"A\", C.D. \"A\"",
+            "away": "MACIOT SPORT, C.D.",
+            "hs": 7,
+            "as": 4,
+            "date": "21-01-2022",
+            "time": "17:00",
+            "venue": "PUERTO ARRECIFE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D.",
+            "away": "LANZAROTE \"A\", U.D. \"A\"",
+            "hs": 1,
+            "as": 9,
+            "date": "21-01-2022",
+            "time": "19:29",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D.",
+            "hs": 5,
+            "as": 3,
+            "date": "22-01-2022",
+            "time": "09:15",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ALTAVISTA C.F.",
+            "away": "HARIA C.F.",
+            "hs": 3,
+            "as": 2,
+            "date": "22-01-2022",
+            "time": "09:15",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO\"A\", U.D. \"A\"",
+            "away": "PUERTO DEL CARMEN, F.C.",
+            "hs": 6,
+            "as": 0,
+            "date": "22-01-2022",
+            "time": "09:15",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "away": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "hs": 5,
+            "as": 5,
+            "date": "22-01-2022",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "05-02-2022",
+        "matches": [
+          {
+            "home": "LOMO \"A\", C.D. \"A\"",
+            "away": "PALMEIROS DE COSTA T., U.D.",
+            "hs": 1,
+            "as": 7,
+            "date": "04-02-2022",
+            "time": "17:00",
+            "venue": "PUERTO ARRECIFE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "away": "LANZAROTE \"A\", U.D. \"A\"",
+            "hs": 1,
+            "as": 8,
+            "date": "04-02-2022",
+            "time": "18:49",
+            "venue": "MUNICIPAL DE YAIZA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TEGUISE, C.D.",
+            "away": "TAHICHE \"A\", C.D. \"A\"",
+            "hs": 0,
+            "as": 4,
+            "date": "05-02-2022",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TEGUISE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "TINAJO\"A\", U.D. \"A\"",
+            "away": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "hs": 5,
+            "as": 4,
+            "date": "05-02-2022",
+            "time": "09:15",
+            "venue": "LOS VOLCANES F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "ALTAVISTA C.F.",
+            "away": "PUERTO DEL CARMEN, F.C.",
+            "hs": 4,
+            "as": 2,
+            "date": "05-02-2022",
+            "time": "09:15",
+            "venue": "AGAPITO REYES VIERA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "away": "HARIA C.F.",
+            "hs": 0,
+            "as": 1,
+            "date": "05-02-2022",
+            "time": "09:15",
+            "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "12-02-2022",
+        "matches": [
+          {
+            "home": "TAHICHE \"A\", C.D. \"A\"",
+            "away": "UNION SUR YAIZA \"A\", C.D. \"A\"",
+            "hs": 6,
+            "as": 3,
+            "date": "12-02-2022",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(2)",
+            "referee": ""
+          },
+          {
+            "home": "PUERTO DEL CARMEN, F.C.",
+            "away": "SAN BARTOLOME \"A\", C.F. \"A\"",
+            "hs": 1,
+            "as": 6,
+            "date": "12-02-2022",
+            "time": "09:15",
+            "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "PALMEIROS DE COSTA T., U.D.",
+            "away": "MACIOT SPORT, C.D.",
+            "hs": 6,
+            "as": 4,
+            "date": "12-02-2022",
+            "time": "09:15",
+            "venue": "MUNICIPAL DE TAHICHE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "HARIA C.F.",
+            "away": "LOMO \"A\", C.D. \"A\"",
+            "hs": 9,
+            "as": 6,
+            "date": "12-02-2022",
+            "time": "10:00",
+            "venue": "LADISLAO RODRIGUEZ BONILLA F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "LANZAROTE \"A\", U.D. \"A\"",
+            "away": "TINAJO\"A\", U.D. \"A\"",
+            "hs": 9,
+            "as": 0,
+            "date": "12-02-2022",
+            "time": "11:15",
+            "venue": "PUERTO ARRECIFE F8(1)",
+            "referee": ""
+          },
+          {
+            "home": "SPORTING TIAS \"A\", C.F. \"A\"",
+            "away": "ALTAVISTA C.F.",
+            "hs": 4,
+            "as": 4,
+            "date": "13-02-2022",
+            "time": "09:30",
+            "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "19-02-2022",
+        "matches": []
+      }
+    ]
+  }
+]

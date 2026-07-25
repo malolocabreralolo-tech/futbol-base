@@ -198,6 +198,28 @@ export function bracketChampion(jornadas, rounds) {
   return adv === 'home' ? last[0][1] : last[0][2];
 }
 
+/* Icono de la cabecera de fase. Los nombres exactos mandan; el resto se
+ * resuelve por palabras clave, porque hay muchas fases insulares con nombre
+ * largo ("Fase 1 Fuerteventura", "Copa Cabildo Primera Lanzarote") que antes
+ * caían todas al ⚽ genérico. */
+const PHASE_ICONS = {
+  'Segunda Fase A': '🏆', 'Segunda Fase B': '🥈', 'Segunda Fase C': '🥉',
+  'Lanzarote': '🌋', 'Fuerteventura': '🏝️',
+  'Gran Canaria': '🏔️',
+  'Primera Fase GC': '🏟️',
+  'Primera Fase': '🏟️',
+};
+
+export function phaseIcon(phase) {
+  if (PHASE_ICONS[phase]) return PHASE_ICONS[phase];
+  const p = String(phase || '').toLowerCase();
+  if (p.includes('copa') || p.includes('campeon') || p.includes('campeón')) return '🏆';
+  if (p.includes('lanzarote')) return '🌋';
+  if (p.includes('fuerteventura')) return '🏝️';
+  if (p.includes('gran canaria') || p.includes(' gc')) return '🏔️';
+  return '⚽';
+}
+
 /* A cup / knockout group (vs a regular league group). By code prefix
  * (PCC or BC) or phase ("Copa"/"Campeón"). */
 export function isCupGroup(g) {
@@ -252,8 +274,19 @@ export function knockoutRoundLabel(raw, idx, total) {
 export function isRoundRobinCup(jornadas) {
   if (!jornadas) return false;
   const keys = Object.keys(jornadas);
-  if (keys.length !== 1) return false;
-  return (jornadas[keys[0]] || []).length > 2;
+  if (!keys.length) return false;
+  // Un cuadro es un EMBUDO: cada ronda tiene menos partidos que la anterior y
+  // termina en una sola final. Si la última ronda no es menor que la primera,
+  // esto es una liguilla y va como TABLA — da igual que se llame "Copa".
+  // Cubre la Copa de Campeones 2023-24 (1 ronda de 7) y las copas insulares
+  // de Lanzarote y Fuerteventura (jornadas numeradas de tamaño constante).
+  // Comparar primera contra última, y no "última === 1", evita clasificar mal
+  // un cuadro a medio jugar cuya última ronda disputada son las semifinales.
+  const first = (jornadas[keys[0]] || []).length;
+  const last = (jornadas[keys[keys.length - 1]] || []).length;
+  // Ronda única: liguilla si tiene varios partidos; una final suelta es cuadro.
+  if (keys.length === 1) return first > 2;
+  return last >= first;
 }
 
 /* Team badge — real shield from SHIELDS or fallback to initials */

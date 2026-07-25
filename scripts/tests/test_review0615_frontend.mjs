@@ -311,3 +311,54 @@ test('countStats ya no usa el atajo HIST_MATCHES solo-benjamín', () => {
     'el recuento debe ser por categoría, no un total global para benjamín');
   assert.match(s, /countMatches\(data, hist\)/);
 });
+
+/* Copas insulares 2023-24 (Lanzarote / Fuerteventura): se llaman "Copa" pero
+ * son LIGUILLAS de jornadas numeradas con clasificación completa, no cuadros.
+ * isKnockoutGroup las marca como copa por la fase, así que sin esto se
+ * pintarían como un bracket de varias columnas con etiquetas inventadas
+ * (Cuartos/Semis/Final por posición). Un cuadro es un EMBUDO: la última ronda
+ * tiene menos partidos que la primera. */
+
+test('isRoundRobinCup: liguilla multi-jornada de tamaño constante → tabla', async () => {
+  const { isRoundRobinCup } = await import('../../src/state.js');
+  const liguilla = {
+    'J1': [['','A','B',1,0],['','C','D',2,1],['','E','F',0,0],['','G','H',3,1]],
+    'J2': [['','A','C',1,0],['','B','D',2,1],['','E','G',0,0],['','F','H',3,1]],
+    'J3': [['','A','D',1,0],['','B','C',2,1],['','E','H',0,0],['','F','G',3,1]],
+  };
+  assert.equal(isRoundRobinCup(liguilla), true);
+});
+
+test('isRoundRobinCup: los cuadros reales del proyecto siguen siendo cuadros', async () => {
+  const { isRoundRobinCup } = await import('../../src/state.js');
+  const r = n => Array.from({ length: n }, () => ['','A','B',1,0]);
+  // 2024-25 y 2025-26 (BCA1…, PCC1) y Maspalomas Cup 2026
+  assert.equal(isRoundRobinCup({ a: r(2), b: r(2), c: r(1) }), false);
+  assert.equal(isRoundRobinCup({ a: r(4), b: r(2), c: r(1) }), false);
+  assert.equal(isRoundRobinCup({ a: r(2), b: r(16), c: r(8), d: r(4), e: r(2), f: r(1) }), false);
+});
+
+test('isRoundRobinCup: un cuadro a medio jugar no se confunde con liguilla', async () => {
+  const { isRoundRobinCup } = await import('../../src/state.js');
+  const r = n => Array.from({ length: n }, () => ['','A','B',1,0]);
+  // Cuartos jugados, semifinales en curso, final aún sin aparecer.
+  assert.equal(isRoundRobinCup({ cuartos: r(4), semis: r(2) }), false);
+});
+
+test('phaseIcon: las fases insulares de nombre largo dejan de caer al genérico', async () => {
+  const { phaseIcon } = await import('../../src/state.js');
+  // Nombres exactos: sin cambios.
+  assert.equal(phaseIcon('Primera Fase GC'), '🏟️');
+  assert.equal(phaseIcon('Segunda Fase A'), '🏆');
+  assert.equal(phaseIcon('Fuerteventura'), '🏝️');
+  // Por palabra clave (antes todas ⚽).
+  assert.equal(phaseIcon('Fase 1 Fuerteventura'), '🏝️');
+  assert.equal(phaseIcon('Primera Lanzarote'), '🌋');
+  assert.equal(phaseIcon('Preferente Lanzarote'), '🌋');
+  assert.equal(phaseIcon('Copa de Campeones'), '🏆');
+  assert.equal(phaseIcon('Copa Cabildo Primera Lanzarote'), '🏆');
+  // Sin coincidencia: genérico.
+  assert.equal(phaseIcon('Fase Rara'), '⚽');
+  assert.equal(phaseIcon(''), '⚽');
+  assert.equal(phaseIcon(null), '⚽');
+});

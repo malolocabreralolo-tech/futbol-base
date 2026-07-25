@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, bracketDrawAdvancer, matchAdvancer, bracketChampion, getSeasonError, ensureSeasonData } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, phaseIcon, bracketDrawAdvancer, matchAdvancer, bracketChampion, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
@@ -88,18 +88,10 @@ export function renderClasif() {
   }
 
   const phases = getPhases();
-  const phaseIcons = {
-    'Segunda Fase A': '🏆', 'Segunda Fase B': '🥈', 'Segunda Fase C': '🥉',
-    'Lanzarote': '🌋', 'Fuerteventura': '🏝️',
-    'Gran Canaria': '🏔️',
-    'Primera Fase GC': '🏟️',
-    'Primera Fase': '🏟️',
-  };
-
   const defaultGroup = S.jorGroup || (S.cat === 'benjamin' ? 'A2' : 'PG2');
   Object.entries(phases).forEach(([phase, groups]) => {
     const filteredGroups = filterGroups(groups);
-    const hdr = el('div', 'phase-header', `<span class="phase-icon">${phaseIcons[phase]||'⚽'}</span> ${escapeHtml(phase)}`);
+    const hdr = el('div', 'phase-header', `<span class="phase-icon">${phaseIcon(phase)}</span> ${escapeHtml(phase)}`);
     container.appendChild(hdr);
 
     groups.forEach(g => {

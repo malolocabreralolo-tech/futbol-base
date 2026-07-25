@@ -196,6 +196,9 @@ export function knockoutRoundLabel(raw, idx, total) {
   const s = String(raw);
   // 1) explicit round name in the key (2025-26 cups: "( Semifinales )").
   //    Check semifinal BEFORE final ("Semifinales" contains "final").
+  //    "Previa": ronda incompleta que abre un cuadro cuyo número de equipos no
+  //    es potencia de 2 (Maspalomas Cup: 34 equipos → 2 eliminatorias → 32).
+  if (/previa/i.test(s)) return 'Previa';
   if (/dieciseis/i.test(s)) return 'Dieciseisavos';
   if (/octavos/i.test(s)) return 'Octavos';
   if (/cuartos/i.test(s)) return 'Cuartos';

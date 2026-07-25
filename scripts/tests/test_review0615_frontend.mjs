@@ -108,6 +108,15 @@ test('knockoutRoundLabel: usa el nombre explícito (order-independiente)', async
   assert.equal(knockoutRoundLabel('( Semifinales )', 0, 2), 'Semifinales');
 });
 
+test('knockoutRoundLabel: la ronda Previa se etiqueta por nombre, no cruda', async () => {
+  const { knockoutRoundLabel } = await import('../../src/state.js');
+  // Maspalomas Cup: cuadro de 34 equipos → 2 eliminatorias previas. Sin este
+  // caso el label caía al fallback y se pintaba literal "( Previa )".
+  assert.equal(knockoutRoundLabel('26-06-2026 ( Previa )', 0, 6), 'Previa');
+  // La posición (fromEnd = 5) no la debe reetiquetar como ronda numerada.
+  assert.notEqual(knockoutRoundLabel('26-06-2026 ( Previa )', 0, 6), 'Ronda 6');
+});
+
 test('knockoutRoundLabel: cups "Ronda N" (2024-25) usan posición → Cuartos/Semis/Final', async () => {
   const { knockoutRoundLabel } = await import('../../src/state.js');
   // bracket de 3 rondas "Ronda 1/2/3 Ida": idx1 → Semifinales (no "Ronda 2")

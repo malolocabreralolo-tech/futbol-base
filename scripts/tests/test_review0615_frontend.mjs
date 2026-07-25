@@ -170,10 +170,15 @@ test('bracketDrawAdvancer: null si ninguno aparece después (final)', async () =
   assert.equal(bracketDrawAdvancer({ F: [['', 'A', 'B', 2, 2]] }, ['F'], 0, 'A', 'B'), null);
 });
 
-test('buildKnockoutBracket marca el avance por penaltis (bracketDrawAdvancer + pen)', () => {
+test('buildKnockoutBracket marca el avance por penaltis (matchAdvancer + pen)', () => {
   const s = src('render.js');
-  assert.match(s, /bracketDrawAdvancer\(/, 'el bracket debe resolver el avance en empates');
+  // matchAdvancer prefiere la 6ª columna explícita y cae a bracketDrawAdvancer
+  // para los datos históricos que no la tienen.
+  assert.match(s, /matchAdvancer\(/, 'el bracket debe resolver el avance en empates');
   assert.match(s, /pen/i, 'debe indicar "(pen)" en empates resueltos');
+  const st = src('state.js');
+  assert.match(st, /bracketDrawAdvancer\(/,
+    'matchAdvancer debe conservar la deducción por ronda posterior');
 });
 
 test('buildUnifiedPrebenjamin filtra cups (usa unifiedPrebenLeagueGroups)', () => {
@@ -209,4 +214,100 @@ test('isRoundRobinCup: 1 ronda con 1 partido (una final suelta) → false', asyn
 test('buildKnockoutBracket renderiza tabla para cups round-robin', () => {
   const s = src('render.js');
   assert.match(s, /isRoundRobinCup\(/, 'buildKnockoutBracket debe usar isRoundRobinCup para elegir tabla vs bracket');
+});
+
+/* Campeón de un cuadro sin clasificación (Maspalomas Cup: grupos que son
+ * bracket puro, standings vacío). Antes la cabecera decía "0 equipos" y la
+ * final decidida en penaltis se quedaba sin campeón: bracketDrawAdvancer mira
+ * quién aparece en la ronda SIGUIENTE, y después de la final no hay ninguna. */
+
+test('matchAdvancer: la 6ª columna manda sobre la deducción', async () => {
+  const { matchAdvancer } = await import('../../src/state.js');
+  const jornadas = { 'F': [['27/06', 'A', 'B', 2, 2, 'away']] };
+  const rounds = ['F'];
+  assert.equal(matchAdvancer(jornadas.F[0], jornadas, rounds, 0), 'away');
+  // Marcador decisivo: gana quien marcó más, la columna no hace falta.
+  assert.equal(matchAdvancer(['27/06', 'A', 'B', 3, 1], jornadas, rounds, 0), 'home');
+  assert.equal(matchAdvancer(['27/06', 'A', 'B', 0, 1], jornadas, rounds, 0), 'away');
+  // Sin jugar no avanza nadie.
+  assert.equal(matchAdvancer(['27/06', 'A', 'B', null, null], jornadas, rounds, 0), null);
+});
+
+test('matchAdvancer: sin 6ª columna sigue deduciendo del cuadro (histórico)', async () => {
+  const { matchAdvancer } = await import('../../src/state.js');
+  const jornadas = {
+    'S': [['26/06', 'A', 'B', 1, 1], ['26/06', 'C', 'D', 2, 0]],
+    'F': [['27/06', 'B', 'C', 3, 0]],
+  };
+  const rounds = ['S', 'F'];
+  // A-B empatan; B aparece en la final → pasó B.
+  assert.equal(matchAdvancer(jornadas.S[0], jornadas, rounds, 0), 'away');
+});
+
+test('bracketChampion: sale del ganador de la final, penaltis incluidos', async () => {
+  const { bracketChampion } = await import('../../src/state.js');
+  const conPenaltis = { 'F': [['27/06', 'AD Huracán A', 'UD Vecindario A', 2, 2, 'away']] };
+  assert.equal(bracketChampion(conPenaltis, ['F']), 'UD Vecindario A');
+  const conMarcador = { 'F': [['27/06', 'Gáldar CF', 'CD Jovero', 7, 2]] };
+  assert.equal(bracketChampion(conMarcador, ['F']), 'Gáldar CF');
+});
+
+test('bracketChampion: null cuando la última ronda no decide', async () => {
+  const { bracketChampion } = await import('../../src/state.js');
+  // Empate sin dato de penaltis ni ronda posterior: no inventamos campeón.
+  assert.equal(bracketChampion({ 'F': [['27/06', 'A', 'B', 1, 1]] }, ['F']), null);
+  // Última ronda con varios partidos (liguilla): no es una final.
+  assert.equal(bracketChampion({ 'R': [['1/06','A','B',1,0], ['1/06','C','D',2,0]] }, ['R']), null);
+  // Final sin jugar.
+  assert.equal(bracketChampion({ 'F': [['27/06', 'A', 'B', null, null]] }, ['F']), null);
+  assert.equal(bracketChampion({}, []), null);
+});
+
+/* ─── countMatches: el chip "N partidos" de la stats-bar ───────────────────
+ * Bug encontrado en la revisión 25/07: en la temporada ACTUAL los grupos solo
+ * llevan la última jornada inline (el resto vive en HISTORY), así que la suma
+ * ingenua daba 78 partidos en prebenjamín. El parche previo sustituía el total
+ * por HIST_MATCHES pero SOLO para benjamín, y HIST_MATCHES es el total de LAS
+ * DOS categorías: benjamín inflaba (2705 en vez de 2126) y prebenjamín
+ * contaba una jornada. */
+
+test('countMatches: la temporada actual cuenta desde HISTORY, no la jornada inline', async () => {
+  const { countMatches } = await import('../../src/state.js');
+  const grupos = [{ id: 'A1', matches: [1, 2, 3] }];           // solo la última jornada
+  const HIST = { A1: { J1: [1, 2, 3], J2: [1, 2, 3], J3: [1, 2] } };
+  assert.equal(countMatches(grupos, HIST), 8);
+  // Sin HISTORY (histórica) el per-season file ya trae todo inline.
+  assert.equal(countMatches(grupos, null), 3);
+});
+
+test('countMatches: los grupos que no pasan por la DB cuentan sus partidos inline', async () => {
+  const { countMatches } = await import('../../src/state.js');
+  // La Maspalomas Cup no está en HISTORY y lleva todos sus partidos inline:
+  // si se ignorasen, desaparecerían del recuento.
+  const grupos = [
+    { id: 'A1', matches: [1] },
+    { id: 'MCB1', matches: [1, 2, 3, 4, 5, 6] },
+  ];
+  const HIST = { A1: { J1: [1, 2, 3, 4] } };
+  assert.equal(countMatches(grupos, HIST), 10);
+});
+
+test('countMatches: cuadros sin lista matches suman por jornadas', async () => {
+  const { countMatches } = await import('../../src/state.js');
+  const grupos = [{ id: 'MCBK1', jornadas: { Previa: [1, 2], Final: [1] } }];
+  assert.equal(countMatches(grupos, null), 3);
+});
+
+test('countMatches: tolera entradas vacías', async () => {
+  const { countMatches } = await import('../../src/state.js');
+  assert.equal(countMatches([], null), 0);
+  assert.equal(countMatches(null, null), 0);
+  assert.equal(countMatches([{ id: 'X', standings: [] }], null), 0);
+});
+
+test('countStats ya no usa el atajo HIST_MATCHES solo-benjamín', () => {
+  const s = src('state.js');
+  assert.doesNotMatch(s, /S\.cat === 'benjamin' && typeof HIST_MATCHES/,
+    'el recuento debe ser por categoría, no un total global para benjamín');
+  assert.match(s, /countMatches\(data, hist\)/);
 });

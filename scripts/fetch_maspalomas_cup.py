@@ -118,7 +118,16 @@ def normalize(match):
         "hs": match.get("homeScore"),
         "as": match.get("awayScore"),
         "field": match.get("field") or "",
+        "pen": _penalty_winner(match),
     }
+
+
+def _penalty_winner(match):
+    """'home' / 'away' si el partido se decidió en los penaltis, si no None."""
+    if (match.get("penaltyStatus") or "none") == "none":
+        return None
+    winner = match.get("penaltyWinner")
+    return winner if winner in ("home", "away") else None
 
 
 def by_kickoff(m):
@@ -137,8 +146,19 @@ def row_full(m, abbreviate_field=False):
 
 
 def row_short(m):
-    """Fila de una ronda dentro de `jornadas` (5 columnas)."""
-    return [m["day"], m["home"], m["away"], m["hs"], m["as"]]
+    """Fila de una ronda dentro de `jornadas`.
+
+    5 columnas, más una 6ª OPCIONAL con quién ganó la tanda de penaltis
+    ('home'/'away') cuando el partido acabó en empate. El frontend deduce el que
+    pasa mirando quién aparece en la ronda siguiente, pero eso no funciona en la
+    final: sin este dato la Copa Oro benjamín 2026 (2-2, penaltis 3-4) se queda
+    sin campeón visible. Las rondas sin penaltis mantienen las 5 columnas de
+    siempre, igual que los datos históricos.
+    """
+    row = [m["day"], m["home"], m["away"], m["hs"], m["as"]]
+    if m["pen"]:
+        row.append(m["pen"])
+    return row
 
 
 # ─── CLASIFICACIONES ───────────────────────────────────────────────────────────

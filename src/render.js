@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, bracketDrawAdvancer, getSeasonError, ensureSeasonData } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, bracketDrawAdvancer, matchAdvancer, bracketChampion, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
@@ -148,11 +148,23 @@ export function buildGroupCard(g, forceOpen) {
   const knockout = isKnockoutGroup(g);
   const teamCount = g.standings.length;
   // For knockouts, show the champion next to the group name instead of
-  // "N equipos" (uninformative for a bracket).
-  const champion = knockout && g.standings.length ? g.standings[0][1] : null;
-  const headerBadge = knockout && champion
+  // "N equipos" (uninformative for a bracket). Pure-bracket cups carry no
+  // standings to read it from, so fall back to the winner of the final; and
+  // never print "0 equipos", which is what an empty standings used to give.
+  let champion = null;
+  if (knockout) {
+    if (g.standings.length) champion = g.standings[0][1];
+    else {
+      const jornadas = knockoutRoundsSource(g, isHistorical(),
+        typeof HISTORY !== 'undefined' ? HISTORY : null);
+      champion = bracketChampion(jornadas, Object.keys(jornadas));
+    }
+  }
+  const headerBadge = champion
     ? `<span class="group-badge cup-badge" title="Campeón">🏆 ${escapeHtml(champion)}</span>`
-    : `<span class="group-badge">${teamCount} equipos</span>`;
+    : (knockout && !teamCount
+        ? ''
+        : `<span class="group-badge">${teamCount} equipos</span>`);
   card.innerHTML = `
     <div class="group-header">
       <div class="group-title">
@@ -189,7 +201,9 @@ function buildKnockoutBracket(g) {
     return buildStandingsTable(g.standings, g.id, g);
   }
 
-  const champion = g.standings.length ? g.standings[0][1] : null;
+  const champion = g.standings.length
+    ? g.standings[0][1]
+    : bracketChampion(jornadas, rounds);
 
   let html = '<div class="bracket">';
   rounds.forEach((rkey, idx) => {
@@ -212,8 +226,9 @@ function buildKnockoutBracket(g) {
       }
       const isFinalMatch = matches.length === 1;
       const draw = played && !homeWin && !awayWin;
-      // On a draw, who advanced on penalties (appears in a later round).
-      const penAdvancer = draw ? bracketDrawAdvancer(jornadas, rounds, idx, home, away) : null;
+      // On a draw, who advanced on penalties: the explicit 6th column when the
+      // source provides it, else inferred from who shows up in a later round.
+      const penAdvancer = draw ? matchAdvancer(m, jornadas, rounds, idx) : null;
       const homeAdv = homeWin || penAdvancer === 'home';
       const awayAdv = awayWin || penAdvancer === 'away';
       const homeClass = `bracket-team${homeAdv ? ' winner' : ''}${draw && !homeAdv ? ' draw' : ''}${isFeatured(home) ? ' featured-team' : ''}`;

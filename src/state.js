@@ -171,6 +171,33 @@ export function bracketDrawAdvancer(jornadas, rounds, idx, home, away) {
   return null;
 }
 
+/* Who advanced from a knockout match. A drawn match carries the shootout
+ * winner in an optional 6th column ('home'/'away') when the source knows it
+ * (Maspalomas Cup API); otherwise fall back to deriving it from the bracket.
+ * That fallback CANNOT resolve the final — there is no later round — so an
+ * explicit column is the only way a penalty-decided final gets a champion. */
+export function matchAdvancer(row, jornadas, rounds, idx) {
+  const [, home, away, hs, as, pen] = row || [];
+  if (hs == null || as == null) return null;
+  if (hs > as) return 'home';
+  if (as > hs) return 'away';
+  if (pen === 'home' || pen === 'away') return pen;
+  return bracketDrawAdvancer(jornadas, rounds, idx, home, away);
+}
+
+/* Champion of a bracket: the team that advanced from the single match of the
+ * last round. Used when the group carries no standings to read it from (the
+ * Maspalomas Cup groups don't — they are pure brackets). Returns null when the
+ * last round isn't a lone decided match. */
+export function bracketChampion(jornadas, rounds) {
+  if (!rounds || !rounds.length) return null;
+  const last = (jornadas || {})[rounds[rounds.length - 1]] || [];
+  if (last.length !== 1) return null;
+  const adv = matchAdvancer(last[0], jornadas, rounds, rounds.length - 1);
+  if (!adv) return null;
+  return adv === 'home' ? last[0][1] : last[0][2];
+}
+
 /* A cup / knockout group (vs a regular league group). By code prefix
  * (PCC or BC) or phase ("Copa"/"Campeón"). */
 export function isCupGroup(g) {
@@ -571,23 +598,37 @@ export function getPhases() {
   return map;
 }
 
+/* Total matches across a set of groups.
+ *
+ * Current-season groups carry only the LATEST jornada inline — the whole season
+ * lives in HISTORY, keyed by group code — so counting their inline matches
+ * reports a single matchday as the season total. Pass `hist` (HISTORY) for the
+ * current season and it is used as the source for every group that appears
+ * there. Groups absent from it (the Maspalomas Cup, which never goes through
+ * the DB) do carry all their matches inline and are counted from the group.
+ *
+ * Pass hist = null for historical seasons: their per-season file already
+ * carries every jornada inline, and HISTORY holds CURRENT-season data whose
+ * group codes can collide across seasons (see knockoutRoundsSource). */
+export function countMatches(groups, hist) {
+  let matches = 0;
+  (groups || []).forEach(g => {
+    const fromHistory = hist && hist[g.id];
+    const source = fromHistory || g.jornadas;
+    if (!fromHistory && g.matches) matches += g.matches.length;
+    else if (source) Object.values(source).forEach(jor => { matches += jor.length; });
+  });
+  return matches;
+}
+
 export function countStats() {
   const data = getData();
-  const groups = data.length;
-  let teams = 0, matches = 0;
-  data.forEach(g => {
-    teams += g.standings.length;
-    if (g.matches) {
-      matches += g.matches.length;
-    } else if (g.jornadas) {
-      Object.values(g.jornadas).forEach(function(jor) { matches += jor.length; });
-    }
-  });
-  // Add history matches for benjamin (current season only)
-  if (!isHistorical() && S.cat === 'benjamin' && typeof HIST_MATCHES !== 'undefined') {
-    matches = HIST_MATCHES;
-  }
-  return { groups, teams, matches };
+  const hist = (!isHistorical() && typeof HISTORY !== 'undefined') ? HISTORY : null;
+  return {
+    groups: data.length,
+    teams: data.reduce((n, g) => n + g.standings.length, 0),
+    matches: countMatches(data, hist),
+  };
 }
 
 /* ====== CLASIFICACION UNIFICADA PREBENJAMIN ====== */

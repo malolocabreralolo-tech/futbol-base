@@ -26,13 +26,51 @@ JS_PATH = ROOT / "data-maspalomas-cup-2026.js"
 
 
 def _match(n, day="26/06", time="10:00", home="A", away="B", hs=1, as_=0,
-           field="Campo CD 1.1 - Campo Joma 1"):
+           field="Campo CD 1.1 - Campo Joma 1", pen=None):
     """Partido ya normalizado, como los que manejan los helpers internos."""
     d = datetime.datetime.strptime(f"2026-{day[3:]}-{day[:2]} {time}",
                                    "%Y-%m-%d %H:%M")
     return {"n": n, "kickoff": d, "day": day, "time": time,
             "date_key": d.strftime("%d-%m-%Y"), "home": home, "away": away,
-            "hs": hs, "as": as_, "field": field}
+            "hs": hs, "as": as_, "field": field, "pen": pen}
+
+
+class TestPenaltyWinner:
+    """El ganador de la tanda viaja en los datos: en la final no hay ronda
+    posterior de la que deducirlo."""
+
+    def test_reads_the_api_winner(self):
+        from fetch_maspalomas_cup import _penalty_winner
+        assert _penalty_winner({"penaltyStatus": "saved",
+                                "penaltyWinner": "away"}) == "away"
+
+    def test_none_when_no_shootout(self):
+        from fetch_maspalomas_cup import _penalty_winner
+        assert _penalty_winner({"penaltyStatus": "none",
+                                "penaltyWinner": None}) is None
+        assert _penalty_winner({}) is None
+
+    def test_ignores_unexpected_winner_values(self):
+        from fetch_maspalomas_cup import _penalty_winner
+        assert _penalty_winner({"penaltyStatus": "saved",
+                                "penaltyWinner": "???"}) is None
+
+    def test_row_carries_a_sixth_column_only_on_shootouts(self):
+        from fetch_maspalomas_cup import row_short
+        assert row_short(_match(1, hs=2, as_=2, pen="away")) == [
+            "26/06", "A", "B", 2, 2, "away"]
+        # Sin penaltis se mantienen las 5 columnas de siempre.
+        assert len(row_short(_match(1, hs=3, as_=1))) == 5
+
+    def test_published_final_of_the_gold_cup_names_its_winner(self):
+        # Copa Oro benjamín 2026: 2-2 y penaltis 3-4 → gana el visitante.
+        src = JS_PATH.read_text(encoding="utf-8")
+        m = re.search(r"const MASPALOMAS_CUP_BENJAMIN = (\[.*?\]);", src, re.DOTALL)
+        gold = next(g for g in json.loads(m.group(1)) if g["name"] == "Copa Oro")
+        final = gold["jornadas"][list(gold["jornadas"])[-1]]
+        assert len(final) == 1
+        assert final[0][3] == final[0][4], "la final acabó en empate"
+        assert final[0][5] == "away", "falta quién ganó la tanda"
 
 
 class TestShortField:

@@ -21,6 +21,7 @@ Uso:
     ISLAS_SEASON=19 SCRAPE_IDS=1328,1330 python3 scripts/fetch_fiflp_islas.py
 """
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -45,6 +46,33 @@ COMPS_BY_SEASON = {
         {"id": "1097", "name": "Copa Benjamin Fuerteventura", "cat": "benjamin", "island": "fuerteventura", "phase": "Copa"},
         {"id": "1128", "name": "Copa Delegacion Benjamin Fuerteventura", "cat": "benjamin", "island": "fuerteventura", "phase": "Copa Delegacion"},
     ],
+    # 2021-2022 — ligas de GRAN CANARIA. Wayback dejó huecos que se dieron por
+    # "techo" (GC7 78/156, GC5 132/156, PGC2/PGC3 132/182) sin haber probado
+    # FIFLP. Se scrapean para COMPARAR: el import solo rellena, nunca pisa.
+    "17gc": [
+        {"id": "891", "name": "Benjamin GC Preferente", "cat": "benjamin", "island": "grancanaria", "phase": "Preferente GC"},
+        {"id": "893", "name": "Benjamin GC Primera", "cat": "benjamin", "island": "grancanaria", "phase": "Primera Fase GC"},
+        {"id": "897", "name": "Prebenjamin GC", "cat": "prebenjamin", "island": "grancanaria", "phase": "Gran Canaria"},
+    ],
+    # 2022-2023 — mismas ligas de Gran Canaria
+    "18gc": [
+        {"id": "1092", "name": "Benjamin GC Preferente", "cat": "benjamin", "island": "grancanaria", "phase": "Preferente GC"},
+        {"id": "1094", "name": "Benjamin GC Primera", "cat": "benjamin", "island": "grancanaria", "phase": "Primera Fase GC"},
+        {"id": "1098", "name": "Prebenjamin GC", "cat": "prebenjamin", "island": "grancanaria", "phase": "Gran Canaria"},
+    ],
+    # 2023-2024 — Segunda Fase de Gran Canaria, que no archivó nadie
+    "19gc": [
+        {"id": "1329", "name": "Benjamin GC Primera", "cat": "benjamin", "island": "grancanaria", "phase": "Primera Fase GC"},
+        {"id": "1333", "name": "Prebenjamin GC", "cat": "prebenjamin", "island": "grancanaria", "phase": "Gran Canaria"},
+        {"id": "1439", "name": "Benjamin GC Segunda Fase", "cat": "benjamin", "island": "grancanaria", "phase": "Segunda Fase GC"},
+        {"id": "1445", "name": "Torneo Cierre Prebenjamin", "cat": "prebenjamin", "island": "grancanaria", "phase": "Torneo Cierre"},
+    ],
+    # 2024-2025 — copas insulares de Lanzarote, nunca importadas
+    "20": [
+        {"id": "1657", "name": "Copa Cabildo Lanzarote Preferente", "cat": "benjamin", "island": "lanzarote", "phase": "Copa Cabildo Preferente Lanzarote"},
+        {"id": "1682", "name": "Copa Cabildo Lanzarote Primera", "cat": "benjamin", "island": "lanzarote", "phase": "Copa Cabildo Primera Lanzarote"},
+        {"id": "1731", "name": "Torneo Cierre Prebenjamin FV-LZ", "cat": "prebenjamin", "island": "lanzarote", "phase": "Torneo Cierre"},
+    ],
     # 2023-2024
     "19": [
         {"id": "1328", "name": "Benjamin Lanzarote Preferente", "cat": "benjamin", "island": "lanzarote", "phase": "Preferente"},
@@ -63,7 +91,10 @@ if SEASON not in COMPS_BY_SEASON:
     sys.exit(f"ISLAS_SEASON={SEASON!r} no soportada. Opciones: "
              f"{', '.join(sorted(COMPS_BY_SEASON))}")
 
-F.SEASON = SEASON
+# La clave puede llevar sufijo ('17gc' = temporada 17, tanda de Gran Canaria)
+# para separar lotes de la misma temporada en raws distintos. El CodTemporada
+# que entiende FIFLP son solo los dígitos.
+F.SEASON = re.sub(r"\D", "", SEASON)
 F.OUTPUT_PATH = os.path.join(F.PROJECT_ROOT, "scripts",
                              f"fiflp_islas_{SEASON}_raw.json")
 

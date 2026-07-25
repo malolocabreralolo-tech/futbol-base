@@ -1,0 +1,55 @@
+name: Scrape FIFLP islas (Lanzarote / Fuerteventura, temporadas anteriores)
+
+on:
+  workflow_dispatch:
+    inputs:
+      temporada:
+        description: 'CodTemporada FIFLP (17=2021-22, 18=2022-23, 19=2023-24)'
+        required: true
+        default: '19'
+      ids:
+        description: 'IDs de competición separados por coma (vacío = todas)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+      - name: Scrape ligas y copas insulares
+        env:
+          ISLAS_SEASON: ${{ inputs.temporada }}
+          SCRAPE_IDS: ${{ inputs.ids }}
+        run: python3 scripts/fetch_fiflp_islas.py
+        timeout-minutes: 30
+      # Sonda: solo commitea el raw JSON; NO toca la DB ni publica. El import,
+      # la verificacion y la publicacion se hacen en LOCAL contra estos datos.
+      - name: Commit raw JSON
+        run: |
+          git config user.name  "GitHub Actions"
+          git config user.email "actions@github.com"
+          RAW="scripts/fiflp_islas_${{ inputs.temporada }}_raw.json"
+          git add "$RAW" || true
+          if git diff --cached --quiet; then
+            echo "Sin datos: FIFLP no devolvio nada para esa temporada."
+          else
+            git stash
+            git pull --rebase origin main
+            git stash pop || true
+            git add "$RAW"
+            git commit -m "scrape: FIFLP islas temporada ${{ inputs.temporada }} raw (sonda)"
+            git push
+          fi

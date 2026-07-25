@@ -23,6 +23,16 @@ FILES = [
     (os.path.join(PROJECT_ROOT, "data-prebenjamin.js"), "PREBENJAMIN", "PREBENJ_STATS"),
 ]
 
+# Protección de cambio de temporada. Las URLs de futbolaspalmas.com son slugs
+# sin temporada y se REUTILIZAN, así que en cuanto arranque la liga siguiente
+# estas mismas direcciones servirán datos de OTRA temporada. Como este scraper
+# tiene la temporada hardcodeada y reemplaza la clasificación de cada grupo
+# (DELETE + INSERT), sin este guard el primer update de septiembre borraría las
+# tablas finales de la temporada terminada y las dejaría a cero.
+_ROLLOVER_MIN_PLAYED = 5   # a partir de aquí una tabla se considera avanzada
+_ROLLOVER_MAX_NEW = 2      # y esto, recién empezada
+_MIN_TEAM_OVERLAP = 0.5    # solapamiento mínimo de equipos entre tablas
+
 GOALS_URL = "https://futbolaspalmas.com/mostrar-mas-datos-estadisticas.php"
 TOP_SCORERS_URL = "https://futbolaspalmas.com/include2019/goleadores-base.php"
 
@@ -33,6 +43,50 @@ from db import (get_connection, init_db, get_or_create_season, get_or_create_cat
 
 
 # ─── FETCH ─────────────────────────────────────────────────────────────────────
+
+def standings_regression(stored, scraped):
+    """¿Sustituir `stored` por `scraped` perdería información?
+
+    Devuelve el motivo (str) si hay que RECHAZAR la escritura, o None si la
+    actualización es normal. `stored` y `scraped` son listas de filas
+    canónicas [pos, equipo, pts, J, G, E, P, GF, GC, DF].
+
+    Rechaza los dos síntomas de que la fuente ha cambiado de temporada bajo el
+    mismo slug: una tabla avanzada que pasa a estar recién empezada, y un
+    conjunto de equipos que ya no se parece al almacenado. Un equipo que se
+    inscribe tarde o uno que se retira a mitad de liga siguen pasando.
+    """
+    if not stored:
+        return None                      # grupo nuevo: nada que perder
+    if not scraped:
+        return "la clasificación scrapeada viene vacía"
+
+    stored_played = max((r[3] for r in stored), default=0)
+    scraped_played = max((r[3] for r in scraped), default=0)
+    if stored_played >= _ROLLOVER_MIN_PLAYED and scraped_played <= _ROLLOVER_MAX_NEW:
+        return (f"la jornada cae de {stored_played} a {scraped_played}: "
+                f"parece el arranque de otra temporada")
+
+    stored_teams = {str(r[1]).strip().lower() for r in stored}
+    scraped_teams = {str(r[1]).strip().lower() for r in scraped}
+    overlap = len(stored_teams & scraped_teams) / max(len(stored_teams), 1)
+    if overlap < _MIN_TEAM_OVERLAP:
+        return (f"solo coincide el {overlap:.0%} de los equipos: "
+                f"el grupo se ha reestructurado o es otra temporada")
+
+    return None
+
+
+def stored_standings(conn, group_id):
+    """Clasificación almacenada de un grupo, en formato canónico."""
+    return [list(r) for r in conn.execute(
+        """SELECT s.position, t.name, s.points, s.played, s.won, s.drawn,
+                  s.lost, s.gf, s.gc, s.gd
+           FROM standings s JOIN teams t ON t.id = s.team_id
+           WHERE s.group_id = ? ORDER BY s.position""",
+        (group_id,),
+    ).fetchall()]
+
 
 def fetch(url):
     req = urllib.request.Request(url, headers={
@@ -467,6 +521,7 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
 
     updated_matches = 0
     updated_standings = 0
+    skipped_standings = []
 
     for group in groups:
         url = group.get("url", "")
@@ -559,7 +614,16 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
             clasi_html = fetch(clasi_url)
             time.sleep(DELAY)
             standings = parse_standings(clasi_html)
-            if standings:
+            regression = standings_regression(stored_standings(conn, group_id),
+                                              standings)
+            if regression:
+                # Casi seguro, un cambio de temporada: el slug ahora sirve otra
+                # liga. Se deja intacto lo almacenado y se avisa; hay que
+                # rotar la temporada (ver docs/temporada-nueva.md) en vez de
+                # dejar que el auto-update pise una temporada terminada.
+                print(f"    ! clasificacion RECHAZADA — {regression}")
+                skipped_standings.append((group_code, regression))
+            elif standings:
                 # DELETE old standings for this group, INSERT new ones
                 conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
                 for row in standings:
@@ -671,6 +735,19 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
         conn.commit()
 
     print(f"  -> {updated_matches} partidos, {updated_standings} clasificaciones actualizadas.\n")
+    if skipped_standings:
+        print(f"  !! {len(skipped_standings)} clasificaciones RECHAZADAS "
+              f"(posible cambio de temporada — ver docs/temporada-nueva.md):")
+        for code, reason in skipped_standings:
+            print(f"     [{code}] {reason}")
+        # Si TODOS los grupos con datos lo rechazan, es un cambio de temporada
+        # en toda regla, no una anomalía suelta: el run tiene que salir rojo
+        # para que nadie lo dé por bueno.
+        if not updated_standings:
+            raise SystemExit(
+                "CAMBIO DE TEMPORADA DETECTADO: ninguna clasificación se pudo "
+                "actualizar sin pisar datos. No se ha modificado nada. Hay que "
+                "arrancar la temporada nueva (docs/temporada-nueva.md).")
 
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────

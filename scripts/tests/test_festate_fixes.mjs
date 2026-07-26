@@ -123,7 +123,10 @@ test('shields no-regression: fixed normalize resolves >= names than the broken o
     const obj = loadDataFile(`data-season-${s}.js`, [key])[key];
     collect(obj.benjamin); collect(obj.prebenjamin);
   }
-  assert.ok(names.size > 400, `expected >400 team names, got ${names.size}`);
+  // Cota de cordura ("se han cargado datos de verdad"), no del contraste de
+  // abajo. Bajó de 400 a 300 el 26/07/2026: fundir los clubes duplicados
+  // (mismo equipo con dos grafías) redujo los nombres distintos de ~450 a ~390.
+  assert.ok(names.size > 300, `expected >300 team names, got ${names.size}`);
 
   const before = makeResolver(normBroken);
   const after = makeResolver(state.normalizeTeamName);

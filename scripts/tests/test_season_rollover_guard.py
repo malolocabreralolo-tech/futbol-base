@@ -189,3 +189,34 @@ class TestFailedStandingsDownloadSkipsTheGroup:
         from fetch_futbolaspalmas import standings_regression
         stored = [[1, "A", 30, 10, 10, 0, 0, 30, 5, 25]]
         assert standings_regression(stored, []) is not None
+
+
+class TestRolloverTripwire:
+    """El corte no puede ser 'TODOS los grupos': futbolaspalmas rueda la
+    temporada escalonada por competición, así que con un solo grupo actualizado
+    el run seguía verde y el cambio de temporada pasaba desapercibido."""
+
+    def test_nothing_updated_stops_the_run(self):
+        from fetch_futbolaspalmas import rollover_detected
+        assert rollover_detected(skipped=5, updated=0)
+
+    def test_a_single_odd_group_does_not_stop_it(self):
+        # Un grupo reestructurado en mitad de temporada: se avisa, no se tumba.
+        from fetch_futbolaspalmas import rollover_detected
+        assert not rollover_detected(skipped=1, updated=40)
+
+    def test_a_staggered_rollover_stops_it(self):
+        # 22 grupos de Segunda Fase ya rodados, el resto todavía no.
+        from fetch_futbolaspalmas import rollover_detected
+        assert rollover_detected(skipped=22, updated=20)
+
+    def test_a_clean_run_never_stops(self):
+        from fetch_futbolaspalmas import rollover_detected
+        assert not rollover_detected(skipped=0, updated=43)
+        assert not rollover_detected(skipped=0, updated=0)
+
+    def test_the_threshold_is_a_share_not_a_count(self):
+        from fetch_futbolaspalmas import rollover_detected
+        # 3 de 43 es ruido; 3 de 6 ya es la mitad de la categoría.
+        assert not rollover_detected(skipped=3, updated=40)
+        assert rollover_detected(skipped=3, updated=3)

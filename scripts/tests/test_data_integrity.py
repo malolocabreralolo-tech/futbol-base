@@ -92,21 +92,47 @@ class TestDBIntegrity:
         assert not dupes, f"{len(dupes)} duplicate standings positions"
 
     def test_standings_arithmetic(self):
-        """played should equal won + drawn + lost; pts = 3*won + drawn (allowing
-        small synthesis discrepancies)."""
+        """played == won + drawn + lost, con tolerancia del 5% de filas.
+
+        Las clasificaciones parciales de Wayback traen alguna incoherencia, así
+        que aquí la tolerancia es de VOLUMEN, no de valor.
+        """
         c = _conn()
         bad = c.execute(
             """SELECT s.id, t.name, s.played, s.won, s.drawn, s.lost, s.points
                FROM standings s JOIN teams t ON s.team_id=t.id
                WHERE s.played != s.won + s.drawn + s.lost"""
         ).fetchall()
-        # Wayback partial-season standings sometimes have slight inconsistencies;
-        # fail only if more than 5% of rows are bad.
         total = c.execute("SELECT COUNT(*) FROM standings").fetchone()[0]
         if total:
             assert len(bad) / total < 0.05, (
                 f"{len(bad)}/{total} standings rows fail played=W+D+L (>5%)"
             )
+
+    def test_standings_points_are_possible(self):
+        """pts == 3*G + E, salvo sanción.
+
+        Lo prometía el docstring del test de arriba y no lo comprobaba nadie: la
+        consulta solo miraba played=G+E+P. Es justo el defecto que en junio dejó
+        publicadas dos clasificaciones imposibles (Valkyrias con 0 puntos y 16
+        victorias). Las sanciones reales restan pocos puntos, así que se tolera
+        una diferencia pequeña — la misma que usa el reparador de generate_js —
+        pero solo en filas donde played SÍ cuadra: si no cuadra, la fila ya la
+        cuenta el test anterior.
+        """
+        from generate_js import _SANCTION_TOLERANCE
+        c = _conn()
+        imposibles = c.execute(
+            """SELECT se.name, g.code, t.name, s.points, s.won, s.drawn
+               FROM standings s JOIN teams t ON t.id=s.team_id
+               JOIN groups g ON g.id=s.group_id JOIN seasons se ON se.id=g.season_id
+               WHERE s.played = s.won + s.drawn + s.lost
+                 AND ABS(s.points - (3 * s.won + s.drawn)) > ?""",
+            (_SANCTION_TOLERANCE,)).fetchall()
+        detalle = [f"{r[0]} {r[1]} {r[2]}: {r[3]}pts con {r[4]}G {r[5]}E"
+                   for r in imposibles[:6]]
+        assert not imposibles, ("Clasificaciones con puntos imposibles: "
+                                + "; ".join(detalle))
 
     def test_seasons_have_groups(self):
         """Every season must have at least one group."""

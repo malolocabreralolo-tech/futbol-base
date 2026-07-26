@@ -85,6 +85,30 @@ def standings_regression(stored, scraped):
     return None
 
 
+# A partir de aquí se considera que la fuente ha cambiado de temporada y no que
+# hay una anomalía suelta (un grupo reestructurado, una tabla que la fuente
+# borró un rato). Con el rollover escalonado de futbolaspalmas, esperar a que
+# fallen TODOS es esperar semanas.
+_ROLLOVER_MIN_SKIPPED = 3
+_ROLLOVER_SKIPPED_SHARE = 0.25
+
+
+def rollover_detected(skipped, updated):
+    """¿Hay que parar el run y pedir intervención humana?
+
+    Sí cuando no se pudo actualizar nada, y también cuando una parte
+    sustancial de los grupos se rechaza: es el patrón del cambio de temporada
+    escalonado. Un rechazo suelto (un grupo reestructurado) se avisa por
+    consola y no tumba el run.
+    """
+    if not skipped:
+        return False
+    if not updated:
+        return True
+    return (skipped >= _ROLLOVER_MIN_SKIPPED
+            and skipped >= _ROLLOVER_SKIPPED_SHARE * (skipped + updated))
+
+
 def stored_standings(conn, group_id):
     """Clasificación almacenada de un grupo, en formato canónico."""
     return [list(r) for r in conn.execute(
@@ -760,14 +784,18 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
               f"(posible cambio de temporada — ver docs/temporada-nueva.md):")
         for code, reason in skipped_standings:
             print(f"     [{code}] {reason}")
-        # Si TODOS los grupos con datos lo rechazan, es un cambio de temporada
-        # en toda regla, no una anomalía suelta: el run tiene que salir rojo
-        # para que nadie lo dé por bueno.
-        if not updated_standings:
+        # El corte no puede ser "TODOS los grupos": futbolaspalmas no rueda la
+        # temporada de golpe, la va escalonando por competición, así que con un
+        # solo grupo actualizado el run seguía verde y el cambio de temporada
+        # pasaba desapercibido durante días. Los datos no se pisan (el guard ya
+        # salta esos grupos), pero nadie se entera. Basta con que una PARTE
+        # sustancial lo rechace para pedir intervención.
+        if rollover_detected(len(skipped_standings), updated_standings):
             raise SystemExit(
-                "CAMBIO DE TEMPORADA DETECTADO: ninguna clasificación se pudo "
-                "actualizar sin pisar datos. No se ha modificado nada. Hay que "
-                "arrancar la temporada nueva (docs/temporada-nueva.md).")
+                f"CAMBIO DE TEMPORADA DETECTADO: {len(skipped_standings)} "
+                f"clasificaciones rechazadas y {updated_standings} actualizadas. "
+                "Los grupos rechazados NO se han tocado. Hay que arrancar la "
+                "temporada nueva (docs/temporada-nueva.md).")
 
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────

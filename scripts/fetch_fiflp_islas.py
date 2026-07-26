@@ -76,6 +76,16 @@ COMPS_BY_SEASON = {
         {"id": "54422953", "name": "Benjamin GC Fase Liga A", "cat": "benjamin", "island": "grancanaria", "phase": "Segunda Fase A"},
         {"id": "54422954", "name": "Benjamin GC Fase Liga B", "cat": "benjamin", "island": "grancanaria", "phase": "Segunda Fase B"},
     ],
+    # 2025-2026 — competiciones insulares que futbolaspalmas NO publica. El
+    # portal solo sirve prebenjamín de Gran Canaria (1prebenjamin1-3; del 4 en
+    # adelante da 404) y de benjamín isleño solo una fase por isla, así que
+    # estas cuatro solo pueden venir de FIFLP.
+    "21isl": [
+        {"id": "54422886", "name": "Benjamin Lanzarote Fase 2", "cat": "benjamin", "island": "lanzarote", "phase": "Lanzarote Fase 2"},
+        {"id": "54422887", "name": "Benjamin Fuerteventura 1a Fase", "cat": "benjamin", "island": "fuerteventura", "phase": "Fuerteventura Fase 1"},
+        {"id": "54422959", "name": "Prebenjamin Lanzarote", "cat": "prebenjamin", "island": "lanzarote", "phase": "Lanzarote"},
+        {"id": "54422889", "name": "Prebenjamin Fuerteventura", "cat": "prebenjamin", "island": "fuerteventura", "phase": "Fuerteventura"},
+    ],
     # 2024-2025 — copas insulares de Lanzarote, nunca importadas
     "20": [
         {"id": "1657", "name": "Copa Cabildo Lanzarote Preferente", "cat": "benjamin", "island": "lanzarote", "phase": "Copa Cabildo Preferente Lanzarote"},

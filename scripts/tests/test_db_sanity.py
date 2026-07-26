@@ -85,3 +85,38 @@ def test_foreign_key_integrity(conn):
     """(e) PRAGMA foreign_key_check returns no violations."""
     rows = conn.execute("PRAGMA foreign_key_check").fetchall()
     assert rows == [], f"foreign key violations: {rows[:10]}"
+
+
+def test_no_duplicate_groups(conn):
+    """(f) Ningún grupo repite el calendario de otro de su misma temporada.
+
+    Los slugs de futbolaspalmas se renumeran entre snapshots del archivo, así
+    que el mismo grupo puede llegar dos veces con códigos distintos. Pasó en
+    2021-22: GC7 era GC5 con menos resultados y PGC3 era PGC2 clavado. Un
+    grupo fantasma duplica sus partidos en los recuentos, mete una fase que no
+    existió en el selector y aparece en la web como una liga más.
+
+    Se compara el CALENDARIO (jornada + local + visitante), no la plantilla:
+    una copa la juegan los mismos equipos de su liga y sería un falso positivo.
+    """
+    fixtures = {}
+    for gid, code, season in conn.execute(
+            """SELECT g.id, g.code, s.name FROM groups g
+               JOIN seasons s ON s.id=g.season_id"""):
+        rows = conn.execute(
+            """SELECT jornada, home_team_id, away_team_id FROM matches
+               WHERE group_id=?""", (gid,)).fetchall()
+        if len(rows) >= 10:
+            fixtures[(season, code)] = set(rows)
+
+    duplicados = []
+    claves = sorted(fixtures)
+    for i, a in enumerate(claves):
+        for b in claves[i + 1:]:
+            if a[0] != b[0]:                       # distinta temporada
+                continue
+            comun = len(fixtures[a] & fixtures[b])
+            if comun and comun / min(len(fixtures[a]), len(fixtures[b])) >= 0.9:
+                duplicados.append(f"{a[0]}: {a[1]} ~ {b[1]} ({comun} partidos comunes)")
+
+    assert not duplicados, "Grupos duplicados: " + "; ".join(duplicados)

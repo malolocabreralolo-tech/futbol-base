@@ -138,6 +138,20 @@ def delete_group_matches(conn, group_id):
     conn.execute("DELETE FROM matches WHERE group_id=?", (group_id,))
 
 
+def delete_group(conn, group_id):
+    """Delete a group whole: its matches (with their acta/goal rows), its
+    standings and its scorers. FK-safe, in dependency order. Does NOT commit.
+
+    Only for groups that should never have existed — a duplicate of another
+    group, typically born from a renumbered source slug. Deleting a real group
+    loses data no importer will bring back."""
+    delete_group_matches(conn, group_id)
+    for tbl in ("standings", "scorers"):
+        if _table_exists(conn, tbl):
+            conn.execute(f"DELETE FROM {tbl} WHERE group_id=?", (group_id,))
+    conn.execute("DELETE FROM groups WHERE id=?", (group_id,))
+
+
 def existing_played_count(conn, season_id, code):
     """Partidos CON marcador ya almacenados para este (temporada, code).
     0 si el grupo aún no existe. Helper compartido por los importadores para

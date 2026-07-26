@@ -32,6 +32,10 @@ _NOISE = {
     'DE', 'DEL', 'LA', 'EL', 'LOS', 'LAS', 'Y',
 }
 _FILIAL = {'A', 'B', 'C', 'D', 'E', 'F'}
+# FIFLP rellena la jornada de descanso de los grupos impares con un rival
+# ficticio. No es un equipo: importarlo mete un club fantasma y 22 partidos que
+# no existen por grupo.
+_DESCANSO = {'DESCANSA', 'DESCANSO', 'DESCANSAN'}
 
 
 def fold(name):
@@ -48,6 +52,11 @@ def fold(name):
 # la última letra ('D' de U.D., 'F' de C.F.) se cuela como letra de filial y
 # entonces 'SAN PEDRO ATALAYA, U.D.' parece un filial D que no existe.
 _ABREVIATURA = re.compile(r'\b(?:[A-Za-zÁÉÍÓÚÑ]\.){2,}')
+
+
+def is_bye(name):
+    """¿Es el rival ficticio de la jornada de descanso, no un equipo?"""
+    return fold(name) in _DESCANSO
 
 
 def team_key(name):
@@ -176,6 +185,11 @@ def group_overlap(scraped, existing):
     return len(match_teams(scraped, existing)) / min(len(scraped), len(existing))
 
 
+# El emparejamiento forzado del último solo vale si el grupo ya casó de sobra:
+# con dos o tres equipos, "el que sobra" no es una deducción, es una apuesta.
+_MIN_PAREJAS_PARA_FORZAR = 3
+
+
 def canonical_names(scraped, group_teams, season_teams):
     """{nombre scrapeado: nombre que hay que escribir}.
 
@@ -197,6 +211,17 @@ def canonical_names(scraped, group_teams, season_teams):
     representantes = {sorted(v)[0]: k for k, v in grupos.items()}
 
     mapa = match_teams(list(representantes), group_teams) if group_teams else {}
+    # Emparejamiento forzado del último: si contra la plantilla del grupo queda
+    # exactamente uno sin pareja a cada lado, es ese. El grupo ya está
+    # identificado (plantilla + calendario), así que el que sobra es el mismo
+    # club escrito raro ('CERRUDA SANTA LUCIA DE TIRAJANA, C.D. "A"' por 'CD
+    # Cerruda'), no un equipo distinto. Acotado a uno para no inventar.
+    if group_teams and len(mapa) >= _MIN_PAREJAS_PARA_FORZAR:
+        libres_s = [n for n in representantes if n not in mapa]
+        libres_e = [t for t in group_teams if t not in set(mapa.values())]
+        if len(libres_s) == 1 and len(libres_e) == 1:
+            mapa[libres_s[0]] = libres_e[0]
+
     sueltos = [n for n in representantes if n not in mapa]
     if sueltos and season_teams:
         ya_usados = set(mapa.values())

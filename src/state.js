@@ -232,9 +232,28 @@ export function isCupGroup(g) {
 
 /* The (≤3) league prebenjamín groups for the unified table — cups excluded.
  * buildUnifiedPrebenjamin numbers by position, so a cup group sorted before
- * PG1 used to take a slot and push PG3 out (and head the table). */
+ * PG1 used to take a slot and push PG3 out (and head the table).
+ *
+ * Sólo se unifica UNA competición. Al entrar el prebenjamín de Lanzarote y
+ * Fuerteventura (2025-26), 'PFV*' ordena antes que 'PG*' y la tabla unificada
+ * pasó a encabezarla Fuerteventura: equipos de islas distintas que no se
+ * cruzan nunca, comparados en la misma clasificación. Se toma la fase con más
+ * equipos, que es la competición principal. */
 export function unifiedPrebenLeagueGroups(prebenjamin) {
-  return (prebenjamin || []).filter(g => !isCupGroup(g)).slice(0, 3);
+  const ligas = (prebenjamin || []).filter(g => !isCupGroup(g));
+  if (ligas.length <= 1) return ligas.slice(0, 3);
+  const porFase = new Map();
+  ligas.forEach(g => {
+    const k = ((g && g.phase) || '').toLowerCase();
+    if (!porFase.has(k)) porFase.set(k, []);
+    porFase.get(k).push(g);
+  });
+  const tamano = gs => gs.reduce((n, g) => n + ((g.standings && g.standings.length) || 0), 0);
+  let mejor = [];
+  porFase.forEach(gs => {
+    if (tamano(gs) > tamano(mejor)) mejor = gs;
+  });
+  return mejor.slice(0, 3);
 }
 
 /* Friendly label for a knockout round. Prefers the explicit round name in the

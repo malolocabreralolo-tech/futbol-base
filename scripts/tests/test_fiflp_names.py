@@ -227,3 +227,47 @@ class TestDoNotMergeDifferentClubs:
                              ('ROQUE AMAGRO DE GALDAR "A"', 'Roque Amagro'),
                              ('TEROR BALOMPIE', 'Teror')]:
             assert team_score(team_key(largo), team_key(corto)) >= MIN_TEAM_SCORE, largo
+
+
+class TestBye:
+    def test_recognises_the_rest_marker(self):
+        from fiflp_names import is_bye
+        assert is_bye('Descansa') and is_bye('DESCANSO') and is_bye('descansa')
+
+    def test_a_real_team_is_not_a_bye(self):
+        from fiflp_names import is_bye
+        assert not is_bye('Firgas')
+        assert not is_bye('')
+
+
+class TestForcedLastPairing:
+    """Con el grupo ya identificado, el equipo que sobra a cada lado es el
+    mismo club escrito raro. Caso real: 'CERRUDA SANTA LUCIA DE TIRAJANA, C.D.
+    "A"' por 'CD Cerruda' en el grupo 4 de la Segunda Fase B de 2025-26."""
+
+    BASE = ['Firgas', 'Moya', 'Teror', 'Valleseco', 'CD Cerruda']
+    FIFLP = ['FIRGAS', 'MOYA', 'TEROR', 'VALLESECO',
+             'CERRUDA SANTA LUCIA DE TIRAJANA, C.D. "A"']
+
+    def test_the_leftover_pairs_up(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(self.FIFLP, self.BASE, [])
+        assert canon['CERRUDA SANTA LUCIA DE TIRAJANA, C.D. "A"'] == 'CD Cerruda'
+
+    def test_two_leftovers_are_not_guessed(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(self.FIFLP[:4] + ['UNO RARO', 'OTRO RARO'],
+                                self.BASE + ['Otro Equipo'], [])
+        assert canon['UNO RARO'] == 'UNO RARO'
+        assert canon['OTRO RARO'] == 'OTRO RARO'
+
+    def test_a_barely_matched_group_forces_nothing(self):
+        from fiflp_names import canonical_names
+        # Con una sola pareja hecha, "el que sobra" sería una apuesta.
+        canon = canonical_names(['MOYA'], ['Firgas'], ['Firgas', 'Moya'])
+        assert canon['MOYA'] == 'Moya'
+
+    def test_nothing_is_forced_without_a_group_squad(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['UNO RARO'], [], ['Firgas'])
+        assert canon['UNO RARO'] == 'UNO RARO'

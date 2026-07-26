@@ -32,13 +32,14 @@ from db import (get_connection, init_db, get_or_create_season,
                 get_or_create_category, get_or_create_team,
                 get_or_create_group, delete_group_matches, PROJECT_ROOT)
 from import_fiflp_cups_2324 import clean_team_name
-from fiflp_names import canonical_names
+from fiflp_names import canonical_names, is_bye
 
 SEASONS = {
     "17": ("2021-2022", 2021, 2022),
     "18": ("2022-2023", 2022, 2023),
     "19": ("2023-2024", 2023, 2024),
     "19gc": ("2023-2024", 2023, 2024),
+    "21isl": ("2025-2026", 2025, 2026),
 }
 
 # competition_id -> (prefijo de código, fase publicada)
@@ -53,6 +54,12 @@ COMP_META = {
     # conserva FIFLP. La Primera (1329) y el prebenjamin (1333) vienen de
     # Wayback y NO se importan por aqui: se filtran con IMPORT_COMPS.
     "1439": ("SF", "Segunda Fase GC"),
+    # 2025-26: competiciones insulares que futbolaspalmas no publica (el portal
+    # solo sirve una fase por isla y el prebenjamin solo de Gran Canaria).
+    "54422886": ("LZS", "Lanzarote Fase 2"),
+    "54422887": ("FV1", "Fuerteventura Fase 1"),
+    "54422959": ("PLZ", "Lanzarote"),
+    "54422889": ("PFV", "Fuerteventura"),
     "1407": ("CLZP", "Copa Cabildo Preferente Lanzarote"),
     "1432": ("CLZ1", "Copa Cabildo Primera Lanzarote"),
     # 2021-22 / 2022-23 (mismas competiciones, otros IDs)
@@ -116,6 +123,8 @@ def import_group(conn, g, season_id, canon_pool=None):
             home, away = clean_team_name(m.get("home")), clean_team_name(m.get("away"))
             if not home or not away or home == away:
                 continue
+            if is_bye(home) or is_bye(away):
+                continue          # jornada de descanso: no es un partido
             matches.append((
                 str(jor.get("num", "")).strip(), home, away,
                 m.get("hs"), m.get("as"),

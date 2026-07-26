@@ -156,6 +156,42 @@ test('unifiedPrebenLeagueGroups excluye cups y conserva PG3', async () => {
   assert.deepEqual(unifiedPrebenLeagueGroups(PRE).map(x => x.id), ['PG1', 'PG2', 'PG3']);
 });
 
+test('unifiedPrebenLeagueGroups no mezcla islas: una sola competición', async () => {
+  const { unifiedPrebenLeagueGroups } = await import('../../src/state.js');
+  // 2025-26: al entrar el prebenjamín insular, 'PFV*' ordena antes que 'PG*' y
+  // la tabla unificada la encabezaba Fuerteventura, comparando equipos de islas
+  // distintas que no se cruzan nunca.
+  const fila = n => Array.from({ length: n }, (_, i) => [i + 1, 'E' + i, 10 - i, 5]);
+  const PRE = [
+    { id: 'PCC1', phase: 'Copa de Campeones', standings: fila(8) },
+    { id: 'PFV1', phase: 'Fuerteventura', standings: fila(7) },
+    { id: 'PFV2', phase: 'Fuerteventura', standings: fila(7) },
+    { id: 'PFV3', phase: 'Fuerteventura', standings: fila(7) },
+    { id: 'PG1', phase: 'Gran Canaria', standings: fila(15) },
+    { id: 'PG2', phase: 'Gran Canaria', standings: fila(15) },
+    { id: 'PG3', phase: 'Gran Canaria', standings: fila(14) },
+    { id: 'PLZ1', phase: 'Lanzarote', standings: fila(5) },
+    { id: 'PLZ2', phase: 'Lanzarote', standings: fila(4) },
+  ];
+  assert.deepEqual(unifiedPrebenLeagueGroups(PRE).map(x => x.id), ['PG1', 'PG2', 'PG3']);
+});
+
+test('unifiedPrebenLeagueGroups con una sola competición la devuelve entera', async () => {
+  const { unifiedPrebenLeagueGroups } = await import('../../src/state.js');
+  const PRE = [
+    { id: 'PG1', phase: 'Gran Canaria', standings: [[1, 'A', 10, 5]] },
+    { id: 'PG2', phase: 'Gran Canaria', standings: [[1, 'B', 9, 5]] },
+  ];
+  assert.deepEqual(unifiedPrebenLeagueGroups(PRE).map(x => x.id), ['PG1', 'PG2']);
+});
+
+test('unifiedPrebenLeagueGroups aguanta vacío y sin standings', async () => {
+  const { unifiedPrebenLeagueGroups } = await import('../../src/state.js');
+  assert.deepEqual(unifiedPrebenLeagueGroups([]), []);
+  assert.deepEqual(unifiedPrebenLeagueGroups(null), []);
+  assert.equal(unifiedPrebenLeagueGroups([{ id: 'PG1', phase: 'GC' }]).length, 1);
+});
+
 /* ─── M4: empates por penaltis muestran quién avanzó ─────────────────────── */
 
 test('bracketDrawAdvancer: el que aparece en ronda posterior avanzó', async () => {

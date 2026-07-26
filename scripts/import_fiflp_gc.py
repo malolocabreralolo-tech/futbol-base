@@ -32,7 +32,7 @@ from db import (get_connection, init_db, get_or_create_season,
                 get_or_create_team, get_or_create_group,
                 delete_group_matches, existing_played_count, PROJECT_ROOT)
 from import_fiflp_cups_2324 import clean_team_name
-from fiflp_names import match_teams, group_overlap, canonical_names
+from fiflp_names import match_teams, group_overlap, canonical_names, is_bye
 
 SEASONS = {
     "17gc": ("2021-2022", 2021, 2022),
@@ -52,7 +52,7 @@ def teams_in_matches(g):
         for m in jor.get("matches") or []:
             teams.add(clean_team_name(m.get("home")))
             teams.add(clean_team_name(m.get("away")))
-    return {t for t in teams if t}
+    return {t for t in teams if t and not is_bye(t)}
 
 
 def scraped_teams(g):
@@ -64,7 +64,7 @@ def scraped_teams(g):
     contar equipos.
     """
     teams = {clean_team_name(r.get("team")) for r in (g.get("standings") or [])}
-    return {t for t in teams if t} | teams_in_matches(g)
+    return {t for t in teams if t and not is_bye(t)} | teams_in_matches(g)
 
 
 def existing_groups(conn, season_id):
@@ -100,7 +100,7 @@ def scraped_pairs(g):
     for jor in g.get("jornadas") or []:
         for m in jor.get("matches") or []:
             h, a = clean_team_name(m.get("home")), clean_team_name(m.get("away"))
-            if h and a and h != a:
+            if h and a and h != a and not is_bye(h) and not is_bye(a):
                 out.add(frozenset((h, a)))
     return out
 
@@ -196,8 +196,11 @@ def write_group(conn, g, season_id, code, cat_id, canon):
     matches = []
     for jor in g.get("jornadas") or []:
         for m in jor.get("matches") or []:
-            home = canon.get(clean_team_name(m.get("home")))
-            away = canon.get(clean_team_name(m.get("away")))
+            crudo_h, crudo_a = clean_team_name(m.get("home")), clean_team_name(m.get("away"))
+            if is_bye(crudo_h) or is_bye(crudo_a):
+                continue          # jornada de descanso: no es un partido
+            home = canon.get(crudo_h, crudo_h)
+            away = canon.get(crudo_a, crudo_a)
             if not home or not away or home == away:
                 continue
             # El emparejamiento se conserva en el calendario, pero sin marcador:

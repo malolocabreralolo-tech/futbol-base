@@ -195,3 +195,28 @@ class TestPhaseCrossoverGuard:
         code, _ = best_match(['FIRGAS, C.D.', 'MOYA, U.D.', 'TEROR BALOMPIE',
                               'ARUCAS C.F.'], self._existing(base), fiflp)
         assert code == 'GC9'
+
+
+class TestByeIsNotAMatch:
+    """FIFLP rellena la jornada de descanso de los grupos impares con un rival
+    ficticio 'Descansa'. En la Segunda Fase A/B de 2025-26 eran 22 por grupo."""
+
+    GRUPO = {
+        "standings": [{"team": 'FIRGAS'}, {"team": 'MOYA'}],
+        "jornadas": [{"num": "1", "matches": [
+            {"home": 'FIRGAS', "away": 'MOYA', "hs": 2, "as": 1},
+            {"home": 'MOYA', "away": 'Descansa', "hs": None, "as": None},
+        ]}],
+    }
+
+    def test_the_bye_is_not_a_team(self):
+        from import_fiflp_gc import scraped_teams
+        assert 'Descansa' not in scraped_teams(self.GRUPO)
+
+    def test_the_bye_is_not_a_fixture(self):
+        from import_fiflp_gc import scraped_pairs
+        assert scraped_pairs(self.GRUPO) == {frozenset(('FIRGAS', 'MOYA'))}
+
+    def test_the_bye_is_not_flagged_as_a_withdrawn_team(self):
+        from import_fiflp_gc import withdrawn_teams
+        assert withdrawn_teams(self.GRUPO) == set()

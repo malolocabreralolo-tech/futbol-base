@@ -104,7 +104,10 @@ test('classifyRequest: data-*.js → stale-while-revalidate (reachable branch)',
 });
 
 test('classifyRequest: code/styles/images → cache-first; html → swr', () => {
-  assert.equal(sw.classifyRequest('/futbol-base/src/app.js'), 'cache-first');
+  // src/*.js pasó a 'swr' el 26/07/2026: se piden sin ?v= y con cache-first un
+  // arreglo de solo código no llegaba al usuario hasta el siguiente cambio de
+  // datos o un bump manual de CACHE_NAME.
+  assert.equal(sw.classifyRequest('/futbol-base/src/app.js'), 'swr');
   assert.equal(sw.classifyRequest('/futbol-base/style.css'), 'cache-first');
   assert.equal(sw.classifyRequest('/futbol-base/icons.svg'), 'cache-first');
   assert.equal(sw.classifyRequest('/futbol-base/index.html'), 'swr');
@@ -199,4 +202,14 @@ test('el SW busca en caché ignorando la ?v=: si no, el precache es basura', () 
   assert.doesNotMatch(s, /caches\.match\(e\.request\)\.then/);
   // El precache sigue sin versión: es lo que lo hace estable entre bumps.
   assert.match(s, /'\.\/data-benjamin\.js'/);
+});
+
+test('los módulos de src/ se revalidan: un arreglo de código no se queda atrás', () => {
+  const s = swSrc;
+  assert.match(s, /pathname\.includes\('\/src\/'\)[^\n]*return 'swr'/);
+  // Y la rama tiene que ir ANTES del cache-first genérico de .js, o nunca se
+  // alcanza (el mismo error que ya pasó con los data-*.js).
+  const iSrc = s.indexOf("pathname.includes('/src/')");
+  const iJs = s.indexOf("\\.(js|css|png");
+  assert.ok(iSrc > 0 && iSrc < iJs, 'la rama de src/ debe ir antes del cache-first de .js');
 });

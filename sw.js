@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260726s';
+const CACHE_NAME = 'futbolbase-v20260726t';
 const OFFLINE_URL = './index.html';
 
 // Static assets — cached on install, served cache-first.
@@ -48,6 +48,12 @@ const SEASON_FILES = [
 function classifyRequest(pathname) {
   const file = pathname.split('/').pop();
   if (file.startsWith('data-') && file.endsWith('.js')) return 'swr';
+  // Los módulos de src/ se piden SIN ?v= (index.html versiona app.js, pero no
+  // sus imports), así que con cache-first un arreglo de solo código no llegaba
+  // al usuario hasta que por casualidad cambiaran los datos o alguien se
+  // acordara de bumpear CACHE_NAME a mano. Con stale-while-revalidate se sirve
+  // igual de rápido y la siguiente carga ya lleva el arreglo.
+  if (pathname.includes('/src/') && pathname.endsWith('.js')) return 'swr';
   if (pathname.endsWith('/') || pathname.endsWith('.html')) return 'swr';
   if (/\.(js|css|png|jpg|jpeg|webp|svg|woff2?|ico)$/.test(pathname) ||
       pathname.includes('/escudos/')) return 'cache-first';

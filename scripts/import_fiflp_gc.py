@@ -213,7 +213,12 @@ def write_group(conn, g, season_id, code, cat_id, canon):
                             m.get("time") or "", m.get("venue") or ""))
     standings = g.get("standings") or []
     names = {n for _, h, a, *_ in matches for n in (h, a)}
-    names |= {canon.get(clean_team_name(r.get("team"))) for r in standings}
+    # Con .get() a secas, un nombre de la tabla que no esté en el mapa mete un
+    # None en el conjunto y el sorted() de abajo revienta comparando None con
+    # str. El mapa siempre debería traerlos, pero eso no es razón para que la
+    # función se caiga si algún día se la llama de otra forma.
+    names |= {canon.get(n, n) for n in
+              (clean_team_name(r.get("team")) for r in standings) if n}
     team_ids = {n: get_or_create_team(conn, n) for n in sorted(names) if n}
 
     group_id = get_or_create_group(
@@ -232,7 +237,8 @@ def write_group(conn, g, season_id, code, cat_id, canon):
                 (group_id, jornada, date, time, team_ids[home], team_ids[away],
                  hs if both else None, as_ if both else None, venue))
         for r in standings:
-            name = canon.get(clean_team_name(r.get("team")))
+            crudo = clean_team_name(r.get("team"))
+            name = canon.get(crudo, crudo)
             if not name:
                 continue
             conn.execute(

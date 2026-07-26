@@ -259,3 +259,26 @@ def test_actas_runs_tests_before_commit():
     assert commit_idx is not None
     assert pytest_idx < commit_idx, "pytest must run before the first commit"
     assert node_idx < commit_idx, "node suite must run before the first commit"
+
+
+def test_update_sh_only_calls_scripts_that_exist():
+    """La vía manual del README no puede estar muerta.
+
+    `scripts/update.sh` llamaba a `build_matchdetail.py`, borrado hace tiempo:
+    con `set -e`, cualquiera que siguiera el README se comía un 'No such file
+    or directory' en el paso 2 y no llegaba a actualizar nada.
+    """
+    contenido = (ROOT / "scripts" / "update.sh").read_text(encoding="utf-8")
+    llamados = set(re.findall(r"python3?\s+scripts/([a-z_0-9]+\.py)", contenido))
+    assert llamados, "update.sh debería llamar a algún script"
+    faltan = sorted(s for s in llamados if not (ROOT / "scripts" / s).exists())
+    assert not faltan, f"update.sh llama a scripts que no existen: {faltan}"
+
+
+def test_update_sh_gates_publishing_on_the_test_suites():
+    """Igual que update.yml: las suites van ANTES del commit."""
+    contenido = (ROOT / "scripts" / "update.sh").read_text(encoding="utf-8")
+    for marca in ("pytest", "node --test"):
+        assert marca in contenido, f"update.sh debe correr {marca}"
+    assert contenido.index("pytest") < contenido.index("git commit")
+    assert contenido.index("node --test") < contenido.index("git commit")

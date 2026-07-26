@@ -37,12 +37,17 @@ scripts/
 
 ## Actualización de datos
 
-Los datos se actualizan automáticamente vía GitHub Actions. Para actualizar manualmente:
+Los datos se actualizan automáticamente vía GitHub Actions (workflow
+«Actualización automática», cada ~5 horas). Para empujar una actualización sin
+esperar al cron:
 
 ```bash
-cd scripts
-bash update.sh
+bash scripts/update.sh            # scrapea, pasa las suites y publica
+bash scripts/update.sh --local    # todo menos el push
 ```
+
+El script pasa las suites ANTES de publicar: una suite roja impide la
+publicación, igual que en el workflow.
 
 Los scripts de Python hacen scraping de las fuentes de datos y generan los archivos `data-*.js` que la aplicación consume directamente.
 

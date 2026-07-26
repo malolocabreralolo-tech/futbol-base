@@ -1,47 +1,59 @@
 #!/bin/bash
-# update.sh — Actualización semanal del portal Fútbol Base Las Palmas
+# update.sh — Actualización manual del portal Fútbol Base Las Palmas
 #
 # Uso:
-#   ./scripts/update.sh
+#   bash scripts/update.sh            # scrapea, comprueba y publica
+#   bash scripts/update.sh --local    # todo menos el push
 #
-# Requiere: datos-fuente/fiflp_cookies.txt con la cookie de sesión FIFLP
-#   1. Abre fiflp.com en Chrome y asegúrate de estar logueado.
-#   2. F12 → Application → Cookies → www.fiflp.com
-#   3. Copia el valor de PHPSESSID y ponlo en datos-fuente/fiflp_cookies.txt
-#      Ejemplo: PHPSESSID=abc123ef4567
+# Hace lo mismo que el workflow «Actualización automática» (update.yml), que es
+# quien lo hace de verdad cada ~5 horas. Esto es la vía manual para cuando hace
+# falta empujar una actualización sin esperar al cron.
+#
+# La versión anterior de este script llevaba tiempo muerta: llamaba a
+# scripts/build_matchdetail.py, que ya no existe, y publicaba un app.js que
+# ahora vive en src/, sin la base de datos ni el service worker.
 
 set -e
 cd "$(dirname "$0")/.."
 
+PUBLICAR=1
+[ "$1" = "--local" ] && PUBLICAR=0
+
 echo "=== Fútbol Base Las Palmas — Actualización ==="
-echo ""
 
-# 1. Descargar nuevas actas de FIFLP
-echo "► Paso 1: Descargando actas de FIFLP..."
-python3 scripts/fetch_fiflp.py || true   # no abortar si no hay cookie
+# 1. Scrapear la temporada en curso y regenerar los data-*.js.
+#    fetch_futbolaspalmas.py llama a generate_js.py al terminar, así que este
+#    paso deja la base y los ficheros publicados al día.
+#    Si la fuente ha cambiado de temporada, el guard de standings_regression
+#    aborta aquí a propósito: ver docs/temporada-nueva.md.
 echo ""
-
-# 2. Regenerar data-matchdetail.js
-echo "► Paso 2: Generando data-matchdetail.js..."
-python3 scripts/build_matchdetail.py
-echo ""
-
-# 3. Actualizar clasificaciones, jornadas y campos desde futbolaspalmas.com
-echo "► Paso 3: Actualizando datos desde futbolaspalmas.com..."
+echo "► 1/3 Scrapeando futbolaspalmas.com y regenerando…"
 python3 scripts/fetch_futbolaspalmas.py
-echo ""
 
-# 4. Publicar en GitHub Pages
-echo "► Paso 4: Publicando en GitHub..."
-git add data-benjamin.js data-prebenjamin.js data-matchdetail.js data-goleadores.js data-history.js app.js style.css index.html
+# 2. Las suites ANTES de publicar, igual que en el workflow: una suite roja
+#    tiene que impedir la publicación, no descubrirse después.
+echo ""
+echo "► 2/3 Comprobando (pytest + node)…"
+python3 -m pytest scripts/tests/ -q
+node --test scripts/tests/test_*.mjs
+
+# 3. Publicar. La lista de ficheros es la misma que la de update.yml: la base
+#    solo se commitea si además cambió algo publicado, para no llenar el
+#    historial de commits de cabecera SQLite sin cambio lógico (contrato C4).
+echo ""
+echo "► 3/3 Publicando…"
+git add 'data-*.js' index.html sw.js
 if git diff --cached --quiet; then
   echo "  Sin cambios que publicar."
-else
-  FECHA=$(date "+%d/%m/%Y %H:%M")
-  git commit -m "Actualización $FECHA"
-  git push
-  echo "  ✓ Publicado en https://malolocabreralolo-tech.github.io/futbol-base/"
+  git reset -q
+  exit 0
 fi
-echo ""
-
-echo "=== Listo ==="
+git add futbolbase.db
+git commit -q -m "Actualización $(date '+%d/%m/%Y %H:%M')"
+if [ "$PUBLICAR" = "1" ]; then
+  git pull --rebase -q origin main
+  git push -q
+  echo "  ✓ Publicado en https://malolocabreralolo-tech.github.io/futbol-base/"
+else
+  echo "  ✓ Commit local hecho (sin push, --local)."
+fi

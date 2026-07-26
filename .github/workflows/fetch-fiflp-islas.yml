@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       temporada:
-        description: 'CodTemporada FIFLP (17=2021-22, 18=2022-23, 19=2023-24)'
+        description: 'Tanda: 17/18/19 (islas), 17gc/18gc/19gc (Gran Canaria), 20 (copas Cabildo LZ)'
         required: true
         default: '19'
       ids:
-        description: 'IDs de competición separados por coma (vacío = todas)'
+        description: 'IDs de competicion separados por coma (vacio = todas)'
         required: false
         default: ''
 
@@ -18,7 +18,7 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 180
 
     steps:
       - uses: actions/checkout@v4
@@ -29,27 +29,42 @@ jobs:
         run: |
           pip install playwright
           playwright install chromium --with-deps
+      # Las ligas de Gran Canaria son mucho mas grandes que las insulares
+      # (12-14 grupos x ~26 jornadas con delay de 2-3s), asi que el limite de
+      # 30 min que valia para las islas se queda corto.
       - name: Scrape ligas y copas insulares
         env:
           ISLAS_SEASON: ${{ inputs.temporada }}
           SCRAPE_IDS: ${{ inputs.ids }}
         run: python3 scripts/fetch_fiflp_islas.py
-        timeout-minutes: 30
+        timeout-minutes: 170
       # Sonda: solo commitea el raw JSON; NO toca la DB ni publica. El import,
       # la verificacion y la publicacion se hacen en LOCAL contra estos datos.
+      # if: always() -> si el scrape se corta a medias, el raw parcial se sube
+      # igual y el siguiente dispatch reanuda desde ahi (el scraper hace resume
+      # por grupo). Antes, un timeout tiraba a la basura todo lo scrapeado.
       - name: Commit raw JSON
+        if: always()
         run: |
           git config user.name  "GitHub Actions"
           git config user.email "actions@github.com"
           RAW="scripts/fiflp_islas_${{ inputs.temporada }}_raw.json"
-          git add "$RAW" || true
-          if git diff --cached --quiet; then
-            echo "Sin datos: FIFLP no devolvio nada para esa temporada."
-          else
-            git stash
-            git pull --rebase origin main
-            git stash pop || true
-            git add "$RAW"
-            git commit -m "scrape: FIFLP islas temporada ${{ inputs.temporada }} raw (sonda)"
-            git push
+          if [ ! -f "$RAW" ]; then
+            echo "Sin datos: FIFLP no devolvio nada para esa tanda."
+            exit 0
           fi
+          git add "$RAW"
+          if git diff --cached --quiet; then
+            echo "El raw no ha cambiado; nada que subir."
+            exit 0
+          fi
+          git commit -m "scrape: FIFLP islas tanda ${{ inputs.temporada }} raw (sonda)"
+          # Varias sondas pueden correr a la vez (cada una escribe su propio
+          # raw): reintentar el push rebasando, en vez de perder el scrape
+          # entero por una carrera de indices.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && exit 0
+            echo "push fallido (intento $i), reintento..."
+            sleep $((i * 10))
+          done
+          exit 1

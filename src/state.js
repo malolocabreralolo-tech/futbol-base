@@ -232,6 +232,42 @@ export function groupJornadaLabel(raw) {
   return /^\d+$/.test(s) ? `Jornada ${s}` : s;
 }
 
+/* Un <td> o un <div> con onclick no existe para el teclado: no se puede
+ * tabular hasta él ni activarlo. Estos dos helpers le ponen el rol y el
+ * tabindex y atienden Enter y Espacio (con preventDefault: si no, Espacio
+ * hace scroll de página en vez de activar). */
+export const ACTIVATION_KEYS = ['Enter', ' ', 'Spacebar'];
+
+export function makeActivatable(node, action) {
+  if (!node) return;
+  node.setAttribute('role', 'button');
+  node.setAttribute('tabindex', '0');
+  node.addEventListener('click', action);
+  node.addEventListener('keydown', e => {
+    if (!ACTIVATION_KEYS.includes(e.key)) return;
+    e.preventDefault();
+    action(e);
+  });
+}
+
+/* Igual, pero por delegación: los nombres de equipo se pintan por cientos y
+ * llevan su rol en el HTML; aquí solo va el manejador del contenedor. */
+export function delegateActivation(container, selector, handler) {
+  if (!container) return;
+  const run = e => {
+    const el = e.target.closest(selector);
+    if (el) handler(el, e);
+  };
+  container.onclick = run;
+  container.onkeydown = e => {
+    if (!ACTIVATION_KEYS.includes(e.key)) return;
+    const el = e.target.closest(selector);
+    if (!el) return;
+    e.preventDefault();
+    handler(el, e);
+  };
+}
+
 export function isCupGroup(g) {
   const id = ((g && g.id) || '').toUpperCase();
   if (id.startsWith('PCC') || id.startsWith('BC')) return true;
@@ -740,7 +776,7 @@ export function buildUnifiedPrebenjamin() {
     const dfStr = t.df > 0 ? '+' + t.df : t.df;
     html += `<tr class="${cls.trim()}">`;
     html += `<td>${pos}</td>`;
-    html += `<td class="team-name-cell" data-group="${escapeAttr(ligaGroups[t.groupNum - 1].id)}" data-team="${escapeAttr(t.name)}">${teamBadge(t.name)} ${escapeHtml(t.name)}</td>`;
+    html += `<td class="team-name-cell" role="button" tabindex="0" data-group="${escapeAttr(ligaGroups[t.groupNum - 1].id)}" data-team="${escapeAttr(t.name)}">${teamBadge(t.name)} ${escapeHtml(t.name)}</td>`;
     html += `<td style="color:${t.color};font-weight:700;text-align:center" title="${escapeAttr(t.groupName)}">${t.sym}</td>`;
     html += `<td class="pts-col">${t.ppg}</td>`;
     html += `<td>${t.pts}</td><td>${t.j}</td><td>${t.g_wins}</td><td>${t.e}</td><td>${t.p}</td>`;

@@ -43,10 +43,17 @@ test('toda celda .team-name-cell construida lleva data-team (render.js + state.j
 
 test('el handler de clic pasa td.dataset.team a openTeamDetail (no textContent)', () => {
   const s = src('render.js');
+  // La delegación vive ahora en delegateActivation (state.js), que le pasa al
+  // handler el propio elemento: sigue siendo dataset, nunca textContent.
   assert.match(
     s,
-    /closest\('\.team-name-cell'\)[\s\S]{0,160}openTeamDetail\(\s*td\.dataset\.team\b/,
+    /delegateActivation\(container, '\.team-name-cell',\s*td => openTeamDetail\(td\.dataset\.team, td\.dataset\.group\)\)/,
     'el handler debe pasar td.dataset.team a openTeamDetail',
+  );
+  assert.match(
+    src('state.js'),
+    /closest\(selector\)/,
+    'delegateActivation debe resolver el objetivo con closest(selector)',
   );
   assert.doesNotMatch(
     s,

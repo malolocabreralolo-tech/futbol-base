@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, groupJornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, phaseIcon, bracketDrawAdvancer, matchAdvancer, bracketChampion, getSeasonError, ensureSeasonData } from './state.js';
+import { S, $, $$, el, makeActivatable, delegateActivation, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, groupJornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, phaseIcon, bracketDrawAdvancer, matchAdvancer, bracketChampion, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
@@ -118,11 +118,9 @@ export function renderClasif() {
     container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No se encontraron equipos</p></div>';
   }
 
-  // Event delegation: click on team name in standings → open team profile
-  container.onclick = e => {
-    const td = e.target.closest('.team-name-cell');
-    if (td) openTeamDetail(td.dataset.team, td.dataset.group);
-  };
+  // Delegación: abrir la ficha del equipo desde el nombre, con ratón o teclado.
+  delegateActivation(container, '.team-name-cell',
+    td => openTeamDetail(td.dataset.team, td.dataset.group));
 }
 
 function filterGroups(groups) {
@@ -182,9 +180,8 @@ export function buildGroupCard(g, forceOpen) {
       ${knockout ? buildKnockoutBracket(g) : buildStandingsTable(g.standings, g.id, g)}
     </div>
   `;
-  card.querySelector('.group-header').addEventListener('click', () => {
-    card.classList.toggle('open');
-  });
+  makeActivatable(card.querySelector('.group-header'),
+    () => card.classList.toggle('open'));
   return card;
 }
 
@@ -247,11 +244,11 @@ function buildKnockoutBracket(g) {
       // textContent with initials); the 🏆 stays outside the cell.
       html += `<div class="bracket-match${isFinalMatch ? ' bracket-match-final' : ''}">
         <div class="${homeClass}${homeIsChamp ? ' champion' : ''}">
-          <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}" data-team="${escapeAttr(home)}">${teamBadge(home)} ${escapeHtml(home)}</span>${homeIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-team-name"><span class="team-name-cell" role="button" tabindex="0" data-group="${escapeAttr(g.id)}" data-team="${escapeAttr(home)}">${teamBadge(home)} ${escapeHtml(home)}</span>${homeIsChamp ? ' 🏆' : ''}</span>
           <span class="bracket-score">${hs != null ? hs : '–'}${penAdvancer === 'home' ? ' <span class="bracket-pen" title="Ganó en la tanda de penaltis">pen</span>' : ''}</span>
         </div>
         <div class="${awayClass}${awayIsChamp ? ' champion' : ''}">
-          <span class="bracket-team-name"><span class="team-name-cell" data-group="${escapeAttr(g.id)}" data-team="${escapeAttr(away)}">${teamBadge(away)} ${escapeHtml(away)}</span>${awayIsChamp ? ' 🏆' : ''}</span>
+          <span class="bracket-team-name"><span class="team-name-cell" role="button" tabindex="0" data-group="${escapeAttr(g.id)}" data-team="${escapeAttr(away)}">${teamBadge(away)} ${escapeHtml(away)}</span>${awayIsChamp ? ' 🏆' : ''}</span>
           <span class="bracket-score">${as != null ? as : '–'}${penAdvancer === 'away' ? ' <span class="bracket-pen" title="Ganó en la tanda de penaltis">pen</span>' : ''}</span>
         </div>
       </div>`;
@@ -301,7 +298,7 @@ export function buildStandingsTable(standings, groupId, group) {
     const cls = (pos <= 3 ? `pos-${pos}` : '') + (isFeatured(row[1]) ? ' featured-team' : '');
     html += `<tr class="${cls.trim()}">`;
     html += `<td>${pos}</td>`;
-    html += `<td class="team-name-cell" data-group="${escapeAttr(groupId)}" data-team="${escapeAttr(row[1])}">${teamBadge(row[1])} ${escapeHtml(row[1])}</td>`;
+    html += `<td class="team-name-cell" role="button" tabindex="0" data-group="${escapeAttr(groupId)}" data-team="${escapeAttr(row[1])}">${teamBadge(row[1])} ${escapeHtml(row[1])}</td>`;
     if (showForm) {
       // Form column
       const form = getTeamForm(row[1], groupId);
@@ -592,7 +589,11 @@ export function renderMatchCards(container, matches, type) {
 
     // Click handler for completed matches
     if (hasScore) {
-      card.addEventListener('click', () => {
+      // La tarjeta ENTERA es el botón (abrir el detalle del partido). Los
+      // nombres de dentro siguen abriendo la ficha del equipo con el ratón,
+      // pero no se hacen focusables: un botón dentro de otro botón es ARIA
+      // inválido, y esa misma ficha se alcanza con teclado desde Clasificación.
+      makeActivatable(card, () => {
         openMatchDetail({
           home: m.home,
           away: m.away,
@@ -826,10 +827,8 @@ export function renderIsla() {
   // Las tablas de aquí son las mismas de CLASIFICACIÓN (buildGroupCard), con
   // sus .team-name-cell y su cursor de mano, pero sin esta delegación el clic
   // no hacía nada: el nombre parecía pulsable y no abría la ficha del equipo.
-  container.onclick = e => {
-    const td = e.target.closest('.team-name-cell');
-    if (td) openTeamDetail(td.dataset.team, td.dataset.group);
-  };
+  delegateActivation(container, '.team-name-cell',
+    td => openTeamDetail(td.dataset.team, td.dataset.group));
 }
 
 /* ====== STATS SECTION ====== */

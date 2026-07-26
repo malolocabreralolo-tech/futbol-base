@@ -439,3 +439,37 @@ test('el botón de cerrar el modal llega a 44px en móvil', () => {
   // la móvil necesita ganar por especificidad, no por orden.
   assert.match(css, /\.modal-close\.modal-close\s*\{[^}]*width:\s*44px/);
 });
+
+test('lo que se puede pulsar con el ratón se puede activar con el teclado', () => {
+  const state = readFileSync(new URL('../../src/state.js', import.meta.url), 'utf8');
+  const render = readFileSync(new URL('../../src/render.js', import.meta.url), 'utf8');
+  // Enter Y Espacio, con preventDefault: si no, Espacio hace scroll de página.
+  assert.match(state, /ACTIVATION_KEYS\s*=\s*\['Enter', ' '/);
+  assert.match(state, /export function makeActivatable/);
+  assert.match(state, /export function delegateActivation/);
+  assert.match(state, /e\.preventDefault\(\)/);
+  // Las tres superficies principales: nombre de equipo, cabecera de grupo y
+  // tarjeta de partido.
+  assert.match(render, /delegateActivation\(container, '\.team-name-cell'/);
+  assert.match(render, /makeActivatable\(card\.querySelector\('\.group-header'\)/);
+  assert.match(render, /makeActivatable\(card, \(\) => \{\s*openMatchDetail/);
+  // Y ya no debe quedar la delegación solo-ratón.
+  assert.doesNotMatch(render, /container\.onclick = e => \{\s*const td/);
+});
+
+test('las celdas de equipo se anuncian como botón y son tabulables', () => {
+  const render = readFileSync(new URL('../../src/render.js', import.meta.url), 'utf8');
+  const state = readFileSync(new URL('../../src/state.js', import.meta.url), 'utf8');
+  const celdas = (render + state).match(/class="team-name-cell"[^>]*/g) || [];
+  assert.ok(celdas.length >= 4, `esperaba varias celdas, encontré ${celdas.length}`);
+  for (const c of celdas) {
+    assert.match(c, /role="button"/, c);
+    assert.match(c, /tabindex="0"/, c);
+  }
+});
+
+test('el foco por teclado se ve (focus-visible con contorno)', () => {
+  const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
+  assert.match(css, /\[role="button"\][\s\S]{0,40}:focus-visible/);
+  assert.match(css, /outline:\s*2px solid/);
+});

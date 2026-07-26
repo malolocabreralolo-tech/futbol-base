@@ -430,8 +430,8 @@ test('POR ISLA abre la ficha de equipo: los nombres no son decorativos', () => {
   const s = src('render.js');
   const i = s.indexOf('export function renderIsla');
   const bloque = s.slice(i, s.indexOf('/* ====== STATS SECTION', i));
-  assert.match(bloque, /container\.onclick/,
-    'renderIsla debe delegar el clic como renderClasif');
+  assert.match(bloque, /delegateActivation\(container, '\.team-name-cell'/,
+    'renderIsla debe delegar la activación como renderClasif (ratón y teclado)');
   assert.match(bloque, /openTeamDetail\(td\.dataset\.team, td\.dataset\.group\)/);
 });
 

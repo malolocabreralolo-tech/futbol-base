@@ -177,11 +177,19 @@ export function openMatchDetail(match) {
 
   // Find group data (data-*.js globals are lexical consts → bare identifier
   // reads must be typeof-guarded or a missing file throws ReferenceError)
-  const allGroups = isHistorical() ? getData()
-    : (S.cat === 'benjamin'
-        ? (typeof BENJAMIN !== 'undefined' ? BENJAMIN : [])
-        : (typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : []));
-  const group = allGroups.find(g => g.id === groupId);
+  // El grupo se buscaba SOLO en la categoría activa (S.cat). MI EQUIPO es la
+  // pantalla de aterrizaje y su equipo puede ser de la otra categoría, así que
+  // en una visita nueva el modal salía sin nombre de grupo y sin la tabla
+  // comparativa. Se busca en la categoría activa primero y en la otra después:
+  // los códigos de grupo no se repiten entre categorías dentro de una
+  // temporada, así que no hay ambigüedad.
+  const porCategoria = (cat) => cat === 'benjamin'
+    ? (typeof BENJAMIN !== 'undefined' ? BENJAMIN : [])
+    : (typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : []);
+  const otra = S.cat === 'benjamin' ? 'prebenjamin' : 'benjamin';
+  const allGroups = isHistorical() ? getData() : porCategoria(S.cat);
+  const group = allGroups.find(g => g.id === groupId)
+    || (isHistorical() ? null : porCategoria(otra).find(g => g.id === groupId));
   const groupLabel = group ? `${group.phase} - ${group.name}` : '';
 
   // Season-aware dataset: historical seasons must never read the

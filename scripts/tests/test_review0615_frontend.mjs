@@ -425,3 +425,19 @@ test('renderSection confiesa el fallo de temporada en TODAS las secciones', () =
     'renderSection debe comprobar el error antes de despachar la sección');
   assert.match(bloque, /return;/);
 });
+
+test('POR ISLA abre la ficha de equipo: los nombres no son decorativos', () => {
+  const s = src('render.js');
+  const i = s.indexOf('export function renderIsla');
+  const bloque = s.slice(i, s.indexOf('/* ====== STATS SECTION', i));
+  assert.match(bloque, /container\.onclick/,
+    'renderIsla debe delegar el clic como renderClasif');
+  assert.match(bloque, /openTeamDetail\(td\.dataset\.team, td\.dataset\.group\)/);
+});
+
+test('el modal busca el grupo en las dos categorías', () => {
+  const s = src('modals.js');
+  // MI EQUIPO es la pantalla de aterrizaje y su equipo puede ser de la otra
+  // categoría: con S.cat a secas, el modal salía sin grupo ni comparativa.
+  assert.match(s, /porCategoria\(otra\)/);
+});

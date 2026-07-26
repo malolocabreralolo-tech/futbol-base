@@ -822,6 +822,14 @@ export function renderIsla() {
       isFirstIsla = false;
     });
   });
+
+  // Las tablas de aquí son las mismas de CLASIFICACIÓN (buildGroupCard), con
+  // sus .team-name-cell y su cursor de mano, pero sin esta delegación el clic
+  // no hacía nada: el nombre parecía pulsable y no abría la ficha del equipo.
+  container.onclick = e => {
+    const td = e.target.closest('.team-name-cell');
+    if (td) openTeamDetail(td.dataset.team, td.dataset.group);
+  };
 }
 
 /* ====== STATS SECTION ====== */

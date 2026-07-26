@@ -147,8 +147,8 @@ def test_lineup_keys_point_at_teams_that_played(conn):
                JOIN groups g ON g.id=m.group_id WHERE g.season_id=?""", (fila[0],))}
         with open(ruta, encoding="utf-8") as f:
             texto = f.read()
-        nombres = {n for par in re.findall(r'"([^"|]+)\|([^"|]+)\|[^"]*"', texto)
-                   for n in par}
+        nombres = {n for clave in _lineup_keys(texto)
+                   for n in clave.split("|")[:2]}
         muertos = sorted(n for n in nombres if n not in vivos)
         if muertos:
             problemas.append(f"{temporada}: {muertos[:5]}")
@@ -171,3 +171,45 @@ def test_island_ids_are_the_ones_the_frontend_knows(conn):
         "SELECT DISTINCT island FROM groups WHERE island IS NOT NULL AND island != ''")
         if r[0] not in validas})
     assert not malas, f"islas que el frontend no conoce: {malas}"
+
+
+def _lineup_keys(texto):
+    """Claves de un data-lineups-*.js, parseando el JSON de verdad.
+
+    Con una regex ingenua se pierden los equipos cuyo nombre lleva comillas
+    ('VETERANOS DEL PILA., C.D. "A"'), que son justo los que peor reconcilian.
+    """
+    import json
+    import re as _re
+    m = _re.search(r"const LINEUPS_\d{4}_\d{4}\s*=\s*(\{[\s\S]*?\});\s*$", texto.strip())
+    return list(json.loads(m.group(1))) if m else []
+
+
+def test_published_lineups_match_the_database(conn):
+    """(i) Cada data-lineups-*.js tiene EXACTAMENTE las actas que dice la base.
+
+    Las temporadas 2022-23 y 2024-25 llegaron a tener 0 actas en la base
+    mientras el sitio seguía sirviendo ficheros de una generación anterior: la
+    'fuente de verdad' no respaldaba lo publicado, así que auditar contra la DB
+    daba un falso negativo y cualquier renombrado dejaba atrás los ficheros sin
+    que nada fallara. Este test ata las dos cosas.
+    """
+    import glob
+    import re as _re
+
+    descuadres = []
+    for ruta in sorted(glob.glob(os.path.join(ROOT, "data-lineups-*.js"))):
+        temporada = _re.search(r"data-lineups-(\d{4}-\d{4})\.js", ruta).group(1)
+        fila = conn.execute("SELECT id FROM seasons WHERE name=?", (temporada,)).fetchone()
+        if not fila:
+            continue
+        en_db = conn.execute(
+            """SELECT COUNT(*) FROM matches m JOIN groups g ON g.id=m.group_id
+               WHERE g.season_id=? AND m.cod_acta IS NOT NULL""", (fila[0],)).fetchone()[0]
+        with open(ruta, encoding="utf-8") as f:
+            publicadas = len(_lineup_keys(f.read()))
+        if en_db != publicadas:
+            descuadres.append(f"{temporada}: base={en_db} publicado={publicadas}")
+
+    assert not descuadres, ("Alineaciones publicadas que la base no respalda: "
+                            + "; ".join(descuadres))

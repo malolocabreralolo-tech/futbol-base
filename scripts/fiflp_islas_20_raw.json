@@ -1,0 +1,85 @@
+[
+  {
+    "competition_id": "1657",
+    "competition_name": "Copa Cabildo Lanzarote Preferente",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Copa Cabildo Preferente Lanzarote",
+    "group_id": "182562",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1657",
+    "competition_name": "Copa Cabildo Lanzarote Preferente",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Copa Cabildo Preferente Lanzarote",
+    "group_id": "182577",
+    "group_name": "GRUPO 2",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1682",
+    "competition_name": "Copa Cabildo Lanzarote Primera",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Copa Cabildo Primera Lanzarote",
+    "group_id": "182605",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1682",
+    "competition_name": "Copa Cabildo Lanzarote Primera",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Copa Cabildo Primera Lanzarote",
+    "group_id": "182633",
+    "group_name": "GRUPO 2",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1682",
+    "competition_name": "Copa Cabildo Lanzarote Primera",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Copa Cabildo Primera Lanzarote",
+    "group_id": "182661",
+    "group_name": "GRUPO 3",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1682",
+    "competition_name": "Copa Cabildo Lanzarote Primera",
+    "cat": "benjamin",
+    "island": "lanzarote",
+    "phase": "Copa Cabildo Primera Lanzarote",
+    "group_id": "182676",
+    "group_name": "GRUPO 4",
+    "standings": [],
+    "jornadas": []
+  },
+  {
+    "competition_id": "1731",
+    "competition_name": "Torneo Cierre Prebenjamin FV-LZ",
+    "cat": "prebenjamin",
+    "island": "lanzarote",
+    "phase": "Torneo Cierre",
+    "group_id": "197018",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "08-06-2025 ( Ronda 1 Ida )",
+        "date": "",
+        "matches": []
+      }
+    ]
+  }
+]

@@ -30,6 +30,7 @@
   --chip: #2b3650;
   --transition: 0.2s ease;
   /* Podium row tints (final standings only) */
+  --crown: #ffc428;   /* corona del pichichi (tema oscuro) */
   --tint-gold: rgba(255,215,0,0.10);
   --tint-silver: rgba(192,192,192,0.09);
   --tint-bronze: rgba(205,127,50,0.10);
@@ -41,10 +42,15 @@
   --bg2: #e4e6eb;
   --card: #ffffff;
   --card-hover: #f5f6fa;
-  --accent: #00a854;
-  --accent-dim: rgba(0,168,84,0.12);
-  --amber: #e6a800;
-  --gold: #b8860b;
+  /* AA 11/6 solo se verificó en textos; los ACENTOS seguían siendo los del
+   * tema oscuro y sobre fondo claro no llegaban: #00a854 daba 3.1:1, #e6a800
+   * 1.9:1 y el #ffc428 de los goleadores 1.6:1, en badges de jornada y grupo
+   * que salen decenas de veces por pantalla. Este portal se mira al aire libre.
+   * Oscurecidos hasta pasar 4.5:1 sobre sus fondos reales (5.8, 4.9 y 6.3:1). */
+  --accent: #00753f;
+  --accent-dim: rgba(0,117,63,0.14);
+  --amber: #8a6500;
+  --gold: #7a5c00;
   /* QA 11/6: #808080 daba 3.9:1 sobre blanco en nombres del 2º clasificado */
   --silver: #6b7280;
   --bronze: #8b5a2b;
@@ -59,6 +65,7 @@
   --shadow-sm: 0 2px 12px rgba(0,0,0,0.05);
   --card-hi: rgba(255,255,255,0.65);
   --chip: #e2e5ec;
+  --crown: #8a6500;   /* 5.3:1 sobre blanco; el #ffc428 daba 1.6:1 */
   --tint-gold: rgba(184,134,11,0.10);
   --tint-silver: rgba(112,112,112,0.08);
   --tint-bronze: rgba(139,90,43,0.10);
@@ -1220,7 +1227,10 @@ body[data-section="miequipo"] .stats-bar {
   .cat-btn { font-size: 14px; padding: 6px 16px; min-height: 44px; }
   .jornada-pill, .island-tab { min-height: 44px; }
   .theme-toggle { width: 44px; height: 44px; }
-  .modal-close { width: 44px; height: 44px; top: 8px; right: 8px; }
+  /* Doble clase: la regla base (.modal-close, más abajo en el fichero) tiene
+   * la misma especificidad y ganaba por orden de fuente, dejando el botón en
+   * 32x32 en móvil. */
+  .modal-close.modal-close { width: 44px; height: 44px; top: 8px; right: 8px; }
   .me-link { min-height: 44px; display: flex; align-items: center; }
   .me-crow[data-mi] { min-height: 44px; }
   .standings-table td { padding: 12px 8px; }
@@ -1382,11 +1392,16 @@ body[data-section="miequipo"] .stats-bar {
   justify-content: center;
   padding: 16px;
   opacity: 0;
-  transition: opacity 0.25s ease;
+  /* visibility saca el modal cerrado del orden de tabulación: con solo
+   * opacity+pointer-events, el foco se perdía en el botón de cerrar, invisible
+   * y fuera del viewport. Se transiciona para no cortar el fundido de salida. */
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s;
   pointer-events: none;
 }
 .modal-overlay.open {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 .modal {
@@ -2030,10 +2045,10 @@ img.team-badge {
 }
 .bracket-team.champion {
   background: linear-gradient(90deg, rgba(255,196,40,0.15), rgba(255,196,40,0.03));
-  color: #ffc428;
+  color: var(--crown);
 }
 .bracket-team.champion .bracket-score {
-  color: #ffc428;
+  color: var(--crown);
 }
 .bracket-score {
   font-size: 14px;
@@ -2044,7 +2059,7 @@ img.team-badge {
 }
 .group-badge.cup-badge {
   background: linear-gradient(90deg, rgba(255,196,40,0.18), rgba(255,196,40,0.05));
-  color: #ffc428;
+  color: var(--crown);
   font-weight: 700;
 }
 
@@ -2265,3 +2280,4 @@ img.team-badge {
   .me-pos-n { font-size: 42px; }
   .me-pos-l { font-size: 9px; }
 }
+

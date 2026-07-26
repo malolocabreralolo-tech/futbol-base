@@ -388,3 +388,54 @@ test('style.css A2: goal bar gradient accent→accent-dim, animation gated, podi
   assert.ok(/\[data-theme="light"\] \.gol-pod-1/.test(css),
     'podium needs its light-theme variant');
 });
+
+test('los acentos del tema claro pasan AA sobre sus fondos reales', () => {
+  const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
+  const luz = (hex) => {
+    const h = hex.replace('#', '');
+    const [r, g, b] = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+    const f = c => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+  };
+  const ratio = (a, b) => {
+    const [x, y] = [luz(a), luz(b)].sort((p, q) => q - p);
+    return (x + 0.05) / (y + 0.05);
+  };
+  const bloque = css.slice(css.indexOf('[data-theme="light"]'));
+  const valor = (nombre) => bloque.match(new RegExp('--' + nombre + ':\\s*(#[0-9a-fA-F]{6})'))[1];
+  // Badges de jornada, de grupo y corona del pichichi, sobre tarjeta blanca.
+  for (const nombre of ['accent', 'gold', 'crown']) {
+    const c = valor(nombre);
+    assert.ok(ratio(c, '#ffffff') >= 4.5,
+      `--${nombre} (${c}) da ${ratio(c, '#ffffff').toFixed(2)}:1 sobre blanco, por debajo de AA`);
+  }
+  // El ámbar vive sobre su propio fondo tintado, no sobre blanco puro.
+  assert.ok(ratio(valor('amber'), '#fff5d6') >= 4.5);
+});
+
+test('la corona del pichichi es una variable por tema, no un color cableado', () => {
+  const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
+  assert.doesNotMatch(css, /color:\s*#ffc428/);
+  assert.match(css, /--crown:/);
+});
+
+test('el modal cerrado no es tabulable y se anuncia como diálogo', () => {
+  const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
+  const html = readFileSync(new URL('../../index.html', import.meta.url), 'utf8');
+  // Con solo opacity:0 + pointer-events:none, el botón de cerrar seguía en el
+  // orden de tabulación: el foco desaparecía en un elemento invisible.
+  assert.match(css, /\.modal-overlay\s*\{[^}]*visibility:\s*hidden/);
+  assert.match(css, /\.modal-overlay\.open\s*\{[^}]*visibility:\s*visible/);
+  assert.match(html, /id="matchModal"[^>]*role="dialog"/);
+  assert.match(html, /aria-modal="true"/);
+  // Lo que etiqueta al diálogo tiene que existir de verdad en el documento.
+  const etiqueta = html.match(/aria-labelledby="([^"]+)"/)[1];
+  assert.ok(html.includes(`id="${etiqueta}"`), `aria-labelledby apunta a #${etiqueta}, que no existe`);
+});
+
+test('el botón de cerrar el modal llega a 44px en móvil', () => {
+  const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
+  // La regla base va después en el fichero con la misma especificidad, así que
+  // la móvil necesita ganar por especificidad, no por orden.
+  assert.match(css, /\.modal-close\.modal-close\s*\{[^}]*width:\s*44px/);
+});

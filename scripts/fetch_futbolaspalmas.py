@@ -66,6 +66,14 @@ def standings_regression(stored, scraped):
     if stored_played >= _ROLLOVER_MIN_PLAYED and scraped_played <= _ROLLOVER_MAX_NEW:
         return (f"la jornada cae de {stored_played} a {scraped_played}: "
                 f"parece el arranque de otra temporada")
+    # Los umbrales fijos dejaban fuera a los grupos cortos: cuatro grupos reales
+    # de la temporada en curso terminan con J4, por debajo del mínimo, así que
+    # ninguna caída los protegía. La regla de no-regresión que usa el resto del
+    # proyecto (db.existing_played_count) no depende de la longitud de la liga:
+    # una jornada NUNCA retrocede dentro de la misma temporada.
+    if scraped_played < stored_played:
+        return (f"la jornada retrocede de {stored_played} a {scraped_played}: "
+                f"una liga no desanda jornadas")
 
     stored_teams = {str(r[1]).strip().lower() for r in stored}
     scraped_teams = {str(r[1]).strip().lower() for r in scraped}
@@ -563,8 +571,13 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
         except Exception as e:
             print(f"    ! clasificacion error: {e}")
 
+        # Si la descarga de la clasificación falla, NO se puede comprobar nada:
+        # tratarlo como tabla vacía hace que el guard rechace el grupo entero en
+        # vez de dejar pasar los partidos a ciegas. Antes, un 500 transitorio del
+        # endpoint bastaba para colar partidos de otra temporada en los grupos
+        # de la vieja, y encima sin ponerse rojo.
         regression = standings_regression(stored_standings(conn, group_id),
-                                          standings) if clasi_html else None
+                                          standings if clasi_html else [])
         if regression:
             print(f"    ! GRUPO OMITIDO — {regression}")
             skipped_standings.append((group_code, regression))

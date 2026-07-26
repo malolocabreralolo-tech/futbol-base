@@ -142,3 +142,50 @@ class TestGuardIsWired:
     def test_the_playbook_it_points_to_exists(self):
         assert (ROOT / "docs" / "temporada-nueva.md").exists(), \
             "el mensaje remite a docs/temporada-nueva.md"
+
+
+class TestShortGroupsAreProtectedToo:
+    """Los umbrales fijos dejaban sin proteger a los grupos cortos: cuatro
+    grupos reales de 2025-26 terminan con J4, por debajo de
+    _ROLLOVER_MIN_PLAYED=5, así que ninguna caída de jornada los rechazaba."""
+
+    def _tabla(self, jugados, equipos=("A", "B", "C", "D")):
+        return [[i + 1, e, jugados * 3, jugados, jugados, 0, 0, 10, 2, 8]
+                for i, e in enumerate(equipos)]
+
+    def test_a_four_matchday_group_cannot_go_back_to_one(self):
+        from fetch_futbolaspalmas import standings_regression
+        motivo = standings_regression(self._tabla(4), self._tabla(1))
+        assert motivo and "retrocede" in motivo
+
+    def test_normal_progress_still_passes(self):
+        from fetch_futbolaspalmas import standings_regression
+        assert standings_regression(self._tabla(4), self._tabla(5)) is None
+
+    def test_the_same_matchday_still_passes(self):
+        # Corrección de una tabla ya publicada: mismo J, no es regresión.
+        from fetch_futbolaspalmas import standings_regression
+        assert standings_regression(self._tabla(4), self._tabla(4)) is None
+
+    def test_a_new_group_still_passes(self):
+        from fetch_futbolaspalmas import standings_regression
+        assert standings_regression([], self._tabla(1)) is None
+
+
+class TestFailedStandingsDownloadSkipsTheGroup:
+    """Si mostrar_clasi.php falla no se puede comprobar nada, así que el grupo
+    entero se salta. Antes el guard ni se llamaba y los partidos entraban a
+    ciegas: un 500 transitorio en septiembre metía la temporada nueva en los
+    grupos de la vieja sin poner el run rojo."""
+
+    def test_the_call_site_passes_an_empty_table_when_the_download_failed(self):
+        import re
+        src = (ROOT / "scripts" / "fetch_futbolaspalmas.py").read_text(encoding="utf-8")
+        assert re.search(r"standings_regression\(\s*stored_standings\(conn, group_id\),\s*"
+                         r"standings if clasi_html else \[\]\)", src), \
+            "el fallo de descarga debe llegar al guard como tabla vacía"
+
+    def test_an_empty_table_is_rejected(self):
+        from fetch_futbolaspalmas import standings_regression
+        stored = [[1, "A", 30, 10, 10, 0, 0, 30, 5, 25]]
+        assert standings_regression(stored, []) is not None

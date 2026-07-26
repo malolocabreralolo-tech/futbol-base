@@ -213,3 +213,37 @@ def test_published_lineups_match_the_database(conn):
 
     assert not descuadres, ("Alineaciones publicadas que la base no respalda: "
                             + "; ".join(descuadres))
+
+
+def test_standings_and_calendar_name_the_same_teams(conn):
+    """(j) Dentro de un grupo, la tabla y el calendario nombran igual.
+
+    FIFLP escribe la letra de filial en la clasificación pero no en el
+    calendario ('CORRALEJO B, C.D. "B"' arriba, 'CORRALEJO, C.D. "B"' en los
+    partidos), así que el mismo equipo entraba dos veces en el mismo grupo: uno
+    con clasificación y sin partidos, otro al revés. En la web ese equipo abre
+    su ficha vacía y su columna de forma sale en blanco. Eran 24 grupos.
+    """
+    problemas = []
+    for gid, code, temporada in conn.execute(
+            """SELECT g.id, g.code, se.name FROM groups g
+                 JOIN seasons se ON se.id=g.season_id"""):
+        tabla = {r[0] for r in conn.execute(
+            """SELECT t.name FROM standings s JOIN teams t ON t.id=s.team_id
+               WHERE s.group_id=?""", (gid,))}
+        calendario = {r[0] for r in conn.execute(
+            """SELECT DISTINCT t.name FROM matches m
+               JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
+               WHERE m.group_id=?""", (gid,))}
+        if not tabla or not calendario:
+            continue
+        # Un equipo de la tabla sin NINGÚN partido es normal si el archivo está
+        # incompleto; lo que no puede pasar es que exista con otro nombre.
+        huerfanos = tabla - calendario
+        fantasmas = calendario - tabla
+        if huerfanos and fantasmas:
+            problemas.append(f"{temporada} {code}: tabla-only={sorted(huerfanos)[:2]} "
+                             f"calendario-only={sorted(fantasmas)[:2]}")
+
+    assert not problemas, ("Grupos donde tabla y calendario usan nombres "
+                           "distintos: " + "; ".join(problemas[:6]))

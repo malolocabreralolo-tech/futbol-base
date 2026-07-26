@@ -35,3 +35,8 @@ database.db
 
 # Visual brainstorming companion
 .superpowers/
+
+# Volcados de diagnóstico del workflow debug-fiflp-copa (se regeneran al vuelo).
+# Estuvieron trackeados y una vez llegaron a main con marcas de conflicto dentro,
+# porque el workflow hace stash/pull/stash pop sin resolver.
+scripts/debug_fiflp_copa.json

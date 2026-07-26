@@ -67,6 +67,15 @@ COMPS_BY_SEASON = {
         {"id": "1439", "name": "Benjamin GC Segunda Fase", "cat": "benjamin", "island": "grancanaria", "phase": "Segunda Fase GC"},
         {"id": "1445", "name": "Torneo Cierre Prebenjamin", "cat": "prebenjamin", "island": "grancanaria", "phase": "Torneo Cierre"},
     ],
+    # 2025-2026 — Segunda Fase de Gran Canaria. El portal publica un GRUPO 4 en
+    # las fases A y B que la base nunca fichó (solo tenía A1-A3 y B1-B3 con la
+    # C completa hasta C4). Sus clasificaciones sí se pudieron sacar del portal,
+    # pero el calendario no: futbolaspalmas solo sirve la jornada en curso y la
+    # liga terminó en mayo. FIFLP conserva las jornadas.
+    "21gc": [
+        {"id": "54422953", "name": "Benjamin GC Fase Liga A", "cat": "benjamin", "island": "grancanaria", "phase": "Segunda Fase A"},
+        {"id": "54422954", "name": "Benjamin GC Fase Liga B", "cat": "benjamin", "island": "grancanaria", "phase": "Segunda Fase B"},
+    ],
     # 2024-2025 — copas insulares de Lanzarote, nunca importadas
     "20": [
         {"id": "1657", "name": "Copa Cabildo Lanzarote Preferente", "cat": "benjamin", "island": "lanzarote", "phase": "Copa Cabildo Preferente Lanzarote"},

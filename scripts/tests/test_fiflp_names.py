@@ -44,9 +44,16 @@ class TestTeamKey:
         # 'ARUCAS C.F. "B" "B"' es el artefacto conocido del scraper.
         assert team_key('ARUCAS C.F. "B" "B"') == team_key('Arucas B')
 
-    def test_name_made_only_of_noise_keeps_its_tokens(self):
-        core, _ = team_key('C.D.')
-        assert core  # no puede quedar vacío: colapsaría con cualquier otro
+    def test_a_name_that_is_only_a_club_type_matches_nobody(self):
+        # 'C.D.' no identifica a nadie: lo que no puede es colapsar con todos.
+        assert team_score(team_key('C.D.'), team_key('Firgas')) == 0.0
+        assert team_score(team_key('C.D.'), team_key('C.F.')) == 0.0
+
+    def test_the_club_abbreviation_is_not_a_filial_letter(self):
+        # 'U.D.' dejaba una 'D' suelta que pasaba por letra de filial.
+        assert team_key('SAN PEDRO ATALAYA, U.D.')[1] == ''
+        assert team_key('MOGAN, C.F.')[1] == ''
+        assert team_key('ARUCAS C.F. "B"')[1] == 'B'
 
 
 class TestTeamScore:
@@ -133,3 +140,90 @@ class TestRealWorldMisses:
     def test_prefix_rule_needs_a_long_token(self):
         # 'SAN' es prefijo de 'SANTA' pero son clubes distintos.
         assert team_score(team_key('San Isidro'), team_key('Santa Brígida')) == 0.0
+
+
+class TestCanonicalNames:
+    POOL = ['Tablero', 'Tablero B', 'Mogán', 'Arinaga', 'Estrella B']
+
+    def test_maps_the_fiflp_spelling_to_the_database_one(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['TABLERO, C.D. "A"', 'MOGAN, C.F.'], [], self.POOL)
+        assert canon['TABLERO, C.D. "A"'] == 'Tablero'
+        assert canon['MOGAN, C.F.'] == 'Mogán'
+
+    def test_a_previous_unreconciled_import_does_not_block_the_good_name(self):
+        from fiflp_names import canonical_names
+        # 'TABLERO, C.D. "A"' ya está en la base porque otro import lo metió sin
+        # reconciliar: emparejado consigo mismo, ganaría por puntuación.
+        sucio = self.POOL + ['TABLERO, C.D. "A"']
+        canon = canonical_names(['TABLERO, C.D. "A"'], [], sucio)
+        assert canon['TABLERO, C.D. "A"'] == 'Tablero'
+
+    def test_the_filial_letter_is_respected(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['TABLERO B, C.D. "B"'], [], self.POOL)
+        assert canon['TABLERO B, C.D. "B"'] == 'Tablero B'
+
+    def test_a_team_the_season_does_not_have_keeps_its_name(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['CASA PASTORES, C.F.'], [], self.POOL)
+        assert canon['CASA PASTORES, C.F.'] == 'CASA PASTORES, C.F.'
+
+    def test_the_group_squad_wins_over_the_season_pool(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['MOGAN, C.F.'], ['CF Mogán'], self.POOL)
+        assert canon['MOGAN, C.F.'] == 'CF Mogán'
+
+
+class TestCanonicalNamesVariants:
+    """FIFLP escribe el mismo equipo distinto en la tabla y en el calendario.
+    Sin agrupar las variantes, el emparejamiento uno-a-uno le da el nombre de la
+    base a una sola y la otra entra como un equipo nuevo."""
+
+    def test_both_spellings_get_the_same_name(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['INGENIO B, C.D. "B"', 'INGENIO "B", C.D. "B"'],
+                                [], ['Ingenio B'])
+        assert canon['INGENIO B, C.D. "B"'] == 'Ingenio B'
+        assert canon['INGENIO "B", C.D. "B"'] == 'Ingenio B'
+
+    def test_variants_of_an_unknown_team_still_collapse(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['PASTORES, C.F.', 'PASTORES C.F.'], [], ['Otro'])
+        assert len(set(canon.values())) == 1  # un solo equipo, no dos
+
+    def test_different_teams_are_not_merged(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['ARUCAS C.F. "A"', 'ARUCAS C.F. "B"'],
+                                [], ['Arucas A', 'Arucas B'])
+        assert canon['ARUCAS C.F. "A"'] == 'Arucas A'
+        assert canon['ARUCAS C.F. "B"'] == 'Arucas B'
+
+
+class TestDoNotMergeDifferentClubs:
+    """Compartir una palabra no basta. Caso real (Segunda Fase GC 2023-24):
+    'MESAS HURACAN, U.D. LAS "A"' es Las Mesas Huracán y se estaba fundiendo con
+    'Atco. Huracán', que es otro club."""
+
+    POOL = ['Las Mesas Hu.', 'Atco. Huracán', 'At. Huracán B', 'Las Huesas']
+
+    def test_the_right_club_wins(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['MESAS HURACAN, U.D. LAS "A"'], [], self.POOL)
+        assert canon['MESAS HURACAN, U.D. LAS "A"'] == 'Las Mesas Hu.'
+
+    def test_the_two_huracan_stay_apart(self):
+        from fiflp_names import canonical_names
+        canon = canonical_names(['MESAS HURACAN, U.D. LAS "A"',
+                                 'ATLETICO HURACAN, A.D.'], [], self.POOL)
+        assert canon['MESAS HURACAN, U.D. LAS "A"'] == 'Las Mesas Hu.'
+        assert canon['ATLETICO HURACAN, A.D.'] == 'Atco. Huracán'
+
+    def test_a_real_short_form_still_matches(self):
+        # La regla no puede cargarse los casos legítimos de nombre corto.
+        from fiflp_names import team_key, team_score, MIN_TEAM_SCORE
+        for largo, corto in [('SAN PEDRO ATALAYA, U.D.', 'Atalaya'),
+                             ('PAN.ERIA PULIDO SAN MATEO, C.D.', 'San Mateo'),
+                             ('ROQUE AMAGRO DE GALDAR "A"', 'Roque Amagro'),
+                             ('TEROR BALOMPIE', 'Teror')]:
+            assert team_score(team_key(largo), team_key(corto)) >= MIN_TEAM_SCORE, largo

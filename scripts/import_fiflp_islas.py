@@ -32,11 +32,13 @@ from db import (get_connection, init_db, get_or_create_season,
                 get_or_create_category, get_or_create_team,
                 get_or_create_group, delete_group_matches, PROJECT_ROOT)
 from import_fiflp_cups_2324 import clean_team_name
+from fiflp_names import canonical_names
 
 SEASONS = {
     "17": ("2021-2022", 2021, 2022),
     "18": ("2022-2023", 2022, 2023),
     "19": ("2023-2024", 2023, 2024),
+    "19gc": ("2023-2024", 2023, 2024),
 }
 
 # competition_id -> (prefijo de código, fase publicada)
@@ -47,6 +49,10 @@ COMP_META = {
     "1442": ("FV2", "Fase 2 Fuerteventura"),
     "1434": ("PFV", "Fuerteventura"),
     "1332": ("CFV", "Copa Fuerteventura"),
+    # 2023-24 Gran Canaria: la SEGUNDA FASE, que no archivo nadie y solo
+    # conserva FIFLP. La Primera (1329) y el prebenjamin (1333) vienen de
+    # Wayback y NO se importan por aqui: se filtran con IMPORT_COMPS.
+    "1439": ("SF", "Segunda Fase GC"),
     "1407": ("CLZP", "Copa Cabildo Preferente Lanzarote"),
     "1432": ("CLZ1", "Copa Cabildo Primera Lanzarote"),
     # 2021-22 / 2022-23 (mismas competiciones, otros IDs)
@@ -87,7 +93,16 @@ def assert_no_collisions(raw, conn, season_id):
             f"Aditivo significa NO pisar lo importado antes.")
 
 
-def import_group(conn, g, season_id):
+def season_team_names(conn, season_id):
+    """Equipos que ya tiene la temporada, con el nombre que usa la base."""
+    return [r[0] for r in conn.execute(
+        """SELECT DISTINCT t.name FROM teams t
+           JOIN standings s ON s.team_id=t.id
+           JOIN groups gr ON gr.id=s.group_id WHERE gr.season_id=?""",
+        (season_id,))]
+
+
+def import_group(conn, g, season_id, canon_pool=None):
     code = group_code(g["competition_id"], g["group_name"])
     _, phase = COMP_META[g["competition_id"]]
     cat_name = "BENJAMIN" if g["cat"] == "benjamin" else "PREBENJAMIN"
@@ -110,6 +125,20 @@ def import_group(conn, g, season_id):
     if not matches and not standings:
         print(f"  [{code}] {grp_name}: scrape vacío — SKIP")
         return None
+
+    # FIFLP escribe 'TABLERO A, C.D. "A"' donde la base pone 'CD Tablero'. Si se
+    # escribe el nombre de FIFLP, el equipo entra duplicado y ese grupo se queda
+    # sin escudo, sin histórico entre temporadas y sin ficha. Se reutiliza el
+    # nombre que ya tiene la temporada siempre que se reconozca al club.
+    if canon_pool:
+        crudos = sorted({n for _, h, a, *_ in matches for n in (h, a)} |
+                        {clean_team_name(r.get("team")) for r in standings} - {""})
+        canon = canonical_names(crudos, [], canon_pool)
+        matches = [(j, canon.get(h, h), canon.get(a, a), *resto)
+                   for j, h, a, *resto in matches]
+        standings = [{**r, "team": canon.get(clean_team_name(r.get("team")),
+                                             clean_team_name(r.get("team")))}
+                     for r in standings]
 
     group_id = get_or_create_group(
         conn, season_id, cat_id, code, name=grp_name, full_name=full,
@@ -160,6 +189,17 @@ def import_group(conn, g, season_id):
     return group_id
 
 
+def filter_comps(raw, comps):
+    """Deja solo las competiciones pedidas. Una tanda de sonda puede traer en el
+    mismo raw competiciones que YA están en la base por otra vía (la Primera
+    Fase de Gran Canaria viene de Wayback): importarlas aquí las duplicaría bajo
+    códigos nuevos, así que hay que poder quedarse con una sola."""
+    if not comps:
+        return raw
+    quiero = {c.strip() for c in comps.split(",") if c.strip()}
+    return [g for g in raw if str(g.get("competition_id")) in quiero]
+
+
 def main():
     season = os.environ.get("ISLAS_SEASON", "19")
     if season not in SEASONS:
@@ -170,6 +210,10 @@ def main():
     with open(raw_path, encoding="utf-8") as f:
         raw = json.load(f)
 
+    raw = filter_comps(raw, os.environ.get("IMPORT_COMPS", ""))
+    if not raw:
+        sys.exit("El filtro IMPORT_COMPS no deja ningún grupo que importar.")
+
     unknown = sorted({g["competition_id"] for g in raw} - set(COMP_META))
     if unknown:
         sys.exit(f"competiciones sin código asignado en COMP_META: {unknown}")
@@ -179,9 +223,11 @@ def main():
     season_id = get_or_create_season(conn, name, start, end)
     assert_no_collisions(raw, conn, season_id)
 
-    print(f"Importando {len(raw)} grupos insulares a {name}…")
+    canon_pool = season_team_names(conn, season_id)
+    print(f"Importando {len(raw)} grupos insulares a {name}… "
+          f"({len(canon_pool)} equipos ya en la temporada para reconciliar nombres)")
     for g in raw:
-        import_group(conn, g, season_id)
+        import_group(conn, g, season_id, canon_pool)
     conn.commit()
     conn.close()
     print("Hecho. Ejecuta generate_js.py para publicar.")

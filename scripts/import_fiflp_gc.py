@@ -32,7 +32,7 @@ from db import (get_connection, init_db, get_or_create_season,
                 get_or_create_team, get_or_create_group,
                 delete_group_matches, existing_played_count, PROJECT_ROOT)
 from import_fiflp_cups_2324 import clean_team_name
-from fiflp_names import match_teams, group_overlap
+from fiflp_names import match_teams, group_overlap, canonical_names
 
 SEASONS = {
     "17gc": ("2021-2022", 2021, 2022),
@@ -68,7 +68,7 @@ def scraped_teams(g):
 
 
 def existing_groups(conn, season_id):
-    """{code: {'id','cat','teams' (nombres de la base), 'played'}}"""
+    """{code: {'id','cat','teams' (nombres de la base), 'played', 'pairs'}}"""
     out = {}
     for gid, code, cat_id in conn.execute(
             "SELECT id, code, category_id FROM groups WHERE season_id=?",
@@ -84,17 +84,72 @@ def existing_groups(conn, season_id):
         played = conn.execute(
             "SELECT COUNT(*) FROM matches WHERE group_id=? AND home_score IS NOT NULL",
             (gid,)).fetchone()[0]
-        out[code] = {"id": gid, "cat": cat_id, "teams": teams, "played": played}
+        pairs = {frozenset((h, a)) for h, a in conn.execute(
+            """SELECT h.name, v.name FROM matches m
+               JOIN teams h ON h.id=m.home_team_id
+               JOIN teams v ON v.id=m.away_team_id
+               WHERE m.group_id=?""", (gid,)) if h != a}
+        out[code] = {"id": gid, "cat": cat_id, "teams": teams,
+                     "played": played, "pairs": pairs}
     return out
 
 
-def best_match(teams, existing):
-    """Código existente cuya plantilla más solapa, con su ratio."""
+def scraped_pairs(g):
+    """Emparejamientos del grupo scrapeado, sin orden local/visitante."""
+    out = set()
+    for jor in g.get("jornadas") or []:
+        for m in jor.get("matches") or []:
+            h, a = clean_team_name(m.get("home")), clean_team_name(m.get("away"))
+            if h and a and h != a:
+                out.add(frozenset((h, a)))
+    return out
+
+
+# Cuánto del calendario existente tiene que reaparecer en el scrape para
+# aceptar que son el mismo grupo.
+MIN_PAIR_OVERLAP = 0.7
+
+
+def pair_overlap(pares_scrape, pares_base, canon):
+    """Parte del calendario de la base que reaparece en el scrape, 0..1.
+
+    None si la base no tiene calendario (grupo recién dado de alta): ahí la
+    plantilla es la única señal disponible.
+    """
+    if not pares_base:
+        return None
+    if not pares_scrape:
+        return 0.0
+    traducidos = {frozenset(canon.get(n, n) for n in par) for par in pares_scrape}
+    return len(traducidos & pares_base) / len(pares_base)
+
+
+def best_match(teams, existing, pares_scrape=None):
+    """Código existente que mejor case, con su ratio de plantilla.
+
+    La plantilla sola NO basta: las fases de una misma temporada se forman con
+    los equipos de la fase anterior, así que un grupo de Segunda Fase solapa un
+    60% con uno de Primera y el relleno lo pisaría con partidos de otra fase.
+    Cuando el grupo de la base ya tiene calendario, se exige además que ese
+    calendario reaparezca en el scrape: dos fases distintas no comparten ni un
+    emparejamiento con las mismas jornadas.
+    """
     best, ratio = None, 0.0
     for code, info in existing.items():
         r = group_overlap(teams, info["teams"])
-        if r > ratio:
-            best, ratio = code, r
+        if r <= ratio:
+            continue
+        if pares_scrape is not None:
+            # El mapa se construye SOLO con los nombres del calendario: FIFLP
+            # escribe el mismo equipo distinto en la tabla y en los partidos, y
+            # un emparejamiento uno-a-uno sobre la unión deja media grafía sin
+            # traducir — con lo que ningún emparejamiento coincidiría.
+            del_calendario = sorted({n for par in pares_scrape for n in par})
+            canon = canonical_names(del_calendario, info["teams"], info["teams"])
+            solape = pair_overlap(pares_scrape, info["pairs"], canon)
+            if solape is not None and solape < MIN_PAIR_OVERLAP:
+                continue
+        best, ratio = code, r
     return best, ratio
 
 
@@ -133,22 +188,6 @@ def count_played(g, retirados=None):
                for m in (jor.get("matches") or [])
                if is_real_match(m, retirados))
 
-
-def canonical_names(scraped, group_teams, season_teams):
-    """{nombre FIFLP: nombre a escribir}.
-
-    Primero contra la plantilla del grupo emparejado (lo normal). Lo que quede
-    suelto se busca en el resto de equipos de la temporada, porque un club puede
-    existir ya en la base bajo otro grupo y no queremos duplicarlo. Lo que no
-    aparezca por ningún lado se queda con su nombre limpio de FIFLP.
-    """
-    mapa = match_teams(scraped, group_teams)
-    sueltos = [n for n in scraped if n not in mapa]
-    if sueltos:
-        ya_usados = set(mapa.values())
-        resto = [t for t in season_teams if t not in ya_usados]
-        mapa.update(match_teams(sueltos, resto))
-    return {n: mapa.get(n, n) for n in scraped}
 
 
 def write_group(conn, g, season_id, code, cat_id, canon):
@@ -238,7 +277,7 @@ def main():
     ganancia = 0
     for g in raw:
         teams = scraped_teams(g)
-        code, ratio = best_match(teams, existing)
+        code, ratio = best_match(teams, existing, scraped_pairs(g))
         nuevo = count_played(g)
         etiqueta = f"{g['competition_name'][:24]:24} {g['group_name']:9}"
         if not code or ratio < MIN_OVERLAP:

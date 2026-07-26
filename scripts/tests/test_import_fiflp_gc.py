@@ -150,3 +150,48 @@ class TestWithdrawnTeams:
                  {"home": 'PASEO COMERCIAL DE VECINDARIO B, C.D. "B"',
                   "away": 'MASPALOMASB, CD "B"', "hs": 1, "as": 1}]}]}
         assert withdrawn_teams(g) == set()
+
+
+class TestPhaseCrossoverGuard:
+    """Las fases de una temporada se forman con los equipos de la anterior, así
+    que un grupo de Segunda Fase solapa ~60% de plantilla con uno de Primera.
+    Caso real (2023-24): el grupo 9 de la Segunda Fase iba a pisar GC9 de la
+    Primera. Lo que los distingue es el CALENDARIO, no la plantilla."""
+
+    EQUIPOS = ['Firgas', 'Moya', 'Teror', 'Arucas']
+
+    def _existing(self, pares):
+        return {'GC9': {'id': 1, 'cat': 1, 'teams': self.EQUIPOS, 'played': 6,
+                        'pairs': pares}}
+
+    def test_a_group_with_a_different_calendar_is_not_a_fill(self):
+        from import_fiflp_gc import best_match
+        base = {frozenset(('Firgas', 'Moya')), frozenset(('Teror', 'Arucas'))}
+        # Mismos equipos, emparejamientos distintos: es otra fase.
+        otros = {frozenset(('Firgas', 'Teror')), frozenset(('Moya', 'Arucas'))}
+        code, _ = best_match(self.EQUIPOS, self._existing(base), otros)
+        assert code is None
+
+    def test_the_same_group_with_more_matches_is_a_fill(self):
+        from import_fiflp_gc import best_match
+        base = {frozenset(('Firgas', 'Moya')), frozenset(('Teror', 'Arucas'))}
+        mas = base | {frozenset(('Firgas', 'Teror')), frozenset(('Moya', 'Arucas'))}
+        code, _ = best_match(self.EQUIPOS, self._existing(base), mas)
+        assert code == 'GC9'
+
+    def test_a_group_without_a_calendar_falls_back_to_the_squad(self):
+        from import_fiflp_gc import best_match
+        # A4/B4 recién dados de alta: sin partidos, la plantilla es lo único.
+        code, _ = best_match(self.EQUIPOS, self._existing(set()),
+                             {frozenset(('Firgas', 'Moya'))})
+        assert code == 'GC9'
+
+    def test_names_are_reconciled_before_comparing_the_calendar(self):
+        from import_fiflp_gc import best_match
+        base = {frozenset(('Firgas', 'Moya')), frozenset(('Teror', 'Arucas'))}
+        # El scrape los escribe a la manera de FIFLP.
+        fiflp = {frozenset(('FIRGAS, C.D.', 'MOYA, U.D.')),
+                 frozenset(('TEROR BALOMPIE', 'ARUCAS C.F.'))}
+        code, _ = best_match(['FIRGAS, C.D.', 'MOYA, U.D.', 'TEROR BALOMPIE',
+                              'ARUCAS C.F.'], self._existing(base), fiflp)
+        assert code == 'GC9'

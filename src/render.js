@@ -26,6 +26,20 @@ export function renderSection() {
   document.body.dataset.section = sec;
   $(`#sec-${sec}`).classList.add('active');
 
+  // Si la temporada histórica no cargó, TODAS las secciones lo dicen. Antes
+  // solo lo confesaba CLASIFICACIÓN: ESTADÍSTICAS presentaba "0 partidos, 0
+  // goles" como si fuera el récord real de esa temporada, y JORNADAS y POR ISLA
+  // decían "no hay datos" como si la temporada estuviera vacía.
+  if (sec !== 'miequipo') {
+    const errBox = seasonErrorBox();
+    if (errBox) {
+      const host = $(`#sec-${sec}`);
+      host.innerHTML = '';
+      host.appendChild(errBox);
+      return;
+    }
+  }
+
   if (sec === 'miequipo') renderMiEquipo();
   else if (sec === 'clasif') renderClasif();
   else if (sec === 'jornadas') renderJornadas();

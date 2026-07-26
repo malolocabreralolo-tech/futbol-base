@@ -188,3 +188,15 @@ test('C3: CACHE_NAME literal on line 1, bumpable via /futbolbase-v[0-9a-z]+/', (
   assert.ok(/futbolbase-v[0-9a-z]+/.test(sw.CACHE_NAME),
     'CACHE_NAME value must match futbolbase-v[0-9a-z]+');
 });
+
+test('el SW busca en caché ignorando la ?v=: si no, el precache es basura', () => {
+  const s = swSrc;
+  // STATIC_ASSETS guarda './data-benjamin.js' y la página pide
+  // './data-benjamin.js?v=2026...': con búsqueda exacta no casaba ninguna, así
+  // que se descargaban ~1,2 MB en cada instalación para no usarlos jamás.
+  assert.match(s, /ignoreSearch:\s*true/);
+  assert.match(s, /matchIgnoringVersion\(e\.request\)/);
+  assert.doesNotMatch(s, /caches\.match\(e\.request\)\.then/);
+  // El precache sigue sin versión: es lo que lo hace estable entre bumps.
+  assert.match(s, /'\.\/data-benjamin\.js'/);
+});

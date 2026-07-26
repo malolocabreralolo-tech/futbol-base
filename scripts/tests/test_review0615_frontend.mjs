@@ -414,3 +414,14 @@ test('la cabecera de grupo usa groupJornadaLabel, no el valor crudo', () => {
   const s = src('render.js');
   assert.match(s, /jornada-badge">\$\{escapeHtml\(groupJornadaLabel\(g\.jornada\)\)\}/);
 });
+
+test('renderSection confiesa el fallo de temporada en TODAS las secciones', () => {
+  const s = src('render.js');
+  // Antes solo lo comprobaba renderClasif: ESTADÍSTICAS pintaba 0 partidos y 0
+  // goles como si fuera el récord real de esa temporada.
+  const i = s.indexOf('export function renderSection');
+  const bloque = s.slice(i, i + 1200);
+  assert.match(bloque, /seasonErrorBox\(\)/,
+    'renderSection debe comprobar el error antes de despachar la sección');
+  assert.match(bloque, /return;/);
+});

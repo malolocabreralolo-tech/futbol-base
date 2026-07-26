@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260726m';
+const CACHE_NAME = 'futbolbase-v20260726n';
 const OFFLINE_URL = './index.html';
 
 // Static assets — cached on install, served cache-first.
@@ -52,6 +52,16 @@ function classifyRequest(pathname) {
   if (/\.(js|css|png|jpg|jpeg|webp|svg|woff2?|ico)$/.test(pathname) ||
       pathname.includes('/escudos/')) return 'cache-first';
   return 'network';
+}
+
+// El precache guarda las URLs SIN ?v= y la página las pide CON ?v=, así que
+// una búsqueda exacta no encontraba nada: 1,2 MB descargados en cada
+// instalación para no usarlos jamás. Ignorar la query es seguro porque la
+// caché entera está versionada por CACHE_NAME — al bumpearla se reinstala todo
+// y `activate` borra las generaciones anteriores, así que dentro de una misma
+// caché no puede haber dos versiones del mismo fichero.
+function matchIgnoringVersion(request) {
+  return caches.match(request, { ignoreSearch: true });
 }
 
 // Pure: given the just-cached request URL and the URLs already in the cache,
@@ -113,7 +123,7 @@ self.addEventListener('fetch', e => {
   // Stale-while-revalidate: serve cache instantly, refresh in background
   if (strategy === 'swr') {
     e.respondWith(
-      caches.match(e.request).then(cached => {
+      matchIgnoringVersion(e.request).then(cached => {
         const networkFetch = fetch(e.request).then(response => {
           if (response.ok) putAndPurge(e.request, response.clone());
           return response;
@@ -127,7 +137,7 @@ self.addEventListener('fetch', e => {
   // Cache-first for static assets (js, css, images, fonts, escudos)
   if (strategy === 'cache-first') {
     e.respondWith(
-      caches.match(e.request).then(cached => {
+      matchIgnoringVersion(e.request).then(cached => {
         if (cached) return cached;
         return fetch(e.request).then(response => {
           if (response.ok) putAndPurge(e.request, response.clone());

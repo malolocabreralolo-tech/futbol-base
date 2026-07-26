@@ -87,7 +87,7 @@ def import_group(conn, g, season_id):
         name=grp_name,
         full_name=full_name,
         phase=phase,
-        island=g.get("island", "gran_canaria"),
+        island=g.get("island", "grancanaria"),
         url=g.get("url", ""),
         current_jornada=cur_jor,
     )

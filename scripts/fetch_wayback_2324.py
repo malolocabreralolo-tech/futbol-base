@@ -286,7 +286,7 @@ def island_from_slug(slug):
         return "lanzarote"
     if "fuerteventura" in s or "fv" in s:
         return "fuerteventura"
-    return "gran_canaria"
+    return "grancanaria"
 
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────

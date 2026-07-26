@@ -411,7 +411,7 @@ def main():
             "category": category,
             "group_name": f"Grupo {grp_num}",
             "phase": slug_to_phase(slug, category),
-            "island": "gran_canaria",
+            "island": "grancanaria",
             "standings": standings_out,
             "jornadas": jornadas_out,
         })

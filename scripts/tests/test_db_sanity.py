@@ -155,3 +155,19 @@ def test_lineup_keys_point_at_teams_that_played(conn):
 
     assert not problemas, ("Alineaciones publicadas con equipos que no jugaron "
                            "esa temporada: " + "; ".join(problemas))
+
+
+def test_island_ids_are_the_ones_the_frontend_knows(conn):
+    """(h) La isla de cada grupo usa el identificador que entiende el frontend.
+
+    renderIsla (src/render.js) tiene la lista de islas cableada
+    ('grancanaria'/'lanzarote'/'fuerteventura') y descarta lo que no case. Los
+    importadores de Wayback escribían 'gran_canaria' con guión bajo, así que 66
+    grupos —incluidos los 23 de la Primera Fase de la temporada en curso— no
+    aparecían en la sección POR ISLA.
+    """
+    validas = {"grancanaria", "lanzarote", "fuerteventura"}
+    malas = sorted({r[0] for r in conn.execute(
+        "SELECT DISTINCT island FROM groups WHERE island IS NOT NULL AND island != ''")
+        if r[0] not in validas})
+    assert not malas, f"islas que el frontend no conoce: {malas}"

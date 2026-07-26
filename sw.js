@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260726h';
+const CACHE_NAME = 'futbolbase-v20260726i';
 const OFFLINE_URL = './index.html';
 
 // Static assets — cached on install, served cache-first.

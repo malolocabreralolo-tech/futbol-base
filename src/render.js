@@ -1,4 +1,4 @@
-import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, phaseIcon, bracketDrawAdvancer, matchAdvancer, bracketChampion, getSeasonError, ensureSeasonData } from './state.js';
+import { S, $, $$, el, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, groupJornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, phaseIcon, bracketDrawAdvancer, matchAdvancer, bracketChampion, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
 
@@ -160,7 +160,7 @@ export function buildGroupCard(g, forceOpen) {
   card.innerHTML = `
     <div class="group-header">
       <div class="group-title">
-        ${escapeHtml(g.name)} ${headerBadge}${g.jornada && !knockout ? ` <span class="jornada-badge">${escapeHtml(g.jornada)}</span>` : ''}
+        ${escapeHtml(g.name)} ${headerBadge}${g.jornada && !knockout ? ` <span class="jornada-badge">${escapeHtml(groupJornadaLabel(g.jornada))}</span>` : ''}
       </div>
       <span class="group-chevron">▾</span>
     </div>

@@ -222,6 +222,16 @@ export function phaseIcon(phase) {
 
 /* A cup / knockout group (vs a regular league group). By code prefix
  * (PCC or BC) or phase ("Copa"/"Campeón"). */
+/* Etiqueta del badge "jornada en curso" de la cabecera de grupo. Las fuentes
+ * no coinciden: futbolaspalmas guarda "Jornada 30" y FIFLP el número pelado
+ * ("14"), así que en la misma pantalla salían badges "Jornada 30" y "14".
+ * Distinto de jornadaLabel, que es la pastilla corta ("J14"). */
+export function groupJornadaLabel(raw) {
+  const s = String(raw == null ? '' : raw).trim();
+  if (!s) return '';
+  return /^\d+$/.test(s) ? `Jornada ${s}` : s;
+}
+
 export function isCupGroup(g) {
   const id = ((g && g.id) || '').toUpperCase();
   if (id.startsWith('PCC') || id.startsWith('BC')) return true;

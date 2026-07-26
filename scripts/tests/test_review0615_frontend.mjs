@@ -398,3 +398,19 @@ test('phaseIcon: las fases insulares de nombre largo dejan de caer al genérico'
   assert.equal(phaseIcon(''), '⚽');
   assert.equal(phaseIcon(null), '⚽');
 });
+
+test('groupJornadaLabel unifica el badge entre fuentes', async () => {
+  const { groupJornadaLabel } = await import('../../src/state.js');
+  // futbolaspalmas guarda 'Jornada 30'; FIFLP el número pelado.
+  assert.equal(groupJornadaLabel('14'), 'Jornada 14');
+  assert.equal(groupJornadaLabel('Jornada 30'), 'Jornada 30');
+  assert.equal(groupJornadaLabel(''), '');
+  assert.equal(groupJornadaLabel(null), '');
+  // Las rondas de copa no son números y se dejan tal cual.
+  assert.equal(groupJornadaLabel('Semifinales'), 'Semifinales');
+});
+
+test('la cabecera de grupo usa groupJornadaLabel, no el valor crudo', () => {
+  const s = src('render.js');
+  assert.match(s, /jornada-badge">\$\{escapeHtml\(groupJornadaLabel\(g\.jornada\)\)\}/);
+});

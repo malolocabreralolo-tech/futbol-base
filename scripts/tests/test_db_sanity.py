@@ -120,3 +120,38 @@ def test_no_duplicate_groups(conn):
                 duplicados.append(f"{a[0]}: {a[1]} ~ {b[1]} ({comun} partidos comunes)")
 
     assert not duplicados, "Grupos duplicados: " + "; ".join(duplicados)
+
+
+def test_lineup_keys_point_at_teams_that_played(conn):
+    """(g) Las claves de data-lineups-*.js nombran equipos de esa temporada.
+
+    La clave es '<local>|<visitante>|<goles>', así que un nombre desactualizado
+    deja el partido sin alineación en el modal, en silencio. Y hay temporadas
+    (2022-23, 2024-25) con CERO actas en la base: sus ficheros publicados son de
+    una generación anterior y generate_js.py ya no los reescribe, así que un
+    renombrado de equipos los deja atrás sin que nada falle. Pasó con la fusión
+    de duplicados del 2026-07-26.
+    """
+    import glob
+    import re
+
+    problemas = []
+    for ruta in sorted(glob.glob(os.path.join(ROOT, "data-lineups-*.js"))):
+        temporada = re.search(r"data-lineups-(\d{4}-\d{4})\.js", ruta).group(1)
+        fila = conn.execute("SELECT id FROM seasons WHERE name=?", (temporada,)).fetchone()
+        if not fila:
+            continue
+        vivos = {r[0] for r in conn.execute(
+            """SELECT DISTINCT t.name FROM matches m
+               JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
+               JOIN groups g ON g.id=m.group_id WHERE g.season_id=?""", (fila[0],))}
+        with open(ruta, encoding="utf-8") as f:
+            texto = f.read()
+        nombres = {n for par in re.findall(r'"([^"|]+)\|([^"|]+)\|[^"]*"', texto)
+                   for n in par}
+        muertos = sorted(n for n in nombres if n not in vivos)
+        if muertos:
+            problemas.append(f"{temporada}: {muertos[:5]}")
+
+    assert not problemas, ("Alineaciones publicadas con equipos que no jugaron "
+                           "esa temporada: " + "; ".join(problemas))

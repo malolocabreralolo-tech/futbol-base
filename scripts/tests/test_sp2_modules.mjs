@@ -165,3 +165,38 @@ test('renderPlayerDetailHtml: shows name, stats, matches', () => {
   assert.ok(/<b>5<\/b>\s*PJ/.test(html));
   assert.ok(/player-detail-match/.test(html));
 });
+
+test('aggregatePlayerFromLineups solo cuenta los partidos de SU equipo', async () => {
+  const { aggregatePlayerFromLineups } = await import('../../src/plantilla.js');
+  // Mismo nombre en dos clubes: sin filtrar por equipo se sumaban los dos y el
+  // desplegable contradecía a la fila de la tabla.
+  const L = {
+    'Firgas|Moya|2-1': { home: [{ n: 'PEREZ, JUAN', r: 'starter', g: 1, y: 0, rd: 0 }], away: [] },
+    'Teror|Firgas|0-3': { home: [], away: [{ n: 'PEREZ, JUAN', r: 'sub', g: 2, y: 1, rd: 0 }] },
+    'Arucas|Moya|1-1': { home: [{ n: 'PEREZ, JUAN', r: 'starter', g: 5, y: 0, rd: 0 }], away: [] },
+  };
+  const suyo = aggregatePlayerFromLineups(L, 'PEREZ, JUAN', 'Firgas');
+  assert.equal(suyo.appearances, 2);
+  assert.equal(suyo.goals, 3);          // 1 + 2, sin los 5 del homónimo
+  assert.equal(suyo.starters, 1);
+  const todos = aggregatePlayerFromLineups(L, 'PEREZ, JUAN');
+  assert.equal(todos.appearances, 3);   // sin equipo, comportamiento anterior
+});
+
+test('renderPlayerDetailHtml no invierte el marcador de los partidos fuera', async () => {
+  const { aggregatePlayerFromLineups, renderPlayerDetailHtml } = await import('../../src/plantilla.js');
+  const L = { 'Teror|Firgas|0-3': { home: [], away: [{ n: 'PEREZ, JUAN', r: 'starter', g: 1, y: 0, rd: 0 }] } };
+  const agg = aggregatePlayerFromLineups(L, 'PEREZ, JUAN', 'Firgas');
+  const html = renderPlayerDetailHtml('PEREZ, JUAN', agg);
+  // Se pinta 'Firgas vs Teror', así que el marcador tiene que ser 3-0.
+  assert.match(html, /Firgas <i>vs<\/i> Teror/);
+  assert.match(html, /pdm-score">3-0</);
+  assert.doesNotMatch(html, /pdm-score">0-3</);
+});
+
+test('el marcador de los partidos en casa se deja tal cual', async () => {
+  const { aggregatePlayerFromLineups, renderPlayerDetailHtml } = await import('../../src/plantilla.js');
+  const L = { 'Firgas|Moya|2-1': { home: [{ n: 'PEREZ, JUAN', r: 'starter', g: 1, y: 0, rd: 0 }], away: [] } };
+  const agg = aggregatePlayerFromLineups(L, 'PEREZ, JUAN', 'Firgas');
+  assert.match(renderPlayerDetailHtml('PEREZ, JUAN', agg), /pdm-score">2-1</);
+});

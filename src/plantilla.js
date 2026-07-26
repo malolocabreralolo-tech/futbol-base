@@ -2,7 +2,7 @@
 // Pure render: HTML string from {rows, opts}. No DOM access in renderPlantillaTable.
 
 // C2: shared escape helper from state.js (no local duplicates).
-import { escapeHtml as escHtml } from './state.js';
+import { escapeHtml as escHtml, normalizeTeamName } from './state.js';
 
 export function sortPlantillaRows(rows, key, dir) {
   key = key || 'g';
@@ -73,13 +73,35 @@ export function renderPlantillaTable(rows, opts) {
        + head + body + '</table>';
 }
 
-export function aggregatePlayerFromLineups(lineups, playerName) {
+/* Estadísticas de un jugador a partir de las alineaciones de la temporada.
+ *
+ * `teamName` es obligatorio en la práctica: sin él se agregaba por NOMBRE sobre
+ * todas las alineaciones, así que un homónimo de otro club sumaba sus partidos
+ * y el desplegable contradecía a la propia fila de la tabla (que sí viene
+ * filtrada por equipo). Se omite solo en los tests que ejercitan el caso
+ * antiguo. */
+export function aggregatePlayerFromLineups(lineups, playerName, teamName) {
   let appearances = 0, starters = 0, goals = 0, yellow = 0, red = 0;
   const matches = [];
+  const suyo = teamName ? normalizeTeamName(teamName) : null;
   for (const [matchKey, m] of Object.entries(lineups || {})) {
+    const partes = String(matchKey).split('|');
     const inHome = (m.home || []).find(p => p.n === playerName);
     const inAway = (m.away || []).find(p => p.n === playerName);
-    const app = inHome || inAway;
+    let app = inHome || inAway;
+    if (suyo) {
+      const enLocal = inHome && normalizeTeamName(partes[0] || '') === suyo;
+      const enVisitante = inAway && normalizeTeamName(partes[1] || '') === suyo;
+      app = enLocal ? inHome : enVisitante ? inAway : null;
+      if (app) {
+        matches.push({ matchKey, side: enLocal ? 'home' : 'away',
+                       g: app.g|0, y: app.y|0, rd: app.rd|0 });
+        appearances += 1;
+        if (app.r === 'starter') starters += 1;
+        goals += app.g|0; yellow += app.y|0; red += app.rd|0;
+      }
+      continue;
+    }
     if (!app) continue;
     appearances += 1;
     if (app.r === 'starter') starters += 1;
@@ -99,12 +121,19 @@ export function renderPlayerDetailHtml(playerName, agg) {
     : agg.matches.slice(0, 30).map(r => {
         const parts = String(r.matchKey).split('|');
         const home = parts[0] || '', away = parts[1] || '', score = parts[2] || '';
+        // Al dar la vuelta a los nombres hay que darle la vuelta también al
+        // marcador: si no, todos los partidos fuera se leen al revés y una
+        // victoria por 1-3 aparece como derrota.
         const vsHtml = r.side === 'home'
           ? '<span class="pdm-vs">' + escHtml(home) + ' <i>vs</i> ' + escHtml(away) + '</span>'
           : '<span class="pdm-vs">' + escHtml(away) + ' <i>vs</i> ' + escHtml(home) + '</span>';
+        const goles = String(score).split('-');
+        const marcador = (r.side === 'away' && goles.length === 2)
+          ? goles[1] + '-' + goles[0]
+          : score;
         return '<div class="player-detail-match">'
              + vsHtml
-             + '<span class="pdm-score">' + escHtml(score) + '</span>'
+             + '<span class="pdm-score">' + escHtml(marcador) + '</span>'
              + (r.g  > 0 ? '<span class="pdm-tag tag-g">⚽' + r.g + '</span>' : '')
              + (r.y  > 0 ? '<span class="pdm-tag tag-y">🟨' + r.y + '</span>' : '')
              + (r.rd > 0 ? '<span class="pdm-tag tag-r">🟥' + r.rd + '</span>' : '')
@@ -154,7 +183,7 @@ export function renderPlantillaInto(container, rows, opts) {
           container.querySelectorAll('.plant-row-active').forEach(n => n.classList.remove('plant-row-active'));
           const name = tr.dataset.playerName;
           let agg = memo.get(name);
-          if (!agg) { agg = aggregatePlayerFromLineups(opts.lineupsForExpand, name); memo.set(name, agg); }
+          if (!agg) { agg = aggregatePlayerFromLineups(opts.lineupsForExpand, name, opts.teamName); memo.set(name, agg); }
           const detailHtml = renderPlayerDetailHtml(name, agg);
           const detailTr = document.createElement('tr');
           detailTr.className = 'player-detail-tr';

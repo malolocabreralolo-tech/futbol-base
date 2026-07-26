@@ -371,6 +371,7 @@ export function renderMiEquipo() {
     renderPlantillaInto(host, rows, {
       teamId: String(teamId),
       season,
+      teamName,
       lineupsForExpand: ldata || undefined,
     });
   });

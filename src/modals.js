@@ -578,6 +578,7 @@ export function openTeamDetail(teamName, groupId) {
       renderPlantillaInto(host, rows, {
         teamId: String(teamId),
         season,
+        teamName,
         lineupsForExpand: ldata || undefined,
       });
       });

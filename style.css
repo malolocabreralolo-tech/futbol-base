@@ -1100,24 +1100,56 @@ body[data-section="miequipo"] .stats-bar {
 /* ====== MI EQUIPO DASHBOARD ====== */
 #sec-miequipo { display: none; }
 #sec-miequipo.active { display: flex; flex-direction: column; gap: 14px; max-width: 760px; margin: 0 auto; }
-.me-hero { display: flex; align-items: center; gap: 16px; background: linear-gradient(150deg, var(--card-hover) 0%, var(--card) 60%); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 18px; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm); }
-.me-hero::after { content: ""; position: absolute; right: -40px; top: -30px; width: 170px; height: 170px; background: radial-gradient(circle, var(--accent-dim), transparent 70%); }
-/* Crest XL with an accent ring + floodlight glow behind it */
+/* ── El héroe: una placa, no tres objetos en fila ─────────────────────────────
+ * Tenía el escudo con aro y halo, el nombre, y el puesto dentro de OTRA caja
+ * con su propio borde y brillo: tres cosas pidiendo atención dentro de una
+ * cuarta. Ahora es una sola composición — escudo grande y sobrio, el nombre
+ * como titular de la página, y el puesto como DORSAL, que es la forma que
+ * tienen los números en este deporte y a esta edad. Sin caja: el número se
+ * sostiene solo. */
+.me-hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(150deg, var(--card-hover) 0%, var(--card) 62%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 22px 22px 20px;
+  position: relative;
+  overflow: hidden;
+}
 .me-crest { position: relative; flex-shrink: 0; }
-.me-crest::before { content: ""; position: absolute; inset: -22px; border-radius: 50%; background: radial-gradient(circle, var(--accent-dim) 0%, transparent 68%); pointer-events: none; }
 .me-crest .team-badge {
-  width: 104px; height: 104px; font-size: 34px; border-radius: 22px; position: relative;
-  box-shadow: 0 0 0 2px var(--green-border), 0 0 26px var(--accent-dim);
-  filter: drop-shadow(0 6px 14px rgba(0,0,0,.35));
+  width: 112px; height: 112px; font-size: 36px; border-radius: 24px; position: relative;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.4));
 }
 .me-id { min-width: 0; }
-.me-id h2 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; font-weight: 400; letter-spacing: 1.2px; line-height: .95; }
-.me-meta { color: var(--text2); font-size: 12.5px; margin-top: 6px; }
-/* Position as an XL ordinal chip — LED scoreboard digits in Bebas */
-.me-pos { margin-left: auto; flex-shrink: 0; text-align: center; background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 12px 18px 10px; box-shadow: inset 0 1px 0 var(--card-hi); position: relative; }
-.me-pos-n { font-family: 'Bebas Neue', sans-serif; font-size: 62px; font-weight: 400; color: var(--accent); line-height: .85; letter-spacing: 1px; font-variant-numeric: tabular-nums; text-shadow: 0 0 22px var(--accent-dim); }
-.me-pos-l { font-size: 10px; color: var(--text3); letter-spacing: .8px; margin-top: 5px; font-weight: 700; }
-.me-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm); }
+.me-id h2 {
+  font-family: 'Bebas Neue', sans-serif; font-size: 52px; font-weight: 400;
+  letter-spacing: .5px; line-height: .88; text-wrap: balance;
+}
+.me-meta { color: var(--text2); font-size: 12.5px; margin-top: 9px; }
+/* El dorsal. Contorneado como en una camiseta; relleno sólido si el navegador
+ * no sabe hacer contorno de texto, para que nunca desaparezca. */
+.me-pos { flex-shrink: 0; text-align: center; }
+.me-pos-n {
+  font-family: 'Bebas Neue', sans-serif; font-size: 96px; font-weight: 400;
+  color: var(--accent); line-height: .8; letter-spacing: 1px;
+  font-variant-numeric: tabular-nums;
+}
+@supports (-webkit-text-stroke: 2px currentColor) {
+  .me-pos-n { -webkit-text-stroke: 2.5px var(--accent); color: transparent; }
+  /* La marca de ordinal va sólida y pequeña: una camiseta no lleva 'º', así que
+   * el contorno es para el número y ella se queda como acento. */
+  .me-pos-o { -webkit-text-stroke: 0; color: var(--accent); }
+}
+.me-pos-o { font-size: .38em; vertical-align: 42%; margin-left: 1px; }
+.me-pos-l { font-size: 10px; color: var(--text3); letter-spacing: .9px; margin-top: 8px; font-weight: 700; }
+/* Seis tarjetas idénticas apiladas no hacen jerarquía, hacen ruido. Cada una
+ * lleva ahora UNA sola señal de superficie (el borde) en vez de borde + brillo
+ * interior + sombra, y el héroe se queda como el único bloque con relieve. */
+.me-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
 
 /* ── Season-over closing card (sober celebration, scoreboard digits) ── */
 .me-over { border-color: rgba(255,215,0,.28); background: linear-gradient(165deg, rgba(255,215,0,.07) 0%, var(--card) 52%); }
@@ -1169,7 +1201,10 @@ body[data-section="miequipo"] .stats-bar {
 .me-jn { font-size: 10px; color: var(--text3); width: 32px; flex: 0 0 32px; }
 .me-hv { font-size: 9px; font-weight: 800; width: 14px; color: var(--text3); }
 .me-o { flex: 1; color: var(--text); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.me-res { font-weight: 800; width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+/* La columna de resultados es lo que se recorre con la vista: dígitos de
+ * marcador (condensados y tabulares), no texto de párrafo en negrita. */
+.me-res { font-family: 'Bebas Neue', sans-serif; font-size: 19px; font-weight: 400;
+  letter-spacing: .5px; width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
 .me-res.G { color: var(--accent); }
 .me-res.E { color: var(--text2); }
 .me-res.P { color: var(--red); }
@@ -1256,12 +1291,11 @@ body[data-section="miequipo"] .stats-bar {
   .search-wrap { padding: 0 12px; }
   .team-badge { width: 20px; height: 20px; font-size: 8px; }
   #sec-miequipo.active { gap: 12px; }
-  .me-hero { padding: 16px 14px; gap: 12px; }
-  .me-crest .team-badge { width: 96px; height: 96px; font-size: 30px; }
-  .me-crest::before { inset: -16px; }
-  .me-id h2 { font-size: 26px; }
-  .me-pos { padding: 10px 13px 8px; }
-  .me-pos-n { font-size: 56px; }
+  .me-hero { padding: 16px 14px; gap: 14px; }
+  .me-crest .team-badge { width: 84px; height: 84px; font-size: 28px; }
+  .me-id h2 { font-size: 30px; }
+  .me-pos-n { font-size: 62px; }
+  .me-pos-l { font-size: 9px; margin-top: 6px; }
   .me-over-stats { gap: 12px; }
   .me-over-stat .n { font-size: 28px; }
 
@@ -2286,12 +2320,10 @@ img.team-badge {
    en 3 líneas a 360px, meta palabra-por-línea a 320px (QA 11/6). ── */
 @media (max-width: 374px) {
   .me-hero { gap: 10px; padding: 14px 12px; }
-  .me-crest .team-badge { width: 72px; height: 72px; font-size: 24px; }
-  .me-crest::before { inset: -12px; }
-  .me-id h2 { font-size: 21px; }
-  .me-pos { padding: 8px 10px 6px; }
-  .me-pos-n { font-size: 42px; }
-  .me-pos-l { font-size: 9px; }
+  .me-crest .team-badge { width: 66px; height: 66px; font-size: 22px; }
+  .me-id h2 { font-size: 24px; }
+  .me-pos-n { font-size: 50px; }
+  .me-pos-l { font-size: 8px; }
 }
 
 

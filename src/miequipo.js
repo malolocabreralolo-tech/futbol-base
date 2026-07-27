@@ -207,7 +207,8 @@ export function renderMiEquipo() {
     + '<div class="me-id"><h2>' + esc(FEATURED.name) + '</h2>'
     + '<div class="me-meta">Prebenjamín &middot; ' + esc(group.name)
       + ' &middot; ' + esc(group.phase) + '</div></div>'
-    + '<div class="me-pos"><div class="me-pos-n">' + pos + '&ordm;</div>'
+    + '<div class="me-pos"><div class="me-pos-n">' + pos
+    + '<span class="me-pos-o">&ordm;</span></div>'
     + '<div class="me-pos-l">DE ' + total + ' EQUIPOS</div></div>';
   c.appendChild(hero);
 

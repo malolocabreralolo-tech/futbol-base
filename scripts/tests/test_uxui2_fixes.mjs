@@ -130,29 +130,35 @@ test('index.html: theme toggle lives inside the header with its aria-label', () 
 
 // ─── 6. hero XL + season-over card de-duplication ─────────────────────────
 
-test('style.css: hero crest is XL (>=96px) with an accent ring, on both breakpoints', () => {
+test('el escudo del héroe es grande en los dos anchos', () => {
+  // Rediseño 27/07/2026: el escudo es el ancla de identidad de la pantalla, así
+  // que se comprueba que sea XL, no una cifra exacta. El aro de acento se quitó
+  // a propósito — el escudo tenía aro, halo Y sombra: tres tratamientos para un
+  // solo objeto.
   const base = css.match(/\.me-crest \.team-badge\s*\{[^}]*\}/);
   assert.ok(base, '.me-crest .team-badge base rule missing');
   const w = base[0].match(/width:\s*(\d+)px/);
-  assert.ok(w && +w[1] >= 96 && +w[1] <= 110, 'crest base width must be 96-110px');
-  assert.ok(/box-shadow:[^;]*var\(--green-border\)/.test(base[0]),
-    'crest needs its accent ring (box-shadow with --green-border)');
+  assert.ok(w && +w[1] >= 96, `el escudo debe ser XL (>=96px), es ${w && w[1]}`);
   const mob = mobile.match(/\.me-crest \.team-badge\s*\{[^}]*\}/);
   assert.ok(mob, 'mobile crest override missing');
   const mw = mob[0].match(/width:\s*(\d+)px/);
-  assert.ok(mw && +mw[1] >= 96, 'mobile crest must stay >=96px');
+  assert.ok(mw && +mw[1] >= 72, `en móvil debe seguir siendo grande (>=72px), es ${mw && mw[1]}`);
 });
 
-test('style.css: ordinal chip digits are scoreboard-sized Bebas (56-64px)', () => {
+test('el puesto se pinta como un dorsal, no como texto', () => {
   const base = css.match(/\.me-pos-n\s*\{[^}]*\}/);
   assert.ok(base, '.me-pos-n rule missing');
-  assert.ok(/Bebas Neue/.test(base[0]), 'ordinal must use Bebas Neue');
+  assert.ok(/Bebas Neue/.test(base[0]), 'el dorsal usa la display condensada');
   const fs = base[0].match(/font-size:\s*(\d+)px/);
-  assert.ok(fs && +fs[1] >= 56 && +fs[1] <= 64, 'ordinal base size must be 56-64px');
+  assert.ok(fs && +fs[1] >= 56, `tamaño de marcador (>=56px), es ${fs && fs[1]}`);
   const mob = mobile.match(/\.me-pos-n\s*\{[^}]*\}/);
   assert.ok(mob, 'mobile .me-pos-n override missing');
   const mfs = mob[0].match(/font-size:\s*(\d+)px/);
-  assert.ok(mfs && +mfs[1] >= 56, 'mobile ordinal must stay >=56px');
+  assert.ok(mfs && +mfs[1] >= 50, `en móvil sigue siendo grande (>=50px), es ${mfs && mfs[1]}`);
+  // El contorno es opcional por soporte: si el navegador no sabe hacerlo, el
+  // número tiene que seguir viéndose relleno, nunca transparente a secas.
+  assert.match(css, /@supports \(-webkit-text-stroke[\s\S]{0,200}color: transparent/);
+  assert.match(base[0], /color: var\(--accent\)/);
 });
 
 test('miequipo.js: season-over card emphasises the balance, not the hero’s position', () => {

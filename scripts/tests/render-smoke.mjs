@@ -35,8 +35,12 @@ export function checkRenderedDom(dom) {
     failures.push('calendar rendered no rows and no "Sin partidos" (.me-crow/.me-next)');
   if (!has('me-mini') && !has('Su posición'))
     failures.push('mini-table (.me-mini / "Su posición") missing');
-  if (!has('me-plant-card') && !has('Plantilla 2'))
-    failures.push('SP-2 Plantilla card (.me-plant-card / "Plantilla 2XXX") missing');
+  // La tarjeta de plantilla es OPCIONAL desde el rediseño del 27/07/2026: sin
+  // actas para ese equipo y temporada se quita entera, en vez de dejar una caja
+  // que solo dice "no hay datos" en la pantalla de aterrizaje. Lo que sí se
+  // exige es que, si está, traiga jugadores de verdad.
+  if (has('me-plant-card') && !has('plant-table') && !has('plant-empty'))
+    failures.push('SP-2 Plantilla card presente pero sin tabla ni empty-state');
   if (!has('me-scrow') && !has('Goleadores del equipo'))
     failures.push('scorers (.me-scrow / "Goleadores del equipo") missing');
   if (has('No hay datos del equipo esta temporada'))

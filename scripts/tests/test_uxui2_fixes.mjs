@@ -473,3 +473,36 @@ test('el foco por teclado se ve (focus-visible con contorno)', () => {
   assert.match(css, /\[role="button"\][\s\S]{0,40}:focus-visible/);
   assert.match(css, /outline:\s*2px solid/);
 });
+
+test('el calendario de MI EQUIPO da el marcador desde el equipo, no desde el campo', () => {
+  const s = readFileSync(new URL('../../src/miequipo.js', import.meta.url), 'utf8');
+  // La fila solo nombra al rival, así que 'Unión Viera 11-1' se leía como una
+  // victoria por 11-1 cuando fue una derrota por 1-11.
+  assert.match(s, /m\.isHome \? m\.hs \+ '-' \+ m\.as : m\.as \+ '-' \+ m\.hs/);
+});
+
+test('cada fila del calendario lleva su resultado, para el raíl de la izquierda', () => {
+  const js = readFileSync(new URL('../../src/miequipo.js', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
+  assert.match(js, /me-r-' \+ \(m\.result === 'W' \? 'G'/);
+  assert.match(css, /\.me-crow\.me-r-G::before/);
+  assert.match(css, /\.me-crow\.me-r-P::before/);
+});
+
+test('el calendario ya no es una caja con scroll propio', () => {
+  const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
+  const regla = css.match(/\.me-cal \{[^}]*\}/)[0];
+  assert.doesNotMatch(regla, /max-height/);
+  assert.doesNotMatch(regla, /overflow-y:\s*auto/);
+});
+
+test('MI EQUIPO es un tablero de dos columnas en escritorio', () => {
+  const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
+  const i = css.indexOf('@media (min-width: 1024px)');
+  const bloque = css.slice(i);
+  assert.match(bloque, /#sec-miequipo\.active \{[^}]*display:\s*grid/);
+  assert.match(bloque, /\.me-side\s*\{[^}]*grid-column:\s*2/);
+  // Y fuera de escritorio el contenedor no puede existir para el layout, o
+  // cambiaría el orden de las tarjetas en móvil.
+  assert.match(css, /\.me-side \{ display: contents; \}/);
+});

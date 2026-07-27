@@ -246,7 +246,7 @@ export function renderMiEquipo() {
     c.appendChild(overCard);
   }
 
-  const calCard = el('div', 'me-card');
+  const calCard = el('div', 'me-card me-cal-card');
   let lastPlayedIdx = -1;
   for (let i = matches.length - 1; i >= 0; i--)
     if (matches[i].played) { lastPlayedIdx = i; break; }
@@ -279,9 +279,17 @@ export function renderMiEquipo() {
     // ni lleva fecha — chip 'no disputado' (QA 11/6: 'dom, 06/06' partido en
     // dos líneas y contradictorio bajo la tarjeta TEMPORADA FINALIZADA).
     const notPlayedOver = !played && outlook.state === 'finished';
-    const score = played ? (m.hs + '-' + m.as) : notPlayedOver ? null : fmtDate(m.date);
+    // El marcador va desde el equipo, no desde el campo: la fila solo nombra al
+    // rival, así que 'Unión Viera 11-1' se lee como que ganamos 11-1 cuando
+    // fue justo al revés. Nuestros goles primero, siempre.
+    const score = played
+      ? (m.isHome ? m.hs + '-' + m.as : m.as + '-' + m.hs)
+      : notPlayedOver ? null : fmtDate(m.date);
     const resCls = score === null ? cls + ' me-res-nd' : cls;
+    // El resultado va también en la FILA: el raíl de la izquierda deja leer
+    // la racha de un vistazo, sin tener que ir marcador a marcador.
     const rowCls = ('me-crow' + (!played ? ' me-dim' : '')
+      + (played ? ' me-r-' + (m.result === 'W' ? 'G' : m.result === 'L' ? 'P' : 'E') : '')
       + (i === lastPlayedIdx ? ' me-last' : '')).trim();
     const tappable = played && hasDetail(m);
     calRows += '<div class="' + rowCls + '"'
@@ -303,6 +311,13 @@ export function renderMiEquipo() {
     + (calRows || '<div class="me-empty">Sin partidos</div>') + '</div>';
   c.appendChild(calCard);
 
+  // Las tarjetas de consulta van en un contenedor propio: en escritorio son la
+  // columna derecha del tablero, y sin él la altura del calendario empujaba a
+  // los goleadores muy por debajo. En móvil el contenedor desaparece del
+  // layout (display:contents), así que el orden y el aire quedan igual.
+  const side = el('div', 'me-side');
+  c.appendChild(side);
+
   calCard.querySelectorAll('[data-mi]').forEach(node => {
     const open = () => {
       const m = matches[+node.dataset.mi];
@@ -314,14 +329,8 @@ export function renderMiEquipo() {
     node.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
   });
 
-  requestAnimationFrame(() => {
-    const cal = $('#meCal');
-    const target = cal && cal.querySelector('.me-divnow');
-    if (cal && target) cal.scrollTop = target.offsetTop - cal.offsetTop - 8;
-    else if (cal) cal.scrollTop = cal.scrollHeight;
-  });
 
-  const miniCard = el('div', 'me-card');
+  const miniCard = el('div', 'me-card me-mini');
   const st = group.standings;
   const lo = Math.max(0, pos - 1 - 3);
   const hi = Math.min(st.length, pos - 1 + 3 + 1);
@@ -340,7 +349,7 @@ export function renderMiEquipo() {
     + '<th>Equipo</th><th>PTS</th><th>J</th><th>DIF</th></tr></thead>'
     + '<tbody>' + bodyRows + '</tbody></table></div>'
     + '<div class="me-link" id="meGoGroup">Ver grupo completo &rarr;</div>';
-  c.appendChild(miniCard);
+  side.appendChild(miniCard);
   $('#meGoGroup').addEventListener('click', jumpToFullGroup);
 
   // SP-2: Plantilla card — always the CURRENT season (see miEquipoSeason)
@@ -353,20 +362,16 @@ export function renderMiEquipo() {
     + '<div class="skeleton skeleton-row"></div><div class="skeleton skeleton-row"></div>'
     + '<div class="skeleton skeleton-row"></div><div class="skeleton skeleton-row"></div>'
     + '</div></div>';
-  c.appendChild(plantCard);
+  side.appendChild(plantCard);
   Promise.all([ensurePlayers(season), ensureLineups(season)]).then(([pdata, ldata]) => {
     const host = document.getElementById('me-plant-host');
     if (!host) return;
-    if (!pdata) {
-      host.innerHTML = '<div class="plant-empty"><span class="plant-empty-ico">&#128203;</span> No hay datos de plantilla para esta temporada.</div>';
-      return;
-    }
+    // Una tarjeta que solo dice "no hay datos" es peso muerto en la pantalla
+    // de aterrizaje, y el prebenjamín no tiene actas: fuera la tarjeta entera.
+    if (!pdata) { plantCard.remove(); return; }
     const teamName = plantillaTeamName(FEATURED);
     const teamId = pdata.teams[normalizeForTeamsMapping(teamName)];
-    if (teamId == null) {
-      host.innerHTML = '<div class="plant-empty"><span class="plant-empty-ico">&#128203;</span> No hay datos de plantilla para este equipo en esta temporada.</div>';
-      return;
-    }
+    if (teamId == null) { plantCard.remove(); return; }
     const rows = pdata.players[String(teamId)] || [];
     renderPlantillaInto(host, rows, {
       teamId: String(teamId),
@@ -376,7 +381,7 @@ export function renderMiEquipo() {
     });
   });
 
-  const golCard = el('div', 'me-card');
+  const golCard = el('div', 'me-card me-gol');
   const wireToggle = () => {
     const t = golCard.querySelector('#meGolToggle');
     if (t) t.addEventListener('click', () => {
@@ -386,6 +391,6 @@ export function renderMiEquipo() {
     });
   };
   golCard.innerHTML = renderScorers(scorers);
-  c.appendChild(golCard);
+  side.appendChild(golCard);
   wireToggle();
 }

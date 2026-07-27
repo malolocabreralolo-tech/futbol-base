@@ -643,3 +643,57 @@ class TestConditionalBump:
         before = snapshot_data_files(root)
         (tmp_path / "data-bar.js").write_text("const BAR=1;\n", encoding="utf-8")
         assert bump_if_changed(before, root) is True
+
+
+class TestTeamLookupIsCollisionAware:
+    """El portal escribe 'Arucas CF' donde la base tiene 'Arucas'. Si
+    get_or_create_team empareja solo por nombre exacto, cada scrape vuelve a
+    partir el club en dos: la clasificación con un nombre y el calendario con el
+    otro, la ficha vacía y la clave de TEAMS_ duplicada. Tumbó el auto-update
+    del 27/07/2026."""
+
+    def _conn(self):
+        import sqlite3
+        from db import init_db
+        c = sqlite3.connect(":memory:")
+        init_db(c)
+        return c
+
+    def test_another_spelling_reuses_the_same_team(self):
+        from db import get_or_create_team
+        c = self._conn()
+        a = get_or_create_team(c, "Arucas")
+        assert get_or_create_team(c, "Arucas CF") == a
+        assert get_or_create_team(c, "ARUCAS, C.F.") == a
+
+    def test_the_name_already_in_the_database_wins(self):
+        from db import get_or_create_team
+        c = self._conn()
+        get_or_create_team(c, "Arucas")
+        get_or_create_team(c, "Arucas CF")
+        assert [r[0] for r in c.execute("SELECT name FROM teams")] == ["Arucas"]
+
+    def test_the_filial_letter_still_separates(self):
+        from db import get_or_create_team
+        c = self._conn()
+        a = get_or_create_team(c, "Arucas")
+        assert get_or_create_team(c, "Arucas B") != a
+        assert get_or_create_team(c, "Arucas C") != a
+
+    def test_a_genuinely_new_club_is_created(self):
+        from db import get_or_create_team
+        c = self._conn()
+        a = get_or_create_team(c, "Arucas")
+        assert get_or_create_team(c, "Firgas") != a
+
+
+def test_the_scraper_repairs_impossible_points_before_writing():
+    """Si no, la fuente vuelve a meter el disparate en la base cada 5 horas."""
+    ruta = os.path.join(ROOT, "scripts", "fetch_futbolaspalmas.py")
+    with open(ruta, encoding="utf-8") as f:
+        src = f.read()
+    assert "_repair_incoherent_points(standings)" in src
+    # Antes del guard de cambio de temporada, que es lo primero que mira la
+    # tabla recién scrapeada (el .index() de la definición no vale aquí).
+    assert (src.index("_repair_incoherent_points(standings)")
+            < src.index("standings_regression(stored_standings("))

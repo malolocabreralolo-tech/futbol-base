@@ -40,6 +40,7 @@ TOP_SCORERS_URL = "https://futbolaspalmas.com/include2019/goleadores-base.php"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from db import (get_connection, init_db, get_or_create_season, get_or_create_category,
                 get_or_create_team, get_or_create_group, DB_PATH)
+from generate_js import _repair_incoherent_points
 
 
 # ─── FETCH ─────────────────────────────────────────────────────────────────────
@@ -592,6 +593,15 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
             clasi_html = fetch(clasi_url)
             time.sleep(DELAY)
             standings = parse_standings(clasi_html)
+            # La fuente republica de vez en cuando una columna de puntos
+            # imposible (la ofuscación derrota al parseo y sale un número
+            # cualquiera). generate_js ya lo repara AL PUBLICAR, pero si no se
+            # repara también aquí la base guarda el disparate y lo vuelve a
+            # guardar en cada pasada. Misma regla: solo la columna de puntos,
+            # nunca recalcular la tabla desde los partidos.
+            standings, reparado = _repair_incoherent_points(standings)
+            if reparado:
+                print("    (puntos imposibles reparados en la clasificación)")
         except Exception as e:
             print(f"    ! clasificacion error: {e}")
 

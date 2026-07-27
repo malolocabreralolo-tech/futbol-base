@@ -190,8 +190,27 @@ def get_or_create_category(conn, name):
     return cur.lastrowid
 
 
+def _teams_key(name):
+    """Clave del contrato C1 (TEAMS_<temporada>): identifica al CLUB.
+
+    Import perezoso: generate_js importa db, así que hacerlo arriba sería un
+    ciclo. La normalización conserva la letra de filial, de modo que 'Arucas' y
+    'Arucas B' siguen siendo clubes distintos.
+    """
+    from generate_js import normalize_for_teams_mapping
+    return normalize_for_teams_mapping(name)
+
+
 def get_or_create_team(conn, name, shield_filename=None):
-    """Return the team id, creating it if needed. Updates shield if provided."""
+    """Return the team id, creating it if needed. Updates shield if provided.
+
+    Antes de crear uno nuevo se busca el mismo club con OTRA GRAFÍA. El portal
+    escribe 'Arucas CF' donde la base tiene 'Arucas', así que emparejar solo por
+    nombre exacto hacía que cada scrape volviera a partir el club en dos: la
+    clasificación con un nombre y el calendario con el otro, la ficha del equipo
+    vacía y la clave de TEAMS_ duplicada. Manda el nombre que ya está en la
+    base; para cambiarlo a propósito está el fixer de _archive.
+    """
     cur = conn.execute("SELECT id FROM teams WHERE name=?", (name,))
     row = cur.fetchone()
     if row:
@@ -201,6 +220,16 @@ def get_or_create_team(conn, name, shield_filename=None):
                 (shield_filename, row[0]),
             )
         return row[0]
+
+    clave = _teams_key(name)
+    if clave:
+        for tid, existente in conn.execute("SELECT id, name FROM teams").fetchall():
+            if _teams_key(existente) == clave:
+                if shield_filename:
+                    conn.execute("UPDATE teams SET shield_filename=? WHERE id=?",
+                                 (shield_filename, tid))
+                return tid
+
     cur = conn.execute(
         "INSERT INTO teams (name, shield_filename) VALUES (?,?)",
         (name, shield_filename),

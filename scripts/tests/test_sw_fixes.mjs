@@ -213,3 +213,10 @@ test('los módulos de src/ se revalidan: un arreglo de código no se queda atrá
   const iJs = s.indexOf("\\.(js|css|png");
   assert.ok(iSrc > 0 && iSrc < iJs, 'la rama de src/ debe ir antes del cache-first de .js');
 });
+
+test('la entrada exacta gana al precache sin versión', () => {
+  const s = swSrc;
+  // Buscar directamente con ignoreSearch dejaba pegada una copia mala del
+  // precache: se serviría para cualquier ?v= en vez de saltarse.
+  assert.match(s, /await caches\.match\(request\)\)?\s*\n?\s*\|\|\s*\(?await caches\.match\(request, \{ ignoreSearch: true \}\)/);
+});

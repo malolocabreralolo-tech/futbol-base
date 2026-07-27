@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260727d';
+const CACHE_NAME = 'futbolbase-v20260727e';
 const OFFLINE_URL = './index.html';
 
 // Static assets — cached on install, served cache-first.
@@ -66,8 +66,15 @@ function classifyRequest(pathname) {
 // caché entera está versionada por CACHE_NAME — al bumpearla se reinstala todo
 // y `activate` borra las generaciones anteriores, así que dentro de una misma
 // caché no puede haber dos versiones del mismo fichero.
-function matchIgnoringVersion(request) {
-  return caches.match(request, { ignoreSearch: true });
+async function matchIgnoringVersion(request) {
+  // Primero la entrada EXACTA (con su ?v=), y solo si no está, la del
+  // precache, que va sin versión. Buscar directamente ignorando la query hacía
+  // que una copia mala del precache — instalada, por ejemplo, mientras el
+  // despliegue estaba a medias — se sirviera para siempre en vez de saltarse
+  // como antes. Con este orden, cuando existe la versionada manda ella, y el
+  // precache sigue valiendo para la primera carga (que es para lo que está).
+  return (await caches.match(request))
+      || (await caches.match(request, { ignoreSearch: true }));
 }
 
 // Pure: given the just-cached request URL and the URLs already in the cache,

@@ -1119,9 +1119,15 @@ body[data-section="miequipo"] .stats-bar {
   position: relative;
   overflow: hidden;
 }
+/* El aro y el halo vuelven: los quité por "tres tratamientos para un objeto",
+ * pero el escudo es la identidad del equipo y sin marco se queda apagado sobre
+ * el fondo oscuro. Es el sitio donde SÍ vale gastar relieve. */
 .me-crest { position: relative; flex-shrink: 0; }
+.me-crest::before { content: ""; position: absolute; inset: -22px; border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-dim) 0%, transparent 68%); pointer-events: none; }
 .me-crest .team-badge {
   width: 112px; height: 112px; font-size: 36px; border-radius: 24px; position: relative;
+  box-shadow: 0 0 0 2px var(--green-border), 0 0 26px var(--accent-dim);
   filter: drop-shadow(0 8px 18px rgba(0,0,0,.4));
 }
 .me-id { min-width: 0; }

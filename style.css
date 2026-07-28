@@ -1,74 +1,80 @@
 /* ====== CSS VARIABLES ====== */
 :root {
-  --bg: #0a0f1a;
-  --bg2: #0e1425;
-  --card: #141b2d;
-  --card-hover: #1a2340;
+  --bg: #060a12;
+  --bg2: #0b111e;
+  --card: rgba(18, 25, 43, 0.75);
+  --card-solid: #12192b;
+  --card-hover: rgba(26, 35, 64, 0.85);
   --accent: #00e676;
-  --accent-dim: rgba(0,230,118,0.15);
+  --accent-glow: rgba(0, 230, 118, 0.4);
+  --accent-dim: rgba(0, 230, 118, 0.12);
   --amber: #ffc107;
+  --amber-glow: rgba(255, 193, 7, 0.3);
   --gold: #ffd700;
   --silver: #c0c0c0;
   --bronze: #cd7f32;
-  --text: #ffffff;
-  /* AA: >=4.5:1 over --card (#141b2d) for small text — text2 5.86:1, text3 4.80:1 */
-  --text2: #8e97ac;
+  --text: #f0f4ff;
+  --text2: #a8b4c8;
   --text3: #7d889c;
-  --border: #1e2a42;
-  --green-border: rgba(0,230,118,0.3);
+  --border: rgba(30, 42, 66, 0.6);
+  --border-light: rgba(255, 255, 255, 0.06);
+  --green-border: rgba(0, 230, 118, 0.25);
   --red: #ff5252;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
+  --red-glow: rgba(255, 82, 82, 0.25);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
   --radius-pill: 50px;
-  /* Stadium-at-night depth: softer, deeper shadows + a 1px inner top
-     highlight on cards (the scoreboard bezel). */
-  --shadow: 0 8px 32px rgba(0,0,0,0.45);
-  --shadow-sm: 0 3px 16px rgba(0,0,0,0.3);
-  --card-hi: rgba(255,255,255,0.05);
-  /* QA 11/6: .dor usaba var(--chip,#333) sin definir — ilegible en claro */
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 30px var(--accent-dim);
+  --card-hi: rgba(255, 255, 255, 0.08);
   --chip: #2b3650;
-  --transition: 0.2s ease;
-  /* Podium row tints (final standings only) */
-  --crown: #ffc428;   /* corona del pichichi (tema oscuro) */
-  --tint-gold: rgba(255,215,0,0.10);
-  --tint-silver: rgba(192,192,192,0.09);
-  --tint-bronze: rgba(205,127,50,0.10);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --crown: #ffc428;
+  --tint-gold: rgba(255, 215, 0, 0.12);
+  --tint-silver: rgba(192, 192, 192, 0.10);
+  --tint-bronze: rgba(205, 127, 50, 0.12);
+  --glass-bg: rgba(18, 25, 43, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 /* Light theme */
 [data-theme="light"] {
   --bg: #f0f2f5;
   --bg2: #e4e6eb;
-  --card: #ffffff;
-  --card-hover: #f5f6fa;
-  /* AA 11/6 solo se verificó en textos; los ACENTOS seguían siendo los del
-   * tema oscuro y sobre fondo claro no llegaban: #00a854 daba 3.1:1, #e6a800
-   * 1.9:1 y el #ffc428 de los goleadores 1.6:1, en badges de jornada y grupo
-   * que salen decenas de veces por pantalla. Este portal se mira al aire libre.
-   * Oscurecidos hasta pasar 4.5:1 sobre sus fondos reales (5.8, 4.9 y 6.3:1). */
+  --card: rgba(255, 255, 255, 0.85);
+  --card-solid: #ffffff;
+  --card-hover: rgba(245, 246, 250, 0.9);
   --accent: #00753f;
-  --accent-dim: rgba(0,117,63,0.14);
+  --accent-glow: rgba(0, 117, 63, 0.3);
+  --accent-dim: rgba(0, 117, 63, 0.12);
   --amber: #8a6500;
+  --amber-glow: rgba(138, 101, 0, 0.25);
   --gold: #7a5c00;
-  /* QA 11/6: #808080 daba 3.9:1 sobre blanco en nombres del 2º clasificado */
   --silver: #6b7280;
   --bronze: #8b5a2b;
   --text: #1a1a2e;
-  /* AA: text2 6.34:1 sobre #fff; text3 5.27:1 sobre --bg #f0f2f5 (QA 11/6) */
   --text2: #5a5f72;
   --text3: #5d6477;
-  --border: #d1d5de;
-  --green-border: rgba(0,168,84,0.3);
+  --border: rgba(209, 213, 222, 0.7);
+  --border-light: rgba(0, 0, 0, 0.06);
+  --green-border: rgba(0, 117, 63, 0.25);
   --red: #d32f2f;
-  --shadow: 0 4px 24px rgba(0,0,0,0.08);
-  --shadow-sm: 0 2px 12px rgba(0,0,0,0.05);
-  --card-hi: rgba(255,255,255,0.65);
+  --red-glow: rgba(211, 47, 47, 0.2);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.07);
+  --shadow-glow: 0 0 24px rgba(0, 117, 63, 0.15);
+  --card-hi: rgba(255, 255, 255, 0.7);
   --chip: #e2e5ec;
-  --crown: #8a6500;   /* 5.3:1 sobre blanco; el #ffc428 daba 1.6:1 */
-  --tint-gold: rgba(184,134,11,0.10);
-  --tint-silver: rgba(112,112,112,0.08);
-  --tint-bronze: rgba(139,90,43,0.10);
+  --crown: #8a6500;
+  --tint-gold: rgba(184, 134, 11, 0.12);
+  --tint-silver: rgba(112, 112, 112, 0.10);
+  --tint-bronze: rgba(139, 90, 43, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.06);
 }
 [data-theme="light"] body {
   /* Light variant of the stadium-light top glow (much fainter, daylight) */
@@ -91,11 +97,11 @@
 
 /* Theme toggle button */
 .theme-toggle {
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--accent-dim);
+  border: 1px solid var(--green-border);
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -106,7 +112,9 @@
 }
 .theme-toggle:hover {
   border-color: var(--accent);
-  background: var(--card-hover);
+  background: var(--accent-dim);
+  box-shadow: 0 0 20px var(--accent-dim);
+  transform: rotate(15deg);
 }
 
 /* ====== RESET ====== */
@@ -119,13 +127,11 @@ body {
   min-height: 100vh;
   line-height: 1.5;
   overflow-x: hidden;
-  /* Night-stadium atmosphere: floodlight glow from the top + the original
-     soft radials + an ultra-subtle SVG noise grain (data-URI, ~330B). */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
-                    radial-gradient(80% 36% at 50% 0%, rgba(0,230,118,0.05) 0%, transparent 70%),
-                    radial-gradient(circle at 20% 50%, rgba(0,230,118,0.03) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255,193,7,0.02) 0%, transparent 50%),
-                    radial-gradient(140% 90% at 50% -20%, #101a30 0%, var(--bg) 55%, #070b13 100%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.03 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
+                    radial-gradient(100% 50% at 50% 0%, rgba(0, 230, 118, 0.06) 0%, transparent 60%),
+                    radial-gradient(circle at 15% 60%, rgba(0, 230, 118, 0.04) 0%, transparent 45%),
+                    radial-gradient(circle at 85% 15%, rgba(255, 193, 7, 0.03) 0%, transparent 45%),
+                    radial-gradient(140% 100% at 50% -20%, #0d1526 0%, var(--bg) 50%, #04060c 100%);
   background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
   background-attachment: fixed;
 }
@@ -138,12 +144,15 @@ body {
 
 /* ====== HEADER ====== */
 .header {
-  background: linear-gradient(135deg, #0e1425 0%, #141b2d 100%);
-  border-bottom: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border-bottom: 1px solid var(--glass-border);
   padding: 24px 16px 0;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 .header-inner {
   max-width: 1200px;
@@ -163,16 +172,21 @@ body {
   gap: 12px;
 }
 .brand-icon {
-  width: 44px;
-  height: 44px;
-  background: var(--accent);
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--accent) 0%, #00c853 100%);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 24px;
   flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(0,230,118,0.3);
+  box-shadow: 0 0 24px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
+  transition: var(--transition);
+}
+.brand-icon:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 32px var(--accent-glow), 0 6px 16px rgba(0,0,0,0.4);
 }
 .brand h1 {
   font-family: 'Bebas Neue', sans-serif;
@@ -202,14 +216,22 @@ body {
   gap: 6px;
   font-size: 13px;
   color: var(--text2);
-  background: var(--bg);
-  padding: 6px 12px;
+  background: var(--accent-dim);
+  padding: 8px 16px;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--border);
+  border: 1px solid var(--green-border);
+  transition: var(--transition);
+}
+.stat-item:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-dim);
+  transform: translateY(-1px);
 }
 .stat-item .stat-val {
   color: var(--accent);
   font-weight: 700;
+  font-size: 15px;
 }
 
 /* Season + Category row */
@@ -227,21 +249,23 @@ body {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  padding: 6px 26px 6px 10px;
-  background: var(--bg);
+  padding: 10px 36px 10px 16px;
+  background: var(--card);
   color: var(--accent);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2300e676' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 8px center;
+  background-position: right 12px center;
   transition: var(--transition);
+  box-shadow: inset 0 1px 0 var(--card-hi);
 }
 .season-selector select:hover {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-dim), inset 0 1px 0 var(--card-hi);
+  transform: translateY(-1px);
 }
 
 /* Category Toggle */
@@ -257,7 +281,7 @@ body {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 18px;
   letter-spacing: 1.5px;
-  padding: 8px 28px;
+  padding: 10px 32px;
   border: none;
   background: transparent;
   color: var(--text2);
@@ -265,15 +289,29 @@ body {
   border-radius: var(--radius-pill);
   transition: var(--transition);
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+.cat-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-dim);
+  opacity: 0;
+  transition: var(--transition);
+  border-radius: var(--radius-pill);
 }
 .cat-btn.active {
-  background: var(--accent);
-  color: #0a0f1a;
+  background: linear-gradient(135deg, var(--accent) 0%, #00c853 100%);
+  color: #060a12;
   font-weight: 700;
-  box-shadow: 0 0 16px rgba(0,230,118,0.3);
+  box-shadow: 0 0 20px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
 }
 .cat-btn:hover:not(.active) {
   color: var(--text);
+}
+.cat-btn:hover:not(.active)::before {
+  opacity: 1;
 }
 
 /* Section Tabs */
@@ -290,7 +328,7 @@ body {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 16px;
   letter-spacing: 1.5px;
-  padding: 12px 24px;
+  padding: 14px 28px;
   background: none;
   border: none;
   color: var(--text2);
@@ -299,9 +337,11 @@ body {
   transition: var(--transition);
   white-space: nowrap;
   flex-shrink: 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 .section-tab.active {
   color: var(--accent);
+  background: var(--accent-dim);
 }
 /* Tab icons: app-nav glyphs. On desktop the tabs keep their classic text-only
    look — only MI EQUIPO keeps its inline ⭐ (pre-existing identity). On mobile
@@ -314,23 +354,24 @@ body {
   content: '';
   position: absolute;
   bottom: -2px;
-  left: 12px;
-  right: 12px;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px;
+  left: 16px;
+  right: 16px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), #00c853);
+  border-radius: 3px;
   transform: scaleX(0);
   transform-origin: center;
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 .section-tab.active::after {
   transform: scaleX(1);
-  box-shadow: 0 0 8px var(--accent-dim);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .section-tab::after { transition: transform 0.25s ease; }
+  .section-tab::after { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 }
 .section-tab:hover:not(.active):not(.disabled) {
   color: var(--text);
+  background: var(--card-hover);
 }
 .section-tab.disabled {
   opacity: 0.3;
@@ -369,19 +410,22 @@ body[data-section="miequipo"] .stats-bar {
 .search-box input {
   width: 100%;
   background: var(--card);
-  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
-  padding: 12px 20px 12px 44px;
-  font-size: 14px;
+  padding: 14px 24px 14px 48px;
+  font-size: 15px;
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
   outline: none;
   transition: var(--transition);
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
 }
 .search-box input::placeholder { color: var(--text3); }
 .search-box input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-dim);
+  box-shadow: 0 0 0 4px var(--accent-dim), inset 0 1px 0 var(--card-hi), var(--shadow-sm);
+  transform: translateY(-1px);
 }
 .search-box .search-icon {
   position: absolute;
@@ -410,25 +454,29 @@ body[data-section="miequipo"] .stats-bar {
 /* ====== PHASE HEADERS ====== */
 .phase-header {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 22px;
+  font-size: 24px;
   letter-spacing: 2px;
   color: var(--accent);
-  margin: 28px 0 12px;
-  padding-bottom: 8px;
+  margin: 32px 0 16px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  text-shadow: 0 0 24px var(--accent-dim);
 }
 .phase-header .phase-icon {
-  font-size: 18px;
+  font-size: 20px;
+  filter: drop-shadow(0 0 8px var(--accent-dim));
 }
 
 /* ====== GROUP CARD ====== */
 .group-card {
   background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   margin-bottom: 16px;
   overflow: hidden;
   transition: var(--transition);
@@ -436,12 +484,14 @@ body[data-section="miequipo"] .stats-bar {
 }
 .group-card:hover {
   border-color: var(--green-border);
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow), 0 0 24px var(--accent-dim);
+  transform: translateY(-2px);
 }
 .group-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: 16px 20px;
   cursor: pointer;
   user-select: none;
   transition: var(--transition);
@@ -461,19 +511,21 @@ body[data-section="miequipo"] .stats-bar {
   background: var(--accent-dim);
   color: var(--accent);
   font-size: 11px;
-  padding: 2px 8px;
+  padding: 4px 12px;
   border-radius: var(--radius-pill);
   font-family: 'DM Sans', sans-serif;
   font-weight: 600;
+  border: 1px solid var(--green-border);
 }
 .group-title .jornada-badge {
-  background: rgba(255,193,7,0.15);
+  background: var(--amber-glow);
   color: var(--amber);
   font-size: 11px;
-  padding: 2px 8px;
+  padding: 4px 12px;
   border-radius: var(--radius-pill);
   font-family: 'DM Sans', sans-serif;
   font-weight: 600;
+  border: 1px solid rgba(255,193,7,0.25);
 }
 .group-chevron {
   color: var(--text3);
@@ -494,41 +546,41 @@ body[data-section="miequipo"] .stats-bar {
 /* ====== STANDINGS TABLE ====== */
 .table-wrap {
   overflow-x: auto;
-  /* Sin tope de altura: un scroll anidado oculta filas sin pista visual
-     (QA 11/6: la fila 11 de 12 quedaba alineada con el borde de la caja). */
   -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
+  background: var(--card);
+  backdrop-filter: blur(8px);
 }
 .standings-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
   min-width: 640px;
-  /* scoreboard digits: every numeric column aligns */
   font-variant-numeric: tabular-nums;
 }
 .standings-table th {
-  background: var(--bg);
+  background: var(--bg2);
   font-family: 'Bebas Neue', sans-serif;
   font-size: 13px;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   color: var(--text2);
-  padding: 10px 8px;
+  padding: 12px 8px;
   text-align: center;
   font-weight: 400;
   white-space: nowrap;
   position: sticky;
   top: 0;
   z-index: 2;
-  box-shadow: 0 1px 0 var(--border);
+  box-shadow: 0 2px 0 var(--border);
 }
 .standings-table th:nth-child(2) { text-align: left; }
 .standings-table td {
-  padding: 10px 8px;
+  padding: 12px 8px;
   text-align: center;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-light);
   white-space: nowrap;
+  transition: var(--transition);
 }
 .standings-table td:nth-child(2) {
   text-align: left;
@@ -538,13 +590,14 @@ body[data-section="miequipo"] .stats-bar {
   text-overflow: ellipsis;
 }
 .standings-table tr:nth-child(even) td {
-  background: rgba(255,255,255,0.025);
+  background: rgba(255,255,255,0.02);
 }
 .standings-table tr:hover td {
-  background: rgba(0,230,118,0.04);
+  background: var(--accent-dim);
+  box-shadow: inset 0 1px 0 var(--card-hi);
 }
-[data-theme="light"] .standings-table tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
-[data-theme="light"] .standings-table tr:hover td { background: rgba(0,168,84,0.06); }
+[data-theme="light"] .standings-table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+[data-theme="light"] .standings-table tr:hover td { background: rgba(0,117,63,0.08); }
 
 /* Position medals */
 .standings-table tr.pos-1 td:first-child { color: var(--gold); font-weight: 700; }
@@ -565,14 +618,32 @@ body[data-section="miequipo"] .stats-bar {
 .standings-table .df-neg { color: var(--red); }
 
 /* ====== FEATURED TEAM HIGHLIGHT ====== */
-.standings-table tr.featured-team td { background: var(--accent-dim); color: var(--text); }
-.standings-table tr.featured-team td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+.standings-table tr.featured-team td {
+  background: var(--accent-dim);
+  color: var(--text);
+  box-shadow: inset 0 1px 0 var(--card-hi);
+}
+.standings-table tr.featured-team td:first-child {
+  box-shadow: inset 4px 0 0 var(--accent);
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+.standings-table tr.featured-team td:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
 .standings-table tr.featured-team td:nth-child(2) { font-weight: 700; }
-.standings-table tr.featured-team .pts-col { text-shadow: 0 0 12px var(--accent-dim); }
-.match-card.featured-team { border-color: var(--green-border); box-shadow: inset 0 0 0 1px var(--accent-dim); }
-.bracket-team.featured-team { box-shadow: inset 3px 0 0 var(--accent); }
+.standings-table tr.featured-team .pts-col {
+  text-shadow: 0 0 16px var(--accent-glow);
+  font-size: 15px;
+}
+.match-card.featured-team {
+  border-color: var(--green-border);
+  box-shadow: inset 0 0 0 1px var(--accent-dim), var(--shadow-glow);
+}
+.bracket-team.featured-team { box-shadow: inset 4px 0 0 var(--accent); }
 .bracket-team.featured-team .bracket-team-name { font-weight: 700; }
-.match-card.featured-team:hover { box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--accent-dim); }
+.match-card.featured-team:hover {
+  box-shadow: var(--shadow), inset 0 0 0 1px var(--accent-dim), 0 0 32px var(--accent-dim);
+}
 
 /* ====== JORNADAS SECTION ====== */
 .selector-row {
@@ -591,19 +662,20 @@ body[data-section="miequipo"] .stats-bar {
   -webkit-appearance: none;
   width: 100%;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
-  padding: 10px 40px 10px 14px;
+  padding: 12px 40px 12px 16px;
   font-size: 14px;
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
   outline: none;
   transition: var(--transition);
+  box-shadow: inset 0 1px 0 var(--card-hi);
 }
 .custom-select select:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-dim);
+  box-shadow: 0 0 0 3px var(--accent-dim), inset 0 1px 0 var(--card-hi);
 }
 .custom-select::after {
   content: '▾';
@@ -611,12 +683,12 @@ body[data-section="miequipo"] .stats-bar {
   right: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text3);
+  color: var(--accent);
   pointer-events: none;
   font-size: 14px;
 }
 .custom-select select option {
-  background: var(--card);
+  background: var(--card-solid);
   color: var(--text);
   padding: 8px;
 }
@@ -637,19 +709,27 @@ body[data-section="miequipo"] .stats-bar {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   background: var(--card);
   color: var(--text2);
   cursor: pointer;
   transition: var(--transition);
   white-space: nowrap;
+  box-shadow: inset 0 1px 0 var(--card-hi);
+}
+.jornada-pill:hover:not(.active) {
+  border-color: var(--green-border);
+  color: var(--text);
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
 }
 .jornada-pill.active {
-  background: var(--accent);
-  color: #0a0f1a;
+  background: linear-gradient(135deg, var(--accent) 0%, #00c853 100%);
+  color: #060a12;
   border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
 }
 .jornada-pill:hover:not(.active) {
   border-color: var(--accent);
@@ -971,30 +1051,35 @@ body[data-section="miequipo"] .stats-bar {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 18px;
+  padding: 10px 22px;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   background: var(--card);
   color: var(--text2);
   cursor: pointer;
   transition: var(--transition);
   white-space: nowrap;
+  box-shadow: inset 0 1px 0 var(--card-hi);
 }
 .island-tab.active {
-  background: var(--accent);
-  color: #0a0f1a;
+  background: linear-gradient(135deg, var(--accent) 0%, #00c853 100%);
+  color: #060a12;
   border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
 }
 .island-tab:hover:not(.active) {
-  border-color: var(--accent);
+  border-color: var(--green-border);
   color: var(--text);
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 var(--card-hi), var(--shadow-sm);
 }
 
 /* ====== FOOTER ====== */
 .footer {
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  padding: 24px 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--glass-border);
+  padding: 28px 16px;
   text-align: center;
   font-size: 13px;
   color: var(--text3);
@@ -1002,6 +1087,10 @@ body[data-section="miequipo"] .stats-bar {
 .footer a {
   color: var(--accent);
   text-decoration: none;
+  transition: var(--transition);
+}
+.footer a:hover {
+  text-shadow: 0 0 12px var(--accent-glow);
 }
 .footer a:hover { text-decoration: underline; }
 .footer p { margin-bottom: 6px; }
@@ -1438,18 +1527,17 @@ body[data-section="miequipo"] .stats-bar {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
+  background: rgba(4, 6, 12, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
   opacity: 0;
-  /* visibility saca el modal cerrado del orden de tabulación: con solo
-   * opacity+pointer-events, el foco se perdía en el botón de cerrar, invisible
-   * y fuera del viewport. Se transiciona para no cortar el fundido de salida. */
   visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s;
+  transition: opacity 0.3s ease, visibility 0.3s;
   pointer-events: none;
 }
 .modal-overlay.open {
@@ -1458,40 +1546,40 @@ body[data-section="miequipo"] .stats-bar {
   pointer-events: auto;
 }
 .modal {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--card-solid);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   max-height: calc(100vh - 48px);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-  transform: translateY(20px) scale(0.97);
-  transition: transform 0.25s ease;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--glass-border);
+  transform: translateY(24px) scale(0.96);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 .modal-overlay.open .modal {
   transform: translateY(0) scale(1);
 }
 .modal-top {
-  background: linear-gradient(135deg, #0e1425 0%, #1a2340 100%);
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--card-solid) 100%);
   border-bottom: 2px solid var(--accent);
-  padding: 20px 20px 16px;
+  padding: 24px 24px 20px;
   text-align: center;
   position: relative;
 }
 .modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: none;
-  border: none;
+  top: 16px;
+  right: 16px;
+  background: var(--accent-dim);
+  border: 1px solid var(--green-border);
   color: var(--text3);
-  font-size: 22px;
+  font-size: 18px;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1499,8 +1587,11 @@ body[data-section="miequipo"] .stats-bar {
   transition: var(--transition);
 }
 .modal-close:hover {
-  color: var(--text);
-  background: rgba(255,255,255,0.1);
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-dim);
+  transform: rotate(90deg);
 }
 /* Sheet drag handle: desktop hides it — it only exists for the mobile
    bottom sheet (see the dedicated max-width block after the modal styles). */
@@ -1837,19 +1928,19 @@ body[data-section="miequipo"] .stats-bar {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: var(--accent);
-  color: #0a0f1a;
+  background: linear-gradient(135deg, var(--accent) 0%, #00c853 100%);
+  color: #060a12;
   border: none;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,230,118,0.3);
+  box-shadow: 0 4px 20px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 0.3s, transform 0.3s;
+  transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
   pointer-events: none;
   z-index: 200;
 }
@@ -1859,8 +1950,8 @@ body[data-section="miequipo"] .stats-bar {
   pointer-events: auto;
 }
 .scroll-top:hover {
-  box-shadow: 0 4px 24px rgba(0,230,118,0.5);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-glow), 0 6px 16px rgba(0,0,0,0.4);
+  transform: translateY(-4px) scale(1.05);
 }
 
 /* ====== TEAM PROFILE MODAL ====== */

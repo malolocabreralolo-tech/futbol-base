@@ -29,7 +29,7 @@ const swSrc = readFileSync(join(ROOT, 'sw.js'), 'utf8');
 const idxSrc = readFileSync(join(ROOT, 'index.html'), 'utf8');
 
 // ─── sw.js loader (classic script → vm with stubbed self) ─────────────────
-function loadSw() {
+function loadSw(globals = {}) {
   const listeners = {};
   const selfStub = {
     addEventListener: (type, fn) => { listeners[type] = fn; },
@@ -37,9 +37,9 @@ function loadSw() {
     clients: { claim: () => {} },
     location: { origin: 'https://example.test' },
   };
-  const ctx = { self: selfStub, console, URL };
+  const ctx = { self: selfStub, console, URL, ...globals };
   vm.createContext(ctx);
-  const probes = ['CACHE_NAME', 'STATIC_ASSETS', 'classifyRequest', 'staleKeysFor'];
+  const probes = ['CACHE_NAME', 'STATIC_ASSETS', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion'];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
     .join(',');
@@ -214,9 +214,19 @@ test('los módulos de src/ se revalidan: un arreglo de código no se queda atrá
   assert.ok(iSrc > 0 && iSrc < iJs, 'la rama de src/ debe ir antes del cache-first de .js');
 });
 
-test('la entrada exacta gana al precache sin versión', () => {
-  const s = swSrc;
-  // Buscar directamente con ignoreSearch dejaba pegada una copia mala del
-  // precache: se serviría para cualquier ?v= en vez de saltarse.
-  assert.match(s, /await caches\.match\(request\)\)?\s*\n?\s*\|\|\s*\(?await caches\.match\(request, \{ ignoreSearch: true \}\)/);
+test('only the active cache is read; exact URLs precede unversioned precache', async () => {
+  const calls = [];
+  let exact = 'exact response';
+  const worker = loadSw({ caches: {
+    match: () => { throw new Error('Global cache lookup could return a previous release'); },
+    open: async name => {
+      assert.equal(name, sw.CACHE_NAME);
+      return { match: async (request, options) => { calls.push(options?.ignoreSearch || false); return options?.ignoreSearch ? 'precache response' : exact; } };
+    },
+  } });
+  assert.equal(await worker.matchIgnoringVersion('https://example.test/index.html?v=new'), 'exact response');
+  assert.deepEqual(calls, [false]);
+  exact = undefined; calls.length = 0;
+  assert.equal(await worker.matchIgnoringVersion('https://example.test/index.html?v=new'), 'precache response');
+  assert.deepEqual(calls, [false, true]);
 });

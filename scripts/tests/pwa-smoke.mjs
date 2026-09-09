@@ -12,17 +12,19 @@ const expected = readFileSync(new URL('../../sw.js', import.meta.url), 'utf8').m
 const proxy = createServer(async (req, res) => {
   if (req.url.split('?')[0] === '/sw.js' && legacy) {
     res.writeHead(200, { 'Content-Type': 'text/javascript', 'Cache-Control': 'no-store' });
-    res.end(`self.addEventListener('install', e => { e.waitUntil(caches.open('${oldCache}').then(c => c.put('./src/config.js', new Response('previous version')))); self.skipWaiting(); }); self.addEventListener('activate', e => e.waitUntil(self.clients.claim())); self.addEventListener('message', e => e.ports[0]?.postMessage('old'));`);
+    res.end(`self.addEventListener('install', e => { e.waitUntil(caches.open('${oldCache}').then(c => c.put('./src/config.js', new Response('previous version')))); self.skipWaiting(); }); self.addEventListener('activate', e => e.waitUntil(self.clients.claim())); self.addEventListener('fetch', e => e.respondWith(fetch(e.request))); self.addEventListener('message', e => e.ports[0]?.postMessage('old'));`);
     return;
   }
   try {
     const response = await fetch(`http://127.0.0.1:${upstream.address().port}${req.url}`);
     if (!response.ok) console.error('PWA fixture HTTP', response.status, req.url);
     const isConfig = req.url.split('?')[0] === '/src/config.js';
-    res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'text/plain', 'Cache-Control': isConfig ? 'public, max-age=3600' : 'no-store' });
+    const isDocument = ['/', '/index.html'].includes(req.url.split('?')[0]);
+    res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'text/plain', 'Cache-Control': isConfig || isDocument ? 'public, max-age=3600' : 'no-store' });
     const body = Buffer.from(await response.arrayBuffer());
     res.end(req.url.startsWith('/sw.js') ? body.toString() + "\nself.addEventListener('message', e => e.ports[0]?.postMessage(CACHE_NAME));"
-      : isConfig && legacy ? body.toString() + '\n// previously cached HTTP asset' : body);
+      : isConfig && legacy ? body.toString() + '\n// previously cached HTTP asset'
+      : isDocument && legacy ? body.toString() + '\n<!-- previously cached HTTP document -->' : body);
   } catch { res.writeHead(500); res.end(); }
 });
 await new Promise(resolve => proxy.listen(0, '127.0.0.1', resolve));
@@ -64,6 +66,7 @@ try {
   }, expected);
   assert.ok(config.includes('export const PORTAL'));
   assert.ok(!config.includes('previously cached HTTP asset'), 'new PWA must bypass HTTP entries cached before publication');
+  assert.ok(!(await page.content()).includes('previously cached HTTP document'), 'navigation must retain the newly published HTML');
   assert.equal(await page.evaluate(async name => (await (await caches.open(name)).match('./index.html'))?.status, expected), 200);
   await page.evaluate(async () => (await navigator.serviceWorker.ready).update());
   await page.waitForFunction(async () => {

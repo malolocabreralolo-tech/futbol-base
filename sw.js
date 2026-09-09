@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260909f';
+const CACHE_NAME = 'futbolbase-v20260909g';
 const OFFLINE_URL = './index.html';
 
 // Static assets — cached on install, served cache-first.
@@ -80,8 +80,9 @@ async function matchIgnoringVersion(request) {
   // despliegue estaba a medias — se sirviera para siempre en vez de saltarse
   // como antes. Con este orden, cuando existe la versionada manda ella, y el
   // precache sigue valiendo para la primera carga (que es para lo que está).
-  return (await caches.match(request))
-      || (await caches.match(request, { ignoreSearch: true }));
+  const cache = await caches.open(CACHE_NAME);
+  return (await cache.match(request))
+      || (await cache.match(request, { ignoreSearch: true }));
 }
 
 // Pure: given the just-cached request URL and the URLs already in the cache,
@@ -128,9 +129,8 @@ self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
@@ -146,10 +146,11 @@ self.addEventListener('fetch', e => {
   if (strategy === 'swr') {
     e.respondWith(
       matchIgnoringVersion(e.request).then(cached => {
-        const networkFetch = fetch(e.request).then(response => {
-          if (response.ok) putAndPurge(e.request, response.clone());
+        const networkFetch = fetch(e.request, { cache: 'no-cache' }).then(async response => {
+          if (response.ok) await putAndPurge(e.request, response.clone());
           return response;
         }).catch(() => cached || caches.match(OFFLINE_URL));
+        e.waitUntil(networkFetch.then(() => {}));
         return cached || networkFetch;
       })
     );

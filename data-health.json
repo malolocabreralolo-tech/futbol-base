@@ -6,278 +6,278 @@
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-uno/",
       "status": "ok",
       "message": "11 equipos; 110 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:00:53+00:00"
+      "checkedAt": "2026-09-09T20:31:35+00:00"
     },
     "A2": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-dos/",
       "status": "rejected",
       "message": "4 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:00:57+00:00"
+      "checkedAt": "2026-09-09T20:31:38+00:00"
     },
     "A3": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-tres/",
       "status": "rejected",
       "message": "2 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:01:00+00:00"
+      "checkedAt": "2026-09-09T20:31:40+00:00"
     },
     "A4": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/",
       "status": "rejected",
       "message": "18 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:01:03+00:00"
+      "checkedAt": "2026-09-09T20:31:42+00:00"
     },
     "B1": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-b-uno/",
       "status": "rejected",
       "message": "1 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:01:06+00:00"
+      "checkedAt": "2026-09-09T20:31:44+00:00"
     },
     "B2": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-b-dos/",
       "status": "ok",
       "message": "12 equipos; 132 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:09+00:00"
+      "checkedAt": "2026-09-09T20:31:46+00:00"
     },
     "B3": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-b-tres/",
       "status": "ok",
       "message": "12 equipos; 132 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:12+00:00"
+      "checkedAt": "2026-09-09T20:31:49+00:00"
     },
     "B4": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/",
       "status": "rejected",
       "message": "31 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:01:15+00:00"
+      "checkedAt": "2026-09-09T20:31:51+00:00"
     },
     "C1": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-c-uno/",
       "status": "rejected",
       "message": "3 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:01:18+00:00"
+      "checkedAt": "2026-09-09T20:31:53+00:00"
     },
     "C2": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-c-dos/",
       "status": "rejected",
       "message": "3 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:01:21+00:00"
+      "checkedAt": "2026-09-09T20:31:55+00:00"
     },
     "C3": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-c-tres/",
       "status": "rejected",
       "message": "3 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:01:24+00:00"
+      "checkedAt": "2026-09-09T20:31:57+00:00"
     },
     "C4": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-fase-c-cuatro/",
       "status": "rejected",
       "message": "1 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:01:28+00:00"
+      "checkedAt": "2026-09-09T20:31:59+00:00"
     },
     "FB": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-grupo-tres-fuerteventura",
       "status": "ok",
       "message": "10 equipos; 90 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:31+00:00"
+      "checkedAt": "2026-09-09T20:32:02+00:00"
     },
     "FF1": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-uno/",
       "status": "ok",
       "message": "5 equipos; 10 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:34+00:00"
+      "checkedAt": "2026-09-09T20:32:04+00:00"
     },
     "FF10": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-diez/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:36+00:00"
+      "checkedAt": "2026-09-09T20:32:05+00:00"
     },
     "FF11": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-once/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:39+00:00"
+      "checkedAt": "2026-09-09T20:32:07+00:00"
     },
     "FF12": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-doce/",
       "status": "ok",
       "message": "5 equipos; 10 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:42+00:00"
+      "checkedAt": "2026-09-09T20:32:09+00:00"
     },
     "FF13": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-trece/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:44+00:00"
+      "checkedAt": "2026-09-09T20:32:11+00:00"
     },
     "FF14": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-catorce/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:47+00:00"
+      "checkedAt": "2026-09-09T20:32:13+00:00"
     },
     "FF15": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-quince/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:49+00:00"
+      "checkedAt": "2026-09-09T20:32:15+00:00"
     },
     "FF16": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-dieciseis/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:52+00:00"
+      "checkedAt": "2026-09-09T20:32:17+00:00"
     },
     "FF17": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-diecisiete/",
       "status": "ok",
       "message": "5 equipos; 10 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:54+00:00"
+      "checkedAt": "2026-09-09T20:32:19+00:00"
     },
     "FF18": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-dieciocho/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:01:57+00:00"
+      "checkedAt": "2026-09-09T20:32:21+00:00"
     },
     "FF19": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-diecinueve/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:00+00:00"
+      "checkedAt": "2026-09-09T20:32:23+00:00"
     },
     "FF2": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-dos/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:02+00:00"
+      "checkedAt": "2026-09-09T20:32:24+00:00"
     },
     "FF20": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-veinte/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:05+00:00"
+      "checkedAt": "2026-09-09T20:32:26+00:00"
     },
     "FF21": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-veintiuno/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:07+00:00"
+      "checkedAt": "2026-09-09T20:32:28+00:00"
     },
     "FF22": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-veintidos/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:10+00:00"
+      "checkedAt": "2026-09-09T20:32:30+00:00"
     },
     "FF23": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-veintitres/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:13+00:00"
+      "checkedAt": "2026-09-09T20:32:32+00:00"
     },
     "FF3": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-tres/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:15+00:00"
+      "checkedAt": "2026-09-09T20:32:34+00:00"
     },
     "FF4": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-cuatro/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:18+00:00"
+      "checkedAt": "2026-09-09T20:32:36+00:00"
     },
     "FF5": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-cinco/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:20+00:00"
+      "checkedAt": "2026-09-09T20:32:38+00:00"
     },
     "FF6": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-seis/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:23+00:00"
+      "checkedAt": "2026-09-09T20:32:39+00:00"
     },
     "FF7": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-siete/",
       "status": "ok",
       "message": "5 equipos; 10 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:26+00:00"
+      "checkedAt": "2026-09-09T20:32:41+00:00"
     },
     "FF8": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-ocho/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:28+00:00"
+      "checkedAt": "2026-09-09T20:32:43+00:00"
     },
     "FF9": {
       "url": "https://futbolaspalmas.com/benjamin-primera-fase-nueve/",
       "status": "ok",
       "message": "6 equipos; 15 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:31+00:00"
+      "checkedAt": "2026-09-09T20:32:45+00:00"
     },
     "FO": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-grupo-uno-fuerteventura",
       "status": "rejected",
       "message": "1 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:02:34+00:00"
+      "checkedAt": "2026-09-09T20:32:48+00:00"
     },
     "FP": {
       "url": "https://futbolaspalmas.com/benjamin-segunda-grupo-dos-fuerteventura",
       "status": "rejected",
       "message": "4 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:02:38+00:00"
+      "checkedAt": "2026-09-09T20:32:50+00:00"
     },
     "LZ1": {
       "url": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/",
       "status": "rejected",
       "message": "1 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:02:41+00:00"
+      "checkedAt": "2026-09-09T20:32:52+00:00"
     },
     "LZ2": {
       "url": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/",
       "status": "ok",
       "message": "10 equipos; 90 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:44+00:00"
+      "checkedAt": "2026-09-09T20:32:54+00:00"
     },
     "LZ3": {
       "url": "https://futbolaspalmas.com/benjamin-primera-grupo-tres-lanzarote/",
       "status": "rejected",
       "message": "3 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:02:47+00:00"
+      "checkedAt": "2026-09-09T20:32:56+00:00"
     },
     "LZ4": {
       "url": "https://futbolaspalmas.com/benjamin-primera-grupo-cuatro-lanzarote/",
       "status": "rejected",
       "message": "1 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:02:49+00:00"
+      "checkedAt": "2026-09-09T20:32:58+00:00"
     },
     "PG1": {
       "url": "https://futbolaspalmas.com/1prebenjamin1",
       "status": "rejected",
       "message": "1 marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste.",
-      "checkedAt": "2026-09-09T16:02:53+00:00"
+      "checkedAt": "2026-09-09T20:33:00+00:00"
     },
     "PG2": {
       "url": "https://futbolaspalmas.com/1prebenjamin2",
       "status": "ok",
       "message": "15 equipos; 182 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:02:56+00:00"
+      "checkedAt": "2026-09-09T20:33:03+00:00"
     },
     "PG3": {
       "url": "https://futbolaspalmas.com/1prebenjamin3",
       "status": "ok",
       "message": "14 equipos; 182 encuentros disponibles",
-      "checkedAt": "2026-09-09T16:03:00+00:00"
+      "checkedAt": "2026-09-09T20:33:06+00:00"
     }
   },
   "nextSeason": {
     "name": "2026-2027",
     "status": "pending"
   },
-  "checkedAt": "2026-09-09T16:03:01+00:00",
+  "checkedAt": "2026-09-09T20:33:06+00:00",
   "lastDataChange": "2026-09-09",
   "summary": {
     "ok": 30,

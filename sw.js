@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260909e';
+const CACHE_NAME = 'futbolbase-v20260909f';
 const OFFLINE_URL = './index.html';
 
 // Static assets — cached on install, served cache-first.
@@ -111,11 +111,13 @@ self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(async c => {
       // Core assets — best effort (retry on demand if any missing)
-      await c.addAll(STATIC_ASSETS).catch(err => {
+      // A new cache generation must fetch new bytes. Default requests can
+      // reuse still-fresh HTTP entries from the previously installed portal.
+      await c.addAll(STATIC_ASSETS.map(url => new Request(url, { cache: 'reload' }))).catch(err => {
         console.warn('[SW] Static asset precache failed (will retry on demand):', err);
       });
       // Season files — best effort, don't block install
-      await Promise.allSettled(SEASON_FILES.map(url => c.add(url)));
+      await Promise.allSettled(SEASON_FILES.map(url => c.add(new Request(url, { cache: 'reload' }))));
     })
   );
   // Activate the updated SW immediately (paired with clients.claim below)

@@ -35,11 +35,11 @@ function loadSw(globals = {}) {
     addEventListener: (type, fn) => { listeners[type] = fn; },
     skipWaiting: () => {},
     clients: { claim: () => {} },
-    location: { origin: 'https://example.test' },
+    location: { origin: 'https://example.test', href: 'https://example.test/sw.js' },
   };
   const ctx = { self: selfStub, console, URL, ...globals };
   vm.createContext(ctx);
-  const probes = ['CACHE_NAME', 'STATIC_ASSETS', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion'];
+  const probes = ['CACHE_NAME', 'STATIC_ASSETS', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
     .join(',');
@@ -48,6 +48,13 @@ function loadSw(globals = {}) {
 }
 
 const sw = loadSw();
+
+test('network URLs use the active version, retaining other query parameters', () => {
+  const url = new URL(sw.versionedAssetURL({ url: 'https://example.test/index.html?lang=es&v=old' }));
+  assert.equal(url.searchParams.get('v'), sw.CACHE_NAME.replace('futbolbase-v', ''));
+  assert.equal(url.searchParams.get('lang'), 'es');
+  assert.equal(new URL(sw.versionedAssetURL('./src/config.js')).pathname, '/src/config.js');
+});
 
 // ─── 1. static import graph ⊆ STATIC_ASSETS ───────────────────────────────
 function staticImportGraph(entry) {

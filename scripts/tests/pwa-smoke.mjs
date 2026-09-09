@@ -20,11 +20,13 @@ const proxy = createServer(async (req, res) => {
     if (!response.ok) console.error('PWA fixture HTTP', response.status, req.url);
     const isConfig = req.url.split('?')[0] === '/src/config.js';
     const isDocument = ['/', '/index.html'].includes(req.url.split('?')[0]);
+    // Model an edge cache that still has old bare URLs after publication.
+    const stale = legacy || !new URL(req.url, 'http://portal.test').searchParams.has('v');
     res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'text/plain', 'Cache-Control': isConfig || isDocument ? 'public, max-age=3600' : 'no-store' });
     const body = Buffer.from(await response.arrayBuffer());
     res.end(req.url.startsWith('/sw.js') ? body.toString() + "\nself.addEventListener('message', e => e.ports[0]?.postMessage(CACHE_NAME));"
-      : isConfig && legacy ? body.toString() + '\n// previously cached HTTP asset'
-      : isDocument && legacy ? body.toString() + '\n<!-- previously cached HTTP document -->' : body);
+      : isConfig && stale ? body.toString() + '\n// previously cached HTTP asset'
+      : isDocument && stale ? body.toString() + '\n<!-- previously cached HTTP document -->' : body);
   } catch { res.writeHead(500); res.end(); }
 });
 await new Promise(resolve => proxy.listen(0, '127.0.0.1', resolve));
@@ -82,6 +84,7 @@ try {
   await context.setOffline(true);
   await page.reload();
   await page.locator('.me-hero').waitFor();
+  assert.ok(!(await page.content()).includes('previously cached HTTP document'), 'background revalidation cannot restore the previous HTML');
   await page.locator('#chooseTeam').click();
   await page.locator('#favoriteSearch').fill('Mesas');
   assert.ok(await page.locator('.picker-team').count() > 0);

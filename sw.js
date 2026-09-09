@@ -1,5 +1,17 @@
-const CACHE_NAME = 'futbolbase-v20260909g';
+const CACHE_NAME = 'futbolbase-v20260909h';
 const OFFLINE_URL = './index.html';
+
+// Version the network URL too: a CDN can still serve a cached previous HTML
+// document for the bare path after a deployment. Cache keys remain stable.
+function versionedAssetURL(request) {
+  const url = new URL(typeof request === 'string' ? request : request.url, self.location.href);
+  url.searchParams.set('v', CACHE_NAME.replace('futbolbase-v', ''));
+  return url.href;
+}
+
+function fetchFresh(request, cache = 'no-cache') {
+  return fetch(versionedAssetURL(request), { cache, credentials: 'same-origin' });
+}
 
 // Static assets — cached on install, served cache-first.
 // Must cover the FULL static import graph of src/app.js
@@ -111,14 +123,14 @@ async function putAndPurge(request, response) {
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(async c => {
-      // Core assets — best effort (retry on demand if any missing)
-      // A new cache generation must fetch new bytes. Default requests can
-      // reuse still-fresh HTTP entries from the previously installed portal.
-      await c.addAll(STATIC_ASSETS.map(url => new Request(url, { cache: 'reload' }))).catch(err => {
-        console.warn('[SW] Static asset precache failed (will retry on demand):', err);
-      });
-      // Season files — best effort, don't block install
-      await Promise.allSettled(SEASON_FILES.map(url => c.add(new Request(url, { cache: 'reload' }))));
+      // One unavailable asset must not discard all the successful downloads.
+      const results = await Promise.allSettled([...STATIC_ASSETS, ...SEASON_FILES].map(async url => {
+        const response = await fetchFresh(url, 'reload');
+        if (!response.ok) throw new Error(url + ': HTTP ' + response.status);
+        await c.put(url, response);
+      }));
+      const failed = results.filter(result => result.status === 'rejected');
+      if (failed.length) console.warn('[SW] Assets will retry on demand:', failed.length);
     })
   );
   // Activate the updated SW immediately (paired with clients.claim below)
@@ -146,7 +158,7 @@ self.addEventListener('fetch', e => {
   if (strategy === 'swr') {
     e.respondWith(
       matchIgnoringVersion(e.request).then(cached => {
-        const networkFetch = fetch(e.request, { cache: 'no-cache' }).then(async response => {
+        const networkFetch = fetchFresh(e.request).then(async response => {
           if (response.ok) await putAndPurge(e.request, response.clone());
           return response;
         }).catch(() => cached || caches.match(OFFLINE_URL));
@@ -162,7 +174,7 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       matchIgnoringVersion(e.request).then(cached => {
         if (cached) return cached;
-        return fetch(e.request).then(response => {
+        return fetchFresh(e.request).then(response => {
           if (response.ok) putAndPurge(e.request, response.clone());
           return response;
         });

@@ -378,6 +378,8 @@ def generate_category_js(conn, category_name, var_name, stats_var):
             "jornada": current_jornada,
             "standings": standings,
             "matches": matches,
+            "standingsKind": "source" if standings == get_standings(conn, gid) else (
+                "reconstructed" if sum(r[3] for r in standings) > sum(r[3] for r in get_standings(conn, gid)) else "corrected"),
         }
         result.append(group_obj)
 
@@ -402,7 +404,7 @@ def generate_history_js(conn):
     for gid, code in groups:
         # Get all matches for this group, ordered by jornada number then date
         rows = conn.execute(
-            """SELECT m.jornada, m.date, h.name, a.name, m.home_score, m.away_score
+            """SELECT m.jornada, m.date, h.name, a.name, m.home_score, m.away_score, m.time, m.venue
                FROM matches m
                JOIN teams h ON m.home_team_id = h.id
                JOIN teams a ON m.away_team_id = a.id
@@ -412,12 +414,12 @@ def generate_history_js(conn):
         ).fetchall()
 
         jornadas = {}
-        for jornada, dt, home, away, hs, as_ in rows:
+        for jornada, dt, home, away, hs, as_, kickoff, venue in rows:
             if jornada not in jornadas:
                 jornadas[jornada] = []
             ctx = f"en {home} vs {away} ({dt})"
             jornadas[jornada].append(
-                [dt, home, away, sanitize_score(hs, ctx), sanitize_score(as_, ctx)]
+                [dt, home, away, sanitize_score(hs, ctx), sanitize_score(as_, ctx), None, kickoff, venue]
             )
             total_matches += 1
 
@@ -683,6 +685,7 @@ def generate_goleadores_js(conn):
 
             if scorers:
                 entries.append({
+                    "id": code,
                     "g": gol_name,
                     "s": [list(s) for s in scorers],
                 })
@@ -930,13 +933,13 @@ def generate_stats_js(conn):
     return "const STATS=" + json.dumps(stats, ensure_ascii=False, separators=(",", ":")) + ";\n"
 
 
-def get_historical_jornadas(conn, group_id):
+def get_historical_jornadas(conn, group_id, include_details=False):
     """Return matches grouped by jornada num for historical groups.
     Format: {jornada_num: [[date, home, away, hs, as_], ...]}
     Only includes jornadas with at least one match.
     """
     rows = conn.execute(
-        """SELECT m.jornada, m.date, h.name, a.name, m.home_score, m.away_score
+        """SELECT m.jornada, m.date, h.name, a.name, m.home_score, m.away_score, m.time, m.venue
            FROM matches m
            JOIN teams h ON m.home_team_id = h.id
            JOIN teams a ON m.away_team_id = a.id
@@ -946,10 +949,11 @@ def get_historical_jornadas(conn, group_id):
     ).fetchall()
 
     jornadas = {}
-    for jornada, dt, home, away, hs, as_ in rows:
+    for jornada, dt, home, away, hs, as_, kickoff, venue in rows:
         ctx = f"en {home} vs {away} ({dt})"
         jornadas.setdefault(jornada, []).append(
             [dt, home, away, sanitize_score(hs, ctx), sanitize_score(as_, ctx)]
+            + ([None, kickoff, venue] if include_details else [])
         )
 
     return dict(sorted(jornadas.items(), key=lambda x: _jornada_sort_key(x[0])))
@@ -1002,7 +1006,7 @@ def generate_seasons_js(conn):
                 groups_data = []
                 for gid, code, name, full_name, phase, island, current_jornada in groups:
                     standings = get_standings(conn, gid)
-                    hist_jornadas = get_historical_jornadas(conn, gid)
+                    hist_jornadas = get_historical_jornadas(conn, gid, include_details=season_name >= '2025-2026')
                     groups_data.append({
                         "id": code,
                         "name": name,

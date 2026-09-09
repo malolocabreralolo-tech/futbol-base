@@ -133,10 +133,12 @@ def main():
 
     print("\nResumen")
     if cambiados:
-        print(f"   ⚠ CAMBIO DE TEMPORADA: {len(cambiados)} grupos sirven otra liga "
+        print(f"   POSIBLE CAMBIO: {len(cambiados)} grupos tienen equipos diferentes "
               f"({', '.join(cambiados)}). Sigue docs/temporada-nueva.md.")
+    elif not vacios:
+        print("   Los grupos revisados mantienen sus equipos. Esto no verifica aún la nueva temporada: hay que contrastar las fechas de los calendarios.")
     else:
-        print("   Las URLs fichadas siguen sirviendo la misma liga: la fuente no ha girado.")
+        print("   Comprobación incompleta: faltan tablas. No se puede concluir si la fuente ha cambiado de temporada.")
     if vacios:
         print(f"   {len(vacios)} grupos sin tabla ahora mismo: {', '.join(vacios)}")
     conn.close()

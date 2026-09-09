@@ -30,6 +30,8 @@ jobs:
         run: pip install pytest pyyaml
 
       - name: Actualizar datos desde futbolaspalmas.com
+        id: scrape
+        continue-on-error: true
         run: python3 scripts/fetch_futbolaspalmas.py
 
       # Los push del bot (GITHUB_TOKEN) NO disparan tests.yml (anti-recursión
@@ -37,12 +39,15 @@ jobs:
       # recién generados y ANTES del commit: si fallan, el job sale rojo y no
       # se publica nada.
       - name: Tests Python (bloquean el commit si fallan)
+        if: steps.scrape.outcome == 'success'
         run: python3 -m pytest scripts/tests/ -q
 
       - name: Tests Node (bloquean el commit si fallan)
+        if: steps.scrape.outcome == 'success'
         run: node --test scripts/tests/test_*.mjs
 
       - name: Commit y push si hay cambios
+        if: success() && steps.scrape.outcome == 'success'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
@@ -52,10 +57,25 @@ jobs:
           # no cambie ningún dato publicado: se gatea su commit a que cambie
           # algún artefacto publicado (evita ~13/14 commits de ruido).
           git add 'data-*.js' index.html sw.js
-          if git diff --cached --quiet; then
-            echo "Sin cambios en datos publicados — no se commitea (evita churn de futbolbase.db)."
-          else
+          if ! git diff --cached --quiet; then
             git add futbolbase.db
+          fi
+          # La comprobación de fuentes se publica aunque el marcador no cambie.
+          git add data-health.json
+          if ! git diff --cached --quiet; then
             git commit -m "Actualización automática $(date '+%d/%m/%Y %H:%M UTC')"
             git push
           fi
+
+      - name: Publicar diagnóstico si la fuente falla
+        if: steps.scrape.outcome == 'failure'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          # No se publican datos deportivos parciales de una ejecución fallida.
+          git add data-health.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Estado de las fuentes $(date '+%d/%m/%Y %H:%M UTC')"
+            git push
+          fi
+          exit 1

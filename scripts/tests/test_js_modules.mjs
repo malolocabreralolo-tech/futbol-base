@@ -235,8 +235,8 @@ test('featuredScorersFrom handles missing group -> []', () => {
 // (typeof-guarded), NOT via globalThis/window — top-level `const` in the
 // classic data-*.js scripts is a global LEXICAL binding, not a property of
 // globalThis. See systematic-debugging root cause 2026-05-18.
-test('miequipo.js does not read data via globalThis/window', () => {
-  const src = readFileSync(join(ROOT, 'src/miequipo.js'), 'utf8');
+test('the dashboard and its data accessor use guarded lexical data bindings', () => {
+  const src = ['miequipo.js', 'favorites.js'].map(file => readFileSync(join(ROOT, 'src', file), 'utf8')).join('\n');
   assert.ok(!/globalThis/.test(src), 'miequipo.js must not use globalThis for data');
   assert.ok(!/\bwindow\.\s*(PREBENJAMIN|HISTORY|GOL_PREBENJ|MATCH_DETAIL|MATCH_DETAIL_KEYS)\b/.test(src),
     'miequipo.js must not use window.<DATA>');

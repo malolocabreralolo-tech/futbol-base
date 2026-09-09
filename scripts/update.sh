@@ -6,7 +6,7 @@
 #   bash scripts/update.sh --local    # todo menos el push
 #
 # Hace lo mismo que el workflow «Actualización automática» (update.yml), que es
-# quien lo hace de verdad cada ~5 horas. Esto es la vía manual para cuando hace
+# quien lo hace de verdad cada 6 horas. Esto es la vía manual para cuando hace
 # falta empujar una actualización sin esperar al cron.
 #
 # La versión anterior de este script llevaba tiempo muerta: llamaba a
@@ -43,12 +43,15 @@ node --test scripts/tests/test_*.mjs
 echo ""
 echo "► 3/3 Publicando…"
 git add 'data-*.js' index.html sw.js
+if ! git diff --cached --quiet; then
+  git add futbolbase.db
+fi
+git add data-health.json
 if git diff --cached --quiet; then
   echo "  Sin cambios que publicar."
   git reset -q
   exit 0
 fi
-git add futbolbase.db
 git commit -q -m "Actualización $(date '+%d/%m/%Y %H:%M')"
 if [ "$PUBLICAR" = "1" ]; then
   git pull --rebase -q origin main

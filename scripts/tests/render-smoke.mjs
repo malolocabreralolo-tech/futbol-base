@@ -64,7 +64,7 @@ const MIME = {
   '.webmanifest': 'application/manifest+json',
 };
 
-function startServer() {
+export function startServer() {
   return new Promise((resolve) => {
     const srv = createServer(async (req, res) => {
       try {
@@ -85,7 +85,7 @@ function startServer() {
   });
 }
 
-function findChrome() {
+export function findChrome() {
   const envC = process.env.CHROME;
   if (envC && (envC.startsWith('/') || /^[A-Za-z]:\\/.test(envC))) return envC;
   const cands = [

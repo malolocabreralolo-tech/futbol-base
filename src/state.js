@@ -1,20 +1,23 @@
+import { PORTAL } from './config.js';
+
 /* ====== APP STATE ====== */
 const S = {
-  cat: 'benjamin',      // 'benjamin' | 'prebenjamin'
+  cat: PORTAL.defaultTeam.cat,
   section: 'miequipo',  // 'miequipo'|'clasif'|'jornadas'|'goleadores'|'isla'|'stats'
   season: '',           // '' = current season, or '2024-2025' etc.
-  search: '',  // unused, kept for compat
+  search: '',
   // jornadas
-  jorGroup: 'A2',
+  jorGroup: PORTAL.defaultTeam.groupId,
   jorNum: '',
   // goleadores
   golGroup: '__GLOBAL__',
   // isla
-  island: 'grancanaria'
+  island: 'grancanaria',
+  filterIsland: '', filterPhase: ''
 };
 
-/* ====== FEATURED TEAM (fixed personal portal) ====== */
-export const FEATURED = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' };
+/* ====== SELECTED FAVORITE ====== */
+export const FEATURED = { ...PORTAL.defaultTeam };
 
 /* True when `name` is the featured team (normalized match). Covers club
  * prefixes and the dot in "Hu." but NOT B teams. */
@@ -57,7 +60,8 @@ export function featuredMatchesFrom(historyGroup) {
         result = gf > gc ? 'W' : gf < gc ? 'L' : 'D';
       }
       out.push({ jor, jorNum, date, home, away, hs, as, isHome,
-        opp: isHome ? away : home, played, result });
+        opp: isHome ? away : home, played, result,
+        time: m[6] || '', venue: m[7] || '', status: m[8] || '' });
     });
   });
   out.sort((a, b) => a.jorNum - b.jorNum
@@ -69,10 +73,9 @@ export function featuredMatchesFrom(historyGroup) {
  * data: [name, team, goals, games]. Sorted goals desc, games asc. */
 export function featuredScorersFrom(golPrebenj) {
   if (!Array.isArray(golPrebenj)) return [];
-  // 'PREBENJAMIN GC GRUPO 2' = the data-goleadores.js display key for
-  // FEATURED.groupId ('PG2'). No PG2->name mapping exists, so this literal
-  // is intentional; if it ever mismatches, this safely returns [].
-  const grp = golPrebenj.find(g => g.g === 'PREBENJAMIN GC GRUPO 2');
+  // Published group IDs work across categories; legacy files use a display key.
+  const grp = golPrebenj.find(g => g.id === FEATURED.groupId)
+    || golPrebenj.find(g => FEATURED.cat === 'prebenjamin' && g.g === 'PREBENJAMIN GC GRUPO ' + FEATURED.groupId.replace(/^PG/, ''));
   if (!grp || !Array.isArray(grp.s)) return [];
   return grp.s
     .filter(s => isFeatured(s[1]))
@@ -524,16 +527,17 @@ export function getData() {
     // back to current-season globals — that would render 2025-26 data
     // under a historical banner. Empty + getSeasonError() is the honest state.
     if (!data) return [];
-    return (S.cat === 'benjamin' ? data.benjamin : data.prebenjamin) || [];
+    return withSeasonCup((S.cat === 'benjamin' ? data.benjamin : data.prebenjamin) || [], S.season);
   }
   const cur = S.cat === 'benjamin'
     ? (typeof BENJAMIN !== 'undefined' ? BENJAMIN : null)
     : (typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : null);
-  let groups = cur || [];
-  // Maspalomas Cup 2026: concatenate its groups for the current season only,
-  // after the existing league + Copa de Campeones groups (PCC*/BC*). Historical
-  // seasons never include it (separate data files).
-  if (S.season === '') {
+  return withSeasonCup(cur || [], PORTAL.season);
+}
+
+function withSeasonCup(groups, season) {
+  // This independent tournament belongs to 2025/26, including after rollover.
+  if (season === '2025-2026') {
     const cup = S.cat === 'benjamin'
       ? (typeof MASPALOMAS_CUP_BENJAMIN !== 'undefined' ? MASPALOMAS_CUP_BENJAMIN : null)
       : (typeof MASPALOMAS_CUP_PREBENJAMIN !== 'undefined' ? MASPALOMAS_CUP_PREBENJAMIN : null);
@@ -672,9 +676,9 @@ export async function ensurePlayers(season) {
 }
 
 export function getCurrentSeason() {
-  // Default: featured season for the portal. If S.season is set (jornadas
-  // selector) prefer that; otherwise '2025-2026' (current season).
-  return (typeof S !== 'undefined' && S && S.season) || '2025-2026';
+  const current = typeof SEASONS !== 'undefined'
+    ? SEASONS.find(s => s.current) : null;
+  return S.season || current?.name || PORTAL.season;
 }
 
 export function isHistorical() {

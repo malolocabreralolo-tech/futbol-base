@@ -1,112 +1,67 @@
 # Arranque de una temporada nueva
 
-Qué hacer cuando empieza la liga (septiembre/octubre). Este proyecto **nunca ha
-pasado un cambio de temporada** con la arquitectura actual: el pipeline con DB se
-construyó en marzo de 2026, a mitad de la 2025-26, y las temporadas anteriores se
-importaron desde archivos. Así que esto es un plan, no una rutina rodada.
+`src/config.js` contiene la configuración compartida por navegador e importador: temporada, siguiente temporada, equipo inicial y zona horaria. El importador exige que esa temporada coincida con la única fila `is_current=1` de SQLite.
 
-## Por qué hace falta hacer algo
+## Estado a 9 de septiembre de 2026
 
-`scripts/fetch_futbolaspalmas.py` no descubre nada por su cuenta:
+La temporada publicada es 2025/26. Las URLs revisadas siguen ofreciendo calendarios de esa temporada; un encabezado «2026/27» no prueba que los partidos correspondan a ella. El portal indica que los grupos de 2026/27 están pendientes de verificación.
 
-- La temporada está **hardcodeada** en `main()`:
-  `get_or_create_season(conn, "2025-2026", 2025, 2026, is_current=True)`.
-- `process_file()` saca la lista de grupos y sus URLs de los propios
-  `data-benjamin.js` / `data-prebenjamin.js`, que a su vez los genera
-  `generate_js.py` desde la DB. Es un **bucle cerrado**: solo sabe refrescar los
-  grupos que ya conoce.
-- Las URLs de futbolaspalmas.com son slugs **sin temporada**
-  (`/benjamin-segunda-fase-uno/`) y se reutilizan: la misma dirección sirve
-  siempre la temporada en curso.
-
-Sumado: en cuanto la fuente pase a 2026-27, el auto-update pediría las URLs de
-los grupos de la *fase final* de 2025-26 y recibiría páginas de otra temporada.
-
-## Qué lo impide mientras tanto
-
-`standings_regression()` (en `fetch_futbolaspalmas.py`) rechaza sustituir una
-clasificación cuando eso perdería información:
-
-- la tabla scrapeada viene vacía;
-- la jornada cae de ≥5 a ≤2 (una temporada terminada pasando a jornada 1);
-- coincide menos del 50 % de los equipos (grupo reestructurado u otra liga).
-
-Los grupos rechazados se listan al final del run. Si **ninguna** clasificación se
-pudo actualizar, el script sale con error a propósito: `update.yml` publica solo
-si el job va verde, así que el cambio de temporada aparece como un run rojo en
-vez de colarse como una actualización normal. Nada se sobrescribe.
-
-Tests: `scripts/tests/test_season_rollover_guard.py`.
-
-> Señal de que ha llegado el momento: el workflow «Actualización automática»
-> empieza a fallar con `CAMBIO DE TEMPORADA DETECTADO`.
-
-## Pasos para arrancar 2026-27
-
-### 1. Descubrir los grupos nuevos
-
-Las dos categorías van por caminos distintos:
-
-- **Benjamín**: la portada de futbolaspalmas.com enlaza las competiciones con
-  slugs legibles. En julio de 2026 había 21 enlaces con `benjamin`, incluidos los
-  de Lanzarote (`benjamin-primera-grupo-uno-lanzarote`) y Fuerteventura
-  (`benjamin-segunda-grupo-uno-fuerteventura`).
-
-  ```bash
-  curl -s https://futbolaspalmas.com/ \
-    | grep -oE 'https://futbolaspalmas\.com/[a-z0-9-]*benjamin[a-z0-9-]*/' | sort -u
-  ```
-
-- **Prebenjamín**: no aparece en el menú. Usa un patrón numerado propio,
-  `https://futbolaspalmas.com/1prebenjaminN` (N = 1, 2, 3…). Hay que probar N
-  hasta que deje de haber grupo.
-
-Comprobar cada candidata: la clasificación se pide en
-`<url>/mostrar_clasi.php` y tiene que parsearla `parse_standings`.
-
-### 2. Sembrar la temporada en la DB
-
-La temporada nueva se crea con sus grupos y sus URLs, y se le pasa el
-`is_current`. La 2025-26 **se conserva entera** como histórica.
-
-- `seasons`: alta de `2026-2027` con `is_current=1`, y `is_current=0` en
-  `2025-2026`.
-- `groups`: un alta por grupo descubierto (código, nombre, fase, isla, url).
-- Los códigos de grupo son los que verá el frontend y los que usa `HISTORY`:
-  conviene mantener el estilo existente (`A1`, `PG1`, …) y **no** reutilizar un
-  código con significado distinto al de otra temporada (hay comprobaciones que
-  dependen de que no colisionen entre temporadas).
-
-### 3. Actualizar el scraper
-
-- Cambiar la temporada hardcodeada de `main()` a `2026-2027`.
-- Repasar `FEATURED` en `src/state.js`: el equipo destacado de MI EQUIPO
-  (`Las Mesas Hu.`, grupo `PG2`) cambiará de grupo, y probablemente de
-  categoría — un prebenjamín de 2025-26 es benjamín en 2026-27.
-
-### 4. Publicar y comprobar
+## Descubrir y comprobar candidatos
 
 ```bash
-python3 scripts/fetch_futbolaspalmas.py      # scrapea + genera data-*.js
-python3 -m pytest scripts/tests/ -q
-node --test scripts/tests/test_*.mjs
+python3 scripts/discover_temporada.py --todas
 ```
 
-Y mirarlo en el navegador antes de dar nada por bueno: que la temporada nueva
-sea la que sale por defecto, que 2025-26 siga completa en el desplegable de
-históricas, y que MI EQUIPO apunte al equipo correcto.
+La sonda no escribe en la base. Compara equipos y muestra enlaces candidatos. Una tabla ausente o unos equipos diferentes requieren contraste; no activan automáticamente ninguna temporada.
 
-Ojo con el contrato **C4**: `generate_js.py` bumpea `?v=` y `CACHE_NAME` solo si
-cambia algún `data-*.js`. Los cambios que sean solo de código (`src/`, `style.css`)
-piden bump **manual** en `index.html` y en la línea 1 de `sw.js`
-(formato `futbolbase-vYYYYMMDD[a-z]`).
+Crear un JSON con los grupos reales encontrados. Este ejemplo solo ilustra el formato; el nombre, equipo, categoría, fase y URL deben contrastarse antes de usarlo:
 
-## Lo que queda sin resolver
+```json
+{
+  "season": "2026-2027",
+  "defaultTeam": { "cat": "prebenjamin", "groupId": "PG1", "name": "NOMBRE EXACTO VERIFICADO" },
+  "groups": [
+    { "id": "PG1", "cat": "prebenjamin", "name": "Grupo 1", "phase": "Gran Canaria", "island": "grancanaria", "url": "https://futbolaspalmas.com/1prebenjamin1/" }
+  ]
+}
+```
 
-- El **descubrimiento no está automatizado**: el paso 1 es manual. Se puede
-  automatizar cuando se vea el HTML real de la portada en temporada arrancada
-  (hacerlo antes es adivinar).
-- El umbral del guard (`_ROLLOVER_MIN_PLAYED = 5`) supone que una temporada
-  terminada tiene ≥5 jornadas. Cierto para todos los grupos de liga; los grupos
-  de copa con 1-2 rondas no quedan protegidos por esa vía, pero sí por el
-  criterio de solapamiento de equipos.
+Los códigos deben ser únicos entre categorías, porque el historial se consulta por código. Las categorías admitidas son `benjamin` y `prebenjamin`; las islas son `grancanaria`, `lanzarote` y `fuerteventura`. Incluir todos los grupos confirmados que se vayan a publicar, con las fases y nombres reales de la fuente.
+
+```bash
+python3 scripts/activate_season.py temporada-2026-2027.json
+```
+
+Este comando verifica sin modificar archivos ni base. Descarga clasificación y calendario de cada grupo y exige:
+
+- Temporada inmediatamente posterior a la publicada.
+- Clasificación y partidos con año explícito.
+- Todas las fechas entre julio del primer año y junio del segundo.
+- Equipos coincidentes entre calendario y clasificación.
+- Equipo inicial presente en el grupo y categoría indicados.
+
+Un calendario vacío, mezclado con otro año o aún de 2025/26 impide continuar.
+
+## Activar y publicar
+
+Ejecutar cuando no haya otra importación en curso:
+
+```bash
+python3 scripts/activate_season.py temporada-2026-2027.json --apply
+python3 -m pytest scripts/tests/ -q
+node --test scripts/tests/test_*.mjs
+node scripts/tests/render-smoke.mjs
+node scripts/tests/interaction-smoke.mjs
+```
+
+La activación vuelve a verificar las fuentes. Guarda una copia en `backups/temporada-FECHA/`, prepara la nueva base y genera los archivos en un directorio temporal. Solo tras completar esa generación reemplaza los archivos de trabajo. No publica ni hace push por su cuenta.
+
+Se conservan partidos, clasificaciones, goleadores y actas anteriores. Se crea `data-season-2025-2026.js` y la Copa Maspalomas 2026 permanece asociada a 2025/26, también al consultar el archivo. Los favoritos siguen guardados: si un equipo cambia de grupo o categoría, la portada permite elegir su nueva ubicación.
+
+Comprobar ambas categorías, el equipo inicial y al menos un partido del archivo en el navegador. Incorporar los archivos generados, `src/config.js`, `data-health.json`, `index.html`, `sw.js` y la base al commit de publicación. No incorporar las copias de seguridad. GitHub Pages publica desde `main`.
+
+## Protecciones de la actualización habitual
+
+El importador rechaza clasificaciones vacías, retrocesos grandes de jornada y cambios fuertes de equipos. Conserva marcadores conocidos si la fuente difiere y señala la discrepancia en el informe. Las etiquetas `3` y `Jornada 3` comparten la identidad ya guardada para evitar duplicar encuentros.
+
+El informe distingue la última consulta de fuentes del último cambio en datos deportivos. Una ejecución sin marcadores nuevos puede actualizar únicamente `data-health.json`. Las pruebas de la actualización automática bloquean la publicación de datos incoherentes.

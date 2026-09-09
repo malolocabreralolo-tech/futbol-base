@@ -1,10 +1,14 @@
 import {
   $, el, teamBadge, S, FEATURED, isFeatured,
   featuredStandingFrom, featuredMatchesFrom, featuredScorersFrom,
-  ensureLineups, ensurePlayers, normalizeForTeamsMapping,
+  ensureLineups, ensurePlayers, normalizeForTeamsMapping, jornadaLabel,
   escapeHtml as esc} from './state.js';
-import { openMatchDetail } from './modals.js';
+import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderPlantillaInto } from './plantilla.js';
+import { PORTAL } from './config.js';
+import { currentGroups, renderFavoriteBar, openTeamPicker, favoriteKey } from './favorites.js';
+import { routeUrl, copyLink, downloadCalendar, venueUrl, fixtureISO, displayDate } from './links.js';
+import { sourceInfo, refreshHealthLabels, openDataInfo } from './health.js';
 
 // data-*.js use top-level `const` (classic scripts) -> global LEXICAL bindings,
 // NOT properties of the global object. Read them as bare identifiers, typeof-guarded,
@@ -152,9 +156,9 @@ function renderScorers(scorers) {
       + '</div>';
   });
   const more = scorers.length > 5
-    ? '<div class="me-link" id="meGolToggle">' + (_showAllScorers
+    ? '<button class="me-link" id="meGolToggle" type="button">' + (_showAllScorers
         ? 'Ver menos' : 'Ver los ' + scorers.length + ' goleadores')
-        + ' &rarr;</div>'
+        + ' &rarr;</button>'
     : '';
   return '<div class="me-ct">Goleadores del equipo '
     + '<span class="me-mut">' + scorers.length + ' jugadores</span></div>'
@@ -167,7 +171,7 @@ function renderScorers(scorers) {
  * in the jornadas selector (S.season). Exported for tests. */
 export function miEquipoSeason(seasons) {
   const cur = Array.isArray(seasons) ? seasons.find(s => s && s.current) : null;
-  return (cur && cur.name) || '2025-2026';
+  return (cur && cur.name) || PORTAL.season;
 }
 
 /* Team name used to look up the plantilla mapping. FEATURED has `name`
@@ -176,222 +180,154 @@ export function plantillaTeamName(featured) {
   return (featured && featured.name) || '';
 }
 
+
+let _showFullCalendar = false;
+let _calendarTeam = '';
+
 function jumpToFullGroup() {
-  const catBtn = document.querySelector('.cat-btn[data-cat="prebenjamin"]');
+  const catBtn = document.querySelector('.cat-btn[data-cat="' + FEATURED.cat + '"]');
   if (catBtn && !catBtn.classList.contains('active')) catBtn.click();
   S.jorGroup = FEATURED.groupId;
-  const tab = document.querySelector('.section-tab[data-section="clasif"]');
-  if (tab) tab.click();
-  requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  S.search = FEATURED.name;
+  S.filterIsland = '';
+  S.filterPhase = '';
+  document.querySelector('.section-tab[data-section="clasif"]')?.click();
 }
 
 export function renderMiEquipo() {
   const c = $('#sec-miequipo');
   if (!c) return;
   c.innerHTML = '';
+  const season = miEquipoSeason(typeof SEASONS !== 'undefined' ? SEASONS : null);
+  const selectedKey = favoriteKey(FEATURED);
+  if (_calendarTeam !== selectedKey) { _showFullCalendar = false; _showAllScorers = false; _calendarTeam = selectedKey; }
+  const intro = el('div', 'page-intro');
+  intro.innerHTML = '<div><span class="eyebrow">FÚTBOL BASE · LAS PALMAS</span><h2>Tu equipo. Cada jornada.</h2><p>Los partidos, los resultados y la ilusión de los nuestros.</p></div>'
+    + '<span class="season-chip">' + esc(season.replace('-', '/')) + '</span>';
+  c.appendChild(intro);
+  renderFavoriteBar(c);
 
-  const stand = featuredStandingFrom(typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : null);
+  const stand = featuredStandingFrom(currentGroups(FEATURED.cat));
   if (!stand) {
-    c.innerHTML = '<div class="empty-state"><div class="empty-icon">&#11088;</div>'
-      + '<p>No hay datos del equipo esta temporada</p></div>';
-    return;
+    const empty = el('div', 'me-card empty-state');
+    empty.innerHTML = '<div class="empty-icon">⚽</div><h3>Elige el grupo de tu equipo</h3><p>El grupo guardado de ' + esc(FEATURED.name) + ' no figura en esta temporada.</p><button class="btn btn-primary">Buscar equipo</button>';
+    empty.querySelector('button').addEventListener('click', openTeamPicker);
+    c.appendChild(empty); return;
   }
-  const group = stand.group, pos = stand.pos, total = stand.total;
-  const hist = typeof HISTORY !== 'undefined' && HISTORY ? HISTORY[FEATURED.groupId] : null;
-  const matches = featuredMatchesFrom(hist);
-  const scorers = featuredScorersFrom(typeof GOL_PREBENJ !== 'undefined' ? GOL_PREBENJ : null);
-
+  const { group, pos, total, row } = stand;
+  const source = typeof HISTORY !== 'undefined' ? HISTORY[FEATURED.groupId] : null;
+  const matches = featuredMatchesFrom(source || group.jornadas);
+  const golData = FEATURED.cat === 'benjamin'
+    ? (typeof GOL_BENJ !== 'undefined' ? GOL_BENJ : null)
+    : (typeof GOL_PREBENJ !== 'undefined' ? GOL_PREBENJ : null);
+  const scorers = featuredScorersFrom(golData);
+  const today = localTodayISO();
+  // Resolve DD/MM against the published season, including when reopening an archive.
+  const dated = matches.map(match => ({ ...match, date: fixtureISO(match.date, season) || match.date }));
+  const outlook = seasonOutlook(dated, today);
+  const completed = dated.filter(match => match.played).sort((a, b) => String(a.date).localeCompare(String(b.date)) || a.jorNum - b.jorNum);
+  const upcoming = dated.filter(match => !match.played && (!fixtureISO(match.date, season) || match.date >= today))
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)) || a.jorNum - b.jorNum);
+  const next = upcoming[0];
+  const last = completed.at(-1);
+  const form = completed.slice(-5);
+  const link = routeUrl({ section: 'miequipo', season, cat: FEATURED.cat, group: FEATURED.groupId, team: FEATURED.name, round: '', q: '' });
+  const catLabel = FEATURED.cat === 'benjamin' ? 'Benjamín' : 'Prebenjamín';
   const hero = el('div', 'me-hero');
-  hero.innerHTML =
-    '<div class="me-crest">' + teamBadge(FEATURED.name) + '</div>'
-    + '<div class="me-id"><h2>' + esc(FEATURED.name) + '</h2>'
-    + '<div class="me-meta">Prebenjamín &middot; ' + esc(group.name)
-      + ' &middot; ' + esc(group.phase) + '</div></div>'
-    + '<div class="me-pos"><div class="me-pos-n">' + pos
-    + '<span class="me-pos-o">&ordm;</span></div>'
-    + '<div class="me-pos-l">DE ' + total + ' EQUIPOS</div></div>';
+  hero.innerHTML = '<div class="me-crest">' + teamBadge(FEATURED.name) + '</div>'
+    + '<div class="me-id"><span class="eyebrow">TU EQUIPO</span><h2>' + esc(FEATURED.name) + '</h2><div class="me-meta">' + catLabel + ' · ' + esc(group.phase) + ' · ' + esc(group.name) + '</div>'
+    + '<button class="text-button" id="meTeamProfile">Ver ficha del equipo ↗</button></div>'
+    + '<div class="hero-summary"><div class="me-pos"><span class="me-pos-n">' + pos + '<small>º</small></span><span class="me-pos-l">de ' + total + ' equipos</span></div>'
+    + '<div class="hero-points"><strong>' + row[2] + '</strong><span>puntos</span></div>'
+    + '<div class="hero-form"><span>Últimos 5 resultados</span><div class="form-strip">' + form.map(match => '<span class="form-dot ' + match.result + '" title="' + esc(displayDate(match.date, season) + ' · ' + match.opp) + '">' + ({ W: 'G', D: 'E', L: 'P' }[match.result]) + '</span>').join('') + '</div></div></div>';
+  hero.querySelector('#meTeamProfile').addEventListener('click', () => openTeamDetail(FEATURED.name, FEATURED.groupId));
   c.appendChild(hero);
 
-  // End-of-season state: the browser clock is read ONCE here (UI edge) and
-  // injected into the pure classifier. 'finished' replaces the PRÓXIMO card
-  // with a sober closing card (see below).
-  const outlook = seasonOutlook(matches, localTodayISO());
-
-  if (outlook.state === 'finished') {
-    const r = stand.row; // [pos, team, pts, j, g, e, p, gf, gc, df]
-    const last = matches[outlook.lastPlayedIdx];
-    const lastCls = last.result === 'W' ? 'G' : last.result === 'L' ? 'P' : 'E';
-    // The hero above already carries the XL final position — this card owns
-    // the season balance (PTS + G/E/P + goals) and the closing result.
-    const overCard = el('div', 'me-card me-over');
-    overCard.innerHTML =
-      '<div class="me-over-flag"><span class="me-ln"></span>'
-      + '<span class="me-over-t">&#127937; Temporada finalizada</span>'
-      + '<span class="me-ln"></span></div>'
-      + '<div class="me-over-main">'
-      + '<div class="me-over-stats">'
-      + '<div class="me-over-stat"><span class="n pts">' + r[2] + '</span><span class="l">PTS</span></div>'
-      + '<div class="me-over-sep"></div>'
-      + '<div class="me-over-stat"><span class="n w">' + r[4] + '</span><span class="l">G</span></div>'
-      + '<div class="me-over-stat"><span class="n d">' + r[5] + '</span><span class="l">E</span></div>'
-      + '<div class="me-over-stat"><span class="n p">' + r[6] + '</span><span class="l">P</span></div>'
-      + '<div class="me-over-sep"></div>'
-      + '<div class="me-over-stat"><span class="n">' + r[7] + '</span><span class="l">GF</span></div>'
-      + '<div class="me-over-stat"><span class="n">' + r[8] + '</span><span class="l">GC</span></div>'
-      + '</div></div>'
-      + '<div class="me-over-last">'
-      + '<span class="me-over-last-l">&Uacute;ltimo partido &middot; J' + last.jorNum + '</span>'
-      + '<span class="me-over-last-m">' + esc(last.home)
-      + ' <b class="me-res ' + lastCls + '">' + last.hs + '-' + last.as + '</b> '
-      + esc(last.away) + '</span></div>';
-    c.appendChild(overCard);
+  const focusMatch = next || last;
+  const focus = el('div', 'me-card me-match-focus' + (next ? ' me-next' : ' me-over'));
+  const ended = outlook.state === 'finished' && today > season.split('-')[1] + '-07-01';
+  focus.innerHTML = '<div class="card-heading"><div><span class="eyebrow">' + (next ? 'PRÓXIMO ENCUENTRO' : 'ÚLTIMO RESULTADO REGISTRADO') + '</span><h3>' + (next ? 'Ya queda menos.' : 'Así fue la última jornada.') + '</h3></div>'
+    + '<span class="status-pill">' + (next ? esc(jornadaLabel(next.jor)) : ended ? 'Temporada finalizada' : 'Sin próximos partidos publicados') + '</span></div>';
+  if (focusMatch) {
+    const vt = venueTimeFor(focusMatch, group);
+    const venue = focusMatch.venue || vt.venue;
+    const time = focusMatch.time || vt.time;
+    const score = focusMatch.played ? '<strong>' + focusMatch.hs + '</strong><span>–</span><strong>' + focusMatch.as + '</strong>'
+      : '<strong>' + (time ? esc(time) : 'VS') + '</strong>';
+    focus.innerHTML += '<div class="focus-fixture"><div class="focus-team">' + teamBadge(focusMatch.home) + '<strong>' + esc(focusMatch.home) + '</strong><span>Local</span></div><div class="focus-score' + (!focusMatch.played ? ' pending-score' : '') + '">' + score + '</div><div class="focus-team">' + teamBadge(focusMatch.away) + '<strong>' + esc(focusMatch.away) + '</strong><span>Visitante</span></div></div>'
+      + '<div class="fixture-info"><span>◷ ' + esc(displayDate(focusMatch.date, season)) + (time ? ' · ' + esc(time) + ' h' : ' · horario no disponible') + '</span><span>⌖ ' + esc(venue || 'Campo no publicado') + '</span></div>'
+      + '<div class="fixture-actions"><button class="btn btn-primary" id="meMatchDetail">Ver partido ↗</button>'
+      + (venue ? '<a class="btn btn-secondary" href="' + esc(venueUrl(venue, group.island)) + '" target="_blank" rel="noopener noreferrer">Cómo llegar ↗</a>' : '')
+      + '<button class="btn btn-secondary" id="meShare">Compartir equipo</button><a class="btn btn-quiet" href="https://wa.me/?text=' + encodeURIComponent(FEATURED.name + '\n' + link) + '" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a></div>';
+    focus.querySelector('#meMatchDetail').addEventListener('click', () => openMatchDetail({ ...focusMatch, date: displayDate(focusMatch.date, season), jornada: focusMatch.jor, groupId: FEATURED.groupId, venue }));
+    focus.querySelector('#meShare').addEventListener('click', () => copyLink(link));
+  } else {
+    focus.innerHTML += '<p class="me-empty">Todavía no hay encuentros publicados para este grupo. Tu favorito queda guardado.</p>';
   }
+  c.appendChild(focus);
 
-  const calCard = el('div', 'me-card me-cal-card');
-  let lastPlayedIdx = -1;
-  for (let i = matches.length - 1; i >= 0; i--)
-    if (matches[i].played) { lastPlayedIdx = i; break; }
-  const nextIdx = outlook.nextIdx;
-
-  let calRows = '';
-  matches.forEach((m, i) => {
-    if (i === nextIdx) {
-      const vt = venueTimeFor(m, group);
-      const cd = countdownLabel(m.date);
-      calRows += '<div class="me-divnow"><span class="me-ln"></span>'
-        + '<span class="me-divt">PRÓXIMO</span><span class="me-ln"></span></div>';
-      calRows += '<div class="me-next"><div class="me-next-top">'
-        + '<span class="me-next-j">JORNADA ' + m.jorNum + '</span>'
-        + (cd ? '<span class="me-next-cd">' + esc(cd) + '</span>' : '')
-        + '</div><div class="me-next-opp">' + teamBadge(m.opp) + ' '
-        + esc(m.opp) + ' <span class="me-next-loc">('
-        + (m.isHome ? 'casa' : 'fuera') + ')</span></div>'
-        + '<div class="me-next-when">&#128197; ' + fmtDate(m.date)
-        + (vt.time ? ' &middot; &#128344; ' + esc(vt.time) : '')
-        + (vt.venue ? ' &middot; &#128205; ' + esc(vt.venue) : '')
-        + '</div></div>';
-      return;
-    }
-    const played = m.played;
-    const cls = played
-      ? 'me-res ' + (m.result === 'W' ? 'G' : m.result === 'L' ? 'P' : 'E')
-      : 'me-res me-next-min';
-    // Temporada finalizada: un fixture vencido sin jugar no es 'pendiente'
-    // ni lleva fecha — chip 'no disputado' (QA 11/6: 'dom, 06/06' partido en
-    // dos líneas y contradictorio bajo la tarjeta TEMPORADA FINALIZADA).
-    const notPlayedOver = !played && outlook.state === 'finished';
-    // El marcador va desde el equipo, no desde el campo: la fila solo nombra al
-    // rival, así que 'Unión Viera 11-1' se lee como que ganamos 11-1 cuando
-    // fue justo al revés. Nuestros goles primero, siempre.
-    const score = played
-      ? (m.isHome ? m.hs + '-' + m.as : m.as + '-' + m.hs)
-      : notPlayedOver ? null : fmtDate(m.date);
-    const resCls = score === null ? cls + ' me-res-nd' : cls;
-    // El resultado va también en la FILA: el raíl de la izquierda deja leer
-    // la racha de un vistazo, sin tener que ir marcador a marcador.
-    const rowCls = ('me-crow' + (!played ? ' me-dim' : '')
-      + (played ? ' me-r-' + (m.result === 'W' ? 'G' : m.result === 'L' ? 'P' : 'E') : '')
-      + (i === lastPlayedIdx ? ' me-last' : '')).trim();
-    const tappable = played && hasDetail(m);
-    calRows += '<div class="' + rowCls + '"'
-      + (tappable ? ' data-mi="' + i + '" role="button" tabindex="0"' : '')
-      + '><span class="me-jn">J' + m.jorNum + '</span>'
-      + '<span class="me-hv">' + (m.isHome ? 'L' : 'V') + '</span>'
-      + '<span class="me-o">' + esc(m.opp)
-      + (i === lastPlayedIdx ? '<span class="me-taglast">último</span>' : '')
-      + (tappable ? ' <span class="me-detail">&#9917;</span>' : '')
-      + '</span><span class="' + resCls + '">'
-      + (score === null ? '<span class="me-nd">no disputado</span>' : esc(score))
-      + '</span></div>';
-  });
-  // (When the season is over the .me-over card above is the closing state —
-  //  no extra filler row needed here.)
-  calCard.innerHTML = '<div class="me-ct">Calendario '
-    + '<span class="me-mut">' + matches.length + ' partidos</span></div>'
-    + '<div class="me-cal" id="meCal">'
-    + (calRows || '<div class="me-empty">Sin partidos</div>') + '</div>';
-  c.appendChild(calCard);
-
-  // Las tarjetas de consulta van en un contenedor propio: en escritorio son la
-  // columna derecha del tablero, y sin él la altura del calendario empujaba a
-  // los goleadores muy por debajo. En móvil el contenedor desaparece del
-  // layout (display:contents), así que el orden y el aire quedan igual.
   const side = el('div', 'me-side');
   c.appendChild(side);
+  const mini = el('div', 'me-card me-mini');
+  const low = Math.max(0, pos - 3), high = Math.min(total, pos + 2);
+  const body = (low > 0 ? standingTr(group.standings[0], true) : '')
+    + (low > 1 ? '<tr class="me-gaprow" aria-hidden="true"><td colspan="5">···</td></tr>' : '')
+    + group.standings.slice(low, high).map(r => standingTr(r, false)).join('');
+  mini.innerHTML = '<div class="card-heading"><div><span class="eyebrow">EN LA CLASIFICACIÓN</span><h3>' + esc(group.name) + '</h3></div><span class="muted">' + catLabel + '</span></div>'
+    + '<div class="table-wrap"><table class="standings-table me-mini"><caption class="sr-only">Posición de ' + esc(FEATURED.name) + ' y equipos cercanos</caption><thead><tr><th scope="col">#</th><th scope="col">Equipo</th><th scope="col">PTS</th><th scope="col">J</th><th scope="col">DIF</th></tr></thead><tbody>' + body + '</tbody></table></div>'
+    + '<button class="me-link" id="meGoGroup">Ver grupo completo →</button>' + sourceInfo(group);
+  mini.querySelector('#meGoGroup').addEventListener('click', jumpToFullGroup);
+  side.appendChild(mini);
 
-  calCard.querySelectorAll('[data-mi]').forEach(node => {
-    const open = () => {
-      const m = matches[+node.dataset.mi];
-      openMatchDetail({ home: m.home, away: m.away, hs: m.hs, as: m.as,
-        date: fmtDate(m.date), jornada: 'Jornada ' + m.jorNum,
-        groupId: FEATURED.groupId, venue: null });
-    };
-    node.addEventListener('click', open);
-    node.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
-  });
-
-
-  const miniCard = el('div', 'me-card me-mini');
-  const st = group.standings;
-  const lo = Math.max(0, pos - 1 - 3);
-  const hi = Math.min(st.length, pos - 1 + 3 + 1);
-  const win = st.slice(lo, hi);
-  const showLeader = lo > 0;
-  let bodyRows = '';
-  if (showLeader) bodyRows += standingTr(st[0], true);
-  // Separador cuando hay hueco entre el líder y la ventana (QA 11/6: la
-  // tabla saltaba de la posición 1 a la 6 y parecía consecutiva).
-  if (lo > 1) bodyRows += '<tr class="me-gaprow" aria-hidden="true">'
-    + '<td colspan="5">&#8943;</td></tr>';
-  win.forEach(r => { bodyRows += standingTr(r, false); });
-  miniCard.innerHTML = '<div class="me-ct">Su posición en el '
-    + esc(group.name) + '</div><div class="table-wrap">'
-    + '<table class="standings-table me-mini"><thead><tr><th>#</th>'
-    + '<th>Equipo</th><th>PTS</th><th>J</th><th>DIF</th></tr></thead>'
-    + '<tbody>' + bodyRows + '</tbody></table></div>'
-    + '<div class="me-link" id="meGoGroup">Ver grupo completo &rarr;</div>';
-  side.appendChild(miniCard);
-  $('#meGoGroup').addEventListener('click', jumpToFullGroup);
-
-  // SP-2: Plantilla card — always the CURRENT season (see miEquipoSeason)
-  const plantCard = el('div', 'me-card me-plant-card');
-  const season = miEquipoSeason(typeof SEASONS !== 'undefined' ? SEASONS : null);
-  plantCard.innerHTML = '<div class="me-ct">Plantilla ' + season.replace('-20', '-') + '</div>'
-    + '<div id="me-plant-host" class="plant-host">'
-    // CSS-only skeleton with the silhouette of the plantilla table rows
-    + '<div class="skeleton-rows" aria-hidden="true">'
-    + '<div class="skeleton skeleton-row"></div><div class="skeleton skeleton-row"></div>'
-    + '<div class="skeleton skeleton-row"></div><div class="skeleton skeleton-row"></div>'
-    + '</div></div>';
-  side.appendChild(plantCard);
-  Promise.all([ensurePlayers(season), ensureLineups(season)]).then(([pdata, ldata]) => {
-    const host = document.getElementById('me-plant-host');
-    if (!host) return;
-    // Una tarjeta que solo dice "no hay datos" es peso muerto en la pantalla
-    // de aterrizaje, y el prebenjamín no tiene actas: fuera la tarjeta entera.
-    if (!pdata) { plantCard.remove(); return; }
-    const teamName = plantillaTeamName(FEATURED);
-    const teamId = pdata.teams[normalizeForTeamsMapping(teamName)];
-    if (teamId == null) { plantCard.remove(); return; }
-    const rows = pdata.players[String(teamId)] || [];
-    renderPlantillaInto(host, rows, {
-      teamId: String(teamId),
-      season,
-      teamName,
-      lineupsForExpand: ldata || undefined,
-    });
-  });
+  const calCard = el('div', 'me-card me-cal-card');
+  c.appendChild(calCard);
+  const recordedResults = completed.length;
+  const standingPlayed = Number(row[3]);
+  function paintCalendar() {
+    const all = [...dated].sort((a, b) => String(b.date).localeCompare(String(a.date)) || b.jorNum - a.jorNum);
+    const visible = _showFullCalendar ? all : all.filter(match => match.played || (fixtureISO(match.date, season) && match.date < today)).slice(0, 5);
+    const rows = visible.map((match, i) => {
+      const missing = !match.played && fixtureISO(match.date, season) && match.date < today;
+      const status = match.status === 'postponed' ? 'aplazado' : match.status === 'not_played' ? 'no disputado' : missing ? 'sin resultado' : match.time || 'por confirmar';
+      const result = match.played ? (match.isHome ? match.hs + '–' + match.as : match.as + '–' + match.hs) : '<span class="me-nd">' + esc(status) + '</span>';
+      return '<button class="me-crow ' + (match.played ? 'me-r-' + ({ W: 'G', D: 'E', L: 'P' }[match.result]) : 'me-dim') + '" data-mi="' + i + '"><span class="calendar-date"><strong>' + esc(displayDate(match.date, season, { weekday: undefined, month: 'short' })) + '</strong><small>' + esc(jornadaLabel(match.jor)) + ' · ' + (match.isHome ? 'Casa' : 'Fuera') + '</small></span>'
+        + teamBadge(match.opp) + '<span class="me-o">' + esc(match.opp) + '</span><span class="me-res ' + (match.played ? ({ W: 'G', D: 'E', L: 'P' }[match.result]) : 'me-res-nd') + '">' + result + '</span><span class="row-arrow" aria-hidden="true">↗</span></button>';
+    }).join('');
+    calCard.innerHTML = '<div class="card-heading"><div><span class="eyebrow">PARTIDO A PARTIDO</span><h3>' + (_showFullCalendar ? 'Calendario completo' : 'Últimos encuentros') + '</h3></div><span class="me-mut">' + dated.length + ' registrados</span></div>'
+      + (standingPlayed > recordedResults ? '<p class="me-coverage">El calendario recoge ' + recordedResults + ' resultado' + (recordedResults === 1 ? '' : 's') + '; la clasificación contabiliza ' + standingPlayed + ' partidos jugados.</p>' : '')
+      + '<div class="me-cal" id="meCal">' + (rows || '<p class="me-empty">Sin partidos anteriores. Consulta el próximo encuentro arriba.</p>') + '</div>'
+      + '<div class="calendar-actions"><button class="me-link" id="meCalendarToggle" aria-expanded="' + _showFullCalendar + '" aria-controls="meCal">' + (_showFullCalendar ? 'Mostrar solo los últimos 5 ↑' : 'Ver calendario completo (' + dated.length + ') ↓') + '</button>'
+      + '<button class="btn btn-quiet" id="meDownload" ' + (!dated.some(match => fixtureISO(match.date, season)) ? 'disabled' : '') + '>↓ Calendario .ics</button></div>';
+    calCard.querySelector('#meCalendarToggle').addEventListener('click', () => { _showFullCalendar = !_showFullCalendar; paintCalendar(); calCard.querySelector('#meCalendarToggle').focus({ preventScroll: true }); });
+    calCard.querySelector('#meDownload').addEventListener('click', () => downloadCalendar(dated, { name: FEATURED.name, season, group: FEATURED.groupId, url: link }));
+    calCard.querySelectorAll('[data-mi]').forEach(button => button.addEventListener('click', () => {
+      const match = visible[+button.dataset.mi];
+      openMatchDetail({ ...match, date: displayDate(match.date, season), jornada: match.jor, groupId: FEATURED.groupId, venue: match.venue || null });
+    }));
+  }
+  paintCalendar();
 
   const golCard = el('div', 'me-card me-gol');
-  const wireToggle = () => {
-    const t = golCard.querySelector('#meGolToggle');
-    if (t) t.addEventListener('click', () => {
-      _showAllScorers = !_showAllScorers;
-      golCard.innerHTML = renderScorers(scorers);
-      wireToggle();
-    });
+  const paintScorers = () => {
+    golCard.innerHTML = renderScorers(scorers);
+    golCard.querySelector('#meGolToggle')?.addEventListener('click', () => { _showAllScorers = !_showAllScorers; paintScorers(); golCard.querySelector('#meGolToggle')?.focus(); });
   };
-  golCard.innerHTML = renderScorers(scorers);
-  side.appendChild(golCard);
-  wireToggle();
+  paintScorers(); side.appendChild(golCard);
+
+  const plantCard = el('div', 'me-card me-plant-card');
+  plantCard.innerHTML = '<div class="me-ct">Plantilla</div><div class="plant-host"><div class="skeleton-rows" aria-hidden="true"><div class="skeleton skeleton-row"></div><div class="skeleton skeleton-row"></div></div></div>';
+  side.appendChild(plantCard);
+  Promise.all([ensurePlayers(season), ensureLineups(season)]).then(([pdata, ldata]) => {
+    if (!plantCard.isConnected) return;
+    const teamId = pdata?.teams[normalizeForTeamsMapping(plantillaTeamName(FEATURED))];
+    const rows = teamId == null ? [] : pdata.players[String(teamId)] || [];
+    if (!rows.length) { plantCard.remove(); return; }
+    renderPlantillaInto(plantCard.querySelector('.plant-host'), rows, { teamId: String(teamId), season, teamName: FEATURED.name, lineupsForExpand: ldata || undefined });
+  });
+
+  const notice = el('div', 'season-note');
+  notice.innerHTML = '<div><span class="eyebrow">LA SIGUIENTE TEMPORADA</span><strong>' + esc(PORTAL.nextSeason.replace('-', '/')) + ' · Grupos pendientes de verificación</strong><p>Tu equipo sigue guardado. Incorporaremos los nuevos calendarios cuando la fuente confirme sus grupos y fechas.</p></div><button class="btn btn-secondary">Datos y fuentes ↗</button>';
+  notice.querySelector('button').addEventListener('click', openDataInfo);
+  c.appendChild(notice);
+  refreshHealthLabels();
 }

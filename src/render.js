@@ -1,6 +1,10 @@
 import { S, $, $$, el, makeActivatable, delegateActivation, normalizeTeamName, teamBadge, getTeamForm, getData, isHistorical, getPhases, countStats, buildUnifiedPrebenjamin, isFeatured, escapeHtml, escapeAttr, jornadaLabel, groupJornadaLabel, sortJornadaKeys, validJorGroup, knockoutRoundsSource, knockoutRoundLabel, isRoundRobinCup, phaseIcon, bracketDrawAdvancer, matchAdvancer, bracketChampion, getSeasonError, ensureSeasonData } from './state.js';
 import { openMatchDetail, openTeamDetail } from './modals.js';
 import { renderMiEquipo, matchDateISO, localTodayISO, goalBarPct } from './miequipo.js';
+import { filterCompetitionGroups, appendFilters, sectionIntro } from './filters.js';
+import { sourceInfo, refreshHealthLabels } from './health.js';
+import { syncRoute, routeUrl, copyLink, downloadCalendar, displayDate } from './links.js';
+import { getCurrentSeason } from './state.js';
 
 /* ====== SEARCH COUNT ====== */
 export function updateSearchCount() {
@@ -81,53 +85,34 @@ export function renderClasif() {
   const container = $('#sec-clasif');
   container.innerHTML = '';
 
-  // Unified PreBenjamin classification for current season
-  if (S.cat === 'prebenjamin' && !isHistorical()) {
-    container.appendChild(buildUnifiedPrebenjamin());
-  }
-
+  sectionIntro(container, 'Cada grupo, su historia.', 'Busca tu equipo y consulta la clasificación de su competición.');
+  const filtered = appendFilters(container, renderClasif);
   if (isHistorical()) {
     const errBox = seasonErrorBox();
-    if (errBox) {
-      container.appendChild(errBox);
-      return;
-    }
-    const data = getData();
-    if (!data.length) {
-      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div><p>No hay datos disponibles para esta categoría en la temporada ' + escapeHtml(S.season.replace('-', '/')) + '</p></div>';
-      return;
-    }
-    const banner = el('div', 'historical-banner', '📋 Datos históricos · Temporada ' + escapeHtml(S.season.replace('-', '/')) + ' · Sin goleadores individuales');
-    container.appendChild(banner);
+    if (errBox) { container.appendChild(errBox); return; }
+    container.appendChild(el('div', 'historical-banner', 'Archivo · Temporada ' + escapeHtml(S.season.replace('-', '/'))));
   }
-
-  const phases = getPhases();
-  const defaultGroup = S.jorGroup || (S.cat === 'benjamin' ? 'A2' : 'PG2');
+  if (S.cat === 'prebenjamin' && !isHistorical() && !S.search && !S.filterPhase && (!S.filterIsland || S.filterIsland === 'grancanaria')) {
+    const comparison = el('details', 'unified-block');
+    comparison.innerHTML = '<summary>Comparar grupos de Gran Canaria <span>Por puntos por partido</span></summary>';
+    comparison.appendChild(buildUnifiedPrebenjamin());
+    container.appendChild(comparison);
+  }
+  const phases = {};
+  filtered.forEach(group => (phases[group.phase] ||= []).push(group));
+  const defaultGroup = validJorGroup(S.jorGroup, filtered);
   Object.entries(phases).forEach(([phase, groups]) => {
-    const filteredGroups = filterGroups(groups);
-    const hdr = el('div', 'phase-header', `<span class="phase-icon">${phaseIcon(phase)}</span> ${escapeHtml(phase)}`);
-    container.appendChild(hdr);
-
-    groups.forEach(g => {
-      const forceOpen = (g.id === defaultGroup);
-      container.appendChild(buildGroupCard(g, forceOpen));
-    });
+    container.appendChild(el('div', 'phase-header', '<span class="phase-icon">' + phaseIcon(phase) + '</span> ' + escapeHtml(phase)));
+    const grid = el('div', 'group-grid');
+    groups.forEach(group => grid.appendChild(buildGroupCard(group, group.id === defaultGroup || !!S.search || filtered.length <= 3)));
+    container.appendChild(grid);
   });
-
-  if (!container.children.length) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No se encontraron equipos</p></div>';
-  }
+  if (!filtered.length) container.appendChild(el('div', 'empty-state', '<div class="empty-icon">⌕</div><h3>No hay grupos con esos filtros</h3><p>Prueba otra isla, fase o nombre de equipo.</p>'));
+  refreshHealthLabels();
 
   // Delegación: abrir la ficha del equipo desde el nombre, con ratón o teclado.
   delegateActivation(container, '.team-name-cell',
     td => openTeamDetail(td.dataset.team, td.dataset.group));
-}
-
-function filterGroups(groups) {
-  if (!S.search) return groups;
-  return groups.filter(g =>
-    g.standings.some(row => row[1].toLowerCase().includes(S.search))
-  );
 }
 
 /* HTML escaping: import escapeHtml/escapeAttr from state.js (C2 — single
@@ -180,8 +165,17 @@ export function buildGroupCard(g, forceOpen) {
       ${knockout ? buildKnockoutBracket(g) : buildStandingsTable(g.standings, g.id, g)}
     </div>
   `;
-  makeActivatable(card.querySelector('.group-header'),
-    () => card.classList.toggle('open'));
+  card.dataset.group = g.id;
+  const header = card.querySelector('.group-header');
+  const body = card.querySelector('.group-body');
+  body.id = 'group-' + S.section + '-' + g.id;
+  body.insertAdjacentHTML('beforeend', sourceInfo(g, isHistorical()));
+  header.setAttribute('aria-controls', body.id);
+  header.setAttribute('aria-expanded', String(!!forceOpen));
+  makeActivatable(header, () => {
+    card.classList.toggle('open');
+    header.setAttribute('aria-expanded', String(card.classList.contains('open')));
+  });
   return card;
 }
 
@@ -332,13 +326,15 @@ export function renderJornadas() {
   const container = $('#sec-jornadas');
   container.innerHTML = '';
 
-  const data = Object.values(getPhases()).flat();
+  sectionIntro(container, 'El fútbol, jornada a jornada.', 'Fechas y horarios de Canarias. Abre un partido para consultar su ficha.');
+  const data = appendFilters(container, renderJornadas);
   
   // Group selector
   const selectorRow = el('div', 'selector-row');
   const selectWrap = el('div', 'custom-select');
   const select = document.createElement('select');
   select.id = 'jorGroupSelect';
+  select.setAttribute('aria-label', 'Grupo de la jornada');
   
   const defaultOpt = document.createElement('option');
   defaultOpt.value = '';
@@ -378,6 +374,7 @@ export function renderJornadas() {
     S.jorGroup = select.value;
     S.jorNum = '';
     renderJornadaContent();
+    syncRoute();
   });
 }
 
@@ -420,13 +417,14 @@ export function renderJornadaContent() {
           $$('.jornada-pill').forEach(function(p){p.classList.remove('active');});
           pill.classList.add('active');
           renderMatchCards(matchesDiv, getHistoricalJornadaMatches(group, k), 'history');
+          syncRoute();
         };
       })(key));
       pillsDiv.appendChild(pill);
     });
     setTimeout(function() {
       var active = pillsDiv.querySelector('.active');
-      if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      if (active) active.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
     }, 50);
     renderMatchCards(matchesDiv, getHistoricalJornadaMatches(group, S.jorNum), 'history');
     return;
@@ -467,6 +465,7 @@ export function renderJornadaContent() {
         $$('.jornada-pill').forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
         renderMatchCards(matchesDiv, getJornadaMatches(j), 'history');
+        syncRoute();
       });
       pillsDiv.appendChild(pill);
     });
@@ -481,6 +480,7 @@ export function renderJornadaContent() {
         renderMatchCards(matchesDiv, group.matches.map(m => ({
           date: m[0], time: m[1], home: m[2], away: m[3], hs: m[4], as: m[5], venue: m[6] || null
         })), 'current');
+        syncRoute();
       });
       pillsDiv.appendChild(pill);
       // Default to current matchday
@@ -490,7 +490,7 @@ export function renderJornadaContent() {
     // Scroll to active pill
     setTimeout(() => {
       const active = pillsDiv.querySelector('.active');
-      if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      if (active) active.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
     }, 50);
 
     // Render matches for selected jornada
@@ -522,14 +522,14 @@ export function renderJornadaContent() {
 export function getJornadaMatches(jorName) {
   if (!HISTORY[S.jorGroup] || !HISTORY[S.jorGroup][jorName]) return [];
   return HISTORY[S.jorGroup][jorName].map(m => ({
-    date: m[0], home: m[1], away: m[2], hs: m[3], as: m[4]
+    date: m[0], home: m[1], away: m[2], hs: m[3], as: m[4], time: m[6] || '', venue: m[7] || ''
   }));
 }
 
 export function getHistoricalJornadaMatches(group, jorNum) {
   if (!group || !group.jornadas || !group.jornadas[jorNum]) return [];
   return group.jornadas[jorNum].map(function(m) {
-    return { date: m[0], home: m[1], away: m[2], hs: m[3], as: m[4] };
+    return { date: m[0], home: m[1], away: m[2], hs: m[3], as: m[4], time: m[6] || '', venue: m[7] || '' };
   });
 }
 
@@ -539,6 +539,13 @@ export function renderMatchCards(container, matches, type) {
     container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚽</div><p>No hay partidos en esta jornada</p></div>';
     return;
   }
+  const group = getData().find(item => item.id === S.jorGroup);
+  const shareUrl = routeUrl({ section: 'jornadas', team: '', match: '' });
+  const tools = el('div', 'jornada-heading');
+  tools.innerHTML = '<div><span class="eyebrow">' + escapeHtml(group?.name || '') + '</span><h3>' + escapeHtml(S.jorNum) + '</h3></div><div class="dialog-actions"><button class="btn btn-secondary" data-share>Compartir jornada</button><button class="btn btn-secondary" data-calendar>↓ Calendario .ics</button></div>';
+  tools.querySelector('[data-share]').addEventListener('click', () => copyLink(shareUrl));
+  tools.querySelector('[data-calendar]').addEventListener('click', () => downloadCalendar(matches.map(match => ({ ...match, jornada: S.jorNum })), { season: getCurrentSeason(), group: S.jorGroup, name: (group?.name || 'Jornada') + ' ' + S.jorNum, url: shareUrl }));
+  container.appendChild(tools);
   const grid = el('div', 'match-grid');
   matches.forEach(m => {
     const hasScore = m.hs !== null && m.hs !== undefined && m.as !== null && m.as !== undefined;
@@ -559,15 +566,7 @@ export function renderMatchCards(container, matches, type) {
       scoreHtml = `<span class="score-vs">VS</span>${timeTag}`;
     }
 
-    let dateStr = m.date || '';
-    // Format date nicely
-    if (type === 'history' && dateStr.includes('-')) {
-      // Format: 2025-11-28
-      const parts = dateStr.split('-');
-      dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
-    } else if (type === 'current' && m.time) {
-      dateStr = `${m.date} · ${m.time}`;
-    }
+    const dateStr = displayDate(m.date, getCurrentSeason()) + (m.time ? ' · ' + m.time + ' h' : '');
 
     // Data lookup key — uses RAW (unescaped) names on purpose; it must match
     // the keys generated in data-matchdetail-keys.js. Same style as modals.js.
@@ -638,6 +637,7 @@ export function renderGoleadores() {
   const container = $('#sec-goleadores');
   container.innerHTML = '';
 
+  sectionIntro(container, 'Los nombres del gol.', 'Goleadores de la temporada según los registros disponibles.');
   const golData = getGolData();
 
   if (!golData || golData.length === 0) {
@@ -650,6 +650,7 @@ export function renderGoleadores() {
   const selectWrap = el('div', 'custom-select');
   const select = document.createElement('select');
   select.id = 'golGroupSelect';
+  select.setAttribute('aria-label', 'Grupo de goleadores');
 
   // Global option
   const globalOpt = document.createElement('option');
@@ -771,6 +772,7 @@ export function renderIsla() {
   container.innerHTML = '';
 
   // Island tabs
+  sectionIntro(container, 'Tres islas. La misma pasión.', 'Las competiciones de Gran Canaria, Lanzarote y Fuerteventura.');
   const tabsDiv = el('div', 'island-tabs');
   const islands = [
     { id: 'grancanaria', label: 'Gran Canaria' },
@@ -788,6 +790,7 @@ export function renderIsla() {
     tab.addEventListener('click', () => {
       S.island = isl.id;
       renderIsla();
+      syncRoute();
     });
     tabsDiv.appendChild(tab);
   });
@@ -800,7 +803,7 @@ export function renderIsla() {
 
   // Filter groups by island
   const islandGroups = data.filter(g => g.island === S.island);
-  const filteredGroups = S.search ? filterGroups(islandGroups) : islandGroups;
+  const filteredGroups = filterCompetitionGroups(islandGroups, { search: S.search });
 
   if (filteredGroups.length === 0) {
     container.appendChild(el('div', 'empty-state', '<div class="empty-icon">🏝️</div><p>No hay datos para esta isla</p>'));
@@ -896,6 +899,7 @@ export function recordCard(icon, value, label, sublabel) {
 export function renderStats() {
   const container = $('#sec-stats');
   container.innerHTML = '';
+  sectionIntro(container, 'La temporada, en números.', 'Estadísticas calculadas con los registros disponibles de cada competición.');
 
   let stats;
   if (isHistorical()) {
@@ -951,7 +955,7 @@ export function renderStats() {
       container.appendChild(hdr2);
       let streakHtml = '<div class="stats-grid">';
       winStreaks.forEach(([name, t]) => {
-        streakHtml += recordCard('🏆', `${t.streak.count}W`, name, `${t.streak.count} victorias seguidas`);
+        streakHtml += recordCard('🏆', `${t.streak.count}G`, name, `${t.streak.count} victorias seguidas`);
       });
       streakHtml += '</div>';
       container.innerHTML += streakHtml;
@@ -1011,4 +1015,3 @@ export function renderStats() {
 }
 
 /* ====== SPARKLINE ====== */
-

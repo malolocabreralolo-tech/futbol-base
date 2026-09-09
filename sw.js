@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260727e';
+const CACHE_NAME = 'futbolbase-v20260909e';
 const OFFLINE_URL = './index.html';
 
 // Static assets — cached on install, served cache-first.
@@ -9,6 +9,11 @@ const STATIC_ASSETS = [
   './index.html',
   './style.css',
   './src/app.js',
+  './src/config.js',
+  './src/links.js',
+  './src/favorites.js',
+  './src/health.js',
+  './src/filters.js',
   './src/init.js',
   './src/state.js',
   './src/render.js',
@@ -24,6 +29,7 @@ const STATIC_ASSETS = [
   './data-shields.js',
   './data-stats.js',
   './data-seasons.js',
+  './data-health.json',
   './data-maspalomas-cup-2026.js',
   './icons.svg',
   './manifest.json',
@@ -47,6 +53,7 @@ const SEASON_FILES = [
 //   'network'     -> everything else (network, offline fallback).
 function classifyRequest(pathname) {
   const file = pathname.split('/').pop();
+  if (file === 'data-health.json') return 'swr';
   if (file.startsWith('data-') && file.endsWith('.js')) return 'swr';
   // Los módulos de src/ se piden SIN ?v= (index.html versiona app.js, pero no
   // sus imports), así que con cache-first un arreglo de solo código no llegaba

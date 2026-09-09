@@ -1,6 +1,7 @@
 import { el, $, getData, teamBadge, normalizeTeamName, isHistorical, buildSparkline, S, ensureMatchDetail, ensureLineups, ensurePlayers, getCurrentSeason, normalizeForTeamsMapping, escapeHtml as escHtml, escapeAttr as escAttr } from './state.js';
 import { renderPlantillaInto } from './plantilla.js';
 import { renderLineupsAndTimeline } from './matchdetail-rich.js';
+import { syncRoute, routeUrl, matchId, venueUrl, copyLink, fixtureISO, displayDate } from './links.js';
 
 /* ====== MATCH DETAIL MODAL ====== */
 // typeof-guarded so the module stays importable under node (tests of the
@@ -10,6 +11,33 @@ const modalOverlay = _doc ? _doc.getElementById('matchModal') : null;
 const modalClose = _doc ? _doc.getElementById('modalClose') : null;
 const modalContent = _doc ? _doc.getElementById('modalContent') : null;
 const modalBody = _doc ? _doc.getElementById('modalBody') : null;
+let previousFocus = null;
+let previousOverflow = '';
+let inertElements = [];
+
+function openModal(title) {
+  if (!modalOverlay.classList.contains('open')) {
+    previousFocus = _doc.activeElement;
+    previousOverflow = _doc.body.style.overflow;
+    inertElements = [..._doc.body.children]
+      .filter(element => element !== modalOverlay && element.id !== 'toast' && !['SCRIPT', 'STYLE', 'LINK'].includes(element.tagName))
+      .map(element => [element, element.inert]);
+    inertElements.forEach(([element]) => { element.inert = true; });
+  }
+  modalOverlay.removeAttribute('aria-labelledby');
+  modalOverlay.setAttribute('aria-label', title);
+  _doc.body.style.overflow = 'hidden';
+  modalOverlay.classList.add('open');
+  modalClose.focus({ preventScroll: true });
+}
+
+export function showDialog(title, bodyHtml) {
+  if (!modalOverlay) return null;
+  modalContent.innerHTML = '<h2 class="dialog-title">' + escHtml(title) + '</h2>';
+  modalBody.innerHTML = bodyHtml;
+  openModal(title);
+  return modalBody;
+}
 
 // Close modal
 if (modalClose) {
@@ -22,7 +50,19 @@ if (modalOverlay) {
 }
 if (_doc) {
   _doc.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (!modalOverlay?.classList.contains('open')) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
+    if (e.key === 'Tab') {
+      const nodes = [...modalOverlay.querySelectorAll('button, a[href], input, select, textarea, [tabindex]')]
+        .filter(node => !node.disabled && node.tabIndex >= 0 && node.getClientRects().length);
+      const first = nodes[0] || modalClose;
+      const last = nodes[nodes.length - 1] || modalClose;
+      if (e.shiftKey && (_doc.activeElement === first || !modalOverlay.contains(_doc.activeElement))) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && (_doc.activeElement === last || !modalOverlay.contains(_doc.activeElement))) {
+        e.preventDefault(); first.focus();
+      }
+    }
   });
 }
 
@@ -129,7 +169,16 @@ export function fillIfCurrent(slot, key, render) {
 }
 
 export function closeModal() {
-  if (modalOverlay) modalOverlay.classList.remove('open');
+  if (!modalOverlay?.classList.contains('open')) return;
+  modalOverlay.classList.remove('open');
+  _doc.body.style.overflow = previousOverflow;
+  inertElements.forEach(([element, value]) => { element.inert = value; });
+  inertElements = [];
+  const focusTarget = previousFocus?.isConnected ? previousFocus
+    : (previousFocus?.id ? _doc.getElementById(previousFocus.id) : null) || _doc.querySelector('.section-tab.active');
+  focusTarget?.focus({ preventScroll: true });
+  previousFocus = null;
+  syncRoute({}, true);
 }
 
 /* Build the goal-timeline section HTML for a match detail entry.
@@ -168,12 +217,13 @@ export function buildGoalsHtml(detail, venue) {
 export function openMatchDetail(match) {
   if (!modalOverlay || !modalContent || !modalBody) return;
 
-  const { home, away, hs, as, date, jornada, groupId, venue } = match;
+  const { home, away, hs, as, date, jornada, groupId, venue, time } = match;
 
   // Determine winner
-  let homeWin = hs > as;
-  let awayWin = as > hs;
-  let draw = hs === as;
+  const hasResult = hs != null && as != null;
+  let homeWin = hasResult && hs > as;
+  let awayWin = hasResult && as > hs;
+  let draw = hasResult && hs === as;
 
   // Find group data (data-*.js globals are lexical consts → bare identifier
   // reads must be typeof-guarded or a missing file throws ReferenceError)
@@ -229,10 +279,10 @@ export function openMatchDetail(match) {
     ${jorLabel ? `<div class="modal-match-jornada">${escHtml(jorLabel)}</div>` : ''}
     <div class="modal-match">
       <div class="modal-team-name home">${escHtml(home)} ${teamBadge(home)}${homeTag}${draw ? drawLabel : ''}</div>
-      <div class="modal-big-score scoreboard-xl"><span class="sb-num${sbHomeCls}">${hs}</span><span class="sb-sep">-</span><span class="sb-num${sbAwayCls}">${as}</span></div>
+      <div class="modal-big-score scoreboard-xl"><span class="sb-num${sbHomeCls}">${hs ?? '—'}</span><span class="sb-sep">-</span><span class="sb-num${sbAwayCls}">${as ?? '—'}</span></div>
       <div class="modal-team-name away">${teamBadge(away)} ${escHtml(away)}${awayTag}${draw && !homeTag ? '' : ''}</div>
     </div>
-    <div class="modal-match-date">${escHtml(date)}</div>
+    <div class="modal-match-date">${escHtml(fixtureISO(date, getCurrentSeason()) ? displayDate(date, getCurrentSeason()) : date)}${time ? ' · ' + escHtml(time) + ' h · Canarias' : ''}</div>
   `;
 
   // Body: team comparison stats + head-to-head
@@ -346,7 +396,17 @@ export function openMatchDetail(match) {
   bodyHtml += '<div id="modalGoalsSection"></div>';
 
   modalBody.innerHTML = bodyHtml;
-  modalOverlay.classList.add('open');
+  const shareUrl = routeUrl({ section: 'jornadas', cat: !dataset.historical && porCategoria('prebenjamin').includes(group) ? 'prebenjamin' : S.cat,
+    group: groupId, round: jornada || '', team: '', match: matchId(match) });
+  const actions = el('div', 'dialog-actions');
+  actions.innerHTML = '<button class="btn btn-secondary" data-copy>Copiar enlace</button>'
+    + '<a class="btn btn-secondary" target="_blank" rel="noopener noreferrer" href="https://wa.me/?text=' + encodeURIComponent(home + ' – ' + away + '\n' + shareUrl) + '">WhatsApp ↗</a>'
+    + (venue ? '<a class="btn btn-secondary" target="_blank" rel="noopener noreferrer" href="' + escAttr(venueUrl(venue, group?.island)) + '">Ver campo ↗</a>' : '');
+  actions.querySelector('[data-copy]').addEventListener('click', () => copyLink(shareUrl));
+  modalBody.prepend(actions);
+  openModal(home + ' contra ' + away);
+  syncRoute({ section: 'jornadas', cat: !dataset.historical && porCategoria('prebenjamin').includes(group) ? 'prebenjamin' : S.cat,
+    group: groupId, round: jornada || '', team: '', match: matchId(match) });
   // Reset del scroll: si el modal anterior quedó scrolleado, el siguiente
   // abría a mitad de contenido (QA 11/6).
   modalBody.scrollTop = 0;
@@ -557,7 +617,14 @@ export function openTeamDetail(teamName, groupId) {
     </div>`;
 
   modalBody.innerHTML = body;
-  modalOverlay.classList.add('open');
+  const shareUrl = routeUrl({ section: S.section === 'miequipo' ? 'clasif' : S.section, group: groupId, team: teamName, match: '' });
+  const actions = el('div', 'dialog-actions');
+  actions.innerHTML = '<button class="btn btn-secondary" data-copy>Copiar enlace del equipo</button>'
+    + '<a class="btn btn-secondary" target="_blank" rel="noopener noreferrer" href="https://wa.me/?text=' + encodeURIComponent(teamName + '\n' + shareUrl) + '">WhatsApp ↗</a>';
+  actions.querySelector('[data-copy]').addEventListener('click', () => copyLink(shareUrl));
+  modalBody.prepend(actions);
+  openModal('Ficha de ' + teamName);
+  syncRoute({ section: S.section === 'miequipo' ? 'clasif' : S.section, group: groupId, team: teamName, match: '' });
   // Reset del scroll: si el modal anterior quedó scrolleado, el siguiente
   // abría a mitad de contenido (QA 11/6).
   modalBody.scrollTop = 0;

@@ -1,7 +1,7 @@
 {
   "name": "Futbol Base Las Palmas",
   "short_name": "Futbol Base LP",
-  "description": "Portal de futbol base de Las Palmas - Temporada 2025/2026",
+  "description": "Tus equipos de fútbol base en Canarias: calendario, resultados y clasificaciones.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0f1a",

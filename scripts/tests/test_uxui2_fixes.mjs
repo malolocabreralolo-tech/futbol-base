@@ -161,11 +161,11 @@ test('el puesto se pinta como un dorsal, no como texto', () => {
   assert.match(base[0], /color: var\(--accent\)/);
 });
 
-test('miequipo.js: season-over card emphasises the balance, not the hero’s position', () => {
+test('miequipo.js: season end retains the last result and points summary', () => {
   assert.ok(!/me-over-pos/.test(mieqSrc),
     'season-over card must not repeat the XL position (me-over-pos removed)');
-  assert.ok(/<span class="n pts">/.test(mieqSrc),
-    'season-over card must lead with the PTS stat');
+  assert.ok(/hero-points/.test(mieqSrc), 'points remain in the team summary');
+  assert.ok(/ÚLTIMO RESULTADO REGISTRADO/.test(mieqSrc), 'the final fixture remains useful after season end');
   assert.ok(/TEMPORADA FINALIZADA/i.test(mieqSrc), 'closing card copy must remain');
 });
 
@@ -237,7 +237,7 @@ test('style.css A2: modal becomes a bottom sheet ONLY inside a mobile media quer
   // source order, so an earlier block would silently lose (A1 scroll-top
   // lesson). lastIndexOf with the trailing '{' skips the combined
   // reduced-motion query.
-  const sheetIdx = css.lastIndexOf('@media (max-width: 768px) {');
+  const sheetIdx = css.lastIndexOf('@media (max-width: 768px) {', css.indexOf('align-items: flex-end', css.indexOf('.sheet-handle')));
   assert.ok(sheetIdx > mediaIdx, 'dedicated sheet media block missing');
   const baseModalIdx = css.indexOf('.modal-overlay {');
   assert.ok(baseModalIdx >= 0 && sheetIdx > baseModalIdx,
@@ -276,7 +276,7 @@ test('style.css A2: modal becomes a bottom sheet ONLY inside a mobile media quer
 });
 
 test('style.css A2: sheet slide-up is gated by prefers-reduced-motion', () => {
-  const sheetIdx = css.lastIndexOf('@media (max-width: 768px) {');
+  const sheetIdx = css.lastIndexOf('@media (max-width: 768px) {', css.indexOf('align-items: flex-end', css.indexOf('.sheet-handle')));
   const sheet = css.slice(sheetIdx);
   // the sheet .modal rule itself must NOT re-enable the transition...
   const mModal = sheet.match(/(^|\s)\.modal\s*\{[^}]*\}/);
@@ -457,7 +457,8 @@ test('lo que se puede pulsar con el ratón se puede activar con el teclado', () 
   // Las tres superficies principales: nombre de equipo, cabecera de grupo y
   // tarjeta de partido.
   assert.match(render, /delegateActivation\(container, '\.team-name-cell'/);
-  assert.match(render, /makeActivatable\(card\.querySelector\('\.group-header'\)/);
+  assert.match(render, /const header = card\.querySelector\('\.group-header'\)/);
+  assert.match(render, /makeActivatable\(header,/);
   assert.match(render, /makeActivatable\(card, \(\) => \{\s*openMatchDetail/);
   // Y ya no debe quedar la delegación solo-ratón.
   assert.doesNotMatch(render, /container\.onclick = e => \{\s*const td/);
@@ -484,13 +485,13 @@ test('el calendario de MI EQUIPO da el marcador desde el equipo, no desde el cam
   const s = readFileSync(new URL('../../src/miequipo.js', import.meta.url), 'utf8');
   // La fila solo nombra al rival, así que 'Unión Viera 11-1' se leía como una
   // victoria por 11-1 cuando fue una derrota por 1-11.
-  assert.match(s, /m\.isHome \? m\.hs \+ '-' \+ m\.as : m\.as \+ '-' \+ m\.hs/);
+  assert.match(s, /match\.isHome \? match\.hs \+ '–' \+ match\.as : match\.as \+ '–' \+ match\.hs/);
 });
 
 test('cada fila del calendario lleva su resultado, para el raíl de la izquierda', () => {
   const js = readFileSync(new URL('../../src/miequipo.js', import.meta.url), 'utf8');
   const css = readFileSync(new URL('../../style.css', import.meta.url), 'utf8');
-  assert.match(js, /me-r-' \+ \(m\.result === 'W' \? 'G'/);
+  assert.match(js, /me-r-' \+ \(\{ W: 'G', D: 'E', L: 'P' \}\[match\.result\]\)/);
   assert.match(css, /\.me-crow\.me-r-G::before/);
   assert.match(css, /\.me-crow\.me-r-P::before/);
 });

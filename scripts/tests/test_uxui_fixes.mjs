@@ -187,8 +187,10 @@ const renderSrc = readFileSync(join(ROOT, 'src', 'render.js'), 'utf8');
 const cssSrc = readFileSync(join(ROOT, 'style.css'), 'utf8');
 const mieqSrc2 = readFileSync(join(ROOT, 'src', 'miequipo.js'), 'utf8');
 
-test('miequipo.js: expired unplayed fixtures show "no disputado" when season is over', () => {
-  assert.ok(/no disputado/.test(mieqSrc2), 'calendar must tag expired fixtures as no disputado');
+test('miequipo.js: missing results do not assert that a fixture was not played', () => {
+  assert.ok(/sin resultado/.test(mieqSrc2), 'calendar must identify missing results');
+  assert.match(mieqSrc2, /match.status === 'not_played' \? 'no disputado' : missing \? 'sin resultado'/,
+    'only an explicit source status permits the label no disputado');
   assert.ok(/me-nd/.test(cssSrc), 'style.css must style the .me-nd chip');
 });
 

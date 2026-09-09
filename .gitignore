@@ -30,8 +30,10 @@ datos-fuente/fiflp_cookies.txt
 database.db
 
 # Test cache
+node_modules/
 .pytest_cache/
 .hypothesis/
+backups/
 
 # Visual brainstorming companion
 .superpowers/

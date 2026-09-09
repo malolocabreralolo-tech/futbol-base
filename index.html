@@ -15,10 +15,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./style.css?v=20260728b">
+  <link rel="stylesheet" href="./style.css?v=20260909e">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
 </head>
 <body>
+  <a class="skip-link" href="#mainContent">Saltar al contenido</a>
 
   <!-- HEADER -->
   <header class="header">
@@ -28,7 +29,7 @@
           <div class="brand-icon">⚽</div>
           <div>
             <h1>FÚTBOL BASE LAS PALMAS</h1>
-            <div class="subtitle"><span id="seasonLabel">Temporada 2025/2026</span> · Sin publicidad</div>
+            <div class="subtitle"><span id="seasonLabel">Calendarios y resultados</span> · Sin publicidad</div>
           </div>
         </div>
         <div class="stats-bar">
@@ -56,7 +57,7 @@
 
       <!-- Section Tabs: top tab-bar on desktop, fixed bottom app-nav on mobile
            (same element, repositioned with CSS — init.js logic untouched) -->
-      <nav class="section-tabs">
+      <nav class="section-tabs" aria-label="Secciones del portal">
         <button class="section-tab active" data-section="miequipo" aria-current="page"><span class="tab-ico" aria-hidden="true">⭐</span><span class="tab-label">MI EQUIPO</span></button>
         <button class="section-tab" data-section="clasif"><span class="tab-ico" aria-hidden="true">🏆</span><span class="tab-label">CLASIFICACIÓN</span></button>
         <button class="section-tab" data-section="jornadas"><span class="tab-ico" aria-hidden="true">⚽</span><span class="tab-label">JORNADAS</span></button>
@@ -68,7 +69,7 @@
   </header>
 
   <!-- MAIN CONTENT -->
-  <main class="main">
+  <main class="main" id="mainContent" tabindex="-1">
     <div id="sec-miequipo" class="section active"></div>
     <div id="sec-clasif" class="section"></div>
     <div id="sec-jornadas" class="section"></div>
@@ -79,9 +80,13 @@
 
   <!-- FOOTER -->
   <footer class="footer">
-    <p>Datos obtenidos de <a href="https://futbolaspalmas.com" target="_blank" rel="noopener noreferrer">futbolaspalmas.com</a></p>
-    <p>Última actualización: 26/07/2026</p>
+    <div class="footer-brand"><strong>FÚTBOL BASE LAS PALMAS</strong><span>El fútbol de los nuestros. Sin publicidad.</span></div>
+    <div class="footer-dates"><span>Fuentes comprobadas: <strong id="sourceChecked">Consultando…</strong></span><span>Último cambio en los datos: <strong id="dataChanged">09/09/2026</strong></span></div>
+    <button class="text-button" data-open-health>Datos, cobertura y fuentes ↗</button>
+    <p class="source-credit">Resultados recopilados de <a href="https://futbolaspalmas.com" target="_blank" rel="noopener noreferrer">Fútbol Las Palmas</a> y <a href="https://www.fiflp.com/" target="_blank" rel="noopener noreferrer">FIFLP</a>.</p>
+    <span id="legacyUpdated" hidden>Última actualización: 09/09/2026</span>
   </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- SCROLL TO TOP -->
   <button id="scrollTop" class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
@@ -101,17 +106,17 @@
   </div>
 
   <!-- DATA FILES -->
-  <script src="./data-benjamin.js?v=20260727e"></script>
-  <script src="./data-prebenjamin.js?v=20260727e"></script>
-  <script src="./data-history.js?v=20260727e"></script>
-  <script src="./data-goleadores.js?v=20260727e"></script>
-  <script src="./data-matchdetail-keys.js?v=20260727e"></script>
-  <script src="./data-shields.js?v=20260727e"></script>
-  <script src="./data-stats.js?v=20260727e"></script>
-  <script src="./data-seasons.js?v=20260727e"></script>
-  <script src="./data-maspalomas-cup-2026.js?v=20260727e"></script>
+  <script src="./data-benjamin.js?v=20260909e"></script>
+  <script src="./data-prebenjamin.js?v=20260909e"></script>
+  <script src="./data-history.js?v=20260909e"></script>
+  <script src="./data-goleadores.js?v=20260909e"></script>
+  <script src="./data-matchdetail-keys.js?v=20260909e"></script>
+  <script src="./data-shields.js?v=20260909e"></script>
+  <script src="./data-stats.js?v=20260909e"></script>
+  <script src="./data-seasons.js?v=20260909e"></script>
+  <script src="./data-maspalomas-cup-2026.js?v=20260909e"></script>
   <!-- APP -->
-  <script type="module" src="./src/app.js?v=20260727e"></script>
+  <script type="module" src="./src/app.js?v=20260909e"></script>
   <script>
     // Standard SW registration: the browser's update cycle detects a
     // byte-different sw.js; skipWaiting+clients.claim in sw.js make the new

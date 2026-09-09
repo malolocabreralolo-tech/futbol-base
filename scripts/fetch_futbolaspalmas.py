@@ -14,6 +14,7 @@ import time
 import urllib.parse
 import urllib.request
 from html.parser import HTMLParser
+from html import unescape
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DELAY = 0.35
@@ -41,6 +42,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from db import (get_connection, init_db, get_or_create_season, get_or_create_category,
                 get_or_create_team, get_or_create_group, DB_PATH)
 from generate_js import _repair_incoherent_points
+from portal_config import active_season
+import source_health
 
 
 # ─── FETCH ─────────────────────────────────────────────────────────────────────
@@ -160,7 +163,13 @@ class MatchParser(HTMLParser):
             self._buf = ""
         elif tag == "tr":
             if self._cells:
-                self.rows.append(self._cells[:])
+                cells = self._cells[:]
+                # September 2026: the history table has six columns and moves
+                # the kick-off time to the end. Normalize to the legacy order.
+                if len(cells) == 6:
+                    date, home, hs, away_score, away, time = cells
+                    cells = [date, time, home, hs, away_score, away, ""]
+                self.rows.append(cells)
 
     def handle_data(self, data):
         if self._in_cell:
@@ -231,10 +240,10 @@ def parse_matches(html):
     return jornada_name, matches
 
 
-def parse_all_matches(html):
+def parse_all_matches(html, include_details=False):
     """
     Returns dict: {"Jornada N": [[date_YYYY-MM-DD, home, away, hs, as], ...]}
-    Only completed matches (with scores) where a 4-digit year can be detected.
+    Includes scheduled and completed matches where a 4-digit year is present.
     Used to build data-history.js with the full jornada history.
     """
     p = MatchParser()
@@ -282,7 +291,10 @@ def parse_all_matches(html):
                 hs = None
                 as_ = None
 
-            jornadas[current_name].append([full_date, home, away, hs, as_])
+            match = [full_date, home, away, hs, as_]
+            if include_details:
+                match.extend([cells[1].strip().removesuffix('h').strip(), cells[6].strip() or None])
+            jornadas[current_name].append(match)
 
     # Remove jornadas with no matches at all
     return {k: v for k, v in jornadas.items() if v}
@@ -310,7 +322,10 @@ def _parse_standings_v2(html):
     pts = [int(x) for x in re.findall(r'text-warning-emphasis[^>]*>\s*(\d+)', html)]
     stats = []
     for row in re.split(r'contenedor__item', html)[1:]:
-        nums = re.findall(r'borderr-start[^>]*>\s*(-?\d+)\s*<', row)
+        # Goal difference now sits inside a coloured span and may carry '+'.
+        values = re.findall(r'borderr-start[^>]*>(.*?)</div>', row, re.DOTALL)
+        texts = [unescape(re.sub(r'<[^>]+>', '', value)).strip() for value in values]
+        nums = [value for value in texts if re.fullmatch(r'[+-]?\d+', value)]
         # primeros 7 = totales [J,G,E,P,GF,GC,DF]; el resto es desglose casa/fuera
         if len(nums) >= 7:
             stats.append([int(x) for x in nums[:7]])
@@ -537,6 +552,16 @@ def parse_top_scorers(html):
 
 # ─── PROCESS FILE (writes to SQLite) ──────────────────────────────────────────
 
+def existing_jornada(conn, group_id, name):
+    """Use the stored round identity: '3' and 'Jornada 3' are the same round."""
+    match = re.fullmatch(r"(?:Jornada\s+)?(\d+)", name or "", re.IGNORECASE)
+    if not match:
+        return name
+    number = str(int(match.group(1)))
+    row = conn.execute("SELECT jornada FROM matches WHERE group_id=? AND jornada IN (?,?) ORDER BY id LIMIT 1",
+                       (group_id, number, "Jornada " + number)).fetchone()
+    return row[0] if row else name
+
 def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
     """
     Read group config from existing JS file, scrape each group,
@@ -577,6 +602,7 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
             html = fetch(url)
         except Exception as e:
             print(f"    ! error: {e}")
+            source_health.record(group_code, url, "error", e)
             continue
         time.sleep(DELAY)
 
@@ -614,11 +640,13 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
                                           standings if clasi_html else [])
         if regression:
             print(f"    ! GRUPO OMITIDO — {regression}")
+            source_health.record(group_code, url, "rejected", regression)
             skipped_standings.append((group_code, regression))
             continue
 
         # ── Partidos + campos (jornada actual) ────────────────────────────
         jornada_name, matches = parse_matches(html)
+        jornada_name = existing_jornada(conn, group_id, jornada_name)
         if jornada_name and matches:
             # Update current_jornada in groups table
             conn.execute(
@@ -651,20 +679,22 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
             print(f"    ! sin partidos")
 
         # ── Historia (todas las jornadas completadas) ─────────────────────
-        all_hist = parse_all_matches(html)
+        all_hist = parse_all_matches(html, include_details=True)
+        all_hist = {existing_jornada(conn, group_id, name): rows for name, rows in all_hist.items()}
+        score_conflicts = 0
         if all_hist:
             hist_count = 0
             for jor_name, jor_matches in all_hist.items():
                 for entry in jor_matches:
-                    full_date, home, away, hs, as_ = entry
+                    full_date, home, away, hs, as_, kickoff, field = entry
                     home_id = get_or_create_team(conn, home)
                     away_id = get_or_create_team(conn, away)
                     conn.execute(
                         """INSERT OR IGNORE INTO matches
                            (group_id, jornada, date, time, home_team_id, away_team_id,
                             home_score, away_score, venue)
-                           VALUES (?,?,?,NULL,?,?,?,?,NULL)""",
-                        (group_id, jor_name, full_date, home_id, away_id, hs, as_),
+                           VALUES (?,?,?,?,?,?,?,?,?)""",
+                        (group_id, jor_name, full_date, kickoff or None, home_id, away_id, hs, as_, field),
                     )
                     # Update score if it was NULL before
                     if hs is not None:
@@ -674,6 +704,16 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
                                AND home_score IS NULL""",
                             (hs, as_, full_date, group_id, jor_name, home_id, away_id),
                         )
+                    conn.execute(
+                        """UPDATE matches SET date=?, time=COALESCE(NULLIF(?,''),time),
+                           venue=COALESCE(NULLIF(?,''),venue)
+                           WHERE group_id=? AND jornada=? AND home_team_id=? AND away_team_id=?""",
+                        (full_date, kickoff, field, group_id, jor_name, home_id, away_id),
+                    )
+                    stored = conn.execute("SELECT home_score,away_score FROM matches WHERE group_id=? AND jornada=? AND home_team_id=? AND away_team_id=?",
+                                          (group_id, jor_name, home_id, away_id)).fetchone()
+                    if hs is not None and stored and stored[0] is not None and tuple(stored) != (hs, as_):
+                        score_conflicts += 1
                     hist_count += 1
             print(f"    Historia: {len(all_hist)} jornadas, {hist_count} partidos")
 
@@ -701,7 +741,10 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
             shields = parse_shields(clasi_html)
             if shields:
                 for team_name, shield_file in shields.items():
-                    get_or_create_team(conn, team_name, shield_filename=shield_file)
+                    # The source now serves shirt thumbnails as well as crests.
+                    # Never replace an available local crest with a missing asset.
+                    if os.path.isfile(os.path.join(PROJECT_ROOT, "escudos", shield_file)) and 'camisa' not in shield_file:
+                        get_or_create_team(conn, team_name, shield_filename=shield_file)
                 print(f"    Escudos: {len(shields)} encontrados")
 
         # ── Goles por partido (incremental) ───────────────────────────────
@@ -715,7 +758,7 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
                     for entry in jor_matches:
                         if entry[3] is None:
                             continue  # partido sin resultado
-                        full_date, home_t, away_t, hs, as_ = entry
+                        full_date, home_t, away_t, hs, as_ = entry[:5]
                         home_id = get_or_create_team(conn, home_t)
                         away_id = get_or_create_team(conn, away_t)
 
@@ -787,6 +830,9 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
 
         # Commit after each group
         conn.commit()
+        source_health.record(group_code, url, "rejected" if score_conflicts else "ok",
+                            f"{score_conflicts} marcadores difieren de la fuente; se conservan los resultados registrados, pendientes de contraste."
+                            if score_conflicts else f"{len(standings)} equipos; {sum(len(ms) for ms in all_hist.values())} encuentros disponibles")
 
     print(f"  -> {updated_matches} partidos, {updated_standings} clasificaciones actualizadas.\n")
     if skipped_standings:
@@ -813,26 +859,21 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
 def main():
     conn = get_connection()
     init_db(conn)
-    season_id = get_or_create_season(conn, "2025-2026", 2025, 2026, is_current=True)
+    season_id, season_name = active_season(conn)
+    print(f"Temporada verificada: {season_name}")
 
-    for js_path, var_name, stats_var in FILES:
-        category_name = var_name  # "BENJAMIN" or "PREBENJAMIN"
-        category_id = get_or_create_category(conn, category_name)
-
-        print(f"\n{'='*50}")
-        print(f"{os.path.basename(js_path)}")
-        print(f"{'='*50}")
-        process_file(conn, js_path, var_name, stats_var, season_id, category_id)
-
-    conn.commit()
-    conn.close()
-
-    # Generate JS files from DB
-    print(f"\n{'='*50}")
-    print("Generating JS files from SQLite")
-    print(f"{'='*50}")
-    from generate_js import main as generate_main
-    generate_main()
+    source_health.begin(season_name)
+    try:
+        for js_path, var_name, stats_var in FILES:
+            category_id = get_or_create_category(conn, var_name)
+            print(f"\n{os.path.basename(js_path)}")
+            process_file(conn, js_path, var_name, stats_var, season_id, category_id)
+        conn.commit()
+        from generate_js import main as generate_main
+        generate_main()
+    finally:
+        conn.close()
+        source_health.finish()
 
     print("\nTerminado.")
 

@@ -1,9 +1,24 @@
 {
  "groups": {
   "2022-2023|BENJAMIN|LZ12": {
-   "after": 160,
+   "after": 0,
    "before": 318,
    "changes": [
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "FUTBOL P.D.C. 2016 A, C.D. \"A\"",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Teguise B",
+     "jornada": "1",
+     "match_id": 926137,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
     {
      "after": [
       10,
@@ -36,6 +51,36 @@
     },
     {
      "after": [
+      6,
+      1
+     ],
+     "away": "Teguise B",
+     "before": [
+      6,
+      0
+     ],
+     "home": "INTERNACIONAL PH B \"B\"",
+     "jornada": "2",
+     "match_id": 926143,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "FUTBOL P.D.C. 2016 A, C.D. \"A\"",
+     "before": [
+      0,
+      1
+     ],
+     "home": "SPORTING TIAS C, C.F. \"C\"",
+     "jornada": "3",
+     "match_id": 926146,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
       3,
       2
      ],
@@ -51,6 +96,51 @@
     },
     {
      "after": [
+      3,
+      2
+     ],
+     "away": "SPORTING TIAS C, C.F. \"C\"",
+     "before": [
+      3,
+      0
+     ],
+     "home": "INTERNACIONAL PH B \"B\"",
+     "jornada": "4",
+     "match_id": 926152,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      20,
+      1
+     ],
+     "away": "FUTBOL P.D.C. 2016 A, C.D. \"A\"",
+     "before": [
+      0,
+      1
+     ],
+     "home": "JUVENTUD MARITIMA A, C.D. \"A\"",
+     "jornada": "5",
+     "match_id": 926156,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      4,
+      2
+     ],
+     "away": "INTERNACIONAL PH B \"B\"",
+     "before": [
+      4,
+      1
+     ],
+     "home": "Tahiche C",
+     "jornada": "5",
+     "match_id": 926158,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
       19,
       1
      ],
@@ -62,6 +152,21 @@
      "home": "JUVENTUD MARITIMA A, C.D. \"A\"",
      "jornada": "7",
      "match_id": 926169,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      1,
+      1
+     ],
+     "away": "Lomo C",
+     "before": [
+      1,
+      0
+     ],
+     "home": "INTERNACIONAL PH B \"B\"",
+     "jornada": "8",
+     "match_id": 926172,
      "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
     },
     {
@@ -156,6 +261,36 @@
     },
     {
      "after": [
+      1,
+      5
+     ],
+     "away": "Maciot Sport",
+     "before": [
+      1,
+      3
+     ],
+     "home": "INTERNACIONAL PH B \"B\"",
+     "jornada": "14",
+     "match_id": 926203,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      12,
+      1
+     ],
+     "away": "FUTBOL P.D.C. 2016 A, C.D. \"A\"",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Tahiche C",
+     "jornada": "15",
+     "match_id": 926206,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
       3,
       4
      ],
@@ -194,16 +329,62 @@
       0,
       1
      ],
+     "home": "FUTBOL P.D.C. 2016 A, C.D. \"A\"",
+     "jornada": "16",
+     "match_id": 926215,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      10,
+      2
+     ],
+     "away": "FUTBOL P.D.C. 2016 A, C.D. \"A\"",
+     "before": [
+      1,
+      2
+     ],
+     "home": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+     "jornada": "17",
+     "match_id": 926217,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      0,
+      13
+     ],
+     "away": "JUVENTUD MARITIMA A, C.D. \"A\"",
+     "before": [
+      0,
+      1
+     ],
      "home": "Teguise B",
      "jornada": "18",
      "match_id": 926223,
      "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      0,
+      3
+     ],
+     "away": "Tinajo B",
+     "before": [
+      0,
+      2
+     ],
+     "home": "INTERNACIONAL PH B \"B\"",
+     "jornada": "20",
+     "match_id": 926232,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2023-2024|BENJAMIN|LZ11": {
-   "after": 110,
-   "before": 350,
+   "after": 0,
+   "before": 330,
    "changes": [
     {
      "after": [
@@ -248,6 +429,21 @@
      "home": "CD Adassa",
      "jornada": "2",
      "match_id": 924876,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      14,
+      0
+     ],
+     "away": "INTERNACIONAL PH D \"DB\"",
+     "before": [
+      4,
+      0
+     ],
+     "home": "Lanzarote B",
+     "jornada": "2",
+     "match_id": 924877,
      "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
     },
     {
@@ -297,6 +493,36 @@
     },
     {
      "after": [
+      4,
+      0
+     ],
+     "away": "INTERNACIONAL PH D \"DB\"",
+     "before": [
+      3,
+      0
+     ],
+     "home": "FUTBOL P.D.C. 2016, C.D.",
+     "jornada": "8",
+     "match_id": 924917,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      8,
+      0
+     ],
+     "away": "FUTBOL P.D.C. 2016, C.D.",
+     "before": [
+      0,
+      0
+     ],
+     "home": "San Bartolomé C",
+     "jornada": "9",
+     "match_id": 924922,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
       3,
       11
      ],
@@ -308,6 +534,21 @@
      "home": "CD Adassa",
      "jornada": "9",
      "match_id": 924923,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      5,
+      1
+     ],
+     "away": "INTERNACIONAL PH D \"DB\"",
+     "before": [
+      5,
+      0
+     ],
+     "home": "Lomo C",
+     "jornada": "9",
+     "match_id": 924926,
      "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
     },
     {
@@ -343,6 +584,21 @@
     {
      "after": [
       1,
+      1
+     ],
+     "away": "FUTBOL P.D.C. 2016, C.D.",
+     "before": [
+      1,
+      0
+     ],
+     "home": "ORIENTACION MARITIMA C, C.D \"C\"",
+     "jornada": "11",
+     "match_id": 924934,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      1,
       8
      ],
      "away": "San Bartolomé C",
@@ -372,6 +628,21 @@
     },
     {
      "after": [
+      1,
+      3
+     ],
+     "away": "FUTBOL P.D.C. 2016, C.D.",
+     "before": [
+      1,
+      2
+     ],
+     "home": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+     "jornada": "16",
+     "match_id": 924970,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
       3,
       1
      ],
@@ -387,17 +658,17 @@
     },
     {
      "after": [
-      3,
-      0
+      1,
+      2
      ],
-     "away": "ORIENTACION MARITIMA C, C.D \"C\"",
+     "away": "Tinajo B",
      "before": [
       0,
-      0
+      2
      ],
-     "home": "Sporting Tías B",
-     "jornada": "16",
-     "match_id": 924972,
+     "home": "FUTBOL P.D.C. 2016, C.D.",
+     "jornada": "17",
+     "match_id": 924977,
      "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
     },
     {
@@ -477,17 +748,32 @@
     },
     {
      "after": [
-      0,
-      14
+      2,
+      5
      ],
-     "away": "Lanzarote B",
+     "away": "San Bartolomé C",
      "before": [
-      0,
+      2,
       3
      ],
-     "home": "Tahiche B",
+     "home": "FUTBOL P.D.C. 2016, C.D.",
      "jornada": "22",
-     "match_id": 925014,
+     "match_id": 925015,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      15,
+      1
+     ],
+     "away": "INTERNACIONAL PH D \"DB\"",
+     "before": [
+      7,
+      1
+     ],
+     "home": "San Bartolomé C",
+     "jornada": "23",
+     "match_id": 925019,
      "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
     },
     {
@@ -507,6 +793,21 @@
     },
     {
      "after": [
+      6,
+      1
+     ],
+     "away": "FUTBOL P.D.C. 2016, C.D.",
+     "before": [
+      3,
+      1
+     ],
+     "home": "CD Tite",
+     "jornada": "23",
+     "match_id": 925023,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
       4,
       1
      ],
@@ -518,6 +819,21 @@
      "home": "PALMEIROS DE COSTA T B., U.D. \"B\"",
      "jornada": "24",
      "match_id": 925025,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      0,
+      11
+     ],
+     "away": "CD Tite",
+     "before": [
+      0,
+      1
+     ],
+     "home": "INTERNACIONAL PH D \"DB\"",
+     "jornada": "24",
+     "match_id": 925030,
      "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
     },
     {
@@ -537,6 +853,21 @@
     },
     {
      "after": [
+      1,
+      11
+     ],
+     "away": "Sporting Tías B",
+     "before": [
+      1,
+      1
+     ],
+     "home": "INTERNACIONAL PH D \"DB\"",
+     "jornada": "26",
+     "match_id": 925044,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
       4,
       1
      ],
@@ -548,6 +879,53 @@
      "home": "ESTEFUT, C.D.",
      "jornada": "26",
      "match_id": 925045,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      0,
+      13
+     ],
+     "away": "Lanzarote B",
+     "before": [
+      0,
+      3
+     ],
+     "home": "Tahiche B",
+     "jornada": "22",
+     "match_id": 925014,
+     "source": "corrección manual: la clasificación oficial cuadra a los dos equipos con 0-13; el 0-3 de FIFLP es un 13 sin el 1 y el 0-14 de la captura de julio de 2024 es una errata"
+    }
+   ],
+   "discarded": [
+    {
+     "away": "ORIENTACION MARITIMA C, C.D \"C\"",
+     "before": [
+      0,
+      0
+     ],
+     "home": "Sporting Tías B",
+     "jornada": "16",
+     "match_id": 924972,
+     "proposed": [
+      3,
+      0
+     ],
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "away": "ESTEFUT, C.D.",
+     "before": [
+      0,
+      4
+     ],
+     "home": "INTERNACIONAL PH D \"DB\"",
+     "jornada": "19",
+     "match_id": 924993,
+     "proposed": [
+      0,
+      3
+     ],
      "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
     }
    ]
@@ -781,10 +1159,11 @@
      "match_id": 931981,
      "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2023-2024|BENJAMIN|SF13": {
-   "after": 38,
+   "after": 0,
    "before": 48,
    "changes": [
     {
@@ -800,6 +1179,36 @@
      "home": "Futboltec",
      "jornada": "3",
      "match_id": 932860,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20240519025855"
+    },
+    {
+     "after": [
+      1,
+      10
+     ],
+     "away": "VETERANOS DEL PILA SAGRADO CORAZON C, C.D. \"C\"",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Futboltec",
+     "jornada": "5",
+     "match_id": 932868,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20240519025855"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "Unión Marina",
+     "before": [
+      0,
+      1
+     ],
+     "home": "VETERANOS DEL PILA SAGRADO CORAZON C, C.D. \"C\"",
+     "jornada": "6",
+     "match_id": 932871,
      "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20240519025855"
     },
     {
@@ -832,7 +1241,8 @@
      "match_id": 932906,
      "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20240519025855"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2023-2024|BENJAMIN|SF14": {
    "after": 0,
@@ -958,7 +1368,8 @@
      "match_id": 932962,
      "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|BENJAMIN|A1": {
    "after": 0,
@@ -1039,10 +1450,11 @@
      "match_id": 919318,
      "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20250712230144"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|BENJAMIN|E1": {
-   "after": 2,
+   "after": 0,
    "before": 78,
    "changes": [
     {
@@ -1152,21 +1564,6 @@
     },
     {
      "after": [
-      8,
-      5
-     ],
-     "away": "Lomo Blanco B",
-     "before": [
-      9,
-      5
-     ],
-     "home": "Corazón Mª B",
-     "jornada": "11",
-     "match_id": 920211,
-     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
-    },
-    {
-     "after": [
       11,
       3
      ],
@@ -1180,10 +1577,27 @@
      "match_id": 920217,
      "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
     }
+   ],
+   "discarded": [
+    {
+     "away": "Lomo Blanco B",
+     "before": [
+      9,
+      5
+     ],
+     "home": "Corazón Mª B",
+     "jornada": "11",
+     "match_id": 920211,
+     "proposed": [
+      8,
+      5
+     ],
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    }
    ]
   },
   "2024-2025|BENJAMIN|E2": {
-   "after": 28,
+   "after": 2,
    "before": 32,
    "changes": [
     {
@@ -1233,9 +1647,37 @@
     },
     {
      "after": [
-      7,
-      2
+      2,
+      1
      ],
+     "away": "Alcotán Can.",
+     "before": [
+      2,
+      0
+     ],
+     "home": "ATLETICO FOMENTO, CLUB \"B\"",
+     "jornada": "3",
+     "match_id": 920234,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20250614053043"
+    },
+    {
+     "after": [
+      10,
+      3
+     ],
+     "away": "ATLETICO FOMENTO, CLUB \"B\"",
+     "before": [
+      1,
+      3
+     ],
+     "home": "Las Coloradas",
+     "jornada": "7",
+     "match_id": 920249,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20250614053043"
+    }
+   ],
+   "discarded": [
+    {
      "away": "Victoria C",
      "before": [
       8,
@@ -1244,6 +1686,10 @@
      "home": "Muelle Grande",
      "jornada": "6",
      "match_id": 920245,
+     "proposed": [
+      7,
+      2
+     ],
      "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20250614053043"
     }
    ]
@@ -1387,7 +1833,8 @@
      "match_id": 920324,
      "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|BENJAMIN|P12": {
    "after": 0,
@@ -1588,10 +2035,11 @@
      "match_id": 923984,
      "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|BENJAMIN|P13": {
-   "after": 44,
+   "after": 0,
    "before": 258,
    "changes": [
     {
@@ -1671,6 +2119,21 @@
     },
     {
      "after": [
+      5,
+      1
+     ],
+     "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D. \"A\"",
+     "before": [
+      5,
+      0
+     ],
+     "home": "Balos",
+     "jornada": "4",
+     "match_id": 924003,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
       15,
       1
      ],
@@ -1682,6 +2145,21 @@
      "home": "Mas. Training",
      "jornada": "4",
      "match_id": 924005,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      14,
+      1
+     ],
+     "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D. \"A\"",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Mas. Training",
+     "jornada": "6",
+     "match_id": 924013,
      "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
     },
     {
@@ -1743,8 +2221,24 @@
      "jornada": "8",
      "match_id": 924025,
      "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      8,
+      0
+     ],
+     "away": "Tablero B",
+     "before": [
+      1,
+      0
+     ],
+     "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D. \"A\"",
+     "jornada": "9",
+     "match_id": 924030,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|BENJAMIN|P14": {
    "after": 20,
@@ -1855,10 +2349,11 @@
      "match_id": 924065,
      "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|BENJAMIN|P2": {
-   "after": 26,
+   "after": 6,
    "before": 234,
    "changes": [
     {
@@ -1904,6 +2399,21 @@
      "home": "SANTIDAD BANOT, C.D.",
      "jornada": "3",
      "match_id": 923820,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      17,
+      0
+     ],
+     "away": "ROQUE AMAGRO-CLARAVISION, C.D.",
+     "before": [
+      7,
+      0
+     ],
+     "home": "BAÑADEROS, C.D. UNION COSTA \"A\"",
+     "jornada": "4",
+     "match_id": 923821,
      "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
     },
     {
@@ -2056,10 +2566,11 @@
      "match_id": 923849,
      "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|BENJAMIN|P5": {
-   "after": 8,
+   "after": 6,
    "before": 222,
    "changes": [
     {
@@ -2211,12 +2722,10 @@
      "jornada": "8",
      "match_id": 923887,
      "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
-    },
+    }
+   ],
+   "discarded": [
     {
-     "after": [
-      14,
-      0
-     ],
      "away": "DANIEL CARNEVALI, C.D. \"A\"",
      "before": [
       14,
@@ -2225,6 +2734,10 @@
      "home": "AD Huracán",
      "jornada": "9",
      "match_id": 923892,
+     "proposed": [
+      14,
+      0
+     ],
      "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
     }
    ]
@@ -2773,7 +3286,8 @@
      "match_id": 924580,
      "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|PREBENJAMIN|PGC2": {
    "after": 4,
@@ -3079,10 +3593,11 @@
      "match_id": 924200,
      "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2024-2025|PREBENJAMIN|PGC3": {
-   "after": 16,
+   "after": 0,
    "before": 218,
    "changes": [
     {
@@ -3128,21 +3643,6 @@
      "home": "La Garita",
      "jornada": "5",
      "match_id": 924237,
-     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
-    },
-    {
-     "after": [
-      8,
-      4
-     ],
-     "away": "Las Longueras",
-     "before": [
-      4,
-      8
-     ],
-     "home": "CD Ingenio",
-     "jornada": "6",
-     "match_id": 924239,
      "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
     },
     {
@@ -3355,10 +3855,27 @@
      "match_id": 924339,
      "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
     }
+   ],
+   "discarded": [
+    {
+     "away": "Las Longueras",
+     "before": [
+      4,
+      8
+     ],
+     "home": "CD Ingenio",
+     "jornada": "6",
+     "match_id": 924239,
+     "proposed": [
+      8,
+      4
+     ],
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    }
    ]
   },
   "2024-2025|PREBENJAMIN|PGC4": {
-   "after": 30,
+   "after": 28,
    "before": 198,
    "changes": [
     {
@@ -3483,21 +4000,6 @@
     },
     {
      "after": [
-      4,
-      0
-     ],
-     "away": "Arguineguín B",
-     "before": [
-      5,
-      0
-     ],
-     "home": "Maspalomas",
-     "jornada": "16",
-     "match_id": 924419,
-     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
-    },
-    {
-     "after": [
       10,
       1
      ],
@@ -3586,6 +4088,23 @@
      "match_id": 924434,
      "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
     }
+   ],
+   "discarded": [
+    {
+     "away": "Arguineguín B",
+     "before": [
+      5,
+      0
+     ],
+     "home": "Maspalomas",
+     "jornada": "16",
+     "match_id": 924419,
+     "proposed": [
+      4,
+      0
+     ],
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    }
    ]
   },
   "2025-2026|BENJAMIN|A2": {
@@ -3622,7 +4141,8 @@
      "match_id": 287,
      "source": "https://futbolaspalmas.com/benjamin-segunda-fase-dos/@20260315073212"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2025-2026|BENJAMIN|A4": {
    "after": 32,
@@ -3868,7 +4388,8 @@
      "match_id": 933058,
      "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2025-2026|BENJAMIN|B4": {
    "after": 4,
@@ -4324,7 +4845,8 @@
      "match_id": 933171,
      "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2025-2026|BENJAMIN|C1": {
    "after": 2,
@@ -4360,7 +4882,8 @@
      "match_id": 928,
      "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-uno/@20260420161411"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2025-2026|BENJAMIN|C3": {
    "after": 0,
@@ -4411,7 +4934,8 @@
      "match_id": 1140,
      "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-tres/@20260510035236"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2025-2026|BENJAMIN|C4": {
    "after": 0,
@@ -4432,7 +4956,8 @@
      "match_id": 1225,
      "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-cuatro/@20260510023944"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2025-2026|BENJAMIN|FO": {
    "after": 0,
@@ -4453,7 +4978,8 @@
      "match_id": 1612,
      "source": "https://futbolaspalmas.com/benjamin-segunda-grupo-uno-fuerteventura@20260611040024"
     }
-   ]
+   ],
+   "discarded": []
   },
   "2025-2026|BENJAMIN|FP": {
    "after": 0,
@@ -4519,7 +5045,8 @@
      "match_id": 1786,
      "source": "https://futbolaspalmas.com/benjamin-segunda-grupo-dos-fuerteventura@20260510020147"
     }
-   ]
+   ],
+   "discarded": []
   }
  },
  "version": 1

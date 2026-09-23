@@ -9,10 +9,17 @@ oficial. Para cada grupo cuyo calendario no cuadra con su tabla
    capturas locales `wayback_*_raw.json`) y sus capturas de Wayback dentro de
    la temporada;
 2. lee su calendario con el mismo parser que el bot y empareja los equipos con
-   los de la base por nombre y, si no, por club (fiflp_names.match_teams);
-3. propone los marcadores que difieren y **solo los aplica si el desvío del
-   grupo frente a la clasificación oficial baja**. Nunca toca clasificaciones
-   ni crea o borra partidos.
+   los de la base por nombre, por club (fiflp_names.match_teams) y, lo que
+   quede suelto, por calendario (mismos rivales en las mismas jornadas);
+3. propone los marcadores que difieren en la misma pareja y jornada (nunca
+   rellena un partido sin marcador), **descarta uno a uno los que la
+   clasificación oficial contradice** (la captura también tiene erratas) y
+   solo aplica el grupo si su desvío baja. Nunca toca clasificaciones ni crea
+   o borra partidos.
+
+Las correcciones manuales de scripts/score_corrections.json (marcadores que
+fija la clasificación oficial y que ninguna captura trae bien) se aplican
+antes y ninguna captura las pisa.
 
 Uso:
     python3 scripts/repair_scores_wayback.py --season 2025-2026 --fetch   # descarga a raw
@@ -40,6 +47,7 @@ from score_deviation import baseline_key, group_deviation, team_deviations  # no
 
 RAW_PATH = ROOT / "scripts" / "wayback_scores_raw.json"
 REPORT_PATH = ROOT / "scripts" / "wayback_scores_repairs.json"
+CORRECTIONS_PATH = ROOT / "scripts" / "score_corrections.json"
 CDX = "https://web.archive.org/cdx/search/cdx"
 # Las URLs de futbolaspalmas se reutilizan entre temporadas y hasta dentro de
 # una misma temporada ('1benjaminN' se renumeró): una captura solo vale si su
@@ -47,6 +55,11 @@ CDX = "https://web.archive.org/cdx/search/cdx"
 MIN_OVERLAP = 0.8
 MAX_SNAPSHOTS_PER_URL = 4
 KEEP_PER_URL = 2
+# Un nombre que el parecido no empareja se empareja por calendario si al menos
+# el 80 % de sus partidos (y no menos de 3) coincide con los de un único equipo
+# libre: mismo rival ya emparejado, misma jornada y mismo campo.
+MIN_SCHEDULE_FIXTURES = 3
+MIN_SCHEDULE_SHARE = 0.8
 
 
 def http_get(url, tries=3):
@@ -118,13 +131,70 @@ def _round_number(label):
     return int(m.group(1)) if m else None
 
 
-def plan_group(conn, group_id, snapshots):
+def pair_by_schedule(partidos, jornadas, mapping, sueltos, teams):
+    """{nombre suelto: team_id} por calendario (ver MIN_SCHEDULE_SHARE).
+
+    «Futbol2016» es «FUTBOL P.D.C. 2016, C.D.» aunque no se parezcan: juega
+    contra los mismos rivales en las mismas jornadas y en el mismo campo."""
+    usados = set(mapping.values())
+    libres = [t for t in teams if t not in usados]
+    en_base = {}
+    for _, jornada, home, away, _, _ in partidos:
+        n = _round_number(jornada)
+        en_base.setdefault(home, set()).add((n, away, True))
+        en_base.setdefault(away, set()).add((n, home, False))
+    en_captura = {}
+    for label, rows in jornadas.items():
+        n = _round_number(label)
+        for row in rows:
+            home, away = row[1], row[2]
+            if home in sueltos and away in mapping:
+                en_captura.setdefault(home, set()).add((n, mapping[away], True))
+            if away in sueltos and home in mapping:
+                en_captura.setdefault(away, set()).add((n, mapping[home], False))
+    out = {}
+    for name in sueltos:
+        fixtures = en_captura.get(name, set())
+        if len(fixtures) < MIN_SCHEDULE_FIXTURES:
+            continue
+        scores = sorted(((len(fixtures & en_base.get(t, set())) / len(fixtures), t)
+                         for t in libres if t not in out.values()), reverse=True)
+        if scores and scores[0][0] >= MIN_SCHEDULE_SHARE and (len(scores) == 1 or scores[1][0] < scores[0][0]):
+            out[name] = scores[0][1]
+    return out
+
+
+def discard_contradicted(conn, group_id, overrides):
+    """(cambios que quedan, [match_id descartados, en orden]).
+
+    La captura también tiene erratas, y un grupo que mejora en conjunto puede
+    arrastrar una (un 4-8 que pasa a 8-4). Se quita, uno a uno, el cambio cuya
+    retirada más baja el desvío, hasta que ninguna retirada lo baje."""
+    kept = dict(overrides)
+    discarded = []
+    while kept:
+        base = sum(team_deviations(conn, group_id, kept).values())
+        best = None
+        for mid in sorted(kept):
+            dev = sum(team_deviations(conn, group_id, {k: v for k, v in kept.items() if k != mid}).values())
+            if dev < base and (best is None or dev < best[1]):
+                best = (mid, dev)
+        if best is None:
+            break
+        discarded.append(best[0])
+        del kept[best[0]]
+    return kept, discarded
+
+
+def plan_group(conn, group_id, snapshots, locked=()):
     """Plan de reparación de un grupo a partir de sus capturas.
 
     Las capturas se aplican de la más antigua a la más reciente: la reciente
-    manda. Solo cuentan filas fechadas dentro de la temporada del grupo. Se
-    acepta solo si el desvío de los equipos con el calendario completo en ambos
-    estados baja estrictamente."""
+    manda. Solo cuentan filas fechadas dentro de la temporada del grupo y en la
+    misma jornada que el partido de la base; nunca se rellena un partido sin
+    marcador ni se toca uno de `locked` (correcciones manuales). Los cambios
+    que la clasificación contradice se descartan uno a uno, y el grupo se
+    acepta solo si el desvío de los equipos completos baja estrictamente."""
     teams = group_teams(conn, group_id)
     (season,) = conn.execute("SELECT s.name FROM groups g JOIN seasons s ON s.id = g.season_id WHERE g.id=?",
                              (group_id,)).fetchone()
@@ -135,12 +205,17 @@ def plan_group(conn, group_id, snapshots):
     por_pareja = {}
     for mid, jornada, home, away, hs, as_ in partidos:
         por_pareja.setdefault((home, away), []).append((mid, jornada, hs, as_))
-    propuestos, origen, sin_pareja = {}, {}, set()
+    propuestos, origen, sin_pareja, rellenos = {}, {}, set(), set()
     for snap in sorted(snapshots, key=lambda s: s["timestamp"]):
         jornadas = snap["jornadas"]
         mapping, sueltos = map_names(_snapshot_names(jornadas), teams)
+        if sueltos:
+            extra = pair_by_schedule(partidos, jornadas, mapping, sueltos, teams)
+            mapping.update(extra)
+            sueltos = [n for n in sueltos if n not in extra]
         sin_pareja.update(sueltos)
         for label, rows in jornadas.items():
+            n = _round_number(label)
             for row in rows:
                 hs, as_ = row[3], row[4]
                 home, away = mapping.get(row[1]), mapping.get(row[2])
@@ -148,25 +223,36 @@ def plan_group(conn, group_id, snapshots):
                     continue
                 if not (row[0] and desde <= row[0] <= hasta):
                     continue  # fila de otra temporada (captura de agosto con la anterior)
-                candidatos = por_pareja.get((home, away), [])
-                if len(candidatos) > 1:
-                    n = _round_number(label)
-                    candidatos = [c for c in candidatos if _round_number(c[1]) == n]
+                # Misma pareja y misma jornada, aunque la pareja sea única: una
+                # captura de otro grupo o de una copa puede repetir la pareja.
+                candidatos = [c for c in por_pareja.get((home, away), [])
+                              if n is not None and _round_number(c[1]) == n]
                 if len(candidatos) != 1:
                     continue
-                mid = candidatos[0][0]
+                mid, _, base_hs, base_as = candidatos[0]
+                if mid in locked:
+                    continue
+                if base_hs is None or base_as is None:
+                    rellenos.add(mid)
+                    continue
                 propuestos[mid] = (hs, as_)
                 origen[mid] = f"{snap['url']}@{snap['timestamp']}"
     actual = {mid: (hs, as_) for mid, _, _, _, hs, as_ in partidos}
-    overrides = {mid: v for mid, v in propuestos.items() if actual.get(mid) != v}
+    propuestas = {mid: v for mid, v in propuestos.items() if actual.get(mid) != v}
+    overrides, descartados = discard_contradicted(conn, group_id, propuestas)
     before, after = _common_deviation(conn, group_id, overrides)
+    cobertura = group_deviation(conn, group_id)
     info = {mid: (j, h, a) for mid, j, h, a, _, _ in partidos}
-    changes = [{"match_id": mid, "jornada": info[mid][0], "home": teams[info[mid][1]],
-                "away": teams[info[mid][2]], "before": list(actual[mid]), "after": list(v),
-                "source": origen[mid]} for mid, v in sorted(overrides.items())]
-    return {"group_id": group_id, "overrides": overrides, "changes": changes,
-            "before": before, "after": after, "accepted": bool(overrides) and after < before,
-            "unmatched": sorted(sin_pareja)}
+
+    def fila(mid):
+        return {"match_id": mid, "jornada": info[mid][0], "home": teams[info[mid][1]],
+                "away": teams[info[mid][2]], "before": list(actual[mid])}
+    changes = [dict(fila(mid), after=list(v), source=origen[mid]) for mid, v in sorted(overrides.items())]
+    discarded = [dict(fila(mid), proposed=list(propuestas[mid]), source=origen[mid]) for mid in descartados]
+    return {"group_id": group_id, "overrides": overrides, "changes": changes, "discarded": discarded,
+            "skipped_fills": len(rellenos), "before": before, "after": after,
+            "accepted": bool(overrides) and after < before,
+            "complete": cobertura["complete"], "teams": cobertura["teams"], "unmatched": sorted(sin_pareja)}
 
 
 def _common_deviation(conn, group_id, overrides):
@@ -182,7 +268,8 @@ def _common_deviation(conn, group_id, overrides):
 
 
 def apply_plans(conn, plans):
-    """Escribe los marcadores de los planes aceptados. Devuelve cuántos partidos cambian."""
+    """Escribe (sin confirmar) los marcadores de los planes aceptados. Devuelve
+    cuántos partidos cambian; confirma commit_and_checkpoint."""
     n = 0
     for plan in plans:
         if not plan["accepted"]:
@@ -190,11 +277,66 @@ def apply_plans(conn, plans):
         for mid, (hs, as_) in plan["overrides"].items():
             conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (hs, as_, mid))
             n += 1
-    conn.commit()
-    # La base va en modo WAL: si otro proceso la tiene abierta, los cambios se
-    # quedarían en futbolbase.db-wal (ignorado por git) y no llegarían al commit.
-    conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
     return n
+
+
+def commit_and_checkpoint(conn):
+    """Confirma y vuelca el WAL al fichero de la base.
+
+    La base va en modo WAL: si otra conexión la tiene abierta, los cambios se
+    quedan en futbolbase.db-wal, que git no sube, y el commit llevaría la base
+    sin ellos. Por eso un volcado incompleto es un error."""
+    conn.commit()
+    busy, log, done = conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
+    if busy or log != done:
+        raise RuntimeError(f"el volcado del wal no terminó (busy={busy}, páginas {done} de {log}): otra "
+                           "conexión tiene futbolbase.db abierta; ciérrala y repite con --write")
+
+
+# ─── Correcciones manuales ───────────────────────────────────────────────────
+
+def load_corrections(path=CORRECTIONS_PATH):
+    try:
+        return json.loads(Path(path).read_text())["corrections"]
+    except FileNotFoundError:
+        return []
+
+
+def _correction_match(conn, season, c):
+    rows = conn.execute("""
+        SELECT m.id, m.jornada, m.home_score, m.away_score FROM matches m
+        JOIN groups g ON g.id = m.group_id JOIN seasons s ON s.id = g.season_id
+        JOIN categories cat ON cat.id = g.category_id
+        JOIN teams th ON th.id = m.home_team_id JOIN teams ta ON ta.id = m.away_team_id
+        WHERE s.name=? AND cat.name=? AND g.code=? AND th.name=? AND ta.name=?""",
+                        (season, c["category"], c["group"], c["home"], c["away"])).fetchall()
+    rows = [r for r in rows if _round_number(r[1]) == _round_number(c["jornada"])]
+    if len(rows) != 1:
+        raise ValueError(f"la corrección de {c['group']} {season}, jornada {c['jornada']} "
+                         f"({c['home']} - {c['away']}) no señala un único partido")
+    return rows[0]
+
+
+def locked_matches(conn, season, corrections):
+    """match_id de las correcciones de la temporada: ninguna captura los pisa."""
+    return {_correction_match(conn, season, c)[0] for c in corrections if c["season"] == season}
+
+
+def apply_corrections(conn, season, corrections):
+    """Aplica (sin confirmar) las correcciones de la temporada que aún no están.
+    Devuelve los cambios hechos, con la clave del grupo."""
+    hechos = []
+    for c in corrections:
+        if c["season"] != season:
+            continue
+        mid, jornada, hs, as_ = _correction_match(conn, season, c)
+        if [hs, as_] == list(c["score"]):
+            continue
+        conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (*c["score"], mid))
+        hechos.append({"key": baseline_key(season, c["category"], c["group"]), "match_id": mid,
+                       "jornada": jornada, "home": c["home"], "away": c["away"], "before": [hs, as_],
+                       "after": list(c["score"]), "source": f"corrección manual: {c['reason']}"})
+    return hechos
 
 
 # ─── Descarga (red) ──────────────────────────────────────────────────────────
@@ -261,13 +403,32 @@ def fetch_pool(urls, season, get=http_get, pause=1.5):
     return pool
 
 
+def url_category(url):
+    """Categoría que nombra la dirección de futbolaspalmas, o None."""
+    slug = url.lower()
+    if "prebenjamin" in slug:
+        return "PREBENJAMIN"
+    return "BENJAMIN" if "benjamin" in slug else None
+
+
+def squad_overlap(snapshot_names, names):
+    """Solape de dos plantillas, 0..1, sobre la MAYOR: una copa de 6 equipos
+    no puede pasar por su liga de 13 (sobre la menor daría 1.0)."""
+    if not snapshot_names or not names:
+        return 0.0
+    return len(match_teams(snapshot_names, names)) / max(len(snapshot_names), len(names))
+
+
 def assign_snapshots(conn, group_ids, pool, keep=KEEP_PER_URL):
-    """{group_id: capturas cuya plantilla casa con la del grupo, recientes primero}."""
+    """{group_id: capturas de su categoría cuya plantilla casa con la del grupo, recientes primero}."""
     out = {}
     for gid in group_ids:
         names = list(group_teams(conn, gid).values())
+        (category,) = conn.execute("SELECT c.name FROM groups g JOIN categories c ON c.id = g.category_id "
+                                   "WHERE g.id=?", (gid,)).fetchone()
         buenas = [s for snaps in pool.values() for s in snaps
-                  if group_overlap(_snapshot_names(s["jornadas"]), names) >= MIN_OVERLAP]
+                  if url_category(s["url"]) in (None, category)
+                  and squad_overlap(_snapshot_names(s["jornadas"]), names) >= MIN_OVERLAP]
         out[gid] = sorted(buenas, key=lambda s: s["timestamp"], reverse=True)[:keep]
     return out
 
@@ -301,7 +462,7 @@ def fetch_group(conn, season, group_id, get=http_get, pause=1.5):
                 continue
             snap_names = _snapshot_names(jornadas)
             con_marcador = sum(1 for rows in jornadas.values() for r in rows if r[3] is not None)
-            ov = group_overlap(snap_names, names) if snap_names else 0.0
+            ov = squad_overlap(snap_names, names)
             print(f"    {url} @{ts}: {con_marcador} marcadores, solape {ov:.2f}")
             if ov >= MIN_OVERLAP and con_marcador:
                 kept.append({"url": url, "timestamp": ts, "jornadas": jornadas})
@@ -340,6 +501,30 @@ def _save(path, data):
     Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
 
 
+def merge_snapshots(saved, fetched):
+    """Capturas guardadas más las descargadas, por (url, timestamp), recientes
+    primero. Con Wayback caído, una descarga vacía nunca borra lo guardado."""
+    by_key = {(s["url"], s["timestamp"]): s for s in saved}
+    by_key.update({(s["url"], s["timestamp"]): s for s in fetched})
+    return sorted(by_key.values(), key=lambda s: s["timestamp"], reverse=True)
+
+
+def _merge_by_match(old, new):
+    out = {c["match_id"]: c for c in old}
+    out.update({c["match_id"]: c for c in new})
+    return list(out.values())
+
+
+def merge_report_group(existing, plan):
+    """Entrada del informe de un grupo tras aplicar `plan`, sin perder lo que
+    registraron ejecuciones anteriores: el desvío de partida es el primero."""
+    existing = existing or {}
+    before = existing.get("before")
+    return {"before": plan["before"] if before is None else before, "after": plan["after"],
+            "changes": _merge_by_match(existing.get("changes", []), plan["changes"]),
+            "discarded": _merge_by_match(existing.get("discarded", []), plan.get("discarded", []))}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--season", required=True)
@@ -351,6 +536,12 @@ def main(argv=None):
     args = ap.parse_args(argv)
     from db import get_connection
     conn = get_connection()
+    corrections = load_corrections()
+    locked = locked_matches(conn, args.season, corrections)
+    corregidos = apply_corrections(conn, args.season, corrections)
+    for c in corregidos:
+        print(f"[{c['key'].split('|')[2]}] corrección manual, jornada {c['jornada']}, {c['home']} - {c['away']}: "
+              f"{c['before'][0]}-{c['before'][1]} -> {c['after'][0]}-{c['after'][1]}")
     codes = set(args.groups.split(",")) if args.groups else None
     targets = _targets(conn, args.season, codes)
     raw = _load(RAW_PATH)
@@ -358,14 +549,17 @@ def main(argv=None):
         pool = fetch_pool(known_urls(conn), args.season)
         asignadas = assign_snapshots(conn, [gid for gid, _, _ in targets], pool)
         for gid, category, code in targets:
-            raw["groups"][baseline_key(args.season, category, code)] = {"snapshots": asignadas[gid]}
+            key = baseline_key(args.season, category, code)
+            previas = raw["groups"].get(key, {}).get("snapshots", [])
+            raw["groups"][key] = {"snapshots": merge_snapshots(previas, asignadas[gid])}
             print(f"[{code}] {len(asignadas[gid])} capturas asignadas")
         _save(RAW_PATH, raw)
     elif args.fetch:
         for gid, category, code in targets:
             print(f"[{code}] descargando capturas")
-            snaps = fetch_group(conn, args.season, gid)
-            raw["groups"][baseline_key(args.season, category, code)] = {"snapshots": snaps}
+            key = baseline_key(args.season, category, code)
+            previas = raw["groups"].get(key, {}).get("snapshots", [])
+            raw["groups"][key] = {"snapshots": merge_snapshots(previas, fetch_group(conn, args.season, gid))}
             _save(RAW_PATH, raw)
     plans = []
     for gid, category, code in targets:
@@ -373,25 +567,39 @@ def main(argv=None):
         if not entry or not entry.get("snapshots"):
             print(f"[{code}] sin capturas válidas")
             continue
-        plan = plan_group(conn, gid, entry["snapshots"])
+        plan = plan_group(conn, gid, entry["snapshots"], locked=locked)
         plan["key"] = baseline_key(args.season, category, code)
         plans.append(plan)
-        estado = "ACEPTADO" if plan["accepted"] else "rechazado"
+        notas = [f"descartados {len(plan['discarded'])}" if plan["discarded"] else "",
+                 f"sin rellenar {plan['skipped_fills']}" if plan["skipped_fills"] else "",
+                 f"solo {plan['complete']} de {plan['teams']} equipos completos"
+                 if plan["complete"] * 2 < plan["teams"] else "",
+                 f"sin pareja: {', '.join(plan['unmatched'])}" if plan["unmatched"] else ""]
         print(f"[{code}] {len(plan['changes'])} marcadores, desvío {plan['before']} -> {plan['after']}: "
-              f"{estado}" + (f"; sin pareja: {', '.join(plan['unmatched'])}" if plan["unmatched"] else ""))
+              + ("ACEPTADO" if plan["accepted"] else "rechazado") + "".join(f"; {x}" for x in notas if x))
     aceptados = [p for p in plans if p["accepted"]]
     print(f"\n{len(aceptados)} de {len(plans)} grupos se reparan; "
           f"{sum(len(p['changes']) for p in aceptados)} marcadores; desvío "
-          f"{sum(p['before'] for p in aceptados)} -> {sum(p['after'] for p in aceptados)}")
-    if args.write and aceptados:
-        n = apply_plans(conn, aceptados)
-        report = _load(REPORT_PATH)
-        for p in aceptados:
-            report["groups"][p["key"]] = {"before": p["before"], "after": p["after"], "changes": p["changes"]}
-        _save(REPORT_PATH, report)
-        print(f"Aplicados {n} marcadores. Informe: {REPORT_PATH.relative_to(ROOT)}. "
-              "Siguiente: python3 scripts/generate_js.py y "
-              "python3 scripts/score_deviation.py --write-baseline")
+          f"{sum(p['before'] for p in aceptados)} -> {sum(p['after'] for p in aceptados)}; "
+          f"{len(corregidos)} correcciones manuales")
+    if not args.write:
+        conn.rollback()
+        conn.close()
+        return
+    n = apply_plans(conn, aceptados)
+    commit_and_checkpoint(conn)
+    report = _load(REPORT_PATH)
+    for p in aceptados:
+        report["groups"][p["key"]] = merge_report_group(report["groups"].get(p["key"]), p)
+    for c in corregidos:
+        entrada = report["groups"].setdefault(c["key"], {"before": None, "after": None,
+                                                          "changes": [], "discarded": []})
+        entrada["changes"] = _merge_by_match(entrada["changes"],
+                                             [{k: v for k, v in c.items() if k != "key"}])
+    _save(REPORT_PATH, report)
+    print(f"Aplicados {n} marcadores y {len(corregidos)} correcciones. Informe: "
+          f"{REPORT_PATH.relative_to(ROOT)}. Siguiente: python3 scripts/generate_js.py y "
+          "python3 scripts/score_deviation.py --write-baseline")
     conn.close()
 
 

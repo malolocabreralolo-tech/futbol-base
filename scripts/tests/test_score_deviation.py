@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from db import SCHEMA, DB_PATH  # noqa: E402
 from score_deviation import (  # noqa: E402
     BASELINE_PATH, baseline_key, closed_season_deviations, group_deviation,
-    load_baseline, regressions,
+    load_baseline, regressions, write_baseline,
 )
 
 
@@ -83,6 +83,24 @@ class TestBaseline:
         # Un grupo que ya no existe (fusión, renombrado) no bloquea al bot.
         base = {baseline_key("2024-2025", "BENJAMIN", "GONE"): 5}
         assert regressions(base, {}) == []
+
+    def test_writing_a_baseline_that_goes_up_needs_permission(self, tmp_path):
+        # La línea base solo puede bajar: subirla (una fusión que conserva la
+        # clave, una corrección que la medida no premia) es una decisión
+        # explícita del mantenedor, nunca un efecto de reescribirla.
+        path = tmp_path / "baseline.json"
+        path.write_text(json.dumps({"version": 1, "groups": {"2024-2025|BENJAMIN|G1": 12}}))
+        with pytest.raises(ValueError, match="2024-2025.BENJAMIN.G1.*12.*20"):
+            write_baseline(_db(), path)
+        assert load_baseline(path) == {"2024-2025|BENJAMIN|G1": 12}
+        assert write_baseline(_db(), path, allow_increase=True) == {"2024-2025|BENJAMIN|G1": 20}
+        assert load_baseline(path) == {"2024-2025|BENJAMIN|G1": 20}
+
+    def test_writing_a_baseline_that_goes_down_or_adds_groups_is_free(self, tmp_path):
+        path = tmp_path / "baseline.json"
+        path.write_text(json.dumps({"version": 1, "groups": {"2024-2025|BENJAMIN|G1": 30,
+                                                            "2023-2024|BENJAMIN|OLD": 4}}))
+        assert write_baseline(_db(), path) == {"2024-2025|BENJAMIN|G1": 20}
 
 
 @pytest.fixture

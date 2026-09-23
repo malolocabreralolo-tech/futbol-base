@@ -12,10 +12,13 @@ tabla == partidos con marcador): si falta alguno, la diferencia no dice nada.
 Uso:
     python3 scripts/score_deviation.py                 # informe por temporada
     python3 scripts/score_deviation.py --write-baseline  # fija la línea base
+    python3 scripts/score_deviation.py --write-baseline --allow-increase
 
 La línea base (scripts/tests/fixtures/score_deviation_baseline.json) solo
 recoge las temporadas cerradas; el vigilante de test_score_deviation.py falla
-si algún grupo se separa más de su clasificación que en ella.
+si algún grupo se separa más de su clasificación que en ella. Solo puede bajar:
+reescribirla con algún grupo peor exige --allow-increase (p. ej., una fusión
+que conserva la clave o una corrección que la medida no premia).
 """
 import argparse
 import json
@@ -87,8 +90,9 @@ def closed_season_deviations(conn):
 def regressions(baseline, current):
     """[(clave, línea base, ahora)] de los grupos que empeoran.
 
-    Un grupo de la línea base que ya no existe no cuenta: una fusión o un
-    renombrado no puede bloquear al bot."""
+    Un grupo de la línea base que ya no existe no cuenta. Al bot nunca le
+    afecta, porque solo escribe la temporada en curso; una fusión que conserva
+    la clave sí puede empeorar un grupo, y eso lo decide el mantenedor."""
     return [(key, base, current[key]) for key, base in sorted(baseline.items())
             if key in current and current[key] > base]
 
@@ -100,8 +104,12 @@ def load_baseline(path=BASELINE_PATH):
         return {}
 
 
-def write_baseline(conn, path=BASELINE_PATH):
+def write_baseline(conn, path=BASELINE_PATH, allow_increase=False):
     devs = closed_season_deviations(conn)
+    worse = regressions(load_baseline(path), devs)
+    if worse and not allow_increase:
+        raise ValueError("la línea base solo puede bajar; empeoran (grupo, antes, ahora): "
+                         f"{worse[:10]}. Si es a propósito, usa --allow-increase.")
     Path(path).write_text(json.dumps({
         "version": 1,
         "nota": "Desvío de goles (calendario frente a clasificación oficial) por grupo "
@@ -115,6 +123,8 @@ def write_baseline(conn, path=BASELINE_PATH):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--write-baseline", action="store_true")
+    ap.add_argument("--allow-increase", action="store_true",
+                    help="con --write-baseline: acepta grupos que empeoran")
     args = ap.parse_args(argv)
     sys.path.insert(0, str(ROOT / "scripts"))
     from db import get_connection
@@ -132,7 +142,7 @@ def main(argv=None):
     for season, (n, bad, dev) in sorted(resumen.items()):
         print(f"{season}  {n:6}  {bad:10}  {dev:15}")
     if args.write_baseline:
-        devs = write_baseline(conn)
+        devs = write_baseline(conn, allow_increase=args.allow_increase)
         print(f"Línea base escrita: {len(devs)} grupos de temporadas cerradas "
               f"({sum(devs.values())} goles de desvío) → {BASELINE_PATH.relative_to(ROOT)}")
     conn.close()

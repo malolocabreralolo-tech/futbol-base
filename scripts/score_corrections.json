@@ -1,0 +1,16 @@
+{
+ "version": 1,
+ "nota": "Marcadores que fija la clasificación oficial y que ninguna captura trae bien. Los aplica repair_scores_wayback.py --write antes que las capturas, y ninguna captura los pisa.",
+ "corrections": [
+  {
+   "season": "2023-2024",
+   "category": "BENJAMIN",
+   "group": "LZ11",
+   "jornada": "22",
+   "home": "Tahiche B",
+   "away": "Lanzarote B",
+   "score": [0, 13],
+   "reason": "la clasificación oficial cuadra a los dos equipos con 0-13; el 0-3 de FIFLP es un 13 sin el 1 y el 0-14 de la captura de julio de 2024 es una errata"
+  }
+ ]
+}

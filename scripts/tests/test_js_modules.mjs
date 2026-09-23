@@ -374,11 +374,16 @@ test('actas data files: lineups events reference players in the same match', () 
     const linVar = `LINEUPS_${season.replace('-', '_')}`;
     const plaVar = `PLAYERS_${season.replace('-', '_')}`;
     const Lin = loadDataFile(f)[linVar];
+    // Una temporada que la lista de loadDataFile aún no conoce (p. ej.
+    // data-lineups-2026-2027.js al activarla) se salta en vez de bloquear al bot.
+    if (!Lin) continue;
     const Pla = loadDataFile(playersFile)[plaVar];
     assert.ok(Lin && typeof Lin === 'object', `${linVar} must load`);
     assert.ok(Pla && typeof Pla === 'object', `${plaVar} must load`);
     // Invariant 1: every event in LINEUPS references a player in the same match's lineup
-    for (const [matchKey, match] of Object.entries(Lin)) {
+    // Una clave repetida ({dup:true, list}) se comprueba partido a partido.
+    const partidos = Object.entries(Lin).flatMap(([k, v]) => entriesOf(v).map(e => [k, e]));
+    for (const [matchKey, match] of partidos) {
       const homeNames = new Set((match.home || []).map(p => p.n));
       const awayNames = new Set((match.away || []).map(p => p.n));
       for (const ev of match.events || []) {
@@ -416,6 +421,49 @@ test('source-contract: SP-2 consts not read via globalThis/window in src/', () =
     for (const g of ['LINEUPS_', 'PLAYERS_', 'TEAMS_']) {
       assert.ok(!new RegExp('globalThis\\.' + g).test(s), f + ': no globalThis.' + g);
       assert.ok(!new RegExp('window\\.' + g).test(s),     f + ': no window.'     + g);
+    }
+  }
+});
+
+// ─── Plan A §9.2: s/gr (y cod) en MATCH_DETAIL y LINEUPS_<S> ─────────────────
+// Cada entrada lleva s (temporada) y gr (código de grupo); LINEUPS además cod
+// (matches.cod_acta). Una clave que comparten dos partidos es
+// {dup:true, list:[≥2 entradas]} y no lleva .g/.home: la interfaz actual lee
+// undefined y no pinta nada, en vez de la cronología de otro partido.
+function entriesOf(v) { return v && v.dup ? v.list : [v]; }
+
+test('MATCH_DETAIL: cada entrada lleva s y gr; las claves repetidas van en list', () => {
+  const { MATCH_DETAIL } = loadDataFile('data-matchdetail.js');
+  for (const [k, v] of Object.entries(MATCH_DETAIL)) {
+    if (v.dup) {
+      assert.ok(Array.isArray(v.list) && v.list.length >= 2, `${k}: dup con 2 o más entradas`);
+      assert.ok(!('g' in v), `${k}: una clave dup no lleva .g`);
+    }
+    for (const e of entriesOf(v)) {
+      assert.match(e.s, /^\d{4}-\d{4}$/, `${k}: s`);
+      assert.ok(typeof e.gr === 'string' && e.gr.length > 0, `${k}: gr`);
+      assert.ok(Array.isArray(e.g) && e.g.length > 0, `${k}: g`);
+    }
+  }
+});
+
+test('LINEUPS_<S>: cada entrada lleva s de su fichero, gr y cod', () => {
+  const files = readdirSync(ROOT).filter(f => /^data-lineups-\d{4}-\d{4}\.js$/.test(f));
+  assert.ok(files.length > 0, 'hay ficheros data-lineups-*.js');
+  for (const f of files) {
+    const season = f.match(/data-lineups-(\d{4}-\d{4})\.js/)[1];
+    const Lin = loadDataFile(f)[`LINEUPS_${season.replace('-', '_')}`];
+    if (!Lin) continue;   // temporada que loadDataFile aún no conoce (2026-2027…)
+    for (const [k, v] of Object.entries(Lin)) {
+      if (v.dup) {
+        assert.ok(Array.isArray(v.list) && v.list.length >= 2, `${f} ${k}: dup con 2 o más entradas`);
+        assert.ok(!('home' in v), `${f} ${k}: una clave dup no lleva .home`);
+      }
+      for (const e of entriesOf(v)) {
+        assert.equal(e.s, season, `${f} ${k}: s`);
+        assert.ok(typeof e.gr === 'string' && e.gr.length > 0, `${f} ${k}: gr`);
+        assert.ok(Number.isInteger(e.cod) && e.cod > 0, `${f} ${k}: cod`);
+      }
     }
   }
 });

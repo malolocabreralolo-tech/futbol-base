@@ -168,6 +168,17 @@ export function fillIfCurrent(slot, key, render) {
   return true;
 }
 
+/* Entrada de MATCH_DETAIL / LINEUPS_<S> para una clave `local|visitante|gl-gv`.
+ * Desde el Plan A (§9.2) la clave que comparten dos partidos llega como
+ * {dup: true, list: [...]}. Esta interfaz no sabe elegir entre ellos, así que
+ * la trata como ausente: ni alineación ni cronología, antes que las de otro
+ * partido. Vive en este módulo (y no en matchdetail-rich.js) para que un
+ * modals.js nuevo nunca dependa de un export que un matchdetail-rich.js viejo
+ * de la caché del service worker no tenga. */
+export function singleEntry(entry) {
+  return entry && !entry.dup ? entry : undefined;
+}
+
 export function closeModal() {
   if (!modalOverlay?.classList.contains('open')) return;
   modalOverlay.classList.remove('open');
@@ -427,13 +438,13 @@ export function openMatchDetail(match) {
   if (lineupsHostNow) lineupsHostNow.dataset.key = matchKey;
   const season = getCurrentSeason();
   Promise.all([ensureLineups(season), ensureMatchDetail()]).then(([lineups, details]) => {
-    const m = lineups && lineups[matchKey];
+    const m = singleEntry(lineups && lineups[matchKey]);
     fillIfCurrent(document.getElementById('modalLineupsSection'), matchKey, host => {
       if (m) renderLineupsAndTimeline(host, m);
     });
     fillIfCurrent(document.getElementById('modalGoalsSection'), matchKey, host => {
       if (!m || !(m.events && m.events.length > 0)) {
-        const detail = details && details[matchKey];
+        const detail = singleEntry(details && details[matchKey]);
         if (detail && detail.g && detail.g.length > 0) {
           host.innerHTML = buildGoalsHtml(detail, match.venue);
         }

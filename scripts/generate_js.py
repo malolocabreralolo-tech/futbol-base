@@ -432,56 +432,70 @@ def generate_history_js(conn):
     return js
 
 
+def _keyed_or_dup(pairs):
+    """[(clave, entrada), …] → {clave: entrada}; si dos o más partidos producen
+    la misma clave `local|visitante|gl-gv`, {clave: {"dup": True, "list":
+    [entrada, …]}} en el orden recibido. Nunca sobrescribe: antes ganaba el
+    último partido y el otro desaparecía sin aviso (la clave
+    'CD Calero|La Garita|1-11' la comparten un partido de FF15 y otro de PG2).
+    Una entrada dup no lleva .g/.home: la interfaz actual lee undefined y no
+    pinta nada, en vez de los datos de otro partido."""
+    buckets = {}
+    for key, entry in pairs:
+        buckets.setdefault(key, []).append(entry)
+    return {k: v[0] if len(v) == 1 else {"dup": True, "list": v}
+            for k, v in buckets.items()}
+
+
+def _match_details(conn):
+    """{clave: {s, gr, g}} (o dup) con la cronología de goles de TODAS las
+    temporadas. s = temporada y gr = código de grupo, para que la interfaz
+    distinga dos partidos con la misma clave."""
+    rows = conn.execute(
+        """SELECT DISTINCT m.id, h.name, a.name, m.home_score, m.away_score,
+                  s.name, gr.code
+           FROM matches m
+           JOIN teams h ON m.home_team_id = h.id
+           JOIN teams a ON m.away_team_id = a.id
+           JOIN groups gr ON gr.id = m.group_id
+           JOIN seasons s ON s.id = gr.season_id
+           JOIN goals g ON g.match_id = m.id
+           ORDER BY m.id""",
+    ).fetchall()
+
+    pairs = []
+    for match_id, home, away, hs, as_, season, code in rows:
+        goals = conn.execute(
+            """SELECT minute, player_name, running_score, side, type
+               FROM goals WHERE match_id = ? ORDER BY minute, id""",
+            (match_id,),
+        ).fetchall()
+        pairs.append((_match_key(home, away, hs, as_),
+                      {"s": season, "gr": code, "g": [list(g) for g in goals]}))
+    return _keyed_or_dup(pairs)
+
+
 def generate_matchdetail_js(conn):
     """Generate data-matchdetail.js with goal details per match."""
     header = (
         "// data-matchdetail.js — generado por scripts/generate_js.py\n"
         "// NO editar manualmente — usar scripts/update.sh para regenerar\n\n"
     )
-
-    # Get all matches that have goals
-    rows = conn.execute(
-        """SELECT DISTINCT m.id, h.name, a.name, m.home_score, m.away_score
-           FROM matches m
-           JOIN teams h ON m.home_team_id = h.id
-           JOIN teams a ON m.away_team_id = a.id
-           JOIN goals g ON g.match_id = m.id
-           ORDER BY m.id""",
-    ).fetchall()
-
-    details = {}
-    for match_id, home, away, hs, as_ in rows:
-        key = _match_key(home, away, hs, as_)
-        goals = conn.execute(
-            """SELECT minute, player_name, running_score, side, type
-               FROM goals WHERE match_id = ? ORDER BY minute, id""",
-            (match_id,),
-        ).fetchall()
-
-        entry = {"g": [list(g) for g in goals]}
-        details[key] = entry
-
-    js = header + "const MATCH_DETAIL=" + js_val(details) + ";"
+    js = header + "const MATCH_DETAIL=" + js_val(_match_details(conn)) + ";"
     return js
 
 
 def generate_matchdetail_keys_js(conn):
     """Generate data-matchdetail-keys.js: an O(1) presence map of the match
     keys that have a goal timeline, so the ⚽ badge can render without loading
-    the full (~359 KB) data-matchdetail.js. Same JOIN as
-    generate_matchdetail_js, so the key set is identical by construction."""
+    the full (~359 KB) data-matchdetail.js. Built from the same entries as
+    generate_matchdetail_js, minus the dup keys: a dup entry has no .g, so the
+    badge would promise a timeline the modal does not paint."""
     header = (
         "// data-matchdetail-keys.js — generado por scripts/generate_js.py\n"
         "// NO editar manualmente — usar scripts/update.sh para regenerar\n\n"
     )
-    rows = conn.execute(
-        """SELECT DISTINCT h.name, a.name, m.home_score, m.away_score
-           FROM matches m
-           JOIN teams h ON m.home_team_id = h.id
-           JOIN teams a ON m.away_team_id = a.id
-           JOIN goals g ON g.match_id = m.id""",
-    ).fetchall()
-    keys = {_match_key(home, away, hs, as_): 1 for home, away, hs, as_ in rows}
+    keys = {k: 1 for k, v in _match_details(conn).items() if not v.get("dup")}
     return header + "const MATCH_DETAIL_KEYS=" + js_val(keys) + ";"
 
 
@@ -491,18 +505,21 @@ def _season_const_suffix(season_name):
 
 def generate_lineups_js(conn, season_name):
     """Emit data-lineups-<season>.js with shape:
-       const LINEUPS_<YYYY_YYYY> = { "<home>|<away>|<hs>-<as>": { home:[...], away:[...], events:[...], coachH, coachA, ref } };
+       const LINEUPS_<YYYY_YYYY> = { "<home>|<away>|<hs>-<as>": { s, gr, cod, home:[...], away:[...], events:[...], coachH, coachA, ref } };
+       s = season name, gr = group code, cod = matches.cod_acta. A key shared by
+       two or more matches is { dup: true, list: [ {s, gr, cod, home, ...}, ... ] }.
     """
     season_id = conn.execute("SELECT id FROM seasons WHERE name=?", (season_name,)).fetchone()
     if not season_id:
         return f"// no season {season_name}\n"
     rows = conn.execute("""
-      SELECT m.id, t1.name, t2.name, m.home_score, m.away_score
+      SELECT m.id, t1.name, t2.name, m.home_score, m.away_score, g.code, m.cod_acta
         FROM matches m JOIN groups g ON g.id=m.group_id
         JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
-       WHERE g.season_id=? AND m.cod_acta IS NOT NULL""", (season_id[0],)).fetchall()
-    obj = {}
-    for mid, h, a, hs, asc in rows:
+       WHERE g.season_id=? AND m.cod_acta IS NOT NULL
+       ORDER BY m.id""", (season_id[0],)).fetchall()
+    pairs = []
+    for mid, h, a, hs, asc, code, cod in rows:
         key = _match_key(h, a, hs, asc)
         apps = conn.execute("""
           SELECT a.team_id, p.full_name, a.dorsal, a.role, a.goals, a.yellow, a.red
@@ -542,10 +559,12 @@ def generate_lineups_js(conn, season_name):
         ref = conn.execute("SELECT name FROM match_staff WHERE match_id=? AND kind='referee'", (mid,)).fetchone()
         ch = conn.execute("SELECT name FROM match_staff WHERE match_id=? AND kind='coach' AND team_id=?", (mid, home_team_id)).fetchone()
         ca = conn.execute("SELECT name FROM match_staff WHERE match_id=? AND kind='coach' AND team_id!=?", (mid, home_team_id)).fetchone()
-        obj[key] = {"home": home, "away": away, "events": events,
-                    "coachH": ch[0] if ch else None,
-                    "coachA": ca[0] if ca else None,
-                    "ref":    ref[0] if ref else None}
+        pairs.append((key, {"s": season_name, "gr": code, "cod": cod,
+                            "home": home, "away": away, "events": events,
+                            "coachH": ch[0] if ch else None,
+                            "coachA": ca[0] if ca else None,
+                            "ref":    ref[0] if ref else None}))
+    obj = _keyed_or_dup(pairs)
     suffix = _season_const_suffix(season_name)
     return ("// Auto-generated by scripts/generate_js.py — do not edit\n"
             "const LINEUPS_" + suffix + " = " + json.dumps(obj, ensure_ascii=False) + ";\n")

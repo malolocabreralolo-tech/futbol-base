@@ -730,3 +730,205 @@ def test_the_scraper_repairs_impossible_points_before_writing():
     # tabla recién scrapeada (el .index() de la definición no vale aquí).
     assert (src.index("_repair_incoherent_points(standings)")
             < src.index("standings_regression(stored_standings("))
+
+
+# ─── Plan A §9.2 (2026-09-23): claves repetidas de MATCH_DETAIL / LINEUPS ───
+
+def _parse_tail_const(js, name):
+    """Como _parse_const, pero hasta el ÚLTIMO ';' del fichero: los data-*.js
+    reales son un único `const X = {...};` y un ';' dentro de un nombre
+    cortaría la búsqueda perezosa."""
+    m = re.search(rf"const {name}\s*=\s*(.*);\s*$", js, re.DOTALL)
+    assert m, f"const {name} not parseable in:\n{js[:500]}"
+    return json.loads(m.group(1))
+
+
+def _entries(value):
+    """Entradas de una clave: [entrada] o la lista de un {dup: true, list}."""
+    return value["list"] if value.get("dup") else [value]
+
+
+class TestMatchKeyCollisions:
+    """MATCH_DETAIL y LINEUPS_<S> se indexan por `local|visitante|gl-gv`, que no
+    es única: 'CD Calero|La Garita|1-11' es un partido de FF15 (benjamín) y
+    otro de PG2 (prebenjamín), y al activar 2026/27 chocarán claves entre
+    temporadas (la consulta de MATCH_DETAIL no filtra temporada). Antes ganaba
+    el último partido y el otro desaparecía en silencio. Ahora cada entrada
+    lleva s (temporada) y gr (código de grupo), LINEUPS además cod
+    (matches.cod_acta), y una clave repetida sale como {dup: true, list: [...]}."""
+
+    KEY = "CD Calero|La Garita|1-11"
+
+    def _seed_calero(self, conn, cod_pg2=None, cod_ff15=None):
+        # Mismos ids y grupos que en la base real (el partido de PG2 es el de
+        # id menor), pero aquí los DOS tienen goles para forzar el choque.
+        conn.executescript("""
+          INSERT INTO groups (id, season_id, category_id, code, name, phase)
+            VALUES (10, 1, 1, 'FF15', 'Grupo 15', 'Primera Fase'),
+                   (20, 1, 2, 'PG2', 'Grupo 2', 'Liga');
+          INSERT INTO teams (id, name) VALUES (1, 'CD Calero'), (2, 'La Garita');
+          INSERT INTO players (id, full_name, norm_name)
+            VALUES (1, 'PEREZ, JUAN', 'perez juan'), (2, 'GOMEZ, RAUL', 'gomez raul');
+        """)
+        conn.execute("""INSERT INTO matches (id, group_id, jornada, date, home_team_id,
+                          away_team_id, home_score, away_score, cod_acta)
+                        VALUES (2256, 20, 'Jornada 27', '2026-05-14', 1, 2, 1, 11, ?)""",
+                     (cod_pg2,))
+        conn.execute("""INSERT INTO matches (id, group_id, jornada, date, home_team_id,
+                          away_team_id, home_score, away_score, cod_acta)
+                        VALUES (687244, 10, 'Jornada 3', '2025-10-24', 1, 2, 1, 11, ?)""",
+                     (cod_ff15,))
+        conn.executescript("""
+          INSERT INTO goals (match_id, minute, player_name, running_score, side, type)
+            VALUES (2256, 5, 'Pepe', '0-1', 'a', 'r'),
+                   (687244, 54, 'Ylian Jose', '1-11', 'a', 'r');
+          INSERT INTO appearances (match_id, team_id, player_id, dorsal, role)
+            VALUES (2256, 1, 1, 7, 'starter'), (687244, 1, 2, 9, 'starter');
+        """)
+
+    def test_matchdetail_entry_carries_season_and_group(self):
+        from scripts.generate_js import generate_matchdetail_js
+        conn = _synth_conn()
+        conn.executescript("""
+          INSERT INTO groups (id, season_id, category_id, code, name, phase)
+            VALUES (1, 1, 1, 'A1', 'Grupo 1', 'Segunda Fase A');
+          INSERT INTO teams (id, name) VALUES (1, 'Home FC'), (2, 'Away FC');
+          INSERT INTO matches (id, group_id, jornada, date, home_team_id, away_team_id,
+                               home_score, away_score)
+            VALUES (1, 1, 'Jornada 1', '06/06', 1, 2, 1, 0);
+          INSERT INTO goals (match_id, minute, player_name, running_score, side, type)
+            VALUES (1, 10, 'X', '1-0', 'h', 'r');
+        """)
+        md = _parse_tail_const(generate_matchdetail_js(conn), "MATCH_DETAIL")
+        assert md == {"Home FC|Away FC|1-0":
+                      {"s": "2025-2026", "gr": "A1", "g": [[10, "X", "1-0", "h", "r"]]}}
+
+    def test_same_key_in_two_groups_is_a_dup_list_not_an_overwrite(self):
+        from scripts.generate_js import generate_matchdetail_js
+        conn = _synth_conn()
+        self._seed_calero(conn)
+        md = _parse_tail_const(generate_matchdetail_js(conn), "MATCH_DETAIL")
+        assert md[self.KEY] == {"dup": True, "list": [
+            {"s": "2025-2026", "gr": "PG2", "g": [[5, "Pepe", "0-1", "a", "r"]]},
+            {"s": "2025-2026", "gr": "FF15", "g": [[54, "Ylian Jose", "1-11", "a", "r"]]},
+        ]}
+        # La interfaz actual lee detail.g: con una clave repetida recibe
+        # undefined y no pinta cronología (no la de otro partido).
+        assert "g" not in md[self.KEY]
+
+    def test_same_key_in_two_seasons_is_a_dup_list(self):
+        """Lo que pasará al activar 2026/27: mismo cruce y mismo marcador."""
+        from scripts.generate_js import generate_matchdetail_js
+        conn = _synth_conn()
+        conn.executescript("""
+          INSERT INTO seasons (id, name, start_year, end_year, is_current)
+            VALUES (2, '2026-2027', 2026, 2027, 0);
+          INSERT INTO groups (id, season_id, category_id, code, name, phase)
+            VALUES (1, 1, 2, 'PG2', 'Grupo 2', 'Liga'),
+                   (2, 2, 2, 'PG2', 'Grupo 2', 'Liga');
+          INSERT INTO teams (id, name) VALUES (1, 'Home FC'), (2, 'Away FC');
+          INSERT INTO matches (id, group_id, jornada, date, home_team_id, away_team_id,
+                               home_score, away_score)
+            VALUES (1, 1, 'Jornada 1', '2025-10-04', 1, 2, 1, 0),
+                   (2, 2, 'Jornada 1', '2026-10-03', 1, 2, 1, 0);
+          INSERT INTO goals (match_id, minute, player_name, running_score, side, type)
+            VALUES (1, 3, 'A', '1-0', 'h', 'r'), (2, 7, 'C', '1-0', 'h', 'r');
+        """)
+        md = _parse_tail_const(generate_matchdetail_js(conn), "MATCH_DETAIL")
+        entry = md["Home FC|Away FC|1-0"]
+        assert entry["dup"] is True
+        assert [(e["s"], e["gr"]) for e in entry["list"]] == [
+            ("2025-2026", "PG2"), ("2026-2027", "PG2")]
+
+    def test_keys_index_skips_dup_keys(self):
+        """MATCH_DETAIL_KEYS == claves con .g (invariante de test_js_modules):
+        una clave repetida no tiene .g, así que el ⚽ no debe prometer una
+        cronología que el modal no va a pintar."""
+        from scripts.generate_js import generate_matchdetail_keys_js
+        conn = _synth_conn()
+        self._seed_calero(conn)
+        conn.executescript("""
+          INSERT INTO teams (id, name) VALUES (3, 'UD Guía');
+          INSERT INTO matches (id, group_id, jornada, date, home_team_id, away_team_id,
+                               home_score, away_score)
+            VALUES (3, 10, 'Jornada 4', '2025-10-31', 3, 1, 1, 0);
+          INSERT INTO goals (match_id, minute, player_name, running_score, side, type)
+            VALUES (3, 11, 'Z', '1-0', 'h', 'r');
+        """)
+        keys = _parse_tail_const(generate_matchdetail_keys_js(conn), "MATCH_DETAIL_KEYS")
+        assert keys == {"UD Guía|CD Calero|1-0": 1}
+
+    def test_lineups_entry_carries_season_group_and_cod(self):
+        from scripts.generate_js import generate_lineups_js
+        conn = _synth_conn()
+        self._seed_calero(conn, cod_ff15=258611)
+        lin = _parse_tail_const(generate_lineups_js(conn, "2025-2026"), "LINEUPS_2025_2026")
+        entry = lin[self.KEY]
+        assert (entry["s"], entry["gr"], entry["cod"]) == ("2025-2026", "FF15", 258611)
+        assert entry["home"][0]["n"] == "GOMEZ, RAUL"
+        assert set(entry) == {"s", "gr", "cod", "home", "away", "events",
+                              "coachH", "coachA", "ref"}
+
+    def test_lineups_same_key_twice_in_a_season_is_a_dup_list(self):
+        from scripts.generate_js import generate_lineups_js
+        conn = _synth_conn()
+        self._seed_calero(conn, cod_pg2=125782, cod_ff15=258611)
+        lin = _parse_tail_const(generate_lineups_js(conn, "2025-2026"), "LINEUPS_2025_2026")
+        entry = lin[self.KEY]
+        assert entry["dup"] is True and "home" not in entry
+        assert [(e["s"], e["gr"], e["cod"]) for e in entry["list"]] == [
+            ("2025-2026", "PG2", 125782), ("2025-2026", "FF15", 258611)]
+        assert [e["home"][0]["n"] for e in entry["list"]] == ["PEREZ, JUAN", "GOMEZ, RAUL"]
+
+    def _real_conn(self, tmp_path):
+        if not os.path.exists(DB_PATH):
+            pytest.skip("futbolbase.db not present")
+        src = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(str(tmp_path / "fb.db"))
+        src.backup(conn)
+        src.close()
+        return conn
+
+    def test_real_db_no_key_is_silently_overwritten(self, tmp_path):
+        """Base real: cada partido con goles sale UNA vez en MATCH_DETAIL y cada
+        partido con acta UNA vez en el LINEUPS_<S> de su temporada, con su
+        (s, gr[, cod]), sea como entrada suelta o dentro de un dup."""
+        from scripts.generate_js import generate_matchdetail_js, generate_lineups_js
+        conn = self._real_conn(tmp_path)
+        md = _parse_tail_const(generate_matchdetail_js(conn), "MATCH_DETAIL")
+        got = sorted((e["s"], e["gr"]) for v in md.values() for e in _entries(v))
+        want = sorted(conn.execute("""
+            SELECT s.name, gr.code FROM matches m
+              JOIN groups gr ON gr.id = m.group_id
+              JOIN seasons s ON s.id = gr.season_id
+             WHERE m.id IN (SELECT match_id FROM goals)""").fetchall())
+        assert got == want, "MATCH_DETAIL perdió o duplicó partidos con goles"
+        for sid, sname in conn.execute("SELECT id, name FROM seasons").fetchall():
+            lin = _parse_tail_const(generate_lineups_js(conn, sname),
+                                    "LINEUPS_" + sname.replace("-", "_"))
+            got = sorted((e["s"], e["gr"], e["cod"]) for v in lin.values() for e in _entries(v))
+            want = sorted(conn.execute("""
+                SELECT ?, gr.code, m.cod_acta FROM matches m
+                  JOIN groups gr ON gr.id = m.group_id
+                 WHERE gr.season_id = ? AND m.cod_acta IS NOT NULL""",
+                (sname, sid)).fetchall())
+            assert got == want, f"LINEUPS_{sname} perdió o duplicó actas"
+
+    def test_real_db_calero_timeline_is_tagged_ff15(self, tmp_path):
+        """En la base real solo el partido de FF15 (12 goles) tiene cronología;
+        el de PG2 no tiene goles. La entrada sale con gr='FF15', así que el
+        rediseño sabrá que no es la del partido de PG2. Si algún día PG2 trae
+        goles, la clave pasa a dup con FF15 y PG2: el test lo acepta. Si una
+        fusión o un renombrado de equipos hace desaparecer la clave, se salta:
+        la invariante general la vigila test_real_db_no_key_is_silently_overwritten."""
+        from scripts.generate_js import generate_matchdetail_js
+        conn = self._real_conn(tmp_path)
+        md = _parse_tail_const(generate_matchdetail_js(conn), "MATCH_DETAIL")
+        entry = md.get(self.KEY)
+        if entry is None:
+            pytest.skip("la clave de Calero ya no está en la base")
+        entries = [e for e in _entries(entry) if e["s"] == "2025-2026"]
+        grs = {e["gr"] for e in entries}
+        assert "FF15" in grs and grs <= {"FF15", "PG2"}, grs
+        ff15 = next(e for e in entries if e["gr"] == "FF15")
+        assert len(ff15["g"]) == 12 and ff15["g"][-1][2] == "1-11"

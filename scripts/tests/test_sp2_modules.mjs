@@ -200,3 +200,43 @@ test('el marcador de los partidos en casa se deja tal cual', async () => {
   const agg = aggregatePlayerFromLineups(L, 'PEREZ, JUAN', 'Firgas');
   assert.match(renderPlayerDetailHtml('PEREZ, JUAN', agg), /pdm-score">2-1</);
 });
+
+// ─── Plan A §9.2: claves repetidas {dup:true, list:[…]} ─────────────────────
+// Desde el Plan A, MATCH_DETAIL y LINEUPS_<S> exportan como {dup:true, list}
+// las claves `local|visitante|gl-gv` que comparten dos partidos. La interfaz
+// actual no sabe elegir entre ellos: los trata como si no hubiera datos.
+import { singleEntry } from '../../src/modals.js';
+import { readFileSync } from 'node:fs';
+
+const DUP = { dup: true, list: [
+  { s: '2025-2026', gr: 'PG2', cod: 125782, events: [],
+    home: [{ n: 'PEREZ, JUAN', r: 'starter', g: 1, y: 0, rd: 0 }], away: [] },
+  { s: '2025-2026', gr: 'FF15', cod: 258611, events: [],
+    home: [{ n: 'PEREZ, JUAN', r: 'starter', g: 2, y: 0, rd: 0 }], away: [] },
+] };
+
+test('singleEntry: deja pasar la entrada normal y trata la repetida como ausente', () => {
+  const one = { s: '2025-2026', gr: 'FF15', g: [[54, 'Ylian Jose', '1-11', 'a', 'r']] };
+  assert.equal(singleEntry(one), one);
+  assert.equal(singleEntry(DUP), undefined);
+  assert.equal(singleEntry(undefined), undefined);
+  assert.equal(singleEntry(null), undefined);
+});
+
+test('aggregatePlayerFromLineups salta una clave repetida sin romperse', () => {
+  const L = {
+    'CD Calero|La Garita|1-11': DUP,
+    'CD Calero|Moya|2-0': { s: '2025-2026', gr: 'FF15', cod: 258700, events: [],
+      home: [{ n: 'PEREZ, JUAN', r: 'starter', g: 1, y: 0, rd: 0 }], away: [] },
+  };
+  const agg = aggregatePlayerFromLineups(L, 'PEREZ, JUAN', 'CD Calero');
+  assert.equal(agg.appearances, 1);
+  assert.equal(agg.goals, 1);
+  assert.deepEqual(agg.matches.map(m => m.matchKey), ['CD Calero|Moya|2-0']);
+});
+
+test('openMatchDetail pasa las dos búsquedas por singleEntry', () => {
+  const src = readFileSync(new URL('../../src/modals.js', import.meta.url), 'utf8');
+  assert.match(src, /const m = singleEntry\(lineups && lineups\[matchKey\]\);/);
+  assert.match(src, /const detail = singleEntry\(details && details\[matchKey\]\);/);
+});

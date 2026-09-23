@@ -219,6 +219,8 @@ export function buildGroup(raw, { season, cat, current = false, history = null }
     rounds,
     currentRound: currentRoundKey(raw, rounds),
   };
+  const retired = retiredTeams(group);
+  group.standings.forEach(row => { row.retired = retired.has(row.team); });
   return group;
 }
 
@@ -379,4 +381,338 @@ export function groupLabel(group) {
   const groupPart = c.group !== undefined ? c.group : String(group.name ?? '').trim();
   const base = [CAT_NAMES[c.cat] || '', c.name, groupPart].filter(Boolean).join(', ');
   return base + islandSuffix(c, c.name, base);
+}
+
+// ─── Análisis de grupo (spec §4.2, §4.3, §4.4, §4.7, §5.3 y §7) ─────────────
+
+function playedMatch(m) {
+  return m.hs != null && m.as != null;
+}
+
+function groupMatches(group) {
+  return (group.rounds || []).flatMap(round => round.matches);
+}
+
+/* Partidos del grupo en orden de fecha (seasonISO, ya en m.dateISO). Un
+ * partido sin fecha toma la primera fecha de su jornada o, si la jornada no
+ * tiene ninguna, la última conocida; a igual fecha manda el orden de jornada
+ * y de fila. Así los grupos antiguos de Fuerteventura y Lanzarote, con
+ * partidos jugados sin fecha, no se desordenan. */
+function chronologicalMatches(group) {
+  const items = [];
+  let carry = '';
+  (group.rounds || []).forEach((round, ri) => {
+    const first = round.matches.map(m => m.dateISO).filter(Boolean).sort()[0] || carry;
+    round.matches.forEach((m, mi) => items.push({ m, key: m.dateISO || first, ri, mi }));
+    carry = first;
+  });
+  items.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0) || a.ri - b.ri || a.mi - b.mi);
+  return items.map(item => item.m);
+}
+
+/* Resultados jugados de un equipo, sin los partidos contra retirados, en
+ * orden cronológico y desde su punto de vista:
+ * {match, letter: 'G'|'E'|'P', gf, gc, rival, side: 'casa'|'fuera'}.
+ * Es el criterio común de seasonSummary y lastResults; homeAwayTable y
+ * bestStreaks aplican los mismos filtros en una sola pasada. */
+function teamResults(group, team, retired) {
+  const out = [];
+  for (const match of chronologicalMatches(group)) {
+    if (!playedMatch(match) || (match.home !== team && match.away !== team)) continue;
+    const home = match.home === team;
+    const rival = home ? match.away : match.home;
+    if (retired.has(rival)) continue;
+    const gf = home ? match.hs : match.as;
+    const gc = home ? match.as : match.hs;
+    out.push({ match, letter: gf > gc ? 'G' : gf === gc ? 'E' : 'P', gf, gc, rival, side: home ? 'casa' : 'fuera' });
+  }
+  return out;
+}
+
+/* Balance {pj, g, e, p, gf, gc, pts} de una lista de resultados {gf, gc}. */
+function recordOf(results) {
+  const rec = { pj: results.length, g: 0, e: 0, p: 0, gf: 0, gc: 0, pts: 0 };
+  for (const { gf, gc } of results) {
+    if (gf > gc) rec.g += 1;
+    else if (gf === gc) rec.e += 1;
+    else rec.p += 1;
+    rec.gf += gf;
+    rec.gc += gc;
+  }
+  rec.pts = rec.g * 3 + rec.e;
+  return rec;
+}
+
+/* Única definición de retirado (spec §5.3). «Grupo terminado» en la regla de
+ * pj = 0 no puede depender de hoy (la firma no lo recibe): cuenta como
+ * terminado el grupo cuya última jornada ya tiene algún resultado. */
+export function retiredTeams(group) {
+  const rounds = group.rounds || [];
+  const standings = group.standings || [];
+  const inCalendar = new Set();
+  const withResult = new Set();
+  rounds.forEach(round => round.matches.forEach(m => {
+    inCalendar.add(m.home);
+    inCalendar.add(m.away);
+    if (playedMatch(m)) {
+      withResult.add(m.home);
+      withResult.add(m.away);
+    }
+  }));
+  const lastRound = rounds[rounds.length - 1];
+  const finished = Boolean(lastRound && lastRound.matches.some(playedMatch));
+  const retired = new Set();
+  for (const row of standings) {
+    if (withResult.has(row.team)) continue;
+    const gone = !inCalendar.has(row.team) && row.pj > 0 && row.g + row.e === 0;
+    if (gone || (row.pj === 0 && finished)) retired.add(row.team);
+  }
+  if (standings.length && withResult.size) {
+    const listed = new Set(standings.map(row => row.team));
+    for (const team of inCalendar) {
+      if (!listed.has(team) && !withResult.has(team)) retired.add(team);
+    }
+  }
+  return retired;
+}
+
+function liveMatch(retired) {
+  return m => !retired.has(m.home) && !retired.has(m.away);
+}
+
+/* Estado D (§4.2): ningún partido pendiente (sin contar los de retirados) y,
+ * además, temporada distinta de la del portal o a partir del 1 de junio del
+ * año final. */
+export function groupFinished(group, todayISO, portalSeason) {
+  const live = liveMatch(retiredTeams(group));
+  if (groupMatches(group).some(m => live(m) && matchState(m, todayISO) === 'pendiente')) return false;
+  if (group.season !== portalSeason) return true;
+  return todayISO >= `${String(group.season).split('-')[1]}-06-01`;
+}
+
+/* §4.3: la jornada del primer partido pendiente por fecha (a igual fecha, la
+ * primera jornada), para que un aplazado no devuelva una jornada vieja; si no
+ * hay pendientes, la última con resultados; si tampoco, la primera. */
+export function defaultRound(group, todayISO) {
+  const rounds = group.rounds || [];
+  const live = liveMatch(retiredTeams(group));
+  let next = null, nextDate = null;
+  for (const round of rounds) {
+    for (const m of round.matches) {
+      if (!live(m) || matchState(m, todayISO) !== 'pendiente') continue;
+      if (nextDate === null || m.dateISO < nextDate) {
+        next = round;
+        nextDate = m.dateISO;
+      }
+    }
+  }
+  if (next) return next;
+  const withResults = rounds.filter(round => round.matches.some(playedMatch));
+  return withResults[withResults.length - 1] || rounds[0] || null;
+}
+
+/* Equipos activos: los de la clasificación (en su orden) o, si llega vacía,
+ * los del calendario; nunca los retirados. */
+function activeTeams(group, retired) {
+  const standings = group.standings || [];
+  const names = standings.length
+    ? standings.map(row => row.team)
+    : [...new Set(groupMatches(group).flatMap(m => [m.home, m.away]))];
+  return names.filter(team => !retired.has(team));
+}
+
+/* Moda de partidos por jornada; en empate, la menor (nunca inventa «faltan»). */
+function usualMatchesPerRound(group, live) {
+  const freq = new Map();
+  for (const round of group.rounds || []) {
+    const n = round.matches.filter(live).length;
+    freq.set(n, (freq.get(n) || 0) + 1);
+  }
+  let best = 0, bestFreq = 0;
+  for (const [n, f] of freq) {
+    if (f > bestFreq || (f === bestFreq && n < best)) {
+      best = n;
+      bestFreq = f;
+    }
+  }
+  return best;
+}
+
+/* Aviso de jornada (§4.3). Los partidos contra retirados no cuentan y los
+ * retirados nunca figuran como ausentes. */
+export function roundNotice(group, round) {
+  const retired = retiredTeams(group);
+  const live = liveMatch(retired);
+  const matches = round.matches.filter(live);
+  const playing = new Set(matches.flatMap(m => [m.home, m.away]));
+  const teams = activeTeams(group, retired).filter(team => !playing.has(team));
+  const usual = usualMatchesPerRound(group, live);
+  if (matches.length < usual) {
+    return { kind: 'faltan', teams, retired: [...retired], missing: usual - matches.length };
+  }
+  if (teams.length) return { kind: 'sin-partido', teams, retired: [...retired], missing: 0 };
+  return null;
+}
+
+/* Cobertura (§7) de las cifras calculadas con el calendario frente al PJ de
+ * la clasificación. `calendar` son los partidos del equipo sin retirados,
+ * también los que aún no se han jugado; `withResult`, los que tienen marcador;
+ * `vsRetired`, los partidos contra retirados: los del calendario más, si algún
+ * retirado no aparece en él (Batán en PG2), los que la clasificación cuenta de
+ * más. Eso se mide con los partidos con resultado (pj − withResult), nunca con
+ * el calendario entero, que a mitad de temporada trae los futuros; y como
+ * mucho son tantos como veces se enfrenta a cualquier otro rival por cada
+ * ausente, para no achacarle un marcador que falta. null si los partidos con
+ * resultado explican todo el PJ. */
+export function coverageNote(team, group) {
+  const row = (group.standings || []).find(r => r.team === team);
+  const retired = retiredTeams(group);
+  if (!row || retired.has(team)) return null;
+  const all = groupMatches(group);
+  const mine = all.filter(m => m.home === team || m.away === team);
+  const rivalOf = m => (m.home === team ? m.away : m.home);
+  const calendar = mine.filter(m => !retired.has(rivalOf(m)));
+  const withResult = calendar.filter(playedMatch).length;
+  if (withResult === row.pj) return null;
+  const inCalendar = new Set(all.flatMap(m => [m.home, m.away]));
+  const faced = mine.map(rivalOf).filter(rival => retired.has(rival));
+  const absent = [...retired].filter(t => !inCalendar.has(t));
+  const meetings = new Map();
+  for (const m of calendar) meetings.set(rivalOf(m), (meetings.get(rivalOf(m)) || 0) + 1);
+  const perRival = Math.max(0, ...meetings.values());
+  const extra = absent.length ? Math.min(Math.max(0, row.pj - withResult), absent.length * perRival) : 0;
+  const names = [...new Set([...faced, ...(extra ? absent : [])])];
+  return { played: row.pj, calendar: calendar.length, vsRetired: faced.length + extra, retired: names, withResult };
+}
+
+/* Vistas Casa y Fuera de la Tabla (§4.4), desde el calendario. Mismos equipos
+ * que la clasificación oficial (o los del calendario si llega vacía), con
+ * `retired` marcado. Orden: retirados al final; luego puntos, diferencia,
+ * goles a favor y puesto oficial. */
+export function homeAwayTable(group, side) {
+  const retired = retiredTeams(group);
+  const standings = group.standings || [];
+  const names = standings.length ? standings.map(row => row.team) : activeTeams(group, retired);
+  const home = side === 'casa';
+  const results = new Map(names.map(team => [team, []]));
+  for (const m of groupMatches(group)) {
+    if (!playedMatch(m) || retired.has(m.home) || retired.has(m.away)) continue;
+    const list = results.get(home ? m.home : m.away);
+    if (list) list.push(home ? { gf: m.hs, gc: m.as } : { gf: m.as, gc: m.hs });
+  }
+  const rows = names.map((team, index) => {
+    const rec = recordOf(results.get(team));
+    return {
+      index,
+      row: { pos: 0, team, pts: rec.pts, pj: rec.pj, g: rec.g, e: rec.e, p: rec.p, gf: rec.gf, gc: rec.gc, dg: rec.gf - rec.gc, retired: retired.has(team) },
+    };
+  });
+  rows.sort((a, b) => a.row.retired - b.row.retired || b.row.pts - a.row.pts || b.row.dg - a.row.dg
+    || b.row.gf - a.row.gf || a.index - b.index);
+  return rows.map(({ row }, i) => ({ ...row, pos: i + 1 }));
+}
+
+/* «La temporada en cifras» y «Así terminó» (§4.2). Puesto, puntos, balance y
+ * goles, de la clasificación; el resto, del calendario sin retirados. best,
+ * worst y last tienen la forma de lastResults, o null. */
+export function seasonSummary(team, group) {
+  const standings = group.standings || [];
+  const row = standings.find(r => r.team === team) || null;
+  const results = teamResults(group, team, retiredTeams(group));
+  const total = recordOf(results);
+  let best = null, worst = null;
+  for (const r of results) {
+    const dg = r.gf - r.gc;
+    if (!best || dg > best.gf - best.gc || (dg === best.gf - best.gc && r.gf > best.gf)) best = r;
+    if (dg < 0 && (!worst || dg < worst.gf - worst.gc || (dg === worst.gf - worst.gc && r.gc > worst.gc))) worst = r;
+  }
+  return {
+    pos: row ? row.pos : null,
+    of: standings.length,
+    pts: row ? row.pts : null,
+    g: row ? row.g : null,
+    e: row ? row.e : null,
+    p: row ? row.p : null,
+    gf: row ? row.gf : null,
+    gc: row ? row.gc : null,
+    perMatch: total.pj ? { gf: total.gf / total.pj, gc: total.gc / total.pj } : null,
+    home: recordOf(results.filter(r => r.side === 'casa')),
+    away: recordOf(results.filter(r => r.side === 'fuera')),
+    best,
+    worst,
+    last: results[results.length - 1] || null,
+    coverage: coverageNote(team, group),
+  };
+}
+
+/* Forma (§4.2 «Últimos cinco», vista Forma de la Tabla y «Contexto» del
+ * partido): los `n` últimos resultados de liga del equipo en el grupo, del
+ * más antiguo al más reciente, con el criterio de teamResults. En un grupo
+ * que no es de liga, ninguno. */
+export function lastResults(team, group, n = 5) {
+  if (group.kind !== 'league') return [];
+  const results = teamResults(group, team, retiredTeams(group));
+  return results.slice(Math.max(0, results.length - n));
+}
+
+/* Partidos de un equipo en el grupo, sin los que son contra retirados (§4.2):
+ * `next`, el primer `pendiente` por fecha (a igual fecha, por jornada), que es
+ * el «Próximo partido» de la portada; `last`, el último jugado; y cuántos hay
+ * jugados (`played`), sin fecha (`undated`) y todavía sin resultado
+ * (`remaining`). Con `remaining` a 0, el equipo ya ha jugado todo su
+ * calendario aunque el grupo siga abierto. */
+export function teamFixtures(team, group, todayISO) {
+  const retired = retiredTeams(group);
+  let next = null, last = null, played = 0, undated = 0, remaining = 0;
+  for (const m of chronologicalMatches(group)) {
+    if ((m.home !== team && m.away !== team) || retired.has(m.home) || retired.has(m.away)) continue;
+    const state = matchState(m, todayISO);
+    if (state === 'jugado') {
+      played += 1;
+      last = m;
+      continue;
+    }
+    remaining += 1;
+    if (state === 'sin fecha') undated += 1;
+    if (state === 'pendiente' && !next) next = m;
+  }
+  return { next, last, played, undated, remaining };
+}
+
+/* Cara a cara (§4.5): los partidos entre `a` y `b` en ese grupo, en los dos
+ * sentidos y por fecha. Solo del grupo: nunca mezcla otra fase ni otra
+ * categoría (caso 7 de §11). */
+export function headToHead(group, a, b) {
+  return chronologicalMatches(group)
+    .filter(m => (m.home === a && m.away === b) || (m.home === b && m.away === a));
+}
+
+/* Récords (§4.7): la mejor racha de victorias y la mejor invicta de cada
+ * equipo en cada grupo de liga de la categoría, en orden de fecha. Una
+ * entrada por equipo y grupo, de mayor a menor; a igual racha, por nombre y
+ * grupo. */
+export function bestStreaks(season, cat) {
+  const wins = [], unbeaten = [];
+  for (const group of season.groups) {
+    if (group.cat !== cat || group.kind !== 'league') continue;
+    const retired = retiredTeams(group);
+    const runs = new Map();
+    for (const m of chronologicalMatches(group)) {
+      if (!playedMatch(m) || retired.has(m.home) || retired.has(m.away)) continue;
+      for (const [team, gf, gc] of [[m.home, m.hs, m.as], [m.away, m.as, m.hs]]) {
+        const run = runs.get(team) || { w: 0, u: 0, bestW: 0, bestU: 0 };
+        run.w = gf > gc ? run.w + 1 : 0;
+        run.u = gf < gc ? 0 : run.u + 1;
+        run.bestW = Math.max(run.bestW, run.w);
+        run.bestU = Math.max(run.bestU, run.u);
+        runs.set(team, run);
+      }
+    }
+    for (const [team, run] of runs) {
+      if (run.bestW) wins.push({ team, n: run.bestW, groupId: group.id });
+      if (run.bestU) unbeaten.push({ team, n: run.bestU, groupId: group.id });
+    }
+  }
+  const order = (a, b) => b.n - a.n || a.team.localeCompare(b.team, 'es') || a.groupId.localeCompare(b.groupId, 'es');
+  return { wins: wins.sort(order), unbeaten: unbeaten.sort(order) };
 }

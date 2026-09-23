@@ -213,8 +213,8 @@ export function buildGroup(raw, { season, cat, current = false, history = null }
     url: textOrNull(raw.url),
     standingsKind: raw.standingsKind ?? null,
     kind,
-    compKey: null,   // Tarea 4: competitionKey
-    label: null,     // Tarea 4: groupLabel
+    compKey: competitionKey({ ...raw, cat }, season).key,
+    label: groupLabel({ ...raw, cat, season }),
     standings: (raw.standings || []).map(standingRow),
     rounds,
     currentRound: currentRoundKey(raw, rounds),
@@ -248,4 +248,135 @@ export function buildCups({ season, benjamin = [], prebenjamin = [] } = {}) {
       ...(prebenjamin || []).map(raw => buildGroup(raw, opts('prebenjamin'))),
     ],
   };
+}
+
+/* ── Competición y etiqueta de grupo (spec §5.3 y §4.7) ────────────────────
+ *
+ * competitionKey(raw, season) → { cat, island, division, phase, cup, key, label }
+ *   division: 'preferente' | 'primera' | 'unica'
+ *   phase:    'primera-fase' | 'segunda-fase' | 'segunda-a'…'segunda-e' |
+ *             'fase-1' | 'fase-2' | 'oro' | 'plata' | 'bronce' | null
+ *   cup:      'campeones' | 'insular' | 'maspalomas' | null
+ *   key:      clave de la competición para #/ligas?f= (única en su temporada
+ *             y categoría; sin categoría ni temporada, que van en c y s)
+ *   label:    nombre legible de la competición, sin categoría ni grupo
+ * Una fase que no está en la tabla sale sin clasificar (division null), con
+ * una clave 'otra-…' y la fase de la fuente como nombre: una fase nueva no
+ * rompe la interfaz, y el test de phases.json la detecta. */
+
+const ISLAND_NAMES = { grancanaria: 'Gran Canaria', lanzarote: 'Lanzarote', fuerteventura: 'Fuerteventura' };
+const CAT_NAMES = { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' };
+const upperFirst = s => s.charAt(0).toUpperCase() + s.slice(1);
+const foldText = s => String(s ?? '').normalize('NFD').replace(/\p{M}/gu, '')
+  .toLowerCase().replace(/\s+/g, ' ').trim();
+const slugOf = s => foldText(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const seasonEndYear = season => (/^\d{4}-(\d{4})$/.exec(String(season)) || [])[1] || '';
+
+/* Tabla de equivalencias. Cubre las 29 fases reales de la base (56
+ * combinaciones de temporada, categoría y fase entre 2021-22 y 2025-26, en
+ * phases.json) y la Maspalomas Cup. Se lee sobre la fase sin tildes y en
+ * minúsculas, y manda la primera regla que casa. Cada regla da los ejes que
+ * no son los de por defecto (division 'unica', phase null, cup null) y:
+ *   name:   nombre legible, sin categoría ni isla ('' = la liga de la isla);
+ *   cupKey: parte de copa de la clave;
+ *   group:  sustituye al nombre del grupo en la etiqueta ('' lo omite). */
+const PHASE_TABLE = [
+  // «Maspalomas Cup» (fase de grupos y cuadros) → «Maspalomas Cup 2026»
+  [/maspalomas/, (m, raw, season) => ({
+    cup: 'maspalomas', cupKey: 'maspalomas', name: `Maspalomas Cup ${seasonEndYear(season)}`.trim(),
+  })],
+  // «Copa de Campeones» (2023-24 y 2025-26) y «Copa Campeones Benjamin A…E»
+  // (2024-25): una sola competición; en 2024-25 la letra es la fase del grupo.
+  [/^copa (?:de )?campeones(?: (?:pre)?benjamin)?(?: ([a-e]))?$/, m => ({
+    cup: 'campeones', cupKey: 'copa-campeones', name: 'Copa de Campeones',
+    ...(m[1] ? { group: `Fase ${m[1].toUpperCase()}` } : {}),
+  })],
+  // «Copa Cabildo Preferente Lanzarote» y «Copa Cabildo Primera Lanzarote» (2023-24)
+  [/^copa cabildo (preferente|primera)\b/, m => ({
+    cup: 'insular', cupKey: 'copa-cabildo', division: m[1], name: `Copa Cabildo ${upperFirst(m[1])}`,
+  })],
+  // «Copa Delegación Fuerteventura» (2022-23)
+  [/^copa delegacion\b/, () => ({ cup: 'insular', cupKey: 'copa-delegacion', name: 'Copa Delegación' })],
+  // «Copa Fuerteventura» (2022-23 y 2023-24) y cualquier otra copa insular
+  [/^copa\b/, (m, raw) => ({ cup: 'insular', cupKey: 'copa', name: String(raw.phase).trim() })],
+  // «Segunda Fase A GC»…«E GC» (2024-25) y «Segunda Fase A»…«C» (2025-26)
+  [/^segunda fase ([a-e])\b/, m => ({ phase: `segunda-${m[1]}`, name: `Segunda Fase ${m[1].toUpperCase()}` })],
+  // «Segunda Fase GC» (2023-24: 14 grupos sin letra)
+  [/^segunda fase\b/, () => ({ phase: 'segunda-fase', name: 'Segunda Fase' })],
+  // «Primera Fase GC»: en prebenjamín (2021-22 a 2023-24) es la liga de Gran
+  // Canaria, la misma que luego se llama «Gran Canaria»; en benjamín 2021-22 y
+  // 2022-23 es la división Primera, bajo «Preferente GC»; desde 2023-24, la
+  // primera fase, antes de la Segunda Fase.
+  [/^primera fase\b/, (m, raw, season, cat) => {
+    if (cat === 'prebenjamin') return {};
+    return String(season) <= '2022-2023'
+      ? { division: 'primera', name: 'Primera' }
+      : { phase: 'primera-fase', name: 'Primera Fase' };
+  }],
+  // «Fase 1 Fuerteventura» (2023-24, 2024-25), «Fuerteventura Fase 1» (2025-26), «Fase 2 Fuerteventura»
+  [/\bfase ([12])\b/, m => ({ phase: `fase-${m[1]}`, name: `Fase ${m[1]}` })],
+  // «Preferente GC» (2021-22, 2022-23) y «Preferente Lanzarote»
+  [/^preferente\b/, () => ({ division: 'preferente', name: 'Preferente' })],
+  // «Primera Lanzarote»
+  [/^primera\b/, () => ({ division: 'primera', name: 'Primera' })],
+  // La liga de la isla: «Gran Canaria», «Lanzarote» y «Fuerteventura». En
+  // benjamín de Fuerteventura 2025-26 el nivel va en el nombre del grupo
+  // («Liga Oro», «Liga Plata», «Liga Bronce»), que pasa a ser la competición.
+  [/^(?:gran canaria|lanzarote|fuerteventura)$/, (m, raw) => {
+    const level = foldText(raw.name).match(/^liga (oro|plata|bronce)$/);
+    return level ? { phase: level[1], name: `Liga ${upperFirst(level[1])}`, group: '' } : {};
+  }],
+];
+
+/* La categoría del grupo: `cat` si viene, y si no, la de fullName (los
+ * grupos crudos de data-*.js no la llevan). */
+function catOfGroup(raw) {
+  const c = foldText(raw && raw.cat);
+  if (c === 'benjamin' || c === 'prebenjamin') return c;
+  const full = foldText(raw && raw.fullName);
+  if (full.includes('prebenjamin')) return 'prebenjamin';
+  return full.includes('benjamin') ? 'benjamin' : null;
+}
+
+function classifyPhase(raw, season) {
+  const cat = catOfGroup(raw);
+  const island = (raw && raw.island) || null;
+  const phase = foldText(raw && raw.phase);
+  for (const [re, make] of PHASE_TABLE) {
+    const m = phase.match(re);
+    if (m) {
+      return { cat, island, known: true, division: 'unica', phase: null, cup: null, name: '', ...make(m, raw, season, cat) };
+    }
+  }
+  return { cat, island, known: false, division: null, phase: null, cup: null, name: String((raw && raw.phase) || '').trim() };
+}
+
+/* « de <isla>» si la isla no es Gran Canaria o si no hay otro calificativo, y
+ * nunca si el texto ya la nombra («Copa Fuerteventura»). */
+function islandSuffix(c, qualifier, textSoFar) {
+  const isla = ISLAND_NAMES[c.island];
+  if (!isla || textSoFar.includes(isla)) return '';
+  return c.island !== 'grancanaria' || !qualifier ? ` de ${isla}` : '';
+}
+
+export function competitionKey(raw, season) {
+  const c = classifyPhase(raw, season);
+  const islandPart = c.island && c.island !== 'grancanaria' ? c.island : null;
+  const parts = c.known
+    ? [islandPart, c.division !== 'unica' ? c.division : null, c.phase, c.cupKey || null]
+    : [islandPart, `otra-${slugOf(c.name) || 'fase'}`];
+  const key = parts.filter(Boolean).join('-') || c.island || 'sin-isla';
+  const label = c.name
+    ? c.name + islandSuffix(c, c.name, c.name)
+    : (ISLAND_NAMES[c.island] || c.island || '');
+  return { cat: c.cat, island: c.island, division: c.division, phase: c.phase, cup: c.cup, key, label };
+}
+
+/* «Prebenjamín, Grupo 2 de Gran Canaria», «Benjamín, Segunda Fase A, Grupo 2».
+ * Recibe un Group o un grupo crudo con {season, cat, phase, island, name}. */
+export function groupLabel(group) {
+  const c = classifyPhase(group, group.season);
+  const groupPart = c.group !== undefined ? c.group : String(group.name ?? '').trim();
+  const base = [CAT_NAMES[c.cat] || '', c.name, groupPart].filter(Boolean).join(', ');
+  return base + islandSuffix(c, c.name, base);
 }

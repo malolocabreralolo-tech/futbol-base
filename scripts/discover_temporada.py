@@ -65,6 +65,23 @@ def leer_clasificacion(url):
     return equipos, max(jornadas) if jornadas else None
 
 
+def candidatas_con_tabla(urls, leer=None, pausa=1.0):
+    """[(url, nº equipos, jornada)] de las URLs que sirven una clasificación.
+
+    Las URLs numeradas de prebenjamín responden aunque no haya liga detrás;
+    sin mirar la tabla, cada página vacía salía como candidata a fichar.
+    """
+    leer = leer or leer_clasificacion
+    out = []
+    for url in urls:
+        equipos, jornada = leer(url)
+        if pausa:
+            time.sleep(pausa)
+        if equipos:
+            out.append((url, len(equipos), jornada))
+    return out
+
+
 def grupos_de_la_base(conn):
     """[(code, url, [equipos])] de la temporada marcada como actual."""
     fila = conn.execute("SELECT id, name FROM seasons WHERE is_current=1").fetchone()
@@ -129,7 +146,11 @@ def main():
     for u in nuevas:
         print(f"      + {u}")
     prebe = [u for u in prebenjamin_links() if u.rstrip("/") not in conocidas]
-    print(f"   prebenjamín (patrón numerado): {len(prebe)} candidatas sin fichar")
+    candidatas = candidatas_con_tabla(prebe, pausa=args.pausa)
+    print(f"   prebenjamín (patrón numerado): {len(candidatas)} con tabla sin fichar "
+          f"({len(prebe) - len(candidatas)} URLs sin tabla)")
+    for u, n, jornada in candidatas:
+        print(f"      + {u} · {n} eq J{jornada}")
 
     print("\nResumen")
     if cambiados:

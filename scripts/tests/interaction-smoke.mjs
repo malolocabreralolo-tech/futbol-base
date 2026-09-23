@@ -1,6 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { createRequire } from 'node:module';
 import { startServer, findChrome } from './render-smoke.mjs';
+import { waitForAsync } from './browser-wait.mjs';
 
 // npm install --no-save --package-lock=false playwright@1.58.0
 // node scripts/tests/interaction-smoke.mjs
@@ -102,7 +103,7 @@ try {
         await checkNavPosition(page, mobile);
         await page.locator('[data-section="jornadas"]').click();
         await page.locator('#seasonSelect').selectOption('2021-2022');
-        await page.waitForFunction(async () => {
+        await waitForAsync(page, async () => {
           const { S, getData } = await import('./src/state.js');
           return S.season === '2021-2022' && getData().length > 0;
         });
@@ -174,7 +175,7 @@ try {
     await page.locator('#favoriteCategory').selectOption('benjamin');
     assert.ok(await page.locator('.picker-team').count() > 0);
     await page.locator('.picker-team').first().click();
-    await page.waitForFunction(async () => (await import('./src/state.js')).FEATURED.cat === 'benjamin');
+    await waitForAsync(page, async () => (await import('./src/state.js')).FEATURED.cat === 'benjamin');
     assert.equal(await page.locator('.favorite-tab').count(), 2);
     const selected = await page.evaluate(async () => ({ ...(await import('./src/state.js')).FEATURED }));
     await page.reload();

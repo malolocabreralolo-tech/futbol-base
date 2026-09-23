@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { startServer, findChrome } from './render-smoke.mjs';
+import { waitForAsync } from './browser-wait.mjs';
 
 const { chromium } = createRequire(import.meta.url)('playwright');
 const upstream = await startServer();
@@ -44,15 +45,15 @@ try {
   // Finish the page's initial registration/update cycle before simulating
   // publication; otherwise an in-flight legacy response can arrive afterward.
   await page.evaluate(async () => (await navigator.serviceWorker.ready).update());
-  await page.waitForFunction(old => caches.keys().then(keys => keys.includes(old)), oldCache);
+  await waitForAsync(page, old => caches.keys().then(keys => keys.includes(old)), oldCache);
   legacy = false;
   await page.evaluate(async () => (await navigator.serviceWorker.getRegistration()).update());
-  await page.waitForFunction(({ expected, oldCache }) => caches.keys().then(keys => keys.includes(expected) && !keys.includes(oldCache)), { expected, oldCache });
-  await page.waitForFunction(async () => {
+  await waitForAsync(page, ({ expected, oldCache }) => caches.keys().then(keys => keys.includes(expected) && !keys.includes(oldCache)), { expected, oldCache });
+  await waitForAsync(page, async () => {
     const registration = await navigator.serviceWorker.getRegistration();
     return registration?.active?.state === 'activated' && navigator.serviceWorker.controller === registration.active;
   });
-  await page.waitForFunction(expected => new Promise(resolve => {
+  await waitForAsync(page, expected => new Promise(resolve => {
     const channel = new MessageChannel();
     channel.port1.onmessage = event => resolve(event.data === expected);
     navigator.serviceWorker.controller?.postMessage('version', [channel.port2]);
@@ -71,11 +72,11 @@ try {
   assert.ok(!(await page.content()).includes('previously cached HTTP document'), 'navigation must retain the newly published HTML');
   assert.equal(await page.evaluate(async name => (await (await caches.open(name)).match('./index.html'))?.status, expected), 200);
   await page.evaluate(async () => (await navigator.serviceWorker.ready).update());
-  await page.waitForFunction(async () => {
+  await waitForAsync(page, async () => {
     const registration = await navigator.serviceWorker.getRegistration();
     return registration?.active?.state === 'activated' && navigator.serviceWorker.controller === registration.active;
   });
-  await page.waitForFunction(expected => new Promise(resolve => {
+  await waitForAsync(page, expected => new Promise(resolve => {
     const channel = new MessageChannel();
     channel.port1.onmessage = event => resolve(event.data === expected);
     navigator.serviceWorker.controller?.postMessage('version', [channel.port2]);

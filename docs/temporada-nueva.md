@@ -64,4 +64,4 @@ Comprobar ambas categorías, el equipo inicial y al menos un partido del archivo
 
 El importador rechaza clasificaciones vacías, retrocesos grandes de jornada y cambios fuertes de equipos. Conserva marcadores conocidos si la fuente difiere y señala la discrepancia en el informe. Las etiquetas `3` y `Jornada 3` comparten la identidad ya guardada para evitar duplicar encuentros.
 
-El informe distingue la última consulta de fuentes del último cambio en datos deportivos. Una ejecución sin marcadores nuevos puede actualizar únicamente `data-health.json`. Las pruebas de la actualización automática bloquean la publicación de datos incoherentes.
+El informe distingue la última consulta de fuentes del último cambio en datos deportivos. `data-health.json` solo se reescribe si cambia algo con significado (estado o mensaje de un grupo, versión de los datos publicados) o si su última comprobación publicada tiene más de 24 horas; sin eso, una ejecución sin marcadores nuevos no genera commit. Las pruebas de la actualización automática bloquean la publicación de datos incoherentes.

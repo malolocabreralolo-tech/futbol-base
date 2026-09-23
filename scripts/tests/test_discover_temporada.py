@@ -52,3 +52,23 @@ class TestPrebenjaminLinks:
 
     def test_default_ceiling(self):
         assert len(prebenjamin_links()) == PREBENJAMIN_MAX
+
+
+class TestCandidatasConTabla:
+    """Las URLs numeradas de prebenjamín existen aunque no haya liga detrás:
+    la sonda las contaba como 'candidatas sin fichar' estando vacías (falsa
+    alarma de 9 candidatas el 23/09/2026). Solo cuenta la que sirve tabla."""
+
+    def test_only_urls_with_a_standings_table_are_candidates(self):
+        from discover_temporada import candidatas_con_tabla
+        tablas = {
+            "https://futbolaspalmas.com/1prebenjamin4": (["UD Moya", "Gáldar CF"], 3),
+            "https://futbolaspalmas.com/1prebenjamin5": ([], None),
+        }
+        out = candidatas_con_tabla(list(tablas), lambda u: tablas[u], pausa=0)
+        assert out == [("https://futbolaspalmas.com/1prebenjamin4", 2, 3)]
+
+    def test_no_table_anywhere_is_no_candidate(self):
+        from discover_temporada import candidatas_con_tabla
+        urls = prebenjamin_links(3)
+        assert candidatas_con_tabla(urls, lambda u: ([], None), pausa=0) == []

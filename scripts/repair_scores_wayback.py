@@ -122,9 +122,13 @@ def plan_group(conn, group_id, snapshots):
     """Plan de reparación de un grupo a partir de sus capturas.
 
     Las capturas se aplican de la más antigua a la más reciente: la reciente
-    manda. Se acepta solo si el desvío de los equipos con el calendario completo
-    en ambos estados baja estrictamente."""
+    manda. Solo cuentan filas fechadas dentro de la temporada del grupo. Se
+    acepta solo si el desvío de los equipos con el calendario completo en ambos
+    estados baja estrictamente."""
     teams = group_teams(conn, group_id)
+    (season,) = conn.execute("SELECT s.name FROM groups g JOIN seasons s ON s.id = g.season_id WHERE g.id=?",
+                             (group_id,)).fetchone()
+    desde, hasta = (f"{d[:4]}-{d[4:6]}-{d[6:]}" for d in season_window(season))
     partidos = conn.execute(
         "SELECT id, jornada, home_team_id, away_team_id, home_score, away_score FROM matches WHERE group_id=?",
         (group_id,)).fetchall()
@@ -142,6 +146,8 @@ def plan_group(conn, group_id, snapshots):
                 home, away = mapping.get(row[1]), mapping.get(row[2])
                 if hs is None or as_ is None or home is None or away is None:
                     continue
+                if not (row[0] and desde <= row[0] <= hasta):
+                    continue  # fila de otra temporada (captura de agosto con la anterior)
                 candidatos = por_pareja.get((home, away), [])
                 if len(candidatos) > 1:
                     n = _round_number(label)

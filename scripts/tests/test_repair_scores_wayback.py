@@ -122,6 +122,15 @@ class TestPlan:
                                         "jornadas": R.jornadas_from_html(both)}])
         assert plan["overrides"] == {100: (15, 0)}
 
+    def test_rows_dated_outside_the_group_season_are_ignored(self):
+        # Una captura de principios de agosto puede enseñar aún la temporada
+        # anterior con una plantilla parecida: sus filas no valen.
+        conn = _db()
+        old = _html([(1, "11-10-2024", "09:00", "Las Rosas", 15, 0, "Las Majoreras")])
+        plan = R.plan_group(conn, 10, [{"url": URL, "timestamp": "20250805000000",
+                                        "jornadas": R.jornadas_from_html(old)}])
+        assert plan["overrides"] == {}
+
     def test_apply_writes_only_accepted_plans(self):
         conn = _db()
         good = R.plan_group(conn, 10, [{"url": URL, "timestamp": "20260510024729",

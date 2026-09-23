@@ -1,5 +1,2633 @@
 {
  "groups": {
+  "2024-2025|BENJAMIN|A1": {
+   "after": 0,
+   "before": 32,
+   "changes": [
+    {
+     "after": [
+      1,
+      3
+     ],
+     "away": "Garepa Viera",
+     "before": [
+      0,
+      3
+     ],
+     "home": "Cardones",
+     "jornada": "4",
+     "match_id": 919264,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20250712230144"
+    },
+    {
+     "after": [
+      1,
+      10
+     ],
+     "away": "AD Huracán",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Las Mesas Hu.",
+     "jornada": "6",
+     "match_id": 919272,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20250712230144"
+    },
+    {
+     "after": [
+      3,
+      7
+     ],
+     "away": "Acodetti",
+     "before": [
+      2,
+      7
+     ],
+     "home": "SANTIDAD BANOT, C.D.",
+     "jornada": "8",
+     "match_id": 919281,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20250712230144"
+    },
+    {
+     "after": [
+      2,
+      3
+     ],
+     "away": "Cardones",
+     "before": [
+      2,
+      0
+     ],
+     "home": "Las Mesas Hu.",
+     "jornada": "10",
+     "match_id": 919286,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20250712230144"
+    },
+    {
+     "after": [
+      4,
+      5
+     ],
+     "away": "Las Mesas Hu.",
+     "before": [
+      2,
+      5
+     ],
+     "home": "SANTIDAD BANOT, C.D.",
+     "jornada": "18",
+     "match_id": 919318,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20250712230144"
+    }
+   ]
+  },
+  "2024-2025|BENJAMIN|E1": {
+   "after": 2,
+   "before": 78,
+   "changes": [
+    {
+     "after": [
+      2,
+      12
+     ],
+     "away": "Corazón Mª B",
+     "before": [
+      1,
+      12
+     ],
+     "home": "BAÑADEROS, C.D. UNION COSTA \"B\"",
+     "jornada": "1",
+     "match_id": 920169,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    },
+    {
+     "after": [
+      6,
+      1
+     ],
+     "away": "UD Guía",
+     "before": [
+      6,
+      0
+     ],
+     "home": "San Nicolás",
+     "jornada": "2",
+     "match_id": 920172,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    },
+    {
+     "after": [
+      4,
+      2
+     ],
+     "away": "BAÑADEROS, C.D. UNION COSTA \"B\"",
+     "before": [
+      4,
+      0
+     ],
+     "home": "Cardones B",
+     "jornada": "2",
+     "match_id": 920174,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    },
+    {
+     "after": [
+      0,
+      11
+     ],
+     "away": "San Nicolás",
+     "before": [
+      0,
+      1
+     ],
+     "home": "UD Teror",
+     "jornada": "3",
+     "match_id": 920177,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    },
+    {
+     "after": [
+      1,
+      6
+     ],
+     "away": "Lomo Blanco B",
+     "before": [
+      1,
+      2
+     ],
+     "home": "ROQUE AMAGRO-CLARAVISION, C.D.",
+     "jornada": "6",
+     "match_id": 920191,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    },
+    {
+     "after": [
+      11,
+      3
+     ],
+     "away": "UD Teror",
+     "before": [
+      1,
+      3
+     ],
+     "home": "Corazón Mª B",
+     "jornada": "7",
+     "match_id": 920194,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    },
+    {
+     "after": [
+      8,
+      1
+     ],
+     "away": "BAÑADEROS, C.D. UNION COSTA \"B\"",
+     "before": [
+      8,
+      0
+     ],
+     "home": "Corazón Mª B",
+     "jornada": "8",
+     "match_id": 920199,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    },
+    {
+     "after": [
+      8,
+      5
+     ],
+     "away": "Lomo Blanco B",
+     "before": [
+      9,
+      5
+     ],
+     "home": "Corazón Mª B",
+     "jornada": "11",
+     "match_id": 920211,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    },
+    {
+     "after": [
+      11,
+      3
+     ],
+     "away": "UD Guía",
+     "before": [
+      1,
+      3
+     ],
+     "home": "Corazón Mª B",
+     "jornada": "13",
+     "match_id": 920217,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20250614045421"
+    }
+   ]
+  },
+  "2024-2025|BENJAMIN|E2": {
+   "after": 28,
+   "before": 32,
+   "changes": [
+    {
+     "after": [
+      5,
+      3
+     ],
+     "away": "Pedro Hidalgo B",
+     "before": [
+      5,
+      1
+     ],
+     "home": "GUINIGUADA APOLINARIO, C.D. \"B\"",
+     "jornada": "2",
+     "match_id": 920228,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20250614053043"
+    },
+    {
+     "after": [
+      1,
+      5
+     ],
+     "away": "Muelle Grande",
+     "before": [
+      0,
+      5
+     ],
+     "home": "Pedro Hidalgo B",
+     "jornada": "3",
+     "match_id": 920232,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20250614053043"
+    },
+    {
+     "after": [
+      8,
+      1
+     ],
+     "away": "GUINIGUADA APOLINARIO, C.D. \"B\"",
+     "before": [
+      6,
+      1
+     ],
+     "home": "Las Coloradas",
+     "jornada": "3",
+     "match_id": 920233,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20250614053043"
+    },
+    {
+     "after": [
+      7,
+      2
+     ],
+     "away": "Victoria C",
+     "before": [
+      8,
+      4
+     ],
+     "home": "Muelle Grande",
+     "jornada": "6",
+     "match_id": 920245,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20250614053043"
+    }
+   ]
+  },
+  "2024-2025|BENJAMIN|E3": {
+   "after": 0,
+   "before": 86,
+   "changes": [
+    {
+     "after": [
+      4,
+      5
+     ],
+     "away": "CD Calero",
+     "before": [
+      2,
+      5
+     ],
+     "home": "Arena Futboltec",
+     "jornada": "1",
+     "match_id": 920282,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    },
+    {
+     "after": [
+      11,
+      1
+     ],
+     "away": "Arena Futboltec",
+     "before": [
+      1,
+      1
+     ],
+     "home": "LA UNION DE VECINDARIO \"C\"",
+     "jornada": "2",
+     "match_id": 920285,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    },
+    {
+     "after": [
+      2,
+      3
+     ],
+     "away": "Estrella B",
+     "before": [
+      2,
+      0
+     ],
+     "home": "CF Mogán",
+     "jornada": "3",
+     "match_id": 920290,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    },
+    {
+     "after": [
+      1,
+      4
+     ],
+     "away": "CD Calero",
+     "before": [
+      0,
+      4
+     ],
+     "home": "Valdecasas",
+     "jornada": "3",
+     "match_id": 920291,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    },
+    {
+     "after": [
+      15,
+      1
+     ],
+     "away": "Valdecasas",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Tablero B",
+     "jornada": "4",
+     "match_id": 920294,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    },
+    {
+     "after": [
+      7,
+      2
+     ],
+     "away": "LA UNION DE VECINDARIO \"C\"",
+     "before": [
+      2,
+      2
+     ],
+     "home": "Tablero B",
+     "jornada": "6",
+     "match_id": 920302,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    },
+    {
+     "after": [
+      1,
+      2
+     ],
+     "away": "Arena Futboltec",
+     "before": [
+      0,
+      2
+     ],
+     "home": "CD Calero",
+     "jornada": "8",
+     "match_id": 920308,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    },
+    {
+     "after": [
+      2,
+      4
+     ],
+     "away": "Tablero B",
+     "before": [
+      2,
+      1
+     ],
+     "home": "Estrella B",
+     "jornada": "8",
+     "match_id": 920309,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    },
+    {
+     "after": [
+      4,
+      1
+     ],
+     "away": "AVIA CAR SAN FERNANDO \"B\"",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Estrella B",
+     "jornada": "12",
+     "match_id": 920324,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-quince/@20250614040249"
+    }
+   ]
+  },
+  "2024-2025|BENJAMIN|P12": {
+   "after": 0,
+   "before": 35,
+   "changes": [
+    {
+     "after": [
+      10,
+      0
+     ],
+     "away": "Casa Pastores",
+     "before": [
+      1,
+      0
+     ],
+     "home": "CD Ingenio",
+     "jornada": "1",
+     "match_id": 923942,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      0,
+      7
+     ],
+     "away": "LA UNION DE VECINDARIO",
+     "before": [
+      0,
+      6
+     ],
+     "home": "CD Arinaga",
+     "jornada": "1",
+     "match_id": 923943,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      0,
+      10
+     ],
+     "away": "CD Ingenio",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Estrella B",
+     "jornada": "2",
+     "match_id": 923947,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      2,
+      0
+     ],
+     "away": "JOVERO-LAS ROSAS, C.D.",
+     "before": [
+      0,
+      0
+     ],
+     "home": "LA UNION DE VECINDARIO",
+     "jornada": "2",
+     "match_id": 923948,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      15,
+      2
+     ],
+     "away": "Balos B",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Doramas",
+     "jornada": "2",
+     "match_id": 923950,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      4,
+      4
+     ],
+     "away": "Agüimes",
+     "before": [
+      3,
+      4
+     ],
+     "home": "Balos B",
+     "jornada": "3",
+     "match_id": 923953,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      0,
+      10
+     ],
+     "away": "Doramas",
+     "before": [
+      0,
+      0
+     ],
+     "home": "Casa Pastores",
+     "jornada": "4",
+     "match_id": 923957,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      1,
+      12
+     ],
+     "away": "JOVERO-LAS ROSAS, C.D.",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Estrella B",
+     "jornada": "4",
+     "match_id": 923958,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      15,
+      0
+     ],
+     "away": "Balos B",
+     "before": [
+      5,
+      0
+     ],
+     "home": "LA UNION DE VECINDARIO",
+     "jornada": "4",
+     "match_id": 923959,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      14,
+      0
+     ],
+     "away": "Casa Pastores",
+     "before": [
+      1,
+      0
+     ],
+     "home": "LA UNION DE VECINDARIO",
+     "jornada": "5",
+     "match_id": 923962,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      1,
+      17
+     ],
+     "away": "CD Ingenio",
+     "before": [
+      1,
+      7
+     ],
+     "home": "Balos B",
+     "jornada": "5",
+     "match_id": 923964,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      6,
+      0
+     ],
+     "away": "CD Arinaga",
+     "before": [
+      0,
+      0
+     ],
+     "home": "CD Ingenio",
+     "jornada": "6",
+     "match_id": 923967,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    },
+    {
+     "after": [
+      7,
+      1
+     ],
+     "away": "CD Arinaga",
+     "before": [
+      3,
+      1
+     ],
+     "home": "Doramas",
+     "jornada": "9",
+     "match_id": 923984,
+     "source": "https://futbolaspalmas.com/1benjamin12/@20250318204639"
+    }
+   ]
+  },
+  "2024-2025|BENJAMIN|P13": {
+   "after": 44,
+   "before": 258,
+   "changes": [
+    {
+     "after": [
+      6,
+      1
+     ],
+     "away": "Balos",
+     "before": [
+      2,
+      1
+     ],
+     "home": "Mas. Training",
+     "jornada": "1",
+     "match_id": 923987,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      1,
+      10
+     ],
+     "away": "Arguineguín",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Tablero B",
+     "jornada": "1",
+     "match_id": 923988,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      1,
+      18
+     ],
+     "away": "Estrella CF",
+     "before": [
+      1,
+      8
+     ],
+     "home": "AVIA CAR SAN FERNANDO \"B\"",
+     "jornada": "1",
+     "match_id": 923990,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      18,
+      0
+     ],
+     "away": "AVIA CAR SAN FERNANDO \"B\"",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Balos",
+     "jornada": "2",
+     "match_id": 923994,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      1,
+      15
+     ],
+     "away": "Mas. Training",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Tablero B",
+     "jornada": "3",
+     "match_id": 923998,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      15,
+      1
+     ],
+     "away": "AVIA CAR SAN FERNANDO \"B\"",
+     "before": [
+      8,
+      1
+     ],
+     "home": "Mas. Training",
+     "jornada": "4",
+     "match_id": 924005,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      15,
+      2
+     ],
+     "away": "Tablero B",
+     "before": [
+      5,
+      2
+     ],
+     "home": "Estrella CF",
+     "jornada": "6",
+     "match_id": 924014,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      0,
+      17
+     ],
+     "away": "SAN PEDRO MARTIR, C.D. \"A\"",
+     "before": [
+      0,
+      1
+     ],
+     "home": "AVIA CAR SAN FERNANDO \"B\"",
+     "jornada": "6",
+     "match_id": 924015,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      1,
+      15
+     ],
+     "away": "SAN PEDRO MARTIR, C.D. \"A\"",
+     "before": [
+      1,
+      5
+     ],
+     "home": "Tablero B",
+     "jornada": "7",
+     "match_id": 924020,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    },
+    {
+     "after": [
+      0,
+      13
+     ],
+     "away": "Maspalomas",
+     "before": [
+      0,
+      3
+     ],
+     "home": "AVIA CAR SAN FERNANDO \"B\"",
+     "jornada": "8",
+     "match_id": 924025,
+     "source": "https://futbolaspalmas.com/1benjamin13/@20250429012425"
+    }
+   ]
+  },
+  "2024-2025|BENJAMIN|P14": {
+   "after": 20,
+   "before": 134,
+   "changes": [
+    {
+     "after": [
+      3,
+      4
+     ],
+     "away": "Arguineguín B",
+     "before": [
+      2,
+      4
+     ],
+     "home": "Doramas C",
+     "jornada": "1",
+     "match_id": 924031,
+     "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
+    },
+    {
+     "after": [
+      12,
+      2
+     ],
+     "away": "LA UNION DE VECINDARIO \"C\"",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Mas. Training B",
+     "jornada": "1",
+     "match_id": 924035,
+     "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
+    },
+    {
+     "after": [
+      2,
+      3
+     ],
+     "away": "Doramas C",
+     "before": [
+      2,
+      1
+     ],
+     "home": "Maspalomas B",
+     "jornada": "4",
+     "match_id": 924049,
+     "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
+    },
+    {
+     "after": [
+      1,
+      3
+     ],
+     "away": "Maspalomas B",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Arguineguín B",
+     "jornada": "5",
+     "match_id": 924051,
+     "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
+    },
+    {
+     "after": [
+      18,
+      0
+     ],
+     "away": "LA UNION DE VECINDARIO \"C\"",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Doramas C",
+     "jornada": "5",
+     "match_id": 924052,
+     "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
+    },
+    {
+     "after": [
+      16,
+      1
+     ],
+     "away": "CF Mogán",
+     "before": [
+      1,
+      1
+     ],
+     "home": "CD Tablero",
+     "jornada": "5",
+     "match_id": 924053,
+     "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
+    },
+    {
+     "after": [
+      11,
+      0
+     ],
+     "away": "LA UNION DE VECINDARIO \"C\"",
+     "before": [
+      1,
+      0
+     ],
+     "home": "AVIA CAR SAN FERNANDO",
+     "jornada": "7",
+     "match_id": 924065,
+     "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
+    }
+   ]
+  },
+  "2024-2025|BENJAMIN|P2": {
+   "after": 26,
+   "before": 234,
+   "changes": [
+    {
+     "after": [
+      0,
+      12
+     ],
+     "away": "Arucas",
+     "before": [
+      0,
+      2
+     ],
+     "home": "UD Teror",
+     "jornada": "1",
+     "match_id": 923806,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      19,
+      0
+     ],
+     "away": "ROQUE AMAGRO-CLARAVISION, C.D.",
+     "before": [
+      9,
+      0
+     ],
+     "home": "Arucas",
+     "jornada": "2",
+     "match_id": 923812,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      12,
+      2
+     ],
+     "away": "UD Barrial",
+     "before": [
+      1,
+      2
+     ],
+     "home": "SANTIDAD BANOT, C.D.",
+     "jornada": "3",
+     "match_id": 923820,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      0,
+      11
+     ],
+     "away": "UD Barrial",
+     "before": [
+      0,
+      1
+     ],
+     "home": "ROQUE AMAGRO-CLARAVISION, C.D.",
+     "jornada": "5",
+     "match_id": 923829,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      15,
+      1
+     ],
+     "away": "UD Teror",
+     "before": [
+      1,
+      1
+     ],
+     "home": "SANTIDAD BANOT, C.D.",
+     "jornada": "5",
+     "match_id": 923830,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      8,
+      0
+     ],
+     "away": "ROQUE AMAGRO-CLARAVISION, C.D.",
+     "before": [
+      4,
+      0
+     ],
+     "home": "UD Teror",
+     "jornada": "6",
+     "match_id": 923832,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      1,
+      2
+     ],
+     "away": "SANTIDAD BANOT, C.D.",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Arucas",
+     "jornada": "6",
+     "match_id": 923833,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      5,
+      6
+     ],
+     "away": "Moya B",
+     "before": [
+      3,
+      6
+     ],
+     "home": "Goleta",
+     "jornada": "6",
+     "match_id": 923835,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      12,
+      2
+     ],
+     "away": "ROQUE AMAGRO-CLARAVISION, C.D.",
+     "before": [
+      1,
+      2
+     ],
+     "home": "SANTIDAD BANOT, C.D.",
+     "jornada": "7",
+     "match_id": 923840,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      1,
+      4
+     ],
+     "away": "Moya B",
+     "before": [
+      0,
+      4
+     ],
+     "home": "UD Barrial",
+     "jornada": "8",
+     "match_id": 923843,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      3,
+      6
+     ],
+     "away": "CD Firgas",
+     "before": [
+      3,
+      1
+     ],
+     "home": "ROQUE AMAGRO-CLARAVISION, C.D.",
+     "jornada": "8",
+     "match_id": 923845,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      14,
+      0
+     ],
+     "away": "UD Teror",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Moya B",
+     "jornada": "9",
+     "match_id": 923848,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    },
+    {
+     "after": [
+      19,
+      0
+     ],
+     "away": "ROQUE AMAGRO-CLARAVISION, C.D.",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Cardones",
+     "jornada": "9",
+     "match_id": 923849,
+     "source": "https://futbolaspalmas.com/1benjamin2/primera-benjamin-grupo-2-benjamin-primera2.html@20250120011309"
+    }
+   ]
+  },
+  "2024-2025|BENJAMIN|P5": {
+   "after": 8,
+   "before": 222,
+   "changes": [
+    {
+     "after": [
+      0,
+      27
+     ],
+     "away": "AD Huracán",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Atl. Isleta B",
+     "jornada": "1",
+     "match_id": 923853,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      0,
+      10
+     ],
+     "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+     "before": [
+      0,
+      0
+     ],
+     "home": "San Lázaro",
+     "jornada": "1",
+     "match_id": 923855,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      11,
+      2
+     ],
+     "away": "Atl. Isleta B",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Arucas B",
+     "jornada": "2",
+     "match_id": 923859,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      1,
+      12
+     ],
+     "away": "AD Huracán",
+     "before": [
+      1,
+      2
+     ],
+     "home": "VICTORIA, REAL CLUB",
+     "jornada": "3",
+     "match_id": 923864,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      10,
+      0
+     ],
+     "away": "Atl. Isleta B",
+     "before": [
+      0,
+      0
+     ],
+     "home": "DANIEL CARNEVALI, C.D. \"A\"",
+     "jornada": "4",
+     "match_id": 923868,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "Las Coloradas",
+     "before": [
+      1,
+      1
+     ],
+     "home": "VICTORIA, REAL CLUB",
+     "jornada": "5",
+     "match_id": 923874,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      13,
+      2
+     ],
+     "away": "DANIEL CARNEVALI, C.D. \"A\"",
+     "before": [
+      3,
+      2
+     ],
+     "home": "Simusetti",
+     "jornada": "7",
+     "match_id": 923881,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      18,
+      0
+     ],
+     "away": "Arucas B",
+     "before": [
+      8,
+      0
+     ],
+     "home": "AD Huracán",
+     "jornada": "7",
+     "match_id": 923882,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      11,
+      0
+     ],
+     "away": "Atl. Isleta B",
+     "before": [
+      1,
+      0
+     ],
+     "home": "VICTORIA, REAL CLUB",
+     "jornada": "7",
+     "match_id": 923884,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      0,
+      14
+     ],
+     "away": "AD Huracán",
+     "before": [
+      0,
+      4
+     ],
+     "home": "Las Coloradas",
+     "jornada": "8",
+     "match_id": 923887,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    },
+    {
+     "after": [
+      14,
+      0
+     ],
+     "away": "DANIEL CARNEVALI, C.D. \"A\"",
+     "before": [
+      14,
+      1
+     ],
+     "home": "AD Huracán",
+     "jornada": "9",
+     "match_id": 923892,
+     "source": "https://futbolaspalmas.com/1benjamin5/primera-benjamin-grupo-5-benjamin-primera5.html@20250619220727"
+    }
+   ]
+  },
+  "2024-2025|PREBENJAMIN|PGC1": {
+   "after": 0,
+   "before": 362,
+   "changes": [
+    {
+     "after": [
+      6,
+      2
+     ],
+     "away": "COSTA AYALA, UNION JUVENIL",
+     "before": [
+      6,
+      0
+     ],
+     "home": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+     "jornada": "1",
+     "match_id": 924452,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      9,
+      2
+     ],
+     "away": "Moya",
+     "before": [
+      9,
+      1
+     ],
+     "home": "SANTIDAD BANOT, C.D.",
+     "jornada": "3",
+     "match_id": 924465,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      5,
+      6
+     ],
+     "away": "UD Atalaya",
+     "before": [
+      2,
+      6
+     ],
+     "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+     "jornada": "5",
+     "match_id": 924474,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      3,
+      1
+     ],
+     "away": "UD Barrial",
+     "before": [
+      1,
+      1
+     ],
+     "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+     "jornada": "5",
+     "match_id": 924478,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      13,
+      2
+     ],
+     "away": "Moya",
+     "before": [
+      3,
+      2
+     ],
+     "home": "Arucas",
+     "jornada": "5",
+     "match_id": 924479,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      2,
+      11
+     ],
+     "away": "Arucas",
+     "before": [
+      2,
+      1
+     ],
+     "home": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+     "jornada": "6",
+     "match_id": 924480,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      2,
+      8
+     ],
+     "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+     "before": [
+      0,
+      8
+     ],
+     "home": "Becerril",
+     "jornada": "6",
+     "match_id": 924482,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      8,
+      1
+     ],
+     "away": "CD Firgas",
+     "before": [
+      5,
+      1
+     ],
+     "home": "UD Atalaya",
+     "jornada": "6",
+     "match_id": 924484,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      3,
+      3
+     ],
+     "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+     "before": [
+      3,
+      2
+     ],
+     "home": "COSTA AYALA, UNION JUVENIL",
+     "jornada": "6",
+     "match_id": 924485,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      9,
+      0
+     ],
+     "away": "Moya",
+     "before": [
+      0,
+      0
+     ],
+     "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+     "jornada": "7",
+     "match_id": 924487,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      2,
+      7
+     ],
+     "away": "UD Atalaya",
+     "before": [
+      1,
+      7
+     ],
+     "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+     "jornada": "7",
+     "match_id": 924491,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      3,
+      2
+     ],
+     "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+     "before": [
+      3,
+      0
+     ],
+     "home": "Becerril",
+     "jornada": "8",
+     "match_id": 924496,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      11,
+      0
+     ],
+     "away": "Guayarmina",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Arucas",
+     "jornada": "8",
+     "match_id": 924497,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      4,
+      4
+     ],
+     "away": "COSTA AYALA, UNION JUVENIL",
+     "before": [
+      4,
+      3
+     ],
+     "home": "Becerril",
+     "jornada": "10",
+     "match_id": 924505,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      4,
+      1
+     ],
+     "away": "UD Barrial",
+     "before": [
+      4,
+      0
+     ],
+     "home": "Moya",
+     "jornada": "10",
+     "match_id": 924507,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      11,
+      0
+     ],
+     "away": "CD Firgas",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Arucas",
+     "jornada": "10",
+     "match_id": 924509,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      1,
+      5
+     ],
+     "away": "Arucas",
+     "before": [
+      0,
+      5
+     ],
+     "home": "UD Barrial",
+     "jornada": "12",
+     "match_id": 924516,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      0,
+      14
+     ],
+     "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+     "before": [
+      0,
+      1
+     ],
+     "home": "CD Firgas",
+     "jornada": "12",
+     "match_id": 924517,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      2,
+      4
+     ],
+     "away": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+     "before": [
+      2,
+      1
+     ],
+     "home": "COSTA AYALA, UNION JUVENIL",
+     "jornada": "12",
+     "match_id": 924519,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      12,
+      0
+     ],
+     "away": "CD Firgas",
+     "before": [
+      1,
+      0
+     ],
+     "home": "SANTIDAD BANOT, C.D.",
+     "jornada": "13",
+     "match_id": 924524,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      9,
+      3
+     ],
+     "away": "COSTA AYALA, UNION JUVENIL",
+     "before": [
+      6,
+      3
+     ],
+     "home": "Arucas",
+     "jornada": "13",
+     "match_id": 924527,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      0,
+      5
+     ],
+     "away": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Becerril",
+     "jornada": "14",
+     "match_id": 924529,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      5,
+      3
+     ],
+     "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+     "before": [
+      5,
+      2
+     ],
+     "home": "UD Barrial",
+     "jornada": "16",
+     "match_id": 924540,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      1,
+      13
+     ],
+     "away": "Arucas",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Moya",
+     "jornada": "16",
+     "match_id": 924542,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      1,
+      6
+     ],
+     "away": "SANTIDAD BANOT, C.D.",
+     "before": [
+      1,
+      2
+     ],
+     "home": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+     "jornada": "16",
+     "match_id": 924543,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "UD Barrial",
+     "before": [
+      0,
+      1
+     ],
+     "home": "SANTIDAD BANOT, C.D.",
+     "jornada": "17",
+     "match_id": 924546,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      7,
+      5
+     ],
+     "away": "Moya",
+     "before": [
+      4,
+      5
+     ],
+     "home": "Guayarmina",
+     "jornada": "17",
+     "match_id": 924547,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      2,
+      2
+     ],
+     "away": "Becerril",
+     "before": [
+      2,
+      0
+     ],
+     "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+     "jornada": "17",
+     "match_id": 924549,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      1,
+      9
+     ],
+     "away": "GALDARCLUBS JACOBEO 21-22, C.D.",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Moya",
+     "jornada": "18",
+     "match_id": 924554,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      4,
+      1
+     ],
+     "away": "SANTIDAD BANOT, C.D.",
+     "before": [
+      4,
+      0
+     ],
+     "home": "Arucas",
+     "jornada": "18",
+     "match_id": 924557,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      0,
+      11
+     ],
+     "away": "Arucas",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Guayarmina",
+     "jornada": "19",
+     "match_id": 924559,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      3,
+      1
+     ],
+     "away": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+     "before": [
+      3,
+      0
+     ],
+     "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+     "jornada": "19",
+     "match_id": 924562,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      2,
+      3
+     ],
+     "away": "Becerril",
+     "before": [
+      0,
+      3
+     ],
+     "home": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+     "jornada": "19",
+     "match_id": 924563,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      14,
+      0
+     ],
+     "away": "CD Firgas",
+     "before": [
+      4,
+      0
+     ],
+     "home": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+     "jornada": "20",
+     "match_id": 924567,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      6,
+      0
+     ],
+     "away": "Guayarmina",
+     "before": [
+      0,
+      0
+     ],
+     "home": "GALDARCLUBS JACOBEO 21-22, C.D.",
+     "jornada": "21",
+     "match_id": 924570,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "VILLA DE SANTA BRIGIDA, U.D \"B\"",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Arucas",
+     "jornada": "22",
+     "match_id": 924580,
+     "source": "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html@20250429145439"
+    }
+   ]
+  },
+  "2024-2025|PREBENJAMIN|PGC2": {
+   "after": 4,
+   "before": 218,
+   "changes": [
+    {
+     "after": [
+      1,
+      12
+     ],
+     "away": "Tamaraceite",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Telde B",
+     "jornada": "1",
+     "match_id": 924080,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      11,
+      1
+     ],
+     "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+     "before": [
+      1,
+      1
+     ],
+     "home": "VETERANOS DEL PILA, C.D.",
+     "jornada": "2",
+     "match_id": 924083,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      4,
+      1
+     ],
+     "away": "Telde B",
+     "before": [
+      4,
+      0
+     ],
+     "home": "Las Mesas Hu.",
+     "jornada": "2",
+     "match_id": 924085,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      1,
+      7
+     ],
+     "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+     "before": [
+      0,
+      7
+     ],
+     "home": "Las Mesas Hu.",
+     "jornada": "4",
+     "match_id": 924095,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      13,
+      0
+     ],
+     "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Unión Viera",
+     "jornada": "6",
+     "match_id": 924108,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      10,
+      0
+     ],
+     "away": "Telde B",
+     "before": [
+      0,
+      0
+     ],
+     "home": "AD Huracán",
+     "jornada": "7",
+     "match_id": 924114,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      14,
+      2
+     ],
+     "away": "Las Mesas Hu.",
+     "before": [
+      4,
+      2
+     ],
+     "home": "Unión Viera",
+     "jornada": "9",
+     "match_id": 924128,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      1,
+      7
+     ],
+     "away": "AD Huracán",
+     "before": [
+      0,
+      7
+     ],
+     "home": "VETERANOS DEL PILA, C.D.",
+     "jornada": "12",
+     "match_id": 924142,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      3,
+      1
+     ],
+     "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+     "before": [
+      2,
+      1
+     ],
+     "home": "Las Mesas Hu.",
+     "jornada": "12",
+     "match_id": 924145,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      5,
+      0
+     ],
+     "away": "VICTORIA, REAL CLUB",
+     "before": [
+      2,
+      0
+     ],
+     "home": "Acodetti",
+     "jornada": "12",
+     "match_id": 924146,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      4,
+      8
+     ],
+     "away": "Unión Viera",
+     "before": [
+      4,
+      0
+     ],
+     "home": "VICTORIA, REAL CLUB",
+     "jornada": "13",
+     "match_id": 924153,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      2,
+      2
+     ],
+     "away": "AD Huracán",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Unión Viera",
+     "jornada": "14",
+     "match_id": 924154,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      10,
+      0
+     ],
+     "away": "Arucas B",
+     "before": [
+      1,
+      0
+     ],
+     "home": "AD Huracán",
+     "jornada": "15",
+     "match_id": 924161,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      10,
+      0
+     ],
+     "away": "Las Mesas Hu.",
+     "before": [
+      1,
+      0
+     ],
+     "home": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+     "jornada": "15",
+     "match_id": 924163,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      2,
+      4
+     ],
+     "away": "Tamaraceite",
+     "before": [
+      0,
+      4
+     ],
+     "home": "VETERANOS DEL PILA, C.D.",
+     "jornada": "17",
+     "match_id": 924172,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      2,
+      5
+     ],
+     "away": "VETERANOS DEL PILA, C.D.",
+     "before": [
+      0,
+      5
+     ],
+     "home": "Las Mesas Hu.",
+     "jornada": "18",
+     "match_id": 924179,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "Las Mesas Hu.",
+     "before": [
+      8,
+      1
+     ],
+     "home": "Acodetti",
+     "jornada": "19",
+     "match_id": 924188,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      4,
+      5
+     ],
+     "away": "VILLA DE SANTA BRIGIDA, U.D. \"A\"",
+     "before": [
+      0,
+      5
+     ],
+     "home": "VICTORIA, REAL CLUB",
+     "jornada": "19",
+     "match_id": 924189,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      0,
+      11
+     ],
+     "away": "Unión Viera",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Las Mesas Hu.",
+     "jornada": "20",
+     "match_id": 924191,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    },
+    {
+     "after": [
+      1,
+      5
+     ],
+     "away": "Las Mesas Hu.",
+     "before": [
+      0,
+      5
+     ],
+     "home": "Arucas B",
+     "jornada": "21",
+     "match_id": 924200,
+     "source": "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html@20250429005248"
+    }
+   ]
+  },
+  "2024-2025|PREBENJAMIN|PGC3": {
+   "after": 16,
+   "before": 218,
+   "changes": [
+    {
+     "after": [
+      13,
+      3
+     ],
+     "away": "Ingenio B",
+     "before": [
+      3,
+      1
+     ],
+     "home": "CD Ingenio",
+     "jornada": "2",
+     "match_id": 924216,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      7,
+      1
+     ],
+     "away": "Acodetti B",
+     "before": [
+      1,
+      1
+     ],
+     "home": "La Garita",
+     "jornada": "2",
+     "match_id": 924218,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      6,
+      2
+     ],
+     "away": "CD Ingenio",
+     "before": [
+      4,
+      2
+     ],
+     "home": "La Garita",
+     "jornada": "5",
+     "match_id": 924237,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      8,
+      4
+     ],
+     "away": "Las Longueras",
+     "before": [
+      4,
+      8
+     ],
+     "home": "CD Ingenio",
+     "jornada": "6",
+     "match_id": 924239,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      1,
+      1
+     ],
+     "away": "Las Huesas",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Las Longueras",
+     "jornada": "7",
+     "match_id": 924246,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      2,
+      8
+     ],
+     "away": "Acodetti B",
+     "before": [
+      1,
+      8
+     ],
+     "home": "Ingenio B",
+     "jornada": "10",
+     "match_id": 924266,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      11,
+      0
+     ],
+     "away": "Ingenio B",
+     "before": [
+      1,
+      0
+     ],
+     "home": "La Garita",
+     "jornada": "12",
+     "match_id": 924278,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      7,
+      15
+     ],
+     "away": "CD Ingenio",
+     "before": [
+      7,
+      5
+     ],
+     "home": "Ingenio B",
+     "jornada": "13",
+     "match_id": 924284,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      12,
+      4
+     ],
+     "away": "Acodetti B",
+     "before": [
+      1,
+      4
+     ],
+     "home": "CD Ingenio",
+     "jornada": "14",
+     "match_id": 924286,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "Ingenio B",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Telde",
+     "jornada": "14",
+     "match_id": 924291,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      5,
+      2
+     ],
+     "away": "La Garita",
+     "before": [
+      5,
+      0
+     ],
+     "home": "CD Ingenio",
+     "jornada": "16",
+     "match_id": 924298,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      4,
+      10
+     ],
+     "away": "CD Ingenio",
+     "before": [
+      4,
+      0
+     ],
+     "home": "Las Longueras",
+     "jornada": "17",
+     "match_id": 924306,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      0,
+      5
+     ],
+     "away": "Unión Carrizal",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Valsequillo",
+     "jornada": "18",
+     "match_id": 924315,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      3,
+      3
+     ],
+     "away": "Valsequillo",
+     "before": [
+      3,
+      0
+     ],
+     "home": "La Garita",
+     "jornada": "19",
+     "match_id": 924320,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      0,
+      12
+     ],
+     "away": "La Garita",
+     "before": [
+      0,
+      2
+     ],
+     "home": "PLAYA DEL HOMBRE, C.D.",
+     "jornada": "20",
+     "match_id": 924323,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      1,
+      10
+     ],
+     "away": "Telde",
+     "before": [
+      1,
+      1
+     ],
+     "home": "PLAYA DEL HOMBRE, C.D.",
+     "jornada": "22",
+     "match_id": 924335,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      0,
+      9
+     ],
+     "away": "La Garita",
+     "before": [
+      0,
+      4
+     ],
+     "home": "Las Huesas",
+     "jornada": "22",
+     "match_id": 924337,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    },
+    {
+     "after": [
+      3,
+      1
+     ],
+     "away": "Acodetti B",
+     "before": [
+      0,
+      0
+     ],
+     "home": "Las Longueras",
+     "jornada": "22",
+     "match_id": 924339,
+     "source": "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html@20250429004632"
+    }
+   ]
+  },
+  "2024-2025|PREBENJAMIN|PGC4": {
+   "after": 30,
+   "before": 198,
+   "changes": [
+    {
+     "after": [
+      7,
+      1
+     ],
+     "away": "JOVERO-LAS ROSAS, C.D.",
+     "before": [
+      5,
+      1
+     ],
+     "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+     "jornada": "3",
+     "match_id": 924353,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      6,
+      3
+     ],
+     "away": "CF Mogán",
+     "before": [
+      6,
+      2
+     ],
+     "home": "CD Arinaga",
+     "jornada": "5",
+     "match_id": 924361,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      7,
+      2
+     ],
+     "away": "Doramas",
+     "before": [
+      7,
+      0
+     ],
+     "home": "Mas. Training",
+     "jornada": "5",
+     "match_id": 924364,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      2,
+      1
+     ],
+     "away": "Arguineguín B",
+     "before": [
+      2,
+      0
+     ],
+     "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+     "jornada": "6",
+     "match_id": 924367,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      7,
+      2
+     ],
+     "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+     "before": [
+      7,
+      1
+     ],
+     "home": "SAN PEDRO MARTIR, C.D.",
+     "jornada": "7",
+     "match_id": 924373,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      1,
+      12
+     ],
+     "away": "JOVERO-LAS ROSAS, C.D.",
+     "before": [
+      1,
+      2
+     ],
+     "home": "CF Mogán",
+     "jornada": "11",
+     "match_id": 924390,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      12,
+      1
+     ],
+     "away": "Arguineguín B",
+     "before": [
+      2,
+      1
+     ],
+     "home": "Arguineguín",
+     "jornada": "12",
+     "match_id": 924395,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      2,
+      11
+     ],
+     "away": "LA UNION DE VECINDARIO",
+     "before": [
+      2,
+      1
+     ],
+     "home": "CD Arinaga",
+     "jornada": "13",
+     "match_id": 924401,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      4,
+      0
+     ],
+     "away": "Arguineguín B",
+     "before": [
+      5,
+      0
+     ],
+     "home": "Maspalomas",
+     "jornada": "16",
+     "match_id": 924419,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "CF Mogán",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Mas. Training",
+     "jornada": "17",
+     "match_id": 924424,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      2,
+      2
+     ],
+     "away": "Arguineguín",
+     "before": [
+      2,
+      1
+     ],
+     "home": "Doramas",
+     "jornada": "18",
+     "match_id": 924427,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      0,
+      11
+     ],
+     "away": "Mas. Training",
+     "before": [
+      0,
+      1
+     ],
+     "home": "JOVERO-LAS ROSAS, C.D.",
+     "jornada": "18",
+     "match_id": 924429,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      12,
+      0
+     ],
+     "away": "CF Mogán",
+     "before": [
+      2,
+      0
+     ],
+     "home": "Arguineguín",
+     "jornada": "19",
+     "match_id": 924432,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      10,
+      0
+     ],
+     "away": "JOVERO-LAS ROSAS, C.D.",
+     "before": [
+      1,
+      0
+     ],
+     "home": "LA UNION DE VECINDARIO",
+     "jornada": "19",
+     "match_id": 924433,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    },
+    {
+     "after": [
+      8,
+      2
+     ],
+     "away": "Maspalomas",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Mas. Training",
+     "jornada": "19",
+     "match_id": 924434,
+     "source": "https://futbolaspalmas.com/1prebenjamin4/@20250318212614"
+    }
+   ]
+  },
   "2025-2026|BENJAMIN|A2": {
    "after": 22,
    "before": 26,

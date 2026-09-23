@@ -1,0 +1,938 @@
+{
+ "groups": {
+  "2025-2026|BENJAMIN|A2": {
+   "after": 22,
+   "before": 26,
+   "changes": [
+    {
+     "after": [
+      9,
+      3
+     ],
+     "away": "Guiniguada",
+     "before": [
+      8,
+      3
+     ],
+     "home": "Veteranos",
+     "jornada": "Jornada 12",
+     "match_id": 286,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-dos/@20260315073212"
+    },
+    {
+     "after": [
+      0,
+      16
+     ],
+     "away": "Las Palmas",
+     "before": [
+      0,
+      15
+     ],
+     "home": "Simusetti",
+     "jornada": "Jornada 12",
+     "match_id": 287,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-dos/@20260315073212"
+    }
+   ]
+  },
+  "2025-2026|BENJAMIN|A4": {
+   "after": 32,
+   "before": 184,
+   "changes": [
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "Casa Pastores",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Femarguín",
+     "jornada": "1",
+     "match_id": 932964,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      0,
+      13
+     ],
+     "away": "UD Vecindario",
+     "before": [
+      0,
+      9
+     ],
+     "home": "Maspalomas",
+     "jornada": "2",
+     "match_id": 932970,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      5,
+      2
+     ],
+     "away": "Estrella CF",
+     "before": [
+      3,
+      2
+     ],
+     "home": "San Fernando",
+     "jornada": "5",
+     "match_id": 932987,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      1,
+      6
+     ],
+     "away": "Doramas",
+     "before": [
+      0,
+      6
+     ],
+     "home": "Telde C",
+     "jornada": "6",
+     "match_id": 932991,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      7,
+      3
+     ],
+     "away": "San Fernando",
+     "before": [
+      7,
+      2
+     ],
+     "home": "Telde C",
+     "jornada": "8",
+     "match_id": 933002,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      1,
+      4
+     ],
+     "away": "Unión Carrizal",
+     "before": [
+      0,
+      4
+     ],
+     "home": "Telde C",
+     "jornada": "11",
+     "match_id": 933013,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      3,
+      8
+     ],
+     "away": "Estrella CF",
+     "before": [
+      3,
+      0
+     ],
+     "home": "Telde C",
+     "jornada": "12",
+     "match_id": 933022,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      11,
+      2
+     ],
+     "away": "Telde C",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Maspa Training",
+     "jornada": "13",
+     "match_id": 933025,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      1,
+      15
+     ],
+     "away": "UD Vecindario",
+     "before": [
+      1,
+      5
+     ],
+     "home": "Telde C",
+     "jornada": "14",
+     "match_id": 933029,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      3,
+      5
+     ],
+     "away": "Estrella CF",
+     "before": [
+      1,
+      5
+     ],
+     "home": "CD Ingenio",
+     "jornada": "14",
+     "match_id": 933030,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      5,
+      3
+     ],
+     "away": "Maspalomas",
+     "before": [
+      2,
+      3
+     ],
+     "home": "Casa Pastores",
+     "jornada": "15",
+     "match_id": 933034,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      10,
+      2
+     ],
+     "away": "CD Ingenio",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Femarguín",
+     "jornada": "17",
+     "match_id": 933044,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      13,
+      4
+     ],
+     "away": "Estrella CF",
+     "before": [
+      3,
+      4
+     ],
+     "home": "Maspa Training",
+     "jornada": "17",
+     "match_id": 933047,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      4,
+      5
+     ],
+     "away": "Femarguín",
+     "before": [
+      4,
+      3
+     ],
+     "home": "Unión Carrizal",
+     "jornada": "18",
+     "match_id": 933050,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      1,
+      5
+     ],
+     "away": "Unión Carrizal",
+     "before": [
+      0,
+      5
+     ],
+     "home": "Casa Pastores",
+     "jornada": "19",
+     "match_id": 933057,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    },
+    {
+     "after": [
+      2,
+      3
+     ],
+     "away": "Maspalomas",
+     "before": [
+      2,
+      0
+     ],
+     "home": "CD Ingenio",
+     "jornada": "20",
+     "match_id": 933058,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-cuatro/@20260510015945"
+    }
+   ]
+  },
+  "2025-2026|BENJAMIN|B4": {
+   "after": 4,
+   "before": 454,
+   "changes": [
+    {
+     "after": [
+      15,
+      0
+     ],
+     "away": "Las Majoreras",
+     "before": [
+      5,
+      0
+     ],
+     "home": "Las Rosas",
+     "jornada": "1",
+     "match_id": 933077,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      1,
+      12
+     ],
+     "away": "San Pedro",
+     "before": [
+      1,
+      2
+     ],
+     "home": "San Fernando B",
+     "jornada": "2",
+     "match_id": 933079,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      8,
+      1
+     ],
+     "away": "Valsequillo B",
+     "before": [
+      5,
+      1
+     ],
+     "home": "San Pedro",
+     "jornada": "3",
+     "match_id": 933084,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      7,
+      5
+     ],
+     "away": "CD Cerruda",
+     "before": [
+      5,
+      5
+     ],
+     "home": "Vecindario B",
+     "jornada": "3",
+     "match_id": 933086,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      10,
+      3
+     ],
+     "away": "San Fernando B",
+     "before": [
+      0,
+      3
+     ],
+     "home": "Las Rosas",
+     "jornada": "3",
+     "match_id": 933087,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      1,
+      10
+     ],
+     "away": "Vecindario B",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Arguineguín",
+     "jornada": "4",
+     "match_id": 933089,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      4,
+      9
+     ],
+     "away": "Valsequillo B",
+     "before": [
+      0,
+      9
+     ],
+     "home": "Las Majoreras",
+     "jornada": "5",
+     "match_id": 933093,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      18,
+      0
+     ],
+     "away": "Las Majoreras",
+     "before": [
+      8,
+      0
+     ],
+     "home": "CD Tablero",
+     "jornada": "6",
+     "match_id": 933100,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      6,
+      6
+     ],
+     "away": "San Pedro",
+     "before": [
+      0,
+      6
+     ],
+     "home": "CD Cerruda",
+     "jornada": "6",
+     "match_id": 933101,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      2,
+      12
+     ],
+     "away": "Vecindario B",
+     "before": [
+      2,
+      2
+     ],
+     "home": "San Fernando B",
+     "jornada": "6",
+     "match_id": 933102,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      0,
+      13
+     ],
+     "away": "CD Arinaga",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Las Majoreras",
+     "jornada": "7",
+     "match_id": 933103,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      20,
+      2
+     ],
+     "away": "Las Majoreras",
+     "before": [
+      0,
+      2
+     ],
+     "home": "CD Cerruda",
+     "jornada": "8",
+     "match_id": 933108,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      0,
+      13
+     ],
+     "away": "Vecindario B",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Valsequillo B",
+     "jornada": "8",
+     "match_id": 933109,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      5,
+      11
+     ],
+     "away": "CD Cerruda",
+     "before": [
+      5,
+      5
+     ],
+     "home": "Arguineguín",
+     "jornada": "9",
+     "match_id": 933113,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      5,
+      3
+     ],
+     "away": "CD Arinaga",
+     "before": [
+      5,
+      2
+     ],
+     "home": "San Fernando B",
+     "jornada": "9",
+     "match_id": 933116,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      11,
+      2
+     ],
+     "away": "CD Arinaga",
+     "before": [
+      1,
+      2
+     ],
+     "home": "CD Tablero",
+     "jornada": "11",
+     "match_id": 933126,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      6,
+      4
+     ],
+     "away": "Vecindario B",
+     "before": [
+      5,
+      4
+     ],
+     "home": "Las Rosas",
+     "jornada": "11",
+     "match_id": 933127,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      1,
+      11
+     ],
+     "away": "Las Rosas",
+     "before": [
+      0,
+      11
+     ],
+     "home": "Las Majoreras",
+     "jornada": "12",
+     "match_id": 933129,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      3,
+      10
+     ],
+     "away": "San Pedro",
+     "before": [
+      3,
+      0
+     ],
+     "home": "Arguineguín",
+     "jornada": "12",
+     "match_id": 933130,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      18,
+      3
+     ],
+     "away": "Las Majoreras",
+     "before": [
+      1,
+      3
+     ],
+     "home": "Vecindario B",
+     "jornada": "13",
+     "match_id": 933134,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      3,
+      7
+     ],
+     "away": "Vecindario B",
+     "before": [
+      3,
+      4
+     ],
+     "home": "CD Cerruda",
+     "jornada": "14",
+     "match_id": 933142,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      11,
+      2
+     ],
+     "away": "Valsequillo B",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Las Rosas",
+     "jornada": "15",
+     "match_id": 933147,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      10,
+      2
+     ],
+     "away": "San Fernando B",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Vecindario B",
+     "jornada": "17",
+     "match_id": 933154,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      0,
+      15
+     ],
+     "away": "CD Tablero",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Las Majoreras",
+     "jornada": "17",
+     "match_id": 933155,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      5,
+      8
+     ],
+     "away": "Valsequillo B",
+     "before": [
+      4,
+      8
+     ],
+     "home": "Arguineguín",
+     "jornada": "17",
+     "match_id": 933157,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      1,
+      8
+     ],
+     "away": "San Pedro",
+     "before": [
+      0,
+      8
+     ],
+     "home": "CF Mogán",
+     "jornada": "18",
+     "match_id": 933162,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      2,
+      7
+     ],
+     "away": "CD Arinaga",
+     "before": [
+      0,
+      7
+     ],
+     "home": "Arguineguín",
+     "jornada": "19",
+     "match_id": 933164,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      9,
+      2
+     ],
+     "away": "CF Mogán",
+     "before": [
+      7,
+      2
+     ],
+     "home": "Las Rosas",
+     "jornada": "19",
+     "match_id": 933165,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      0,
+      14
+     ],
+     "away": "CD Tablero",
+     "before": [
+      0,
+      4
+     ],
+     "home": "San Fernando B",
+     "jornada": "19",
+     "match_id": 933166,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "Las Majoreras",
+     "before": [
+      1,
+      1
+     ],
+     "home": "CF Mogán",
+     "jornada": "20",
+     "match_id": 933171,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/@20260510024729"
+    }
+   ]
+  },
+  "2025-2026|BENJAMIN|C1": {
+   "after": 2,
+   "before": 4,
+   "changes": [
+    {
+     "after": [
+      2,
+      14
+     ],
+     "away": "Arucas C",
+     "before": [
+      2,
+      15
+     ],
+     "home": "San Lázaro B",
+     "jornada": "Jornada 11",
+     "match_id": 909,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-uno/@20260420161411"
+    },
+    {
+     "after": [
+      11,
+      1
+     ],
+     "away": "Atalaya B",
+     "before": [
+      10,
+      1
+     ],
+     "home": "Arucas C",
+     "jornada": "Jornada 15",
+     "match_id": 928,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-uno/@20260420161411"
+    }
+   ]
+  },
+  "2025-2026|BENJAMIN|C3": {
+   "after": 0,
+   "before": 16,
+   "changes": [
+    {
+     "after": [
+      0,
+      5
+     ],
+     "away": "La Garita B",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Valdecasas",
+     "jornada": "Jornada 14",
+     "match_id": 1125,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-tres/@20260510035236"
+    },
+    {
+     "after": [
+      10,
+      3
+     ],
+     "away": "Unión Marina",
+     "before": [
+      8,
+      3
+     ],
+     "home": "UD Jinámar",
+     "jornada": "Jornada 15",
+     "match_id": 1130,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-tres/@20260510035236"
+    },
+    {
+     "after": [
+      4,
+      5
+     ],
+     "away": "Los Vélez",
+     "before": [
+      3,
+      3
+     ],
+     "home": "UD Jinámar",
+     "jornada": "Jornada 17",
+     "match_id": 1140,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-tres/@20260510035236"
+    }
+   ]
+  },
+  "2025-2026|BENJAMIN|C4": {
+   "after": 0,
+   "before": 28,
+   "changes": [
+    {
+     "after": [
+      9,
+      2
+     ],
+     "away": "Arguineguín B",
+     "before": [
+      2,
+      9
+     ],
+     "home": "Maspalomas B",
+     "jornada": "Jornada 12",
+     "match_id": 1225,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-fase-c-cuatro/@20260510023944"
+    }
+   ]
+  },
+  "2025-2026|BENJAMIN|FO": {
+   "after": 0,
+   "before": 6,
+   "changes": [
+    {
+     "after": [
+      11,
+      3
+     ],
+     "away": "Villaverde",
+     "before": [
+      11,
+      0
+     ],
+     "home": "UD Sotavento",
+     "jornada": "Jornada 3",
+     "match_id": 1612,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-grupo-uno-fuerteventura@20260611040024"
+    }
+   ]
+  },
+  "2025-2026|BENJAMIN|FP": {
+   "after": 0,
+   "before": 10,
+   "changes": [
+    {
+     "after": [
+      9,
+      1
+     ],
+     "away": "Peña Amistad",
+     "before": [
+      8,
+      1
+     ],
+     "home": "European FU",
+     "jornada": "Jornada 14",
+     "match_id": 1776,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-grupo-dos-fuerteventura@20260510020147"
+    },
+    {
+     "after": [
+      2,
+      11
+     ],
+     "away": "Balompédica",
+     "before": [
+      2,
+      12
+     ],
+     "home": "Villaverde B",
+     "jornada": "Jornada 15",
+     "match_id": 1778,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-grupo-dos-fuerteventura@20260510020147"
+    },
+    {
+     "after": [
+      6,
+      6
+     ],
+     "away": "UD Jandía",
+     "before": [
+      5,
+      5
+     ],
+     "home": "Peña Amistad",
+     "jornada": "Jornada 15",
+     "match_id": 1782,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-grupo-dos-fuerteventura@20260510020147"
+    },
+    {
+     "after": [
+      9,
+      0
+     ],
+     "away": "CD Corralejo",
+     "before": [
+      8,
+      0
+     ],
+     "home": "European FU",
+     "jornada": "Jornada 16",
+     "match_id": 1786,
+     "source": "https://futbolaspalmas.com/benjamin-segunda-grupo-dos-fuerteventura@20260510020147"
+    }
+   ]
+  }
+ },
+ "version": 1
+}

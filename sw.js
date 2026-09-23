@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20260923d';
+const CACHE_NAME = 'futbolbase-v20260923e';
 const OFFLINE_URL = './index.html';
 
 // Version the network URL too: a CDN can still serve a cached previous HTML

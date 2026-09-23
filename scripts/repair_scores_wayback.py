@@ -285,12 +285,16 @@ def commit_and_checkpoint(conn):
 
     La base va en modo WAL: si otra conexión la tiene abierta, los cambios se
     quedan en futbolbase.db-wal, que git no sube, y el commit llevaría la base
-    sin ellos. Por eso un volcado incompleto es un error."""
+    sin ellos. Por eso un volcado incompleto es un error; los cambios ya están
+    confirmados y basta con repetir el volcado cuando la otra conexión cierre."""
     conn.commit()
     busy, log, done = conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
     if busy or log != done:
-        raise RuntimeError(f"el volcado del wal no terminó (busy={busy}, páginas {done} de {log}): otra "
-                           "conexión tiene futbolbase.db abierta; ciérrala y repite con --write")
+        raise RuntimeError(
+            f"cambios confirmados e informe guardado, pero el volcado del wal no terminó (busy={busy}, "
+            f"páginas {done} de {log}): otra conexión tiene futbolbase.db abierta. Ciérrala y vuelca con: "
+            "python3 -c \"import sqlite3; print(sqlite3.connect('futbolbase.db')"
+            ".execute('PRAGMA wal_checkpoint(TRUNCATE)').fetchone())\"")
 
 
 # ─── Correcciones manuales ───────────────────────────────────────────────────
@@ -443,10 +447,14 @@ def candidate_urls(conn, season, group_id):
 
 
 def fetch_group(conn, season, group_id, get=http_get, pause=1.5):
-    """Capturas válidas del grupo: plantilla con solape suficiente y algún marcador."""
+    """Capturas válidas del grupo: de su categoría, con plantilla de solape suficiente y algún marcador."""
     names = list(group_teams(conn, group_id).values())
+    (category,) = conn.execute("SELECT c.name FROM groups g JOIN categories c ON c.id = g.category_id "
+                               "WHERE g.id=?", (group_id,)).fetchone()
     kept = []
     for url in candidate_urls(conn, season, group_id):
+        if url_category(url) not in (None, category):
+            continue
         guardadas = 0
         try:
             stamps = list_snapshots(url, season, get=get)
@@ -536,12 +544,8 @@ def main(argv=None):
     args = ap.parse_args(argv)
     from db import get_connection
     conn = get_connection()
-    corrections = load_corrections()
+    corrections = load_corrections(CORRECTIONS_PATH)
     locked = locked_matches(conn, args.season, corrections)
-    corregidos = apply_corrections(conn, args.season, corrections)
-    for c in corregidos:
-        print(f"[{c['key'].split('|')[2]}] corrección manual, jornada {c['jornada']}, {c['home']} - {c['away']}: "
-              f"{c['before'][0]}-{c['before'][1]} -> {c['after'][0]}-{c['after'][1]}")
     codes = set(args.groups.split(",")) if args.groups else None
     targets = _targets(conn, args.season, codes)
     raw = _load(RAW_PATH)
@@ -561,6 +565,14 @@ def main(argv=None):
             previas = raw["groups"].get(key, {}).get("snapshots", [])
             raw["groups"][key] = {"snapshots": merge_snapshots(previas, fetch_group(conn, args.season, gid))}
             _save(RAW_PATH, raw)
+    # Las correcciones van sin confirmar hasta el final: después de la descarga,
+    # para no bloquear la base a otros procesos mientras dura.
+    corregidos = apply_corrections(conn, args.season, corrections)
+    for c in corregidos:
+        print(f"[{c['key'].split('|')[2]}] corrección manual, jornada {c['jornada']}, {c['home']} - {c['away']}: "
+              f"{c['before'][0]}-{c['before'][1]} -> {c['after'][0]}-{c['after'][1]}")
+    if corregidos:
+        targets = _targets(conn, args.season, codes)
     plans = []
     for gid, category, code in targets:
         entry = raw["groups"].get(baseline_key(args.season, category, code))
@@ -587,7 +599,7 @@ def main(argv=None):
         conn.close()
         return
     n = apply_plans(conn, aceptados)
-    commit_and_checkpoint(conn)
+    conn.commit()
     report = _load(REPORT_PATH)
     for p in aceptados:
         report["groups"][p["key"]] = merge_report_group(report["groups"].get(p["key"]), p)
@@ -597,10 +609,13 @@ def main(argv=None):
         entrada["changes"] = _merge_by_match(entrada["changes"],
                                              [{k: v for k, v in c.items() if k != "key"}])
     _save(REPORT_PATH, report)
+    try:
+        commit_and_checkpoint(conn)
+    finally:
+        conn.close()
     print(f"Aplicados {n} marcadores y {len(corregidos)} correcciones. Informe: "
           f"{REPORT_PATH.relative_to(ROOT)}. Siguiente: python3 scripts/generate_js.py y "
           "python3 scripts/score_deviation.py --write-baseline")
-    conn.close()
 
 
 if __name__ == "__main__":

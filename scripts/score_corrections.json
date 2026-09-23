@@ -9,8 +9,24 @@
    "jornada": "22",
    "home": "Tahiche B",
    "away": "Lanzarote B",
-   "score": [0, 13],
+   "score": [
+    0,
+    13
+   ],
    "reason": "la clasificación oficial cuadra a los dos equipos con 0-13; el 0-3 de FIFLP es un 13 sin el 1 y el 0-14 de la captura de julio de 2024 es una errata"
+  },
+  {
+   "season": "2024-2025",
+   "category": "BENJAMIN",
+   "group": "P14",
+   "jornada": "8",
+   "home": "LA UNION DE VECINDARIO \"C\"",
+   "away": "SAN PEDRO MARTIR, C.D. \"B\"",
+   "score": [
+    3,
+    10
+   ],
+   "reason": "la clasificación oficial cuadra a los dos equipos en sus seis columnas con 3-10 (con 3-0 el ganador sale al revés); el 3-0 de FIFLP es un 10 sin el 1 y ninguna captura trae el partido"
   }
  ]
 }

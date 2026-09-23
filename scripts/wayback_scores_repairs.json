@@ -2348,6 +2348,21 @@
      "jornada": "7",
      "match_id": 924065,
      "source": "https://futbolaspalmas.com/1benjamin14/@20241211093218"
+    },
+    {
+     "after": [
+      3,
+      10
+     ],
+     "away": "SAN PEDRO MARTIR, C.D. \"B\"",
+     "before": [
+      3,
+      0
+     ],
+     "home": "LA UNION DE VECINDARIO \"C\"",
+     "jornada": "8",
+     "match_id": 924070,
+     "source": "corrección manual: la clasificación oficial cuadra a los dos equipos en sus seis columnas con 3-10 (con 3-0 el ganador sale al revés); el 3-0 de FIFLP es un 10 sin el 1 y ninguna captura trae el partido"
     }
    ],
    "discarded": []

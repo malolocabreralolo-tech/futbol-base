@@ -212,6 +212,24 @@ class TestPlan:
         assert plan["overrides"] == {403: (12, 1), 405: (1, 10)}
         assert plan["after"] == 0
 
+    def test_pairing_by_calendar_needs_one_clear_team(self):
+        # Menos de 3 partidos, menos del 80 % o dos equipos igual de buenos:
+        # no se empareja (mejor un nombre suelto que un equipo equivocado).
+        teams = {1: "A", 2: "B", 3: "C", 4: "D"}
+        mapping = {"A": 1, "B": 2}
+        c_fixtures = [(1, "1", 3, 1, 1, 0), (2, "2", 2, 3, 0, 1), (3, "3", 1, 3, 2, 2)]
+
+        def snap(rows):
+            return {f"Jornada {j}": [["2025-10-11", h, a, 1, 0]] for j, h, a in rows}
+        full = snap([(1, "X", "A"), (2, "B", "X"), (3, "A", "X")])
+        assert R.pair_by_schedule(c_fixtures, full, mapping, ["X"], teams) == {"X": 3}
+        two = snap([(1, "X", "A"), (2, "B", "X")])
+        assert R.pair_by_schedule(c_fixtures, two, mapping, ["X"], teams) == {}
+        four = snap([(1, "X", "A"), (2, "B", "X"), (3, "A", "X"), (4, "X", "B")])
+        assert R.pair_by_schedule(c_fixtures, four, mapping, ["X"], teams) == {}
+        twins = c_fixtures + [(4, "1", 4, 1, 1, 0), (5, "2", 2, 4, 0, 1), (6, "3", 1, 4, 2, 2)]
+        assert R.pair_by_schedule(twins, full, mapping, ["X"], teams) == {}
+
     def test_apply_writes_only_accepted_plans(self):
         conn = _db()
         good = R.plan_group(conn, 10, [{"url": URL, "timestamp": "20260510024729",
@@ -240,6 +258,33 @@ class TestApply:
             R.commit_and_checkpoint(conn)
         lector.execute("COMMIT")
         R.commit_and_checkpoint(conn)
+
+    def test_a_blocked_checkpoint_keeps_the_report(self, tmp_path, monkeypatch):
+        # Si otra conexión impide volcar el WAL, los cambios ya están
+        # confirmados: el informe tiene que guardarse igualmente.
+        path = tmp_path / "wal.db"
+        disco = sqlite3.connect(path)
+        _db().backup(disco)
+        disco.execute("PRAGMA journal_mode=WAL")
+        disco.close()
+        raw = tmp_path / "raw.json"
+        raw.write_text(json.dumps({"version": 1, "groups": {"2025-2026|BENJAMIN|B4": {"snapshots": [
+            {"url": URL, "timestamp": "20260510024729", "jornadas": R.jornadas_from_html(GOOD)}]}}}))
+        report = tmp_path / "report.json"
+        monkeypatch.setattr(R, "RAW_PATH", raw)
+        monkeypatch.setattr(R, "REPORT_PATH", report)
+        monkeypatch.setattr(R, "CORRECTIONS_PATH", tmp_path / "sin-correcciones.json")
+        monkeypatch.setattr(R, "ROOT", tmp_path)
+        import db
+        monkeypatch.setattr(db, "get_connection", lambda: sqlite3.connect(path, timeout=0.1))
+        lector = sqlite3.connect(path, isolation_level=None)
+        lector.execute("BEGIN")
+        lector.execute("SELECT COUNT(*) FROM matches").fetchone()
+        with pytest.raises(RuntimeError, match="informe guardado"):
+            R.main(["--season", "2025-2026", "--write"])
+        lector.execute("COMMIT")
+        assert json.loads(report.read_text())["groups"]["2025-2026|BENJAMIN|B4"]["changes"][0]["after"] == [15, 0]
+        assert sqlite3.connect(path).execute("SELECT home_score FROM matches WHERE id=100").fetchone() == (15,)
 
     def test_manual_corrections_apply_once_and_name_their_match(self):
         conn = _db()

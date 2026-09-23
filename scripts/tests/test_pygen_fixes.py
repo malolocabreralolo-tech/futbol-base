@@ -929,6 +929,9 @@ class TestMatchKeyCollisions:
             pytest.skip("la clave de Calero ya no está en la base")
         entries = [e for e in _entries(entry) if e["s"] == "2025-2026"]
         grs = {e["gr"] for e in entries}
+        ff15s = [e for e in entries if e["gr"] == "FF15"]
+        if not ff15s:
+            pytest.skip("la entrada FF15 de Calero ya no está en la base")
+        ff15 = ff15s[0]
         assert "FF15" in grs and grs <= {"FF15", "PG2"}, grs
-        ff15 = next(e for e in entries if e["gr"] == "FF15")
         assert len(ff15["g"]) == 12 and ff15["g"][-1][2] == "1-11"

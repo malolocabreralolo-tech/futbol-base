@@ -237,7 +237,12 @@ def fetch_pool(urls, season, get=http_get, pause=1.5):
     pool = {}
     for url in urls:
         snaps = []
-        for ts in list_snapshots(url, season, get=get)[:MAX_SNAPSHOTS_PER_URL]:
+        try:
+            stamps = list_snapshots(url, season, get=get)
+        except RuntimeError as exc:  # un 504 de Wayback no puede tumbar la temporada
+            print(f"    ! {exc}")
+            stamps = []
+        for ts in stamps[:MAX_SNAPSHOTS_PER_URL]:
             time.sleep(pause)
             try:
                 jornadas = jornadas_from_html(snapshot_html(url, ts, get=get))
@@ -279,7 +284,12 @@ def fetch_group(conn, season, group_id, get=http_get, pause=1.5):
     kept = []
     for url in candidate_urls(conn, season, group_id):
         guardadas = 0
-        for ts in list_snapshots(url, season, get=get)[:MAX_SNAPSHOTS_PER_URL]:
+        try:
+            stamps = list_snapshots(url, season, get=get)
+        except RuntimeError as exc:
+            print(f"    ! {exc}")
+            stamps = []
+        for ts in stamps[:MAX_SNAPSHOTS_PER_URL]:
             time.sleep(pause)
             try:
                 jornadas = jornadas_from_html(snapshot_html(url, ts, get=get))

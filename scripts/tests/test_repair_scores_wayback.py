@@ -177,3 +177,18 @@ class TestPool:
                  for ts in ("20260101000000", "20260301000000", "20260510000000")]
         assigned = R.assign_snapshots(conn, [10], {"https://a/": snaps}, keep=2)
         assert [s["timestamp"] for s in assigned[10]] == ["20260510000000", "20260301000000"]
+
+    def test_one_failing_url_does_not_stop_the_pool(self):
+        # Un 504 de Wayback en una consulta tumbaba toda la descarga de la
+        # temporada y se perdían las capturas ya bajadas.
+        cdx = json.dumps([["timestamp", "statuscode"], ["20260510000000", "200"]])
+
+        def fake_get(url):
+            if "cdx" in url and "rota" in url:
+                raise RuntimeError("HTTP Error 504: Gateway Time-out")
+            return cdx if "cdx" in url else GOOD
+
+        pool = R.fetch_pool(["https://futbolaspalmas.com/rota/", "https://futbolaspalmas.com/buena/"],
+                            "2025-2026", get=fake_get, pause=0)
+        assert pool["https://futbolaspalmas.com/rota/"] == []
+        assert [s["timestamp"] for s in pool["https://futbolaspalmas.com/buena/"]] == ["20260510000000"]

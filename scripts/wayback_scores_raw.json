@@ -1,5 +1,6566 @@
 {
  "groups": {
+  "2021-2022|BENJAMIN|BPGC1": {
+   "snapshots": [
+    {
+     "jornadas": {
+      "Jornada 1": [
+       [
+        "2021-11-06",
+        "Victoria",
+        "Corazón Mª",
+        3,
+        3,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2021-11-06",
+        "Tamaraceite",
+        "Las Palmas",
+        0,
+        7,
+        "09:00",
+        "Juan Guedes"
+       ],
+       [
+        "2021-11-06",
+        "Acodetti",
+        "Veteranos",
+        1,
+        4,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2021-11-06",
+        "Piletas",
+        "Arucas",
+        1,
+        9,
+        "09:00",
+        "Piletas"
+       ],
+       [
+        "2021-11-06",
+        "Atco. Huracán",
+        "San Juan",
+        10,
+        0,
+        "",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2021-11-06",
+        "Heidelberg",
+        "Las Huesas",
+        6,
+        6,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2021-11-06",
+        "Barrio Atlan.",
+        "Gran Canaria",
+        3,
+        2,
+        "10:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2021-11-07",
+        "Garepa Viera",
+        "La Garita",
+        5,
+        1,
+        "09:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 10": [
+       [
+        "2022-01-21",
+        "Gran Canaria",
+        "Corazón Mª",
+        1,
+        3,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-01-22",
+        "Atco. Huracán",
+        "Las Huesas",
+        6,
+        2,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-01-22",
+        "Piletas",
+        "Heidelberg",
+        4,
+        4,
+        "09:00",
+        "Piletas"
+       ],
+       [
+        "2022-02-16",
+        "Acodetti",
+        "Victoria",
+        5,
+        0,
+        "17:45",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-01-22",
+        "Tamaraceite",
+        "Garepa Viera",
+        2,
+        2,
+        "09:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-02-16",
+        "Veteranos",
+        "Barrio Atlan.",
+        0,
+        1,
+        "17:15",
+        "Junta Obras"
+       ],
+       [
+        "2022-03-08",
+        "Arucas",
+        "Las Palmas",
+        0,
+        10,
+        "18:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-01-23",
+        "San Juan",
+        "La Garita",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 11": [
+       [
+        "2022-01-29",
+        "Las Palmas",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Anexo GC"
+       ],
+       [
+        "2022-03-15",
+        "Corazón Mª",
+        "Atco. Huracán",
+        0,
+        1,
+        "19:30",
+        "Colegio Claret"
+       ],
+       [
+        "2022-01-29",
+        "Las Huesas",
+        "Piletas",
+        7,
+        3,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-01-29",
+        "Victoria",
+        "Tamaraceite",
+        4,
+        3,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-01-29",
+        "Heidelberg",
+        "Acodetti",
+        1,
+        12,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-01-29",
+        "Barrio Atlan.",
+        "Garepa Viera",
+        5,
+        0,
+        "10:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-01-28",
+        "La Garita",
+        "Gran Canaria",
+        1,
+        7,
+        "19:30",
+        "Las Remudas"
+       ],
+       [
+        "2022-02-22",
+        "Veteranos",
+        "Arucas",
+        3,
+        0,
+        "17:15",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 12": [
+       [
+        "2022-04-07",
+        "Gran Canaria",
+        "Las Palmas",
+        0,
+        2,
+        "17:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-02-05",
+        "Atco. Huracán",
+        "La Garita",
+        9,
+        1,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-02-05",
+        "Piletas",
+        "Corazón Mª",
+        0,
+        12,
+        "09:30",
+        "Piletas"
+       ],
+       [
+        "2022-02-05",
+        "Acodetti",
+        "Las Huesas",
+        2,
+        1,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-03-02",
+        "Tamaraceite",
+        "Heidelberg",
+        3,
+        2,
+        "17:30",
+        "Juan Guedes"
+       ],
+       [
+        "2022-02-06",
+        "Arucas",
+        "Barrio Atlan.",
+        3,
+        0,
+        "09:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-02-06",
+        "San Juan",
+        "Veteranos",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-02-05",
+        "Garepa Viera",
+        "Victoria",
+        4,
+        1,
+        "15:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 13": [
+       [
+        "2022-02-12",
+        "Las Palmas",
+        "Atco. Huracán",
+        10,
+        0,
+        "09:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-02-12",
+        "Corazón Mª",
+        "Acodetti",
+        2,
+        6,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-02-12",
+        "Heidelberg",
+        "Garepa Viera",
+        5,
+        5,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-02-12",
+        "Barrio Atlan.",
+        "Victoria",
+        4,
+        3,
+        "10:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-02-12",
+        "La Garita",
+        "Piletas",
+        1,
+        1,
+        "09:00",
+        "Las Remudas"
+       ],
+       [
+        "2022-02-12",
+        "Las Huesas",
+        "Tamaraceite",
+        4,
+        0,
+        "12:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-02-13",
+        "Arucas",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-02-13",
+        "Veteranos",
+        "Gran Canaria",
+        1,
+        1,
+        "09:00",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 14": [
+       [
+        "2022-02-18",
+        "Gran Canaria",
+        "Arucas",
+        0,
+        3,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-02-20",
+        "Garepa Viera",
+        "Las Huesas",
+        3,
+        3,
+        "11:00",
+        "Alfonso Silva"
+       ],
+       [
+        "2022-02-19",
+        "Piletas",
+        "Las Palmas",
+        0,
+        15,
+        "09:30",
+        "Piletas"
+       ],
+       [
+        "2022-02-19",
+        "Acodetti",
+        "La Garita",
+        5,
+        3,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-02-19",
+        "Victoria",
+        "Heidelberg",
+        4,
+        4,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-02-19",
+        "Barrio Atlan.",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-02-19",
+        "Atco. Huracán",
+        "Veteranos",
+        1,
+        3,
+        "10:30",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-02-19",
+        "Tamaraceite",
+        "Corazón Mª",
+        1,
+        5,
+        "10:30",
+        "Juan Guedes"
+       ]
+      ],
+      "Jornada 15": [
+       [
+        "2022-02-26",
+        "Las Palmas",
+        "Acodetti",
+        6,
+        0,
+        "09:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-02-26",
+        "Corazón Mª",
+        "Garepa Viera",
+        3,
+        4,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-02-26",
+        "Las Huesas",
+        "Victoria",
+        6,
+        2,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-02-26",
+        "Heidelberg",
+        "Barrio Atlan.",
+        0,
+        7,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-02-25",
+        "La Garita",
+        "Tamaraceite",
+        1,
+        4,
+        "17:30",
+        "Las Remudas"
+       ],
+       [
+        "2022-02-27",
+        "San Juan",
+        "Gran Canaria",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-02-27",
+        "Arucas",
+        "Atco. Huracán",
+        6,
+        1,
+        "09:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-02-27",
+        "Veteranos",
+        "Piletas",
+        13,
+        0,
+        "09:00",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 16": [
+       [
+        "2022-03-04",
+        "Gran Canaria",
+        "Barrio Atlan.",
+        0,
+        1,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-03-05",
+        "Las Huesas",
+        "Heidelberg",
+        6,
+        0,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-03-05",
+        "Corazón Mª",
+        "Victoria",
+        6,
+        1,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-03-05",
+        "Las Palmas",
+        "Tamaraceite",
+        8,
+        0,
+        "09:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-03-05",
+        "La Garita",
+        "Garepa Viera",
+        4,
+        2,
+        "09:00",
+        "Las Remudas"
+       ],
+       [
+        "2022-03-06",
+        "Veteranos",
+        "Acodetti",
+        4,
+        2,
+        "09:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-04-27",
+        "Arucas",
+        "Piletas",
+        10,
+        0,
+        "18:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-03-06",
+        "San Juan",
+        "Atco. Huracán",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 17": [
+       [
+        "2022-03-12",
+        "Victoria",
+        "La Garita",
+        2,
+        2,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-03-12",
+        "Tamaraceite",
+        "Veteranos",
+        0,
+        3,
+        "09:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-03-12",
+        "Acodetti",
+        "Arucas",
+        3,
+        3,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-03-12",
+        "Piletas",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Piletas"
+       ],
+       [
+        "2022-03-11",
+        "Heidelberg",
+        "Corazón Mª",
+        1,
+        8,
+        "17:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-03-12",
+        "Barrio Atlan.",
+        "Las Huesas",
+        4,
+        1,
+        "10:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-03-13",
+        "Garepa Viera",
+        "Las Palmas",
+        0,
+        5,
+        "09:00",
+        "Alfonso Silva"
+       ],
+       [
+        "2022-03-13",
+        "Atco. Huracán",
+        "Gran Canaria",
+        5,
+        2,
+        "09:00",
+        "Pepe Gonçalvez"
+       ]
+      ],
+      "Jornada 18": [
+       [
+        "2022-03-18",
+        "Gran Canaria",
+        "Piletas",
+        2,
+        2,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-03-19",
+        "Las Palmas",
+        "Victoria",
+        14,
+        0,
+        "09:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-03-19",
+        "Atco. Huracán",
+        "Barrio Atlan.",
+        3,
+        0,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-03-18",
+        "La Garita",
+        "Heidelberg",
+        1,
+        5,
+        "19:30",
+        "Las Remudas"
+       ],
+       [
+        "2022-03-19",
+        "Corazón Mª",
+        "Las Huesas",
+        4,
+        3,
+        "12:30",
+        "Colegio Claret"
+       ],
+       [
+        "2022-03-20",
+        "Veteranos",
+        "Garepa Viera",
+        7,
+        0,
+        "09:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-03-20",
+        "San Juan",
+        "Acodetti",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-03-20",
+        "Arucas",
+        "Tamaraceite",
+        7,
+        2,
+        "10:30",
+        "Elías Rizkallal"
+       ]
+      ],
+      "Jornada 19": [
+       [
+        "2022-03-26",
+        "Las Huesas",
+        "La Garita",
+        8,
+        0,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-03-26",
+        "Victoria",
+        "Veteranos",
+        2,
+        2,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-03-26",
+        "Tamaraceite",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Juan Guedes"
+       ],
+       [
+        "2022-03-26",
+        "Piletas",
+        "Atco. Huracán",
+        1,
+        9,
+        "11:00",
+        "Piletas"
+       ],
+       [
+        "2022-03-26",
+        "Heidelberg",
+        "Las Palmas",
+        0,
+        9,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-03-26",
+        "Barrio Atlan.",
+        "Corazón Mª",
+        2,
+        4,
+        "12:00",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-03-26",
+        "Acodetti",
+        "Gran Canaria",
+        2,
+        1,
+        "13:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-03-27",
+        "Garepa Viera",
+        "Arucas",
+        1,
+        2,
+        "09:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 2": [
+       [
+        "2021-11-12",
+        "Gran Canaria",
+        "Atco. Huracán",
+        1,
+        4,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2021-11-13",
+        "Corazón Mª",
+        "Heidelberg",
+        9,
+        3,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2021-11-13",
+        "Las Palmas",
+        "Garepa Viera",
+        12,
+        0,
+        "09:00",
+        "Anexo GC"
+       ],
+       [
+        "2021-11-13",
+        "La Garita",
+        "Victoria",
+        0,
+        4,
+        "10:30",
+        "Las Remudas"
+       ],
+       [
+        "2021-11-13",
+        "Las Huesas",
+        "Barrio Atlan.",
+        1,
+        2,
+        "11:00",
+        "Las Huesas"
+       ],
+       [
+        "2021-11-14",
+        "Veteranos",
+        "Tamaraceite",
+        5,
+        0,
+        "09:00",
+        "Junta Obras"
+       ],
+       [
+        "2021-11-14",
+        "Arucas",
+        "Acodetti",
+        2,
+        4,
+        "09:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2021-11-14",
+        "San Juan",
+        "Piletas",
+        2,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 20": [
+       [
+        "2022-04-01",
+        "Gran Canaria",
+        "Tamaraceite",
+        2,
+        4,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-04-02",
+        "Las Palmas",
+        "Las Huesas",
+        9,
+        0,
+        "09:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-04-02",
+        "Atco. Huracán",
+        "Acodetti",
+        1,
+        2,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-04-02",
+        "Piletas",
+        "Barrio Atlan.",
+        1,
+        6,
+        "09:00",
+        "Piletas"
+       ],
+       [
+        "2022-04-02",
+        "La Garita",
+        "Corazón Mª",
+        2,
+        6,
+        "09:00",
+        "las remudas"
+       ],
+       [
+        "2022-04-03",
+        "Veteranos",
+        "Heidelberg",
+        7,
+        2,
+        "09:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-04-03",
+        "Arucas",
+        "Victoria",
+        4,
+        1,
+        "09:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-04-03",
+        "San Juan",
+        "Garepa Viera",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 21": [
+       [
+        "2022-04-09",
+        "Corazón Mª",
+        "Las Palmas",
+        2,
+        5,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-04-09",
+        "Las Huesas",
+        "Veteranos",
+        2,
+        3,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-04-09",
+        "Victoria",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Puerto Pi"
+       ],
+       [
+        "2022-04-09",
+        "Acodetti",
+        "Piletas",
+        11,
+        2,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-04-09",
+        "Heidelberg",
+        "Arucas",
+        3,
+        3,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-04-09",
+        "Barrio Atlan.",
+        "La Garita",
+        5,
+        0,
+        "10:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-04-09",
+        "Tamaraceite",
+        "Atco. Huracán",
+        1,
+        5,
+        "10:30",
+        "Juan Guedes"
+       ],
+       [
+        "2022-04-09",
+        "Garepa Viera",
+        "Gran Canaria",
+        2,
+        1,
+        "11:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 22": [
+       [
+        "2022-04-22",
+        "Gran Canaria",
+        "Victoria",
+        2,
+        1,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-04-27",
+        "Las Palmas",
+        "La Garita",
+        13,
+        0,
+        "19:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-04-27",
+        "Atco. Huracán",
+        "Garepa Viera",
+        9,
+        2,
+        "18:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-04-23",
+        "Piletas",
+        "Tamaraceite",
+        1,
+        6,
+        "11:00",
+        "Piletas"
+       ],
+       [
+        "2022-04-23",
+        "Acodetti",
+        "Barrio Atlan.",
+        2,
+        2,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-04-18",
+        "Veteranos",
+        "Corazón Mª",
+        2,
+        1,
+        "19:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-04-20",
+        "Arucas",
+        "Las Huesas",
+        7,
+        0,
+        "18:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-04-24",
+        "San Juan",
+        "Heidelberg",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 23": [
+       [
+        "2022-04-30",
+        "Las Huesas",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Las Huesas"
+       ],
+       [
+        "2022-04-30",
+        "Victoria",
+        "Atco. Huracán",
+        0,
+        9,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-04-30",
+        "Heidelberg",
+        "Gran Canaria",
+        0,
+        4,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-04-30",
+        "Barrio Atlan.",
+        "Las Palmas",
+        1,
+        5,
+        "10:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-05-03",
+        "La Garita",
+        "Veteranos",
+        1,
+        4,
+        "17:30",
+        "Las Remudas"
+       ],
+       [
+        "2022-04-30",
+        "Tamaraceite",
+        "Acodetti",
+        1,
+        4,
+        "10:30",
+        "Juan Guedes"
+       ],
+       [
+        "2022-04-30",
+        "Corazón Mª",
+        "Arucas",
+        2,
+        4,
+        "12:30",
+        "Colegio Claret"
+       ],
+       [
+        "2022-04-29",
+        "Garepa Viera",
+        "Piletas",
+        7,
+        0,
+        "17:30",
+        "Piletas"
+       ]
+      ],
+      "Jornada 24": [
+       [
+        "2022-05-06",
+        "Gran Canaria",
+        "Las Huesas",
+        6,
+        3,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-05-07",
+        "Atco. Huracán",
+        "Heidelberg",
+        6,
+        0,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-05-07",
+        "Piletas",
+        "Victoria",
+        2,
+        3,
+        "09:00",
+        "Piletas"
+       ],
+       [
+        "2022-05-07",
+        "Acodetti",
+        "Garepa Viera",
+        4,
+        1,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-05-07",
+        "Tamaraceite",
+        "Barrio Atlan.",
+        0,
+        2,
+        "10:30",
+        "Juan Guedes"
+       ],
+       [
+        "2022-05-08",
+        "Veteranos",
+        "Las Palmas",
+        1,
+        3,
+        "09:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-05-08",
+        "Arucas",
+        "La Garita",
+        6,
+        0,
+        "09:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-05-08",
+        "San Juan",
+        "Corazón Mª",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 25": [
+       [
+        "2022-05-18",
+        "Las Palmas",
+        "Arucas",
+        4,
+        0,
+        "19:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-05-14",
+        "La Garita",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-05-14",
+        "Corazón Mª",
+        "Gran Canaria",
+        3,
+        2,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-05-14",
+        "Las Huesas",
+        "Atco. Huracán",
+        1,
+        1,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-05-13",
+        "Heidelberg",
+        "Piletas",
+        2,
+        3,
+        "18:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-05-12",
+        "Barrio Atlan.",
+        "Veteranos",
+        3,
+        3,
+        "18:00",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-05-14",
+        "Victoria",
+        "Acodetti",
+        1,
+        5,
+        "12:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-05-14",
+        "Garepa Viera",
+        "Tamaraceite",
+        1,
+        1,
+        "11:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 26": [
+       [
+        "2022-05-20",
+        "Gran Canaria",
+        "La Garita",
+        7,
+        2,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-05-21",
+        "Atco. Huracán",
+        "Corazón Mª",
+        4,
+        2,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-05-21",
+        "Piletas",
+        "Las Huesas",
+        1,
+        9,
+        "09:00",
+        "Piletas"
+       ],
+       [
+        "2022-05-19",
+        "Acodetti",
+        "Heidelberg",
+        7,
+        2,
+        "17:45",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-05-21",
+        "Tamaraceite",
+        "Victoria",
+        1,
+        1,
+        "10:30",
+        "Juan Guedes"
+       ],
+       [
+        "2022-05-22",
+        "Arucas",
+        "Veteranos",
+        1,
+        4,
+        "09:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-05-22",
+        "San Juan",
+        "Las Palmas",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-05-21",
+        "Garepa Viera",
+        "Barrio Atlan.",
+        3,
+        2,
+        "09:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 27": [
+       [
+        "2022-05-25",
+        "Las Palmas",
+        "Gran Canaria",
+        4,
+        1,
+        "19:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-05-28",
+        "Corazón Mª",
+        "Piletas",
+        11,
+        0,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-05-28",
+        "Las Huesas",
+        "Acodetti",
+        1,
+        4,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-05-28",
+        "Victoria",
+        "Garepa Viera",
+        2,
+        1,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-05-28",
+        "Heidelberg",
+        "Tamaraceite",
+        2,
+        3,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-05-27",
+        "Barrio Atlan.",
+        "Arucas",
+        1,
+        3,
+        "18:00",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-05-28",
+        "La Garita",
+        "Atco. Huracán",
+        0,
+        10,
+        "10:30",
+        "Las Remudas"
+       ],
+       [
+        "2022-05-29",
+        "Veteranos",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 28": [
+       [
+        "2022-06-03",
+        "Gran Canaria",
+        "Veteranos",
+        3,
+        1,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2022-06-04",
+        "Atco. Huracán",
+        "Las Palmas",
+        2,
+        3,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-06-04",
+        "Piletas",
+        "La Garita",
+        0,
+        0,
+        "09:00",
+        "Piletas"
+       ],
+       [
+        "2022-06-04",
+        "Acodetti",
+        "Corazón Mª",
+        3,
+        1,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-06-04",
+        "Victoria",
+        "Barrio Atlan.",
+        3,
+        5,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-06-04",
+        "Tamaraceite",
+        "Las Huesas",
+        6,
+        2,
+        "10:30",
+        "Juan Guedes"
+       ],
+       [
+        "2022-06-05",
+        "San Juan",
+        "Arucas",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-06-03",
+        "Garepa Viera",
+        "Heidelberg",
+        6,
+        2,
+        "19:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 29": [
+       [
+        "2022-06-11",
+        "Las Palmas",
+        "Piletas",
+        13,
+        1,
+        "09:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-06-11",
+        "Corazón Mª",
+        "Tamaraceite",
+        6,
+        2,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-06-11",
+        "Las Huesas",
+        "Garepa Viera",
+        3,
+        2,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-06-11",
+        "Heidelberg",
+        "Victoria",
+        1,
+        3,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-06-11",
+        "La Garita",
+        "Acodetti",
+        1,
+        7,
+        "10:30",
+        "Las Remudas"
+       ],
+       [
+        "2022-06-12",
+        "San Juan",
+        "Barrio Atlan.",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-06-10",
+        "Arucas",
+        "Gran Canaria",
+        5,
+        1,
+        "18:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-06-12",
+        "Veteranos",
+        "Atco. Huracán",
+        10,
+        2,
+        "09:00",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 3": [
+       [
+        "2021-11-20",
+        "Las Huesas",
+        "Corazón Mª",
+        2,
+        7,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2021-11-20",
+        "Victoria",
+        "Las Palmas",
+        0,
+        4,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2021-11-20",
+        "Tamaraceite",
+        "Arucas",
+        1,
+        3,
+        "09:00",
+        "Juan Guedes"
+       ],
+       [
+        "2021-11-20",
+        "Acodetti",
+        "San Juan",
+        9,
+        0,
+        "",
+        "Mayordomia 1"
+       ],
+       [
+        "2021-11-20",
+        "Piletas",
+        "Gran Canaria",
+        1,
+        6,
+        "09:00",
+        "Piletas"
+       ],
+       [
+        "2021-11-20",
+        "Heidelberg",
+        "La Garita",
+        5,
+        2,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2021-11-20",
+        "Barrio Atlan.",
+        "Atco. Huracán",
+        4,
+        6,
+        "10:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2021-11-21",
+        "Garepa Viera",
+        "Veteranos",
+        1,
+        5,
+        "09:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 30": [
+       [
+        "2022-06-18",
+        "Gran Canaria",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Mundial 82"
+       ],
+       [
+        "2022-06-18",
+        "Atco. Huracán",
+        "Arucas",
+        4,
+        2,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-06-16",
+        "Piletas",
+        "Veteranos",
+        0,
+        6,
+        "18:00",
+        "Piletas"
+       ],
+       [
+        "2022-06-18",
+        "Acodetti",
+        "Las Palmas",
+        2,
+        3,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-06-18",
+        "Tamaraceite",
+        "La Garita",
+        5,
+        0,
+        "09:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-06-17",
+        "Garepa Viera",
+        "Corazón Mª",
+        4,
+        2,
+        "19:00",
+        "Alfonso Silva"
+       ],
+       [
+        "2022-06-18",
+        "Victoria",
+        "Las Huesas",
+        2,
+        8,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-06-18",
+        "Barrio Atlan.",
+        "Heidelberg",
+        3,
+        2,
+        "09:00",
+        "Parque Atlántico"
+       ]
+      ],
+      "Jornada 4": [
+       [
+        "2021-11-26",
+        "La Garita",
+        "Las Huesas",
+        1,
+        7,
+        "18:30",
+        "Las Remudas"
+       ],
+       [
+        "2021-11-26",
+        "Gran Canaria",
+        "Acodetti",
+        4,
+        4,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2021-11-27",
+        "Corazón Mª",
+        "Barrio Atlan.",
+        2,
+        4,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2021-11-27",
+        "Las Palmas",
+        "Heidelberg",
+        16,
+        0,
+        "09:00",
+        "Anexo GC"
+       ],
+       [
+        "2021-11-27",
+        "Atco. Huracán",
+        "Piletas",
+        12,
+        2,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2021-11-28",
+        "Veteranos",
+        "Victoria",
+        6,
+        0,
+        "09:00",
+        "Junta Obras"
+       ],
+       [
+        "2021-11-28",
+        "Arucas",
+        "Garepa Viera",
+        5,
+        1,
+        "09:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2021-11-28",
+        "San Juan",
+        "Tamaraceite",
+        2,
+        10,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 5": [
+       [
+        "2021-12-04",
+        "Corazón Mª",
+        "La Garita",
+        8,
+        1,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2021-12-05",
+        "Las Huesas",
+        "Las Palmas",
+        2,
+        14,
+        "12:15",
+        "Las Huesas"
+       ],
+       [
+        "2021-12-04",
+        "Victoria",
+        "Arucas",
+        1,
+        3,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2021-12-04",
+        "Tamaraceite",
+        "Gran Canaria",
+        4,
+        4,
+        "09:00",
+        "Juan Guedes"
+       ],
+       [
+        "2021-12-04",
+        "Acodetti",
+        "Atco. Huracán",
+        11,
+        1,
+        "09:00",
+        "Mayordomia 1"
+       ],
+       [
+        "2021-12-04",
+        "Heidelberg",
+        "Veteranos",
+        2,
+        11,
+        "09:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2021-12-22",
+        "Barrio Atlan.",
+        "Piletas",
+        10,
+        1,
+        "17:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2021-12-05",
+        "Garepa Viera",
+        "San Juan",
+        3,
+        0,
+        "",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 6": [
+       [
+        "2021-12-10",
+        "Gran Canaria",
+        "Garepa Viera",
+        0,
+        3,
+        "19:30",
+        "Mundial 82"
+       ],
+       [
+        "2021-12-12",
+        "Las Palmas",
+        "Corazón Mª",
+        5,
+        1,
+        "13:30",
+        "Anexo GC"
+       ],
+       [
+        "2021-12-11",
+        "Atco. Huracán",
+        "Tamaraceite",
+        4,
+        1,
+        "09:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2021-12-29",
+        "Piletas",
+        "Acodetti",
+        2,
+        7,
+        "17:30",
+        "Piletas"
+       ],
+       [
+        "2021-12-10",
+        "La Garita",
+        "Barrio Atlan.",
+        1,
+        9,
+        "17:30",
+        "Las Remudas"
+       ],
+       [
+        "2021-12-12",
+        "Veteranos",
+        "Las Huesas",
+        8,
+        0,
+        "09:00",
+        "Junta Obras"
+       ],
+       [
+        "2021-12-12",
+        "Arucas",
+        "Heidelberg",
+        8,
+        1,
+        "09:40",
+        "Elías Rizkallal"
+       ],
+       [
+        "2021-12-12",
+        "San Juan",
+        "Victoria",
+        0,
+        3,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 7": [
+       [
+        "2021-12-16",
+        "La Garita",
+        "Las Palmas",
+        0,
+        10,
+        "17:15",
+        "Las Remudas"
+       ],
+       [
+        "2021-12-18",
+        "Corazón Mª",
+        "Veteranos",
+        2,
+        2,
+        "09:00",
+        "Colegio Claret"
+       ],
+       [
+        "2021-12-18",
+        "Las Huesas",
+        "Arucas",
+        2,
+        5,
+        "09:00",
+        "Las Huesas"
+       ],
+       [
+        "2021-12-18",
+        "Victoria",
+        "Gran Canaria",
+        0,
+        5,
+        "09:00",
+        "Puerto Pi"
+       ],
+       [
+        "2021-12-18",
+        "Heidelberg",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Manuel Betancor"
+       ],
+       [
+        "2021-12-16",
+        "Tamaraceite",
+        "Piletas",
+        5,
+        0,
+        "17:00",
+        "Juan Guedes"
+       ],
+       [
+        "2021-12-18",
+        "Barrio Atlan.",
+        "Acodetti",
+        3,
+        4,
+        "10:30",
+        "Parque Atlántico"
+       ],
+       [
+        "2021-12-19",
+        "Garepa Viera",
+        "Atco. Huracán",
+        3,
+        4,
+        "09:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 8": [
+       [
+        "2022-02-02",
+        "Gran Canaria",
+        "Heidelberg",
+        11,
+        3,
+        "18:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-01-27",
+        "Las Palmas",
+        "Barrio Atlan.",
+        4,
+        1,
+        "19:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-02-23",
+        "Atco. Huracán",
+        "Victoria",
+        2,
+        0,
+        "17:45",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-02-15",
+        "Piletas",
+        "Garepa Viera",
+        0,
+        9,
+        "18:30",
+        "Piletas"
+       ],
+       [
+        "2022-02-23",
+        "Acodetti",
+        "Tamaraceite",
+        4,
+        1,
+        "17:45",
+        "Mayordomia 1"
+       ],
+       [
+        "2022-02-09",
+        "Veteranos",
+        "La Garita",
+        11,
+        0,
+        "17:15",
+        "Junta Obras"
+       ],
+       [
+        "2022-02-09",
+        "Arucas",
+        "Corazón Mª",
+        5,
+        1,
+        "18:30",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-01-07",
+        "San Juan",
+        "Las Huesas",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 9": [
+       [
+        "2022-03-03",
+        "Las Palmas",
+        "Veteranos",
+        1,
+        1,
+        "19:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-01-15",
+        "Corazón Mª",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Colegio Claret"
+       ],
+       [
+        "2022-03-16",
+        "Las Huesas",
+        "Gran Canaria",
+        3,
+        3,
+        "17:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-03-16",
+        "Victoria",
+        "Piletas",
+        5,
+        1,
+        "18:30",
+        "Puerto Pi"
+       ],
+       [
+        "2022-02-16",
+        "Heidelberg",
+        "Atco. Huracán",
+        2,
+        6,
+        "17:30",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-04-06",
+        "La Garita",
+        "Arucas",
+        3,
+        8,
+        "17:45",
+        "Las Remudas"
+       ],
+       [
+        "2022-03-10",
+        "Barrio Atlan.",
+        "Tamaraceite",
+        4,
+        0,
+        "18:00",
+        "Parque Atlántico"
+       ],
+       [
+        "2022-04-12",
+        "Garepa Viera",
+        "Acodetti",
+        1,
+        4,
+        "17:00",
+        "Alfonso Silva"
+       ]
+      ]
+     },
+     "timestamp": "20220702144352",
+     "url": "https://futbolaspalmas.com/1benjamin-prefe1/benjamin-preferente-grupo-1-benjaminpreferente1.html"
+    },
+    {
+     "jornadas": {
+      "Jornada 1": [
+       [
+        "2021-11-06",
+        "Victoria",
+        "Corazón Mª",
+        3,
+        3,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2021-11-06",
+        "Tamaraceite",
+        "Las Palmas",
+        0,
+        7,
+        "09:00:00",
+        "Juan Guedes"
+       ],
+       [
+        "2021-11-06",
+        "Acodetti",
+        "Veteranos",
+        1,
+        4,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2021-11-06",
+        "Piletas",
+        "Arucas",
+        1,
+        9,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2021-11-06",
+        "Atco. Huracán",
+        "San Juan",
+        10,
+        0,
+        "",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2021-11-06",
+        "Heidelberg",
+        "Las Huesas",
+        6,
+        6,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2021-11-06",
+        "Barrio Atlan.",
+        "Gran Canaria",
+        3,
+        2,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2021-11-07",
+        "Garepa Viera",
+        "La Garita",
+        5,
+        1,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 10": [
+       [
+        "2022-01-21",
+        "Gran Canaria",
+        "Corazón Mª",
+        1,
+        3,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-01-22",
+        "Atco. Huracán",
+        "Las Huesas",
+        6,
+        2,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-01-22",
+        "Piletas",
+        "Heidelberg",
+        4,
+        4,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-01-22",
+        "Acodetti",
+        "Victoria",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-01-22",
+        "Tamaraceite",
+        "Garepa Viera",
+        2,
+        2,
+        "09:00:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-01-23",
+        "Veteranos",
+        "Barrio Atlan.",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-01-23",
+        "Arucas",
+        "Las Palmas",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-01-23",
+        "San Juan",
+        "La Garita",
+        0,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 11": [
+       [
+        "2022-01-29",
+        "Las Palmas",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Anexo GC"
+       ],
+       [
+        "2022-01-29",
+        "Corazón Mª",
+        "Atco. Huracán",
+        null,
+        null,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-01-29",
+        "Las Huesas",
+        "Piletas",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-01-29",
+        "Victoria",
+        "Tamaraceite",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-01-29",
+        "Heidelberg",
+        "Acodetti",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-01-29",
+        "Barrio Atlan.",
+        "Garepa Viera",
+        null,
+        null,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-01-28",
+        "La Garita",
+        "Gran Canaria",
+        null,
+        null,
+        "19:30:00",
+        "Las Remudas"
+       ],
+       [
+        "2022-01-30",
+        "Veteranos",
+        "Arucas",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 12": [
+       [
+        "2022-02-04",
+        "Gran Canaria",
+        "Las Palmas",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-02-05",
+        "Atco. Huracán",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-02-05",
+        "Piletas",
+        "Corazón Mª",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-02-05",
+        "Acodetti",
+        "Las Huesas",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-02-05",
+        "Tamaraceite",
+        "Heidelberg",
+        null,
+        null,
+        "10:30:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-02-06",
+        "Arucas",
+        "Barrio Atlan.",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-02-06",
+        "San Juan",
+        "Veteranos",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-02-06",
+        "Garepa Viera",
+        "Victoria",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 13": [
+       [
+        "2022-02-12",
+        "Las Palmas",
+        "Atco. Huracán",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-02-12",
+        "Corazón Mª",
+        "Acodetti",
+        null,
+        null,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-02-12",
+        "Heidelberg",
+        "Garepa Viera",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-02-12",
+        "Barrio Atlan.",
+        "Victoria",
+        null,
+        null,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-02-12",
+        "La Garita",
+        "Piletas",
+        null,
+        null,
+        "12:00:00",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-02-12",
+        "Las Huesas",
+        "Tamaraceite",
+        null,
+        null,
+        "12:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-02-13",
+        "Arucas",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-02-13",
+        "Veteranos",
+        "Gran Canaria",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 14": [
+       [
+        "2022-02-18",
+        "Gran Canaria",
+        "Arucas",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-02-18",
+        "Garepa Viera",
+        "Las Huesas",
+        null,
+        null,
+        "19:30:00",
+        "Alfonso Silva"
+       ],
+       [
+        "2022-02-19",
+        "Piletas",
+        "Las Palmas",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-02-19",
+        "Acodetti",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-02-19",
+        "Victoria",
+        "Heidelberg",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-02-19",
+        "Barrio Atlan.",
+        "San Juan",
+        null,
+        null,
+        "",
+        "P. Atlántico"
+       ],
+       [
+        "2022-02-19",
+        "Atco. Huracán",
+        "Veteranos",
+        null,
+        null,
+        "10:30:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-02-19",
+        "Tamaraceite",
+        "Corazón Mª",
+        null,
+        null,
+        "10:30:00",
+        "Juan Guedes"
+       ]
+      ],
+      "Jornada 15": [
+       [
+        "2022-02-26",
+        "Las Palmas",
+        "Acodetti",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-02-26",
+        "Corazón Mª",
+        "Garepa Viera",
+        null,
+        null,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-02-26",
+        "Las Huesas",
+        "Victoria",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-02-26",
+        "Heidelberg",
+        "Barrio Atlan.",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-02-26",
+        "La Garita",
+        "Tamaraceite",
+        null,
+        null,
+        "10:30:00",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-02-27",
+        "San Juan",
+        "Gran Canaria",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-02-27",
+        "Arucas",
+        "Atco. Huracán",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-02-27",
+        "Veteranos",
+        "Piletas",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 16": [
+       [
+        "2022-03-04",
+        "Gran Canaria",
+        "Barrio Atlan.",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-03-05",
+        "Las Huesas",
+        "Heidelberg",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-03-05",
+        "Corazón Mª",
+        "Victoria",
+        null,
+        null,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-03-05",
+        "Las Palmas",
+        "Tamaraceite",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-03-05",
+        "La Garita",
+        "Garepa Viera",
+        null,
+        null,
+        "10:00:00",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-03-06",
+        "Veteranos",
+        "Acodetti",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-03-06",
+        "Arucas",
+        "Piletas",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-03-06",
+        "San Juan",
+        "Atco. Huracán",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 17": [
+       [
+        "2022-03-12",
+        "Victoria",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-03-12",
+        "Tamaraceite",
+        "Veteranos",
+        null,
+        null,
+        "09:00:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-03-12",
+        "Acodetti",
+        "Arucas",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-03-12",
+        "Piletas",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Piletas"
+       ],
+       [
+        "2022-03-12",
+        "Heidelberg",
+        "Corazón Mª",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-03-12",
+        "Barrio Atlan.",
+        "Las Huesas",
+        null,
+        null,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-03-13",
+        "Garepa Viera",
+        "Las Palmas",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ],
+       [
+        "2022-03-13",
+        "Atco. Huracán",
+        "Gran Canaria",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ]
+      ],
+      "Jornada 18": [
+       [
+        "2022-03-18",
+        "Gran Canaria",
+        "Piletas",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-03-19",
+        "Las Palmas",
+        "Victoria",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-03-19",
+        "Atco. Huracán",
+        "Barrio Atlan.",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-03-19",
+        "La Garita",
+        "Heidelberg",
+        null,
+        null,
+        "10:30:00",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-03-19",
+        "Corazón Mª",
+        "Las Huesas",
+        null,
+        null,
+        "12:30:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-03-20",
+        "Veteranos",
+        "Garepa Viera",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-03-20",
+        "San Juan",
+        "Acodetti",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-03-20",
+        "Arucas",
+        "Tamaraceite",
+        null,
+        null,
+        "10:30:00",
+        "Elías Rizkallal"
+       ]
+      ],
+      "Jornada 19": [
+       [
+        "2022-03-26",
+        "Las Huesas",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-03-26",
+        "Victoria",
+        "Veteranos",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-03-26",
+        "Tamaraceite",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Juan Guedes"
+       ],
+       [
+        "2022-03-26",
+        "Piletas",
+        "Atco. Huracán",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-03-26",
+        "Heidelberg",
+        "Las Palmas",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-03-26",
+        "Barrio Atlan.",
+        "Corazón Mª",
+        null,
+        null,
+        "12:00:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-03-26",
+        "Acodetti",
+        "Gran Canaria",
+        null,
+        null,
+        "13:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-03-27",
+        "Garepa Viera",
+        "Arucas",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 2": [
+       [
+        "2021-11-12",
+        "Gran Canaria",
+        "Atco. Huracán",
+        1,
+        4,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2021-11-13",
+        "Corazón Mª",
+        "Heidelberg",
+        9,
+        3,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2021-11-13",
+        "Las Palmas",
+        "Garepa Viera",
+        12,
+        0,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2021-11-13",
+        "La Garita",
+        "Victoria",
+        0,
+        4,
+        "10:30:00",
+        "Las Remudas"
+       ],
+       [
+        "2021-11-13",
+        "Las Huesas",
+        "Barrio Atlan.",
+        1,
+        2,
+        "11:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2021-11-14",
+        "Veteranos",
+        "Tamaraceite",
+        5,
+        0,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2021-11-14",
+        "Arucas",
+        "Acodetti",
+        2,
+        4,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2021-11-14",
+        "San Juan",
+        "Piletas",
+        2,
+        7,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 20": [
+       [
+        "2022-04-01",
+        "Gran Canaria",
+        "Tamaraceite",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-04-02",
+        "Las Palmas",
+        "Las Huesas",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-04-02",
+        "Atco. Huracán",
+        "Acodetti",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-04-02",
+        "Piletas",
+        "Barrio Atlan.",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-04-02",
+        "La Garita",
+        "Corazón Mª",
+        null,
+        null,
+        "10:30:00",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-04-03",
+        "Veteranos",
+        "Heidelberg",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-04-03",
+        "Arucas",
+        "Victoria",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-04-03",
+        "San Juan",
+        "Garepa Viera",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 21": [
+       [
+        "2022-04-09",
+        "Corazón Mª",
+        "Las Palmas",
+        null,
+        null,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-04-09",
+        "Las Huesas",
+        "Veteranos",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-04-09",
+        "Victoria",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Puerto Pi"
+       ],
+       [
+        "2022-04-09",
+        "Acodetti",
+        "Piletas",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-04-09",
+        "Heidelberg",
+        "Arucas",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-04-09",
+        "Barrio Atlan.",
+        "La Garita",
+        null,
+        null,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-04-09",
+        "Tamaraceite",
+        "Atco. Huracán",
+        null,
+        null,
+        "10:30:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-04-10",
+        "Garepa Viera",
+        "Gran Canaria",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 22": [
+       [
+        "2022-04-22",
+        "Gran Canaria",
+        "Victoria",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-04-23",
+        "Las Palmas",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-04-23",
+        "Atco. Huracán",
+        "Garepa Viera",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-04-23",
+        "Piletas",
+        "Tamaraceite",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-04-23",
+        "Acodetti",
+        "Barrio Atlan.",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-04-24",
+        "Veteranos",
+        "Corazón Mª",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-04-24",
+        "Arucas",
+        "Las Huesas",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-04-24",
+        "San Juan",
+        "Heidelberg",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 23": [
+       [
+        "2022-04-30",
+        "Las Huesas",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Las Huesas"
+       ],
+       [
+        "2022-04-30",
+        "Victoria",
+        "Atco. Huracán",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-04-30",
+        "Heidelberg",
+        "Gran Canaria",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-04-30",
+        "Barrio Atlan.",
+        "Las Palmas",
+        null,
+        null,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-04-30",
+        "La Garita",
+        "Veteranos",
+        null,
+        null,
+        "10:30:00",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-04-30",
+        "Tamaraceite",
+        "Acodetti",
+        null,
+        null,
+        "10:30:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-04-30",
+        "Corazón Mª",
+        "Arucas",
+        null,
+        null,
+        "12:30:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-05-01",
+        "Garepa Viera",
+        "Piletas",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 24": [
+       [
+        "2022-05-06",
+        "Gran Canaria",
+        "Las Huesas",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-05-07",
+        "Atco. Huracán",
+        "Heidelberg",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-05-07",
+        "Piletas",
+        "Victoria",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-05-07",
+        "Acodetti",
+        "Garepa Viera",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-05-07",
+        "Tamaraceite",
+        "Barrio Atlan.",
+        null,
+        null,
+        "10:30:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-05-08",
+        "Veteranos",
+        "Las Palmas",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-05-08",
+        "Arucas",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-05-08",
+        "San Juan",
+        "Corazón Mª",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 25": [
+       [
+        "2022-05-14",
+        "Las Palmas",
+        "Arucas",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-05-14",
+        "La Garita",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-05-14",
+        "Corazón Mª",
+        "Gran Canaria",
+        null,
+        null,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-05-14",
+        "Las Huesas",
+        "Atco. Huracán",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-05-14",
+        "Heidelberg",
+        "Piletas",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-05-14",
+        "Barrio Atlan.",
+        "Veteranos",
+        null,
+        null,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-05-14",
+        "Victoria",
+        "Acodetti",
+        null,
+        null,
+        "12:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-05-15",
+        "Garepa Viera",
+        "Tamaraceite",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 26": [
+       [
+        "2022-05-20",
+        "Gran Canaria",
+        "La Garita",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-05-21",
+        "Atco. Huracán",
+        "Corazón Mª",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-05-21",
+        "Piletas",
+        "Las Huesas",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-05-21",
+        "Acodetti",
+        "Heidelberg",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-05-21",
+        "Tamaraceite",
+        "Victoria",
+        null,
+        null,
+        "10:30:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-05-22",
+        "Arucas",
+        "Veteranos",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-05-22",
+        "San Juan",
+        "Las Palmas",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-05-22",
+        "Garepa Viera",
+        "Barrio Atlan.",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 27": [
+       [
+        "2022-05-28",
+        "Las Palmas",
+        "Gran Canaria",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-05-28",
+        "Corazón Mª",
+        "Piletas",
+        null,
+        null,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-05-28",
+        "Las Huesas",
+        "Acodetti",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-05-28",
+        "Victoria",
+        "Garepa Viera",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-05-28",
+        "Heidelberg",
+        "Tamaraceite",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-05-28",
+        "Barrio Atlan.",
+        "Arucas",
+        null,
+        null,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-05-28",
+        "La Garita",
+        "Atco. Huracán",
+        null,
+        null,
+        "10:30:00",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-05-29",
+        "Veteranos",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 28": [
+       [
+        "2022-06-03",
+        "Gran Canaria",
+        "Veteranos",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-06-04",
+        "Atco. Huracán",
+        "Las Palmas",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-06-04",
+        "Piletas",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-06-04",
+        "Acodetti",
+        "Corazón Mª",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-06-04",
+        "Victoria",
+        "Barrio Atlan.",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-06-04",
+        "Tamaraceite",
+        "Las Huesas",
+        null,
+        null,
+        "10:30:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-06-05",
+        "San Juan",
+        "Arucas",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-06-05",
+        "Garepa Viera",
+        "Heidelberg",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 29": [
+       [
+        "2022-06-11",
+        "Las Palmas",
+        "Piletas",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-06-11",
+        "Corazón Mª",
+        "Tamaraceite",
+        null,
+        null,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2022-06-11",
+        "Las Huesas",
+        "Garepa Viera",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-06-11",
+        "Heidelberg",
+        "Victoria",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-06-11",
+        "La Garita",
+        "Acodetti",
+        null,
+        null,
+        "10:30:00",
+        "Pablo Hdez."
+       ],
+       [
+        "2022-06-12",
+        "San Juan",
+        "Barrio Atlan.",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ],
+       [
+        "2022-06-12",
+        "Arucas",
+        "Gran Canaria",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-06-12",
+        "Veteranos",
+        "Atco. Huracán",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ]
+      ],
+      "Jornada 3": [
+       [
+        "2021-11-20",
+        "Las Huesas",
+        "Corazón Mª",
+        2,
+        7,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2021-11-20",
+        "Victoria",
+        "Las Palmas",
+        0,
+        4,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2021-11-20",
+        "Tamaraceite",
+        "Arucas",
+        1,
+        3,
+        "09:00:00",
+        "Juan Guedes"
+       ],
+       [
+        "2021-11-20",
+        "Acodetti",
+        "San Juan",
+        9,
+        0,
+        "",
+        "Mayordomia1"
+       ],
+       [
+        "2021-11-20",
+        "Piletas",
+        "Gran Canaria",
+        1,
+        6,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2021-11-20",
+        "Heidelberg",
+        "La Garita",
+        5,
+        2,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2021-11-20",
+        "Barrio Atlan.",
+        "Atco. Huracán",
+        4,
+        6,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2021-11-21",
+        "Garepa Viera",
+        "Veteranos",
+        1,
+        5,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 30": [
+       [
+        "2022-06-18",
+        "Gran Canaria",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Mundial 82"
+       ],
+       [
+        "2022-06-18",
+        "Atco. Huracán",
+        "Arucas",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-06-18",
+        "Piletas",
+        "Veteranos",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-06-18",
+        "Acodetti",
+        "Las Palmas",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-06-18",
+        "Tamaraceite",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Juan Guedes"
+       ],
+       [
+        "2022-06-18",
+        "Garepa Viera",
+        "Corazón Mª",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ],
+       [
+        "2022-06-18",
+        "Victoria",
+        "Las Huesas",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-06-18",
+        "Barrio Atlan.",
+        "Heidelberg",
+        null,
+        null,
+        "09:00:00",
+        "P. Atlántico"
+       ]
+      ],
+      "Jornada 4": [
+       [
+        "2021-11-26",
+        "La Garita",
+        "Las Huesas",
+        1,
+        7,
+        "18:30:00",
+        "Las Remudas"
+       ],
+       [
+        "2021-11-26",
+        "Gran Canaria",
+        "Acodetti",
+        4,
+        4,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2021-11-27",
+        "Corazón Mª",
+        "Barrio Atlan.",
+        2,
+        4,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2021-11-27",
+        "Las Palmas",
+        "Heidelberg",
+        16,
+        0,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2021-11-27",
+        "Atco. Huracán",
+        "Piletas",
+        12,
+        2,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2021-11-28",
+        "Veteranos",
+        "Victoria",
+        6,
+        0,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2021-11-28",
+        "Arucas",
+        "Garepa Viera",
+        5,
+        1,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2021-11-28",
+        "San Juan",
+        "Tamaraceite",
+        2,
+        10,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 5": [
+       [
+        "2021-12-04",
+        "Corazón Mª",
+        "La Garita",
+        8,
+        1,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2021-12-05",
+        "Las Huesas",
+        "Las Palmas",
+        2,
+        14,
+        "12:15:00",
+        "Las Huesas"
+       ],
+       [
+        "2021-12-04",
+        "Victoria",
+        "Arucas",
+        1,
+        3,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2021-12-04",
+        "Tamaraceite",
+        "Gran Canaria",
+        4,
+        4,
+        "09:00:00",
+        "Juan Guedes"
+       ],
+       [
+        "2021-12-04",
+        "Acodetti",
+        "Atco. Huracán",
+        11,
+        1,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2021-12-04",
+        "Heidelberg",
+        "Veteranos",
+        2,
+        11,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2021-12-22",
+        "Barrio Atlan.",
+        "Piletas",
+        10,
+        1,
+        "17:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2021-12-05",
+        "Garepa Viera",
+        "San Juan",
+        3,
+        0,
+        "",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 6": [
+       [
+        "2021-12-10",
+        "Gran Canaria",
+        "Garepa Viera",
+        0,
+        3,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2021-12-12",
+        "Las Palmas",
+        "Corazón Mª",
+        5,
+        1,
+        "13:30:00",
+        "Anexo GC"
+       ],
+       [
+        "2021-12-11",
+        "Atco. Huracán",
+        "Tamaraceite",
+        4,
+        1,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2021-12-29",
+        "Piletas",
+        "Acodetti",
+        2,
+        7,
+        "17:30:00",
+        "Piletas"
+       ],
+       [
+        "2021-12-10",
+        "La Garita",
+        "Barrio Atlan.",
+        1,
+        9,
+        "17:30:00",
+        "Las Remudas"
+       ],
+       [
+        "2021-12-12",
+        "Veteranos",
+        "Las Huesas",
+        8,
+        0,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2021-12-12",
+        "Arucas",
+        "Heidelberg",
+        8,
+        1,
+        "09:40:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2021-12-12",
+        "San Juan",
+        "Victoria",
+        0,
+        3,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 7": [
+       [
+        "2021-12-16",
+        "La Garita",
+        "Las Palmas",
+        0,
+        10,
+        "17:15:00",
+        "Las Remudas"
+       ],
+       [
+        "2021-12-18",
+        "Corazón Mª",
+        "Veteranos",
+        2,
+        2,
+        "09:00:00",
+        "Colegio Claret"
+       ],
+       [
+        "2021-12-18",
+        "Las Huesas",
+        "Arucas",
+        2,
+        5,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2021-12-18",
+        "Victoria",
+        "Gran Canaria",
+        0,
+        5,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2021-12-18",
+        "Heidelberg",
+        "San Juan",
+        7,
+        0,
+        "",
+        "Manuel Betancor"
+       ],
+       [
+        "2021-12-16",
+        "Tamaraceite",
+        "Piletas",
+        5,
+        0,
+        "17:00:00",
+        "Juan Guedes"
+       ],
+       [
+        "2021-12-18",
+        "Barrio Atlan.",
+        "Acodetti",
+        3,
+        4,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2021-12-19",
+        "Garepa Viera",
+        "Atco. Huracán",
+        3,
+        4,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ],
+      "Jornada 8": [
+       [
+        "2022-01-07",
+        "Gran Canaria",
+        "Heidelberg",
+        null,
+        null,
+        "19:30:00",
+        "Mundial 82"
+       ],
+       [
+        "2022-01-27",
+        "Las Palmas",
+        "Barrio Atlan.",
+        4,
+        1,
+        "19:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-01-08",
+        "Atco. Huracán",
+        "Victoria",
+        null,
+        null,
+        "09:00:00",
+        "Pepe Gonçalvez"
+       ],
+       [
+        "2022-01-08",
+        "Piletas",
+        "Garepa Viera",
+        null,
+        null,
+        "09:00:00",
+        "Piletas"
+       ],
+       [
+        "2022-01-08",
+        "Acodetti",
+        "Tamaraceite",
+        null,
+        null,
+        "09:00:00",
+        "Mayordomia1"
+       ],
+       [
+        "2022-01-09",
+        "Veteranos",
+        "La Garita",
+        null,
+        null,
+        "09:00:00",
+        "Junta Obras"
+       ],
+       [
+        "2022-01-09",
+        "Arucas",
+        "Corazón Mª",
+        null,
+        null,
+        "09:00:00",
+        "Elías Rizkallal"
+       ],
+       [
+        "2022-01-09",
+        "San Juan",
+        "Las Huesas",
+        null,
+        null,
+        "",
+        "Hoya La Plata"
+       ]
+      ],
+      "Jornada 9": [
+       [
+        "2022-01-15",
+        "Las Palmas",
+        "Veteranos",
+        null,
+        null,
+        "09:00:00",
+        "Anexo GC"
+       ],
+       [
+        "2022-01-15",
+        "Corazón Mª",
+        "San Juan",
+        null,
+        null,
+        "",
+        "Colegio Claret"
+       ],
+       [
+        "2022-01-15",
+        "Las Huesas",
+        "Gran Canaria",
+        null,
+        null,
+        "09:00:00",
+        "Las Huesas"
+       ],
+       [
+        "2022-01-15",
+        "Victoria",
+        "Piletas",
+        null,
+        null,
+        "09:00:00",
+        "Puerto Pi"
+       ],
+       [
+        "2022-01-15",
+        "Heidelberg",
+        "Atco. Huracán",
+        null,
+        null,
+        "09:30:00",
+        "Manuel Betancor"
+       ],
+       [
+        "2022-01-15",
+        "La Garita",
+        "Arucas",
+        null,
+        null,
+        "10:30:00",
+        "Las Remudas"
+       ],
+       [
+        "2022-01-15",
+        "Barrio Atlan.",
+        "Tamaraceite",
+        null,
+        null,
+        "10:30:00",
+        "P. Atlántico"
+       ],
+       [
+        "2022-01-16",
+        "Garepa Viera",
+        "Acodetti",
+        null,
+        null,
+        "09:00:00",
+        "Alfonso Silva"
+       ]
+      ]
+     },
+     "timestamp": "20220128025813",
+     "url": "https://futbolaspalmas.com/1benjamin-prefe1/benjamin-preferente-grupo-1-benjaminpreferente1.html"
+    }
+   ]
+  },
+  "2022-2023|BENJAMIN|CFV1": {
+   "snapshots": []
+  },
+  "2022-2023|BENJAMIN|CFV2": {
+   "snapshots": []
+  },
+  "2022-2023|BENJAMIN|CFV3": {
+   "snapshots": []
+  },
+  "2022-2023|BENJAMIN|CFVD1": {
+   "snapshots": []
+  },
+  "2022-2023|BENJAMIN|FV12": {
+   "snapshots": []
+  },
+  "2022-2023|BENJAMIN|FV13": {
+   "snapshots": []
+  },
+  "2022-2023|BENJAMIN|LZ12": {
+   "snapshots": [
+    {
+     "jornadas": {
+      "Jornada 1": [
+       [
+        "2022-10-14",
+        "Sporting Tías C",
+        "Tinajo B",
+        3,
+        9,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2022-10-15",
+        "Teguise B",
+        "Futbol2016",
+        10,
+        1,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-10-15",
+        "Marítima",
+        "Palmeiros B",
+        18,
+        1,
+        "11:00",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-10-15",
+        "Tahiche C",
+        "Lomo C",
+        10,
+        0,
+        "11:00",
+        "Mun. Tahiche"
+       ],
+       [
+        "2022-10-16",
+        "Maciot Sport",
+        "San Bartolomé B",
+        11,
+        3,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 10": [
+       [
+        "2023-01-20",
+        "Sporting Tías C",
+        "Palmeiros B",
+        1,
+        3,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-01-21",
+        "Playa Honda B",
+        "San Bartolomé B",
+        6,
+        2,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-01-21",
+        "Teguise B",
+        "Tinajo B",
+        2,
+        8,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-01-21",
+        "Tahiche C",
+        "Marítima",
+        3,
+        9,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-01-22",
+        "Maciot Sport",
+        "Lomo C",
+        8,
+        1,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 11": [
+       [
+        "2023-02-04",
+        "San Bartolomé B",
+        "Teguise B",
+        1,
+        1,
+        "09:30",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-02-04",
+        "Lomo C",
+        "Sporting Tías C",
+        4,
+        6,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-02-04",
+        "Palmeiros B",
+        "Tahiche C",
+        3,
+        6,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-03-16",
+        "Tinajo B",
+        "Maciot Sport",
+        2,
+        3,
+        "17:00",
+        "Los Volcanes"
+       ],
+       [
+        "2023-02-03",
+        "Futbol2016",
+        "Playa Honda B",
+        0,
+        8,
+        "16:00",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 12": [
+       [
+        "2023-02-11",
+        "Palmeiros B",
+        "Marítima",
+        2,
+        6,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-02-11",
+        "Lomo C",
+        "Tahiche C",
+        1,
+        8,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-02-11",
+        "Tinajo B",
+        "Sporting Tías C",
+        2,
+        1,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2023-02-11",
+        "San Bartolomé B",
+        "Maciot Sport",
+        1,
+        11,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-02-12",
+        "Futbol2016",
+        "Teguise B",
+        1,
+        6,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 13": [
+       [
+        "2023-02-17",
+        "Sporting Tías C",
+        "San Bartolomé B",
+        3,
+        1,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-02-18",
+        "Marítima",
+        "Lomo C",
+        7,
+        0,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-02-18",
+        "Tahiche C",
+        "Tinajo B",
+        1,
+        0,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-02-18",
+        "Teguise B",
+        "Playa Honda B",
+        1,
+        4,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-02-19",
+        "Maciot Sport",
+        "Futbol2016",
+        7,
+        1,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 14": [
+       [
+        "2023-03-04",
+        "Lomo C",
+        "Palmeiros B",
+        1,
+        0,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-03-04",
+        "Tinajo B",
+        "Marítima",
+        0,
+        7,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2023-03-04",
+        "Playa Honda B",
+        "Maciot Sport",
+        1,
+        5,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-03-04",
+        "San Bartolomé B",
+        "Tahiche C",
+        1,
+        8,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-03-05",
+        "Futbol2016",
+        "Sporting Tías C",
+        0,
+        8,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 15": [
+       [
+        "2023-03-10",
+        "Sporting Tías C",
+        "Playa Honda B",
+        4,
+        2,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-03-10",
+        "Palmeiros B",
+        "Tinajo B",
+        3,
+        4,
+        "17:00",
+        "Teguise"
+       ],
+       [
+        "2023-03-11",
+        "Marítima",
+        "San Bartolomé B",
+        9,
+        0,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-03-09",
+        "Tahiche C",
+        "Futbol2016",
+        12,
+        1,
+        "16:45",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-03-10",
+        "Maciot Sport",
+        "Teguise B",
+        5,
+        2,
+        "17:00",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 16": [
+       [
+        "2023-03-18",
+        "Tinajo B",
+        "Lomo C",
+        3,
+        0,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2023-03-18",
+        "Playa Honda B",
+        "Tahiche C",
+        1,
+        3,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-03-18",
+        "Teguise B",
+        "Sporting Tías C",
+        1,
+        3,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-03-18",
+        "San Bartolomé B",
+        "Palmeiros B",
+        4,
+        5,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-03-19",
+        "Futbol2016",
+        "Marítima",
+        0,
+        13,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 17": [
+       [
+        "2023-03-24",
+        "Sporting Tías C",
+        "Maciot Sport",
+        2,
+        4,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-03-25",
+        "Palmeiros B",
+        "Futbol2016",
+        10,
+        2,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-03-25",
+        "Marítima",
+        "Playa Honda B",
+        8,
+        2,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-03-25",
+        "Tahiche C",
+        "Teguise B",
+        6,
+        2,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-03-25",
+        "Lomo C",
+        "San Bartolomé B",
+        1,
+        3,
+        "11:00",
+        "Pto. Arrecife"
+       ]
+      ],
+      "Jornada 18": [
+       [
+        "2023-04-01",
+        "Playa Honda B",
+        "Palmeiros B",
+        2,
+        3,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-04-01",
+        "Teguise B",
+        "Marítima",
+        0,
+        13,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-04-01",
+        "San Bartolomé B",
+        "Tinajo B",
+        3,
+        2,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-04-02",
+        "Futbol2016",
+        "Lomo C",
+        1,
+        1,
+        "09:30",
+        "Pto. Del Carmen"
+       ],
+       [
+        "2023-03-31",
+        "Maciot Sport",
+        "Tahiche C",
+        2,
+        5,
+        "16:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 19": [
+       [
+        "2023-04-15",
+        "Tinajo B",
+        "Futbol2016",
+        6,
+        3,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2023-04-15",
+        "Palmeiros B",
+        "Teguise B",
+        2,
+        0,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-04-15",
+        "Marítima",
+        "Maciot Sport",
+        9,
+        2,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-04-15",
+        "Tahiche C",
+        "Sporting Tías C",
+        6,
+        3,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-04-15",
+        "Lomo C",
+        "Playa Honda B",
+        1,
+        1,
+        "11:00",
+        "Pto. Arrecife"
+       ]
+      ],
+      "Jornada 2": [
+       [
+        "2022-10-22",
+        "Lomo C",
+        "Marítima",
+        0,
+        13,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-10-22",
+        "Tinajo B",
+        "Tahiche C",
+        1,
+        3,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2022-10-22",
+        "Playa Honda B",
+        "Teguise B",
+        6,
+        1,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2022-10-22",
+        "San Bartolomé B",
+        "Sporting Tías C",
+        0,
+        4,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2022-10-23",
+        "Futbol2016",
+        "Maciot Sport",
+        0,
+        19,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 20": [
+       [
+        "2023-04-21",
+        "Sporting Tías C",
+        "Marítima",
+        1,
+        12,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-04-22",
+        "Playa Honda B",
+        "Tinajo B",
+        0,
+        3,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-04-22",
+        "Teguise B",
+        "Lomo C",
+        1,
+        0,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-04-23",
+        "Futbol2016",
+        "San Bartolomé B",
+        2,
+        4,
+        "09:30",
+        "Pto. Del Carmen"
+       ],
+       [
+        "2023-04-22",
+        "Maciot Sport",
+        "Palmeiros B",
+        8,
+        0,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 21": [
+       [
+        "2023-04-29",
+        "Palmeiros B",
+        "Sporting Tías C",
+        2,
+        2,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-04-29",
+        "Marítima",
+        "Tahiche C",
+        6,
+        2,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-04-29",
+        "San Bartolomé B",
+        "Playa Honda B",
+        3,
+        1,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-04-29",
+        "Tinajo B",
+        "Teguise B",
+        7,
+        2,
+        "11:00",
+        "Los Volcanes"
+       ],
+       [
+        "2023-04-29",
+        "Lomo C",
+        "Maciot Sport",
+        1,
+        10,
+        "11:00",
+        "Pto. Arrecife"
+       ]
+      ],
+      "Jornada 22": [
+       [
+        "2023-05-13",
+        "Teguise B",
+        "San Bartolomé B",
+        1,
+        4,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-05-11",
+        "Maciot Sport",
+        "Tinajo B",
+        2,
+        1,
+        "17:00",
+        "SF Javier"
+       ],
+       [
+        "2023-05-13",
+        "Sporting Tías C",
+        "Lomo C",
+        2,
+        0,
+        "09:30",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-05-13",
+        "Tahiche C",
+        "Palmeiros B",
+        9,
+        1,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-05-13",
+        "Playa Honda B",
+        "Futbol2016",
+        5,
+        1,
+        "11:00",
+        "Playa Honda"
+       ]
+      ],
+      "Jornada 3": [
+       [
+        "2022-10-28",
+        "Sporting Tías C",
+        "Futbol2016",
+        10,
+        1,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2022-10-29",
+        "Palmeiros B",
+        "Lomo C",
+        3,
+        2,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-10-29",
+        "Marítima",
+        "Tinajo B",
+        8,
+        1,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-10-29",
+        "Tahiche C",
+        "San Bartolomé B",
+        12,
+        2,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2022-10-30",
+        "Maciot Sport",
+        "Playa Honda B",
+        4,
+        3,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 4": [
+       [
+        "2022-11-12",
+        "San Bartolomé B",
+        "Marítima",
+        1,
+        11,
+        "09:30",
+        "Pedro Espinosa"
+       ],
+       [
+        "2022-11-12",
+        "Playa Honda B",
+        "Sporting Tías C",
+        3,
+        2,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2022-11-12",
+        "Teguise B",
+        "Maciot Sport",
+        1,
+        9,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-11-12",
+        "Tinajo B",
+        "Palmeiros B",
+        7,
+        0,
+        "11:00",
+        "Los Volcanes"
+       ],
+       [
+        "2022-11-13",
+        "Futbol2016",
+        "Tahiche C",
+        2,
+        12,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 5": [
+       [
+        "2022-11-18",
+        "Marítima",
+        "Futbol2016",
+        20,
+        1,
+        "17:00",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-11-18",
+        "Sporting Tías C",
+        "Teguise B",
+        6,
+        0,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2022-11-19",
+        "Tahiche C",
+        "Playa Honda B",
+        4,
+        2,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2022-12-13",
+        "Palmeiros B",
+        "San Bartolomé B",
+        5,
+        3,
+        "17:00",
+        "Teguise"
+       ],
+       [
+        "2022-11-19",
+        "Lomo C",
+        "Tinajo B",
+        1,
+        4,
+        "12:30",
+        "Pto. Arrecife"
+       ]
+      ],
+      "Jornada 6": [
+       [
+        "2022-11-26",
+        "San Bartolomé B",
+        "Lomo C",
+        2,
+        1,
+        "09:30",
+        "Pedro Espinosa"
+       ],
+       [
+        "2022-11-26",
+        "Playa Honda B",
+        "Marítima",
+        1,
+        15,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2022-11-26",
+        "Teguise B",
+        "Tahiche C",
+        1,
+        13,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-11-26",
+        "Futbol2016",
+        "Palmeiros B",
+        1,
+        12,
+        "11:00",
+        "Pto. Del Carmen"
+       ],
+       [
+        "2022-11-27",
+        "Maciot Sport",
+        "Sporting Tías C",
+        7,
+        2,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 7": [
+       [
+        "2022-12-03",
+        "Lomo C",
+        "Futbol2016",
+        7,
+        1,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-12-03",
+        "Palmeiros B",
+        "Playa Honda B",
+        1,
+        6,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-12-03",
+        "Marítima",
+        "Teguise B",
+        19,
+        1,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-12-03",
+        "Tinajo B",
+        "San Bartolomé B",
+        3,
+        1,
+        "11:00",
+        "Los Volcanes"
+       ],
+       [
+        "2022-12-01",
+        "Tahiche C",
+        "Maciot Sport",
+        10,
+        3,
+        "16:45",
+        "Mun. Tahiche"
+       ]
+      ],
+      "Jornada 8": [
+       [
+        "2022-12-15",
+        "Sporting Tías C",
+        "Tahiche C",
+        2,
+        8,
+        "18:30",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2022-12-17",
+        "Playa Honda B",
+        "Lomo C",
+        1,
+        1,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2022-12-17",
+        "Teguise B",
+        "Palmeiros B",
+        1,
+        1,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-12-18",
+        "Futbol2016",
+        "Tinajo B",
+        1,
+        17,
+        "09:30",
+        "Pto. Del Carmen"
+       ],
+       [
+        "2022-12-18",
+        "Maciot Sport",
+        "Marítima",
+        3,
+        11,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 9": [
+       [
+        "2023-01-14",
+        "San Bartolomé B",
+        "Futbol2016",
+        9,
+        0,
+        "09:30",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-01-14",
+        "Palmeiros B",
+        "Maciot Sport",
+        0,
+        7,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-01-14",
+        "Marítima",
+        "Sporting Tías C",
+        12,
+        0,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-01-14",
+        "Tinajo B",
+        "Playa Honda B",
+        4,
+        3,
+        "11:00",
+        "Los Volcanes"
+       ],
+       [
+        "2023-01-14",
+        "Lomo C",
+        "Teguise B",
+        0,
+        5,
+        "11:00",
+        "Pto. Arrecife"
+       ]
+      ]
+     },
+     "timestamp": "20230618120846",
+     "url": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/"
+    },
+    {
+     "jornadas": {
+      "Jornada 1": [
+       [
+        "2022-10-14",
+        "Sporting Tías C",
+        "Tinajo B",
+        3,
+        9,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2022-10-15",
+        "Teguise B",
+        "Futbol2016",
+        10,
+        1,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-10-15",
+        "Marítima",
+        "Palmeiros B",
+        18,
+        1,
+        "11:00",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-10-15",
+        "Tahiche C",
+        "Lomo C",
+        10,
+        0,
+        "11:00",
+        "Mun. Tahiche"
+       ],
+       [
+        "2022-10-16",
+        "Maciot Sport",
+        "San Bartolomé B",
+        11,
+        3,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 10": [
+       [
+        "2023-01-20",
+        "Sporting Tías C",
+        "Palmeiros B",
+        1,
+        3,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-01-21",
+        "Playa Honda B",
+        "San Bartolomé B",
+        6,
+        2,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-01-21",
+        "Teguise B",
+        "Tinajo B",
+        2,
+        8,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-01-21",
+        "Tahiche C",
+        "Marítima",
+        3,
+        9,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-01-22",
+        "Maciot Sport",
+        "Lomo C",
+        8,
+        1,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 11": [
+       [
+        "2023-02-04",
+        "San Bartolomé B",
+        "Teguise B",
+        1,
+        1,
+        "09:30",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-02-04",
+        "Lomo C",
+        "Sporting Tías C",
+        4,
+        6,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-02-04",
+        "Palmeiros B",
+        "Tahiche C",
+        3,
+        6,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-03-16",
+        "Tinajo B",
+        "Maciot Sport",
+        2,
+        3,
+        "17:00",
+        "Los Volcanes"
+       ],
+       [
+        "2023-02-03",
+        "Futbol2016",
+        "Playa Honda B",
+        0,
+        8,
+        "16:00",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 12": [
+       [
+        "2023-02-11",
+        "Palmeiros B",
+        "Marítima",
+        2,
+        6,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-02-11",
+        "Lomo C",
+        "Tahiche C",
+        1,
+        8,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-02-11",
+        "Tinajo B",
+        "Sporting Tías C",
+        2,
+        1,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2023-02-11",
+        "San Bartolomé B",
+        "Maciot Sport",
+        1,
+        11,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-02-12",
+        "Futbol2016",
+        "Teguise B",
+        1,
+        6,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 13": [
+       [
+        "2023-02-17",
+        "Sporting Tías C",
+        "San Bartolomé B",
+        3,
+        1,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-02-18",
+        "Marítima",
+        "Lomo C",
+        7,
+        0,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-02-18",
+        "Tahiche C",
+        "Tinajo B",
+        1,
+        0,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-02-18",
+        "Teguise B",
+        "Playa Honda B",
+        1,
+        4,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-02-19",
+        "Maciot Sport",
+        "Futbol2016",
+        7,
+        1,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 14": [
+       [
+        "2023-03-04",
+        "Lomo C",
+        "Palmeiros B",
+        1,
+        0,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-03-04",
+        "Tinajo B",
+        "Marítima",
+        0,
+        7,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2023-03-04",
+        "Playa Honda B",
+        "Maciot Sport",
+        1,
+        5,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-03-04",
+        "San Bartolomé B",
+        "Tahiche C",
+        1,
+        8,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-03-05",
+        "Futbol2016",
+        "Sporting Tías C",
+        0,
+        8,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 15": [
+       [
+        "2023-03-10",
+        "Sporting Tías C",
+        "Playa Honda B",
+        4,
+        2,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-03-10",
+        "Palmeiros B",
+        "Tinajo B",
+        3,
+        4,
+        "17:00",
+        "Teguise"
+       ],
+       [
+        "2023-03-11",
+        "Marítima",
+        "San Bartolomé B",
+        9,
+        0,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-03-09",
+        "Tahiche C",
+        "Futbol2016",
+        12,
+        1,
+        "16:45",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-03-10",
+        "Maciot Sport",
+        "Teguise B",
+        5,
+        2,
+        "17:00",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 16": [
+       [
+        "2023-03-18",
+        "Tinajo B",
+        "Lomo C",
+        3,
+        0,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2023-03-18",
+        "Playa Honda B",
+        "Tahiche C",
+        1,
+        3,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-03-18",
+        "Teguise B",
+        "Sporting Tías C",
+        1,
+        3,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-03-18",
+        "San Bartolomé B",
+        "Palmeiros B",
+        4,
+        5,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-03-19",
+        "Futbol2016",
+        "Marítima",
+        0,
+        13,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 17": [
+       [
+        "2023-03-24",
+        "Sporting Tías C",
+        "Maciot Sport",
+        2,
+        4,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-03-25",
+        "Palmeiros B",
+        "Futbol2016",
+        null,
+        null,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-03-25",
+        "Marítima",
+        "Playa Honda B",
+        null,
+        null,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-03-25",
+        "Tahiche C",
+        "Teguise B",
+        null,
+        null,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-03-25",
+        "Lomo C",
+        "San Bartolomé B",
+        null,
+        null,
+        "11:00",
+        "Pto. Arrecife"
+       ]
+      ],
+      "Jornada 18": [
+       [
+        "2023-04-01",
+        "Playa Honda B",
+        "Palmeiros B",
+        null,
+        null,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-04-01",
+        "Teguise B",
+        "Marítima",
+        null,
+        null,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-04-01",
+        "San Bartolomé B",
+        "Tinajo B",
+        null,
+        null,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-04-02",
+        "Futbol2016",
+        "Lomo C",
+        null,
+        null,
+        "09:30",
+        "Pto. Del Carmen"
+       ],
+       [
+        "2023-04-02",
+        "Maciot Sport",
+        "Tahiche C",
+        null,
+        null,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 19": [
+       [
+        "2023-04-15",
+        "Tinajo B",
+        "Futbol2016",
+        null,
+        null,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2023-04-15",
+        "Palmeiros B",
+        "Teguise B",
+        null,
+        null,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-04-15",
+        "Marítima",
+        "Maciot Sport",
+        null,
+        null,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-04-15",
+        "Tahiche C",
+        "Sporting Tías C",
+        null,
+        null,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-04-15",
+        "Lomo C",
+        "Playa Honda B",
+        null,
+        null,
+        "11:00",
+        "Pto. Arrecife"
+       ]
+      ],
+      "Jornada 2": [
+       [
+        "2022-10-22",
+        "Lomo C",
+        "Marítima",
+        0,
+        13,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-10-22",
+        "Tinajo B",
+        "Tahiche C",
+        1,
+        3,
+        "09:30",
+        "Los Volcanes"
+       ],
+       [
+        "2022-10-22",
+        "Playa Honda B",
+        "Teguise B",
+        6,
+        1,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2022-10-22",
+        "San Bartolomé B",
+        "Sporting Tías C",
+        0,
+        4,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2022-10-23",
+        "Futbol2016",
+        "Maciot Sport",
+        0,
+        19,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 20": [
+       [
+        "2023-04-21",
+        "Sporting Tías C",
+        "Marítima",
+        null,
+        null,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-04-22",
+        "Playa Honda B",
+        "Tinajo B",
+        null,
+        null,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2023-04-22",
+        "Teguise B",
+        "Lomo C",
+        null,
+        null,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-04-23",
+        "Futbol2016",
+        "San Bartolomé B",
+        null,
+        null,
+        "09:30",
+        "Pto. Del Carmen"
+       ],
+       [
+        "2023-04-23",
+        "Maciot Sport",
+        "Palmeiros B",
+        null,
+        null,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 21": [
+       [
+        "2023-04-29",
+        "Palmeiros B",
+        "Sporting Tías C",
+        null,
+        null,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-04-29",
+        "Marítima",
+        "Tahiche C",
+        null,
+        null,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-04-29",
+        "San Bartolomé B",
+        "Playa Honda B",
+        null,
+        null,
+        "11:00",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-04-29",
+        "Tinajo B",
+        "Teguise B",
+        null,
+        null,
+        "11:00",
+        "Los Volcanes"
+       ],
+       [
+        "2023-04-29",
+        "Lomo C",
+        "Maciot Sport",
+        null,
+        null,
+        "11:00",
+        "Pto. Arrecife"
+       ]
+      ],
+      "Jornada 22": [
+       [
+        "2023-05-13",
+        "Teguise B",
+        "San Bartolomé B",
+        null,
+        null,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-05-13",
+        "Maciot Sport",
+        "Tinajo B",
+        null,
+        null,
+        "09:30",
+        "SF Javier"
+       ],
+       [
+        "2023-05-13",
+        "Sporting Tías C",
+        "Lomo C",
+        null,
+        null,
+        "09:30",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2023-05-13",
+        "Tahiche C",
+        "Palmeiros B",
+        null,
+        null,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2023-05-13",
+        "Playa Honda B",
+        "Futbol2016",
+        null,
+        null,
+        "11:00",
+        "Playa Honda"
+       ]
+      ],
+      "Jornada 3": [
+       [
+        "2022-10-28",
+        "Sporting Tías C",
+        "Futbol2016",
+        10,
+        1,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2022-10-29",
+        "Palmeiros B",
+        "Lomo C",
+        3,
+        2,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-10-29",
+        "Marítima",
+        "Tinajo B",
+        8,
+        1,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-10-29",
+        "Tahiche C",
+        "San Bartolomé B",
+        12,
+        2,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2022-10-30",
+        "Maciot Sport",
+        "Playa Honda B",
+        4,
+        3,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 4": [
+       [
+        "2022-11-12",
+        "San Bartolomé B",
+        "Marítima",
+        1,
+        11,
+        "09:30",
+        "Pedro Espinosa"
+       ],
+       [
+        "2022-11-12",
+        "Playa Honda B",
+        "Sporting Tías C",
+        3,
+        2,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2022-11-12",
+        "Teguise B",
+        "Maciot Sport",
+        1,
+        9,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-11-12",
+        "Tinajo B",
+        "Palmeiros B",
+        7,
+        0,
+        "11:00",
+        "Los Volcanes"
+       ],
+       [
+        "2022-11-13",
+        "Futbol2016",
+        "Tahiche C",
+        2,
+        12,
+        "09:30",
+        "Pto. Del Carmen"
+       ]
+      ],
+      "Jornada 5": [
+       [
+        "2022-11-18",
+        "Marítima",
+        "Futbol2016",
+        20,
+        1,
+        "17:00",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-11-18",
+        "Sporting Tías C",
+        "Teguise B",
+        6,
+        0,
+        "18:00",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2022-11-19",
+        "Tahiche C",
+        "Playa Honda B",
+        4,
+        2,
+        "09:30",
+        "Mun. Tahiche"
+       ],
+       [
+        "2022-12-13",
+        "Palmeiros B",
+        "San Bartolomé B",
+        5,
+        3,
+        "17:00",
+        "Teguise"
+       ],
+       [
+        "2022-11-19",
+        "Lomo C",
+        "Tinajo B",
+        1,
+        4,
+        "12:30",
+        "Pto. Arrecife"
+       ]
+      ],
+      "Jornada 6": [
+       [
+        "2022-11-26",
+        "San Bartolomé B",
+        "Lomo C",
+        2,
+        1,
+        "09:30",
+        "Pedro Espinosa"
+       ],
+       [
+        "2022-11-26",
+        "Playa Honda B",
+        "Marítima",
+        1,
+        15,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2022-11-26",
+        "Teguise B",
+        "Tahiche C",
+        1,
+        13,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-11-26",
+        "Futbol2016",
+        "Palmeiros B",
+        1,
+        12,
+        "11:00",
+        "Pto. Del Carmen"
+       ],
+       [
+        "2022-11-27",
+        "Maciot Sport",
+        "Sporting Tías C",
+        7,
+        2,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 7": [
+       [
+        "2022-12-03",
+        "Lomo C",
+        "Futbol2016",
+        7,
+        1,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-12-03",
+        "Palmeiros B",
+        "Playa Honda B",
+        1,
+        6,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-12-03",
+        "Marítima",
+        "Teguise B",
+        19,
+        1,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2022-12-03",
+        "Tinajo B",
+        "San Bartolomé B",
+        3,
+        1,
+        "11:00",
+        "Los Volcanes"
+       ],
+       [
+        "2022-12-01",
+        "Tahiche C",
+        "Maciot Sport",
+        10,
+        3,
+        "16:45",
+        "Mun. Tahiche"
+       ]
+      ],
+      "Jornada 8": [
+       [
+        "2022-12-15",
+        "Sporting Tías C",
+        "Tahiche C",
+        2,
+        8,
+        "18:30",
+        "Fco. Bermúdez"
+       ],
+       [
+        "2022-12-17",
+        "Playa Honda B",
+        "Lomo C",
+        1,
+        1,
+        "09:30",
+        "Playa Honda"
+       ],
+       [
+        "2022-12-17",
+        "Teguise B",
+        "Palmeiros B",
+        1,
+        1,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2022-12-18",
+        "Futbol2016",
+        "Tinajo B",
+        1,
+        17,
+        "09:30",
+        "Pto. Del Carmen"
+       ],
+       [
+        "2022-12-18",
+        "Maciot Sport",
+        "Marítima",
+        3,
+        11,
+        "09:30",
+        "SF Javier"
+       ]
+      ],
+      "Jornada 9": [
+       [
+        "2023-01-14",
+        "San Bartolomé B",
+        "Futbol2016",
+        9,
+        0,
+        "09:30",
+        "Pedro Espinosa"
+       ],
+       [
+        "2023-01-14",
+        "Palmeiros B",
+        "Maciot Sport",
+        0,
+        7,
+        "09:30",
+        "Teguise"
+       ],
+       [
+        "2023-01-14",
+        "Marítima",
+        "Sporting Tías C",
+        12,
+        0,
+        "09:30",
+        "Pto. Arrecife"
+       ],
+       [
+        "2023-01-14",
+        "Tinajo B",
+        "Playa Honda B",
+        4,
+        3,
+        "11:00",
+        "Los Volcanes"
+       ],
+       [
+        "2023-01-14",
+        "Lomo C",
+        "Teguise B",
+        0,
+        5,
+        "11:00",
+        "Pto. Arrecife"
+       ]
+      ]
+     },
+     "timestamp": "20230324223056",
+     "url": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/"
+    }
+   ]
+  },
+  "2022-2023|BENJAMIN|LZP1": {
+   "snapshots": []
+  },
   "2024-2025|BENJAMIN|A1": {
    "snapshots": [
     {

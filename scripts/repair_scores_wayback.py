@@ -191,6 +191,9 @@ def apply_plans(conn, plans):
             conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (hs, as_, mid))
             n += 1
     conn.commit()
+    # La base va en modo WAL: si otro proceso la tiene abierta, los cambios se
+    # quedarían en futbolbase.db-wal (ignorado por git) y no llegarían al commit.
+    conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
     return n
 
 

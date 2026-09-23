@@ -1,5 +1,206 @@
 {
  "groups": {
+  "2022-2023|BENJAMIN|LZ12": {
+   "after": 160,
+   "before": 318,
+   "changes": [
+    {
+     "after": [
+      10,
+      0
+     ],
+     "away": "Lomo C",
+     "before": [
+      0,
+      0
+     ],
+     "home": "Tahiche C",
+     "jornada": "1",
+     "match_id": 926139,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      11,
+      3
+     ],
+     "away": "San Bartolomé B",
+     "before": [
+      1,
+      3
+     ],
+     "home": "Maciot Sport",
+     "jornada": "1",
+     "match_id": 926140,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      3,
+      2
+     ],
+     "away": "Lomo C",
+     "before": [
+      3,
+      0
+     ],
+     "home": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+     "jornada": "3",
+     "match_id": 926147,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      19,
+      1
+     ],
+     "away": "Teguise B",
+     "before": [
+      9,
+      0
+     ],
+     "home": "JUVENTUD MARITIMA A, C.D. \"A\"",
+     "jornada": "7",
+     "match_id": 926169,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      3,
+      11
+     ],
+     "away": "JUVENTUD MARITIMA A, C.D. \"A\"",
+     "before": [
+      3,
+      1
+     ],
+     "home": "Maciot Sport",
+     "jornada": "8",
+     "match_id": 926175,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      8,
+      1
+     ],
+     "away": "Lomo C",
+     "before": [
+      4,
+      1
+     ],
+     "home": "Maciot Sport",
+     "jornada": "10",
+     "match_id": 926185,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      4,
+      6
+     ],
+     "away": "SPORTING TIAS C, C.F. \"C\"",
+     "before": [
+      1,
+      6
+     ],
+     "home": "Lomo C",
+     "jornada": "11",
+     "match_id": 926188,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      3,
+      6
+     ],
+     "away": "Tahiche C",
+     "before": [
+      0,
+      6
+     ],
+     "home": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+     "jornada": "11",
+     "match_id": 926189,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      2,
+      6
+     ],
+     "away": "JUVENTUD MARITIMA A, C.D. \"A\"",
+     "before": [
+      0,
+      6
+     ],
+     "home": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+     "jornada": "12",
+     "match_id": 926191,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      1,
+      11
+     ],
+     "away": "Maciot Sport",
+     "before": [
+      1,
+      1
+     ],
+     "home": "San Bartolomé B",
+     "jornada": "12",
+     "match_id": 926194,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      3,
+      4
+     ],
+     "away": "Tinajo B",
+     "before": [
+      2,
+      4
+     ],
+     "home": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+     "jornada": "15",
+     "match_id": 926208,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      5,
+      2
+     ],
+     "away": "Teguise B",
+     "before": [
+      4,
+      2
+     ],
+     "home": "Maciot Sport",
+     "jornada": "15",
+     "match_id": 926210,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    },
+    {
+     "after": [
+      0,
+      13
+     ],
+     "away": "JUVENTUD MARITIMA A, C.D. \"A\"",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Teguise B",
+     "jornada": "18",
+     "match_id": 926223,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-dos-lanzarote/@20230618120846"
+    }
+   ]
+  },
   "2024-2025|BENJAMIN|A1": {
    "after": 0,
    "before": 32,

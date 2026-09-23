@@ -201,6 +201,765 @@
     }
    ]
   },
+  "2023-2024|BENJAMIN|LZ11": {
+   "after": 110,
+   "before": 350,
+   "changes": [
+    {
+     "after": [
+      11,
+      2
+     ],
+     "away": "Sporting Tías B",
+     "before": [
+      1,
+      2
+     ],
+     "home": "San Bartolomé C",
+     "jornada": "1",
+     "match_id": 924867,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      5,
+      2
+     ],
+     "away": "Lomo C",
+     "before": [
+      4,
+      2
+     ],
+     "home": "ORIENTACION MARITIMA C, C.D \"C\"",
+     "jornada": "2",
+     "match_id": 924871,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      1,
+      14
+     ],
+     "away": "San Bartolomé C",
+     "before": [
+      0,
+      4
+     ],
+     "home": "CD Adassa",
+     "jornada": "2",
+     "match_id": 924876,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      1,
+      0
+     ],
+     "away": "Sporting Tías B",
+     "before": [
+      0,
+      0
+     ],
+     "home": "ORIENTACION MARITIMA C, C.D \"C\"",
+     "jornada": "3",
+     "match_id": 924884,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      1,
+      12
+     ],
+     "away": "San Bartolomé C",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Tahiche B",
+     "jornada": "4",
+     "match_id": 924885,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      0,
+      10
+     ],
+     "away": "Lanzarote B",
+     "before": [
+      0,
+      1
+     ],
+     "home": "CD Adassa",
+     "jornada": "7",
+     "match_id": 924906,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      3,
+      11
+     ],
+     "away": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+     "before": [
+      0,
+      11
+     ],
+     "home": "CD Adassa",
+     "jornada": "9",
+     "match_id": 924923,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      1,
+      3
+     ],
+     "away": "ORIENTACION MARITIMA C, C.D \"C\"",
+     "before": [
+      1,
+      2
+     ],
+     "home": "Teguise B",
+     "jornada": "10",
+     "match_id": 924929,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      11,
+      1
+     ],
+     "away": "Lomo C",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Tahiche B",
+     "jornada": "10",
+     "match_id": 924931,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      1,
+      8
+     ],
+     "away": "San Bartolomé C",
+     "before": [
+      0,
+      8
+     ],
+     "home": "Lomo C",
+     "jornada": "11",
+     "match_id": 924940,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      5,
+      3
+     ],
+     "away": "Teguise B",
+     "before": [
+      2,
+      3
+     ],
+     "home": "Lanzarote B",
+     "jornada": "13",
+     "match_id": 924952,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      3,
+      1
+     ],
+     "away": "Teguise B",
+     "before": [
+      2,
+      0
+     ],
+     "home": "Tinajo B",
+     "jornada": "16",
+     "match_id": 924971,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      3,
+      0
+     ],
+     "away": "ORIENTACION MARITIMA C, C.D \"C\"",
+     "before": [
+      0,
+      0
+     ],
+     "home": "Sporting Tías B",
+     "jornada": "16",
+     "match_id": 924972,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      6,
+      2
+     ],
+     "away": "ESTEFUT, C.D.",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Teguise B",
+     "jornada": "17",
+     "match_id": 924978,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      4,
+      1
+     ],
+     "away": "Sporting Tías B",
+     "before": [
+      0,
+      1
+     ],
+     "home": "Lomo C",
+     "jornada": "17",
+     "match_id": 924981,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      1,
+      10
+     ],
+     "away": "CD Tite",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Tahiche B",
+     "jornada": "18",
+     "match_id": 924984,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      15,
+      0
+     ],
+     "away": "CD Adassa",
+     "before": [
+      5,
+      0
+     ],
+     "home": "Lanzarote B",
+     "jornada": "20",
+     "match_id": 924998,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      13,
+      1
+     ],
+     "away": "ESTEFUT, C.D.",
+     "before": [
+      1,
+      1
+     ],
+     "home": "CD Tite",
+     "jornada": "21",
+     "match_id": 925008,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      0,
+      14
+     ],
+     "away": "Lanzarote B",
+     "before": [
+      0,
+      3
+     ],
+     "home": "Tahiche B",
+     "jornada": "22",
+     "match_id": 925014,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      3,
+      1
+     ],
+     "away": "ESTEFUT, C.D.",
+     "before": [
+      3,
+      0
+     ],
+     "home": "Sporting Tías B",
+     "jornada": "23",
+     "match_id": 925021,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      4,
+      1
+     ],
+     "away": "Tahiche B",
+     "before": [
+      3,
+      1
+     ],
+     "home": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+     "jornada": "24",
+     "match_id": 925025,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      4,
+      0
+     ],
+     "away": "ORIENTACION MARITIMA C, C.D \"C\"",
+     "before": [
+      2,
+      0
+     ],
+     "home": "San Bartolomé C",
+     "jornada": "26",
+     "match_id": 925043,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    },
+    {
+     "after": [
+      4,
+      1
+     ],
+     "away": "Tahiche B",
+     "before": [
+      4,
+      0
+     ],
+     "home": "ESTEFUT, C.D.",
+     "jornada": "26",
+     "match_id": 925045,
+     "source": "https://futbolaspalmas.com/benjamin-primera-grupo-uno-lanzarote/@20240715180450"
+    }
+   ]
+  },
+  "2023-2024|BENJAMIN|SF1": {
+   "after": 38,
+   "before": 246,
+   "changes": [
+    {
+     "after": [
+      13,
+      3
+     ],
+     "away": "Goleta",
+     "before": [
+      1,
+      3
+     ],
+     "home": "Corazón Mª",
+     "jornada": "1",
+     "match_id": 931913,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      8,
+      3
+     ],
+     "away": "Guayarmina",
+     "before": [
+      8,
+      0
+     ],
+     "home": "Garepa Viera",
+     "jornada": "2",
+     "match_id": 931918,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      11,
+      1
+     ],
+     "away": "Goleta",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Garepa Viera",
+     "jornada": "3",
+     "match_id": 931925,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      0,
+      10
+     ],
+     "away": "Garepa Viera",
+     "before": [
+      0,
+      1
+     ],
+     "home": "San Nicolás",
+     "jornada": "4",
+     "match_id": 931926,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      7,
+      3
+     ],
+     "away": "Corazón Mª",
+     "before": [
+      7,
+      1
+     ],
+     "home": "Becerril",
+     "jornada": "4",
+     "match_id": 931927,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      2,
+      4
+     ],
+     "away": "Becerril",
+     "before": [
+      0,
+      4
+     ],
+     "home": "UD Barrial",
+     "jornada": "5",
+     "match_id": 931934,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      1,
+      4
+     ],
+     "away": "Guayarmina",
+     "before": [
+      1,
+      1
+     ],
+     "home": "San Nicolás",
+     "jornada": "6",
+     "match_id": 931936,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      13,
+      0
+     ],
+     "away": "UD Barrial",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Arucas",
+     "jornada": "6",
+     "match_id": 931940,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      1,
+      10
+     ],
+     "away": "Becerril",
+     "before": [
+      0,
+      10
+     ],
+     "home": "Goleta",
+     "jornada": "7",
+     "match_id": 931944,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      12,
+      0
+     ],
+     "away": "Goleta",
+     "before": [
+      8,
+      0
+     ],
+     "home": "Arucas",
+     "jornada": "8",
+     "match_id": 931946,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      2,
+      10
+     ],
+     "away": "Corazón Mª",
+     "before": [
+      1,
+      1
+     ],
+     "home": "Goleta",
+     "jornada": "10",
+     "match_id": 931958,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      2,
+      0
+     ],
+     "away": "UD Barrial",
+     "before": [
+      1,
+      0
+     ],
+     "home": "Garepa Viera",
+     "jornada": "10",
+     "match_id": 931960,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      10,
+      2
+     ],
+     "away": "Becerril",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Arucas",
+     "jornada": "11",
+     "match_id": 931961,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      12,
+      3
+     ],
+     "away": "Corazón Mª",
+     "before": [
+      2,
+      3
+     ],
+     "home": "Arucas",
+     "jornada": "14",
+     "match_id": 931978,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    },
+    {
+     "after": [
+      0,
+      16
+     ],
+     "away": "Arucas",
+     "before": [
+      0,
+      1
+     ],
+     "home": "UD Barrial",
+     "jornada": "15",
+     "match_id": 931981,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-uno/@20240519012022"
+    }
+   ]
+  },
+  "2023-2024|BENJAMIN|SF13": {
+   "after": 38,
+   "before": 48,
+   "changes": [
+    {
+     "after": [
+      0,
+      1
+     ],
+     "away": "Unión Marina",
+     "before": [
+      0,
+      0
+     ],
+     "home": "Futboltec",
+     "jornada": "3",
+     "match_id": 932860,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20240519025855"
+    },
+    {
+     "after": [
+      2,
+      2
+     ],
+     "away": "Guiniguada B",
+     "before": [
+      0,
+      2
+     ],
+     "home": "Unión Marina",
+     "jornada": "8",
+     "match_id": 932879,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20240519025855"
+    },
+    {
+     "after": [
+      0,
+      5
+     ],
+     "away": "Tablero B",
+     "before": [
+      0,
+      3
+     ],
+     "home": "Atco. Isleta",
+     "jornada": "14",
+     "match_id": 932906,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-trece/@20240519025855"
+    }
+   ]
+  },
+  "2023-2024|BENJAMIN|SF14": {
+   "after": 0,
+   "before": 56,
+   "changes": [
+    {
+     "after": [
+      1,
+      5
+     ],
+     "away": "LA UNION DE VECINDARIO",
+     "before": [
+      1,
+      4
+     ],
+     "home": "Estrella B",
+     "jornada": "1",
+     "match_id": 932909,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
+    },
+    {
+     "after": [
+      2,
+      4
+     ],
+     "away": "CF Mogán",
+     "before": [
+      2,
+      2
+     ],
+     "home": "CD Arinaga",
+     "jornada": "2",
+     "match_id": 932912,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
+    },
+    {
+     "after": [
+      7,
+      3
+     ],
+     "away": "Estrella B",
+     "before": [
+      7,
+      1
+     ],
+     "home": "CF Mogán",
+     "jornada": "5",
+     "match_id": 932925,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
+    },
+    {
+     "after": [
+      2,
+      11
+     ],
+     "away": "CD Tablero",
+     "before": [
+      2,
+      1
+     ],
+     "home": "Estrella B",
+     "jornada": "9",
+     "match_id": 932941,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
+    },
+    {
+     "after": [
+      2,
+      4
+     ],
+     "away": "CF Mogán",
+     "before": [
+      2,
+      2
+     ],
+     "home": "LA UNION DE VECINDARIO",
+     "jornada": "10",
+     "match_id": 932943,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
+    },
+    {
+     "after": [
+      1,
+      0
+     ],
+     "away": "San Fernando",
+     "before": [
+      0,
+      0
+     ],
+     "home": "Arguineguín B",
+     "jornada": "12",
+     "match_id": 932951,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
+    },
+    {
+     "after": [
+      10,
+      1
+     ],
+     "away": "Casa Pastores",
+     "before": [
+      1,
+      1
+     ],
+     "home": "CD Tablero",
+     "jornada": "12",
+     "match_id": 932953,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
+    },
+    {
+     "after": [
+      8,
+      4
+     ],
+     "away": "CF Mogán",
+     "before": [
+      7,
+      4
+     ],
+     "home": "San Fernando",
+     "jornada": "14",
+     "match_id": 932962,
+     "source": "https://futbolaspalmas.com/benjamin-gran-canaria-catorce/@20240519020744"
+    }
+   ]
+  },
   "2024-2025|BENJAMIN|A1": {
    "after": 0,
    "before": 32,

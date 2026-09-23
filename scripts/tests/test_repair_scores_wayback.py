@@ -130,3 +130,41 @@ class TestPlan:
         assert R.apply_plans(conn, [good, rejected]) == 1
         assert conn.execute("SELECT home_score, away_score FROM matches WHERE id=100").fetchone() == (15, 0)
         assert conn.execute("SELECT home_score, away_score FROM matches WHERE id=101").fetchone() == (1, 1)
+
+
+class TestPool:
+    """Las URLs de futbolaspalmas se reutilizan cada temporada: una bolsa con
+    todas las conocidas, asignando cada captura al grupo cuya plantilla casa."""
+
+    def test_known_urls_come_from_every_season_and_local_raws(self, tmp_path, monkeypatch):
+        conn = _db()
+        conn.execute("INSERT INTO seasons (id, name, start_year, end_year) VALUES (2, '2024-2025', 2024, 2025)")
+        conn.execute("INSERT INTO groups (id, season_id, category_id, code, url) "
+                     "VALUES (30, 2, 1, 'P1', 'https://futbolaspalmas.com/1benjamin1/')")
+        raw = tmp_path / "wayback_2425_raw.json"
+        raw.write_text(json.dumps({"season": "2024-2025", "groups": [
+            {"url": "https://futbolaspalmas.com/1prebenjamin1/", "standings": []}]}))
+        monkeypatch.setattr(R, "ROOT", tmp_path.parent)
+        monkeypatch.setattr(R, "_raw_files", lambda: [raw])
+        assert R.known_urls(conn) == [
+            "https://futbolaspalmas.com/1benjamin1/",
+            "https://futbolaspalmas.com/1prebenjamin1/",
+            "https://futbolaspalmas.com/benjamin-segunda-fase-b-cuatro/"]
+
+    def test_assign_picks_snapshots_whose_squad_matches(self):
+        conn = _db()
+        other = _html([(1, "11-10-2025", "09:00", "Club X", 1, 0, "Club Y"),
+                       (2, "18-10-2025", "09:00", "Club Z", 2, 2, "Club X")])
+        pool = {"https://a/": [{"url": "https://a/", "timestamp": "20260510000000",
+                                "jornadas": R.jornadas_from_html(GOOD)}],
+                "https://b/": [{"url": "https://b/", "timestamp": "20260511000000",
+                                "jornadas": R.jornadas_from_html(other)}]}
+        assigned = R.assign_snapshots(conn, [10], pool)
+        assert [s["url"] for s in assigned[10]] == ["https://a/"]
+
+    def test_assign_keeps_the_most_recent_matching_snapshots(self):
+        conn = _db()
+        snaps = [{"url": "https://a/", "timestamp": ts, "jornadas": R.jornadas_from_html(GOOD)}
+                 for ts in ("20260101000000", "20260301000000", "20260510000000")]
+        assigned = R.assign_snapshots(conn, [10], {"https://a/": snaps}, keep=2)
+        assert [s["timestamp"] for s in assigned[10]] == ["20260510000000", "20260301000000"]

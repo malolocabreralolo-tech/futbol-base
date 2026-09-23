@@ -190,13 +190,15 @@ def apply_plans(conn, plans):
 
 # ─── Descarga (red) ──────────────────────────────────────────────────────────
 
+def _raw_files():
+    return [p for p in sorted((ROOT / "scripts").glob("wayback_*_raw.json")) if p.name != RAW_PATH.name]
+
+
 def _local_raw_urls(conn, season, group_id):
     """URLs de las capturas locales wayback_*_raw.json cuya plantilla es la del grupo."""
     names = list(group_teams(conn, group_id).values())
     urls = []
-    for path in sorted((ROOT / "scripts").glob("wayback_*_raw.json")):
-        if path == RAW_PATH:
-            continue
+    for path in _raw_files():
         try:
             data = json.loads(path.read_text())
         except ValueError:
@@ -208,6 +210,52 @@ def _local_raw_urls(conn, season, group_id):
             if g.get("url") and group_overlap(equipos, names) >= MIN_OVERLAP:
                 urls.append(g["url"])
     return urls
+
+
+def known_urls(conn):
+    """Todas las URLs de futbolaspalmas conocidas: las de la base (cualquier
+    temporada) y las de las capturas locales. futbolaspalmas reutiliza sus
+    direcciones cada temporada, así que valen como candidatas para cualquiera."""
+    urls = {u for (u,) in conn.execute("SELECT url FROM groups WHERE url IS NOT NULL AND url != ''")}
+    for path in _raw_files():
+        try:
+            data = json.loads(path.read_text())
+        except ValueError:
+            continue
+        urls.update(g["url"] for g in data.get("groups", []) if g.get("url"))
+    return sorted(u for u in urls if "futbolaspalmas.com" in u)
+
+
+def fetch_pool(urls, season, get=http_get, pause=1.5):
+    """{url: [capturas con algún marcador]}: las más recientes de cada URL en la temporada."""
+    pool = {}
+    for url in urls:
+        snaps = []
+        for ts in list_snapshots(url, season, get=get)[:MAX_SNAPSHOTS_PER_URL]:
+            time.sleep(pause)
+            try:
+                jornadas = jornadas_from_html(snapshot_html(url, ts, get=get))
+            except RuntimeError as exc:
+                print(f"    ! {exc}")
+                continue
+            con_marcador = sum(1 for rows in jornadas.values() for r in rows if r[3] is not None)
+            print(f"    {url} @{ts}: {con_marcador} marcadores")
+            if con_marcador:
+                snaps.append({"url": url, "timestamp": ts, "jornadas": jornadas})
+        pool[url] = snaps
+        time.sleep(pause)
+    return pool
+
+
+def assign_snapshots(conn, group_ids, pool, keep=KEEP_PER_URL):
+    """{group_id: capturas cuya plantilla casa con la del grupo, recientes primero}."""
+    out = {}
+    for gid in group_ids:
+        names = list(group_teams(conn, gid).values())
+        buenas = [s for snaps in pool.values() for s in snaps
+                  if group_overlap(_snapshot_names(s["jornadas"]), names) >= MIN_OVERLAP]
+        out[gid] = sorted(buenas, key=lambda s: s["timestamp"], reverse=True)[:keep]
+    return out
 
 
 def candidate_urls(conn, season, group_id):
@@ -278,6 +326,8 @@ def main(argv=None):
     ap.add_argument("--season", required=True)
     ap.add_argument("--groups", help="códigos separados por comas (por defecto: los que tienen desvío)")
     ap.add_argument("--fetch", action="store_true", help="descarga capturas de Wayback al raw")
+    ap.add_argument("--pool", action="store_true",
+                    help="con --fetch: prueba todas las URLs conocidas de futbolaspalmas, no solo las del grupo")
     ap.add_argument("--write", action="store_true", help="aplica los planes aceptados")
     args = ap.parse_args(argv)
     from db import get_connection
@@ -285,7 +335,14 @@ def main(argv=None):
     codes = set(args.groups.split(",")) if args.groups else None
     targets = _targets(conn, args.season, codes)
     raw = _load(RAW_PATH)
-    if args.fetch:
+    if args.fetch and args.pool:
+        pool = fetch_pool(known_urls(conn), args.season)
+        asignadas = assign_snapshots(conn, [gid for gid, _, _ in targets], pool)
+        for gid, category, code in targets:
+            raw["groups"][baseline_key(args.season, category, code)] = {"snapshots": asignadas[gid]}
+            print(f"[{code}] {len(asignadas[gid])} capturas asignadas")
+        _save(RAW_PATH, raw)
+    elif args.fetch:
         for gid, category, code in targets:
             print(f"[{code}] descargando capturas")
             snaps = fetch_group(conn, args.season, gid)

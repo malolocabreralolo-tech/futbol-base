@@ -26,13 +26,14 @@ JS_PATH = ROOT / "data-maspalomas-cup-2026.js"
 
 
 def _match(n, day="26/06", time="10:00", home="A", away="B", hs=1, as_=0,
-           field="Campo CD 1.1 - Campo Joma 1", pen=None):
+           field="Campo CD 1.1 - Campo Joma 1", pen=None, shootout=None):
     """Partido ya normalizado, como los que manejan los helpers internos."""
     d = datetime.datetime.strptime(f"2026-{day[3:]}-{day[:2]} {time}",
                                    "%Y-%m-%d %H:%M")
     return {"n": n, "kickoff": d, "day": day, "time": time,
             "date_key": d.strftime("%d-%m-%Y"), "home": home, "away": away,
-            "hs": hs, "as": as_, "field": field, "pen": pen}
+            "hs": hs, "as": as_, "field": field, "pen": pen,
+            "shootout": shootout}
 
 
 class TestPenaltyWinner:
@@ -55,13 +56,6 @@ class TestPenaltyWinner:
         assert _penalty_winner({"penaltyStatus": "saved",
                                 "penaltyWinner": "???"}) is None
 
-    def test_row_carries_a_sixth_column_only_on_shootouts(self):
-        from fetch_maspalomas_cup import row_short
-        assert row_short(_match(1, hs=2, as_=2, pen="away")) == [
-            "26/06", "A", "B", 2, 2, "away"]
-        # Sin penaltis se mantienen las 5 columnas de siempre.
-        assert len(row_short(_match(1, hs=3, as_=1))) == 5
-
     def test_published_final_of_the_gold_cup_names_its_winner(self):
         # Copa Oro benjamín 2026: 2-2 y penaltis 3-4 → gana el visitante.
         src = JS_PATH.read_text(encoding="utf-8")
@@ -71,6 +65,96 @@ class TestPenaltyWinner:
         assert len(final) == 1
         assert final[0][3] == final[0][4], "la final acabó en empate"
         assert final[0][5] == "away", "falta quién ganó la tanda"
+        assert final[0][8] == "3-4", "falta el resultado de la tanda"
+
+
+class TestShootoutScore:
+    """La tanda 'h-a' sale de penaltyHomeScore/penaltyAwayScore del raw y solo
+    acompaña a un ganador de tanda (spec §9.3): nunca hay índice 8 sin 5."""
+
+    def test_formats_home_dash_away(self):
+        from fetch_maspalomas_cup import _shootout_score
+        assert _shootout_score({"penaltyStatus": "saved",
+                                "penaltyWinner": "away",
+                                "penaltyHomeScore": 3,
+                                "penaltyAwayScore": 4}) == "3-4"
+
+    def test_none_when_no_shootout(self):
+        from fetch_maspalomas_cup import _shootout_score
+        assert _shootout_score({"penaltyStatus": "none",
+                                "penaltyWinner": None,
+                                "penaltyHomeScore": None,
+                                "penaltyAwayScore": None}) is None
+        assert _shootout_score({}) is None
+
+    def test_none_when_a_score_is_missing(self):
+        from fetch_maspalomas_cup import _shootout_score
+        assert _shootout_score({"penaltyStatus": "saved",
+                                "penaltyWinner": "home",
+                                "penaltyHomeScore": 5,
+                                "penaltyAwayScore": None}) is None
+
+    def test_none_without_a_valid_winner(self):
+        from fetch_maspalomas_cup import _shootout_score
+        assert _shootout_score({"penaltyStatus": "saved",
+                                "penaltyWinner": "???",
+                                "penaltyHomeScore": 3,
+                                "penaltyAwayScore": 4}) is None
+
+    def test_normalize_carries_the_shootout(self):
+        from fetch_maspalomas_cup import normalize
+        m = normalize({"matchNumber": 2333, "date": "2026-06-27T17:00:00.000Z",
+                       "homeTeamName": "AD Huracán A",
+                       "awayTeamName": "UD Vecindario A",
+                       "homeScore": 2, "awayScore": 2, "field": "CD 1.1",
+                       "penaltyStatus": "saved", "penaltyWinner": "away",
+                       "penaltyHomeScore": 3, "penaltyAwayScore": 4})
+        assert (m["pen"], m["shootout"]) == ("away", "3-4")
+        sin = normalize({"matchNumber": 1003, "date": "2026-06-23T14:00:00.000Z",
+                         "homeTeamName": "X", "awayTeamName": "Y",
+                         "homeScore": 1, "awayScore": 4, "field": "CD 1.2",
+                         "penaltyStatus": "none", "penaltyWinner": None,
+                         "penaltyHomeScore": None, "penaltyAwayScore": None})
+        assert (sin["pen"], sin["shootout"]) == (None, None)
+
+    def test_raw_has_shootout_scores_exactly_on_penalty_matches(self):
+        raw = json.loads(RAW_PATH.read_text(encoding="utf-8"))
+        decided = [m for m in raw
+                   if (m.get("penaltyStatus") or "none") != "none"]
+        for m in raw:
+            has_scores = (isinstance(m.get("penaltyHomeScore"), int)
+                          and isinstance(m.get("penaltyAwayScore"), int))
+            assert has_scores == (m in decided), m["matchNumber"]
+        for m in decided:
+            h, a = m["penaltyHomeScore"], m["penaltyAwayScore"]
+            assert m["homeScore"] == m["awayScore"], m["matchNumber"]
+            assert m["penaltyWinner"] == ("home" if h > a else "away"), \
+                m["matchNumber"]
+        # 24 tandas en todo el raw; 10 son de Alevín, que no se publica.
+        assert len(decided) == 24
+
+
+class TestBracketRow:
+    """Fila de cuadro en `jornadas`, con el mismo orden por posición que
+    HISTORY (spec §5.3): [día, local, visitante, gl, gv, pen|null, hora,
+    campo corto, tanda|null]. El índice 5 sigue siendo quién pasó."""
+
+    def test_shootout_row_has_nine_columns(self):
+        from fetch_maspalomas_cup import row_short
+        m = _match(1, time="17:00", hs=2, as_=2, pen="away", shootout="3-4",
+                   field="Campo CD 1.1 - Campo Joma 1")
+        assert row_short(m) == ["26/06", "A", "B", 2, 2, "away",
+                                "17:00", "CD 1.1", "3-4"]
+
+    def test_row_without_shootout_has_nulls_in_5_and_8(self):
+        from fetch_maspalomas_cup import row_short
+        assert row_short(_match(1, hs=3, as_=1)) == [
+            "26/06", "A", "B", 3, 1, None, "10:00", "CD 1.1", None]
+
+    def test_unplayed_row_keeps_nine_columns(self):
+        from fetch_maspalomas_cup import row_short
+        assert row_short(_match(1, hs=None, as_=None, field="")) == [
+            "26/06", "A", "B", None, None, None, "10:00", "", None]
 
 
 class TestShortField:
@@ -262,3 +346,56 @@ class TestPublishedContent:
         # 'Ronda 6' era la etiqueta sin sentido que recibía la ronda previa.
         src = JS_PATH.read_text(encoding="utf-8")
         assert "Ronda 6" not in src
+
+    def test_bracket_rows_have_nine_columns_and_group_rows_do_not_change(self):
+        for var in ("MASPALOMAS_CUP_BENJAMIN", "MASPALOMAS_CUP_PREBENJAMIN"):
+            for g in self._groups(var):
+                if g.get("jornadas"):
+                    for rows in g["jornadas"].values():
+                        for r in rows:
+                            assert len(r) == 9, f"{g['id']}: {r}"
+                            assert r[5] in ("home", "away", None), r
+                            # Quién pasó (5) y la tanda (8) van juntos.
+                            assert (r[5] is None) == (r[8] is None), r
+                else:
+                    # Fase de grupos: [día, hora, local, visitante, gl, gv,
+                    # campo], como siempre (la hora va en el índice 1).
+                    for r in g["matches"]:
+                        assert len(r) == 7, f"{g['id']}: {r}"
+                        assert re.fullmatch(r"\d{2}:\d{2}", r[1]), r
+
+    def test_published_shootouts_are_consistent(self):
+        seen = 0
+        for var in ("MASPALOMAS_CUP_BENJAMIN", "MASPALOMAS_CUP_PREBENJAMIN"):
+            for g in self._groups(var):
+                for rows in (g.get("jornadas") or {}).values():
+                    for r in rows:
+                        if r[8] is None:
+                            continue
+                        seen += 1
+                        h, a = (int(x) for x in r[8].split("-"))
+                        assert r[3] == r[4], f"tanda sin empate: {r}"
+                        assert r[5] == ("home" if h > a else "away"), r
+        # 24 tandas en el raw menos las 10 de Alevín.
+        assert seen == 14
+
+    def test_bracket_time_and_field_match_the_inline_list(self):
+        # Hora y campo corto del cuadro = los de `matches` del mismo cuadro.
+        for var in ("MASPALOMAS_CUP_BENJAMIN", "MASPALOMAS_CUP_PREBENJAMIN"):
+            for g in self._groups(var):
+                if not g.get("jornadas"):
+                    continue
+                inline = {(r[0], r[2], r[3]): (r[1], r[6])
+                          for r in g["matches"]}
+                for rows in g["jornadas"].values():
+                    for r in rows:
+                        assert (r[6], r[7]) == inline[(r[0], r[1], r[2])], \
+                            f"{g['id']}: {r}"
+
+    def test_las_mesas_quarterfinal_row(self):
+        plata = next(g for g in self._groups("MASPALOMAS_CUP_PREBENJAMIN")
+                     if g["name"] == "Copa Plata")
+        rows = [r for rs in plata["jornadas"].values() for r in rs
+                if r[1] == "UD Las Mesas Huracán" and r[2] == "CF Unión Carrizal"]
+        assert rows == [["27/06", "UD Las Mesas Huracán", "CF Unión Carrizal",
+                         1, 1, "home", "10:00", "CD 4", "3-2"]]

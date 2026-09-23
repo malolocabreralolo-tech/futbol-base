@@ -12,6 +12,7 @@
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -297,6 +298,53 @@ test('bracketChampion: null cuando la última ronda no decide', async () => {
   // Final sin jugar.
   assert.equal(bracketChampion({ 'F': [['27/06', 'A', 'B', null, null]] }, ['F']), null);
   assert.equal(bracketChampion({}, []), null);
+});
+
+/* Plan A §9.3: los cuadros de la Maspalomas pasan a filas de 9 columnas
+ * [día, local, visitante, gl, gv, pen|null, hora, campo, tanda|null]. La
+ * interfaz actual solo lee 0-5 en el cuadro (matchAdvancer, bracketChampion,
+ * buildKnockoutBracket) y 6-7 como hora y campo (getHistoricalJornadaMatches,
+ * enlace directo de init.js). Estas pruebas fijan que la fila nueva no la
+ * rompe. */
+test('matchAdvancer/bracketChampion: fila de 9 columnas con pen null y tanda', async () => {
+  const { matchAdvancer, bracketChampion, isRoundRobinCup } = await import('../../src/state.js');
+  const jornadas = {
+    'S': [['27/06', 'A', 'B', 1, 1, null, '09:00', 'CD 1.1', null],
+          ['27/06', 'C', 'D', 2, 0, null, '09:00', 'CD 1.2', null]],
+    'F': [['27/06', 'B', 'C', 2, 2, 'away', '17:00', 'CD 1.1', '3-4']],
+  };
+  const rounds = ['S', 'F'];
+  // pen null en un empate: se sigue deduciendo del cuadro (B juega la final).
+  assert.equal(matchAdvancer(jornadas.S[0], jornadas, rounds, 0), 'away');
+  assert.equal(matchAdvancer(jornadas.S[1], jornadas, rounds, 0), 'home');
+  // En la final manda el índice 5; la tanda del índice 8 no interfiere.
+  assert.equal(matchAdvancer(jornadas.F[0], jornadas, rounds, 1), 'away');
+  assert.equal(bracketChampion(jornadas, rounds), 'C');
+  assert.equal(isRoundRobinCup(jornadas), false);
+});
+
+test('Maspalomas publicada: cada partido de cuadro tiene quién pasó y cada cuadro su campeón', async () => {
+  // El torneo terminó el 27/06/2026 y update.yml no regenera este fichero.
+  const { matchAdvancer, bracketChampion, isRoundRobinCup, countMatches } = await import('../../src/state.js');
+  const ctx = {};
+  vm.createContext(ctx);
+  vm.runInContext(readFileSync(join(ROOT, 'data-maspalomas-cup-2026.js'), 'utf8')
+    + ';this.P = MASPALOMAS_CUP_PREBENJAMIN; this.B = MASPALOMAS_CUP_BENJAMIN;', ctx);
+  const champions = {};
+  for (const g of [...ctx.P, ...ctx.B].filter(x => x.jornadas)) {
+    const rounds = Object.keys(g.jornadas);
+    assert.equal(isRoundRobinCup(g.jornadas), false, `${g.id} se pintaría como tabla`);
+    rounds.forEach((r, i) => g.jornadas[r].forEach(m => {
+      assert.ok(matchAdvancer(m, g.jornadas, rounds, i), `${g.id} ${r}: ${JSON.stringify(m)}`);
+    }));
+    champions[g.id] = bracketChampion(g.jornadas, rounds);
+    // El chip «N partidos» cuenta la lista inline del cuadro, que no cambia.
+    assert.equal(countMatches([g], {}), g.matches.length);
+  }
+  assert.deepEqual(champions, {
+    MCPK1: 'CF Unión Viera', MCPK2: 'AD Huracán',
+    MCBK1: 'Gáldar CF', MCBK2: 'UD Vecindario A',
+  });
 });
 
 /* ─── countMatches: el chip "N partidos" de la stats-bar ───────────────────

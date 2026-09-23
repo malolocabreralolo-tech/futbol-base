@@ -119,6 +119,7 @@ def normalize(match):
         "as": match.get("awayScore"),
         "field": match.get("field") or "",
         "pen": _penalty_winner(match),
+        "shootout": _shootout_score(match),
     }
 
 
@@ -128,6 +129,20 @@ def _penalty_winner(match):
         return None
     winner = match.get("penaltyWinner")
     return winner if winner in ("home", "away") else None
+
+
+def _shootout_score(match):
+    """Resultado de la tanda como 'h-a' (p. ej. '3-4'), si no None.
+
+    Solo acompaña a un ganador de tanda válido: una fila nunca lleva tanda
+    (índice 8) sin quién pasó (índice 5).
+    """
+    if _penalty_winner(match) is None:
+        return None
+    h, a = match.get("penaltyHomeScore"), match.get("penaltyAwayScore")
+    if not (isinstance(h, int) and isinstance(a, int)):
+        return None
+    return f"{h}-{a}"
 
 
 def by_kickoff(m):
@@ -146,19 +161,19 @@ def row_full(m, abbreviate_field=False):
 
 
 def row_short(m):
-    """Fila de una ronda dentro de `jornadas`.
+    """Fila de una ronda dentro de `jornadas` (9 columnas, spec §5.3/§9.3):
 
-    5 columnas, más una 6ª OPCIONAL con quién ganó la tanda de penaltis
-    ('home'/'away') cuando el partido acabó en empate. El frontend deduce el que
-    pasa mirando quién aparece en la ronda siguiente, pero eso no funciona en la
-    final: sin este dato la Copa Oro benjamín 2026 (2-2, penaltis 3-4) se queda
-    sin campeón visible. Las rondas sin penaltis mantienen las 5 columnas de
-    siempre, igual que los datos históricos.
+        [día, local, visitante, gl, gv, pen|None, hora, campo corto, tanda|None]
+
+    El mismo orden por posición que HISTORY. `pen` (índice 5) es quién pasó en
+    la tanda ('home'/'away'): el frontend deduce el que pasa mirando quién
+    aparece en la ronda siguiente, pero eso no funciona en la final, y sin este
+    dato la Copa Oro benjamín 2026 (2-2, penaltis 3-4) se queda sin campeón.
+    `tanda` (índice 8) es su resultado, 'h-a'. Hora y campo corto son los
+    mismos que los de la lista `matches` del cuadro.
     """
-    row = [m["day"], m["home"], m["away"], m["hs"], m["as"]]
-    if m["pen"]:
-        row.append(m["pen"])
-    return row
+    return [m["day"], m["home"], m["away"], m["hs"], m["as"], m["pen"],
+            m["time"], short_field(m["field"]), m["shootout"]]
 
 
 # ─── CLASIFICACIONES ───────────────────────────────────────────────────────────

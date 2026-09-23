@@ -935,7 +935,10 @@ def generate_stats_js(conn):
 
 def get_historical_jornadas(conn, group_id, include_details=False):
     """Return matches grouped by jornada num for historical groups.
-    Format: {jornada_num: [[date, home, away, hs, as_], ...]}
+    Format: {jornada_num: [[date, home, away, hs, as_], ...]}; with
+    include_details, the 8 columns of HISTORY:
+    [date, home, away, hs, as_, None, time, venue]. Every per-season file
+    uses include_details (Plan A §9.1).
     Only includes jornadas with at least one match.
     """
     rows = conn.execute(
@@ -1006,7 +1009,7 @@ def generate_seasons_js(conn):
                 groups_data = []
                 for gid, code, name, full_name, phase, island, current_jornada in groups:
                     standings = get_standings(conn, gid)
-                    hist_jornadas = get_historical_jornadas(conn, gid, include_details=season_name >= '2025-2026')
+                    hist_jornadas = get_historical_jornadas(conn, gid, include_details=True)
                     groups_data.append({
                         "id": code,
                         "name": name,

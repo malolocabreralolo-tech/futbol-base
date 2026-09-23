@@ -227,6 +227,85 @@ class TestGeneratedFiles:
                             )
 
 
+# ─── Plan A §9.1: hora y campo en temporadas pasadas ────────────────────────
+
+# Suelo de filas históricas con hora y campo. En futbolbase.db, el 23/09/2026,
+# hay 5.618 (2021-22: 90, 2022-23: 641, 2023-24: 2.147, 2024-25: 2.740); el
+# suelo deja margen para que una reimportación manual (fetch-fiflp.yml) que
+# pierda algún horario no bloquee la publicación. Al archivar 2025-26 solo sube.
+MIN_HISTORICAL_ROWS_WITH_DETAILS = 5400
+
+
+def _historical_match_rows():
+    """(temporada, grupo, jornada, fila) de cada partido de los data-season-*.js."""
+    for entry in _load_seasons_js():
+        if entry.get("current"):
+            continue
+        per_season = _load_per_season_js(entry["name"])
+        if per_season is None:
+            pytest.fail(f"data-season-{entry['name']}.js missing")
+        for cat in ("benjamin", "prebenjamin"):
+            for g in per_season.get(cat, []):
+                for jornada, rows in (g.get("jornadas") or {}).items():
+                    for row in rows:
+                        yield entry["name"], g["id"], jornada, row
+
+
+class TestHistoricalMatchRows:
+    def test_every_historical_row_has_eight_columns(self):
+        """[fecha, local, visitante, gl, gv, null, hora, campo], como HISTORY.
+
+        Además, ningún data-season-*.js lleva U+2028 ni U+2029: la interfaz los
+        lee con una expresión regular (ensureSeasonData en state.js y
+        loadAllHistoricalSeasons en modals.js) cuyo `.` no casa esos dos
+        separadores en JavaScript. El `.` de Python sí los casa, así que
+        _load_per_season_js no lo detectaría."""
+        bad = [f"{s}/{gid}/{j}: {row}" for s, gid, j, row in _historical_match_rows()
+               if not isinstance(row, list) or len(row) != 8 or row[5] is not None]
+        assert not bad, f"{len(bad)} filas históricas sin 8 columnas: {bad[:5]}"
+        for entry in _load_seasons_js():
+            if entry.get("current"):
+                continue
+            with open(os.path.join(ROOT, f"data-season-{entry['name']}.js"),
+                      encoding="utf-8") as f:
+                texto = f.read()
+            assert "\u2028" not in texto and "\u2029" not in texto, (
+                f"data-season-{entry['name']}.js lleva U+2028/U+2029")
+
+    def test_time_and_venue_counts_match_db(self):
+        """Cada temporada publica todas las horas y campos que tiene la base."""
+        c = _conn()
+        published = {}
+        for season, _gid, _j, row in _historical_match_rows():
+            t, v = published.get(season, (0, 0))
+            detailed = len(row) == 8
+            published[season] = (t + bool(detailed and row[6]),
+                                 v + bool(detailed and row[7]))
+        assert published, "no hay temporadas históricas publicadas"
+        for season, got in sorted(published.items()):
+            expected = c.execute(
+                """SELECT COUNT(CASE WHEN m.time <> '' THEN 1 END),
+                          COUNT(CASE WHEN m.venue <> '' THEN 1 END)
+                   FROM matches m
+                   JOIN groups g ON g.id = m.group_id
+                   JOIN seasons se ON se.id = g.season_id
+                   JOIN categories c ON c.id = g.category_id
+                   JOIN teams h ON h.id = m.home_team_id
+                   JOIN teams a ON a.id = m.away_team_id
+                   WHERE se.name = ?
+                     AND UPPER(c.name) IN ('BENJAMIN', 'PREBENJAMIN')""",
+                (season,)).fetchone()
+            assert got == tuple(expected), (
+                f"{season}: publicado (hora, campo)={got}, en la base={tuple(expected)}")
+
+    def test_at_least_n_historical_rows_with_time_and_venue(self):
+        n = sum(1 for *_, row in _historical_match_rows()
+                if len(row) == 8 and row[6] and row[7])
+        assert n >= MIN_HISTORICAL_ROWS_WITH_DETAILS, (
+            f"solo {n} partidos históricos con hora y campo "
+            f"(mínimo {MIN_HISTORICAL_ROWS_WITH_DETAILS})")
+
+
 # ─── Actas pipeline schema ───────────────────────────────────────────────────
 
 def test_actas_migration_idempotent(tmp_path):

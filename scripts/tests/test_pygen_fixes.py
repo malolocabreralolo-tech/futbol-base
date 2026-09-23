@@ -258,6 +258,39 @@ class TestScoreRangeGuard:
         assert capsys.readouterr().err == ""
 
 
+# ─── Plan A §9.1: hora y campo en temporadas pasadas ────────────────────────
+
+class TestHistoricalMatchDetails:
+    """Las temporadas pasadas salían en filas de 5 columnas aunque la base
+    tenga su hora y su campo (unos 5.600 partidos de 2021-22 a 2024-25): solo
+    2025-26 en adelante pasaba include_details. Ahora todas las temporadas usan
+    las 8 columnas de HISTORY: [fecha, local, visitante, gl, gv, null, hora, campo]."""
+
+    def _seed_past_season(self, conn):
+        conn.executescript("""
+          INSERT INTO seasons (id, name, start_year, end_year, is_current)
+            VALUES (2, '2021-2022', 2021, 2022, 0);
+          INSERT INTO groups (id, season_id, category_id, code, name, phase, current_jornada)
+            VALUES (7, 2, 2, 'PG2', 'Grupo 2', 'Gran Canaria', '1');
+          INSERT INTO teams (id, name) VALUES (1, 'Las Mesas Hu.'), (2, 'Huracan');
+          INSERT INTO matches (id, group_id, jornada, date, time, home_team_id, away_team_id,
+                               home_score, away_score, venue)
+            VALUES (1, 7, '1', '06/11', '10:30', 1, 2, 2, 7, 'ANEXO GRAN CANARIA F8(1)'),
+                   (2, 7, '1', '06/11', '', 2, 1, NULL, NULL, '');
+        """)
+
+    def test_past_season_rows_carry_time_and_venue(self):
+        from scripts.generate_js import generate_seasons_js
+        conn = _synth_conn()
+        self._seed_past_season(conn)
+        _, seasons = generate_seasons_js(conn)
+        past = next(s for s in seasons if s["name"] == "2021-2022")
+        assert past["prebenjamin"][0]["jornadas"] == {"1": [
+            ["06/11", "Huracan", "Las Mesas Hu.", None, None, None, "", ""],
+            ["06/11", "Las Mesas Hu.", "Huracan", 2, 7, None, "10:30", "ANEXO GRAN CANARIA F8(1)"],
+        ]}
+
+
 # ─── Fix 4: stale standings recompute (current season, league groups) ───────
 
 class TestStandingsFreshness:

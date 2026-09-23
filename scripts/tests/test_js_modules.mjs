@@ -137,12 +137,13 @@ test('per-season groups have valid standings + jornadas shape', () => {
           assert.equal(typeof team, 'string');
           if (J > 0) assert.ok(pts <= J * 3, `${name}/${g.id}/${team}: pts=${pts} > 3*J=${J*3}`);
         }
-        // jornadas: object {num: [[date,home,away,hs,as], ...]}
+        // jornadas: object {num: [[date,home,away,hs,as,pen,hora,campo], ...]}
+        // (5 columnas en ficheros generados antes de Plan A §9.1; 8 desde entonces)
         if (g.jornadas) {
           for (const [num, matches] of Object.entries(g.jornadas)) {
             assert.ok(Array.isArray(matches), `${name}/${g.id}/J${num}: matches not array`);
             for (const m of matches) {
-              assert.ok(Array.isArray(m) && m.length === 5,
+              assert.ok(Array.isArray(m) && (m.length === 5 || m.length === 8),
                 `${name}/${g.id}/J${num}: match shape ${JSON.stringify(m)}`);
             }
           }

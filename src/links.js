@@ -153,3 +153,75 @@ export function downloadCalendar(matches, options) {
   anchor.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+
+/* ====== Rutas del rediseño (spec §4.1): '#/<pantalla>?<parámetros>' ====== */
+
+export const SCREENS = ['', 'jornada', 'tabla', 'explorar', 'partido', 'equipo', 'ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes'];
+// Orden estable de los parámetros en los enlaces; los que no están aquí van detrás, por orden alfabético.
+const PARAM_ORDER = ['s', 'c', 'i', 'f', 'g', 'r', 'h', 'a', 't', 'v', 'q', 'to'];
+
+export function parseRoute(hash) {
+  const m = String(hash ?? '').match(/^#?\/([a-z]*)(?:\?([^#]*))?(?:#.*)?$/);
+  if (!m || !SCREENS.includes(m[1])) return { screen: '', params: {} };
+  const params = {};
+  for (const [key, value] of new URLSearchParams(m[2] || '')) {
+    if (/^[a-z]+$/.test(key) && value !== '' && !Object.hasOwn(params, key)) params[key] = value;
+  }
+  return { screen: m[1], params };
+}
+
+export function routeHref(screen, params = {}) {
+  if (!SCREENS.includes(screen)) return '#/';
+  const rank = key => (PARAM_ORDER.includes(key) ? PARAM_ORDER.indexOf(key) : PARAM_ORDER.length);
+  const query = Object.keys(params || {})
+    .filter(key => params[key] !== '' && params[key] !== null && params[key] !== undefined)
+    .sort((a, b) => rank(a) - rank(b) || (a < b ? -1 : a > b ? 1 : 0))
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(String(params[key]))}`)
+    .join('&');
+  return `#/${screen}${query ? '?' + query : ''}`;
+}
+
+// Enlaces antiguos ('#section=…', compartidos por WhatsApp) → ruta nueva (tabla de §4.1).
+// `season` es PORTAL.season: la temporada del enlace solo se escribe si es otra.
+// Un enlace nunca cambia mi equipo: 'miequipo' con equipo abre su ficha.
+function legacyMatch(value) {
+  try {
+    const match = JSON.parse(value);
+    return Array.isArray(match) && match.length === 3 && match.every(v => typeof v === 'string') && match[0] && match[1] ? match : null;
+  } catch { return null; }
+}
+
+export function translateLegacy(hash, { season } = {}) {
+  const text = String(hash ?? '');
+  const raw = new URLSearchParams(text.replace(/^#/, ''));
+  if (text.startsWith('#/') || !raw.has('section')) return null;
+  const route = readRoute(text);
+  const c = ['benjamin', 'prebenjamin'].includes(raw.get('cat')) ? raw.get('cat') : '';
+  const s = route.season && route.season !== season ? route.season : '';
+  const g = route.group;
+  const match = legacyMatch(route.match);
+  if (g && match) return routeHref('partido', { s, g, r: match[2], h: match[0], a: match[1] });
+  if (route.team) return g ? routeHref('equipo', { s, g, t: route.team }) : routeHref('explorar', { s, q: route.team });
+  switch (route.section) {
+    case 'clasif': return routeHref('tabla', { s, g });
+    case 'jornadas': return routeHref('jornada', { s, g, r: route.round });
+    case 'goleadores': return routeHref('goleadores', { s, c: g ? '' : c, g });
+    case 'isla': return routeHref('ligas', { s, c, i: route.island });
+    case 'stats': return routeHref('records', { s, c });
+    default: return '#/';
+  }
+}
+
+// Cuenta atrás del próximo partido; `todayISO` es el día de hoy en Atlantic/Canary.
+export function countdownLabel(dateISO, todayISO) {
+  const day = value => {
+    const m = String(value ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return null;
+    const date = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+    return date.getUTCMonth() === +m[2] - 1 && date.getUTCDate() === +m[3] ? date.getTime() / 86400000 : null;
+  };
+  const from = day(todayISO), to = day(dateISO);
+  if (from === null || to === null || to < from) return null;
+  const days = to - from;
+  return days === 0 ? 'hoy' : days === 1 ? 'mañana' : `faltan ${days} días`;
+}

@@ -716,3 +716,117 @@ export function bestStreaks(season, cat) {
   const order = (a, b) => b.n - a.n || a.team.localeCompare(b.team, 'es') || a.groupId.localeCompare(b.groupId, 'es');
   return { wins: wins.sort(order), unbeaten: unbeaten.sort(order) };
 }
+
+// ─── Nombres (spec §3.5) y cronología (spec §4.5 y §5.3) ─────────────────────
+
+/* «Apellidos, Nombre» → «Nombre Apellidos». Si el texto llega entero en
+ * MAYÚSCULAS (actas), cada palabra pasa a mayúscula inicial, también «De» y
+ * «La» y cada parte de un compuesto con guion. Nunca añade tildes: solo cambia
+ * mayúsculas por minúsculas. El texto con minúsculas se respeta tal cual. */
+export function playerName(raw) {
+  let text = String(raw ?? '').replace(/\s+/g, ' ').trim();
+  const comma = text.indexOf(',');
+  if (comma !== -1) {
+    text = [text.slice(comma + 1).trim(), text.slice(0, comma).trim()].filter(Boolean).join(' ');
+  }
+  if (/\p{Lu}/u.test(text) && !/\p{Ll}/u.test(text)) {
+    text = text.toLowerCase().replace(/(^|[\s\-.'(])(\p{Ll})/gu, (_, before, letter) => before + letter.toUpperCase());
+  }
+  return text;
+}
+
+const CLUB_ACRONYM = String.raw`(?:U\.?D\.?|C\.?D\.?A?|A\.?D\.?|R\.?C\.?|C\.?F\.?|S\.?D\.?|F\.?C\.?|Real Club|REAL CLUB)`;
+const LEADING_ACRONYMS = new RegExp(String.raw`^(?:${CLUB_ACRONYM}\s+)+`);
+const TRAILING_ACRONYMS = new RegExp(String.raw`(?:\s+${CLUB_ACRONYM})+$`);
+
+/* Nombre corto para casillas estrechas: quita las siglas del club al
+ * principio o al final (UD, CD, AD, RC, CF, C.D., U.D., «Real Club»…) y
+ * conserva la letra de filial. La forma de la federación «NOMBRE, C.D. EL "B"»
+ * pasa a «EL NOMBRE B»: se queda el artículo y se quita el resto del sufijo.
+ * No cambia mayúsculas ni tildes. Si no queda ninguna letra, devuelve el
+ * nombre entero («CD 35600»). */
+export function teamShort(name) {
+  const full = String(name ?? '').replace(/\s+/g, ' ').trim();
+  let text = full;
+  let filial = '';
+  const quoted = text.match(/\s*"([^"]*)"$/);
+  if (quoted) {
+    if (/^[A-E]$/.test(quoted[1])) filial = quoted[1];
+    text = text.slice(0, quoted.index).trim();
+  }
+  const comma = text.lastIndexOf(',');
+  if (comma !== -1) {
+    const article = text.slice(comma + 1).trim().match(/(?:^|\s)(EL|LA|LAS|LOS)$/);
+    text = (article ? article[1] + ' ' : '') + text.slice(0, comma).trim();
+  }
+  if (!filial) {
+    const letter = text.match(/\s([A-E])$/);
+    if (letter) {
+      filial = letter[1];
+      text = text.slice(0, letter.index);
+    }
+  }
+  text = text.replace(LEADING_ACRONYMS, '').replace(TRAILING_ACRONYMS, '').trim();
+  if (!/\p{L}/u.test(text)) return full;
+  if (filial && !text.endsWith(' ' + filial)) text += ' ' + filial;
+  return text;
+}
+
+/* La entrada de la cronología o de las actas que corresponde al partido: la
+ * única, o el único elemento de `list`, cuyo (s, gr) es el del partido. */
+function entryForMatch(entry, match) {
+  if (!entry) return null;
+  const list = entry.dup ? entry.list || [] : [entry];
+  const hits = list.filter(item => item && item.s === match.season && item.gr === match.groupId);
+  return hits.length === 1 ? hits[0] : null;
+}
+
+const GOAL_MARK = { o: '(p.p.)', own: '(p.p.)', p: '(p)', penalty: '(p)' };
+
+/* Nombre del goleador para mostrar. La fuente a veces pone el marcador donde
+ * va el nombre («0-1»): entonces no hay nombre (null). */
+function scorerName(raw, type) {
+  const name = playerName(raw);
+  if (!name || /^\d+\s*-\s*\d+$/.test(name)) return null;
+  const mark = GOAL_MARK[type];
+  return mark && !name.includes(mark) ? `${name} ${mark}` : name;
+}
+
+/* Goles de un partido (§4.5): la cronología de futbolaspalmas si hay una
+ * entrada inequívoca; si no, los goles del acta (sin marcador parcial si le
+ * falta algún minuto); si no, null. mismatch compara los goles de cada lado
+ * con el marcador: {timeline: 'h-a', score: 'h-a'} si no cuadran. */
+export function timelineFor(match, matchDetail, lineups) {
+  if (match.hs == null || match.as == null) return null;
+  const key = `${match.home}|${match.away}|${match.hs}-${match.as}`;
+  const side = s => (s === 'h' ? 'home' : 'away');
+  let source, goals;
+  const detail = entryForMatch(matchDetail && matchDetail[key], match);
+  if (detail) {
+    source = 'futbolaspalmas';
+    goals = (detail.g || []).map(([minute, name, score, s, type]) => ({
+      minute: minute ?? null, score: score || null, side: side(s), name: scorerName(name, type),
+    }));
+  } else {
+    const acta = entryForMatch(lineups && lineups[key], match);
+    if (!acta) return null;
+    source = 'acta';
+    const events = (acta.events || [])
+      .map((event, index) => ({ event, index }))
+      .filter(({ event }) => event.t === 'goal')
+      .sort((a, b) => ((a.event.m ?? Infinity) - (b.event.m ?? Infinity)) || a.index - b.index)
+      .map(({ event }) => event);
+    const timed = events.every(event => event.m != null);
+    let h = 0, a = 0;
+    goals = events.map(event => {
+      if (event.s === 'h') h += 1; else a += 1;
+      return { minute: event.m ?? null, score: timed ? `${h}-${a}` : null, side: side(event.s), name: scorerName(event.n, event.gt) };
+    });
+  }
+  const home = goals.filter(goal => goal.side === 'home').length;
+  const away = goals.length - home;
+  const mismatch = home === match.hs && away === match.as
+    ? null
+    : { timeline: `${home}-${away}`, score: `${match.hs}-${match.as}` };
+  return { source, goals, mismatch };
+}

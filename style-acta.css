@@ -1,0 +1,374 @@
+/* Sistema visual «Acta» en tinta roja (spec §3).
+ * Sustituye a style.css en el corte de B2; hasta entonces no lo enlaza nadie.
+ * Tema claro por defecto; el oscuro solo si el sistema lo pide (spec §4.9). */
+
+:root {
+  color-scheme: light dark;
+  --paper: #FFFFFF;
+  --text: #1A1F2B;
+  --mute: #5A6272;
+  --ink: #C0182B;
+  --on-ink: #FFFFFF;
+  --rule: #E7B9BE;
+  --line: #ECEEF2;
+  --mark: #FBEDEE;
+  --win: #1B7A43;
+  --on-win: #FFFFFF;
+  --draw: #E4E7EC;
+  --on-draw: #1A1F2B;
+  --loss: #1A1F2B;
+  --on-loss: #FFFFFF;
+  --gutter: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #15171C;
+    --text: #ECEEF2;
+    --mute: #A3AAB8;
+    --ink: #FF5A64;
+    --on-ink: #15171C;
+    --rule: #5A2A30;
+    --line: #262A33;
+    --mark: #2A1B1E;
+    --win: #3FBF78;
+    --on-win: #15171C;
+    --draw: #3A3F4A;
+    --on-draw: #ECEEF2;
+    --loss: #ECEEF2;
+    --on-loss: #15171C;
+  }
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* El foco nunca queda debajo de la barra fija. */
+  scroll-padding-bottom: calc(64px + env(safe-area-inset-bottom));
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
+}
+
+h1, h2, h3, p, dl, dd { margin: 0; }
+h1 { font-size: 19px; font-weight: 800; line-height: 1.2; }
+a { color: var(--ink); text-underline-offset: 3px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+abbr[title] { text-decoration: none; }
+
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.page { max-width: 640px; margin: 0 auto; padding: 0 var(--gutter) 24px; }
+
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 14px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(calc(-100% - 16px));
+}
+.skip-link:focus { transform: none; }
+
+/* ── Bloque y caja ────────────────────────────────────────────────────── */
+
+.block { margin-top: 18px; }
+.block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 8px;
+  margin-bottom: 7px;
+}
+.block-title { font-size: 15px; font-weight: 800; line-height: 1.25; color: var(--ink); }
+.block-context { min-width: 0; font-size: 12.5px; font-weight: 600; color: var(--mute); text-align: right; }
+
+.box { border: 1.5px solid var(--ink); background: var(--paper); }
+.box > * + * { border-top: 1px solid var(--rule); }
+
+/* ── Casillas ─────────────────────────────────────────────────────────── */
+
+.cells {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+}
+.cells-1 { grid-template-columns: minmax(0, 1fr); }
+.cells-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cells-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cells-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.cell { min-width: 0; padding: 6px 8px 7px; background: var(--paper); }
+.cell-label { font-size: 11.5px; color: var(--mute); }
+.cell-value { font-size: 17px; font-weight: 800; line-height: 1.3; color: var(--ink); overflow-wrap: anywhere; }
+.cell.is-muted .cell-value { font-size: 13.5px; font-weight: 600; color: var(--mute); }
+
+/* ── Fila de partido ──────────────────────────────────────────────────── */
+
+.match-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 8px 6px;
+  color: var(--text);
+  text-decoration: none;
+}
+.box > .match-row + .match-row { border-top-color: var(--line); }
+.match-time { font-size: 11.5px; color: var(--mute); }
+.match-team { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.match-home { justify-content: flex-end; text-align: right; }
+.match-away { justify-content: flex-start; }
+.match-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.match-score {
+  padding: 3px 0;
+  border: 1px solid var(--rule);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.3;
+  text-align: center;
+}
+.match-score.is-pending { color: var(--mute); font-weight: 600; }
+.match-note { grid-column: 2 / -1; font-size: 12.5px; font-weight: 600; color: var(--mute); text-align: center; }
+.match-row.is-mine {
+  background: var(--mark);
+  color: var(--ink);
+  font-weight: 800;
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+.match-row.is-mine .match-score { border-color: var(--ink); }
+.match-row.is-mine .match-time { color: var(--ink); }
+
+/* ── Tabla ────────────────────────────────────────────────────────────── */
+
+.standings { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.standings th, .standings td {
+  height: 44px;
+  padding: 0 3px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+.standings thead th {
+  height: auto;
+  padding: 6px 3px;
+  border-bottom: 1.5px solid var(--ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--mute);
+  white-space: nowrap;
+}
+.standings tbody tr:last-child > * { border-bottom: 0; }
+.standings .st-pos { width: 24px; text-align: center; color: var(--mute); }
+/* Sin overflow: el recorte va en .st-name, y así no se come el contorno de foco de .st-link. */
+.standings .st-team { text-align: left; font-weight: 400; }
+.standings .st-num { width: 24px; }
+.standings .st-gf, .standings .st-gc { width: 32px; }
+.standings .st-dg { width: 38px; }
+.standings .st-pts { width: 30px; font-weight: 800; }
+.standings .st-form { width: 98px; padding-left: 6px; text-align: left; }
+.st-link, .st-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: none;
+}
+.st-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-retired { font-size: 11.5px; font-weight: 400; color: var(--mute); }
+.standings tr.is-mine > * { background: var(--mark); color: var(--ink); font-weight: 800; }
+.standings tr.is-mine > :first-child { box-shadow: inset 3px 0 0 var(--ink); }
+
+/* ── Forma ────────────────────────────────────────────────────────────── */
+
+.form { display: inline-flex; gap: 2px; vertical-align: middle; }
+.form-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+.form-g { background: var(--win); color: var(--on-win); }
+.form-e { background: var(--draw); color: var(--on-draw); }
+.form-p { background: var(--loss); color: var(--on-loss); }
+
+/* ── Selector segmentado y botonera ───────────────────────────────────── */
+
+.segmented { display: flex; border: 1.5px solid var(--ink); }
+.segment {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+  text-decoration: none;
+}
+.segment + .segment { border-left: 1px solid var(--rule); }
+.segment[aria-current] { background: var(--ink); color: var(--on-ink); }
+
+.buttons { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+  text-decoration: none;
+}
+.button + .button { border-left: 1px solid var(--rule); }
+.button.is-main { background: var(--ink); color: var(--on-ink); }
+
+/* ── Escudo y monograma ───────────────────────────────────────────────── */
+
+.crest { display: inline-block; flex: none; object-fit: contain; vertical-align: middle; }
+.mono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--line);
+  color: var(--mute);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  vertical-align: middle;
+}
+.crest-16, .mono-16 { width: 16px; height: 16px; }
+.crest-32, .mono-32 { width: 32px; height: 32px; }
+.crest-46, .mono-46 { width: 46px; height: 46px; }
+.mono-16 { font-size: 7.5px; }
+.mono-32 { font-size: 12px; }
+.mono-46 { font-size: 16px; }
+
+/* ── Aviso y vacío ────────────────────────────────────────────────────── */
+
+.notice { margin-top: 10px; font-size: 12.5px; color: var(--mute); }
+.notice b { font-weight: 700; color: var(--text); }
+.empty { padding: 12px; border: 1.5px dashed var(--rule); color: var(--mute); }
+
+/* ── Barra de navegación: abajo en móvil y tableta ────────────────────── */
+
+.tabbar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  height: calc(64px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1.5px solid var(--ink);
+  background: var(--paper);
+}
+.tab {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  max-width: 160px;
+  min-height: 44px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--mute);
+  text-decoration: none;
+}
+.tab-icon { display: grid; place-items: center; width: 44px; height: 28px; }
+.tab-icon svg { width: 22px; height: 22px; }
+.tab-label { line-height: 1.2; }
+.tab[aria-current] { font-weight: 800; color: var(--ink); }
+.tab[aria-current] .tab-icon { background: var(--ink); color: var(--on-ink); }
+
+/* ── Escritorio: pestañas arriba, 1120 px de ancho ────────────────────── */
+
+@media (min-width: 1024px) {
+  html { scroll-padding-bottom: 0; }
+  body { padding-bottom: 0; }
+  .page { max-width: 1120px; }
+  .tabbar {
+    position: static;
+    justify-content: flex-start;
+    gap: 4px;
+    height: auto;
+    padding-bottom: 0;
+    border-top: 0;
+    background: transparent;
+  }
+  .tab {
+    flex: none;
+    flex-direction: row;
+    gap: 6px;
+    max-width: none;
+    min-height: 48px;
+    padding: 0 14px;
+    font-size: 13.5px;
+  }
+  .tab-icon { width: auto; height: auto; }
+  .tab-icon svg { width: 20px; height: 20px; }
+  .tab[aria-current] { box-shadow: inset 0 -3px 0 var(--ink); }
+  .tab[aria-current] .tab-icon { background: transparent; color: inherit; }
+}
+
+/* ── Enlaces con puntero ──────────────────────────────────────────────── */
+
+@media (hover: hover) {
+  a.match-row:hover .match-name,
+  .st-link:hover .st-name,
+  a.segment:not([aria-current]):hover,
+  a.button:not(.is-main):hover { text-decoration: underline; }
+}
+
+/* ── Movimiento: solo como respuesta a una acción (spec §3.4) ─────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .segment, .button, .tab-icon { transition: background-color 0.15s ease, color 0.15s ease; }
+}

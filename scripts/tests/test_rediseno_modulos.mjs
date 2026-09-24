@@ -84,6 +84,31 @@ test('imports planos y estáticos, a módulos de src/ que existen; src/ sin subc
   }
 });
 
+// Añadido de la Tarea 5 (decisión del controlador): sin ciclos de imports entre los módulos de
+// src/. Recorre el mismo grafo que la prueba de arriba, con su mismo matchAll de imports, y falla
+// con la cadena del ciclo si dos módulos acaban dependiendo uno de otro.
+test('sin ciclos de imports entre los módulos de src/', () => {
+  const deps = new Map(MODULES.map((f) => {
+    const src = code(read(`src/${f}`));
+    const specs = [...src.matchAll(/(?:from|import)\s*['"]([^'"]+)['"]/g)].map(([, spec]) => spec.slice(2));
+    return [f, specs];
+  }));
+  const onStack = new Set();
+  const done = new Set();
+  const walk = (f, stack) => {
+    if (done.has(f)) return;
+    if (onStack.has(f)) {
+      const start = stack.indexOf(f);
+      assert.fail(`ciclo de imports: ${[...stack.slice(start), f].join(' → ')}`);
+    }
+    onStack.add(f);
+    for (const dep of deps.get(f) || []) walk(dep, [...stack, f]);
+    onStack.delete(f);
+    done.add(f);
+  };
+  for (const f of MODULES) walk(f, []);
+});
+
 test('cada screen-*.js exporta el contrato de pantalla { id, needs, render }', async () => {
   const screens = MODULES.filter((f) => /^screen-[a-z]+\.js$/.test(f));
   assert.ok(screens.includes('screen-home.js'));

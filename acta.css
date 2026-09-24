@@ -447,17 +447,58 @@ abbr[title] { text-decoration: none; }
 .choice-none { font-weight: 700; color: var(--ink); text-decoration: underline; }
 .home-cta { margin-top: 10px; }
 
-/* ── Cabecera de la app en el corte: la marca, solo en escritorio (spec §4.8) ──
- * La Tarea 5 (shell.js) completa la cabecera y la barra. */
-.shell-brand { display: none; }
+/* ── Marco de la app: marca y aviso sin conexión (spec §4.8 y §4.10) ──── */
+
+/* En móvil y tableta la cabecera no ocupa nada: la barra es fija abajo y
+ * la marca no se ve. El hueco del aviso solo tiene alto cuando hay aviso. */
+.brand { display: none; }
+.shell-offline:not(:empty) { border-bottom: 1px solid var(--rule); }
+.shell-offline .notice { max-width: 640px; margin: 0 auto; padding: 8px var(--gutter); }
+
+/* ── Esqueletos de carga: gris plano, sin animación (spec §3.4 y §7) ──── */
+
+.sk { display: block; background: var(--line); }
+.sk-crest { flex: none; width: 46px; height: 46px; border-radius: 50%; }
+.sk-title { width: 55%; height: 22px; }
+.sk-sub { width: 80%; height: 15px; margin-top: 5px; }
+.sk-block-title { width: 130px; height: 19px; margin-bottom: 7px; }
+.sk-day { width: 140px; height: 18px; margin: 16px 0 6px; }
+.box.skeleton { border-color: var(--line); }
+.sk-box-home { height: 272px; }
+.sk-box-round { height: 60px; margin-top: 14px; }
+.sk-rows-6 { height: 272px; }
+.sk-box-seg { height: 47px; margin-top: 14px; }
+.sk-rows-10 { height: 474px; }
+.sk-box-match { height: 240px; }
+.sk-box { height: 96px; }
+
+/* ── Caja de error y aviso de redirección (spec §7 y §4.1) ────────────── */
+
+.error-text { padding: 12px; font-weight: 600; }
+
+/* ── Escritorio: marca a la izquierda y pestañas, 1120 px (spec §4.8) ─── */
+
 @media (min-width: 1024px) {
-  .shell-header, .tabbar { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
-  .shell-brand {
-    display: inline-flex;
+  .shell-header { border-bottom: 1.5px solid var(--ink); }
+  .shell-bar {
+    display: flex;
+    align-items: stretch;
+    gap: 24px;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  .brand {
+    display: flex;
     align-items: center;
+    gap: 6px;
     min-height: 44px;
+    font-size: 17px;
     font-weight: 800;
     color: var(--ink);
     text-decoration: none;
   }
+  .brand-place { font-weight: 600; color: var(--mute); }
+  .shell-bar .tabbar { margin-left: auto; }
+  .shell-offline .notice { max-width: 1120px; }
 }

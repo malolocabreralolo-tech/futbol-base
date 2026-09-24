@@ -18,7 +18,7 @@ test('esqueleto: saltar al contenido, cabecera, la barra de ui.tabbar y main#con
   assert.match(INDEX, /<header class="shell-header">/);
   assert.ok(INDEX.includes(String(tabbar('miequipo'))), 'la barra estática es ui.tabbar("miequipo"), tal cual');
   assert.equal((INDEX.match(/<nav\b/g) || []).length, 1);
-  assert.match(INDEX, /<main id="contenido" class="page" tabindex="-1">\s*<div class="box skeleton" aria-hidden="true"><\/div>\s*<\/main>/);
+  assert.match(INDEX, /<main id="contenido" class="page" tabindex="-1">\s*<div class="skeleton-screen" data-skeleton="home" aria-busy="true">/);
   assert.doesNotMatch(INDEX, /<h1\b/, 'el h1 lo pone cada pantalla');
 });
 

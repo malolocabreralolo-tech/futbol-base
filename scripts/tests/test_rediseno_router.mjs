@@ -567,6 +567,22 @@ test('un fallo de programación da la caja de error sin su mensaje; render tiene
   assert.doesNotMatch(t.root.innerHTML, /sin escapar/);
 });
 
+test('un bucle de redirecciones (defensivo) da «No se pudieron cargar los datos de esta pantalla», nunca su mensaje literal', async () => {
+  const b = fakeBrowser('#/tabla');
+  // Un getContext que alterna la resolución en cada llamada: resolveParams converge siempre con un
+  // contexto fijo, así que para probar el límite (defensivo) de MAX_REDIRECTS hace falta un
+  // contexto que cambie solo, no un caso real de la tabla de §4.1.
+  const other = { status: 'ok', group: group('A2'), name: 'AD Huracán', cat: 'benjamin' };
+  const ctxA = context();
+  const ctxB = context({ resolution: other });
+  let toggle = false;
+  const flip = () => { toggle = !toggle; return (toggle ? ctxA : ctxB)(); };
+  const tabla = { id: 'tabla', needs: () => [Promise.resolve()], render: () => html`<h1>tabla</h1>` };
+  await quietly({ screens: { '': screen('home'), tabla }, root: b.root, getContext: flip, window: b.win });
+  assert.match(b.root.innerHTML, /No se pudieron cargar los datos de esta pantalla\./);
+  assert.doesNotMatch(b.root.innerHTML, /Demasiadas redirecciones/);
+});
+
 test('al cambiar de jornada el desplazamiento se queda y el foco vuelve al control pulsado (mismo id)', async () => {
   const b = fakeBrowser('#/jornada?g=PG2&r=Jornada%201');
   const jornada = screen('jornada', { body: (ctx) => html`<a id="siguiente" href="#/jornada?g=PG2&r=Jornada%202">›</a>` });
@@ -581,6 +597,31 @@ test('al cambiar de jornada el desplazamiento se queda y el foco vuelve al contr
   assert.equal(b.h1().focused, 0);
 });
 
+test('el foco vuelve al control pulsado aunque el clic no lo active (Safari, B11)', async () => {
+  const b = fakeBrowser('#/jornada?g=PG2&r=Jornada%201');
+  const jornada = screen('jornada', { body: () => html`<a id="siguiente" href="#/jornada?g=PG2&r=Jornada%202">›</a>` });
+  const router = startRouter({ screens: { '': screen('home'), jornada }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  // A diferencia de la prueba anterior, nunca se llama a .focus(): Safari no activa el control al
+  // pulsarlo, así que b.doc.activeElement sigue siendo null en todo momento.
+  b.click({ href: '#/jornada?g=PG2&r=Jornada%202', id: 'siguiente' });
+  await router.idle();
+  assert.equal(b.doc.getElementById('siguiente').focused, 1, 'el control nuevo con el mismo id, aunque el clic no lo activara');
+  assert.equal(b.h1().focused, 0);
+});
+
+test('un ancla tras un segundo # manda al avanzar: se desplaza al ancla, no arriba', async () => {
+  const b = fakeBrowser('#/');
+  const equipo = screen('equipo', { body: () => html`<div id="calendario">Calendario</div>` });
+  const router = startRouter({ screens: { '': screen('home'), equipo }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.scroll(200);
+  b.click({ href: '#/equipo?g=PG2&t=Las%20Mesas%20Hu.#calendario' });
+  await router.idle();
+  assert.equal(b.doc.getElementById('calendario').scrolled, 1, 'scrollIntoView en el ancla');
+  assert.equal(b.win.scrollY, 200, 'no se fuerza win.scrollTo(0, …) cuando hay ancla');
+});
+
 test('«Saltar al contenido» lleva el foco a main sin cambiar la ruta', async () => {
   const b = fakeBrowser('#/');
   const router = startRouter({ screens: { '': screen('home') }, root: b.root, getContext: context(), window: b.win });
@@ -589,6 +630,17 @@ test('«Saltar al contenido» lleva el foco a main sin cambiar la ruta', async (
   assert.deepEqual(b.entries(), ['#/']);
   assert.equal(b.main.focused, 1);
   assert.equal(b.main.getAttribute('tabindex'), '-1');
+});
+
+test('un ancla interna cuyo destino no existe no cambia la ruta ni repinta (se previene igual)', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  const router = startRouter({ screens: { '': screen('home', { log }) }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  log.length = 0;
+  assert.equal(b.click({ href: '#noexiste' }), true, 'se previene aunque el destino no exista (B3)');
+  assert.deepEqual(b.entries(), ['#/']);
+  assert.deepEqual(log, [], 'ninguna navegación nueva: no hay needs, render ni mount');
 });
 
 test('mount puede devolver una limpieza, que se llama justo antes de pintar la pantalla siguiente', async () => {
@@ -641,4 +693,69 @@ test('si mount navega (nav.replace), manda esa navegación: el pintado anterior 
   assert.deepEqual(b.entries(), ['#/', '#/tabla?v=goles']);
   assert.match(b.root.innerHTML, /<h1>tabla<\/h1>/);
   assert.equal(b.h1().focused, 1, 'un solo foco, el de la tabla');
+  // La navegación anidada hereda el destino de fuera: es un push, así que arriba (hallazgo 3),
+  // nunca el scrollY 300 de antes de pulsar Explorar.
+  assert.equal(b.win.scrollY, 0, 'arriba al avanzar, no el scroll de antes del push');
+});
+
+test('un mount que navega y además devuelve limpieza: no pisa la de la pantalla nueva ni se pierde', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  const explorar = screen('explorar', { log, mount: (root, ctx, nav) => { nav.go('tabla'); return () => log.push('limpieza explorar'); } });
+  const tabla = screen('tabla', { log, mount: () => () => log.push('limpieza tabla') });
+  const jornada = screen('jornada', { log });
+  const router = startRouter({ screens: { '': screen('home', { log }), explorar, tabla, jornada }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  log.length = 0;
+  b.click({ href: '#/explorar' });
+  await router.idle();
+  // La limpieza de explorar se llama en el acto: su pantalla nunca llegó a quedarse en pantalla.
+  assert.deepEqual(log, ['needs explorar', 'render explorar', 'mount explorar', 'needs tabla', 'render tabla', 'mount tabla', 'limpieza explorar']);
+  log.length = 0;
+  b.click({ href: '#/jornada' });
+  await router.idle();
+  // Al salir de tabla (la que de verdad estaba en pantalla), su limpieza; nunca la de explorar otra vez.
+  assert.deepEqual(log, ['needs jornada', 'render jornada', 'limpieza tabla', 'mount jornada']);
+});
+
+test('idle() espera una navegación lanzada desde mount, aunque tenga needs pendientes', async () => {
+  const b = fakeBrowser('#/');
+  const gate = deferred();
+  const tabla = screen('tabla', { needs: () => [gate.promise] });
+  const explorar = screen('explorar', { mount: (root, ctx, nav) => { nav.go('tabla'); } });
+  const router = startRouter({ screens: { '': screen('home'), explorar, tabla }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/explorar' });
+  const idlePromise = router.idle();
+  let resolved = false;
+  idlePromise.then(() => { resolved = true; });
+  await tick();
+  assert.equal(resolved, false, 'todavía no: tabla (lanzada desde el mount de explorar) sigue esperando su needs');
+  assert.match(b.root.innerHTML, /data-skeleton="tabla"/);
+  gate.resolve();
+  await idlePromise;
+  assert.equal(resolved, true);
+  assert.match(b.root.innerHTML, /<h1>tabla<\/h1>/);
+});
+
+test('nav.back() devuelve la promesa de la vuelta atrás, no la del pintado anterior', async () => {
+  const b = fakeBrowser('#/');
+  const gate = deferred();
+  let calls = 0;
+  const home = screen('home', { needs: () => (++calls === 1 ? [] : [gate.promise]) });
+  const tabla = screen('tabla');
+  const router = startRouter({ screens: { '': home, tabla }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/tabla' });
+  await router.idle();
+  const backPromise = router.nav.back();
+  let resolved = false;
+  backPromise.then(() => { resolved = true; });
+  await tick();
+  assert.equal(resolved, false, 'la vuelta a Mi equipo tiene needs pendientes: back() no ha terminado');
+  assert.match(b.root.innerHTML, /data-skeleton="home"/);
+  gate.resolve();
+  await backPromise;
+  assert.equal(resolved, true);
+  assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
 });

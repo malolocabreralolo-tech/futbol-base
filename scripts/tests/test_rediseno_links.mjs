@@ -106,7 +106,7 @@ test('enlaces antiguos: temporada, parámetros sobrantes y casos límite', () =>
 test('cada enlace antiguo traducido es una ruta nueva válida', () => {
   const legacy = ['#section=stats', '#section=isla&island=fuerteventura', '#section=goleadores&group=PG3',
     '#section=jornadas&group=PG2&match=%5B%22Las+Mesas+Hu.%22%2C%22AD+Hurac%C3%A1n%22%2C%22Jornada+30%22%5D'];
-  assert.deepEqual(legacy.map(hash => parseRoute(translateLegacy(hash, { season: SEASON })).screen), ['records', 'ligas', 'goleadores', 'partido']);
+  assert.deepEqual(legacy.map(hash => parseRoute(translateLegacy(hash)).screen), ['records', 'ligas', 'goleadores', 'partido']);
 });
 
 test('countdownLabel: hoy, mañana, faltan N días; nada si ya pasó o la fecha no es válida', () => {

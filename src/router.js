@@ -222,6 +222,8 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
   let cleanup = null;                   // lo que devolvió el último mount
   let latest = Promise.resolve();
   let lastPrimary = null;
+  const nesting = [];                   // pila de { target, focusId } de la navegación en mount
+  let pendingBack = null;               // resolve() de un nav.back() que espera al pintado de la vuelta
   try { lastPrimary = TABS.has(session?.getItem(SESSION_KEY)) ? session.getItem(SESSION_KEY) : null; } catch { lastPrimary = null; }
 
   // Cada entrada de la app lleva { fbIdx, fbKey }: fbIdx > 0 dice que la anterior es de la app.
@@ -265,7 +267,9 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       hist.replaceState(hist.state, '', href);
       route = parseRoute(href);
     }
-    throw new Error('Demasiadas redirecciones');
+    // Defensivo: la cadena de redirecciones de resolveParams está pensada para converger; si no lo
+    // hace, es un fallo de programación (RangeError: loadWhat no muestra su mensaje literal).
+    throw new RangeError('Demasiadas redirecciones');
   }
 
   function paint(markup) {
@@ -293,11 +297,19 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     el.focus({ preventScroll: true });
   }
 
-  // mode: 'initial' | 'push' | 'replace' | 'pop' | 'refresh'.
-  function show(mode, carried = null) {
+  // mode: 'initial' | 'push' | 'replace' | 'pop' | 'refresh'. clickedId: el id del enlace pulsado
+  // (onClick), para el foco al cambiar de jornada o de vista aunque el clic no active el control
+  // (Safari, B11): activeElement queda como reserva, para el teclado.
+  function show(mode, carried = null, clickedId = null) {
     const st = entry();
-    const target = mode === 'pop' ? (positions.get(st?.fbKey) ?? 0) : mode === 'replace' ? win.scrollY : 0;
-    const focusId = mode === 'replace' ? (doc.activeElement?.id || null) : null;
+    // Una navegación que empieza dentro de un mount (nesting no vacío) hereda el destino de
+    // desplazamiento y de foco de la navegación de fuera, en vez de recalcularlos con el scrollY
+    // o el activeElement de ahora mismo, que todavía son los de antes de esa navegación.
+    const inherited = nesting[nesting.length - 1] || null;
+    const target = inherited ? inherited.target
+      : mode === 'pop' ? (positions.get(st?.fbKey) ?? 0) : mode === 'replace' ? win.scrollY : 0;
+    const focusId = inherited ? inherited.focusId
+      : mode === 'replace' ? (clickedId || doc.activeElement?.id || null) : null;
     latest = run(mode, carried, 0, target, focusId);
     return latest;
   }
@@ -323,14 +335,14 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       if (needs.length) {
         paint(skeleton(screen.id));
         await Promise.all(needs);
-        if (my !== token) return;   // otra navegación empezó mientras cargaba: no se pinta
+        if (my !== token) return latest;   // otra navegación empezó mientras cargaba: no se pinta; que idle() la espere
       }
       if (needs.length || first.pending) {
         base = getContext();
         const again = settle(base);
         if (again.pending) throw Object.assign(new Error('temporada sin cargar'), { what: `la temporada ${seasonLabel(again.route.params.s)}` });
         if (routeHref(again.route.screen, again.route.params) !== routeHref(route.screen, route.params)) {
-          if (depth >= MAX_REDIRECTS) throw new Error('Demasiadas redirecciones');
+          if (depth >= MAX_REDIRECTS) throw new RangeError('Demasiadas redirecciones');
           return run(mode, notice || again.notice, depth + 1, target, focusId);
         }
       }
@@ -341,25 +353,43 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       paint(withNotice(String(view), notice));
       if (Object.hasOwn(PRIMARY, route.screen)) rememberPrimary(PRIMARY[route.screen]);
       if (screen.mount) {
+        // Si el mount navega (nav.go, nav.replace, saveMyTeam…) de forma síncrona, la navegación
+        // anidada corre con el `target`/`focusId` de ESTA (nesting): «arriba al avanzar» no se
+        // pierde por el scrollY de antes de este push (B2, ronda 1, hallazgo 3).
+        nesting.push({ target, focusId });
+        let done;
         try {
-          const done = screen.mount(root, ctx, nav);
-          if (typeof done === 'function') cleanup = done;
+          done = screen.mount(root, ctx, nav);
         } catch (err) {
+          // Un mount que lanza deja la pantalla pintada (decisión del controlador, B2 ronda 1): sus
+          // enlaces los atiende igual el router por delegación; la caja de error es solo de needs y render.
           console.error('[router] mount', err);
+        } finally {
+          nesting.pop();
         }
-        if (my !== token) return;   // mount ya ha navegado (nav.go, saveMyTeam…): manda esa navegación
+        if (my !== token) {
+          // El mount ya navegó: su pantalla no está en el DOM. Si además devolvió una limpieza, se
+          // llama ya mismo (nunca se guarda en `cleanup`, que ya es la de la navegación anidada) y
+          // esa navegación manda la suya; idle() la espera encadenando en `latest` (hallazgo 1).
+          if (typeof done === 'function') {
+            try { done(); } catch (err) { console.error('[router] limpieza', err); }
+          }
+          return latest;
+        }
+        if (typeof done === 'function') cleanup = done;
       }
       place(mode, target, focusId);
     } catch (err) {
-      if (my !== token) return;
+      if (my !== token) return latest;
       console.error('[router]', err);
       paint(errorScreen({ screenId: screen?.id || 'pendiente', title: routeTitle(route.screen), what: loadWhat(err), back: backHref(route) }));
       place(mode, 0, null);
     }
   }
 
-  // Ir a un href de la app: pushState o replaceState según historyMode (o `forced`).
-  function navigate(href, forced = null) {
+  // Ir a un href de la app: pushState o replaceState según historyMode (o `forced`). clickedId: el
+  // id del enlace pulsado (onClick), para el foco al cambiar de jornada o de vista.
+  function navigate(href, forced = null, clickedId = null) {
     let mode = forced;
     if (!mode) {
       try {
@@ -372,12 +402,16 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     }
     if (mode === 'replace') hist.replaceState(hist.state, '', href);
     else hist.pushState({ fbIdx: (entry()?.fbIdx ?? 0) + 1, fbKey: newKey() }, '', href);
-    return show(mode);
+    return show(mode, null, clickedId);
   }
 
-  // «‹»: la entrada anterior si es de la app; si no, el padre (spec §4.1).
+  // «‹»: la entrada anterior si es de la app; si no, el padre (spec §4.1). hist.back() dispara
+  // popstate más tarde, nunca en este turno, así que el pintado real llega por onLocation: se deja
+  // un pendiente y se resuelve desde allí, para que idle() y el propio nav.back() esperen al de la
+  // vuelta, no al de la pantalla que ya estaba pintada (B2, ronda 1, hallazgo 2).
   function goBack() {
     if ((entry()?.fbIdx ?? 0) > 0) {
+      latest = new Promise((resolve) => { pendingBack = resolve; });
       hist.back();
       return latest;
     }
@@ -390,7 +424,10 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     const st = entry();
     if (st && st.fbKey === seen.key && win.location.hash === seen.hash) return;
     if (!st) stamp(seen.idx + 1);   // entrada nueva del navegador, detrás de la última atendida
-    show('pop');
+    const resolveBack = pendingBack;
+    pendingBack = null;
+    const painted = show('pop');
+    if (resolveBack) painted.then(resolveBack, resolveBack);
   }
 
   // Delegación en el documento: enlaces #/… (con su modo de historial), «‹», Reintentar y
@@ -416,11 +453,14 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     const href = el.getAttribute('href') || '';
     if (href.startsWith('#/')) {
       event.preventDefault();
-      navigate(href);
+      navigate(href, null, el.id || null);
     } else if (href.length > 1 && href.startsWith('#')) {
+      // Un ancla interna nunca cambia la ruta (spec §4.1): se previene siempre, exista o no su
+      // destino. Si no, un hash sin ruta («#calendario») lo trataría el navegador y acabaría en
+      // Mi equipo, con una entrada nueva (B2, ronda 1, hallazgo 5).
+      event.preventDefault();
       const dest = doc.getElementById(decode(href.slice(1)));
       if (!dest) return;
-      event.preventDefault();
       if (!dest.hasAttribute('tabindex')) dest.setAttribute('tabindex', '-1');
       dest.focus();
     }

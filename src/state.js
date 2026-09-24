@@ -570,3 +570,16 @@ export function countStats(season, cat) {
     matches: countMatches(data, hist),
   };
 }
+
+/* `needs` de las pantallas que leen una temporada (spec §5.4): [] si es la del portal o ya
+ * está en datasets.seasonRaw; si no, una promesa que la guarda allí, o que rechaza con
+ * Error(<qué>) para la caja «No se pudieron cargar los datos de <qué>» del router. La temporada del
+ * portal la da el router (needs(params, datasets, { portalSeason })), nunca config.js (R2-1). */
+export function seasonNeeds(name, datasets, portalSeason) {
+  if (!portalSeason) throw new TypeError('seasonNeeds: falta la temporada del portal');
+  if (!name || name === portalSeason || datasets.seasonRaw[name]) return [];
+  return [ensureSeasonData(name).then((raw) => {
+    if (!raw) throw new Error(`la temporada ${String(name).replace(/^(\d{4})-\d{2}(\d{2})$/, '$1/$2')}`);
+    datasets.seasonRaw[name] = raw;
+  })];
+}

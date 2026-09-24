@@ -286,3 +286,23 @@ export function showNextSeasonBox({ group, health, portalSeason }) {
   if (!group || group.season !== portalSeason) return false;
   return !health || health.nextSeason?.status === 'pending';
 }
+
+/* Nombre de mi equipo en `group` para el resalte propio (spec §3.3), o null. En el grupo
+ * resuelto, el de la resolución. En otro grupo de la misma temporada y la misma fase, nunca: el
+ * mismo nombre es otro equipo (Santa Brígida en B1 y B2; decisión 17 de B1). En los demás (otra
+ * fase u otra temporada), el nombre tal cual si el grupo es de su categoría y lo trae, como el
+ * grupo por defecto de §4.1. Un equipo del mismo nombre en la otra categoría nunca se resalta. */
+export function myTeamIn(group, myTeam, resolution) {
+  if (!group) return null;
+  const ok = resolution && resolution.status === 'ok' && resolution.group ? resolution : null;
+  if (ok && ok.group.season === group.season) {
+    if (ok.group.id === group.id) return ok.name;
+    if (ok.group.compKey === group.compKey) return null;
+  }
+  const name = ok ? ok.name : myTeam && myTeam.name;
+  const cat = ok ? ok.cat : myTeam && myTeam.cat;
+  if (!name || cat !== group.cat) return null;
+  const listed = (group.standings || []).some(row => row.team === name)
+    || (group.rounds || []).some(round => round.matches.some(m => m.home === name || m.away === name));
+  return listed ? name : null;
+}

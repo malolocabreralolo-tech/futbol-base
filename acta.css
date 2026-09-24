@@ -674,3 +674,45 @@ abbr[title] { text-decoration: none; }
   a.summer-row:hover .summer-main,
   a.home-all:hover { text-decoration: underline; }
 }
+
+/* ── Jornada: navegación, días y botonera (spec §4.3) ─────────────────── */
+
+.round-nav {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 52px;
+  margin-top: 14px;
+  border: 1.5px solid var(--ink);
+}
+.round-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+}
+.round-step.is-off { color: var(--rule); }
+.round-now {
+  min-width: 0;
+  padding: 8px 6px;
+  border-right: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+  text-align: center;
+}
+.round-title { font-size: 17px; font-weight: 800; line-height: 1.3; }
+.round-dates { font-size: 12.5px; font-weight: 600; color: var(--mute); }
+.day { min-width: 0; }
+.day-title { margin: 16px 0 6px; font-size: 13.5px; font-weight: 700; color: var(--mute); }
+.round-actions { margin-top: 16px; }
+
+/* Escritorio: los días en dos columnas si caben (spec §4.8); uno solo ocupa todo el ancho. */
+@media (min-width: 1024px) {
+  .days {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    column-gap: 24px;
+    align-items: start;
+  }
+}

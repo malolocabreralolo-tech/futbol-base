@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { buildSeason, buildCups, findRound, findMatch } from '../../src/model.js';
+import { buildSeason, buildCups, findGroup, findRound, findMatch } from '../../src/model.js';
 import { buildClubIndex } from '../../src/myteam.js';
 import { teamNames } from './fixtures/rediseno/simulate.mjs';
 import { html } from '../../src/html.js';
@@ -88,6 +88,14 @@ test('findRound y findMatch: la ronda por clave o número; el partido en su rond
   assert.equal(findMatch(pg2, mesas).dateISO, '2026-06-02');
   assert.equal(findMatch(pg2, { r: 'Jornada 30', h: 'AD Huracán', a: 'Las Mesas Hu.' }).dateISO, '2026-02-12', 'el de la ida, J15');
   assert.equal(findMatch(pg2, { r: 'Jornada 30', h: 'x', a: 'y' }), null);
+});
+
+test('findGroup: el grupo de la temporada, el de los torneos, y null sin grupo o sin temporada cargada (ronda de arreglos 1, findGroup única)', () => {
+  assert.equal(findGroup(model(), PORTAL, 'PG2'), group('PG2'));
+  assert.equal(findGroup(model(), PORTAL, 'MCPK1'), cups.groups.find((g) => g.id === 'MCPK1'), 'de los torneos, si no está en la temporada');
+  assert.equal(findGroup(model(), PORTAL, 'ZZ9'), null);
+  assert.equal(findGroup(model(), '2024-2025', 'PGC2'), null, 'temporada pasada sin cargar');
+  assert.equal(findGroup(model(['2024-2025']), '2024-2025', 'PGC2'), past.groups.find((g) => g.id === 'PGC2'), 'cargada, la encuentra');
 });
 
 test('temporada pasada: sin cargar queda pendiente; cargada, el primer grupo de liga de mi categoría con su nombre', () => {

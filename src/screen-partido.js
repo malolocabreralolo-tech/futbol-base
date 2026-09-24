@@ -9,8 +9,8 @@
 import { html, join } from './html.js';
 import { box, cells, crest, empty, formChips, notice, screenHead } from './ui.js';
 import {
-  actaFor, competitionKey, findMatch, headToHead, lastResults, matchState, playerName, seasonLabel, teamShort,
-  timelineFor,
+  actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, playerName, seasonLabel,
+  teamShort, timelineFor,
 } from './model.js';
 import { countdownLabel, dayMonth, routeHref, shareLink, weekdayDate } from './links.js';
 import {
@@ -45,15 +45,6 @@ function scoreSource(group) {
 const actaUrl = (cod) => `https://www.fiflp.com/pnfg/NPcd/NFG_CmpPartido?cod_primaria=1000120&CodActa=${cod}&cod_acta=${cod}`;
 
 // ── Localizar el partido de la ruta ──────────────────────────────────────
-
-// El grupo de la ruta: de la temporada (ligas y copas de la federación) o de
-// los torneos (Maspalomas Cup), que son una capa aparte del modelo.
-function findGroup(model, season, id) {
-  const found = model.group(season, id);
-  if (found) return found;
-  const cups = model.cups();
-  return cups && cups.season === season ? cups.groups.find((g) => g.id === id) || null : null;
-}
 
 // (s, g, r, h, a) identifica el partido: findMatch de model.js (Tarea 6), el mismo criterio con
 // el que el router lo deja pasar (la ronda por su clave o su número; si ahí no está, el único
@@ -258,11 +249,26 @@ function h2hBlock(match, group, ctx) {
   return block('Cara a cara', html`<div class="box">${join(rows)}</div>${previous}`, group.kind === 'league' ? 'esta temporada' : 'en esta competición');
 }
 
+// Candidato único de un lado, entre los equipos que juegan en el grupo (spec §4.5, «con el nombre
+// normalizado igual»): si varios normalizan como `wantExact`, se prefiere el que coincide con él
+// exactamente; si sigue habiendo varios, o ninguno exacto, null. Sin un candidato limpio el grupo
+// es ambiguo (dos equipos con el mismo nombre normalizado, como «UD Barrial» y «Barrial Atl.») y
+// mejor no enseñar nada que mezclar los partidos de otro equipo.
+function resolveTeam(teams, wantExact) {
+  const wantNorm = normalizeTeamName(wantExact);
+  const candidates = teams.filter((t) => normalizeTeamName(t) === wantNorm);
+  if (candidates.length === 1) return candidates[0];
+  if (candidates.length > 1) {
+    const exact = candidates.filter((t) => t === wantExact);
+    if (exact.length === 1) return exact[0];
+  }
+  return null;
+}
+
 // Cara a cara de temporadas anteriores (spec §4.5): los grupos de la misma
 // categoría en los que ambos equipos, con el nombre normalizado igual (como el
 // historial de la ficha antigua), se enfrentaron. Nunca de la otra categoría.
 export function previousMeetings(model, names, match, cat) {
-  const want = [normalizeTeamName(match.home), normalizeTeamName(match.away)];
   const out = [];
   for (const name of names) {
     const season = model.season(name);
@@ -270,10 +276,20 @@ export function previousMeetings(model, names, match, cat) {
     for (const group of season.groups) {
       if (group.cat !== cat) continue;
       const teams = [...new Set(group.rounds.flatMap((round) => round.matches.flatMap((m) => [m.home, m.away])))];
-      const homes = teams.filter((t) => normalizeTeamName(t) === want[0]);
-      const aways = teams.filter((t) => normalizeTeamName(t) === want[1]);
-      const matches = [];
-      for (const a of homes) for (const b of aways) if (a !== b) matches.push(...headToHead(group, a, b));
+      const home = resolveTeam(teams, match.home);
+      const away = resolveTeam(teams, match.away);
+      if (!home || !away || home === away) continue;
+      // headToHead ya da los dos sentidos en orden cronológico (spec §4.5, «por fecha»); una sola
+      // llamada con el único par resuelto, nunca la pareja invertida, así que ningún partido sale
+      // dos veces. La clave es defensiva: cada partido, una sola vez, por su grupo, jornada, local
+      // y visitante.
+      const seen = new Set();
+      const matches = headToHead(group, home, away).filter((m) => {
+        const key = `${group.id}|${m.roundKey}|${m.home}|${m.away}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
       if (matches.length) out.push({ season: name, group, matches });
     }
   }
@@ -380,6 +396,21 @@ export async function loadSeasons(datasets, names, load = ensureSeasonData) {
   return done.every(Boolean);
 }
 
+// Carga las temporadas anteriores y arma el contenido del panel; nunca lanza. Un fallo de la carga
+// o de un dato mal formado que llegue después (por ejemplo, el RangeError de rowToMatch con una
+// temporada con una fila mal formada) se convierte en la caja de error del propio panel, con su
+// «Reintentar», en vez de dejar la promesa rechazada sin nadie que la atienda. Pura (no toca el
+// DOM): se prueba sin navegador.
+export async function previousPanelContent(ctx, match, group) {
+  try {
+    await loadSeasons(ctx.datasets, pastSeasons(ctx.datasets.seasons, match.season));
+    return previousBlock(ctx, match, group);
+  } catch (err) {
+    console.error('[partido] temporadas anteriores', err);
+    return errorBox('las temporadas anteriores');
+  }
+}
+
 async function showPrevious(section, ctx) {
   const panel = section.querySelector(`#${PREVIOUS_ID}`);
   const { group, match } = locate(ctx);
@@ -387,10 +418,10 @@ async function showPrevious(section, ctx) {
   // innerHTML solo recibe Html de html``, que ya escapa cada dato (spec §5.1).
   panel.setAttribute('aria-busy', 'true');
   panel.innerHTML = String(html`<p class="pt-loading">Cargando temporadas anteriores…</p>`);
-  await loadSeasons(ctx.datasets, pastSeasons(ctx.datasets.seasons, match.season));
+  const content = await previousPanelContent(ctx, match, group);
   // Una respuesta lenta nunca pinta sobre otra pantalla.
   if (!panel.isConnected) return;
-  panel.innerHTML = String(previousBlock(ctx, match, group));
+  panel.innerHTML = String(content);
   panel.removeAttribute('aria-busy');
 }
 

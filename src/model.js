@@ -1065,6 +1065,18 @@ export function findMatch(group, { r, h, a } = {}) {
   return all.length === 1 ? all[0] : null;
 }
 
+// El grupo de una ruta (spec §4.1): de la temporada (ligas y copas de la federación) o, si no está
+// ahí, de los torneos (Cups de esa temporada, como la Maspalomas Cup). null si la temporada no está
+// cargada o si no hay ningún grupo con ese id en ninguno de los dos sitios. Una sola regla para el
+// router (qué rutas acepta) y la pantalla Partido (qué grupo pinta): antes eran dos copias literales
+// que podían divergir.
+export function findGroup(model, season, id) {
+  const group = model.group(season, id);
+  if (group) return group;
+  const cups = model.cups();
+  return cups && cups.season === season ? cups.groups.find((g) => g.id === id) || null : null;
+}
+
 /* El acta de la federación de un partido (spec §4.5, «Alineaciones»): la
  * entrada de LINEUPS_<S> con el mismo criterio que timelineFor, la única cuya
  * (s, gr) es la del partido. null si no hay marcador, si no hay entrada o si

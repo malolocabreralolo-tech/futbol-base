@@ -8,7 +8,7 @@
 // No toca el navegador al importarse: startRouter recibe `window`.
 import { Html } from './html.js';
 import { parseRoute, routeHref, translateLegacy } from './links.js';
-import { findMatch, findRound, seasonLabel } from './model.js';
+import { findGroup, findMatch, findRound, seasonLabel } from './model.js';
 import { sameClub } from './myteam.js';
 import { skeleton, errorScreen, routeNotice, routeTitle, updateTabbar } from './shell.js';
 
@@ -30,14 +30,6 @@ const pick = (params, keys) => Object.fromEntries(keys.filter((k) => params[k] !
 const knownSeason = (ctx, name) => (ctx.datasets?.seasons || []).some((entry) => entry && entry.name === name);
 const hasTeam = (group, name) => group.standings.some((row) => row.team === name)
   || group.rounds.some((round) => round.matches.some((m) => m.home === name || m.away === name));
-
-// Un grupo de la temporada o, si no, de los torneos (Cups de 2025-2026: MCP3, MCPK1…).
-function findGroup(model, season, id) {
-  const group = model.group(season, id);
-  if (group) return group;
-  const cups = model.cups();
-  return cups && cups.season === season ? cups.groups.find((g) => g.id === id) || null : null;
-}
 
 // Nombre y categoría de mi equipo: los resueltos o, en E y X, los guardados.
 function identity(ctx) {

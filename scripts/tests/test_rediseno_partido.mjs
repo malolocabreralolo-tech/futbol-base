@@ -10,7 +10,7 @@ import { currentAt, datasetsFrom as baseDatasets } from './fixtures/rediseno/sim
 import { actaFor, createModel, findMatch } from '../../src/model.js';
 import { ensureLineups } from '../../src/state.js';
 import {
-  loadSeasons, partidoNeeds, pastSeasons, previousBlock, previousMeetings, screen,
+  loadSeasons, partidoNeeds, pastSeasons, previousBlock, previousMeetings, previousPanelContent, screen,
 } from '../../src/screen-partido.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -296,6 +296,80 @@ test('Temporadas anteriores bajo demanda: misma categoría y el nombre normaliza
   // Con la temporada cargada y sin enfrentamientos, se dice.
   const none = String(previousBlock(ctx, { ...match, home: 'Arucas B', away: 'CD Calero' }, group));
   assert.equal(text(none), 'No encontramos partidos entre estos dos equipos en la temporada 2024/25.');
+});
+
+// Grupo crudo mínimo de una temporada pasada, con la forma de las fixtures (§5.3): standings vacío
+// (no lo necesita previousMeetings) y jornadas en línea de 8 columnas.
+const pastRawGroup = (id, jornadas) => ({
+  id, name: id, fullName: id, phase: 'Gran Canaria', island: 'grancanaria', standings: [], jornadas,
+});
+const pastModel = (prebenjamin) => createModel(
+  { seasonRaw: { '2024-2025': { name: '2024-2025', benjamin: [], prebenjamin } } },
+  { portalSeason: '2025-2026' },
+);
+
+test('previousMeetings: equipos con el mismo nombre normalizado, nunca mezclados, sin duplicar y por fecha (ronda de arreglos 1)', () => {
+  // 1) «UD Barrial» y «Barrial Atl.» normalizan igual (normalizeTeamName quita UD y ATL): el cara
+  // a cara de «UD Barrial – Arucas» solo lista los partidos de UD Barrial, nunca los de Barrial Atl.
+  const mixed = pastRawGroup('PGX1', {
+    '1': [['05/10', 'UD Barrial', 'Arucas', 3, 1, null, '10:00', ''], ['05/10', 'Barrial Atl.', 'Telde', 0, 2, null, '10:00', '']],
+    '2': [['12/10', 'Arucas', 'UD Barrial', 1, 1, null, '10:00', '']],
+  });
+  const found1 = previousMeetings(pastModel([mixed]), ['2024-2025'], { home: 'UD Barrial', away: 'Arucas' }, 'prebenjamin');
+  assert.equal(found1.length, 1);
+  assert.equal(found1[0].matches.length, 2);
+  for (const m of found1[0].matches) {
+    assert.ok(m.home === 'UD Barrial' || m.away === 'UD Barrial');
+    assert.notEqual(m.home, 'Barrial Atl.');
+    assert.notEqual(m.away, 'Barrial Atl.');
+  }
+
+  // 2) Dos equipos que normalizan igual y ninguno con el nombre exacto del partido actual: el
+  // grupo, ambiguo, no sale (mejor nada que un partido de otro equipo).
+  const ambiguous = pastRawGroup('PGX2', {
+    '1': [['05/10', 'UD Barrial', 'Arucas', 2, 0, null, '10:00', ''], ['05/10', 'CD Barrial', 'Telde', 1, 1, null, '10:00', '']],
+  });
+  assert.deepEqual(previousMeetings(pastModel([ambiguous]), ['2024-2025'], { home: 'Barrial', away: 'Arucas' }, 'prebenjamin'), []);
+
+  // 3) El partido actual enfrenta a dos equipos que normalizan igual entre sí: antes, el bucle
+  // (a,b)/(b,a) sobre headToHead (que ya da los dos sentidos) contaba cada partido dos veces.
+  const self = pastRawGroup('PGX3', {
+    '1': [['05/10', 'UD Barrial', 'Barrial Atl.', 3, 0, null, '10:00', '']],
+    '2': [['12/10', 'Barrial Atl.', 'UD Barrial', 1, 1, null, '10:00', '']],
+  });
+  const found3 = previousMeetings(pastModel([self]), ['2024-2025'], { home: 'UD Barrial', away: 'Barrial Atl.' }, 'prebenjamin');
+  assert.equal(found3.length, 1);
+  assert.equal(found3[0].matches.length, 2, 'sin duplicar: dos partidos, no cuatro');
+
+  // 4) Orden por fecha dentro del grupo (la misma regla que el resto de la pantalla), no por
+  // jornada: J2 (5 oct) va antes que J1 (20 oct).
+  const unordered = pastRawGroup('PGX4', {
+    '1': [['20/10', 'UD Barrial', 'Arucas', 2, 2, null, '10:00', '']],
+    '2': [['05/10', 'Arucas', 'UD Barrial', 1, 0, null, '10:00', '']],
+  });
+  const found4 = previousMeetings(pastModel([unordered]), ['2024-2025'], { home: 'UD Barrial', away: 'Arucas' }, 'prebenjamin');
+  assert.deepEqual(found4[0].matches.map((m) => m.dateISO), ['2024-10-05', '2024-10-20']);
+});
+
+test('previousPanelContent: un fallo tras cargar (dato mal formado) da la caja de error, nunca se queda a medias (ronda de arreglos 1)', async () => {
+  const match = { season: '2025-2026', home: 'Las Mesas Hu.', away: 'AD Huracán' };
+  const group = { cat: 'prebenjamin' };
+  // La temporada ya está en seasonRaw (loadSeasons no hace red), pero model.season() lanza al
+  // construirla: simula el RangeError de rowToMatch con una fila mal formada, que antes dejaba el
+  // panel colgado en «Cargando…» (showPrevious no tenía camino de error).
+  const ctx = {
+    today: TODAY,
+    datasets: { seasons: SEASONS, seasonRaw: { '2024-2025': { name: '2024-2025' } } },
+    model: { season: () => { throw new RangeError('fila con columnas inválidas'); } },
+  };
+  const saved = console.error;
+  console.error = () => {};
+  try {
+    const content = await previousPanelContent(ctx, match, group);
+    assert.ok(failBox(content, 'las temporadas anteriores'));
+  } finally {
+    console.error = saved;
+  }
 });
 
 test('needs pide la cronología, las actas de la temporada del partido y, si es pasada, la temporada, que es la única que rechaza', async () => {

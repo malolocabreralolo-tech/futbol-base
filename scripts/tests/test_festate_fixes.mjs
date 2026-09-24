@@ -197,6 +197,24 @@ test('ensureLineups: a failed fetch is NOT cached for the session', async () => 
   assert.ok(second && second['M|N|1-0'], 'retry after failure must refetch and succeed');
 });
 
+test('ensureLineups: a 404 IS cached for the session (fetch called once); a 503 is not (ronda de arreglos 1)', async () => {
+  let calls404 = 0;
+  fetchImpl = async () => { calls404 += 1; return { ok: false, status: 404, text: async () => '' }; };
+  const first = await state.ensureLineups('2029-2030');
+  assert.deepEqual(first, {}, '404: sin fichero de actas (temporada sin actas), {}');
+  const second = await state.ensureLineups('2029-2030');
+  assert.deepEqual(second, {});
+  assert.equal(calls404, 1, '404: la segunda llamada no repite el fetch, queda en caché');
+
+  let calls503 = 0;
+  fetchImpl = async () => { calls503 += 1; return { ok: false, status: 503, text: async () => '' }; };
+  const third = await state.ensureLineups('2028-2029');
+  assert.equal(third, null);
+  const fourth = await state.ensureLineups('2028-2029');
+  assert.equal(fourth, null);
+  assert.equal(calls503, 2, '503: cada llamada repite el fetch, nunca se guarda en caché');
+});
+
 test('ensurePlayers: a failed fetch is NOT cached for the session', async () => {
   fetchImpl = async () => { throw new Error('network down'); };
   assert.equal(await state.ensurePlayers('2024-2025'), null);

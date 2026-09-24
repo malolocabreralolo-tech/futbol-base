@@ -244,6 +244,16 @@ export function updatedMyTeam(myTeam, resolution) {
   return same ? null : next;
 }
 
+// Lo que app.js guarda al arrancar (decisión 12 de B1): el myTeam de updatedMyTeam, solo si el cambio
+// es de la misma temporada (el cambio de fase del paso 0, FF5 → A2). Un cambio de temporada (paso 1)
+// nunca se guarda solo: se vuelve a resolver en cada carga hasta que la familia lo confirma (la
+// respuesta a E o «Hacer mi equipo»). Así, con 2026/27 publicada por partes, un único candidato en
+// silencio el primer día no impide la pregunta cuando llegan los demás (A2 de la revisión de B2).
+export function myTeamToSave(myTeam, resolution) {
+  const next = updatedMyTeam(myTeam, resolution);
+  return next && myTeam && next.season === myTeam.season ? next : null;
+}
+
 // ---- Verano (spec §6.4) ----
 
 // Solo los torneos de la temporada de mi equipo: los de 2025-26 nunca salen bajo otra. En cada

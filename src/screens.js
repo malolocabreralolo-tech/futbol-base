@@ -2,8 +2,11 @@
 // provisional (decisión 6 de B2) hasta que llegue la suya.
 import { SCREENS } from './links.js';
 import { screen as home } from './screen-home.js';
+import { screen as jornada } from './screen-jornada.js';
+import { screen as tabla } from './screen-tabla.js';
+import { screen as partido } from './screen-partido.js';
 import { screen as pendiente } from './screen-pendiente.js';
 
-const READY = { '': home };
+const READY = { '': home, jornada, tabla, partido };
 
 export const SCREEN_MAP = Object.freeze(Object.fromEntries(SCREENS.map((name) => [name, READY[name] || pendiente])));

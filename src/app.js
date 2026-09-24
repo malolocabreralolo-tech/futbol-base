@@ -1,13 +1,16 @@
 // Arranque (spec §5.2): almacén, registro de datos, modelo y router. index.html llama a
 // start(document, window) cuando ya han llegado los datos inmediatos: importar este módulo no toca
-// el navegador (test_rediseno_modulos).
+// el navegador (test_rediseno_modulos). Antes del primer pintado, start instala la cadena de los
+// escudos, sigue la conexión para el aviso de la cabecera y guarda el cambio de fase de mi equipo;
+// sin los datos inmediatos de la temporada, pinta la caja de error y no arranca el router.
 import { PORTAL } from './config.js';
-import { readGlobals } from './state.js';
-import { createModel } from './model.js';
-import { buildClubIndex, resolveMyTeam } from './myteam.js';
-import { loadStore } from './store.js';
-import { canaryTodayISO } from './links.js';
+import { readGlobals, ensureHealth } from './state.js';
+import { createModel, seasonLabel } from './model.js';
+import { buildClubIndex, resolveMyTeam, myTeamToSave } from './myteam.js';
+import { loadStore, saveStore, safeStorage } from './store.js';
+import { canaryTodayISO, parseRoute } from './links.js';
 import { crestFallback } from './ui.js';
+import { errorScreen, offlineNotice, routeTitle } from './shell.js';
 import { startRouter } from './router.js';
 import { SCREEN_MAP } from './screens.js';
 
@@ -27,20 +30,78 @@ export function startContext({ storage, portal, datasets, today }) {
   return { ...contextFor({ model, myTeam: store.myTeam, portal: base, datasets, today }), lastPrimary: 'miequipo' };
 }
 
-export function start(doc, win) {
+// Los datos inmediatos sin los que no hay temporada: sin uno de ellos, ni X ni B serían verdad.
+const REQUIRED = ['benjamin', 'prebenjamin', 'history'];
+
+// config: el PORTAL de config.js; las pruebas pasan otro (una temporada simulada).
+export function start(doc, win, config = PORTAL) {
   // Escudos: miniatura → original → monograma (spec §5.4). Los errores de <img> no burbujean: se
   // escuchan en captura, y desde antes del primer pintado (escudos/s/ no existe hasta B4).
   doc.addEventListener('error', (event) => crestFallback(event.target), true);
   const storage = () => win.localStorage;
-  const portal = { season: PORTAL.season, defaultTeam: PORTAL.defaultTeam };
+  const portal = { season: config.season, defaultTeam: config.defaultTeam };
   // Registro de datos: los globales inmediatos y lo que traen los cargadores perezosos.
   const datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: null };
-  const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
-  const store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
   // La fecha del literal oculto «Última actualización» de index.html, por si falta data-health.
   const legacyDate = doc.getElementById('legacyUpdated')?.textContent.match(/\d{2}\/\d{2}\/\d{4}/)?.[0] || null;
-  const getContext = () => contextFor({
-    model, myTeam: store.myTeam, portal, datasets, today: canaryTodayISO(new Date(), PORTAL.timeZone), legacyDate,
+
+  // «Sin conexión. Datos del …» en la cabecera (spec §4.10), en vivo.
+  function showOffline() {
+    const slot = doc.querySelector('.shell-offline');
+    if (slot) slot.innerHTML = win.navigator.onLine === false ? String(offlineNotice(datasets.health, legacyDate)) : '';
+  }
+  win.addEventListener('online', showOffline);
+  win.addEventListener('offline', showOffline);
+  showOffline();
+  ensureHealth().then((health) => {
+    if (health) datasets.health = health;
+    showOffline();
   });
-  return startRouter({ screens: SCREEN_MAP, root: doc.getElementById('contenido'), getContext, window: win });
+
+  // Sin los datos inmediatos de la temporada (un precache a medias y sin conexión, por ejemplo), la
+  // caja de error de §7 con «Reintentar», que recarga la página: nunca un X o un B falsos (M4 de la
+  // revisión adversarial). Mi equipo no se resuelve ni se guarda, y el router no arranca.
+  if (REQUIRED.some((key) => !datasets[key])) {
+    const route = parseRoute(win.location.hash);
+    const screen = SCREEN_MAP[route.screen] || SCREEN_MAP[''];
+    doc.getElementById('contenido').innerHTML = String(errorScreen({
+      screenId: screen.id, title: routeTitle(route.screen), what: `la temporada ${seasonLabel(portal.season)}`,
+    }));
+    doc.addEventListener('click', (event) => {
+      if (event.target?.closest?.('[data-action="retry"]')) win.location.reload();
+    });
+    return null;
+  }
+
+  const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
+  let store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
+  const getContext = () => contextFor({
+    model, myTeam: store.myTeam, portal, datasets, today: canaryTodayISO(new Date(), config.timeZone), legacyDate,
+  });
+
+  // El cambio de fase que se resuelve sin preguntar (FF5 → A2) queda guardado desde el arranque
+  // (decisión 12 de B1). Un cambio de temporada, nunca: se resuelve en cada carga hasta que la
+  // familia lo confirma (A2 de la revisión adversarial).
+  const next = myTeamToSave(store.myTeam, getContext().resolution);
+  if (next) {
+    store = { ...store, myTeam: next };
+    saveStore(storage, store);
+  }
+
+  return startRouter({
+    screens: SCREEN_MAP,
+    root: doc.getElementById('contenido'),
+    getContext,
+    window: win,
+    // El último destino principal, para la barra en Partido, dura lo que la pestaña (§4.1).
+    session: safeStorage(() => win.sessionStorage),
+    actions: {
+      // Respuesta a la pregunta de E y «Hacer mi equipo» (§4.2 y §4.6): se guarda (o, si el
+      // almacenamiento falla, queda en memoria) y el router vuelve a pintar la ruta.
+      saveMyTeam(myTeam) {
+        store = { ...store, myTeam };
+        return saveStore(storage, store);
+      },
+    },
+  });
 }

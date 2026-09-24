@@ -218,3 +218,8 @@ export function screenHead(title, { sub = null, action = null, crest: badge = nu
       : html`<a class="screen-action" href="${action.href}">${action.label}</a>`;
   return html`<header class="screen-head">${back ? backLink(back) : ''}${badge || ''}<div class="screen-head-text"><h1>${title}</h1>${sub ? html`<p class="screen-sub">${sub}</p>` : ''}</div>${act}</header>`;
 }
+
+// Lista en castellano: '' sin elementos, el elemento con uno, «A ${conj} B» con dos y «A, B ${conj} C» con tres o más.
+export function listEs(items, conj = 'y') {
+  return items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} ${conj} ${items[items.length - 1]}`;
+}

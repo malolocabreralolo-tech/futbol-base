@@ -9,7 +9,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   crest, crestFallback, monogram, box, cells, matchRow, standingsTable,
-  formChips, segmented, notice, empty, tabbar,
+  formChips, segmented, notice, empty, tabbar, listEs,
 } from '../../src/ui.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -259,6 +259,18 @@ test('notice y empty', () => {
     '<p class="notice">Faltan 2 partidos de esta jornada en la fuente</p>');
   assert.equal(s(empty('Aún no se ha jugado ninguna jornada')),
     '<p class="empty">Aún no se ha jugado ninguna jornada</p>');
+});
+
+test('listEs: lista en castellano, «y» por defecto, con 0, 1, 2 y 3 o más elementos', () => {
+  assert.equal(listEs([]), '');
+  assert.equal(listEs(['CD Batán']), 'CD Batán');
+  assert.equal(listEs(['RC Victoria', 'Arucas B']), 'RC Victoria y Arucas B');
+  assert.equal(listEs(['A', 'B', 'C']), 'A, B y C');
+  assert.equal(listEs(['A', 'B', 'C', 'D']), 'A, B, C y D');
+  assert.equal(listEs([], 'o'), '');
+  assert.equal(listEs(['CD Batán'], 'o'), 'CD Batán');
+  assert.equal(listEs(['CD Batán', 'CD Teguinte'], 'o'), 'CD Batán o CD Teguinte');
+  assert.equal(listEs(['A', 'B', 'C'], 'o'), 'A, B o C');
 });
 
 test('tabbar: 4 destinos, iconos SVG ocultos al lector y aria-current solo en el activo', () => {

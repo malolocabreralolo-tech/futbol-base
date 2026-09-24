@@ -78,6 +78,28 @@ test('jornada por defecto (defaultRound, por fecha): sin r, con una r que no exi
   assert.equal(title(render({ g: 'PG2', r: '12' })), 'Jornada 12 de 30', 'un enlace escrito a mano con el número');
 });
 
+test('M con huecos: el máximo entre el número de rondas y el mayor n (grupo sintético, sin la jornada 3)', () => {
+  // Grupo a mano con la forma de Round/Group del modelo: rondas con n 1, 2 y 4 (sin la 3), así
+  // que rounds.length (3) no basta para dar M; manda el mayor n (4), como escribe roundTitle.
+  const round = (n) => ({ key: String(n), label: `Jornada ${n}`, n, dateFrom: null, dateTo: null, matches: [] });
+  const group = {
+    season: PORTAL_SEASON, id: 'SINT', cat: 'prebenjamin', name: 'Sintético', fullName: null, phase: null,
+    island: 'grancanaria', url: null, standingsKind: null, kind: 'league', compKey: 'sintetico-grancanaria',
+    label: 'Grupo sintético', standings: [], rounds: [round(1), round(2), round(4)], currentRound: null,
+  };
+  const season = { name: PORTAL_SEASON, current: true, groups: [group] };
+  const model = {
+    season: (name) => (name === PORTAL_SEASON ? season : null),
+    group: (name, id) => (name === PORTAL_SEASON && id === 'SINT' ? group : null),
+  };
+  const ctx = {
+    route: { screen: 'jornada', params: { g: 'SINT', r: '4' } }, params: { g: 'SINT', r: '4' }, model,
+    myTeam: null, resolution: { status: 'absent' }, today: '2026-09-24', health: null, datasets: {},
+    portal: { season: PORTAL_SEASON, defaultTeam: null }, lastPrimary: 'jornada',
+  };
+  assert.equal(title(s(screen.render(ctx))), 'Jornada 4 de 4');
+});
+
 test('PG3: en ninguna jornada aparece «faltan»; los dos que no juegan, sin retirados', () => {
   const pg3 = ctxFor('jornada', { s: PORTAL_SEASON, g: 'PG3' }).model.group(PORTAL_SEASON, 'PG3');
   assert.equal(pg3.rounds.length, 30);
@@ -154,6 +176,14 @@ test('temporada sin cargar, grupo que no existe o sin calendario: nunca una pant
   current.history.PG2 = {};
   const out = render({ g: 'PG2' }, { datasets: datasetsFor({ current }) });
   assert.match(out, /<p class="empty">La fuente todavía no ha publicado el calendario de este grupo\.<\/p>/);
+});
+
+test('sin g: «Elige un grupo en «Otro grupo».» sin lanzar', () => {
+  let out;
+  assert.doesNotThrow(() => { out = render({}); });
+  assert.match(out, /<h1>Jornada<\/h1>/);
+  assert.match(out, /<p class="empty">Elige un grupo en «Otro grupo»\.<\/p>/);
+  assert.match(out, /href="#\/ligas\?s=2025-2026&amp;to=jornada">Otro grupo/);
 });
 
 test('fechas: días de la semana, intervalos entre meses y años, y un solo día', () => {

@@ -6,7 +6,7 @@
 // de navegador. mount(root, ctx, nav) añade el comportamiento. Nada toca el DOM
 // al importarse.
 import { html } from './html.js';
-import { box, cells, crest, empty, matchRow, notice, screenHead, standingsTable } from './ui.js';
+import { box, cells, crest, empty, listEs, matchRow, notice, screenHead, standingsTable } from './ui.js';
 import {
   competitionKey, lastResults, matchState, playerName, retiredTeams, seasonLabel, seasonSummary,
   sourceInfo, teamFixtures, teamShort,
@@ -48,7 +48,6 @@ function checkedPhrase(instant, today) {
 const score = (a, b) => `${a}–${b}`;
 // 3.25 → '3,3': un decimal con coma, sin los datos de idioma del motor.
 const oneDecimal = n => n.toFixed(1).replace('.', ',');
-const listText = names => (names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} y ${names[names.length - 1]}`);
 
 // ── Enlaces (spec §4.1) ─────────────────────────────────────────────────
 
@@ -191,7 +190,7 @@ export function coverageText(coverage, missing = 0) {
   if (missing > 0) text = `${n} de ${due} partidos con resultado`;
   else if (vsRetired > 0) text = n === calendar ? `${n} partidos en el calendario` : `${n} partidos jugados en el calendario`;
   else text = `Calculado con ${n} partidos del calendario`;
-  if (vsRetired > 0) text += ` y ${vsRetired} contra ${listText(retired)} (${retired.length > 1 ? 'retirados' : 'retirado'})`;
+  if (vsRetired > 0) text += ` y ${vsRetired} contra ${listEs(retired)} (${retired.length > 1 ? 'retirados' : 'retirado'})`;
   if (due + vsRetired !== played) text += `; la clasificación cuenta ${played}`;
   return text;
 }
@@ -343,7 +342,7 @@ function summerBlocks(ctx, resolution) {
       : [groupPhaseRow(entry.group, entry.team)]));
     const months = [...new Set(entries.flatMap(e => e.rows).map(m => m.dateISO).filter(Boolean).sort()
       .map(monthName))];
-    return box(html`<ul class="summer">${rows}</ul>`, { title: `Verano: ${label}`, context: listText(months) });
+    return box(html`<ul class="summer">${rows}</ul>`, { title: `Verano: ${label}`, context: listEs(months) });
   });
 }
 

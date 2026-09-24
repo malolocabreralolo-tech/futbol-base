@@ -2,7 +2,7 @@
 // con sus fechas, los partidos por día con el propio primero y resaltado, el aviso de la
 // jornada, la botonera y «Otro grupo». mount() añade compartir y el .ics del grupo.
 import { html } from './html.js';
-import { screenHead, matchRow, notice, empty } from './ui.js';
+import { screenHead, matchRow, notice, empty, listEs } from './ui.js';
 import { errorBox } from './shell.js';
 import { defaultRound, findRound, roundNotice, retiredTeams, matchState, seasonLabel } from './model.js';
 // Los días y los meses, escritos en links.js (Tarea 7): sin los datos de idioma del motor.
@@ -33,10 +33,6 @@ export function dateRange(from, to) {
   return `del ${a.d} al ${b.d} de ${b.month}`;
 }
 
-// «A», «A y B», «A, B y C» (o con «o»).
-const listEs = (items, conj) => (items.length < 2 ? items.join('')
-  : `${items.slice(0, -1).join(', ')} ${conj} ${items[items.length - 1]}`);
-
 // La ronda de `r` (findRound, de la Tarea 6: Round.key y, si no existe, por número, para un enlace
 // escrito a mano con «r=30»; la misma regla que el router), o la de defaultRound (decisión 1 de B1:
 // por fecha). null si el grupo no tiene rondas.
@@ -51,13 +47,15 @@ function roundTitle(group, round) {
 }
 
 const againstRetired = retired => m => retired.has(m.home) || retired.has(m.away);
+// Si `m` es un partido de `mine` (el nombre resuelto, o null sin equipo propio en este grupo).
+const isMineOf = mine => m => mine !== null && (m.home === mine || m.away === mine);
 
 // Días de la jornada, sin los partidos contra retirados (nunca se jugarán; el aviso los
 // explica). El día del partido propio va primero y, dentro, el propio en cabeza; los demás, por
 // fecha; «Sin fecha», al final. En cada día, por hora y en el orden de la fuente.
 function roundDays(group, round, mine) {
   const vsRetired = againstRetired(retiredTeams(group));
-  const isMine = m => mine !== null && (m.home === mine || m.away === mine);
+  const isMine = isMineOf(mine);
   const byDay = new Map();
   round.matches.filter(m => !vsRetired(m)).forEach((m, i) => {
     const key = m.dateISO || '';
@@ -129,7 +127,7 @@ function render(ctx) {
   const days = roundDays(group, round, mine);
   const dates = days.map(day => day.date).filter(Boolean).sort();
   const nav = html`<nav class="round-nav" aria-label="Jornadas">${step(group.rounds[at - 1], '‹', 'Jornada anterior', 'round-prev')}<div class="round-now"><h2 class="round-title">${roundTitle(group, round)}</h2><p class="round-dates">${dateRange(dates[0], dates[dates.length - 1])}</p></div>${step(group.rounds[at + 1], '›', 'Jornada siguiente', 'round-next')}</nav>`;
-  const isMine = m => mine !== null && (m.home === mine || m.away === mine);
+  const isMine = isMineOf(mine);
   const matchHref = m => routeHref('partido', { s, g: group.id, r: round.key, h: m.home, a: m.away });
   const list = days.length
     ? html`<div class="days">${days.map(day => html`<section class="day"><h3 class="day-title">${dayLabel(day.date)}</h3><div class="box">${day.matches.map(m => matchRow(m, { mine: isMine(m), today, shields, href: matchHref(m) }))}</div></section>`)}</div>`

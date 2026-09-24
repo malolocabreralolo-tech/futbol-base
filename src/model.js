@@ -16,6 +16,7 @@
  */
 import {
   isCupGroup, isRoundRobinCup, knockoutRoundLabel, matchAdvancer, sortJornadaKeys, jornadaNumber,
+  normalizeTeamName,
 } from './state.js';
 import { fixtureISO } from './links.js';
 
@@ -837,4 +838,201 @@ export function timelineFor(match, matchDetail, lineups) {
     ? null
     : { timeline: `${home}-${away}`, score: `${match.hs}-${match.as}` };
   return { source, goals, mismatch };
+}
+
+/* ── Registro de datos y modelo (Plan B2, contrato del esqueleto) ──────────
+ *
+ * datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: null }:
+ * los globales inmediatos y lo que traen los cargadores perezosos de state.js. El modelo los lee
+ * al pedirlos, así que una temporada pasada aparece en cuanto se guarda en seasonRaw. */
+
+// La Maspalomas Cup es de 2025/26 y lo sigue siendo después de activar 2026/27 («Para B2»).
+const CUPS_SEASON = '2025-2026';
+
+// Todos los nombres de equipo de temporadas y torneos ya construidos: clasificación y partidos.
+function teamNamesOf(collections) {
+  const names = new Set();
+  for (const { groups } of collections) {
+    for (const group of groups) {
+      for (const row of group.standings) names.add(row.team);
+      for (const round of group.rounds) for (const match of round.matches) { names.add(match.home); names.add(match.away); }
+    }
+  }
+  return [...names];
+}
+
+// buildClubIndex (myteam.js) llega inyectado: myteam.js importa de este módulo, y al revés sería un
+// ciclo. Quien no pide clubIndex() no lo necesita (las pantallas reciben el índice ya hecho).
+export function createModel(datasets, { portalSeason, buildClubIndex = null } = {}) {
+  checkSeason(portalSeason, 'createModel');
+  const data = datasets || {};
+  const seasons = new Map();
+  let cups = null;
+  let index = null;
+  let indexKey = null;
+  const model = {
+    // Season memorizada. La del portal, de benjamin, prebenjamin e history; una pasada, de
+    // seasonRaw[name] (lo que devuelve ensureSeasonData), o null mientras no esté cargada.
+    season(name) {
+      if (seasons.has(name)) return seasons.get(name);
+      let built = null;
+      if (name === portalSeason) {
+        built = buildSeason({ name, current: true, benjamin: data.benjamin, prebenjamin: data.prebenjamin, history: data.history });
+      } else if (SEASON_RE.test(String(name)) && data.seasonRaw && Object.hasOwn(data.seasonRaw, name) && data.seasonRaw[name]) {
+        const raw = data.seasonRaw[name];
+        built = buildSeason({ name, current: false, benjamin: raw.benjamin, prebenjamin: raw.prebenjamin });
+      }
+      if (built) seasons.set(name, built);
+      return built;
+    },
+    group(season, id) {
+      const built = model.season(season);
+      return (built && built.groups.find(group => group.id === id)) || null;
+    },
+    // Torneos de 2025-26 (capa aparte, spec §5.3), memorizados en cuanto hay datos; null si no hay.
+    cups() {
+      if (!cups && (data.cupBenjamin || data.cupPrebenjamin)) {
+        cups = buildCups({ season: CUPS_SEASON, benjamin: data.cupBenjamin, prebenjamin: data.cupPrebenjamin });
+      }
+      return cups;
+    },
+    // Índice de clubes (spec §6.1) sobre los nombres de las temporadas cargadas y los torneos,
+    // con los escudos. Se rehace cuando se carga otra temporada o llegan los torneos.
+    clubIndex() {
+      const loaded = [portalSeason, ...Object.keys(data.seasonRaw || {}).filter(name => name !== portalSeason).sort()];
+      const collections = [...loaded.map(name => model.season(name)).filter(Boolean), model.cups()].filter(Boolean);
+      const key = collections.map(collection => collection.name || `torneos ${collection.season}`).join('|');
+      if (!index || key !== indexKey) {
+        if (typeof buildClubIndex !== 'function') throw new TypeError('createModel: clubIndex() necesita buildClubIndex');
+        index = buildClubIndex(teamNamesOf(collections), data.shields || {});
+        indexKey = key;
+      }
+      return index;
+    },
+    // Goleadores de la temporada actual (GOL_BENJ o GOL_PREBENJ: [{ id, g, s: [[jugador, equipo,
+    // goles, partidos]] }]), los que recibe teamScorers; [] en las pasadas, que no los tienen.
+    scorers(season, cat) {
+      if (season !== portalSeason) return [];
+      const gol = cat === 'benjamin' ? data.golBenj : cat === 'prebenjamin' ? data.golPrebenj : null;
+      return Array.isArray(gol) ? gol : [];
+    },
+  };
+  return model;
+}
+
+/* ── Funciones puras del diseño anterior (spec §5.2, «se mueven») ─────────
+ * Vienen de plantilla.js, matchdetail-rich.js, modals.js, filters.js y health.js, que se borran
+ * en el corte. Mismo comportamiento y mismas pruebas; filterCompetitionGroups ya no toma el
+ * estado S por defecto y sourceInfo devuelve datos en lugar de HTML (decisión 3 de B2). */
+
+export function sortPlantillaRows(rows, key, dir) {
+  key = key || 'g';
+  dir = dir || 'desc';
+  const mul = dir === 'desc' ? -1 : 1;
+  const cmp = (a, b) => {
+    const va = a[key], vb = b[key];
+    if (typeof va === 'number' && typeof vb === 'number') {
+      if (va !== vb) return (va - vb) * mul;
+    } else {
+      const sa = String(va || ''), sb = String(vb || '');
+      const c = sa.localeCompare(sb, 'es');
+      if (c !== 0) return c * mul;
+    }
+    if (a.ap !== b.ap) return b.ap - a.ap;
+    return String(a.n).localeCompare(String(b.n), 'es');
+  };
+  return rows.slice().sort(cmp);
+}
+
+/* Estadísticas de un jugador a partir de las alineaciones de la temporada. `teamName` es
+ * obligatorio en la práctica: sin él se agrega por NOMBRE sobre todas las alineaciones, y un
+ * homónimo de otro club suma sus partidos. Una clave repetida ({dup, list}) no cuenta. */
+export function aggregatePlayerFromLineups(lineups, player, teamName) {
+  let appearances = 0, starters = 0, goals = 0, yellow = 0, red = 0;
+  const matches = [];
+  const suyo = teamName ? normalizeTeamName(teamName) : null;
+  for (const [matchKey, m] of Object.entries(lineups || {})) {
+    const partes = String(matchKey).split('|');
+    const inHome = (m.home || []).find(p => p.n === player);
+    const inAway = (m.away || []).find(p => p.n === player);
+    let app = inHome || inAway;
+    if (suyo) {
+      const enLocal = inHome && normalizeTeamName(partes[0] || '') === suyo;
+      const enVisitante = inAway && normalizeTeamName(partes[1] || '') === suyo;
+      app = enLocal ? inHome : enVisitante ? inAway : null;
+      if (app) {
+        matches.push({ matchKey, side: enLocal ? 'home' : 'away', g: app.g | 0, y: app.y | 0, rd: app.rd | 0 });
+        appearances += 1;
+        if (app.r === 'starter') starters += 1;
+        goals += app.g | 0; yellow += app.y | 0; red += app.rd | 0;
+      }
+      continue;
+    }
+    if (!app) continue;
+    appearances += 1;
+    if (app.r === 'starter') starters += 1;
+    goals += app.g | 0;
+    yellow += app.y | 0;
+    red += app.rd | 0;
+    matches.push({ matchKey, side: inHome ? 'home' : 'away', g: app.g | 0, y: app.y | 0, rd: app.rd | 0 });
+  }
+  return { appearances, starters, goals, yellow, red, matches };
+}
+
+// Eventos del acta por minuto; los que no tienen minuto, al final.
+export function mergeAndOrderEvents(events) {
+  const arr = (events || []).slice();
+  arr.sort((a, b) => {
+    const ma = (a.m == null) ? 1e9 : a.m;
+    const mb = (b.m == null) ? 1e9 : b.m;
+    return ma - mb;
+  });
+  return arr;
+}
+
+/* De dónde salen los partidos de un grupo según la temporada. Los códigos se repiten entre
+ * temporadas (A1 está en 2024-25 y en HISTORY de 2025-26), así que:
+ *   - temporada pasada (state.season no vacío): las `jornadas` del propio grupo, nunca HISTORY,
+ *     y sin rachas (stats: null, solo son de la actual);
+ *   - temporada actual: HISTORY[groupId] y, si no está (copas), las `jornadas` del grupo.
+ * Las dos formas son { 'Jornada N': [[fecha, local, visitante, gl, gv], …] }. */
+export function resolveSeasonDataset(state, opts) {
+  opts = opts || {};
+  const group = opts.group || null;
+  const historical = !!(state && state.season);
+  const groupJornadas =
+    (group && group.jornadas && typeof group.jornadas === 'object'
+     && !Array.isArray(group.jornadas)) ? group.jornadas : null;
+  if (historical) {
+    return { historical: true, matchSource: groupJornadas || {}, stats: null };
+  }
+  const history = opts.history || null;
+  const groupId = opts.groupId != null ? opts.groupId : (group && group.id);
+  const fromHistory = (history && groupId != null) ? history[groupId] : null;
+  return {
+    historical: false,
+    matchSource: fromHistory || groupJornadas || {},
+    stats: opts.stats || null,
+  };
+}
+
+// Grupos crudos por isla, fase y nombre de club (normalizado). `state`: { search, filterIsland, filterPhase }.
+export function filterCompetitionGroups(groups, state = {}) {
+  const query = normalizeTeamName(state.search || '');
+  return groups.filter(group => (!state.filterIsland || group.island === state.filterIsland)
+    && (!state.filterPhase || group.phase === state.filterPhase)
+    && (!query || (group.standings || []).some(row => normalizeTeamName(row[1]).includes(query))));
+}
+
+/* Procedencia de la clasificación (spec §4.4; decisión 3 de B2): datos, no HTML.
+ *   kind:   'oficial' (la de la fuente tal cual), 'calculada' (reconstruida con los resultados) o
+ *           'corregida' (con los puntos corregidos), según standingsKind;
+ *   source: el dominio de la fuente («futbolaspalmas.com»), o null sin URL;
+ *   url:    la de la fuente, solo http o https, o null.
+ * En una temporada pasada (historical) no hay enlace: la URL de la fuente es la de la actual. */
+const SOURCE_KINDS = { reconstructed: 'calculada', corrected: 'corregida' };
+export function sourceInfo(group, historical = false) {
+  const kind = SOURCE_KINDS[group && group.standingsKind] || 'oficial';
+  const m = historical ? null : String((group && group.url) || '').match(/^https?:\/\/(?:www\.)?([^/?#:@\s]+)/i);
+  return { kind, source: m ? m[1].toLowerCase() : null, url: m ? group.url : null };
 }

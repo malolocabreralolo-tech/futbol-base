@@ -1,7 +1,7 @@
 // Identidad de club y «mi equipo» a través de temporadas y fases (spec §6).
 // Módulo puro: recibe los datos por parámetro y no lee ningún global de datos.
 import { normalizeForTeamsMapping, normalizeTeamName } from './state.js';
-import { matchState, retiredTeams, competitionKey } from './model.js';
+import { matchState, retiredTeams, competitionKey, groupFinished, teamFixtures } from './model.js';
 
 // Nombres de torneos y de la federación que no se pueden unir por escudo ni por clave base.
 export const TEAM_ALIASES = { 'UD Las Mesas Huracán': 'Las Mesas Hu.' };
@@ -208,4 +208,26 @@ export function summerCups(cups, myTeam, index) {
     if (rows.length) out.push({ group, rows });
   }
   return out;
+}
+
+// ---- Estado de la portada (spec §4.2) ----
+
+// Orden E, X, D, B, C, A. Solo cuentan los partidos que no son contra retirados. A y C
+// salen de teamFixtures, como el próximo partido que enseña la portada: A si mi equipo
+// tiene próximo partido; C si ya ha jugado y no lo tiene. Sin nada jugado ni próximo
+// partido (todos sin fecha), B. `health` no cambia el estado: solo decide la caja.
+export function homeState({ resolution, todayISO, portalSeason }) {
+  if (resolution?.status === 'ask') return 'E';
+  if (resolution?.status !== 'ok') return 'X';
+  const { group, name } = resolution;
+  if (groupFinished(group, todayISO, portalSeason)) return 'D';
+  if (!countedMatches(group).some(match => matchState(match, todayISO) === 'jugado')) return 'B';
+  const { next, played } = teamFixtures(name, group, todayISO);
+  if (next) return 'A';
+  return played > 0 ? 'C' : 'B';
+}
+
+export function showNextSeasonBox({ group, health, portalSeason }) {
+  if (!group || group.season !== portalSeason) return false;
+  return !health || health.nextSeason?.status === 'pending';
 }

@@ -3,7 +3,7 @@
 // que emiten están definidas en style-acta.css.
 import { html } from './html.js';
 import { matchState } from './model.js';
-import { normalizeTeamName } from './state.js';
+import { shieldFile } from './state.js';
 
 // ── Escudo y monograma ──────────────────────────────────────────────────
 
@@ -11,25 +11,6 @@ const SIZES = [16, 32, 46];
 
 function checkSize(size) {
   if (!SIZES.includes(size)) throw new RangeError(`Tamaño de escudo no válido: ${size} (16, 32 o 46)`);
-}
-
-// Índice normalizado por objeto de escudos (se construye una vez por mapa).
-const normalizedIndex = new WeakMap();
-
-// Fichero de escudo exacto o normalizado (spec §5.2), o null.
-function lookupShield(name, shields) {
-  if (!name || !shields) return null;
-  if (Object.hasOwn(shields, name)) return shields[name];
-  let index = normalizedIndex.get(shields);
-  if (!index) {
-    index = new Map();
-    for (const [key, file] of Object.entries(shields)) {
-      const norm = normalizeTeamName(key);
-      if (norm && !index.has(norm)) index.set(norm, file);
-    }
-    normalizedIndex.set(shields, index);
-  }
-  return index.get(normalizeTeamName(String(name))) || null;
 }
 
 const CLUB_WORDS = new Set(['ad', 'afc', 'atco', 'atl', 'cd', 'ce', 'cef', 'cf', 'club', 'cp', 'rc', 'real', 'sc', 'sd', 'ssd', 'ud', 'us']);
@@ -55,7 +36,7 @@ export function monogram(name, size = 16) {
 // de la primera pantalla.
 export function crest(name, { size = 16, shields = {}, lazy = true } = {}) {
   checkSize(size);
-  const file = lookupShield(name, shields);
+  const file = shieldFile(name, shields);
   if (!file) return monogram(name, size);
   const thumb = `./escudos/s/${file.replace(/\.[^./]+$/, '')}.png`;
   return html`<img class="crest crest-${size}" src="${thumb}" data-full="./escudos/${file}" data-name="${name}" alt="" width="${size}" height="${size}"${lazy ? html` loading="lazy"` : ''} decoding="async">`;

@@ -1,6 +1,6 @@
 // Identidad de club y «mi equipo» a través de temporadas y fases (spec §6).
 // Módulo puro: recibe los datos por parámetro y no lee ningún global de datos.
-import { normalizeForTeamsMapping, normalizeTeamName } from './state.js';
+import { normalizeForTeamsMapping, shieldFile } from './state.js';
 import { matchState, retiredTeams, competitionKey, groupFinished, teamFixtures } from './model.js';
 
 // Nombres de torneos y de la federación que no se pueden unir por escudo ni por clave base.
@@ -36,18 +36,14 @@ function filialLetter(name) {
 }
 
 // Grafo de nombres (union-find). Cada nombre se une a sus «claves»: 'f:' fichero de escudo
-// (exacto o normalizado), 'k:' clave base y 'n:' nombre destino de su alias.
+// (exacto o normalizado, con shieldFile de state.js, la misma búsqueda que crest), 'k:' clave
+// base y 'n:' nombre destino de su alias.
 export function buildClubIndex(names, shields = {}, aliases = TEAM_ALIASES) {
-  const normalized = new Map();
-  for (const [key, file] of Object.entries(shields)) {
-    const norm = normalizeTeamName(key);
-    if (norm && !normalized.has(norm)) normalized.set(norm, file);
-  }
   const cache = new Map();
   const keysOf = name => {
     if (cache.has(name)) return cache.get(name);
     const keys = [];
-    const file = Object.hasOwn(shields, name) ? shields[name] : normalized.get(normalizeTeamName(name));
+    const file = shieldFile(name, shields);
     if (file) keys.push('f:' + file);
     const base = baseKey(name);
     if (base) keys.push('k:' + base);

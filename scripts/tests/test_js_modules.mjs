@@ -254,8 +254,9 @@ test('state.js exports a single-flight ensureMatchDetail loader', () => {
   assert.ok(/export async function ensureMatchDetail\s*\(/.test(s),
     'state.js must export async ensureMatchDetail()');
   assert.ok(/_matchDetailPromise/.test(s), 'must single-flight via a cached promise');
-  assert.ok(/fetch\(`?\.\/data-matchdetail\.js/.test(s),
-    'must fetch ./data-matchdetail.js');
+  // Plan B2, tarea 2: las peticiones perezosas pasan por fetchData (la versión y el tiempo límite).
+  assert.ok(/fetchData\('data-matchdetail\.js'\)/.test(s),
+    'must fetch data-matchdetail.js through fetchData');
   assert.ok(!/globalThis|window\.\s*MATCH_DETAIL/.test(s),
     'must not use globalThis/window for matchdetail');
 });

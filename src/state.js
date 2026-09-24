@@ -398,6 +398,26 @@ export function normalizeTeamName(s) {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['".,\u2018\u2019\u201c\u201d]/g, '').replace(/\b(CF|UD|CD|AD|SD|AFC|SC|CP|CE|CEF|SSD|ATLETICO|ATL)\b/gi, '').toLowerCase().trim().replace(/\s+/g, ' ');
 }
 
+// Fichero de escudo de un equipo (spec §5.2, sustituye a teamBadge): la clave exacta de `shields`
+// o, si no está, la primera clave con el mismo nombre normalizado; null si no hay. Nunca por
+// subcadena: «UD Las Mesas Huracán» se llevaría el escudo de AD Huracán. Es la única búsqueda de
+// escudos de la app: la usan crest (ui.js) y buildClubIndex (myteam.js), que no deben divergir.
+const _shieldIndex = new WeakMap();
+export function shieldFile(name, shields) {
+  if (!name || !shields) return null;
+  if (Object.hasOwn(shields, name)) return shields[name];
+  let index = _shieldIndex.get(shields);
+  if (!index) {
+    index = new Map();
+    for (const [key, file] of Object.entries(shields)) {
+      const norm = normalizeTeamName(key);
+      if (norm && !index.has(norm)) index.set(norm, file);
+    }
+    _shieldIndex.set(shields, index);
+  }
+  return index.get(normalizeTeamName(String(name))) || null;
+}
+
 let _shieldsNorm = null;
 function getShieldsNorm() {
   if (_shieldsNorm) return _shieldsNorm;
@@ -442,11 +462,61 @@ export function teamBadge(name) {
   return teamBadgeFallback(name);
 }
 
+// Globales inmediatos de los data-*.js (spec §5.4): identificador desnudo con typeof, nunca a
+// través del objeto global, y null si el fichero no ha llegado. Es la puerta de los datos de la
+// app nueva: el resto de módulos los recibe por parámetro (datasets).
+export function readGlobals() {
+  return {
+    benjamin: typeof BENJAMIN !== 'undefined' ? BENJAMIN : null,
+    prebenjamin: typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : null,
+    history: typeof HISTORY !== 'undefined' ? HISTORY : null,
+    golBenj: typeof GOL_BENJ !== 'undefined' ? GOL_BENJ : null,
+    golPrebenj: typeof GOL_PREBENJ !== 'undefined' ? GOL_PREBENJ : null,
+    shields: typeof SHIELDS !== 'undefined' ? SHIELDS : null,
+    seasons: typeof SEASONS !== 'undefined' ? SEASONS : null,
+    cupBenjamin: typeof MASPALOMAS_CUP_BENJAMIN !== 'undefined' ? MASPALOMAS_CUP_BENJAMIN : null,
+    cupPrebenjamin: typeof MASPALOMAS_CUP_PREBENJAMIN !== 'undefined' ? MASPALOMAS_CUP_PREBENJAMIN : null,
+  };
+}
+
+// Versión de los datos (spec §5.4): la ?v= del <script> de data-seasons.js, que index.html
+// siempre carga; '' sin documento o sin ese <script>. La llevan todas las peticiones perezosas.
+export function dataVersion() {
+  if (typeof document === 'undefined') return '';
+  const src = document.querySelector('script[src*="data-seasons.js"]')?.getAttribute('src') || '';
+  return (src.match(/[?&]v=([^&#]+)/) || [])[1] || '';
+}
+
+// La query de las peticiones perezosas: '?v=<versión>' o ''.
+function dataQuery() {
+  const version = dataVersion();
+  return version ? `?v=${version}` : '';
+}
+
+// Nada espera para siempre (§7): si una petición perezosa no termina, cuerpo incluido, en
+// LAZY_TIMEOUT_MS, se aborta y la carga falla como con un error de red. Lo opcional pinta su
+// caja de error en el bloque; lo necesario, en la pantalla, siempre con «Reintentar».
+export const LAZY_TIMEOUT_MS = 15000;
+
+// Una petición perezosa: `file` con la ?v= de los datos y el tiempo límite. Devuelve lo que los
+// cargadores usan de una respuesta (ok, status y text()), con el cuerpo ya leído dentro del plazo.
+async function fetchData(file) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), LAZY_TIMEOUT_MS);
+  try {
+    const r = await fetch(`./${file}${dataQuery()}`, { signal: controller.signal });
+    const body = r.ok ? await r.text() : '';
+    return { ok: r.ok, status: r.status, text: async () => body };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /* Lazy loader for the full goal-timeline data. data-matchdetail.js is no
  * longer an eager <script> (it is ~359 KB); fetch+parse it on demand the
  * first time a match modal needs it. Single-flight + module cache. Mirrors
- * loadAllHistoricalSeasons() in modals.js. ?v= is inherited from the eager
- * data-matchdetail-keys.js script tag so cache-busting stays aligned.
+ * loadAllHistoricalSeasons() in modals.js. ?v= is dataVersion() (the one of
+ * data-seasons.js), like every lazy loader.
  * On failure the single-flight promise is cleared (next call retries) and
  * a null sentinel is returned — callers already null-check. */
 let _matchDetail = null;
@@ -455,10 +525,8 @@ export async function ensureMatchDetail() {
   if (_matchDetail) return _matchDetail;
   if (_matchDetailPromise) return _matchDetailPromise;
   _matchDetailPromise = (async () => {
-    const ver = (document.querySelector('script[src*="data-matchdetail-keys.js"]')
-      ?.src.match(/v=([^&]+)/)?.[1]) || '';
     try {
-      const r = await fetch(`./data-matchdetail.js${ver ? `?v=${ver}` : ''}`);
+      const r = await fetchData('data-matchdetail.js');
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const txt = await r.text();
       const m = txt.match(/const MATCH_DETAIL=(\{[\s\S]*\});/);
@@ -555,11 +623,8 @@ export async function ensureSeasonData(seasonName) {
   if (_seasonCache[seasonName]) return _seasonCache[seasonName];
   if (_seasonPromise[seasonName]) return _seasonPromise[seasonName];
   _seasonPromise[seasonName] = (async () => {
-    // Cache-bust per-season files alongside index.html ?v= parameter
-    const ver = (document.querySelector('script[src*="data-seasons.js"]')?.src.match(/v=([^&]+)/)?.[1]) || '';
-    const url = `./data-season-${seasonName}.js${ver ? `?v=${ver}` : ''}`;
     try {
-      const r = await fetch(url);
+      const r = await fetchData(`data-season-${seasonName}.js`);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const text = await r.text();
       // Extract JSON: "const SEASON_2024_2025=..." → parse the object
@@ -570,7 +635,7 @@ export async function ensureSeasonData(seasonName) {
       delete _seasonError[seasonName];
       return seasonObj;
     } catch (e) {
-      console.error('[state] ensureSeasonData failed:', url, e);
+      console.error('[state] ensureSeasonData failed:', seasonName, e);
       _seasonError[seasonName] = (e && e.message) || String(e);
       return null; // error sentinel
     } finally {
@@ -616,11 +681,6 @@ const _playersPromise = {};
 
 function _seasonSuffix(season) { return season.replace('-', '_'); }
 
-function _versionFromMatchDetailKeys() {
-  return (document.querySelector('script[src*="data-matchdetail-keys.js"]')
-    ?.src.match(/v=([^&]+)/)?.[1]) || '';
-}
-
 /* On failure both loaders return a null sentinel WITHOUT caching it and
  * clear their single-flight promise, so a later call retries the fetch
  * (a transient network error no longer blanks the feature for the whole
@@ -629,10 +689,9 @@ export async function ensureLineups(season) {
   if (_lineups[season] !== undefined) return _lineups[season];
   if (_lineupsPromise[season]) return _lineupsPromise[season];
   _lineupsPromise[season] = (async () => {
-    const ver = _versionFromMatchDetailKeys();
     const suffix = _seasonSuffix(season);
     try {
-      const r = await fetch('./data-lineups-' + season + '.js' + (ver ? '?v=' + ver : ''));
+      const r = await fetchData(`data-lineups-${season}.js`);
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const txt = await r.text();
       const re = new RegExp('const LINEUPS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*\\});');
@@ -653,10 +712,9 @@ export async function ensurePlayers(season) {
   if (_players[season] !== undefined) return _players[season];
   if (_playersPromise[season]) return _playersPromise[season];
   _playersPromise[season] = (async () => {
-    const ver = _versionFromMatchDetailKeys();
     const suffix = _seasonSuffix(season);
     try {
-      const r = await fetch('./data-players-' + season + '.js' + (ver ? '?v=' + ver : ''));
+      const r = await fetchData(`data-players-${season}.js`);
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const txt = await r.text();
       const reP = new RegExp('const PLAYERS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*?\\});');
@@ -673,6 +731,28 @@ export async function ensurePlayers(season) {
     }
   })();
   return _playersPromise[season];
+}
+
+// data-health.json (spec §4.10 y §7): la comprobación de las fuentes, parseada, o null si no
+// llega (sin conexión, por ejemplo). Un único vuelo: las llamadas simultáneas comparten la
+// petición; un fallo no se memoriza y la siguiente llamada reintenta.
+let _health = null;
+let _healthPromise = null;
+async function loadHealth() {
+  try {
+    const r = await fetchData('data-health.json');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    _health = JSON.parse(await r.text());
+    return _health;
+  } catch (e) {
+    console.warn('[state] ensureHealth failed:', e.message);
+    return null;
+  }
+}
+export async function ensureHealth() {
+  if (_health) return _health;
+  if (!_healthPromise) _healthPromise = loadHealth().finally(() => { _healthPromise = null; });
+  return _healthPromise;
 }
 
 export function getCurrentSeason() {

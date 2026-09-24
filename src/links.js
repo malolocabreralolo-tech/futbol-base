@@ -212,6 +212,34 @@ export function translateLegacy(hash, { season } = {}) {
   }
 }
 
+// «Hoy» de la app (decisión 4 de B2): el día de Canarias, nunca el del dispositivo. En un móvil
+// con hora peninsular, entre las 23:00 y las 24:00 de Canarias, el reloj local ya está en
+// mañana (M1 de B1). El router lo calcula una vez y lo inyecta en ctx.today.
+export function canaryTodayISO(now = new Date(), timeZone = 'Atlantic/Canary') {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
+    timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(now).map(part => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+/* Fecha de un partido ('AAAA-MM-DD' o 'DD/MM') en ISO respecto a `todayISO`, que se inyecta.
+ * Un DD/MM nunca pasa al año siguiente por haber pasado hace poco (el 06/06 no es el del año
+ * que viene): solo cruza de año si queda a más de 180 días, hacia delante (diciembre visto desde
+ * enero) o hacia atrás (enero visto desde diciembre). Viene de miequipo.js (spec §5.2). */
+export function matchDateISO(d, todayISO) {
+  if (!d) return null;
+  const s = String(d);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const m = s.match(/^(\d{2})\/(\d{2})$/);
+  if (!m || !todayISO) return null;
+  const t = String(todayISO);
+  const ty = +t.slice(0, 4);
+  const diffDays = (Date.UTC(ty, +t.slice(5, 7) - 1, +t.slice(8, 10))
+    - Date.UTC(ty, +m[2] - 1, +m[1])) / 86400000;
+  const y = diffDays > 180 ? ty + 1 : diffDays < -180 ? ty - 1 : ty;
+  return y + '-' + m[2] + '-' + m[1];
+}
+
 // Cuenta atrás del próximo partido; `todayISO` es el día de hoy en Atlantic/Canary.
 export function countdownLabel(dateISO, todayISO) {
   const day = value => {

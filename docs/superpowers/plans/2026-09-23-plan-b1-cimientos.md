@@ -178,7 +178,7 @@ export function coverageNote(team, group)
   //   los del calendario contra retirados más lo que la clasificación cuenta de más si un retirado no está en el
   //   calendario, medido con los partidos con resultado (pj − withResult), nunca con el calendario entero, y como
   //   mucho tantos como veces se enfrenta a cualquier otro rival; null si withResult explica todo el PJ
-export function homeAwayTable(group, side)                                 // side 'casa' | 'fuera' → Row[] de esa condición, pos 1..N y retirados al final
+export function homeAwayTable(group, side)                                 // side 'casa' | 'fuera' → Row[] de esa condición, pos 1..N y retirados al final; RangeError con otra condición
 export function seasonSummary(team, group)
   // → { pos, of, pts, g, e, p, gf, gc,         // de la clasificación: null sin fila; of cuenta los retirados
   //     perMatch: { gf, gc } | null,            // medias sin redondear

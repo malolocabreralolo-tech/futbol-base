@@ -60,6 +60,26 @@ Después de activar, fija la línea base de desvío de marcadores para que la te
 python3 scripts/score_deviation.py --write-baseline
 ```
 
+Comprueba también, a mano, que ninguna fase de la temporada nueva cae en «otra-…», la clave que da `competitionKey` (`src/model.js`) a una fase que no reconoce. Ninguna prueba lo detecta, y a propósito: `phases.json` está congelada, y una fase nueva de la fuente no debe bloquear al bot. Pero una fase sin clasificar recibe en `src/myteam.js` el nivel de la Primera Fase, así que una «Tercera Fase» nunca provocaría un cambio de fase:
+
+```bash
+node --input-type=module -e "
+import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
+import { PORTAL } from './src/config.js';
+import { buildSeason } from './src/model.js';
+const data = vm.createContext({});
+for (const file of ['data-benjamin.js', 'data-prebenjamin.js', 'data-history.js'])
+  vm.runInContext(readFileSync(file, 'utf8').replace(/^const /gm, 'var '), data);
+const season = buildSeason({ name: PORTAL.season, current: true, benjamin: data.BENJAMIN, prebenjamin: data.PREBENJAMIN, history: data.HISTORY });
+const otras = season.groups.filter(group => /(^|-)otra-/.test(group.compKey));
+for (const group of otras) console.log(group.cat, group.id, group.phase, '→', group.compKey);
+console.log(season.name + ':', season.groups.length, 'grupos,', otras.length, 'en otra-…');
+"
+```
+
+La última línea debe acabar en «0 en otra-…». Si sale algún grupo (fuera de Gran Canaria, la clave lleva delante la isla, como `lanzarote-otra-…`), añade su fase a `PHASE_TABLE` en `src/model.js` y, si va después de la Primera Fase, a `PHASE_LEVEL` en `src/myteam.js`, con sus pruebas.
+
 La activación vuelve a verificar las fuentes. Guarda una copia en `backups/temporada-FECHA/`, prepara la nueva base y genera los archivos en un directorio temporal. Solo tras completar esa generación reemplaza los archivos de trabajo. No publica ni hace push por su cuenta.
 
 Se conservan partidos, clasificaciones, goleadores y actas anteriores. Se crea `data-season-2025-2026.js` y la Copa Maspalomas 2026 permanece asociada a 2025/26, también al consultar el archivo. Los favoritos siguen guardados: si un equipo cambia de grupo o categoría, la portada permite elegir su nueva ubicación.

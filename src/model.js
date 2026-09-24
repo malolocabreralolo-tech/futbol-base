@@ -255,7 +255,7 @@ export function buildCups({ season, benjamin = [], prebenjamin = [] } = {}) {
 /* ── Competición y etiqueta de grupo (spec §5.3 y §4.7) ────────────────────
  *
  * competitionKey(raw, season) → { cat, island, division, phase, cup, key, label }
- *   division: 'preferente' | 'primera' | 'unica'
+ *   division: 'preferente' | 'primera' | 'unica' | null
  *   phase:    'primera-fase' | 'segunda-fase' | 'segunda-a'…'segunda-e' |
  *             'fase-1' | 'fase-2' | 'oro' | 'plata' | 'bronce' | null
  *   cup:      'campeones' | 'insular' | 'maspalomas' | null
@@ -263,8 +263,12 @@ export function buildCups({ season, benjamin = [], prebenjamin = [] } = {}) {
  *             y categoría; sin categoría ni temporada, que van en c y s)
  *   label:    nombre legible de la competición, sin categoría ni grupo
  * Una fase que no está en la tabla sale sin clasificar (division null), con
- * una clave 'otra-…' y la fase de la fuente como nombre: una fase nueva no
- * rompe la interfaz, y el test de phases.json la detecta. */
+ * una clave 'otra-…' (tras la isla, fuera de Gran Canaria) y la fase de la
+ * fuente como nombre: una fase nueva no rompe la interfaz, pero ninguna prueba
+ * la detecta, porque phases.json está congelada. Además, myteam.js le da nivel
+ * 1, el de la Primera Fase: una «Tercera Fase» nunca provocaría un cambio de
+ * fase. Por eso docs/temporada-nueva.md pide comprobar a mano, tras activar
+ * una temporada, que ninguna fase cae en 'otra-…'. */
 
 const ISLAND_NAMES = { grancanaria: 'Gran Canaria', lanzarote: 'Lanzarote', fuerteventura: 'Fuerteventura' };
 const CAT_NAMES = { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' };
@@ -588,8 +592,12 @@ export function coverageNote(team, group) {
 /* Vistas Casa y Fuera de la Tabla (§4.4), desde el calendario. Mismos equipos
  * que la clasificación oficial (o los del calendario si llega vacía), con
  * `retired` marcado. Orden: retirados al final; luego puntos, diferencia,
- * goles a favor y puesto oficial. */
+ * goles a favor y puesto oficial. Otra condición que 'casa' o 'fuera' lanza
+ * RangeError: una errata no enseña la tabla de fuera en silencio. */
 export function homeAwayTable(group, side) {
+  if (side !== 'casa' && side !== 'fuera') {
+    throw new RangeError(`homeAwayTable: condición «${side}» no válida; se acepta 'casa' o 'fuera'`);
+  }
   const retired = retiredTeams(group);
   const standings = group.standings || [];
   const names = standings.length ? standings.map(row => row.team) : activeTeams(group, retired);

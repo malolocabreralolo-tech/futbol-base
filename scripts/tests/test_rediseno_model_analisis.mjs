@@ -202,6 +202,13 @@ test('homeAwayTable: Casa y Fuera de PG2 desde el calendario', () => {
   }
 });
 
+test('homeAwayTable: RangeError con una condición que no es casa ni fuera', () => {
+  // Una errata enseñaría la tabla de fuera sin ningún error, como pasaría en crest, formChips o tabbar.
+  for (const side of ['local', 'visitante', 'Casa', 'home', 'away', '', undefined]) {
+    assert.throws(() => homeAwayTable(group('PG2'), side), RangeError, String(side));
+  }
+});
+
 test('seasonSummary: «La temporada en cifras» de Las Mesas (maqueta 4)', () => {
   const s = seasonSummary('Las Mesas Hu.', group('PG2'));
   assert.deepEqual([s.pos, s.of, s.pts, s.g, s.e, s.p, s.gf, s.gc], [9, 15, 37, 12, 1, 15, 90, 120]);

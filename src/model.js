@@ -1041,3 +1041,26 @@ export function sourceInfo(group, historical = false) {
 export function seasonLabel(season) {
   return String(season ?? '').replace(/^(\d{4})-\d{2}(\d{2})$/, '$1/$2');
 }
+
+// La ronda `r` de un grupo (§4.1): la de esa clave (Round.key) o, si no hay, la del mismo número
+// («30» o «Jornada 30» en un enlace escrito a mano o antiguo; las claves '1'…'14' de PFV2). null si
+// no hay ninguna. La usan el router (una jornada que la pantalla sabe leer no se quita) y Jornada.
+export function findRound(group, r) {
+  if (r == null || r === '') return null;
+  const rounds = group.rounds || [];
+  const exact = rounds.find((round) => round.key === r);
+  if (exact) return exact;
+  const n = jornadaNumber(r);
+  return n === null ? null : rounds.find((round) => round.n === n) || null;
+}
+
+// (r, h, a) identifica un partido del grupo: en su ronda (findRound) y, si ahí no está, el único
+// partido de h contra a del grupo (un enlace con otra jornada). null si no hay ninguno o hay dos.
+// La usan el router y la pantalla Partido.
+export function findMatch(group, { r, h, a } = {}) {
+  const round = findRound(group, r);
+  const inRound = round ? round.matches.find((m) => m.home === h && m.away === a) : null;
+  if (inRound) return inRound;
+  const all = (group.rounds || []).flatMap((x) => x.matches.filter((m) => m.home === h && m.away === a));
+  return all.length === 1 ? all[0] : null;
+}

@@ -1,0 +1,644 @@
+// Plan B2, tarea 6: el router (spec §4.1, §5.1, §7 y §8). Funciones puras sobre las fixtures
+// congeladas y startRouter con un window y un document falsos: token de navegación con promesas
+// controladas, enlaces antiguos, historial, «‹», desplazamiento, foco y Reintentar.
+import { test } from 'node:test';
+import { strict as assert } from 'node:assert';
+import { fixture } from './fixtures/rediseno/load.mjs';
+import { buildSeason, buildCups, findRound, findMatch } from '../../src/model.js';
+import { buildClubIndex } from '../../src/myteam.js';
+import { teamNames } from './fixtures/rediseno/simulate.mjs';
+import { html } from '../../src/html.js';
+import { SCREENS, parseRoute, routeHref } from '../../src/links.js';
+import { routeTitle } from '../../src/shell.js';
+import { resolveParams, historyMode, parentOf, activeTab, routeIsMine, startRouter } from '../../src/router.js';
+import { screen as pendiente } from '../../src/screen-pendiente.js';
+import { SCREEN_MAP } from '../../src/screens.js';
+
+const PORTAL = '2025-2026';
+const raw = fixture('current-2025-2026');
+const current = buildSeason({ name: raw.season, current: true, ...raw });
+const pastRaw = fixture('historical-2024-2025');
+const past = buildSeason({ name: pastRaw.season, current: false, benjamin: pastRaw.benjamin, prebenjamin: pastRaw.prebenjamin });
+const cups = buildCups({ season: '2025-2026', ...fixture('cups-2025-2026') });
+const SEASONS = [{ name: '2025-2026', current: true }, { name: '2024-2025', current: false }];
+const group = (id) => current.groups.find((g) => g.id === id);
+const MY_TEAM = { name: 'Las Mesas Hu.', season: PORTAL, cat: 'prebenjamin', groupId: 'PG2' };
+const OK = { status: 'ok', group: group('PG2'), name: 'Las Mesas Hu.', cat: 'prebenjamin' };
+const ASK = { status: 'ask', candidates: [{ group: group('PG2'), name: 'Las Mesas Hu.', cat: 'prebenjamin' }] };
+// PG2, jornada 30: Las Mesas Hu. 2–7 AD Huracán y Acodetti 12–1 Santa Brígida.
+const J30 = '#/partido?g=PG2&r=Jornada%2030&h=Las%20Mesas%20Hu.&a=AD%20Hurac%C3%A1n';
+const OTHER = '#/partido?g=PG2&r=Jornada%2030&h=Acodetti&a=Santa%20Br%C3%ADgida';
+
+// Índice de clubes con un nombre más de Las Mesas Hu. (sin punto), del mismo club.
+const INDEX = buildClubIndex([...teamNames(current, cups), 'Las Mesas Hu'], fixture('shields'));
+// Modelo con el contrato de createModel: la temporada pasada solo existe cuando está en `loaded`,
+// que se lee en cada llamada (una carga de needs lo amplía).
+function model(loaded = []) {
+  const seasons = () => ({ [PORTAL]: current, ...(loaded.includes('2024-2025') ? { '2024-2025': past } : {}) });
+  return {
+    season: (name) => seasons()[name] || null,
+    group: (season, id) => seasons()[season]?.groups.find((g) => g.id === id) || null,
+    cups: () => cups,
+    clubIndex: () => INDEX,
+  };
+}
+function context({ resolution = OK, loaded = [] } = {}) {
+  return () => ({
+    portal: { season: PORTAL, defaultTeam: { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' } },
+    model: model(loaded), resolution, myTeam: MY_TEAM, today: '2026-09-23', health: null,
+    datasets: { seasons: SEASONS, seasonRaw: {} },
+  });
+}
+const resolve = (hash, options) => resolveParams(parseRoute(hash), context(options)());
+// Una redirección como [href, aviso]; así se lee igual que en la barra de direcciones.
+const target = (res) => (res.redirect ? [routeHref(res.redirect.screen, res.redirect.params), res.redirect.notice] : res);
+
+// ── resolveParams: cada fila de §4.1 ─────────────────────────────────────
+
+test('Mi equipo, Temporadas, Fuentes y Ajustes no llevan parámetros', () => {
+  for (const hash of ['#/', '#/?g=PG2', '#/temporadas', '#/fuentes?x=1', '#/ajustes']) assert.deepEqual(resolve(hash), { params: {} }, hash);
+});
+
+test('Jornada y Tabla: s es la temporada del portal y g, el grupo resuelto de mi equipo', () => {
+  assert.deepEqual(resolve('#/jornada'), { params: { s: PORTAL, g: 'PG2' } });
+  assert.deepEqual(resolve('#/tabla?v=forma'), { params: { v: 'forma', s: PORTAL, g: 'PG2' } });
+  assert.deepEqual(resolve('#/jornada?g=PG3&r=Jornada%203'), { params: { g: 'PG3', r: 'Jornada 3', s: PORTAL } });
+  assert.deepEqual(resolve('#/tabla?s=2025-2026&g=A2'), { params: { s: PORTAL, g: 'A2' } });
+});
+
+test('una vista de Tabla o una jornada que no existen se quitan (replaceState, sin aviso); la jornada vale por su número', () => {
+  assert.deepEqual(target(resolve('#/tabla?g=PG2&v=rara')), ['#/tabla?g=PG2', null]);
+  assert.deepEqual(target(resolve('#/jornada?r=Jornada%2099')), ['#/jornada', null]);
+  assert.deepEqual(target(resolve('#/jornada?g=A2&r=Jornada%2030')), ['#/jornada?g=A2', null], 'A2 tiene 22 jornadas');
+  // Un enlace escrito a mano con el número: la pantalla lo lee (findRound), y el router no lo quita.
+  assert.deepEqual(resolve('#/jornada?g=PG2&r=30'), { params: { g: 'PG2', r: '30', s: PORTAL } });
+});
+
+test('findRound y findMatch: la ronda por clave o número; el partido en su ronda o, si no, el único h–a del grupo', () => {
+  const pg2 = group('PG2');
+  assert.equal(findRound(pg2, 'Jornada 30').key, 'Jornada 30');
+  assert.equal(findRound(pg2, '30').key, 'Jornada 30');
+  assert.equal(findRound(pg2, 'J30').key, 'Jornada 30');
+  assert.equal(findRound(pg2, 'Jornada 99'), null);
+  assert.equal(findRound(pg2, ''), null);
+  const mesas = { h: 'Las Mesas Hu.', a: 'AD Huracán' };
+  assert.equal(findMatch(pg2, { r: 'Jornada 30', ...mesas }).dateISO, '2026-06-02');
+  assert.equal(findMatch(pg2, { r: '30', ...mesas }).dateISO, '2026-06-02');
+  assert.equal(findMatch(pg2, { r: 'Jornada 3', ...mesas }).dateISO, '2026-06-02', 'otra jornada: el único Las Mesas–Huracán');
+  assert.equal(findMatch(pg2, mesas).dateISO, '2026-06-02');
+  assert.equal(findMatch(pg2, { r: 'Jornada 30', h: 'AD Huracán', a: 'Las Mesas Hu.' }).dateISO, '2026-02-12', 'el de la ida, J15');
+  assert.equal(findMatch(pg2, { r: 'Jornada 30', h: 'x', a: 'y' }), null);
+});
+
+test('temporada pasada: sin cargar queda pendiente; cargada, el primer grupo de liga de mi categoría con su nombre', () => {
+  assert.deepEqual(resolve('#/tabla?s=2024-2025'), { params: { s: '2024-2025' }, pending: true });
+  assert.deepEqual(resolve('#/tabla?s=2024-2025', { loaded: ['2024-2025'] }), { params: { s: '2024-2025', g: 'PGC2' } });
+  // En benjamín de 2024-25 (P1) Las Mesas Hu. no jugó: a Ligas de esa temporada y categoría.
+  const benjamin = { status: 'ok', group: group('A2'), name: 'Las Mesas Hu.', cat: 'benjamin' };
+  assert.deepEqual(target(resolve('#/jornada?s=2024-2025', { loaded: ['2024-2025'], resolution: benjamin })),
+    ['#/ligas?s=2024-2025&c=benjamin&to=jornada', 'Las Mesas Hu. no aparece en la temporada 2024/25']);
+});
+
+test('con E o X, Jornada y Tabla abren #/ligas de la temporada actual con «Elige tu equipo en Mi equipo»', () => {
+  for (const resolution of [ASK, { status: 'absent' }]) {
+    assert.deepEqual(target(resolve('#/jornada', { resolution })), ['#/ligas?to=jornada', 'Elige tu equipo en Mi equipo']);
+    assert.deepEqual(target(resolve('#/tabla?v=goles', { resolution })), ['#/ligas?to=tabla', 'Elige tu equipo en Mi equipo']);
+    // Con el grupo en el enlace, la pantalla se abre igual.
+    assert.deepEqual(resolve('#/tabla?g=PG3', { resolution }), { params: { g: 'PG3', s: PORTAL } });
+  }
+});
+
+test('un grupo que no es de liga lleva a #/copa (liguilla y cuadro de la Maspalomas Cup)', () => {
+  assert.equal(cups.groups.find((g) => g.id === 'MCP3').kind, 'cup-league');
+  assert.equal(cups.groups.find((g) => g.id === 'MCPK1').kind, 'cup-bracket');
+  assert.deepEqual(target(resolve('#/tabla?g=MCP3')), ['#/copa?g=MCP3', null]);
+  assert.deepEqual(target(resolve('#/jornada?g=MCPK1&r=Final')), ['#/copa?g=MCPK1', null]);
+});
+
+test('grupo que no existe: a #/ligas con aviso; temporada desconocida: se quita, con aviso', () => {
+  assert.deepEqual(target(resolve('#/tabla?g=LZS1')), ['#/ligas?c=prebenjamin&to=tabla', 'No encontramos el grupo LZS1 en la temporada 2025/26']);
+  assert.deepEqual(target(resolve('#/tabla?s=2024-2025&g=PG2', { loaded: ['2024-2025'] })),
+    ['#/ligas?s=2024-2025&c=prebenjamin&to=tabla', 'No encontramos el grupo PG2 en la temporada 2024/25']);
+  assert.deepEqual(target(resolve('#/tabla?s=1999-2000&g=PG2')), ['#/tabla?g=PG2', 'No existe la temporada 1999/00; te enseñamos la actual']);
+});
+
+test('Explorar, Ligas, Copa, Goleadores y Récords: la temporada por defecto y sus parámetros', () => {
+  assert.deepEqual(resolve('#/explorar?q=Mesas'), { params: { q: 'Mesas', s: PORTAL } });
+  assert.deepEqual(resolve('#/ligas?c=benjamin&i=grancanaria&f=segunda-fase-a&to=tabla'),
+    { params: { c: 'benjamin', i: 'grancanaria', f: 'segunda-fase-a', to: 'tabla', s: PORTAL } });
+  assert.deepEqual(resolve('#/copa?g=MCPK1'), { params: { g: 'MCPK1', s: PORTAL } });
+  assert.deepEqual(resolve('#/goleadores?s=2024-2025&c=prebenjamin'), { params: { s: '2024-2025', c: 'prebenjamin' } });
+  assert.deepEqual(resolve('#/records?c=benjamin'), { params: { c: 'benjamin', s: PORTAL } });
+});
+
+test('Partido: vale si findMatch lo encuentra (su ronda, o el único h–a del grupo); si no, a su jornada con aviso', () => {
+  assert.deepEqual(resolve(J30), { params: { g: 'PG2', r: 'Jornada 30', h: 'Las Mesas Hu.', a: 'AD Huracán', s: PORTAL } });
+  // Por su número, o con otra jornada pero un único Huracán–Las Mesas en el grupo (J15): la pantalla lo lee.
+  assert.deepEqual(resolve('#/partido?g=PG2&r=30&h=Las%20Mesas%20Hu.&a=AD%20Hurac%C3%A1n'), { params: { g: 'PG2', r: '30', h: 'Las Mesas Hu.', a: 'AD Huracán', s: PORTAL } });
+  assert.deepEqual(resolve('#/partido?g=PG2&r=Jornada%2030&h=AD%20Hurac%C3%A1n&a=Las%20Mesas%20Hu.'),
+    { params: { g: 'PG2', r: 'Jornada 30', h: 'AD Huracán', a: 'Las Mesas Hu.', s: PORTAL } });
+  // CD Batán se retiró: sus partidos no están en el calendario.
+  assert.deepEqual(target(resolve('#/partido?g=PG2&r=Jornada%2030&h=Telde&a=CD%20Bat%C3%A1n')),
+    ['#/jornada?g=PG2&r=Jornada%2030', 'No encontramos ese partido']);
+  assert.deepEqual(target(resolve('#/partido?g=PG2&r=Jornada%2099&h=x&a=y')), ['#/jornada?g=PG2', 'No encontramos ese partido']);
+  assert.deepEqual(target(resolve('#/partido?h=x&a=y')), ['#/jornada', 'No encontramos ese partido']);
+  assert.deepEqual(resolve('#/partido?s=2024-2025&g=PGC2&r=Jornada%201&h=x&a=y'),
+    { params: { s: '2024-2025', g: 'PGC2', r: 'Jornada 1', h: 'x', a: 'y' }, pending: true });
+});
+
+test('Equipo: g es obligatorio; sin él, el equipo se busca en Explorar', () => {
+  assert.deepEqual(resolve('#/equipo?g=PG2&t=Las%20Mesas%20Hu.'), { params: { g: 'PG2', t: 'Las Mesas Hu.', s: PORTAL } });
+  assert.deepEqual(target(resolve('#/equipo?t=Las%20Mesas%20Hu.')), ['#/explorar?q=Las%20Mesas%20Hu.', null]);
+  assert.deepEqual(target(resolve('#/equipo?g=ZZ9&t=X')), ['#/explorar?q=X', 'No encontramos el grupo ZZ9 en la temporada 2025/26']);
+});
+
+// ── historyMode, parentOf, activeTab y routeIsMine ───────────────────────
+
+test('historyMode: cambiar de pantalla es push; jornada, vista de Tabla o búsqueda, replace', () => {
+  const R = parseRoute;
+  assert.equal(historyMode(null, R('#/tabla')), 'push');
+  assert.equal(historyMode(R('#/'), R('#/jornada')), 'push');
+  assert.equal(historyMode(R('#/jornada?g=PG2&r=Jornada%201'), R('#/jornada?g=PG2&r=Jornada%202')), 'replace');
+  assert.equal(historyMode(R('#/jornada?g=PG2'), R('#/jornada?g=PG2&r=Jornada%202')), 'replace');
+  assert.equal(historyMode(R('#/jornada?g=PG2&r=Jornada%201'), R('#/jornada?g=PG3&r=Jornada%201')), 'push');
+  assert.equal(historyMode(R('#/tabla?g=PG2&v=puntos'), R('#/tabla?g=PG2&v=forma')), 'replace');
+  assert.equal(historyMode(R('#/tabla?g=PG2'), R('#/tabla?s=2024-2025&g=PG2')), 'push');
+  assert.equal(historyMode(R('#/explorar?q=Mes'), R('#/explorar?q=Mesas')), 'replace');
+  assert.equal(historyMode(R('#/goleadores?g=PG2&q=a'), R('#/goleadores?g=PG2&q=ab')), 'replace');
+  assert.equal(historyMode(R(J30), R(OTHER)), 'push');
+  assert.equal(historyMode(R('#/tabla?g=PG2'), R('#/tabla?g=PG2')), 'replace', 'la misma ruta no crea otra entrada');
+});
+
+test('parentOf: Partido → su jornada; lo que cuelga de Explorar → Explorar; los destinos principales, nada', () => {
+  assert.deepEqual(parentOf(parseRoute(J30)), { screen: 'jornada', params: { g: 'PG2', r: 'Jornada 30' } });
+  assert.deepEqual(parentOf({ screen: 'partido', params: { s: '2024-2025', g: 'PGC2', r: 'Jornada 3', h: 'x', a: 'y' } }),
+    { screen: 'jornada', params: { s: '2024-2025', g: 'PGC2', r: 'Jornada 3' } });
+  for (const screen of ['equipo', 'copa', 'goleadores', 'ligas', 'temporadas', 'records', 'fuentes', 'ajustes']) {
+    assert.deepEqual(parentOf({ screen, params: { g: 'PG2' } }), { screen: 'explorar', params: {} }, screen);
+  }
+  for (const screen of ['', 'jornada', 'tabla', 'explorar']) assert.equal(parentOf({ screen, params: {} }), null, screen);
+});
+
+test('activeTab: el destino marcado de cada fila de §4.1, "page" en los principales y "true" en las demás', () => {
+  const tab = (hash, last = null, mine = false) => activeTab(parseRoute(hash), last, mine);
+  assert.deepEqual(tab('#/'), { active: 'miequipo', current: 'page' });
+  assert.deepEqual(tab('#/jornada?g=PG3'), { active: 'jornada', current: 'page' });
+  assert.deepEqual(tab('#/tabla'), { active: 'tabla', current: 'page' });
+  assert.deepEqual(tab('#/explorar?q=x'), { active: 'explorar', current: 'page' });
+  // Partido: el último destino principal; por enlace directo, Mi equipo si es mío y Jornada si no.
+  assert.deepEqual(tab(J30, 'tabla', true), { active: 'tabla', current: 'true' });
+  assert.deepEqual(tab(J30, null, true), { active: 'miequipo', current: 'true' });
+  assert.deepEqual(tab(OTHER, null, false), { active: 'jornada', current: 'true' });
+  assert.deepEqual(tab(OTHER, 'partido', false), { active: 'jornada', current: 'true' }, 'solo cuenta un destino principal');
+  // Equipo: Mi equipo si (s, g, t) es mi equipo; si no, Explorar.
+  assert.deepEqual(tab('#/equipo?g=PG2&t=Las%20Mesas%20Hu.', 'tabla', true), { active: 'miequipo', current: 'true' });
+  assert.deepEqual(tab('#/equipo?g=PG2&t=Acodetti', 'tabla', false), { active: 'explorar', current: 'true' });
+  // Ligas: Explorar, o el de `to` si viene de «Otro grupo».
+  assert.deepEqual(tab('#/ligas?c=prebenjamin'), { active: 'explorar', current: 'true' });
+  assert.deepEqual(tab('#/ligas?to=tabla'), { active: 'tabla', current: 'true' });
+  assert.deepEqual(tab('#/ligas?to=jornada'), { active: 'jornada', current: 'true' });
+  for (const hash of ['#/copa?g=MCPK1', '#/goleadores', '#/temporadas', '#/records', '#/fuentes', '#/ajustes']) {
+    assert.deepEqual(tab(hash, 'tabla'), { active: 'explorar', current: 'true' }, hash);
+  }
+});
+
+test('routeIsMine: el partido o la ficha de mi equipo, en su grupo y su temporada', () => {
+  const R = (hash) => ({ screen: parseRoute(hash).screen, params: { s: PORTAL, ...parseRoute(hash).params } });
+  assert.equal(routeIsMine(R(J30), OK), true);
+  assert.equal(routeIsMine(R(OTHER), OK), false);
+  assert.equal(routeIsMine(R('#/equipo?g=PG2&t=Las%20Mesas%20Hu.'), OK), true);
+  assert.equal(routeIsMine(R('#/equipo?g=PG3&t=Las%20Mesas%20Hu.'), OK), false);
+  assert.equal(routeIsMine({ screen: 'partido', params: { s: '2024-2025', g: 'PG2', r: 'Jornada 30', h: 'Las Mesas Hu.', a: 'x' } }, OK), false);
+  assert.equal(routeIsMine(R(J30), ASK), false);
+  assert.equal(routeIsMine(R('#/tabla?g=PG2'), OK), false);
+});
+
+// ── Pantallas registradas y pantalla provisional ─────────────────────────
+
+// Rutas de B3 (decisión 6 de B2): la pantalla provisional. Jornada, Tabla y Partido la llevan
+// hasta que la Tarea 12 registra las suyas.
+const B3 = ['explorar', 'equipo', 'ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes'];
+
+test('cada ruta de §4.1 tiene pantalla; las de B3 pintan la provisional con su h1 y el vacío', () => {
+  assert.deepEqual(Object.keys(SCREEN_MAP).sort(), [...SCREENS].sort());
+  assert.equal(SCREEN_MAP[''].id, 'home');
+  for (const name of SCREENS) assert.equal(typeof SCREEN_MAP[name].render, 'function', name);
+  for (const name of B3) {
+    assert.equal(SCREEN_MAP[name], pendiente, name);
+    const back = parentOf({ screen: name, params: {} });
+    const out = String(pendiente.render({ route: { screen: name, params: {} }, backHref: back ? routeHref(back.screen, back.params) : null }));
+    assert.equal((out.match(/<h1>/g) || []).length, 1, name);
+    assert.ok(out.includes(`<h1>${routeTitle(name)}</h1>`), name);
+    assert.ok(out.includes('Esta pantalla llega en la próxima fase del rediseño.'), name);
+    assert.match(out, new RegExp(`^<section data-screen="pendiente" data-route="${name}">`), name);
+  }
+  assert.deepEqual(pendiente.needs({}, {}), []);
+});
+
+// ── startRouter con un window y un document falsos ─────────────────────
+
+// Lo justo del navegador: historial con entradas y estado, location.hash, eventos de window y de
+// document, desplazamiento, la barra de 4 destinos y un <main> que guarda el HTML pintado y crea
+// su h1 y sus elementos con id en cada pintado.
+function fakeBrowser(hash = '#/') {
+  const listeners = { window: {}, document: {} };
+  const on = (where) => (type, fn) => { (listeners[where][type] ||= []).push(fn); };
+  const fire = (where, type, event) => (listeners[where][type] || []).forEach((fn) => fn(event));
+  const entries = [{ hash, state: null }];
+  let index = 0;
+  const hashOf = (url) => (String(url).includes('#') ? String(url).slice(String(url).indexOf('#')) : String(url));
+  const history = {
+    scrollRestoration: 'auto',
+    get state() { return entries[index].state; },
+    pushState(state, _title, url) {
+      entries.splice(index + 1, entries.length, { hash: hashOf(url), state: structuredClone(state) });
+      index++;
+    },
+    replaceState(state, _title, url) {
+      entries[index] = { hash: url === undefined ? entries[index].hash : hashOf(url), state: structuredClone(state) };
+    },
+    back() {
+      if (index === 0) return;
+      index--;
+      queueMicrotask(() => { fire('window', 'popstate', { state: entries[index].state }); fire('window', 'hashchange', {}); });
+    },
+  };
+  const doc = { title: 'Fútbol Base Las Palmas', activeElement: null, addEventListener: on('document') };
+  function element(tag, attrs = {}) {
+    const el = {
+      tagName: tag.toUpperCase(), attrs: { ...attrs }, focused: 0, scrolled: 0,
+      get id() { return el.attrs.id || ''; },
+      getAttribute: (n) => (Object.hasOwn(el.attrs, n) ? el.attrs[n] : null),
+      setAttribute: (n, v) => { el.attrs[n] = String(v); },
+      removeAttribute: (n) => { delete el.attrs[n]; },
+      hasAttribute: (n) => Object.hasOwn(el.attrs, n),
+      closest: (sel) => (sel === 'a[href],[data-action]'
+        && ((el.tagName === 'A' && el.hasAttribute('href')) || el.hasAttribute('data-action')) ? el : null),
+      focus: () => { el.focused++; doc.activeElement = el; },
+      scrollIntoView: () => { el.scrolled++; },
+    };
+    return el;
+  }
+  const tabs = ['#/', '#/jornada', '#/tabla', '#/explorar'].map((href) => element('a', { class: 'tab', href }));
+  const main = element('main', { id: 'contenido' });
+  let painted = { h1: null, ids: new Map() };
+  const root = {
+    markup: '',
+    set innerHTML(markup) {
+      this.markup = markup;
+      painted = {
+        h1: markup.includes('<h1') ? element('h1') : null,
+        ids: new Map([...markup.matchAll(/ id="([^"]+)"/g)].map(([, id]) => [id, element('a', { id })])),
+      };
+    },
+    get innerHTML() { return this.markup; },
+    querySelector: (sel) => (sel === 'h1' ? painted.h1 : null),
+    contains: (el) => el === painted.h1 || [...painted.ids.values()].includes(el),
+  };
+  doc.querySelectorAll = (sel) => (sel === '.tabbar a.tab' ? tabs : []);
+  doc.getElementById = (id) => (id === 'contenido' ? main : painted.ids.get(id) || null);
+  const win = {
+    document: doc, history, scrollY: 0,
+    location: { get hash() { return entries[index].hash; } },
+    scrollTo(_x, y) { win.scrollY = y; fire('window', 'scroll', {}); },
+    addEventListener: on('window'),
+  };
+  return {
+    win, root, doc, main,
+    entries: () => entries.map((e) => e.hash),
+    index: () => index,
+    h1: () => root.querySelector('h1'),
+    marks: () => tabs.filter((t) => t.attrs['aria-current']).map((t) => [t.attrs.href, t.attrs['aria-current']]),
+    // Un clic como lo recibe la delegación del documento; devuelve si el router lo atendió.
+    click(attrs, tag = 'a') {
+      let prevented = false;
+      fire('document', 'click', { target: element(tag, attrs), button: 0, defaultPrevented: false, preventDefault() { prevented = true; } });
+      return prevented;
+    },
+    // Un hash escrito a mano en la barra de direcciones: entrada nueva del navegador, sin estado.
+    type(newHash) {
+      entries.splice(index + 1, entries.length, { hash: newHash, state: null });
+      index++;
+      fire('window', 'popstate', { state: null });
+      fire('window', 'hashchange', {});
+    },
+    scroll(y) { win.scrollY = y; fire('window', 'scroll', {}); },
+  };
+}
+
+// Pantalla falsa: su h1 es su id y enseña la ruta resuelta en <p class="where">.
+function screen(id, { log = [], needs = () => [], mount = null, body = null } = {}) {
+  return {
+    id,
+    needs: (params, datasets) => { log.push(`needs ${id}`); return needs(params, datasets); },
+    render: (ctx) => {
+      log.push(`render ${id}`);
+      return html`<section data-screen="${id}"><header class="screen-head"><h1>${id}</h1></header><p class="where">${routeHref(ctx.route.screen, ctx.params)}</p>${body ? body(ctx) : ''}</section>`;
+    },
+    mount: (root, ctx, nav) => { log.push(`mount ${id}`); return mount ? mount(root, ctx, nav) : undefined; },
+  };
+}
+const where = (b) => (b.root.innerHTML.match(/<p class="where">([^<]*)<\/p>/) || [])[1]?.replace(/&amp;/g, '&');
+const deferred = () => {
+  let resolve, reject;
+  const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
+  return { promise, resolve, reject };
+};
+const tick = () => new Promise((resolve) => setImmediate(resolve));
+// Arranca el router sin volcar en la salida los console.error esperados (cajas de error).
+async function quietly(options) {
+  const original = console.error;
+  console.error = () => {};
+  try {
+    const router = startRouter(options);
+    await router.idle();
+    return router;
+  } finally {
+    console.error = original;
+  }
+}
+
+test('la ruta inicial pasa por needs, render y mount; marca la barra y no mueve el foco', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  const router = startRouter({ screens: { '': screen('home', { log }) }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.deepEqual(log, ['needs home', 'render home', 'mount home']);
+  assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
+  assert.equal(b.h1().focused, 0, 'la carga inicial no mueve el foco');
+  assert.deepEqual(b.marks(), [['#/', 'page']]);
+  assert.equal(b.doc.title, 'Fútbol Base Las Palmas');
+  assert.equal(b.win.history.scrollRestoration, 'manual');
+  assert.deepEqual(router.current(), { screen: '', params: {} });
+});
+
+test('needs recibe la temporada del portal del contexto: ninguna pantalla la lee de config.js (R2-1)', async () => {
+  const b = fakeBrowser('#/tabla?g=PG2');
+  const received = [];
+  const tabla = { ...screen('tabla'), needs: (params, datasets, options) => { received.push(options); return []; } };
+  const router = startRouter({ screens: { tabla }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.deepEqual(received, [{ portalSeason: PORTAL }]);
+});
+
+test('token: una respuesta lenta (o un error) nunca pinta sobre la ruta nueva', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  const slow = deferred();
+  const failing = deferred();
+  const screens = {
+    '': screen('home', { log }),
+    tabla: screen('tabla', { log, needs: () => [slow.promise] }),
+    explorar: screen('explorar', { log, needs: () => [failing.promise] }),
+    jornada: screen('jornada', { log }),
+  };
+  const router = startRouter({ screens, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.equal(b.click({ href: '#/tabla' }), true);
+  assert.match(b.root.innerHTML, /data-skeleton="tabla"/, 'el esqueleto mientras carga');
+  b.click({ href: '#/explorar' });
+  b.click({ href: '#/jornada' });
+  await router.idle();
+  assert.match(b.root.innerHTML, /<h1>jornada<\/h1>/);
+  slow.resolve();
+  failing.reject(new Error('la temporada 2024/25'));
+  await tick();
+  assert.match(b.root.innerHTML, /<h1>jornada<\/h1>/, 'la tabla y el error llegaron tarde y no pintan');
+  assert.ok(!log.includes('render tabla') && !log.includes('render explorar'));
+  assert.deepEqual(b.marks(), [['#/jornada', 'page']]);
+});
+
+test('enlace antiguo de WhatsApp: se traduce con replaceState, sin entrada nueva, y conserva su temporada', async () => {
+  const b = fakeBrowser('#section=jornadas&cat=prebenjamin&season=2025-2026&group=PG2&round=Jornada+30');
+  const router = startRouter({ screens: { '': screen('home'), jornada: screen('jornada') }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/jornada?s=2025-2026&g=PG2&r=Jornada%2030']);
+  assert.equal(where(b), '#/jornada?s=2025-2026&g=PG2&r=Jornada%2030');
+  const m = fakeBrowser('#section=jornadas&group=PG2&match=%5B%22Las+Mesas+Hu.%22%2C%22AD+Hurac%C3%A1n%22%2C%22Jornada+30%22%5D');
+  const r2 = startRouter({ screens: { '': screen('home'), partido: screen('partido') }, root: m.root, getContext: context(), window: m.win });
+  await r2.idle();
+  assert.deepEqual(m.entries(), [J30]);
+  assert.deepEqual(m.marks(), [['#/', 'true']], 'enlace directo a un partido de mi equipo: Mi equipo');
+});
+
+test('enlace antiguo «miequipo» de mi equipo (la URL que escribía la app anterior): Mi equipo, no su ficha', async () => {
+  const open = async (hash) => {
+    const b = fakeBrowser(hash);
+    const router = startRouter({ screens: { '': screen('home'), equipo: pendiente }, root: b.root, getContext: context(), window: b.win });
+    await router.idle();
+    return b.entries();
+  };
+  // El mismo nombre que el guardado, o el mismo club en el mismo grupo («Las Mesas Hu», sin punto).
+  assert.deepEqual(await open('#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=Las+Mesas+Hu.'), ['#/']);
+  assert.deepEqual(await open('#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=Las+Mesas+Hu'), ['#/']);
+  // Otro equipo, o el mismo club en otro grupo: su ficha, con la temporada del enlace (§4.1).
+  assert.deepEqual(await open('#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=AD+Hurac%C3%A1n'),
+    ['#/equipo?s=2025-2026&g=PG2&t=AD%20Hurac%C3%A1n']);
+  assert.deepEqual(await open('#section=miequipo&cat=benjamin&season=2025-2026&group=A2&team=Las+Mesas+Hu'),
+    ['#/equipo?s=2025-2026&g=A2&t=Las%20Mesas%20Hu']);
+});
+
+test('enlace directo con parámetros que faltan o no existen: la pantalla por defecto, con aviso, nunca en blanco', async () => {
+  const b = fakeBrowser('#/jornada');
+  const router = startRouter({ screens: { '': screen('home'), jornada: screen('jornada'), ligas: pendiente }, root: b.root, getContext: context({ resolution: ASK }), window: b.win });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/ligas?to=jornada']);
+  assert.match(b.root.innerHTML, /<\/header><p class="notice route-notice" role="status">Elige tu equipo en Mi equipo<\/p>/);
+  assert.deepEqual(b.marks(), [['#/jornada', 'true']]);
+  const g = fakeBrowser('#/tabla?g=LZS1');
+  const r2 = startRouter({ screens: { '': screen('home'), tabla: screen('tabla'), ligas: pendiente }, root: g.root, getContext: context(), window: g.win });
+  await r2.idle();
+  assert.deepEqual(g.entries(), ['#/ligas?c=prebenjamin&to=tabla']);
+  assert.match(g.root.innerHTML, /<h1>Ligas<\/h1><\/div><\/header><p class="notice route-notice" role="status">No encontramos el grupo LZS1 en la temporada 2025\/26<\/p>/);
+});
+
+test('temporada pasada sin cargar: needs la carga y después se pone el grupo por defecto', async () => {
+  const b = fakeBrowser('#/tabla?s=2024-2025');
+  const loaded = [];
+  const log = [];
+  const tabla = screen('tabla', { log, needs: (params) => (loaded.includes(params.s) ? [] : [Promise.resolve().then(() => { loaded.push(params.s); })]) });
+  const router = startRouter({ screens: { '': screen('home'), tabla }, root: b.root, getContext: context({ loaded }), window: b.win });
+  await router.idle();
+  assert.equal(where(b), '#/tabla?s=2024-2025&g=PGC2');
+  assert.deepEqual(b.entries(), ['#/tabla?s=2024-2025'], 'el valor por defecto no reescribe la dirección');
+  assert.deepEqual(log.filter((x) => x.startsWith('render')), ['render tabla']);
+  // Si needs no la carga, la caja de error lo dice.
+  const e = fakeBrowser('#/tabla?s=2024-2025');
+  await quietly({ screens: { '': screen('home'), tabla: screen('tabla') }, root: e.root, getContext: context(), window: e.win });
+  assert.match(e.root.innerHTML, /No se pudieron cargar los datos de la temporada 2024\/25\./);
+});
+
+test('historial: cambiar de pantalla es push; cambiar de jornada o de vista, replace', async () => {
+  const b = fakeBrowser('#/jornada?g=PG2&r=Jornada%201');
+  const router = startRouter({ screens: { '': screen('home'), jornada: screen('jornada'), tabla: screen('tabla') }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/jornada?g=PG2&r=Jornada%202' });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/jornada?g=PG2&r=Jornada%202']);
+  b.click({ href: '#/tabla' });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/jornada?g=PG2&r=Jornada%202', '#/tabla']);
+  b.click({ href: '#/tabla?v=goles' });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/jornada?g=PG2&r=Jornada%202', '#/tabla?v=goles']);
+  assert.equal(where(b), '#/tabla?s=2025-2026&g=PG2&v=goles');
+});
+
+test('Atrás y «‹» con entrada anterior de la app: history.back(), con el desplazamiento guardado y foco al h1', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  let partidoCtx = null;
+  const screens = { '': screen('home', { log }), partido: screen('partido', { log, mount: (root, ctx) => { partidoCtx = ctx; } }) };
+  const router = startRouter({ screens, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.scroll(420);
+  b.click({ href: J30 });
+  await router.idle();
+  assert.equal(b.win.scrollY, 0, 'la ficha empieza arriba');
+  assert.equal(b.h1().focused, 1, 'foco al h1 al avanzar');
+  assert.equal(b.h1().getAttribute('tabindex'), '-1');
+  assert.deepEqual(b.marks(), [['#/', 'true']], 'Partido desde Mi equipo: su destino de origen');
+  assert.equal(partidoCtx.backHref, '#/jornada?s=2025-2026&g=PG2&r=Jornada%2030');
+  assert.equal(partidoCtx.lastPrimary, 'miequipo');
+  assert.equal(b.click({ href: partidoCtx.backHref, 'data-action': 'back' }), true);
+  await tick();
+  await router.idle();
+  assert.equal(b.index(), 0);
+  assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
+  assert.equal(b.win.scrollY, 420, 'vuelve adonde estaba la portada');
+  assert.equal(b.h1().focused, 1);
+  assert.deepEqual(log.filter((x) => x === 'render home'), ['render home', 'render home'], 'popstate y hashchange: un solo pintado');
+});
+
+test('«‹» entrando por enlace directo: sigue el enlace al padre (Partido → su jornada), con push', async () => {
+  const b = fakeBrowser(OTHER);
+  let ctxSeen = null;
+  const screens = { '': screen('home'), partido: screen('partido', { mount: (root, ctx) => { ctxSeen = ctx; } }), jornada: screen('jornada') };
+  const router = startRouter({ screens, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.deepEqual(b.marks(), [['#/jornada', 'true']], 'enlace directo a un partido que no es mío: Jornada');
+  assert.equal(b.click({ href: ctxSeen.backHref, 'data-action': 'back' }), true);
+  await router.idle();
+  assert.deepEqual(b.entries(), [OTHER, '#/jornada?s=2025-2026&g=PG2&r=Jornada%2030']);
+  assert.match(b.root.innerHTML, /<h1>jornada<\/h1>/);
+  assert.deepEqual(b.marks(), [['#/jornada', 'page']]);
+});
+
+test('un hash escrito a mano es una entrada nueva de la app, y su «‹» vuelve atrás', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  const router = startRouter({ screens: { '': screen('home', { log }), tabla: screen('tabla', { log }) }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.type('#/tabla');
+  await router.idle();
+  assert.match(b.root.innerHTML, /<h1>tabla<\/h1>/);
+  assert.deepEqual(log.filter((x) => x === 'render tabla'), ['render tabla']);
+  assert.equal(b.click({ href: '#/', 'data-action': 'back' }), true);
+  await tick();
+  await router.idle();
+  assert.equal(b.index(), 0);
+  assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
+});
+
+test('error de carga: caja con Reintentar, que vuelve a pedir los datos y pinta la pantalla', async () => {
+  const b = fakeBrowser('#/tabla');
+  let calls = 0;
+  const tabla = screen('tabla', { needs: () => [++calls === 1 ? Promise.reject(new Error('la temporada 2024/25')) : Promise.resolve()] });
+  const router = await quietly({ screens: { '': screen('home'), tabla }, root: b.root, getContext: context(), window: b.win });
+  assert.match(b.root.innerHTML, /^<section data-screen="tabla" data-state="error">/);
+  assert.match(b.root.innerHTML, /<h1>Tabla<\/h1>/);
+  assert.match(b.root.innerHTML, /No se pudieron cargar los datos de la temporada 2024\/25\./);
+  assert.equal(b.click({ 'data-action': 'retry', type: 'button' }, 'button'), true);
+  await router.idle();
+  assert.match(b.root.innerHTML, /<h1>tabla<\/h1>/);
+  assert.equal(calls, 2);
+});
+
+test('un fallo de programación da la caja de error sin su mensaje; render tiene que devolver Html', async () => {
+  const b = fakeBrowser('#/tabla');
+  const tabla = { id: 'tabla', needs: () => { throw new TypeError('x is undefined'); }, render: () => html`` };
+  await quietly({ screens: { '': screen('home'), tabla }, root: b.root, getContext: context(), window: b.win });
+  assert.match(b.root.innerHTML, /No se pudieron cargar los datos de esta pantalla\./);
+  assert.doesNotMatch(b.root.innerHTML, /undefined/);
+  const t = fakeBrowser('#/tabla');
+  const texto = { id: 'tabla', needs: () => [], render: () => '<h1>sin escapar</h1>' };
+  await quietly({ screens: { '': screen('home'), tabla: texto }, root: t.root, getContext: context(), window: t.win });
+  assert.match(t.root.innerHTML, /data-state="error"/);
+  assert.doesNotMatch(t.root.innerHTML, /sin escapar/);
+});
+
+test('al cambiar de jornada el desplazamiento se queda y el foco vuelve al control pulsado (mismo id)', async () => {
+  const b = fakeBrowser('#/jornada?g=PG2&r=Jornada%201');
+  const jornada = screen('jornada', { body: (ctx) => html`<a id="siguiente" href="#/jornada?g=PG2&r=Jornada%202">›</a>` });
+  const router = startRouter({ screens: { '': screen('home'), jornada }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.scroll(150);
+  b.doc.getElementById('siguiente').focus();
+  b.click({ href: '#/jornada?g=PG2&r=Jornada%202', id: 'siguiente' });
+  await router.idle();
+  assert.equal(b.win.scrollY, 150);
+  assert.equal(b.doc.getElementById('siguiente').focused, 1, 'el control nuevo con el mismo id');
+  assert.equal(b.h1().focused, 0);
+});
+
+test('«Saltar al contenido» lleva el foco a main sin cambiar la ruta', async () => {
+  const b = fakeBrowser('#/');
+  const router = startRouter({ screens: { '': screen('home') }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.equal(b.click({ class: 'skip-link', href: '#contenido' }), true);
+  assert.deepEqual(b.entries(), ['#/']);
+  assert.equal(b.main.focused, 1);
+  assert.equal(b.main.getAttribute('tabindex'), '-1');
+});
+
+test('mount puede devolver una limpieza, que se llama justo antes de pintar la pantalla siguiente', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  const home = screen('home', { mount: () => () => log.push('limpieza home') });
+  const router = startRouter({ screens: { '': home, tabla: screen('tabla', { log }) }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/tabla' });
+  await router.idle();
+  assert.deepEqual(log, ['needs tabla', 'render tabla', 'limpieza home', 'mount tabla']);
+});
+
+test('el último destino principal se guarda en la sesión y marca Partido tras recargar', async () => {
+  const saved = new Map();
+  const session = { getItem: (k) => saved.get(k) ?? null, setItem: (k, v) => { saved.set(k, v); } };
+  const b = fakeBrowser('#/tabla');
+  const screens = { '': screen('home'), tabla: screen('tabla'), partido: screen('partido') };
+  await startRouter({ screens, root: b.root, getContext: context(), window: b.win, session }).idle();
+  assert.equal(saved.get('futbol-base:destino'), 'tabla');
+  const again = fakeBrowser(OTHER);
+  await startRouter({ screens, root: again.root, getContext: context(), window: again.win, session }).idle();
+  assert.deepEqual(again.marks(), [['#/tabla', 'true']]);
+});
+
+test('nav.saveMyTeam guarda con actions.saveMyTeam y vuelve a pintar la ruta', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  let nav = null;
+  let stored = null;
+  const home = screen('home', { log, mount: (root, ctx, n) => { nav = n; } });
+  const router = startRouter({ screens: { '': home }, root: b.root, getContext: context(), window: b.win, actions: { saveMyTeam: (team) => { stored = team; return true; } } });
+  await router.idle();
+  const team = { name: 'Las Mesas B', season: '2026-2027', cat: 'benjamin', groupId: 'B2' };
+  assert.equal(nav.saveMyTeam(team), true);
+  await router.idle();
+  assert.deepEqual(stored, team);
+  assert.deepEqual(log.filter((x) => x === 'render home'), ['render home', 'render home']);
+  assert.equal(b.h1().focused, 1);
+});
+
+test('si mount navega (nav.replace), manda esa navegación: el pintado anterior no recoloca nada', async () => {
+  const b = fakeBrowser('#/');
+  const explorar = screen('explorar', { mount: (root, ctx, nav) => { nav.replace('tabla', { v: 'goles' }); } });
+  const router = startRouter({ screens: { '': screen('home'), explorar, tabla: screen('tabla') }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.scroll(300);
+  b.click({ href: '#/explorar' });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/', '#/tabla?v=goles']);
+  assert.match(b.root.innerHTML, /<h1>tabla<\/h1>/);
+  assert.equal(b.h1().focused, 1, 'un solo foco, el de la tabla');
+});

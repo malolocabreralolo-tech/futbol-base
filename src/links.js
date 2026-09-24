@@ -136,8 +136,10 @@ export function routeHref(screen, params = {}) {
 }
 
 // Enlaces antiguos ('#section=…', compartidos por WhatsApp) → ruta nueva (tabla de §4.1).
-// `season` es PORTAL.season: la temporada del enlace solo se escribe si es otra.
-// Un enlace nunca cambia mi equipo: 'miequipo' con equipo abre su ficha.
+// La temporada del enlace se conserva siempre como `s`, aunque sea la del portal: tras activar
+// 2026/27, un enlace de 2025/26 sigue en 2025/26. Un enlace nunca cambia mi equipo: 'miequipo'
+// con un equipo abre su ficha, salvo si `isMine(team, group)` dice que es el mío: esa es la URL que
+// la app anterior escribía en cada carga, y abre Mi equipo (M3 de la revisión de B2).
 function legacyMatch(value) {
   try {
     const match = JSON.parse(value);
@@ -145,16 +147,17 @@ function legacyMatch(value) {
   } catch { return null; }
 }
 
-export function translateLegacy(hash, { season } = {}) {
+export function translateLegacy(hash, { isMine = () => false } = {}) {
   const text = String(hash ?? '');
   const raw = new URLSearchParams(text.replace(/^#/, ''));
   if (text.startsWith('#/') || !raw.has('section')) return null;
   const route = readRoute(text);
   const c = ['benjamin', 'prebenjamin'].includes(raw.get('cat')) ? raw.get('cat') : '';
-  const s = route.season && route.season !== season ? route.season : '';
+  const s = route.season;
   const g = route.group;
   const match = legacyMatch(route.match);
   if (g && match) return routeHref('partido', { s, g, r: match[2], h: match[0], a: match[1] });
+  if (route.team && route.section === 'miequipo' && isMine(route.team, g)) return '#/';
   if (route.team) return g ? routeHref('equipo', { s, g, t: route.team }) : routeHref('explorar', { s, q: route.team });
   switch (route.section) {
     case 'clasif': return routeHref('tabla', { s, g });

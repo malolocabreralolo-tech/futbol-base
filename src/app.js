@@ -1,48 +1,46 @@
-// Arranque del rediseño (spec §5.2): almacén, registro de datos, modelo y primera pantalla.
-// index.html llama a start(document, window) cuando ya han llegado los datos inmediatos: importar
-// este módulo no toca el navegador (test_rediseno_modulos). Desde el corte pinta la portada sin
-// router; en la Tarea 6, startRouter ocupa el lugar de paintHome.
+// Arranque (spec §5.2): almacén, registro de datos, modelo y router. index.html llama a
+// start(document, window) cuando ya han llegado los datos inmediatos: importar este módulo no toca
+// el navegador (test_rediseno_modulos).
 import { PORTAL } from './config.js';
-import { html } from './html.js';
 import { readGlobals } from './state.js';
 import { createModel } from './model.js';
 import { buildClubIndex, resolveMyTeam } from './myteam.js';
 import { loadStore } from './store.js';
 import { canaryTodayISO } from './links.js';
 import { crestFallback } from './ui.js';
-import { screen as home } from './screen-home.js';
+import { startRouter } from './router.js';
+import { SCREEN_MAP } from './screens.js';
 
-// El contexto común de las pantallas (esqueleto, sin la ruta): mi equipo del almacén, resuelto
-// contra la temporada del portal con el «hoy» de Canarias. Con el almacén vacío o bloqueado,
-// loadStore da el equipo por defecto, sin preguntas. buildClubIndex se inyecta en createModel.
+// Los datos de un pintado (el ctx de las pantallas sin la ruta, que añade el router): mi equipo
+// resuelto contra la temporada del portal con el «hoy» de Canarias, un solo reloj (decisión 4).
+function contextFor({ model, myTeam, portal, datasets, today, legacyDate = null }) {
+  const resolution = resolveMyTeam(myTeam, model.season(portal.season), model.clubIndex(), today);
+  return { model, myTeam, resolution, today, health: datasets.health, datasets, portal, legacyDate };
+}
+
+// El mismo contexto desde un almacén y con el día que se le pida: la base de las pruebas de las
+// pantallas. Con el almacén vacío o bloqueado, loadStore da el equipo por defecto, sin preguntas.
 export function startContext({ storage, portal, datasets, today }) {
   const store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
   const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
-  const resolution = resolveMyTeam(store.myTeam, model.season(portal.season), model.clubIndex(), today);
-  return {
-    model, myTeam: store.myTeam, resolution, today, health: datasets.health, datasets,
-    portal: { season: portal.season, defaultTeam: portal.defaultTeam }, lastPrimary: 'miequipo',
-  };
+  const base = { season: portal.season, defaultTeam: portal.defaultTeam };
+  return { ...contextFor({ model, myTeam: store.myTeam, portal: base, datasets, today }), lastPrimary: 'miequipo' };
 }
 
-function paintHome(root, win) {
-  const datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: null };
-  const base = startContext({ storage: () => win.localStorage, portal: PORTAL, datasets, today: canaryTodayISO(new Date(), PORTAL.timeZone) });
-  const route = { screen: '', params: {} };
-  root.innerHTML = String(home.render({ ...base, route, params: route.params }));
-}
-
-// Arranca la app en el documento que recibe: escucha los errores de escudo y pinta la portada en
-// #contenido; si algo lanza, la caja de error con «Reintentar», que recarga.
 export function start(doc, win) {
-  // escudos/s/ no existe hasta B4: miniatura → original → monograma («Para B2», Escudos).
+  // Escudos: miniatura → original → monograma (spec §5.4). Los errores de <img> no burbujean: se
+  // escuchan en captura, y desde antes del primer pintado (escudos/s/ no existe hasta B4).
   doc.addEventListener('error', (event) => crestFallback(event.target), true);
-  const root = doc.getElementById('contenido');
-  try {
-    paintHome(root, win);
-  } catch (error) {
-    console.error('[app] no se pudo pintar la portada:', error);
-    root.innerHTML = String(html`<div class="box" role="alert"><p class="notice"><b>No se pudieron cargar los datos de la portada.</b></p><div class="buttons"><button type="button" class="button is-main" data-action="retry">Reintentar</button></div></div>`);
-    root.querySelector('[data-action="retry"]').addEventListener('click', () => win.location.reload());
-  }
+  const storage = () => win.localStorage;
+  const portal = { season: PORTAL.season, defaultTeam: PORTAL.defaultTeam };
+  // Registro de datos: los globales inmediatos y lo que traen los cargadores perezosos.
+  const datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: null };
+  const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
+  const store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
+  // La fecha del literal oculto «Última actualización» de index.html, por si falta data-health.
+  const legacyDate = doc.getElementById('legacyUpdated')?.textContent.match(/\d{2}\/\d{2}\/\d{4}/)?.[0] || null;
+  const getContext = () => contextFor({
+    model, myTeam: store.myTeam, portal, datasets, today: canaryTodayISO(new Date(), PORTAL.timeZone), legacyDate,
+  });
+  return startRouter({ screens: SCREEN_MAP, root: doc.getElementById('contenido'), getContext, window: win });
 }

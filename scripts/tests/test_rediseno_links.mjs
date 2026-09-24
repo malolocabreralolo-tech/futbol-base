@@ -67,30 +67,37 @@ test('ida y vuelta de cada ruta de §4.1, con nombres difíciles', () => {
 test('enlaces antiguos: cada fila de la tabla de §4.1 (hashes reales de routeUrl)', () => {
   const cases = [
     ['#section=miequipo&cat=prebenjamin&season=2025-2026', '#/'],
-    ['#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=Las+Mesas+Hu.', '#/equipo?g=PG2&t=Las%20Mesas%20Hu.'],
-    ['#section=clasif&cat=prebenjamin&season=2025-2026&group=PG2', '#/tabla?g=PG2'],
-    ['#section=jornadas&cat=prebenjamin&season=2025-2026&group=PG2&round=Jornada+30', '#/jornada?g=PG2&r=Jornada%2030'],
+    ['#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=Las+Mesas+Hu.', '#/equipo?s=2025-2026&g=PG2&t=Las%20Mesas%20Hu.'],
+    ['#section=clasif&cat=prebenjamin&season=2025-2026&group=PG2', '#/tabla?s=2025-2026&g=PG2'],
+    ['#section=jornadas&cat=prebenjamin&season=2025-2026&group=PG2&round=Jornada+30', '#/jornada?s=2025-2026&g=PG2&r=Jornada%2030'],
     ['#section=jornadas&cat=prebenjamin&season=2025-2026&group=PG2&round=Jornada+30&match=%5B%22Las+Mesas+Hu.%22%2C%22AD+Hurac%C3%A1n%22%2C%22Jornada+30%22%5D',
-      '#/partido?g=PG2&r=Jornada%2030&h=Las%20Mesas%20Hu.&a=AD%20Hurac%C3%A1n'],
-    ['#section=clasif&cat=prebenjamin&season=2025-2026&group=PG2&team=AD+Hurac%C3%A1n', '#/equipo?g=PG2&t=AD%20Hurac%C3%A1n'],
-    ['#section=clasif&cat=prebenjamin&season=2025-2026&team=AD+Hurac%C3%A1n', '#/explorar?q=AD%20Hurac%C3%A1n'],
-    ['#section=goleadores&cat=benjamin&season=2025-2026&group=A2', '#/goleadores?g=A2'],
-    ['#section=isla&cat=benjamin&season=2025-2026&island=lanzarote', '#/ligas?c=benjamin&i=lanzarote'],
-    ['#section=stats&cat=benjamin&season=2025-2026', '#/records?c=benjamin'],
+      '#/partido?s=2025-2026&g=PG2&r=Jornada%2030&h=Las%20Mesas%20Hu.&a=AD%20Hurac%C3%A1n'],
+    ['#section=clasif&cat=prebenjamin&season=2025-2026&group=PG2&team=AD+Hurac%C3%A1n', '#/equipo?s=2025-2026&g=PG2&t=AD%20Hurac%C3%A1n'],
+    ['#section=clasif&cat=prebenjamin&season=2025-2026&team=AD+Hurac%C3%A1n', '#/explorar?s=2025-2026&q=AD%20Hurac%C3%A1n'],
+    ['#section=goleadores&cat=benjamin&season=2025-2026&group=A2', '#/goleadores?s=2025-2026&g=A2'],
+    ['#section=isla&cat=benjamin&season=2025-2026&island=lanzarote', '#/ligas?s=2025-2026&c=benjamin&i=lanzarote'],
+    ['#section=stats&cat=benjamin&season=2025-2026', '#/records?s=2025-2026&c=benjamin'],
   ];
-  for (const [legacy, expected] of cases) assert.equal(translateLegacy(legacy, { season: SEASON }), expected, legacy);
+  // La temporada del enlace se conserva siempre (M3 de la revisión de B2): tras activar 2026/27, un
+  // enlace de 2025/26 sigue en 2025/26.
+  for (const [legacy, expected] of cases) assert.equal(translateLegacy(legacy), expected, legacy);
 });
 
 test('enlaces antiguos: temporada, parámetros sobrantes y casos límite', () => {
-  const t = hash => translateLegacy(hash, { season: SEASON });
+  const t = hash => translateLegacy(hash);
   assert.equal(t('#section=clasif&cat=prebenjamin&season=2024-2025&group=PGC2'), '#/tabla?s=2024-2025&g=PGC2');
   assert.equal(t('#section=clasif&group=PG2'), '#/tabla?g=PG2');
-  assert.equal(translateLegacy('#section=clasif&cat=prebenjamin&season=2025-2026&group=PG2', { season: '2026-2027' }), '#/tabla?s=2025-2026&g=PG2');
-  assert.equal(t('#section=jornadas&cat=benjamin&season=2025-2026&group=B2&round=Jornada+12&q=mesas&island=grancanaria&phase=Segunda+Fase+B'), '#/jornada?g=B2&r=Jornada%2012');
-  assert.equal(t('#section=goleadores&cat=benjamin&season=2025-2026'), '#/goleadores?c=benjamin');
+  assert.equal(t('#section=jornadas&cat=benjamin&season=2025-2026&group=B2&round=Jornada+12&q=mesas&island=grancanaria&phase=Segunda+Fase+B'), '#/jornada?s=2025-2026&g=B2&r=Jornada%2012');
+  assert.equal(t('#section=goleadores&cat=benjamin&season=2025-2026'), '#/goleadores?s=2025-2026&c=benjamin');
   assert.equal(t('#section=jornadas&group=PG2&round=Jornada+3&match=%5Bmal'), '#/jornada?g=PG2&r=Jornada%203');
   assert.equal(t('#section=jornadas&round=Jornada+3&match=%5B%22A%22%2C%22B%22%2C%22Jornada+3%22%5D'), '#/jornada?r=Jornada%203');
-  assert.equal(t('#section=miequipo&cat=prebenjamin&season=2025-2026&team=Las+Mesas+Hu.'), '#/explorar?q=Las%20Mesas%20Hu.');
+  assert.equal(t('#section=miequipo&cat=prebenjamin&season=2025-2026&team=Las+Mesas+Hu.'), '#/explorar?s=2025-2026&q=Las%20Mesas%20Hu.');
+  // La URL que escribía la app anterior en cada carga, con mi equipo: Mi equipo (M3).
+  const mine = (team, group) => team === 'Las Mesas Hu.' && group === 'PG2';
+  assert.equal(translateLegacy('#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=Las+Mesas+Hu.', { isMine: mine }), '#/');
+  assert.equal(translateLegacy('#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=Telde', { isMine: mine }), '#/equipo?s=2025-2026&g=PG2&t=Telde');
+  assert.equal(translateLegacy('#section=clasif&cat=prebenjamin&season=2025-2026&group=PG2&team=Las+Mesas+Hu.', { isMine: mine }),
+    '#/equipo?s=2025-2026&g=PG2&t=Las%20Mesas%20Hu.', 'solo «miequipo» abre Mi equipo');
   assert.equal(t('#section=otra&group=PG2'), '#/');
   assert.equal(t('#section=clasif&season=..%2F..%2Fmal&group=PG2'), '#/tabla?g=PG2');
   for (const hash of ['#/tabla?g=PG2', '#/', '', '#', undefined, '#calendario', '#group=PG2']) assert.equal(t(hash), null, String(hash));

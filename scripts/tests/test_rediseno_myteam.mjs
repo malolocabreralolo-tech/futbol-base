@@ -131,7 +131,7 @@ test('paso 2: un grupo guardado de torneo pregunta si el candidato se llama dist
 
 test('caso 8: el verano de PG2 Las Mesas son MCP3 y MCPK1, nunca los torneos de benjamín', () => {
   const summer = summerCups(cups, LAS_MESAS_PG2, index);
-  assert.deepEqual(summer.map(entry => entry.group.id), ['MCP3', 'MCPK1']);
+  assert.deepEqual(summer.map(entry => `${entry.group.id}|${entry.team}`), ['MCP3|UD Las Mesas Huracán', 'MCPK1|UD Las Mesas Huracán']);
   const line = m => `${m.home} ${m.hs}-${m.as} ${m.away}`;
   assert.deepEqual(summer[0].rows.map(line), [
     'UD Las Mesas Huracán 1-4 Real Club Victoria',
@@ -146,8 +146,42 @@ test('caso 8: el verano de PG2 Las Mesas son MCP3 y MCPK1, nunca los torneos de 
   assert.equal(summer[1].rows[1].advancer, 'home');
   assert.equal(summer[1].rows[1].shootout, '3-2');
   const benjamin = summerCups(cups, { ...LAS_MESAS_PG2, cat: 'benjamin', groupId: 'A2' }, index);
-  assert.deepEqual(benjamin.map(entry => entry.group.id), ['MCB16', 'MCBK2']);
+  assert.deepEqual(benjamin.map(entry => `${entry.group.id}|${entry.team}`), ['MCB16|UD Las Mesas Huracán', 'MCBK2|UD Las Mesas Huracán']);
   assert.deepEqual(summerCups(cups, { name: 'AD Huracán', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' }, index), []);
+});
+
+test('decisión 19: el verano es el del equipo del torneo con la misma letra de filial, nunca el de sus hermanos', () => {
+  // Con la forma real de la Maspalomas 2026: Arucas CF A y Arucas CF B juegan grupos distintos
+  // (MCB4 y MCB2, aquí sobre MCB16) y el cuadro MCBK2 (el real) trae partidos de Arucas CF A, B y D.
+  const [mcb16, mcbk2] = fixture('cups-2025-2026').benjamin;
+  const groupWith = (id, name, renames) => {
+    const swap = team => renames[team] ?? team;
+    const group = { ...structuredClone(mcb16), id, name, fullName: `Maspalomas Cup 2026 - Benjamín - ${name}` };
+    group.standings = group.standings.map(([pos, team, ...rest]) => [pos, swap(team), ...rest]);
+    group.matches = group.matches.map(([day, time, home, away, ...rest]) => [day, time, swap(home), swap(away), ...rest]);
+    return group;
+  };
+  const arucasCups = buildCups({ season: '2025-2026', benjamin: [
+    groupWith('MCB2', 'Grupo B', { 'Simusetti CF': 'Arucas CF B' }),
+    groupWith('MCB4', 'Grupo D', { 'CD Maspalomas A': 'Arucas CF A' }),
+    mcbk2,
+  ] });
+  const summerOf = (name, of = arucasCups) => summerCups(of, { name, season: '2025-2026', cat: 'benjamin', groupId: 'A1' }, index);
+  const brief = entries => entries.map(({ group, team, rows }) => `${group.id}|${team}|${rows.length}`);
+  // «Arucas», sin letra, es el A: su grupo y sus tres partidos de cuadro (dieciseisavos, octavos y cuartos).
+  assert.deepEqual(brief(summerOf('Arucas')), ['MCB4|Arucas CF A|3', 'MCBK2|Arucas CF A|3']);
+  assert.deepEqual(brief(summerOf('Arucas B')), ['MCB2|Arucas CF B|3', 'MCBK2|Arucas CF B|1']);
+  assert.deepEqual(brief(summerOf('Arucas D')), ['MCBK2|Arucas CF D|1']);
+  // Sin equipo del club con su letra, no hay verano: mejor nada que el de otro equipo.
+  assert.deepEqual(summerOf('Arucas C'), []);
+  for (const name of ['Arucas', 'Arucas B', 'Arucas D']) {
+    for (const { team, rows } of summerOf(name)) {
+      for (const match of rows) assert.ok(match.home === team || match.away === team, `${name}: ${match.home}-${match.away}`);
+    }
+  }
+  // Dos equipos del club con la misma letra en un grupo («Arucas CF» y «Arucas CF A»): no se sabe cuál es.
+  const twins = buildCups({ season: '2025-2026', benjamin: [groupWith('MCB4', 'Grupo D', { 'CD Maspalomas A': 'Arucas CF A', 'Simusetti CF': 'Arucas CF' })] });
+  assert.deepEqual(summerOf('Arucas', twins), []);
 });
 
 test('decisión 10: FF5 Las Mesas Hu. el 08/11/2025, con la Segunda Fase sin publicar, sigue en FF5 sin preguntar por FF13', () => {

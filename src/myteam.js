@@ -9,10 +9,20 @@ export const TEAM_ALIASES = { 'UD Las Mesas Huracán': 'Las Mesas Hu.' };
 // Siglas que normalizeForTeamsMapping no quita (ya quita CF, CD, UD, AD, SD, SC, SAD, CP, CE, FC…).
 const SIGLAS = new Set(['rc', 'us', 'cda', 'cef']);
 
+const clubTokens = name => normalizeForTeamsMapping(name).split(' ').filter(token => token && !SIGLAS.has(token));
+// La letra de filial: la última palabra, si es una sola letra de la A a la E.
+const hasFilialLetter = tokens => tokens.length > 1 && /^[a-e]$/.test(tokens[tokens.length - 1]);
+
 export function baseKey(name) {
-  const tokens = normalizeForTeamsMapping(name).split(' ').filter(token => token && !SIGLAS.has(token));
-  if (tokens.length > 1 && /^[a-e]$/.test(tokens[tokens.length - 1])) tokens.pop();
+  const tokens = clubTokens(name);
+  if (hasFilialLetter(tokens)) tokens.pop();
   return tokens.join(' ');
+}
+
+// La letra de filial de un nombre, en minúscula; sin letra, es el equipo A.
+function filialLetter(name) {
+  const tokens = clubTokens(name);
+  return hasFilialLetter(tokens) ? tokens[tokens.length - 1] : 'a';
 }
 
 // Grafo de nombres (union-find). Cada nombre se une a sus «claves»: 'f:' fichero de escudo
@@ -198,14 +208,21 @@ export function updatedMyTeam(myTeam, resolution) {
 
 // ---- Verano (spec §6.4) ----
 
-// Solo los torneos de la temporada de mi equipo: los de 2025-26 nunca salen bajo otra.
+// Solo los torneos de la temporada de mi equipo: los de 2025-26 nunca salen bajo otra. En cada
+// grupo de torneo de su categoría, el equipo del club con su misma letra de filial y solo sus
+// partidos (decisión 19): el de «Arucas» es Arucas CF A, nunca B, C ni D. Si no hay ninguno con
+// esa letra, o hay dos, el grupo no sale: mejor sin «Verano» que con el de otro equipo.
 export function summerCups(cups, myTeam, index) {
   if (!cups || !myTeam || cups.season !== myTeam.season) return [];
+  const letter = filialLetter(myTeam.name);
   const out = [];
   for (const group of cups.groups) {
     if (group.cat !== myTeam.cat) continue;
-    const rows = allMatches(group).filter(match => sameClub(index, match.home, myTeam.name) || sameClub(index, match.away, myTeam.name));
-    if (rows.length) out.push({ group, rows });
+    const mine = teamsOf(group).filter(team => sameClub(index, team, myTeam.name) && filialLetter(team) === letter);
+    if (mine.length !== 1) continue;
+    const [team] = mine;
+    const rows = allMatches(group).filter(match => match.home === team || match.away === team);
+    if (rows.length) out.push({ group, team, rows });
   }
   return out;
 }

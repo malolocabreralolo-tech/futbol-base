@@ -63,6 +63,7 @@ Cada una tiene su prueba en la tarea que la implementa. Si un revisor prefiere l
 16. **Segunda Fase publicada grupo a grupo:** en el paso 0, mientras el club tenga en la fase posterior menos equipos que en la fase del grupo guardado (sin contar los retirados de esa fase, que nunca aparecen en la posterior), ni se cambia ni se pregunta: sigue el grupo guardado (C o D, según toque). Así ninguna familia recibe una pregunta falsa ni un cambio porque el grupo de un hermano se publique antes que el suyo, y Santa Brígida (FF9), con su filial en FF3, espera a que existan B1 y B2 y entonces pregunta. Si el club nunca llega a tener tantos equipos en la fase posterior (un filial eliminado), la familia se queda con su grupo de la Primera Fase; con un filial retirado, como 'CORRALEJO, C.D. "B"' en FV11, «CD Corralejo» pasa a FP. (Tarea 8)
 17. **El mismo nombre en dos grupos de la fase guardada** son dos equipos distintos (CD Batán en FF10 y FF12, Valsequillo en FF14 y FF17, Peña Amistad en FV12 y FV13): nunca hay cambio silencioso; se pregunta con los equipos del club en la fase posterior. (Tarea 8)
 18. **Julio es del año final de la temporada** en el modelo: una fecha `DD/MM` de julio sin año cae en el año final (los torneos de verano), no en el primero como en `fixtureISO`, que usa la app actual y no cambia. En 2026-2027, «01/07» es el 01/07/2027, y el partido del 30/06/2027 sigue pendiente el 29/06. (Tarea 3)
+19. **«Verano» por equipo del torneo:** `summerCups` devuelve `[{ group, team, rows }]`. En cada grupo de torneo de su categoría, `team` es el equipo del club con la misma letra de filial que `myTeam.name` (la última palabra, si es una sola letra de la A a la E; sin letra, la A) y `rows` trae solo sus partidos; si no hay ninguno con esa letra, o hay dos, el grupo no sale, porque es mejor quedarse sin «Verano» que enseñar el de otro equipo. Con la lectura literal de §6.4 (los grupos con cualquier equipo del club), «Arucas» (A1) recibía los grupos y los partidos de Arucas CF A, B, C y D. (Revisión final, I1)
 
 ## Foco de revisión
 
@@ -219,7 +220,10 @@ export function homeState({ resolution, todayISO, portalSeason })
   // 'E' | 'X' | 'D' | 'B' | 'C' | 'A' (sin health: decisión 5); A si teamFixtures da next; C si mi equipo ha
   // jugado y no tiene next; B si el grupo no ha jugado nada, o si mi equipo no ha jugado nada y no tiene next
 export function showNextSeasonBox({ group, health, portalSeason })  // boolean
-export function summerCups(cups, myTeam, index)          // [{ group, rows: Match[] }], solo de myTeam.cat y solo si cups.season === myTeam.season
+export function summerCups(cups, myTeam, index)
+  // → [{ group, team, rows: Match[] }], solo de myTeam.cat y solo si cups.season === myTeam.season. team: el equipo
+  //   del club en ese grupo con la misma letra de filial que myTeam.name (sin letra, la A); rows: solo sus partidos.
+  //   Sin ninguno con esa letra, o con dos, el grupo no sale (decisión 19)
 ```
 
 ### `src/store.js`

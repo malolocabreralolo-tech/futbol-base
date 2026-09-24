@@ -25,7 +25,7 @@ test('la licencia OFL acompaña a la fuente', () => {
 });
 
 test('@font-face: Public Sans desde fonts/, pesos 100-900, swap y subconjunto latino', () => {
-  const css = readFileSync(join(ROOT, 'style-acta.css'), 'utf8');
+  const css = readFileSync(join(ROOT, 'acta.css'), 'utf8');
   const faces = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map((m) => m[1]);
   assert.equal(faces.length, 1, 'una sola familia');
   const face = faces[0];

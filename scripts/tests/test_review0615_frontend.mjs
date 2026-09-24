@@ -41,22 +41,6 @@ test('validJorGroup devuelve "" si no hay grupos', async () => {
   assert.equal(validJorGroup('A2', []), '');
 });
 
-test('renderJornadas valida jorGroup con validJorGroup (no solo si falsy)', () => {
-  const s = src('render.js');
-  assert.match(s, /validJorGroup\(\s*S\.jorGroup\s*,\s*data\s*\)/,
-    'renderJornadas debe normalizar S.jorGroup vía validJorGroup');
-});
-
-test('renderJornadaContent emite empty-state si el grupo no existe (no return mudo)', () => {
-  const s = src('render.js');
-  // tras resolver group, si no existe debe pintar empty-state en matchesDiv
-  assert.match(
-    s,
-    /const group = getData\(\)\.find[\s\S]{0,200}empty-state/,
-    'renderJornadaContent debe pintar empty-state cuando el grupo no se encuentra',
-  );
-});
-
 /* ─── Cups 2025-26: bracket de knockout en temporada actual ───────────────
  * buildKnockoutBracket leía g.jornadas, ausente en grupos de temporada actual
  * (sus rondas viven en HISTORY[code], como toda la temporada actual). Las cups
@@ -84,13 +68,6 @@ test('knockoutRoundsSource: histórica sin jornadas NO usa HISTORY (colisión de
 test('knockoutRoundsSource: {} si no hay fuente', async () => {
   const { knockoutRoundsSource } = await import('../../src/state.js');
   assert.deepEqual(knockoutRoundsSource({ id: 'Z' }, false, null), {});
-});
-
-test('buildKnockoutBracket usa knockoutRoundsSource (cups actuales renderizan)', () => {
-  const s = src('render.js');
-  assert.match(s, /knockoutRoundsSource\(/, 'buildKnockoutBracket debe usar knockoutRoundsSource');
-  assert.doesNotMatch(s, /const rounds = g\.jornadas \? Object\.keys/,
-    'ya no debe leer g.jornadas directo para las rondas');
 });
 
 /* ─── Etiqueta de ronda por NOMBRE explícito (no por posición) ─────────────
@@ -126,11 +103,6 @@ test('knockoutRoundLabel: cups "Ronda N" (2024-25) usan posición → Cuartos/Se
   assert.equal(knockoutRoundLabel('10-06-2025 ( Ronda 3 Ida )', 2, 3), 'Final');
   // bracket profundo (>4 rondas): cae a "Ronda N"
   assert.equal(knockoutRoundLabel('( Ronda 5 )', 0, 6), 'Ronda 5');
-});
-
-test('buildKnockoutBracket usa knockoutRoundLabel', () => {
-  const s = src('render.js');
-  assert.match(s, /knockoutRoundLabel\(/, 'debe usar knockoutRoundLabel para las etiquetas');
 });
 
 /* ─── H1: la copa prebenjamín (PCC1) no debe romper la clasificación unificada ─
@@ -207,24 +179,6 @@ test('bracketDrawAdvancer: null si ninguno aparece después (final)', async () =
   assert.equal(bracketDrawAdvancer({ F: [['', 'A', 'B', 2, 2]] }, ['F'], 0, 'A', 'B'), null);
 });
 
-test('buildKnockoutBracket marca el avance por penaltis (matchAdvancer + pen)', () => {
-  const s = src('render.js');
-  // matchAdvancer prefiere la 6ª columna explícita y cae a bracketDrawAdvancer
-  // para los datos históricos que no la tienen.
-  assert.match(s, /matchAdvancer\(/, 'el bracket debe resolver el avance en empates');
-  assert.match(s, /pen/i, 'debe indicar "(pen)" en empates resueltos');
-  const st = src('state.js');
-  assert.match(st, /bracketDrawAdvancer\(/,
-    'matchAdvancer debe conservar la deducción por ronda posterior');
-});
-
-test('buildUnifiedPrebenjamin filtra cups (usa unifiedPrebenLeagueGroups)', () => {
-  const s = src('state.js');
-  assert.match(s, /unifiedPrebenLeagueGroups\(/, 'buildUnifiedPrebenjamin debe filtrar grupos de liga');
-  // ya no debe iterar PREBENJAMIN.forEach numerando por idx con corte >3
-  assert.doesNotMatch(s, /PREBENJAMIN\.forEach\(\(g, idx\) => \{[\s\S]{0,120}groupNum > 3/);
-});
-
 // ── Copa de Campeones 2023-24: grupos round-robin (1 ronda, >2 partidos) ──
 // Deben renderizarse como TABLA de clasificación, NO como bracket (que
 // knockoutRoundLabel etiquetaría "Final" por posición — bug). Los cups
@@ -248,11 +202,6 @@ test('isRoundRobinCup: 1 ronda con 1 partido (una final suelta) → false', asyn
   assert.equal(isRoundRobinCup({}), false);
   assert.equal(isRoundRobinCup(null), false);
 });
-test('buildKnockoutBracket renderiza tabla para cups round-robin', () => {
-  const s = src('render.js');
-  assert.match(s, /isRoundRobinCup\(/, 'buildKnockoutBracket debe usar isRoundRobinCup para elegir tabla vs bracket');
-});
-
 /* Campeón de un cuadro sin clasificación (Maspalomas Cup: grupos que son
  * bracket puro, standings vacío). Antes la cabecera decía "0 equipos" y la
  * final decidida en penaltis se quedaba sin campeón: bracketDrawAdvancer mira
@@ -456,36 +405,4 @@ test('groupJornadaLabel unifica el badge entre fuentes', async () => {
   assert.equal(groupJornadaLabel(null), '');
   // Las rondas de copa no son números y se dejan tal cual.
   assert.equal(groupJornadaLabel('Semifinales'), 'Semifinales');
-});
-
-test('la cabecera de grupo usa groupJornadaLabel, no el valor crudo', () => {
-  const s = src('render.js');
-  assert.match(s, /jornada-badge">\$\{escapeHtml\(groupJornadaLabel\(g\.jornada\)\)\}/);
-});
-
-test('renderSection confiesa el fallo de temporada en TODAS las secciones', () => {
-  const s = src('render.js');
-  // Antes solo lo comprobaba renderClasif: ESTADÍSTICAS pintaba 0 partidos y 0
-  // goles como si fuera el récord real de esa temporada.
-  const i = s.indexOf('export function renderSection');
-  const bloque = s.slice(i, i + 1200);
-  assert.match(bloque, /seasonErrorBox\(\)/,
-    'renderSection debe comprobar el error antes de despachar la sección');
-  assert.match(bloque, /return;/);
-});
-
-test('POR ISLA abre la ficha de equipo: los nombres no son decorativos', () => {
-  const s = src('render.js');
-  const i = s.indexOf('export function renderIsla');
-  const bloque = s.slice(i, s.indexOf('/* ====== STATS SECTION', i));
-  assert.match(bloque, /delegateActivation\(container, '\.team-name-cell'/,
-    'renderIsla debe delegar la activación como renderClasif (ratón y teclado)');
-  assert.match(bloque, /openTeamDetail\(td\.dataset\.team, td\.dataset\.group\)/);
-});
-
-test('el modal busca el grupo en las dos categorías', () => {
-  const s = src('modals.js');
-  // MI EQUIPO es la pantalla de aterrizaje y su equipo puede ser de la otra
-  // categoría: con S.cat a secas, el modal salía sin grupo ni comparativa.
-  assert.match(s, /porCategoria\(otra\)/);
 });

@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fixtureISO, kickoffUTC, buildCalendar, routeUrl, readRoute, matchId, venueUrl } from '../../src/links.js';
-import { filterCompetitionGroups } from '../../src/filters.js';
+import { fixtureISO, kickoffUTC, buildCalendar, readRoute, venueUrl } from '../../src/links.js';
 
 test('calendar dates belong to the selected season, including archived dates', () => {
   assert.equal(fixtureISO('03/09', '2021-2022'), '2021-09-03');
@@ -33,24 +32,16 @@ test('ICS preserves Unicode, stable identities, line folding, and unknown kickof
   assert.deepEqual(calendar.match(/UID:.+/g), updated.match(/UID:.+/g));
 });
 
-test('shared URLs round-trip accents and punctuation without losing the archive', () => {
-  const match = { home: 'Unión & Sur', away: 'Equipo #1', jornada: 'Jornada 12' };
-  const url = routeUrl({ section: 'jornadas', cat: 'prebenjamin', season: '2021-2022', group: 'PG2', round: match.jornada,
-    team: '', match: matchId(match), q: 'Unión & Sur', island: 'grancanaria', phase: 'Fase 2' });
-  const parsed = readRoute(new URL(url).hash);
+test('los enlaces antiguos se leen sin perder el archivo y descartan temporadas mal formadas', () => {
+  // Ya nadie los escribe (routeUrl se fue con el corte): solo se leen para traducirlos.
+  const match = JSON.stringify(['Unión & Sur', 'Equipo #1', 'Jornada 12']);
+  const parsed = readRoute('#' + new URLSearchParams({ section: 'jornadas', cat: 'prebenjamin', season: '2021-2022',
+    group: 'PG2', round: 'Jornada 12', match, q: 'Unión & Sur' }).toString());
   assert.equal(parsed.season, '2021-2022');
-  assert.equal(parsed.match, matchId(match));
-  assert.equal(parsed.search, 'Unión & Sur');
   assert.equal(parsed.round, 'Jornada 12');
+  assert.equal(parsed.search, 'Unión & Sur');
+  assert.equal(parsed.match, match);
   assert.equal(readRoute('#section=unknown&season=../../bad').season, '');
-});
-
-test('filters combine club names, islands and phases, and handle empty groups', () => {
-  const groups = [{ island: 'grancanaria', phase: 'Liga', standings: [[1, 'Unión Viera']] },
-    { island: 'lanzarote', phase: 'Copa', standings: [[1, 'Unión Viera B']] }, { standings: [] }];
-  assert.equal(filterCompetitionGroups(groups, { search: 'union viera' }).length, 2);
-  assert.deepEqual(filterCompetitionGroups(groups, { search: 'union', filterIsland: 'grancanaria', filterPhase: 'Liga' }), [groups[0]]);
-  assert.equal(filterCompetitionGroups(groups, { search: 'inexistente' }).length, 0);
 });
 
 test('maps links only exist for a known venue and encode the search correctly', () => {

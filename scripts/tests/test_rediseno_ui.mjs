@@ -291,8 +291,8 @@ test('ni inglés ni emoji: Local/Visitante y G/E/P, nunca HOME, AWAY ni W/D/L', 
   assert.doesNotMatch(all, /\p{Extended_Pictographic}/u);
 });
 
-test('cada clase que emite ui.js existe en style-acta.css', () => {
-  const css = readFileSync(join(ROOT, 'style-acta.css'), 'utf8');
+test('cada clase que emite ui.js existe en acta.css', () => {
+  const css = readFileSync(join(ROOT, 'acta.css'), 'utf8');
   const defined = new Set([...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.([a-zA-Z][\w-]*)/g)].map(m => m[1]));
   const out = [
     crest('Las Mesas Hu.', { shields: SHIELDS }), crest('Femarguín', { size: 32 }), crest('x', { size: 46 }),
@@ -306,6 +306,37 @@ test('cada clase que emite ui.js existe en style-acta.css', () => {
     standingsTable(PG2, { view: 'forma' }),
     segmented([{ value: 'a', label: 'A' }], 'a', () => '#'), notice('t', 'x'), empty('x'), tabbar('jornada'),
   ].map(String).join('');
+  const used = new Set([...out.matchAll(/class="([^"]+)"/g)].flatMap(m => m[1].split(/\s+/)));
+  assert.deepEqual([...used].filter(c => !defined.has(c)), []);
+});
+
+// ── Plan B2, tarea 4: la cabecera de pantalla, común a todas las pantallas ──
+import { html } from '../../src/html.js';
+import { screenHead, backLink } from '../../src/ui.js';
+
+test('screenHead: el único h1 con su etiqueta, «‹» y escudo a la izquierda, acción a la derecha; todo escapado', () => {
+  const escudo = crest('Las Mesas Hu.', { size: 46, shields: SHIELDS, lazy: false });
+  assert.equal(s(screenHead('Las Mesas Hu.', { sub: 'Prebenjamín, Grupo 2 de Gran Canaria', crest: escudo, action: { href: '#/explorar', label: 'Cambiar' } })),
+    `<header class="screen-head">${escudo}<div class="screen-head-text"><h1>Las Mesas Hu.</h1>`
+    + '<p class="screen-sub">Prebenjamín, Grupo 2 de Gran Canaria</p></div><a class="screen-action" href="#/explorar">Cambiar</a></header>');
+  const partido = s(screenHead('Partido', {
+    sub: 'Jornada 15, Grupo 2 de Gran Canaria', back: '#/jornada?g=PG2&r=Jornada%2015',
+    action: html`<button class="screen-action" type="button" data-action="share">Compartir</button>`,
+  }));
+  assert.match(partido, /^<header class="screen-head"><a class="back" href="#\/jornada\?g=PG2&amp;r=Jornada%2015" data-action="back" aria-label="Volver">‹<\/a><div class="screen-head-text"><h1>Partido<\/h1>/);
+  assert.match(partido, /<button class="screen-action" type="button" data-action="share">Compartir<\/button><\/header>$/);
+  const raro = s(screenHead('MESAS, U.D. LAS "B"', { sub: '<i>x</i>', action: { href: '#/x"', label: '<b>y</b>' } }));
+  assert.match(raro, /<h1>MESAS, U\.D\. LAS &quot;B&quot;<\/h1>/);
+  assert.doesNotMatch(raro, /<i>|<b>|href="#\/x"/);
+  assert.equal(s(screenHead('Jornada')), '<header class="screen-head"><div class="screen-head-text"><h1>Jornada</h1></div></header>');
+  assert.equal(s(screenHead(html`Partido<span class="vh">: A – B</span>`)), '<header class="screen-head"><div class="screen-head-text"><h1>Partido<span class="vh">: A – B</span></h1></div></header>');
+  assert.equal(s(backLink('#/explorar')), '<a class="back" href="#/explorar" data-action="back" aria-label="Volver">‹</a>');
+});
+
+test('cada clase que emite screenHead existe en acta.css', () => {
+  const css = readFileSync(join(ROOT, 'acta.css'), 'utf8');
+  const defined = new Set([...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.([a-zA-Z][\w-]*)/g)].map(m => m[1]));
+  const out = s(screenHead('t', { sub: 's', back: '#', action: { href: '#', label: 'a' } }));
   const used = new Set([...out.matchAll(/class="([^"]+)"/g)].flatMap(m => m[1].split(/\s+/)));
   assert.deepEqual([...used].filter(c => !defined.has(c)), []);
 });

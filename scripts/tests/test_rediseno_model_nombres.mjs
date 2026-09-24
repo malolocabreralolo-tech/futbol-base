@@ -165,3 +165,16 @@ test('timelineFor: sin marcador o sin entrada, null', () => {
   assert.equal(timelineFor(teguinte, matchDetail, lineups), null);
   assert.equal(timelineFor(find('PG3', 'UD Vecindario', 'CD Ingenio'), {}, {}), null);
 });
+
+// ── Plan B2, tarea 4: seasonLabel, la temporada tal como se lee en pantalla ─
+import { seasonLabel } from '../../src/model.js';
+
+test('seasonLabel: «2025-2026» → «2025/26»; lo que no es una temporada queda igual', () => {
+  assert.equal(seasonLabel('2025-2026'), '2025/26');
+  assert.equal(seasonLabel('2026-2027'), '2026/27');
+  assert.equal(seasonLabel('2021-2022'), '2021/22');
+  assert.equal(seasonLabel('1999-2000'), '1999/00');
+  assert.equal(seasonLabel(''), '');
+  assert.equal(seasonLabel(null), '');
+  assert.equal(seasonLabel('Temporada'), 'Temporada');
+});

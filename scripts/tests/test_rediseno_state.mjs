@@ -194,3 +194,54 @@ test('crest y buildClubIndex buscan el escudo con shieldFile: una sola búsqueda
   assert.equal(index.same('UD Las Mesas Huracán', 'AD Huracán'), false);
   assert.equal(buildClubIndex(names, {}, {}).same('Las Mesas Hu', 'MESAS, U.D. LAS "B"'), false, 'sin escudos no hay arista');
 });
+
+// ── Plan B2, tarea 4 (corte): decisiones 1 y 2 ──────────────────────────────
+
+test('decisiones 1 y 2: state.js sin estado de interfaz, sin HTML y sin lo que ya cubre el modelo', () => {
+  for (const gone of ['S', 'FEATURED', 'isFeatured', 'featuredStandingFrom', 'featuredMatchesFrom',
+    'featuredScorersFrom', 'getTeamForm', 'isHistorical', 'getCurrentSeason', 'teamBadge', 'teamBadgeFallback',
+    'handleBadgeError', 'installBadgeErrorDelegation', 'escapeHtml', 'escapeAttr', '$', '$$', 'el',
+    'ACTIVATION_KEYS', 'makeActivatable', 'delegateActivation', 'buildUnifiedPrebenjamin', 'buildSparkline']) {
+    assert.equal(gone in state, false, `${gone} sigue en state.js`);
+  }
+  for (const kept of ['jornadaLabel', 'validJorGroup', 'knockoutRoundsSource', 'phaseIcon', 'groupJornadaLabel',
+    'unifiedPrebenLeagueGroups', 'getPhases', 'countStats', 'countMatches', 'getData', 'withSeasonCup', 'teamScorers']) {
+    assert.equal(typeof state[kept], 'function', kept);
+  }
+  assert.doesNotMatch(read('src/state.js'), /<(img|span|div|table|svg)\b/, 'state.js ya no pinta HTML');
+});
+
+test('decisión 2: teamScorers(gol, team), los goleadores del equipo en su grupo, por goles y partidos', () => {
+  const gol = [
+    { id: 'PG1', g: 'PREBENJAMIN GC GRUPO 1', s: [['Otro, Grupo', 'Las Mesas Hu.', 30, 20]] },
+    { id: 'PG2', g: 'PREBENJAMIN GC GRUPO 2', s: [
+      ['Santana Santacruz, Agoney', 'Las Mesas Hu.', 11, 21], ['De La Rosa Perello, Theo', 'Las Mesas Hu.', 12, 17],
+      ['Igual, Goles', 'Las Mesas Hu.', 11, 19], ['Filial, Uno', 'Las Mesas B', 20, 10], ['Rival, Uno', 'AD Huracán', 40, 20]] },
+  ];
+  const team = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' };
+  assert.deepEqual(state.teamScorers(gol, team), [
+    { name: 'De La Rosa Perello, Theo', goals: 12, games: 17 },
+    { name: 'Igual, Goles', goals: 11, games: 19 },
+    { name: 'Santana Santacruz, Agoney', goals: 11, games: 21 },
+  ]);
+  // Los ficheros antiguos de prebenjamín identifican el grupo por su texto.
+  const legacy = gol.map(({ g, s }) => ({ g, s }));
+  assert.equal(state.teamScorers(legacy, team).length, 3);
+  assert.deepEqual(state.teamScorers(legacy, { ...team, cat: 'benjamin' }), []);
+  assert.deepEqual(state.teamScorers(gol, { ...team, groupId: 'PG9' }), []);
+  assert.deepEqual(state.teamScorers(undefined, team), []);
+  assert.deepEqual(state.teamScorers(gol, null), []);
+});
+
+test('decisión 1: getPhases(groups) y countStats(season, cat) reciben lo que antes leían de S', async () => {
+  const groups = [{ id: 'B', phase: 'Fase 1', name: 'Grupo 10' }, { id: 'A', phase: 'Fase 1', name: 'Grupo 2' },
+    { id: 'C', phase: 'Fase 2', name: 'Grupo 1' }];
+  const ids = (map) => Object.fromEntries(Object.entries(map).map(([phase, list]) => [phase, list.map((g) => g.id)]));
+  assert.deepEqual(ids(state.getPhases(groups)), { 'Fase 1': ['A', 'B'], 'Fase 2': ['C'] });
+  assert.deepEqual(state.getPhases(null), {});
+  bodies['data-season-2021-2022.js'] = 'const SEASON_2021_2022={"name":"2021-2022","current":false,"benjamin":[{"id":"GC1","name":"Grupo 1","phase":"Primera Fase","standings":[[1,"X",3,1,1,0,0,2,0,2],[2,"Y",0,1,0,0,1,0,2,-2]],"jornadas":{"1":[["01/10","X","Y",2,0]]}}],"prebenjamin":[]};';
+  assert.ok(await state.ensureSeasonData('2021-2022'));
+  assert.deepEqual(state.countStats('2021-2022', 'benjamin'), { groups: 1, teams: 2, matches: 1 });
+  assert.deepEqual(state.countStats('2021-2022', 'prebenjamin'), { groups: 0, teams: 0, matches: 0 });
+  assert.deepEqual(state.countStats('2019-2020', 'benjamin'), { groups: 0, teams: 0, matches: 0 }, 'sin cargar, nada');
+});

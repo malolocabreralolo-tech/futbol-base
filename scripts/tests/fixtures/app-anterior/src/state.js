@@ -1,23 +1,112 @@
-// Carga de datos y funciones de dominio heredadas (spec §5.2). Desde el corte de B2 no guarda
-// estado de interfaz (S y FEATURED), no pinta HTML y no toca el DOM al importarse: la URL es la
-// fuente de verdad, myteam.js y store.js guardan mi equipo y ui.js pinta los escudos.
 import { PORTAL } from './config.js';
 
-/* Goleadores de un equipo en su grupo, de GOL_BENJ o GOL_PREBENJ ([{ id, g, s: [[jugador,
- * equipo, goles, partidos]] }], lo que da model.scorers): [{ name, goals, games }], de más a menos
- * goles y, a igualdad, con menos partidos. `team` es { cat, groupId, name }, como myTeam; el
- * nombre se compara exacto, porque los de los goleadores son los de la clasificación. Antes
- * featuredScorersFrom, que leía FEATURED (decisión 2 de B2). */
-export function teamScorers(gol, team) {
-  if (!Array.isArray(gol) || !team) return [];
-  // Los ficheros publicados llevan el código del grupo; los antiguos, una clave de texto.
-  const grp = gol.find(g => g.id === team.groupId)
-    || gol.find(g => team.cat === 'prebenjamin' && g.g === 'PREBENJAMIN GC GRUPO ' + String(team.groupId).replace(/^PG/, ''));
+/* ====== APP STATE ====== */
+const S = {
+  cat: PORTAL.defaultTeam.cat,
+  section: 'miequipo',  // 'miequipo'|'clasif'|'jornadas'|'goleadores'|'isla'|'stats'
+  season: '',           // '' = current season, or '2024-2025' etc.
+  search: '',
+  // jornadas
+  jorGroup: PORTAL.defaultTeam.groupId,
+  jorNum: '',
+  // goleadores
+  golGroup: '__GLOBAL__',
+  // isla
+  island: 'grancanaria',
+  filterIsland: '', filterPhase: ''
+};
+
+/* ====== SELECTED FAVORITE ====== */
+export const FEATURED = { ...PORTAL.defaultTeam };
+
+/* True when `name` is the featured team (normalized match). Covers club
+ * prefixes and the dot in "Hu." but NOT B teams. */
+export function isFeatured(name) {
+  if (!name) return false;
+  const strip = s => normalizeTeamName(s).replace(/\./g, '').replace(/\s+/g, ' ').trim();
+  return strip(name) === strip(FEATURED.name);
+}
+
+/* Standings row of the featured team within a PREBENJAMIN-shaped array.
+ * Returns { group, row, pos, total } or null. */
+export function featuredStandingFrom(prebenjamin) {
+  if (!Array.isArray(prebenjamin)) return null;
+  const group = prebenjamin.find(g => g.id === FEATURED.groupId);
+  if (!group || !Array.isArray(group.standings)) return null;
+  const row = group.standings.find(r => isFeatured(r[1]));
+  if (!row) return null;
+  return { group, row, pos: row[0], total: group.standings.length };
+}
+
+/* All matches of the featured team from a HISTORY[groupId]-shaped object,
+ * sorted by jornada then date. Entry: { jor, jorNum, date, home, away,
+ * hs, as, isHome, opp, played, result } -- result 'W'|'D'|'L' or null. */
+export function featuredMatchesFrom(historyGroup) {
+  if (!historyGroup || typeof historyGroup !== 'object') return [];
+  const out = [];
+  Object.entries(historyGroup).forEach(([jor, matches]) => {
+    if (!Array.isArray(matches)) return;
+    const jorNum = parseInt(String(jor).replace(/\D/g, ''), 10) || 0;
+    matches.forEach(m => {
+      const [date, home, away, hs, as] = m;
+      if (!isFeatured(home) && !isFeatured(away)) return;
+      const isHome = isFeatured(home);
+      const played = hs !== null && hs !== undefined
+        && as !== null && as !== undefined;
+      let result = null;
+      if (played) {
+        const gf = isHome ? hs : as;
+        const gc = isHome ? as : hs;
+        result = gf > gc ? 'W' : gf < gc ? 'L' : 'D';
+      }
+      out.push({ jor, jorNum, date, home, away, hs, as, isHome,
+        opp: isHome ? away : home, played, result,
+        time: m[6] || '', venue: m[7] || '', status: m[8] || '' });
+    });
+  });
+  out.sort((a, b) => a.jorNum - b.jorNum
+    || String(a.date).localeCompare(String(b.date)));
+  return out;
+}
+
+/* Featured team's scorers from a GOL_PREBENJ-shaped array. Entry shape in
+ * data: [name, team, goals, games]. Sorted goals desc, games asc. */
+export function featuredScorersFrom(golPrebenj) {
+  if (!Array.isArray(golPrebenj)) return [];
+  // Published group IDs work across categories; legacy files use a display key.
+  const grp = golPrebenj.find(g => g.id === FEATURED.groupId)
+    || golPrebenj.find(g => FEATURED.cat === 'prebenjamin' && g.g === 'PREBENJAMIN GC GRUPO ' + FEATURED.groupId.replace(/^PG/, ''));
   if (!grp || !Array.isArray(grp.s)) return [];
   return grp.s
-    .filter(s => s[1] === team.name)
+    .filter(s => isFeatured(s[1]))
     .map(s => ({ name: s[0], goals: s[2], games: s[3] }))
     .sort((a, b) => b.goals - a.goals || a.games - b.games);
+}
+
+/* ====== HELPERS ====== */
+export function $(sel, ctx) { return (ctx||document).querySelector(sel); }
+export function $$(sel, ctx) { return Array.from((ctx||document).querySelectorAll(sel)); }
+export function el(tag, cls, html) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html !== undefined) e.innerHTML = html;
+  return e;
+}
+
+/* ====== HTML ESCAPING (C2: single shared implementation) ======
+ * Team/player/venue names come from scraping (FIFLP / futbolaspalmas /
+ * Wayback) and DO contain quotes today (5.908 names with `"` in 2024-25,
+ * e.g. 'ATLETICO HURACAN, A.D. "A"'). Every interpolation of scraped data
+ * into innerHTML must go through these. Other modules import them from
+ * here — do not re-declare local copies. */
+export function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+/* For attribute values (alt="...", title="...", data-*="..."). Same charset
+ * as escapeHtml — quotes are the load-bearing part for attributes. */
+export function escapeAttr(s) {
+  return escapeHtml(s);
 }
 
 /* ====== JORNADA KEY HELPERS ======
@@ -134,6 +223,8 @@ export function phaseIcon(phase) {
   return '⚽';
 }
 
+/* A cup / knockout group (vs a regular league group). By code prefix
+ * (PCC or BC) or phase ("Copa"/"Campeón"). */
 /* Etiqueta del badge "jornada en curso" de la cabecera de grupo. Las fuentes
  * no coinciden: futbolaspalmas guarda "Jornada 30" y FIFLP el número pelado
  * ("14"), así que en la misma pantalla salían badges "Jornada 30" y "14".
@@ -144,8 +235,42 @@ export function groupJornadaLabel(raw) {
   return /^\d+$/.test(s) ? `Jornada ${s}` : s;
 }
 
-/* A cup / knockout group (vs a regular league group). By code prefix
- * (PCC or BC) or phase ("Copa"/"Campeón"). */
+/* Un <td> o un <div> con onclick no existe para el teclado: no se puede
+ * tabular hasta él ni activarlo. Estos dos helpers le ponen el rol y el
+ * tabindex y atienden Enter y Espacio (con preventDefault: si no, Espacio
+ * hace scroll de página en vez de activar). */
+export const ACTIVATION_KEYS = ['Enter', ' ', 'Spacebar'];
+
+export function makeActivatable(node, action) {
+  if (!node) return;
+  node.setAttribute('role', 'button');
+  node.setAttribute('tabindex', '0');
+  node.addEventListener('click', action);
+  node.addEventListener('keydown', e => {
+    if (!ACTIVATION_KEYS.includes(e.key)) return;
+    e.preventDefault();
+    action(e);
+  });
+}
+
+/* Igual, pero por delegación: los nombres de equipo se pintan por cientos y
+ * llevan su rol en el HTML; aquí solo va el manejador del contenedor. */
+export function delegateActivation(container, selector, handler) {
+  if (!container) return;
+  const run = e => {
+    const el = e.target.closest(selector);
+    if (el) handler(el, e);
+  };
+  container.onclick = run;
+  container.onkeydown = e => {
+    if (!ACTIVATION_KEYS.includes(e.key)) return;
+    const el = e.target.closest(selector);
+    if (!el) return;
+    e.preventDefault();
+    handler(el, e);
+  };
+}
+
 export function isCupGroup(g) {
   const id = ((g && g.id) || '').toUpperCase();
   if (id.startsWith('PCC') || id.startsWith('BC')) return true;
@@ -232,6 +357,39 @@ export function isRoundRobinCup(jornadas) {
   return last >= first;
 }
 
+/* Team badge — real shield from SHIELDS or fallback to initials */
+export function teamBadgeFallback(name) {
+  const words = name.replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]/g, '').trim().split(/\s+/);
+  let initials;
+  if (words.length === 1) initials = words[0].substring(0, 2).toUpperCase();
+  else initials = words.slice(0, 3).map(w => w[0]).join('').toUpperCase();
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  const hue = Math.abs(hash) % 360;
+  return `<span class="team-badge" style="background:hsl(${hue},55%,45%)">${initials}</span>`;
+}
+
+/* Replace a broken badge <img> with the initials fallback. Pure helper so
+ * it is unit-testable; wired to the DOM via installBadgeErrorDelegation()
+ * below. (The old inline error attribute called teamBadgeFallback, a
+ * module-scope function that is NOT global \u2192 ReferenceError, dead fallback.) */
+export function handleBadgeError(target) {
+  if (!target || target.tagName !== 'IMG') return false;
+  if (!target.classList || !target.classList.contains('team-badge')) return false;
+  target.outerHTML = teamBadgeFallback(target.alt || '');
+  return true;
+}
+
+/* Delegated, capture-phase error handler: <img> error events do not bubble,
+ * so listen in capture on the document. Installed once at module load. */
+export function installBadgeErrorDelegation(doc) {
+  const d = doc || (typeof document !== 'undefined' ? document : null);
+  if (!d || d.__badgeErrorDelegated) return;
+  d.__badgeErrorDelegated = true;
+  d.addEventListener('error', e => { handleBadgeError(e.target); }, true);
+}
+if (typeof document !== 'undefined') installBadgeErrorDelegation(document);
+
 /* Shield-matching normalizer. NOTE: mirrored by scripts/check_missing_shields.py
  * (normalize()) and by the reference copy in scripts/tests \u2014 keep in sync.
  * Pipeline: NFD accent-strip \u2192 strip quotes (straight + curly) / dots /
@@ -240,80 +398,55 @@ export function normalizeTeamName(s) {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['".,\u2018\u2019\u201c\u201d]/g, '').replace(/\b(CF|UD|CD|AD|SD|AFC|SC|CP|CE|CEF|SSD|ATLETICO|ATL)\b/gi, '').toLowerCase().trim().replace(/\s+/g, ' ');
 }
 
-// Fichero de escudo de un equipo (spec §5.2, sustituye a teamBadge): la clave exacta de `shields`
-// o, si no está, la primera clave con el mismo nombre normalizado; null si no hay. Nunca por
-// subcadena: «UD Las Mesas Huracán» se llevaría el escudo de AD Huracán. Es la única búsqueda de
-// escudos de la app: la usan crest (ui.js) y buildClubIndex (myteam.js), que no deben divergir.
-const _shieldIndex = new WeakMap();
-export function shieldFile(name, shields) {
-  if (!name || !shields) return null;
-  if (Object.hasOwn(shields, name)) return shields[name];
-  let index = _shieldIndex.get(shields);
-  if (!index) {
-    index = new Map();
-    for (const [key, file] of Object.entries(shields)) {
-      const norm = normalizeTeamName(key);
-      if (norm && !index.has(norm)) index.set(norm, file);
+let _shieldsNorm = null;
+function getShieldsNorm() {
+  if (_shieldsNorm) return _shieldsNorm;
+  if (typeof SHIELDS === 'undefined') return (_shieldsNorm = {});
+  _shieldsNorm = {};
+  Object.keys(SHIELDS).forEach(k => {
+    const norm = normalizeTeamName(k);
+    if (norm && !_shieldsNorm[norm]) _shieldsNorm[norm] = SHIELDS[k];
+  });
+  return _shieldsNorm;
+}
+
+/* Broken images fall back to initials via the delegated document-level
+ * error handler (installBadgeErrorDelegation) — no inline handler attrs. */
+function shieldImg(file, name) {
+  return '<img class="team-badge" src="./escudos/' + escapeAttr(file) + '" alt="' + escapeAttr(name) + '">';
+}
+
+export function teamBadge(name) {
+  if (typeof SHIELDS !== 'undefined') {
+    // 1. Exact match
+    if (SHIELDS[name]) {
+      return shieldImg(SHIELDS[name], name);
     }
-    _shieldIndex.set(shields, index);
+    // 2. Normalized match (strip diacritics + common suffixes)
+    const norm = normalizeTeamName(name);
+    const shNorm = getShieldsNorm();
+    if (norm && shNorm[norm]) {
+      return shieldImg(shNorm[norm], name);
+    }
+    // 3. Substring match (short name inside long key, using normalized forms)
+    if (norm.length >= 4) {
+      const found = Object.keys(SHIELDS).find(k => {
+        const kn = normalizeTeamName(k);
+        return kn.length >= 4 && (kn.includes(norm) || norm.includes(kn));
+      });
+      if (found) {
+        return shieldImg(SHIELDS[found], name);
+      }
+    }
   }
-  return index.get(normalizeTeamName(String(name))) || null;
-}
-
-// Globales inmediatos de los data-*.js (spec §5.4): identificador desnudo con typeof, nunca a
-// través del objeto global, y null si el fichero no ha llegado. Es la puerta de los datos de la
-// app nueva: el resto de módulos los recibe por parámetro (datasets).
-export function readGlobals() {
-  return {
-    benjamin: typeof BENJAMIN !== 'undefined' ? BENJAMIN : null,
-    prebenjamin: typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : null,
-    history: typeof HISTORY !== 'undefined' ? HISTORY : null,
-    golBenj: typeof GOL_BENJ !== 'undefined' ? GOL_BENJ : null,
-    golPrebenj: typeof GOL_PREBENJ !== 'undefined' ? GOL_PREBENJ : null,
-    shields: typeof SHIELDS !== 'undefined' ? SHIELDS : null,
-    seasons: typeof SEASONS !== 'undefined' ? SEASONS : null,
-    cupBenjamin: typeof MASPALOMAS_CUP_BENJAMIN !== 'undefined' ? MASPALOMAS_CUP_BENJAMIN : null,
-    cupPrebenjamin: typeof MASPALOMAS_CUP_PREBENJAMIN !== 'undefined' ? MASPALOMAS_CUP_PREBENJAMIN : null,
-  };
-}
-
-// Versión de los datos (spec §5.4): la ?v= del <script> de data-seasons.js, que index.html
-// siempre carga; '' sin documento o sin ese <script>. La llevan todas las peticiones perezosas.
-export function dataVersion() {
-  if (typeof document === 'undefined') return '';
-  const src = document.querySelector('script[src*="data-seasons.js"]')?.getAttribute('src') || '';
-  return (src.match(/[?&]v=([^&#]+)/) || [])[1] || '';
-}
-
-// La query de las peticiones perezosas: '?v=<versión>' o ''.
-function dataQuery() {
-  const version = dataVersion();
-  return version ? `?v=${version}` : '';
-}
-
-// Nada espera para siempre (§7): si una petición perezosa no termina, cuerpo incluido, en
-// LAZY_TIMEOUT_MS, se aborta y la carga falla como con un error de red. Lo opcional pinta su
-// caja de error en el bloque; lo necesario, en la pantalla, siempre con «Reintentar».
-export const LAZY_TIMEOUT_MS = 15000;
-
-// Una petición perezosa: `file` con la ?v= de los datos y el tiempo límite. Devuelve lo que los
-// cargadores usan de una respuesta (ok, status y text()), con el cuerpo ya leído dentro del plazo.
-async function fetchData(file) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), LAZY_TIMEOUT_MS);
-  try {
-    const r = await fetch(`./${file}${dataQuery()}`, { signal: controller.signal });
-    const body = r.ok ? await r.text() : '';
-    return { ok: r.ok, status: r.status, text: async () => body };
-  } finally {
-    clearTimeout(timer);
-  }
+  return teamBadgeFallback(name);
 }
 
 /* Lazy loader for the full goal-timeline data. data-matchdetail.js is no
  * longer an eager <script> (it is ~359 KB); fetch+parse it on demand the
- * first time the match screen needs it. Single-flight + module cache.
- * ?v= is dataVersion() (the one of data-seasons.js), like every lazy loader.
+ * first time a match modal needs it. Single-flight + module cache. Mirrors
+ * loadAllHistoricalSeasons() in modals.js. ?v= is inherited from the eager
+ * data-matchdetail-keys.js script tag so cache-busting stays aligned.
  * On failure the single-flight promise is cleared (next call retries) and
  * a null sentinel is returned — callers already null-check. */
 let _matchDetail = null;
@@ -322,8 +455,10 @@ export async function ensureMatchDetail() {
   if (_matchDetail) return _matchDetail;
   if (_matchDetailPromise) return _matchDetailPromise;
   _matchDetailPromise = (async () => {
+    const ver = (document.querySelector('script[src*="data-matchdetail-keys.js"]')
+      ?.src.match(/v=([^&]+)/)?.[1]) || '';
     try {
-      const r = await fetchData('data-matchdetail.js');
+      const r = await fetch(`./data-matchdetail.js${ver ? `?v=${ver}` : ''}`);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const txt = await r.text();
       const m = txt.match(/const MATCH_DETAIL=(\{[\s\S]*\});/);
@@ -339,9 +474,41 @@ export async function ensureMatchDetail() {
   return _matchDetailPromise;
 }
 
+/* Get last N results for a team from HISTORY */
+export function getTeamForm(teamName, groupId, n) {
+  n = n || 5;
+  var jornadas = null;
+  if (isHistorical()) {
+    var group = getData().find(function(g){return g.id === groupId;});
+    if (group && group.jornadas) jornadas = group.jornadas;
+  } else {
+    if (typeof HISTORY === 'undefined' || !HISTORY[groupId]) return [];
+    jornadas = HISTORY[groupId];
+  }
+  if (!jornadas) return [];
+  var all = [];
+  Object.entries(jornadas).forEach(function(entry) {
+    var jorKey = entry[0], matches = entry[1];
+    // Keys may be 'Jornada N', 'N' or non-numeric copa rounds; jornadaNumber
+    // handles all three (null → sorted last, stable on date).
+    var num = jornadaNumber(jorKey);
+    var jorNum = num === null ? Number.MAX_SAFE_INTEGER : num;
+    matches.forEach(function(m) {
+      var date = m[0], home = m[1], away = m[2], hs = m[3], as_ = m[4];
+      if (hs === null || hs === undefined || as_ === null || as_ === undefined) return;
+      if (home !== teamName && away !== teamName) return;
+      var isHome = home === teamName;
+      var gf = isHome ? hs : as_, gc = isHome ? as_ : hs;
+      all.push({ jorNum: jorNum, date: date, result: gf > gc ? 'W' : gf < gc ? 'L' : 'D' });
+    });
+  });
+  all.sort(function(a,b){return (a.jorNum - b.jorNum) || String(a.date).localeCompare(String(b.date));});
+  return all.slice(-n);
+}
+
 // Season data cache — loaded lazily per historical season.
 // _seasonError[name] holds the last load failure message (cleared on
-// success) so the screen can show an honest error + retry instead of
+// success) so render.js can show an honest error + retry instead of
 // silently mislabeling current-season data as historical.
 const _seasonCache = {};
 const _seasonPromise = {};
@@ -352,27 +519,26 @@ export function getSeasonError(seasonName) {
   return _seasonError[seasonName] || null;
 }
 
-// Grupos de una temporada y categoría, con la Maspalomas Cup en 2025-26. Los de la temporada del
-// portal (o season vacío) salen de los globales; los de una pasada, de lo que cargó
-// ensureSeasonData, y [] mientras no esté cargada: nunca cae a los datos de la actual con la
-// etiqueta de otra temporada.
-export function getData(season, cat) {
-  if (season && season !== PORTAL.season) {
-    const data = _seasonCache[season];
+// Synchronous — uses cached data for historical seasons
+export function getData() {
+  if (S.season) {
+    const data = _seasonCache[S.season];
+    // Season requested but not loaded (failed or in flight): NEVER fall
+    // back to current-season globals — that would render 2025-26 data
+    // under a historical banner. Empty + getSeasonError() is the honest state.
     if (!data) return [];
-    return withSeasonCup((cat === 'benjamin' ? data.benjamin : data.prebenjamin) || [], season, cat);
+    return withSeasonCup((S.cat === 'benjamin' ? data.benjamin : data.prebenjamin) || [], S.season);
   }
-  const cur = cat === 'benjamin'
+  const cur = S.cat === 'benjamin'
     ? (typeof BENJAMIN !== 'undefined' ? BENJAMIN : null)
     : (typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : null);
-  return withSeasonCup(cur || [], PORTAL.season, cat);
+  return withSeasonCup(cur || [], PORTAL.season);
 }
 
-// Añade la Maspalomas Cup de la categoría a los grupos de 2025-26: es de esa temporada también
-// después de activar 2026/27.
-export function withSeasonCup(groups, season, cat) {
+function withSeasonCup(groups, season) {
+  // This independent tournament belongs to 2025/26, including after rollover.
   if (season === '2025-2026') {
-    const cup = cat === 'benjamin'
+    const cup = S.cat === 'benjamin'
       ? (typeof MASPALOMAS_CUP_BENJAMIN !== 'undefined' ? MASPALOMAS_CUP_BENJAMIN : null)
       : (typeof MASPALOMAS_CUP_PREBENJAMIN !== 'undefined' ? MASPALOMAS_CUP_PREBENJAMIN : null);
     if (cup && cup.length) groups = groups.concat(cup);
@@ -380,7 +546,7 @@ export function withSeasonCup(groups, season, cat) {
   return groups;
 }
 
-// Async — call this before reading a historical season with getData or createModel.
+// Async — call this before renderSection when switching historical seasons.
 // Single-flight per season; on failure the in-flight promise is cleared so
 // a later call (e.g. the "Reintentar" button) refetches. Returns the season
 // object, or null as error sentinel (see getSeasonError for the message).
@@ -389,8 +555,11 @@ export async function ensureSeasonData(seasonName) {
   if (_seasonCache[seasonName]) return _seasonCache[seasonName];
   if (_seasonPromise[seasonName]) return _seasonPromise[seasonName];
   _seasonPromise[seasonName] = (async () => {
+    // Cache-bust per-season files alongside index.html ?v= parameter
+    const ver = (document.querySelector('script[src*="data-seasons.js"]')?.src.match(/v=([^&]+)/)?.[1]) || '';
+    const url = `./data-season-${seasonName}.js${ver ? `?v=${ver}` : ''}`;
     try {
-      const r = await fetchData(`data-season-${seasonName}.js`);
+      const r = await fetch(url);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const text = await r.text();
       // Extract JSON: "const SEASON_2024_2025=..." → parse the object
@@ -401,7 +570,7 @@ export async function ensureSeasonData(seasonName) {
       delete _seasonError[seasonName];
       return seasonObj;
     } catch (e) {
-      console.error('[state] ensureSeasonData failed:', seasonName, e);
+      console.error('[state] ensureSeasonData failed:', url, e);
       _seasonError[seasonName] = (e && e.message) || String(e);
       return null; // error sentinel
     } finally {
@@ -447,6 +616,11 @@ const _playersPromise = {};
 
 function _seasonSuffix(season) { return season.replace('-', '_'); }
 
+function _versionFromMatchDetailKeys() {
+  return (document.querySelector('script[src*="data-matchdetail-keys.js"]')
+    ?.src.match(/v=([^&]+)/)?.[1]) || '';
+}
+
 /* On failure both loaders return a null sentinel WITHOUT caching it and
  * clear their single-flight promise, so a later call retries the fetch
  * (a transient network error no longer blanks the feature for the whole
@@ -455,9 +629,10 @@ export async function ensureLineups(season) {
   if (_lineups[season] !== undefined) return _lineups[season];
   if (_lineupsPromise[season]) return _lineupsPromise[season];
   _lineupsPromise[season] = (async () => {
+    const ver = _versionFromMatchDetailKeys();
     const suffix = _seasonSuffix(season);
     try {
-      const r = await fetchData(`data-lineups-${season}.js`);
+      const r = await fetch('./data-lineups-' + season + '.js' + (ver ? '?v=' + ver : ''));
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const txt = await r.text();
       const re = new RegExp('const LINEUPS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*\\});');
@@ -478,9 +653,10 @@ export async function ensurePlayers(season) {
   if (_players[season] !== undefined) return _players[season];
   if (_playersPromise[season]) return _playersPromise[season];
   _playersPromise[season] = (async () => {
+    const ver = _versionFromMatchDetailKeys();
     const suffix = _seasonSuffix(season);
     try {
-      const r = await fetchData(`data-players-${season}.js`);
+      const r = await fetch('./data-players-' + season + '.js' + (ver ? '?v=' + ver : ''));
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const txt = await r.text();
       const reP = new RegExp('const PLAYERS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*?\\});');
@@ -499,32 +675,20 @@ export async function ensurePlayers(season) {
   return _playersPromise[season];
 }
 
-// data-health.json (spec §4.10 y §7): la comprobación de las fuentes, parseada, o null si no
-// llega (sin conexión, por ejemplo). Un único vuelo: las llamadas simultáneas comparten la
-// petición; un fallo no se memoriza y la siguiente llamada reintenta.
-let _health = null;
-let _healthPromise = null;
-async function loadHealth() {
-  try {
-    const r = await fetchData('data-health.json');
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    _health = JSON.parse(await r.text());
-    return _health;
-  } catch (e) {
-    console.warn('[state] ensureHealth failed:', e.message);
-    return null;
-  }
-}
-export async function ensureHealth() {
-  if (_health) return _health;
-  if (!_healthPromise) _healthPromise = loadHealth().finally(() => { _healthPromise = null; });
-  return _healthPromise;
+export function getCurrentSeason() {
+  const current = typeof SEASONS !== 'undefined'
+    ? SEASONS.find(s => s.current) : null;
+  return S.season || current?.name || PORTAL.season;
 }
 
-// Grupos por fase, ordenados por el número de su nombre (decisión 1: recibe los grupos).
-export function getPhases(groups) {
+export function isHistorical() {
+  return !!S.season;
+}
+
+export function getPhases() {
+  const data = getData();
   const map = {};
-  (groups || []).forEach(g => {
+  data.forEach(g => {
     if (!map[g.phase]) map[g.phase] = [];
     map[g.phase].push(g);
   });
@@ -559,14 +723,114 @@ export function countMatches(groups, hist) {
   return matches;
 }
 
-// Grupos, equipos y partidos de una temporada y categoría (decisión 1: recibe las dos).
-export function countStats(season, cat) {
-  const data = getData(season, cat);
-  const historical = !!season && season !== PORTAL.season;
-  const hist = (!historical && typeof HISTORY !== 'undefined') ? HISTORY : null;
+export function countStats() {
+  const data = getData();
+  const hist = (!isHistorical() && typeof HISTORY !== 'undefined') ? HISTORY : null;
   return {
     groups: data.length,
-    teams: data.reduce((n, g) => n + (g.standings || []).length, 0),
+    teams: data.reduce((n, g) => n + g.standings.length, 0),
     matches: countMatches(data, hist),
   };
 }
+
+/* ====== CLASIFICACION UNIFICADA PREBENJAMIN ====== */
+export function buildUnifiedPrebenjamin() {
+  const allTeams = [];
+  const groupSymbols = { 1: '①', 2: '②', 3: '③' };
+  const groupColors = { 1: '#4285F4', 2: '#EA4335', 3: '#34A853' };
+  
+  if (typeof PREBENJAMIN === 'undefined') return document.createElement('div');
+
+  // Only the league groups (PG1/PG2/PG3) — never the Copa de Campeones (PCC*),
+  // which otherwise took a numbered slot and pushed PG3 out of the table.
+  const ligaGroups = unifiedPrebenLeagueGroups(PREBENJAMIN);
+
+  ligaGroups.forEach((g, idx) => {
+    if (!g.standings || !g.standings.length) return;
+    const groupNum = idx + 1;
+    const sym = groupSymbols[groupNum] || '○';
+    const color = groupColors[groupNum] || '#888';
+    
+    g.standings.forEach(row => {
+      const pts = row[2];
+      const j = row[3];
+      const ppg = j > 0 ? (pts / j) : 0;
+      allTeams.push({
+        name: row[1], pts, j, g_wins: row[4], e: row[5], p: row[6],
+        gf: row[7] || 0, gc: row[8] || 0, df: row[9] || 0,
+        ppg: Math.round(ppg * 100) / 100,
+        groupNum, sym, color, groupName: g.name
+      });
+    });
+  });
+  
+  // Sort by PPG first, then total points, then GD
+  allTeams.sort((a, b) => b.ppg - a.ppg || b.pts - a.pts || b.df - a.df);
+  
+  const wrapper = document.createElement('div');
+  let html = `<div class="phase-header"><span class="phase-icon">🏆</span> CLASIFICACIÓN UNIFICADA PREBENJAMÍN</div>`;
+  html += '<div class="table-wrap"><table class="standings-table unified-table"><thead><tr>';
+  html += '<th>#</th><th>Equipo</th><th>GRP</th><th>PPJ</th><th>PTS</th><th>J</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DF</th>';
+  html += '</tr></thead><tbody>';
+  
+  allTeams.forEach((t, i) => {
+    const pos = i + 1;
+    const cls = (pos <= 3 ? 'pos-' + pos : '') + (isFeatured(t.name) ? ' featured-team' : '');
+    const dfCls = t.df > 0 ? 'df-pos' : (t.df < 0 ? 'df-neg' : '');
+    const dfStr = t.df > 0 ? '+' + t.df : t.df;
+    html += `<tr class="${cls.trim()}">`;
+    html += `<td>${pos}</td>`;
+    html += `<td class="team-name-cell" role="button" tabindex="0" data-group="${escapeAttr(ligaGroups[t.groupNum - 1].id)}" data-team="${escapeAttr(t.name)}">${teamBadge(t.name)} ${escapeHtml(t.name)}</td>`;
+    html += `<td style="color:${t.color};font-weight:700;text-align:center" title="${escapeAttr(t.groupName)}">${t.sym}</td>`;
+    html += `<td class="pts-col">${t.ppg}</td>`;
+    html += `<td>${t.pts}</td><td>${t.j}</td><td>${t.g_wins}</td><td>${t.e}</td><td>${t.p}</td>`;
+    html += `<td>${t.gf}</td><td>${t.gc}</td>`;
+    html += `<td class="${dfCls}">${dfStr}</td>`;
+    html += '</tr>';
+  });
+  
+  html += '</tbody></table></div>';
+  html += '<div class="unified-legend">';
+  html += '<span>PPJ = Puntos por partido</span>';
+  for (let n = 1; n <= 3; n++) {
+    if (ligaGroups[n - 1]) {
+      html += `<span style="color:${groupColors[n]}">${groupSymbols[n]} ${escapeHtml(ligaGroups[n - 1].name)}</span>`;
+    }
+  }
+  html += '</div>';
+  
+  wrapper.innerHTML = html;
+  return wrapper;
+}
+
+/* ====== SPARKLINE ====== */
+export function buildSparkline(data) {
+  if (!data || data.length < 2) return '';
+  const w = 300, h = 60, pad = 4;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+  const stepX = (w - pad * 2) / (data.length - 1);
+
+  const points = data.map((v, i) => {
+    const x = pad + i * stepX;
+    const y = h - pad - ((v - min) / range) * (h - pad * 2);
+    return `${x},${y}`;
+  });
+
+  const fillPoints = `${pad},${h - pad} ${points.join(' ')} ${pad + (data.length - 1) * stepX},${h - pad}`;
+
+  let svg = `<div class="sparkline-wrap">`;
+  svg += `<svg class="sparkline" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">`;
+  svg += `<polygon points="${fillPoints}" fill="rgba(0,230,118,0.1)" />`;
+  svg += `<polyline points="${points.join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`;
+  // End dot
+  const lastPt = points[points.length - 1].split(',');
+  svg += `<circle cx="${lastPt[0]}" cy="${lastPt[1]}" r="3" fill="var(--accent)" />`;
+  svg += '</svg>';
+  svg += `<div class="sparkline-labels"><span>J1: ${data[0]} pts</span><span>J${data.length}: ${data[data.length - 1]} pts</span></div>`;
+  svg += '</div>';
+  return svg;
+}
+
+export { S };

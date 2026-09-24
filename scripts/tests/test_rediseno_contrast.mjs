@@ -1,4 +1,4 @@
-// Plan B1, tarea 11: tokens de style-acta.css (spec §3.1) y contraste AA
+// Plan B1, tarea 11: tokens de acta.css (spec §3.1) y contraste AA
 // (spec §3.1, §8 y §11). Lee los tokens de los dos temas tal como están en el
 // CSS: si alguien toca un color, el test recalcula el contraste real.
 import { test } from 'node:test';
@@ -33,7 +33,7 @@ function parseCss(src) {
   return rules;
 }
 
-const rules = parseCss(readFileSync(join(ROOT, 'style-acta.css'), 'utf8'));
+const rules = parseCss(readFileSync(join(ROOT, 'acta.css'), 'utf8'));
 const tokensOf = (rule) => Object.fromEntries(
   [...rule.body.matchAll(/--([a-z-]+)\s*:\s*(#[0-9A-Fa-f]{6})\s*;/g)].map(m => [m[1], m[2].toUpperCase()]));
 const rootRule = (media) => rules.find(r => r.selector === ':root' && media(r.media));

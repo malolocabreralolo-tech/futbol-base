@@ -1036,3 +1036,8 @@ export function sourceInfo(group, historical = false) {
   const m = historical ? null : String((group && group.url) || '').match(/^https?:\/\/(?:www\.)?([^/?#:@\s]+)/i);
   return { kind, source: m ? m[1].toLowerCase() : null, url: m ? group.url : null };
 }
+
+// «2025-2026» → «2025/26», la forma de las temporadas en pantalla; lo demás, tal cual.
+export function seasonLabel(season) {
+  return String(season ?? '').replace(/^(\d{4})-\d{2}(\d{2})$/, '$1/$2');
+}

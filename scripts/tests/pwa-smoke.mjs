@@ -1,99 +1,281 @@
+// PWA smoke (spec §5.5 y §11): el paso de la app anterior al rediseño, con el service worker de verdad.
+// La versión anterior es la app de main 31a15b8 con su sw.js (scripts/tests/fixtures/app-anterior);
+// después se publica el árbol de trabajo con las marcas de versión subidas, como el despliegue de B4 y
+// B5. Las dos versiones reciben los mismos datos y el mismo src/config.js, congelados: los de las
+// fixtures de B1 (23/09/2026), nunca los data-*.js vivos, que cambian con el bot y al activar 2026/27.
+// El SW anterior sirve los .js de src/ con stale-while-revalidate y los .css con cache-first, los dos
+// ignorando la ?v= (A1 de la revisión):
+//  - la hoja nueva va en otra URL, acta.css, que su caché no tiene;
+//  - index.html quita de su caché app.js, state.js y links.js antes de importar app.js.
+// Mientras el SW nuevo se instala (su precache queda retenido), cada apertura tiene que ser entera de
+// una versión: la 1.ª, la anterior; la 2.ª y la 3.ª, la nueva (documento, hoja y módulos), también si
+// en la 1.ª falló la actualización en segundo plano de app.js y state.js. Sin conexión entre la 1.ª y
+// la 2.ª, el index.html nuevo no encuentra ni la hoja ni los módulos: el aviso con «Reintentar», que
+// con conexión abre la app nueva. Con el SW nuevo activo, la app nueva funciona sin conexión.
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { startServer, findChrome } from './render-smoke.mjs';
 import { waitForAsync } from './browser-wait.mjs';
+import { fixture } from './fixtures/rediseno/load.mjs';
 
 const { chromium } = createRequire(import.meta.url)('playwright');
+const ROOT = fileURLToPath(new URL('../../', import.meta.url));
+const PREVIOUS = join(ROOT, 'scripts', 'tests', 'fixtures', 'app-anterior');
+// La portada del rediseño, en cualquier estado (spec §11), y la de la app anterior.
+const HOME = 'section[data-screen="home"][data-state]';
+const OLD_HOME = '.me-hero';
+const read = (dir, file) => {
+  const path = join(dir, file);
+  return existsSync(path) && statSync(path).isFile() ? readFileSync(path, 'utf8') : null;
+};
+const versionOf = (sw) => sw.match(/CACHE_NAME = 'futbolbase-v([^']+)'/)[1];
+const OLD_VERSION = versionOf(read(PREVIOUS, 'sw.js'));
+const TREE_VERSION = versionOf(read(ROOT, 'sw.js'));
+const PUBLISHED = '20991231a';
+const oldCache = `futbolbase-v${OLD_VERSION}`;
+const expected = `futbolbase-v${PUBLISHED}`;
+const publish = (file, text) => (file === 'index.html' || file === 'sw.js' ? text.replaceAll(TREE_VERSION, PUBLISHED) : text);
+const NOTICE = 'No se pudo abrir la versión nueva de la app. Comprueba la conexión y pulsa Reintentar.';
+
+// Los datos y la configuración de las dos versiones, congelados (R2-2 de la revisión adversarial): las
+// fixtures de B1, el día de los datos de hoy (23/09/2026), y el config.js de la app anterior (2025/26,
+// con Las Mesas en PG2). Lo que las fixtures no traen, vacío: las temporadas archivadas, que el SW
+// anterior precachea todas, y las fichas de jugadores, que la app anterior pide para su portada.
+const js = (pairs) => ({ type: 'text/javascript', body: pairs.map(([name, value]) => `const ${name}=${JSON.stringify(value)};`).join('\n') + '\n' });
+const FROZEN = (() => {
+  const raw = fixture('current-2025-2026');
+  const past = fixture('historical-2024-2025');
+  const cups = fixture('cups-2025-2026');
+  return {
+    'src/config.js': { type: 'text/javascript', body: read(PREVIOUS, 'src/config.js') },
+    'data-benjamin.js': js([['BENJAMIN', raw.benjamin]]),
+    'data-prebenjamin.js': js([['PREBENJAMIN', raw.prebenjamin]]),
+    'data-history.js': js([['HISTORY', raw.history]]),
+    'data-goleadores.js': js([['GOL_BENJ', []], ['GOL_PREBENJ', []]]),
+    'data-matchdetail-keys.js': js([['MATCH_DETAIL_KEYS', {}]]),
+    'data-shields.js': js([['SHIELDS', fixture('shields')]]),
+    'data-stats.js': js([['STATS', {}]]),
+    'data-seasons.js': js([['SEASONS', [{ name: '2025-2026', current: true }, { name: '2024-2025', current: false }]]]),
+    'data-maspalomas-cup-2026.js': js([['MASPALOMAS_CUP_BENJAMIN', cups.benjamin], ['MASPALOMAS_CUP_PREBENJAMIN', cups.prebenjamin]]),
+    'data-season-2024-2025.js': js([['SEASON_2024_2025', { name: '2024-2025', current: false, benjamin: past.benjamin, prebenjamin: past.prebenjamin }]]),
+    'data-matchdetail.js': js([['MATCH_DETAIL', fixture('matchdetail')]]),
+    'data-lineups-2025-2026.js': js([['LINEUPS_2025_2026', fixture('lineups-2025-2026')]]),
+    'data-health.json': { type: 'application/json', body: JSON.stringify(fixture('health')) },
+  };
+})();
+function frozen(file) {
+  if (Object.hasOwn(FROZEN, file)) return FROZEN[file];
+  const [, kind, from, to] = file.match(/^data-(season|players)-(\d{4})-(\d{4})\.js$/) || [];
+  if (kind === 'season') return js([[`SEASON_${from}_${to}`, { name: `${from}-${to}`, current: false, benjamin: [], prebenjamin: [] }]]);
+  if (kind === 'players') return js([[`PLAYERS_${from}_${to}`, {}], [`TEAMS_${from}_${to}`, {}]]);
+  return null;
+}
+
+// De qué versión es lo que sirvió una apertura: la anterior, la nueva, igual en las dos o ninguna.
+function generation(file, body) {
+  const data = frozen(file);
+  if (data) return body === data.body ? 'igual' : 'ninguna';
+  const before = read(PREVIOUS, file);
+  const now = read(ROOT, file);
+  const after = now === null ? null : publish(file, now);
+  if (body === before && body === after) return 'igual';
+  if (body === after) return 'nueva';
+  if (body === before) return 'anterior';
+  return 'ninguna';
+}
+
 const upstream = await startServer();
-let legacy = true;
-const oldCache = 'futbolbase-v-test-previous';
-const expected = readFileSync(new URL('../../sw.js', import.meta.url), 'utf8').match(/CACHE_NAME = '([^']+)'/)[1];
+let phase = 'anterior';
+let release;
+const precacheHeld = new Promise((resolve) => { release = resolve; });
+const failing = new Set();   // actualizaciones en segundo plano del SW anterior que fallan
 const proxy = createServer(async (req, res) => {
-  if (req.url.split('?')[0] === '/sw.js' && legacy) {
-    res.writeHead(200, { 'Content-Type': 'text/javascript', 'Cache-Control': 'no-store' });
-    res.end(`self.addEventListener('install', e => { e.waitUntil(caches.open('${oldCache}').then(c => c.put('./src/config.js', new Response('previous version')))); self.skipWaiting(); }); self.addEventListener('activate', e => e.waitUntil(self.clients.claim())); self.addEventListener('fetch', e => e.respondWith(fetch(e.request))); self.addEventListener('message', e => e.ports[0]?.postMessage('old'));`);
-    return;
-  }
+  const url = new URL(req.url, 'http://portal.test');
+  const file = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.slice(1));
+  const fromWorker = req.headers['sec-fetch-dest'] === 'empty';
+  const isConfig = file === 'src/config.js';
+  const isDocument = file === 'index.html';
+  const cacheControl = isConfig || isDocument ? 'public, max-age=3600' : 'no-store';
   try {
+    if (phase === 'nueva') {
+      // El precache del SW nuevo (con la ?v= publicada) espera a que la prueba lo suelte.
+      if (fromWorker && url.searchParams.get('v') === PUBLISHED) await precacheHeld;
+      // La actualización en segundo plano del SW anterior (con su ?v=) de un módulo que falla.
+      if (fromWorker && url.searchParams.get('v') === OLD_VERSION && failing.has(file)) {
+        res.writeHead(503, { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' });
+        res.end('no disponible');
+        return;
+      }
+    }
+    // Datos y config.js, congelados y los mismos en las dos versiones; ningún data-* vivo.
+    const data = frozen(file);
+    if (data || file.startsWith('data-')) {
+      if (!data) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
+      // Una CDN que aún guarda las URL sin ?v= de antes de publicar: el SW nuevo las pide con ?v=.
+      const stale = phase === 'nueva' && isConfig && !url.searchParams.has('v');
+      res.writeHead(data ? 200 : 404, { 'Content-Type': data ? data.type : 'text/plain', 'Cache-Control': cacheControl });
+      res.end(data ? data.body + (stale ? '\n// previously cached HTTP asset' : '') : 'no está congelado');
+      return;
+    }
+    if (phase === 'anterior') {
+      const body = read(PREVIOUS, file);
+      if (body !== null) {
+        res.writeHead(200, { 'Content-Type': file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : file.endsWith('.svg') ? 'image/svg+xml' : file.endsWith('.json') ? 'application/json' : 'text/javascript', 'Cache-Control': cacheControl });
+        res.end(body);
+        return;
+      }
+    }
     const response = await fetch(`http://127.0.0.1:${upstream.address().port}${req.url}`);
-    if (!response.ok) console.error('PWA fixture HTTP', response.status, req.url);
-    const isConfig = req.url.split('?')[0] === '/src/config.js';
-    const isDocument = ['/', '/index.html'].includes(req.url.split('?')[0]);
-    // Model an edge cache that still has old bare URLs after publication.
-    const stale = legacy || !new URL(req.url, 'http://portal.test').searchParams.has('v');
-    res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'text/plain', 'Cache-Control': isConfig || isDocument ? 'public, max-age=3600' : 'no-store' });
-    const body = Buffer.from(await response.arrayBuffer());
-    res.end(req.url.startsWith('/sw.js') ? body.toString() + "\nself.addEventListener('message', e => e.ports[0]?.postMessage(CACHE_NAME));"
-      : isConfig && stale ? body.toString() + '\n// previously cached HTTP asset'
-      : isDocument && stale ? body.toString() + '\n<!-- previously cached HTTP document -->' : body);
-  } catch { res.writeHead(500); res.end(); }
+    // Los módulos de la app anterior ya no existen: su SW los pide en segundo plano y le dan 404.
+    const expectedGone = phase === 'nueva' && fromWorker && read(PREVIOUS, file) !== null && read(ROOT, file) === null;
+    if (!response.ok && !expectedGone) console.error('PWA fixture HTTP', response.status, req.url);
+    let body = Buffer.from(await response.arrayBuffer());
+    if (phase === 'nueva' && response.ok) {
+      let text = publish(file, body.toString());
+      if (file === 'sw.js') text += "\nself.addEventListener('message', e => e.ports[0]?.postMessage(CACHE_NAME));";
+      // Una CDN que aún guarda las URL sin ?v= de antes de publicar: el SW nuevo las pide con ?v=.
+      if (isDocument && !url.searchParams.has('v')) text += '\n<!-- previously cached HTTP document -->';
+      if (file === 'sw.js' || file === 'index.html') body = Buffer.from(text);
+    }
+    res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'text/plain', 'Cache-Control': cacheControl });
+    res.end(body);
+  } catch {
+    res.writeHead(500);
+    res.end();
+  }
 });
-await new Promise(resolve => proxy.listen(0, '127.0.0.1', resolve));
+await new Promise((resolve) => proxy.listen(0, '127.0.0.1', resolve));
+const base = `http://127.0.0.1:${proxy.address().port}/index.html`;
+
 let browser;
 try {
   browser = await chromium.launch({ executablePath: findChrome(), headless: true, args: ['--no-sandbox'] });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'es-ES' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'es-ES', timezoneId: 'Atlantic/Canary' });
+  // La app anterior pide sus fuentes a Google: fuera de la prueba.
+  await context.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (route) => route.abort());
+  context.on('console', (message) => { if (message.text().includes('[SW]')) console.log(message.text()); });
   const page = await context.newPage();
-  context.on('console', message => { if (message.text().includes('[SW]')) console.log(message.text()); });
-  page.setDefaultTimeout(15000);
+  page.setDefaultTimeout(20000);
   const errors = [];
-  page.on('pageerror', error => errors.push(error.message));
-  await page.goto(`http://127.0.0.1:${proxy.address().port}/index.html`);
-  await page.locator('.me-hero').waitFor();
-  // Finish the page's initial registration/update cycle before simulating
-  // publication; otherwise an in-flight legacy response can arrive afterward.
-  await page.evaluate(async () => (await navigator.serviceWorker.ready).update());
-  await waitForAsync(page, old => caches.keys().then(keys => keys.includes(old)), oldCache);
-  legacy = false;
-  await page.evaluate(async () => (await navigator.serviceWorker.getRegistration()).update());
-  await waitForAsync(page, ({ expected, oldCache }) => caches.keys().then(keys => keys.includes(expected) && !keys.includes(oldCache)), { expected, oldCache });
-  await waitForAsync(page, async () => {
-    const registration = await navigator.serviceWorker.getRegistration();
-    return registration?.active?.state === 'activated' && navigator.serviceWorker.controller === registration.active;
+  page.on('pageerror', (error) => errors.push(error.message));
+  // Lo que sirve cada apertura (documento, hojas y módulos de src/), con su versión.
+  let served = [];
+  page.on('response', (response) => {
+    const url = new URL(response.url());
+    if (url.origin !== new URL(base).origin || !/^\/(index\.html)?$|\.css$|^\/src\/.+\.js$/.test(url.pathname)) return;
+    const file = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname.slice(1));
+    served.push(response.text().then((body) => ({ file, generation: generation(file, body) }), () => ({ file, generation: 'sin cuerpo' })));
   });
-  await waitForAsync(page, expected => new Promise(resolve => {
-    const channel = new MessageChannel();
-    channel.port1.onmessage = event => resolve(event.data === expected);
-    navigator.serviceWorker.controller?.postMessage('version', [channel.port2]);
-    setTimeout(() => resolve(false), 500);
-  }), expected);
+  const opening = async (label, wanted) => {
+    const seen = await Promise.all(served);
+    served = [];
+    const byGeneration = {};
+    for (const { file, generation: g } of seen) (byGeneration[g] ||= []).push(file);
+    const other = wanted === 'nueva' ? 'anterior' : 'nueva';
+    assert.ok(seen.some(({ file }) => file === 'index.html'), `${label}: no llegó el documento`);
+    assert.ok(seen.some(({ file }) => file.endsWith('.css')), `${label}: no llegó ninguna hoja`);
+    for (const g of [other, 'ninguna', 'sin cuerpo']) {
+      assert.deepEqual(byGeneration[g] || [], [], `${label}: la versión ${wanted} con ficheros de «${g}»`);
+    }
+    assert.deepEqual(errors, [], `${label}: errores de JavaScript`);
+  };
+
+  // 1. La app anterior instalada: su SW controla la página y tiene su precache.
+  await page.goto(base);
+  await page.locator(OLD_HOME).waitFor();
+  await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   await page.reload();
-  await page.locator('.me-hero').waitFor();
-  const config = await page.evaluate(async name => {
-    const cache = await caches.open(name);
-    const response = await cache.match('./src/config.js');
-    if (!response) throw new Error('Missing config. Cached: ' + (await cache.keys()).map(r => r.url).join(', '));
-    return response.text();
-  }, expected);
-  assert.ok(config.includes('export const PORTAL'));
-  assert.ok(!config.includes('previously cached HTTP asset'), 'new PWA must bypass HTTP entries cached before publication');
-  assert.ok(!(await page.content()).includes('previously cached HTTP document'), 'navigation must retain the newly published HTML');
-  assert.equal(await page.evaluate(async name => (await (await caches.open(name)).match('./index.html'))?.status, expected), 200);
-  await page.evaluate(async () => (await navigator.serviceWorker.ready).update());
-  await waitForAsync(page, async () => {
-    const registration = await navigator.serviceWorker.getRegistration();
-    return registration?.active?.state === 'activated' && navigator.serviceWorker.controller === registration.active;
-  });
-  await waitForAsync(page, expected => new Promise(resolve => {
-    const channel = new MessageChannel();
-    channel.port1.onmessage = event => resolve(event.data === expected);
-    navigator.serviceWorker.controller?.postMessage('version', [channel.port2]);
-    setTimeout(() => resolve(false), 500);
-  }), expected);
+  await page.locator(OLD_HOME).waitFor();
+  await waitForAsync(page, (name) => caches.keys().then((keys) => keys.includes(name) && !!navigator.serviceWorker.controller), oldCache);
+  served = [];
+
+  // 2. Se publica el rediseño. En la 1.ª apertura, la actualización en segundo plano de app.js y
+  // state.js falla: su caché se queda con los viejos, aunque ya guarde el index.html nuevo.
+  phase = 'nueva';
+  failing.add('src/app.js');
+  failing.add('src/state.js');
+  await page.reload();
+  await page.locator(OLD_HOME).waitFor();
+  await opening('1.ª apertura', 'anterior');
+  await waitForAsync(page, (name) => caches.open(name).then((cache) => cache.match('./index.html'))
+    .then((response) => (response ? response.text() : '')).then((text) => text.includes('id="contenido"')), oldCache);
+  failing.clear();
+
+  // 3. Sin conexión, con el SW anterior al mando y el index.html nuevo en su caché, que no tiene ni
+  // acta.css ni los módulos nuevos: el aviso con «Reintentar», nunca «Cargando…» sin más (R2-3).
   await context.setOffline(true);
   await page.reload();
-  await page.locator('.me-hero').waitFor();
-  assert.ok(!(await page.content()).includes('previously cached HTTP document'), 'background revalidation cannot restore the previous HTML');
-  await page.locator('#chooseTeam').click();
-  await page.locator('#favoriteSearch').fill('Mesas');
-  assert.ok(await page.locator('.picker-team').count() > 0);
+  const notice = page.locator('#contenido [role="alert"]');
+  await notice.waitFor();
+  assert.equal((await notice.locator('p').textContent()).trim(), NOTICE);
+  const retry = notice.getByRole('button', { name: 'Reintentar' });
+  assert.ok((await retry.boundingBox()).height >= 44, '«Reintentar» mide al menos 44 px');
+  assert.equal(await page.locator(`${HOME}, ${OLD_HOME}, [data-skeleton]`).count(), 0, 'sin conexión: ni una portada ni el esqueleto');
+  assert.deepEqual(errors, [], 'sin conexión: errores de JavaScript');
+  served = [];
+
+  // 4. Con conexión, «Reintentar» abre la app nueva (2.ª apertura), y recargar, la 3.ª; con el SW
+  // anterior todavía al mando: la app nueva entera, con acta.css.
+  await context.setOffline(false);
+  for (const [label, open] of [['2.ª apertura, con «Reintentar»', () => retry.click()], ['3.ª apertura', () => page.reload()]]) {
+    await open();
+    await page.locator(HOME).waitFor();
+    await opening(label, 'nueva');
+    assert.ok(await page.evaluate((name) => caches.keys().then((keys) => keys.includes(name)), oldCache), `${label}: el SW anterior ya no manda`);
+    const look = await page.evaluate(() => ({
+      sheets: [...document.styleSheets].map((sheet) => new URL(sheet.href || location.href).pathname),
+      font: getComputedStyle(document.body).fontFamily.split(',')[0].replace(/["']/g, ''),
+      bar: getComputedStyle(document.querySelector('.tabbar')).position,
+    }));
+    assert.deepEqual(look, { sheets: ['/acta.css'], font: 'Public Sans', bar: 'fixed' }, label);
+  }
+
+  // 5. El SW nuevo termina de instalarse, borra la caché anterior y toma el mando.
+  release();
+  await waitForAsync(page, ({ expected, oldCache }) => caches.keys().then((keys) => keys.includes(expected) && !keys.includes(oldCache)), { expected, oldCache });
+  await waitForAsync(page, async () => {
+    const registration = await navigator.serviceWorker.getRegistration();
+    return registration?.active?.state === 'activated' && navigator.serviceWorker.controller === registration.active;
+  });
+  await waitForAsync(page, (expected) => new Promise((resolve) => {
+    const channel = new MessageChannel();
+    channel.port1.onmessage = (event) => resolve(event.data === expected);
+    navigator.serviceWorker.controller?.postMessage('version', [channel.port2]);
+    setTimeout(() => resolve(false), 500);
+  }), expected);
+  await page.reload();
+  await page.locator(HOME).waitFor();
+  await opening('con el SW nuevo', 'nueva');
+  const config = await page.evaluate(async (name) => {
+    const response = await (await caches.open(name)).match('./src/config.js');
+    return response ? response.text() : null;
+  }, expected);
+  assert.ok(config && config.includes('export const PORTAL'), 'config.js precacheado');
+  assert.ok(!config.includes('previously cached HTTP asset'), 'the new PWA must bypass HTTP entries cached before publication');
+  assert.ok(!(await page.content()).includes('previously cached HTTP document'), 'navigation must retain the newly published HTML');
+  assert.equal(await page.evaluate(async (name) => (await (await caches.open(name)).match('./index.html'))?.status, expected), 200);
+
+  // 6. Sin conexión: la portada, con la fuente, los iconos y la hoja precacheados.
+  await context.setOffline(true);
+  await page.reload();
+  await page.locator(HOME).waitFor();
+  await opening('sin conexión', 'nueva');
+  assert.match(await page.locator(HOME).getAttribute('data-state'), /^[ABCD]$/);
+  assert.equal(await page.locator('h1').count(), 1);
+  const precached = await page.evaluate(async (name) => (await (await caches.open(name)).keys()).map((r) => new URL(r.url).pathname), expected);
+  for (const path of ['/fonts/PublicSans-latin.woff2', '/icons/icon-192.png', '/src/screen-home.js', '/acta.css']) {
+    assert.ok(precached.includes(path), `${path} is not precached`);
+  }
   assert.deepEqual(errors, []);
-  console.log(`PASS: previous PWA cache replaced by ${expected}; dashboard and team search work offline`);
+  console.log(`PASS: de la app anterior (su SW real) al rediseño, con datos congelados: la 1.ª apertura es la anterior; sin conexión a medias, el aviso con «Reintentar»; la 2.ª y la 3.ª, la nueva con acta.css y sin mezclar módulos; ${expected} funciona sin conexión`);
   await context.close();
 } finally {
   if (browser) await browser.close();
-  proxy.closeAllConnections(); upstream.closeAllConnections();
-  await Promise.all([new Promise(resolve => proxy.close(resolve)), new Promise(resolve => upstream.close(resolve))]);
+  proxy.closeAllConnections();
+  upstream.closeAllConnections();
+  await Promise.all([new Promise((resolve) => proxy.close(resolve)), new Promise((resolve) => upstream.close(resolve))]);
 }

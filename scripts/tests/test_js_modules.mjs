@@ -10,7 +10,6 @@
 
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { isFeatured, FEATURED } from '../../src/state.js';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -153,101 +152,6 @@ test('per-season groups have valid standings + jornadas shape', () => {
   }
 });
 
-// FEATURED / isFeatured
-test('FEATURED points at Las Mesas Hu. Prebenjamin PG2', () => {
-  assert.equal(FEATURED.cat, 'prebenjamin');
-  assert.equal(FEATURED.groupId, 'PG2');
-  assert.equal(FEATURED.name, 'Las Mesas Hu.');
-});
-
-test('isFeatured matches the team and variants, not B teams', () => {
-  assert.equal(isFeatured('Las Mesas Hu.'), true);
-  assert.equal(isFeatured('Las Mesas Hu'), true);
-  assert.equal(isFeatured('CD Las Mesas Hu.'), true);
-  assert.equal(isFeatured('Las Mesas B'), false);
-  assert.equal(isFeatured('Las Mesas Hu. B'), false);
-  assert.equal(isFeatured('AD Huracan'), false);
-  assert.equal(isFeatured(''), false);
-  assert.equal(isFeatured(undefined), false);
-});
-
-// featured data extraction
-import {
-  featuredStandingFrom, featuredMatchesFrom, featuredScorersFrom,
-} from '../../src/state.js';
-
-test('featuredStandingFrom finds Las Mesas in PREBENJAMIN PG2', () => {
-  const { PREBENJAMIN } = loadDataFile('data-prebenjamin.js');
-  const r = featuredStandingFrom(PREBENJAMIN);
-  assert.ok(r);
-  assert.equal(r.row[1], 'Las Mesas Hu.');
-  assert.equal(r.pos, r.row[0]);
-  assert.ok(r.total >= r.pos);
-  assert.equal(r.group.id, 'PG2');
-});
-
-test('featuredStandingFrom returns null when team absent', () => {
-  assert.equal(featuredStandingFrom([{ id: 'PG2', name: 'G2',
-    standings: [[1, 'Otro', 0, 0, 0, 0, 0, 0, 0, 0]] }]), null);
-  assert.equal(featuredStandingFrom([]), null);
-});
-
-test('featuredMatchesFrom builds a sorted played/upcoming list', () => {
-  const hist = {
-    'Jornada 2': [['2026-01-10', 'Rival X', 'Las Mesas Hu.', 1, 3]],
-    'Jornada 1': [['2026-01-03', 'Las Mesas Hu.', 'Rival Y', 2, 2],
-                  ['2026-01-03', 'Otro', 'Mas', 0, 0]],
-    'Jornada 3': [['06/06', 'Las Mesas Hu.', 'Rival Z', null, null]],
-  };
-  const m = featuredMatchesFrom(hist);
-  assert.equal(m.length, 3);
-  assert.deepEqual(m.map(x => x.jorNum), [1, 2, 3]);
-  assert.equal(m[0].opp, 'Rival Y');
-  assert.equal(m[0].isHome, true);
-  assert.equal(m[0].result, 'D');
-  assert.equal(m[0].played, true);
-  assert.equal(m[1].opp, 'Rival X');
-  assert.equal(m[1].isHome, false);
-  assert.equal(m[1].result, 'W');
-  assert.equal(m[2].played, false);
-  assert.equal(m[2].result, null);
-});
-
-test('featuredMatchesFrom on empty/missing history -> []', () => {
-  assert.deepEqual(featuredMatchesFrom(undefined), []);
-  assert.deepEqual(featuredMatchesFrom({}), []);
-});
-
-test('featuredScorersFrom returns Las Mesas players sorted by goals', () => {
-  const { GOL_PREBENJ } = loadDataFile('data-goleadores.js');
-  const s = featuredScorersFrom(GOL_PREBENJ);
-  assert.ok(s.length >= 1);
-  for (let i = 1; i < s.length; i++)
-    assert.ok(s[i - 1].goals >= s[i].goals);
-  assert.ok(s.every(p => typeof p.name === 'string' && typeof p.goals === 'number'));
-});
-
-test('featuredScorersFrom handles missing group -> []', () => {
-  assert.deepEqual(featuredScorersFrom([{ g: 'OTRO GRUPO', s: [] }]), []);
-  assert.deepEqual(featuredScorersFrom(undefined), []);
-});
-
-// regression: miequipo.js must read data globals as bare identifiers
-// (typeof-guarded), NOT via globalThis/window — top-level `const` in the
-// classic data-*.js scripts is a global LEXICAL binding, not a property of
-// globalThis. See systematic-debugging root cause 2026-05-18.
-test('the dashboard and its data accessor use guarded lexical data bindings', () => {
-  const src = ['miequipo.js', 'favorites.js'].map(file => readFileSync(join(ROOT, 'src', file), 'utf8')).join('\n');
-  assert.ok(!/globalThis/.test(src), 'miequipo.js must not use globalThis for data');
-  assert.ok(!/\bwindow\.\s*(PREBENJAMIN|HISTORY|GOL_PREBENJ|MATCH_DETAIL|MATCH_DETAIL_KEYS)\b/.test(src),
-    'miequipo.js must not use window.<DATA>');
-  assert.ok(!/const\s+G\s*=\s*\(\)\s*=>/.test(src), 'the globalThis G() helper must be gone');
-  for (const g of ['PREBENJAMIN', 'HISTORY', 'GOL_PREBENJ', 'MATCH_DETAIL_KEYS']) {
-    assert.ok(new RegExp(`typeof\\s+${g}\\s*!==\\s*['"]undefined['"]`).test(src),
-      `miequipo.js must guard ${g} with typeof ${g} !== 'undefined'`);
-  }
-});
-
 // lazy matchdetail loader contract
 test('state.js exports a single-flight ensureMatchDetail loader', () => {
   const s = readFileSync(join(ROOT, 'src/state.js'), 'utf8');
@@ -291,65 +195,12 @@ test('data-matchdetail-keys.js exactly mirrors keys with goal timelines', () => 
   for (const k of got) assert.ok(MATCH_DETAIL_KEYS[k], `truthy value for ${k}`);
 });
 
-// badge must use the lightweight keys map, never the full object
-test('badge consumers use MATCH_DETAIL_KEYS, not full MATCH_DETAIL', () => {
-  const render = readFileSync(join(ROOT, 'src/render.js'), 'utf8');
-  const mieq = readFileSync(join(ROOT, 'src/miequipo.js'), 'utf8');
-  assert.ok(/MATCH_DETAIL_KEYS/.test(render), 'render.js uses MATCH_DETAIL_KEYS');
-  assert.ok(/MATCH_DETAIL_KEYS/.test(mieq), 'miequipo.js uses MATCH_DETAIL_KEYS');
-  assert.ok(!/\bMATCH_DETAIL\b/.test(render),
-    'render.js must not reference full MATCH_DETAIL (\\b excludes _KEYS)');
-  assert.ok(!/\bMATCH_DETAIL\b/.test(mieq),
-    'miequipo.js must not reference full MATCH_DETAIL');
-});
-
-// render smoke: pure DOM checker (deterministic, no browser)
-import { checkRenderedDom } from './render-smoke.mjs';
-
-const SMOKE_GOOD_DOM = `<!DOCTYPE html><html><body><main>
-<div id="sec-miequipo" class="section active">
- <div class="me-hero"><h2>Las Mesas Hu.</h2><div class="me-meta">Prebenjamín</div></div>
- <div class="me-card"><div class="me-cal" id="meCal"><div class="me-crow"><span>J1</span></div></div></div>
- <div class="me-card">Su posición en el Grupo 2<table class="standings-table me-mini"></table></div>
- <div class="me-card me-plant-card"><div class="me-ct">Plantilla 2024-25</div><div class="plant-empty">No data</div></div>
- <div class="me-card">Goleadores del equipo<div class="me-scrow"><span>P</span></div></div>
- ${/* pads #sec-miequipo inner content above the 500-char smoke threshold */ ''}${'<span>padpadpad</span>'.repeat(60)}
-</div><div id="sec-clasif" class="section"></div></main></body></html>`;
-
-test('checkRenderedDom: healthy MI EQUIPO render passes', () => {
-  const { ok, failures } = checkRenderedDom(SMOKE_GOOD_DOM);
-  assert.deepEqual(failures, []);
-  assert.equal(ok, true);
-});
-
-test('checkRenderedDom: globalThis-class empty-state fails', () => {
-  const bad = `<!DOCTYPE html><html><body><main>
-<div id="sec-miequipo" class="section active"><div class="empty-state"><div class="empty-icon">x</div><p>No hay datos del equipo esta temporada</p></div></div>
-<div id="sec-clasif" class="section"></div></main></body></html>`;
-  const { ok, failures } = checkRenderedDom(bad);
-  assert.equal(ok, false);
-  assert.ok(failures.length >= 1);
-  assert.ok(failures.some(f => /empty-state|hero|datos/.test(f)));
-});
-
-test('checkRenderedDom: empty #sec-miequipo (JS threw) fails', () => {
-  const empty = '<html><body><main><div id="sec-miequipo" class="section active"></div><div id="sec-clasif" class="section"></div></main></body></html>';
-  const { ok, failures } = checkRenderedDom(empty);
-  assert.equal(ok, false);
-  assert.ok(failures.length >= 1);
-  assert.ok(failures.some(f => /content too small/.test(f)),
-    'empty section must flag the content-too-small failure');
-});
-
-
-test('state.js exports ensureLineups, ensurePlayers, getCurrentSeason (SP-2)', () => {
+test('state.js exports ensureLineups and ensurePlayers (SP-2)', () => {
   const src = readFileSync(join(ROOT, 'src', 'state.js'), 'utf8');
   assert.ok(/export\s+async\s+function\s+ensureLineups\b/.test(src),
     'state.js must export ensureLineups');
   assert.ok(/export\s+async\s+function\s+ensurePlayers\b/.test(src),
     'state.js must export ensurePlayers');
-  assert.ok(/export\s+function\s+getCurrentSeason\b/.test(src),
-    'state.js must export getCurrentSeason');
   for (const f of ['state.js']) {
     const s = readFileSync(join(ROOT, 'src', f), 'utf8');
     assert.ok(!/globalThis\.(LINEUPS_|PLAYERS_|TEAMS_)/.test(s),
@@ -414,11 +265,10 @@ test('actas data files: lineups events reference players in the same match', () 
 });
 
 test('source-contract: SP-2 consts not read via globalThis/window in src/', () => {
-  const files = ['app.js','init.js','state.js','modals.js','miequipo.js','render.js','plantilla.js','matchdetail-rich.js'];
+  const files = readdirSync(join(ROOT, 'src')).filter(f => f.endsWith('.js'));
+  assert.ok(files.includes('state.js') && files.includes('app.js'));
   for (const f of files) {
-    let s;
-    try { s = readFileSync(join(ROOT, 'src', f), 'utf8'); }
-    catch { continue; }
+    const s = readFileSync(join(ROOT, 'src', f), 'utf8');
     for (const g of ['LINEUPS_', 'PLAYERS_', 'TEAMS_']) {
       assert.ok(!new RegExp('globalThis\\.' + g).test(s), f + ': no globalThis.' + g);
       assert.ok(!new RegExp('window\\.' + g).test(s),     f + ': no window.'     + g);

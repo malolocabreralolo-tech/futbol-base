@@ -1,4 +1,4 @@
-// Plan B1, tarea 11: intención de style-acta.css (spec §3.2-§3.4, §4.8 y §8).
+// Plan B1, tarea 11: intención de acta.css (spec §3.2-§3.4, §4.8 y §8).
 // Comprueba reglas, no píxeles: la verificación visual va aparte, con capturas.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
@@ -7,7 +7,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const SRC = readFileSync(join(ROOT, 'style-acta.css'), 'utf8');
+const SRC = readFileSync(join(ROOT, 'acta.css'), 'utf8');
 
 // Reglas del CSS como {media, selector, body}; un nivel de @media.
 function parseCss(src) {
@@ -189,4 +189,26 @@ test('saltar al contenido: oculto hasta recibir el foco; utilidad visualmente oc
 
 test('sin emoji en la hoja de estilos', () => {
   assert.doesNotMatch(SRC, /\p{Extended_Pictographic}/u);
+});
+
+// ── Plan B2, tarea 4: la cabecera de pantalla y la pregunta de la portada ───
+
+test('cabecera de pantalla (screenHead): 72 px con regla de tinta; «‹» y la acción miden 44 px', () => {
+  const head = decl('.screen-head');
+  assert.match(head, /min-height:\s*72px/);
+  assert.match(head, /border-bottom:\s*2px solid var\(--ink\)/);
+  assert.match(decl('.screen-head-text'), /min-width:\s*0/, 'sin min-width el nombre empujaría la página a 320 px');
+  // El nombre completo en una línea: si no cabe a 320 px, con elipsis (spec §3.5).
+  const h1 = decl('.screen-head h1');
+  for (const rule of [/white-space:\s*nowrap/, /text-overflow:\s*ellipsis/, /overflow:\s*hidden/]) assert.match(h1, rule);
+  assert.match(decl('.screen-sub'), /color:\s*var\(--mute\)/);
+  for (const sel of ['.back', '.screen-action']) assert.match(decl(sel), /min-height:\s*44px/, sel);
+  assert.match(decl('.back'), /width:\s*44px/);
+  assert.match(decl('.screen-action'), /color:\s*var\(--ink\)/, 'la acción, en tinta también cuando es un botón');
+});
+
+test('portada: cada candidato de la pregunta (estado E) es un botón de al menos 44 px, con el nombre en tinta', () => {
+  assert.match(decl('.choice'), /min-height:\s*56px/);
+  assert.match(decl('.choice-name'), /color:\s*var\(--ink\)/);
+  assert.match(decl('.choice-text'), /min-width:\s*0/);
 });

@@ -1,5 +1,6 @@
 /* Sistema visual «Acta» en tinta roja (spec §3).
- * Sustituye a style.css en el corte de B2; hasta entonces no lo enlaza nadie.
+ * Era style-acta.css hasta el corte de B2, que la convirtió en la hoja de la app con una URL nueva:
+ * el SW de la app anterior sirve style.css desde su caché aunque cambie la ?v=.
  * Tema claro por defecto; el oscuro solo si el sistema lo pide (spec §4.9). */
 
 /* Public Sans variable, subconjunto latino (@fontsource-variable/public-sans
@@ -382,4 +383,81 @@ abbr[title] { text-decoration: none; }
 
 @media (prefers-reduced-motion: no-preference) {
   .segment, .button, .tab-icon { transition: background-color 0.15s ease, color 0.15s ease; }
+}
+
+/* ── Cabecera de pantalla (maquetas 4, 5-1, 5-2 y 5-3): screenHead de ui.js ── */
+
+.screen-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 14px var(--gutter) 8px;
+  border-bottom: 2px solid var(--ink);
+}
+.screen-head-text { flex: 1 1 auto; min-width: 0; }
+/* Nombre completo, con elipsis si no cabe a 320 px (spec §3.5). */
+.screen-head h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.screen-sub { margin-top: 2px; font-size: 12.5px; color: var(--mute); }
+/* Enlace o botón («Cambiar», «Otro grupo», «Compartir»): los dos en tinta y subrayados. */
+.screen-action {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.back {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-height: 44px;
+  margin: 0 -8px 0 -12px;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* ── Mi equipo: la pregunta de E y la acción de X (spec §4.2) ──────────── */
+
+.choices { margin: 0; padding: 0; list-style: none; }
+.choices > li + li { border-top: 1px solid var(--line); }
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 12px;
+  color: var(--text);
+  text-align: left;
+  text-decoration: none;
+}
+.choice-text { display: flex; flex-direction: column; min-width: 0; }
+.choice-name { font-size: 15px; font-weight: 800; color: var(--ink); overflow-wrap: anywhere; }
+.choice-label { font-size: 12.5px; color: var(--mute); }
+.choice-none { font-weight: 700; color: var(--ink); text-decoration: underline; }
+.home-cta { margin-top: 10px; }
+
+/* ── Cabecera de la app en el corte: la marca, solo en escritorio (spec §4.8) ──
+ * La Tarea 5 (shell.js) completa la cabecera y la barra. */
+.shell-brand { display: none; }
+@media (min-width: 1024px) {
+  .shell-header, .tabbar { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+  .shell-brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 800;
+    color: var(--ink);
+    text-decoration: none;
+  }
 }

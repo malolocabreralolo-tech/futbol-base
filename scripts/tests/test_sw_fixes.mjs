@@ -19,7 +19,7 @@
 
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
@@ -74,19 +74,27 @@ function staticImportGraph(entry) {
   return seen;
 }
 
-test('STATIC_ASSETS covers the whole static import graph of src/app.js', () => {
+test('STATIC_ASSETS lleva exactamente el grafo de imports estáticos de src/app.js', () => {
   assert.ok(Array.isArray(sw.STATIC_ASSETS), 'STATIC_ASSETS must be an array');
-  const graph = staticImportGraph('app.js');
-  assert.ok(graph.size >= 8, `expected >=8 modules in graph, got ${graph.size}`);
-  for (const mod of graph) {
-    assert.ok(sw.STATIC_ASSETS.includes(`./src/${mod}`),
-      `./src/${mod} (statically imported from app.js) missing in STATIC_ASSETS`);
-  }
+  const graph = [...staticImportGraph('app.js')].sort();
+  assert.ok(graph.includes('screen-home.js') && graph.includes('state.js'), graph.join(', '));
+  // Sin umbral: ni falta un módulo del grafo ni sobra uno que ya no existe (404 al instalar).
+  const precached = [...sw.STATIC_ASSETS].filter(url => url.startsWith('./src/')).map(url => url.slice('./src/'.length)).sort();
+  assert.deepEqual(precached, graph);
 });
 
-test('STATIC_ASSETS includes the 3 modules the review found missing', () => {
-  for (const f of ['./src/miequipo.js', './src/plantilla.js', './src/matchdetail-rich.js']) {
-    assert.ok(sw.STATIC_ASSETS.includes(f), `${f} missing in STATIC_ASSETS`);
+test('STATIC_ASSETS lleva la página, la fuente alojada y los iconos de la PWA (spec §5.5)', () => {
+  const files = (dir, ext) => readdirSync(join(ROOT, dir)).filter(f => f.endsWith(ext)).map(f => `./${dir}/${f}`);
+  const wanted = ['./', './index.html', './acta.css', './manifest.json', './data-health.json',
+    ...files('fonts', '.woff2'), ...files('icons', '.png')];
+  assert.ok(wanted.length >= 10, wanted.join(', '));
+  for (const url of wanted) assert.ok(sw.STATIC_ASSETS.includes(url), `${url} missing in STATIC_ASSETS`);
+});
+
+test('cada entrada de STATIC_ASSETS existe en el repositorio', () => {
+  for (const url of sw.STATIC_ASSETS) {
+    if (url === './') continue;
+    assert.ok(existsSync(join(ROOT, url)), `${url} no existe: el service worker lo pediría en cada instalación`);
   }
 });
 

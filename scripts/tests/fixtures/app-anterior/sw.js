@@ -13,31 +13,26 @@ function fetchFresh(request, cache = 'no-cache') {
   return fetch(versionedAssetURL(request), { cache, credentials: 'same-origin' });
 }
 
-// Static assets — cached on install (spec §5.5): the page, the stylesheet, the
-// manifest, the self-hosted font, the PWA icons, the FULL static import graph
-// of src/app.js (test_sw_fixes.mjs compares it with the real graph) and the
-// eager data-*.js that index.html loads.
+// Static assets — cached on install, served cache-first.
+// Must cover the FULL static import graph of src/app.js
+// (app → init → state/render → modals/miequipo → plantilla/matchdetail-rich).
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './acta.css',
-  './manifest.json',
-  './data-health.json',
-  './fonts/PublicSans-latin.woff2',
-  './icons/icon-180.png',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png',
+  './style.css',
   './src/app.js',
   './src/config.js',
-  './src/html.js',
   './src/links.js',
-  './src/model.js',
-  './src/myteam.js',
-  './src/screen-home.js',
+  './src/favorites.js',
+  './src/health.js',
+  './src/filters.js',
+  './src/init.js',
   './src/state.js',
-  './src/store.js',
-  './src/ui.js',
+  './src/render.js',
+  './src/modals.js',
+  './src/miequipo.js',
+  './src/plantilla.js',
+  './src/matchdetail-rich.js',
   './data-benjamin.js',
   './data-prebenjamin.js',
   './data-history.js',
@@ -46,7 +41,10 @@ const STATIC_ASSETS = [
   './data-shields.js',
   './data-stats.js',
   './data-seasons.js',
+  './data-health.json',
   './data-maspalomas-cup-2026.js',
+  './icons.svg',
+  './manifest.json',
 ];
 
 // Season data files — loaded lazily by the app, precache when available

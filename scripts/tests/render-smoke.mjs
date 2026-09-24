@@ -6,61 +6,49 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync, spawn } from 'node:child_process';
 
 /**
- * Render smoke test for the futbol-base SPA.
+ * Render smoke test for the futbol-base SPA (rediseño «Acta», spec §11).
  *
- * `checkRenderedDom(dom)` is a pure assertion over the serialized DOM of
- * index.html AFTER its JS ran. It catches the regression class that bit
- * twice: a src/ or index.html change that leaves MI EQUIPO (the default
- * screen) un-rendered — the globalThis bug (empty-state "No hay datos del
- * equipo esta temporada") or any throw in the module graph (empty
- * #sec-miequipo). Unit-tested in test_js_modules.mjs with fixtures.
+ * `checkRenderedDom(dom, { teamName })` is a pure assertion over the serialized DOM of index.html
+ * AFTER its JS ran. Its markers do not depend on the moment of the season, so it does not turn
+ * red when a season ends or starts: the home screen (<section data-screen="home">) must be in
+ * state A, B, C or D, with its screen header (header.screen-head), one h1 with the team name and
+ * at least one block. E (asking which team), X (team absent), the error box («Reintentar») and
+ * the skeleton of index.html left untouched (app.js threw) fail. Unit-tested in
+ * test_rediseno_smoke.mjs with the real screen over frozen fixtures.
  *
  * Run directly (`node scripts/tests/render-smoke.mjs`) to exercise the real
- * browser harness (added in Task 2); in CI it gates. Zero npm deps (node:* only).
+ * browser harness; in CI it gates. Zero npm deps (node:* only).
  */
 
-export function checkRenderedDom(dom) {
+const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" };
+const decode = (text) => text.replace(/<[^>]*>/g, '').replace(/&(amp|lt|gt|quot|#39);/g, (e) => ENTITIES[e]).trim();
+
+export function checkRenderedDom(dom, { teamName } = {}) {
   const failures = [];
-  const has = (s) => dom.includes(s);
-
-  if (!/<div id="sec-miequipo"[^>]*\bclass="[^"]*\bactive\b/.test(dom))
-    failures.push('#sec-miequipo.active not found (section did not activate)');
-  if (!has('me-hero'))
-    failures.push('hero (.me-hero) missing — MI EQUIPO did not render');
-  if (!has('Las Mesas Hu.'))
-    failures.push('featured team name "Las Mesas Hu." missing');
-  if (!has('me-cal'))
-    failures.push('calendar (.me-cal) missing');
-  if (!has('me-crow') && !has('me-next') && !has('Sin partidos'))
-    failures.push('calendar rendered no rows and no "Sin partidos" (.me-crow/.me-next)');
-  if (!has('me-mini') && !has('Su posición'))
-    failures.push('mini-table (.me-mini / "Su posición") missing');
-  // La tarjeta de plantilla es OPCIONAL desde el rediseño del 27/07/2026: sin
-  // actas para ese equipo y temporada se quita entera, en vez de dejar una caja
-  // que solo dice "no hay datos" en la pantalla de aterrizaje. Lo que sí se
-  // exige es que, si está, traiga jugadores de verdad.
-  if (has('me-plant-card') && !has('plant-table') && !has('plant-empty'))
-    failures.push('SP-2 Plantilla card presente pero sin tabla ni empty-state');
-  if (!has('me-scrow') && !has('Goleadores del equipo'))
-    failures.push('scorers (.me-scrow / "Goleadores del equipo") missing');
-  if (has('No hay datos del equipo esta temporada'))
-    failures.push('empty-state present — render produced no data (globalThis-class bug?)');
-  if (has('en construcción'))
-    failures.push('stub placeholder ("en construcción") present');
-
-  const m = dom.match(/<div id="sec-miequipo"[^>]*>([\s\S]*?)<div id="sec-clasif"/);
-  const inner = m ? m[1] : '';
-  if (inner.length < 500)
-    failures.push(`#sec-miequipo content too small (${inner.length} chars) — likely empty/failed render`);
-
-  return { ok: failures.length === 0, failures };
+  const section = dom.match(/<section\b[^>]*\bdata-screen="home"[^>]*>/);
+  const state = section ? ((section[0].match(/\bdata-state="([A-Z])"/) || [])[1] || null) : null;
+  if (!section) failures.push('falta la portada: no hay <section data-screen="home">');
+  else if (!state) failures.push('la portada no marca su estado (data-state)');
+  else if (state === 'E') failures.push('estado E: la portada pregunta por el equipo en vez de enseñarlo');
+  else if (state === 'X') failures.push('estado X: el equipo no aparece en la temporada del portal');
+  else if (!'ABCD'.includes(state)) failures.push(`estado desconocido: ${state}`);
+  if (section) {
+    if (!/<header class="screen-head">/.test(dom)) failures.push('falta la cabecera de Mi equipo (header.screen-head)');
+    const h1 = [...dom.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => decode(m[1]));
+    if (h1.length !== 1) failures.push(`la portada tiene ${h1.length} h1, y debe tener uno`);
+    else if (teamName && !h1[0].includes(teamName)) failures.push(`el h1 dice «${h1[0]}», no «${teamName}»`);
+    if (!/<section class="block">/.test(dom)) failures.push('la portada no tiene ningún bloque');
+  }
+  if (/data-action="retry"/.test(dom)) failures.push('caja de error con «Reintentar»: la portada no pudo cargar sus datos');
+  if (/class="box skeleton[" ]|data-skeleton="/.test(dom)) failures.push('el esqueleto de index.html sigue ahí: app.js no pintó la portada');
+  return { ok: failures.length === 0, failures, state };
 }
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript',
   '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml',
-  '.png': 'image/png', '.ico': 'image/x-icon',
+  '.png': 'image/png', '.ico': 'image/x-icon', '.woff2': 'font/woff2',
   '.webmanifest': 'application/manifest+json',
 };
 
@@ -162,9 +150,11 @@ async function main() {
       process.exit(0);
     }
 
-    const { ok, failures } = checkRenderedDom(dom);
+    // Con el almacén vacío, la portada es la del equipo por defecto (spec §4.2).
+    const { PORTAL } = await import(pathToFileURL(join(ROOT, 'src', 'config.js')).href);
+    const { ok, failures, state } = checkRenderedDom(dom, { teamName: PORTAL.defaultTeam.name });
     if (ok) {
-      console.log(`PASS: render smoke OK — MI EQUIPO rendered (DOM ${dom.length} bytes)`);
+      console.log(`PASS: render smoke OK — Mi equipo en estado ${state} (DOM ${dom.length} bytes)`);
       process.exit(0);
     }
     console.error('FAIL: render smoke assertions failed:');

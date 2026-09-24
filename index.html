@@ -2,110 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Fútbol Base Las Palmas</title>
-  <meta name="description" content="Portal de fútbol base de Las Palmas - Categorías Benjamín y Prebenjamín. Clasificaciones, jornadas, goleadores. Sin publicidad.">
+  <meta name="description" content="Tu equipo de fútbol base en Canarias: próximo partido, resultados, clasificación y goleadores. Sin publicidad.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Fútbol Base LP">
-  <meta name="theme-color" content="#0a0f1a">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15171C" media="(prefers-color-scheme: dark)">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./style.css?v=20260923j">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./acta.css?v=20260923j">
 </head>
 <body>
-  <a class="skip-link" href="#mainContent">Saltar al contenido</a>
-
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-inner">
-      <div class="header-top">
-        <div class="brand">
-          <div class="brand-icon">⚽</div>
-          <div>
-            <h1>FÚTBOL BASE LAS PALMAS</h1>
-            <div class="subtitle"><span id="seasonLabel">Calendarios y resultados</span> · Sin publicidad</div>
-          </div>
-        </div>
-        <div class="stats-bar">
-          <div class="stat-item">
-            <span class="stat-val" id="statGroups">0</span> grupos
-          </div>
-          <div class="stat-item">
-            <span class="stat-val" id="statTeams">0</span> equipos
-          </div>
-          <div class="stat-item">
-            <span class="stat-val" id="statMatches">0</span> partidos
-          </div>
-        </div>
-        <div class="season-selector" id="seasonSelector"></div>
-        <button class="theme-toggle" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">🌙</button>
-      </div>
-
-      <!-- Category Toggle -->
-      <div class="season-cat-row">
-        <div class="category-toggle">
-          <button class="cat-btn active" data-cat="benjamin">⚽ BENJAMÍN</button>
-          <button class="cat-btn" data-cat="prebenjamin">⚽ PREBENJAMÍN</button>
-        </div>
-      </div>
-
-      <!-- Section Tabs: top tab-bar on desktop, fixed bottom app-nav on mobile
-           (same element, repositioned with CSS — init.js logic untouched) -->
-      <nav class="section-tabs" aria-label="Secciones del portal">
-        <button class="section-tab active" data-section="miequipo" aria-current="page"><span class="tab-ico" aria-hidden="true">⭐</span><span class="tab-label">MI EQUIPO</span></button>
-        <button class="section-tab" data-section="clasif"><span class="tab-ico" aria-hidden="true">🏆</span><span class="tab-label">CLASIFICACIÓN</span></button>
-        <button class="section-tab" data-section="jornadas"><span class="tab-ico" aria-hidden="true">⚽</span><span class="tab-label">JORNADAS</span></button>
-        <button class="section-tab" data-section="goleadores"><span class="tab-ico" aria-hidden="true">👑</span><span class="tab-label">GOLEADORES</span></button>
-        <button class="section-tab" data-section="isla"><span class="tab-ico" aria-hidden="true">🏝️</span><span class="tab-label">POR ISLA</span></button>
-        <button class="section-tab" data-section="stats"><span class="tab-ico" aria-hidden="true">📊</span><span class="tab-label">ESTADÍSTICAS</span></button>
-      </nav>
-    </div>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <header class="shell-header">
+    <a class="shell-brand" href="#/">Fútbol Base Las Palmas</a>
   </header>
-
-  <!-- MAIN CONTENT -->
-  <main class="main" id="mainContent" tabindex="-1">
-    <div id="sec-miequipo" class="section active"></div>
-    <div id="sec-clasif" class="section"></div>
-    <div id="sec-jornadas" class="section"></div>
-    <div id="sec-goleadores" class="section"></div>
-    <div id="sec-isla" class="section"></div>
-    <div id="sec-stats" class="section"></div>
+  <nav class="tabbar" aria-label="Navegación principal"><a class="tab" href="#/" aria-current="page"><span class="tab-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M12 3l7 2.6V11c0 4.4-2.9 7.9-7 9.6-4.1-1.7-7-5.2-7-9.6V5.6z"/><path d="M5.2 10.5h13.6"/></svg></span><span class="tab-label">Mi equipo</span></a><a class="tab" href="#/jornada"><span class="tab-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><rect x="4" y="5.5" width="16" height="14.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg></span><span class="tab-label">Jornada</span></a><a class="tab" href="#/tabla"><span class="tab-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><rect x="4" y="4.5" width="16" height="15"/><path d="M4 9.5h16M4 14.5h16M9.5 4.5v15"/></svg></span><span class="tab-label">Tabla</span></a><a class="tab" href="#/explorar"><span class="tab-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg></span><span class="tab-label">Explorar</span></a></nav>
+  <main id="contenido" class="page" tabindex="-1">
+    <div class="box skeleton" aria-hidden="true"></div>
   </main>
+  <span id="legacyUpdated" hidden>Última actualización: 23/09/2026</span>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-brand"><strong>FÚTBOL BASE LAS PALMAS</strong><span>El fútbol de los nuestros. Sin publicidad.</span></div>
-    <div class="footer-dates"><span>Fuentes comprobadas: <strong id="sourceChecked">Consultando…</strong></span><span>Último cambio en los datos: <strong id="dataChanged">09/09/2026</strong></span></div>
-    <button class="text-button" data-open-health>Datos, cobertura y fuentes ↗</button>
-    <p class="source-credit">Resultados recopilados de <a href="https://futbolaspalmas.com" target="_blank" rel="noopener noreferrer">Fútbol Las Palmas</a> y <a href="https://www.fiflp.com/" target="_blank" rel="noopener noreferrer">FIFLP</a>.</p>
-    <span id="legacyUpdated" hidden>Última actualización: 23/09/2026</span>
-  </footer>
-  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-
-  <!-- SCROLL TO TOP -->
-  <button id="scrollTop" class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
-
-  <!-- MATCH DETAIL MODAL: centered dialog on desktop, bottom sheet on mobile.
-       The drag handle lives OUTSIDE #modalContent (whose innerHTML is
-       rewritten on every open) and doubles as the swipe-down surface. -->
-  <div class="modal-overlay" id="matchModal" role="dialog" aria-modal="true" aria-labelledby="modalContent">
-    <div class="modal">
-      <div class="modal-top">
-        <div class="sheet-handle" aria-hidden="true"></div>
-        <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
-        <div id="modalContent"></div>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-
-  <!-- DATA FILES -->
+  <!-- Datos inmediatos: los mismos nueve de antes del corte y en el mismo orden (Plan B2,
+       decisión 5). defer, carga perezosa y la baja de data-matchdetail-keys.js son de B4. -->
   <script src="./data-benjamin.js?v=20260923j"></script>
   <script src="./data-prebenjamin.js?v=20260923j"></script>
   <script src="./data-history.js?v=20260923j"></script>
@@ -115,8 +38,43 @@
   <script src="./data-stats.js?v=20260923j"></script>
   <script src="./data-seasons.js?v=20260923j"></script>
   <script src="./data-maspalomas-cup-2026.js?v=20260923j"></script>
-  <!-- APP -->
-  <script type="module" src="./src/app.js?v=20260923j"></script>
+  <script type="module">
+    // El SW de la app anterior sirve los módulos de src/ desde su caché, aunque cambie la ?v=, y los
+    // actualiza en segundo plano: si una actualización falló, su app.js, state.js o links.js es el
+    // viejo y la app nueva no arranca. Si un SW controla la página, antes de importar app.js se quitan
+    // esos tres de las cachés de la app anterior (las que guardan src/render.js, que ya no existe);
+    // los pedirá a la red. Sin SW al mando, las peticiones van a la red y no hay nada que quitar.
+    // Si el arranque falla (sin conexión en plena transición, cuando esa caché ya guarda este
+    // index.html pero no acta.css ni los módulos nuevos, o un módulo que no llega), un aviso con
+    // estilos en línea y «Reintentar»: nunca «Cargando…» para siempre. Es texto fijo, sin datos.
+    try {
+      if (navigator.serviceWorker?.controller) {
+        try {
+          for (const name of await caches.keys()) {
+            const cache = await caches.open(name);
+            if (!(await cache.match('./src/render.js', { ignoreSearch: true }))) continue;
+            for (const file of ['./src/app.js', './src/state.js', './src/links.js']) await cache.delete(file, { ignoreSearch: true });
+          }
+        } catch { /* sin Cache Storage: no hay nada que quitar */ }
+      }
+      const { start } = await import('./src/app.js?v=20260923j');
+      start(document, window);
+    } catch (error) {
+      console.error('[arranque]', error);
+      document.getElementById('contenido').innerHTML = `<div role="alert" style="max-width:40rem;margin:0 auto;padding:24px 16px;font:16px/1.5 system-ui,sans-serif">
+        <p style="margin:0 0 16px">No se pudo abrir la versión nueva de la app. Comprueba la conexión y pulsa Reintentar.</p>
+        <button type="button" id="reintentar-arranque" style="min-height:44px;padding:0 20px;border:0;border-radius:0;background:#C0182B;color:#FFFFFF;font:inherit;font-weight:700">Reintentar</button>
+      </div>`;
+      document.getElementById('reintentar-arranque').addEventListener('click', async () => {
+        // Que el navegador busque ya el SW nuevo (sin esperarlo más de 3 s) y otra vez desde el principio.
+        try {
+          const registration = await navigator.serviceWorker?.getRegistration();
+          if (registration) await Promise.race([registration.update(), new Promise((resolve) => setTimeout(resolve, 3000))]);
+        } catch { /* sin SW o sin red: se recarga igual */ }
+        location.reload();
+      });
+    }
+  </script>
   <script>
     // Standard SW registration: the browser's update cycle detects a
     // byte-different sw.js; skipWaiting+clients.claim in sw.js make the new

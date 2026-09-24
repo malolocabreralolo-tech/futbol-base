@@ -1,11 +1,10 @@
-// Rutas, enlaces antiguos, fechas, calendario (.ics), mapas y compartir (spec §5.2). Desde el
-// corte de B2 no lee estado de interfaz: las rutas nuevas son routeHref y parseRoute, y los
-// enlaces antiguos (#section=…) solo se leen, para traducirlos (translateLegacy).
+import { S, FEATURED, getCurrentSeason } from './state.js';
 import { PORTAL } from './config.js';
 
 export const SECTIONS = ['miequipo', 'clasif', 'jornadas', 'goleadores', 'isla', 'stats'];
+let readingRoute = false;
+export function setReadingRoute(value) { readingRoute = value; }
 
-// Lee un enlace antiguo ('#section=…&group=…'), compartido por WhatsApp antes del rediseño.
 export function readRoute(hash = '') {
   const p = new URLSearchParams(hash.replace(/^#/, ''));
   const section = SECTIONS.includes(p.get('section')) ? p.get('section') : 'miequipo';
@@ -18,10 +17,57 @@ export function readRoute(hash = '') {
   };
 }
 
+export function routeUrl(overrides = {}, base = typeof location !== 'undefined' ? location.href : 'https://malolocabreralolo-tech.github.io/futbol-base/') {
+  const route = {
+    section: S.section, cat: S.cat, season: getCurrentSeason(),
+    group: S.jorGroup, round: S.section === 'jornadas' ? S.jorNum : '',
+    q: S.search, island: S.section === 'isla' ? S.island : S.filterIsland, phase: S.filterPhase,
+    team: S.section === 'miequipo' ? FEATURED.name : '', ...overrides,
+  };
+  const url = new URL(base);
+  url.hash = new URLSearchParams(Object.entries(route).filter(([, value]) => value !== '' && value != null)).toString();
+  return url.href;
+}
+
+export function syncRoute(overrides = {}, replace = false) {
+  if (readingRoute || typeof window === 'undefined') return;
+  const url = routeUrl(overrides);
+  if (url !== location.href) history[replace ? 'replaceState' : 'pushState'](null, '', url);
+}
+
+export function matchId(match) {
+  return JSON.stringify([match.home, match.away, String(match.jornada || match.jor || '')]);
+}
+
 export function venueUrl(venue, island = '') {
   if (!venue || !String(venue).trim()) return '';
   const names = { grancanaria: 'Gran Canaria', lanzarote: 'Lanzarote', fuerteventura: 'Fuerteventura' };
   return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${venue}, ${names[island] || island || 'Canarias'}, España`);
+}
+
+export function notify(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add('visible');
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => toast.classList.remove('visible'), 4000);
+}
+
+export async function copyLink(url) {
+  try {
+    await navigator.clipboard.writeText(url);
+    notify('Enlace copiado');
+  } catch {
+    const input = document.createElement('textarea');
+    input.value = url;
+    input.setAttribute('aria-label', 'Enlace para copiar');
+    document.body.appendChild(input);
+    input.select();
+    const copied = document.execCommand('copy');
+    input.remove();
+    notify(copied ? 'Enlace copiado' : 'No se pudo copiar. Usa el enlace de WhatsApp para compartir.');
+  }
 }
 
 // Resolve a date against its SEASON, never against the day the archive is read.
@@ -164,34 +210,6 @@ export function translateLegacy(hash, { season } = {}) {
     case 'stats': return routeHref('records', { s, c });
     default: return '#/';
   }
-}
-
-// «Hoy» de la app (decisión 4 de B2): el día de Canarias, nunca el del dispositivo. En un móvil
-// con hora peninsular, entre las 23:00 y las 24:00 de Canarias, el reloj local ya está en
-// mañana (M1 de B1). El router lo calcula una vez y lo inyecta en ctx.today.
-export function canaryTodayISO(now = new Date(), timeZone = 'Atlantic/Canary') {
-  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
-    timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
-  }).formatToParts(now).map(part => [part.type, part.value]));
-  return `${parts.year}-${parts.month}-${parts.day}`;
-}
-
-/* Fecha de un partido ('AAAA-MM-DD' o 'DD/MM') en ISO respecto a `todayISO`, que se inyecta.
- * Un DD/MM nunca pasa al año siguiente por haber pasado hace poco (el 06/06 no es el del año
- * que viene): solo cruza de año si queda a más de 180 días, hacia delante (diciembre visto desde
- * enero) o hacia atrás (enero visto desde diciembre). Viene de miequipo.js (spec §5.2). */
-export function matchDateISO(d, todayISO) {
-  if (!d) return null;
-  const s = String(d);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  const m = s.match(/^(\d{2})\/(\d{2})$/);
-  if (!m || !todayISO) return null;
-  const t = String(todayISO);
-  const ty = +t.slice(0, 4);
-  const diffDays = (Date.UTC(ty, +t.slice(5, 7) - 1, +t.slice(8, 10))
-    - Date.UTC(ty, +m[2] - 1, +m[1])) / 86400000;
-  const y = diffDays > 180 ? ty + 1 : diffDays < -180 ? ty - 1 : ty;
-  return y + '-' + m[2] + '-' + m[1];
 }
 
 // Cuenta atrás del próximo partido; `todayISO` es el día de hoy en Atlantic/Canary.

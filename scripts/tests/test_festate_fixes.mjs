@@ -5,12 +5,11 @@
  * Covers:
  *   1. normalizeTeamName broken punctuation regex (state.js) + shields no-regression
  *   2. C1: normalizeForTeamsMapping conserves trailing filial letter (a/b/c/d)
- *   3. C2: escapeHtml/escapeAttr exported from state.js, used by render.js
- *   4. teamBadge onerror fallback via delegation (no inline module-scope ref)
  *   5. 'JNaN' jornada pills: jornadaNumber/jornadaLabel/sortJornadaKeys
- *   6. typeof guards for BENJAMIN/PREBENJAMIN/GOL_*
- *   7. getTeamForm jornada-key parsing ('Jornada N' keys)
+ *   6. typeof guards for BENJAMIN/PREBENJAMIN; getData(season, cat)
  *   8. lazy loaders: failures not cached for the session, honest season error
+ * (3, 4 and 7 — escapeHtml, teamBadge and getTeamForm — left with the B2 cut:
+ * html.js, ui.js and model.js cover them in the test_rediseno_*.mjs suites.)
  */
 
 import { test } from 'node:test';
@@ -25,35 +24,19 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 /* ── browser-global stubs (must exist BEFORE importing src/state.js) ──
  * Data globals are set as globalThis properties: properties of the global
  * object ARE visible as bare identifiers (the reverse of the lexical-const
- * gotcha), so `typeof SHIELDS !== 'undefined'` guards see them. */
+ * gotcha), so `typeof BENJAMIN !== 'undefined'` guards see them. */
 let fetchImpl = async () => { throw new Error('fetch not stubbed'); };
 globalThis.fetch = (...a) => fetchImpl(...a);
 
-const docListeners = [];
+// No <script> of data-seasons.js: the lazy loaders request without ?v=.
 globalThis.document = {
   querySelector: () => null,
   querySelectorAll: () => [],
-  addEventListener: (type, fn, capture) => docListeners.push({ type, fn, capture }),
 };
 
 const NAME_QUOTES = 'ATLETICO HURACAN, A.D. "A"';   // real 2024-25 FIFLP name
-const NAME_INJECT = '<img src=x onerror=evil()>';
-globalThis.SHIELDS = {
-  'Las Palmas': 'laspalmas.png',
-  [NAME_QUOTES]: 'huracan.png',
-  [NAME_INJECT]: 'evil.png',
-};
-globalThis.HISTORY = {
-  G1: {
-    // Insertion order J2-then-J1, and J1 played LATER than J2 (postponed
-    // match) so a date-based ordering is distinguishable from jornada order.
-    'Jornada 2': [['2026-01-10', 'Equipo X', 'Rival B', 1, 0]],
-    'Jornada 1': [['2026-01-17', 'Equipo X', 'Rival C', 0, 2]],
-  },
-};
 
 const state = await import('../../src/state.js');
-const renderSrc = readFileSync(join(ROOT, 'src', 'render.js'), 'utf8');
 const stateSrc = readFileSync(join(ROOT, 'src', 'state.js'), 'utf8');
 
 function loadDataFile(filename, probes) {
@@ -159,86 +142,6 @@ test('C1: normalizeForTeamsMapping still strips accents/punctuation/club tokens'
   assert.equal(state.normalizeForTeamsMapping(null), '');
 });
 
-/* ════ 3. C2: escapeHtml / escapeAttr ════ */
-
-test('C2: state.js exports escapeHtml and escapeAttr', () => {
-  assert.equal(typeof state.escapeHtml, 'function', 'escapeHtml export');
-  assert.equal(typeof state.escapeAttr, 'function', 'escapeAttr export');
-  assert.equal(state.escapeHtml('<img src=x onerror=evil()>'),
-    '&lt;img src=x onerror=evil()&gt;');
-  assert.equal(state.escapeHtml('A & "B" \'C\''), 'A &amp; &quot;B&quot; &#39;C&#39;');
-  assert.equal(state.escapeAttr(NAME_QUOTES),
-    'ATLETICO HURACAN, A.D. &quot;A&quot;');
-});
-
-test('C2: render.js imports the shared escapers and drops its duplicate', () => {
-  assert.ok(/import\s*\{[^}]*\bescapeHtml\b[^}]*\}\s*from\s*'\.\/state\.js'/s.test(renderSrc),
-    'render.js must import escapeHtml from ./state.js');
-  assert.ok(/import\s*\{[^}]*\bescapeAttr\b[^}]*\}\s*from\s*'\.\/state\.js'/s.test(renderSrc),
-    'render.js must import escapeAttr from ./state.js');
-  assert.ok(!/function\s+_esc\s*\(/.test(renderSrc),
-    'render.js must not keep its private _esc duplicate (C2: zero duplicates)');
-});
-
-test('C2: render.js no longer interpolates scraped strings raw into innerHTML', () => {
-  for (const raw of ['${row[1]}', '${m.home}', '${m.away}', '${m.venue}',
-    '${s.name}', '${s.team}', '${s.group}', '${t.name}', '${phase}']) {
-    assert.ok(!renderSrc.includes(raw),
-      `render.js must escape this interpolation: ${raw}`);
-  }
-  assert.ok(!stateSrc.includes('${t.name}'),
-    'state.js buildUnifiedPrebenjamin must escape ${t.name}');
-  assert.ok(!stateSrc.includes('title="${t.groupName}"'),
-    'state.js buildUnifiedPrebenjamin must escape the title attribute');
-});
-
-test('C2: teamBadge escapes the alt attribute (real 2024-25 quoted name)', () => {
-  const html = state.teamBadge(NAME_QUOTES);
-  assert.ok(html.startsWith('<img'), 'exact SHIELDS hit must yield an <img>');
-  assert.ok(html.includes('alt="ATLETICO HURACAN, A.D. &quot;A&quot;"'),
-    `alt must be quote-escaped, got: ${html}`);
-  // No stray attribute garbage: a double quote may not appear inside the alt value
-  assert.ok(!/alt="[^"]*"A""/.test(html), 'alt attribute must not be broken');
-});
-
-test('C2: teamBadge neutralizes an injection-shaped team name', () => {
-  const html = state.teamBadge(NAME_INJECT);
-  assert.ok(!html.includes('<img src=x'), 'payload must not survive unescaped');
-  assert.ok(html.includes('&lt;img src=x onerror=evil()&gt;'),
-    'payload must appear HTML-escaped');
-});
-
-/* ════ 4. teamBadge fallback without module-scope onerror reference ════ */
-
-test('teamBadge HTML has no inline onerror (was a ReferenceError to a module fn)', () => {
-  for (const name of [NAME_QUOTES, 'Las Palmas']) {
-    const html = state.teamBadge(name);
-    assert.ok(!/onerror=/.test(html), `no inline onerror in: ${html}`);
-    assert.ok(!/teamBadgeFallback/.test(html), 'no reference to the module-scope fn');
-  }
-  assert.ok(!/onerror=/.test(stateSrc), 'state.js must not emit inline onerror anywhere');
-});
-
-test('handleBadgeError swaps a broken badge <img> for the initials fallback', () => {
-  const img = {
-    tagName: 'IMG',
-    classList: { contains: c => c === 'team-badge' },
-    alt: 'Las Palmas',
-    outerHTML: '<img>',
-  };
-  assert.equal(state.handleBadgeError(img), true);
-  assert.ok(/team-badge/.test(img.outerHTML), 'fallback span has team-badge class');
-  assert.ok(/LP/.test(img.outerHTML), 'initials LP rendered');
-  // non-badge targets are ignored
-  assert.equal(state.handleBadgeError({ tagName: 'DIV', classList: { contains: () => false } }), false);
-  assert.equal(state.handleBadgeError(null), false);
-});
-
-test('state.js installs capture-phase error delegation on the document', () => {
-  assert.ok(docListeners.some(l => l.type === 'error' && l.capture === true),
-    'document must have a capture-phase error listener (img error does not bubble)');
-});
-
 /* ════ 5. jornada labels (JNaN in Copa 2024-25) ════ */
 
 test('jornadaNumber: numeric and "Jornada N" labels parse; copa labels do not', () => {
@@ -265,48 +168,18 @@ test('sortJornadaKeys: numeric ascending, non-numeric keep insertion order after
     ['25-04-2025 ( Ronda 1 )', '26-04-2025 ( Ronda 2 )']);
 });
 
-test('render.js uses jornadaLabel and no longer maps jornada keys through Number', () => {
-  assert.ok(!/Object\.keys\(group\.jornadas\)\.map\(Number\)/.test(renderSrc),
-    'historical pills must not coerce keys with Number (JNaN)');
-  assert.ok(/\bjornadaLabel\b/.test(renderSrc), 'render.js must use jornadaLabel');
-  assert.ok(!/'J'\s*\+\s*num\b/.test(renderSrc), "no 'J'+num concatenation left");
-});
-
 /* ════ 6. typeof guards for data globals ════ */
 
 test('getData survives undefined BENJAMIN/PREBENJAMIN (returns [])', () => {
   // BENJAMIN/PREBENJAMIN are NOT defined at this point of the test file.
   assert.equal(typeof globalThis.BENJAMIN, 'undefined', 'precondition');
-  state.S.season = '';
-  state.S.cat = 'benjamin';
-  assert.deepEqual(state.getData(), [], 'no ReferenceError, empty fallback');
-  state.S.cat = 'prebenjamin';
-  assert.deepEqual(state.getData(), []);
-  state.S.cat = 'benjamin';
-});
-
-test('render.js guards GOL_BENJ/GOL_PREBENJ with the typeof pattern', () => {
-  assert.ok(/typeof GOL_BENJ !== 'undefined'/.test(renderSrc),
-    'GOL_BENJ must be typeof-guarded');
-  assert.ok(/typeof GOL_PREBENJ !== 'undefined'/.test(renderSrc),
-    'GOL_PREBENJ must be typeof-guarded');
-  assert.ok(!/globalThis\.(GOL_BENJ|GOL_PREBENJ|BENJAMIN|PREBENJAMIN)/.test(renderSrc),
-    'guards must use bare identifiers, never globalThis');
+  assert.deepEqual(state.getData('', 'benjamin'), [], 'no ReferenceError, empty fallback');
+  assert.deepEqual(state.getData('', 'prebenjamin'), []);
 });
 
 test('state.js guards BENJAMIN/PREBENJAMIN with the typeof pattern', () => {
   assert.ok(/typeof BENJAMIN !== 'undefined'/.test(stateSrc));
   assert.ok(/typeof PREBENJAMIN !== 'undefined'/.test(stateSrc));
-});
-
-/* ════ 7. getTeamForm with 'Jornada N' keys ════ */
-
-test('getTeamForm orders by jornada number, not by NaN/date accident', () => {
-  state.S.season = '';
-  const form = state.getTeamForm('Equipo X', 'G1', 5);
-  assert.equal(form.length, 2);
-  // J1 (loss, played 2026-01-17) must come BEFORE J2 (win, played 2026-01-10)
-  assert.deepEqual(form.map(f => f.result), ['L', 'W']);
 });
 
 /* ════ 8. lazy loaders: failures are retryable + honest season errors ════ */
@@ -356,9 +229,7 @@ test('failed historical season: getData returns [] (never mislabeled current dat
   fetchImpl = async () => ({ ok: false, status: 404, text: async () => '' });
 
   await state.ensureSeasonData('2098-2099');
-  state.S.season = '2098-2099';
-  state.S.cat = 'benjamin';
-  assert.deepEqual(state.getData(), [],
+  assert.deepEqual(state.getData('2098-2099', 'benjamin'), [],
     'an unloaded historical season must NOT fall back to current-season data');
   assert.ok(state.getSeasonError('2098-2099'),
     'getSeasonError must report the failure');
@@ -370,18 +241,10 @@ test('failed historical season: getData returns [] (never mislabeled current dat
   });
   await state.ensureSeasonData('2098-2099');
   assert.equal(state.getSeasonError('2098-2099'), null, 'error cleared on success');
-  const data = state.getData();
+  const data = state.getData('2098-2099', 'benjamin');
   assert.equal(data.length, 1);
   assert.equal(data[0].id, 'H1', 'retry loads the real historical groups');
+  assert.equal(state.getData('', 'benjamin')[0].id, 'CUR', 'the current season still reads BENJAMIN');
 
-  state.S.season = '';
   delete globalThis.BENJAMIN;
-});
-
-test('render.js renders an honest season-error state with retry', () => {
-  assert.ok(/getSeasonError/.test(renderSrc),
-    'render.js must consult getSeasonError');
-  assert.ok(/No se pudieron cargar los datos de la temporada/.test(renderSrc),
-    'honest error message present');
-  assert.ok(/Reintentar/.test(renderSrc), 'retry affordance present');
 });

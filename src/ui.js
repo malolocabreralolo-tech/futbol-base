@@ -1,7 +1,7 @@
 // Componentes del sistema visual «Acta» (spec §3.3). Funciones puras que
 // devuelven Html: no leen globales ni tocan el DOM al importarse. Las clases
 // que emiten están definidas en style-acta.css.
-import { html } from './html.js';
+import { html, Html } from './html.js';
 import { matchState } from './model.js';
 import { shieldFile } from './state.js';
 
@@ -196,4 +196,23 @@ export function tabbar(active, { current = 'page' } = {}) {
       ? html`<a class="tab" href="${t.href}" aria-current="${current}">${inner}</a>`
       : html`<a class="tab" href="${t.href}">${inner}</a>`;
   })}</nav>`;
+}
+
+// ── Cabecera de pantalla ────────────────────────────────────────────────
+
+// «‹» (volver): el router lo atiende con history.back() si la entrada anterior es de la app y,
+// si no, sigue el enlace al padre (spec §4.1).
+export function backLink(href) {
+  return html`<a class="back" href="${href}" data-action="back" aria-label="Volver">‹</a>`;
+}
+
+// Maquetas 4, 5-1, 5-2 y 5-3: el único h1 de la pantalla con su etiqueta debajo, «‹» y escudo
+// opcionales a la izquierda y una acción a la derecha («Cambiar», «Otro grupo», «Compartir»).
+// title: texto o Html; action: { href, label } para un enlace, o un Html ya hecho (un botón);
+// crest: Html de crest(); back: href del padre.
+export function screenHead(title, { sub = null, action = null, crest: badge = null, back = null } = {}) {
+  const act = action == null ? ''
+    : action instanceof Html ? action
+      : html`<a class="screen-action" href="${action.href}">${action.label}</a>`;
+  return html`<header class="screen-head">${back ? backLink(back) : ''}${badge || ''}<div class="screen-head-text"><h1>${title}</h1>${sub ? html`<p class="screen-sub">${sub}</p>` : ''}</div>${act}</header>`;
 }

@@ -169,7 +169,7 @@ test('clasificación completa (C): las 15 filas, la propia resaltada y cada equi
   assert.match(block, /<caption class="vh">Clasificación: Prebenjamín, Grupo 2 de Gran Canaria<\/caption>/);
   assert.equal((block.match(/class="is-mine"/g) || []).length, 1);
   assert.match(block, /<tr class="is-mine"><td class="st-pos">9<\/td><th scope="row" class="st-team"><a class="st-link" href="#\/equipo\?s=2025-2026&amp;g=PG2&amp;t=Las%20Mesas%20Hu\.">/);
-  assert.match(block, /<th scope="col" class="st-num"><abbr title="Partidos jugados">J<\/abbr><\/th><th scope="col" class="st-num"><abbr title="Ganados">G<\/abbr><\/th>/);
+  assert.match(block, /<th scope="col" class="st-num st-pj"><abbr title="Partidos jugados">J<\/abbr><\/th><th scope="col" class="st-num st-g"><abbr title="Ganados">G<\/abbr><\/th>/);
 });
 
 test('goleadores del equipo (C): los 5 primeros de Las Mesas, nunca los de otro equipo, con el nombre de pila delante y «ver todos»', () => {
@@ -600,7 +600,7 @@ test('«Clasificación final»: la fila propia con dos arriba y dos abajo, con #
 test('standingsTable: la vista «resumen» es #, Equipo, J, DG y Pts', () => {
   const row = { pos: 9, team: 'Las Mesas Hu.', pts: 37, pj: 28, g: 12, e: 1, p: 15, gf: 90, gc: 120, dg: -30, retired: false };
   const out = String(standingsTable([row], { view: 'resumen', mine: 'Las Mesas Hu.' }));
-  assert.match(out, /<td class="st-pos">9<\/td><th scope="row" class="st-team">.*<\/th><td class="st-num">28<\/td><td class="st-dg">−30<\/td><td class="st-pts">37<\/td><\/tr>/);
+  assert.match(out, /<td class="st-pos">9<\/td><th scope="row" class="st-team">.*<\/th><td class="st-num st-pj">28<\/td><td class="st-dg">−30<\/td><td class="st-pts">37<\/td><\/tr>/);
 });
 
 test('dos columnas (§4.8): a la izquierda el partido, Últimos cinco y el hueco del calendario; a la derecha la clasificación, goleadores y cifras', () => {

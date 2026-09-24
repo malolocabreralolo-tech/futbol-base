@@ -201,7 +201,7 @@ test('standingsTable: th con scope, caption oculto, abreviaturas explicadas y DG
   assert.match(out, /^<table class="standings"><caption class="vh">Clasificación del Grupo 2 de Gran Canaria<\/caption><thead><tr>/);
   assert.match(s(standingsTable(PG2)), /<caption class="vh">Clasificación<\/caption>/);
   assert.equal((out.match(/<th scope="row" class="st-team">/g) || []).length, PG2.length);
-  assert.match(out, /<th scope="col" class="st-num"><abbr title="Partidos jugados">J<\/abbr><\/th>/);
+  assert.match(out, /<th scope="col" class="st-num st-pj"><abbr title="Partidos jugados">J<\/abbr><\/th>/);
   assert.match(out, /<th scope="col" class="st-pts"><abbr title="Puntos">Pts<\/abbr><\/th>/);
   assert.match(out, /<td class="st-dg">\+154<\/td>/);
   assert.match(out, /<td class="st-dg">−30<\/td>/, 'signo menos tipográfico (U+2212)');

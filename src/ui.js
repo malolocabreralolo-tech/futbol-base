@@ -104,10 +104,10 @@ export function matchRow(match, { mine = false, today, shields, href } = {}) {
 const signed = (n) => (n == null ? '' : n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '0');
 
 const COLUMNS = {
-  pj: { label: 'J', title: 'Partidos jugados', cls: 'st-num', cell: (r) => r.pj },
-  g: { label: 'G', title: 'Ganados', cls: 'st-num', cell: (r) => r.g },
-  e: { label: 'E', title: 'Empatados', cls: 'st-num', cell: (r) => r.e },
-  p: { label: 'P', title: 'Perdidos', cls: 'st-num', cell: (r) => r.p },
+  pj: { label: 'J', title: 'Partidos jugados', cls: 'st-num st-pj', cell: (r) => r.pj },
+  g: { label: 'G', title: 'Ganados', cls: 'st-num st-g', cell: (r) => r.g },
+  e: { label: 'E', title: 'Empatados', cls: 'st-num st-e', cell: (r) => r.e },
+  p: { label: 'P', title: 'Perdidos', cls: 'st-num st-p', cell: (r) => r.p },
   gf: { label: 'GF', title: 'Goles a favor', cls: 'st-gf', cell: (r) => r.gf },
   gc: { label: 'GC', title: 'Goles en contra', cls: 'st-gc', cell: (r) => r.gc },
   dg: { label: 'DG', title: 'Diferencia de goles', cls: 'st-dg', cell: (r) => signed(r.dg) },
@@ -158,10 +158,13 @@ export function formChips(letters) {
   })}</span>`;
 }
 
-export function segmented(options, active, hrefFor) {
+// idPrefix (opcional): un id estable por opción, «<prefijo>-<valor>». Al cambiar de vista con
+// replaceState, el router devuelve el foco al segmento pulsado (B11 de la revisión de B2).
+export function segmented(options, active, hrefFor, { idPrefix = null } = {}) {
+  const id = (value) => (idPrefix ? html` id="${idPrefix}-${value}"` : '');
   return html`<div class="segmented">${options.map(({ value, label }) => (value === active
-    ? html`<a class="segment" href="${hrefFor(value)}" aria-current="true">${label}</a>`
-    : html`<a class="segment" href="${hrefFor(value)}">${label}</a>`))}</div>`;
+    ? html`<a class="segment"${id(value)} href="${hrefFor(value)}" aria-current="true">${label}</a>`
+    : html`<a class="segment"${id(value)} href="${hrefFor(value)}">${label}</a>`))}</div>`;
 }
 
 export function notice(term, text) {

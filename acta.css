@@ -716,3 +716,40 @@ abbr[title] { text-decoration: none; }
     align-items: start;
   }
 }
+
+/* ── Tabla: vistas, goleadores y procedencia (spec §4.4) ──────────────── */
+
+.tabla-views { margin-top: 14px; }
+.tabla-views.is-wide { display: none; }
+.block-link, .source-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+}
+/* Goleadores del grupo: la tabla de la clasificación con sus propias columnas (la de la portada es .scorers). */
+.group-scorers .sc-goals { width: 52px; }
+.group-scorers .sc-pj { width: 36px; }
+.group-scorers td.sc-goals { font-weight: 800; color: var(--ink); }
+.source-line { margin-top: 14px; }
+
+/* Móvil y tableta: una sola tabla con todas las columnas; cada vista deja las suyas. */
+@media (max-width: 1023.98px) {
+  .tabla-puntos .standings :is(.st-gf, .st-gc, .st-form) { display: none; }
+  .tabla-goles .standings :is(.st-pj, .st-g, .st-e, .st-p, .st-form) { display: none; }
+  .tabla-goles .standings :is(.st-gf, .st-gc) { width: 40px; }
+  .tabla-goles .standings .st-dg { width: 48px; }
+  .tabla-forma .standings :is(.st-g, .st-e, .st-p, .st-gf, .st-gc, .st-dg) { display: none; }
+}
+
+/* Escritorio: el selector de Todas, Casa y Fuera en lugar del de cinco (decisión 15 de B1),
+ * y columnas de cifras más anchas, que en móvil van justas. */
+@media (min-width: 1024px) {
+  .tabla-views.is-narrow { display: none; }
+  .tabla-views.is-wide { display: block; max-width: 480px; }
+  [data-screen="tabla"] .standings .st-num { width: 36px; }
+  [data-screen="tabla"] .standings :is(.st-gf, .st-gc) { width: 48px; }
+  [data-screen="tabla"] .standings .st-dg { width: 56px; }
+  [data-screen="tabla"] .standings .st-form { width: 124px; padding-left: 14px; }
+  [data-screen="tabla"] .standings .st-pts { width: 48px; }
+}

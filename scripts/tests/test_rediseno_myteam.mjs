@@ -13,9 +13,12 @@ const cups = buildCups({ season: '2025-2026', ...fixture('cups-2025-2026') });
 const index = buildClubIndex(teamNames(real, cups), shields);
 const TODAY = '2026-09-23';
 const LAS_MESAS_PG2 = { name: 'Las Mesas Hu.', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' };
+// Con `stale` solo si la resolución lo trae: un `ok` esperado sin él exige que no esté.
 const summary = result => result.status === 'ask'
   ? { status: 'ask', candidates: result.candidates.map(c => `${c.group.id}|${c.name}`).sort() }
-  : result.status === 'ok' ? { status: 'ok', group: `${result.group.season}|${result.group.id}`, name: result.name, cat: result.cat } : result;
+  : result.status === 'ok'
+    ? { status: 'ok', group: `${result.group.season}|${result.group.id}`, name: result.name, cat: result.cat, ...('stale' in result ? { stale: result.stale } : {}) }
+    : result;
 
 test('baseKey quita siglas y la letra de filial final', () => {
   assert.equal(baseKey('Las Mesas Hu.'), 'las mesas hu');
@@ -29,9 +32,30 @@ test('baseKey quita siglas y la letra de filial final', () => {
   assert.equal(baseKey('Arucas CF D'), 'arucas');
 });
 
-test('el alias de la Maspalomas es el de la spec', () => {
-  assert.deepEqual(TEAM_ALIASES, { 'UD Las Mesas Huracán': 'Las Mesas Hu.' });
+test('TEAM_ALIASES: el alias de la Maspalomas de la spec y los cuatro de la Primera Fase de 2025-26', () => {
+  assert.deepEqual(TEAM_ALIASES, {
+    'UD Las Mesas Huracán': 'Las Mesas Hu.',
+    'Loz Vélez': 'Los Vélez',
+    'M. Training B': 'Maspa Training B',
+    'C. Pastores B': 'Casa Pastores B',
+    'INTER FUERTEVENTURA, C.D.': 'Inter FTV',
+  });
 });
+
+// Nombres reales que cambian de la Primera Fase a la siguiente y que ni el escudo ni la clave base
+// unen: sin su alias, esas familias se quedaban en su grupo de la Primera Fase ya terminado (decisión 20).
+for (const [first, later, where] of [
+  ['Loz Vélez', 'Los Vélez', 'FF20 → C3'],
+  ['M. Training B', 'Maspa Training B', 'FF21 → A3'],
+  ['C. Pastores B', 'Casa Pastores B', 'FF21 → C4'],
+  ['INTER FUERTEVENTURA, C.D.', 'Inter FTV', 'FV11 → FO'],
+]) {
+  test(`alias ${where}: «${first}» y «${later}» son el mismo club`, () => {
+    assert.ok(!sameClub(buildClubIndex([first, later], {}, {}), first, later), 'sin el alias no se unen');
+    assert.ok(sameClub(buildClubIndex([first, later]), first, later));
+    assert.ok(sameClub(index, first, later));
+  });
+}
 
 test('Las Mesas: los cinco nombres reales son el mismo club', () => {
   const names = ['Las Mesas Hu.', 'Las Mesas Hu. B', 'L.Mesas Hu. B', 'Las Mesas B', 'UD Las Mesas Huracán'];
@@ -320,6 +344,42 @@ test('decisión 17: el mismo nombre en dos grupos de la fase guardada son dos eq
     assert.deepEqual(summary(resolveMyTeam(myTeam, twins, index, TODAY)),
       { status: 'ask', candidates: ['A2|Las Mesas Hu.', 'B2|Las Mesas B'] }, groupId);
   }
+});
+
+test('decisión 20: con la fase posterior en juego y ningún equipo del club en ella, sigue el grupo guardado con stale', () => {
+  // 02/03/2026: FF15 terminó el 08/11 y A1, A2, B1 y B2 tienen partidos pendientes, pero ningún
+  // equipo del club de CD Calero, como les pasaba a Loz Vélez (FF20) o a INTER FUERTEVENTURA, C.D.
+  // (FV11) antes de sus alias.
+  const calero = { name: 'CD Calero', season: '2025-2026', cat: 'benjamin', groupId: 'FF15' };
+  const res = resolveMyTeam(calero, season(currentAt('2026-03-02')), index, '2026-03-02');
+  assert.deepEqual(summary(res), { status: 'ok', group: '2025-2026|FF15', name: 'CD Calero', cat: 'benjamin', stale: true });
+  // Ni cambio ni pregunta, y nada que guardar: updatedMyTeam ignora stale.
+  assert.equal(updatedMyTeam(calero, res), null);
+});
+
+test('decisión 20: con un hermano ya en la fase posterior y el mío aún sin publicar, se espera sin stale', () => {
+  // 27/11/2025 con solo A2 publicado (decisión 16): «Las Mesas Hu.» ya está en A2, todo por jugar,
+  // y «Las Mesas B» (B2) aún no.
+  const raw = currentAt('2025-11-27');
+  raw.benjamin = raw.benjamin.filter(g => ['FF5', 'FF13', 'A2'].includes(g.id));
+  const ff13 = { name: 'Las Mesas Hu. B', season: '2025-2026', cat: 'benjamin', groupId: 'FF13' };
+  assert.deepEqual(summary(resolveMyTeam(ff13, season(raw), index, '2025-11-27')),
+    { status: 'ok', group: '2025-2026|FF13', name: 'Las Mesas Hu. B', cat: 'benjamin' });
+});
+
+test('decisión 20: sin stale si la fase posterior ya terminó, si no existe o si es de otra isla', () => {
+  const calero = { name: 'CD Calero', season: '2025-2026', cat: 'benjamin', groupId: 'FF15' };
+  const ff15 = { status: 'ok', group: '2025-2026|FF15', name: 'CD Calero', cat: 'benjamin' };
+  // Terminada: la temporada entera.
+  assert.deepEqual(summary(resolveMyTeam(calero, real, index, TODAY)), ff15);
+  // Inexistente: el 02/03/2026, solo con los grupos de la Primera Fase.
+  const onlyFirst = currentAt('2026-03-02');
+  onlyFirst.benjamin = onlyFirst.benjamin.filter(g => g.id.startsWith('FF'));
+  assert.deepEqual(summary(resolveMyTeam(calero, season(onlyFirst), index, '2026-03-02')), ff15);
+  // De otra isla: A1, A2, B1 y B2, con sus partidos pendientes, en Lanzarote.
+  const elsewhere = currentAt('2026-03-02');
+  for (const g of elsewhere.benjamin) if (!g.id.startsWith('FF')) g.island = 'lanzarote';
+  assert.deepEqual(summary(resolveMyTeam(calero, season(elsewhere), index, '2026-03-02')), ff15);
 });
 
 test('decisión 16: un filial retirado en la fase guardada no hace esperar: el equipo A pasa a su grupo posterior', () => {

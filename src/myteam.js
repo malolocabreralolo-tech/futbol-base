@@ -4,7 +4,16 @@ import { normalizeForTeamsMapping, normalizeTeamName } from './state.js';
 import { matchState, retiredTeams, competitionKey, groupFinished, teamFixtures } from './model.js';
 
 // Nombres de torneos y de la federación que no se pueden unir por escudo ni por clave base.
-export const TEAM_ALIASES = { 'UD Las Mesas Huracán': 'Las Mesas Hu.' };
+// Además del de la Maspalomas, los de 2025-26 que cambian de la Primera Fase a la siguiente
+// (FF20 → C3, FF21 → A3, FF21 → C4 y FV11 → FO): sin ellos, esas familias se quedaban en su
+// grupo de la Primera Fase ya terminado (decisión 20).
+export const TEAM_ALIASES = {
+  'UD Las Mesas Huracán': 'Las Mesas Hu.',
+  'Loz Vélez': 'Los Vélez',
+  'M. Training B': 'Maspa Training B',
+  'C. Pastores B': 'Casa Pastores B',
+  'INTER FUERTEVENTURA, C.D.': 'Inter FTV',
+};
 
 // Siglas que normalizeForTeamsMapping no quita (ya quita CF, CD, UD, AD, SD, SC, SAD, CP, CE, FC…).
 const SIGLAS = new Set(['rc', 'us', 'cda', 'cef']);
@@ -69,6 +78,11 @@ export function buildClubIndex(names, shields = {}, aliases = TEAM_ALIASES) {
     same(a, b) {
       if (!a || !b) return false;
       if (a === b) return true;
+      // Atajo: una clave compartida (el mismo escudo, la misma clave base o el mismo alias) es
+      // una arista de §6.1, y se compara en crudo, sin exigir que la clave esté en el grafo. Es
+      // seguro en los usos reales porque un lado es siempre un nombre del universo (un equipo de
+      // los grupos o torneos con los que se construyó el índice): esa clave ya está unida a él,
+      // así que el grafo daría lo mismo.
       const keysA = keysOf(a);
       if (keysOf(b).some(key => keysA.includes(key))) return true;
       const rootsA = rootsOf(a);
@@ -111,6 +125,9 @@ function countedMatches(group) {
 }
 
 const hasPending = (group, todayISO) => countedMatches(group).some(match => matchState(match, todayISO) === 'pendiente');
+// Nivel de fase de cada grupo, memorizado por identidad del objeto Group. El valor sale solo del
+// propio grupo (su fase, vía competitionKey) y no lee nada externo, así que memorizarlo no cambia
+// ningún resultado; al ser un WeakMap, tampoco retiene los grupos que ya no se usan.
 const levels = new WeakMap();
 function phaseLevel(group) {
   if (!levels.has(group)) levels.set(group, PHASE_LEVEL[competitionKey(group, group.season).phase] ?? 1);
@@ -122,6 +139,10 @@ function topPhase(entries) {
   const top = Math.max(...entries.map(entry => phaseLevel(entry.group)));
   return entries.filter(entry => phaseLevel(entry.group) === top);
 }
+// Los equipos del club de `name` en esos grupos, uno por grupo y nombre: [{group, name}], en el
+// orden de los grupos y, dentro de cada uno, en el de teamsOf.
+const clubTeams = (groups, name, index) => groups.flatMap(group => teamsOf(group)
+  .filter(team => sameClub(index, team, name)).map(team => ({ group, name: team })));
 
 // Candidatos del club en cada categoría: grupos de liga de la fase más reciente, que es la
 // más alta de las que tienen partidos pendientes o, si no hay ninguna, la más alta de todas
@@ -130,14 +151,10 @@ function topPhase(entries) {
 function clubCandidates(season, cats, name, index, todayISO) {
   const candidates = [];
   for (const cat of cats) {
-    const found = leagueGroups(season, cat)
-      .map(group => ({ group, teams: teamsOf(group).filter(team => sameClub(index, team, name)) }))
-      .filter(entry => entry.teams.length);
+    const found = clubTeams(leagueGroups(season, cat), name, index);
     if (!found.length) continue;
     const pending = found.filter(entry => hasPending(entry.group, todayISO));
-    for (const { group, teams } of topPhase(pending.length ? pending : found)) {
-      for (const team of teams) candidates.push({ group, name: team, cat });
-    }
+    for (const entry of topPhase(pending.length ? pending : found)) candidates.push({ ...entry, cat });
   }
   return candidates;
 }
@@ -157,18 +174,29 @@ const ask = entries => ({ status: 'ask', candidates: entries.map(({ group, name 
 //   pregunta con los equipos del club en la fase posterior (decisión 17), como cuando solo
 //   hay otros equipos del club (la filial que cambia de nombre).
 // - Sin equipos del club en la fase posterior, sigue el grupo guardado.
-function laterPhase(groups, saved, myTeam, index) {
-  const club = gs => gs.flatMap(group => teamsOf(group).filter(team => sameClub(index, team, myTeam.name)).map(name => ({ group, name })));
-  const later = topPhase(club(groups.filter(group => phaseLevel(group) > phaseLevel(saved))));
-  const before = club(groups.filter(group => phaseLevel(group) === phaseLevel(saved)));
+// Siempre que sigue el grupo guardado, lleva `stale: true` si la fase posterior de su categoría
+// e isla ya tiene grupos con partidos pendientes y ningún equipo del club: lo probable es que el
+// equipo siga en ella con un nombre que el índice no une. No cambia ni pregunta: B2 lo avisa y
+// updatedMyTeam no lo guarda (decisión 20). Si el club tiene algún equipo en esa fase, aunque
+// menos, se espera sin marca (decisión 16).
+function laterPhase(groups, saved, myTeam, index, todayISO) {
+  const posterior = groups.filter(group => phaseLevel(group) > phaseLevel(saved));
+  const clubLater = clubTeams(posterior, myTeam.name, index);
+  const later = topPhase(clubLater);
+  const before = clubTeams(groups.filter(group => phaseLevel(group) === phaseLevel(saved)), myTeam.name, index);
+  const stay = () => {
+    const island = posterior.filter(group => group.island === saved.island);
+    const stale = !clubLater.some(entry => entry.group.island === saved.island) && island.some(group => hasPending(group, todayISO));
+    return stale ? { ...ok(saved, myTeam.name), stale: true } : ok(saved, myTeam.name);
+  };
   // Fase posterior sin publicar entera para el club: se espera, sin preguntar ni mover (decisión 16).
-  if (later.length < before.filter(({ group, name }) => !retiredTeams(group).has(name)).length) return ok(saved, myTeam.name);
+  if (later.length < before.filter(({ group, name }) => !retiredTeams(group).has(name)).length) return stay();
   // El mismo nombre en dos grupos de la fase guardada: dos equipos distintos, nunca en silencio (decisión 17).
   const twins = before.filter(entry => entry.name === myTeam.name).length > 1;
   const same = later.filter(entry => entry.name === myTeam.name);
   if (same.length === 1 && !twins) return ok(same[0].group, myTeam.name);
   if (same.length && !twins) return ask(same);
-  return later.length ? ask(later) : ok(saved, myTeam.name);
+  return later.length ? ask(later) : stay();
 }
 
 // Pasos 1 y 2: sin candidatos, ausente; uno solo con el mismo nombre y la misma categoría,
@@ -187,7 +215,7 @@ export function resolveMyTeam(myTeam, season, index, todayISO) {
     const groups = leagueGroups(season, myTeam.cat);
     const saved = groups.find(group => group.id === myTeam.groupId);
     if (saved && teamsOf(saved).includes(myTeam.name)) {
-      return hasPending(saved, todayISO) ? ok(saved, myTeam.name) : laterPhase(groups, saved, myTeam, index);
+      return hasPending(saved, todayISO) ? ok(saved, myTeam.name) : laterPhase(groups, saved, myTeam, index, todayISO);
     }
     // Paso 2: el grupo guardado ya no sirve; se busca solo en su categoría.
     return choose(clubCandidates(season, [myTeam.cat], myTeam.name, index, todayISO), myTeam);
@@ -199,6 +227,7 @@ export function resolveMyTeam(myTeam, season, index, todayISO) {
 
 // Lo que B2 guarda tras resolver (decisión 12): el myTeam nuevo, {name, season, cat, groupId},
 // si una resolución `ok` cambia algo; null si no cambia nada o si la resolución no es `ok`.
+// `stale` no se guarda ni cuenta como cambio (decisión 20).
 export function updatedMyTeam(myTeam, resolution) {
   if (!resolution || resolution.status !== 'ok') return null;
   const next = { name: resolution.name, season: resolution.group.season, cat: resolution.cat, groupId: resolution.group.id };

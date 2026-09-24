@@ -311,9 +311,13 @@ const pastModel = (prebenjamin) => createModel(
 test('previousMeetings: equipos con el mismo nombre normalizado, nunca mezclados, sin duplicar y por fecha (ronda de arreglos 1)', () => {
   // 1) «UD Barrial» y «Barrial Atl.» normalizan igual (normalizeTeamName quita UD y ATL): el cara
   // a cara de «UD Barrial – Arucas» solo lista los partidos de UD Barrial, nunca los de Barrial Atl.
+  // Barrial Atl. también se enfrenta a Arucas (una jornada distinta): con el código viejo,
+  // homes = ['UD Barrial', 'Barrial Atl.'] y aways = ['Arucas'] mezclaban ese partido con los de
+  // UD Barrial.
   const mixed = pastRawGroup('PGX1', {
     '1': [['05/10', 'UD Barrial', 'Arucas', 3, 1, null, '10:00', ''], ['05/10', 'Barrial Atl.', 'Telde', 0, 2, null, '10:00', '']],
     '2': [['12/10', 'Arucas', 'UD Barrial', 1, 1, null, '10:00', '']],
+    '3': [['20/10', 'Barrial Atl.', 'Arucas', 4, 0, null, '10:00', '']],
   });
   const found1 = previousMeetings(pastModel([mixed]), ['2024-2025'], { home: 'UD Barrial', away: 'Arucas' }, 'prebenjamin');
   assert.equal(found1.length, 1);

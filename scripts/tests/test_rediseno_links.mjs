@@ -50,7 +50,7 @@ test('ida y vuelta de cada ruta de §4.1, con nombres difíciles', () => {
     ['records', { s: '2023-2024', c: 'benjamin' }],
     ['fuentes', {}],
     ['ajustes', {}],
-    ['equipo', { s: SEASON, g: 'FV11', t: 'VET"C" SA-COR' }],
+    ['equipo', { s: SEASON, g: 'FV11', t: 'VET“C” SA-COR' }],
     ['equipo', { s: SEASON, g: 'FF13', t: 'L.Mesas Hu. B' }],
     ['equipo', { s: SEASON, g: 'B2', t: 'MESAS, U.D. LAS "B"' }],
     ['equipo', { s: SEASON, g: 'LZ1', t: 'Pto.del Carmen' }],

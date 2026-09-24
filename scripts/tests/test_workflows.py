@@ -151,6 +151,9 @@ def test_tests_yml_paths_cover_known_gaps():
         assert ".github/workflows/update.yml" in paths, (
             f"{event} paths must include .github/workflows/update.yml"
         )
+        # Rediseño «Acta»: un PR que solo toque la hoja nueva debe correr
+        # las pruebas de contraste y de CSS.
+        assert "style-acta.css" in paths, f"{event} paths must include style-acta.css"
 
 
 def test_tests_yml_render_smoke_intact():

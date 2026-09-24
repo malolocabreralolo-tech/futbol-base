@@ -124,3 +124,12 @@ test('cada screen-*.js exporta el contrato de pantalla { id, needs, render }', a
 test('los nueve módulos del diseño anterior no vuelven', () => {
   assert.deepEqual(OLD.filter((f) => MODULES.includes(f)), []);
 });
+
+// ── Plan B2, tarea 7: nada de lo que se ve depende de los datos de idioma (B9 de la revisión) ──
+// Los días y los meses van escritos en links.js; los números, con toFixed. Intl solo convierte a la
+// hora de Canarias, con partes numéricas.
+test('ningún módulo formatea con los datos de idioma del motor: ni toLocale*String ni Intl en castellano', () => {
+  for (const f of MODULES) {
+    assert.doesNotMatch(code(read(`src/${f}`)), /\.toLocale(?:Date|Time)?String\(|Intl\.[A-Za-z]+Format\(\s*['"]es/, f);
+  }
+});

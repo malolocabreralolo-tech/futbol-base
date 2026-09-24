@@ -502,3 +502,111 @@ abbr[title] { text-decoration: none; }
   .shell-bar .tabbar { margin-left: auto; }
   .shell-offline .notice { max-width: 1120px; }
 }
+
+/* ── Mi equipo: la portada (spec §4.2) ─────────────────────────────────── */
+
+/* Enlace de texto pulsable: «calendario completo», «ver todos»… Mide 44 px
+ * de alto, pero los márgenes negativos no agrandan la línea ni la cabecera del bloque. */
+.more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: -12px;
+  margin-bottom: -12px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.home-note { padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: var(--mute); text-align: center; }
+.home-fresh { margin-top: 14px; font-size: 12.5px; color: var(--mute); }
+/* Columnas de la portada: en móvil, una debajo de otra, y nunca más anchas que la página. */
+.home-cols, .home-main, .home-side { min-width: 0; }
+
+/* Próximo partido y último partido */
+.fixture {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
+  padding: 14px 8px 12px;
+}
+.fixture-team { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; text-align: center; }
+.fixture-side { margin-top: 4px; font-size: 12.5px; color: var(--mute); }
+.fixture-name {
+  max-width: 100%;
+  font-size: 15px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fixture-vs { align-self: center; padding: 0 6px; font-size: 19px; font-weight: 800; color: var(--rule); }
+.fixture-venue { display: flex; flex-direction: column; gap: 1px; padding: 6px 8px 8px; }
+.fixture-place { font-size: 15px; overflow-wrap: anywhere; }
+.fixture-place.is-muted { font-size: 13.5px; font-weight: 600; color: var(--mute); }
+
+.result {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 14px 8px 12px;
+  color: var(--text);
+  text-decoration: none;
+}
+.result-score { font-size: 40px; font-weight: 800; line-height: 1; color: var(--ink); }
+
+/* Últimos cinco: una casilla por partido, cada una abre su ficha */
+.last5 { display: grid; gap: 1px; margin: 0; padding: 0; list-style: none; background: var(--rule); }
+.last5-1 { grid-template-columns: minmax(0, 1fr); }
+.last5-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.last5-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.last5-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.last5-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.last5 > li { display: flex; min-width: 0; background: var(--paper); }
+.last5-cell {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 2px 7px;
+  color: var(--text);
+  text-decoration: none;
+}
+.last5-score { font-size: 17px; font-weight: 800; line-height: 1.2; }
+.last5-rival {
+  max-width: 100%;
+  font-size: 12.5px;
+  color: var(--mute);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Goleadores del equipo */
+.scorers { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.scorers th, .scorers td { height: 40px; padding: 0 8px; border-bottom: 1px solid var(--line); text-align: right; }
+.scorers thead th {
+  height: auto;
+  padding: 6px 8px;
+  border-bottom: 1.5px solid var(--ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--mute);
+}
+.scorers tbody tr:last-child > * { border-bottom: 0; }
+.scorers .sc-name { text-align: left; font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scorers .sc-goals { width: 60px; }
+.scorers .sc-games { width: 44px; }
+.scorers td.sc-goals { font-size: 17px; font-weight: 800; color: var(--ink); }
+
+@media (hover: hover) {
+  a.last5-cell:hover .last5-score,
+  a.result:hover .result-score,
+  .choice:hover .choice-name { text-decoration: underline; }
+}

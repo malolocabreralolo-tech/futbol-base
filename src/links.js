@@ -41,12 +41,48 @@ export function fixtureISO(value, season = PORTAL.season) {
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
-export function displayDate(value, season = PORTAL.season, options = {}) {
-  const iso = fixtureISO(value, season);
-  if (!iso) return 'Fecha por confirmar';
-  return new Date(iso + 'T12:00:00Z').toLocaleDateString('es-ES', {
-    timeZone: PORTAL.timeZone, weekday: 'short', day: 'numeric', month: 'short', ...options,
-  });
+/* ====== Fechas en castellano (spec §8), sin Intl ====== */
+
+// Los días y los meses van escritos aquí (B9 de la revisión de B2), como en Jornada: nada de lo que
+// se ve depende de los datos de idioma del navegador ni del Node que ejecuta las pruebas (el bot no
+// fija su versión). Las fechas de partido son días de calendario ('AAAA-MM-DD'), sin zona horaria.
+export const WEEKDAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+export const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
+  'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const WEEKDAYS_SHORT = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+const MONTHS_SHORT = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'];
+
+// 'AAAA-MM-DD' → { weekday, day, month } (weekday 0 es domingo; month 0, enero), o null.
+function calendarDay(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso ?? ''));
+  if (!m) return null;
+  const date = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  if (date.getUTCDate() !== +m[3] || date.getUTCMonth() !== +m[2] - 1) return null;
+  return { weekday: date.getUTCDay(), day: +m[3], month: +m[2] - 1 };
+}
+
+// '2026-03-07' → 'sáb 7 mar'
+export function weekdayDate(iso) {
+  const d = calendarDay(iso);
+  return d ? `${WEEKDAYS_SHORT[d.weekday]} ${d.day} ${MONTHS_SHORT[d.month]}` : null;
+}
+
+// '2026-09-23' → '23 sept'
+export function dayMonth(iso) {
+  const d = calendarDay(iso);
+  return d ? `${d.day} ${MONTHS_SHORT[d.month]}` : null;
+}
+
+// '2026-09-23' → '23 de septiembre'
+export function dayMonthLong(iso) {
+  const d = calendarDay(iso);
+  return d ? `${d.day} de ${MONTHS[d.month]}` : null;
+}
+
+// '2026-06-27' → 'junio'
+export function monthName(iso) {
+  const d = calendarDay(iso);
+  return d ? MONTHS[d.month] : null;
 }
 
 function icsText(value) {
@@ -209,4 +245,45 @@ export function countdownLabel(dateISO, todayISO) {
   if (from === null || to === null || to < from) return null;
   const days = to - from;
   return days === 0 ? 'hoy' : days === 1 ? 'mañana' : `faltan ${days} días`;
+}
+
+/* ====== Compartir (spec §4.2 A), común a las pantallas que comparten ====== */
+
+// Copia un texto: la API del portapapeles y, si no está o falla, un textarea con
+// execCommand. → true si se copió.
+export async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    try {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      const copied = document.execCommand('copy');
+      area.remove();
+      return copied;
+    } catch {
+      return false;
+    }
+  }
+}
+
+// navigator.share con { title, text, url } si existe; si no, o si falla, copia el
+// enlace. → 'compartido' | 'cancelado' | 'copiado' | 'no copiado': cada pantalla
+// lo dice a su manera.
+export async function shareLink(data) {
+  if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+    try {
+      await navigator.share(data);
+      return 'compartido';
+    } catch (error) {
+      if (error && error.name === 'AbortError') return 'cancelado';
+    }
+  }
+  return (await copyText(data.url)) ? 'copiado' : 'no copiado';
 }

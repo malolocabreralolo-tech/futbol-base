@@ -185,7 +185,7 @@ test('state.js guards BENJAMIN/PREBENJAMIN with the typeof pattern', () => {
 /* ════ 8. lazy loaders: failures are retryable + honest season errors ════ */
 
 test('ensureLineups: a failed fetch is NOT cached for the session', async () => {
-  fetchImpl = async () => ({ ok: false, status: 404, text: async () => '' });
+  fetchImpl = async () => ({ ok: false, status: 503, text: async () => '' });
   const first = await state.ensureLineups('2024-2025');
   assert.equal(first, null, 'failure returns the null sentinel');
 

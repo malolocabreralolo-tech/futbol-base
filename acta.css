@@ -753,3 +753,134 @@ abbr[title] { text-decoration: none; }
   [data-screen="tabla"] .standings .st-form { width: 124px; padding-left: 14px; }
   [data-screen="tabla"] .standings .st-pts { width: 48px; }
 }
+
+/* ── Partido (spec §4.5) ──────────────────────────────────────────────── */
+
+/* La cabecera es la de screenHead (Tarea 4). Bajo ella, la región que dice si
+ * se copió el enlace: nunca display: none, o dejaría de anunciarse. */
+.pt-main, .pt-aside { min-width: 0; }
+.pt-share-status { font-size: 12.5px; font-weight: 600; color: var(--mute); text-align: right; }
+.pt-share-status:not(:empty) { margin-top: 6px; }
+
+/* Resultado: casillas, escudos de 46 px y marcador de 40 px. */
+.pt-teams {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 8px;
+  padding: 14px 8px 12px;
+}
+.pt-team { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; text-align: center; }
+.pt-side { font-size: 12.5px; font-weight: 400; color: var(--mute); }
+/* Nombre completo; si no cabe en dos líneas, cortado con elipsis (spec §3.5). */
+.pt-name {
+  display: -webkit-box;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.pt-score { font-size: 40px; font-weight: 800; line-height: 1; white-space: nowrap; }
+.pt-score.is-pending { font-weight: 600; color: var(--mute); }
+.pt-penalties { padding: 8px 10px; font-size: 12.5px; font-weight: 700; color: var(--mute); text-align: center; }
+.pt-tanda { white-space: nowrap; }
+
+/* Goles: tres columnas (local | minuto y marcador | visitante) o dos listas. */
+.pt-goals { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.pt-goals thead th { height: 0; padding: 0; border: 0; }
+.pt-goals td { padding: 9px 10px; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+.pt-goals tbody tr:first-child td { border-top: 0; }
+.pt-g-home { text-align: right; font-weight: 700; }
+.pt-g-away { text-align: left; font-weight: 700; }
+.pt-g-mid { width: 88px; text-align: center; white-space: nowrap; }
+.pt-goals td.pt-g-mid { border-right: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.pt-g-min { font-size: 12.5px; font-weight: 400; color: var(--mute); }
+.pt-g-score { font-weight: 800; }
+.pt-noname { font-weight: 400; color: var(--mute); }
+.pt-goals .pt-mine, .pt-glist.pt-mine li { color: var(--ink); }
+.pt-glists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pt-glist { min-width: 0; padding: 8px 10px 10px; }
+.pt-glist + .pt-glist { border-left: 1px solid var(--rule); }
+.pt-glist-head { overflow: hidden; font-size: 13.5px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.pt-glist-head .pt-side { display: block; }
+.pt-glist ul { margin: 4px 0 0; padding: 0; list-style: none; }
+.pt-glist li { padding: 3px 0; font-weight: 700; }
+.pt-glist-n { font-weight: 400; color: var(--mute); }
+.pt-glist-none { margin-top: 4px; color: var(--mute); }
+
+/* Alineaciones del acta: titulares y suplentes con dorsal y goles. */
+.pt-lu-teams { display: grid; grid-template-columns: minmax(0, 1fr); }
+.pt-lu-team { min-width: 0; padding: 10px 10px 12px; }
+.pt-lu-team + .pt-lu-team { border-top: 1px solid var(--rule); }
+.pt-lu-head { font-size: 15px; font-weight: 800; }
+.pt-lu-head .pt-side { margin-right: 4px; }
+.pt-lineup { width: 100%; margin-top: 6px; border-collapse: collapse; }
+.pt-lineup th, .pt-lineup td { padding: 6px 4px; border-bottom: 1px solid var(--line); font-weight: 400; text-align: left; vertical-align: top; }
+.pt-lineup thead th { padding-top: 0; border-bottom: 1.5px solid var(--ink); font-size: 11.5px; font-weight: 600; color: var(--mute); }
+.pt-lineup .pt-player { overflow-wrap: anywhere; }
+.pt-lineup .pt-dorsal { width: 38px; padding-right: 10px; color: var(--mute); text-align: right; }
+.pt-lineup .pt-pgoals { width: 52px; font-weight: 800; color: var(--ink); text-align: right; }
+.pt-lineup thead .pt-pgoals { font-weight: 600; color: var(--mute); }
+.pt-lu-group th { padding-top: 10px; font-size: 12.5px; font-weight: 700; color: var(--mute); }
+.pt-staff { margin-top: 8px; }
+.pt-staff-label, .pt-none { color: var(--mute); }
+.pt-lu-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: 12px; padding: 2px 10px; }
+.pt-lu-foot .pt-staff { margin: 0; padding: 8px 0; }
+.pt-acta { display: inline-flex; align-items: center; min-height: 44px; font-weight: 800; }
+
+/* Cara a cara: el partido actual con el resalte propio, sin óvalo. */
+.pt-h2h-row {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 8px;
+  min-height: 44px;
+  padding: 6px 10px;
+  color: var(--text);
+  text-decoration: none;
+}
+.box > .pt-h2h-row + .pt-h2h-row { border-top-color: var(--line); }
+.pt-h2h-when { font-size: 12.5px; line-height: 1.3; color: var(--mute); }
+.pt-h2h-teams { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pt-h2h-score { font-weight: 800; white-space: nowrap; }
+.pt-h2h-score.is-pending { font-weight: 600; color: var(--mute); }
+.pt-h2h-row.is-current { background: var(--mark); color: var(--ink); font-weight: 800; box-shadow: inset 3px 0 0 var(--ink); }
+.pt-h2h-row.is-current .pt-h2h-when { color: var(--ink); }
+/* Nombre corto en móvil (spec §3.5); el completo, oculto a la vista, lo leen los lectores de pantalla. */
+.pt-full { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.pt-prev-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 8px;
+  border: 1.5px solid var(--ink);
+  font-weight: 700;
+  color: var(--ink);
+}
+.pt-prev { margin-top: 10px; }
+.pt-prev-head { margin: 12px 0 6px; font-size: 12.5px; font-weight: 700; color: var(--mute); }
+.pt-prev-head:first-child { margin-top: 0; }
+.pt-loading { color: var(--mute); }
+
+/* Contexto: posición y últimos cinco de los dos, en una línea. */
+.pt-context .cell-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pt-context .cell-value { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.pt-pos { white-space: nowrap; }
+
+@media (hover: hover) {
+  a.pt-h2h-row:hover .pt-h2h-teams { text-decoration: underline; }
+}
+
+@media (min-width: 1024px) {
+  .pt-cols { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); column-gap: 28px; align-items: start; }
+  .pt-lu-teams { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pt-lu-team + .pt-lu-team { border-top: 0; border-left: 1px solid var(--rule); }
+  .pt-full { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+  .pt-short { display: none; }
+}

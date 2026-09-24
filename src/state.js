@@ -458,6 +458,10 @@ export async function ensureLineups(season) {
     const suffix = _seasonSuffix(season);
     try {
       const r = await fetchData(`data-lineups-${season}.js`);
+      // generate_js.py solo escribe data-lineups-<S>.js si la temporada tiene
+      // alguna acta: sin fichero (404) no hay actas, y eso no es un error de
+      // carga (una temporada recién activada, por ejemplo).
+      if (r.status === 404) { _lineups[season] = {}; return _lineups[season]; }
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const txt = await r.text();
       const re = new RegExp('const LINEUPS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*\\});');

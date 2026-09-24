@@ -1064,3 +1064,12 @@ export function findMatch(group, { r, h, a } = {}) {
   const all = (group.rounds || []).flatMap((x) => x.matches.filter((m) => m.home === h && m.away === a));
   return all.length === 1 ? all[0] : null;
 }
+
+/* El acta de la federación de un partido (spec §4.5, «Alineaciones»): la
+ * entrada de LINEUPS_<S> con el mismo criterio que timelineFor, la única cuya
+ * (s, gr) es la del partido. null si no hay marcador, si no hay entrada o si
+ * la entrada es de otro partido con la misma clave. */
+export function actaFor(match, lineups) {
+  if (match.hs == null || match.as == null || !lineups) return null;
+  return entryForMatch(lineups[`${match.home}|${match.away}|${match.hs}-${match.as}`], match);
+}

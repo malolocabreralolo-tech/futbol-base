@@ -12,7 +12,8 @@ import { buildSeason, createModel, teamFixtures } from '../../src/model.js';
 import { buildClubIndex, resolveMyTeam } from '../../src/myteam.js';
 import { shareLink, copyText, weekdayDate, dayMonth, dayMonthLong, monthName } from '../../src/links.js';
 import { loadStore, LEGACY_KEY } from '../../src/store.js';
-import { screen, coverageText, shareData, matchCalendar } from '../../src/screen-home.js';
+import { standingsTable } from '../../src/ui.js';
+import { screen, coverageText, shareData, matchCalendar, teamCalendar } from '../../src/screen-home.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const shields = fixture('shields');
@@ -521,4 +522,134 @@ test('estilos de la portada: pulsables de 44 px y nombres con elipsis', () => {
   assert.match(decl('.result-score'), /font-size:\s*40px/, 'el marcador grande es el de 40 px de la escala');
   const home = RULES.filter(r => /home|fixture|last5|scorers|choice|result|\.more/.test(r.selector)).map(r => r.body).join(';');
   assert.doesNotMatch(home, /text-transform|border-radius|box-shadow/);
+});
+
+// ── Estado D, «Verano», clasificación final y escritorio (Tarea 8) ────────
+
+const DESKTOP = media => media !== null && /min-width:\s*1024px/.test(media);
+
+test('D el 23/09/2026 (caso 1 de §11): «A la espera de la temporada 2026/27» y la caja con sus casillas y su texto', () => {
+  const out = render(CASES.D);
+  assert.match(out, /data-state="D"/);
+  assert.match(out, /<h1>Las Mesas Hu\.<\/h1><p class="screen-sub">A la espera de la temporada 2026\/27<\/p><\/div><a class="screen-action" href="#\/explorar#buscar">Cambiar<\/a>/);
+  assert.equal(text(blockOf(out, 'Temporada 2026/27')), 'Temporada 2026/27 Grupos pendientes en esta web Última comprobación hoy, 22:11 '
+    + 'La temporada 2026/27 aparecerá aquí cuando la federación publique los grupos y se activen en esta web. '
+    + 'Si hay más de un equipo de Las Mesas Hu., te preguntaremos cuál es el tuyo.');
+  assert.doesNotMatch(out, /[Ss]e revisa/);
+  assert.doesNotMatch(out, /Próximo partido/);
+});
+
+test('D sin la caja: el 15/06/2026 con 2026/27 ya lista, «Temporada 2025/26 terminada»', () => {
+  const ready = { ...health, nextSeason: { name: '2026-2027', status: 'ready' } };
+  const out = render({ today: '2026-06-15', withHealth: ready });
+  assert.match(out, /data-state="D"/);
+  assert.match(out, /<p class="screen-sub">Temporada 2025\/26 terminada<\/p>/);
+  assert.equal(blockOf(out, 'Temporada 2026/27'), null);
+});
+
+test('D sin data-health: la caja sale con la fecha del literal «Última actualización», sin hora, o «no disponible»', () => {
+  const legacy = render({ today: '2026-09-23', withHealth: null, legacyDate: '23/09/2026' });
+  assert.match(text(blockOf(legacy, 'Temporada 2026/27')), /Grupos pendientes en esta web Última comprobación 23 sept La temporada/);
+  const none = render({ today: '2026-09-23', withHealth: null });
+  assert.match(blockOf(none, 'Temporada 2026/27'), /<div class="cell is-muted"><dt class="cell-label">Última comprobación<\/dt><dd class="cell-value">no disponible<\/dd><\/div>/);
+});
+
+test('«Así terminó 2025/26»: puesto de 15, puntos, balance, goles, último resultado y máximo goleador del equipo', () => {
+  assert.equal(text(blockOf(render(CASES.D), 'Así terminó 2025/26')), 'Así terminó 2025/26 Prebenjamín, Grupo 2 de Gran Canaria '
+    + 'Posición 9.º de 15 Puntos 37 Balance 12G 1E 15P A favor 90 goles En contra 120 goles Último 2–7 Huracán '
+    + 'Máximo goleador Theo De La Rosa Perello, 12 goles en 17 partidos');
+  assert.doesNotMatch(blockOf(render({ ...CASES.D, gol: {} }), 'Así terminó 2025/26'), /Máximo goleador/);
+});
+
+test('Verano de PG2 (caso 8 de §11): MCP3 y MCPK1 con el puesto, los partidos de cuadro y el paso por penaltis; nunca los de benjamín', () => {
+  const block = blockOf(render(CASES.D), 'Verano: Maspalomas Cup 2026');
+  assert.match(block, /<p class="block-context">junio<\/p>/);
+  const rows = [...block.matchAll(/<a class="summer-row" href="([^"]+)">(.*?)<\/a>/g)].map(m => [m[1], text(m[2])]);
+  assert.deepEqual(rows, [
+    ['#/copa?s=2025-2026&amp;g=MCP3', 'Fase de grupos, Grupo C 3.º de 4 3 pts'],
+    ['#/copa?s=2025-2026&amp;g=MCPK1', 'Copa Plata, previa · vie 26 jun Tablero – Las Mesas Huracán 1–4'],
+    ['#/copa?s=2025-2026&amp;g=MCPK1', 'Copa Plata, cuartos · sáb 27 jun Las Mesas Huracán – Unión Carrizal 1–1 Las Mesas Huracán pasó por penaltis (3–2)'],
+    ['#/copa?s=2025-2026&amp;g=MCPK1', 'Copa Plata, semifinales · sáb 27 jun Las Mesas Huracán – Maspa Training A 2–4'],
+  ]);
+  assert.doesNotMatch(block, /MCB16|MCBK2|Copa Oro|Grupo P\b/);
+  // RC Victoria no tiene «Verano»: «Real Club Victoria» (MCP3) no se une a su club (B1, «Para B2»).
+  assert.ok(!titles(render({ ...CASES.D, myTeam: { ...LAS_MESAS, name: 'RC Victoria' } })).some(t => t.startsWith('Verano')));
+});
+
+test('«Ver toda la temporada 2025/26» abre la ficha del equipo en esa temporada y grupo', () => {
+  assert.match(render(CASES.D), /<a class="home-all" href="#\/equipo\?s=2025-2026&amp;g=PG2&amp;t=Las%20Mesas%20Hu\.">Ver toda la temporada 2025\/26<\/a>/);
+});
+
+test('«Clasificación final»: la fila propia con dos arriba y dos abajo, con #, Equipo, J, DG y Pts, y «ver completa»', () => {
+  const rowsOf = block => [...block.matchAll(/<tr( class="is-mine")?><td class="st-pos">(\d+)<\/td>.*?<span class="st-name">(.*?)<\/span>/g)]
+    .map(m => [Number(m[2]), m[3], Boolean(m[1])]);
+  const block = blockOf(render(CASES.D), 'Clasificación final');
+  assert.deepEqual(rowsOf(block), [[7, 'Gran Canaria', false], [8, 'Telde', false], [9, 'Las Mesas Hu.', true],
+    [10, 'Santa Brígida', false], [11, 'Las Huesas', false]]);
+  assert.deepEqual([...block.matchAll(/<th scope="col" class="[^"]+">(?:<abbr title="[^"]+">)?(.*?)(?:<\/abbr>)?<\/th>/g)].map(m => m[1]),
+    ['#', 'Equipo', 'J', 'DG', 'Pts']);
+  assert.match(block, /<p class="block-context"><a class="more" href="#\/tabla\?s=2025-2026&amp;g=PG2">ver completa<\/a><\/p>/);
+  assert.match(block, /<caption class="vh">Clasificación final: Prebenjamín, Grupo 2 de Gran Canaria<\/caption>/);
+  // Cerca de un extremo, las cinco primeras o las cinco últimas.
+  const top = blockOf(render({ ...CASES.D, myTeam: { ...LAS_MESAS, name: 'Unión Viera' } }), 'Clasificación final');
+  assert.deepEqual(rowsOf(top).map(r => r[0]), [1, 2, 3, 4, 5]);
+  const bottom = blockOf(render({ ...CASES.D, myTeam: { ...LAS_MESAS, name: 'CD Batán' } }), 'Clasificación final');
+  assert.deepEqual(rowsOf(bottom).map(r => r[0]), [11, 12, 13, 14, 15]);
+});
+
+test('standingsTable: la vista «resumen» es #, Equipo, J, DG y Pts', () => {
+  const row = { pos: 9, team: 'Las Mesas Hu.', pts: 37, pj: 28, g: 12, e: 1, p: 15, gf: 90, gc: 120, dg: -30, retired: false };
+  const out = String(standingsTable([row], { view: 'resumen', mine: 'Las Mesas Hu.' }));
+  assert.match(out, /<td class="st-pos">9<\/td><th scope="row" class="st-team">.*<\/th><td class="st-num">28<\/td><td class="st-dg">−30<\/td><td class="st-pts">37<\/td><\/tr>/);
+});
+
+test('dos columnas (§4.8): a la izquierda el partido, Últimos cinco y el hueco del calendario; a la derecha la clasificación, goleadores y cifras', () => {
+  const columnsOf = markup => {
+    const m = String(markup).match(/<div class="home-cols"><div class="home-main">([\s\S]*)<\/div><div class="home-side">([\s\S]*)<\/div><\/div><\/section>$/);
+    return { main: m[1], side: m[2] };
+  };
+  const a = columnsOf(render(CASES.A));
+  assert.deepEqual(titles(a.main), ['Próximo partido', 'Últimos cinco']);
+  assert.ok(a.main.endsWith('<div data-slot="calendario"></div>'));
+  assert.deepEqual(titles(a.side), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras']);
+  assert.match(a.side, /<p class="home-fresh">.*<\/p>$/);
+  const c = columnsOf(render(CASES.C));
+  assert.deepEqual(titles(c.main), ['Último partido', 'Últimos cinco']);
+  const b = columnsOf(render(CASES.B));
+  assert.deepEqual(titles(b.main), ['Próximo partido']);
+  assert.match(b.main, /<p class="empty">Aún no se ha jugado ninguna jornada<\/p><\/section><div data-slot="calendario"><\/div>$/);
+  assert.deepEqual(titles(b.side), ['Clasificación']);
+  const d = columnsOf(render(CASES.D));
+  assert.deepEqual(titles(d.main), ['Temporada 2026/27', 'Así terminó 2025/26', 'Verano: Maspalomas Cup 2026']);
+  assert.match(d.main, /<a class="home-all" href="[^"]+">Ver toda la temporada 2025\/26<\/a>$/);
+  assert.deepEqual(titles(d.side), ['Clasificación final']);
+  assert.doesNotMatch(d.main, /data-slot/);
+});
+
+test('teamCalendar: el calendario completo de escritorio, en orden de jornada, con su estado y un enlace por partido', () => {
+  const raw = currentAt('2026-06-02');
+  const pg2 = buildSeason({ name: raw.season, current: true, ...raw }).groups.find(g => g.id === 'PG2');
+  const out = String(teamCalendar('Las Mesas Hu.', pg2, { today: '2026-06-03', shields }));
+  assert.match(out, /^<section class="block" id="calendario"><div class="block-head"><h2 class="block-title">Calendario<\/h2><p class="block-context">26 partidos<\/p><\/div><ol class="box cal">/);
+  const whens = [...out.matchAll(/<p class="cal-when">(.*?)<\/p>/g)].map(m => m[1]);
+  assert.equal(whens.length, 26);
+  assert.equal(whens[0], 'Jornada 1 · sáb 11 oct');
+  assert.equal(whens[25], 'Jornada 30 · mar 2 jun');
+  assert.equal((out.match(/<a class="match-row" href="#\/partido\?s=2025-2026&amp;g=PG2&amp;r=Jornada%20\d+&amp;/g) || []).length, 26);
+  assert.equal((out.match(/<span class="match-note">sin resultado<\/span>/g) || []).length, 1);
+  assert.deepEqual(missingClasses(out), []);
+  assert.match(String(teamCalendar('CD Batán', pg2, { today: '2026-06-03' })), /<p class="empty">Sin partidos en el calendario de este grupo<\/p>/);
+});
+
+test('estilos de D y de escritorio: dos columnas desde 1024 px, filas de verano de 44 px y el calendario nunca oculto con CSS', () => {
+  const cols = decl('.home-cols', DESKTOP);
+  assert.match(cols, /display:\s*grid/);
+  assert.match(cols, /grid-template-columns:\s*minmax\(0, 1fr\) minmax\(0, 1fr\)/);
+  assert.doesNotMatch(decl('.home-cols'), /display:\s*(grid|flex)/, 'en móvil las columnas se apilan');
+  assert.match(decl('.summer-row'), /min-height:\s*44px/);
+  const all = decl('.home-all');
+  assert.match(all, /min-height:\s*48px/);
+  assert.match(all, /border:\s*1\.5px solid var\(--ink\)/);
+  assert.match(decl('.summer-note'), /color:\s*var\(--ink\)/);
+  assert.doesNotMatch(CSS, /(data-slot|\.cal\b|#calendario)[^{]*\{[^}]*display:\s*none/, 'lo pinta mount, no se esconde');
 });

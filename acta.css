@@ -610,3 +610,67 @@ abbr[title] { text-decoration: none; }
   a.result:hover .result-score,
   .choice:hover .choice-name { text-decoration: underline; }
 }
+
+/* ── Mi equipo, estado D: temporada siguiente, «Así terminó» y «Verano» ── */
+
+.box-text { padding: 10px 12px 12px; font-size: 15px; line-height: 1.5; }
+.home-top { display: flex; flex-direction: column; gap: 1px; padding: 6px 8px 8px; }
+.home-top-name { font-size: 15px; overflow-wrap: anywhere; }
+.summer { margin: 0; padding: 0; list-style: none; }
+.summer > li + li { border-top: 1px solid var(--line); }
+.summer-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: var(--text);
+  text-decoration: none;
+}
+.summer-what { grid-column: 1 / -1; font-size: 12.5px; color: var(--mute); }
+.summer-main { min-width: 0; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.summer-score { font-size: 17px; font-weight: 800; }
+.summer-note {
+  grid-column: 1 / -1;
+  justify-self: end;
+  margin-top: 4px;
+  padding: 1px 6px;
+  border: 1px solid var(--rule);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.home-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin-top: 18px;
+  padding: 0 12px;
+  border: 1.5px solid var(--ink);
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Calendario completo del equipo: solo en escritorio, y lo pinta mount */
+.cal { margin: 0; padding: 0; list-style: none; }
+.box.cal > li + li { border-top-color: var(--line); }
+.cal-when { padding: 6px 6px 0; font-size: 11.5px; font-weight: 600; color: var(--mute); }
+
+/* Dos columnas en escritorio (spec §4.8); en móvil, una debajo de otra */
+@media (min-width: 1024px) {
+  .home-cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    column-gap: 40px;
+  }
+}
+
+@media (hover: hover) {
+  a.summer-row:hover .summer-main,
+  a.home-all:hover { text-decoration: underline; }
+}

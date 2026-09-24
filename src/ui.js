@@ -115,9 +115,11 @@ const COLUMNS = {
     cell: (r) => (r.retired ? html`<span class="st-retired">retirado</span>` : formChips(r.form || [])) },
 };
 
-// Spec §4.4. «todas» es la de escritorio (≥1024 px).
+// Spec §4.4. «todas» es la de escritorio (≥1024 px) y «resumen», la de la
+// clasificación final de la portada en el estado D (spec §4.2: #, Equipo, J, DG y Pts).
 const VIEWS = {
   puntos: ['pj', 'g', 'e', 'p', 'dg'],
+  resumen: ['pj', 'dg'],
   goles: ['gf', 'gc', 'dg'],
   forma: ['pj', 'form'],
   casa: ['pj', 'g', 'e', 'p'],

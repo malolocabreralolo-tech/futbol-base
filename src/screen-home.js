@@ -6,14 +6,15 @@
 // de navegador. mount(root, ctx, nav) añade el comportamiento. Nada toca el DOM
 // al importarse.
 import { html } from './html.js';
-import { box, cells, crest, empty, notice, screenHead, standingsTable } from './ui.js';
+import { box, cells, crest, empty, matchRow, notice, screenHead, standingsTable } from './ui.js';
 import {
-  lastResults, matchState, playerName, retiredTeams, seasonLabel, seasonSummary, sourceInfo,
-  teamFixtures, teamShort,
+  competitionKey, lastResults, matchState, playerName, retiredTeams, seasonLabel, seasonSummary,
+  sourceInfo, teamFixtures, teamShort,
 } from './model.js';
-import { homeState } from './myteam.js';
+import { homeState, showNextSeasonBox, summerCups } from './myteam.js';
 import {
-  buildCalendar, countdownLabel, dayMonthLong, downloadCalendar, routeHref, shareLink, venueUrl, weekdayDate,
+  buildCalendar, countdownLabel, dayMonth, dayMonthLong, downloadCalendar, monthName, routeHref, shareLink,
+  venueUrl, weekdayDate,
 } from './links.js';
 import { ensureHealth, teamScorers } from './state.js';
 
@@ -250,6 +251,7 @@ function seasonView(ctx, env, top) {
   } else {
     main.push(html`<section class="block">${empty(notPlayedText(group, name))}</section>`);
   }
+  main.push(CALENDAR_SLOT);
   aside.push(freshness(ctx, group));
   return columns(main, aside);
 }
@@ -274,12 +276,158 @@ function stateC(ctx, env) {
   return html`${header(r.name, r.group.label, env)}${staleNotice(r)}${seasonView(ctx, env, lastBlock(fx, r.group, env.shields))}`;
 }
 
-// ── Estado D: temporada terminada ───────────────────────────────────────
+// ── Estado D: temporada terminada (spec §4.2 D, §6.4 y maqueta 6-1) ─────
 
-// La cabecera, el aviso y la clasificación completa del grupo terminado.
+// Casilla de la última comprobación: «hoy, 22:11» o «23 sept, 22:11».
+function checkedCell(instant, today) {
+  const c = canary(instant);
+  if (!c) return null;
+  return c.day === today ? `hoy, ${c.time}` : `${dayMonth(c.day)}, ${c.time}`;
+}
+
+// Sin data-health, la fecha del literal oculto «Última actualización: DD/MM/AAAA» de
+// index.html, sin hora (spec §4.2 D): «23 sept».
+function legacyCell(text) {
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(text ?? '').trim());
+  return m ? dayMonth(`${m[3]}-${m[2]}-${m[1]}`) : null;
+}
+
+// '2025-2026' → '2026-2027'
+const nextSeasonOf = season => {
+  const m = /^(\d{4})-(\d{4})$/.exec(String(season));
+  return m ? `${Number(m[1]) + 1}-${Number(m[2]) + 1}` : '';
+};
+
+function nextSeasonBox(ctx, name, next) {
+  const health = ctx.health;
+  const checked = health && health.checkedAt ? checkedCell(health.checkedAt, ctx.today) : legacyCell(ctx.legacyDate);
+  const club = teamShort(name).replace(/\s[A-E]$/, '');
+  return box(html`${cells([
+    { label: 'Grupos', value: 'pendientes en esta web' },
+    { label: 'Última comprobación', value: checked || 'no disponible', muted: !checked },
+  ])}<p class="box-text">La temporada ${seasonLabel(next)} aparecerá aquí cuando la federación publique los grupos y se activen en esta web. Si hay más de un equipo de ${club}, te preguntaremos cuál es el tuyo.</p>`,
+  { title: `Temporada ${seasonLabel(next)}` });
+}
+
+function endedBlock(ctx, group, name) {
+  const sum = seasonSummary(name, group);
+  const top = scorersOf(ctx, group, name)[0] || null;
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const content = html`${cells([
+    { label: 'Posición', value: sum.pos != null ? `${sum.pos}.º de ${sum.of}` : '—' },
+    { label: 'Puntos', value: sum.pts ?? '—' },
+    { label: 'Balance', value: sum.g != null ? `${sum.g}G ${sum.e}E ${sum.p}P` : '—' },
+  ])}${cells([
+    { label: 'A favor', value: sum.gf != null ? plural(sum.gf, 'gol', 'goles') : '—' },
+    { label: 'En contra', value: sum.gc != null ? plural(sum.gc, 'gol', 'goles') : '—' },
+    { label: 'Último', value: sum.last ? `${score(sum.last.gf, sum.last.gc)} ${teamShort(sum.last.rival)}` : '—' },
+  ])}${top ? html`<p class="home-top"><span class="cell-label">Máximo goleador</span><span class="home-top-name"><b>${playerName(top.name)}</b>, ${plural(top.goals, 'gol', 'goles')} en ${plural(top.games, 'partido', 'partidos')}</span></p>` : ''}`;
+  return box(content, { title: `Así terminó ${seasonLabel(group.season)}`, context: group.label });
+}
+
+// «Verano» (spec §6.4 y decisión 19 de B1): los torneos de su categoría, una caja
+// por competición, con la fase de grupos (puesto) y cada partido de cuadro.
+function summerBlocks(ctx, resolution) {
+  const cups = ctx.model.cups();
+  if (!cups) return [];
+  const mine = { name: resolution.name, season: resolution.group.season, cat: resolution.cat, groupId: resolution.group.id };
+  const byCompetition = new Map();
+  for (const entry of summerCups(cups, mine, ctx.model.clubIndex())) {
+    const label = competitionKey(entry.group, entry.group.season).label;
+    if (!byCompetition.has(label)) byCompetition.set(label, []);
+    byCompetition.get(label).push(entry);
+  }
+  return [...byCompetition].map(([label, entries]) => {
+    const rows = entries.flatMap(entry => (entry.group.kind === 'cup-bracket'
+      ? entry.rows.map(m => bracketRow(entry.group, m))
+      : [groupPhaseRow(entry.group, entry.team)]));
+    const months = [...new Set(entries.flatMap(e => e.rows).map(m => m.dateISO).filter(Boolean).sort()
+      .map(monthName))];
+    return box(html`<ul class="summer">${rows}</ul>`, { title: `Verano: ${label}`, context: listText(months) });
+  });
+}
+
+function groupPhaseRow(group, team) {
+  const row = group.standings.find(r => r.team === team);
+  return html`<li><a class="summer-row" href="${routeHref('copa', { s: group.season, g: group.id })}"><span class="summer-what">Fase de grupos, ${group.name}</span><span class="summer-main">${row ? `${row.pos}.º de ${group.standings.length}` : teamShort(team)}</span><span class="summer-score">${row ? `${row.pts} pts` : ''}</span></a></li>`;
+}
+
+function bracketRow(group, m) {
+  const round = roundOf(group, m);
+  const when = shortDate(m.dateISO);
+  const what = `${group.name}, ${(round ? round.label : m.roundKey).toLowerCase()}${when ? ` · ${when}` : ''}`;
+  const played = m.hs != null && m.as != null;
+  const penalties = played && m.hs === m.as && m.advancer
+    ? `${teamShort(m.advancer === 'home' ? m.home : m.away)} pasó por penaltis${m.shootout ? ` (${m.shootout.replace('-', '–')})` : ''}`
+    : null;
+  return html`<li><a class="summer-row" href="${routeHref('copa', { s: group.season, g: group.id })}"><span class="summer-what">${what}</span><span class="summer-main">${teamShort(m.home)} – ${teamShort(m.away)}</span><span class="summer-score">${played ? score(m.hs, m.as) : '–'}</span>${penalties ? html`<span class="summer-note">${penalties}</span>` : ''}</a></li>`;
+}
+
+// La fila propia con las dos de arriba y las dos de abajo; cerca de un extremo,
+// las cinco primeras o las cinco últimas.
+function windowAround(rows, name, around = 2) {
+  const size = 2 * around + 1;
+  const i = rows.findIndex(row => row.team === name);
+  if (i < 0) return rows.slice(0, size);
+  const start = Math.max(0, Math.min(i - around, rows.length - size));
+  return rows.slice(start, start + size);
+}
+
+function finalStandings(group, name, shields) {
+  if (!group.standings.length) return blockEmpty('Clasificación final', 'Clasificación sin publicar');
+  const more = html`<a class="more" href="${routeHref('tabla', { s: group.season, g: group.id })}">ver completa</a>`;
+  return box(standingsTable(windowAround(group.standings, name), {
+    view: 'resumen', mine: name, shields, hrefFor: row => teamHref(group, row.team), caption: `Clasificación final: ${group.label}`,
+  }), { title: 'Clasificación final', context: more });
+}
+
 function stateD(ctx, env) {
   const r = ctx.resolution;
-  return html`${header(r.name, `Temporada ${seasonLabel(r.group.season)} terminada`, env)}${staleNotice(r)}${columns([], [standingsBlock(r.group, r.name, env.shields)])}`;
+  const { group, name } = r;
+  const withBox = showNextSeasonBox({ group, health: ctx.health, portalSeason: ctx.portal.season });
+  const next = nextSeasonOf(group.season);
+  const subtitle = withBox ? `A la espera de la temporada ${seasonLabel(next)}` : `Temporada ${seasonLabel(group.season)} terminada`;
+  const main = [
+    withBox ? nextSeasonBox(ctx, name, next) : '',
+    endedBlock(ctx, group, name),
+    ...summerBlocks(ctx, r),
+    html`<a class="home-all" href="${teamHref(group, name)}">Ver toda la temporada ${seasonLabel(group.season)}</a>`,
+  ];
+  return html`${header(name, subtitle, env)}${staleNotice(r)}${columns(main, [finalStandings(group, name, env.shields)])}`;
+}
+
+// ── Calendario completo del equipo (escritorio, spec §4.8) ──────────────
+
+// Hueco del calendario en la columna principal de A, B y C: mount lo pinta en escritorio.
+const CALENDAR_SLOT = html`<div data-slot="calendario"></div>`;
+
+// Todos sus partidos del grupo, en orden de jornada y con su estado (spec §5.3).
+export function teamCalendar(team, group, { today, shields = {} } = {}) {
+  const items = group.rounds.flatMap(round => round.matches.filter(m => m.home === team || m.away === team).map(m => ({ round, m })));
+  if (!items.length) return blockEmpty('Calendario', 'Sin partidos en el calendario de este grupo');
+  const rows = items.map(({ round, m }) => html`<li><p class="cal-when">${round.label}${m.dateISO ? ` · ${shortDate(m.dateISO)}` : ''}</p>${matchRow(m, { today, shields, href: matchHref(m) })}</li>`);
+  return html`<section class="block" id="calendario"><div class="block-head"><h2 class="block-title">Calendario</h2><p class="block-context">${items.length} partidos</p></div><ol class="box cal">${rows}</ol></section>`;
+}
+
+// Solo en escritorio: se pinta al montar y al cruzar los 1024 px, nunca oculto con CSS (spec
+// §5.1: se pinta solo lo visible). El router llama a la limpieza que devuelve mount justo antes
+// del próximo pintado (paint() de router.js): por eso wideCalendar devuelve la suya, que quita el
+// escuchador de matchMedia (que no es del DOM y no desaparece solo al sustituir la sección).
+const WIDE = '(min-width: 1024px)';
+function wideCalendar(section, ctx) {
+  const slot = section.querySelector('[data-slot="calendario"]');
+  if (!slot || typeof matchMedia !== 'function') return null;
+  const query = matchMedia(WIDE);
+  const off = () => { if (typeof query.removeEventListener === 'function') query.removeEventListener('change', paint); };
+  const paint = () => {
+    if (!slot.isConnected) { off(); return; }
+    const { name, group } = ctx.resolution;
+    // Html de la plantilla html``, que escapa toda interpolación, como el pintado del router.
+    slot.innerHTML = query.matches ? String(teamCalendar(name, group, { today: ctx.today, shields: ctx.datasets?.shields || {} })) : '';
+  };
+  paint();
+  if (typeof query.addEventListener === 'function') query.addEventListener('change', paint);
+  return off;
 }
 
 // ── Compartir y calendario del próximo partido (los usa mount) ──────────
@@ -357,5 +505,6 @@ export const screen = {
         share(target, section.querySelector('[data-role="aviso"]'), data);
       }
     });
+    return ctx.resolution && ctx.resolution.status === 'ok' ? wideCalendar(section, ctx) : undefined;
   },
 };

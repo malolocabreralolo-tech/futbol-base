@@ -240,7 +240,7 @@ test('cada ruta de §4.1 tiene pantalla; las de B3 pintan la provisional con su 
 // Lo justo del navegador: historial con entradas y estado, location.hash, eventos de window y de
 // document, desplazamiento, la barra de 4 destinos y un <main> que guarda el HTML pintado y crea
 // su h1 y sus elementos con id en cada pintado.
-function fakeBrowser(hash = '#/') {
+function fakeBrowser(hash = '#/', { deferBack = false } = {}) {
   const listeners = { window: {}, document: {} };
   const on = (where) => (type, fn) => { (listeners[where][type] ||= []).push(fn); };
   const fire = (where, type, event) => (listeners[where][type] || []).forEach((fn) => fn(event));
@@ -257,8 +257,16 @@ function fakeBrowser(hash = '#/') {
     replaceState(state, _title, url) {
       entries[index] = { hash: url === undefined ? entries[index].hash : hashOf(url), state: structuredClone(state) };
     },
+    // deferBack: como un navegador real, que tampoco cambia history.state ni location.hash hasta
+    // que la propia vuelta atrás ocurre; sin él (por defecto) el índice baja ya, en este turno, y
+    // solo se aplaza el evento, lo que tapa la carrera de dos back() seguidos (B2, ronda 2).
     back() {
       if (index === 0) return;
+      if (deferBack) {
+        const target = index - 1;
+        queueMicrotask(() => { index = target; fire('window', 'popstate', { state: entries[index].state }); fire('window', 'hashchange', {}); });
+        return;
+      }
       index--;
       queueMicrotask(() => { fire('window', 'popstate', { state: entries[index].state }); fire('window', 'hashchange', {}); });
     },
@@ -757,5 +765,28 @@ test('nav.back() devuelve la promesa de la vuelta atrás, no la del pintado ante
   gate.resolve();
   await backPromise;
   assert.equal(resolved, true);
+  assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
+});
+
+test('dos nav.back() seguidos: ninguna de las dos promesas se queda colgada (B2, ronda 2)', async () => {
+  // deferBack: history.back() no cambia el índice hasta su propio popstate, como un navegador de
+  // verdad; con el navegador falso por defecto (que lo cambia ya) los dos back() no compiten por
+  // el mismo pendiente, y el fallo no se ve.
+  const b = fakeBrowser('#/', { deferBack: true });
+  const router = startRouter({ screens: { '': screen('home'), fuentes: screen('fuentes') }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/fuentes' });
+  await router.idle();
+  const p1 = router.nav.back();
+  const p2 = router.nav.back();
+  let r1 = false, r2 = false;
+  p1.then(() => { r1 = true; });
+  p2.then(() => { r2 = true; });
+  await tick();
+  await tick();
+  await tick();
+  assert.equal(r1, true, 'la promesa del primer nav.back() no se queda colgada para siempre');
+  assert.equal(r2, true);
+  assert.equal(b.index(), 0);
   assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
 });

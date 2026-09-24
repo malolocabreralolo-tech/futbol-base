@@ -408,10 +408,16 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
   // «‹»: la entrada anterior si es de la app; si no, el padre (spec §4.1). hist.back() dispara
   // popstate más tarde, nunca en este turno, así que el pintado real llega por onLocation: se deja
   // un pendiente y se resuelve desde allí, para que idle() y el propio nav.back() esperen al de la
-  // vuelta, no al de la pantalla que ya estaba pintada (B2, ronda 1, hallazgo 2).
+  // vuelta, no al de la pantalla que ya estaba pintada (B2, ronda 1, hallazgo 2). Dos nav.back()
+  // seguidos, cada uno con su history.back(), encadenan sus pendientes en vez de pisarse: si no,
+  // el popstate (uno solo, el segundo lo deduplica onLocation) solo resolvía el último, y la
+  // promesa del primero se quedaba colgada para siempre (B2, ronda 2, hallazgo único).
   function goBack() {
     if ((entry()?.fbIdx ?? 0) > 0) {
-      latest = new Promise((resolve) => { pendingBack = resolve; });
+      const earlier = pendingBack;
+      latest = new Promise((resolve) => {
+        pendingBack = earlier ? (value) => { earlier(value); resolve(value); } : resolve;
+      });
       hist.back();
       return latest;
     }

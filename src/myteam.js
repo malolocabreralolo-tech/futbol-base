@@ -5,14 +5,15 @@ import { matchState, retiredTeams, competitionKey, groupFinished, teamFixtures }
 
 // Nombres de torneos y de la federación que no se pueden unir por escudo ni por clave base.
 // Además del de la Maspalomas, los de 2025-26 que cambian de la Primera Fase a la siguiente
-// (FF20 → C3, FF21 → A3, FF21 → C4 y FV11 → FO): sin ellos, esas familias se quedaban en su
-// grupo de la Primera Fase ya terminado (decisión 20).
+// (FF20 → C3, FF21 → A3, FF21 → C4, FV11 → FO y FV14 → FP): sin ellos, esas familias se
+// quedaban en su grupo de la Primera Fase ya terminado (decisión 20).
 export const TEAM_ALIASES = {
   'UD Las Mesas Huracán': 'Las Mesas Hu.',
   'Loz Vélez': 'Los Vélez',
   'M. Training B': 'Maspa Training B',
   'C. Pastores B': 'Casa Pastores B',
   'INTER FUERTEVENTURA, C.D.': 'Inter FTV',
+  'BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO "A"': 'Balompédica',
 };
 
 // Siglas que normalizeForTeamsMapping no quita (ya quita CF, CD, UD, AD, SD, SC, SAD, CP, CE, FC…).
@@ -139,6 +140,14 @@ function topPhase(entries) {
   const top = Math.max(...entries.map(entry => phaseLevel(entry.group)));
   return entries.filter(entry => phaseLevel(entry.group) === top);
 }
+// El primer partido con fecha de esos grupos ('AAAA-MM-DD'), o null.
+const firstDate = groups => groups.flatMap(allMatches).map(match => match.dateISO).filter(Boolean).sort()[0] ?? null;
+// Días de `fromISO` a `toISO`, dos fechas 'AAAA-MM-DD'.
+const utcDay = iso => Date.UTC(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)) - 1, Number(iso.slice(8, 10)));
+const daysBetween = (fromISO, toISO) => Math.round((utcDay(toISO) - utcDay(fromISO)) / 86400000);
+// Días que la fase posterior tiene que llevar en marcha para que haya marca `stale`: mientras
+// se publica grupo a grupo, un club sin ningún grupo publicado aún no está atascado (decisión 20).
+const STALE_AFTER_DAYS = 7;
 // Los equipos del club de `name` en esos grupos, uno por grupo y nombre: [{group, name}], en el
 // orden de los grupos y, dentro de cada uno, en el de teamsOf.
 const clubTeams = (groups, name, index) => groups.flatMap(group => teamsOf(group)
@@ -175,10 +184,11 @@ const ask = entries => ({ status: 'ask', candidates: entries.map(({ group, name 
 //   hay otros equipos del club (la filial que cambia de nombre).
 // - Sin equipos del club en la fase posterior, sigue el grupo guardado.
 // Siempre que sigue el grupo guardado, lleva `stale: true` si la fase posterior de su categoría
-// e isla ya tiene grupos con partidos pendientes y ningún equipo del club: lo probable es que el
-// equipo siga en ella con un nombre que el índice no une. No cambia ni pregunta: B2 lo avisa y
-// updatedMyTeam no lo guarda (decisión 20). Si el club tiene algún equipo en esa fase, aunque
-// menos, se espera sin marca (decisión 16).
+// e isla tiene grupos con partidos pendientes, ningún equipo del club y al menos 7 días en marcha
+// (su primer partido con fecha es de hace 7 días o más): lo probable es que el equipo siga en ella
+// con un nombre que el índice no une. Antes de esa semana, la fase se puede estar publicando grupo
+// a grupo. No cambia ni pregunta: B2 lo avisa y updatedMyTeam no lo guarda (decisión 20). Si el
+// club tiene algún equipo en esa fase, aunque menos, se espera sin marca (decisión 16).
 function laterPhase(groups, saved, myTeam, index, todayISO) {
   const posterior = groups.filter(group => phaseLevel(group) > phaseLevel(saved));
   const clubLater = clubTeams(posterior, myTeam.name, index);
@@ -186,7 +196,10 @@ function laterPhase(groups, saved, myTeam, index, todayISO) {
   const before = clubTeams(groups.filter(group => phaseLevel(group) === phaseLevel(saved)), myTeam.name, index);
   const stay = () => {
     const island = posterior.filter(group => group.island === saved.island);
-    const stale = !clubLater.some(entry => entry.group.island === saved.island) && island.some(group => hasPending(group, todayISO));
+    const since = firstDate(island);
+    const stale = !clubLater.some(entry => entry.group.island === saved.island)
+      && since !== null && daysBetween(since, todayISO) >= STALE_AFTER_DAYS
+      && island.some(group => hasPending(group, todayISO));
     return stale ? { ...ok(saved, myTeam.name), stale: true } : ok(saved, myTeam.name);
   };
   // Fase posterior sin publicar entera para el club: se espera, sin preguntar ni mover (decisión 16).

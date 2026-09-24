@@ -32,13 +32,14 @@ test('baseKey quita siglas y la letra de filial final', () => {
   assert.equal(baseKey('Arucas CF D'), 'arucas');
 });
 
-test('TEAM_ALIASES: el alias de la Maspalomas de la spec y los cuatro de la Primera Fase de 2025-26', () => {
+test('TEAM_ALIASES: el alias de la Maspalomas de la spec y los cinco de la Primera Fase de 2025-26', () => {
   assert.deepEqual(TEAM_ALIASES, {
     'UD Las Mesas Huracán': 'Las Mesas Hu.',
     'Loz Vélez': 'Los Vélez',
     'M. Training B': 'Maspa Training B',
     'C. Pastores B': 'Casa Pastores B',
     'INTER FUERTEVENTURA, C.D.': 'Inter FTV',
+    'BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO "A"': 'Balompédica',
   });
 });
 
@@ -49,6 +50,7 @@ for (const [first, later, where] of [
   ['M. Training B', 'Maspa Training B', 'FF21 → A3'],
   ['C. Pastores B', 'Casa Pastores B', 'FF21 → C4'],
   ['INTER FUERTEVENTURA, C.D.', 'Inter FTV', 'FV11 → FO'],
+  ['BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO "A"', 'Balompédica', 'FV14 → FP'],
 ]) {
   test(`alias ${where}: «${first}» y «${later}» son el mismo club`, () => {
     assert.ok(!sameClub(buildClubIndex([first, later], {}, {}), first, later), 'sin el alias no se unen');
@@ -346,15 +348,36 @@ test('decisión 17: el mismo nombre en dos grupos de la fase guardada son dos eq
   }
 });
 
+// CD Calero (FF15, terminado el 08/11/2025) no tiene ningún equipo del club en la Segunda Fase
+// de las fixtures (A1, A2, B1 y B2), que empieza el 28/11/2025 con A1 y B1.
+const CALERO = { name: 'CD Calero', season: '2025-2026', cat: 'benjamin', groupId: 'FF15' };
+const CALERO_FF15 = { status: 'ok', group: '2025-2026|FF15', name: 'CD Calero', cat: 'benjamin' };
+const SECOND_PHASE_START = '2025-11-28';
+const daysAfter = (iso, n) => new Date(Date.parse(iso) + n * 86400000).toISOString().slice(0, 10);
+
 test('decisión 20: con la fase posterior en juego y ningún equipo del club en ella, sigue el grupo guardado con stale', () => {
-  // 02/03/2026: FF15 terminó el 08/11 y A1, A2, B1 y B2 tienen partidos pendientes, pero ningún
-  // equipo del club de CD Calero, como les pasaba a Loz Vélez (FF20) o a INTER FUERTEVENTURA, C.D.
-  // (FV11) antes de sus alias.
-  const calero = { name: 'CD Calero', season: '2025-2026', cat: 'benjamin', groupId: 'FF15' };
-  const res = resolveMyTeam(calero, season(currentAt('2026-03-02')), index, '2026-03-02');
-  assert.deepEqual(summary(res), { status: 'ok', group: '2025-2026|FF15', name: 'CD Calero', cat: 'benjamin', stale: true });
+  // 02/03/2026: A1, A2, B1 y B2 tienen partidos pendientes y llevan meses en marcha, como les pasaba
+  // a Loz Vélez (FF20) o a INTER FUERTEVENTURA, C.D. (FV11) antes de sus alias.
+  const res = resolveMyTeam(CALERO, season(currentAt('2026-03-02')), index, '2026-03-02');
+  assert.deepEqual(summary(res), { ...CALERO_FF15, stale: true });
   // Ni cambio ni pregunta, y nada que guardar: updatedMyTeam ignora stale.
-  assert.equal(updatedMyTeam(calero, res), null);
+  assert.equal(updatedMyTeam(CALERO, res), null);
+});
+
+test('decisión 20: con la fase posterior en marcha desde hace 3 días, aún sin stale: se puede estar publicando grupo a grupo', () => {
+  const firsts = real.groups.filter(g => /^[AB]\d$/.test(g.id)).flatMap(g => g.rounds.flatMap(r => r.matches.map(m => m.dateISO)));
+  assert.equal(firsts.filter(Boolean).sort()[0], SECOND_PHASE_START);
+  for (const days of [3, 6]) {
+    const day = daysAfter(SECOND_PHASE_START, days);
+    assert.deepEqual(summary(resolveMyTeam(CALERO, season(currentAt(day)), index, day)), CALERO_FF15, `${days} días (${day})`);
+  }
+});
+
+test('decisión 20: con la fase posterior en marcha desde hace 8 días, stale (desde el séptimo)', () => {
+  for (const days of [8, 7]) {
+    const day = daysAfter(SECOND_PHASE_START, days);
+    assert.deepEqual(summary(resolveMyTeam(CALERO, season(currentAt(day)), index, day)), { ...CALERO_FF15, stale: true }, `${days} días (${day})`);
+  }
 });
 
 test('decisión 20: con un hermano ya en la fase posterior y el mío aún sin publicar, se espera sin stale', () => {
@@ -368,18 +391,16 @@ test('decisión 20: con un hermano ya en la fase posterior y el mío aún sin pu
 });
 
 test('decisión 20: sin stale si la fase posterior ya terminó, si no existe o si es de otra isla', () => {
-  const calero = { name: 'CD Calero', season: '2025-2026', cat: 'benjamin', groupId: 'FF15' };
-  const ff15 = { status: 'ok', group: '2025-2026|FF15', name: 'CD Calero', cat: 'benjamin' };
   // Terminada: la temporada entera.
-  assert.deepEqual(summary(resolveMyTeam(calero, real, index, TODAY)), ff15);
+  assert.deepEqual(summary(resolveMyTeam(CALERO, real, index, TODAY)), CALERO_FF15);
   // Inexistente: el 02/03/2026, solo con los grupos de la Primera Fase.
   const onlyFirst = currentAt('2026-03-02');
   onlyFirst.benjamin = onlyFirst.benjamin.filter(g => g.id.startsWith('FF'));
-  assert.deepEqual(summary(resolveMyTeam(calero, season(onlyFirst), index, '2026-03-02')), ff15);
+  assert.deepEqual(summary(resolveMyTeam(CALERO, season(onlyFirst), index, '2026-03-02')), CALERO_FF15);
   // De otra isla: A1, A2, B1 y B2, con sus partidos pendientes, en Lanzarote.
   const elsewhere = currentAt('2026-03-02');
   for (const g of elsewhere.benjamin) if (!g.id.startsWith('FF')) g.island = 'lanzarote';
-  assert.deepEqual(summary(resolveMyTeam(calero, season(elsewhere), index, '2026-03-02')), ff15);
+  assert.deepEqual(summary(resolveMyTeam(CALERO, season(elsewhere), index, '2026-03-02')), CALERO_FF15);
 });
 
 test('decisión 16: un filial retirado en la fase guardada no hace esperar: el equipo A pasa a su grupo posterior', () => {

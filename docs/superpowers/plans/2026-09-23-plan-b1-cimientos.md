@@ -63,8 +63,8 @@ Cada una tiene su prueba en la tarea que la implementa. Si un revisor prefiere l
 16. **Segunda Fase publicada grupo a grupo:** en el paso 0, mientras el club tenga en la fase posterior menos equipos que en la fase del grupo guardado (sin contar los retirados de esa fase, que nunca aparecen en la posterior), ni se cambia ni se pregunta: sigue el grupo guardado (C o D, según toque). Así ninguna familia recibe una pregunta falsa ni un cambio porque el grupo de un hermano se publique antes que el suyo, y Santa Brígida (FF9), con su filial en FF3, espera a que existan B1 y B2 y entonces pregunta. Si el club nunca llega a tener tantos equipos en la fase posterior (un filial eliminado), la familia se queda con su grupo de la Primera Fase; con un filial retirado, como 'CORRALEJO, C.D. "B"' en FV11, «CD Corralejo» pasa a FP. (Tarea 8)
 17. **El mismo nombre en dos grupos de la fase guardada** son dos equipos distintos (CD Batán en FF10 y FF12, Valsequillo en FF14 y FF17, Peña Amistad en FV12 y FV13): nunca hay cambio silencioso; se pregunta con los equipos del club en la fase posterior. (Tarea 8)
 18. **Julio es del año final de la temporada** en el modelo: una fecha `DD/MM` de julio sin año cae en el año final (los torneos de verano), no en el primero como en `fixtureISO`, que usa la app actual y no cambia. En 2026-2027, «01/07» es el 01/07/2027, y el partido del 30/06/2027 sigue pendiente el 29/06. (Tarea 3)
-19. **«Verano» por equipo del torneo:** `summerCups` devuelve `[{ group, team, rows }]`. En cada grupo de torneo de su categoría, `team` es el equipo del club con la misma letra de filial que `myTeam.name` (la última palabra, si es una sola letra de la A a la E; sin letra, la A) y `rows` trae solo sus partidos; si no hay ninguno con esa letra, o hay dos, el grupo no sale, porque es mejor quedarse sin «Verano» que enseñar el de otro equipo. Con la lectura literal de §6.4 (los grupos con cualquier equipo del club), «Arucas» (A1) recibía los grupos y los partidos de Arucas CF A, B, C y D. (Revisión final, I1)
-20. **Primera Fase sin salida: `stale` y alias.** En el paso 0, si el grupo guardado no tiene partidos pendientes y la fase posterior de su categoría e isla tiene grupos de liga con partidos pendientes pero ningún equipo del club, sigue el grupo guardado, sin cambio ni pregunta, con `stale: true` en la resolución `ok`: `updatedMyTeam` no lo guarda y B2 lo avisa en C y D. Si el club tiene algún equipo en esa fase, aunque sean menos, se espera sin marca (decisión 16), y con la fase posterior terminada o inexistente tampoco hay marca. Además, `TEAM_ALIASES` suma los cuatro pares reales de 2025-26 que se quedaban así de noviembre a junio: «Loz Vélez» → «Los Vélez» (FF20 → C3), «M. Training B» → «Maspa Training B» (FF21 → A3), «C. Pastores B» → «Casa Pastores B» (FF21 → C4) e «INTER FUERTEVENTURA, C.D.» → «Inter FTV» (FV11 → FO). (Revisión final, I2)
+19. **«Verano» por equipo del torneo:** `summerCups` devuelve `[{ group, team, rows }]`. En cada grupo de torneo de su categoría, `team` es el equipo del club con la misma letra de filial que `myTeam.name` (la última palabra, si es una sola letra de la A a la E; sin letra, la A) y `rows` trae solo sus partidos; si no hay ninguno con esa letra, o hay dos, el grupo no sale, porque es mejor quedarse sin «Verano» que enseñar el de otro equipo. El equipo sin letra del torneo también cuenta como el A, así que un filial B no ve como suyo el torneo al que fue el equipo sin letra de su club. Con la lectura literal de §6.4 (los grupos con cualquier equipo del club), «Arucas» (A1) recibía los grupos y los partidos de Arucas CF A, B, C y D. (Revisión final, I1)
+20. **Primera Fase sin salida: `stale` y alias.** En el paso 0, si el grupo guardado no tiene partidos pendientes y la fase posterior de su categoría e isla tiene grupos de liga con partidos pendientes, ningún equipo del club y al menos 7 días en marcha (su primer partido con fecha es de hace 7 días o más), sigue el grupo guardado, sin cambio ni pregunta, con `stale: true` en la resolución `ok`: `updatedMyTeam` no lo guarda y B2 lo avisa en C y D. La semana de espera evita el aviso mientras la fase se publica grupo a grupo. Si el club tiene algún equipo en esa fase, aunque sean menos, se espera sin marca (decisión 16), y con la fase posterior terminada o inexistente tampoco hay marca. Además, `TEAM_ALIASES` suma los cinco pares reales de 2025-26 que se quedaban así de noviembre o diciembre a junio: «Loz Vélez» → «Los Vélez» (FF20 → C3), «M. Training B» → «Maspa Training B» (FF21 → A3), «C. Pastores B» → «Casa Pastores B» (FF21 → C4), «INTER FUERTEVENTURA, C.D.» → «Inter FTV» (FV11 → FO) y 'BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO "A"' → «Balompédica» (FV14 → FP). (Revisión final, I2)
 
 ## Foco de revisión
 
@@ -204,9 +204,10 @@ export function timelineFor(match, matchDetail, lineups)
 ### `src/myteam.js`
 
 ```js
-export const TEAM_ALIASES = {                            // el de la Maspalomas (spec) y los cuatro de la decisión 20
+export const TEAM_ALIASES = {                            // el de la Maspalomas (spec) y los cinco de la decisión 20
   'UD Las Mesas Huracán': 'Las Mesas Hu.', 'Loz Vélez': 'Los Vélez', 'M. Training B': 'Maspa Training B',
   'C. Pastores B': 'Casa Pastores B', 'INTER FUERTEVENTURA, C.D.': 'Inter FTV',
+  'BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO "A"': 'Balompédica',
 };
 export function baseKey(name)                            // normalizeForTeamsMapping sin siglas (rc, us, cda, cef) ni última letra [a-e] suelta
 export function buildClubIndex(names, shields = {}, aliases = TEAM_ALIASES)
@@ -219,8 +220,9 @@ export function resolveMyTeam(myTeam, season, index, todayISO)
   //   suya, sin contar sus retirados (decisiones 10 a 12, 16 y 17); candidatos uno por grupo y nombre (decisión 11),
   //   en el orden de season.groups, primero los de myTeam.cat; pasos 1 y 2: un solo candidato se usa sin
   //   preguntar solo con el mismo nombre y la misma categoría (decisión 13); stale: true solo en el paso 0, cuando
-  //   sigue el grupo guardado y la fase posterior de su categoría e isla ya tiene partidos pendientes y ningún
-  //   equipo del club (decisión 20); si no, la clave no está
+  //   sigue el grupo guardado y la fase posterior de su categoría e isla tiene partidos pendientes, ningún
+  //   equipo del club y su primer partido con fecha 7 días o más antes de todayISO (decisión 20); si no, la
+  //   clave no está
 export function updatedMyTeam(myTeam, resolution)       // { name, season, cat, groupId } nuevo si una resolución `ok` cambia algo; si no, null. Ignora stale
 export function homeState({ resolution, todayISO, portalSeason })
   // 'E' | 'X' | 'D' | 'B' | 'C' | 'A' (sin health: decisión 5); A si teamFixtures da next; C si mi equipo ha

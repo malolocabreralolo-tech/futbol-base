@@ -4,6 +4,8 @@ import { existsSync } from 'node:fs';
 import { join, dirname, normalize, extname, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync, spawn } from 'node:child_process';
+import { createRequire } from 'node:module';
+import { useWorld } from './fixture-site.mjs';
 
 /**
  * Render smoke test for the futbol-base SPA (rediseño «Acta», spec §11).
@@ -17,7 +19,9 @@ import { spawnSync, spawn } from 'node:child_process';
  * test_rediseno_smoke.mjs with the real screen over frozen fixtures.
  *
  * Run directly (`node scripts/tests/render-smoke.mjs`) to exercise the real
- * browser harness; in CI it gates. Zero npm deps (node:* only).
+ * browser harness; in CI it gates. The real data run with Chrome --dump-dom (node:* only); then
+ * the D state runs in the browser over the frozen fixtures (fixture-site.mjs, world D: 23/09/2026,
+ * data-health with 2026/27 pending) with the page clock fixed by Playwright (spec §11).
  */
 
 const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" };
@@ -120,6 +124,37 @@ function runChrome(bin, args, ms) {
   });
 }
 
+// Estado D en el navegador (spec §11): el mundo D de fixture-site.mjs, con los datos congelados,
+// data-health con 2026/27 pendiente y el reloj de la página fijado en el 23/09/2026. Devuelve la
+// lista de fallos ([] si todo está bien).
+async function fixtureStateD(chrome, port) {
+  const { chromium } = createRequire(import.meta.url)('playwright');
+  const browser = await chromium.launch({ executablePath: chrome, headless: true, args: ['--no-sandbox'] });
+  try {
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 }, serviceWorkers: 'block', locale: 'es-ES', timezoneId: 'Atlantic/Canary',
+    });
+    await useWorld(context, 'D');
+    const page = await context.newPage();
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto(`http://127.0.0.1:${port}/index.html#/`);
+    await page.locator('#contenido section[data-screen="home"][data-state]').waitFor({ timeout: 15000 });
+    const dom = await page.content();
+    const { failures, state } = checkRenderedDom(dom, { teamName: 'Las Mesas Hu.' });
+    const titles = [...dom.matchAll(/<h2 class="block-title">([^<]*)<\/h2>/g)].map((m) => m[1]);
+    const wanted = ['Temporada 2026/27', 'Así terminó 2025/26', 'Verano: Maspalomas Cup 2026', 'Clasificación final'];
+    return [
+      ...failures,
+      ...(state === 'D' ? [] : [`la portada del 23/09/2026 está en ${state}, no en D`]),
+      ...wanted.filter((title) => !titles.includes(title)).map((title) => `falta el bloque «${title}»`),
+      ...errors.map((message) => `error de JavaScript: ${message}`),
+    ];
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const chrome = findChrome();
   if (!chrome) {
@@ -155,7 +190,14 @@ async function main() {
     const { ok, failures, state } = checkRenderedDom(dom, { teamName: PORTAL.defaultTeam.name });
     if (ok) {
       console.log(`PASS: render smoke OK — Mi equipo en estado ${state} (DOM ${dom.length} bytes)`);
-      process.exit(0);
+      const problems = await fixtureStateD(chrome, port);
+      if (!problems.length) {
+        console.log('PASS: estado D con las fixtures y el reloj del 23/09/2026: «Temporada 2026/27», «Así terminó 2025/26», «Verano» y la clasificación final');
+        process.exit(0);
+      }
+      console.error('FAIL: estado D con las fixtures:');
+      for (const f of problems) console.error('  - ' + f);
+      process.exit(1);
     }
     console.error('FAIL: render smoke assertions failed:');
     for (const f of failures) console.error('  - ' + f);

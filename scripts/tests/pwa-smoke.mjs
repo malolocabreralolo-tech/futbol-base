@@ -267,11 +267,18 @@ try {
   assert.match(await page.locator(HOME).getAttribute('data-state'), /^[ABCD]$/);
   assert.equal(await page.locator('h1').count(), 1);
   const precached = await page.evaluate(async (name) => (await (await caches.open(name)).keys()).map((r) => new URL(r.url).pathname), expected);
-  for (const path of ['/fonts/PublicSans-latin.woff2', '/icons/icon-192.png', '/src/screen-home.js', '/acta.css']) {
+  for (const path of ['/fonts/PublicSans-latin.woff2', '/icons/icon-192.png', '/src/screen-home.js', '/src/screen-jornada.js', '/acta.css']) {
     assert.ok(precached.includes(path), `${path} is not precached`);
   }
+  // La cabecera avisa de que no hay conexión (spec §4.10).
+  await waitForAsync(page, () => document.querySelector('.shell-offline')?.textContent.startsWith('Sin conexión.'));
+  // Jornada, por la barra, también sin conexión: su módulo y los datos inmediatos están en caché.
+  await page.locator('.tabbar a.tab[href="#/jornada"]').click();
+  await page.locator('#contenido section[data-screen="jornada"]').waitFor();
+  assert.equal(await page.locator('#contenido section[data-screen="jornada"][data-state="error"]').count(), 0);
+  assert.equal(await page.locator('#contenido h1').textContent(), 'Jornada');
   assert.deepEqual(errors, []);
-  console.log(`PASS: de la app anterior (su SW real) al rediseño, con datos congelados: la 1.ª apertura es la anterior; sin conexión a medias, el aviso con «Reintentar»; la 2.ª y la 3.ª, la nueva con acta.css y sin mezclar módulos; ${expected} funciona sin conexión`);
+  console.log(`PASS: de la app anterior (su SW real) al rediseño, con datos congelados: la 1.ª apertura es la anterior; sin conexión a medias, el aviso con «Reintentar»; la 2.ª y la 3.ª, la nueva con acta.css y sin mezclar módulos; con ${expected}, la portada y Jornada funcionan sin conexión`);
   await context.close();
 } finally {
   if (browser) await browser.close();

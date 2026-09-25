@@ -71,10 +71,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Render smoke (headless Chrome)
-        run: node scripts/tests/render-smoke.mjs
-      - name: Install interaction test runner
+      - name: Install browser test runner
         run: npm install --no-save --package-lock=false playwright@1.58.0
+      - name: Render smoke (headless Chrome; the D state with Playwright)
+        run: node scripts/tests/render-smoke.mjs
       - name: Interaction smoke (headless Chrome)
         run: node scripts/tests/interaction-smoke.mjs
       - name: PWA update and offline smoke

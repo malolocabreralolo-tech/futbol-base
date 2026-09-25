@@ -14,7 +14,7 @@ import {
 } from './model.js';
 import { countdownLabel, dayMonth, matchHref, shareAndAnnounce, weekdayDate } from './links.js';
 import {
-  ensureLineups, ensureMatchDetail, ensureSeasonData, normalizeTeamName,
+  ensureLineups, ensureMatchDetail, ensureSeasonData, loadSeasons, normalizeTeamName,
 } from './state.js';
 import { errorBox } from './shell.js';
 
@@ -371,17 +371,6 @@ export function partidoNeeds(params, datasets, loaders = LOADERS) {
     }));
   }
   return loads;
-}
-
-// Carga las temporadas `names` que falten en datasets.seasonRaw; true si están todas.
-export async function loadSeasons(datasets, names, load = ensureSeasonData) {
-  const done = await Promise.all(names.map(async (name) => {
-    if (datasets.seasonRaw[name]) return true;
-    const raw = await load(name);
-    if (raw) datasets.seasonRaw[name] = raw;
-    return Boolean(raw);
-  }));
-  return done.every(Boolean);
 }
 
 // Carga las temporadas anteriores y arma el contenido del panel; nunca lanza. Un fallo de la carga

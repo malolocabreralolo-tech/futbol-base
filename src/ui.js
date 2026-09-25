@@ -258,3 +258,19 @@ export function screenHead(title, { sub = null, action = null, crest: badge = nu
 export function listEs(items, conj = 'y') {
   return items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} ${conj} ${items[items.length - 1]}`;
 }
+
+// ── Evolución de puntos (spec §4.6; decisión 12 de B3) ──────────────────
+
+// Una línea sólida en tinta (.points-line), sin puntos, sin relleno y sin trazos discontinuos
+// (preferencia del usuario), sobre la línea de base del cero. El SVG se estira al ancho de su caja
+// (preserveAspectRatio none) y el trazo no se deforma (vector-effect en acta.css). series: [{ pts }],
+// una por jornada, con pts null en las que faltan por jugar (sin línea); max: el tope vertical. Es
+// decorativo (aria-hidden): el dato va también en texto, al lado. Con menos de dos jornadas jugadas o
+// sin tope, nada.
+export function pointsChart(series, { max } = {}) {
+  const values = series.map((point) => point.pts);
+  if (values.filter((v) => v != null).length < 2 || !(max > 0)) return html``;
+  const width = values.length - 1;
+  const points = values.flatMap((v, i) => (v == null ? [] : [`${i},${max - v}`])).join(' ');
+  return html`<svg class="points-chart" viewBox="0 0 ${width} ${max}" preserveAspectRatio="none" aria-hidden="true" focusable="false"><line class="points-base" x1="0" y1="${max}" x2="${width}" y2="${max}"></line><polyline class="points-line" points="${points}"></polyline></svg>`;
+}

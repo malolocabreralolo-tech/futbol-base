@@ -914,3 +914,87 @@ abbr[title] { text-decoration: none; }
 
 /* «Calendario del equipo (.ics)», encima de la lista del calendario completo. */
 .cal-actions { margin-bottom: 8px; }
+
+/* Evolución de puntos (pointsChart de ui.js): una línea sólida en tinta, sin puntos, sin relleno y
+ * sin trazos discontinuos, sobre la base del cero; el SVG se estira al ancho de la caja y el trazo no
+ * se deforma. */
+.points-plot { padding: 14px 12px 10px; }
+.points-chart { display: block; width: 100%; height: 120px; overflow: visible; }
+.points-line { fill: none; stroke: var(--ink); stroke-width: 2.5px; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.points-base { stroke: var(--rule); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+
+/* Plantilla: N.º, jugador (el botón que despliega sus partidos), PJ, titular y goles. */
+.squad { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.squad th, .squad td { padding: 0 6px; border-bottom: 1px solid var(--line); font-weight: 400; text-align: right; }
+.squad thead th { padding: 6px; border-bottom: 1.5px solid var(--ink); font-size: 11.5px; font-weight: 600; color: var(--mute); white-space: nowrap; }
+.squad tbody tr:last-child > * { border-bottom: 0; }
+.squad .sq-dorsal { width: 38px; color: var(--mute); }
+.squad .sq-name { text-align: left; }
+.squad .sq-num { width: 36px; }
+.squad .sq-goals { width: 52px; }
+.squad td.sq-goals { font-size: 15px; font-weight: 800; color: var(--ink); }
+.squad-player {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 0;
+  color: var(--text);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.squad-player[aria-expanded="true"] { font-weight: 800; color: var(--ink); }
+.squad-detail > td { padding: 0 0 8px; background: var(--mark); }
+.squad-matches { margin: 0; padding: 0; list-style: none; }
+.squad-match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: 10px;
+  min-height: 44px;
+  padding: 6px 10px;
+  color: var(--text);
+  text-align: left;
+  text-decoration: none;
+}
+.squad-matches > li + li { border-top: 1px solid var(--line); }
+.squad-when { grid-column: 1 / -1; font-size: 11.5px; font-weight: 600; color: var(--mute); }
+.squad-rival { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.squad-score { font-weight: 800; white-space: nowrap; }
+.squad-goals { font-size: 12.5px; color: var(--mute); white-space: nowrap; }
+
+/* Trayectoria: el botón que la carga bajo demanda y su panel, una caja por temporada. */
+.team-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  border: 1.5px solid var(--ink);
+  font-weight: 700;
+  color: var(--ink);
+}
+.team-panel { margin-top: 10px; }
+.team-loading { color: var(--mute); }
+.traj-season { margin: 12px 0 6px; font-size: 12.5px; font-weight: 700; color: var(--mute); }
+.traj-season:first-child { margin-top: 0; }
+.traj-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 10px;
+  min-height: 44px;
+  padding: 6px 10px;
+  color: var(--text);
+  text-decoration: none;
+}
+.box > .traj-row + .traj-row { border-top-color: var(--line); }
+.traj-team { min-width: 0; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.traj-group { grid-column: 1; min-width: 0; font-size: 12.5px; color: var(--mute); }
+.traj-pos { grid-column: 2; grid-row: 1; font-weight: 800; white-space: nowrap; }
+.traj-pts { grid-column: 2; grid-row: 2; font-size: 12.5px; color: var(--mute); text-align: right; white-space: nowrap; }
+
+@media (hover: hover) {
+  a.squad-match:hover .squad-rival,
+  a.traj-row:hover .traj-team { text-decoration: underline; }
+}

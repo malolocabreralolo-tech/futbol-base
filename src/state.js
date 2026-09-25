@@ -414,3 +414,16 @@ export function seasonNeeds(name, datasets, portalSeason) {
     datasets.seasonRaw[name] = raw;
   })];
 }
+
+// Carga las temporadas `names` que falten en datasets.seasonRaw; true si están todas (false si alguna
+// no llegó: ensureSeasonData no memoriza el fallo, y la llamada siguiente la vuelve a pedir). La usan
+// el cara a cara de Partido (temporadas anteriores) y la Trayectoria de Equipo (todo el archivo).
+export async function loadSeasons(datasets, names, load = ensureSeasonData) {
+  const done = await Promise.all(names.map(async (name) => {
+    if (datasets.seasonRaw[name]) return true;
+    const raw = await load(name);
+    if (raw) datasets.seasonRaw[name] = raw;
+    return Boolean(raw);
+  }));
+  return done.every(Boolean);
+}

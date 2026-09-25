@@ -1099,3 +1099,101 @@ export function actaFor(match, lineups) {
   if (match.hs == null || match.as == null || !lineups) return null;
   return entryForMatch(lineups[`${match.home}|${match.away}|${match.hs}-${match.as}`], match);
 }
+
+/* ── Ficha de Equipo: evolución de puntos y plantilla (spec §4.6; decisiones 12 y 13 de B3) ── */
+
+/* Evolución de puntos: los puntos acumulados del equipo tras cada jornada del grupo, en su orden,
+ * desde el calendario y con el criterio de teamResults (sin los partidos contra retirados). Un
+ * partido cuenta en su jornada, aunque se jugara más tarde (un aplazado). [{ roundKey, label, pts }],
+ * con `pts` null en las jornadas posteriores a la última con algún resultado del grupo (por jugar). */
+export function pointsProgression(team, group) {
+  const rounds = group.rounds || [];
+  const retired = retiredTeams(group);
+  let last = -1;
+  rounds.forEach((round, i) => { if (round.matches.some(playedMatch)) last = i; });
+  let pts = 0;
+  return rounds.map((round, i) => {
+    for (const m of round.matches) {
+      if (!playedMatch(m) || (m.home !== team && m.away !== team)) continue;
+      const home = m.home === team;
+      if (retired.has(home ? m.away : m.home)) continue;
+      const gf = home ? m.hs : m.as;
+      const gc = home ? m.as : m.hs;
+      pts += gf > gc ? 3 : gf === gc ? 1 : 0;
+    }
+    return { roundKey: round.key, label: round.label, pts: i <= last ? pts : null };
+  });
+}
+
+// Las actas de los partidos del equipo en el grupo, en orden de fecha: la entrada de su (s, gr)
+// (actaFor, también dentro de las {dup}). Un acta con un lado vacío no cuenta para nadie: las 10
+// de Goleta en A1 traen al rival en `home` y `away` vacío. `side` es el lado del equipo.
+function teamActas(lineups, group, team) {
+  const list = [];
+  let skipped = 0;
+  for (const match of chronologicalMatches(group)) {
+    if (match.home !== team && match.away !== team) continue;
+    const acta = actaFor(match, lineups);
+    if (!acta) continue;
+    const full = side => Array.isArray(acta[side]) && acta[side].length > 0;
+    if (!full('home') || !full('away')) skipped += 1;
+    else list.push({ match, acta, side: match.home === team ? 'home' : 'away' });
+  }
+  return { list, skipped };
+}
+
+// Las actas del grupo en esas alineaciones, con o sin el equipo (la plantilla solo sale si hay).
+function groupActas(lineups, group) {
+  let n = 0;
+  for (const entry of Object.values(lineups || {})) {
+    for (const item of entry && entry.dup ? entry.list || [] : [entry]) {
+      if (item && item.s === group.season && item.gr === group.id) n += 1;
+    }
+  }
+  return n;
+}
+
+/* Plantilla de un equipo en su grupo, desde las actas de la federación (LINEUPS_<S>), nunca desde
+ * PLAYERS_<S> (§4.6): { rows, actas, skipped, groupActas }.
+ * - rows: [{ name, dorsal, ap, st, g, y, rd }] (partidos, de titular, goles y tarjetas), por goles,
+ *   partidos y nombre. El dorsal es el más repetido en sus actas y, si empatan, el de la más reciente;
+ *   en A1, 42 jugadores llevan más de uno.
+ * - actas: las del equipo que cuentan; skipped: las suyas con un lado vacío, que no cuentan;
+ *   groupActas: las del grupo, de cualquier equipo. */
+export function teamSquad(lineups, { group, team }) {
+  const { list, skipped } = teamActas(lineups, group, team);
+  const players = new Map();
+  list.forEach(({ acta, side }, at) => {
+    for (const p of acta[side]) {
+      const row = players.get(p.n) || { name: p.n, dorsals: new Map(), ap: 0, st: 0, g: 0, y: 0, rd: 0 };
+      row.ap += 1;
+      if (p.r === 'starter') row.st += 1;
+      row.g += p.g | 0;
+      row.y += p.y | 0;
+      row.rd += p.rd | 0;
+      if (p.dn != null) row.dorsals.set(p.dn, { n: (row.dorsals.get(p.dn)?.n || 0) + 1, at });
+      players.set(p.n, row);
+    }
+  });
+  const dorsalOf = dorsals => [...dorsals].sort(([, a], [, b]) => b.n - a.n || b.at - a.at)[0]?.[0] ?? null;
+  const rows = [...players.values()].map(({ name, dorsals, ap, st, g, y, rd }) => ({ name, dorsal: dorsalOf(dorsals), ap, st, g, y, rd }));
+  rows.sort((a, b) => b.g - a.g || b.ap - a.ap || playerName(a.name).localeCompare(playerName(b.name), 'es'));
+  return { rows, actas: list.length, skipped, groupActas: groupActas(lineups, group) };
+}
+
+/* Los partidos de un jugador del equipo en el grupo, en orden de fecha, desde las mismas actas que
+ * la plantilla: [{ match, side, goals }], con `match` el partido del modelo (su marcador y su enlace)
+ * y `side` el lado de su equipo, para dar el marcador desde su equipo (§4.6). */
+export function playerMatches(lineups, { group, team, player }) {
+  return teamActas(lineups, group, team).list.flatMap(({ match, acta, side }) => {
+    const p = acta[side].find(x => x.n === player);
+    return p ? [{ match, side, goals: p.g | 0 }] : [];
+  });
+}
+
+/* ¿Hay alguna tarjeta en las actas de la temporada? La columna de tarjetas de la plantilla solo sale
+ * entonces (§4.6); hoy la fuente no las recoge y no hay ninguna. */
+export function anyCards(lineups) {
+  return Object.values(lineups || {}).some(entry => (entry && entry.dup ? entry.list || [] : [entry])
+    .some(acta => acta && [...(acta.home || []), ...(acta.away || [])].some(p => (p.y | 0) + (p.rd | 0) > 0)));
+}

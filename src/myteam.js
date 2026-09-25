@@ -322,3 +322,32 @@ export function myTeamIn(group, myTeam, resolution) {
     || (group.rounds || []).some(round => round.matches.some(m => m.home === name || m.away === name));
   return listed ? name : null;
 }
+
+// ---- Trayectoria (spec §4.6 y §6.1; decisión 14 de B3) ----
+
+// El club de `name` (el índice de clubes de todo lo cargado, §6.1) en cada temporada de `seasons` que
+// esté cargada, en ese orden (la más reciente primero): una fila por temporada, categoría y nombre
+// exacto, en el grupo de liga de la fase más alta en que juega (topPhase, la regla de la resolución).
+// Dos grupos de la misma fase con el mismo nombre son dos equipos (decisión 17 de B1): dos filas.
+// [{ season, cat, name, group, pos, pts }], con pos y pts de su fila de la clasificación, o null.
+export function teamTrajectory(model, name, index, seasons) {
+  const out = [];
+  for (const seasonName of seasons) {
+    const season = model.season(seasonName);
+    if (!season) continue;
+    for (const cat of CATS) {
+      const byName = new Map();
+      for (const entry of clubTeams(leagueGroups(season, cat), name, index)) {
+        if (!byName.has(entry.name)) byName.set(entry.name, []);
+        byName.get(entry.name).push(entry);
+      }
+      for (const [team, entries] of [...byName].sort(([a], [b]) => a.localeCompare(b, 'es'))) {
+        for (const { group } of topPhase(entries)) {
+          const row = group.standings.find(r => r.team === team) || null;
+          out.push({ season: seasonName, cat, name: team, group, pos: row ? row.pos : null, pts: row ? row.pts : null });
+        }
+      }
+    }
+  }
+  return out;
+}

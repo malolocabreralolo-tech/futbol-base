@@ -8,10 +8,10 @@ import { fileURLToPath } from 'node:url';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { currentAt, datasetsFrom as baseDatasets } from './fixtures/rediseno/simulate.mjs';
 import { actaFor, createModel, findMatch } from '../../src/model.js';
-import { ensureLineups } from '../../src/state.js';
+import { ensureLineups, loadSeasons } from '../../src/state.js';
 import { ctxFor } from './fixtures/rediseno/screens.mjs';
 import {
-  loadSeasons, partidoNeeds, pastSeasons, previousBlock, previousMeetings, previousPanelContent, screen,
+  partidoNeeds, pastSeasons, previousBlock, previousMeetings, previousPanelContent, screen,
 } from '../../src/screen-partido.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');

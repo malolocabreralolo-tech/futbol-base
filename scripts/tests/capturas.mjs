@@ -35,7 +35,6 @@ const SHOTS = [
   ['tabla-forma', 'D', '#/tabla?v=forma', ['tabla', null]],
   ['partido', 'D', PARTIDO_J15, ['partido', null]],
   ['partido-acta', 'D', PARTIDO_ACTA, ['partido', null]],
-  ['provisional', 'D', '#/ajustes', ['pendiente', null]],
   // Error: la temporada 2023-24 no llega (503) → la caja de error de la pantalla, con «Reintentar».
   ['error', 'D', '#/tabla?s=2023-2024', ['tabla', 'error'], { fail: ['data-season-2023-2024.js'] }],
   // Vacío: un partido sin cronología ni acta (spec §4.5 y caso 7 de §11).

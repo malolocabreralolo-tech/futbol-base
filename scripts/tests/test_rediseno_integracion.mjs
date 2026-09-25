@@ -24,6 +24,7 @@ import { screen as jornada } from '../../src/screen-jornada.js';
 import { screen as tabla } from '../../src/screen-tabla.js';
 import { screen as partido } from '../../src/screen-partido.js';
 import { screen as equipo } from '../../src/screen-equipo.js';
+import { screen as ajustes } from '../../src/screen-ajustes.js';
 import { screen as pendiente } from '../../src/screen-pendiente.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -45,7 +46,7 @@ test('rutas completas: las cuatro pantallas de B2, Equipo y la provisional en la
   assert.equal(SCREEN_MAP.equipo, equipo);
   assert.deepEqual([home, jornada, tabla, partido, equipo].map((s) => s.id), ['home', 'jornada', 'tabla', 'partido', 'equipo']);
   assert.deepEqual(SCREENS.filter((name) => SCREEN_MAP[name] === pendiente),
-    ['temporadas', 'fuentes', 'ajustes']);
+    []);
 });
 
 test('myTeamToSave: el cambio de fase (FF5 → A2, decisión 12 de B1) sí; nada si no cambia', () => {
@@ -368,6 +369,43 @@ test('«Borrar datos»: nav.clearData borra v2, v1, las claves antiguas y el des
   assert.deepEqual(page.entries(), ['#/', '#/tabla', '#/ajustes', '#/']);
   assert.match(page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1>/, 'Mi equipo, con el equipo por defecto');
   // Al recargar: el equipo por defecto, sin migrar otra vez la clave v1 (ya no está) ni escribir nada.
+  const again = await load(storage, { today: '2026-03-01' });
+  assert.match(again.page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1>/);
+  assert.equal(storage.size, 0);
+});
+
+// ── Plan B3, tarea 11: «Borrar datos de esta app» desde la pantalla Ajustes, con start() ──
+
+test('Ajustes con start(): mi equipo guardado, y «Borrar» (tras desplegar el aviso) borra el almacén y abre Mi equipo con el equipo por defecto, también al recargar (decisión 29 de B3)', async () => {
+  const huracan = { name: 'AD Huracán', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' };
+  const storage = new Map([
+    [STORE_KEY, JSON.stringify({ myTeam: huracan, recent: [{ s: '2025-2026', g: 'PG2', t: 'Acodetti' }] })],
+    [LEGACY_KEY, JSON.stringify(fixture('favorites-v1'))],
+  ]);
+  const { page, router } = await load(storage, { today: '2026-03-01', hash: '#/ajustes' });
+  assert.match(page.main.innerHTML, /^<section data-screen="ajustes">/);
+  assert.match(page.main.innerHTML, /<span class="aj-team-name">AD Huracán<\/span><span class="aj-team-label">Prebenjamín, Grupo 2 de Gran Canaria<\/span>/);
+  assert.deepEqual(page.marks(), [['#/explorar', 'true']]);
+  // El mount de la pantalla, sobre su sección pintada (el navegador falso no busca por selector),
+  // con el nav de verdad: el botón despliega el aviso y su «Borrar» llama a nav.clearData.
+  let onClick = null;
+  const attrs = { 'data-action': 'borrar-datos', 'aria-expanded': 'false' };
+  const toggle = { getAttribute: (n) => attrs[n] ?? null, setAttribute: (n, v) => { attrs[n] = String(v); }, focus() {} };
+  const panel = { innerHTML: '', hidden: true };
+  const section = {
+    addEventListener: (type, fn) => { if (type === 'click') onClick = fn; }, contains: () => true,
+    querySelector: (sel) => (sel === '[data-action="borrar-datos"]' ? toggle : sel === '#ajustes-borrar' ? panel : null),
+  };
+  ajustes.mount({ matches: () => false, querySelector: () => section }, {}, router.nav);
+  onClick({ target: { closest: () => toggle } });
+  assert.match(panel.innerHTML, /data-action="confirmar-borrado">Borrar<\/button>/);
+  assert.equal(storage.size, 2, 'desplegar no borra nada');
+  onClick({ target: { closest: () => ({ getAttribute: (n) => (n === 'data-action' ? 'confirmar-borrado' : null) }) } });
+  await router.idle();
+  assert.equal(storage.size, 0, 'ni v2 ni v1');
+  assert.deepEqual(page.entries(), ['#/ajustes', '#/']);
+  assert.match(page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1>/, 'Mi equipo, con el equipo por defecto');
+  // Al recargar: el equipo por defecto, sin volver a migrar la clave v1 (ya no está).
   const again = await load(storage, { today: '2026-03-01' });
   assert.match(again.page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1>/);
   assert.equal(storage.size, 0);

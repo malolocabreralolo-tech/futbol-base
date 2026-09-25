@@ -1326,3 +1326,74 @@ abbr[title] { text-decoration: none; }
     column-gap: 40px;
   }
 }
+
+/* ── Temporadas: el archivo, una fila por temporada (decisión 27 de B3) ─── */
+
+.tp-list { margin: 0; padding: 0; list-style: none; }
+.box.tp-list > li + li { border-top-color: var(--line); }
+.tp-row { display: flex; align-items: stretch; }
+.tp-season {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 56px;
+  padding: 8px 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.tp-name { font-size: 17px; font-weight: 800; }
+.tp-now { padding: 1px 6px; border: 1px solid var(--rule); font-size: 12.5px; font-weight: 700; }
+.tp-records {
+  display: flex;
+  flex: none;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-left: 1px solid var(--rule);
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* ── Datos y fuentes: estado, comprobación por grupo y temporada siguiente (decisión 28 de B3) ── */
+
+.fu-list { margin: 0; padding: 0; list-style: none; }
+.box.fu-list > li + li { border-top-color: var(--line); }
+/* Cada grupo comprobado abre su fuente: etiqueta y estado, el mensaje y el dominio. */
+.fu-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: var(--text);
+  text-decoration: none;
+}
+.fu-name { min-width: 0; font-weight: 700; overflow-wrap: anywhere; }
+.fu-state { font-size: 12.5px; font-weight: 600; color: var(--mute); white-space: nowrap; }
+.fu-state.is-alert { font-weight: 800; color: var(--ink); }
+.fu-detail { grid-column: 1 / -1; font-size: 12.5px; color: var(--mute); overflow-wrap: anywhere; }
+.fu-failed .buttons { margin-top: 10px; border: 1.5px solid var(--ink); }
+
+/* ── Ajustes: mi equipo y «Borrar datos de esta app» en dos pasos (decisión 29 de B3) ─── */
+
+.aj-team { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 8px 12px; }
+.aj-team-text { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+.aj-team-name { font-size: 15px; font-weight: 800; color: var(--ink); overflow-wrap: anywhere; }
+.aj-team-label { font-size: 12.5px; color: var(--mute); }
+.aj-clear { width: 100%; }
+.aj-warning { padding: 10px 12px; font-weight: 700; }
+.aj-confirm .buttons { border-top: 1px solid var(--rule); }
+
+@media (hover: hover) {
+  a.tp-season:hover .tp-name,
+  a.fu-row:hover .fu-name { text-decoration: underline; }
+}
+
+/* Escritorio: Temporadas y Ajustes son listas cortas; a 640 px, como en móvil y tableta. */
+@media (min-width: 1024px) {
+  :is([data-screen="temporadas"], [data-screen="ajustes"]) .block { max-width: 640px; }
+}

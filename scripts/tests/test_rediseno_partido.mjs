@@ -9,6 +9,8 @@ import { fixture } from './fixtures/rediseno/load.mjs';
 import { currentAt, datasetsFrom as baseDatasets } from './fixtures/rediseno/simulate.mjs';
 import { actaFor, createModel, findMatch } from '../../src/model.js';
 import { ensureLineups } from '../../src/state.js';
+import { routeHref } from '../../src/links.js';
+import { parentOf } from '../../src/router.js';
 import {
   loadSeasons, partidoNeeds, pastSeasons, previousBlock, previousMeetings, previousPanelContent, screen,
 } from '../../src/screen-partido.js';
@@ -27,12 +29,15 @@ function datasetsFrom(raw = fixture('current-2025-2026')) {
   });
 }
 
+// backHref: el «‹» que el router pone en el ctx (parentOf con el modelo, M2 de la revisión final).
 function ctxFor(params, { today = TODAY, datasets = datasetsFrom(), resolution = null } = {}) {
+  const route = { screen: 'partido', params };
+  const model = createModel(datasets, { portalSeason: PORTAL.season });
+  const parent = parentOf(route, model);
   return {
-    route: { screen: 'partido', params }, params, today, datasets, resolution,
-    model: createModel(datasets, { portalSeason: PORTAL.season }),
+    route, params, today, datasets, resolution, model,
     myTeam: { ...PORTAL.defaultTeam, season: PORTAL.season }, health: datasets.health,
-    portal: PORTAL, lastPrimary: 'jornada',
+    portal: PORTAL, lastPrimary: 'jornada', backHref: routeHref(parent.screen, parent.params),
   };
 }
 
@@ -180,6 +185,19 @@ test('Maspalomas Cup (MCPK1): pasó por penaltis con la tanda; sin acta ni conte
   const previa = render({ s: '2025-2026', g: 'MCPK1', r: '26-06-2026 ( Previa )', h: 'CD Tablero', a: 'UD Las Mesas Huracán' });
   assert.ok(text(blockOf(previa, 'Resultado')).includes('Resultado: 1–4'));
   assert.doesNotMatch(previa, /penaltis/);
+});
+
+test('«‹» es el ctx.backHref del router (parentOf): la copa en un torneo, la jornada del partido en una liga (M2)', () => {
+  // Un torneo o una copa: su cuadro (decisión 100), el mismo padre que da el router.
+  assert.match(render(MCPK1_CUARTOS), /<a class="back" href="#\/copa\?s=2025-2026&amp;g=MCPK1" data-action="back"/);
+  // Partido no calcula otro padre: pinta el que le da el router, sea cual sea.
+  const ctx = ctxFor(PG2_J30);
+  ctx.backHref = '#/jornada?s=2025-2026&g=PG2';
+  assert.match(String(screen.render(ctx)), /<header class="screen-head"><a class="back" href="#\/jornada\?s=2025-2026&amp;g=PG2" data-action="back"/);
+  // La temporada pasada que no se pudo cargar: el «‹» va a la jornada de esa temporada, el mismo
+  // de la caja de error del router, y no a la jornada de la temporada actual.
+  const past = render({ s: '2024-2025', g: 'PGC2', r: '6', h: 'Las Mesas Hu.', a: 'AD Huracán' });
+  assert.match(past, /<a class="back" href="#\/jornada\?s=2024-2025&amp;g=PGC2&amp;r=6" data-action="back"/);
 });
 
 test('Un fichero perezoso que falla: su bloque con «Reintentar» y el resto de la pantalla (spec §7)', () => {

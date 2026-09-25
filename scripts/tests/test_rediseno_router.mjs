@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { buildSeason, buildCups, findGroup, findRound, findMatch } from '../../src/model.js';
+import { buildSeason, buildCups, findGroup, findRound, findMatch, seasonLabel } from '../../src/model.js';
 import { buildClubIndex } from '../../src/myteam.js';
 import { teamNames } from './fixtures/rediseno/simulate.mjs';
 import { html } from '../../src/html.js';
@@ -247,7 +247,7 @@ test('cada ruta de §4.1 tiene pantalla; las de B3 pintan la provisional con su 
 
 // Lo justo del navegador: historial con entradas y estado, location.hash, eventos de window y de
 // document, desplazamiento, la barra de 4 destinos y un <main> que guarda el HTML pintado y crea
-// su h1 y sus elementos con id en cada pintado.
+// su h1 y sus elementos con id (con su etiqueta: un <input id="buscar"> es un INPUT) en cada pintado.
 function fakeBrowser(hash = '#/', { deferBack = false } = {}) {
   const listeners = { window: {}, document: {} };
   const on = (where) => (type, fn) => { (listeners[where][type] ||= []).push(fn); };
@@ -304,7 +304,7 @@ function fakeBrowser(hash = '#/', { deferBack = false } = {}) {
       this.markup = markup;
       painted = {
         h1: markup.includes('<h1') ? element('h1') : null,
-        ids: new Map([...markup.matchAll(/ id="([^"]+)"/g)].map(([, id]) => [id, element('a', { id })])),
+        ids: new Map([...markup.matchAll(/<([a-zA-Z][\w-]*)\b[^>]*? id="([^"]+)"/g)].map(([, tag, id]) => [id, element(tag, { id })])),
       };
     },
     get innerHTML() { return this.markup; },
@@ -468,20 +468,128 @@ test('enlace directo con parámetros que faltan o no existen: la pantalla por de
   assert.match(g.root.innerHTML, /<h1>Ligas<\/h1><\/div><\/header><p class="notice route-notice" role="status">No encontramos el grupo LZS1 en la temporada 2025\/26<\/p>/);
 });
 
-test('temporada pasada sin cargar: needs la carga y después se pone el grupo por defecto', async () => {
+// La carga de una temporada pasada que el router pide él mismo (loadSeason, con la firma de
+// seasonNeeds): la apunta en `loaded`, que lee el modelo falso, o rechaza las `fails` primeras
+// veces como una red caída, con el Error('la temporada 2024/25') de seasonNeeds.
+function seasonLoader(loaded, { fails = 0, log = [] } = {}) {
+  let calls = 0;
+  return (name, datasets, portalSeason) => {
+    log.push(`carga ${name}`);
+    if (!name || name === portalSeason || loaded.includes(name)) return [];
+    return [++calls <= fails
+      ? Promise.reject(new Error(`la temporada ${seasonLabel(name)}`))
+      : Promise.resolve().then(() => { loaded.push(name); })];
+  };
+}
+
+test('temporada pasada sin cargar: se carga y después se pone el grupo por defecto', async () => {
   const b = fakeBrowser('#/tabla?s=2024-2025');
   const loaded = [];
   const log = [];
   const tabla = screen('tabla', { log, needs: (params) => (loaded.includes(params.s) ? [] : [Promise.resolve().then(() => { loaded.push(params.s); })]) });
-  const router = startRouter({ screens: { '': screen('home'), tabla }, root: b.root, getContext: context({ loaded }), window: b.win });
+  const router = startRouter({ screens: { '': screen('home'), tabla }, root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded) });
   await router.idle();
   assert.equal(where(b), '#/tabla?s=2024-2025&g=PGC2');
   assert.deepEqual(b.entries(), ['#/tabla?s=2024-2025'], 'el valor por defecto no reescribe la dirección');
   assert.deepEqual(log.filter((x) => x.startsWith('render')), ['render tabla']);
-  // Si needs no la carga, la caja de error lo dice.
-  const e = fakeBrowser('#/tabla?s=2024-2025');
-  await quietly({ screens: { '': screen('home'), tabla: screen('tabla') }, root: e.root, getContext: context(), window: e.win });
-  assert.match(e.root.innerHTML, /No se pudieron cargar los datos de la temporada 2024\/25\./);
+});
+
+// ── Ronda final de B2: temporada pendiente, ancla de formulario y padre de Partido ──
+
+test('temporada pasada sin cargar que la pantalla no pide: la carga el router y la pinta, nunca la caja de error (I4(a))', async () => {
+  const b = fakeBrowser('#/equipo?s=2024-2025&g=PGC2&t=Las%20Mesas%20Hu.');
+  const loaded = [];
+  const log = [];
+  // La provisional (y cualquier pantalla de B3 que olvide seasonNeeds) no pide nada en needs.
+  const router = startRouter({ screens: { '': screen('home'), equipo: pendiente }, root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded, { log }) });
+  await router.idle();
+  assert.deepEqual(log, ['carga 2024-2025'], 'el router pide la temporada pendiente, con la de la ruta');
+  assert.deepEqual(loaded, ['2024-2025']);
+  assert.match(b.root.innerHTML, /^<section data-screen="pendiente" data-route="equipo">/);
+  assert.doesNotMatch(b.root.innerHTML, /No se pudieron cargar/);
+  assert.deepEqual(b.entries(), ['#/equipo?s=2024-2025&g=PGC2&t=Las%20Mesas%20Hu.']);
+  // Con la temporada cargada, el grupo se valida como siempre: uno que no existe lleva a Explorar.
+  const g = fakeBrowser('#/equipo?s=2024-2025&g=ZZ9&t=X');
+  const loaded2 = [];
+  const r2 = startRouter({ screens: { '': screen('home'), equipo: pendiente, explorar: pendiente }, root: g.root, getContext: context({ loaded: loaded2 }), window: g.win, loadSeason: seasonLoader(loaded2) });
+  await r2.idle();
+  assert.deepEqual(g.entries(), ['#/explorar?s=2024-2025&q=X']);
+  assert.match(g.root.innerHTML, /No encontramos el grupo ZZ9 en la temporada 2024\/25/);
+});
+
+test('si la carga de la temporada pendiente falla: la caja de error, y su «Reintentar» funciona al volver la red (I4(a))', async () => {
+  const b = fakeBrowser('#/tabla?s=2024-2025');
+  const loaded = [];
+  const log = [];
+  const router = await quietly({ screens: { '': screen('home'), tabla: screen('tabla', { log }) }, root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded, { fails: 1 }) });
+  assert.match(b.root.innerHTML, /^<section data-screen="tabla" data-state="error">/);
+  assert.match(b.root.innerHTML, /No se pudieron cargar los datos de la temporada 2024\/25\./);
+  assert.equal(b.click({ 'data-action': 'retry', type: 'button' }, 'button'), true);
+  await router.idle();
+  assert.equal(where(b), '#/tabla?s=2024-2025&g=PGC2');
+  assert.deepEqual(log.filter((x) => x.startsWith('render')), ['render tabla']);
+});
+
+test('un ancla que es un control de formulario se lleva el foco al avanzar, al volver y al reintentar (#/explorar#buscar, I4(b))', async () => {
+  const b = fakeBrowser('#/');
+  const explorar = screen('explorar', { body: () => html`<form role="search"><input id="buscar" type="search"></form>` });
+  const equipo = screen('equipo', { body: () => html`<div id="calendario">Calendario</div>` });
+  const router = startRouter({ screens: { '': screen('home'), explorar, equipo }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  const buscar = () => b.doc.getElementById('buscar');
+  b.click({ href: '#/explorar#buscar' });
+  await router.idle();
+  assert.equal(buscar().tagName, 'INPUT');
+  assert.equal(buscar().focused, 1, 'al avanzar, el foco va al buscador (§4.2 A)');
+  assert.equal(b.h1().focused, 0, 'y no al h1');
+  // Un ancla que no es un control (el calendario de la ficha) solo desplaza: el foco, al h1.
+  b.click({ href: '#/equipo?g=PG2&t=Las%20Mesas%20Hu.#calendario' });
+  await router.idle();
+  assert.equal(b.doc.getElementById('calendario').scrolled, 1);
+  assert.equal(b.h1().focused, 1);
+  // Al volver (pop) a #/explorar#buscar, otra vez el buscador.
+  b.win.history.back();
+  await tick();
+  await router.idle();
+  assert.equal(buscar().focused, 1, 'al volver, el buscador');
+  assert.equal(b.h1().focused, 0);
+  // Y al reintentar (refresh).
+  router.nav.retry();
+  await router.idle();
+  assert.equal(buscar().focused, 1, 'al reintentar, el buscador');
+  assert.equal(b.h1().focused, 0);
+});
+
+test('parentOf con el modelo: un partido de copa o de torneo vuelve a #/copa?s&g; uno de liga, a la jornada de su partido (M2)', () => {
+  const m = model();
+  const up = (params) => parentOf({ screen: 'partido', params: { s: PORTAL, ...params } }, m);
+  assert.deepEqual(up({ g: 'MCPK1', r: '27-06-2026 ( Cuartos )', h: 'UD Las Mesas Huracán', a: 'CF Unión Carrizal' }),
+    { screen: 'copa', params: { s: PORTAL, g: 'MCPK1' } }, 'cuadro de la Maspalomas Cup (model.cups())');
+  assert.deepEqual(up({ g: 'MCP3', r: 'Fase de Grupos', h: 'UD Las Mesas Huracán', a: 'Real Club Victoria' }),
+    { screen: 'copa', params: { s: PORTAL, g: 'MCP3' } }, 'liguilla de la Maspalomas Cup: tampoco es de liga');
+  // De liga: la jornada del partido, con su clave, aunque el enlace traiga el número u otra jornada.
+  assert.deepEqual(up({ g: 'PG2', r: '30', h: 'Las Mesas Hu.', a: 'AD Huracán' }), { screen: 'jornada', params: { s: PORTAL, g: 'PG2', r: 'Jornada 30' } });
+  assert.deepEqual(up({ g: 'PG2', r: 'Jornada 3', h: 'AD Huracán', a: 'Las Mesas Hu.' }), { screen: 'jornada', params: { s: PORTAL, g: 'PG2', r: 'Jornada 15' } });
+  // Un partido que no está en el grupo: la jornada por defecto de su grupo.
+  assert.deepEqual(up({ g: 'PG2', r: 'Jornada 30', h: 'x', a: 'y' }), { screen: 'jornada', params: { s: PORTAL, g: 'PG2' } });
+  // Sin modelo, o sin su temporada cargada, lo que trae el enlace, como antes.
+  assert.deepEqual(parentOf({ screen: 'partido', params: { s: '2024-2025', g: 'PGC2', r: '6', h: 'x', a: 'y' } }, m),
+    { screen: 'jornada', params: { s: '2024-2025', g: 'PGC2', r: '6' } });
+  assert.deepEqual(parentOf({ screen: 'partido', params: { s: PORTAL, g: 'MCPK1', r: 'Final' } }),
+    { screen: 'jornada', params: { s: PORTAL, g: 'MCPK1', r: 'Final' } });
+});
+
+test('ctx.backHref de un partido de torneo es #/copa?s&g, y nav.back() sin historial de la app va allí (M2)', async () => {
+  const hash = routeHref('partido', { g: 'MCPK1', r: '27-06-2026 ( Cuartos )', h: 'UD Las Mesas Huracán', a: 'CF Unión Carrizal' });
+  const b = fakeBrowser(hash);
+  let seen = null;
+  const screens = { '': screen('home'), partido: screen('partido', { mount: (root, ctx) => { seen = ctx; } }), copa: screen('copa') };
+  const router = startRouter({ screens, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.equal(seen.backHref, '#/copa?s=2025-2026&g=MCPK1');
+  await router.nav.back();
+  assert.deepEqual(b.entries(), [hash, '#/copa?s=2025-2026&g=MCPK1']);
+  assert.match(b.root.innerHTML, /<h1>copa<\/h1>/);
 });
 
 test('historial: cambiar de pantalla es push; cambiar de jornada o de vista, replace', async () => {

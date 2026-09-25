@@ -3,14 +3,15 @@
 // - Funciones puras: resolveParams (valores por defecto y redirecciones de §4.1),
 //   historyMode (pushState o replaceState), parentOf («‹»), activeTab y routeIsMine (barra).
 // - startRouter, la parte con DOM: hashchange y popstate, enlaces antiguos, token de
-//   navegación, needs → render → mount, desplazamiento por entrada del historial, foco al h1,
-//   «‹» y Reintentar.
+//   navegación, la temporada pendiente, needs → render → mount, desplazamiento por entrada del
+//   historial, foco al h1 (o al control del ancla), «‹» y Reintentar.
 // No toca el navegador al importarse: startRouter recibe `window`.
 import { Html } from './html.js';
 import { parseRoute, routeHref, translateLegacy } from './links.js';
 import { findGroup, findMatch, findRound, seasonLabel } from './model.js';
 import { sameClub } from './myteam.js';
 import { skeleton, errorScreen, routeNotice, routeTitle, updateTabbar } from './shell.js';
+import { seasonNeeds } from './state.js';
 
 // Destinos principales de la barra, por pantalla.
 const PRIMARY = { '': 'miequipo', jornada: 'jornada', tabla: 'tabla', explorar: 'explorar' };
@@ -23,6 +24,8 @@ const REPLACE_ONLY = { jornada: ['r'], tabla: ['v'], explorar: ['q'], goleadores
 const UNDER_EXPLORE = new Set(['equipo', 'copa', 'goleadores', 'ligas', 'temporadas', 'records', 'fuentes', 'ajustes']);
 const MAX_REDIRECTS = 5;
 const SESSION_KEY = 'futbol-base:destino';
+// Un ancla que es uno de estos controles se lleva el foco en lugar del h1 (#/explorar#buscar).
+const FORM_CONTROLS = new Set(['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON']);
 
 const redirect = (screen, params, notice = null) => ({ redirect: { screen, params, notice } });
 const omit = (params, key) => Object.fromEntries(Object.entries(params).filter(([k]) => k !== key));
@@ -131,11 +134,22 @@ export function historyMode(from, to) {
   return changed.every((k) => allowed.includes(k)) ? 'replace' : 'push';
 }
 
-// Padre de «‹» cuando no hay entrada anterior de la app: Partido → su jornada; lo que cuelga de
-// Explorar → Explorar; los destinos principales no tienen.
-export function parentOf(route) {
+// Padre de «‹» cuando no hay entrada anterior de la app (spec §4.1): lo que cuelga de Explorar →
+// Explorar; los destinos principales no tienen; y Partido, según su grupo, que se busca en `model`
+// (el del contexto; M2 de la revisión final de B2):
+// - de un grupo que no es de liga (una copa o un torneo MC*, decisión 100) → #/copa?s&g;
+// - de liga → su jornada, con la clave de la ronda del partido (findMatch) o, si el partido no
+//   está en el grupo, sin `r`: la jornada por defecto;
+// - sin modelo, o con el grupo sin encontrar (su temporada sin cargar), la jornada del enlace.
+export function parentOf(route, model = null) {
   const params = route?.params || {};
-  if (route?.screen === 'partido') return { screen: 'jornada', params: pick(params, ['s', 'g', 'r']) };
+  if (route?.screen === 'partido') {
+    const group = model && params.g ? findGroup(model, params.s, params.g) : null;
+    if (!group) return { screen: 'jornada', params: pick(params, ['s', 'g', 'r']) };
+    if (group.kind !== 'league') return { screen: 'copa', params: { s: group.season, g: group.id } };
+    const match = findMatch(group, params);
+    return { screen: 'jornada', params: pick({ s: group.season, g: group.id, r: match ? match.roundKey : '' }, ['s', 'g', 'r']) };
+  }
   if (UNDER_EXPLORE.has(route?.screen)) return { screen: 'explorar', params: {} };
   return null;
 }
@@ -200,9 +214,11 @@ function legacyMine(ctx) {
 // screens: { <ruta de §4.1>: { id, needs, render, mount? } }; root: <main id="contenido">;
 // getContext() → { model, myTeam, resolution, today, health, datasets, portal } (los datos de
 // cada pintado; el router añade route, params, lastPrimary y backHref); actions.saveMyTeam(myTeam)
-// guarda mi equipo (app.js); session: { getItem, setItem } para el último destino principal.
-// Devuelve { nav, idle, current }: idle() es la promesa del último pintado.
-export function startRouter({ screens, root, getContext, window: win, actions = {}, session = null }) {
+// guarda mi equipo (app.js); session: { getItem, setItem } para el último destino principal;
+// loadSeason(name, datasets, portalSeason) → Promise[]: la carga de una temporada pasada pendiente,
+// seasonNeeds de state.js (las pruebas pasan otra). Devuelve { nav, idle, current }: idle() es la
+// promesa del último pintado.
+export function startRouter({ screens, root, getContext, window: win, actions = {}, session = null, loadSeason = seasonNeeds }) {
   const doc = win.document;
   const hist = win.history;
   const baseTitle = doc.title;
@@ -229,8 +245,10 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     hist.replaceState(st, '');
     return st;
   };
-  const backHref = (route) => {
-    const parent = parentOf(route);
+  // El «‹» de una ruta (ctx.backHref y la caja de error): el href de su padre, con el modelo del
+  // contexto para saber de qué tipo es el grupo de un partido; null en los destinos principales.
+  const backHref = (route, model) => {
+    const parent = parentOf(route, model);
     return parent ? routeHref(parent.screen, parent.params) : null;
   };
   const screenOf = (name) => screens[name] || screens[''];
@@ -274,16 +292,22 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
 
   // Desplazamiento: arriba al avanzar, el guardado al volver, el mismo al cambiar jornada o
   // vista; un ancla (#/…#calendario) manda al avanzar. Foco: al h1 (tabindex -1), salvo en la
-  // carga inicial; al cambiar jornada o vista, vuelve al control pulsado si sigue (mismo id).
+  // carga inicial; al cambiar jornada o vista, vuelve al control pulsado si sigue (mismo id); y si
+  // el ancla es un control de formulario (#/explorar#buscar: «Cambiar» abre Explorar con el
+  // buscador enfocado, §4.2 A), al avanzar, al volver y al reintentar se lo lleva él, no el h1
+  // (I4(b) de la revisión final de B2).
   function place(mode, target, focusId) {
     const hash = win.location.hash;
     const at = hash.indexOf('#', 1);
-    const anchor = at > 0 && (mode === 'push' || mode === 'initial') ? doc.getElementById(decode(hash.slice(at + 1))) : null;
+    const anchorId = at > 0 ? decode(hash.slice(at + 1)) : '';
+    const anchor = anchorId && (mode === 'push' || mode === 'initial') ? doc.getElementById(anchorId) : null;
     if (anchor) anchor.scrollIntoView();
     else win.scrollTo(0, target);
     if (mode === 'initial') return;
+    const control = anchorId && mode !== 'replace' ? doc.getElementById(anchorId) : null;
+    const field = control && FORM_CONTROLS.has(control.tagName) && root.contains(control) ? control : null;
     const kept = focusId ? doc.getElementById(focusId) : null;
-    const el = kept && root.contains(kept) ? kept : root.querySelector('h1');
+    const el = field || (kept && root.contains(kept) ? kept : root.querySelector('h1'));
     if (!el) return;
     if (el.tagName === 'H1' && !el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
     el.focus({ preventScroll: true });
@@ -310,8 +334,9 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     const my = ++token;
     let route = parseRoute(win.location.hash);
     let screen = screenOf(route.screen);
+    let base = null;
     try {
-      let base = getContext();
+      base = getContext();
       const first = settle(base);
       route = first.route;
       screen = screenOf(route.screen);
@@ -323,7 +348,15 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       updateTabbar(tab.active, tab.current, doc);
       doc.title = route.screen === '' ? baseTitle : `${routeTitle(route.screen)} · ${baseTitle}`;
       // La temporada del portal llega a needs desde el contexto, nunca de config.js (R2-1).
-      const needs = (screen.needs && screen.needs(route.params, base.datasets, { portalSeason: base.portal.season })) || [];
+      const portalSeason = base.portal.season;
+      // Una temporada pasada sin cargar (pending: resolveParams no pudo validar la ruta) la carga el
+      // router, junto a los needs de la pantalla, pida esta su temporada o no (I4(a) de la revisión
+      // final de B2): pending es justo seasonNeeds(s). Si la carga falla, la caja de error con
+      // «Reintentar», que vuelve a pedirla (ensureSeasonData no memoriza un fallo).
+      const needs = [
+        ...(first.pending ? loadSeason(route.params.s, base.datasets, portalSeason) : []),
+        ...((screen.needs && screen.needs(route.params, base.datasets, { portalSeason })) || []),
+      ];
       if (needs.length) {
         paint(skeleton(screen.id));
         await Promise.all(needs);
@@ -338,7 +371,7 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
           return run(mode, notice || again.notice, depth + 1, target, focusId);
         }
       }
-      const ctx = { ...base, route, params: route.params, lastPrimary, backHref: backHref(route) };
+      const ctx = { ...base, route, params: route.params, lastPrimary, backHref: backHref(route, base.model) };
       // Solo se pinta Html de html``, que escapa cada interpolación (spec §5.1).
       const view = screen.render(ctx);
       if (!(view instanceof Html)) throw new TypeError(`render de ${screen.id} no devolvió Html`);
@@ -374,7 +407,7 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     } catch (err) {
       if (my !== token) return latest;
       console.error('[router]', err);
-      paint(errorScreen({ screenId: screen?.id || 'pendiente', title: routeTitle(route.screen), what: loadWhat(err), back: backHref(route) }));
+      paint(errorScreen({ screenId: screen?.id || 'pendiente', title: routeTitle(route.screen), what: loadWhat(err), back: backHref(route, base?.model) }));
       place(mode, 0, null);
     }
   }
@@ -401,9 +434,12 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
   // popstate más tarde, nunca en este turno, así que el pintado real llega por onLocation: se deja
   // un pendiente y se resuelve desde allí, para que idle() y el propio nav.back() esperen al de la
   // vuelta, no al de la pantalla que ya estaba pintada (B2, ronda 1, hallazgo 2). Dos nav.back()
-  // seguidos, cada uno con su history.back(), encadenan sus pendientes en vez de pisarse: si no,
-  // el popstate (uno solo, el segundo lo deduplica onLocation) solo resolvía el último, y la
-  // promesa del primero se quedaba colgada para siempre (B2, ronda 2, hallazgo único).
+  // seguidos, cada uno con su history.back(), encadenan sus pendientes en vez de pisarse, y el
+  // primer popstate que atiende onLocation los resuelve todos con su pintado. En un navegador real
+  // pueden llegar dos popstate, a entradas distintas (el segundo pinta sin pendiente que resolver);
+  // en el navegador falso de las pruebas llegan a la misma entrada y onLocation descarta el segundo.
+  // Sin encadenar, el pendiente del primero se perdía y su promesa se quedaba colgada para siempre
+  // (B2, ronda 2, hallazgo único).
   function goBack() {
     if ((entry()?.fbIdx ?? 0) > 0) {
       const earlier = pendingBack;
@@ -413,7 +449,9 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       hist.back();
       return latest;
     }
-    const parent = current ? parentOf(current) : null;
+    let model = null;
+    try { model = getContext().model; } catch { /* sin contexto: el padre que dice el enlace */ }
+    const parent = current ? parentOf(current, model) : null;
     return navigate(parent ? routeHref(parent.screen, parent.params) : '#/', 'push');
   }
 

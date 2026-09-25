@@ -63,14 +63,9 @@ const roundOf = (group, match) => (group.rounds || []).find((round) => round.key
 
 const matchHref = (m) => routeHref('partido', { s: m.season, g: m.groupId, r: m.roundKey, h: m.home, a: m.away });
 
-// «‹» sin historial de la app: la jornada del partido (spec §4.1); en un torneo
-// o una copa, su cuadro.
-function parentHref(group, match) {
-  if (!group) return routeHref('jornada');
-  return group.kind === 'league'
-    ? routeHref('jornada', { s: group.season, g: group.id, r: match ? match.roundKey : '' })
-    : routeHref('copa', { s: group.season, g: group.id });
-}
+// «‹» sin historial de la app es ctx.backHref, que pone el router con parentOf (router.js): la
+// jornada del partido (spec §4.1) o, en un torneo o una copa, su cuadro (decisión 100). Un solo
+// padre para la pantalla y para la caja de error del router (M2 de la revisión final de B2).
 
 // El lado de mi equipo en este partido ('home' | 'away'), solo en su grupo resuelto.
 function mineSide(ctx, match) {
@@ -332,11 +327,11 @@ export function render(ctx) {
   const { season, loaded, group, match } = locate(ctx);
   const listed = (ctx.datasets.seasons || []).some((s) => s.name === season);
   if (!loaded && listed && season !== ctx.portal.season) {
-    return screenHtml(html`${header({ title: 'Partido', back: parentHref(null) })}${errorBox(`la temporada ${seasonLabel(season)}`)}`);
+    return screenHtml(html`${header({ title: 'Partido', back: ctx.backHref })}${errorBox(`la temporada ${seasonLabel(season)}`)}`);
   }
   if (!match) {
     const where = group ? group.label : `la temporada ${seasonLabel(season)}`;
-    return screenHtml(html`${header({ title: 'Partido', subtitle: group ? group.label : null, back: parentHref(group, null) })}${block('Partido no encontrado', empty(`Este partido no está en los datos de ${where}.`))}`);
+    return screenHtml(html`${header({ title: 'Partido', subtitle: group ? group.label : null, back: ctx.backHref })}${block('Partido no encontrado', empty(`Este partido no está en los datos de ${where}.`))}`);
   }
   const round = roundOf(group, match);
   const roundLabel = round ? round.label : match.roundKey;
@@ -351,7 +346,7 @@ export function render(ctx) {
   const head = header({
     title: html`Partido<span class="vh">: ${match.home} ${DASH} ${match.away}</span>`,
     subtitle: `${roundLabel} · ${group.label}${past}`,
-    back: parentHref(group, match),
+    back: ctx.backHref,
     share,
   });
   // Sin marcador no hay goles ni acta que enseñar.

@@ -135,18 +135,21 @@ function fakePage(storage, hash = '#/') {
 // Los data-*.js inmediatos, como los globales del navegador, y los perezosos por fetch.
 const GLOBALS = ['BENJAMIN', 'PREBENJAMIN', 'HISTORY', 'GOL_BENJ', 'GOL_PREBENJ', 'SHIELDS', 'SEASONS',
   'MASPALOMAS_CUP_BENJAMIN', 'MASPALOMAS_CUP_PREBENJAMIN'];
-function installData(season, { without = [] } = {}) {
+function installData(season, { without = [], seasons = [{ name: '2025-2026', current: true }] } = {}) {
   const cups = fixture('cups-2025-2026');
   const values = { BENJAMIN: season.benjamin, PREBENJAMIN: season.prebenjamin, HISTORY: season.history,
-    GOL_BENJ: [], GOL_PREBENJ: [], SHIELDS: shields, SEASONS: [{ name: '2025-2026', current: true }],
+    GOL_BENJ: [], GOL_PREBENJ: [], SHIELDS: shields, SEASONS: seasons,
     MASPALOMAS_CUP_BENJAMIN: cups.benjamin, MASPALOMAS_CUP_PREBENJAMIN: cups.prebenjamin };
   for (const name of GLOBALS) delete globalThis[name];
   for (const [name, value] of Object.entries(values)) if (!without.includes(name)) globalThis[name] = value;
 }
+// Una temporada archivada con la forma de data-season-<S>.js (const SEASON_<S>={name, benjamin, prebenjamin}).
+const seasonFile = (name, { benjamin = [], prebenjamin = [] }) => `const SEASON_${name.replace('-', '_')}=${JSON.stringify({ name, benjamin, prebenjamin })};`;
 const FILES = {
   'data-health.json': () => JSON.stringify(fixture('health')),
   'data-matchdetail.js': () => `const MATCH_DETAIL=${JSON.stringify(fixture('matchdetail'))};`,
   'data-lineups-2025-2026.js': () => `const LINEUPS_2025_2026=${JSON.stringify(fixture('lineups-2025-2026'))};`,
+  'data-season-2024-2025.js': () => seasonFile('2024-2025', fixture('historical-2024-2025')),
 };
 globalThis.fetch = async (url) => {
   const body = FILES[String(url).replace(/^\.\//, '').replace(/\?.*$/, '')];
@@ -155,8 +158,8 @@ globalThis.fetch = async (url) => {
 
 // Una carga de la app: los datos de `season`, el día `today` (a mediodía en Canarias, inyectado en
 // start() como el reloj: nada de temporizadores simulados, sin su ExperimentalWarning) y el almacén.
-async function load(storage, { season = raw, portal = PORTAL_2526, today, hash = '#/', without = [] }) {
-  installData(season, { without });
+async function load(storage, { season = raw, portal = PORTAL_2526, today, hash = '#/', without = [], seasons }) {
+  installData(season, { without, seasons });
   const page = fakePage(storage, hash);
   const router = start(page.doc, page.win, portal, { now: () => new Date(`${today}T12:00:00Z`) });
   if (router) await router.idle();
@@ -260,6 +263,48 @@ test('el router deja pasar lo que las pantallas saben leer: la jornada por su n�
   assert.match(page.main.innerHTML, /<p class="screen-sub">Jornada 15 · Prebenjamín, Grupo 2 de Gran Canaria<\/p>/);
   const mountErrors = errorSpy.mock.calls.filter((call) => String(call.arguments[0]).includes('[router] mount'));
   assert.deepEqual(mountErrors, [], 'el mount de las pantallas reales no debe lanzar (con las pantallas reales)');
+});
+
+// Las temporadas que publica SEASONS cuando hay archivo: la actual y 2024/25.
+const WITH_PAST = [{ name: '2025-2026', current: true }, { name: '2024-2025', current: false }];
+
+test('temporada pasada que la pantalla no pide (Equipo, aún la provisional): la carga el router y la pinta, nunca la caja de error (I4(a))', async (t) => {
+  const errorSpy = t.mock.method(console, 'error');
+  const hash = '#/equipo?s=2024-2025&g=PGC2&t=Las%20Mesas%20Hu.';
+  const { page } = await load(new Map(), { today: '2026-03-01', hash, seasons: WITH_PAST });
+  assert.equal(page.hash(), hash, 'sin redirección');
+  assert.match(page.main.innerHTML, /^<section data-screen="pendiente" data-route="equipo">/);
+  assert.match(page.main.innerHTML, /<h1>Equipo<\/h1>/);
+  assert.doesNotMatch(page.main.innerHTML, /No se pudieron cargar/);
+  // El enlace de la revisión (A1, que la temporada 2024/25 de las fixtures no tiene): cargada la
+  // temporada, el grupo se valida y lleva a Explorar con su aviso, tampoco a la caja de error.
+  const other = await load(new Map(), { today: '2026-03-01', hash: '#/equipo?s=2024-2025&g=A1&t=Guayarmina', seasons: WITH_PAST });
+  assert.equal(other.page.hash(), '#/explorar?s=2024-2025&q=Guayarmina');
+  assert.match(other.page.main.innerHTML, /No encontramos el grupo A1 en la temporada 2024\/25/);
+  assert.deepEqual(errorSpy.mock.calls.map((call) => String(call.arguments[0])), [], 'ni el router ni la carga registran errores');
+});
+
+test('si falla la carga de esa temporada: la caja de error, y «Reintentar» pinta la pantalla al volver la red (I4(a))', async (t) => {
+  // La carga fallida y la caja de error se registran con console.error: aquí se esperan.
+  t.mock.method(console, 'error', () => {});
+  const hash = '#/equipo?s=2023-2024&g=PGC9&t=Las%20Mesas%20Hu.';
+  const seasons = [...WITH_PAST, { name: '2023-2024', current: false }];
+  const { page, router } = await load(new Map(), { today: '2026-03-01', hash, seasons });
+  assert.match(page.main.innerHTML, /^<section data-screen="pendiente" data-state="error">/);
+  assert.match(page.main.innerHTML, /No se pudieron cargar los datos de la temporada 2023\/24\./);
+  assert.match(page.main.innerHTML, /data-action="retry"/);
+  // Vuelve la red: el fichero ya llega (una temporada mínima, con el grupo del enlace).
+  FILES['data-season-2023-2024.js'] = () => seasonFile('2023-2024', {
+    prebenjamin: [{ id: 'PGC9', name: 'Grupo 9', phase: 'Gran Canaria', island: 'grancanaria', standings: [[1, 'Las Mesas Hu.', 0, 0, 0, 0, 0, 0, 0, 0]], jornadas: {} }],
+  });
+  try {
+    router.nav.retry();   // lo mismo que hace el «Reintentar» de la caja (data-action="retry")
+    await router.idle();
+    assert.equal(page.hash(), hash);
+    assert.match(page.main.innerHTML, /^<section data-screen="pendiente" data-route="equipo">/);
+  } finally {
+    delete FILES['data-season-2023-2024.js'];
+  }
 });
 
 test('aviso sin conexión en vivo: aparece al arrancar sin conexión, se va con online y vuelve con offline', async () => {

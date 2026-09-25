@@ -181,14 +181,18 @@ import {
   featuredStandingFrom, featuredMatchesFrom, featuredScorersFrom,
 } from '../../src/state.js';
 
-test('featuredStandingFrom finds Las Mesas in PREBENJAMIN PG2', () => {
-  const { PREBENJAMIN } = loadDataFile('data-prebenjamin.js');
-  const r = featuredStandingFrom(PREBENJAMIN);
+// Datos sintéticos a partir de FEATURED (config.js), nunca los data-*.js vivos: el día que se
+// active 2026/27, por partes o con el equipo en otro grupo, esta prueba no puede parar el bot.
+test('featuredStandingFrom finds the featured team in its group', () => {
+  const other = { id: 'OTRO', name: 'Otro grupo', standings: [[1, FEATURED.name, 0, 0, 0, 0, 0, 0, 0, 0]] };
+  const mine = { id: FEATURED.groupId, name: 'Grupo',
+    standings: [[1, 'Otro equipo', 0, 0, 0, 0, 0, 0, 0, 0], [2, FEATURED.name, 0, 0, 0, 0, 0, 0, 0, 0]] };
+  const r = featuredStandingFrom([other, mine]);
   assert.ok(r);
-  assert.equal(r.row[1], 'Las Mesas Hu.');
-  assert.equal(r.pos, r.row[0]);
-  assert.ok(r.total >= r.pos);
-  assert.equal(r.group.id, 'PG2');
+  assert.equal(r.row[1], FEATURED.name);
+  assert.equal(r.pos, 2);
+  assert.equal(r.total, 2);
+  assert.equal(r.group.id, FEATURED.groupId);
 });
 
 test('featuredStandingFrom returns null when team absent', () => {
@@ -223,12 +227,12 @@ test('featuredMatchesFrom on empty/missing history -> []', () => {
   assert.deepEqual(featuredMatchesFrom({}), []);
 });
 
-test('featuredScorersFrom returns Las Mesas players sorted by goals', () => {
-  const { GOL_PREBENJ } = loadDataFile('data-goleadores.js');
-  const s = featuredScorersFrom(GOL_PREBENJ);
-  assert.ok(s.length >= 1);
-  for (let i = 1; i < s.length; i++)
-    assert.ok(s[i - 1].goals >= s[i].goals);
+// Sintético por lo mismo: al empezar 2026/27 el equipo aún no tiene goleadores.
+test('featuredScorersFrom returns the featured team players sorted by goals', () => {
+  const s = featuredScorersFrom([{ id: FEATURED.groupId, g: 'GRUPO', s: [
+    ['Ana', FEATURED.name, 3, 5], ['Bea', 'Otro equipo', 9, 9], ['Carla', FEATURED.name, 7, 4],
+    ['Dora', FEATURED.name, 3, 2]] }]);
+  assert.deepEqual(s.map(p => p.name), ['Carla', 'Dora', 'Ana']);
   assert.ok(s.every(p => typeof p.name === 'string' && typeof p.goals === 'number'));
 });
 

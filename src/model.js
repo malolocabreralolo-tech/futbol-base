@@ -1410,7 +1410,7 @@ export function compareGroups(groups) {
 /* El cuadro de una copa o de un torneo: sus rondas, con quién pasó cada partido, y el campeón.
  * Quién pasó sale del propio cuadro cuando lo dice: el único de los dos que juega la ronda
  * siguiente. Si no lo dice (la última ronda, o una siguiente en la que no está ninguno), sale de
- * Match.advancer: el marcador, la columna de penaltis o una ronda posterior. Si el cuadro contradice
+ * Match.advancer: el marcador o la columna de penaltis. Si el cuadro contradice
  * al marcador (sigue el que perdió), `conflict`: en 2024-25 BCC1 pasa dos veces, y la pantalla dice
  * las dos cosas (spec §7). El campeón es quien pasó de la final (la última ronda, «Final», con un
  * solo partido), o null si aún no tiene resultado. null si el grupo no es un cuadro.

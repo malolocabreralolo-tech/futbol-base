@@ -101,5 +101,6 @@ test('CODIGO es la huella del código del árbol: src/*.js y acta.css (scripts/c
   const files = ['acta.css', ...readdirSync(join(ROOT, 'src')).filter((f) => f.endsWith('.js')).sort().map((f) => `src/${f}`)];
   const hash = createHash('sha1');
   for (const file of files) hash.update(Buffer.concat([Buffer.from(`${file}\0`), readFileSync(join(ROOT, file)), Buffer.from('\0')]));
-  assert.equal((INDEX.match(/const CODIGO = '([0-9a-f]{8})';/) || [])[1], hash.digest('hex').slice(0, 8));
+  assert.equal((INDEX.match(/const CODIGO = '([0-9a-f]{8})';/) || [])[1], hash.digest('hex').slice(0, 8),
+    'CODIGO desfasado: ejecuta python3 scripts/codigo.py');
 });

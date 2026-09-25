@@ -662,7 +662,8 @@ abbr[title] { text-decoration: none; }
   text-decoration: none;
 }
 
-/* Calendario completo del equipo: solo en escritorio, y lo pinta mount */
+/* Calendario completo del equipo: en Mi equipo, solo en escritorio, y lo pinta mount; en la ficha
+ * de Equipo se pinta siempre, a cualquier ancho, en render (calendar: 'always'). */
 .cal { margin: 0; padding: 0; list-style: none; }
 .box.cal > li + li { border-top-color: var(--line); }
 .cal-when { padding: 6px 6px 0; font-size: 11.5px; font-weight: 600; color: var(--mute); }
@@ -1215,6 +1216,10 @@ abbr[title] { text-decoration: none; }
 @media (hover: hover) {
   a.bm:hover .bm-name { text-decoration: underline; }
 }
+
+/* El contorno de foco cae fuera de `.bracket`, que recorta el eje X: sin este hueco se pierden los
+ * lados izquierdo y derecho a 320 y 390 px (Minor 1 de la revisión final de B3, §8). */
+.bracket .bm:focus-visible { outline-offset: -4px; }
 
 /* Escritorio: todas las rondas a la vista, una columna por ronda, sin pestañas ni alto fijo. Los
  * partidos se reparten a lo alto de cada columna, como en un cuadro. */

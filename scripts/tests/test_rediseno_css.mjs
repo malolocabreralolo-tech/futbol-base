@@ -100,6 +100,12 @@ test('foco visible en los enlaces de la tabla: la celda del equipo no recorta el
   assert.doesNotMatch(decl('.st-link'), /overflow/);
 });
 
+// Minor 1 de la revisión final de B3 (§8): a 320 y 390 px el contorno de `a.bm` perdía los lados
+// izquierdo y derecho, porque `.bracket` recorta el eje X y cada columna mide el 100 % de la caja.
+test('foco visible en el cuadro: el contorno no se recorta en los lados', () => {
+  assert.match(decl('.bracket .bm:focus-visible'), /outline-offset:\s*-4px/);
+});
+
 test('el selector segmentado sigue visible en escritorio (Todas, Casa y Fuera)', () => {
   const desktop = RULES.filter(r => DESKTOP(r.media) && /\.segment/.test(r.selector)).map(r => r.body).join(';');
   assert.doesNotMatch(desktop, /display:\s*none|visibility:\s*hidden/);

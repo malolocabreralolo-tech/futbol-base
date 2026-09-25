@@ -8,8 +8,7 @@ import { tabbar, notice, screenHead } from './ui.js';
 
 const TAB_HREFS = { miequipo: '#/', jornada: '#/jornada', tabla: '#/tabla', explorar: '#/explorar' };
 
-// Títulos de las rutas de §4.1: el h1 de la pantalla provisional, de la caja de error y del
-// <title> del documento.
+// Títulos de las rutas de §4.1: el h1 de la caja de error y del <title> del documento.
 const TITLES = {
   '': 'Mi equipo', jornada: 'Jornada', tabla: 'Tabla', explorar: 'Explorar', partido: 'Partido',
   equipo: 'Equipo', ligas: 'Ligas', copa: 'Copa', goleadores: 'Goleadores',

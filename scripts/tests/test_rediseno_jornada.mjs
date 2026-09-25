@@ -79,24 +79,14 @@ test('jornada por defecto (defaultRound, por fecha): sin r, con una r que no exi
 });
 
 test('M con huecos: el máximo entre el número de rondas y el mayor n (grupo sintético, sin la jornada 3)', () => {
-  // Grupo a mano con la forma de Round/Group del modelo: rondas con n 1, 2 y 4 (sin la 3), así
-  // que rounds.length (3) no basta para dar M; manda el mayor n (4), como escribe roundTitle.
-  const round = (n) => ({ key: String(n), label: `Jornada ${n}`, n, dateFrom: null, dateTo: null, matches: [] });
-  const group = {
-    season: PORTAL_SEASON, id: 'SINT', cat: 'prebenjamin', name: 'Sintético', fullName: null, phase: null,
-    island: 'grancanaria', url: null, standingsKind: null, kind: 'league', compKey: 'sintetico-grancanaria',
-    label: 'Grupo sintético', standings: [], rounds: [round(1), round(2), round(4)], currentRound: null,
-  };
-  const season = { name: PORTAL_SEASON, current: true, groups: [group] };
-  const model = {
-    season: (name) => (name === PORTAL_SEASON ? season : null),
-    group: (name, id) => (name === PORTAL_SEASON && id === 'SINT' ? group : null),
-  };
-  const ctx = {
-    route: { screen: 'jornada', params: { g: 'SINT', r: '4' } }, params: { g: 'SINT', r: '4' }, model,
-    myTeam: null, resolution: { status: 'absent' }, today: '2026-09-24', health: null, datasets: {},
-    portal: { season: PORTAL_SEASON, defaultTeam: null }, lastPrimary: 'jornada',
-  };
+  // Un grupo sintético en los datos de la temporada, con sus jornadas en HISTORY: 1, 2 y 4 (sin la
+  // 3), así que rounds.length (3) no basta para dar M; manda el mayor n (4), como escribe roundTitle.
+  // El ctx es el de siempre (ctxFor, sobre startContext), con el modelo de verdad.
+  const current = fixture('current-2025-2026');
+  current.prebenjamin.push({ id: 'SINT', name: 'Grupo 9', phase: 'Gran Canaria', island: 'grancanaria', standings: [] });
+  current.history.SINT = { 'Jornada 1': [], 'Jornada 2': [], 'Jornada 4': [] };
+  const ctx = ctxFor('jornada', { s: PORTAL_SEASON, g: 'SINT', r: 'Jornada 4' }, { datasets: datasetsFor({ current }) });
+  assert.deepEqual(ctx.model.group(PORTAL_SEASON, 'SINT').rounds.map((round) => round.n), [1, 2, 4]);
   assert.equal(title(s(screen.render(ctx))), 'Jornada 4 de 4');
 });
 

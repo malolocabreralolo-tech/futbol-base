@@ -10,6 +10,7 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fixture } from './fixtures/rediseno/load.mjs';
+import { fakeBrowser } from './fixtures/rediseno/fake-browser.mjs';
 import { currentAt, nextSeasonRaw, teamNames } from './fixtures/rediseno/simulate.mjs';
 import { buildSeason } from '../../src/model.js';
 import { buildClubIndex, resolveMyTeam, myTeamToSave } from '../../src/myteam.js';
@@ -69,68 +70,10 @@ test('myTeamToSave: un cambio de temporada nunca se guarda solo, con una categor
 
 // ── start() de verdad, sobre un navegador falso ────────────────────────────
 
-// Lo justo del navegador para app.js y el router: historial y hash, eventos, el <main> que guarda
-// el HTML pintado (con su h1), el hueco del aviso sin conexión, el literal «Última actualización»
-// y el almacenamiento: un Map compartido entre cargas, como el localStorage de un móvil.
-function fakePage(storage, hash = '#/') {
-  const listeners = {};
-  const entries = [{ hash, state: null }];
-  let index = 0;
-  const hashOf = (url) => (String(url).includes('#') ? String(url).slice(String(url).indexOf('#')) : String(url));
-  const h1 = { tagName: 'H1', attrs: {}, hasAttribute: (n) => n in h1.attrs, setAttribute: (n, v) => { h1.attrs[n] = String(v); }, focus() {} };
-  const mainListeners = {};
-  const main = {
-    innerHTML: '', querySelector: (sel) => (sel === 'h1' && main.innerHTML.includes('<h1') ? h1 : null), contains: () => true,
-    addEventListener: (type, fn) => { (mainListeners[type] ||= []).push(fn); },
-    removeEventListener: (type, fn) => { mainListeners[type] = (mainListeners[type] || []).filter((f) => f !== fn); },
-  };
-  const offline = { innerHTML: '' };
-  // La barra de la cabecera (spec §4.1): cuatro <a class="tab"> con su href, como updateTabbar los
-  // recorre (doc.querySelectorAll('.tabbar a.tab')). aria-current va en `attrs`, como en el h1 falso.
-  const tabs = ['#/', '#/jornada', '#/tabla', '#/explorar'].map((href) => {
-    const el = { href, attrs: {}, getAttribute: (n) => (n === 'href' ? href : el.attrs[n] ?? null) };
-    el.setAttribute = (n, v) => { el.attrs[n] = String(v); };
-    el.removeAttribute = (n) => { delete el.attrs[n]; };
-    el.hasAttribute = (n) => n in el.attrs;
-    return el;
-  });
-  const activeTabs = () => tabs.filter((t) => t.hasAttribute('aria-current')).map((t) => [t.getAttribute('href'), t.getAttribute('aria-current')]);
-  const place = (map) => ({ getItem: (k) => (map.has(k) ? map.get(k) : null), setItem: (k, v) => { map.set(k, String(v)); }, removeItem: (k) => { map.delete(k); } });
-  const reloads = [];
-  const doc = {
-    title: 'Fútbol Base Las Palmas', activeElement: null,
-    addEventListener: (type, fn) => { (listeners[type] ||= []).push(fn); },
-    getElementById: (id) => (id === 'contenido' ? main : id === 'legacyUpdated' ? { textContent: 'Última actualización: 23/09/2026' } : null),
-    querySelector: (sel) => (sel === '.shell-offline' ? offline : null),
-    querySelectorAll: (sel) => (sel === '.tabbar a.tab' ? tabs : []),
-  };
-  const winListeners = {};
-  const win = {
-    document: doc, scrollY: 0, navigator: { onLine: true },
-    history: {
-      scrollRestoration: 'auto',
-      get state() { return entries[index].state; },
-      pushState(state, _t, url) { entries.splice(index + 1, entries.length, { hash: hashOf(url), state: structuredClone(state) }); index++; },
-      replaceState(state, _t, url) { entries[index] = { hash: url === undefined ? entries[index].hash : hashOf(url), state: structuredClone(state) }; },
-      back() {},
-    },
-    location: { get hash() { return entries[index].hash; }, reload: () => reloads.push(true) },
-    scrollTo() {},
-    addEventListener: (type, fn) => { (winListeners[type] ||= []).push(fn); },
-    localStorage: place(storage), sessionStorage: place(new Map()),
-  };
-  // Un clic en un elemento con esos atributos, como lo recibe la delegación del documento.
-  const click = (attrs) => (listeners.click || []).forEach((fn) => fn({
-    button: 0, defaultPrevented: false, preventDefault() {},
-    target: { closest: (sel) => (sel === '[data-action="retry"]' && attrs['data-action'] === 'retry' ? {} : null) },
-  }));
-  // navigator.onLine + el evento a juego, como lo dispara un navegador de verdad.
-  const setOnline = (value) => {
-    win.navigator.onLine = value;
-    (winListeners[value ? 'online' : 'offline'] || []).forEach((fn) => fn());
-  };
-  return { doc, win, main, reloads, click, setOnline, activeTabs, hash: () => entries[index].hash };
-}
+// El navegador falso es el común (fixtures/rediseno/fake-browser.mjs), el mismo de las pruebas del
+// router: historial y hash, eventos, el <main> que guarda el HTML pintado, el hueco del aviso sin
+// conexión, el literal «Última actualización» y el almacenamiento, un Map compartido entre cargas,
+// como el localStorage de un móvil.
 
 // Los data-*.js inmediatos, como los globales del navegador, y los perezosos por fetch.
 const GLOBALS = ['BENJAMIN', 'PREBENJAMIN', 'HISTORY', 'GOL_BENJ', 'GOL_PREBENJ', 'SHIELDS', 'SEASONS',
@@ -160,7 +103,7 @@ globalThis.fetch = async (url) => {
 // start() como el reloj: nada de temporizadores simulados, sin su ExperimentalWarning) y el almacén.
 async function load(storage, { season = raw, portal = PORTAL_2526, today, hash = '#/', without = [], seasons }) {
   installData(season, { without, seasons });
-  const page = fakePage(storage, hash);
+  const page = fakeBrowser(hash, { storage });
   const router = start(page.doc, page.win, portal, { now: () => new Date(`${today}T12:00:00Z`) });
   if (router) await router.idle();
   return { page, router };
@@ -214,14 +157,14 @@ test('sin un dato inmediato de la temporada, la caja de error con «Reintentar»
     assert.doesNotMatch(page.main.innerHTML, /no aparece|Aún no se ha jugado/);
     assert.equal(storage.size, 0, 'no resuelve ni guarda mi equipo');
     assert.match(page.main.innerHTML, /data-action="retry"/, `${missing}: el botón «Reintentar» existe de verdad`);
-    page.click({ 'data-action': 'retry' });
+    page.click({ 'data-action': 'retry', type: 'button' }, 'button');
     assert.deepEqual(page.reloads, [true], `${missing}: «Reintentar» recarga la página`);
   }
 });
 
 test('sin los datos inmediatos, la caja de error actualiza también la barra y el título de la ruta pedida (M4)', async () => {
   const { page } = await load(new Map(), { today: '2026-03-01', hash: '#/tabla', without: ['BENJAMIN'] });
-  assert.deepEqual(page.activeTabs(), [['#/tabla', 'page']], 'la barra marca Tabla, no Mi equipo');
+  assert.deepEqual(page.marks(), [['#/tabla', 'page']], 'la barra marca Tabla, no Mi equipo');
   assert.equal(page.doc.title, 'Tabla · Fútbol Base Las Palmas');
 });
 
@@ -298,7 +241,8 @@ test('si falla la carga de esa temporada: la caja de error, y «Reintentar» pin
     prebenjamin: [{ id: 'PGC9', name: 'Grupo 9', phase: 'Gran Canaria', island: 'grancanaria', standings: [[1, 'Las Mesas Hu.', 0, 0, 0, 0, 0, 0, 0, 0]], jornadas: {} }],
   });
   try {
-    router.nav.retry();   // lo mismo que hace el «Reintentar» de la caja (data-action="retry")
+    // El «Reintentar» de la caja: lo atiende el router, que vuelve a pedir la temporada.
+    assert.equal(page.click({ 'data-action': 'retry', type: 'button' }, 'button'), true);
     await router.idle();
     assert.equal(page.hash(), hash);
     assert.match(page.main.innerHTML, /^<section data-screen="pendiente" data-route="equipo">/);
@@ -309,7 +253,7 @@ test('si falla la carga de esa temporada: la caja de error, y «Reintentar» pin
 
 test('aviso sin conexión en vivo: aparece al arrancar sin conexión, se va con online y vuelve con offline', async () => {
   installData(raw, {});
-  const page = fakePage(new Map());
+  const page = fakeBrowser('#/', { storage: new Map() });
   page.win.navigator.onLine = false;
   const router = start(page.doc, page.win, PORTAL_2526);
   await router.idle();

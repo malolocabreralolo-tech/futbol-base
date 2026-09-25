@@ -12,6 +12,7 @@ import { buildSeason, createModel, teamFixtures } from '../../src/model.js';
 import { buildClubIndex, resolveMyTeam } from '../../src/myteam.js';
 import { shareLink, copyText, weekdayDate, dayMonth, dayMonthLong, monthName } from '../../src/links.js';
 import { loadStore, LEGACY_KEY } from '../../src/store.js';
+import { ctxFor } from './fixtures/rediseno/screens.mjs';
 import { standingsTable } from '../../src/ui.js';
 import { screen, coverageText, shareData, matchCalendar, teamCalendar } from '../../src/screen-home.js';
 
@@ -39,22 +40,16 @@ const GOL = {
   ] }],
 };
 
-// El ctx del router (esqueleto de B2), con createModel sobre las fixtures (buildClubIndex inyectado).
-// `resolution`, si llega, es una función ({ season, index }) → resolución.
+// El ctx de la portada es el de siempre (ctxFor de fixtures/rediseno/screens.mjs, sobre startContext
+// de app.js): el modelo, mi equipo del almacén resuelto con el hoy inyectado, health y legacyDate.
+// `resolution`, si llega, transforma la resolución del ctx (el aviso stale, que las fixtures no traen).
 function homeCtx({
   raw = fixture('current-2025-2026'), myTeam = LAS_MESAS, today, portalSeason = '2025-2026',
   withHealth = health, legacyDate = null, gol = GOL, resolution,
 } = {}) {
   const datasets = datasetsFrom(raw, { golBenj: gol.benjamin || null, golPrebenj: gol.prebenjamin || null, health: withHealth });
-  const model = createModel(datasets, { portalSeason, buildClubIndex });
-  const season = model.season(portalSeason);
-  const index = model.clubIndex();
-  return {
-    route: { screen: '', params: {} }, params: {}, model, myTeam, today, health: withHealth, legacyDate,
-    resolution: resolution ? resolution({ season, index }) : resolveMyTeam(myTeam, season, index, today),
-    datasets, portal: { season: portalSeason, defaultTeam: { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' } },
-    lastPrimary: 'miequipo',
-  };
+  const ctx = ctxFor('', {}, { today, datasets, myTeam, portalSeason, legacyDate });
+  return resolution ? { ...ctx, resolution: resolution(ctx.resolution) } : ctx;
 }
 const render = options => String(screen.render(homeCtx(options)));
 
@@ -344,8 +339,7 @@ test('X: «Las Mesas Hu. no aparece en 2026/27» y «Elegir equipo» a Explorar'
 });
 
 test('stale (decisión 20 de B1): el aviso bajo la cabecera en C y en D, y nunca en A', () => {
-  const stale = (today, options) => ({ ...options, today,
-    resolution: ({ season, index }) => ({ ...resolveMyTeam(LAS_MESAS, season, index, today), stale: true }) });
+  const stale = (today, options) => ({ ...options, today, resolution: (resolution) => ({ ...resolution, stale: true }) });
   const aviso = '<p class="notice"><b>¿Sigue tu equipo en la Segunda Fase?</b> <a class="more" href="#/explorar#buscar">Búscalo en Explorar</a></p>';
   for (const [state, options] of [['C', CASES.C], ['D', CASES.D]]) {
     const out = render(stale(options.today, options));

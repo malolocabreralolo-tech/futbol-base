@@ -5,11 +5,16 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { fixture } from './load.mjs';
 import { datasetsFrom } from './simulate.mjs';
-import { createModel } from '../../../../src/model.js';
-import { buildClubIndex, resolveMyTeam } from '../../../../src/myteam.js';
+import { memoryStorage } from './fake-browser.mjs';
+import { startContext } from '../../../../src/app.js';
+import { routeHref } from '../../../../src/links.js';
+import { activeTab, parentOf } from '../../../../src/router.js';
+import { STORE_KEY } from '../../../../src/store.js';
 
 export const PORTAL_SEASON = '2025-2026';
 export const MY_TEAM = { name: 'Las Mesas Hu.', season: PORTAL_SEASON, cat: 'prebenjamin', groupId: 'PG2' };
+// El equipo por defecto con la forma de PORTAL.defaultTeam (config.js), sin temporada.
+export const DEFAULT_TEAM = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' };
 
 // Registro de datos con la forma de readGlobals() más lo perezoso (esqueleto de B2): el de
 // datasetsFrom (Tarea 3) con SEASONS, data-health y los goleadores que se pidan.
@@ -27,14 +32,30 @@ export function pastSeasonRaw() {
   return { name: raw.season, current: false, benjamin: raw.benjamin, prebenjamin: raw.prebenjamin };
 }
 
-// ctx de una pantalla: params ya resueltos (lo hace el router), hoy inyectado y mi equipo
-// resuelto con resolveMyTeam sobre la temporada del portal.
-export function ctxFor(screen, params, { today = '2026-09-24', datasets = datasetsFor(), myTeam = MY_TEAM } = {}) {
-  const model = createModel(datasets, { portalSeason: PORTAL_SEASON, buildClubIndex });
-  const resolution = resolveMyTeam(myTeam, model.season(PORTAL_SEASON), model.clubIndex(), today);
+// El ctx de una pantalla, el mismo que le da la app (decisión 109; M1 de la revisión final de B2):
+// startContext de app.js, que comparte contextFor con start (el modelo, mi equipo resuelto con
+// resolveMyTeam sobre la temporada del portal, el hoy inyectado, health y legacyDate), desde un
+// almacén con `myTeam` guardado (null: el almacén vacío, que da el equipo por defecto), más lo que
+// añade el router:
+// - route y params (ya resueltos: lo hace el router);
+// - lastPrimary, un destino de la barra: el de la pantalla si es uno principal y, si no, el
+//   último visitado (por defecto, el de startContext: Mi equipo); nunca 'partido';
+// - backHref, el «‹» del router: parentOf con el modelo del ctx.
+// portalSeason cambia la temporada del portal (2026/27 simulada) y legacyDate, el literal oculto
+// «Última actualización» de index.html.
+export function ctxFor(screen, params, {
+  today = '2026-09-24', datasets = datasetsFor(), myTeam = MY_TEAM, portalSeason = PORTAL_SEASON, legacyDate = null,
+  lastPrimary = null,
+} = {}) {
+  const storage = memoryStorage(new Map(myTeam ? [[STORE_KEY, JSON.stringify({ myTeam, recent: [] })]] : []));
+  const base = startContext({ storage, portal: { season: portalSeason, defaultTeam: DEFAULT_TEAM }, datasets, today });
+  const route = { screen, params };
+  const tab = activeTab(route, null, false);
+  const parent = parentOf(route, base.model);
   return {
-    route: { screen, params }, params, model, myTeam, resolution, today, health: datasets.health, datasets,
-    portal: { season: PORTAL_SEASON, defaultTeam: MY_TEAM }, lastPrimary: screen,
+    ...base, legacyDate, route, params,
+    lastPrimary: lastPrimary || (tab.current === 'page' ? tab.active : base.lastPrimary),
+    backHref: parent ? routeHref(parent.screen, parent.params) : null,
   };
 }
 

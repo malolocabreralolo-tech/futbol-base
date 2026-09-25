@@ -9,14 +9,12 @@ import { fixture } from './fixtures/rediseno/load.mjs';
 import { currentAt, datasetsFrom as baseDatasets } from './fixtures/rediseno/simulate.mjs';
 import { actaFor, createModel, findMatch } from '../../src/model.js';
 import { ensureLineups } from '../../src/state.js';
-import { routeHref } from '../../src/links.js';
-import { parentOf } from '../../src/router.js';
+import { ctxFor } from './fixtures/rediseno/screens.mjs';
 import {
   loadSeasons, partidoNeeds, pastSeasons, previousBlock, previousMeetings, previousPanelContent, screen,
 } from '../../src/screen-partido.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const PORTAL = { season: '2025-2026', defaultTeam: { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' } };
 const SEASONS = [{ name: '2025-2026', current: true }, { name: '2024-2025', current: false }];
 const TODAY = '2026-09-23';
 
@@ -29,19 +27,12 @@ function datasetsFrom(raw = fixture('current-2025-2026')) {
   });
 }
 
-// backHref: el «‹» que el router pone en el ctx (parentOf con el modelo, M2 de la revisión final).
-function ctxFor(params, { today = TODAY, datasets = datasetsFrom(), resolution = null } = {}) {
-  const route = { screen: 'partido', params };
-  const model = createModel(datasets, { portalSeason: PORTAL.season });
-  const parent = parentOf(route, model);
-  return {
-    route, params, today, datasets, resolution, model,
-    myTeam: { ...PORTAL.defaultTeam, season: PORTAL.season }, health: datasets.health,
-    portal: PORTAL, lastPrimary: 'jornada', backHref: routeHref(parent.screen, parent.params),
-  };
-}
+// El ctx de Partido es el de siempre (ctxFor de fixtures/rediseno/screens.mjs, sobre startContext de
+// app.js, con backHref de parentOf): mi equipo es el del almacén, por defecto Las Mesas Hu. en PG2,
+// el equipo por defecto de config.js. `myTeam` lo cambia.
+const ctxOf = (params, { today = TODAY, datasets = datasetsFrom(), myTeam } = {}) => ctxFor('partido', params, { today, datasets, myTeam });
 
-const render = (params, opts) => String(screen.render(ctxFor(params, opts)));
+const render = (params, opts) => String(screen.render(ctxOf(params, opts)));
 const text = (out) => String(out).replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
   .replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 
@@ -191,7 +182,7 @@ test('«‹» es el ctx.backHref del router (parentOf): la copa en un torneo, la
   // Un torneo o una copa: su cuadro (decisión 100), el mismo padre que da el router.
   assert.match(render(MCPK1_CUARTOS), /<a class="back" href="#\/copa\?s=2025-2026&amp;g=MCPK1" data-action="back"/);
   // Partido no calcula otro padre: pinta el que le da el router, sea cual sea.
-  const ctx = ctxFor(PG2_J30);
+  const ctx = ctxOf(PG2_J30);
   ctx.backHref = '#/jornada?s=2025-2026&g=PG2';
   assert.match(String(screen.render(ctx)), /<header class="screen-head"><a class="back" href="#\/jornada\?s=2025-2026&amp;g=PG2" data-action="back"/);
   // La temporada pasada que no se pudo cargar: el «‹» va a la jornada de esa temporada, el mismo
@@ -233,8 +224,9 @@ test('Cronología con nombre y minuto a null y acta sin goles (plan B1, «Para B
   };
   const out = render({ s: '2025-2026', g: 'PG2', r: 'Jornada 15', h: 'AD Huracán', a: 'Las Mesas Hu.' }, { datasets: ds });
   const goles = blockOf(out, 'Goles');
-  assert.match(goles, /<tr><td class="pt-g-home"><span class="pt-noname">sin nombre<\/span><\/td><td class="pt-g-mid"><b class="pt-g-score">1–0<\/b><\/td><td class="pt-g-away"><\/td><\/tr>/);
-  assert.match(goles, /<td class="pt-g-away"><span class="pt-noname">sin nombre<\/span><\/td>/);
+  // Con el ctx de la app, Las Mesas Hu. (visitante) es mi equipo: su columna va en tinta (decisión 99).
+  assert.match(goles, /<tr><td class="pt-g-home"><span class="pt-noname">sin nombre<\/span><\/td><td class="pt-g-mid"><b class="pt-g-score">1–0<\/b><\/td><td class="pt-g-away pt-mine"><\/td><\/tr>/);
+  assert.match(goles, /<td class="pt-g-away pt-mine"><span class="pt-noname">sin nombre<\/span><\/td>/);
   assert.ok(text(goles).endsWith('la cronología de futbolaspalmas suma 1–1 y el resultado de futbolaspalmas es 8–1.'));
 
   const acta = { s: '2025-2026', gr: 'PG2', cod: 1, home: [{ n: 'PEREZ, ANA', dn: 1, r: 'starter', g: 0 }], away: [], events: [], coachH: null, coachA: null, ref: null };
@@ -247,15 +239,16 @@ test('Cronología con nombre y minuto a null y acta sin goles (plan B1, «Para B
 });
 
 test('Mi equipo: sus goleadores en tinta, como en la maqueta 5-3 (AD Huracán 8–1 Las Mesas Hu.)', () => {
-  const ds = datasetsFrom();
-  const model = createModel(ds, { portalSeason: PORTAL.season });
-  const resolution = { status: 'ok', group: model.group('2025-2026', 'PG2'), name: 'Las Mesas Hu.', cat: 'prebenjamin' };
   const params = { s: '2025-2026', g: 'PG2', r: 'Jornada 15', h: 'AD Huracán', a: 'Las Mesas Hu.' };
-  const goles = blockOf(render(params, { datasets: ds, resolution }), 'Goles');
+  // Mi equipo, resuelto en PG2 (el guardado por defecto): sus goles, en tinta.
+  const goles = blockOf(render(params), 'Goles');
   assert.match(goles, /<td class="pt-g-home"><\/td><td class="pt-g-mid"><span class="pt-g-min">37'<\/span> <b class="pt-g-score">2–1<\/b><\/td><td class="pt-g-away pt-mine">Yadiel<\/td>/);
   assert.doesNotMatch(goles, /pt-g-home pt-mine/);
-  // Sin resolución, o en otro grupo, nadie va en tinta.
-  assert.doesNotMatch(blockOf(render(params), 'Goles'), /pt-mine/);
+  // Mi equipo en otro grupo (el benjamín de Las Mesas Hu., en A2), o sin resolver (no aparece): nadie en tinta.
+  for (const myTeam of [{ name: 'Las Mesas Hu.', season: '2025-2026', cat: 'benjamin', groupId: 'A2' },
+    { name: 'Nadie', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' }]) {
+    assert.doesNotMatch(blockOf(render(params, { myTeam }), 'Goles'), /pt-mine/, myTeam.name);
+  }
 });
 
 test('Partido de una temporada pasada: su temporada en la cabecera y sus enlaces', () => {
@@ -285,7 +278,7 @@ test('Partido pendiente: la cuenta atrás, sin marcador, sin goles ni alineacion
 
 test('Temporadas anteriores bajo demanda: misma categoría y el nombre normalizado (spec §4.5)', async () => {
   const ds = datasetsFrom();
-  const ctx = ctxFor(PG2_J30, { datasets: ds });
+  const ctx = ctxOf(PG2_J30, { datasets: ds });
   const out = String(screen.render(ctx));
   assert.match(blockOf(out, 'Cara a cara'), /<button type="button" class="pt-prev-toggle" data-action="previous" aria-expanded="false" aria-controls="partido-anteriores">Ver temporadas anteriores<\/button><div id="partido-anteriores" class="pt-prev" aria-live="polite" hidden><\/div>/);
   const group = ctx.model.group('2025-2026', 'PG2');
@@ -434,7 +427,7 @@ test('Partido que no está: vacío con enlace a la jornada, nunca una pantalla e
   assert.match(out, /<a class="back" href="#\/jornada\?s=2025-2026&amp;g=PG2" data-action="back"/);
   assert.ok(text(render({ ...PG2_J30, g: 'ZZ9' })).includes('Este partido no está en los datos de la temporada 2025/26.'));
   // «30» por «Jornada 30» (el número de un enlace antiguo) y la ronda ausente: el único partido de h contra a.
-  const group = ctxFor(PG2_J30).model.group('2025-2026', 'PG2');
+  const group = ctxOf(PG2_J30).model.group('2025-2026', 'PG2');
   assert.equal(findMatch(group, { ...PG2_J30, r: '30' }).dateISO, '2026-06-02');
   assert.equal(findMatch(group, { ...PG2_J30, r: undefined }).dateISO, '2026-06-02');
   assert.equal(findMatch(group, { ...PG2_J30, r: 'Jornada 29' }).dateISO, '2026-06-02');
@@ -482,7 +475,7 @@ test('ensureLineups: sin fichero de actas (404) no hay actas; otro fallo da null
 test('acta.css: cada clase de la pantalla existe; marcador de 40 px; pulsables de 44 px; resalte sin óvalo', () => {
   const css = readFileSync(join(ROOT, 'acta.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const defined = new Set([...css.matchAll(/\.([a-zA-Z][\w-]*)/g)].map((m) => m[1]));
-  const ctx = ctxFor(PG2_J30);
+  const ctx = ctxOf(PG2_J30);
   const group = ctx.model.group('2025-2026', 'PG2');
   const hist = fixture('historical-2024-2025');
   ctx.datasets.seasonRaw['2024-2025'] = { name: '2024-2025', current: false, benjamin: hist.benjamin, prebenjamin: hist.prebenjamin };

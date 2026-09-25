@@ -4,6 +4,7 @@
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';
+import { fakeBrowser } from './fixtures/rediseno/fake-browser.mjs';
 import { buildSeason, buildCups, findGroup, findRound, findMatch, seasonLabel } from '../../src/model.js';
 import { buildClubIndex } from '../../src/myteam.js';
 import { teamNames } from './fixtures/rediseno/simulate.mjs';
@@ -245,102 +246,8 @@ test('cada ruta de §4.1 tiene pantalla; las de B3 pintan la provisional con su 
 
 // ── startRouter con un window y un document falsos ─────────────────────
 
-// Lo justo del navegador: historial con entradas y estado, location.hash, eventos de window y de
-// document, desplazamiento, la barra de 4 destinos y un <main> que guarda el HTML pintado y crea
-// su h1 y sus elementos con id (con su etiqueta: un <input id="buscar"> es un INPUT) en cada pintado.
-function fakeBrowser(hash = '#/', { deferBack = false } = {}) {
-  const listeners = { window: {}, document: {} };
-  const on = (where) => (type, fn) => { (listeners[where][type] ||= []).push(fn); };
-  const fire = (where, type, event) => (listeners[where][type] || []).forEach((fn) => fn(event));
-  const entries = [{ hash, state: null }];
-  let index = 0;
-  const hashOf = (url) => (String(url).includes('#') ? String(url).slice(String(url).indexOf('#')) : String(url));
-  const history = {
-    scrollRestoration: 'auto',
-    get state() { return entries[index].state; },
-    pushState(state, _title, url) {
-      entries.splice(index + 1, entries.length, { hash: hashOf(url), state: structuredClone(state) });
-      index++;
-    },
-    replaceState(state, _title, url) {
-      entries[index] = { hash: url === undefined ? entries[index].hash : hashOf(url), state: structuredClone(state) };
-    },
-    // deferBack: como un navegador real, que tampoco cambia history.state ni location.hash hasta
-    // que la propia vuelta atrás ocurre; sin él (por defecto) el índice baja ya, en este turno, y
-    // solo se aplaza el evento, lo que tapa la carrera de dos back() seguidos (B2, ronda 2).
-    back() {
-      if (index === 0) return;
-      if (deferBack) {
-        const target = index - 1;
-        queueMicrotask(() => { index = target; fire('window', 'popstate', { state: entries[index].state }); fire('window', 'hashchange', {}); });
-        return;
-      }
-      index--;
-      queueMicrotask(() => { fire('window', 'popstate', { state: entries[index].state }); fire('window', 'hashchange', {}); });
-    },
-  };
-  const doc = { title: 'Fútbol Base Las Palmas', activeElement: null, addEventListener: on('document') };
-  function element(tag, attrs = {}) {
-    const el = {
-      tagName: tag.toUpperCase(), attrs: { ...attrs }, focused: 0, scrolled: 0,
-      get id() { return el.attrs.id || ''; },
-      getAttribute: (n) => (Object.hasOwn(el.attrs, n) ? el.attrs[n] : null),
-      setAttribute: (n, v) => { el.attrs[n] = String(v); },
-      removeAttribute: (n) => { delete el.attrs[n]; },
-      hasAttribute: (n) => Object.hasOwn(el.attrs, n),
-      closest: (sel) => (sel === 'a[href],[data-action]'
-        && ((el.tagName === 'A' && el.hasAttribute('href')) || el.hasAttribute('data-action')) ? el : null),
-      focus: () => { el.focused++; doc.activeElement = el; },
-      scrollIntoView: () => { el.scrolled++; },
-    };
-    return el;
-  }
-  const tabs = ['#/', '#/jornada', '#/tabla', '#/explorar'].map((href) => element('a', { class: 'tab', href }));
-  const main = element('main', { id: 'contenido' });
-  let painted = { h1: null, ids: new Map() };
-  const root = {
-    markup: '',
-    set innerHTML(markup) {
-      this.markup = markup;
-      painted = {
-        h1: markup.includes('<h1') ? element('h1') : null,
-        ids: new Map([...markup.matchAll(/<([a-zA-Z][\w-]*)\b[^>]*? id="([^"]+)"/g)].map(([, tag, id]) => [id, element(tag, { id })])),
-      };
-    },
-    get innerHTML() { return this.markup; },
-    querySelector: (sel) => (sel === 'h1' ? painted.h1 : null),
-    contains: (el) => el === painted.h1 || [...painted.ids.values()].includes(el),
-  };
-  doc.querySelectorAll = (sel) => (sel === '.tabbar a.tab' ? tabs : []);
-  doc.getElementById = (id) => (id === 'contenido' ? main : painted.ids.get(id) || null);
-  const win = {
-    document: doc, history, scrollY: 0,
-    location: { get hash() { return entries[index].hash; } },
-    scrollTo(_x, y) { win.scrollY = y; fire('window', 'scroll', {}); },
-    addEventListener: on('window'),
-  };
-  return {
-    win, root, doc, main,
-    entries: () => entries.map((e) => e.hash),
-    index: () => index,
-    h1: () => root.querySelector('h1'),
-    marks: () => tabs.filter((t) => t.attrs['aria-current']).map((t) => [t.attrs.href, t.attrs['aria-current']]),
-    // Un clic como lo recibe la delegación del documento; devuelve si el router lo atendió.
-    click(attrs, tag = 'a') {
-      let prevented = false;
-      fire('document', 'click', { target: element(tag, attrs), button: 0, defaultPrevented: false, preventDefault() { prevented = true; } });
-      return prevented;
-    },
-    // Un hash escrito a mano en la barra de direcciones: entrada nueva del navegador, sin estado.
-    type(newHash) {
-      entries.splice(index + 1, entries.length, { hash: newHash, state: null });
-      index++;
-      fire('window', 'popstate', { state: null });
-      fire('window', 'hashchange', {});
-    },
-    scroll(y) { win.scrollY = y; fire('window', 'scroll', {}); },
-  };
-}
+// El navegador falso es el común (fixtures/rediseno/fake-browser.mjs), el mismo de las pruebas de
+// start() en test_rediseno_integracion.mjs.
 
 // Pantalla falsa: su h1 es su id y enseña la ruta resuelta en <p class="where">.
 function screen(id, { log = [], needs = () => [], mount = null, body = null } = {}) {

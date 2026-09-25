@@ -55,6 +55,11 @@ test('datos inmediatos: los nueve data-*.js de antes, en el mismo orden (decisi�
   assert.ok(at("localStorage.getItem('futbol-base:codigo')") < at('caches.keys()'), 'lee el marcador antes de limpiar');
   assert.ok(at('caches.keys()') < at("import('./src/app.js"), 'limpia antes de importar');
   assert.ok(at('start(document, window);') < at("localStorage.setItem('futbol-base:codigo', CODIGO)"), 'apunta CODIGO tras start');
+  // El marcador se apunta solo si un SW manda en la página: una apertura que se lo salta (Mayús+Recargar,
+  // «Bypass for network») con el SW anterior todavía activo no purgó nada, y apuntarlo igual dejaría la
+  // limpieza sin hacer para siempre (ronda de arreglos 1, reproducido con bypass.mjs).
+  assert.ok(boot[0].includes("start(document, window);\n      if (navigator.serviceWorker?.controller) {\n        try { localStorage.setItem('futbol-base:codigo', CODIGO); } catch"),
+    'el marcador se apunta solo si hay un SW al mando (ronda de arreglos 1)');
   assert.doesNotMatch(boot[0], /src\/render\.js/, 'la limpieza de la app anterior queda dentro de la general');
   assert.doesNotMatch(INDEX, /<script\b[^>]*\bdefer\b/, 'defer llega en B4');
 });

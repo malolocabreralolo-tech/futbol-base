@@ -45,8 +45,11 @@
     // importar app.js se quitan src/*.js y las hojas de esta app de las cachés futbolbase-v* que no son
     // la de esta versión (la ?v= de data-seasons.js) y, si se quitó algo, la hoja ya aplicada se vuelve
     // a pedir: todo llega de la red, de una sola versión, y el SW lo guarda para abrir sin conexión.
-    // Los datos se quedan. CODIGO se apunta en futbol-base:codigo solo tras start(): si el arranque
-    // falla, la apertura siguiente vuelve a limpiar (decisión 155 de B3). Sin SW al mando no hay caché
+    // Los datos se quedan. CODIGO se apunta en futbol-base:codigo solo tras start() y solo si un SW
+    // manda en la página: una apertura que se lo salta (Mayús+Recargar, «Bypass for network») con el
+    // SW anterior todavía activo no purgó nada, y apuntarlo igual dejaría la limpieza sin hacer para
+    // siempre (ronda de arreglos 1). Si el arranque falla, o si no hay SW al mando, la apertura
+    // siguiente vuelve a intentarlo (decisión 155 de B3). Sin SW al mando no hay caché
     // de SW que limpiar, pero la caché HTTP de GitHub Pages (max-age=600) puede dar durante 10 minutos
     // un módulo viejo a este app.js: lo decide B4 al versionar el grafo de módulos.
     // Si el arranque falla (sin conexión en plena transición, cuando esa caché ya guarda este
@@ -81,7 +84,9 @@
       }
       const { start } = await import('./src/app.js?v=20260925');
       start(document, window);
-      try { localStorage.setItem('futbol-base:codigo', CODIGO); } catch { /* sin almacenamiento */ }
+      if (navigator.serviceWorker?.controller) {
+        try { localStorage.setItem('futbol-base:codigo', CODIGO); } catch { /* sin almacenamiento */ }
+      }
     } catch (error) {
       console.error('[arranque]', error);
       document.getElementById('contenido').innerHTML = `<div role="alert" style="max-width:40rem;margin:0 auto;padding:24px 16px;font:16px/1.5 system-ui,sans-serif">

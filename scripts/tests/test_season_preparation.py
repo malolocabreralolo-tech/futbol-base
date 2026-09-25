@@ -10,6 +10,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 from activate_season import validate_manifest, verify_sources, seed_season, apply_manifest
+import codigo
 from db import SCHEMA, get_connection
 from fetch_futbolaspalmas import parse_all_matches, parse_standings, existing_jornada
 from portal_config import load_config
@@ -99,3 +100,22 @@ def test_activation_generates_new_season_and_retains_every_old_sporting_row(tmp_
     assert 'Las Mesas Hu.' in archive and 'PG2' in archive
     assert 'NEW1' in (tmp_path / 'data-prebenjamin.js').read_text()
     assert json.loads((tmp_path / 'data-health.json').read_text())['season'] == '2026-2027'
+
+
+def test_apply_recalculates_codigo_for_the_new_config(tmp_path):
+    # --apply rewrites src/config.js, part of CODIGO's fingerprint (src/*.js + acta.css; scripts/codigo.py,
+    # Plan B3 decisión 156). Unlike the narrower tmp_path above (only enough to exercise the data
+    # migration), this one mirrors the whole tree codigo.py needs, so codigo.py --check can confirm the
+    # fingerprint was recalculated in place after activation (ronda de arreglos 1, R2-1).
+    shutil.copytree(ROOT / 'src', tmp_path / 'src')
+    shutil.copy2(ROOT / 'acta.css', tmp_path / 'acta.css')
+    for file in [*ROOT.glob('data-*.js'), ROOT / 'index.html', ROOT / 'sw.js']:
+        shutil.copy2(file, tmp_path / file.relative_to(ROOT))
+    source, target = get_connection(ROOT / 'futbolbase.db'), sqlite3.connect(tmp_path / 'futbolbase.db')
+    source.backup(target)
+    source.close()
+    target.close()
+    assert codigo.main(['--check', '--root', str(tmp_path)]) == 0, 'la copia empieza con CODIGO al día'
+    apply_manifest(MANIFEST, evidence(), tmp_path)
+    assert load_config(tmp_path / 'src/config.js')['season'] == '2026-2027'
+    assert codigo.main(['--check', '--root', str(tmp_path)]) == 0

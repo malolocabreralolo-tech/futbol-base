@@ -112,6 +112,7 @@ def seed_season(conn, manifest, evidence):
 def apply_manifest(manifest, evidence, root=Path(PROJECT_ROOT)):
     """Generate in a temporary checkout before replacing any live artifact."""
     import generate_js
+    import codigo
     root = Path(root)
     config = load_config(root / "src/config.js")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -172,6 +173,13 @@ def apply_manifest(manifest, evidence, root=Path(PROJECT_ROOT)):
                 else:
                     (root / relative).unlink(missing_ok=True)
             raise
+    # CODIGO es la huella de src/*.js y acta.css (scripts/codigo.py; Plan B3 decisión 156); --apply
+    # acaba de reescribir src/config.js, así que se recalcula aquí con la misma función, o
+    # test_rediseno_index.mjs saldría en rojo el día de activar (ronda de arreglos 1, R2-1). root sin el
+    # árbol completo (una copia parcial, como la que usan las pruebas que solo comprueban los datos) no
+    # tiene nada que recalcular.
+    if (root / "acta.css").exists():
+        codigo.main(["--root", str(root)])
     return backup
 
 

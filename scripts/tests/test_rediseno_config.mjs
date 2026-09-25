@@ -29,7 +29,11 @@ test('todas las demás pruebas de Node salen en verde con ese config.js', () => 
   const files = readdirSync(join(ROOT, 'scripts', 'tests')).filter((f) => /^test_.*\.mjs$/.test(f) && f !== SELF).sort();
   const run = node(['--test', '--test-reporter=tap', ...files.map((f) => join('scripts', 'tests', f))]);
   const failed = run.stdout.split('\n').filter((line) => /^not ok /.test(line));
-  assert.deepEqual(failed, [], `con la temporada 2026/27 en config.js:\n${run.stderr.slice(-1500)}`);
-  assert.equal(run.status, 0, run.stderr.slice(-1500));
+  // El detalle de un fallo (qué prueba, con qué mensaje) va en stdout, que --test-reporter=tap
+  // vuelca ahí; stderr solo trae avisos sueltos y, casi siempre, está vacío. Enseñar solo las
+  // últimas 1500 letras de stderr (que normalmente no dice nada del fallo) escondía el motivo real.
+  const detail = () => `con la temporada 2026/27 en config.js:\n${run.stdout.slice(-3000)}${run.stderr ? `\n--- stderr ---\n${run.stderr}` : ''}`;
+  assert.deepEqual(failed, [], detail());
+  assert.equal(run.status, 0, detail());
   assert.match(run.stdout, /^# fail 0$/m);
 });

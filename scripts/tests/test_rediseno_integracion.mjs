@@ -78,8 +78,23 @@ function fakePage(storage, hash = '#/') {
   let index = 0;
   const hashOf = (url) => (String(url).includes('#') ? String(url).slice(String(url).indexOf('#')) : String(url));
   const h1 = { tagName: 'H1', attrs: {}, hasAttribute: (n) => n in h1.attrs, setAttribute: (n, v) => { h1.attrs[n] = String(v); }, focus() {} };
-  const main = { innerHTML: '', querySelector: (sel) => (sel === 'h1' && main.innerHTML.includes('<h1') ? h1 : null), contains: () => true };
+  const mainListeners = {};
+  const main = {
+    innerHTML: '', querySelector: (sel) => (sel === 'h1' && main.innerHTML.includes('<h1') ? h1 : null), contains: () => true,
+    addEventListener: (type, fn) => { (mainListeners[type] ||= []).push(fn); },
+    removeEventListener: (type, fn) => { mainListeners[type] = (mainListeners[type] || []).filter((f) => f !== fn); },
+  };
   const offline = { innerHTML: '' };
+  // La barra de la cabecera (spec §4.1): cuatro <a class="tab"> con su href, como updateTabbar los
+  // recorre (doc.querySelectorAll('.tabbar a.tab')). aria-current va en `attrs`, como en el h1 falso.
+  const tabs = ['#/', '#/jornada', '#/tabla', '#/explorar'].map((href) => {
+    const el = { href, attrs: {}, getAttribute: (n) => (n === 'href' ? href : el.attrs[n] ?? null) };
+    el.setAttribute = (n, v) => { el.attrs[n] = String(v); };
+    el.removeAttribute = (n) => { delete el.attrs[n]; };
+    el.hasAttribute = (n) => n in el.attrs;
+    return el;
+  });
+  const activeTabs = () => tabs.filter((t) => t.hasAttribute('aria-current')).map((t) => [t.getAttribute('href'), t.getAttribute('aria-current')]);
   const place = (map) => ({ getItem: (k) => (map.has(k) ? map.get(k) : null), setItem: (k, v) => { map.set(k, String(v)); }, removeItem: (k) => { map.delete(k); } });
   const reloads = [];
   const doc = {
@@ -87,8 +102,9 @@ function fakePage(storage, hash = '#/') {
     addEventListener: (type, fn) => { (listeners[type] ||= []).push(fn); },
     getElementById: (id) => (id === 'contenido' ? main : id === 'legacyUpdated' ? { textContent: 'Última actualización: 23/09/2026' } : null),
     querySelector: (sel) => (sel === '.shell-offline' ? offline : null),
-    querySelectorAll: () => [],
+    querySelectorAll: (sel) => (sel === '.tabbar a.tab' ? tabs : []),
   };
+  const winListeners = {};
   const win = {
     document: doc, scrollY: 0, navigator: { onLine: true },
     history: {
@@ -99,7 +115,8 @@ function fakePage(storage, hash = '#/') {
       back() {},
     },
     location: { get hash() { return entries[index].hash; }, reload: () => reloads.push(true) },
-    scrollTo() {}, addEventListener() {},
+    scrollTo() {},
+    addEventListener: (type, fn) => { (winListeners[type] ||= []).push(fn); },
     localStorage: place(storage), sessionStorage: place(new Map()),
   };
   // Un clic en un elemento con esos atributos, como lo recibe la delegación del documento.
@@ -107,7 +124,12 @@ function fakePage(storage, hash = '#/') {
     button: 0, defaultPrevented: false, preventDefault() {},
     target: { closest: (sel) => (sel === '[data-action="retry"]' && attrs['data-action'] === 'retry' ? {} : null) },
   }));
-  return { doc, win, main, reloads, click, hash: () => entries[index].hash };
+  // navigator.onLine + el evento a juego, como lo dispara un navegador de verdad.
+  const setOnline = (value) => {
+    win.navigator.onLine = value;
+    (winListeners[value ? 'online' : 'offline'] || []).forEach((fn) => fn());
+  };
+  return { doc, win, main, reloads, click, setOnline, activeTabs, hash: () => entries[index].hash };
 }
 
 // Los data-*.js inmediatos, como los globales del navegador, y los perezosos por fetch.
@@ -131,40 +153,37 @@ globalThis.fetch = async (url) => {
   return body ? { ok: true, status: 200, text: async () => body() } : { ok: false, status: 404, text: async () => '' };
 };
 
-// Una carga de la app: los datos de `season`, el día `today` (a mediodía en Canarias; el reloj de
-// la prueba, t.mock.timers, se queda en ese día hasta la carga siguiente) y el almacén.
-async function load(t, storage, { season = raw, portal = PORTAL_2526, today, hash = '#/', without = [] }) {
+// Una carga de la app: los datos de `season`, el día `today` (a mediodía en Canarias, inyectado en
+// start() como el reloj: nada de temporizadores simulados, sin su ExperimentalWarning) y el almacén.
+async function load(storage, { season = raw, portal = PORTAL_2526, today, hash = '#/', without = [] }) {
   installData(season, { without });
-  t.mock.timers.setTime(Date.parse(`${today}T12:00:00Z`));
   const page = fakePage(storage, hash);
-  const router = start(page.doc, page.win, portal);
+  const router = start(page.doc, page.win, portal, { now: () => new Date(`${today}T12:00:00Z`) });
   if (router) await router.idle();
   return { page, router };
 }
 const stateOf = (page) => (page.main.innerHTML.match(/<section data-screen="home" data-state="([A-Z]|error)"/) || [])[1];
 const saved = (storage) => JSON.parse(storage.get(STORE_KEY)).myTeam;
 
-test('start: el cambio de fase se guarda al arrancar, antes del primer pintado (FF5 → A2)', async (t) => {
-  t.mock.timers.enable({ apis: ['Date'] });
+test('start: el cambio de fase se guarda al arrancar, antes del primer pintado (FF5 → A2)', async () => {
   const ff5 = { name: 'Las Mesas Hu.', season: '2025-2026', cat: 'benjamin', groupId: 'FF5' };
   const storage = new Map([[STORE_KEY, JSON.stringify({ myTeam: ff5, recent: [] })]]);
-  const { page } = await load(t, storage, { season: currentAt('2026-03-01'), today: '2026-03-01' });
+  const { page } = await load(storage, { season: currentAt('2026-03-01'), today: '2026-03-01' });
   assert.deepEqual(saved(storage), { ...ff5, groupId: 'A2' });
   assert.equal(stateOf(page), 'A');
   assert.match(page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1><p class="screen-sub">Benjamín, Segunda Fase A, Grupo 2<\/p>/);
 });
 
-test('§11, caso 3, por partes: el primer día PG2 en silencio y sin guardar; el segundo, la pregunta; su respuesta se guarda y se respeta', async (t) => {
-  t.mock.timers.enable({ apis: ['Date'] });
+test('§11, caso 3, por partes: el primer día PG2 en silencio y sin guardar; el segundo, la pregunta; su respuesta se guarda y se respeta', async () => {
   const storage = new Map([[STORE_KEY, JSON.stringify({ myTeam: PG2, recent: [] })]]);
   // Día 1: 2026/27 solo con el prebenjamín de Gran Canaria. El paso 1 da PG2 sin preguntar…
-  let day = await load(t, storage, { season: nextSeasonRaw({ prebenjamin: ['PG2', 'PG3'] }), portal: PORTAL_2627, today: '2026-10-01' });
+  let day = await load(storage, { season: nextSeasonRaw({ prebenjamin: ['PG2', 'PG3'] }), portal: PORTAL_2627, today: '2026-10-01' });
   assert.equal(stateOf(day.page), 'B');
   assert.match(day.page.main.innerHTML, /<p class="screen-sub">Prebenjamín, Grupo 2 de Gran Canaria<\/p>/);
   assert.deepEqual(saved(storage), PG2, '…y no lo guarda: no es una respuesta de la familia');
   // Día 2: llega el benjamín de Gran Canaria, con «Las Mesas Hu.» (A2) y «Las Mesas B» (B2): E.
   const both = nextSeasonRaw({ benjamin: ['A2', 'B2'], prebenjamin: ['PG2', 'PG3'] });
-  day = await load(t, storage, { season: both, portal: PORTAL_2627, today: '2026-10-02' });
+  day = await load(storage, { season: both, portal: PORTAL_2627, today: '2026-10-02' });
   assert.equal(stateOf(day.page), 'E');
   assert.equal((day.page.main.innerHTML.match(/data-action="elegir"/g) || []).length, 3);
   // La respuesta (el botón llama a nav.saveMyTeam) se guarda y la portada se vuelve a pintar.
@@ -175,32 +194,58 @@ test('§11, caso 3, por partes: el primer día PG2 en silencio y sin guardar; el
   assert.equal(stateOf(day.page), 'B');
   assert.match(day.page.main.innerHTML, /<p class="screen-sub">Benjamín, Segunda Fase A, Grupo 2<\/p>/);
   // Día 3: la carga siguiente respeta la respuesta, sin preguntar.
-  day = await load(t, storage, { season: both, portal: PORTAL_2627, today: '2026-10-03' });
+  day = await load(storage, { season: both, portal: PORTAL_2627, today: '2026-10-03' });
   assert.equal(stateOf(day.page), 'B');
   assert.match(day.page.main.innerHTML, /<p class="screen-sub">Benjamín, Segunda Fase A, Grupo 2<\/p>/);
   assert.deepEqual(saved(storage), answer);
 });
 
-test('sin un dato inmediato de la temporada, la caja de error con «Reintentar», que recarga; nunca X ni B falsos (M4)', async (t) => {
-  t.mock.timers.enable({ apis: ['Date'] });
+test('sin un dato inmediato de la temporada, la caja de error con «Reintentar», que recarga; nunca X ni B falsos (M4)', async () => {
   for (const missing of ['BENJAMIN', 'PREBENJAMIN', 'HISTORY']) {
     const storage = new Map();
-    const { page, router } = await load(t, storage, { today: '2026-03-01', without: [missing] });
+    const { page, router } = await load(storage, { today: '2026-03-01', without: [missing] });
     assert.equal(router, null, `${missing}: el router no arranca`);
     assert.equal(stateOf(page), 'error', missing);
     assert.match(page.main.innerHTML, /<h1>Mi equipo<\/h1>/);
     assert.match(page.main.innerHTML, /No se pudieron cargar los datos de la temporada 2025\/26\./);
     assert.doesNotMatch(page.main.innerHTML, /no aparece|Aún no se ha jugado/);
     assert.equal(storage.size, 0, 'no resuelve ni guarda mi equipo');
+    assert.match(page.main.innerHTML, /data-action="retry"/, `${missing}: el botón «Reintentar» existe de verdad`);
     page.click({ 'data-action': 'retry' });
     assert.deepEqual(page.reloads, [true], `${missing}: «Reintentar» recarga la página`);
   }
 });
 
+test('sin los datos inmediatos, la caja de error actualiza también la barra y el título de la ruta pedida (M4)', async () => {
+  const { page } = await load(new Map(), { today: '2026-03-01', hash: '#/tabla', without: ['BENJAMIN'] });
+  assert.deepEqual(page.activeTabs(), [['#/tabla', 'page']], 'la barra marca Tabla, no Mi equipo');
+  assert.equal(page.doc.title, 'Tabla · Fútbol Base Las Palmas');
+});
+
+test('un dato mal formado que hace fallar el guardado al arrancar no impide que el router arranque (registra y no guarda)', async (t) => {
+  const errorSpy = t.mock.method(console, 'error');
+  // Una fila de HISTORY con menos columnas de las que acepta rowToMatch (5, 6, 8 o 9): buildSeason
+  // lanza un RangeError la primera vez que getContext() construye la temporada del portal, que es
+  // justo lo que hace el guardado al arrancar (src/app.js) antes de que exista el router.
+  const broken = structuredClone(raw);
+  const groupId = broken.benjamin[0].id;
+  const roundKey = Object.keys(broken.history[groupId])[0];
+  broken.history[groupId][roundKey][0] = broken.history[groupId][roundKey][0].slice(0, 3);
+  const storage = new Map();
+  const { page, router } = await load(storage, { season: broken, today: '2026-03-01' });
+  assert.ok(router, 'el router arranca igual, aunque el guardado al arrancar haya fallado');
+  assert.equal(storage.size, 0, 'no guarda nada: el fallo se registra, no se guarda a medias');
+  assert.equal(stateOf(page), 'error', 'el mismo fallo vuelve a aparecer al pintar, y el router enseña su caja de error');
+  const logged = errorSpy.mock.calls.some((call) => String(call.arguments[0]).includes('[app] guardado al arrancar'));
+  assert.ok(logged, 'registra el fallo del guardado al arrancar con console.error');
+});
+
 test('el router deja pasar lo que las pantallas saben leer: la jornada por su número y el único partido h–a (B7)', async (t) => {
-  t.mock.timers.enable({ apis: ['Date'] });
+  // Con las pantallas reales, el mount() de Jornada y Partido corre de verdad: un error ahí no
+  // debe quedar escondido dentro de la guarda del router (hallazgo de la revisión, ronda 1).
+  const errorSpy = t.mock.method(console, 'error');
   const open = async (hash) => {
-    const { page } = await load(t, new Map(), { today: '2026-03-01', hash });
+    const { page } = await load(new Map(), { today: '2026-03-01', hash });
     return page;
   };
   let page = await open('#/jornada?g=PG2&r=30');
@@ -213,6 +258,22 @@ test('el router deja pasar lo que las pantallas saben leer: la jornada por su n�
   page = await open('#/partido?g=PG2&r=Jornada%2099&h=AD%20Hurac%C3%A1n&a=Las%20Mesas%20Hu.');
   assert.match(page.main.innerHTML, /<h1>Partido<span class="vh">: AD Huracán – Las Mesas Hu\.<\/span><\/h1>/);
   assert.match(page.main.innerHTML, /<p class="screen-sub">Jornada 15 · Prebenjamín, Grupo 2 de Gran Canaria<\/p>/);
+  const mountErrors = errorSpy.mock.calls.filter((call) => String(call.arguments[0]).includes('[router] mount'));
+  assert.deepEqual(mountErrors, [], 'el mount de las pantallas reales no debe lanzar (con las pantallas reales)');
+});
+
+test('aviso sin conexión en vivo: aparece al arrancar sin conexión, se va con online y vuelve con offline', async () => {
+  installData(raw, {});
+  const page = fakePage(new Map());
+  page.win.navigator.onLine = false;
+  const router = start(page.doc, page.win, PORTAL_2526);
+  await router.idle();
+  const slot = () => page.doc.querySelector('.shell-offline').innerHTML;
+  assert.match(slot(), /Sin conexión\.<\/b> Datos del 23\/09\/2026/, 'arranca sin conexión: el aviso aparece con la fecha');
+  page.setOnline(true);
+  assert.equal(slot(), '', 'con conexión: el aviso se vacía');
+  page.setOnline(false);
+  assert.match(slot(), /Sin conexión\.<\/b> Datos del 23\/09\/2026/, 'sin conexión otra vez: el aviso vuelve, con la fecha correcta');
 });
 
 // app.js es el punto de entrada: start(doc, win) lo llama index.html. Además de su conducta (arriba),
@@ -229,9 +290,9 @@ test('app.js: crestFallback en captura y mi equipo guardado, los dos antes del p
   assert.ok(routerStart > crest && routerStart > save, 'los dos van antes de startRouter');
 });
 
-test('app.js: aviso sin conexión en vivo, sesión y «Hacer mi equipo» con saveStore', () => {
-  for (const type of ['online', 'offline']) assert.match(APP, new RegExp(`win\\.addEventListener\\('${type}', showOffline\\)`), type);
-  assert.match(APP, /offlineNotice\(datasets\.health, legacyDate\)/);
+// El aviso sin conexión en vivo (online/offline y offlineNotice) ya se comprueba por conducta,
+// arriba: aquí solo lo que esa prueba no puede ver desde fuera (sesión y la forma de saveMyTeam).
+test('app.js: sesión y «Hacer mi equipo» con saveStore', () => {
   assert.match(APP, /session: safeStorage\(\(\) => win\.sessionStorage\)/);
   assert.match(APP, /saveMyTeam\(myTeam\) \{\s*store = \{ \.\.\.store, myTeam \};\s*return saveStore\(storage, store\);/);
 });

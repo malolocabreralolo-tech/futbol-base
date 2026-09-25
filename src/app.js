@@ -10,8 +10,8 @@ import { buildClubIndex, resolveMyTeam, myTeamToSave } from './myteam.js';
 import { loadStore, saveStore, safeStorage } from './store.js';
 import { canaryTodayISO, parseRoute } from './links.js';
 import { crestFallback } from './ui.js';
-import { errorScreen, offlineNotice, routeTitle } from './shell.js';
-import { startRouter } from './router.js';
+import { errorScreen, offlineNotice, routeTitle, updateTabbar } from './shell.js';
+import { startRouter, activeTab } from './router.js';
 import { SCREEN_MAP } from './screens.js';
 
 // Los datos de un pintado (el ctx de las pantallas sin la ruta, que añade el router): mi equipo
@@ -33,8 +33,9 @@ export function startContext({ storage, portal, datasets, today }) {
 // Los datos inmediatos sin los que no hay temporada: sin uno de ellos, ni X ni B serían verdad.
 const REQUIRED = ['benjamin', 'prebenjamin', 'history'];
 
-// config: el PORTAL de config.js; las pruebas pasan otro (una temporada simulada).
-export function start(doc, win, config = PORTAL) {
+// config: el PORTAL de config.js; las pruebas pasan otro (una temporada simulada). now: el reloj,
+// inyectable en las pruebas (así no hace falta simular temporizadores); por defecto, el de verdad.
+export function start(doc, win, config = PORTAL, { now = () => new Date() } = {}) {
   // Escudos: miniatura → original → monograma (spec §5.4). Los errores de <img> no burbujean: se
   // escuchan en captura, y desde antes del primer pintado (escudos/s/ no existe hasta B4).
   doc.addEventListener('error', (event) => crestFallback(event.target), true);
@@ -64,6 +65,11 @@ export function start(doc, win, config = PORTAL) {
   if (REQUIRED.some((key) => !datasets[key])) {
     const route = parseRoute(win.location.hash);
     const screen = SCREEN_MAP[route.screen] || SCREEN_MAP[''];
+    // Sin datos no hay resolución de mi equipo (isMine, false): la barra y el título de la ruta
+    // pedida se actualizan igual que lo haría el router, que aquí no llega a arrancar.
+    const tab = activeTab(route, null, false);
+    updateTabbar(tab.active, tab.current, doc);
+    doc.title = route.screen === '' ? doc.title : `${routeTitle(route.screen)} · ${doc.title}`;
     doc.getElementById('contenido').innerHTML = String(errorScreen({
       screenId: screen.id, title: routeTitle(route.screen), what: `la temporada ${seasonLabel(portal.season)}`,
     }));
@@ -76,16 +82,23 @@ export function start(doc, win, config = PORTAL) {
   const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
   let store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
   const getContext = () => contextFor({
-    model, myTeam: store.myTeam, portal, datasets, today: canaryTodayISO(new Date(), config.timeZone), legacyDate,
+    model, myTeam: store.myTeam, portal, datasets, today: canaryTodayISO(now(), config.timeZone), legacyDate,
   });
 
   // El cambio de fase que se resuelve sin preguntar (FF5 → A2) queda guardado desde el arranque
   // (decisión 12 de B1). Un cambio de temporada, nunca: se resuelve en cada carga hasta que la
-  // familia lo confirma (A2 de la revisión adversarial).
-  const next = myTeamToSave(store.myTeam, getContext().resolution);
-  if (next) {
-    store = { ...store, myTeam: next };
-    saveStore(storage, store);
+  // familia lo confirma (A2 de la revisión adversarial). Un dato mal formado no debe impedir que
+  // el router arranque: si getContext() falla aquí (buildSeason, el índice de clubes o
+  // resolveMyTeam, con datos mal formados), se registra y no se guarda nada; el router arranca
+  // igual y, si el mismo fallo vuelve a aparecer al pintar, enseña su propia caja de error.
+  try {
+    const next = myTeamToSave(store.myTeam, getContext().resolution);
+    if (next) {
+      store = { ...store, myTeam: next };
+      saveStore(storage, store);
+    }
+  } catch (err) {
+    console.error('[app] guardado al arrancar', err);
   }
 
   return startRouter({

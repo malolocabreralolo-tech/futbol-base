@@ -7,8 +7,9 @@ import { screen as tabla } from './screen-tabla.js';
 import { screen as partido } from './screen-partido.js';
 import { screen as equipo } from './screen-equipo.js';
 import { screen as explorar } from './screen-explorar.js';
+import { screen as ligas } from './screen-ligas.js';
 import { screen as pendiente } from './screen-pendiente.js';
 
-const READY = { '': home, jornada, tabla, partido, equipo, explorar };
+const READY = { '': home, jornada, tabla, partido, equipo, explorar, ligas };
 
 export const SCREEN_MAP = Object.freeze(Object.fromEntries(SCREENS.map((name) => [name, READY[name] || pendiente])));

@@ -19,11 +19,12 @@ import { useWorld } from './fixture-site.mjs';
 //   en el segmento pulsado;
 // - abrir un partido y volver con Atrás; entrar por enlace directo y volver con «‹»;
 // - traducir un enlace antiguo de WhatsApp, con su temporada y sin entrada nueva;
-// - «Otro grupo» lleva a la pantalla provisional de Ligas (B3) sin errores;
+// - «Otro grupo» → Ligas → Tabla (B3, Tarea 7): la liga, sus grupos y la Tabla del grupo elegido, con
+//   Tabla marcada en la barra;
 // - sin desplazamiento horizontal en ninguna pantalla.
 // Y una vez, en el mundo E (§11, caso 3): la respuesta a la pregunta se guarda y, al recargar, la
 // portada es la de ese equipo, sin preguntar.
-// Buscar un equipo, «Hacer mi equipo» y «Otro grupo» → Ligas → Tabla llegan con B3.
+// Buscar un equipo y «Hacer mi equipo» llegan con la Tarea 12 de B3.
 // Sin esperas fijas: cada paso espera a su condición (waitForAsync).
 const { chromium } = createRequire(import.meta.url)('playwright');
 const chrome = findChrome();
@@ -165,13 +166,21 @@ async function scenarios(viewport, colorScheme) {
     assert.equal(s.length, tabEntries, `${label}: cambiar de vista usa replaceState`);
     await checkLayout(page, viewport.width, `${label}, tabla`);
 
-    // 5. «Otro grupo» → Ligas, la pantalla provisional de B3, con Tabla como destino.
+    // 5. «Otro grupo» → Ligas → Tabla (§11): las ligas de prebenjamín de Gran Canaria, con Tabla como
+    // destino (la barra no cambia); la liga abre sus grupos, y el grupo, su Tabla.
     await page.click('#contenido a.screen-action');
-    s = await paintedAs(page, 'pendiente');
-    assert.equal(s.route, 'ligas', label);
+    s = await paintedAs(page, 'ligas', { hash: '#/ligas?s=2025-2026&c=prebenjamin&i=grancanaria&to=tabla' });
     assert.equal(s.h1, 'Ligas', label);
     assert.deepEqual(s.tabs, ['#/tabla true'], label);
     await checkLayout(page, viewport.width, `${label}, ligas`);
+    await page.click('#contenido a.link-row');
+    s = await paintedAs(page, 'ligas', { hash: '#/ligas?s=2025-2026&c=prebenjamin&f=grancanaria&to=tabla' });
+    assert.equal(s.h1, 'Gran Canaria', label);
+    assert.deepEqual(s.tabs, ['#/tabla true'], label);
+    await checkLayout(page, viewport.width, `${label}, grupos de la liga`);
+    await page.click('#contenido a.group-row[href="#/tabla?s=2025-2026&g=PG3"]');
+    s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG3' });
+    assert.deepEqual(s.tabs, ['#/tabla page'], label);
     await page.close();
 
     // 6. Enlace directo a un partido de mi equipo: Mi equipo marcado y «‹» a su jornada.

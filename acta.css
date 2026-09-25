@@ -1119,3 +1119,29 @@ abbr[title] { text-decoration: none; }
   .link-row:hover .link-row-title,
   .season-option:hover { text-decoration: underline; }
 }
+
+/* ── Ligas: los grupos de una competición y «Comparar grupos» (spec §4.7; decisiones 20 y 21 de B3) ── */
+
+/* El grupo de mi equipo, con el resalte propio (spec §3.3), sin óvalo. */
+.link-row.is-mine { background: var(--mark); box-shadow: inset 3px 0 0 var(--ink); }
+.link-row.is-mine .link-row-title { color: var(--ink); }
+/* La ronda en curso de un grupo («jornada 22»), en una sola línea. */
+.group-row .link-row-context { white-space: nowrap; }
+.compare-toggle { width: 100%; margin-top: 8px; border: 1.5px solid var(--ink); }
+.compare { margin-top: 4px; }
+/* El puesto llega a 3 cifras (134 equipos en la Primera Fase de benjamín): unos 3,5 ch de la cifra de
+   la tabla (13,5 px), en px porque con table-layout: fixed el ancho lo da la cabecera, de 11,5 px, y
+   en ch saldría más estrecho (decisión 161 de B3). */
+.compare-table .st-pos { width: 34px; }
+.compare-table .cmp-group { width: 30px; color: var(--mute); text-align: center; }
+.compare-table .cmp-ppj { width: 48px; font-weight: 800; color: var(--ink); }
+.compare-table thead .cmp-ppj { font-weight: 600; color: var(--mute); }
+
+/* Escritorio: las cifras de la comparación, más anchas (como las de la Tabla). */
+@media (min-width: 1024px) {
+  .compare-table .st-num { width: 36px; }
+  .compare-table .st-dg { width: 56px; }
+  .compare-table .st-pts { width: 48px; }
+  .compare-table .cmp-group { width: 44px; }
+  .compare-table .cmp-ppj { width: 64px; }
+}

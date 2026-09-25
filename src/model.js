@@ -1385,3 +1385,20 @@ export function groupSummary(group) {
     champion: final && final.advancer ? (final.advancer === 'home' ? final.home : final.away) : null,
   };
 }
+
+/* «Comparar grupos» de Ligas (spec §4.7 y §4.11; decisión 21 de B3), la comparativa de prebenjamín de
+ * la app anterior para cualquier competición: la clasificación oficial de sus grupos de liga en una
+ * sola tabla, por puntos por partido (pts / pj; 0 sin partidos) y, a igualdad, por puntos, diferencia
+ * de goles y nombre. Los retirados, al final. Los grupos que no son de liga no entran.
+ * → [{ team, groupId, groupLabel, pj, pts, ppj, dg, retired }], con groupLabel el de groupSummary. */
+export function compareGroups(groups) {
+  const rows = (groups || []).filter(group => group.kind === 'league').flatMap(group => {
+    const groupLabel = shortLabel(group);
+    return group.standings.map(row => {
+      const pj = row.pj ?? 0;
+      const pts = row.pts ?? 0;
+      return { team: row.team, groupId: group.id, groupLabel, pj, pts, ppj: pj ? pts / pj : 0, dg: row.dg ?? 0, retired: Boolean(row.retired) };
+    });
+  });
+  return rows.sort((a, b) => (a.retired - b.retired) || (b.ppj - a.ppj) || (b.pts - a.pts) || (b.dg - a.dg) || byName(a.team, b.team));
+}

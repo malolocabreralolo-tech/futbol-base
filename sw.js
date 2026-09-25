@@ -32,6 +32,7 @@ const STATIC_ASSETS = [
   './src/router.js',
   './src/shell.js',
   './src/screens.js',
+  './src/screen-ligas.js',
   './src/screen-explorar.js',
   './src/screen-pendiente.js',
   './src/screen-jornada.js',

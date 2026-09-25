@@ -87,11 +87,16 @@ test('data-seasons.js loads with SEASONS array', () => {
   }
 });
 
-test('data-benjamin.js loads BENJAMIN array of groups', () => {
+// Una temporada nueva se puede activar por partes (solo benjamín o solo prebenjamín): una de las
+// dos categorías puede llegar vacía, y el bot, que ejecuta esta suite antes de comitear, no debe
+// pararse por eso. Se comprueba la forma, y que entre las dos haya algún grupo.
+test('data-benjamin.js y data-prebenjamin.js cargan arrays de grupos (una activación por partes deja una vacía)', () => {
   const { BENJAMIN } = loadDataFile('data-benjamin.js');
+  const { PREBENJAMIN } = loadDataFile('data-prebenjamin.js');
   assert.ok(Array.isArray(BENJAMIN), 'BENJAMIN should be an array');
-  assert.ok(BENJAMIN.length > 0, 'should have groups');
-  for (const g of BENJAMIN) {
+  assert.ok(Array.isArray(PREBENJAMIN), 'PREBENJAMIN should be an array');
+  assert.ok(BENJAMIN.length + PREBENJAMIN.length > 0, 'should have groups in at least one category');
+  for (const g of [...BENJAMIN, ...PREBENJAMIN]) {
     assert.ok(typeof g.id === 'string', `group missing id: ${JSON.stringify(g).slice(0,100)}`);
     assert.ok(Array.isArray(g.standings), `${g.id}: standings should be array`);
   }

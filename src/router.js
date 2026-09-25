@@ -476,7 +476,7 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       // quedaba el esqueleto, sin «Reintentar». Entonces, el padre sin modelo: la jornada del enlace.
       let back = null;
       try { back = backHref(route, base?.model); } catch { back = backHref(route, null); }
-      paint(errorScreen({ screenId: screen?.id || 'pendiente', title: routeTitle(route.screen), what: loadWhat(err), back }));
+      paint(errorScreen({ screenId: screen?.id || route.screen || 'home', title: routeTitle(route.screen), what: loadWhat(err), back }));
       place(mode, 0, null);
     }
   }

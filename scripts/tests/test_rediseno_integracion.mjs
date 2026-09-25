@@ -25,7 +25,6 @@ import { screen as tabla } from '../../src/screen-tabla.js';
 import { screen as partido } from '../../src/screen-partido.js';
 import { screen as equipo } from '../../src/screen-equipo.js';
 import { screen as ajustes } from '../../src/screen-ajustes.js';
-import { screen as pendiente } from '../../src/screen-pendiente.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const shields = fixture('shields');
@@ -37,16 +36,15 @@ const DEFAULT_TEAM = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.'
 const PORTAL_2526 = { season: '2025-2026', nextSeason: '2026-2027', defaultTeam: DEFAULT_TEAM, timeZone: 'Atlantic/Canary' };
 const PORTAL_2627 = { season: '2026-2027', nextSeason: '2027-2028', defaultTeam: DEFAULT_TEAM, timeZone: 'Atlantic/Canary' };
 
-test('rutas completas: las cuatro pantallas de B2, Equipo y la provisional en las otras ocho de B3', () => {
+test('rutas completas: cada ruta de §4.1 pinta su pantalla, las cuatro de B2 y las nueve de B3, sin provisional (decisión 7 de B3)', () => {
   assert.deepEqual(Object.keys(SCREEN_MAP).sort(), [...SCREENS].sort());
   assert.equal(SCREEN_MAP[''], home);
   assert.equal(SCREEN_MAP.jornada, jornada);
   assert.equal(SCREEN_MAP.tabla, tabla);
   assert.equal(SCREEN_MAP.partido, partido);
   assert.equal(SCREEN_MAP.equipo, equipo);
-  assert.deepEqual([home, jornada, tabla, partido, equipo].map((s) => s.id), ['home', 'jornada', 'tabla', 'partido', 'equipo']);
-  assert.deepEqual(SCREENS.filter((name) => SCREEN_MAP[name] === pendiente),
-    []);
+  assert.equal(SCREEN_MAP.ajustes, ajustes);
+  assert.deepEqual(SCREENS.filter((name) => SCREEN_MAP[name].id !== (name || 'home')), []);
 });
 
 test('myTeamToSave: el cambio de fase (FF5 → A2, decisión 12 de B1) sí; nada si no cambia', () => {

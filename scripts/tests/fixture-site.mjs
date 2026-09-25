@@ -3,12 +3,18 @@
 // vivos y un PORTAL fijo en lugar de src/config.js. Así los smoke y las capturas no cambian cuando
 // el bot publica datos ni al activar 2026/27. El «hoy» se fija con el reloj de Playwright.
 // Lo usan interaction-smoke.mjs, render-smoke.mjs (estado D) y capturas.mjs.
+// Desde B3 (decisión 31) cada mundo solo anuncia en SEASONS las temporadas cuyo archivo sirve, y sirve
+// el que anuncia; y lleva los datos de las fixtures de B3: los goleadores congelados, la Copa de
+// Campeones en los mundos del 23/09/2026, las cuatro copas de la Maspalomas y las actas de A1 y FF1.
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { currentAt, nextSeasonRaw } from './fixtures/rediseno/simulate.mjs';
+import {
+  archive, cupsRaw, currentAt, goleadores, lineupsFor, nextSeasonRaw, withChampions,
+} from './fixtures/rediseno/simulate.mjs';
 
 export const STORE_KEY = 'futbol-base:v2';
 const DEFAULT_TEAM = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' };
 const LAS_MESAS_2526 = { name: 'Las Mesas Hu.', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' };
+// SEASONS con cada temporada del portal: files() sirve el archivo de cada temporada pasada (decisión 31).
 const SEASONS_2526 = [{ name: '2025-2026', current: true }, { name: '2024-2025', current: false }, { name: '2023-2024', current: false }];
 const SEASONS_2627 = [{ name: '2026-2027', current: true }, { name: '2025-2026', current: false }, { name: '2024-2025', current: false }];
 // data-health.json de las fixtures es el del 23/09/2026 (D y E). En los mundos de otro día, sus
@@ -22,25 +28,10 @@ function healthOn(today) {
   return JSON.parse(JSON.stringify(health).replaceAll(HEALTH_DAY, eve));
 }
 
-// data-goleadores.js (23/09/2026), copia literal de las filas de PG2 y A2 que usa la portada
-// (las mismas que test_rediseno_portada.mjs): las fixtures de B1 no traen goleadores. Son los de fin
-// de temporada; a mitad de temporada, scorersAt los reduce a su día.
-const GOL = {
-  prebenjamin: [{ id: 'PG2', g: 'PREBENJAMIN GC GRUPO 2', s: [
-    ['León Rodríguez, Lucas', 'AD Huracán', 50, 20], ['Rodriguez Aloma, Antoine', 'AD Huracán', 27, 19],
-    ['De La Rosa Perello, Theo', 'Las Mesas Hu.', 12, 17], ['Santana Santacruz, Agoney', 'Las Mesas Hu.', 11, 21],
-    ['Ruiz Aleman, Einar', 'Las Mesas Hu.', 9, 23], ['Hidalgo Camejo, Pablo', 'Las Mesas Hu.', 8, 18],
-    ['Medina Hairach, Nadir', 'Las Mesas Hu.', 8, 21], ['Peña Peña, Alejandro', 'Las Mesas Hu.', 6, 20],
-    ['Parcero Ramirez, Neyzan', 'Las Mesas Hu.', 5, 17], ['Hernandez Betancor, Yeudiel', 'Las Mesas Hu.', 4, 5],
-    ['Falcon Montilla, Mateo', 'Las Mesas Hu.', 3, 21], ['Morales Gonzalez, Daniel', 'Las Mesas Hu.', 1, 16],
-    ['Rodriguez Del Rosario, Yadiel', 'Las Mesas Hu.', 1, 21],
-  ] }],
-  benjamin: [{ id: 'A2', g: 'BENJAMIN SEGUNDA FASE A-G2', s: [
-    ['Espiau Chicoy, Alvaro', 'Las Mesas Hu.', 23, 19], ['Espiau Chicoy, Sergio', 'Las Mesas Hu.', 16, 19],
-    ['Rodriguez Montesdeoca, Iker', 'Las Mesas Hu.', 13, 16], ['Lorenzo Hernandez, Joel', 'Las Mesas Hu.', 12, 17],
-    ['Navarro Melgar, Lucas', 'Las Mesas Hu.', 9, 16], ['Llarena Moreno, Carlos', 'Las Mesas Hu.', 8, 19],
-  ] }],
-};
+// data-goleadores.js: los goleadores congelados de B3 (gol-2025-2026, Tarea 2), los de fin de temporada
+// de los grupos de las fixtures; a mitad de temporada, scorersAt los reduce a su día. Las filas de PG2
+// son las que este fichero copiaba a mano desde B2; en A2 van las 12 de Las Mesas, y no solo 6.
+const GOL = (({ golBenj, golPrebenj }) => ({ benjamin: golBenj, prebenjamin: golPrebenj }))(goleadores());
 
 // La clasificación de un día de temporada (B12 de la revisión adversarial). La de las fixtures es la
 // final; currentAt quita los marcadores desde `today`, pero no la toca, y a una fecha anterior saldrían
@@ -130,24 +121,40 @@ export const WORLDS = {
     current: () => nextSeasonRaw({ benjamin: ['A1', 'B2', 'FF15'], prebenjamin: ['PG2', 'PG3'] }), gol: false },
   // 03/06/2026: Las Mesas ya jugó la jornada 30 y el grupo no ha terminado: C.
   C: { today: '2026-06-03', portalSeason: '2025-2026', current: () => seasonAt('2026-06-03') },
-  // 23/09/2026, los datos de hoy: D con la caja de la temporada siguiente (data-health pendiente).
-  D: { today: '2026-09-23', portalSeason: '2025-2026', current: () => fixture('current-2025-2026') },
+  // 23/09/2026, los datos de hoy: D con la caja de la temporada siguiente (data-health pendiente). Con
+  // la Copa de Campeones, que se jugó del 4 al 10 de junio (en A y C, todavía no).
+  D: { today: '2026-09-23', portalSeason: '2025-2026', current: () => withChampions(fixture('current-2025-2026')) },
   // D con «Las Mesas Hu. B» de FF13 guardado: la filial cambia de nombre y se pregunta (E, caso 2b).
-  E: { today: '2026-09-23', portalSeason: '2025-2026', current: () => fixture('current-2025-2026'),
+  E: { today: '2026-09-23', portalSeason: '2025-2026', current: () => withChampions(fixture('current-2025-2026')),
     myTeam: { name: 'Las Mesas Hu. B', season: '2025-2026', cat: 'benjamin', groupId: 'FF13' } },
   // 2026/27 sin Las Mesas: X.
   X: { today: '2026-10-01', portalSeason: '2026-2027', current: () => nextSeasonRaw({ benjamin: ['A1'], prebenjamin: ['PG3'] }),
     myTeam: LAS_MESAS_2526, gol: false },
 };
 
-// Los ficheros que sirve un mundo, por su nombre (sin ?v=): el cuerpo y su tipo.
+// 2025-26 terminada, con la forma de data-season-<S>.js, para los mundos de 2026/27 (B y X): la fixture
+// final con su Copa de Campeones, cada grupo con su calendario de HISTORY como `jornadas`.
+function finishedSeason() {
+  const raw = withChampions(FINAL);
+  const group = (g) => ({ id: g.id, name: g.name, fullName: g.fullName, phase: g.phase, island: g.island,
+    current_jornada: g.jornada ?? null, standings: g.standings, jornadas: raw.history[g.id] || {} });
+  return { name: '2025-2026', current: false, benjamin: raw.benjamin.map(group), prebenjamin: raw.prebenjamin.map(group) };
+}
+// El archivo de una temporada pasada: el de las fixtures (2024-25 y 2023-24) o 2025-26 terminada.
+const pastSeason = (name) => (name === '2025-2026' ? finishedSeason() : archive(name));
+
+// Los ficheros que sirve un mundo, por su nombre (sin ?v=): el cuerpo y su tipo. SEASONS anuncia las
+// temporadas cuyo archivo se sirve, y solo esas (decisión 31 de B3): Temporadas, la Trayectoria de
+// Equipo o el selector de Explorar nunca llevan a un fichero que da 404.
 function files(w) {
   const raw = w.current();
-  const cups = fixture('cups-2025-2026');
-  const past = fixture('historical-2024-2025');
+  const cups = cupsRaw({ extra: true });
   const gol = w.gol === false ? { benjamin: [], prebenjamin: [] } : scorersAt(raw);
+  const seasons = w.portalSeason === '2026-2027' ? SEASONS_2627 : SEASONS_2526;
   const next = w.portalSeason === '2026-2027' ? '2027-2028' : '2026-2027';
   const js = (pairs) => ({ type: 'text/javascript', body: pairs.map(([name, value]) => `const ${name}=${JSON.stringify(value)};`).join('\n') + '\n' });
+  const archived = Object.fromEntries(seasons.filter((s) => !s.current)
+    .map(({ name }) => [`data-season-${name}.js`, js([[`SEASON_${name.replace('-', '_')}`, pastSeason(name)]])]));
   return {
     'src/config.js': { type: 'text/javascript', body: `export const PORTAL = ${JSON.stringify({ season: w.portalSeason, nextSeason: next, defaultTeam: DEFAULT_TEAM, timeZone: 'Atlantic/Canary' }, null, 2)};\n` },
     'data-benjamin.js': js([['BENJAMIN', raw.benjamin]]),
@@ -157,13 +164,21 @@ function files(w) {
     'data-matchdetail-keys.js': js([['MATCH_DETAIL_KEYS', {}]]),
     'data-shields.js': js([['SHIELDS', fixture('shields')]]),
     'data-stats.js': js([['STATS', {}]]),
-    'data-seasons.js': js([['SEASONS', w.portalSeason === '2026-2027' ? SEASONS_2627 : SEASONS_2526]]),
+    'data-seasons.js': js([['SEASONS', seasons]]),
     'data-maspalomas-cup-2026.js': js([['MASPALOMAS_CUP_BENJAMIN', cups.benjamin], ['MASPALOMAS_CUP_PREBENJAMIN', cups.prebenjamin]]),
-    'data-season-2024-2025.js': js([['SEASON_2024_2025', { name: '2024-2025', current: false, benjamin: past.benjamin, prebenjamin: past.prebenjamin }]]),
+    ...archived,
     'data-matchdetail.js': js([['MATCH_DETAIL', fixture('matchdetail')]]),
-    'data-lineups-2025-2026.js': js([['LINEUPS_2025_2026', fixture('lineups-2025-2026')]]),
+    'data-lineups-2025-2026.js': js([['LINEUPS_2025_2026', lineupsFor('2025-2026')]]),
     'data-health.json': { type: 'application/json', body: JSON.stringify(healthOn(w.today)) },
   };
+}
+
+// Lo que sirve el mundo `name`, por fichero: { body, type }. Lo usan useWorld y su prueba
+// (test_rediseno_mundos.mjs, decisión 31 de B3).
+export function worldFiles(name) {
+  const w = WORLDS[name];
+  if (!w) throw new Error(`mundo desconocido: ${name}`);
+  return files(w);
 }
 
 // Instala el mundo `name` en un contexto de Playwright: rutas de los datos y de config.js (el resto

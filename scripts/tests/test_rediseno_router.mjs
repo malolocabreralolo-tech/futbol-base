@@ -3,6 +3,7 @@
 // controladas, enlaces antiguos, historial, «‹», desplazamiento, foco y Reintentar.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
+import { existsSync } from 'node:fs';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { fakeBrowser } from './fixtures/rediseno/fake-browser.mjs';
 import { buildSeason, buildCups, findGroup, findRound, findMatch, seasonLabel } from '../../src/model.js';
@@ -10,9 +11,7 @@ import { buildClubIndex } from '../../src/myteam.js';
 import { teamNames } from './fixtures/rediseno/simulate.mjs';
 import { html } from '../../src/html.js';
 import { SCREENS, parseRoute, routeHref } from '../../src/links.js';
-import { routeTitle } from '../../src/shell.js';
 import { resolveParams, historyMode, parentOf, activeTab, routeIsMine, startRouter } from '../../src/router.js';
-import { screen as pendiente } from '../../src/screen-pendiente.js';
 import { SCREEN_MAP } from '../../src/screens.js';
 
 const PORTAL = '2025-2026';
@@ -222,27 +221,16 @@ test('routeIsMine: el partido o la ficha de mi equipo, en su grupo y su temporad
   assert.equal(routeIsMine(R('#/tabla?g=PG2'), OK), false);
 });
 
-// ── Pantallas registradas y pantalla provisional ─────────────────────────
+// ── Pantallas registradas ────────────────────────────────────────────────
 
-// Rutas de B3 (decisión 6 de B2): la pantalla provisional hasta que cada tarea de B3 registra la
-// suya (decisión 7 de B3). Equipo, desde la Tarea 4 de B3.
-const B3 = [];
-
-test('cada ruta de §4.1 tiene pantalla; las de B3 que faltan pintan la provisional con su h1 y el vacío', () => {
+// Cada ruta de §4.1 tiene la suya (decisión 7 de B3): la provisional de B2 ya no existe.
+test('cada ruta de §4.1 tiene su pantalla, con el id de su ruta; la provisional de B2 ya no existe', () => {
   assert.deepEqual(Object.keys(SCREEN_MAP).sort(), [...SCREENS].sort());
-  assert.equal(SCREEN_MAP[''].id, 'home');
-  assert.equal(SCREEN_MAP.equipo.id, 'equipo');
-  for (const name of SCREENS) assert.equal(typeof SCREEN_MAP[name].render, 'function', name);
-  for (const name of B3) {
-    assert.equal(SCREEN_MAP[name], pendiente, name);
-    const back = parentOf({ screen: name, params: {} });
-    const out = String(pendiente.render({ route: { screen: name, params: {} }, backHref: back ? routeHref(back.screen, back.params) : null }));
-    assert.equal((out.match(/<h1>/g) || []).length, 1, name);
-    assert.ok(out.includes(`<h1>${routeTitle(name)}</h1>`), name);
-    assert.ok(out.includes('Esta pantalla llega en la próxima fase del rediseño.'), name);
-    assert.match(out, new RegExp(`^<section data-screen="pendiente" data-route="${name}">`), name);
+  for (const name of SCREENS) {
+    assert.equal(SCREEN_MAP[name].id, name || 'home', name);
+    assert.equal(typeof SCREEN_MAP[name].render, 'function', name);
   }
-  assert.deepEqual(pendiente.needs({}, {}), []);
+  assert.equal(existsSync(new URL('../../src/screen-pendiente.js', import.meta.url)), false, 'screen-pendiente.js se borra');
 });
 
 // ── startRouter con un window y un document falsos ─────────────────────
@@ -348,7 +336,7 @@ test('enlace antiguo de WhatsApp: se traduce con replaceState, sin entrada nueva
 test('enlace antiguo «miequipo» de mi equipo (la URL que escribía la app anterior): Mi equipo, no su ficha', async () => {
   const open = async (hash) => {
     const b = fakeBrowser(hash);
-    const router = startRouter({ screens: { '': screen('home'), equipo: pendiente }, root: b.root, getContext: context(), window: b.win });
+    const router = startRouter({ screens: { '': screen('home'), equipo: screen('equipo') }, root: b.root, getContext: context(), window: b.win });
     await router.idle();
     return b.entries();
   };
@@ -365,16 +353,16 @@ test('enlace antiguo «miequipo» de mi equipo (la URL que escribía la app ante
 
 test('enlace directo con parámetros que faltan o no existen: la pantalla por defecto, con aviso, nunca en blanco', async () => {
   const b = fakeBrowser('#/jornada');
-  const router = startRouter({ screens: { '': screen('home'), jornada: screen('jornada'), ligas: pendiente }, root: b.root, getContext: context({ resolution: ASK }), window: b.win });
+  const router = startRouter({ screens: { '': screen('home'), jornada: screen('jornada'), ligas: screen('ligas') }, root: b.root, getContext: context({ resolution: ASK }), window: b.win });
   await router.idle();
   assert.deepEqual(b.entries(), ['#/ligas?to=jornada']);
   assert.match(b.root.innerHTML, /<\/header><p class="notice route-notice" role="status">Elige tu equipo en Mi equipo<\/p>/);
   assert.deepEqual(b.marks(), [['#/jornada', 'true']]);
   const g = fakeBrowser('#/tabla?g=LZS1');
-  const r2 = startRouter({ screens: { '': screen('home'), tabla: screen('tabla'), ligas: pendiente }, root: g.root, getContext: context(), window: g.win });
+  const r2 = startRouter({ screens: { '': screen('home'), tabla: screen('tabla'), ligas: screen('ligas') }, root: g.root, getContext: context(), window: g.win });
   await r2.idle();
   assert.deepEqual(g.entries(), ['#/ligas?c=prebenjamin&to=tabla']);
-  assert.match(g.root.innerHTML, /<h1>Ligas<\/h1><\/div><\/header><p class="notice route-notice" role="status">No encontramos el grupo LZS1 en la temporada 2025\/26<\/p>/);
+  assert.match(g.root.innerHTML, /<h1>ligas<\/h1><\/header><p class="notice route-notice" role="status">No encontramos el grupo LZS1 en la temporada 2025\/26<\/p>/);
 });
 
 // La carga de una temporada pasada que el router pide él mismo (loadSeason, con la firma de
@@ -409,18 +397,18 @@ test('temporada pasada sin cargar que la pantalla no pide: la carga el router y 
   const b = fakeBrowser('#/equipo?s=2024-2025&g=PGC2&t=Las%20Mesas%20Hu.');
   const loaded = [];
   const log = [];
-  // La provisional (y cualquier pantalla de B3 que olvide seasonNeeds) no pide nada en needs.
-  const router = startRouter({ screens: { '': screen('home'), equipo: pendiente }, root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded, { log }) });
+  // Una pantalla que no pide su temporada en needs, como las de B3 (decisión 2 de B3).
+  const router = startRouter({ screens: { '': screen('home'), equipo: screen('equipo') }, root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded, { log }) });
   await router.idle();
   assert.deepEqual(log, ['carga 2024-2025'], 'el router pide la temporada pendiente, con la de la ruta');
   assert.deepEqual(loaded, ['2024-2025']);
-  assert.match(b.root.innerHTML, /^<section data-screen="pendiente" data-route="equipo">/);
+  assert.match(b.root.innerHTML, /^<section data-screen="equipo">/);
   assert.doesNotMatch(b.root.innerHTML, /No se pudieron cargar/);
   assert.deepEqual(b.entries(), ['#/equipo?s=2024-2025&g=PGC2&t=Las%20Mesas%20Hu.']);
   // Con la temporada cargada, el grupo se valida como siempre: uno que no existe lleva a Explorar.
   const g = fakeBrowser('#/equipo?s=2024-2025&g=ZZ9&t=X');
   const loaded2 = [];
-  const r2 = startRouter({ screens: { '': screen('home'), equipo: pendiente, explorar: pendiente }, root: g.root, getContext: context({ loaded: loaded2 }), window: g.win, loadSeason: seasonLoader(loaded2) });
+  const r2 = startRouter({ screens: { '': screen('home'), equipo: screen('equipo'), explorar: screen('explorar') }, root: g.root, getContext: context({ loaded: loaded2 }), window: g.win, loadSeason: seasonLoader(loaded2) });
   await r2.idle();
   assert.deepEqual(g.entries(), ['#/explorar?s=2024-2025&q=X']);
   assert.match(g.root.innerHTML, /No encontramos el grupo ZZ9 en la temporada 2024\/25/);

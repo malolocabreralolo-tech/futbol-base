@@ -43,3 +43,9 @@ test('waitForAsync reintenta si la evaluación falla por una navegación', async
   await waitForAsync(page, () => true, null, { interval: 1 });
   assert.equal(calls, 3);
 });
+
+test('waitForAsync nombra el escenario, el ancho y el tema cuando se agota (B3, Para B3 punto 21)', async () => {
+  const page = { evaluate: async () => false };
+  await assert.rejects(waitForAsync(page, () => false, null, { timeout: 30, interval: 5, label: '390px en oscuro, ficha de AD Huracán' }),
+    /^Error: waitForAsync \(390px en oscuro, ficha de AD Huracán\): condition not met after 30ms/);
+});

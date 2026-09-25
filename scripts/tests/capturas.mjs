@@ -1,8 +1,10 @@
 // Capturas para el usuario (spec §11, verificación visual antes de publicar): cada pantalla de B2 y
-// los estados A, B, C, D, E y X de la portada, más error, vacío y sin conexión, a 390 px en claro y
-// en oscuro y a 1440 px en claro. Salen de los mundos de fixtures de fixture-site.mjs (datos
-// congelados y reloj fijado), así que no dependen del día. Cada captura es la pantalla entera: la
-// ventana crece hasta el alto de la página, con la barra en su sitio.
+// los estados A, B, C, D, E y X de la portada, más error, vacío y sin conexión, y las de B3 (la ficha
+// en A y en D con su plantilla y su trayectoria abiertas, Explorar con resultados, Ligas con
+// «Comparar grupos» abierto, el cuadro y la liguilla de Copa, Goleadores, Récords, Temporadas, Fuentes
+// y Ajustes), a 390 px en claro y en oscuro y a 1440 px en claro. Salen de los mundos de fixtures de
+// fixture-site.mjs (datos congelados y reloj fijado), así que no dependen del día. Cada captura es la
+// pantalla entera: la ventana crece hasta el alto de la página, con la barra en su sitio.
 // Uso, desde la raíz del repo: OUT=<directorio> node scripts/tests/capturas.mjs
 import { strict as assert } from 'node:assert';
 import { createRequire } from 'node:module';
@@ -22,6 +24,13 @@ assert.ok(chrome, 'Chrome is required for the screenshots');
 const PARTIDO_J15 = '#/partido?s=2025-2026&g=PG2&r=Jornada%2015&h=AD%20Hurac%C3%A1n&a=Las%20Mesas%20Hu.';
 const PARTIDO_J30 = '#/partido?s=2025-2026&g=PG2&r=Jornada%2030&h=Las%20Mesas%20Hu.&a=AD%20Hurac%C3%A1n';
 const PARTIDO_ACTA = '#/partido?s=2025-2026&g=A1&r=Jornada%201&h=Guayarmina&a=Santidad';
+// La ficha de Guayarmina (A1), con actas en las fixtures: su plantilla sale de ellas.
+const GUAYARMINA = '#/equipo?s=2025-2026&g=A1&t=Guayarmina';
+// Lo que se abre antes de la foto: [botón que se pulsa, lo que tiene que aparecer].
+const OPEN_SQUAD_AND_TRAJECTORY = [
+  ['#contenido button.squad-player', '#contenido tr.squad-detail a.squad-match'],
+  ['#contenido button[data-action="trayectoria"]', '#trayectoria a.traj-row'],
+];
 // [nombre, mundo, ruta, lo que tiene que verse: data-screen y data-state (null: sin estado), opciones]
 const SHOTS = [
   ['portada-A', 'A', '#/', ['home', 'A']],
@@ -41,6 +50,22 @@ const SHOTS = [
   ['vacio', 'D', PARTIDO_J30, ['partido', null]],
   // Sin conexión: el aviso de la cabecera con la fecha de data-health (spec §4.10).
   ['sin-conexion', 'D', '#/', ['home', 'D'], { offline: true }],
+  // B3: la ficha a mitad de temporada (A) y terminada (D), con la plantilla y la trayectoria abiertas.
+  ['equipo-A', 'A', GUAYARMINA, ['equipo', 'A'], { act: OPEN_SQUAD_AND_TRAJECTORY }],
+  ['equipo-D', 'D', GUAYARMINA, ['equipo', 'D'], { act: OPEN_SQUAD_AND_TRAJECTORY }],
+  // Explorar con los resultados de «hurac» (la búsqueda va en la ruta).
+  ['explorar', 'D', '#/explorar?s=2025-2026&q=hurac', ['explorar', null]],
+  // Ligas: los grupos de prebenjamín de Gran Canaria, con «Comparar grupos» abierto.
+  ['ligas-comparar', 'D', '#/ligas?s=2025-2026&c=prebenjamin&f=grancanaria', ['ligas', null],
+    { act: [['#comparar-prebenjamin', '#comparar-prebenjamin-tabla tbody tr']] }],
+  // Copa: el cuadro (Copa Maspalomas benjamín, MCBK2) y una liguilla (MCP3).
+  ['copa-cuadro', 'D', '#/copa?s=2025-2026&g=MCBK2', ['copa', null]],
+  ['copa-liguilla', 'D', '#/copa?s=2025-2026&g=MCP3', ['copa', null]],
+  ['goleadores', 'D', '#/goleadores', ['goleadores', null]],
+  ['records', 'D', '#/records', ['records', null]],
+  ['temporadas', 'D', '#/temporadas', ['temporadas', null]],
+  ['fuentes', 'D', '#/fuentes', ['fuentes', null]],
+  ['ajustes', 'D', '#/ajustes', ['ajustes', null]],
 ];
 const VARIANTS = [[390, 844, 'light', 'claro'], [390, 844, 'dark', 'oscuro'], [1440, 900, 'light', 'claro']];
 
@@ -66,7 +91,14 @@ try {
         await waitForAsync(page, ([s, st]) => {
           const section = document.querySelector('#contenido section[data-screen]');
           return section && section.getAttribute('data-screen') === s && section.getAttribute('data-state') === st;
-        }, [screen, state]);
+        }, [screen, state], { label });
+        // Lo que se abre antes de la foto, con su localizador: sin esperas fijas. Después, el ratón a
+        // la esquina: nada queda subrayado por :hover en la foto.
+        for (const [button, shown] of options.act || []) {
+          await page.locator(button).first().click();
+          await page.locator(shown).first().waitFor();
+        }
+        if (options.act) await page.mouse.move(0, 0);
         // La ventana, del alto de la página: todo queda a la vista y los escudos diferidos cargan.
         const fit = async () => {
           const full = await page.evaluate(() => ({ height: document.documentElement.scrollHeight, overflow: document.documentElement.scrollWidth - innerWidth }));
@@ -74,9 +106,11 @@ try {
           await page.setViewportSize({ width, height: Math.max(height, full.height) });
         };
         await fit();
-        // Los escudos (o ya su monograma) y la fuente, cargados antes de la foto.
+        // Los escudos (o ya su monograma) y la fuente, cargados antes de la foto. Los del cuadro de copa
+        // que quedan fuera de la vista dentro de su caja deslizante no cargarían nunca: se piden ya.
+        await page.evaluate(() => { for (const img of document.querySelectorAll('img[loading="lazy"]')) img.loading = 'eager'; });
         await waitForAsync(page, () => document.fonts.status === 'loaded'
-          && [...document.images].every((img) => img.complete && img.naturalWidth > 0));
+          && [...document.images].every((img) => img.complete && img.naturalWidth > 0), null, { label: `${label}, escudos y fuente` });
         if (options.offline) {
           // Sin conexión, después de cargar: el aviso de la cabecera, con los escudos ya en la página.
           await context.setOffline(true);

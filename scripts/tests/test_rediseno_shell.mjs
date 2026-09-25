@@ -62,7 +62,7 @@ test('offlineNotice: «Sin conexión. Datos del …» con lastDataChange o, si f
 });
 
 test('skeleton: cabecera y primeras cajas de cada pantalla, ocupado, sin h1 ni data-screen', () => {
-  for (const id of ['home', 'jornada', 'tabla', 'partido', 'pendiente']) {
+  for (const id of ['home', 'jornada', 'tabla', 'partido', 'ajustes']) {
     const out = s(skeleton(id));
     assert.match(out, new RegExp(`^<div class="skeleton-screen" data-skeleton="${id}" aria-busy="true"><p class="vh" role="status">Cargando…</p>`), id);
     assert.match(out, /<div class="screen-head sk-head" aria-hidden="true">/, id);
@@ -71,7 +71,8 @@ test('skeleton: cabecera y primeras cajas de cada pantalla, ocupado, sin h1 ni d
   }
   assert.match(s(skeleton('home')), /<span class="sk sk-crest"><\/span>.*<div class="box skeleton sk-box-home"><\/div>/);
   assert.doesNotMatch(s(skeleton('jornada')), /sk-crest/);
-  assert.equal(s(skeleton('explorar')), s(skeleton('pendiente')).replace('data-skeleton="pendiente"', 'data-skeleton="explorar"'));
+  // Las pantallas de B3 comparten el esqueleto genérico (la provisional de B2 ya no existe).
+  assert.equal(s(skeleton('explorar')), s(skeleton('ajustes')).replace('data-skeleton="ajustes"', 'data-skeleton="explorar"'));
 });
 
 test('errorBox: «No se pudieron cargar los datos de <qué>» y Reintentar con data-action="retry"', () => {
@@ -162,7 +163,7 @@ test('cada clase que emite shell.js existe en acta.css (salvo los ganchos del ro
   const HOOKS = new Set(['skeleton-screen', 'sk-head', 'error-box', 'route-notice']);
   const out = [renderHeader(), offlineNotice(null, '23/09/2026'),
     screenHead('t', { sub: 's', action: { href: '#', label: 'a' }, back: '#' }),
-    ...['home', 'jornada', 'tabla', 'partido', 'pendiente'].map(skeleton),
+    ...['home', 'jornada', 'tabla', 'partido', 'ajustes'].map(skeleton),
     errorScreen({ screenId: 'home', title: 't', what: 'w' }), routeNotice('x')].map(String).join('');
   const used = new Set([...out.matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)));
   assert.deepEqual([...used].filter((c) => !defined.has(c) && !HOOKS.has(c)), []);

@@ -1,5 +1,5 @@
-// Qué pantalla pinta cada ruta de §4.1 (el router las recibe de app.js). Las de B3 llevan la
-// provisional (decisión 6 de B2) hasta que llegue la suya.
+// Qué pantalla pinta cada ruta de §4.1 (el router las recibe de app.js): cada una, la suya. La
+// provisional de B2 (decisión 6 de B2) se fue con la última pantalla de B3 (decisión 7 de B3).
 import { SCREENS } from './links.js';
 import { screen as home } from './screen-home.js';
 import { screen as jornada } from './screen-jornada.js';
@@ -14,8 +14,7 @@ import { screen as records } from './screen-records.js';
 import { screen as temporadas } from './screen-temporadas.js';
 import { screen as fuentes } from './screen-fuentes.js';
 import { screen as ajustes } from './screen-ajustes.js';
-import { screen as pendiente } from './screen-pendiente.js';
 
 const READY = { '': home, jornada, tabla, partido, equipo, explorar, ligas, copa, goleadores, records, temporadas, fuentes, ajustes };
 
-export const SCREEN_MAP = Object.freeze(Object.fromEntries(SCREENS.map((name) => [name, READY[name] || pendiente])));
+export const SCREEN_MAP = Object.freeze(Object.fromEntries(SCREENS.map((name) => [name, READY[name]])));

@@ -15378,7 +15378,7 @@ git diff --stat
 ```
 Resultado esperado: `versión <la del día en UTC, o la vigente con la letra siguiente> (antes, <la vigente>): 11 ?v= en index.html y futbolbase-v<la misma> en sw.js; «Última actualización: <la de los datos>», sin tocar`; `CODIGO b76af1b0: la huella de acta.css y src/*.js, en index.html` (la del paso 9); y en `git diff --stat`, solo `index.html` y `sw.js`.
 
-**4. Suites y smoke**, en verde con la versión nueva: los del paso 9 (pytest `477 passed, 5 skipped`, node 728 sin fallos y las tres pasadas de los smoke, con 21 PASS cada una). `pwa-smoke` publica sus propias versiones (`20991231a` y `20991231b`) sobre la del árbol, así que no depende de la del día.
+**4. Suites y smoke**, en verde con la versión nueva: los del paso 9 (pytest `478 passed, 5 skipped`, node 728 sin fallos y las tres pasadas de los smoke, con 21 PASS cada una). `pwa-smoke` publica sus propias versiones (`20991231a` y `20991231b`) sobre la del árbol, así que no depende de la del día.
 
 **5. El commit de la publicación:**
 
@@ -15395,7 +15395,7 @@ instalada cambien a la nueva. Con el visto bueno del usuario, B3 se
 publica: Equipo, Explorar, Ligas, Copa, Goleadores, Récords, Temporadas,
 Datos y fuentes y Ajustes dejan la pantalla provisional.
 
-Verificado: pytest 477 (5 saltadas), node 728 y los tres smoke, tres veces
+Verificado: pytest 478 (5 saltadas), node 728 y los tres smoke, tres veces
 seguidas, en verde, con el despliegue de código sobre el SW de la rama.
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
@@ -15639,11 +15639,12 @@ Lo que B3 deja preparado, pendiente o avisado, y lo que «Para B3 y siguientes»
 - **El paso de B2 a B3 con el SW de B2 instalado: resuelto en la Tarea 12, paso 9** (decisiones 155 a 158). Es el primer despliegue de código sobre el SW de B2, y B3 cambia exportaciones de `state.js`, `links.js`, `model.js`, `myteam.js` y `ui.js`.
   - Con el plan anterior, la revisión lo simuló (un proceso de Chrome por apertura, con las cabeceras de GitHub Pages): una apertura breve tras publicar dejaba la siguiente a medias, con los módulos de B3 y la hoja de B2, o con el aviso del arranque, que «Reintentar» no arreglaba.
   - Con el arreglo, la misma simulación sobre el árbol final (siete escenarios, tres pasadas cada uno) da 84 aperturas, ninguna a medias. En 15, el `<link>` recibe primero la hoja de B2 y la limpieza la sustituye antes de pintar.
-  - Solo la 2.ª apertura sin red tras una 1.ª de 300 ms da el aviso: es inevitable, porque los módulos nuevos no están en ninguna caché. La 3.ª, con red, ya es entera.
+  - Solo la 2.ª apertura sin red tras una 1.ª de 300 ms da el aviso: en B3 es inevitable, porque el despliegue trae módulos nuevos que no están en ninguna caché. La 3.ª, con red, ya es entera. Corrección (Minor 9 de la revisión final): «es inevitable» solo vale cuando el despliegue trae módulos nuevos; si un despliegue de código posterior no trae ninguno, la limpieza podría saltarse sin red, y B4 lo decide.
   - El día de publicar, el paso 10 lo comprueba en la web con un perfil que tenía B2, y un aviso o la hoja de B2 paran la publicación.
 - **Lo que el arreglo no cubre** (aparcado por el controlador):
   - sin SW, la caché HTTP de 600 s de GitHub Pages: durante unos 10 minutos tras cada publicación, un navegador sin SW puede recibir un `state.js` o un `links.js` viejos para un `app.js` nuevo. B2 se publicó con este riesgo, y lo cierra versionar el grafo de módulos. Sin import maps si en la familia hay un iPhone con iOS 15: subirían el suelo de Safari 15.4 a 16.4;
   - la recarga en el mismo proceso: tras un fallo del arranque, Chrome puede reutilizar de la memoria los módulos del intento anterior, y «Reintentar» en la misma pestaña, repetir el fallo. Cerrar la app y volver a abrirla lo arregla.
+- **Volver atrás tras publicar** (recomendación de la revisión final): siempre revertir hacia delante, conservando el arranque con `CODIGO` y subiendo las versiones y `CODIGO`. Nunca volver a publicar el `index.html` de `376e981`: su arranque no quita el código de B3 de las cachés del SW.
 
 ### B4: datos, escudos y despliegue
 
@@ -15659,20 +15660,36 @@ Lo que B3 deja preparado, pendiente o avisado, y lo que «Para B3 y siguientes»
 - **CI:** el filtro de rutas de `tests.yml` todavía no incluye `fonts/**` ni `icons/**`.
 - **Los datos congelados de `pwa-smoke`** (decisión 130 de B2) tienen el formato de hoy: si B4 cambia el de los datos inmediatos o retira uno, cada versión de la prueba tiene que recibir el suyo.
 - **Memorizar por grupo** (recomendación 3 de B1): `seasonRecords` tarda unos 52 ms en Node con los datos vivos de benjamín (unos 200 ms en un móvil lento, en cada cambio de categoría), el `render` de una ficha 8 ms, y la portada calcula su estado dos veces (en `homeState` y en `teamView`).
-- **`countMatches`** (`state.js`) sigue sin uso en `src/`: B3 no lo necesitó.
+- **`countMatches`** (`state.js`) sigue sin uso en `src/`: B3 no lo necesitó. Tampoco `matchAdvancer`, `bracketDrawAdvancer` ni `bracketChampion` (`state.js:91-130`, Minor 9 de la revisión final): el cuadro de Copa (`bracket()` de `model.js`) resuelve quién pasó a su manera y no los llama.
 - **Versiones:** cada publicación sube a la vez `CACHE_NAME`, las `?v=` y `CODIGO` (Tarea 12, paso 10); entre publicaciones, cada merge o rebase con `main` pasa por `scripts/sync_versions.py` (`docs/rediseno-rebase.md`, que todavía dice que la rama no se fusiona hasta B5).
+- **Datos y fuentes no pinta la caja de error de §7** (Minor 2 de la revisión final, `src/screen-fuentes.js:79-81`): si falla `data-health.json`, pinta un `.empty` con su propio texto, sin `role="alert"`, en vez de `errorBox('el estado de las fuentes')`. Afecta poco porque el fichero está en el precache.
+- **La ficha de Equipo espera a las actas antes de pintarse** (Minor 3 de la revisión final, `src/screen-equipo.js:281-288`): `needs` espera a `data-lineups-<s>.js` (139-219 KB) antes de pintar nada, aunque solo la Plantilla lo usa; en la primera visita de cada temporada, con mala cobertura, el esqueleto puede tardar hasta 15 s. Arreglo: pintar sin esperar y que `mount` rellene la Plantilla, o precachear las actas (ligado a la plantilla sin conexión, arriba).
+- **Ayudantes repetidos en las pantallas de B3** (Minor 5 de la revisión final; el principio I2 del plan manda que lo compartido vaya a `ui.js` o `model.js`): los nombres de categoría (`CAT_NAMES`, `CAT_SHORT`, `CAT_LABEL`, `CAT_NAME` y `CAT_WORD`, en cinco pantallas y en el privado de `model.js:286`); `count`/`plural` (`screen-explorar.js`, `screen-ligas.js` y `screen-equipo.js`); `score` (`team-view.js`, `screen-equipo.js` y `screen-partido.js`); `signed` (`screen-ligas.js` y `ui.js`); y los formateadores de cifras (`screen-records.js`, `screen-ligas.js` y `team-view.js`). Exportarlos una sola vez.
+- **`routeIsMine` pasa de `router.js` a `myteam.js`** (Minor 6 de la revisión final): `src/screen-equipo.js:18` importa de `router.js` una función pura que no crea ningún ciclo, pero que es del terreno de `myteam.js`.
+- **«Reintentar» de un bloque conserva el desplazamiento** (Minor 10 de la revisión final): hoy «Reintentar» de la Plantilla, como ya hacía el panel de Partido en B2, refresca toda la ruta con `show('refresh')`, que desplaza a y=0 y lleva el foco al `h1`; quien estaba abajo pierde su sitio.
+- **Lo aparcado para B4 en el triaje de la revisión final** (una línea por hallazgo, todos sin caso en vivo o de coste mínimo):
+  - `nav.update`, ligado al token del `mount` que lo llama;
+  - el calendario de escritorio de la portada, a `interaction-smoke` a 1440 px;
+  - las huellas de la portada que faltan: D sin «Verano», C con otras notas, menos de 5 resultados y «por confirmar»;
+  - la tecla Intro de los dos buscadores, a `interaction-smoke`;
+  - una final empatada sin penaltis, con un texto que no diga «Todavía no hay campeón»;
+  - «sin fecha» repetido en las filas de liguilla;
+  - `listOf`, que se calcula dos veces en Goleadores;
+  - el coste sin conexión de un despliegue de código posterior sin módulos nuevos;
+  - las etiquetas en los tiempos agotados de localizadores y clics, para el diagnóstico del CI.
 
 ### B5 y después
 
 - **Al activar 2026/27**, con el almacén vacío la portada es la del equipo por defecto de la temporada nueva, y la primera pasada de `render-smoke` (datos reales) sigue en verde salvo que ese equipo no esté en ella (X, como pide §11). Si `PORTAL.defaultTeam` cambia de grupo, hay que actualizar `src/config.js` al activar. Las pruebas con fixtures no cambian (`test_rediseno_config.mjs`).
 - **Con 2026/27 publicada por partes**, el paso 1 puede resolver «Las Mesas Hu.» sin preguntar el primer día; no se guarda, y cuando lleguen los demás equipos de Las Mesas, la carga siguiente pregunta.
+- **El día de activar** (deferred de la revisión final): `activate_season.py:182` no comprueba lo que devuelve `codigo.main` (aparcado porque las suites detectan un `CODIGO` desfasado antes de empujar); y falta la prueba de «Hacer mi equipo» en el estado B, que solo aparece al activar 2026/27 (el código de su cabecera es el mismo de A, C y D, que sí tienen prueba).
 - **Lo que se verá en producción y conviene saber** (B2 y B3):
   - el aviso de marcador distinto en Partido, frecuente en A1 (18 de 44 actas no suman el marcador);
   - «Ver temporadas anteriores» de Partido y la Trayectoria de Equipo cargan bajo demanda hasta 4 ficheros (unos 0,9 MB), y sus paneles son «todo o nada»: con una temporada caída, esconden también las que llegaron;
   - las filas de 44 px alargan las clasificaciones, Datos y fuentes mide unos 3.200 px a 390 px (45 grupos) y Goleadores de benjamín pinta unos 100 KB de HTML en sus 200 primeras filas;
   - Goleadores de benjamín con los datos vivos (2.144 jugadores) y la CPU ×4, medido en Chrome (decisión 159): cada «Ver 200 más» tarda de 0,32 a 0,47 s, algo más en cada toque, y cada tecla del buscador, de 32 a 96 ms, también al borrar. Con el árbol de accesibilidad (un lector de pantalla, u otro servicio de accesibilidad de Android; en la máquina de la verificación, Orca activo, y así midió también la revisión), el primer toque tarda 0,75 s y desde el 4.º o 5.º pasa de 1 s, hasta 1,6 s en el 9.º; y la primera tecla que filtra (la que quita las 200 filas), hasta 120 ms. Ese coste crece con las filas que ya hay en el documento, sea cual sea la tabla: ni una tabla por página, ni `content-visibility`, ni quitar los escudos lo cambian. B4 puede virtualizar la lista o acortar las páginas;
   - el buscador de Explorar busca subcadenas: con 2 letras frecuentes («la») salen unos 75 resultados, primero los que empiezan por ellas (decisión 166);
-  - Copa y Goleadores no tienen esqueleto propio: el genérico (una caja) sale mientras el router carga una temporada pasada;
+  - ninguna de las nueve pantallas de B3 tiene esqueleto propio (Minor 7 de la revisión final; corrige esta nota, que antes solo nombraba Copa y Goleadores): Equipo, Explorar, Ligas y Récords, además de Copa y Goleadores, pintan el genérico (`src/shell.js`, `BODIES` solo trae home, jornada, tabla y partido) mientras el router carga una temporada pasada, y después saltan a su forma final;
   - sin `ResizeObserver` (Safari anterior a 13.1), el alto del cuadro de copa solo se recalcula al deslizar o al tocar una pestaña.
 - **Fixtures:**
   - `currentAt` (B1) conserva la clasificación final, y las pruebas de Node lo usan así: a mitad de temporada, la nota de la gráfica de puntos dice «la clasificación oficial da 37» frente a 18 del calendario. Los mundos de navegador ya la recalculan para su día (`standingsAt` de `fixture-site.mjs`); si hace falta en Node, `standingsAt` puede pasar a `simulate.mjs`;

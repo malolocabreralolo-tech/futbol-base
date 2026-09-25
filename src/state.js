@@ -24,6 +24,43 @@ export function teamScorers(gol, team) {
     .map(({ name, goals, games }) => ({ name, goals, games }));
 }
 
+/* Goleadores de una categoría entera (spec §4.7; decisión 25 de B3), de GOL_BENJ o GOL_PREBENJ (lo
+ * que da model.scorers): una fila por jugador y equipo, con los nombres exactos, que suma los goles y
+ * los partidos de todos sus grupos, que son sus fases (la Primera y la Segunda Fase de benjamín). Dos
+ * homónimos de equipos distintos van por separado. [{ name, team, goals, games, groupId, groups }],
+ * de más a menos goles y, a igualdad, con menos partidos (y en el orden de la fuente): el orden de
+ * groupScorers. groups: sus grupos, en el orden de la fuente; groupId, el de su ficha de equipo, el
+ * grupo en el que jugó más partidos (a igualdad, el primero). La usan Goleadores y Récords. */
+export function categoryScorers(gol) {
+  const byPlayer = new Map();
+  for (const entry of Array.isArray(gol) ? gol : []) {
+    if (!entry || !Array.isArray(entry.s)) continue;
+    for (const [name, team, goals, games] of entry.s) {
+      const key = JSON.stringify([name, team]);
+      const row = byPlayer.get(key) || { name, team, goals: 0, games: 0, groupId: entry.id, groups: [], most: -1 };
+      row.goals += goals;
+      row.games += games;
+      row.groups.push(entry.id);
+      if (games > row.most) { row.most = games; row.groupId = entry.id; }
+      byPlayer.set(key, row);
+    }
+  }
+  return [...byPlayer.values()].map(({ most, ...row }) => row)
+    .sort((a, b) => b.goals - a.goals || a.games - b.games);
+}
+
+/* El puesto de cada fila de una lista de goleadores ya ordenada (la de categoryScorers o la de
+ * groupScorers): con los mismos goles y partidos, el mismo puesto (1, 2, 2, 4). Una sola regla para
+ * Goleadores y para los 30 primeros de Récords (decisión 144 de B3). */
+export function rankScorers(rows) {
+  const out = [];
+  rows.forEach((row, i) => {
+    const prev = out[i - 1];
+    out.push({ ...row, pos: prev && prev.goals === row.goals && prev.games === row.games ? prev.pos : i + 1 });
+  });
+  return out;
+}
+
 /* ====== JORNADA KEY HELPERS ======
  * Jornada labels are mixed across seasons: 'Jornada N' (current HISTORY),
  * 'N' (wayback per-season files) and copa-round keys like

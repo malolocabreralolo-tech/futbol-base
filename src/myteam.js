@@ -343,3 +343,12 @@ export function teamTrajectory(model, name, index, seasons) {
   }
   return out;
 }
+
+// ---- Categoría por defecto de Goleadores y Récords (decisiones 25 y 26 de B3) ----
+
+// La de mi equipo resuelto o, sin él (E o X), la del equipo por defecto (PORTAL.defaultTeam); si
+// tampoco es una categoría de la app, benjamín. Una sola regla para las dos pantallas.
+export function defaultCategory(resolution, defaultTeam) {
+  if (resolution && resolution.status === 'ok' && CATS.includes(resolution.cat)) return resolution.cat;
+  return defaultTeam && CATS.includes(defaultTeam.cat) ? defaultTeam.cat : CATS[0];
+}

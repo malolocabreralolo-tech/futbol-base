@@ -1232,3 +1232,51 @@ abbr[title] { text-decoration: none; }
   .bracket-round { display: flex; flex-direction: column; }
   .bracket-matches { display: flex; flex: 1 1 auto; flex-direction: column; justify-content: space-around; }
 }
+
+/* ── Goleadores: la lista completa con su buscador (spec §4.7) ─────────── */
+
+.gol-cats { margin-top: 14px; }
+.gol-count { margin: 12px 0 6px; font-size: 12.5px; font-weight: 600; color: var(--mute); }
+/* La tabla de los goleadores del grupo de la Tabla (.group-scorers), con el puesto más ancho y el
+ * jugador en dos líneas: su nombre y, debajo, su equipo, que abre la ficha. El enlace mide 44 px de
+ * alto, pero sus márgenes negativos no agrandan la fila. El puesto llega a 4 cifras («2140» en
+ * benjamín con los datos vivos): unos 4,5 ch de la cifra de la tabla (13,5 px), en px porque con
+ * table-layout: fixed el ancho lo da la cabecera, de 11,5 px, y en ch saldría más estrecho
+ * (decisión 161 de B3). */
+.gol-table .st-pos { width: 44px; }
+.gol-table .gol-player { padding-top: 7px; padding-bottom: 7px; font-weight: 400; text-align: left; }
+.gol-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gol-team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 44px;
+  margin: -12px 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+.gol-team-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* «Ver 200 más»: añade la página siguiente de la lista (mount, decisión 159 de B3). */
+.gol-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 8px;
+  border: 1.5px solid var(--ink);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+@media (hover: hover) {
+  a.gol-team:hover .gol-team-name { text-decoration: underline; }
+}
+
+/* Escritorio: cuatro columnas no necesitan los 1120 px; a 720, el nombre y los goles quedan cerca. */
+@media (min-width: 1024px) {
+  [data-screen="goleadores"] > :not(.screen-head) { max-width: 720px; }
+}

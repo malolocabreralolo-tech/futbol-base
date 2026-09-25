@@ -38,6 +38,7 @@ const STATIC_ASSETS = [
   './src/screen-jornada.js',
   './src/screen-tabla.js',
   './src/screen-partido.js',
+  './src/screen-records.js',
   './src/screen-copa.js',
   './src/screen-goleadores.js',
   './src/screen-equipo.js',

@@ -1280,3 +1280,49 @@ abbr[title] { text-decoration: none; }
 @media (min-width: 1024px) {
   [data-screen="goleadores"] > :not(.screen-head) { max-width: 720px; }
 }
+
+/* ── Récords: totales, récords de partido y de equipo y goleadores (spec §4.7; decisión 26 de B3) ── */
+
+.rc-cats { margin-top: 14px; }
+.rc-cols, .rc-records, .rc-top { min-width: 0; }
+.rc-list { margin: 0; padding: 0; list-style: none; }
+.box.rc-list > li + li { border-top-color: var(--line); }
+/* Cada récord es un enlace a su partido o a su equipo: qué es, quién, la cifra y el detalle. */
+.rc-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: var(--text);
+  text-decoration: none;
+}
+.rc-what { grid-column: 1 / -1; font-size: 12.5px; color: var(--mute); }
+.rc-subject { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 15px; font-weight: 700; }
+.rc-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rc-figure { font-size: 17px; font-weight: 800; color: var(--ink); white-space: nowrap; }
+.rc-detail { grid-column: 1 / -1; font-size: 12.5px; color: var(--mute); }
+.rc-detail:empty { display: none; }
+/* Máximos goleadores: la tabla de la clasificación, con el equipo debajo del jugador. */
+.rc-scorers .st-pos { width: 28px; }
+.rc-scorers .sc-goals { width: 52px; }
+.rc-scorers .sc-pj { width: 36px; }
+.rc-scorers td.sc-goals { font-weight: 800; color: var(--ink); }
+.rc-who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.rc-team { font-size: 12.5px; color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (hover: hover) {
+  a.rc-row:hover .rc-name { text-decoration: underline; }
+}
+
+/* Escritorio: los récords a la izquierda y los goleadores a la derecha (spec §4.8). */
+@media (min-width: 1024px) {
+  .rc-cats { max-width: 480px; }
+  .rc-cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    column-gap: 40px;
+  }
+}

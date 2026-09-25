@@ -1437,3 +1437,65 @@ export function bracket(group) {
   const final = last && last.label === 'Final' && last.matches.length === 1 ? last.matches[0] : null;
   return { rounds, champion: final && final.advancer ? final.match[final.advancer] : null };
 }
+
+/* ── Récords de una temporada (spec §4.7; decisión 26 de B3) ──────────────
+ * Con el modelo y nunca con data-stats.js: solo el modelo tiene las temporadas pasadas y aplica los
+ * mínimos. Cuentan los grupos de liga de la categoría (sin copas ni torneos, que no son la temporada
+ * de liga), y de ellos, los partidos con marcador. `season` es un Season del modelo.
+ *   totals:      { matches, goals, avg } (avg null sin partidos);
+ *   biggestWin:  el Match de mayor diferencia; a igualdad, el de más goles y después el primero en
+ *                el orden de los grupos, las jornadas y las filas;
+ *   mostGoals:   el Match con más goles; a igualdad, el primero en ese orden;
+ *   bestAttack y bestDefense: { team, groupId, pj, gf, gc }, de la clasificación, con PJ ≥ 10 y sin
+ *                retirados: más goles a favor (a igualdad, menos PJ) y menos en contra (a igualdad,
+ *                más PJ); después, el orden de los grupos y de la clasificación;
+ *   bestHome y bestAway: los 3 mejores por puntos por partido con 5 partidos o más en casa o fuera
+ *                (homeAwayTable), { team, groupId, pj, pts, ppj, g, e, p, gf, gc }; a igual ppj, más
+ *                puntos, diferencia y goles a favor, y el orden de los grupos y de su tabla;
+ *   streaks:     bestStreaks(season, cat).
+ * Sin nada que cumpla un mínimo, null (o [] en bestHome y bestAway). */
+export const RECORD_MIN_PJ = 10;
+export const RECORD_MIN_SIDE = 5;
+
+export function seasonRecords(season, cat) {
+  const groups = season.groups.filter(group => group.cat === cat && group.kind === 'league');
+  let matches = 0, goals = 0, biggestWin = null, mostGoals = null;
+  for (const group of groups) {
+    for (const round of group.rounds) {
+      for (const m of round.matches) {
+        if (!playedMatch(m)) continue;
+        matches += 1;
+        goals += m.hs + m.as;
+        const diff = Math.abs(m.hs - m.as);
+        const best = biggestWin && Math.abs(biggestWin.hs - biggestWin.as);
+        if (!biggestWin || diff > best || (diff === best && m.hs + m.as > biggestWin.hs + biggestWin.as)) biggestWin = m;
+        if (!mostGoals || m.hs + m.as > mostGoals.hs + mostGoals.as) mostGoals = m;
+      }
+    }
+  }
+  const rows = groups.flatMap(group => group.standings
+    .filter(row => !row.retired && row.pj != null && row.pj >= RECORD_MIN_PJ && row.gf != null && row.gc != null)
+    .map(row => ({ team: row.team, groupId: group.id, pj: row.pj, gf: row.gf, gc: row.gc })));
+  let bestAttack = null, bestDefense = null;
+  for (const row of rows) {
+    if (!bestAttack || row.gf > bestAttack.gf || (row.gf === bestAttack.gf && row.pj < bestAttack.pj)) bestAttack = row;
+    if (!bestDefense || row.gc < bestDefense.gc || (row.gc === bestDefense.gc && row.pj > bestDefense.pj)) bestDefense = row;
+  }
+  const bestSide = side => groups
+    .flatMap((group, gi) => homeAwayTable(group, side)
+      .filter(row => !row.retired && row.pj >= RECORD_MIN_SIDE)
+      .map(row => ({ gi, pos: row.pos, team: row.team, groupId: group.id, pj: row.pj, pts: row.pts, ppj: row.pts / row.pj, g: row.g, e: row.e, p: row.p, gf: row.gf, gc: row.gc })))
+    .sort((a, b) => b.ppj - a.ppj || b.pts - a.pts || (b.gf - b.gc) - (a.gf - a.gc) || b.gf - a.gf || a.gi - b.gi || a.pos - b.pos)
+    .slice(0, 3)
+    .map(({ gi, pos, ...row }) => row);
+  return {
+    totals: { matches, goals, avg: matches ? goals / matches : null },
+    biggestWin,
+    mostGoals,
+    bestAttack,
+    bestDefense,
+    bestHome: bestSide('casa'),
+    bestAway: bestSide('fuera'),
+    streaks: bestStreaks(season, cat),
+  };
+}

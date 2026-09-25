@@ -10,14 +10,15 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { fakeBrowser } from './fixtures/rediseno/fake-browser.mjs';
+import { fakeBrowser, memoryStorage } from './fixtures/rediseno/fake-browser.mjs';
+import { ctxFor, datasetsFor } from './fixtures/rediseno/screens.mjs';
 import { currentAt, nextSeasonRaw, teamNames } from './fixtures/rediseno/simulate.mjs';
 import { buildSeason } from '../../src/model.js';
 import { buildClubIndex, resolveMyTeam, myTeamToSave } from '../../src/myteam.js';
 import { SCREENS } from '../../src/links.js';
-import { STORE_KEY } from '../../src/store.js';
+import { STORE_KEY, LEGACY_KEY } from '../../src/store.js';
 import { SCREEN_MAP } from '../../src/screens.js';
-import { start } from '../../src/app.js';
+import { start, startContext } from '../../src/app.js';
 import { screen as home } from '../../src/screen-home.js';
 import { screen as jornada } from '../../src/screen-jornada.js';
 import { screen as tabla } from '../../src/screen-tabla.js';
@@ -284,4 +285,84 @@ test('app.js: crestFallback en captura y mi equipo guardado, los dos antes del p
 test('app.js: sesión y «Hacer mi equipo» con saveStore', () => {
   assert.match(APP, /session: safeStorage\(\(\) => win\.sessionStorage\)/);
   assert.match(APP, /saveMyTeam\(myTeam\) \{\s*store = \{ \.\.\.store, myTeam \};\s*return saveStore\(storage, store\);/);
+});
+// ── Plan B3, tarea 1: paso 0 del router, vistos hace poco y «Borrar datos» con start() ──
+
+test('paso 0 de B3: una temporada que se lee pero está mal formada da la caja de error con «Reintentar», nunca el esqueleto', async (t) => {
+  // El dato roto y la caja de error se registran con console.error: aquí se esperan.
+  t.mock.method(console, 'error', () => {});
+  const hash = '#/partido?s=2021-2022&g=PGC9&r=1&h=A&a=B';
+  const seasons = [...WITH_PAST, { name: '2021-2022', current: false }];
+  // const SEASON_2021_2022={…}; se parsea, pero `benjamin` no es un array: buildSeason lanza al construirla,
+  // al validar la ruta y otra vez al calcular el «‹» de la caja (parentOf de Partido → findGroup).
+  FILES['data-season-2021-2022.js'] = () => seasonFile('2021-2022', { benjamin: { roto: true } });
+  try {
+    const { page, router } = await load(new Map(), { today: '2026-03-01', hash, seasons });
+    assert.equal(page.hash(), hash);
+    assert.match(page.main.innerHTML, /^<section data-screen="partido" data-state="error">/);
+    assert.match(page.main.innerHTML, /<h1>Partido<\/h1>/);
+    assert.match(page.main.innerHTML, /No se pudieron cargar los datos de esta pantalla\./);
+    assert.match(page.main.innerHTML, /<button class="button is-main" type="button" data-action="retry">Reintentar<\/button>/);
+    assert.doesNotMatch(page.main.innerHTML, /data-skeleton/);
+    // El «‹», sin el modelo que lanza: la jornada del enlace.
+    assert.match(page.main.innerHTML, /<a class="back" href="#\/jornada\?s=2021-2022&amp;g=PGC9&amp;r=1" data-action="back"/);
+    // «Reintentar» vuelve a pintar la caja (el dato sigue roto) y termina.
+    assert.equal(page.click({ 'data-action': 'retry', type: 'button' }, 'button'), true);
+    await router.idle();
+    assert.match(page.main.innerHTML, /^<section data-screen="partido" data-state="error">/);
+  } finally {
+    delete FILES['data-season-2021-2022.js'];
+  }
+});
+
+test('ctx.recent sale del almacén en startContext, en ctxFor y en start(); nav.addRecent lo guarda sin volver a pintar y sobrevive a la recarga (decisión 5 de B3)', async (t) => {
+  const seen = [{ s: '2025-2026', g: 'PG2', t: 'AD Huracán' }];
+  // startContext, la base de ctxFor: los del almacén, saneados.
+  const dirty = memoryStorage(new Map([[STORE_KEY, JSON.stringify({ myTeam: PG2, recent: [...seen, { g: 'PG3' }] })]]));
+  assert.deepEqual(startContext({ storage: dirty, portal: PORTAL_2526, datasets: datasetsFor(), today: '2026-03-01' }).recent, seen);
+  assert.deepEqual(ctxFor('explorar', { s: '2025-2026' }, { recent: seen }).recent, seen);
+  assert.deepEqual(ctxFor('explorar', { s: '2025-2026' }).recent, []);
+  // start(): el ctx de cada pintado.
+  const render = t.mock.method(home, 'render');
+  const lastCtx = () => render.mock.calls.at(-1).arguments[0];
+  const storage = new Map([[STORE_KEY, JSON.stringify({ myTeam: PG2, recent: seen })]]);
+  const { router } = await load(storage, { today: '2026-03-01' });
+  assert.deepEqual(lastCtx().recent, seen);
+  const paints = render.mock.callCount();
+  const acodetti = { s: '2025-2026', g: 'PG2', t: 'Acodetti' };
+  assert.equal(router.nav.addRecent(acodetti), true, 'guardado en el almacén');
+  await router.idle();
+  assert.equal(render.mock.callCount(), paints, 'sin volver a pintar');
+  assert.deepEqual(JSON.parse(storage.get(STORE_KEY)), { myTeam: PG2, recent: [acodetti, ...seen] });
+  router.nav.retry();
+  await router.idle();
+  assert.deepEqual(lastCtx().recent, [acodetti, ...seen], 'el pintado siguiente ya lo trae, de memoria');
+  await load(storage, { today: '2026-03-01' });
+  assert.deepEqual(lastCtx().recent, [acodetti, ...seen], 'y tras recargar, del almacén');
+});
+
+test('«Borrar datos»: nav.clearData borra v2, v1, las claves antiguas y el destino de la sesión, y abre Mi equipo con el equipo por defecto; la recarga no vuelve a migrar (decisión 6 de B3)', async (t) => {
+  const huracan = { name: 'AD Huracán', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' };
+  const v1 = { teams: [{ name: 'AD Huracán', cat: 'prebenjamin', groupId: 'PG2' }], selected: 'prebenjamin|PG2|huracan' };
+  const storage = new Map([
+    [STORE_KEY, JSON.stringify({ myTeam: huracan, recent: [{ s: '2025-2026', g: 'PG2', t: 'Acodetti' }] })],
+    [LEGACY_KEY, JSON.stringify(v1)], ['season', '2025-2026'], ['cat', 'prebenjamin'], ['theme', 'light'],
+  ]);
+  const { page, router } = await load(storage, { today: '2026-03-01' });
+  assert.match(page.main.innerHTML, /<h1>AD Huracán<\/h1>/);
+  page.click({ href: '#/tabla' });
+  await router.idle();
+  assert.equal(page.win.sessionStorage.getItem('futbol-base:destino'), 'tabla');
+  page.click({ href: '#/ajustes' });
+  await router.idle();
+  const removed = t.mock.method(page.win.sessionStorage, 'removeItem');
+  await router.nav.clearData();
+  assert.equal(storage.size, 0, 'ni v2, ni v1, ni season, cat y theme');
+  assert.deepEqual(removed.mock.calls.map((call) => call.arguments[0]), ['futbol-base:destino']);
+  assert.deepEqual(page.entries(), ['#/', '#/tabla', '#/ajustes', '#/']);
+  assert.match(page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1>/, 'Mi equipo, con el equipo por defecto');
+  // Al recargar: el equipo por defecto, sin migrar otra vez la clave v1 (ya no está) ni escribir nada.
+  const again = await load(storage, { today: '2026-03-01' });
+  assert.match(again.page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1>/);
+  assert.equal(storage.size, 0);
 });

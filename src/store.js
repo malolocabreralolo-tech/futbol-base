@@ -6,8 +6,9 @@
 // el Storage por parámetro (o una función que lo devuelve) y lo envuelve con
 // safeStorage, así que un almacenamiento que falla (modo privado, cookies
 // bloqueadas, cuota agotada o ninguno) deja la app con los valores por defecto
-// en memoria. Nunca borra nada: ni futbol-base:favorites:v1 ni las claves
-// antiguas `season`, `cat` y `theme`, que tampoco se leen.
+// en memoria. Solo borra con «Borrar datos de esta app» (clearStore): la
+// migración no toca futbol-base:favorites:v1 ni las claves antiguas `season`,
+// `cat` y `theme`, que tampoco se leen.
 import { normalizeTeamName } from './state.js';
 
 export const STORE_KEY = 'futbol-base:v2';
@@ -35,6 +36,14 @@ export function safeStorage(storage) {
     setItem(key, value) {
       try {
         target().setItem(key, value);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    removeItem(key) {
+      try {
+        target().removeItem(key);
         return true;
       } catch {
         return false;
@@ -118,4 +127,13 @@ export function saveStore(storage, state) {
 export function addRecent(state, entry) {
   if (!isRecent(entry)) return state;
   return { ...state, recent: cleanRecent([{ s: entry.s, g: entry.g, t: entry.t }, ...(state.recent || [])]) };
+}
+
+// «Borrar datos de esta app» (§4.7 y §4.9; decisión 6 de B3): v2, la clave v1 (si se quedara, la
+// carga siguiente volvería a migrarla) y las claves `season`, `cat` y `theme` de la app anterior.
+// Nunca storage.clear(): el origen (malolocabreralolo-tech.github.io) es de más proyectos. Devuelve
+// false si alguna no se pudo borrar; nunca lanza.
+export function clearStore(storage) {
+  const store = safeStorage(storage);
+  return [STORE_KEY, LEGACY_KEY, 'season', 'cat', 'theme'].map((key) => store.removeItem(key)).every(Boolean);
 }

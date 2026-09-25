@@ -1,10 +1,11 @@
-// Almacén «futbol-base:v2» y migración desde v1 (Plan B1, Tarea 10; spec §6.5 y §11).
+// Almacén «futbol-base:v2» y migración desde v1 (Plan B1, Tarea 10; spec §6.5 y §11), y
+// «Borrar datos de esta app» (Plan B3, Tarea 1: removeItem y clearStore).
 // Usa Storage falsos en memoria y la fixture congelada favorites-v1: nunca
 // localStorage ni los data-*.js, ni depende de los valores de src/config.js.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  STORE_KEY, LEGACY_KEY, MAX_RECENT, safeStorage, migrateV1, loadStore, saveStore, addRecent,
+  STORE_KEY, LEGACY_KEY, MAX_RECENT, safeStorage, migrateV1, loadStore, saveStore, addRecent, clearStore,
 } from '../../src/store.js';
 import { fixture } from './fixtures/rediseno/load.mjs';
 
@@ -20,6 +21,7 @@ class MemoryStorage {
 class BrokenStorage {
   getItem() { throw new Error('SecurityError: acceso denegado'); }
   setItem() { throw new Error('QuotaExceededError: cuota agotada'); }
+  removeItem() { throw new Error('SecurityError: acceso denegado'); }
 }
 
 // Valores de PORTAL escritos a mano: la prueba no depende de src/config.js.
@@ -256,4 +258,35 @@ test('addRecent: el mismo equipo en otra temporada es otra entrada; una entrada 
   for (const bad of [null, {}, { s: '2025-2026', g: 'PG2' }, { s: 2025, g: 'PG2', t: 'AD Huracán' }]) {
     assert.equal(addRecent(state, bad), state);
   }
+});
+// ── Plan B3, tarea 1: «Borrar datos de esta app» (decisión 6) ─────────────
+
+test('safeStorage.removeItem: borra la clave y nunca lanza', () => {
+  const memory = new MemoryStorage({ a: '1', b: '2' });
+  assert.equal(safeStorage(memory).removeItem('a'), true);
+  assert.deepEqual(Object.fromEntries(memory.data), { b: '2' });
+  assert.equal(safeStorage(() => memory).removeItem('no-está'), true, 'borrar lo que no está no es un fallo');
+  for (const storage of [new BrokenStorage(), null, undefined, {}, () => { throw new Error('SecurityError'); }]) {
+    assert.equal(safeStorage(storage).removeItem('a'), false);
+  }
+});
+
+test('clearStore: borra v2, v1 y las claves antiguas, y nada más; la carga siguiente no vuelve a migrar', () => {
+  const mine = { name: 'Las Mesas B', season: '2025-2026', cat: 'benjamin', groupId: 'B2' };
+  const storage = new MemoryStorage({
+    [STORE_KEY]: JSON.stringify({ myTeam: mine, recent: [{ s: '2025-2026', g: 'PG2', t: 'AD Huracán' }] }),
+    [LEGACY_KEY]: JSON.stringify(fixture('favorites-v1')),
+    season: '2024-2025', cat: 'benjamin', theme: 'light', 'otra-app': 'x',
+  });
+  assert.equal(clearStore(storage), true);
+  assert.deepEqual(Object.fromEntries(storage.data), { 'otra-app': 'x' }, 'el origen es de más proyectos: nunca clear()');
+  assert.deepEqual(loadStore(storage, OPTIONS), { myTeam: DEFAULT_TEAM, recent: [] });
+  assert.equal(storage.getItem(STORE_KEY), null, 'sin v1 no hay migración: loadStore no escribe nada');
+});
+
+test('clearStore: con el almacenamiento bloqueado no lanza y dice que no pudo', () => {
+  for (const storage of [new BrokenStorage(), null, undefined, () => { throw new Error('SecurityError'); }]) {
+    assert.equal(clearStore(storage), false);
+  }
+  assert.equal(clearStore(new MemoryStorage()), true, 'un almacén vacío ya está borrado');
 });

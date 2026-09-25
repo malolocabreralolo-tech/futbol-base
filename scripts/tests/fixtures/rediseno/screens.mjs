@@ -42,12 +42,13 @@ export function pastSeasonRaw() {
 //   último visitado (por defecto, el de startContext: Mi equipo); nunca 'partido';
 // - backHref, el «‹» del router: parentOf con el modelo del ctx.
 // portalSeason cambia la temporada del portal (2026/27 simulada) y legacyDate, el literal oculto
-// «Última actualización» de index.html.
+// «Última actualización» de index.html. recent son los vistos hace poco guardados con `myTeam`
+// ([{ s, g, t }], que llegan a ctx.recent; decisión 5 de B3); con myTeam null, el almacén vacío.
 export function ctxFor(screen, params, {
-  today = '2026-09-24', datasets = datasetsFor(), myTeam = MY_TEAM, portalSeason = PORTAL_SEASON, legacyDate = null,
-  lastPrimary = null,
+  today = '2026-09-24', datasets = datasetsFor(), myTeam = MY_TEAM, recent = [], portalSeason = PORTAL_SEASON,
+  legacyDate = null, lastPrimary = null,
 } = {}) {
-  const storage = memoryStorage(new Map(myTeam ? [[STORE_KEY, JSON.stringify({ myTeam, recent: [] })]] : []));
+  const storage = memoryStorage(new Map(myTeam ? [[STORE_KEY, JSON.stringify({ myTeam, recent })]] : []));
   const base = startContext({ storage, portal: { season: portalSeason, defaultTeam: DEFAULT_TEAM }, datasets, today });
   const route = { screen, params };
   const tab = activeTab(route, null, false);

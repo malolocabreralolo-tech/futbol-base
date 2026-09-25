@@ -4,14 +4,15 @@
 //   historyMode (pushState o replaceState), parentOf («‹»), activeTab y routeIsMine (barra).
 // - startRouter, la parte con DOM: hashchange y popstate, enlaces antiguos, token de
 //   navegación, la temporada pendiente, needs → render → mount, desplazamiento por entrada del
-//   historial, foco al h1 (o al control del ancla), «‹» y Reintentar.
+//   historial, foco al h1 (o al control del ancla), «‹» y Reintentar; y el nav de las pantallas,
+//   con la búsqueda que se apunta sin pintar (update), los vistos hace poco y «Borrar datos».
 // No toca el navegador al importarse: startRouter recibe `window`.
 import { Html } from './html.js';
 import { parseRoute, routeHref, translateLegacy } from './links.js';
 import { findGroup, findMatch, findRound, seasonLabel } from './model.js';
 import { sameClub } from './myteam.js';
 import { skeleton, errorScreen, routeNotice, routeTitle, updateTabbar } from './shell.js';
-import { seasonNeeds } from './state.js';
+import { normalizeTeamName, seasonNeeds } from './state.js';
 
 // Destinos principales de la barra, por pantalla.
 const PRIMARY = { '': 'miequipo', jornada: 'jornada', tabla: 'tabla', explorar: 'explorar' };
@@ -23,9 +24,19 @@ const REPLACE_ONLY = { jornada: ['r'], tabla: ['v'], explorar: ['q'], goleadores
 // Pantallas que se abren desde Explorar: su «‹» sin historial lleva a #/explorar.
 const UNDER_EXPLORE = new Set(['equipo', 'copa', 'goleadores', 'ligas', 'temporadas', 'records', 'fuentes', 'ajustes']);
 const MAX_REDIRECTS = 5;
-const SESSION_KEY = 'futbol-base:destino';
+// El último destino principal, en la sesión (app.js lo borra con «Borrar datos», decisión 6 de B3).
+export const SESSION_KEY = 'futbol-base:destino';
 // Un ancla que es uno de estos controles se lleva el foco en lugar del h1 (#/explorar#buscar).
 const FORM_CONTROLS = new Set(['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON']);
+// Parámetros de valor cerrado (§4.1): el que no está en su lista se quita, sin aviso, como una vista
+// de Tabla que no existe (decisión 3 de B3). `i` y `to` son de la Tarea 1 de B3: con una isla
+// desconocida Ligas saldría vacía, y con otro `to` sus grupos enlazarían a otra pantalla.
+const CATS = ['benjamin', 'prebenjamin'];
+const CLOSED = {
+  ligas: { c: CATS, i: ['grancanaria', 'lanzarote', 'fuerteventura'], to: ['tabla', 'jornada'] },
+  goleadores: { c: CATS },
+  records: { c: CATS },
+};
 
 const redirect = (screen, params, notice = null) => ({ redirect: { screen, params, notice } });
 const omit = (params, key) => Object.fromEntries(Object.entries(params).filter(([k]) => k !== key));
@@ -45,8 +56,8 @@ function identity(ctx) {
 // resolveParams(route, ctx) → { params, pending? } | { redirect: { screen, params, notice } }
 //   ctx: { portal: { season }, model, resolution, myTeam, datasets: { seasons } }
 //   params: los de la ruta con `s` (y `g` en Jornada y Tabla) ya puestos; pending: la temporada
-//   pasada aún no está cargada y no se puede validar el grupo (el router la vuelve a resolver
-//   cuando termina `needs`). Las redirecciones se aplican con replaceState.
+//   pasada aún no está cargada y no se puede validar la ruta (el router la carga y la vuelve a
+//   resolver cuando termina `needs`). Las redirecciones se aplican con replaceState.
 export function resolveParams(route, ctx) {
   const screen = route.screen;
   const raw = route.params || {};
@@ -55,10 +66,18 @@ export function resolveParams(route, ctx) {
   if (raw.s && raw.s !== portal && !knownSeason(ctx, raw.s)) {
     return redirect(screen, omit(raw, 's'), `No existe la temporada ${seasonLabel(raw.s)}; te enseñamos la actual`);
   }
+  const closed = CLOSED[screen] || {};
+  const wrong = Object.keys(closed).filter((key) => raw[key] != null && !closed[key].includes(raw[key]));
+  if (wrong.length) return redirect(screen, Object.fromEntries(Object.entries(raw).filter(([key]) => !wrong.includes(key))));
   const params = { ...raw, s: raw.s || portal };
   if (screen === 'jornada' || screen === 'tabla') return leagueParams(screen, raw, params, ctx);
   if (screen === 'partido') return matchParams(params, ctx);
-  if (screen === 'equipo') return teamParams(params, ctx);
+  if (screen === 'equipo') return teamParams(raw, params, ctx);
+  // Explorar, Ligas, Copa, Goleadores y Récords (decisión 2 de B3): con una temporada pasada sin
+  // cargar, pendientes. La carga el router (I4(a) de B2): ninguna pantalla pide la de su ruta.
+  if (!ctx.model.season(params.s)) return { params, pending: true };
+  if (screen === 'copa') return cupParams(params, ctx);
+  if (screen === 'goleadores') return scorersParams(raw, params, ctx);
   return { params };
 }
 
@@ -110,16 +129,58 @@ function matchParams(params, ctx) {
   return { params };
 }
 
-// Equipo: `g` es obligatorio; sin él, el equipo se busca en Explorar (como un enlace antiguo).
-function teamParams(params, ctx) {
+// Equipo: `g` y `t` son obligatorios; sin ellos, el equipo se busca en Explorar (como un enlace
+// antiguo). Con la temporada cargada (decisión 3 de B3): un grupo que no es de liga (un torneo MC* o
+// una copa de la federación, sin ficha de equipo) abre su Copa, sin aviso, como «Vistos hace poco» y
+// los enlaces antiguos a torneos (B1:8012). Un equipo que no juega en el grupo con ese nombre exacto:
+// si un solo equipo del grupo tiene su nombre normalizado, es otra grafía del mismo («Las Mesas Hu»,
+// sin punto), y la ruta pasa a su nombre canónico, sin aviso y con el resto de sus parámetros
+// (decisión 32); si no hay ninguno, o hay varios, se busca en Explorar, con aviso (B1:7998: el `g`
+// de un enlace antiguo puede no ser el de su equipo).
+function teamParams(raw, params, ctx) {
   const s = params.s === ctx.portal.season ? '' : params.s;
-  if (!params.g) return redirect('explorar', { s, q: params.t });
+  if (!params.g || !params.t) return redirect('explorar', { s, q: params.t });
   const season = ctx.model.season(params.s);
   if (!season) return { params, pending: true };
-  if (!findGroup(ctx.model, params.s, params.g)) {
+  const group = findGroup(ctx.model, params.s, params.g);
+  if (!group) {
     return redirect('explorar', { s, q: params.t }, `No encontramos el grupo ${params.g} en la temporada ${seasonLabel(params.s)}`);
   }
+  if (group.kind !== 'league') return redirect('copa', { s, g: group.id });
+  if (!hasTeam(group, params.t)) {
+    const same = sameNamed(group, params.t);
+    if (same.length === 1) return redirect('equipo', { ...raw, t: same[0] });
+    return redirect('explorar', { s, q: params.t }, `No encontramos a ${params.t} en ${group.label}`);
+  }
   return { params };
+}
+
+// Los equipos del grupo, de la clasificación o del calendario, con el nombre normalizado de `name`
+// (normalizeTeamName de state.js: sin tildes, puntos ni siglas del club).
+function sameNamed(group, name) {
+  const key = normalizeTeamName(String(name));
+  const teams = new Set([...group.standings.map((row) => row.team),
+    ...group.rounds.flatMap((round) => round.matches.flatMap((m) => [m.home, m.away]))]);
+  return [...teams].filter((team) => typeof team === 'string' && team !== '' && normalizeTeamName(team) === key);
+}
+
+// Copa (decisión 3 de B3): el grupo es una copa de la federación o un torneo. Uno de liga abre su
+// Tabla, sin aviso; uno que no existe, Ligas de esa temporada con el aviso de la Tabla; sin grupo,
+// Ligas sin aviso (ningún enlace de la app lo da: una dirección escrita a mano).
+function cupParams(params, ctx) {
+  const s = params.s === ctx.portal.season ? '' : params.s;
+  if (!params.g) return redirect('ligas', { s });
+  const group = findGroup(ctx.model, params.s, params.g);
+  if (!group) return redirect('ligas', { s }, `No encontramos el grupo ${params.g} en la temporada ${seasonLabel(params.s)}`);
+  if (group.kind === 'league') return redirect('tabla', { s, g: group.id });
+  return { params };
+}
+
+// Goleadores (decisión 3 de B3): un grupo que no existe se quita, con aviso: la global de su
+// categoría (la `c` del enlace o, sin ella, la que la pantalla pone por defecto).
+function scorersParams(raw, params, ctx) {
+  if (!params.g || findGroup(ctx.model, params.s, params.g)) return { params };
+  return redirect('goleadores', omit(raw, 'g'), `No encontramos el grupo ${params.g} en la temporada ${seasonLabel(params.s)}`);
 }
 
 // ── Historial, «‹» y barra ───────────────────────────────────────────────
@@ -212,9 +273,11 @@ function legacyMine(ctx) {
 }
 
 // screens: { <ruta de §4.1>: { id, needs, render, mount? } }; root: <main id="contenido">;
-// getContext() → { model, myTeam, resolution, today, health, datasets, portal } (los datos de
-// cada pintado; el router añade route, params, lastPrimary y backHref); actions.saveMyTeam(myTeam)
-// guarda mi equipo (app.js); session: { getItem, setItem } para el último destino principal;
+// getContext() → { model, myTeam, recent, resolution, today, health, datasets, portal, legacyDate }
+// (los datos de cada pintado; el router añade route, params, lastPrimary y backHref); actions, de
+// app.js: saveMyTeam(myTeam) guarda mi equipo, addRecent(entry) apunta una ficha en «Vistos hace
+// poco» y clearData() borra los datos de la app; session: { getItem, setItem } para el último
+// destino principal;
 // loadSeason(name, datasets, portalSeason) → Promise[]: la carga de una temporada pasada pendiente,
 // seasonNeeds de state.js (las pruebas pasan otra). Devuelve { nav, idle, current }: idle() es la
 // promesa del último pintado.
@@ -294,8 +357,9 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
   // vista; un ancla (#/…#calendario) manda al avanzar. Foco: al h1 (tabindex -1), salvo en la
   // carga inicial; al cambiar jornada o vista, vuelve al control pulsado si sigue (mismo id); y si
   // el ancla es un control de formulario (#/explorar#buscar: «Cambiar» abre Explorar con el
-  // buscador enfocado, §4.2 A), al avanzar, al volver y al reintentar se lo lleva él, no el h1
-  // (I4(b) de la revisión final de B2).
+  // buscador enfocado, §4.2 A), al avanzar y al reintentar se lo lleva él, no el h1 (I4(b) de la
+  // revisión final de B2). Al volver (Atrás, Adelante o un hash escrito a mano), el h1: en el
+  // móvil, el campo abriría el teclado sobre los resultados que se querían ver (decisión 165 de B3).
   function place(mode, target, focusId) {
     const hash = win.location.hash;
     const at = hash.indexOf('#', 1);
@@ -304,7 +368,7 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     if (anchor) anchor.scrollIntoView();
     else win.scrollTo(0, target);
     if (mode === 'initial') return;
-    const control = anchorId && mode !== 'replace' ? doc.getElementById(anchorId) : null;
+    const control = anchorId && (mode === 'push' || mode === 'refresh') ? doc.getElementById(anchorId) : null;
     const field = control && FORM_CONTROLS.has(control.tagName) && root.contains(control) ? control : null;
     const kept = focusId ? doc.getElementById(focusId) : null;
     const el = field || (kept && root.contains(kept) ? kept : root.querySelector('h1'));
@@ -407,7 +471,12 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     } catch (err) {
       if (my !== token) return latest;
       console.error('[router]', err);
-      paint(errorScreen({ screenId: screen?.id || 'pendiente', title: routeTitle(route.screen), what: loadWhat(err), back: backHref(route, base?.model) }));
+      // Paso 0 de B3: el «‹» de la caja se calcula aparte. Con una temporada mal formada, parentOf
+      // de Partido vuelve a tocarla (findGroup) y lanzaría aquí dentro: idle() rechazaba y se
+      // quedaba el esqueleto, sin «Reintentar». Entonces, el padre sin modelo: la jornada del enlace.
+      let back = null;
+      try { back = backHref(route, base?.model); } catch { back = backHref(route, null); }
+      paint(errorScreen({ screenId: screen?.id || 'pendiente', title: routeTitle(route.screen), what: loadWhat(err), back }));
       place(mode, 0, null);
     }
   }
@@ -502,6 +571,30 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     }
   }
 
+  // La ruta actual con otros parámetros (completos), con replaceState y sin pintar: los buscadores
+  // de Explorar y Goleadores apuntan su `q` al escribir sin perder el cursor (decisión 4 de B3). La
+  // entrada conserva su { fbIdx, fbKey } (y con ellos su desplazamiento guardado y el «‹») y su
+  // ancla (#buscar); `current` pasa a ser la ruta nueva, resuelta como en navigate, para que la
+  // navegación siguiente compare con ella. No toca el foco ni el desplazamiento. Devuelve false si
+  // no hay ruta o si el navegador se niega: Safari lanza si pasan de 100 en pocos segundos.
+  function update(params) {
+    if (!current) return false;
+    const hash = win.location.hash;
+    const at = hash.indexOf('#', 1);
+    const href = routeHref(current.screen, params) + (at > 0 ? hash.slice(at) : '');
+    const target = parseRoute(href);
+    let resolved = null;
+    try { resolved = resolveParams(target, getContext()).params || null; } catch { resolved = null; }
+    try {
+      hist.replaceState(hist.state, '', href);
+    } catch {
+      return false;
+    }
+    current = { screen: target.screen, params: resolved || target.params };
+    seen = { ...seen, hash: win.location.hash };
+    return true;
+  }
+
   const nav = {
     go: (screen, params) => navigate(routeHref(screen, params)),
     replace: (screen, params) => navigate(routeHref(screen, params), 'replace'),
@@ -512,6 +605,18 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       const saved = actions.saveMyTeam ? actions.saveMyTeam(myTeam) : false;
       show('refresh');
       return saved;
+    },
+    update,
+    // «Vistos hace poco» (decisión 5 de B3): Equipo apunta su ficha en su mount; lo guarda app.js,
+    // sin volver a pintar. Devuelve si quedó guardado en el almacén (false: solo en memoria).
+    addRecent(entry) {
+      return actions.addRecent ? actions.addRecent(entry) : false;
+    },
+    // «Borrar datos de esta app» (Ajustes, decisión 6 de B3): lo borra app.js y se abre Mi equipo,
+    // con una entrada nueva.
+    clearData() {
+      if (actions.clearData) actions.clearData();
+      return navigate('#/', 'push');
     },
   };
 

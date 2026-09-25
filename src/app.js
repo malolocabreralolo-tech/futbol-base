@@ -7,18 +7,19 @@ import { PORTAL } from './config.js';
 import { readGlobals, ensureHealth } from './state.js';
 import { createModel, seasonLabel } from './model.js';
 import { buildClubIndex, resolveMyTeam, myTeamToSave } from './myteam.js';
-import { loadStore, saveStore, safeStorage } from './store.js';
+import { loadStore, saveStore, safeStorage, addRecent, clearStore } from './store.js';
 import { canaryTodayISO, parseRoute } from './links.js';
 import { crestFallback } from './ui.js';
 import { errorScreen, offlineNotice, routeTitle, updateTabbar } from './shell.js';
-import { startRouter, activeTab } from './router.js';
+import { startRouter, activeTab, SESSION_KEY } from './router.js';
 import { SCREEN_MAP } from './screens.js';
 
 // Los datos de un pintado (el ctx de las pantallas sin la ruta, que añade el router): mi equipo
-// resuelto contra la temporada del portal con el «hoy» de Canarias, un solo reloj (decisión 4).
-function contextFor({ model, myTeam, portal, datasets, today, legacyDate = null }) {
+// resuelto contra la temporada del portal con el «hoy» de Canarias, un solo reloj (decisión 4), y
+// los vistos hace poco del almacén (decisión 5 de B3).
+function contextFor({ model, myTeam, recent = [], portal, datasets, today, legacyDate = null }) {
   const resolution = resolveMyTeam(myTeam, model.season(portal.season), model.clubIndex(), today);
-  return { model, myTeam, resolution, today, health: datasets.health, datasets, portal, legacyDate };
+  return { model, myTeam, recent, resolution, today, health: datasets.health, datasets, portal, legacyDate };
 }
 
 // El mismo contexto desde un almacén y con el día que se le pida: la base de las pruebas de las
@@ -27,7 +28,7 @@ export function startContext({ storage, portal, datasets, today }) {
   const store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
   const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
   const base = { season: portal.season, defaultTeam: portal.defaultTeam };
-  return { ...contextFor({ model, myTeam: store.myTeam, portal: base, datasets, today }), lastPrimary: 'miequipo' };
+  return { ...contextFor({ model, myTeam: store.myTeam, recent: store.recent, portal: base, datasets, today }), lastPrimary: 'miequipo' };
 }
 
 // Los datos inmediatos sin los que no hay temporada: sin uno de ellos, ni X ni B serían verdad.
@@ -86,7 +87,7 @@ export function start(doc, win, config = PORTAL, { now = () => new Date() } = {}
   const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
   let store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
   const getContext = () => contextFor({
-    model, myTeam: store.myTeam, portal, datasets, today: canaryTodayISO(now(), config.timeZone), legacyDate,
+    model, myTeam: store.myTeam, recent: store.recent, portal, datasets, today: canaryTodayISO(now(), config.timeZone), legacyDate,
   });
 
   // El cambio de fase que se resuelve sin preguntar (FF5 → A2) queda guardado desde el arranque
@@ -118,6 +119,20 @@ export function start(doc, win, config = PORTAL, { now = () => new Date() } = {}
       saveMyTeam(myTeam) {
         store = { ...store, myTeam };
         return saveStore(storage, store);
+      },
+      // «Vistos hace poco» (§4.6 y §6.5): la ficha visitada va la primera, sin repetidos y como
+      // máximo 8 (addRecent de store.js); se guarda o, si el almacenamiento falla, queda en memoria.
+      addRecent(entry) {
+        store = addRecent(store, entry);
+        return saveStore(storage, store);
+      },
+      // «Borrar datos de esta app» (§4.7 y §4.9): el almacén, con la clave v1 y las antiguas, y el
+      // último destino de la sesión; en memoria, lo de un almacén vacío (loadStore sin almacenamiento
+      // da el equipo por defecto), aunque el navegador no deje borrar.
+      clearData() {
+        clearStore(storage);
+        safeStorage(() => win.sessionStorage).removeItem(SESSION_KEY);
+        store = loadStore(null, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
       },
     },
   });

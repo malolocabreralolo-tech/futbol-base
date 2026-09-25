@@ -136,7 +136,7 @@ test('Explorar, Ligas, Copa, Goleadores y Récords: la temporada por defecto y s
   assert.deepEqual(resolve('#/ligas?c=benjamin&i=grancanaria&f=segunda-fase-a&to=tabla'),
     { params: { c: 'benjamin', i: 'grancanaria', f: 'segunda-fase-a', to: 'tabla', s: PORTAL } });
   assert.deepEqual(resolve('#/copa?g=MCPK1'), { params: { g: 'MCPK1', s: PORTAL } });
-  assert.deepEqual(resolve('#/goleadores?s=2024-2025&c=prebenjamin'), { params: { s: '2024-2025', c: 'prebenjamin' } });
+  assert.deepEqual(resolve('#/goleadores?s=2024-2025&c=prebenjamin', { loaded: ['2024-2025'] }), { params: { s: '2024-2025', c: 'prebenjamin' } });
   assert.deepEqual(resolve('#/records?c=benjamin'), { params: { c: 'benjamin', s: PORTAL } });
 });
 
@@ -354,11 +354,12 @@ test('enlace antiguo «miequipo» de mi equipo (la URL que escribía la app ante
   // El mismo nombre que el guardado, o el mismo club en el mismo grupo («Las Mesas Hu», sin punto).
   assert.deepEqual(await open('#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=Las+Mesas+Hu.'), ['#/']);
   assert.deepEqual(await open('#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=Las+Mesas+Hu'), ['#/']);
-  // Otro equipo, o el mismo club en otro grupo: su ficha, con la temporada del enlace (§4.1).
+  // Otro equipo, o el mismo club en otro grupo: su ficha, con la temporada del enlace (§4.1). Con otra
+  // grafía del nombre («Las Mesas Hu», sin punto, en A2), la del grupo (decisión 32 de B3).
   assert.deepEqual(await open('#section=miequipo&cat=prebenjamin&season=2025-2026&group=PG2&team=AD+Hurac%C3%A1n'),
     ['#/equipo?s=2025-2026&g=PG2&t=AD%20Hurac%C3%A1n']);
   assert.deepEqual(await open('#section=miequipo&cat=benjamin&season=2025-2026&group=A2&team=Las+Mesas+Hu'),
-    ['#/equipo?s=2025-2026&g=A2&t=Las%20Mesas%20Hu']);
+    ['#/equipo?s=2025-2026&g=A2&t=Las%20Mesas%20Hu.']);
 });
 
 test('enlace directo con parámetros que faltan o no existen: la pantalla por defecto, con aviso, nunca en blanco', async () => {
@@ -437,7 +438,7 @@ test('si la carga de la temporada pendiente falla: la caja de error, y su «Rein
   assert.deepEqual(log.filter((x) => x.startsWith('render')), ['render tabla']);
 });
 
-test('un ancla que es un control de formulario se lleva el foco al avanzar, al volver y al reintentar (#/explorar#buscar, I4(b))', async () => {
+test('un ancla que es un control de formulario se lleva el foco al avanzar y al reintentar; al volver, el h1 (#/explorar#buscar, I4(b); decisión 165 de B3)', async () => {
   const b = fakeBrowser('#/');
   const explorar = screen('explorar', { body: () => html`<form role="search"><input id="buscar" type="search"></form>` });
   const equipo = screen('equipo', { body: () => html`<div id="calendario">Calendario</div>` });
@@ -454,13 +455,14 @@ test('un ancla que es un control de formulario se lleva el foco al avanzar, al v
   await router.idle();
   assert.equal(b.doc.getElementById('calendario').scrolled, 1);
   assert.equal(b.h1().focused, 1);
-  // Al volver (pop) a #/explorar#buscar, otra vez el buscador.
+  // Al volver (pop: Atrás, Adelante o un hash escrito a mano) a #/explorar#buscar, el h1: en el
+  // móvil, el foco en el campo abriría el teclado sobre lo que se quería ver (decisión 165 de B3).
   b.win.history.back();
   await tick();
   await router.idle();
-  assert.equal(buscar().focused, 1, 'al volver, el buscador');
-  assert.equal(b.h1().focused, 0);
-  // Y al reintentar (refresh).
+  assert.equal(b.h1().focused, 1, 'al volver, el h1');
+  assert.equal(buscar().focused, 0, 'y no el buscador');
+  // Al reintentar (refresh), el buscador, como al avanzar.
   router.nav.retry();
   await router.idle();
   assert.equal(buscar().focused, 1, 'al reintentar, el buscador');
@@ -812,4 +814,276 @@ test('dos nav.back() seguidos: ninguna de las dos promesas se queda colgada (B2,
   assert.equal(r2, true);
   assert.equal(b.index(), 0);
   assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
+});
+// ── Plan B3, tarea 1: la temporada pendiente y la validación de las rutas de B3 ──
+
+// Pantallas falsas de todas las rutas, con su id como h1 (la de '' se llama home).
+const allScreens = (log = []) => Object.fromEntries(SCREENS.map((name) => [name, screen(name || 'home', { log })]));
+
+test('Explorar, Ligas, Copa, Goleadores y Récords: con una temporada pasada sin cargar, pendientes (decisión 2 de B3)', () => {
+  for (const hash of ['#/explorar?s=2024-2025&q=Mesas', '#/ligas?s=2024-2025&c=prebenjamin&to=tabla', '#/copa?s=2024-2025&g=PGC2',
+    '#/goleadores?s=2024-2025&g=PGC2', '#/records?s=2024-2025&c=benjamin']) {
+    assert.deepEqual(resolve(hash), { params: parseRoute(hash).params, pending: true }, hash);
+  }
+  // Cargada, la ruta se resuelve; la del portal nunca queda pendiente.
+  assert.deepEqual(resolve('#/explorar?s=2024-2025&q=Mesas', { loaded: ['2024-2025'] }), { params: { s: '2024-2025', q: 'Mesas' } });
+  assert.deepEqual(resolve('#/records?s=2024-2025&c=benjamin', { loaded: ['2024-2025'] }), { params: { s: '2024-2025', c: 'benjamin' } });
+  assert.deepEqual(resolve('#/ligas?s=2025-2026&c=prebenjamin'), { params: { s: PORTAL, c: 'prebenjamin' } });
+});
+
+test('esa temporada la carga el router y la ruta se pinta, o se redirige ya cargada; nunca la caja de error (decisión 2 de B3)', async () => {
+  const cases = [
+    ['#/explorar?s=2024-2025&q=Mesas', '#/explorar?s=2024-2025&q=Mesas', 'explorar'],
+    ['#/ligas?s=2024-2025&c=prebenjamin', '#/ligas?s=2024-2025&c=prebenjamin', 'ligas'],
+    ['#/goleadores?s=2024-2025&g=PGC2', '#/goleadores?s=2024-2025&g=PGC2', 'goleadores'],
+    ['#/records?s=2024-2025&c=benjamin', '#/records?s=2024-2025&c=benjamin', 'records'],
+    // Copa con un grupo de liga va a su Tabla: solo se sabe con la temporada cargada.
+    ['#/copa?s=2024-2025&g=PGC2', '#/tabla?s=2024-2025&g=PGC2', 'tabla'],
+  ];
+  for (const [hash, entry, id] of cases) {
+    const b = fakeBrowser(hash);
+    const loaded = [];
+    const log = [];
+    const router = startRouter({ screens: allScreens(), root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded, { log }) });
+    await router.idle();
+    assert.deepEqual(log, ['carga 2024-2025'], hash);
+    assert.deepEqual(b.entries(), [entry], hash);
+    assert.equal(where(b), entry, hash);
+    assert.match(b.root.innerHTML, new RegExp(`^<section data-screen="${id}">`), hash);
+    assert.doesNotMatch(b.root.innerHTML, /No se pudieron cargar|route-notice/, hash);
+  }
+});
+
+test('un `c` que no es benjamín ni prebenjamín se quita, sin aviso; en Ligas, también una isla o un `to` que no existen (decisión 3 de B3)', async () => {
+  assert.deepEqual(target(resolve('#/records?c=alevin')), ['#/records', null]);
+  assert.deepEqual(target(resolve('#/goleadores?c=Benjamin&g=PG2&q=ana')), ['#/goleadores?g=PG2&q=ana', null]);
+  // Todos a la vez, antes de cargar la temporada (no la necesitan).
+  assert.deepEqual(target(resolve('#/ligas?s=2024-2025&c=alevin&i=tenerife&to=partido')), ['#/ligas?s=2024-2025', null]);
+  assert.deepEqual(resolve('#/ligas?c=prebenjamin&i=lanzarote&to=jornada'), { params: { c: 'prebenjamin', i: 'lanzarote', to: 'jornada', s: PORTAL } });
+  const b = fakeBrowser('#/records?c=alevin');
+  const router = startRouter({ screens: allScreens(), root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/records']);
+  assert.match(b.root.innerHTML, /^<section data-screen="records">/);
+  assert.doesNotMatch(b.root.innerHTML, /route-notice/);
+});
+
+test('Copa con un grupo que no existe: Ligas de esa temporada, con el aviso de la Tabla; sin grupo, sin aviso (decisión 3 de B3)', async () => {
+  assert.deepEqual(target(resolve('#/copa?g=ZZ9')), ['#/ligas', 'No encontramos el grupo ZZ9 en la temporada 2025/26']);
+  // Los torneos MC* son de 2025-26: en 2024-25 no existen.
+  assert.deepEqual(target(resolve('#/copa?s=2024-2025&g=MCPK1', { loaded: ['2024-2025'] })),
+    ['#/ligas?s=2024-2025', 'No encontramos el grupo MCPK1 en la temporada 2024/25']);
+  assert.deepEqual(target(resolve('#/copa')), ['#/ligas', null], 'una dirección escrita a mano, sin grupo');
+  // Enlace directo con la temporada sin cargar: se carga, se valida y se redirige, con el aviso tras la cabecera.
+  const b = fakeBrowser('#/copa?s=2024-2025&g=MCPK1');
+  const loaded = [];
+  const router = startRouter({ screens: allScreens(), root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded) });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/ligas?s=2024-2025']);
+  assert.match(b.root.innerHTML, /<\/header><p class="notice route-notice" role="status">No encontramos el grupo MCPK1 en la temporada 2024\/25<\/p>/);
+});
+
+test('Copa con un grupo de liga: su Tabla, con replaceState y sin aviso; las copas y los torneos se quedan (decisión 3 de B3)', async () => {
+  assert.deepEqual(target(resolve('#/copa?g=PG2')), ['#/tabla?g=PG2', null]);
+  assert.deepEqual(target(resolve('#/copa?s=2025-2026&g=A1')), ['#/tabla?g=A1', null]);
+  assert.deepEqual(resolve('#/copa?g=MCP3'), { params: { g: 'MCP3', s: PORTAL } }, 'liguilla de la Maspalomas Cup');
+  assert.deepEqual(resolve('#/copa?g=MCPK1'), { params: { g: 'MCPK1', s: PORTAL } }, 'cuadro de la Maspalomas Cup');
+  const b = fakeBrowser('#/');
+  const router = startRouter({ screens: allScreens(), root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/copa?g=PG2' });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/', '#/tabla?g=PG2'], 'una sola entrada nueva, ya en la Tabla');
+  assert.match(b.root.innerHTML, /^<section data-screen="tabla">/);
+  assert.doesNotMatch(b.root.innerHTML, /route-notice/);
+});
+
+test('Goleadores con un grupo que no existe: la global de su categoría, con aviso (decisión 3 de B3)', async () => {
+  assert.deepEqual(target(resolve('#/goleadores?g=ZZ9')), ['#/goleadores', 'No encontramos el grupo ZZ9 en la temporada 2025/26']);
+  assert.deepEqual(target(resolve('#/goleadores?c=benjamin&g=ZZ9&t=Guayarmina&q=ana')),
+    ['#/goleadores?c=benjamin&t=Guayarmina&q=ana', 'No encontramos el grupo ZZ9 en la temporada 2025/26']);
+  // Los grupos que existen pasan, también los torneos: qué goleadores hay lo dice la pantalla.
+  assert.deepEqual(resolve('#/goleadores?g=PG2&t=Acodetti'), { params: { g: 'PG2', t: 'Acodetti', s: PORTAL } });
+  assert.deepEqual(resolve('#/goleadores?g=MCPK1'), { params: { g: 'MCPK1', s: PORTAL } });
+  const b = fakeBrowser('#/goleadores?s=2024-2025&g=PG2');
+  const loaded = [];
+  const router = startRouter({ screens: allScreens(), root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded) });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/goleadores?s=2024-2025']);
+  assert.match(b.root.innerHTML, /<\/header><p class="notice route-notice" role="status">No encontramos el grupo PG2 en la temporada 2024\/25<\/p>/);
+});
+
+test('Equipo con un grupo que no es de liga (un torneo o una copa): su Copa, sin aviso (decisión 3 de B3; B1:8012)', async () => {
+  assert.deepEqual(target(resolve('#/equipo?g=MCP3&t=UD%20Las%20Mesas%20Hurac%C3%A1n')), ['#/copa?g=MCP3', null]);
+  // Un «Vistos hace poco» de la migración v1, con su temporada: abre el cuadro del torneo.
+  const b = fakeBrowser('#/equipo?s=2025-2026&g=MCPK1&t=UD%20Las%20Mesas%20Hurac%C3%A1n');
+  const router = startRouter({ screens: allScreens(), root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/copa?g=MCPK1']);
+  assert.match(b.root.innerHTML, /^<section data-screen="copa">/);
+  assert.doesNotMatch(b.root.innerHTML, /route-notice/);
+  assert.deepEqual(b.marks(), [['#/explorar', 'true']]);
+});
+
+test('Equipo con un equipo que no juega en el grupo: se busca en Explorar, con aviso; sin equipo, sin aviso (decisión 3 de B3; B1:7998)', async () => {
+  assert.deepEqual(target(resolve('#/equipo?g=PG2&t=Guayarmina')),
+    ['#/explorar?q=Guayarmina', 'No encontramos a Guayarmina en Prebenjamín, Grupo 2 de Gran Canaria']);
+  assert.deepEqual(target(resolve('#/equipo?g=PG2')), ['#/explorar', null]);
+  // Un retirado sigue en la clasificación de su grupo (CD Batán, en PG2): su ficha se abre.
+  assert.deepEqual(resolve('#/equipo?g=PG2&t=CD%20Bat%C3%A1n'), { params: { g: 'PG2', t: 'CD Batán', s: PORTAL } });
+  // Un enlace antiguo «miequipo» con el grupo que se estaba viendo, en 2024-25 (Guayarmina jugaba en P1).
+  const b = fakeBrowser('#/equipo?s=2024-2025&g=PGC2&t=Guayarmina');
+  const loaded = [];
+  const router = startRouter({ screens: allScreens(), root: b.root, getContext: context({ loaded }), window: b.win, loadSeason: seasonLoader(loaded) });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/explorar?s=2024-2025&q=Guayarmina']);
+  assert.match(b.root.innerHTML, /<\/header><p class="notice route-notice" role="status">No encontramos a Guayarmina en Prebenjamín, Grupo 2 de Gran Canaria<\/p>/);
+});
+
+test('Equipo con otra grafía del equipo: su nombre canónico, con replaceState y sin aviso; con dos parecidos, Explorar con aviso (decisión 32)', async () => {
+  // «Las Mesas Hu», sin punto, en A2: el único equipo del grupo con ese nombre normalizado es «Las
+  // Mesas Hu.». La ruta conserva sus parámetros: sin `s` si no la traía, y con ella si la traía.
+  assert.deepEqual(target(resolve('#/equipo?g=A2&t=Las%20Mesas%20Hu')), ['#/equipo?g=A2&t=Las%20Mesas%20Hu.', null]);
+  assert.deepEqual(target(resolve('#/equipo?s=2025-2026&g=PG2&t=AD%20Huracan')), ['#/equipo?s=2025-2026&g=PG2&t=AD%20Hurac%C3%A1n', null]);
+  // Dos equipos del grupo con ese nombre normalizado: no se adivina, se busca en Explorar.
+  const pg2 = group('PG2');
+  const twins = { ...pg2, standings: [...pg2.standings, { ...pg2.standings[0], team: 'LAS MESAS HU' }] };
+  const base = context()();
+  const ctx = { ...base, model: { ...base.model, group: (season, id) => (id === 'PG2' ? twins : base.model.group(season, id)) } };
+  assert.deepEqual(target(resolveParams(parseRoute('#/equipo?g=PG2&t=Las%20Mesas%20Hu'), ctx)),
+    ['#/explorar?q=Las%20Mesas%20Hu', 'No encontramos a Las Mesas Hu en Prebenjamín, Grupo 2 de Gran Canaria']);
+  // Con el router: una sola entrada, ya con el nombre canónico, y la ficha pintada sin aviso.
+  const b = fakeBrowser('#/equipo?s=2025-2026&g=A2&t=Las%20Mesas%20Hu');
+  const router = startRouter({ screens: allScreens(), root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/equipo?s=2025-2026&g=A2&t=Las%20Mesas%20Hu.']);
+  assert.match(b.root.innerHTML, /^<section data-screen="equipo">/);
+  assert.doesNotMatch(b.root.innerHTML, /route-notice/);
+});
+
+// ── Plan B3, tarea 1: nav.update, nav.addRecent y nav.clearData ──────────
+
+test('nav.update: la búsqueda va a la dirección con replaceState, sin pintar ni mover el foco ni el desplazamiento; Atrás no recorre cada letra (decisión 4 de B3)', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  let nav = null;
+  const explorar = screen('explorar', {
+    log, body: () => html`<form role="search"><input id="buscar" type="search"></form>`,
+    mount: (root, ctx, n) => { nav = n; return () => log.push('limpieza explorar'); },
+  });
+  const router = startRouter({ screens: { ...allScreens(log), explorar }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/explorar#buscar' });
+  await router.idle();
+  const input = b.doc.getElementById('buscar');
+  assert.equal(input.focused, 1, '«Cambiar» abre Explorar con el foco en el buscador');
+  const state = b.win.history.state;
+  b.scroll(120);
+  log.length = 0;
+  const painted = b.root.innerHTML;
+  // Cada letra: la pantalla filtra su lista y apunta la búsqueda en la dirección.
+  for (const q of ['M', 'Me', 'Mes']) assert.equal(nav.update({ s: PORTAL, q }), true, q);
+  assert.deepEqual(log, [], 'ni needs, ni render, ni mount, ni la limpieza');
+  assert.equal(b.root.innerHTML, painted);
+  assert.deepEqual(b.entries(), ['#/', '#/explorar?s=2025-2026&q=Mes#buscar'], 'la misma entrada, con su ancla');
+  assert.deepEqual(b.win.history.state, state, 'su fbIdx y su fbKey');
+  assert.equal(b.win.scrollY, 120);
+  assert.equal(b.doc.activeElement, input, 'el cursor sigue en el buscador');
+  assert.equal(input.focused, 1);
+  assert.equal(b.h1().focused, 0);
+  assert.deepEqual(router.current(), { screen: 'explorar', params: { s: PORTAL, q: 'Mes' } });
+  // Borrar la búsqueda la quita de la dirección.
+  assert.equal(nav.update({ s: PORTAL, q: '' }), true);
+  assert.deepEqual(b.entries(), ['#/', '#/explorar?s=2025-2026#buscar']);
+  assert.deepEqual(router.current(), { screen: 'explorar', params: { s: PORTAL } });
+  nav.update({ s: PORTAL, q: 'Mes' });
+  // Si el navegador se niega (Safari, con más de 100 replaceState en pocos segundos), ni lanza ni cambia nada.
+  const replaceState = b.win.history.replaceState;
+  b.win.history.replaceState = () => { throw new Error('SecurityError: Attempt to use history.replaceState() more than 100 times per 10 seconds'); };
+  assert.equal(nav.update({ s: PORTAL, q: 'Mesa' }), false);
+  b.win.history.replaceState = replaceState;
+  assert.deepEqual(router.current(), { screen: 'explorar', params: { s: PORTAL, q: 'Mes' } });
+  // La navegación siguiente parte de la ruta nueva: la misma búsqueda por un enlace no crea entrada…
+  b.click({ href: '#/explorar?s=2025-2026&q=Mes' });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/', '#/explorar?s=2025-2026&q=Mes']);
+  // …y una ficha de los resultados es una entrada nueva, detrás de la de la búsqueda.
+  b.click({ href: '#/equipo?g=PG2&t=Acodetti' });
+  await router.idle();
+  assert.deepEqual(b.entries(), ['#/', '#/explorar?s=2025-2026&q=Mes', '#/equipo?g=PG2&t=Acodetti']);
+  assert.equal(b.win.history.state.fbIdx, 2);
+  // Atrás: la búsqueda escrita, que la pantalla pinta desde la dirección…
+  b.win.history.back();
+  await tick();
+  await router.idle();
+  assert.equal(b.index(), 1);
+  assert.equal(where(b), '#/explorar?s=2025-2026&q=Mes');
+  // …y Atrás otra vez, la portada, sin pasar por «Me» ni por «M».
+  b.win.history.back();
+  await tick();
+  await router.idle();
+  assert.equal(b.index(), 0);
+  assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
+  // Sin ruta (el contexto falló al arrancar y se pintó la caja de error), update no escribe nada.
+  const broken = fakeBrowser('#/explorar');
+  const r2 = await quietly({ screens: allScreens(), root: broken.root, getContext: () => { throw new Error('sin datos'); }, window: broken.win });
+  assert.equal(r2.nav.update({ s: PORTAL, q: 'Mes' }), false);
+  assert.deepEqual(broken.entries(), ['#/explorar']);
+});
+
+test('nav.update en la entrada del ancla: la conserva con la búsqueda, y al volver con Atrás el foco va al h1, no al buscador (decisiones 4 y 165 de B3)', async () => {
+  const b = fakeBrowser('#/');
+  let nav = null;
+  const explorar = screen('explorar', { body: () => html`<form role="search"><input id="buscar" type="search"></form>`, mount: (root, ctx, n) => { nav = n; } });
+  const router = startRouter({ screens: { ...allScreens(), explorar }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/explorar#buscar' });
+  await router.idle();
+  assert.equal(b.doc.getElementById('buscar').focused, 1, 'al avanzar, el buscador');
+  nav.update({ s: PORTAL, q: 'Acod' });
+  b.click({ href: '#/equipo?g=PG2&t=Acodetti' });
+  await router.idle();
+  b.win.history.back();
+  await tick();
+  await router.idle();
+  // La entrada vuelve con su búsqueda y su ancla, pero el teclado no se abre sobre los resultados.
+  assert.equal(b.hash(), '#/explorar?s=2025-2026&q=Acod#buscar');
+  assert.equal(b.doc.getElementById('buscar').focused, 0, 'al volver, el buscador no');
+  assert.equal(b.h1().focused, 1, 'al volver, el h1');
+});
+
+test('nav.addRecent llama a actions.addRecent sin volver a pintar; nav.clearData, a actions.clearData, y abre Mi equipo con push (decisiones 5 y 6 de B3)', async () => {
+  const b = fakeBrowser('#/');
+  const log = [];
+  const calls = [];
+  let nav = null;
+  const equipo = screen('equipo', { log, mount: (root, ctx, n) => { nav = n; } });
+  const actions = {
+    addRecent: (entry) => { calls.push(['addRecent', entry]); return true; },
+    clearData: () => { calls.push(['clearData']); },
+  };
+  const router = startRouter({ screens: { ...allScreens(log), equipo }, root: b.root, getContext: context(), window: b.win, actions });
+  await router.idle();
+  b.click({ href: '#/equipo?g=PG2&t=Acodetti' });
+  await router.idle();
+  log.length = 0;
+  const entry = { s: PORTAL, g: 'PG2', t: 'Acodetti' };
+  assert.equal(nav.addRecent(entry), true);
+  await router.idle();
+  assert.deepEqual(calls, [['addRecent', entry]]);
+  assert.deepEqual(log, [], 'sin volver a pintar');
+  b.click({ href: '#/ajustes' });
+  await router.idle();
+  await router.nav.clearData();
+  assert.deepEqual(calls.map(([name]) => name), ['addRecent', 'clearData']);
+  assert.deepEqual(b.entries(), ['#/', '#/equipo?g=PG2&t=Acodetti', '#/ajustes', '#/']);
+  assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
+  assert.equal(b.h1().focused, 1, 'el foco al h1, como al avanzar');
+  // Sin acciones (un router sin app.js): nada que guardar, y clearData solo navega.
+  const bare = fakeBrowser('#/ajustes');
+  const r2 = startRouter({ screens: allScreens(), root: bare.root, getContext: context(), window: bare.win });
+  await r2.idle();
+  assert.equal(r2.nav.addRecent(entry), false);
+  await r2.nav.clearData();
+  assert.deepEqual(bare.entries(), ['#/ajustes', '#/']);
 });

@@ -88,7 +88,8 @@ test('PG2, 02/06/2026, Las Mesas Hu. 2–7 AD Huracán: sin cronología, sin act
   assert.match(h2h, /<a class="pt-h2h-row" href="#\/partido\?s=2025-2026&amp;g=PG2&amp;r=Jornada%2015&amp;h=AD%20Hurac%C3%A1n&amp;a=Las%20Mesas%20Hu\.">/);
   // Contexto: posición actual y forma de los dos, en una línea.
   assert.equal(text(blockOf(out, 'Contexto')),
-    'Contexto posición y últimos cinco Las Mesas Hu. 9.º , últimos resultados: E P P G P AD Huracán 3.º , últimos resultados: P G G G G');
+    'Contexto posición y últimos cinco Las Mesas Hu. 9.º , últimos resultados: E empatado, P perdido, P perdido, G ganado, P perdido '
+    + 'AD Huracán 3.º , últimos resultados: P perdido, G ganado, G ganado, G ganado, G ganado');
   // Terminología de la spec: Local y Visitante, G, E y P.
   assert.doesNotMatch(text(out), /\b(HOME|AWAY|Home|Away)\b/);
 });

@@ -42,6 +42,7 @@ const STATIC_ASSETS = [
   './src/model.js',
   './src/myteam.js',
   './src/screen-home.js',
+  './src/team-view.js',
   './src/state.js',
   './src/store.js',
   './src/ui.js',

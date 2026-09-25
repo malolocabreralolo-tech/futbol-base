@@ -62,10 +62,13 @@ export function crestFallback(img) {
 
 // Bloque con título: su h2, el contexto a la derecha (opcional) y el contenido tal cual (una caja,
 // un vacío, una lista…); id, el de la sección, para un ancla como #calendario. El único de la app,
-// con un solo orden de argumentos (I2 de la revisión final de B2): lo usan las pantallas y box.
+// con un solo orden de argumentos (I2 de la revisión final de B2): lo usan las pantallas y box. Sin
+// título (null o ''), el bloque va sin cabecera ni contexto: solo su separación (decisión 10 de B3).
 export function block(title, content, { context = null, id = null } = {}) {
+  const anchor = id ? html` id="${id}"` : '';
+  if (title == null || title === '') return html`<section class="block"${anchor}>${content}</section>`;
   const ctx = context == null || context === '' ? '' : html`<p class="block-context">${context}</p>`;
-  return html`<section class="block"${id ? html` id="${id}"` : ''}><div class="block-head"><h2 class="block-title">${title}</h2>${ctx}</div>${content}</section>`;
+  return html`<section class="block"${anchor}><div class="block-head"><h2 class="block-title">${title}</h2>${ctx}</div>${content}</section>`;
 }
 
 // El contenido en una caja; con título, dentro de su bloque.
@@ -135,8 +138,9 @@ const VIEWS = {
 const abbr = (label, title) => (title ? html`<abbr title="${title}">${label}</abbr>` : label);
 
 // rows: Row[] del modelo; `form` (letras G/E/P) es opcional y solo lo usan
-// las vistas forma y todas. `mine` es el nombre exacto del equipo propio.
-export function standingsTable(rows, { view = 'puntos', mine, shields, hrefFor, caption } = {}) {
+// las vistas forma y todas. `mine` es el nombre exacto del equipo resaltado, y `mineText`, lo que
+// dice su texto oculto: «mi equipo» o, en la ficha de otro equipo, «este equipo» (B3).
+export function standingsTable(rows, { view = 'puntos', mine, mineText = 'mi equipo', shields, hrefFor, caption } = {}) {
   const keys = VIEWS[view] || VIEWS.puntos;
   const head = html`<tr><th scope="col" class="st-pos">${abbr('#', 'Posición')}</th><th scope="col" class="st-team">Equipo</th>${keys.map((k) =>
     html`<th scope="col" class="${COLUMNS[k].cls}">${abbr(COLUMNS[k].label, COLUMNS[k].title)}</th>`)}<th scope="col" class="st-pts">${abbr('Pts', 'Puntos')}</th></tr>`;
@@ -147,7 +151,7 @@ export function standingsTable(rows, { view = 'puntos', mine, shields, hrefFor, 
       ? html`<a class="st-link" href="${hrefFor(row)}">${inner}</a>`
       : html`<span class="st-label">${inner}</span>`;
     const cellsHtml = keys.map((k) => html`<td class="${COLUMNS[k].cls}">${COLUMNS[k].cell(row)}</td>`);
-    return html`<tr${isMine ? html` class="is-mine"` : ''}><td class="st-pos">${row.pos ?? i + 1}</td><th scope="row" class="st-team">${label}${isMine ? html`<span class="vh"> (mi equipo)</span>` : ''}</th>${cellsHtml}<td class="st-pts">${row.pts}</td></tr>`;
+    return html`<tr${isMine ? html` class="is-mine"` : ''}><td class="st-pos">${row.pos ?? i + 1}</td><th scope="row" class="st-team">${label}${isMine ? html`<span class="vh"> (${mineText})</span>` : ''}</th>${cellsHtml}<td class="st-pts">${row.pts}</td></tr>`;
   });
   return html`<table class="standings"><caption class="vh">${caption || 'Clasificación'}</caption><thead>${head}</thead><tbody>${body}</tbody></table>`;
 }
@@ -155,11 +159,14 @@ export function standingsTable(rows, { view = 'puntos', mine, shields, hrefFor, 
 // ── Forma, selector, aviso y vacío ──────────────────────────────────────
 
 const FORM_CLASS = { G: 'form-g', E: 'form-e', P: 'form-p' };
+// El texto oculto de cada letra (recomendación 4 de B1): el lector de pantalla dice «ganado,
+// empatado, perdido» en lugar de «G E P»; la letra se ve, pero no se lee dos veces.
+const FORM_WORD = { G: 'ganado', E: 'empatado', P: 'perdido' };
 
 export function formChips(letters) {
-  return html`<span class="form">${letters.map((letter) => {
+  return html`<span class="form">${letters.map((letter, i) => {
     if (!Object.hasOwn(FORM_CLASS, letter)) throw new RangeError(`Letra de forma no válida: «${letter}» (solo G, E o P)`);
-    return html`<span class="form-chip ${FORM_CLASS[letter]}">${letter}</span>`;
+    return html`<span class="form-chip ${FORM_CLASS[letter]}" aria-hidden="true">${letter}</span><span class="vh">${FORM_WORD[letter]}${i < letters.length - 1 ? ', ' : ''}</span>`;
   })}</span>`;
 }
 

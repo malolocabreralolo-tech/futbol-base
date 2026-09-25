@@ -888,3 +888,24 @@ abbr[title] { text-decoration: none; }
   .pt-full { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
   .pt-short { display: none; }
 }
+
+/* ── Vista de equipo: lo largo de la ficha (team-view.js, decisión 8 de B3) ─ */
+
+/* El calendario completo de la ficha (teamColumns con `rest`): en móvil va al final, detrás de la
+ * clasificación y las cifras, en el orden del documento; en escritorio, en la columna izquierda, justo
+ * debajo de lo principal, mientras la derecha ocupa las dos filas (spec §4.8). La segunda fila (1fr)
+ * crece si la derecha es más alta: lo principal y `rest` quedan juntos, sin hueco entre ellos. */
+.home-rest { min-width: 0; }
+
+@media (min-width: 1024px) {
+  .home-cols.has-rest { grid-template-rows: auto 1fr; }
+  .has-rest > .home-main { grid-column: 1; grid-row: 1; }
+  .has-rest > .home-side { grid-column: 2; grid-row: 1 / span 2; }
+  .has-rest > .home-rest { grid-column: 1; grid-row: 2; }
+}
+
+/* «Hacer mi equipo» en la cabecera de la ficha: en un móvil estrecho parte en dos líneas y deja sitio
+ * al nombre, con «‹» y el escudo al lado (a 320 px, «AD Huracán» entero y no «AD Hu…»). */
+@media (max-width: 479.98px) {
+  .team-make { max-width: 72px; line-height: 1.25; text-align: right; }
+}

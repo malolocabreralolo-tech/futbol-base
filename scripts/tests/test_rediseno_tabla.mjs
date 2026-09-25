@@ -73,9 +73,11 @@ test('Forma: los cinco últimos de lastResults y «retirado» para CD Batán', (
   assert.deepEqual(active(nav(out, 'wide')), ['Todas']);
   assert.match(out, /<div class="box tabla-forma">/);
   const rows = bodyRows(out);
-  const letters = (row) => [...row.html.matchAll(/<span class="form-chip form-[gep]">([GEP])<\/span>/g)].map(m => m[1]).join('');
+  const letters = (row) => [...row.html.matchAll(/<span class="form-chip form-[gep]" aria-hidden="true">([GEP])<\/span>/g)].map(m => m[1]).join('');
+  const words = (row) => [...row.html.matchAll(/<span class="vh">(ganado|empatado|perdido)(?:, )?<\/span>/g)].map(m => m[1]).join(' ');
   assert.equal(letters(rows[8]), lastResults('Las Mesas Hu.', pg2()).map(x => x.letter).join(''));
   assert.equal(letters(rows[8]), 'EPPGP');
+  assert.equal(words(rows[8]), 'empatado perdido perdido ganado perdido', 'lo que dice el lector de pantalla');
   assert.equal(letters(rows[0]), 'GGPGG');
   assert.match(rows[14].html, /<td class="st-form"><span class="st-retired">retirado<\/span><\/td>/);
   assert.match(rows[14].text, /^15 .*CD Batán 28 0 0 28 0 84 −84 retirado 0$/);
@@ -156,7 +158,7 @@ test('temporada pasada (P1 2024-25): la temporada en la etiqueta, forma del arch
   const rows = bodyRows(out);
   assert.equal(rows.length, 10);
   assert.ok(rows.every(r => !r.mine));
-  assert.match(rows[0].text, /^1 .*Moya 9 7 1 1 41 17 \+24 G G G G G 22$/);
+  assert.match(rows[0].text, /^1 .*Moya 9 7 1 1 41 17 \+24 G ganado, G ganado, G ganado, G ganado, G ganado 22$/);
   assert.match(rows[0].html, /href="#\/equipo\?s=2024-2025&amp;g=P1&amp;t=Moya"/);
   assert.match(out, /<p class="notice source-line">Clasificación oficial\. Archivo de la temporada 2024\/25\.<\/p>/);
   assert.match(out, /href="#\/ligas\?s=2024-2025&amp;c=benjamin&amp;i=grancanaria&amp;to=tabla"/);

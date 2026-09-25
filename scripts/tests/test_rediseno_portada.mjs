@@ -14,7 +14,8 @@ import { shareLink, copyText, weekdayDate, dayMonth, dayMonthLong, monthName } f
 import { loadStore, LEGACY_KEY } from '../../src/store.js';
 import { ctxFor } from './fixtures/rediseno/screens.mjs';
 import { standingsTable } from '../../src/ui.js';
-import { screen, coverageText, shareData, matchCalendar, teamCalendar } from '../../src/screen-home.js';
+import { screen } from '../../src/screen-home.js';
+import { coverageText, shareData, matchCalendar, teamCalendar } from '../../src/team-view.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const shields = fixture('shields');

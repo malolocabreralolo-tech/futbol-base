@@ -259,7 +259,7 @@ test('standingsTable: fila propia con clase y texto para lectores; enlaces escap
 
 test('standingsTable: vista Forma con fichas y «retirado» para los retirados', () => {
   const out = s(standingsTable(PG2, { view: 'forma' }));
-  assert.match(out, /<td class="st-form"><span class="form"><span class="form-chip form-e">E<\/span><span class="form-chip form-p">P<\/span>/);
+  assert.match(out, /<td class="st-form"><span class="form"><span class="form-chip form-e" aria-hidden="true">E<\/span><span class="vh">empatado, <\/span><span class="form-chip form-p" aria-hidden="true">P<\/span>/);
   assert.match(out, /<td class="st-form"><span class="st-retired">retirado<\/span><\/td>/);
 });
 
@@ -274,10 +274,13 @@ test('standingsTable: los nombres con comillas no rompen el marcado', () => {
   assert.match(out, /<tr class="is-mine"><td class="st-pos">2<\/td>/);
 });
 
-test('formChips: G, E y P con su clase; cualquier otra letra se rechaza', () => {
+test('formChips: G, E y P con su clase y su palabra oculta (recomendación 4 de B1); cualquier otra letra se rechaza', () => {
+  // La letra se ve y no se lee; el lector de pantalla dice «ganado, empatado, perdido».
   assert.equal(s(formChips(['G', 'E', 'P'])), '<span class="form">'
-    + '<span class="form-chip form-g">G</span><span class="form-chip form-e">E</span>'
-    + '<span class="form-chip form-p">P</span></span>');
+    + '<span class="form-chip form-g" aria-hidden="true">G</span><span class="vh">ganado, </span>'
+    + '<span class="form-chip form-e" aria-hidden="true">E</span><span class="vh">empatado, </span>'
+    + '<span class="form-chip form-p" aria-hidden="true">P</span><span class="vh">perdido</span></span>');
+  assert.equal(s(formChips(['E'])), '<span class="form"><span class="form-chip form-e" aria-hidden="true">E</span><span class="vh">empatado</span></span>');
   assert.equal(s(formChips([])), '<span class="form"></span>');
   for (const bad of ['W', 'D', 'L', 'g', '']) assert.throws(() => formChips([bad]), RangeError, bad);
 });

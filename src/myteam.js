@@ -275,21 +275,27 @@ export function summerCups(cups, myTeam, index) {
   return out;
 }
 
-// ---- Estado de la portada (spec §4.2) ----
+// ---- Estado de un equipo y de la portada (spec §4.2 y §4.6) ----
 
-// Orden E, X, D, B, C, A. Solo cuentan los partidos que no son contra retirados. A y C
-// salen de teamFixtures, como el próximo partido que enseña la portada: A si mi equipo
-// tiene próximo partido; C si ya ha jugado y no lo tiene. Sin nada jugado ni próximo
-// partido (todos sin fecha), B. `health` no cambia el estado: solo decide la caja.
-export function homeState({ resolution, todayISO, portalSeason }) {
-  if (resolution?.status === 'ask') return 'E';
-  if (resolution?.status !== 'ok') return 'X';
-  const { group, name } = resolution;
+// Estado de un equipo en su grupo, en el orden D, B, C, A (decisión 9 de B3): lo comparten la
+// portada, tras E y X, y la ficha de Equipo, que así no necesita una resolución de mi equipo falsa.
+// Solo cuentan los partidos que no son contra retirados. A y C salen de teamFixtures, como el
+// próximo partido que se enseña: A si el equipo tiene próximo partido; C si ya ha jugado y no lo
+// tiene. Sin nada jugado ni próximo partido (todos sin fecha), B.
+export function teamState({ group, name, todayISO, portalSeason }) {
   if (groupFinished(group, todayISO, portalSeason)) return 'D';
   if (!countedMatches(group).some(match => matchState(match, todayISO) === 'jugado')) return 'B';
   const { next, played } = teamFixtures(name, group, todayISO);
   if (next) return 'A';
   return played > 0 ? 'C' : 'B';
+}
+
+// Orden E, X y después el de teamState sobre el grupo resuelto. `health` no cambia el estado: solo
+// decide la caja.
+export function homeState({ resolution, todayISO, portalSeason }) {
+  if (resolution?.status === 'ask') return 'E';
+  if (resolution?.status !== 'ok') return 'X';
+  return teamState({ group: resolution.group, name: resolution.name, todayISO, portalSeason });
 }
 
 export function showNextSeasonBox({ group, health, portalSeason }) {

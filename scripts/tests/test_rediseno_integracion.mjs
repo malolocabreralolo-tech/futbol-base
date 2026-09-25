@@ -45,7 +45,7 @@ test('rutas completas: las cuatro pantallas de B2, Equipo y la provisional en la
   assert.equal(SCREEN_MAP.equipo, equipo);
   assert.deepEqual([home, jornada, tabla, partido, equipo].map((s) => s.id), ['home', 'jornada', 'tabla', 'partido', 'equipo']);
   assert.deepEqual(SCREENS.filter((name) => SCREEN_MAP[name] === pendiente),
-    ['explorar', 'ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes']);
+    ['ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes']);
 });
 
 test('myTeamToSave: el cambio de fase (FF5 → A2, decisión 12 de B1) sí; nada si no cambia', () => {

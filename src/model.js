@@ -1197,3 +1197,191 @@ export function anyCards(lineups) {
   return Object.values(lineups || {}).some(entry => (entry && entry.dup ? entry.list || [] : [entry])
     .some(acta => acta && [...(acta.home || []), ...(acta.away || [])].some(p => (p.y | 0) + (p.rd | 0) > 0)));
 }
+
+/* ── Explorar y Ligas (Plan B3, Tareas 6 y 7; spec §4.7) ──────────────────
+ *
+ * phaseLevel(group) → 1 | 2                 el nivel de su fase («la fase más alta», decisión 17)
+ * topPhase(entries) → entries               de unos { group, … }, los de la fase más alta
+ * searchKey(text) → texto plegado            lo que compara el buscador
+ * searchTeams(model, season, query) → { leagues: [{ name, cat, group }], cups: [{ name, cat, group }] }
+ * competitions(model, season, { cat, island }) → [{ cat, key, label, kind: 'liga'|'copa', groups }]
+ * groupSummary(group) → { label, teams, round, leader, champion }
+ */
+
+/* Nivel de la fase de un grupo: 2 para la Segunda Fase (con letra o sin ella), la Fase 2 de
+ * Fuerteventura y sus ligas Oro, Plata y Bronce, que se juegan después de la primera fase; 1 para
+ * todo lo demás. Es la regla de «la fase más alta» de mi equipo (myteam.js), del buscador y del orden
+ * de las competiciones: vive aquí porque model.js no puede importar de myteam.js (sería un ciclo).
+ * Memorizado por identidad del objeto Group: el valor sale solo del propio grupo (su fase, vía
+ * competitionKey), y el WeakMap no retiene los grupos que ya no se usan. */
+const PHASE_LEVEL = {
+  'segunda-fase': 2, 'segunda-a': 2, 'segunda-b': 2, 'segunda-c': 2, 'segunda-d': 2, 'segunda-e': 2,
+  'fase-2': 2, oro: 2, plata: 2, bronce: 2,
+};
+const levels = new WeakMap();
+export function phaseLevel(group) {
+  if (!levels.has(group)) levels.set(group, PHASE_LEVEL[competitionKey(group, group.season).phase] ?? 1);
+  return levels.get(group);
+}
+
+/* De una lista de { group, … }, los de la fase más alta (phaseLevel): la regla de los candidatos de mi
+ * equipo y de su trayectoria (myteam.js), y del buscador de Explorar (decisión 37). */
+export function topPhase(entries) {
+  const top = Math.max(...entries.map(entry => phaseLevel(entry.group)));
+  return entries.filter(entry => phaseLevel(entry.group) === top);
+}
+
+const CAT_ORDER = ['benjamin', 'prebenjamin'];
+const ISLAND_ORDER = ['grancanaria', 'lanzarote', 'fuerteventura'];
+// Dentro de un nivel y una isla: la división, la fase y la copa, de la primera a la última de la
+// temporada (la Liga Oro antes que la Plata; la Preferente antes que la Primera). La fuente ordena los
+// grupos por su código (FB, FO, FP), y ese orden no sirve.
+const DIVISION_ORDER = ['preferente', 'primera', 'unica'];
+const PHASE_ORDER = ['segunda-fase', 'segunda-a', 'segunda-b', 'segunda-c', 'segunda-d', 'segunda-e', 'fase-2',
+  'oro', 'plata', 'bronce', 'primera-fase', 'fase-1', null];
+const CUP_ORDER = [null, 'campeones', 'insular', 'maspalomas'];
+const rankOf = (list, value) => (list.includes(value) ? list.indexOf(value) : list.length);
+// Orden de nombres sin tildes ni mayúsculas, el mismo en todos los motores (sin datos de idioma).
+function byName(a, b) {
+  const x = foldText(a), y = foldText(b);
+  return x < y ? -1 : x > y ? 1 : a < b ? -1 : a > b ? 1 : 0;
+}
+// Orden natural: las cifras como números («Grupo 2» antes que «Grupo 10»).
+function naturalOrder(a, b) {
+  const x = foldText(a).match(/\d+|\D+/g) || [];
+  const y = foldText(b).match(/\d+|\D+/g) || [];
+  for (let i = 0; i < Math.min(x.length, y.length); i++) {
+    if (x[i] === y[i]) continue;
+    if (/^\d/.test(x[i]) && /^\d/.test(y[i])) return Number(x[i]) - Number(y[i]);
+    return x[i] < y[i] ? -1 : 1;
+  }
+  return x.length - y.length;
+}
+// El nombre de un grupo dentro de su competición: «Grupo 2», «Fase A» (la letra de la Copa de
+// Campeones de 2024-25, que la fuente llama «Grupo 1»), «Copa Oro», «Liga Oro».
+function shortLabel(group) {
+  const c = classifyPhase(group, group.season);
+  const own = c.group !== undefined ? c.group : String(group.name ?? '').trim();
+  return own || String(group.name ?? '').trim() || group.id;
+}
+
+/* El texto que compara el buscador: sin tildes, en minúsculas y con cada tramo que no es letra o
+ * cifra en un espacio («Las Mesas Hu.» → «las mesas hu»). */
+export function searchKey(text) {
+  return foldText(text).replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+/* Los equipos de una temporada o de los torneos, una sola vez: [{ name, key, bare, group }], de la
+ * clasificación y del calendario de cada grupo, en el orden de los grupos. `key` es searchKey(name)
+ * y `bare`, normalizeTeamName(name) (sin las siglas del club: «UD Las Mesas Huracán» → «las mesas
+ * huracan»). Memorizado por la colección: el modelo memoriza sus Season y sus Cups. */
+const teamLists = new WeakMap();
+function teamList(collection) {
+  if (!teamLists.has(collection)) {
+    const out = [];
+    for (const group of collection.groups) {
+      const names = new Set(group.standings.map(row => row.team));
+      for (const round of group.rounds) for (const m of round.matches) { names.add(m.home); names.add(m.away); }
+      for (const name of names) {
+        if (typeof name === 'string' && name.trim()) out.push({ name, key: searchKey(name), bare: normalizeTeamName(name), group });
+      }
+    }
+    teamLists.set(collection, out);
+  }
+  return teamLists.get(collection);
+}
+
+/* Buscador de Explorar (spec §4.7; decisión 17 de B3). Busca `query` por nombre normalizado, desde 2
+ * letras, en los grupos de las dos categorías de la temporada y, si son de esa temporada, en los
+ * torneos (model.cups()). Un nombre casa si contiene la búsqueda plegada (searchKey) o, sin las
+ * siglas del club, la búsqueda sin ellas (normalizeTeamName: «ud las mesas» encuentra «Las Mesas Hu.»).
+ * - leagues: los grupos de liga, uno por nombre y categoría, en el de la fase más alta (la regla de
+ *   topPhase de mi equipo); dos grupos de esa fase con el mismo nombre son dos equipos (Santa Brígida en
+ *   B1 y B2), y salen los dos. Abren #/equipo.
+ * - cups: los grupos que no son de liga (Copa de Campeones, copas insulares y torneos), uno por nombre y
+ *   grupo. Abren #/copa.
+ * Orden (decisión 166 de B3): primero los nombres que empiezan por la búsqueda, después los que tienen
+ * una palabra que empieza por ella y después el resto (searchKey: «la» pone «Las Mesas Hu.» antes que
+ * «UD Las Mesas Huracán», y los dos antes que «Atalaya B»); dentro, por nombre; a igual nombre, de
+ * benjamín a prebenjamín, y después en el orden de los grupos. */
+export function searchTeams(model, season, query) {
+  const key = searchKey(query);
+  if (key.length < 2) return { leagues: [], cups: [] };
+  const bare = normalizeTeamName(String(query ?? ''));
+  const built = model.season(season);
+  const cups = model.cups();
+  const hits = [...(built ? teamList(built) : []), ...(cups && cups.season === season ? teamList(cups) : [])]
+    .filter(entry => entry.key.includes(key) || (bare.length >= 2 && entry.bare.includes(bare)));
+  const byTeam = new Map();
+  for (const hit of hits) {
+    if (hit.group.kind !== 'league') continue;
+    const id = `${hit.group.cat}|${hit.name}`;
+    byTeam.set(id, [...(byTeam.get(id) || []), hit]);
+  }
+  const leagues = [...byTeam.values()].flatMap(list => topPhase(list));
+  const tier = entry => (entry.key.startsWith(key) ? 0 : ` ${entry.key}`.includes(` ${key}`) ? 1 : 2);
+  const order = (a, b) => tier(a) - tier(b) || byName(a.name, b.name) || rankOf(CAT_ORDER, a.group.cat) - rankOf(CAT_ORDER, b.group.cat);
+  const out = list => list.sort(order).map(({ name, group }) => ({ name, cat: group.cat, group }));
+  return { leagues: out(leagues), cups: out(hits.filter(hit => hit.group.kind !== 'league')) };
+}
+
+/* Competiciones de una temporada (spec §4.7; decisión 18 de B3): una entrada por categoría y clave
+ * (Group.compKey), con su nombre (el label de competitionKey), si es liga o copa y sus grupos. Entran
+ * los grupos de la temporada y, si son de esa temporada, los torneos.
+ * - kind: 'copa' en la Copa de Campeones, las copas insulares y los torneos (competitionKey.cup); si
+ *   no, 'liga'.
+ * - Orden: benjamín y prebenjamín; en cada una, las ligas y después las copas; dentro, la fase más
+ *   alta primero, después Gran Canaria, Lanzarote y Fuerteventura, y después la división, la fase y la
+ *   copa (PHASE_ORDER…) y el nombre.
+ * - Los grupos, en orden natural de su nombre («Grupo 2» antes que «Grupo 10»).
+ * - cat e island filtran; sin ellos, todas. Una temporada sin cargar da []. */
+export function competitions(model, season, { cat = null, island = null } = {}) {
+  const built = model.season(season);
+  const cups = model.cups();
+  const groups = [...(built ? built.groups : []), ...(cups && cups.season === season ? cups.groups : [])];
+  const entries = new Map();
+  for (const group of groups) {
+    if ((cat && group.cat !== cat) || (island && group.island !== island)) continue;
+    const id = `${group.cat}|${group.compKey}`;
+    if (!entries.has(id)) {
+      const ck = competitionKey(group, group.season);
+      entries.set(id, { ck, cat: group.cat, key: group.compKey, label: ck.label, kind: ck.cup ? 'copa' : 'liga', level: phaseLevel(group), groups: [] });
+    }
+    entries.get(id).groups.push(group);
+  }
+  const rank = e => [rankOf(CAT_ORDER, e.cat), e.kind === 'liga' ? 0 : 1, -e.level, rankOf(ISLAND_ORDER, e.ck.island),
+    rankOf(DIVISION_ORDER, e.ck.division), rankOf(PHASE_ORDER, e.ck.phase), rankOf(CUP_ORDER, e.ck.cup)];
+  return [...entries.values()]
+    .sort((a, b) => {
+      const x = rank(a), y = rank(b);
+      const i = x.findIndex((v, k) => v !== y[k]);
+      return i >= 0 ? x[i] - y[i] : byName(a.label, b.label);
+    })
+    .map(e => ({
+      cat: e.cat, key: e.key, label: e.label, kind: e.kind,
+      groups: e.groups.map(g => [shortLabel(g), g]).sort((a, b) => naturalOrder(a[0], b[0]) || naturalOrder(a[1].id, b[1].id)).map(([, g]) => g),
+    }));
+}
+
+/* Un grupo en una línea (Ligas y la Copa de Campeones de Explorar; decisión 20 de B3):
+ * - label: su nombre dentro de la competición («Grupo 2», «Fase A», «Copa Oro», «Liga Oro»);
+ * - teams: los equipos de su clasificación o, sin ella (los cuadros de la Maspalomas), los del calendario;
+ * - round: la etiqueta de la ronda en curso que marca la fuente («Jornada 22», «Final»), o null;
+ * - leader: el 1.º de la clasificación, en ligas y liguillas, si ya ha jugado; si no, null;
+ * - champion: en un cuadro, quien pasó en la final (su único partido de la última ronda); si no, null. */
+export function groupSummary(group) {
+  const rounds = group.rounds || [];
+  const standings = group.standings || [];
+  const round = group.currentRound ? rounds.find(r => r.key === group.currentRound) : null;
+  const inCalendar = new Set(rounds.flatMap(r => r.matches.flatMap(m => [m.home, m.away])).filter(Boolean));
+  const last = rounds[rounds.length - 1];
+  const final = group.kind === 'cup-bracket' && last && last.matches.length === 1 ? last.matches[0] : null;
+  const first = standings[0];
+  return {
+    label: shortLabel(group),
+    teams: standings.length || inCalendar.size,
+    round: round ? round.label : null,
+    leader: group.kind !== 'cup-bracket' && first && first.pj > 0 ? first.team : null,
+    champion: final && final.advancer ? (final.advancer === 'home' ? final.home : final.away) : null,
+  };
+}

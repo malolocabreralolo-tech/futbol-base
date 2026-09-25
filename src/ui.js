@@ -2,7 +2,7 @@
 // devuelven Html: no leen globales ni tocan el DOM al importarse. Las clases
 // que emiten están definidas en acta.css.
 import { html, Html } from './html.js';
-import { matchState, penaltyWinner } from './model.js';
+import { matchState, penaltyWinner, seasonLabel } from './model.js';
 import { shieldFile } from './state.js';
 
 // ── Escudo y monograma ──────────────────────────────────────────────────
@@ -273,4 +273,33 @@ export function pointsChart(series, { max } = {}) {
   const width = values.length - 1;
   const points = values.flatMap((v, i) => (v == null ? [] : [`${i},${max - v}`])).join(' ');
   return html`<svg class="points-chart" viewBox="0 0 ${width} ${max}" preserveAspectRatio="none" aria-hidden="true" focusable="false"><line class="points-base" x1="0" y1="${max}" x2="${width}" y2="${max}"></line><polyline class="points-line" points="${points}"></polyline></svg>`;
+}
+
+// ── Buscador, selector de temporada y filas de enlace (Plan B3, Tarea 6) ──
+
+const SEARCH_ICON = svg(html`<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/>`);
+
+// Buscador (spec §4.7; decisión 17 de B3): un <input type="search"> con su etiqueta, dentro de un
+// <form role="search">. Filtrar al escribir es cosa del mount de cada pantalla, que además detiene
+// el envío del formulario (Intro no recarga la página). El id es estable: #buscar es el ancla de
+// «Cambiar» (§4.2 A). La letra del campo mide 16 px o más: iOS no amplía la página al enfocarlo.
+export function searchBox({ id, value = '', label, placeholder = label }) {
+  return html`<form class="search" role="search"><label class="vh" for="${id}">${label}</label><span class="search-icon" aria-hidden="true">${SEARCH_ICON}</span><input class="search-input" id="${id}" type="search" value="${value}" placeholder="${placeholder}" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"></form>`;
+}
+
+// Selector de temporada (spec §4.7; decisión 16 de B3): la acción de la cabecera, «2025/26 ▾», es un
+// botón con aria-expanded que despliega un enlace por temporada, de la más reciente a la más antigua
+// (el orden de SEASONS). Lo abre y lo cierra el mount de la pantalla. seasons: [{ name }]; active: la
+// temporada que se ve; hrefFor(name) → el enlace de cada una; id: el del botón, y «<id>-lista», el de
+// la lista (aria-controls).
+export function seasonPicker(seasons, active, hrefFor, { id }) {
+  const items = seasons.map(({ name }) => html`<li><a class="season-option" href="${hrefFor(name)}"${name === active ? html` aria-current="true"` : ''}>${seasonLabel(name)}</a></li>`);
+  return html`<div class="season-picker"><button class="screen-action season-toggle" id="${id}" type="button" aria-expanded="false" aria-controls="${id}-lista"><span class="vh">Temporada </span>${seasonLabel(active)}<span class="season-caret" aria-hidden="true"></span></button><ul class="season-menu" id="${id}-lista" hidden>${items}</ul></div>`;
+}
+
+// Fila de una lista de enlaces (Explorar y Ligas; maqueta 5-4): el título, con su detalle debajo si
+// lo hay, y el contexto a la derecha en --mute («4 grupos», «junio»). Toda la fila es el enlace, de
+// 44 px o más. cls: una clase más para la fila (a.group-row, el marcador de Ligas).
+export function linkRow(href, title, { context = null, detail = null, cls = null } = {}) {
+  return html`<a class="${cls ? `link-row ${cls}` : 'link-row'}" href="${href}"><span class="link-row-main"><span class="link-row-title">${title}</span>${detail ? html`<span class="link-row-detail">${detail}</span>` : ''}</span>${context ? html`<span class="link-row-context">${context}</span>` : ''}</a>`;
 }

@@ -1,7 +1,7 @@
 // Identidad de club y «mi equipo» a través de temporadas y fases (spec §6).
 // Módulo puro: recibe los datos por parámetro y no lee ningún global de datos.
 import { normalizeForTeamsMapping, shieldFile } from './state.js';
-import { matchState, retiredTeams, competitionKey, groupFinished, teamFixtures } from './model.js';
+import { matchState, retiredTeams, groupFinished, teamFixtures, phaseLevel, topPhase } from './model.js';
 
 // Nombres de torneos y de la federación que no se pueden unir por escudo ni por clave base.
 // Además del de la Maspalomas, los de 2025-26 que cambian de la Primera Fase a la siguiente
@@ -101,10 +101,6 @@ export function sameClub(index, a, b) {
 // ---- Resolución de mi equipo (spec §6.3) ----
 
 const CATS = ['benjamin', 'prebenjamin'];
-const PHASE_LEVEL = {
-  'segunda-fase': 2, 'segunda-a': 2, 'segunda-b': 2, 'segunda-c': 2, 'segunda-d': 2, 'segunda-e': 2,
-  'fase-2': 2, oro: 2, plata: 2, bronce: 2,
-};
 
 const allMatches = group => group.rounds.flatMap(round => round.matches);
 
@@ -122,20 +118,9 @@ function countedMatches(group) {
 }
 
 const hasPending = (group, todayISO) => countedMatches(group).some(match => matchState(match, todayISO) === 'pendiente');
-// Nivel de fase de cada grupo, memorizado por identidad del objeto Group. El valor sale solo del
-// propio grupo (su fase, vía competitionKey) y no lee nada externo, así que memorizarlo no cambia
-// ningún resultado; al ser un WeakMap, tampoco retiene los grupos que ya no se usan.
-const levels = new WeakMap();
-function phaseLevel(group) {
-  if (!levels.has(group)) levels.set(group, PHASE_LEVEL[competitionKey(group, group.season).phase] ?? 1);
-  return levels.get(group);
-}
+// El nivel de fase de cada grupo es phaseLevel (model.js), el mismo del buscador y de las competiciones.
 const leagueGroups = (season, cat) => season.groups.filter(group => group.kind === 'league' && group.cat === cat);
-// De una lista de {group, …}, los de la fase más alta.
-function topPhase(entries) {
-  const top = Math.max(...entries.map(entry => phaseLevel(entry.group)));
-  return entries.filter(entry => phaseLevel(entry.group) === top);
-}
+// De una lista de {group, …}, los de la fase más alta: topPhase (model.js), la misma del buscador.
 // El primer partido con fecha de esos grupos ('AAAA-MM-DD'), o null.
 const firstDate = groups => groups.flatMap(allMatches).map(match => match.dateISO).filter(Boolean).sort()[0] ?? null;
 // Días de `fromISO` a `toISO`, dos fechas 'AAAA-MM-DD'.

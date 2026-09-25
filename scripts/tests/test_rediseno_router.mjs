@@ -226,7 +226,7 @@ test('routeIsMine: el partido o la ficha de mi equipo, en su grupo y su temporad
 
 // Rutas de B3 (decisión 6 de B2): la pantalla provisional hasta que cada tarea de B3 registra la
 // suya (decisión 7 de B3). Equipo, desde la Tarea 4 de B3.
-const B3 = ['explorar', 'ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes'];
+const B3 = ['ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes'];
 
 test('cada ruta de §4.1 tiene pantalla; las de B3 que faltan pintan la provisional con su h1 y el vacío', () => {
   assert.deepEqual(Object.keys(SCREEN_MAP).sort(), [...SCREENS].sort());

@@ -9,7 +9,8 @@
 // - un document con sus oyentes, el título, activeElement, la barra de 4 destinos, el hueco del aviso
 //   sin conexión (.shell-offline) y el literal «Última actualización» de index.html;
 // - el <main id="contenido"> que pinta el router: guarda el HTML y, en cada pintado, crea su h1 y un
-//   elemento por cada id (con su etiqueta: un <input id="buscar"> es un INPUT), con sus oyentes.
+//   elemento por cada id (con su etiqueta: un <input id="buscar"> es un INPUT), con sus oyentes; su
+//   querySelector encuentra el h1 y esos elementos por su id ('#buscar'), como el mount de Explorar.
 // Cada elemento sabe closest(selector) solo sobre sí mismo, con selectores de etiqueta y de atributo
 // ('a[href],[data-action]', '[data-action="retry"]'), que es lo que usan el router y app.js.
 
@@ -80,7 +81,8 @@ export function fakeBrowser(hash = '#/', { storage = new Map(), deferBack = fals
       };
     },
   });
-  main.querySelector = (selector) => (selector === 'h1' ? painted.h1 : null);
+  main.querySelector = (selector) => (selector === 'h1' ? painted.h1
+    : /^#[\w-]+$/.test(selector) ? painted.ids.get(selector.slice(1)) || null : null);
   main.contains = (el) => el === painted.h1 || [...painted.ids.values()].includes(el);
 
   doc.querySelector = (selector) => (selector === '.shell-offline' ? offline : null);

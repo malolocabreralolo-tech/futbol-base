@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
   <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./acta.css?v=20260923j">
+  <link rel="stylesheet" href="./acta.css?v=20260925">
 </head>
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -26,15 +26,15 @@
 
   <!-- Datos inmediatos: los mismos nueve de antes del corte y en el mismo orden (Plan B2,
        decisión 5). defer, carga perezosa y la baja de data-matchdetail-keys.js son de B4. -->
-  <script src="./data-benjamin.js?v=20260923j"></script>
-  <script src="./data-prebenjamin.js?v=20260923j"></script>
-  <script src="./data-history.js?v=20260923j"></script>
-  <script src="./data-goleadores.js?v=20260923j"></script>
-  <script src="./data-matchdetail-keys.js?v=20260923j"></script>
-  <script src="./data-shields.js?v=20260923j"></script>
-  <script src="./data-stats.js?v=20260923j"></script>
-  <script src="./data-seasons.js?v=20260923j"></script>
-  <script src="./data-maspalomas-cup-2026.js?v=20260923j"></script>
+  <script src="./data-benjamin.js?v=20260925"></script>
+  <script src="./data-prebenjamin.js?v=20260925"></script>
+  <script src="./data-history.js?v=20260925"></script>
+  <script src="./data-goleadores.js?v=20260925"></script>
+  <script src="./data-matchdetail-keys.js?v=20260925"></script>
+  <script src="./data-shields.js?v=20260925"></script>
+  <script src="./data-stats.js?v=20260925"></script>
+  <script src="./data-seasons.js?v=20260925"></script>
+  <script src="./data-maspalomas-cup-2026.js?v=20260925"></script>
   <script type="module">
     // El SW de la app anterior sirve los módulos de src/ desde su caché, aunque cambie la ?v=, y los
     // actualiza en segundo plano: si una actualización falló, su app.js, state.js o links.js es el
@@ -56,7 +56,7 @@
           }
         } catch { /* sin Cache Storage: no hay nada que quitar */ }
       }
-      const { start } = await import('./src/app.js?v=20260923j');
+      const { start } = await import('./src/app.js?v=20260925');
       start(document, window);
     } catch (error) {
       console.error('[arranque]', error);

@@ -23,6 +23,7 @@ import { screen as home } from '../../src/screen-home.js';
 import { screen as jornada } from '../../src/screen-jornada.js';
 import { screen as tabla } from '../../src/screen-tabla.js';
 import { screen as partido } from '../../src/screen-partido.js';
+import { screen as equipo } from '../../src/screen-equipo.js';
 import { screen as pendiente } from '../../src/screen-pendiente.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -35,15 +36,16 @@ const DEFAULT_TEAM = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.'
 const PORTAL_2526 = { season: '2025-2026', nextSeason: '2026-2027', defaultTeam: DEFAULT_TEAM, timeZone: 'Atlantic/Canary' };
 const PORTAL_2627 = { season: '2026-2027', nextSeason: '2027-2028', defaultTeam: DEFAULT_TEAM, timeZone: 'Atlantic/Canary' };
 
-test('rutas completas: las cuatro pantallas de B2 y la provisional en las nueve de B3', () => {
+test('rutas completas: las cuatro pantallas de B2, Equipo y la provisional en las otras ocho de B3', () => {
   assert.deepEqual(Object.keys(SCREEN_MAP).sort(), [...SCREENS].sort());
   assert.equal(SCREEN_MAP[''], home);
   assert.equal(SCREEN_MAP.jornada, jornada);
   assert.equal(SCREEN_MAP.tabla, tabla);
   assert.equal(SCREEN_MAP.partido, partido);
-  assert.deepEqual([home, jornada, tabla, partido].map((s) => s.id), ['home', 'jornada', 'tabla', 'partido']);
+  assert.equal(SCREEN_MAP.equipo, equipo);
+  assert.deepEqual([home, jornada, tabla, partido, equipo].map((s) => s.id), ['home', 'jornada', 'tabla', 'partido', 'equipo']);
   assert.deepEqual(SCREENS.filter((name) => SCREEN_MAP[name] === pendiente),
-    ['explorar', 'equipo', 'ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes']);
+    ['explorar', 'ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes']);
 });
 
 test('myTeamToSave: el cambio de fase (FF5 → A2, decisión 12 de B1) sí; nada si no cambia', () => {
@@ -212,14 +214,17 @@ test('el router deja pasar lo que las pantallas saben leer: la jornada por su n�
 // Las temporadas que publica SEASONS cuando hay archivo: la actual y 2024/25.
 const WITH_PAST = [{ name: '2025-2026', current: true }, { name: '2024-2025', current: false }];
 
-test('temporada pasada que la pantalla no pide (Equipo, aún la provisional): la carga el router y la pinta, nunca la caja de error (I4(a))', async (t) => {
+test('temporada pasada que la pantalla no pide (Equipo): la carga el router y la pinta, nunca la caja de error (I4(a)); la ficha va a «Vistos hace poco»', async (t) => {
   const errorSpy = t.mock.method(console, 'error');
   const hash = '#/equipo?s=2024-2025&g=PGC2&t=Las%20Mesas%20Hu.';
-  const { page } = await load(new Map(), { today: '2026-03-01', hash, seasons: WITH_PAST });
+  const storage = new Map();
+  const { page } = await load(storage, { today: '2026-03-01', hash, seasons: WITH_PAST });
   assert.equal(page.hash(), hash, 'sin redirección');
-  assert.match(page.main.innerHTML, /^<section data-screen="pendiente" data-route="equipo">/);
-  assert.match(page.main.innerHTML, /<h1>Equipo<\/h1>/);
+  assert.match(page.main.innerHTML, /^<section data-screen="equipo" data-state="D">/);
+  assert.match(page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1><p class="screen-sub">Temporada 2024\/25 terminada<\/p>/);
   assert.doesNotMatch(page.main.innerHTML, /No se pudieron cargar/);
+  // El mount de verdad la apunta en el almacén (decisión 5 de B3), con el equipo por defecto.
+  assert.deepEqual(JSON.parse(storage.get(STORE_KEY)).recent, [{ s: '2024-2025', g: 'PGC2', t: 'Las Mesas Hu.' }]);
   // El enlace de la revisión (A1, que la temporada 2024/25 de las fixtures no tiene): cargada la
   // temporada, el grupo se valida y lleva a Explorar con su aviso, tampoco a la caja de error.
   const other = await load(new Map(), { today: '2026-03-01', hash: '#/equipo?s=2024-2025&g=A1&t=Guayarmina', seasons: WITH_PAST });
@@ -234,7 +239,7 @@ test('si falla la carga de esa temporada: la caja de error, y «Reintentar» pin
   const hash = '#/equipo?s=2023-2024&g=PGC9&t=Las%20Mesas%20Hu.';
   const seasons = [...WITH_PAST, { name: '2023-2024', current: false }];
   const { page, router } = await load(new Map(), { today: '2026-03-01', hash, seasons });
-  assert.match(page.main.innerHTML, /^<section data-screen="pendiente" data-state="error">/);
+  assert.match(page.main.innerHTML, /^<section data-screen="equipo" data-state="error">/);
   assert.match(page.main.innerHTML, /No se pudieron cargar los datos de la temporada 2023\/24\./);
   assert.match(page.main.innerHTML, /data-action="retry"/);
   // Vuelve la red: el fichero ya llega (una temporada mínima, con el grupo del enlace).
@@ -246,7 +251,8 @@ test('si falla la carga de esa temporada: la caja de error, y «Reintentar» pin
     assert.equal(page.click({ 'data-action': 'retry', type: 'button' }, 'button'), true);
     await router.idle();
     assert.equal(page.hash(), hash);
-    assert.match(page.main.innerHTML, /^<section data-screen="pendiente" data-route="equipo">/);
+    assert.match(page.main.innerHTML, /^<section data-screen="equipo" data-state="D">/);
+    assert.match(page.main.innerHTML, /<h1>Las Mesas Hu\.<\/h1>/);
   } finally {
     delete FILES['data-season-2023-2024.js'];
   }

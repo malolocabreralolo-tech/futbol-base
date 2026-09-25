@@ -909,3 +909,8 @@ abbr[title] { text-decoration: none; }
 @media (max-width: 479.98px) {
   .team-make { max-width: 72px; line-height: 1.25; text-align: right; }
 }
+
+/* ── Equipo: la ficha de cualquier equipo (spec §4.6) ─────────────────── */
+
+/* «Calendario del equipo (.ics)», encima de la lista del calendario completo. */
+.cal-actions { margin-bottom: 8px; }

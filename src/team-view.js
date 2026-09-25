@@ -14,7 +14,7 @@ import {
 import { showNextSeasonBox, summerCups, teamState } from './myteam.js';
 import {
   buildCalendar, checkedCell, checkedPhrase, countdownLabel, dayMonth, downloadCalendar, matchHref, monthName,
-  routeHref, shareAndAnnounce, teamHref, venueUrl, weekdayDate,
+  routeHref, shareAndAnnounce, teamCalendarEvents, teamHref, venueUrl, weekdayDate,
 } from './links.js';
 import { teamScorers } from './state.js';
 
@@ -228,7 +228,7 @@ function seasonView(v, state) {
     main.push(block(null, empty(notPlayedText(group, name))));
   }
   const rest = [];
-  if (v.calendar === 'always') rest.push(teamCalendar(name, group, { today: ctx.today, shields }));
+  if (v.calendar === 'always') rest.push(teamCalendar(name, group, { today: ctx.today, shields, ics: true }));
   else main.push(CALENDAR_SLOT);
   aside.push(freshness(ctx, group));
   const head = html`${teamHeader(name, group.label, v)}${state === 'C' ? staleNotice(v.stale) : ''}`;
@@ -349,7 +349,7 @@ function endedView(v, nextSeason) {
     ...summerBlocks(ctx, group, name),
     always ? '' : html`<a class="home-all" href="${teamHref(group.season, group.id, name)}">Ver toda la temporada ${seasonLabel(group.season)}</a>`,
   ];
-  const rest = always ? [teamCalendar(name, group, { today: ctx.today, shields })] : [];
+  const rest = always ? [teamCalendar(name, group, { today: ctx.today, shields, ics: true })] : [];
   return { head: html`${teamHeader(name, subtitle, v)}${staleNotice(v.stale)}`, main, aside: [finalStandings(group, name, v)], rest };
 }
 
@@ -377,12 +377,16 @@ export function teamView(ctx, { group, name }, {
 // ── Calendario completo del equipo (spec §4.6 y §4.8) ───────────────────
 
 // Todos sus partidos del grupo, en orden de jornada y con su estado (spec §5.3). El bloque lleva
-// siempre el ancla #calendario, también sin partidos (un retirado).
-export function teamCalendar(team, group, { today, shields = {} } = {}) {
+// siempre el ancla #calendario, también sin partidos (un retirado). Con `ics` (la ficha), encima de la
+// lista, «Calendario del equipo (.ics)» con todos sus partidos con fecha (decisión 15 de B3), si los hay.
+export function teamCalendar(team, group, { today, shields = {}, ics = false } = {}) {
   const items = group.rounds.flatMap(round => round.matches.filter(m => m.home === team || m.away === team).map(m => ({ round, m })));
   if (!items.length) return block('Calendario', empty('Sin partidos en el calendario de este grupo'), { id: 'calendario' });
   const rows = items.map(({ round, m }) => html`<li><p class="cal-when">${round.label}${m.dateISO ? ` · ${shortDate(m.dateISO)}` : ''}</p>${matchRow(m, { today, shields, href: matchHref(m) })}</li>`);
-  return block('Calendario', html`<ol class="box cal">${rows}</ol>`, { context: `${items.length} partidos`, id: 'calendario' });
+  const download = ics && teamCalendarEvents(team, group).length
+    ? html`<div class="box cal-actions"><div class="buttons"><button type="button" class="button" data-action="calendario-equipo">Calendario del equipo (.ics)</button></div></div>`
+    : '';
+  return block('Calendario', html`${download}<ol class="box cal">${rows}</ol>`, { context: `${items.length} partidos`, id: 'calendario' });
 }
 
 // Solo en escritorio: se pinta al montar y al cruzar los 1024 px, nunca oculto con CSS (spec §5.1: se
@@ -429,13 +433,20 @@ export function matchCalendar(match, group, { url = '', now = new Date() } = {})
 }
 
 // El comportamiento de la vista en su sección (la que se sustituye en cada pintado: la escucha nunca
-// se acumula): «Calendario» y «Compartir» del próximo partido del equipo y, con calendar 'wide', el
-// calendario de escritorio. Devuelve la limpieza de ese calendario, o undefined.
+// se acumula): «Calendario» y «Compartir» del próximo partido del equipo; con calendar 'always', el
+// .ics de todos sus partidos, y con 'wide', el calendario de escritorio. Devuelve la limpieza de ese
+// calendario, o undefined.
 export function mountTeamView(section, ctx, { group, name }, { calendar = 'wide' } = {}) {
   section.addEventListener('click', event => {
     const target = event.target.closest('[data-action]');
     if (!target || !section.contains(target)) return;
     const action = target.getAttribute('data-action');
+    if (action === 'calendario-equipo' && calendar === 'always') {
+      // El enlace del .ics es el de la ficha, con su temporada (decisiones 28 y 101 de B2).
+      const url = new URL(teamHref(group.season, group.id, name), location.href.split(/[?#]/)[0]).href;
+      downloadCalendar(teamCalendarEvents(name, group), { season: group.season, group: group.id, name, url });
+      return;
+    }
     if (action !== 'calendario' && action !== 'compartir') return;
     const next = teamFixtures(name, group, ctx.today).next;
     if (!next) return;

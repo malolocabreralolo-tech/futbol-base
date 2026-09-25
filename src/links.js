@@ -144,6 +144,16 @@ export function calendarFileName(name) {
   return `calendario${slug ? `-${slug}` : ''}.ics`;
 }
 
+// «Calendario del equipo (.ics)» de la ficha de Equipo (spec §4.6 y §4.11; decisión 15 de B3): todos
+// los partidos con fecha del equipo en su grupo, jugados o no, en la forma de buildCalendar, con su
+// ronda. Los que no tienen fecha no pueden ir en un calendario. `team` es el nombre exacto; `group`, un
+// Group del modelo, cuya temporada pasa a buildCalendar el que lo descarga (nunca PORTAL.season).
+export function teamCalendarEvents(team, group) {
+  return (group.rounds || []).flatMap(round => round.matches
+    .filter(m => (m.home === team || m.away === team) && m.dateISO)
+    .map(m => ({ date: m.dateISO, time: m.time || '', home: m.home, away: m.away, jor: round.label, venue: m.venue || '' })));
+}
+
 export function downloadCalendar(matches, options) {
   const blob = new Blob([buildCalendar(matches, options)], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);

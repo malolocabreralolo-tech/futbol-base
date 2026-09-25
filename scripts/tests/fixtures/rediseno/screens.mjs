@@ -4,7 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { fixture } from './load.mjs';
-import { datasetsFrom } from './simulate.mjs';
+import { datasetsFrom, withChampions, cupsRaw } from './simulate.mjs';
 import { memoryStorage } from './fake-browser.mjs';
 import { startContext } from '../../../../src/app.js';
 import { routeHref } from '../../../../src/links.js';
@@ -17,12 +17,25 @@ export const MY_TEAM = { name: 'Las Mesas Hu.', season: PORTAL_SEASON, cat: 'pre
 export const DEFAULT_TEAM = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' };
 
 // Registro de datos con la forma de readGlobals() más lo perezoso (esqueleto de B2): el de
-// datasetsFrom (Tarea 3) con SEASONS, data-health y los goleadores que se pidan.
-// `current` es el crudo de la temporada actual (fixture o currentAt(...)).
-export function datasetsFor({ current = fixture('current-2025-2026'), golBenj = [], golPrebenj = [], seasonRaw = {} } = {}) {
-  return datasetsFrom(current, {
-    golBenj, golPrebenj, seasonRaw, health: fixture('health'),
-    seasons: [{ name: PORTAL_SEASON, current: true }, { name: '2024-2025', current: false }],
+// datasetsFrom (Tarea 3) con SEASONS, data-health y lo que se pida (B3, Tarea 2):
+// - current: el crudo de la temporada actual (la fixture, currentAt(...) o withChampions(...));
+// - golBenj y golPrebenj: los goleadores; los congelados, con ...goleadores() de simulate.mjs;
+// - seasonRaw: las temporadas pasadas ya cargadas, { [name]: archive(name) o pastSeasonRaw() };
+// - champions: añade a current la Copa de Campeones 2025-26 (withChampions);
+// - cupsExtra: los torneos con la Copa Plata de benjamín y la Copa Oro de prebenjamín (cupsRaw);
+// - lineups: las actas ya cargadas, { [season]: lineupsFor(season) };
+// - seasons: SEASONS. Por defecto, 2025-26 (actual), 2024-25 y las de seasonRaw, de la más reciente
+//   a la más antigua: se anuncian las temporadas que se sirven.
+export function datasetsFor({
+  current = fixture('current-2025-2026'), golBenj = [], golPrebenj = [], seasonRaw = {},
+  champions = false, cupsExtra = false, lineups = {}, seasons = null,
+} = {}) {
+  const cups = cupsRaw({ extra: cupsExtra });
+  const names = [...new Set([PORTAL_SEASON, '2024-2025', ...Object.keys(seasonRaw)])].sort().reverse();
+  return datasetsFrom(champions ? withChampions(current) : current, {
+    golBenj, golPrebenj, seasonRaw, lineups, health: fixture('health'),
+    cupBenjamin: cups.benjamin, cupPrebenjamin: cups.prebenjamin,
+    seasons: seasons || names.map(name => ({ name, current: name === PORTAL_SEASON })),
   });
 }
 

@@ -31,7 +31,7 @@
     - antes, se trae `main` a la rama (el bot comitea datos en `main`);
     - el despliegue sube a la vez las `?v=` de `index.html`, `CACHE_NAME` de `sw.js` y `CODIGO`, sin tocar «Última actualización» (spec §5.5). La versión es la fecha UTC, estrictamente mayor que la vigente (decisiones 156 y 158);
     - pytest, node y los tres smoke, en verde;
-    - primero se empuja la rama, y `main` solo avanza, con avance rápido, cuando el CI de la rama está en verde (`gh pr checks 2`). **Nunca con un workflow en marcha** (`gh run list --limit 5`);
+    - primero se empuja la rama, y `main` solo avanza, con avance rápido, cuando el CI de la rama está en verde (`Tests` lanzado sobre la rama con `workflow_dispatch`: el PR borrador #2 quedó cerrado al publicar B2). **Nunca con un workflow en marcha** (`gh run list --limit 5`);
     - y se comprueba la web publicada, apertura a apertura, con el perfil de un móvil que tenía la versión anterior.
   - Hasta que B3 se publique, la web publicada es B2: sus rutas de B3 pintan la pantalla provisional.
 - **Cada tarea termina en un commit con todo en verde:** `python3 -m pytest scripts/tests/ -q`, `node --test scripts/tests/test_*.mjs`, `node scripts/tests/render-smoke.mjs`, `node scripts/tests/interaction-smoke.mjs` y `node scripts/tests/pwa-smoke.mjs`. El bot (`update.yml`, `fetch-fiflp.yml` y `fetch-fiflp-actas.yml`) ejecuta pytest y node antes de comitear, y se para en rojo en silencio.
@@ -263,7 +263,7 @@ La revisión publicó B3 sobre el SW de B2 en una simulación con las cabeceras 
 158. **El paso de publicar, más estricto** (A1 y bajas 5 y 6 de la revisión):
   - sube `CODIGO` con las `?v=` y `CACHE_NAME`;
   - la versión es la fecha UTC, como la del bot, y estrictamente mayor que la vigente; si no lo es, la letra siguiente de la vigente;
-  - empuja primero `rediseno-acta`, espera a que `Tests` del PR borrador #2 esté en verde (`gh pr checks 2`) y solo entonces avanza `main`, nunca con un workflow en marcha;
+  - empuja primero `rediseno-acta`, espera a que `Tests`, lanzado sobre la rama con `workflow_dispatch`, esté en verde (el PR borrador #2 quedó cerrado al publicar B2) y solo entonces avanza `main`, nunca con un workflow en marcha;
   - `publicar-b3.mjs despues` abre la app en un proceso de Chrome nuevo por apertura (la 1.ª, de 1 s; la 2.ª, hasta que manda el SW nuevo; la 3.ª, con él; la 4.ª, sin red, por un proxy cerrado). Comprueba la hoja de B3 por una regla que B2 no tiene (el borde del buscador de Explorar), y un aviso del arranque es un fallo, no una nota para B4.
 
   Coste: publicar espera además al CI de la rama, unos minutos. (Tarea 12, paso 10)
@@ -15311,17 +15311,16 @@ Esperado: `5 files changed, 305 insertions(+), 26 deletions(-)`. Es nuevo `scrip
 
 - [ ] **Step 10: Publicar B3 (con el visto bueno del usuario)**
 
-Cada fase se publica al terminarla, con el visto bueno del usuario, como B2 en `376e981` (restricciones globales). Hasta entonces, las rutas de B3 siguen siendo la pantalla provisional en la web publicada. Este paso no lo ejecuta la verificación de punta a punta del plan: toca la rama remota, `main` y la web. Desde la revisión del plan (decisión 158): la versión es la fecha UTC y estrictamente mayor que la vigente; sube también `CODIGO`; `main` solo avanza cuando el CI de la rama (el PR borrador #2) está en verde; y la comprobación de la web abre la app en procesos nuevos, con una 1.ª apertura breve, la hoja de B3 y una apertura sin red, y trata un aviso del arranque como un fallo.
+Cada fase se publica al terminarla, con el visto bueno del usuario, como B2 en `376e981` (restricciones globales). Hasta entonces, las rutas de B3 siguen siendo la pantalla provisional en la web publicada. Este paso no lo ejecuta la verificación de punta a punta del plan: toca la rama remota, `main` y la web. Desde la revisión del plan (decisión 158): la versión es la fecha UTC y estrictamente mayor que la vigente; sube también `CODIGO`; `main` solo avanza cuando el CI de la rama está en verde (lanzado a mano: el PR borrador #2 quedó cerrado como fusionado al publicar B2); y la comprobación de la web abre la app en procesos nuevos, con una 1.ª apertura breve, la hoja de B3 y una apertura sin red, y trata un aviso del arranque como un fallo.
 
-**1. Antes de empezar.** El usuario ha dado el visto bueno, no hay ningún workflow en marcha, el árbol está limpio y el PR borrador #2 (`rediseno-acta` → `main`) sigue abierto:
+**1. Antes de empezar.** El usuario ha dado el visto bueno, no hay ningún workflow en marcha y el árbol está limpio:
 
 ```bash
 cd /home/manolo/claude/futbol-base
 gh run list --limit 5
 git status --short
-gh pr view 2 --json number,state,isDraft,headRefName --jq '"#\(.number) \(.state) borrador=\(.isDraft) \(.headRefName)"'
 ```
-Resultado esperado: ninguna fila `in_progress` ni `queued` (si la hay, se espera con Monitor y un `until` sobre `gh run list`, nunca con una espera fija); solo `?? HANDOFF.md` y `?? docs/mejoras-2026-09.md`, que no están en git; y `#2 OPEN borrador=true rediseno-acta`.
+Resultado esperado: ninguna fila `in_progress` ni `queued` (si la hay, se espera con Monitor y un `until` sobre `gh run list`, nunca con una espera fija); y solo `?? HANDOFF.md` y `?? docs/mejoras-2026-09.md`, que no están en git.
 
 **2. Traer `main` a la rama**, con lo que el bot haya comiteado desde la última publicación (datos, `data-health.json` y sus marcas de versión), como `30cb12b` antes de publicar B2:
 
@@ -15344,7 +15343,7 @@ git add index.html sw.js
 git commit --no-edit
 ```
 
-**3. Subir la versión** (§5.5; decisión 158): las 11 marcas `?v=` de `index.html` (la hoja, los 9 datos inmediatos y `app.js`) y `CACHE_NAME` de `sw.js`, a la vez y con la misma cadena, sin tocar «Última actualización», que es la fecha de los datos y la escribe el bot; y `CODIGO`, la versión del código, con `scripts/codigo.py` (sin cambios de código desde el paso 9, se queda como está).
+**3. Subir la versión** (§5.5; decisión 158): las 11 marcas `?v=` de `index.html` (la hoja, los 9 datos inmediatos y `app.js`) y `CACHE_NAME` de `sw.js`, a la vez y con la misma cadena, sin tocar «Última actualización», que es la fecha de los datos y la escribe el bot; y `CODIGO`, la versión del código, con `scripts/codigo.py` (sin cambios de código desde `a1ac515`, el arreglo de la revisión final, se queda como está).
 - La versión es la fecha **UTC**, como la del bot (`date.today()` en el runner de GitHub): con la de Canarias, entre las 00:00 y la 01:00 se podía repetir o hacer retroceder una `CACHE_NAME`.
 - Tiene que ser **estrictamente mayor** que la vigente. Si no lo es (la del día ya está publicada, o la vigente es de un día posterior), la letra siguiente de la vigente: `20260925` → `20260925b` → `20260925c`. El guion se para si la vigente ya lleva la `z`.
 
@@ -15376,9 +15375,9 @@ PY
 python3 scripts/codigo.py
 git diff --stat
 ```
-Resultado esperado: `versión <la del día en UTC, o la vigente con la letra siguiente> (antes, <la vigente>): 11 ?v= en index.html y futbolbase-v<la misma> en sw.js; «Última actualización: <la de los datos>», sin tocar`; `CODIGO b76af1b0: la huella de acta.css y src/*.js, en index.html` (la del paso 9); y en `git diff --stat`, solo `index.html` y `sw.js`.
+Resultado esperado: `versión <la del día en UTC, o la vigente con la letra siguiente> (antes, <la vigente>): 11 ?v= en index.html y futbolbase-v<la misma> en sw.js; «Última actualización: <la de los datos>», sin tocar`; `CODIGO be0acbf3: la huella de acta.css y src/*.js, en index.html` (la de `a1ac515`); y en `git diff --stat`, solo `index.html` y `sw.js`.
 
-**4. Suites y smoke**, en verde con la versión nueva: los del paso 9 (pytest `478 passed, 5 skipped`, node 728 sin fallos y las tres pasadas de los smoke, con 21 PASS cada una). `pwa-smoke` publica sus propias versiones (`20991231a` y `20991231b`) sobre la del árbol, así que no depende de la del día.
+**4. Suites y smoke**, en verde con la versión nueva: los de la revisión final (pytest `478 passed, 5 skipped`, node 729 sin fallos y las tres pasadas de los smoke, con 21 PASS cada una). `pwa-smoke` publica sus propias versiones (`20991231a` y `20991231b`) sobre la del árbol, así que no depende de la del día.
 
 **5. El commit de la publicación:**
 
@@ -15395,7 +15394,7 @@ instalada cambien a la nueva. Con el visto bueno del usuario, B3 se
 publica: Equipo, Explorar, Ligas, Copa, Goleadores, Récords, Temporadas,
 Datos y fuentes y Ajustes dejan la pantalla provisional.
 
-Verificado: pytest 478 (5 saltadas), node 728 y los tres smoke, tres veces
+Verificado: pytest 478 (5 saltadas), node 729 y los tres smoke, tres veces
 seguidas, en verde, con el despliegue de código sobre el SW de la rama.
 
 Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
@@ -15575,15 +15574,18 @@ S="$S" node "$S/publicar-b3.mjs" antes
 ```
 Resultado esperado: `antes: {"screen":"home","alert":false,"hoja":null,"caches":["futbolbase-v<la versión publicada>"],"controlled":true}; errores: 0`.
 
-**7. Empujar la rama y esperar a su CI; después, `main`** (§12; decisión 158). Primero `rediseno-acta`, sin ningún workflow en marcha: actualiza el PR borrador #2 y dispara `Tests` sobre él. `main` solo avanza cuando esos checks están en verde: Pages despliega `main` aunque `Tests` salga en rojo después.
+**7. Empujar la rama y esperar a su CI; después, `main`** (§12; decisión 158). Primero `rediseno-acta`, sin ningún workflow en marcha, y después `Tests` sobre esa rama, lanzado a mano. El PR borrador #2 quedó cerrado como fusionado el 25/9, cuando `main` avanzó con B2 (`376e981`), y un PR cerrado no corre sus checks con los push nuevos; `tests.yml` admite `workflow_dispatch`. `main` solo avanza cuando esa ejecución está en verde: Pages despliega `main` aunque `Tests` salga en rojo después.
 
 ```bash
 cd /home/manolo/claude/futbol-base
 gh run list --limit 5
 git push origin rediseno-acta
-timeout 1800 gh pr checks 2 --watch --interval 30
+gh workflow run tests.yml --ref rediseno-acta
+HEAD_SHA=$(git rev-parse HEAD)
+until RUN=$(gh run list --workflow=tests.yml --branch rediseno-acta --event workflow_dispatch --limit 5 --json databaseId,headSha --jq ".[] | select(.headSha == \"$HEAD_SHA\") | .databaseId" | head -1) && [ -n "$RUN" ]; do sleep 5; done
+timeout 1800 gh run watch "$RUN" --exit-status --interval 30
 ```
-Resultado esperado: ninguna fila `in_progress` ni `queued` antes del push (si la hay, se espera con Monitor y un `until` sobre `gh run list`), y `gh pr checks 2` termina con los tres trabajos de `Tests` (pytest, node-tests y render-smoke) en `pass`, y sale con 0. Si alguno falla, lo nombra y sale con 1: se para, sin empujar `main`, y se enseña al usuario (`gh run view <id> --log-failed`).
+Resultado esperado: ninguna fila `in_progress` ni `queued` antes del push (si la hay, se espera con Monitor y un `until` sobre `gh run list`), y `gh run watch` termina con los tres trabajos de `Tests` (pytest, node-tests y render-smoke) en ✓, y sale con 0. Si alguno falla, sale con 1: se para, sin empujar `main`, y se enseña al usuario (`gh run view "$RUN" --log-failed`).
 
 Después, `main` con avance rápido, otra vez sin ningún workflow en marcha (el bot puede estar comiteando datos). Si `main` avanzó mientras tanto, el push se rechaza: se vuelve al punto 2.
 
@@ -15612,7 +15614,7 @@ until curl -s "https://malolocabreralolo-tech.github.io/futbol-base/sw.js?nc=$(d
 curl -s "https://malolocabreralolo-tech.github.io/futbol-base/index.html?nc=$(date +%s)" | grep -c "?v=$V"
 curl -s "https://malolocabreralolo-tech.github.io/futbol-base/index.html?nc=$(date +%s)" | grep -oE "const CODIGO = '[0-9a-f]{8}';"
 ```
-Resultado esperado: `11` y `const CODIGO = 'b76af1b0';`, la del paso 9.
+Resultado esperado: `11` y `const CODIGO = 'be0acbf3';`, la de `a1ac515`.
 
 Después, el paso de B2 a B3 con el perfil del punto 6, y cada pantalla de B3 sin SW:
 

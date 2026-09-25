@@ -36,28 +36,52 @@
   <script src="./data-seasons.js?v=20260925"></script>
   <script src="./data-maspalomas-cup-2026.js?v=20260925"></script>
   <script type="module">
-    // El SW de la app anterior sirve los módulos de src/ desde su caché, aunque cambie la ?v=, y los
-    // actualiza en segundo plano: si una actualización falló, su app.js, state.js o links.js es el
-    // viejo y la app nueva no arranca. Si un SW controla la página, antes de importar app.js se quitan
-    // esos tres de las cachés de la app anterior (las que guardan src/render.js, que ya no existe);
-    // los pedirá a la red. Sin SW al mando no hay caché de SW que limpiar, pero la caché HTTP de GitHub
-    // Pages (max-age=600) puede dar durante 10 minutos un state.js o un links.js viejos a este app.js:
-    // lo decide B4 al versionar el grafo de módulos.
+    // Un SW de otra versión (el de la versión anterior o el de la app de antes del rediseño) sirve
+    // los módulos de src/ desde su caché, aunque cambie la ?v=, y los revalida de uno en uno en
+    // segundo plano; la hoja, nunca. Tras publicar código puede dar este index.html con la hoja vieja
+    // o con módulos de dos versiones: pantallas sin estilos, o una app que no arranca. CODIGO es la
+    // versión del código (la huella de src/*.js y acta.css, que escribe scripts/codigo.py; el bot nunca
+    // la cambia). La primera vez que este navegador abre este código con un SW al mando, antes de
+    // importar app.js se quitan src/*.js y las hojas de esta app de las cachés futbolbase-v* que no son
+    // la de esta versión (la ?v= de data-seasons.js) y, si se quitó algo, la hoja ya aplicada se vuelve
+    // a pedir: todo llega de la red, de una sola versión, y el SW lo guarda para abrir sin conexión.
+    // Los datos se quedan. CODIGO se apunta en futbol-base:codigo solo tras start(): si el arranque
+    // falla, la apertura siguiente vuelve a limpiar (decisión 155 de B3). Sin SW al mando no hay caché
+    // de SW que limpiar, pero la caché HTTP de GitHub Pages (max-age=600) puede dar durante 10 minutos
+    // un módulo viejo a este app.js: lo decide B4 al versionar el grafo de módulos.
     // Si el arranque falla (sin conexión en plena transición, cuando esa caché ya guarda este
-    // index.html pero no acta.css ni los módulos nuevos, o un módulo que no llega), un aviso con
+    // index.html pero no la hoja ni los módulos nuevos, o un módulo que no llega), un aviso con
     // estilos en línea y «Reintentar»: nunca «Cargando…» para siempre. Es texto fijo, sin datos.
     try {
-      if (navigator.serviceWorker?.controller) {
+      const CODIGO = 'b76af1b0';
+      let seen = null;
+      try { seen = localStorage.getItem('futbol-base:codigo'); } catch { /* sin almacenamiento */ }
+      if (navigator.serviceWorker?.controller && seen !== CODIGO) {
         try {
+          const version = (document.querySelector('script[src*="data-seasons.js"]')?.getAttribute('src').match(/[?&]v=([^&#]+)/) || [])[1];
+          const home = new URL('./', location.href).pathname;
+          let stale = false;
           for (const name of await caches.keys()) {
+            // Solo las cachés de esta app: el origen es de todos los proyectos de la cuenta.
+            if (!name.startsWith('futbolbase-v') || name === `futbolbase-v${version}`) continue;
             const cache = await caches.open(name);
-            if (!(await cache.match('./src/render.js', { ignoreSearch: true }))) continue;
-            for (const file of ['./src/app.js', './src/state.js', './src/links.js']) await cache.delete(file, { ignoreSearch: true });
+            for (const request of await cache.keys()) {
+              const { pathname } = new URL(request.url);
+              if (pathname.startsWith(home) && /\/src\/[^/]+\.js$|\.css$/.test(pathname) && await cache.delete(request)) stale = true;
+            }
+          }
+          const sheet = document.querySelector('link[rel="stylesheet"]');
+          if (stale && sheet) {
+            const fresh = sheet.cloneNode();
+            fresh.href = `${sheet.href}&c=${CODIGO}`;
+            await new Promise((resolve) => { fresh.onload = fresh.onerror = resolve; sheet.after(fresh); });
+            if (fresh.sheet) sheet.remove(); else fresh.remove();
           }
         } catch { /* sin Cache Storage: no hay nada que quitar */ }
       }
       const { start } = await import('./src/app.js?v=20260925');
       start(document, window);
+      try { localStorage.setItem('futbol-base:codigo', CODIGO); } catch { /* sin almacenamiento */ }
     } catch (error) {
       console.error('[arranque]', error);
       document.getElementById('contenido').innerHTML = `<div role="alert" style="max-width:40rem;margin:0 auto;padding:24px 16px;font:16px/1.5 system-ui,sans-serif">

@@ -6,13 +6,15 @@
 // El SW anterior sirve los .js de src/ con stale-while-revalidate y los .css con cache-first, los dos
 // ignorando la ?v= (A1 de la revisión):
 //  - la hoja nueva va en otra URL, acta.css, que su caché no tiene;
-//  - index.html quita de su caché app.js, state.js y links.js antes de importar app.js.
+//  - la primera vez que se abre un código nuevo, index.html quita de las cachés de otras versiones su
+//    código y sus hojas antes de importar app.js (desde B3, para cualquier versión: decisión 155).
 // Mientras el SW nuevo se instala (su precache queda retenido), cada apertura tiene que ser entera de
 // una versión: la 1.ª, la anterior; la 2.ª y la 3.ª, la nueva (documento, hoja y módulos), también si
 // en la 1.ª falló la actualización en segundo plano de app.js y state.js. Sin conexión entre la 1.ª y
 // la 2.ª, el index.html nuevo no encuentra ni la hoja ni los módulos: el aviso con «Reintentar», que
 // con conexión abre la app nueva. Con el SW nuevo activo, la app nueva funciona sin conexión: la
 // portada, Jornada y el buscador de Explorar (B3), con los datos precacheados.
+// Después, un segundo escenario: un despliegue de código sobre el SW de la propia rama (codeDeploy).
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -152,6 +154,173 @@ const proxy = createServer(async (req, res) => {
 await new Promise((resolve) => proxy.listen(0, '127.0.0.1', resolve));
 const base = `http://127.0.0.1:${proxy.address().port}/index.html`;
 
+// ── 2. Despliegue de código sobre el SW de la rama (A1 de la revisión del plan B3; decisión 157) ──
+// La versión «a» es el árbol publicado como 20991231a, instalada y con su SW al mando. Se publica «b»
+// (20991231b) con un cambio de código de verdad: state.js exporta SIGUIENTE y app.js lo importa (las
+// exportaciones cambian, como de B2 a B3), acta.css lleva una marca (--version-codigo: "b") y CODIGO
+// cambia. El SW de «a» revalida src/*.js fichero a fichero y nunca la hoja (cache-first):
+//  - la instalación del SW de «b» (sus peticiones con ?v= de «b») queda retenida hasta el final;
+//  - 1.ª apertura: «a» entera. En segundo plano, su SW revalida el documento y los módulos, ya de «b»,
+//    salvo state.js, que da 503 (mala cobertura): su caché se queda con index.html y app.js de «b» y
+//    con state.js y acta.css de «a»;
+//  - 2.ª apertura, en otra página: «b» entera (la marca de la hoja, Explorar, sin el aviso del arranque
+//    ni errores). Sin la limpieza del arranque (decisión 155), el SyntaxError de state.js y la hoja vieja;
+//  - 3.ª, sin conexión (el servidor corta las conexiones): «b» entera, desde la caché;
+//  - se suelta la instalación: el SW de «b» toma el mando y borra la caché de «a», y la app es «b» entera.
+// Los datos, los congelados de arriba (FROZEN), y el código sin caché HTTP (no-store): determinista.
+const CODE_A = '20991231a';
+const CODE_B = '20991231b';
+const MARK = '--version-codigo';
+// Una condición del servidor, que se comprueba cada 50 ms hasta `timeout` (nunca un tiempo fijo).
+async function settle(condition, label, timeout = 15000) {
+  const deadline = Date.now() + timeout;
+  while (!condition()) {
+    if (Date.now() >= deadline) throw new Error(`${label}: condition not met after ${timeout}ms`);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+}
+async function codeDeploy(browser) {
+  let phase = 'a';
+  let down = false;          // sin conexión: el servidor corta cada conexión
+  let failState = false;     // la revalidación de state.js del SW de «a» da 503
+  let failedState = false;   // y ya la dio
+  let release;
+  const held = new Promise((resolve) => { release = resolve; });
+  // El código de cada versión: el del árbol con sus marcas y, en «b», el cambio de exportaciones y la marca.
+  const code = (file) => {
+    if (!(file === 'index.html' || file === 'sw.js' || file === 'acta.css' || /^src\/[^/]+\.js$/.test(file))) return null;
+    let text = read(ROOT, file);
+    if (text === null) return null;
+    if (file === 'index.html' || file === 'sw.js') text = text.replaceAll(TREE_VERSION, phase === 'a' ? CODE_A : CODE_B);
+    if (phase === 'b') {
+      if (file === 'index.html') text = text.replace(/const CODIGO = '[0-9a-f]{8}';/, "const CODIGO = 'siguient';");
+      if (file === 'src/state.js') text += "\nexport const SIGUIENTE = 'b';\n";
+      if (file === 'src/app.js') text = `import { SIGUIENTE } from './state.js';\nif (SIGUIENTE !== 'b') throw new Error('mezcla');\n${text}`;
+      if (file === 'acta.css') text += `\n:root { ${MARK}: "b"; }\n`;
+    }
+    return text;
+  };
+  const server = createServer(async (req, res) => {
+    const url = new URL(req.url, 'http://portal.test');
+    const file = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.slice(1));
+    if (down) { req.socket.destroy(); return; }
+    const fromWorker = req.headers['sec-fetch-dest'] === 'empty';
+    const v = url.searchParams.get('v');
+    try {
+      if (fromWorker && v === CODE_B) await held;
+      if (failState && fromWorker && v === CODE_A && file === 'src/state.js') {
+        failedState = true;
+        res.writeHead(503, { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' });
+        res.end('no disponible');
+        return;
+      }
+      const data = frozen(file);
+      if (data || file.startsWith('data-')) {
+        if (!data) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
+        res.writeHead(data ? 200 : 404, { 'Content-Type': data ? data.type : 'text/plain', 'Cache-Control': 'no-store' });
+        res.end(data ? data.body : 'no está congelado');
+        return;
+      }
+      const text = code(file);
+      if (text !== null) {
+        const type = file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : 'text/javascript';
+        res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8`, 'Cache-Control': 'no-store' });
+        res.end(text);
+        return;
+      }
+      const response = await fetch(`http://127.0.0.1:${upstream.address().port}${req.url}`);
+      res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'text/plain', 'Cache-Control': 'no-store' });
+      res.end(Buffer.from(await response.arrayBuffer()));
+    } catch {
+      res.writeHead(500);
+      res.end();
+    }
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const home = `http://127.0.0.1:${server.address().port}/index.html`;
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'es-ES', timezoneId: 'Atlantic/Canary' });
+  // Una apertura: una página nueva, que carga la app entera; lo que se ve y los errores del arranque.
+  const open = async (label, hash = '#/explorar') => {
+    const page = await context.newPage();
+    page.setDefaultTimeout(20000);
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    page.on('console', (message) => { if (message.type() === 'error' && message.text().startsWith('[arranque]')) errors.push(message.text().split('\n')[0]); });
+    await page.goto(home + hash);
+    await waitForAsync(page, () => !!document.querySelector('#contenido section[data-screen], #contenido [role="alert"]'), null, { label });
+    const look = await page.evaluate((mark) => ({
+      screen: document.querySelector('#contenido section[data-screen]')?.getAttribute('data-screen') ?? null,
+      alert: !!document.querySelector('#contenido [role="alert"]'),
+      marca: getComputedStyle(document.documentElement).getPropertyValue(mark).trim(),
+    }), MARK);
+    return { page, seen: { ...look, errores: errors } };
+  };
+  const whole = (label, seen, marca) => assert.deepEqual(seen, { screen: 'explorar', alert: false, marca, errores: [] },
+    `despliegue de código, ${label}: ${JSON.stringify(seen)}`);
+  try {
+    // «a» instalada: su SW al mando (clients.claim) y su precache, sin volver a cargar la página: así
+    // ninguna revalidación de «a» queda pendiente cuando se publica «b».
+    let o = await open('despliegue de código, «a»', '#/');
+    await waitForAsync(o.page, (name) => caches.keys().then((keys) => keys.includes(name) && !!navigator.serviceWorker.controller),
+      `futbolbase-v${CODE_A}`, { label: 'despliegue de código, «a» instalada' });
+    await o.page.close();
+    // Se publica «b». 1.ª apertura: «a» entera; su SW revalida en segundo plano, y state.js da 503.
+    phase = 'b';
+    failState = true;
+    o = await open('despliegue de código, 1.ª apertura');
+    whole('1.ª apertura, «a» entera', o.seen, '');
+    await settle(() => failedState, 'despliegue de código, la revalidación de state.js');
+    await waitForAsync(o.page, async ([name, a, b]) => {
+      const cache = await caches.open(name);
+      const text = async (key) => { const response = await cache.match(key); return response ? response.text() : ''; };
+      return (await text('./index.html')).includes(b) && (await text(`./src/app.js?v=${a}`)).includes('SIGUIENTE');
+    }, [`futbolbase-v${CODE_A}`, CODE_A, CODE_B], { label: 'despliegue de código, index.html y app.js de «b» en la caché de «a»' });
+    await o.page.close();
+    failState = false;
+    // 2.ª apertura, con el SW de «a» al mando: «b» entera.
+    o = await open('despliegue de código, 2.ª apertura');
+    whole('2.ª apertura, «b» entera', o.seen, '"b"');
+    await o.page.close();
+    // 3.ª, sin conexión: «b» entera, desde la caché del SW de «a».
+    down = true;
+    o = await open('despliegue de código, 3.ª apertura sin conexión');
+    whole('3.ª apertura sin conexión, «b» entera', o.seen, '"b"');
+    await o.page.close();
+    down = false;
+    // Se suelta la instalación del SW de «b»: toma el mando y borra la caché de «a». Se espera desde
+    // una página que el SW sirve de la red sin guardar nada (manifest.json), para que ninguna
+    // revalidación del SW de «a» toque su caché mientras «b» se activa; y, como la comprobación de la
+    // publicación, pidiendo la actualización en cada vuelta. Si no llega, el error dice cómo quedó.
+    release();
+    const probe = await context.newPage();
+    await probe.goto(home.replace(/index\.html$/, 'manifest.json'));
+    const workers = () => probe.evaluate(async () => {
+      const registration = await navigator.serviceWorker.getRegistration();
+      return { caches: await caches.keys(), installing: registration?.installing?.state ?? null, waiting: registration?.waiting?.state ?? null,
+        active: registration?.active?.state ?? null, controlled: !!navigator.serviceWorker.controller };
+    });
+    await waitForAsync(probe, async (name) => {
+      const registration = await navigator.serviceWorker.getRegistration();
+      try { await registration?.update(); } catch { /* ya se está instalando */ }
+      const keys = await caches.keys();
+      return keys.length === 1 && keys[0] === name && registration?.active?.state === 'activated'
+        && navigator.serviceWorker.controller === registration.active;
+    }, `futbolbase-v${CODE_B}`, { timeout: 30000, interval: 500, label: 'despliegue de código, el SW de «b» al mando' })
+      .catch(async (error) => { throw new Error(`${error.message.split('\n')[0]}: ${JSON.stringify(await workers())}`); });
+    await probe.close();
+    // Con el SW de «b» al mando desde la navegación: «b» entera.
+    o = await open('despliegue de código, con el SW de «b»');
+    whole('con el SW de «b»', o.seen, '"b"');
+    await o.page.close();
+    console.log('PASS: despliegue de código sobre el SW de la rama: la 1.ª apertura es la versión anterior; la 2.ª, con su revalidación de state.js fallida, y la 3.ª, sin conexión, la nueva entera (su hoja y sus módulos, sin el aviso del arranque); con el SW nuevo, también');
+  } finally {
+    release();
+    await context.close();
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
+  }
+}
+
 let browser;
 try {
   browser = await chromium.launch({ executablePath: findChrome(), headless: true, args: ['--no-sandbox'] });
@@ -288,6 +457,7 @@ try {
   assert.deepEqual(errors, []);
   console.log(`PASS: de la app anterior (su SW real) al rediseño, con datos congelados: la 1.ª apertura es la anterior; sin conexión a medias, el aviso con «Reintentar»; la 2.ª y la 3.ª, la nueva con acta.css y sin mezclar módulos; con ${expected}, la portada, Jornada y el buscador de Explorar funcionan sin conexión`);
   await context.close();
+  await codeDeploy(browser);
 } finally {
   if (browser) await browser.close();
   proxy.closeAllConnections();

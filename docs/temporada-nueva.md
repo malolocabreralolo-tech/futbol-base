@@ -48,13 +48,14 @@ Ejecutar cuando no haya otra importación en curso:
 
 ```bash
 python3 scripts/activate_season.py temporada-2026-2027.json --apply
+python3 scripts/codigo.py
 python3 -m pytest scripts/tests/ -q
 node --test scripts/tests/test_*.mjs
 node scripts/tests/render-smoke.mjs
 node scripts/tests/interaction-smoke.mjs
 ```
 
-`pytest` y `node --test` se ejecutan, y tienen que salir en verde, antes de empujar la activación: el bot (`update.yml`) los ejecuta antes de comitear los datos y, si alguno falla, se para en rojo sin avisar y deja de publicar. Una activación por partes (solo una categoría, como en el ejemplo, que solo trae prebenjamín) es válida, y la suite tiene que seguir en verde con ella.
+`--apply` cambia `src/config.js`, que es código: `scripts/codigo.py` sube `CODIGO`, la versión del código que lee el arranque de `index.html` (Plan B3, decisión 156); sin ella, `test_rediseno_index.mjs` sale en rojo. `pytest` y `node --test` se ejecutan, y tienen que salir en verde, antes de empujar la activación: el bot (`update.yml`) los ejecuta antes de comitear los datos y, si alguno falla, se para en rojo sin avisar y deja de publicar. Una activación por partes (solo una categoría, como en el ejemplo, que solo trae prebenjamín) es válida, y la suite tiene que seguir en verde con ella.
 
 Después de activar, fija la línea base de desvío de marcadores para que la temporada que acaba de cerrarse quede protegida por el vigilante `test_score_deviation_does_not_regress`:
 

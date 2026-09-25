@@ -9,7 +9,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import {
-  rowToMatch, inlineRowToMatch, buildGroup, buildSeason, buildCups, groupKind, matchState,
+  rowToMatch, inlineRowToMatch, buildGroup, buildSeason, buildCups, groupKind, matchState, penaltyWinner, roundOf,
 } from '../../src/model.js';
 import { fixtureISO } from '../../src/links.js';
 
@@ -284,6 +284,27 @@ test('buildCups: MCBK2, final de la Copa Oro por penaltis', () => {
   const final = k2.rounds[5].matches[0];
   assert.deepEqual([final.home, final.away, final.hs, final.as, final.advancer, final.shootout],
     ['AD Huracán A', 'UD Vecindario A', 2, 2, 'away', '3-4']);
+});
+
+// I2 de la revisión final de B2: la condición de los penaltis y la ronda de un partido, una sola
+// vez, para la fila de partido (ui.js), Partido y «Verano».
+test('penaltyWinner: quién pasó en una eliminatoria jugada y empatada; null si no hubo penaltis', () => {
+  const k1 = byId(cups().groups, 'MCPK1');
+  const qf = k1.rounds[1].matches.find(m => m.home === 'UD Las Mesas Huracán');
+  assert.equal(penaltyWinner(qf), 'UD Las Mesas Huracán', 'cuartos 1–1, pasó el local (3–2)');
+  const k2 = byId(cups().groups, 'MCBK2');
+  assert.equal(penaltyWinner(k2.rounds[5].matches[0]), 'UD Vecindario A', 'final 2–2, pasó el visitante (3–4)');
+  assert.equal(penaltyWinner(k1.rounds[3].matches[0]), null, 'final 1–2: sin penaltis');
+  assert.equal(penaltyWinner({ ...qf, hs: null, as: null }), null, 'sin jugar');
+  assert.equal(penaltyWinner({ ...qf, advancer: null }), null, 'empate de liga: nadie pasa');
+});
+
+test('roundOf: la ronda de un partido en su grupo, por su clave; null si no está', () => {
+  const k1 = byId(cups().groups, 'MCPK1');
+  const qf = k1.rounds[1].matches[0];
+  assert.equal(roundOf(k1, qf), k1.rounds[1]);
+  assert.equal(roundOf(k1, { ...qf, roundKey: 'no existe' }), null);
+  assert.equal(roundOf({ rounds: undefined }, qf), null);
 });
 
 // ── groupKind ──────────────────────────────────────────────────────────────

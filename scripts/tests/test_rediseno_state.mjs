@@ -36,7 +36,6 @@ const bodies = {
   'data-season-2024-2025.js': 'const SEASON_2024_2025={"name":"2024-2025","current":false,"benjamin":[],"prebenjamin":[]};',
   'data-season-2023-2024.js': 'const SEASON_2023_2024={"name":"2023-2024","current":false,"benjamin":[],"prebenjamin":[]};',
   'data-lineups-2025-2026.js': 'const LINEUPS_2025_2026={};',
-  'data-players-2025-2026.js': 'const PLAYERS_2025_2026={};\nconst TEAMS_2025_2026={};',
   'data-health.json': null,   // cada prueba de ensureHealth decide
 };
 globalThis.fetch = async (url) => {
@@ -75,13 +74,13 @@ test('nada espera para siempre: cada petición perezosa se corta a los 15 s y la
   console.warn = () => {};
   try {
     const loads = [state.ensureMatchDetail(), state.ensureSeasonData('2022-2023'), state.ensureLineups('2023-2024'),
-      state.ensurePlayers('2023-2024'), state.ensureHealth()];
-    assert.equal(hung.length, 5, hung.join(', '));
+      state.ensureHealth()];
+    assert.equal(hung.length, 4, hung.join(', '));
     t.mock.timers.tick(state.LAZY_TIMEOUT_MS - 1);
     await new Promise((resolve) => setImmediate(resolve));
-    assert.equal(hung.length, 5, 'todavía en vuelo');
+    assert.equal(hung.length, 4, 'todavía en vuelo');
     t.mock.timers.tick(1);
-    assert.deepEqual(await Promise.all(loads), [null, null, null, null, null]);
+    assert.deepEqual(await Promise.all(loads), [null, null, null, null]);
   } finally {
     globalThis.fetch = saved;
     console.error = quiet.error;
@@ -106,10 +105,8 @@ test('cada petición perezosa lleva la versión de data-seasons.js, nunca la de 
   assert.ok(await state.ensureMatchDetail());
   assert.ok(await state.ensureSeasonData('2024-2025'));
   assert.ok(await state.ensureLineups('2025-2026'));
-  assert.ok(await state.ensurePlayers('2025-2026'));
   assert.deepEqual(requests.map((url) => url.replace(/\?.*$/, '')), [
     './data-matchdetail.js', './data-season-2024-2025.js', './data-lineups-2025-2026.js',
-    './data-players-2025-2026.js',
   ]);
   for (const url of requests) assert.match(url, /\?v=20260923j$/, url);
 });
@@ -131,7 +128,7 @@ test('todas las peticiones perezosas pasan por fetchData(): la versión de los d
   assert.equal((src.match(/\bfetch\(/g) || []).length, 1, 'un solo fetch en state.js, el de fetchData');
   assert.match(src, /await fetch\(`\.\/\$\{file\}\$\{dataQuery\(\)\}`, \{ signal: controller\.signal \}\)/);
   const loaders = src.match(/await fetchData\(/g) || [];
-  assert.equal(loaders.length, 5, 'matchdetail, temporadas, actas, jugadores y data-health');
+  assert.equal(loaders.length, 4, 'matchdetail, temporadas, actas y data-health');
   assert.doesNotMatch(src, /data-matchdetail-keys\.js"\]/, 'la versión ya no sale de data-matchdetail-keys.js');
 });
 
@@ -201,47 +198,51 @@ test('decisiones 1 y 2: state.js sin estado de interfaz, sin HTML y sin lo que y
   for (const gone of ['S', 'FEATURED', 'isFeatured', 'featuredStandingFrom', 'featuredMatchesFrom',
     'featuredScorersFrom', 'getTeamForm', 'isHistorical', 'getCurrentSeason', 'teamBadge', 'teamBadgeFallback',
     'handleBadgeError', 'installBadgeErrorDelegation', 'escapeHtml', 'escapeAttr', '$', '$$', 'el',
-    'ACTIVATION_KEYS', 'makeActivatable', 'delegateActivation', 'buildUnifiedPrebenjamin', 'buildSparkline']) {
+    'ACTIVATION_KEYS', 'makeActivatable', 'delegateActivation', 'buildUnifiedPrebenjamin', 'buildSparkline',
+    // M5 de la revisión final de B2: las heredadas que nadie usaba en src/, index.html ni sw.js.
+    'getData', 'withSeasonCup', 'countStats', 'getSeasonError', 'ensurePlayers', 'phaseIcon',
+    'unifiedPrebenLeagueGroups', 'validJorGroup', 'jornadaLabel', 'groupJornadaLabel', 'knockoutRoundsSource',
+    'getPhases']) {
     assert.equal(gone in state, false, `${gone} sigue en state.js`);
   }
-  for (const kept of ['jornadaLabel', 'validJorGroup', 'knockoutRoundsSource', 'phaseIcon', 'groupJornadaLabel',
-    'unifiedPrebenLeagueGroups', 'getPhases', 'countStats', 'countMatches', 'getData', 'withSeasonCup', 'teamScorers']) {
+  for (const kept of ['countMatches', 'groupScorers', 'teamScorers']) {
     assert.equal(typeof state[kept], 'function', kept);
   }
   assert.doesNotMatch(read('src/state.js'), /<(img|span|div|table|svg)\b/, 'state.js ya no pinta HTML');
 });
 
+// I2 de la revisión final de B2: groupScorers (Tabla y Goleadores) y teamScorers (Mi equipo), las
+// dos aquí y con un solo orden; teamScorers es el filtro por equipo de groupScorers.
+const GOL = [
+  { id: 'PG1', g: 'PREBENJAMIN GC GRUPO 1', s: [['Otro, Grupo', 'Las Mesas Hu.', 30, 20]] },
+  { id: 'PG2', g: 'PREBENJAMIN GC GRUPO 2', s: [
+    ['Santana Santacruz, Agoney', 'Las Mesas Hu.', 11, 21], ['De La Rosa Perello, Theo', 'Las Mesas Hu.', 12, 17],
+    ['Igual, Goles', 'Las Mesas Hu.', 11, 19], ['Filial, Uno', 'Las Mesas B', 20, 10], ['Rival, Uno', 'AD Huracán', 40, 20]] },
+];
+
+test('groupScorers(gol, groupId): los goleadores del grupo, de más a menos goles y, a igualdad, con menos partidos', () => {
+  assert.deepEqual(state.groupScorers(GOL, 'PG2').map((r) => [r.name, r.team, r.goals, r.games]), [
+    ['Rival, Uno', 'AD Huracán', 40, 20], ['Filial, Uno', 'Las Mesas B', 20, 10],
+    ['De La Rosa Perello, Theo', 'Las Mesas Hu.', 12, 17], ['Igual, Goles', 'Las Mesas Hu.', 11, 19],
+    ['Santana Santacruz, Agoney', 'Las Mesas Hu.', 11, 21],
+  ]);
+  assert.equal(state.groupScorers(GOL, 'PG9'), null, 'sin el grupo en la fuente, null');
+  assert.equal(state.groupScorers(null, 'PG2'), null);
+  assert.deepEqual(state.groupScorers([{ id: 'X', s: [] }], 'X'), []);
+  assert.deepEqual(state.groupScorers([{ id: 'X' }], 'X'), [], 'sin lista, ninguno');
+});
+
 test('decisión 2: teamScorers(gol, team), los goleadores del equipo en su grupo, por goles y partidos', () => {
-  const gol = [
-    { id: 'PG1', g: 'PREBENJAMIN GC GRUPO 1', s: [['Otro, Grupo', 'Las Mesas Hu.', 30, 20]] },
-    { id: 'PG2', g: 'PREBENJAMIN GC GRUPO 2', s: [
-      ['Santana Santacruz, Agoney', 'Las Mesas Hu.', 11, 21], ['De La Rosa Perello, Theo', 'Las Mesas Hu.', 12, 17],
-      ['Igual, Goles', 'Las Mesas Hu.', 11, 19], ['Filial, Uno', 'Las Mesas B', 20, 10], ['Rival, Uno', 'AD Huracán', 40, 20]] },
-  ];
   const team = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' };
-  assert.deepEqual(state.teamScorers(gol, team), [
+  assert.deepEqual(state.teamScorers(GOL, team), [
     { name: 'De La Rosa Perello, Theo', goals: 12, games: 17 },
     { name: 'Igual, Goles', goals: 11, games: 19 },
     { name: 'Santana Santacruz, Agoney', goals: 11, games: 21 },
   ]);
-  // Los ficheros antiguos de prebenjamín identifican el grupo por su texto.
-  const legacy = gol.map(({ g, s }) => ({ g, s }));
-  assert.equal(state.teamScorers(legacy, team).length, 3);
-  assert.deepEqual(state.teamScorers(legacy, { ...team, cat: 'benjamin' }), []);
-  assert.deepEqual(state.teamScorers(gol, { ...team, groupId: 'PG9' }), []);
+  // El grupo se busca solo por su código (id): el respaldo por la clave de texto de los ficheros
+  // antiguos se fue, porque todas las entradas publicadas llevan id (I2 de la revisión final).
+  assert.deepEqual(state.teamScorers(GOL.map(({ g, s }) => ({ g, s })), team), []);
+  assert.deepEqual(state.teamScorers(GOL, { ...team, groupId: 'PG9' }), []);
   assert.deepEqual(state.teamScorers(undefined, team), []);
-  assert.deepEqual(state.teamScorers(gol, null), []);
-});
-
-test('decisión 1: getPhases(groups) y countStats(season, cat) reciben lo que antes leían de S', async () => {
-  const groups = [{ id: 'B', phase: 'Fase 1', name: 'Grupo 10' }, { id: 'A', phase: 'Fase 1', name: 'Grupo 2' },
-    { id: 'C', phase: 'Fase 2', name: 'Grupo 1' }];
-  const ids = (map) => Object.fromEntries(Object.entries(map).map(([phase, list]) => [phase, list.map((g) => g.id)]));
-  assert.deepEqual(ids(state.getPhases(groups)), { 'Fase 1': ['A', 'B'], 'Fase 2': ['C'] });
-  assert.deepEqual(state.getPhases(null), {});
-  bodies['data-season-2021-2022.js'] = 'const SEASON_2021_2022={"name":"2021-2022","current":false,"benjamin":[{"id":"GC1","name":"Grupo 1","phase":"Primera Fase","standings":[[1,"X",3,1,1,0,0,2,0,2],[2,"Y",0,1,0,0,1,0,2,-2]],"jornadas":{"1":[["01/10","X","Y",2,0]]}}],"prebenjamin":[]};';
-  assert.ok(await state.ensureSeasonData('2021-2022'));
-  assert.deepEqual(state.countStats('2021-2022', 'benjamin'), { groups: 1, teams: 2, matches: 1 });
-  assert.deepEqual(state.countStats('2021-2022', 'prebenjamin'), { groups: 0, teams: 0, matches: 0 });
-  assert.deepEqual(state.countStats('2019-2020', 'benjamin'), { groups: 0, teams: 0, matches: 0 }, 'sin cargar, nada');
+  assert.deepEqual(state.teamScorers(GOL, null), []);
 });

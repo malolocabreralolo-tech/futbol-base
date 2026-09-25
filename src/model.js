@@ -124,6 +124,14 @@ export function matchState(match, todayISO) {
   return match.dateISO >= todayISO ? 'pendiente' : 'sin resultado';
 }
 
+/* Quién pasó por penaltis una eliminatoria jugada y empatada (spec §4.5 y §9.3): el nombre del
+ * equipo, o null. Cada pantalla lo escribe a su manera: el nombre completo o teamShort, con la
+ * tanda o sin ella (I2 de la revisión final de B2: antes, tres copias de la condición). */
+export function penaltyWinner(match) {
+  if (match.hs == null || match.as == null || match.hs !== match.as) return null;
+  return match.advancer === 'home' ? match.home : match.advancer === 'away' ? match.away : null;
+}
+
 /* 'Jornada N' si la clave es numérica ('5', 'Jornada 5'); si no, la clave sin
  * la fecha ni los paréntesis ('14-06-2024 ( Ronda 1 )' → 'Ronda 1'). */
 function roundLabel(key) {
@@ -842,9 +850,10 @@ export function timelineFor(match, matchDetail, lineups) {
 
 /* ── Registro de datos y modelo (Plan B2, contrato del esqueleto) ──────────
  *
- * datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: null }:
- * los globales inmediatos y lo que traen los cargadores perezosos de state.js. El modelo los lee
- * al pedirlos, así que una temporada pasada aparece en cuanto se guarda en seasonRaw. */
+ * datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: undefined }:
+ * los globales inmediatos y lo que traen los cargadores perezosos de state.js (health: undefined
+ * sin pedir y null si falló). El modelo los lee al pedirlos, así que una temporada pasada aparece
+ * en cuanto se guarda en seasonRaw. */
 
 // La Maspalomas Cup es de 2025/26 y lo sigue siendo después de activar 2026/27 («Para B2»).
 const CUPS_SEASON = '2025-2026';
@@ -921,9 +930,9 @@ export function createModel(datasets, { portalSeason, buildClubIndex = null } = 
 }
 
 /* ── Funciones puras del diseño anterior (spec §5.2, «se mueven») ─────────
- * Vienen de plantilla.js, matchdetail-rich.js, modals.js, filters.js y health.js, que se borran
- * en el corte. Mismo comportamiento y mismas pruebas; filterCompetitionGroups ya no toma el
- * estado S por defecto y sourceInfo devuelve datos en lugar de HTML (decisión 3 de B2). */
+ * Vienen de plantilla.js, matchdetail-rich.js, modals.js, filters.js y health.js, que se borraron
+ * en el corte (Tarea 4 de B2). Mismo comportamiento y mismas pruebas; filterCompetitionGroups ya no
+ * toma el estado S por defecto y sourceInfo devuelve datos en lugar de HTML (decisión 3 de B2). */
 
 export function sortPlantillaRows(rows, key, dir) {
   key = key || 'g';
@@ -1040,6 +1049,11 @@ export function sourceInfo(group, historical = false) {
 // «2025-2026» → «2025/26», la forma de las temporadas en pantalla; lo demás, tal cual.
 export function seasonLabel(season) {
   return String(season ?? '').replace(/^(\d{4})-\d{2}(\d{2})$/, '$1/$2');
+}
+
+// La ronda de un partido en su grupo (la de su clave, match.roundKey), o null.
+export function roundOf(group, match) {
+  return (group.rounds || []).find((round) => round.key === match.roundKey) || null;
 }
 
 // La ronda `r` de un grupo (§4.1): la de esa clave (Round.key) o, si no hay, la del mismo número

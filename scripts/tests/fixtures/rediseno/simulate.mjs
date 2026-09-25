@@ -53,6 +53,7 @@ export function teamNames(...collections) {
 // El registro de datos de B2 (`datasets` del esqueleto: los nueve globales de readGlobals más
 // seasonRaw, matchDetail, lineups y health) a partir de una temporada cruda de las fixtures
 // (current-2025-2026, currentAt o nextSeasonRaw), con los escudos y los torneos congelados.
+// health es undefined, como en app.js: data-health.json sin pedir (null sería «falló»).
 // `extra` sustituye cualquier campo (golPrebenj, health, seasonRaw…).
 export function datasetsFrom(raw, extra = {}) {
   const cups = fixture('cups-2025-2026');
@@ -60,7 +61,7 @@ export function datasetsFrom(raw, extra = {}) {
     benjamin: raw.benjamin, prebenjamin: raw.prebenjamin, history: raw.history,
     golBenj: null, golPrebenj: null, shields: fixture('shields'), seasons: null,
     cupBenjamin: cups.benjamin, cupPrebenjamin: cups.prebenjamin,
-    seasonRaw: {}, matchDetail: null, lineups: {}, health: null,
+    seasonRaw: {}, matchDetail: null, lineups: {}, health: undefined,
     ...extra,
   };
 }

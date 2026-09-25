@@ -136,7 +136,8 @@ test('faltan: una jornada con menos partidos que la moda del grupo, en singular 
 test('Calendario del grupo: solo con partidos futuros, sin los de retirados, y el .ics con uno por partido', () => {
   assert.doesNotMatch(render({ g: 'PG2' }), /data-action="group-calendar"/, 'sin partidos futuros, se oculta');
   const out = render({ g: 'PG2' }, at('2026-05-27'));
-  assert.match(out, /<div class="buttons" aria-live="polite"><button class="button" type="button" data-action="share-round">Compartir jornada<\/button><button class="button" type="button" data-action="group-calendar">Calendario del grupo<\/button><\/div>/);
+  // Bajo la botonera, la región de estado común de «Compartir» (shareStatus, I2 de la revisión final).
+  assert.match(out, /<div class="buttons"><button class="button" type="button" data-action="share-round">Compartir jornada<\/button><button class="button" type="button" data-action="group-calendar">Calendario del grupo<\/button><\/div><\/div><p class="share-status" role="status"><\/p><\/section>$/);
   const pg2 = ctxFor('jornada', {}, at('2026-05-27')).model.group(PORTAL_SEASON, 'PG2');
   const futuros = groupCalendar(pg2, '2026-05-27');
   assert.equal(futuros.length, 11, 'cinco de la jornada 29 y seis de la 30');
@@ -147,6 +148,33 @@ test('Calendario del grupo: solo con partidos futuros, sin los de retirados, y e
   const fv = groupCalendar(pfv2, '2026-03-01');
   assert.equal(fv.length, 21);
   assert.ok(fv.every(m => m.home !== 'CD Teguinte' && m.away !== 'CD Teguinte'));
+});
+
+// I2 de la revisión final de B2: la respuesta común de «Compartir» (la de Partido): sin share ni
+// portapapeles, el enlace de la jornada en la región de estado, para copiarlo a mano; el botón no cambia.
+test('mount: «Compartir jornada» sin share ni portapapeles escribe el enlace en la región de estado', async () => {
+  const ctx = ctxFor('jornada', { s: PORTAL_SEASON, g: 'PG2', r: 'Jornada 30' });
+  let onClick = null;
+  const status = { textContent: '' };
+  const el = { addEventListener: (type, fn) => { if (type === 'click') onClick = fn; }, querySelector: (sel) => (sel === '.share-status' ? status : null) };
+  const root = { querySelector: (sel) => (sel === '[data-screen="jornada"]' ? el : null) };
+  const saved = { navigator: Object.getOwnPropertyDescriptor(globalThis, 'navigator'), location: globalThis.location };
+  Object.defineProperty(globalThis, 'navigator', { configurable: true, writable: true,
+    value: { clipboard: { writeText: async () => { throw new Error('denegado'); } } } });
+  globalThis.location = { href: 'https://x.test/futbol-base/#/jornada' };
+  try {
+    screen.mount(root, ctx);
+    const button = { textContent: 'Compartir jornada', dataset: { action: 'share-round' } };
+    onClick({ target: { closest: () => button } });
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(status.textContent, 'No se pudo copiar el enlace: https://x.test/futbol-base/#/jornada?s=2025-2026&g=PG2&r=Jornada%2030');
+    assert.equal(button.textContent, 'Compartir jornada', 'el botón no cambia de texto');
+  } finally {
+    if (saved.navigator) Object.defineProperty(globalThis, 'navigator', saved.navigator);
+    else delete globalThis.navigator;
+    if (saved.location === undefined) delete globalThis.location;
+    else globalThis.location = saved.location;
+  }
 });
 
 test('temporada pasada (P1 2024-25): la temporada en la etiqueta, fechas DD/MM, sin resalte ni calendario', () => {

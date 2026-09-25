@@ -2,11 +2,11 @@
  * Node test runner — fixes frontend de la revisión 2026-06-15.
  * Run: node --test scripts/tests/test_review0615_frontend.mjs
  *
- * #9: pestaña JORNADAS en blanco al cambiar a temporada histórica. S.jorGroup
- *     conservaba un código de la temporada ACTUAL ('A2'/'PG2') que no existe
- *     en los grupos históricos (GC1..GC12) -> getData().find(...) undefined ->
- *     return mudo -> panel vacío. Fix: validJorGroup (puro) valida pertenencia
- *     y cae al primer grupo; + empty-state en vez de return mudo.
+ * Quedan las funciones de state.js que usa el modelo del rediseño (etiquetas de
+ * ronda, detector de copa, quién pasó y campeón, liguilla o cuadro) y
+ * countMatches. validJorGroup, knockoutRoundsSource, unifiedPrebenLeagueGroups,
+ * countStats, phaseIcon y groupJornadaLabel se fueron con sus pruebas en la
+ * revisión final de B2 (M5): nada de src/, index.html ni sw.js las usaba.
  */
 
 import { test } from 'node:test';
@@ -17,58 +17,6 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const src = f => readFileSync(join(ROOT, 'src', f), 'utf8');
-
-test('validJorGroup mantiene el grupo si existe en la temporada activa', async () => {
-  const { validJorGroup } = await import('../../src/state.js');
-  assert.equal(validJorGroup('A2', [{ id: 'A1' }, { id: 'A2' }, { id: 'B1' }]), 'A2');
-});
-
-test('validJorGroup cae al primero si el grupo es stale (cambio a histórica)', async () => {
-  const { validJorGroup } = await import('../../src/state.js');
-  // S.jorGroup='A2' de la actual; la histórica solo tiene GC1..GC12
-  assert.equal(validJorGroup('A2', [{ id: 'GC1' }, { id: 'GC2' }]), 'GC1');
-});
-
-test('validJorGroup cae al primero si no había grupo previo', async () => {
-  const { validJorGroup } = await import('../../src/state.js');
-  assert.equal(validJorGroup('', [{ id: 'X' }]), 'X');
-  assert.equal(validJorGroup(null, [{ id: 'X' }]), 'X');
-});
-
-test('validJorGroup devuelve "" si no hay grupos', async () => {
-  const { validJorGroup } = await import('../../src/state.js');
-  assert.equal(validJorGroup('A2', []), '');
-});
-
-/* ─── Cups 2025-26: bracket de knockout en temporada actual ───────────────
- * buildKnockoutBracket leía g.jornadas, ausente en grupos de temporada actual
- * (sus rondas viven en HISTORY[code], como toda la temporada actual). Las cups
- * 2025-26 (BCA1/BCB1/BCC1/PCC1) salían "Sin partidos registrados". Fuente de
- * rondas extraída a knockoutRoundsSource (puro). */
-
-test('knockoutRoundsSource: histórica usa g.jornadas inline (per-season file)', async () => {
-  const { knockoutRoundsSource } = await import('../../src/state.js');
-  const g = { id: 'BCA1', jornadas: { Final: [['', 'A', 'B', 1, 0, '']] } };
-  assert.deepEqual(knockoutRoundsSource(g, true, { BCA1: { X: [] } }), g.jornadas);
-});
-
-test('knockoutRoundsSource: actual cae a HISTORY[code] (cup sin jornadas inline)', async () => {
-  const { knockoutRoundsSource } = await import('../../src/state.js');
-  const g = { id: 'BCA1', standings: [] };
-  const HIST = { BCA1: { '06-06-2026 ( Final )': [['', 'ACODETTI', 'PALMAS', 0, 1, '']] } };
-  assert.deepEqual(knockoutRoundsSource(g, false, HIST), HIST.BCA1);
-});
-
-test('knockoutRoundsSource: histórica sin jornadas NO usa HISTORY (colisión de código)', async () => {
-  const { knockoutRoundsSource } = await import('../../src/state.js');
-  assert.deepEqual(knockoutRoundsSource({ id: 'BCA1' }, true, { BCA1: { X: [] } }), {});
-});
-
-test('knockoutRoundsSource: {} si no hay fuente', async () => {
-  const { knockoutRoundsSource } = await import('../../src/state.js');
-  assert.deepEqual(knockoutRoundsSource({ id: 'Z' }, false, null), {});
-});
 
 /* ─── Etiqueta de ronda por NOMBRE explícito (no por posición) ─────────────
  * Las rondas salían intercambiadas (Final↔Semifinales) cuando el orden era
@@ -105,10 +53,7 @@ test('knockoutRoundLabel: cups "Ronda N" (2024-25) usan posición → Cuartos/Se
   assert.equal(knockoutRoundLabel('( Ronda 5 )', 0, 6), 'Ronda 5');
 });
 
-/* ─── H1: la copa prebenjamín (PCC1) no debe romper la clasificación unificada ─
- * PCC1 ordena antes que PG1 en PREBENJAMIN; buildUnifiedPrebenjamin numeraba
- * por posición y cortaba en >3 → PG3 (14 equipos) desaparecía y un equipo de
- * copa encabezaba la tabla. Debe filtrar grupos de liga. */
+/* ─── H1: detector de copa por código o fase (groupKind de model.js lo usa) ─ */
 
 test('isCupGroup detecta cups por código/fase', async () => {
   const { isCupGroup } = await import('../../src/state.js');
@@ -116,53 +61,6 @@ test('isCupGroup detecta cups por código/fase', async () => {
   assert.equal(isCupGroup({ id: 'BCA1', phase: 'Copa de Campeones' }), true);
   assert.equal(isCupGroup({ id: 'PG3', phase: 'Gran Canaria' }), false);
   assert.equal(isCupGroup({ id: 'A1', phase: 'Segunda Fase A' }), false);
-});
-
-test('unifiedPrebenLeagueGroups excluye cups y conserva PG3', async () => {
-  const { unifiedPrebenLeagueGroups } = await import('../../src/state.js');
-  const PRE = [
-    { id: 'PCC1', phase: 'Copa de Campeones', standings: [[1, 'X', 6, 2]] },
-    { id: 'PG1', phase: 'Gran Canaria', standings: [[1, 'A', 10, 5]] },
-    { id: 'PG2', phase: 'Gran Canaria', standings: [[1, 'B', 9, 5]] },
-    { id: 'PG3', phase: 'Gran Canaria', standings: [[1, 'C', 8, 5]] },
-  ];
-  assert.deepEqual(unifiedPrebenLeagueGroups(PRE).map(x => x.id), ['PG1', 'PG2', 'PG3']);
-});
-
-test('unifiedPrebenLeagueGroups no mezcla islas: una sola competición', async () => {
-  const { unifiedPrebenLeagueGroups } = await import('../../src/state.js');
-  // 2025-26: al entrar el prebenjamín insular, 'PFV*' ordena antes que 'PG*' y
-  // la tabla unificada la encabezaba Fuerteventura, comparando equipos de islas
-  // distintas que no se cruzan nunca.
-  const fila = n => Array.from({ length: n }, (_, i) => [i + 1, 'E' + i, 10 - i, 5]);
-  const PRE = [
-    { id: 'PCC1', phase: 'Copa de Campeones', standings: fila(8) },
-    { id: 'PFV1', phase: 'Fuerteventura', standings: fila(7) },
-    { id: 'PFV2', phase: 'Fuerteventura', standings: fila(7) },
-    { id: 'PFV3', phase: 'Fuerteventura', standings: fila(7) },
-    { id: 'PG1', phase: 'Gran Canaria', standings: fila(15) },
-    { id: 'PG2', phase: 'Gran Canaria', standings: fila(15) },
-    { id: 'PG3', phase: 'Gran Canaria', standings: fila(14) },
-    { id: 'PLZ1', phase: 'Lanzarote', standings: fila(5) },
-    { id: 'PLZ2', phase: 'Lanzarote', standings: fila(4) },
-  ];
-  assert.deepEqual(unifiedPrebenLeagueGroups(PRE).map(x => x.id), ['PG1', 'PG2', 'PG3']);
-});
-
-test('unifiedPrebenLeagueGroups con una sola competición la devuelve entera', async () => {
-  const { unifiedPrebenLeagueGroups } = await import('../../src/state.js');
-  const PRE = [
-    { id: 'PG1', phase: 'Gran Canaria', standings: [[1, 'A', 10, 5]] },
-    { id: 'PG2', phase: 'Gran Canaria', standings: [[1, 'B', 9, 5]] },
-  ];
-  assert.deepEqual(unifiedPrebenLeagueGroups(PRE).map(x => x.id), ['PG1', 'PG2']);
-});
-
-test('unifiedPrebenLeagueGroups aguanta vacío y sin standings', async () => {
-  const { unifiedPrebenLeagueGroups } = await import('../../src/state.js');
-  assert.deepEqual(unifiedPrebenLeagueGroups([]), []);
-  assert.deepEqual(unifiedPrebenLeagueGroups(null), []);
-  assert.equal(unifiedPrebenLeagueGroups([{ id: 'PG1', phase: 'GC' }]).length, 1);
 });
 
 /* ─── M4: empates por penaltis muestran quién avanzó ─────────────────────── */
@@ -338,13 +236,6 @@ test('countMatches: tolera entradas vacías', async () => {
   assert.equal(countMatches([{ id: 'X', standings: [] }], null), 0);
 });
 
-test('countStats ya no usa el atajo HIST_MATCHES solo-benjamín', () => {
-  const s = src('state.js');
-  assert.doesNotMatch(s, /S\.cat === 'benjamin' && typeof HIST_MATCHES/,
-    'el recuento debe ser por categoría, no un total global para benjamín');
-  assert.match(s, /countMatches\(data, hist\)/);
-});
-
 /* Copas insulares 2023-24 (Lanzarote / Fuerteventura): se llaman "Copa" pero
  * son LIGUILLAS de jornadas numeradas con clasificación completa, no cuadros.
  * isKnockoutGroup las marca como copa por la fase, así que sin esto se
@@ -378,31 +269,3 @@ test('isRoundRobinCup: un cuadro a medio jugar no se confunde con liguilla', asy
   assert.equal(isRoundRobinCup({ cuartos: r(4), semis: r(2) }), false);
 });
 
-test('phaseIcon: las fases insulares de nombre largo dejan de caer al genérico', async () => {
-  const { phaseIcon } = await import('../../src/state.js');
-  // Nombres exactos: sin cambios.
-  assert.equal(phaseIcon('Primera Fase GC'), '🏟️');
-  assert.equal(phaseIcon('Segunda Fase A'), '🏆');
-  assert.equal(phaseIcon('Fuerteventura'), '🏝️');
-  // Por palabra clave (antes todas ⚽).
-  assert.equal(phaseIcon('Fase 1 Fuerteventura'), '🏝️');
-  assert.equal(phaseIcon('Primera Lanzarote'), '🌋');
-  assert.equal(phaseIcon('Preferente Lanzarote'), '🌋');
-  assert.equal(phaseIcon('Copa de Campeones'), '🏆');
-  assert.equal(phaseIcon('Copa Cabildo Primera Lanzarote'), '🏆');
-  // Sin coincidencia: genérico.
-  assert.equal(phaseIcon('Fase Rara'), '⚽');
-  assert.equal(phaseIcon(''), '⚽');
-  assert.equal(phaseIcon(null), '⚽');
-});
-
-test('groupJornadaLabel unifica el badge entre fuentes', async () => {
-  const { groupJornadaLabel } = await import('../../src/state.js');
-  // futbolaspalmas guarda 'Jornada 30'; FIFLP el número pelado.
-  assert.equal(groupJornadaLabel('14'), 'Jornada 14');
-  assert.equal(groupJornadaLabel('Jornada 30'), 'Jornada 30');
-  assert.equal(groupJornadaLabel(''), '');
-  assert.equal(groupJornadaLabel(null), '');
-  // Las rondas de copa no son números y se dejan tal cual.
-  assert.equal(groupJornadaLabel('Semifinales'), 'Semifinales');
-});

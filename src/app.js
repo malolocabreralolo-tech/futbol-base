@@ -41,8 +41,10 @@ export function start(doc, win, config = PORTAL, { now = () => new Date() } = {}
   doc.addEventListener('error', (event) => crestFallback(event.target), true);
   const storage = () => win.localStorage;
   const portal = { season: config.season, defaultTeam: config.defaultTeam };
-  // Registro de datos: los globales inmediatos y lo que traen los cargadores perezosos.
-  const datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: null };
+  // Registro de datos: los globales inmediatos y lo que traen los cargadores perezosos. health es
+  // undefined mientras data-health.json no se ha pedido y null si falló: se pide una vez por sesión
+  // (M4 de la revisión final de B2).
+  const datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: undefined };
   // La fecha del literal oculto «Última actualización» de index.html, por si falta data-health.
   const legacyDate = doc.getElementById('legacyUpdated')?.textContent.match(/\d{2}\/\d{2}\/\d{4}/)?.[0] || null;
 
@@ -54,8 +56,10 @@ export function start(doc, win, config = PORTAL, { now = () => new Date() } = {}
   win.addEventListener('online', showOffline);
   win.addEventListener('offline', showOffline);
   showOffline();
+  // El mismo vuelo que la portada (ensureHealth es de un solo vuelo): su resultado, o null si falla,
+  // queda en datasets.health, y así ninguna visita a Mi equipo lo vuelve a pedir ni lo espera.
   ensureHealth().then((health) => {
-    if (health) datasets.health = health;
+    datasets.health = health;
     showOffline();
   });
 

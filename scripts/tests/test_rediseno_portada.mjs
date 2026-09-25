@@ -91,20 +91,38 @@ test('contrato de pantalla: id home, sin cargas con data-health ya cargado, y un
   }
 });
 
-test('needs: data-health.json una vez, guardado en datasets.health, y nunca rechaza', async () => {
-  const saved = globalThis.fetch;
+// M4 de la revisión final de B2: datasets.health es undefined sin pedir y null si falló. Se pide
+// una sola vez por sesión: mientras falla, las visitas siguientes pintan en el acto, sin esperar.
+test('needs: data-health.json una sola vez por sesión, guardado en datasets.health (null si falló), y nunca rechaza', async () => {
+  const saved = { fetch: globalThis.fetch, warn: console.warn };
   let calls = 0;
-  globalThis.fetch = async () => { calls += 1; return { ok: true, status: 200, text: async () => JSON.stringify(health) }; };
+  let up = false;
+  globalThis.fetch = async () => {
+    calls += 1;
+    return up ? { ok: true, status: 200, text: async () => JSON.stringify(health) } : { ok: false, status: 503, text: async () => '' };
+  };
+  console.warn = () => {};
   try {
-    const datasets = { health: null };
+    // Falla: queda null, y la visita siguiente no lo vuelve a pedir ni lo espera.
+    const failed = {};
+    const first = screen.needs({}, failed);
+    assert.equal(first.length, 1);
+    await Promise.all(first);
+    assert.equal(failed.health, null);
+    assert.deepEqual(screen.needs({}, failed), [], 'falló: esta sesión no lo vuelve a pedir');
+    assert.equal(calls, 1);
+    // Llega: queda guardado y tampoco se vuelve a pedir.
+    up = true;
+    const datasets = { health: undefined };
     const loads = screen.needs({}, datasets);
     assert.equal(loads.length, 1);
     await Promise.all(loads);
     assert.equal(datasets.health.nextSeason.status, 'pending');
     assert.deepEqual(screen.needs({}, datasets), [], 'cargado, no se vuelve a pedir');
-    assert.equal(calls, 1);
+    assert.equal(calls, 2);
   } finally {
-    globalThis.fetch = saved;
+    globalThis.fetch = saved.fetch;
+    console.warn = saved.warn;
   }
 });
 
@@ -125,7 +143,8 @@ test('A (PG2, 01/03/2026): próximo partido con cuenta atrás, casillas, local y
     + 'Local Veteranos – Visitante Las Mesas Hu. Campo no publicado Calendario Compartir');
   assert.match(block, /<span class="cell-label">Campo<\/span><span class="fixture-place is-muted">no publicado<\/span>/);
   assert.match(block, /<div class="buttons"><button type="button" class="button is-main" data-action="calendario">Calendario<\/button><button type="button" class="button" data-action="compartir">Compartir<\/button><\/div>/);
-  assert.match(out, /<\/section><p class="vh" role="status" data-role="aviso"><\/p>/);
+  // La región de estado de «Compartir», la común (shareStatus): visible, bajo el bloque.
+  assert.match(out, /<\/section><p class="share-status" role="status"><\/p>/);
 });
 
 test('A con campo (A2, 20/05/2026): «Cómo llegar» abre el mapa en otra pestaña y es la acción principal', () => {
@@ -224,6 +243,16 @@ test('frescura: fuente y hora de Canarias de la comprobación del grupo, «hoy»
   assert.equal(fresh(render({ ...CASES.C, withHealth: at('2026-06-03T04:35:00+00:00', 'rejected') })),
     'Clasificación oficial de futbolaspalmas.com, comprobada hoy a las 5:35. Revisión pendiente. Ver fuentes');
   assert.equal(fresh(render({ ...CASES.C, withHealth: null })), 'Clasificación oficial de futbolaspalmas.com. Ver fuentes');
+  // Calculada y corregida (standingsKind): la frase de procedencia común (sourcePhrase), la de la Tabla.
+  const kind = (standingsKind) => {
+    const raw = currentAt('2026-06-03');
+    raw.prebenjamin.find(g => g.id === 'PG2').standingsKind = standingsKind;
+    return fresh(render({ ...CASES.C, raw }));
+  };
+  assert.equal(kind('reconstructed'),
+    'Clasificación calculada con los resultados de futbolaspalmas.com, comprobada el 23 de septiembre a las 22:11. Ver fuentes');
+  assert.equal(kind('corrected'),
+    'Clasificación de futbolaspalmas.com con los puntos corregidos, comprobada el 23 de septiembre a las 22:11. Ver fuentes');
 });
 
 test('B, primera causa (2026/27 simulada, 01/10/2026): próximo partido normal, un único vacío y la tabla a cero en el orden de la fuente', () => {
@@ -388,6 +417,37 @@ test('mount: responder a la pregunta E guarda { name, season, cat, groupId } del
   const button = { getAttribute: name => ({ 'data-action': 'elegir', 'data-index': '1' })[name] };
   onClick({ target: { closest: () => button } });
   assert.deepEqual(saved, [{ name: 'Las Mesas B', season: '2025-2026', cat: 'benjamin', groupId: 'B2' }]);
+});
+
+// I2 de la revisión final de B2: la respuesta común de «Compartir» (la de Partido). Sin share ni
+// portapapeles, el enlace va a la región de estado para copiarlo a mano, y el botón no cambia.
+test('mount: «Compartir» sin share ni portapapeles escribe el enlace del partido en la región de estado', async () => {
+  const ctx = homeCtx(CASES.A);
+  let onClick = null;
+  const status = { textContent: '' };
+  const section = {
+    addEventListener: (type, fn) => { if (type === 'click') onClick = fn; }, contains: () => true,
+    querySelector: selector => (selector === '.share-status' ? status : null),
+  };
+  const root = { matches: () => false, querySelector: selector => (selector === '[data-screen="home"]' ? section : null) };
+  const saved = { navigator: Object.getOwnPropertyDescriptor(globalThis, 'navigator'), location: globalThis.location };
+  Object.defineProperty(globalThis, 'navigator', { configurable: true, writable: true,
+    value: { clipboard: { writeText: async () => { throw new Error('denegado'); } } } });
+  globalThis.location = { href: 'https://x.test/futbol-base/index.html#/' };
+  try {
+    screen.mount(root, ctx, {});
+    const button = { textContent: 'Compartir', getAttribute: name => ({ 'data-action': 'compartir' })[name] };
+    onClick({ target: { closest: () => button } });
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(status.textContent, 'No se pudo copiar el enlace: https://x.test/futbol-base/index.html'
+      + '#/partido?s=2025-2026&g=PG2&r=Jornada%2018&h=Veteranos&a=Las%20Mesas%20Hu.');
+    assert.equal(button.textContent, 'Compartir', 'el botón no cambia de texto');
+  } finally {
+    if (saved.navigator) Object.defineProperty(globalThis, 'navigator', saved.navigator);
+    else delete globalThis.navigator;
+    if (saved.location === undefined) delete globalThis.location;
+    else globalThis.location = saved.location;
+  }
 });
 
 test('fechas en castellano sin Intl (links.js): los días y los meses van escritos en el código', () => {

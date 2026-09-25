@@ -6,7 +6,8 @@ import { readFileSync } from 'node:fs';
 import { currentAt } from './fixtures/rediseno/simulate.mjs';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { ctxFor, datasetsFor, pastSeasonRaw, cssRules, PORTAL_SEASON } from './fixtures/rediseno/screens.mjs';
-import { screen, homeAwayCoverage, groupScorers } from '../../src/screen-tabla.js';
+import { screen, homeAwayCoverage } from '../../src/screen-tabla.js';
+import { groupScorers } from '../../src/state.js';
 import { lastResults, homeAwayTable, sourceInfo } from '../../src/model.js';
 import { standingsTable } from '../../src/ui.js';
 
@@ -141,6 +142,11 @@ test('procedencia: sourceInfo (datos) con «Ver fuente»; sin enlace si el grupo
   const raw = fixture('current-2025-2026');
   raw.prebenjamin.find(g => g.id === 'PG2').standingsKind = 'reconstructed';
   assert.match(text(render({ g: 'PG2' }, opts({ current: raw }))), /Clasificación calculada con los resultados de .+: puede no reflejar sanciones ni desempates de la federación\. Ver fuente/);
+  // Corregida: la frase común (sourcePhrase, ui.js) con la advertencia de la Tabla.
+  const fixed = fixture('current-2025-2026');
+  fixed.prebenjamin.find(g => g.id === 'PG2').standingsKind = 'corrected';
+  assert.match(render({ g: 'PG2' }, opts({ current: fixed })),
+    /<p class="notice source-line">Clasificación de futbolaspalmas\.com con los puntos corregidos: consulta la fuente por si hay sanciones\. <a class="source-link"/);
 });
 
 test('temporada pasada (P1 2024-25): la temporada en la etiqueta, forma del archivo y sin fila propia', () => {

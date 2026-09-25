@@ -276,6 +276,13 @@ abbr[title] { text-decoration: none; }
 .button + .button { border-left: 1px solid var(--rule); }
 .button.is-main { background: var(--ink); color: var(--on-ink); }
 
+/* La respuesta de «Compartir» (shareStatus de ui.js), la misma en Mi equipo, Jornada y Partido:
+ * «Enlace copiado.» o el enlace, si no se pudo copiar, para copiarlo a mano. Nunca display: none,
+ * o dejaría de anunciarse (decisión 111), y el enlace parte donde haga falta: sin desplazamiento
+ * horizontal a 320 px. Vacía, no ocupa sitio. */
+.share-status { font-size: 12.5px; font-weight: 600; color: var(--mute); text-align: right; overflow-wrap: anywhere; }
+.share-status:not(:empty) { margin-top: 6px; }
+
 /* ── Escudo y monograma ───────────────────────────────────────────────── */
 
 .crest { display: inline-block; flex: none; object-fit: contain; vertical-align: middle; }
@@ -756,11 +763,8 @@ abbr[title] { text-decoration: none; }
 
 /* ── Partido (spec §4.5) ──────────────────────────────────────────────── */
 
-/* La cabecera es la de screenHead (Tarea 4). Bajo ella, la región que dice si
- * se copió el enlace: nunca display: none, o dejaría de anunciarse. */
+/* La cabecera es la de screenHead (Tarea 4); bajo ella, la región de Compartir (.share-status). */
 .pt-main, .pt-aside { min-width: 0; }
-.pt-share-status { font-size: 12.5px; font-weight: 600; color: var(--mute); text-align: right; }
-.pt-share-status:not(:empty) { margin-top: 6px; }
 
 /* Resultado: casillas, escudos de 46 px y marcador de 40 px. */
 .pt-teams {

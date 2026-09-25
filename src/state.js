@@ -1,23 +1,27 @@
 // Carga de datos y funciones de dominio heredadas (spec §5.2). Desde el corte de B2 no guarda
 // estado de interfaz (S y FEATURED), no pinta HTML y no toca el DOM al importarse: la URL es la
 // fuente de verdad, myteam.js y store.js guardan mi equipo y ui.js pinta los escudos.
-import { PORTAL } from './config.js';
 
-/* Goleadores de un equipo en su grupo, de GOL_BENJ o GOL_PREBENJ ([{ id, g, s: [[jugador,
- * equipo, goles, partidos]] }], lo que da model.scorers): [{ name, goals, games }], de más a menos
- * goles y, a igualdad, con menos partidos. `team` es { cat, groupId, name }, como myTeam; el
- * nombre se compara exacto, porque los de los goleadores son los de la clasificación. Antes
- * featuredScorersFrom, que leía FEATURED (decisión 2 de B2). */
-export function teamScorers(gol, team) {
-  if (!Array.isArray(gol) || !team) return [];
-  // Los ficheros publicados llevan el código del grupo; los antiguos, una clave de texto.
-  const grp = gol.find(g => g.id === team.groupId)
-    || gol.find(g => team.cat === 'prebenjamin' && g.g === 'PREBENJAMIN GC GRUPO ' + String(team.groupId).replace(/^PG/, ''));
-  if (!grp || !Array.isArray(grp.s)) return [];
-  return grp.s
-    .filter(s => s[1] === team.name)
-    .map(s => ({ name: s[0], goals: s[2], games: s[3] }))
+/* Goleadores de un grupo, de GOL_BENJ o GOL_PREBENJ ([{ id, g, s: [[jugador, equipo, goles,
+ * partidos]] }], lo que da model.scorers; cada entrada lleva el código del grupo en `id`):
+ * [{ name, team, goals, games }], de más a menos goles y, a igualdad, con menos partidos. null si
+ * la fuente no trae el grupo. Lo usan Tabla y, con teamScorers, Mi equipo (I2 de la revisión final
+ * de B2: antes, cada una con su copia del orden). */
+export function groupScorers(gol, groupId) {
+  const entry = (Array.isArray(gol) ? gol : []).find(item => item && item.id === groupId);
+  if (!entry) return null;
+  return (Array.isArray(entry.s) ? entry.s : [])
+    .map(([name, team, goals, games]) => ({ name, team, goals, games }))
     .sort((a, b) => b.goals - a.goals || a.games - b.games);
+}
+
+/* Goleadores de un equipo en su grupo: los de groupScorers con su nombre exacto (los de los
+ * goleadores son los de la clasificación), [{ name, goals, games }]. `team` es { cat, groupId,
+ * name }, como myTeam. Antes featuredScorersFrom, que leía FEATURED (decisión 2 de B2). */
+export function teamScorers(gol, team) {
+  if (!team) return [];
+  return (groupScorers(gol, team.groupId) || []).filter(s => s.team === team.name)
+    .map(({ name, goals, games }) => ({ name, goals, games }));
 }
 
 /* ====== JORNADA KEY HELPERS ======
@@ -31,13 +35,6 @@ export function jornadaNumber(key) {
   return m ? parseInt(m[1], 10) : null;
 }
 
-/* Pill label: 'J<n>' for numeric jornadas, the raw label verbatim for
- * non-numeric rounds (e.g. 'Semifinal', copa keys) — never 'JNaN'. */
-export function jornadaLabel(key) {
-  const n = jornadaNumber(key);
-  return n !== null ? 'J' + n : String(key).trim();
-}
-
 /* Sort jornada keys: numeric ones ascending, non-numeric ones after them
  * preserving insertion order (data files emit rounds in play order). */
 export function sortJornadaKeys(keys) {
@@ -49,26 +46,6 @@ export function sortJornadaKeys(keys) {
       return (an - bn) || (a.i - b.i);
     })
     .map(x => x.k);
-}
-
-/* Keep jorGroup only if it belongs to the active season's groups; otherwise
- * fall back to the first one. Switching to a historical season used to leave a
- * stale current-season code (e.g. 'A2') that no historical group has, so the
- * Jornadas tab rendered blank. Pure + testable. */
-export function validJorGroup(current, groups) {
-  if (current && groups.some(g => g.id === current)) return current;
-  return groups.length ? groups[0].id : '';
-}
-
-/* Rounds source for a knockout (cup) group's bracket. Historical cups carry
- * their rounds inline (g.jornadas, from the per-season file); current-season
- * cups live in HISTORY keyed by code, like every current-season group. The
- * `historical` guard avoids the cross-season code collision (BCA1 exists in
- * both 2024-25 and 2025-26). Returns the rounds object (or {}). */
-export function knockoutRoundsSource(g, historical, history) {
-  if (g && g.jornadas && Object.keys(g.jornadas).length) return g.jornadas;
-  if (!historical && history && g && history[g.id]) return history[g.id];
-  return {};
 }
 
 /* For a DRAWN knockout match, the team that advanced (on penalties) is the one
@@ -112,38 +89,6 @@ export function bracketChampion(jornadas, rounds) {
   return adv === 'home' ? last[0][1] : last[0][2];
 }
 
-/* Icono de la cabecera de fase. Los nombres exactos mandan; el resto se
- * resuelve por palabras clave, porque hay muchas fases insulares con nombre
- * largo ("Fase 1 Fuerteventura", "Copa Cabildo Primera Lanzarote") que antes
- * caían todas al ⚽ genérico. */
-const PHASE_ICONS = {
-  'Segunda Fase A': '🏆', 'Segunda Fase B': '🥈', 'Segunda Fase C': '🥉',
-  'Lanzarote': '🌋', 'Fuerteventura': '🏝️',
-  'Gran Canaria': '🏔️',
-  'Primera Fase GC': '🏟️',
-  'Primera Fase': '🏟️',
-};
-
-export function phaseIcon(phase) {
-  if (PHASE_ICONS[phase]) return PHASE_ICONS[phase];
-  const p = String(phase || '').toLowerCase();
-  if (p.includes('copa') || p.includes('campeon') || p.includes('campeón')) return '🏆';
-  if (p.includes('lanzarote')) return '🌋';
-  if (p.includes('fuerteventura')) return '🏝️';
-  if (p.includes('gran canaria') || p.includes(' gc')) return '🏔️';
-  return '⚽';
-}
-
-/* Etiqueta del badge "jornada en curso" de la cabecera de grupo. Las fuentes
- * no coinciden: futbolaspalmas guarda "Jornada 30" y FIFLP el número pelado
- * ("14"), así que en la misma pantalla salían badges "Jornada 30" y "14".
- * Distinto de jornadaLabel, que es la pastilla corta ("J14"). */
-export function groupJornadaLabel(raw) {
-  const s = String(raw == null ? '' : raw).trim();
-  if (!s) return '';
-  return /^\d+$/.test(s) ? `Jornada ${s}` : s;
-}
-
 /* A cup / knockout group (vs a regular league group). By code prefix
  * (PCC or BC) or phase ("Copa"/"Campeón"). */
 export function isCupGroup(g) {
@@ -152,32 +97,6 @@ export function isCupGroup(g) {
   if (id.startsWith('MCP') || id.startsWith('MCB')) return true;
   const phase = ((g && g.phase) || '').toLowerCase();
   return phase.includes('copa') || phase.includes('campeon') || phase.includes('maspalomas');
-}
-
-/* The (≤3) league prebenjamín groups for the unified table — cups excluded.
- * buildUnifiedPrebenjamin numbers by position, so a cup group sorted before
- * PG1 used to take a slot and push PG3 out (and head the table).
- *
- * Sólo se unifica UNA competición. Al entrar el prebenjamín de Lanzarote y
- * Fuerteventura (2025-26), 'PFV*' ordena antes que 'PG*' y la tabla unificada
- * pasó a encabezarla Fuerteventura: equipos de islas distintas que no se
- * cruzan nunca, comparados en la misma clasificación. Se toma la fase con más
- * equipos, que es la competición principal. */
-export function unifiedPrebenLeagueGroups(prebenjamin) {
-  const ligas = (prebenjamin || []).filter(g => !isCupGroup(g));
-  if (ligas.length <= 1) return ligas.slice(0, 3);
-  const porFase = new Map();
-  ligas.forEach(g => {
-    const k = ((g && g.phase) || '').toLowerCase();
-    if (!porFase.has(k)) porFase.set(k, []);
-    porFase.get(k).push(g);
-  });
-  const tamano = gs => gs.reduce((n, g) => n + ((g.standings && g.standings.length) || 0), 0);
-  let mejor = [];
-  porFase.forEach(gs => {
-    if (tamano(gs) > tamano(mejor)) mejor = gs;
-  });
-  return mejor.slice(0, 3);
 }
 
 /* Friendly label for a knockout round. Prefers the explicit round name in the
@@ -340,50 +259,13 @@ export async function ensureMatchDetail() {
 }
 
 // Season data cache — loaded lazily per historical season.
-// _seasonError[name] holds the last load failure message (cleared on
-// success) so the screen can show an honest error + retry instead of
-// silently mislabeling current-season data as historical.
 const _seasonCache = {};
 const _seasonPromise = {};
-const _seasonError = {};
 
-/* Last load error for a historical season ('' / null when none). */
-export function getSeasonError(seasonName) {
-  return _seasonError[seasonName] || null;
-}
-
-// Grupos de una temporada y categoría, con la Maspalomas Cup en 2025-26. Los de la temporada del
-// portal (o season vacío) salen de los globales; los de una pasada, de lo que cargó
-// ensureSeasonData, y [] mientras no esté cargada: nunca cae a los datos de la actual con la
-// etiqueta de otra temporada.
-export function getData(season, cat) {
-  if (season && season !== PORTAL.season) {
-    const data = _seasonCache[season];
-    if (!data) return [];
-    return withSeasonCup((cat === 'benjamin' ? data.benjamin : data.prebenjamin) || [], season, cat);
-  }
-  const cur = cat === 'benjamin'
-    ? (typeof BENJAMIN !== 'undefined' ? BENJAMIN : null)
-    : (typeof PREBENJAMIN !== 'undefined' ? PREBENJAMIN : null);
-  return withSeasonCup(cur || [], PORTAL.season, cat);
-}
-
-// Añade la Maspalomas Cup de la categoría a los grupos de 2025-26: es de esa temporada también
-// después de activar 2026/27.
-export function withSeasonCup(groups, season, cat) {
-  if (season === '2025-2026') {
-    const cup = cat === 'benjamin'
-      ? (typeof MASPALOMAS_CUP_BENJAMIN !== 'undefined' ? MASPALOMAS_CUP_BENJAMIN : null)
-      : (typeof MASPALOMAS_CUP_PREBENJAMIN !== 'undefined' ? MASPALOMAS_CUP_PREBENJAMIN : null);
-    if (cup && cup.length) groups = groups.concat(cup);
-  }
-  return groups;
-}
-
-// Async — call this before reading a historical season with getData or createModel.
+// Async — call this before reading a historical season with createModel (datasets.seasonRaw).
 // Single-flight per season; on failure the in-flight promise is cleared so
 // a later call (e.g. the "Reintentar" button) refetches. Returns the season
-// object, or null as error sentinel (see getSeasonError for the message).
+// object, or null as error sentinel (the failure goes to the console).
 export async function ensureSeasonData(seasonName) {
   if (!seasonName) return null;
   if (_seasonCache[seasonName]) return _seasonCache[seasonName];
@@ -398,11 +280,9 @@ export async function ensureSeasonData(seasonName) {
       if (!m) throw new Error('No SEASON_ var found');
       const seasonObj = JSON.parse(m[1]);
       _seasonCache[seasonName] = seasonObj;
-      delete _seasonError[seasonName];
       return seasonObj;
     } catch (e) {
       console.error('[state] ensureSeasonData failed:', seasonName, e);
-      _seasonError[seasonName] = (e && e.message) || String(e);
       return null; // error sentinel
     } finally {
       delete _seasonPromise[seasonName]; // allow retry after failure
@@ -412,7 +292,8 @@ export async function ensureSeasonData(seasonName) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────
- * SP-2: lazy-loaders for data-lineups-<S>.js and data-players-<S>.js.
+ * SP-2: lazy-loader for data-lineups-<S>.js (data-players-<S>.js is no
+ * longer read: the plantilla comes from LINEUPS, spec §4.6).
  * Same shape as ensureMatchDetail. Parse data file text with a regex
  * and JSON.parse the const value — never read via the global object.
  * (Lesson 2026-05-18: const top-level declarations don't become
@@ -442,13 +323,11 @@ export function normalizeForTeamsMapping(s) {
 
 const _lineups = {};
 const _lineupsPromise = {};
-const _players = {};
-const _playersPromise = {};
 
 function _seasonSuffix(season) { return season.replace('-', '_'); }
 
-/* On failure both loaders return a null sentinel WITHOUT caching it and
- * clear their single-flight promise, so a later call retries the fetch
+/* On failure the loader returns a null sentinel WITHOUT caching it and
+ * clears its single-flight promise, so a later call retries the fetch
  * (a transient network error no longer blanks the feature for the whole
  * session). Callers already null-check (UI empty-state). */
 export async function ensureLineups(season) {
@@ -478,31 +357,6 @@ export async function ensureLineups(season) {
   return _lineupsPromise[season];
 }
 
-export async function ensurePlayers(season) {
-  if (_players[season] !== undefined) return _players[season];
-  if (_playersPromise[season]) return _playersPromise[season];
-  _playersPromise[season] = (async () => {
-    const suffix = _seasonSuffix(season);
-    try {
-      const r = await fetchData(`data-players-${season}.js`);
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const txt = await r.text();
-      const reP = new RegExp('const PLAYERS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*?\\});');
-      const reT = new RegExp('const TEAMS_'   + suffix + '\\s*=\\s*(\\{[\\s\\S]*?\\});');
-      const mp = txt.match(reP);
-      const mt = txt.match(reT);
-      if (!mp || !mt) throw new Error('PLAYERS_/TEAMS_' + suffix + ' not parseable');
-      _players[season] = { players: JSON.parse(mp[1]), teams: JSON.parse(mt[1]) };
-      return _players[season];
-    } catch (e) {
-      console.warn('[state] ensurePlayers failed:', e.message);
-      _playersPromise[season] = null; // clear single-flight → retry allowed
-      return null;                    // error sentinel (never cached)
-    }
-  })();
-  return _playersPromise[season];
-}
-
 // data-health.json (spec §4.10 y §7): la comprobación de las fuentes, parseada, o null si no
 // llega (sin conexión, por ejemplo). Un único vuelo: las llamadas simultáneas comparten la
 // petición; un fallo no se memoriza y la siguiente llamada reintenta.
@@ -525,21 +379,6 @@ export async function ensureHealth() {
   return _healthPromise;
 }
 
-// Grupos por fase, ordenados por el número de su nombre (decisión 1: recibe los grupos).
-export function getPhases(groups) {
-  const map = {};
-  (groups || []).forEach(g => {
-    if (!map[g.phase]) map[g.phase] = [];
-    map[g.phase].push(g);
-  });
-  Object.values(map).forEach(arr => arr.sort((a, b) => {
-    const na = parseInt(a.name.replace(/\D/g, '')) || 0;
-    const nb = parseInt(b.name.replace(/\D/g, '')) || 0;
-    return na - nb;
-  }));
-  return map;
-}
-
 /* Total matches across a set of groups.
  *
  * Current-season groups carry only the LATEST jornada inline — the whole season
@@ -551,7 +390,7 @@ export function getPhases(groups) {
  *
  * Pass hist = null for historical seasons: their per-season file already
  * carries every jornada inline, and HISTORY holds CURRENT-season data whose
- * group codes can collide across seasons (see knockoutRoundsSource). */
+ * group codes can collide across seasons (BCA1 exists in 2024-25 and 2025-26). */
 export function countMatches(groups, hist) {
   let matches = 0;
   (groups || []).forEach(g => {
@@ -561,18 +400,6 @@ export function countMatches(groups, hist) {
     else if (source) Object.values(source).forEach(jor => { matches += jor.length; });
   });
   return matches;
-}
-
-// Grupos, equipos y partidos de una temporada y categoría (decisión 1: recibe las dos).
-export function countStats(season, cat) {
-  const data = getData(season, cat);
-  const historical = !!season && season !== PORTAL.season;
-  const hist = (!historical && typeof HISTORY !== 'undefined') ? HISTORY : null;
-  return {
-    groups: data.length,
-    teams: data.reduce((n, g) => n + (g.standings || []).length, 0),
-    matches: countMatches(data, hist),
-  };
 }
 
 /* `needs` de las pantallas que leen una temporada (spec §5.4): [] si es la del portal o ya

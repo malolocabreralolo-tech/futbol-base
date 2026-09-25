@@ -134,12 +134,22 @@ export function buildCalendar(matches, { season = PORTAL.season, group = '', nam
   }).join('\r\n') + '\r\n';
 }
 
+// Nombre del .ics: «calendario-<nombre>.ics», con el nombre sin tildes (NFD) y en minúsculas, cada
+// tramo que no es letra o cifra en un guion y sin guiones en los extremos, como slugOf de model.js
+// (que links.js no puede importar: model.js importa de aquí). M3 de la revisión final de B2:
+// «Prebenjamín, Grupo 2 de Gran Canaria» → calendario-prebenjamin-grupo-2-de-gran-canaria.ics.
+export function calendarFileName(name) {
+  const slug = String(name ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return `calendario${slug ? `-${slug}` : ''}.ics`;
+}
+
 export function downloadCalendar(matches, options) {
   const blob = new Blob([buildCalendar(matches, options)], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = 'calendario-' + options.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.ics';
+  anchor.download = calendarFileName(options.name);
   anchor.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
@@ -169,6 +179,17 @@ export function routeHref(screen, params = {}) {
     .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(String(params[key]))}`)
     .join('&');
   return `#/${screen}${query ? '?' + query : ''}`;
+}
+
+// Enlaces a las fichas, siempre con su temporada (decisiones 28 y 101: un enlace compartido no
+// cambia de partido ni de equipo al activar la temporada siguiente). Los únicos de la app (I2 de
+// la revisión final de B2). match: un Match del modelo (model.js).
+export function matchHref(match) {
+  return routeHref('partido', { s: match.season, g: match.groupId, r: match.roundKey, h: match.home, a: match.away });
+}
+
+export function teamHref(season, groupId, team) {
+  return routeHref('equipo', { s: season, g: groupId, t: team });
 }
 
 // Enlaces antiguos ('#section=…', compartidos por WhatsApp) → ruta nueva (tabla de §4.1).
@@ -213,6 +234,35 @@ export function canaryTodayISO(now = new Date(), timeZone = 'Atlantic/Canary') {
     timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
   }).formatToParts(now).map(part => [part.type, part.value]));
   return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+/* Fecha y hora de Canarias de un instante (el checkedAt de data-health, spec §7), para Mi equipo y
+ * Fuentes (I2 de la revisión final de B2). La zona horaria pasa por Intl, solo con partes
+ * numéricas; los nombres de los meses salen de MONTHS (B9). */
+const CANARY_CLOCK = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Atlantic/Canary', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+});
+
+// Un instante en Canarias: { day: 'AAAA-MM-DD', time: 'H:MM' }, o null si no es una fecha válida.
+export function canaryDateTime(instant) {
+  const date = new Date(instant);
+  if (!instant || !Number.isFinite(date.getTime())) return null;
+  const p = Object.fromEntries(CANARY_CLOCK.formatToParts(date).map(part => [part.type, part.value]));
+  return { day: `${p.year}-${p.month}-${p.day}`, time: `${Number(p.hour)}:${p.minute}` };
+}
+
+// «hoy a las 22:11» o «el 23 de septiembre a las 22:11» (spec §7: nunca «ahora»); null sin instante.
+export function checkedPhrase(instant, today) {
+  const c = canaryDateTime(instant);
+  if (!c) return null;
+  return c.day === today ? `hoy a las ${c.time}` : `el ${dayMonthLong(c.day)} a las ${c.time}`;
+}
+
+// La casilla de la última comprobación: «hoy, 22:11» o «23 sept, 22:11»; null sin instante.
+export function checkedCell(instant, today) {
+  const c = canaryDateTime(instant);
+  if (!c) return null;
+  return c.day === today ? `hoy, ${c.time}` : `${dayMonth(c.day)}, ${c.time}`;
 }
 
 /* Fecha de un partido ('AAAA-MM-DD' o 'DD/MM') en ISO respecto a `todayISO`, que se inyecta.
@@ -286,4 +336,15 @@ export async function shareLink(data) {
     }
   }
   return (await copyText(data.url)) ? 'copiado' : 'no copiado';
+}
+
+// Compartir con la misma respuesta en todas las pantallas, la de Partido (I2 de la revisión final
+// de B2): shareLink y, en la región de estado `status` (la de shareStatus, ui.js), «Enlace
+// copiado.» o, si tampoco se pudo copiar, «No se pudo copiar el enlace: <url>», para copiarlo a
+// mano. Si se compartió o se canceló, no dice nada. → lo que devuelve shareLink.
+export async function shareAndAnnounce(data, status) {
+  const outcome = await shareLink(data);
+  if (status && outcome === 'copiado') status.textContent = 'Enlace copiado.';
+  else if (status && outcome === 'no copiado') status.textContent = `No se pudo copiar el enlace: ${data.url}`;
+  return outcome;
 }

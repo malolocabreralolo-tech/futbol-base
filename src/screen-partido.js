@@ -7,12 +7,12 @@
 // las temporadas anteriores (con su «Reintentar»). «‹» y el «Reintentar» de la
 // pantalla son del router (data-action="back" y "retry").
 import { html, join } from './html.js';
-import { box, cells, crest, empty, formChips, notice, screenHead } from './ui.js';
+import { block, box, cells, crest, empty, formChips, notice, screenHead, shareStatus } from './ui.js';
 import {
-  actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, playerName, seasonLabel,
-  teamShort, timelineFor,
+  actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, penaltyWinner, playerName,
+  roundOf, seasonLabel, teamShort, timelineFor,
 } from './model.js';
-import { countdownLabel, dayMonth, routeHref, shareLink, weekdayDate } from './links.js';
+import { countdownLabel, dayMonth, matchHref, shareAndAnnounce, weekdayDate } from './links.js';
 import {
   ensureLineups, ensureMatchDetail, ensureSeasonData, normalizeTeamName,
 } from './state.js';
@@ -59,10 +59,6 @@ function locate(ctx) {
   return { season, loaded, group, match };
 }
 
-const roundOf = (group, match) => (group.rounds || []).find((round) => round.key === match.roundKey) || null;
-
-const matchHref = (m) => routeHref('partido', { s: m.season, g: m.groupId, r: m.roundKey, h: m.home, a: m.away });
-
 // «‹» sin historial de la app es ctx.backHref, que pone el router con parentOf (router.js): la
 // jornada del partido (spec §4.1) o, en un torneo o una copa, su cuadro (decisión 100). Un solo
 // padre para la pantalla y para la caja de error del router (M2 de la revisión final de B2).
@@ -74,20 +70,16 @@ function mineSide(ctx, match) {
   return r.name === match.home ? 'home' : r.name === match.away ? 'away' : null;
 }
 
-// ── Bloques ──────────────────────────────────────────────────────────────
-
-function block(title, content, context) {
-  return html`<section class="block"><div class="block-head"><h2 class="block-title">${title}</h2>${context ? html`<p class="block-context">${context}</p>` : ''}</div>${content}</section>`;
-}
+// ── Bloques (block, de ui.js) ────────────────────────────────────────────
 
 // La cabecera de pantalla común (screenHead, ui.js): «‹» al padre, el título, la etiqueta de
-// jornada y grupo, y Compartir (un botón, con los datos del enlace). La región de estado dice si
-// se copió el enlace.
+// jornada y grupo, y Compartir (un botón, con los datos del enlace). Debajo, la región de estado
+// común (shareStatus) dice si se copió el enlace.
 function header({ title, subtitle, back, share }) {
   const shareButton = share
     ? html`<button type="button" class="screen-action" data-action="share" data-title="${share.title}" data-text="${share.text}" data-path="${share.path}">Compartir</button>`
     : null;
-  return html`${screenHead(title, { sub: subtitle, back, action: shareButton })}<p class="pt-share-status" role="status"></p>`;
+  return html`${screenHead(title, { sub: subtitle, back, action: shareButton })}${shareStatus()}`;
 }
 
 function resultBlock(match, { today, shields }) {
@@ -104,8 +96,9 @@ function resultBlock(match, { today, shields }) {
     ? html`<p class="pt-score"><span class="vh">Resultado: </span>${score(match.hs, match.as)}</p>`
     : html`<p class="pt-score is-pending"><span aria-hidden="true">${DASH}</span><span class="vh">Sin resultado</span></p>`;
   // Eliminatoria resuelta por penaltis (spec §4.5 y §9.3): quién pasó y la tanda si se conoce.
-  const penalties = played && match.advancer && match.hs === match.as
-    ? html`<p class="pt-penalties">${match.advancer === 'home' ? match.home : match.away} pasó por penaltis${match.shootout ? html` <span class="pt-tanda">(${dashed(match.shootout)})</span>` : ''}</p>`
+  const winner = penaltyWinner(match);
+  const penalties = winner
+    ? html`<p class="pt-penalties">${winner} pasó por penaltis${match.shootout ? html` <span class="pt-tanda">(${dashed(match.shootout)})</span>` : ''}</p>`
     : '';
   return box(html`${facts}<div class="pt-teams">${team(match.home, 'Local')}${marker}${team(match.away, 'Visitante')}</div>${penalties}`,
     { title: 'Resultado', context });
@@ -169,7 +162,7 @@ function goalsBlock(match, group, ctx) {
   const warning = mismatch
     ? notice('Los goles no cuadran con el marcador:', `${TIMELINE_SOURCE[source]} suma ${dashed(mismatch.timeline)} y ${scoreSource(group)} es ${dashed(mismatch.score)}.`)
     : '';
-  return block('Goles', html`${body}${warning}`, source === 'futbolaspalmas' ? 'minuto a minuto' : 'según el acta');
+  return block('Goles', html`${body}${warning}`, { context: source === 'futbolaspalmas' ? 'minuto a minuto' : 'según el acta' });
 }
 
 function lineupTable(players, team, side) {
@@ -241,7 +234,7 @@ function h2hBlock(match, group, ctx) {
   const previous = pastSeasons(ctx.datasets.seasons, match.season).length
     ? html`<button type="button" class="pt-prev-toggle" data-action="previous" aria-expanded="false" aria-controls="${PREVIOUS_ID}">Ver temporadas anteriores</button><div id="${PREVIOUS_ID}" class="pt-prev" aria-live="polite" hidden></div>`
     : '';
-  return block('Cara a cara', html`<div class="box">${join(rows)}</div>${previous}`, group.kind === 'league' ? 'esta temporada' : 'en esta competición');
+  return block('Cara a cara', html`<div class="box">${join(rows)}</div>${previous}`, { context: group.kind === 'league' ? 'esta temporada' : 'en esta competición' });
 }
 
 // Candidato único de un lado, entre los equipos que juegan en el grupo (spec §4.5, «con el nombre
@@ -430,15 +423,13 @@ function togglePrevious(section, ctx, button) {
   if (!open && !panel.hasChildNodes()) showPrevious(section, ctx);
 }
 
-// Compartir (spec §4.2 A) con shareLink (links.js): navigator.share con el enlace al partido y,
-// sin share o si falla, copiarlo; se dice en la región de estado (con el enlace, si no se pudo).
-async function sharePartido(button, section) {
-  const status = section.querySelector('.pt-share-status');
+// Compartir (spec §4.2 A) con shareAndAnnounce (links.js): navigator.share con el enlace al
+// partido y, sin share o si falla, copiarlo; se dice en la región de estado (con el enlace, si no
+// se pudo). Es la respuesta de todas las pantallas que comparten.
+function sharePartido(button, section) {
   const url = new URL(button.getAttribute('data-path'), window.location.href.split(/[?#]/)[0]).href;
-  const outcome = await shareLink({ title: button.getAttribute('data-title'), text: button.getAttribute('data-text'), url });
-  if (!status) return;
-  if (outcome === 'copiado') status.textContent = 'Enlace copiado.';
-  else if (outcome === 'no copiado') status.textContent = `No se pudo copiar el enlace: ${url}`;
+  return shareAndAnnounce({ title: button.getAttribute('data-title'), text: button.getAttribute('data-text'), url },
+    section.querySelector('.share-status'));
 }
 
 export function mount(root, ctx) {

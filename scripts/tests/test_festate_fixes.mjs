@@ -5,11 +5,13 @@
  * Covers:
  *   1. normalizeTeamName broken punctuation regex (state.js) + shields no-regression
  *   2. C1: normalizeForTeamsMapping conserves trailing filial letter (a/b/c/d)
- *   5. 'JNaN' jornada pills: jornadaNumber/jornadaLabel/sortJornadaKeys
- *   6. typeof guards for BENJAMIN/PREBENJAMIN; getData(season, cat)
- *   8. lazy loaders: failures not cached for the session, honest season error
+ *   5. 'JNaN' jornada keys: jornadaNumber/sortJornadaKeys
+ *   6. typeof guards for BENJAMIN/PREBENJAMIN
+ *   8. lazy loaders: failures not cached for the session
  * (3, 4 and 7 — escapeHtml, teamBadge and getTeamForm — left with the B2 cut:
- * html.js, ui.js and model.js cover them in the test_rediseno_*.mjs suites.)
+ * html.js, ui.js and model.js cover them in the test_rediseno_*.mjs suites.
+ * jornadaLabel, getData, getSeasonError and ensurePlayers left in the final
+ * B2 review, M5: nothing in src/, index.html or sw.js used them.)
  */
 
 import { test } from 'node:test';
@@ -153,13 +155,6 @@ test('jornadaNumber: numeric and "Jornada N" labels parse; copa labels do not', 
   assert.equal(state.jornadaNumber('Semifinal'), null);
 });
 
-test('jornadaLabel: J<n> for numeric labels, verbatim otherwise', () => {
-  assert.equal(state.jornadaLabel('Jornada 5'), 'J5');
-  assert.equal(state.jornadaLabel('7'), 'J7');
-  assert.equal(state.jornadaLabel('Semifinal'), 'Semifinal');
-  assert.equal(state.jornadaLabel('08-06-2025 ( Ronda 1 Ida )'), '08-06-2025 ( Ronda 1 Ida )');
-});
-
 test('sortJornadaKeys: numeric ascending, non-numeric keep insertion order after', () => {
   assert.deepEqual(state.sortJornadaKeys(['Jornada 10', '3', 'Jornada 2']),
     ['Jornada 2', '3', 'Jornada 10']);
@@ -169,13 +164,6 @@ test('sortJornadaKeys: numeric ascending, non-numeric keep insertion order after
 });
 
 /* ════ 6. typeof guards for data globals ════ */
-
-test('getData survives undefined BENJAMIN/PREBENJAMIN (returns [])', () => {
-  // BENJAMIN/PREBENJAMIN are NOT defined at this point of the test file.
-  assert.equal(typeof globalThis.BENJAMIN, 'undefined', 'precondition');
-  assert.deepEqual(state.getData('', 'benjamin'), [], 'no ReferenceError, empty fallback');
-  assert.deepEqual(state.getData('', 'prebenjamin'), []);
-});
 
 test('state.js guards BENJAMIN/PREBENJAMIN with the typeof pattern', () => {
   assert.ok(/typeof BENJAMIN !== 'undefined'/.test(stateSrc));
@@ -215,19 +203,6 @@ test('ensureLineups: a 404 IS cached for the session (fetch called once); a 503 
   assert.equal(calls503, 2, '503: cada llamada repite el fetch, nunca se guarda en caché');
 });
 
-test('ensurePlayers: a failed fetch is NOT cached for the session', async () => {
-  fetchImpl = async () => { throw new Error('network down'); };
-  assert.equal(await state.ensurePlayers('2024-2025'), null);
-
-  fetchImpl = async () => ({
-    ok: true, status: 200,
-    text: async () => 'const PLAYERS_2024_2025={"1":[{"n":"X","ap":1,"st":1,"g":0,"y":0,"rd":0}]};\nconst TEAMS_2024_2025={"atalaya b":1};',
-  });
-  const second = await state.ensurePlayers('2024-2025');
-  assert.ok(second && second.players && second.teams, 'retry succeeds');
-  assert.equal(second.teams['atalaya b'], 1);
-});
-
 test('ensureMatchDetail: failure returns null sentinel and allows retry', async () => {
   fetchImpl = async () => ({ ok: false, status: 500, text: async () => '' });
   const first = await state.ensureMatchDetail();
@@ -242,27 +217,16 @@ test('ensureMatchDetail: failure returns null sentinel and allows retry', async 
   assert.ok(second && second['a|b|1-0'], 'retry after failure must succeed');
 });
 
-test('failed historical season: getData returns [] (never mislabeled current data)', async () => {
-  globalThis.BENJAMIN = [{ id: 'CUR', name: 'Actual', standings: [] }];
+test('failed historical season: ensureSeasonData returns null, is NOT cached, and a retry loads it', async () => {
   fetchImpl = async () => ({ ok: false, status: 404, text: async () => '' });
+  assert.equal(await state.ensureSeasonData('2098-2099'), null, 'failure is the null sentinel, never current data');
 
-  await state.ensureSeasonData('2098-2099');
-  assert.deepEqual(state.getData('2098-2099', 'benjamin'), [],
-    'an unloaded historical season must NOT fall back to current-season data');
-  assert.ok(state.getSeasonError('2098-2099'),
-    'getSeasonError must report the failure');
-
-  // retry path: a later successful fetch clears the error and loads data
+  // retry path: a later successful fetch loads the real historical groups
   fetchImpl = async () => ({
     ok: true, status: 200,
     text: async () => 'const SEASON_2098_2099={"name":"2098-2099","benjamin":[{"id":"H1","standings":[]}],"prebenjamin":[]};',
   });
-  await state.ensureSeasonData('2098-2099');
-  assert.equal(state.getSeasonError('2098-2099'), null, 'error cleared on success');
-  const data = state.getData('2098-2099', 'benjamin');
-  assert.equal(data.length, 1);
-  assert.equal(data[0].id, 'H1', 'retry loads the real historical groups');
-  assert.equal(state.getData('', 'benjamin')[0].id, 'CUR', 'the current season still reads BENJAMIN');
-
-  delete globalThis.BENJAMIN;
+  const data = await state.ensureSeasonData('2098-2099');
+  assert.equal(data.benjamin.length, 1);
+  assert.equal(data.benjamin[0].id, 'H1', 'retry loads the real historical groups');
 });

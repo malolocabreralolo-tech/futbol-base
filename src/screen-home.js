@@ -6,53 +6,33 @@
 // de navegador. mount(root, ctx, nav) añade el comportamiento. Nada toca el DOM
 // al importarse.
 import { html } from './html.js';
-import { box, cells, crest, empty, listEs, matchRow, notice, screenHead, standingsTable } from './ui.js';
 import {
-  competitionKey, lastResults, matchState, playerName, retiredTeams, seasonLabel, seasonSummary,
-  sourceInfo, teamFixtures, teamShort,
+  block, box, cells, crest, empty, listEs, matchRow, notice, screenHead, shareStatus, sourcePhrase, standingsTable,
+} from './ui.js';
+import {
+  competitionKey, lastResults, matchState, penaltyWinner, playerName, retiredTeams, roundOf, seasonLabel,
+  seasonSummary, sourceInfo, teamFixtures, teamShort,
 } from './model.js';
 import { homeState, showNextSeasonBox, summerCups } from './myteam.js';
 import {
-  buildCalendar, countdownLabel, dayMonth, dayMonthLong, downloadCalendar, monthName, routeHref, shareLink,
-  venueUrl, weekdayDate,
+  buildCalendar, checkedCell, checkedPhrase, countdownLabel, dayMonth, downloadCalendar, matchHref, monthName,
+  routeHref, shareAndAnnounce, teamHref, venueUrl, weekdayDate,
 } from './links.js';
 import { ensureHealth, teamScorers } from './state.js';
 
 // Fechas y horas siempre en Canarias (spec §8). Las fechas de partido son días de calendario
-// ('AAAA-MM-DD') y se escriben con los nombres de links.js, sin los datos de idioma del motor (B9).
-// La hora de una comprobación (un instante) pasa a Canarias con Intl, pero solo con partes numéricas.
-const TZ = 'Atlantic/Canary';
-const CLOCK = new Intl.DateTimeFormat('en-CA', {
-  timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
-});
-const parts = (format, date) => Object.fromEntries(format.formatToParts(date).map(p => [p.type, p.value]));
+// ('AAAA-MM-DD') y se escriben con los nombres de links.js, sin los datos de idioma del motor (B9);
+// la hora de una comprobación (un instante), con checkedPhrase y checkedCell, también de links.js.
 
 // '2026-10-04' → 'dom 4 oct'
 const shortDate = weekdayDate;
-
-// Un instante (checkedAt de data-health) en Canarias: { day: 'AAAA-MM-DD', time: 'H:MM' }.
-function canary(instant) {
-  const date = new Date(instant);
-  if (!instant || !Number.isFinite(date.getTime())) return null;
-  const p = parts(CLOCK, date);
-  return { day: `${p.year}-${p.month}-${p.day}`, time: `${Number(p.hour)}:${p.minute}` };
-}
-
-// «hoy a las 22:11» o «el 23 de septiembre a las 22:11» (spec §7: nunca «ahora»).
-function checkedPhrase(instant, today) {
-  const c = canary(instant);
-  if (!c) return null;
-  return c.day === today ? `hoy a las ${c.time}` : `el ${dayMonthLong(c.day)} a las ${c.time}`;
-}
 
 const score = (a, b) => `${a}–${b}`;
 // 3.25 → '3,3': un decimal con coma, sin los datos de idioma del motor.
 const oneDecimal = n => n.toFixed(1).replace('.', ',');
 
-// ── Enlaces (spec §4.1) ─────────────────────────────────────────────────
+// ── Enlaces (spec §4.1): matchHref y teamHref, de links.js ──────────────
 
-const matchHref = m => routeHref('partido', { s: m.season, g: m.groupId, r: m.roundKey, h: m.home, a: m.away });
-const teamHref = (group, team) => routeHref('equipo', { s: group.season, g: group.id, t: team });
 // «Cambiar» y las demás búsquedas abren Explorar con el buscador enfocado: el
 // ancla #buscar va tras la ruta, como #calendario en la ficha de equipo.
 const SEARCH = `${routeHref('explorar')}#buscar`;
@@ -67,10 +47,6 @@ function header(name, subtitle, { shields, change = true }) {
     action: change ? { href: SEARCH, label: 'Cambiar' } : null,
   });
 }
-
-const blockEmpty = (title, text) => html`<section class="block"><div class="block-head"><h2 class="block-title">${title}</h2></div>${empty(text)}</section>`;
-
-const roundOf = (group, match) => group.rounds.find(round => round.key === match.roundKey) || null;
 
 // La última jornada (en su orden) con algún resultado, o null.
 function lastPlayedRound(group) {
@@ -120,7 +96,7 @@ function nextBlock(m, group, today, shields) {
   const teams = html`<div class="fixture">${side(m.home, 'Local', shields)}<span class="fixture-vs" aria-hidden="true">–</span>${side(m.away, 'Visitante', shields)}</div>`;
   const venue = html`<p class="fixture-venue"><span class="cell-label">Campo</span><span class="${m.venue ? 'fixture-place' : 'fixture-place is-muted'}">${m.venue || 'no publicado'}</span></p>`;
   const buttons = html`<div class="buttons">${m.venue ? html`<a class="button is-main" href="${venueUrl(m.venue, group.island)}" target="_blank" rel="noopener noreferrer">Cómo llegar</a>` : ''}<button type="button" class="${m.venue ? 'button' : 'button is-main'}" data-action="calendario">Calendario</button><button type="button" class="button" data-action="compartir">Compartir</button></div>`;
-  return html`${box(html`${when}${teams}${venue}${buttons}`, { title: 'Próximo partido', context: countdownLabel(m.dateISO, today) })}<p class="vh" role="status" data-role="aviso"></p>`;
+  return html`${box(html`${when}${teams}${venue}${buttons}`, { title: 'Próximo partido', context: countdownLabel(m.dateISO, today) })}${shareStatus()}`;
 }
 
 // Sin próximo partido, por qué (B1, «Para B2»): sin fecha, sin resultado o todo jugado.
@@ -144,16 +120,16 @@ const LETTER = { G: 'Ganado', E: 'Empatado', P: 'Perdido' };
 
 function lastFiveBlock(results, group, name) {
   const items = results.map(r => html`<li><a class="last5-cell" href="${matchHref(r.match)}"><span class="form-chip form-${r.letter.toLowerCase()}" aria-hidden="true">${r.letter}</span><span class="vh">${LETTER[r.letter]}, </span><span class="last5-score">${score(r.gf, r.gc)}</span><span class="last5-rival"><span class="vh">${r.side === 'casa' ? 'en casa contra ' : 'fuera contra '}</span>${teamShort(r.rival)}</span></a></li>`);
-  const more = html`<a class="more" href="${teamHref(group, name)}#calendario">calendario completo</a>`;
+  const more = html`<a class="more" href="${teamHref(group.season, group.id, name)}#calendario">calendario completo</a>`;
   return box(html`<ol class="last5 last5-${results.length}">${items}</ol>`,
     { title: results.length === 5 ? 'Últimos cinco' : 'Últimos resultados', context: more });
 }
 
 function standingsBlock(group, name, shields) {
-  if (!group.standings.length) return blockEmpty('Clasificación', 'Clasificación sin publicar');
+  if (!group.standings.length) return block('Clasificación', empty('Clasificación sin publicar'));
   const after = lastPlayedRound(group);
   return box(standingsTable(group.standings, {
-    view: 'puntos', mine: name, shields, hrefFor: row => teamHref(group, row.team), caption: `Clasificación: ${group.label}`,
+    view: 'puntos', mine: name, shields, hrefFor: row => teamHref(group.season, group.id, row.team), caption: `Clasificación: ${group.label}`,
   }), { title: 'Clasificación', context: after ? `tras la ${after.label.toLowerCase()}` : null });
 }
 
@@ -163,7 +139,7 @@ const scorersOf = (ctx, group, name) => teamScorers(ctx.model.scorers(group.seas
 
 function scorersBlock(ctx, group, name) {
   const list = scorersOf(ctx, group, name);
-  if (!list.length) return blockEmpty('Goleadores del equipo', 'Sin goleadores publicados de este equipo');
+  if (!list.length) return block('Goleadores del equipo', empty('Sin goleadores publicados de este equipo'));
   const rows = list.slice(0, 5).map(s => html`<tr><th scope="row" class="sc-name">${playerName(s.name)}</th><td class="sc-goals">${s.goals}</td><td class="sc-games">${s.games}</td></tr>`);
   const more = html`<a class="more" href="${routeHref('goleadores', { s: group.season, g: group.id, t: name })}">ver todos</a>`;
   return box(html`<table class="scorers"><caption class="vh">Goleadores de ${name}</caption><thead><tr><th scope="col" class="sc-name">Jugador</th><th scope="col" class="sc-goals">Goles</th><th scope="col" class="sc-games"><abbr title="Partidos jugados">PJ</abbr></th></tr></thead><tbody>${rows}</tbody></table>`,
@@ -214,12 +190,10 @@ function figuresBlock(ctx, group, name) {
   return html`${box(content, { title: 'La temporada en cifras' })}${note ? notice('Cobertura:', note) : ''}`;
 }
 
-// «Clasificación oficial de futbolaspalmas.com, comprobada el …» (spec §4.2 y §7).
+// «Clasificación oficial de futbolaspalmas.com, comprobada el …» (spec §4.2 y §7): la frase de
+// procedencia de sourcePhrase (ui.js), la misma de la Tabla, con la comprobación del grupo.
 function freshness(ctx, group) {
-  const info = sourceInfo(group, false);
-  const of = info.source ? ` de ${info.source}` : '';
-  const lead = info.kind === 'calculada' ? `Clasificación calculada con los resultados${of}`
-    : info.kind === 'corregida' ? `Clasificación${of} con los puntos corregidos` : `Clasificación oficial${of}`;
+  const lead = sourcePhrase(sourceInfo(group, false));
   const health = ctx.health;
   const item = health && health.season === group.season && health.groups ? health.groups[group.id] : null;
   const when = item && item.checkedAt ? checkedPhrase(item.checkedAt, ctx.today) : null;
@@ -276,13 +250,6 @@ function stateC(ctx, env) {
 }
 
 // ── Estado D: temporada terminada (spec §4.2 D, §6.4 y maqueta 6-1) ─────
-
-// Casilla de la última comprobación: «hoy, 22:11» o «23 sept, 22:11».
-function checkedCell(instant, today) {
-  const c = canary(instant);
-  if (!c) return null;
-  return c.day === today ? `hoy, ${c.time}` : `${dayMonth(c.day)}, ${c.time}`;
-}
 
 // Sin data-health, la fecha del literal oculto «Última actualización: DD/MM/AAAA» de
 // index.html, sin hora (spec §4.2 D): «23 sept».
@@ -356,9 +323,8 @@ function bracketRow(group, m) {
   const when = shortDate(m.dateISO);
   const what = `${group.name}, ${(round ? round.label : m.roundKey).toLowerCase()}${when ? ` · ${when}` : ''}`;
   const played = m.hs != null && m.as != null;
-  const penalties = played && m.hs === m.as && m.advancer
-    ? `${teamShort(m.advancer === 'home' ? m.home : m.away)} pasó por penaltis${m.shootout ? ` (${m.shootout.replace('-', '–')})` : ''}`
-    : null;
+  const winner = penaltyWinner(m);
+  const penalties = winner ? `${teamShort(winner)} pasó por penaltis${m.shootout ? ` (${m.shootout.replace('-', '–')})` : ''}` : null;
   return html`<li><a class="summer-row" href="${routeHref('copa', { s: group.season, g: group.id })}"><span class="summer-what">${what}</span><span class="summer-main">${teamShort(m.home)} – ${teamShort(m.away)}</span><span class="summer-score">${played ? score(m.hs, m.as) : '–'}</span>${penalties ? html`<span class="summer-note">${penalties}</span>` : ''}</a></li>`;
 }
 
@@ -373,10 +339,10 @@ function windowAround(rows, name, around = 2) {
 }
 
 function finalStandings(group, name, shields) {
-  if (!group.standings.length) return blockEmpty('Clasificación final', 'Clasificación sin publicar');
+  if (!group.standings.length) return block('Clasificación final', empty('Clasificación sin publicar'));
   const more = html`<a class="more" href="${routeHref('tabla', { s: group.season, g: group.id })}">ver completa</a>`;
   return box(standingsTable(windowAround(group.standings, name), {
-    view: 'resumen', mine: name, shields, hrefFor: row => teamHref(group, row.team), caption: `Clasificación final: ${group.label}`,
+    view: 'resumen', mine: name, shields, hrefFor: row => teamHref(group.season, group.id, row.team), caption: `Clasificación final: ${group.label}`,
   }), { title: 'Clasificación final', context: more });
 }
 
@@ -390,7 +356,7 @@ function stateD(ctx, env) {
     withBox ? nextSeasonBox(ctx, name, next) : '',
     endedBlock(ctx, group, name),
     ...summerBlocks(ctx, r),
-    html`<a class="home-all" href="${teamHref(group, name)}">Ver toda la temporada ${seasonLabel(group.season)}</a>`,
+    html`<a class="home-all" href="${teamHref(group.season, group.id, name)}">Ver toda la temporada ${seasonLabel(group.season)}</a>`,
   ];
   return html`${header(name, subtitle, env)}${staleNotice(r)}${columns(main, [finalStandings(group, name, env.shields)])}`;
 }
@@ -403,9 +369,9 @@ const CALENDAR_SLOT = html`<div data-slot="calendario"></div>`;
 // Todos sus partidos del grupo, en orden de jornada y con su estado (spec §5.3).
 export function teamCalendar(team, group, { today, shields = {} } = {}) {
   const items = group.rounds.flatMap(round => round.matches.filter(m => m.home === team || m.away === team).map(m => ({ round, m })));
-  if (!items.length) return blockEmpty('Calendario', 'Sin partidos en el calendario de este grupo');
+  if (!items.length) return block('Calendario', empty('Sin partidos en el calendario de este grupo'));
   const rows = items.map(({ round, m }) => html`<li><p class="cal-when">${round.label}${m.dateISO ? ` · ${shortDate(m.dateISO)}` : ''}</p>${matchRow(m, { today, shields, href: matchHref(m) })}</li>`);
-  return html`<section class="block" id="calendario"><div class="block-head"><h2 class="block-title">Calendario</h2><p class="block-context">${items.length} partidos</p></div><ol class="box cal">${rows}</ol></section>`;
+  return block('Calendario', html`<ol class="box cal">${rows}</ol>`, { context: `${items.length} partidos`, id: 'calendario' });
 }
 
 // Solo en escritorio: se pinta al montar y al cruzar los 1024 px, nunca oculto con CSS (spec
@@ -452,27 +418,16 @@ export function matchCalendar(match, group, { url = '', now = new Date() } = {})
   return buildCalendar(matches, { ...options, now });
 }
 
-// Confirma en el propio botón y en la región de estado, y vuelve al texto original.
-function confirmOn(button, status, text) {
-  if (status) status.textContent = text;
-  if (!button.dataset.label) button.dataset.label = button.textContent;
-  button.textContent = text;
-  setTimeout(() => { button.textContent = button.dataset.label; }, 2500);
-}
-
-async function share(button, status, data) {
-  const outcome = await shareLink(data);
-  if (outcome === 'copiado') confirmOn(button, status, 'Enlace copiado');
-  else if (outcome === 'no copiado') confirmOn(button, status, 'No se pudo copiar el enlace');
-}
-
 const STATES = { E: stateE, X: stateX, D: stateD, B: stateB, C: stateC, A: stateA };
 
 export const screen = {
   id: 'home',
   // Todo sale de los datos inmediatos salvo data-health.json (la caja de D y la frescura): se pide
-  // una vez y queda en datasets.health. Nunca rechaza: sin él, la portada se pinta igual (spec §7).
-  needs: (params, datasets) => (datasets.health ? [] : [ensureHealth().then((health) => { datasets.health = health; })]),
+  // una sola vez por sesión y queda en datasets.health, que es undefined mientras no se ha pedido y
+  // null si falló; con null, las visitas siguientes pintan en el acto, sin esperar otra vez hasta
+  // 15 s (M4 de la revisión final de B2). Nunca rechaza: sin él, la portada se pinta igual (§7).
+  needs: (params, datasets) => (datasets.health !== undefined ? []
+    : [ensureHealth().then((health) => { datasets.health = health; })]),
   render(ctx) {
     const state = homeState({ resolution: ctx.resolution, todayISO: ctx.today, portalSeason: ctx.portal.season });
     const body = STATES[state](ctx, { shields: (ctx.datasets && ctx.datasets.shields) || {} });
@@ -501,7 +456,8 @@ export const screen = {
       if (action === 'calendario') {
         downloadCalendar(...calendarArgs(next, group, data.url));
       } else if (action === 'compartir') {
-        share(target, section.querySelector('[data-role="aviso"]'), data);
+        // La respuesta común (links.js): «Enlace copiado.» o el enlace, en la región de estado.
+        shareAndAnnounce(data, section.querySelector('.share-status'));
       }
     });
     return ctx.resolution && ctx.resolution.status === 'ok' ? wideCalendar(section, ctx) : undefined;

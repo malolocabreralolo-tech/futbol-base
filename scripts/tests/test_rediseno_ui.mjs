@@ -7,9 +7,10 @@ import { strict as assert } from 'node:assert';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { html } from '../../src/html.js';
 import {
-  crest, crestFallback, monogram, box, cells, matchRow, standingsTable,
-  formChips, segmented, notice, empty, tabbar, listEs,
+  crest, crestFallback, monogram, block, box, cells, matchRow, standingsTable,
+  formChips, segmented, notice, empty, tabbar, listEs, shareStatus, sourcePhrase,
 } from '../../src/ui.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -128,6 +129,43 @@ test('box: título en h2, contexto a la derecha y contenido Html sin reescapar',
   assert.match(out, /^<section class="block"><div class="block-head"><h2 class="block-title">Próximo partido<\/h2><p class="block-context">faltan 3 días<\/p><\/div><div class="box"><dl class="cells cells-1">/);
   assert.equal(s(box('a < b')), '<div class="box">a &lt; b</div>');
   assert.doesNotMatch(s(box('x', { title: 'Tabla' })), /block-context/);
+});
+
+// I2 de la revisión final de B2: un solo bloque con título, block(título, contenido, { context, id }),
+// para Tabla, Partido, Mi equipo y box; antes, dos copias con los argumentos en otro orden.
+test('block: título en h2, contenido tal cual y, en opciones, el contexto y el id de la sección', () => {
+  assert.equal(s(block('Goles', empty('Partido sin goles.'))),
+    '<section class="block"><div class="block-head"><h2 class="block-title">Goles</h2></div><p class="empty">Partido sin goles.</p></section>');
+  assert.equal(s(block('Cara a cara', html`<div class="box">x</div>`, { context: 'esta temporada' })),
+    '<section class="block"><div class="block-head"><h2 class="block-title">Cara a cara</h2><p class="block-context">esta temporada</p></div><div class="box">x</div></section>');
+  assert.equal(s(block('Calendario', html`<ol class="box cal"></ol>`, { context: '30 partidos', id: 'calendario' })),
+    '<section class="block" id="calendario"><div class="block-head"><h2 class="block-title">Calendario</h2><p class="block-context">30 partidos</p></div><ol class="box cal"></ol></section>');
+  // Sin contexto (null, undefined o ''), sin su párrafo; el contexto puede ser Html (un enlace).
+  for (const context of [null, undefined, '']) assert.doesNotMatch(s(block('T', 'x', { context })), /block-context/);
+  assert.match(s(block('T', 'x', { context: html`<a class="block-link" href="#/goleadores">ver todos (12)</a>` })),
+    /<p class="block-context"><a class="block-link" href="#\/goleadores">ver todos \(12\)<\/a><\/p>/);
+  // Todo escapado: título, contexto, id y un contenido de texto.
+  assert.equal(s(block('<b>', 'a < b', { context: '"c"', id: 'x"y' })),
+    '<section class="block" id="x&quot;y"><div class="block-head"><h2 class="block-title">&lt;b&gt;</h2><p class="block-context">&quot;c&quot;</p></div>a &lt; b</section>');
+  // box con título es un bloque con su caja: el mismo marcado.
+  assert.equal(s(box('x', { title: 'T', context: 'c' })), s(block('T', html`<div class="box">x</div>`, { context: 'c' })));
+});
+
+test('shareStatus: la región de estado de «Compartir», la misma en todas las pantallas', () => {
+  assert.equal(s(shareStatus()), '<p class="share-status" role="status"></p>');
+});
+
+// I2 de la revisión final de B2 (y el minor de la T7): la frase de procedencia, una sola, para
+// Mi equipo y Tabla, en sus tres ramas.
+test('sourcePhrase: oficial, calculada o corregida, con la fuente o sin ella', () => {
+  const src = 'futbolaspalmas.com';
+  assert.equal(sourcePhrase({ kind: 'oficial', source: src }), 'Clasificación oficial de futbolaspalmas.com');
+  assert.equal(sourcePhrase({ kind: 'calculada', source: src }), 'Clasificación calculada con los resultados de futbolaspalmas.com');
+  assert.equal(sourcePhrase({ kind: 'corregida', source: src }), 'Clasificación de futbolaspalmas.com con los puntos corregidos');
+  assert.equal(sourcePhrase({ kind: 'oficial', source: null }), 'Clasificación oficial');
+  assert.equal(sourcePhrase({ kind: 'calculada', source: null }), 'Clasificación calculada con los resultados');
+  assert.equal(sourcePhrase({ kind: 'corregida', source: null }), 'Clasificación con los puntos corregidos');
+  assert.equal(sourcePhrase(null), 'Clasificación oficial');
 });
 
 test('cells: dl con etiqueta y dato, el 0 se pinta y el dato apagado lleva su clase', () => {
@@ -317,13 +355,13 @@ test('cada clase que emite ui.js existe en acta.css', () => {
     standingsTable(PG2, { view: 'todas', mine: 'Las Mesas Hu.', shields: SHIELDS, hrefFor: () => '#' }),
     standingsTable(PG2, { view: 'forma' }),
     segmented([{ value: 'a', label: 'A' }], 'a', () => '#'), notice('t', 'x'), empty('x'), tabbar('jornada'),
+    block('t', 'x', { context: 'c', id: 'i' }), shareStatus(),
   ].map(String).join('');
   const used = new Set([...out.matchAll(/class="([^"]+)"/g)].flatMap(m => m[1].split(/\s+/)));
   assert.deepEqual([...used].filter(c => !defined.has(c)), []);
 });
 
 // ── Plan B2, tarea 4: la cabecera de pantalla, común a todas las pantallas ──
-import { html } from '../../src/html.js';
 import { screenHead, backLink } from '../../src/ui.js';
 
 test('screenHead: el único h1 con su etiqueta, «‹» y escudo a la izquierda, acción a la derecha; todo escapado', () => {

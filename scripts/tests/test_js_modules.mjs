@@ -200,12 +200,11 @@ test('data-matchdetail-keys.js exactly mirrors keys with goal timelines', () => 
   for (const k of got) assert.ok(MATCH_DETAIL_KEYS[k], `truthy value for ${k}`);
 });
 
-test('state.js exports ensureLineups and ensurePlayers (SP-2)', () => {
+// ensurePlayers se fue en la revisión final de B2 (M5): la plantilla sale de LINEUPS (spec §4.6).
+test('state.js exports ensureLineups (SP-2)', () => {
   const src = readFileSync(join(ROOT, 'src', 'state.js'), 'utf8');
   assert.ok(/export\s+async\s+function\s+ensureLineups\b/.test(src),
     'state.js must export ensureLineups');
-  assert.ok(/export\s+async\s+function\s+ensurePlayers\b/.test(src),
-    'state.js must export ensurePlayers');
   for (const f of ['state.js']) {
     const s = readFileSync(join(ROOT, 'src', f), 'utf8');
     assert.ok(!/globalThis\.(LINEUPS_|PLAYERS_|TEAMS_)/.test(s),

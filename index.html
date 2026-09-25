@@ -40,7 +40,9 @@
     // actualiza en segundo plano: si una actualización falló, su app.js, state.js o links.js es el
     // viejo y la app nueva no arranca. Si un SW controla la página, antes de importar app.js se quitan
     // esos tres de las cachés de la app anterior (las que guardan src/render.js, que ya no existe);
-    // los pedirá a la red. Sin SW al mando, las peticiones van a la red y no hay nada que quitar.
+    // los pedirá a la red. Sin SW al mando no hay caché de SW que limpiar, pero la caché HTTP de GitHub
+    // Pages (max-age=600) puede dar durante 10 minutos un state.js o un links.js viejos a este app.js:
+    // lo decide B4 al versionar el grafo de módulos.
     // Si el arranque falla (sin conexión en plena transición, cuando esa caché ya guarda este
     // index.html pero no acta.css ni los módulos nuevos, o un módulo que no llega), un aviso con
     // estilos en línea y «Reintentar»: nunca «Cargando…» para siempre. Es texto fijo, sin datos.

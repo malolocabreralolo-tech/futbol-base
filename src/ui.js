@@ -1,8 +1,8 @@
 // Componentes del sistema visual «Acta» (spec §3.3). Funciones puras que
 // devuelven Html: no leen globales ni tocan el DOM al importarse. Las clases
-// que emiten están definidas en style-acta.css.
+// que emiten están definidas en acta.css.
 import { html, Html } from './html.js';
-import { matchState } from './model.js';
+import { matchState, penaltyWinner } from './model.js';
 import { shieldFile } from './state.js';
 
 // ── Escudo y monograma ──────────────────────────────────────────────────
@@ -60,11 +60,18 @@ export function crestFallback(img) {
 
 // ── Caja, bloque y casillas ─────────────────────────────────────────────
 
+// Bloque con título: su h2, el contexto a la derecha (opcional) y el contenido tal cual (una caja,
+// un vacío, una lista…); id, el de la sección, para un ancla como #calendario. El único de la app,
+// con un solo orden de argumentos (I2 de la revisión final de B2): lo usan las pantallas y box.
+export function block(title, content, { context = null, id = null } = {}) {
+  const ctx = context == null || context === '' ? '' : html`<p class="block-context">${context}</p>`;
+  return html`<section class="block"${id ? html` id="${id}"` : ''}><div class="block-head"><h2 class="block-title">${title}</h2>${ctx}</div>${content}</section>`;
+}
+
+// El contenido en una caja; con título, dentro de su bloque.
 export function box(content, { title, context } = {}) {
   const body = html`<div class="box">${content}</div>`;
-  if (title == null || title === '') return body;
-  const ctx = context == null || context === '' ? '' : html`<p class="block-context">${context}</p>`;
-  return html`<section class="block"><div class="block-head"><h2 class="block-title">${title}</h2>${ctx}</div>${body}</section>`;
+  return title == null || title === '' ? body : block(title, body, { context });
 }
 
 // items: [{label, value, muted?}]. Columnas: 1-3 tal cual, 4 en 2×2, 5 en fila, 6+ de 3 en 3.
@@ -80,10 +87,8 @@ export function cells(items) {
 
 function matchNote(match, state) {
   if (state === 'sin resultado' || state === 'sin fecha') return state;
-  if (state === 'jugado' && match.advancer && match.hs === match.as) {
-    const who = match.advancer === 'home' ? match.home : match.away;
-    return html`${who} pasó por penaltis${match.shootout ? html` (${String(match.shootout).replace('-', '–')})` : ''}`;
-  }
+  const who = penaltyWinner(match);
+  if (who) return html`${who} pasó por penaltis${match.shootout ? html` (${String(match.shootout).replace('-', '–')})` : ''}`;
   return null;
 }
 
@@ -173,6 +178,26 @@ export function notice(term, text) {
 
 export function empty(text) {
   return html`<p class="empty">${text}</p>`;
+}
+
+// ── Compartir y procedencia ─────────────────────────────────────────────
+
+// La región de estado de «Compartir» (spec §4.2 A), la misma en todas las pantallas: la rellena
+// shareAndAnnounce (links.js) con «Enlace copiado.» o, si no se pudo copiar, con el enlace para
+// copiarlo a mano. Visible y nunca display: none, o dejaría de anunciarse (decisión 111).
+export function shareStatus() {
+  return html`<p class="share-status" role="status"></p>`;
+}
+
+// La procedencia de una clasificación en una frase, desde sourceInfo (model.js, spec §4.4):
+// «Clasificación oficial de futbolaspalmas.com», «Clasificación calculada con los resultados de …»
+// o «Clasificación de … con los puntos corregidos»; sin fuente, sin «de …». Texto, no Html: Mi
+// equipo le añade la comprobación y Tabla, su advertencia y el enlace a la fuente.
+export function sourcePhrase(info) {
+  const of = info && info.source ? ` de ${info.source}` : '';
+  if (info && info.kind === 'calculada') return `Clasificación calculada con los resultados${of}`;
+  if (info && info.kind === 'corregida') return `Clasificación${of} con los puntos corregidos`;
+  return `Clasificación oficial${of}`;
 }
 
 // ── Barra de navegación ─────────────────────────────────────────────────

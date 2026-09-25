@@ -1,7 +1,10 @@
 // Rutas nuevas, enlaces antiguos y cuenta atrás (spec §4.1 y §4.2.A).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { SCREENS, parseRoute, routeHref, translateLegacy, countdownLabel } from '../../src/links.js';
+import {
+  SCREENS, parseRoute, routeHref, translateLegacy, countdownLabel, matchHref, teamHref, canaryDateTime, checkedPhrase,
+  checkedCell, calendarFileName, downloadCalendar, shareAndAnnounce,
+} from '../../src/links.js';
 
 const SEASON = '2025-2026';
 
@@ -118,5 +121,89 @@ test('countdownLabel: hoy, mañana, faltan N días; nada si ya pasó o la fecha 
   for (const [date, today] of [['2026-09-22', '2026-09-23'], [null, '2026-09-23'], ['por confirmar', '2026-09-23'],
     ['2026-02-31', '2026-02-01'], ['2026-13-01', '2026-09-23'], ['24/09', '2026-09-23'], ['2026-09-24', '']]) {
     assert.equal(countdownLabel(date, today), null, `${date} / ${today}`);
+  }
+});
+
+// ── Revisión final de B2: ayudantes únicos (I2) y el nombre de los .ics (M3) ──
+
+test('matchHref y teamHref: los enlaces a las fichas, siempre con su temporada', () => {
+  const m = { season: '2025-2026', groupId: 'PG2', roundKey: 'Jornada 30', home: 'Las Mesas Hu.', away: 'AD Huracán' };
+  assert.equal(matchHref(m), '#/partido?s=2025-2026&g=PG2&r=Jornada%2030&h=Las%20Mesas%20Hu.&a=AD%20Hurac%C3%A1n');
+  assert.equal(matchHref({ ...m, season: '2024-2025', groupId: 'MCPK1', roundKey: '27-06-2026 ( Cuartos )' }),
+    '#/partido?s=2024-2025&g=MCPK1&r=27-06-2026%20(%20Cuartos%20)&h=Las%20Mesas%20Hu.&a=AD%20Hurac%C3%A1n');
+  assert.equal(teamHref('2025-2026', 'PG2', 'MESAS, U.D. LAS "B"'), '#/equipo?s=2025-2026&g=PG2&t=MESAS%2C%20U.D.%20LAS%20%22B%22');
+  assert.deepEqual(parseRoute(teamHref('2025-2026', 'B2', 'Inter/Pilar')), { screen: 'equipo', params: { s: '2025-2026', g: 'B2', t: 'Inter/Pilar' } });
+});
+
+test('canaryDateTime, checkedPhrase y checkedCell: fecha y hora de Canarias de un instante, «hoy» si es hoy', () => {
+  // Verano (UTC+1) y el paso de medianoche: 23:30 UTC del 02/06 son las 0:30 del 03/06 en Canarias.
+  assert.deepEqual(canaryDateTime('2026-09-23T21:11:00+00:00'), { day: '2026-09-23', time: '22:11' });
+  assert.deepEqual(canaryDateTime('2026-06-02T23:30:00+00:00'), { day: '2026-06-03', time: '0:30' });
+  // Invierno (UTC+0).
+  assert.deepEqual(canaryDateTime('2026-01-10T09:05:00Z'), { day: '2026-01-10', time: '9:05' });
+  for (const bad of [null, undefined, '', 'mañana']) assert.equal(canaryDateTime(bad), null, String(bad));
+  assert.equal(checkedPhrase('2026-09-23T21:11:00+00:00', '2026-09-23'), 'hoy a las 22:11');
+  assert.equal(checkedPhrase('2026-09-23T21:11:00+00:00', '2026-09-24'), 'el 23 de septiembre a las 22:11');
+  assert.equal(checkedCell('2026-09-23T21:11:00+00:00', '2026-09-23'), 'hoy, 22:11');
+  assert.equal(checkedCell('2026-09-23T21:11:00+00:00', '2026-09-24'), '23 sept, 22:11');
+  assert.equal(checkedPhrase(null, '2026-09-23'), null);
+  assert.equal(checkedCell('', '2026-09-23'), null);
+});
+
+test('M3: el nombre del .ics va sin tildes (NFD) y sin guiones en los extremos', () => {
+  assert.equal(calendarFileName('Prebenjamín, Grupo 2 de Gran Canaria'), 'calendario-prebenjamin-grupo-2-de-gran-canaria.ics');
+  assert.equal(calendarFileName('Las Mesas Hu. – AD Huracán'), 'calendario-las-mesas-hu-ad-huracan.ics');
+  assert.equal(calendarFileName('Veteranos – Las Mesas Hu.'), 'calendario-veteranos-las-mesas-hu.ics');
+  assert.equal(calendarFileName('«Unión» Viera B'), 'calendario-union-viera-b.ics');
+  assert.equal(calendarFileName('–'), 'calendario.ics');
+});
+
+test('M3: downloadCalendar descarga el .ics con ese nombre', () => {
+  const saved = { document: globalThis.document, setTimeout: globalThis.setTimeout };
+  const anchor = { clicks: 0, click() { this.clicks += 1; } };
+  globalThis.document = { createElement: (tag) => (tag === 'a' ? anchor : null) };
+  // La URL del Blob se revoca al segundo: aquí, en el acto, para no dejar la prueba esperando.
+  globalThis.setTimeout = (fn) => { fn(); return 0; };
+  try {
+    downloadCalendar([{ date: '2026-06-02', time: '17:30', home: 'Las Mesas Hu.', away: 'AD Huracán', jornada: 'Jornada 30' }],
+      { season: '2025-2026', group: 'PG2', name: 'Prebenjamín, Grupo 2 de Gran Canaria', url: '' });
+  } finally {
+    globalThis.document = saved.document;
+    globalThis.setTimeout = saved.setTimeout;
+  }
+  assert.equal(anchor.download, 'calendario-prebenjamin-grupo-2-de-gran-canaria.ics');
+  assert.equal(anchor.clicks, 1);
+});
+
+// I2: la respuesta de Partido para todas las pantallas que comparten.
+test('shareAndAnnounce: «Enlace copiado.» o, si no se pudo copiar, el enlace en la región de estado; nada si se compartió', async () => {
+  const saved = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  const withNavigator = (value) => Object.defineProperty(globalThis, 'navigator', { value, configurable: true, writable: true });
+  const data = { title: 'Jornada 30 · Prebenjamín, Grupo 2 de Gran Canaria', url: 'https://x.test/futbol-base/#/jornada?s=2025-2026&g=PG2&r=Jornada%2030' };
+  const copied = [];
+  const clipboard = { writeText: async (text) => { copied.push(text); } };
+  try {
+    let status = { textContent: '' };
+    withNavigator({ clipboard });
+    assert.equal(await shareAndAnnounce(data, status), 'copiado');
+    assert.equal(status.textContent, 'Enlace copiado.');
+    assert.deepEqual(copied, [data.url]);
+    // Sin share ni portapapeles (y sin documento, en Node): el enlace, para copiarlo a mano.
+    status = { textContent: '' };
+    withNavigator({ clipboard: { writeText: async () => { throw new Error('denegado'); } } });
+    assert.equal(await shareAndAnnounce(data, status), 'no copiado');
+    assert.equal(status.textContent, `No se pudo copiar el enlace: ${data.url}`);
+    // Compartido o cancelado: no dice nada.
+    status = { textContent: '' };
+    withNavigator({ share: async () => {}, clipboard });
+    assert.equal(await shareAndAnnounce(data, status), 'compartido');
+    withNavigator({ share: async () => { throw new DOMException('cancelado', 'AbortError'); }, clipboard });
+    assert.equal(await shareAndAnnounce(data, status), 'cancelado');
+    assert.equal(status.textContent, '');
+    // Sin región de estado, no lanza.
+    assert.equal(await shareAndAnnounce(data, null), 'cancelado');
+  } finally {
+    if (saved) Object.defineProperty(globalThis, 'navigator', saved);
+    else delete globalThis.navigator;
   }
 });

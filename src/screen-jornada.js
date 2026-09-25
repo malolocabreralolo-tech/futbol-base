@@ -2,11 +2,11 @@
 // con sus fechas, los partidos por día con el propio primero y resaltado, el aviso de la
 // jornada, la botonera y «Otro grupo». mount() añade compartir y el .ics del grupo.
 import { html } from './html.js';
-import { screenHead, matchRow, notice, empty, listEs } from './ui.js';
+import { screenHead, matchRow, notice, empty, listEs, shareStatus } from './ui.js';
 import { errorBox } from './shell.js';
 import { defaultRound, findRound, roundNotice, retiredTeams, matchState, seasonLabel } from './model.js';
 // Los días y los meses, escritos en links.js (Tarea 7): sin los datos de idioma del motor.
-import { MONTHS, WEEKDAYS, routeHref, downloadCalendar, shareLink } from './links.js';
+import { MONTHS, WEEKDAYS, routeHref, matchHref, downloadCalendar, shareAndAnnounce } from './links.js';
 import { seasonNeeds } from './state.js';
 import { myTeamIn } from './myteam.js';
 
@@ -128,30 +128,15 @@ function render(ctx) {
   const dates = days.map(day => day.date).filter(Boolean).sort();
   const nav = html`<nav class="round-nav" aria-label="Jornadas">${step(group.rounds[at - 1], '‹', 'Jornada anterior', 'round-prev')}<div class="round-now"><h2 class="round-title">${roundTitle(group, round)}</h2><p class="round-dates">${dateRange(dates[0], dates[dates.length - 1])}</p></div>${step(group.rounds[at + 1], '›', 'Jornada siguiente', 'round-next')}</nav>`;
   const isMine = isMineOf(mine);
-  const matchHref = m => routeHref('partido', { s, g: group.id, r: round.key, h: m.home, a: m.away });
   const list = days.length
     ? html`<div class="days">${days.map(day => html`<section class="day"><h3 class="day-title">${dayLabel(day.date)}</h3><div class="box">${day.matches.map(m => matchRow(m, { mine: isMine(m), today, shields, href: matchHref(m) }))}</div></section>`)}</div>`
     : empty('La fuente no trae partidos de esta jornada.');
   const warn = noticeText(roundNotice(group, round));
   const calendar = groupCalendar(group, today).length > 0
     ? html`<button class="button" type="button" data-action="group-calendar">Calendario del grupo</button>` : '';
-  const actions = html`<div class="box round-actions"><div class="buttons" aria-live="polite"><button class="button" type="button" data-action="share-round">Compartir jornada</button>${calendar}</div></div>`;
+  // Bajo la botonera, la región de estado de «Compartir jornada» (shareStatus, la de todas las pantallas).
+  const actions = html`<div class="box round-actions"><div class="buttons"><button class="button" type="button" data-action="share-round">Compartir jornada</button>${calendar}</div></div>${shareStatus()}`;
   return html`<section data-screen="jornada">${head}${nav}${list}${warn ? notice(warn.term, warn.text) : ''}${actions}</section>`;
-}
-
-// Cambia un momento el texto del botón («Enlace copiado»); la botonera es aria-live.
-function flash(button, text) {
-  if (!button.dataset.label) button.dataset.label = button.textContent;
-  button.textContent = text;
-  setTimeout(() => { button.textContent = button.dataset.label; }, 2500);
-}
-
-// shareLink (links.js): navigator.share y, si no hay o falla, copiar el enlace (§4.2 A). La
-// botonera dice en el propio botón si se copió.
-async function share(button, data) {
-  const outcome = await shareLink(data);
-  if (outcome === 'copiado') flash(button, 'Enlace copiado');
-  else if (outcome === 'no copiado') flash(button, 'No se pudo copiar el enlace');
 }
 
 function mount(root, ctx) {
@@ -164,7 +149,9 @@ function mount(root, ctx) {
     const button = event.target.closest('button[data-action]');
     if (!button) return;
     if (button.dataset.action === 'share-round') {
-      share(button, { title: `${round.label} · ${group.label}`, url: link({ s: group.season, g: group.id, r: round.key }) });
+      // shareLink y la respuesta común (links.js): «Enlace copiado.» o el enlace, en la región de estado.
+      shareAndAnnounce({ title: `${round.label} · ${group.label}`, url: link({ s: group.season, g: group.id, r: round.key }) },
+        el.querySelector('.share-status'));
     } else if (button.dataset.action === 'group-calendar') {
       downloadCalendar(groupCalendar(group, ctx.today), {
         season: group.season, group: group.id, name: group.label, url: link({ s: group.season, g: group.id }),

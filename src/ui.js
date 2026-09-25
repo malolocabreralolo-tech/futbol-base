@@ -88,7 +88,10 @@ export function cells(items) {
 
 // ── Fila de partido ─────────────────────────────────────────────────────
 
-function matchNote(match, state) {
+// La nota de un partido: su estado si no tiene resultado («sin resultado», «sin fecha») o, en una
+// eliminatoria empatada, quién pasó por penaltis y la tanda si se conoce. La usan matchRow y el
+// cuadro de Copa, que le pasa el partido con quién pasó según el cuadro (decisión 22 de B3).
+export function matchNote(match, state) {
   if (state === 'sin resultado' || state === 'sin fecha') return state;
   const who = penaltyWinner(match);
   if (who) return html`${who} pasó por penaltis${match.shootout ? html` (${String(match.shootout).replace('-', '–')})` : ''}`;

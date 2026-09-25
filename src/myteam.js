@@ -239,21 +239,28 @@ export function myTeamToSave(myTeam, resolution) {
   return next && myTeam && next.season === myTeam.season ? next : null;
 }
 
-// ---- Verano (spec §6.4) ----
+// ---- Mi equipo en los torneos: Verano (spec §6.4) y Copa (spec §4.7) ----
+
+// El nombre de mi equipo en un grupo de torneo o de copa (decisión 23 de B3), o null: el equipo del
+// grupo, en su categoría, que es de su club (§6.1, con los alias: «UD Las Mesas Huracán» en la
+// Maspalomas) y lleva su misma letra de filial (decisión 19 de B1): el de «Arucas» es Arucas CF A,
+// nunca B, C ni D. Si no hay ninguno con esa letra, o hay dos, null: mejor sin resalte que con el
+// de otro equipo. myTeam: { name, cat }, el resuelto o el guardado. La usan summerCups y Copa.
+export function cupTeamOf(group, myTeam, index) {
+  if (!group || !myTeam || !myTeam.name || group.cat !== myTeam.cat) return null;
+  const letter = filialLetter(myTeam.name);
+  const mine = teamsOf(group).filter(team => sameClub(index, team, myTeam.name) && filialLetter(team) === letter);
+  return mine.length === 1 ? mine[0] : null;
+}
 
 // Solo los torneos de la temporada de mi equipo: los de 2025-26 nunca salen bajo otra. En cada
-// grupo de torneo de su categoría, el equipo del club con su misma letra de filial y solo sus
-// partidos (decisión 19): el de «Arucas» es Arucas CF A, nunca B, C ni D. Si no hay ninguno con
-// esa letra, o hay dos, el grupo no sale: mejor sin «Verano» que con el de otro equipo.
+// grupo de torneo, su equipo (cupTeamOf) y solo sus partidos; sin él, el grupo no sale.
 export function summerCups(cups, myTeam, index) {
   if (!cups || !myTeam || cups.season !== myTeam.season) return [];
-  const letter = filialLetter(myTeam.name);
   const out = [];
   for (const group of cups.groups) {
-    if (group.cat !== myTeam.cat) continue;
-    const mine = teamsOf(group).filter(team => sameClub(index, team, myTeam.name) && filialLetter(team) === letter);
-    if (mine.length !== 1) continue;
-    const [team] = mine;
+    const team = cupTeamOf(group, myTeam, index);
+    if (!team) continue;
     const rows = allMatches(group).filter(match => match.home === team || match.away === team);
     if (rows.length) out.push({ group, team, rows });
   }

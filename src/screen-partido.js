@@ -218,14 +218,21 @@ export function pastSeasons(seasons, seasonName) {
     .reverse();
 }
 
-// Cara a cara de la temporada (spec §4.5, «de la misma categoría»): en una liga, los partidos
-// entre los dos equipos, por su nombre exacto, en todos los grupos de liga de la categoría (la
-// primera y la segunda fase de benjamín), por fecha y con el actual resaltado. En un torneo o una
-// copa, los de su competición.
+// Los grupos de un cara a cara (spec §4.5, «de la misma categoría»; decisión 24 de B3): los de la
+// temporada en esa categoría, que son sus ligas (la primera y la segunda fase de benjamín) y sus
+// copas de la federación (Copa de Campeones e insulares). Una sola regla para esta temporada y para
+// las anteriores. Nunca un torneo de la Maspalomas, con otros nombres («UD Las Mesas Huracán»): vive
+// en model.cups() y no en la temporada, y el filtro lo deja escrito.
+const isTournament = (group) => /maspalomas/.test(String(group.compKey || ''));
+const h2hGroups = (season, cat) => season.groups.filter((g) => g.cat === cat && !isTournament(g));
+
+// Cara a cara de la temporada: los partidos entre los dos equipos, por su nombre exacto, en los
+// grupos de h2hGroups (en una liga y en una copa de la federación), por fecha y con el actual
+// resaltado. En un torneo, los de su grupo.
 function h2hBlock(match, group, ctx) {
   const same = (g, m) => g.id === group.id && m.roundKey === match.roundKey && m.home === match.home && m.away === match.away;
-  const season = group.kind === 'league' ? ctx.model.season(group.season) : null;
-  const groups = season ? season.groups.filter((g) => g.kind === 'league' && g.cat === group.cat) : [group];
+  const season = isTournament(group) ? null : ctx.model.season(group.season);
+  const groups = season ? h2hGroups(season, group.cat) : [group];
   const when = (m) => m.dateISO || '9999-99-99';
   const found = groups.flatMap((g) => headToHead(g, match.home, match.away).map((m) => ({ g, m })));
   const ordered = found.map((x, i) => ({ ...x, i })).sort((x, y) => (when(x.m) < when(y.m) ? -1 : when(x.m) > when(y.m) ? 1 : x.i - y.i));
@@ -234,7 +241,7 @@ function h2hBlock(match, group, ctx) {
   const previous = pastSeasons(ctx.datasets.seasons, match.season).length
     ? html`<button type="button" class="pt-prev-toggle" data-action="previous" aria-expanded="false" aria-controls="${PREVIOUS_ID}">Ver temporadas anteriores</button><div id="${PREVIOUS_ID}" class="pt-prev" aria-live="polite" hidden></div>`
     : '';
-  return block('Cara a cara', html`<div class="box">${join(rows)}</div>${previous}`, { context: group.kind === 'league' ? 'esta temporada' : 'en esta competición' });
+  return block('Cara a cara', html`<div class="box">${join(rows)}</div>${previous}`, { context: season ? 'esta temporada' : 'en esta competición' });
 }
 
 // Candidato único de un lado, entre los equipos que juegan en el grupo (spec §4.5, «con el nombre
@@ -253,16 +260,16 @@ function resolveTeam(teams, wantExact) {
   return null;
 }
 
-// Cara a cara de temporadas anteriores (spec §4.5): los grupos de la misma
-// categoría en los que ambos equipos, con el nombre normalizado igual (como el
-// historial de la ficha antigua), se enfrentaron. Nunca de la otra categoría.
+// Cara a cara de temporadas anteriores (spec §4.5): los grupos de h2hGroups (ligas y
+// copas de la federación de la misma categoría, decisión 24 de B3) en los que ambos
+// equipos, con el nombre normalizado igual (como el historial de la ficha antigua),
+// se enfrentaron. Nunca de la otra categoría.
 export function previousMeetings(model, names, match, cat) {
   const out = [];
   for (const name of names) {
     const season = model.season(name);
     if (!season) continue;
-    for (const group of season.groups) {
-      if (group.cat !== cat) continue;
+    for (const group of h2hGroups(season, cat)) {
       const teams = [...new Set(group.rounds.flatMap((round) => round.matches.flatMap((m) => [m.home, m.away])))];
       const home = resolveTeam(teams, match.home);
       const away = resolveTeam(teams, match.away);

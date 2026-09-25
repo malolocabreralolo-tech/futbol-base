@@ -1145,3 +1145,90 @@ abbr[title] { text-decoration: none; }
   .compare-table .cmp-group { width: 44px; }
   .compare-table .cmp-ppj { width: 64px; }
 }
+
+/* ── Copa: el campeón, el cuadro y la liguilla (spec §4.7 y §8) ────────── */
+
+/* El campeón, arriba: su escudo y su nombre en tinta; debajo, la final. */
+.cup-champion { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px 12px; }
+.cup-champion-name { min-width: 0; font-size: 17px; font-weight: 800; color: var(--ink); overflow-wrap: anywhere; }
+.cup-champion.is-mine { background: var(--mark); box-shadow: inset 3px 0 0 var(--ink); }
+
+/* Pestañas de ronda: botones que desplazan el cuadro (mount); la ronda a la vista, rellena de tinta.
+ * Si no caben en una fila, parten en dos: nunca desplazan la página. */
+.bracket-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  margin-bottom: 10px;
+  border: 1.5px solid var(--ink);
+  background: var(--rule);
+}
+.bracket-tab {
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 0 10px;
+  background: var(--paper);
+  font-weight: 700;
+  color: var(--ink);
+}
+.bracket-tab[aria-current] { background: var(--ink); color: var(--on-ink); }
+
+/* Móvil y tableta: una ronda por pantalla. El desplazamiento horizontal va dentro de esta caja, con
+ * ajuste a cada columna: es la única excepción de §8, y la página nunca se desplaza. Cada columna
+ * conserva su alto (mount le da a la caja el de la ronda a la vista). */
+.bracket {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+}
+.bracket-round { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; }
+.bracket-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.bracket-title { font-size: 13.5px; font-weight: 800; }
+.bracket-date { font-size: 12.5px; font-weight: 600; color: var(--mute); }
+.bracket-matches { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+
+/* Un partido del cuadro: los dos equipos en dos líneas con sus goles; quién pasó, en negrita. */
+.bm {
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: 7px 9px;
+  border: 1.5px solid var(--ink);
+  color: var(--text);
+  text-decoration: none;
+}
+.bm-when { font-size: 11.5px; color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bm-team { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.bm-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bm-goals { flex: none; min-width: 22px; font-weight: 800; text-align: right; }
+.bm-team.is-through { font-weight: 800; }
+.bm-note { font-size: 12.5px; font-weight: 600; color: var(--mute); }
+.bm-note.is-conflict { color: var(--ink); }
+/* El camino de mi equipo: el resalte propio (spec §3.3), sin óvalo. */
+.bm.is-mine { background: var(--mark); box-shadow: inset 3px 0 0 var(--ink); }
+.bm-team.is-me { color: var(--ink); }
+
+@media (hover: hover) {
+  a.bm:hover .bm-name { text-decoration: underline; }
+}
+
+/* Escritorio: todas las rondas a la vista, una columna por ronda, sin pestañas ni alto fijo. Los
+ * partidos se reparten a lo alto de cada columna, como en un cuadro. */
+@media (min-width: 1024px) {
+  .bracket-tabs { display: none; }
+  .bracket {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    column-gap: 14px;
+    align-items: stretch;
+    height: auto !important;
+    overflow: visible;
+  }
+  .bracket-round { display: flex; flex-direction: column; }
+  .bracket-matches { display: flex; flex: 1 1 auto; flex-direction: column; justify-content: space-around; }
+}

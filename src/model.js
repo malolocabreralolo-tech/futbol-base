@@ -15,7 +15,7 @@
  * matchState(match, todayISO).
  */
 import {
-  isCupGroup, isRoundRobinCup, knockoutRoundLabel, matchAdvancer, sortJornadaKeys, jornadaNumber,
+  isCupGroup, isRoundRobinCup, knockoutRoundLabel, sortJornadaKeys, jornadaNumber,
   normalizeTeamName,
 } from './state.js';
 import { fixtureISO } from './links.js';
@@ -203,14 +203,17 @@ export function buildGroup(raw, { season, cat, current = false, history = null }
     round.dateFrom = dates.length ? dates[0] : null;
     round.dateTo = dates.length ? dates[dates.length - 1] : null;
   });
-  // Quién pasó: solo en los cuadros. matchAdvancer (state.js) usa el marcador,
-  // la columna pen o, en un empate sin pen, quién sale en una ronda posterior.
-  const order = rounds.map(r => r.key);
-  const bracket = kind !== 'cup-bracket' ? null : Object.fromEntries(rounds.map(r =>
-    [r.key, r.matches.map(m => [m.dateISO, m.home, m.away, m.hs, m.as, m.advancer])]));
-  rounds.forEach((round, idx) => round.matches.forEach((m, i) => {
-    m.advancer = bracket ? matchAdvancer(bracket[round.key][i], bracket, order, idx) : null;
-  }));
+  // Quién pasó: solo en los cuadros, y solo lo que dice la fuente: el marcador o, en un empate, la
+  // columna pen (rowToMatch la deja en advancer). Un empate sin ella se queda sin nadie: lo dice el
+  // propio cuadro, «según el cuadro» (bracket y Copa), y ni Partido ni la nota de un partido hablan
+  // de unos penaltis que la fuente no da (decisión 162 de B3). Hasta B3 se deducía aquí de las
+  // rondas siguientes (matchAdvancer), y Partido lo daba por penaltis.
+  for (const round of rounds) {
+    for (const m of round.matches) {
+      m.advancer = kind !== 'cup-bracket' || m.hs == null || m.as == null ? null
+        : m.hs > m.as ? 'home' : m.as > m.hs ? 'away' : m.advancer;
+    }
+  }
   const group = {
     season,
     id: raw.id,
@@ -1368,21 +1371,20 @@ export function competitions(model, season, { cat = null, island = null } = {}) 
  * - teams: los equipos de su clasificación o, sin ella (los cuadros de la Maspalomas), los del calendario;
  * - round: la etiqueta de la ronda en curso que marca la fuente («Jornada 22», «Final»), o null;
  * - leader: el 1.º de la clasificación, en ligas y liguillas, si ya ha jugado; si no, null;
- * - champion: en un cuadro, quien pasó en la final (su único partido de la última ronda); si no, null. */
+ * - champion: en un cuadro, el de bracket (decisión 22): quien pasó de su final; si no, null. Una sola
+ *   regla para Copa, Ligas y Explorar. */
 export function groupSummary(group) {
   const rounds = group.rounds || [];
   const standings = group.standings || [];
   const round = group.currentRound ? rounds.find(r => r.key === group.currentRound) : null;
   const inCalendar = new Set(rounds.flatMap(r => r.matches.flatMap(m => [m.home, m.away])).filter(Boolean));
-  const last = rounds[rounds.length - 1];
-  const final = group.kind === 'cup-bracket' && last && last.matches.length === 1 ? last.matches[0] : null;
   const first = standings[0];
   return {
     label: shortLabel(group),
     teams: standings.length || inCalendar.size,
     round: round ? round.label : null,
     leader: group.kind !== 'cup-bracket' && first && first.pj > 0 ? first.team : null,
-    champion: final && final.advancer ? (final.advancer === 'home' ? final.home : final.away) : null,
+    champion: group.kind === 'cup-bracket' ? bracket(group).champion : null,
   };
 }
 
@@ -1401,4 +1403,37 @@ export function compareGroups(groups) {
     });
   });
   return rows.sort((a, b) => (a.retired - b.retired) || (b.ppj - a.ppj) || (b.pts - a.pts) || (b.dg - a.dg) || byName(a.team, b.team));
+}
+
+// ─── Copa: el cuadro (spec §4.7; decisión 22 de B3) ─────────────────────────
+
+/* El cuadro de una copa o de un torneo: sus rondas, con quién pasó cada partido, y el campeón.
+ * Quién pasó sale del propio cuadro cuando lo dice: el único de los dos que juega la ronda
+ * siguiente. Si no lo dice (la última ronda, o una siguiente en la que no está ninguno), sale de
+ * Match.advancer: el marcador, la columna de penaltis o una ronda posterior. Si el cuadro contradice
+ * al marcador (sigue el que perdió), `conflict`: en 2024-25 BCC1 pasa dos veces, y la pantalla dice
+ * las dos cosas (spec §7). El campeón es quien pasó de la final (la última ronda, «Final», con un
+ * solo partido), o null si aún no tiene resultado. null si el grupo no es un cuadro.
+ *   → { rounds: [{ key, label, dateFrom, matches: [{ match, advancer, conflict }] }], champion } */
+export function bracket(group) {
+  if (!group || group.kind !== 'cup-bracket') return null;
+  const rounds = group.rounds.map((round, i) => {
+    const next = group.rounds[i + 1];
+    const later = new Set(next ? next.matches.flatMap(m => [m.home, m.away]) : []);
+    return {
+      key: round.key,
+      label: round.label,
+      dateFrom: round.dateFrom,
+      matches: round.matches.map(match => {
+        const home = later.has(match.home);
+        const away = later.has(match.away);
+        const seen = home === away ? null : home ? 'home' : 'away';
+        const byScore = playedMatch(match) && match.hs !== match.as ? (match.hs > match.as ? 'home' : 'away') : null;
+        return { match, advancer: seen || match.advancer, conflict: Boolean(seen && byScore && seen !== byScore) };
+      }),
+    };
+  });
+  const last = rounds[rounds.length - 1];
+  const final = last && last.label === 'Final' && last.matches.length === 1 ? last.matches[0] : null;
+  return { rounds, champion: final && final.advancer ? final.match[final.advancer] : null };
 }

@@ -747,10 +747,12 @@ def snapshot_data_files(root=None):
     return snap
 
 
-def _next_version(index_content):
+def _next_version(index_content, today=None):
     """New cache-bust version string: YYYYMMDD, or YYYYMMDD + next letter
-    suffix (b, c, ...) if index.html already carries today's version."""
-    today = date.today().strftime("%Y%m%d")
+    suffix (b, c, ...) if index.html already carries that day's version.
+    `today` (datetime.date) defaults to date.today(): the bot's clock, UTC on
+    the GitHub runner."""
+    today = (today or date.today()).strftime("%Y%m%d")
     existing = re.search(r"\?v=(\d{8})([a-z]?)", index_content)
     if existing and existing.group(1) == today:
         suffix = existing.group(2)
@@ -762,10 +764,17 @@ def _next_version(index_content):
     return today
 
 
-def bump_cache_version(root=None):
-    """Bump ?v=, footer date (index.html) and CACHE_NAME (sw.js, contrato C3)
-    to the SAME version string. Only call when data content changed — the
-    decision lives in bump_if_changed() (contrato C4)."""
+def bump_cache_version(root=None, touch_footer=True, version=None):
+    """Bump ?v= (index.html) and CACHE_NAME (sw.js, contrato C3) to the SAME
+    version string and, with touch_footer, the footer date «Última
+    actualización». The bot calls it without arguments, only when data
+    content changed (bump_if_changed, contrato C4): the footer is the date of
+    the data. scripts/publicar.py passes touch_footer=False and its own
+    version (spec §5.5; Plan B4, decisión 10): a release does not move that
+    date. `version` keeps the bot's form, 8 digits and an optional letter
+    (ValueError otherwise, and nothing is written)."""
+    if version is not None and not re.fullmatch(r"\d{8}[a-z]?", version):
+        raise ValueError(f"versión sin la forma del bot (AAAAMMDD y una letra opcional): {version!r}")
     root = root or PROJECT_ROOT
     index_path = os.path.join(root, "index.html")
     if not os.path.exists(index_path):
@@ -775,14 +784,15 @@ def bump_cache_version(root=None):
     with open(index_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    version = _next_version(content)
-    today_display = date.today().strftime("%d/%m/%Y")
+    version = version or _next_version(content)
     new_content = re.sub(r"\?v=\d{8}[a-z]?", f"?v={version}", content)
-    new_content = re.sub(
-        r"Última actualización: \d{2}/\d{2}/\d{4}",
-        f"Última actualización: {today_display}",
-        new_content
-    )
+    if touch_footer:
+        today_display = date.today().strftime("%d/%m/%Y")
+        new_content = re.sub(
+            r"Última actualización: \d{2}/\d{2}/\d{4}",
+            f"Última actualización: {today_display}",
+            new_content
+        )
     if new_content != content:
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(new_content)

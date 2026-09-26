@@ -1,16 +1,16 @@
-# Rebase de la rama del rediseño (`rediseno-acta`)
+# Rebase y publicación de la rama del rediseño (`rediseno-acta`)
 
-El rediseño «Acta» se construye en la rama `rediseno-acta` y no se fusiona en `main` hasta B5. Mientras tanto, el bot sigue comiteando en `main` cada pocas horas, y la rama se rebasa a menudo sobre `main` (spec §12). Este es el procedimiento (Plan B2, decisión 8).
+El rediseño «Acta» se construye en la rama `rediseno-acta`, y cada fase se publica al terminarla, con el visto bueno del usuario: `main` avanza hasta la rama con avance rápido (B2 en `376e981`, B3 en `862486f`). Entre una publicación y otra, el bot sigue comiteando en `main` cada pocas horas, y la rama trae `main` a menudo (spec §12). Este es el procedimiento (Plan B2, decisión 8), y al final, el de publicar (Plan B4, decisión 10).
 
 ## Qué choca y qué se queda
 
 El bot (`update.yml`, `fetch-fiflp.yml` y `fetch-fiflp-actas.yml`) comitea tres cosas:
 
-- **`data-*.js`, `data-health.json` y `futbolbase.db`.** La rama no los toca, así que no chocan. Si alguno chocara, se queda el de `main`: `git checkout --ours -- <fichero>` (en un rebase, «ours» es `main`).
+- **`data-*.js`, `data-health.json` y `futbolbase.db`.** La rama no los toca, así que no chocan. Si alguno chocara, se queda el de `main`: `git checkout --ours -- <fichero>` (en un rebase, «ours» es `main`). La excepción son los `data-*.js` que la rama retira a propósito (B4: `data-matchdetail-keys.js`, `data-stats.js` y `data-players-*.js`): si el bot los regeneró en `main`, chocan como «borrados en la rama y modificados en `main`», y se resuelven con `git rm`, nunca con el de `main`.
 - **`sw.js`.** El bot solo cambia `CACHE_NAME` en la línea 1, y la rama cambia `STATIC_ASSETS`. Git suele mezclarlo solo.
 - **`index.html`.** El bot sube todas las `?v=` y el literal oculto «Última actualización». Desde el corte, la rama tiene otro `index.html`, y el choque es casi seguro.
 
-Siempre se queda **la estructura de la rama con las marcas de versión de `main`**: las `?v=`, «Última actualización» y `CACHE_NAME`. Lo hace `scripts/sync_versions.py`. `CACHE_NAME` y las `?v=` no se suben a mano en B2 (decisión 7): la subida conjunta es del despliegue de B4 y B5.
+Siempre se queda **la estructura de la rama con las marcas de versión de `main`**: las `?v=`, «Última actualización» y `CACHE_NAME`. Lo hace `scripts/sync_versions.py`. `CACHE_NAME` y las `?v=` no se suben a mano: las sube `scripts/publicar.py` al publicar una fase (abajo).
 
 ## Antes de rebasar
 
@@ -81,4 +81,22 @@ git push --force-with-lease origin rediseno-acta
 
 `gh run list` no debe mostrar ninguna ejecución `in_progress` ni `queued`. `--force-with-lease` no pisa la rama remota si alguien la movió después del último `fetch`.
 
-El PR borrador hacia `main` vuelve a lanzar `tests.yml`, con las suites y los tres smoke.
+El PR borrador #2 hacia `main` quedó cerrado al publicar B2, y un push a la rama no lanza `tests.yml`: se lanza a mano, `gh workflow run tests.yml --ref rediseno-acta`, con las suites y los tres smoke.
+
+## Publicar una fase
+
+Con el visto bueno del usuario, sin ningún workflow en marcha y con el árbol limpio. El paso de publicar de cada plan (el de B3, Tarea 12, paso 10) tiene las comprobaciones de la web; esto es lo que se repite en cada fase:
+
+1. **Traer `main`** con un merge (`git merge --no-edit origin/main`): en un merge, «ours» es la rama. Si chocan `index.html` o `sw.js`, `git checkout --ours` de esos dos y `python3 scripts/sync_versions.py --from origin/main`; al final, `python3 scripts/sync_versions.py --from origin/main --check`. Un conflicto en otro fichero se resuelve a mano: el bot nunca toca `src/`, `scripts/` ni `docs/`. Si la fase borró un `data-*.js` que el bot sigue regenerando en `main` (B4: `data-matchdetail-keys.js`, `data-stats.js` y `data-players-*.js`), sale un conflicto «modificado y borrado»: se resuelve con `git rm` de esos ficheros.
+2. **Subir la versión** con `scripts/publicar.py`: las `?v=` de `index.html` y `CACHE_NAME` de `sw.js` a la vez, con la fecha UTC (o la letra siguiente, si no es mayor que la vigente), y `CODIGO`, sin tocar «Última actualización»:
+
+   ```bash
+   cd /home/manolo/claude/futbol-base
+   python3 scripts/publicar.py
+   git diff --stat
+   ```
+
+   Sale `versión <V> (antes, <la vigente>): <N> ?v= en index.html y futbolbase-v<V> en sw.js; «Última actualización: <la de los datos>», sin tocar` y la línea de `CODIGO`, y en el `diff`, solo `index.html` y `sw.js`. Si la vigente ya lleva la `z`, se para sin escribir nada.
+3. **Suites y los tres smoke**, en verde, y el commit `Publica Bn del rediseño «Acta»: versión <V>` con `index.html` y `sw.js`.
+4. **Empujar la rama, su CI y después `main`**: `git push origin rediseno-acta`, `gh workflow run tests.yml --ref rediseno-acta` y, con esa ejecución en verde, `git push origin rediseno-acta:main` (avance rápido). Cada push, sin ningún workflow en marcha (`gh run list --limit 5`). Si `main` avanzó mientras tanto, el push se rechaza: se vuelve al paso 1.
+5. **Comprobar la web** con el perfil de un móvil que tenía la versión anterior, apertura a apertura, como en el paso de publicar del plan.

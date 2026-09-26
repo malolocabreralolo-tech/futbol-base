@@ -89,6 +89,25 @@ def _size(path):
     return _png_header(data)[:2] if data[:8] == PNG_SIGNATURE else _jpeg_size(data)
 
 
+def _minimal_icc(colorspace):
+    """Un perfil ICC válido mínimo (sin tags) del espacio de color pedido (p.ej. b"GRAY", b"CMYK"): a
+    ImageCms.ImageCmsProfile le basta la cabecera para abrirlo y dar su xcolor_space."""
+    header = bytearray(128)
+    struct.pack_into(">I", header, 8, 0x02100000)  # versión 2.1.0
+    header[12:16] = b"prtr"
+    header[16:20] = colorspace
+    header[20:24] = b"XYZ "
+    header[36:40] = b"acsp"  # firma obligatoria de la cabecera ICC
+
+    def s15f16(value):
+        return struct.pack(">i", round(value * 65536))
+
+    header[68:72], header[72:76], header[76:80] = s15f16(0.9642), s15f16(1.0), s15f16(0.8249)  # iluminante D50
+    data = bytearray(bytes(header) + struct.pack(">I", 0))  # tabla de tags vacía
+    struct.pack_into(">I", data, 0, len(data))
+    return bytes(data)
+
+
 def _png_with_tag(tag):
     """Un PNG mínimo (1×1, con paleta) con el bloque tEXt «escudo», escrito sin Pillow."""
     def chunk(kind, body):
@@ -276,3 +295,57 @@ def test_build_turns_a_photo_as_its_exif_says(tmp_path):
     assert thumb.size == (40, 80)
     top, bottom = thumb.getpixel((20, 10)), thumb.getpixel((20, 70))
     assert top[2] > 150 > top[0] and bottom[0] > 150 > bottom[2], (top, bottom)
+
+
+def test_build_ignores_a_grayscale_icc_profile_instead_of_crashing(tmp_path, capsys):
+    # Un perfil de grises: profileToProfile no vale sobre RGBA con él (PyCMSError: cannot build transform).
+    # Se ignora (los valores tal cual, como si no lo trajera) y se avisa con el nombre del original.
+    Image = pytest.importorskip("PIL.Image")
+    (tmp_path / "escudos").mkdir()
+    buf = io.BytesIO()
+    Image.new("L", (10, 10), 128).save(buf, "PNG", icc_profile=_minimal_icc(b"GRAY"))
+    (tmp_path / "escudos" / "gris.png").write_bytes(buf.getvalue())
+    assert build_crests.main(["--root", str(tmp_path)]) == 0
+    assert "gris.png: perfil ICC GRAY (no RGB), se ignora" in capsys.readouterr().out
+    thumb = Image.open(tmp_path / "escudos" / "s" / "gris.png").convert("RGBA")
+    assert thumb.getpixel((0, 0)) == (128, 128, 128, 255)
+
+
+def test_build_ignores_a_cmyk_icc_profile_instead_of_crashing(tmp_path, capsys):
+    # Un JPEG CMYK con perfil CMYK: mismo caso que el de grises. Sin perfil, C=0 M=255 Y=255 K=0 da rojo.
+    Image = pytest.importorskip("PIL.Image")
+    (tmp_path / "escudos").mkdir()
+    buf = io.BytesIO()
+    Image.new("CMYK", (10, 10), (0, 255, 255, 0)).save(buf, "JPEG", icc_profile=_minimal_icc(b"CMYK"))
+    (tmp_path / "escudos" / "cmyk.jpg").write_bytes(buf.getvalue())
+    assert build_crests.main(["--root", str(tmp_path)]) == 0
+    assert "cmyk.jpg: perfil ICC CMYK (no RGB), se ignora" in capsys.readouterr().out
+    r, g, b, a = Image.open(tmp_path / "escudos" / "s" / "cmyk.png").convert("RGBA").getpixel((0, 0))
+    assert r > 200 > g and r > 200 > b and a == 255, (r, g, b, a)
+
+
+def test_build_scales_16_bit_grayscale_before_converting_instead_of_turning_white(tmp_path):
+    # Hoy convert("RGBA") sobre I;16 sale blanca sin avisar. Escalado a 8 bits antes, el gris queda su gris.
+    Image = pytest.importorskip("PIL.Image")
+    (tmp_path / "escudos").mkdir()
+    buf = io.BytesIO()
+    Image.new("I;16", (10, 10), 40000).save(buf, "PNG")
+    (tmp_path / "escudos" / "profundo.png").write_bytes(buf.getvalue())
+    assert build_crests.main(["--root", str(tmp_path)]) == 0
+    pixel = Image.open(tmp_path / "escudos" / "s" / "profundo.png").convert("RGBA").getpixel((0, 0))
+    assert pixel == (156, 156, 156, 255), pixel  # 40000 de 65535 escalado a 8 bits, no blanco
+
+
+def test_build_skips_a_broken_original_and_keeps_going(tmp_path, capsys):
+    # Un fichero que Pillow no abre no para el lote: los demás se escriben y main sale con 1.
+    Image = pytest.importorskip("PIL.Image")
+    (tmp_path / "escudos").mkdir()
+    (tmp_path / "escudos" / "roto.png").write_bytes(b"esto no es una imagen")
+    buf = io.BytesIO()
+    Image.new("RGB", (20, 20), (10, 20, 30)).save(buf, "PNG")
+    (tmp_path / "escudos" / "sano.png").write_bytes(buf.getvalue())
+    assert build_crests.main(["--root", str(tmp_path)]) == 1
+    out = capsys.readouterr().out
+    assert "no se pudo: roto.png" in out
+    assert (tmp_path / "escudos" / "s" / "sano.png").is_file()
+    assert not (tmp_path / "escudos" / "s" / "roto.png").is_file()

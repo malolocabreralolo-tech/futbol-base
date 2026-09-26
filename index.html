@@ -51,7 +51,7 @@
     // siempre (ronda de arreglos 1). Si el arranque falla, o si no hay SW al mando, la apertura
     // siguiente vuelve a intentarlo (decisión 155 de B3). Sin SW al mando no hay caché
     // de SW que limpiar, pero la caché HTTP de GitHub Pages (max-age=600) puede dar durante 10 minutos
-    // un módulo viejo a este app.js: lo decide B4 al versionar el grafo de módulos.
+    // un módulo viejo a este app.js: queda para B5 (B4 no versiona el grafo de módulos).
     // Si el arranque falla (sin conexión en plena transición, cuando esa caché ya guarda este
     // index.html pero no la hoja ni los módulos nuevos, o un módulo que no llega), un aviso con
     // estilos en línea y «Reintentar»: nunca «Cargando…» para siempre. Es texto fijo, sin datos.
@@ -112,7 +112,7 @@
     // every load. (Never unregister here: that re-installed the full ~500KB
     // precache on EVERY visit.)
     // Tras el evento load (Plan B4): con los datos en defer, este guion corre durante el análisis, y en la
-    // primera visita el precache del SW (unos 2 MB) competía con los datos y los módulos de la portada.
+    // primera visita el precache del SW (unos 450 KB con gzip) competía con los datos y los módulos de la portada.
     // Si load ya pasó, en seguida.
     if ('serviceWorker' in navigator) {
       const register = () => navigator.serviceWorker.register('./sw.js')

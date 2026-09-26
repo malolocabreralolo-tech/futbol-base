@@ -32,7 +32,7 @@ import generate_js  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 VERSION_RE = re.compile(r"\?v=(\d{8}[a-z]?)")
 FOOTER_RE = re.compile(r"Última actualización: \d{2}/\d{2}/\d{4}")
-CACHE_LINE_RE = re.compile(r"^const CACHE_NAME = 'futbolbase-v[0-9a-z]+';$")
+CACHE_LINE_RE = re.compile(r"^const CACHE_NAME = 'futbolbase-v([0-9a-z]+)';$")
 
 
 def next_publish_version(current, today_utc):
@@ -64,10 +64,14 @@ def main(argv=None):
     sw = (root / "sw.js").read_text(encoding="utf-8")
     marks = VERSION_RE.findall(index)
     footer = FOOTER_RE.findall(index)
-    if not marks or len(footer) != 1 or not CACHE_LINE_RE.match(sw.split("\n", 1)[0]) \
-            or len(codigo.CODIGO_RE.findall(index)) != 1:
+    cache_line = CACHE_LINE_RE.match(sw.split("\n", 1)[0])
+    if not marks or len(footer) != 1 or not cache_line or len(codigo.CODIGO_RE.findall(index)) != 1:
         print("index.html y sw.js tienen que llevar sus marcas: las ?v=, un «Última actualización», un CODIGO "
               "y CACHE_NAME en la línea 1 de sw.js: nada escrito")
+        return 1
+    if len(set(marks)) != 1 or cache_line.group(1) != marks[0]:
+        print(f"las ?v= de index.html tienen que ir todas iguales y coincidir con el CACHE_NAME de sw.js "
+              f"({sorted(set(marks))} vs. futbolbase-v{cache_line.group(1)}): nada escrito")
         return 1
     current = marks[0]
     try:

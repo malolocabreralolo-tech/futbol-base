@@ -126,6 +126,32 @@ def test_publicar_sube_las_marcas_y_codigo_sin_tocar_el_pie(tmp_path, monkeypatc
     ]
 
 
+def test_publicar_se_para_si_las_v_no_son_todas_iguales(tmp_path, monkeypatch, capsys):
+    # Una de las tres ?v= queda distinta de las otras dos (una fusión a medias, por ejemplo): la versión
+    # no puede salir solo de la primera sin comprobar que todas van iguales.
+    site = _tree(tmp_path, version="20260925b")
+    index = (site / "index.html").read_text(encoding="utf-8")
+    index = index.replace("data-seasons.js?v=20260925b", "data-seasons.js?v=20260925c", 1)
+    (site / "index.html").write_text(index, encoding="utf-8")
+    before = [(site / name).read_text(encoding="utf-8") for name in ("index.html", "sw.js")]
+    monkeypatch.setattr(publicar, "_today_utc", lambda: "20260925")
+    assert publicar.main(["--root", str(site)]) == 1
+    assert [(site / name).read_text(encoding="utf-8") for name in ("index.html", "sw.js")] == before
+    assert capsys.readouterr().out.strip().endswith(": nada escrito")
+
+
+def test_publicar_se_para_si_cache_name_no_coincide_con_las_v(tmp_path, monkeypatch, capsys):
+    # Las tres ?v= van iguales entre sí, pero el CACHE_NAME de sw.js quedó de otra versión.
+    site = _tree(tmp_path, version="20260925b")
+    sw = (site / "sw.js").read_text(encoding="utf-8")
+    (site / "sw.js").write_text(sw.replace("futbolbase-v20260925b", "futbolbase-v20260925c", 1), encoding="utf-8")
+    before = [(site / name).read_text(encoding="utf-8") for name in ("index.html", "sw.js")]
+    monkeypatch.setattr(publicar, "_today_utc", lambda: "20260925")
+    assert publicar.main(["--root", str(site)]) == 1
+    assert [(site / name).read_text(encoding="utf-8") for name in ("index.html", "sw.js")] == before
+    assert capsys.readouterr().out.strip().endswith(": nada escrito")
+
+
 def test_publicar_se_para_en_la_z_sin_escribir(tmp_path, monkeypatch, capsys):
     site = _tree(tmp_path, version="20260925z")
     before = [(site / name).read_text(encoding="utf-8") for name in ("index.html", "sw.js")]

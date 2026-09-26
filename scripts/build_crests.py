@@ -98,16 +98,26 @@ def survey(root):
 
 
 def make_thumbnail(original: Path, target: Path):
-    """Escribe la miniatura de `original` en `target` (con Pillow)."""
+    """Escribe la miniatura de `original` en `target` (con Pillow). `ImageCms.PyCMSError` y un original que
+    Pillow no abre suben tal cual: `main` los captura por fichero y sigue con los demás."""
     from PIL import Image, ImageCms, ImageOps, PngImagePlugin
 
     data = original.read_bytes()
     with Image.open(io.BytesIO(data)) as im:
         icc = im.info.get("icc_profile")
-        image = ImageOps.exif_transpose(im).convert("RGBA")
+        im = ImageOps.exif_transpose(im)
+        if im.mode in ("I", "I;16"):  # grises de 16 bits: a 8 bits antes de convertir, si no sale blanca
+            im = im.point(lambda v: v * (1 / 256)).convert("L")
+        image = im.convert("RGBA")
     if icc:
         source = ImageCms.ImageCmsProfile(io.BytesIO(icc))
-        image = ImageCms.profileToProfile(image, source, ImageCms.createProfile("sRGB"), outputMode="RGBA")
+        space = source.profile.xcolor_space.strip()
+        if space == "RGB":
+            image = ImageCms.profileToProfile(image, source, ImageCms.createProfile("sRGB"), outputMode="RGBA")
+        else:
+            # profileToProfile no vale sobre RGBA con un perfil que no sea RGB (PyCMSError: cannot build
+            # transform). Sin perfil, como si no lo trajera: los valores tal cual (ya está en RGBA de su modo).
+            print(f"{original.name}: perfil ICC {space} (no RGB), se ignora")
     size = thumb_size(*image.size)
     if size != image.size:
         image = image.resize(size, Image.Resampling.LANCZOS)
@@ -144,14 +154,22 @@ def main(argv=None) -> int:
     except ImportError:
         print("build_crests.py necesita Pillow: pip install Pillow")
         return 1
+    from PIL import ImageCms, UnidentifiedImageError
+    failed = 0
     for original, thumb, _ in state["pendientes"]:
-        make_thumbnail(original, thumb)
+        try:
+            make_thumbnail(original, thumb)
+        except (ImageCms.PyCMSError, UnidentifiedImageError) as exc:
+            print(f"no se pudo: {original.name}: {exc}")
+            failed += 1
+            continue
         print(f"escrita: {rel(thumb)}")
     for extra in state["sobran"]:
         extra.unlink()
         print(f"borrada: {rel(extra)}")
-    print(f"escudos/s: {len(state['pendientes'])} escritas, {state['al_dia']} al día, {len(state['sobran'])} borradas")
-    return 0
+    summary = f"escudos/s: {len(state['pendientes']) - failed} escritas, {state['al_dia']} al día, {len(state['sobran'])} borradas"
+    print(summary + (f", {failed} con error" if failed else ""))
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":

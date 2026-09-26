@@ -128,6 +128,13 @@ def test_update_gates_db_commit_on_published_changes():
 
 # ---------------------------------------------------------------- tests.yml
 
+def test_tests_yml_is_named_tests():
+    """El modo estricto de test_build_crests.py (sus 8 pruebas @LIVE, que se saltan dentro de un bot)
+    depende de que este workflow se llame exactamente «Tests»: ver _strict() en test_build_crests.py. Si
+    cambiara aquí sin cambiar allí, esas pruebas se saltarían en el CI sin avisar."""
+    assert _load("tests.yml").get("name") == "Tests"
+
+
 def test_tests_yml_has_schedule_and_dispatch():
     trig = _triggers(_load("tests.yml"))
     assert "workflow_dispatch" in trig, "tests.yml needs workflow_dispatch"

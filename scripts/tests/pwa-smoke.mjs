@@ -301,41 +301,70 @@ async function codeDeploy(browser) {
     whole('3.ª apertura sin conexión, «b» entera', o.seen, '"b"');
     await o.page.close();
     down = false;
-    // Se suelta la instalación del SW de «b»: toma el mando y borra la caché de «a». Se espera desde
-    // una página que el SW sirve de la red sin guardar nada (manifest.json), para que ninguna
-    // revalidación del SW de «a» toque su caché mientras «b» se activa; y, como la comprobación de la
-    // publicación, pidiendo la actualización en cada vuelta. Si no llega, el error dice cómo quedó: los
-    // SW en cada vuelta, las peticiones sin respuesta y las del servidor desde que se soltó.
+    // Se suelta la instalación del SW de «b»: toma el mando y borra la caché de «a».
+    //  - Si una página abierta le pide algo al SW de «a» justo cuando «b» queda instalado, Chrome vuelve
+    //    a arrancar el de «a» y no activa «b» (skipWaiting) mientras esa página siga abierta. En CI le
+    //    pasaba a la página de espera con su favicon.ico, en 1 de cada 3 pasadas; en local, con la
+    //    petición lanzada a propósito, 3 de 3, con Chrome 150 y con 153. En la app, «b» manda desde que
+    //    se cierra y se vuelve a abrir, y cada apertura es entera de una versión (CODIGO).
+    //  - Así que la carrera se provoca a propósito, con una página que se cierra después, y se espera
+    //    como quien abre la app y la cierra: una página nueva en cada vuelta, que se cierra en seguida.
+    //  - La página es manifest.json, que el SW sirve de la red sin guardar nada: ninguna revalidación
+    //    del SW de «a» toca su caché mientras «b» se activa. Y, como la comprobación de la
+    //    publicación, se pide la actualización en cada vuelta.
+    // Si no llega, el error dice cómo quedó: los SW en cada vuelta, las peticiones sin respuesta y las
+    // del servidor desde que se soltó.
     const releasedAt = requests.length;
     release();
-    const probe = await context.newPage();
-    await probe.goto(home.replace(/index\.html$/, 'manifest.json'));
-    await probe.evaluate(() => { window.estadosSW = []; window.inicioSW = performance.now(); });
-    const workers = () => probe.evaluate(async () => {
-      const registration = await navigator.serviceWorker.getRegistration();
-      return { caches: await caches.keys(), installing: registration?.installing?.state ?? null, waiting: registration?.waiting?.state ?? null,
-        active: registration?.active?.state ?? null, controlled: !!navigator.serviceWorker.controller, vueltas: window.estadosSW };
-    });
-    await waitForAsync(probe, async (name) => {
-      const registration = await navigator.serviceWorker.getRegistration();
-      try { await registration?.update(); } catch { /* ya se está instalando */ }
-      const keys = await caches.keys();
+    const probeUrl = home.replace(/index\.html$/, 'manifest.json');
+    const racer = await context.newPage();
+    await racer.goto(probeUrl);
+    await racer.evaluate(() => new Promise((resolve) => {
+      const race = () => {
+        for (let i = 0; i < 3; i += 1) setTimeout(() => fetch(`favicon.ico?carrera=${i}`).catch(() => {}), i * 5);
+        setTimeout(resolve, 1000);
+      };
+      navigator.serviceWorker.getRegistration().then((registration) => {
+        if (registration?.waiting) race();
+        else if (registration?.installing) registration.installing.addEventListener('statechange', (event) => { if (event.target.state === 'installed') race(); });
+        else resolve();
+      });
+    }));
+    await racer.close();
+    const states = [];
+    const waitStart = Date.now();
+    const look = async () => {
+      const page = await context.newPage();
+      try {
+        await page.goto(probeUrl);
+        return await page.evaluate(async () => {
+          const registration = await navigator.serviceWorker.getRegistration();
+          try { await registration?.update(); } catch { /* ya se está instalando */ }
+          return { caches: await caches.keys(), installing: registration?.installing?.state ?? null, waiting: registration?.waiting?.state ?? null,
+            active: registration?.active?.state ?? null, controlled: !!registration?.active && navigator.serviceWorker.controller === registration.active };
+        });
+      } finally {
+        await page.close();
+      }
+    };
+    for (;;) {
+      // Una navegación que falla en una vuelta cuenta como «todavía no», con su error en los estados.
+      const seen = await look().catch((error) => ({ caches: [], installing: null, waiting: null, active: null, controlled: false,
+        error: error.message.split('\n')[0] }));
       // Cada cambio de estado de los SW, con los ms desde que empezó la espera.
-      const state = [registration?.installing?.state, registration?.waiting?.state, registration?.active?.state,
-        navigator.serviceWorker.controller === registration?.active, keys.length].join('/');
-      if (window.estadosSW.at(-1)?.endsWith(` ${state}`) !== true) window.estadosSW.push(`${Math.round(performance.now() - window.inicioSW)}ms ${state}`);
-      return keys.length === 1 && keys[0] === name && registration?.active?.state === 'activated'
-        && navigator.serviceWorker.controller === registration.active;
-    }, `futbolbase-v${CODE_B}`, { timeout: 30000, interval: 500, label: 'despliegue de código, el SW de «b» al mando' })
-      .catch(async (error) => {
+      const state = [seen.installing, seen.waiting, seen.active, seen.controlled, seen.caches.length, seen.error ?? ''].join('/');
+      if (states.at(-1)?.endsWith(` ${state}`) !== true) states.push(`${Date.now() - waitStart}ms ${state}`);
+      if (seen.caches.length === 1 && seen.caches[0] === `futbolbase-v${CODE_B}` && seen.active === 'activated' && seen.controlled) break;
+      if (Date.now() - waitStart >= 30000) {
         // Sin las comprobaciones de sw.js de cada vuelta, que taparían el resto.
         const since = requests.slice(releasedAt);
         const others = since.filter((line) => !line.endsWith(' /sw.js'));
-        throw new Error(`${error.message.split('\n')[0]}: ${JSON.stringify(await workers())}\n`
+        throw new Error(`despliegue de código, el SW de «b» al mando: condition not met after 30000ms: ${JSON.stringify({ ...seen, vueltas: states })}\n`
           + `sin respuesta (${pending.size}): ${JSON.stringify([...pending.values()])}\n`
           + `peticiones desde que se soltó «b» (y ${(since.length - others.length) / 2} comprobaciones de sw.js):\n  ${others.slice(0, 150).join('\n  ')}`);
-      });
-    await probe.close();
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
     // Con el SW de «b» al mando desde la navegación: «b» entera.
     o = await open('despliegue de código, con el SW de «b»');
     whole('con el SW de «b»', o.seen, '"b"');

@@ -211,9 +211,14 @@ async function main(argv) {
   const chrome = findChrome();
   if (!chrome) throw new Error('no hay Chrome: CHROME=/ruta/de/chrome');
   const { chromium } = createRequire(import.meta.url)('playwright');
-  const server = await startPagesServer(ROOT);
-  const browser = await chromium.launch({ executablePath: chrome, headless: true, args: ['--no-sandbox'] });
+  // server y browser se crean dentro del try: si chromium.launch() falla (binario roto, sandbox
+  // denegado…) el servidor ya arrancado no debe quedar abierto colgando el proceso. Cada cierre se
+  // hace solo si llegó a crearse, y su fallo no debe tapar el error original del try (o su resultado).
+  let server = null;
+  let browser = null;
   try {
+    server = await startPagesServer(ROOT);
+    browser = await chromium.launch({ executablePath: chrome, headless: true, args: ['--no-sandbox'] });
     const site = args.web || server.url;
     console.log(`sitio: ${args.web || 'el árbol, con pages-server.mjs'}; el CLS, en local con el mundo A`);
     const home = await measureHome(browser, site, args.runs);
@@ -223,8 +228,8 @@ async function main(argv) {
     for (const line of lines) console.log(line);
     return ok ? 0 : 1;
   } finally {
-    await browser.close();
-    await server.close();
+    if (browser) await browser.close().catch(() => {});
+    if (server) await server.close().catch(() => {});
   }
 }
 

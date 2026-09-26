@@ -2,10 +2,12 @@
 // informe de presupuesto.mjs, sin navegador y sin medir tiempos (el guion mide; estas pruebas, no).
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
+import { spawnSync } from 'node:child_process';
 import { request } from 'node:http';
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 import { startPagesServer } from './pages-server.mjs';
 import { LIMITS, median, parseArgs, report } from './presupuesto.mjs';
@@ -109,4 +111,22 @@ test('presupuesto: argumentos, mediana y el informe con sus umbrales (spec §5.4
     assert.equal(ok, false, JSON.stringify(worse));
     assert.equal(lines.at(-1), 'PRESUPUESTO: MAL');
   }
+});
+
+// Regresión: si Chrome no arranca (CHROME apunta a un camino que no existe; findChrome() lo devuelve
+// tal cual porque empieza por «/», sin comprobar que exista), presupuesto.mjs tiene que salir con 2 en
+// seguida, sin dejar el servidor de pages-server.mjs abierto colgando el proceso. spawnSync con
+// `timeout` es la red de seguridad: si el guion volviera a colgarse, esta prueba fallaría (la señal no
+// sería null) en vez de colgar toda la suite. Sin navegador de verdad: chromium.launch() falla al
+// comprobar el binario, antes de tocar la red.
+test('presupuesto: sin Chrome que arranque, sale con 2 en seguida y no deja el servidor abierto', () => {
+  const bin = fileURLToPath(new URL('./presupuesto.mjs', import.meta.url));
+  const run = spawnSync(process.execPath, [bin], {
+    env: { ...process.env, CHROME: '/no/existe/chrome' },
+    encoding: 'utf8',
+    timeout: 15000,
+  });
+  assert.equal(run.signal, null, `no debería seguir vivo a los 15 s: ${run.stdout}${run.stderr}`);
+  assert.equal(run.status, 2, `stdout: ${run.stdout}\nstderr: ${run.stderr}`);
+  assert.match(run.stderr, /PRESUPUESTO: sin medir:/);
 });

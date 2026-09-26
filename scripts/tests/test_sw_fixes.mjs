@@ -248,3 +248,17 @@ test('only the active cache is read; exact URLs precede unversioned precache', a
   assert.equal(await worker.matchIgnoringVersion('https://example.test/index.html?v=new'), 'precache response');
   assert.deepEqual(calls, [false, true]);
 });
+
+// ─── 6. activate: solo las cachés de esta app (decisión 8 de B4) ────────────
+test('activate solo borra las cachés futbolbase-v* de otras versiones: el origen es compartido (decisión 8 de B4)', async () => {
+  // malolocabreralolo-tech.github.io lo comparte otro proyecto de la cuenta: sus cachés no se tocan.
+  const deleted = [];
+  const worker = loadSw({ caches: {
+    keys: async () => ['futbolbase-v20250101', sw.CACHE_NAME, 'futbolbase-v20991231z', 'otro-proyecto-v1', 'workbox-precache-v2', 'futbolbase'],
+    delete: async (name) => { deleted.push(name); return true; },
+  } });
+  let done;
+  worker.listeners.activate({ waitUntil: (promise) => { done = promise; } });
+  await done;
+  assert.deepEqual(deleted.sort(), ['futbolbase-v20250101', 'futbolbase-v20991231z']);
+});

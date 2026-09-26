@@ -168,6 +168,45 @@ def test_tests_yml_pytest_installs_pyyaml():
     )
 
 
+def test_tests_yml_paths_cover_fonts_icons_and_crests():
+    """Plan B4 (spec §5.5): un cambio que solo toque la fuente, los iconos o los escudos corre las
+    pruebas que los miran (test_rediseno_assets, test_build_icons, test_build_crests y el precache de
+    test_sw_fixes)."""
+    trig = _triggers(_load("tests.yml"))
+    for event in ("push", "pull_request"):
+        paths = trig[event]["paths"]
+        for wanted in ("fonts/**", "icons/**", "escudos/**"):
+            assert wanted in paths, f"{event} paths must include {wanted}"
+
+
+# La versión mayor más baja de cada acción que corre en Node 24, según sus notas de versión (plan B4,
+# decisiones 12 y 55): checkout v5.0.0 («Update actions checkout to use node 24»), setup-python v6.0.0
+# («Upgrade to node 24») y setup-node v5.0.0 («Upgrade action to use node24»). Otra acción, u otra
+# versión, se comprueba antes en sus notas y se apunta aquí. En tests.yml y en update.yml, el bot, que
+# empuja data-health.json varias veces al día y ejerce el cambio en horas; los demás workflows, en B5.
+NODE24 = {"actions/checkout": "v5", "actions/setup-python": "v6", "actions/setup-node": "v5"}
+
+
+@pytest.mark.parametrize("name", ["tests.yml", "update.yml"])
+def test_actions_run_on_node24(name):
+    data = _load(name)
+    uses = [step["uses"] for job in data["jobs"].values() for step in job["steps"] if "uses" in step]
+    assert uses, f"{name} sin acciones"
+    for ref in uses:
+        action, _, version = ref.partition("@")
+        assert NODE24.get(action) == version, f"{name}, {ref}: en Node 24 va {action}@{NODE24.get(action, '?')}"
+
+
+# La imagen de los runners, fijada en todos los workflows (plan B4, decisión 55): ubuntu-latest pasa a
+# Ubuntu 26 el 19/10/2026, y el bot, con el Python 3.11 de setup-python, podría quedarse sin él. Una
+# imagen nueva se prueba antes y se cambia aquí y en los workflows a la vez.
+def test_every_workflow_pins_its_runner_image():
+    workflows = sorted(WF_DIR.glob("*.yml"))
+    wrong = {f"{path.name} {job}": spec.get("runs-on")
+             for path in workflows for job, spec in _load(path.name)["jobs"].items() if spec.get("runs-on") != "ubuntu-24.04"}
+    assert len(workflows) >= 10 and wrong == {}, wrong
+
+
 # ----------------------------------------------------------- fetch-fiflp.yml
 
 def test_fetch_fiflp_stages_globs_in_both_add_sites():

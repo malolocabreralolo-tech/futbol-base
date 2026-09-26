@@ -31,7 +31,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   scrape:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4

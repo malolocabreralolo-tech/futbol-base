@@ -153,10 +153,14 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
+// Solo las cachés de esta app (futbolbase-v*) de otras versiones: el origen
+// (malolocabreralolo-tech.github.io) lo comparte otro proyecto de la cuenta, y
+// sus cachés no se tocan (decisión 8 de B4). La limpieza del arranque de
+// index.html se limita a lo mismo.
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+      Promise.all(keys.filter(k => k.startsWith('futbolbase-v') && k !== CACHE_NAME).map(k => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });

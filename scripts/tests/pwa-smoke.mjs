@@ -15,6 +15,7 @@
 // con conexión abre la app nueva. Con el SW nuevo activo, la app nueva funciona sin conexión: la
 // portada, Jornada y el buscador de Explorar (B3), con los datos precacheados.
 // Después, un segundo escenario: un despliegue de código sobre el SW de la propia rama (codeDeploy).
+// En los dos, ni la app nueva ni su SW piden los datos que B4 retiró (decisión 3 de B4).
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -59,15 +60,16 @@ const FROZEN = (() => {
     'data-prebenjamin.js': js([['PREBENJAMIN', raw.prebenjamin]]),
     'data-history.js': js([['HISTORY', raw.history]]),
     'data-goleadores.js': js([['GOL_BENJ', []], ['GOL_PREBENJ', []]]),
-    'data-matchdetail-keys.js': js([['MATCH_DETAIL_KEYS', {}]]),
     'data-shields.js': js([['SHIELDS', fixture('shields')]]),
-    'data-stats.js': js([['STATS', {}]]),
     'data-seasons.js': js([['SEASONS', [{ name: '2025-2026', current: true }, { name: '2024-2025', current: false }]]]),
     'data-maspalomas-cup-2026.js': js([['MASPALOMAS_CUP_BENJAMIN', cups.benjamin], ['MASPALOMAS_CUP_PREBENJAMIN', cups.prebenjamin]]),
     'data-season-2024-2025.js': js([['SEASON_2024_2025', { name: '2024-2025', current: false, benjamin: past.benjamin, prebenjamin: past.prebenjamin }]]),
     'data-matchdetail.js': js([['MATCH_DETAIL', fixture('matchdetail')]]),
     'data-lineups-2025-2026.js': js([['LINEUPS_2025_2026', fixture('lineups-2025-2026')]]),
     'data-health.json': { type: 'application/json', body: JSON.stringify(fixture('health')) },
+    // Solo para la app anterior: su index.html los nombra y su SW los precachea (B4 los retiró).
+    'data-matchdetail-keys.js': js([['MATCH_DETAIL_KEYS', {}]]),
+    'data-stats.js': js([['STATS', {}]]),
   };
 })();
 function frozen(file) {
@@ -77,6 +79,12 @@ function frozen(file) {
   if (kind === 'players') return js([[`PLAYERS_${from}_${to}`, {}], [`TEAMS_${from}_${to}`, {}]]);
   return null;
 }
+// Los datos que B4 retiró (decisiones 1 y 3 de B4). Solo los pide la app anterior (su index.html los
+// nombra, su SW los precachea y su portada pide las fichas de jugadores), y el mundo se los sigue
+// sirviendo; la app nueva y su SW, nunca. Cada petición se apunta con su ?v=: las del SW nuevo, y las
+// de la app nueva con él al mando, llevan la versión publicada.
+const RETIRED = /^data-(matchdetail-keys|stats|players-\d{4}-\d{4})\.js$/;
+const retiredAsked = [];
 
 // De qué versión es lo que sirvió una apertura: la anterior, la nueva, igual en las dos o ninguna.
 function generation(file, body) {
@@ -99,6 +107,7 @@ const failing = new Set();   // actualizaciones en segundo plano del SW anterior
 const proxy = createServer(async (req, res) => {
   const url = new URL(req.url, 'http://portal.test');
   const file = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.slice(1));
+  if (RETIRED.test(file)) retiredAsked.push(`${file}?v=${url.searchParams.get('v')}`);
   const fromWorker = req.headers['sec-fetch-dest'] === 'empty';
   const isConfig = file === 'src/config.js';
   const isDocument = file === 'index.html';
@@ -192,6 +201,7 @@ async function codeDeploy(browser) {
   const requests = [];
   const pending = new Map();
   let lastRequest = 0;
+  const retired = [];        // las peticiones de datos retirados: ninguna, las dos versiones son la app nueva
   // El código de cada versión: el del árbol con sus marcas y, en «b», el cambio de exportaciones y la marca.
   const code = (file) => {
     if (!(file === 'index.html' || file === 'sw.js' || file === 'acta.css' || /^src\/[^/]+\.js$/.test(file))) return null;
@@ -217,6 +227,7 @@ async function codeDeploy(browser) {
     });
     const url = new URL(req.url, 'http://portal.test');
     const file = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.slice(1));
+    if (RETIRED.test(file)) retired.push(req.url);
     if (down) { req.socket.destroy(); return; }
     const fromWorker = req.headers['sec-fetch-dest'] === 'empty';
     const v = url.searchParams.get('v');
@@ -369,7 +380,8 @@ async function codeDeploy(browser) {
     o = await open('despliegue de código, con el SW de «b»');
     whole('con el SW de «b»', o.seen, '"b"');
     await o.page.close();
-    console.log('PASS: despliegue de código sobre el SW de la rama: la 1.ª apertura es la versión anterior; la 2.ª, con su revalidación de state.js fallida, y la 3.ª, sin conexión, la nueva entera (su hoja y sus módulos, sin el aviso del arranque); con el SW nuevo, también');
+    assert.deepEqual(retired, [], 'despliegue de código: la app nueva pide datos retirados (decisión 3 de B4)');
+    console.log('PASS: despliegue de código sobre el SW de la rama: la 1.ª apertura es la versión anterior; la 2.ª, con su revalidación de state.js fallida, y la 3.ª, sin conexión, la nueva entera (su hoja y sus módulos, sin el aviso del arranque); con el SW nuevo, también, y sin pedir datos retirados');
   } finally {
     release();
     await context.close();
@@ -512,7 +524,11 @@ try {
   await page.locator('#resultados a.search-result[href="#/equipo?s=2025-2026&g=PG2&t=AD%20Hurac%C3%A1n"]').waitFor();
   assert.equal(await page.locator('#contenido .error-box').count(), 0, 'Explorar sin conexión: sin cajas de error');
   assert.deepEqual(errors, []);
-  console.log(`PASS: de la app anterior (su SW real) al rediseño, con datos congelados: la 1.ª apertura es la anterior; sin conexión a medias, el aviso con «Reintentar»; la 2.ª y la 3.ª, la nueva con acta.css y sin mezclar módulos; con ${expected}, la portada, Jornada y el buscador de Explorar funcionan sin conexión`);
+  // Los datos retirados (decisión 3 de B4): la app anterior los pide y el mundo se los da; ni el SW
+  // nuevo ni la app nueva con él al mando piden ninguno (llevarían la versión publicada).
+  assert.ok(retiredAsked.some((asked) => asked.endsWith(`?v=${OLD_VERSION}`)), `la app anterior pide sus datos: ${JSON.stringify(retiredAsked)}`);
+  assert.deepEqual(retiredAsked.filter((asked) => asked.endsWith(`?v=${PUBLISHED}`)), [], 'la app nueva pide datos retirados');
+  console.log(`PASS: de la app anterior (su SW real) al rediseño, con datos congelados: la 1.ª apertura es la anterior; sin conexión a medias, el aviso con «Reintentar»; la 2.ª y la 3.ª, la nueva con acta.css y sin mezclar módulos; con ${expected}, la portada, Jornada y el buscador de Explorar funcionan sin conexión, y ni la app nueva ni su SW piden los datos retirados`);
   await context.close();
   await codeDeploy(browser);
 } finally {

@@ -12,7 +12,7 @@ Guards the CI contracts fixed on 2026-06-11:
    new suites (e.g. test_sp2_modules.mjs) are picked up automatically.
 3. Every workflow that runs scripts/generate_js.py stages ALL of its
    outputs: `data-*.js` glob (covers data-seasons.js, data-season-*.js,
-   data-matchdetail-keys.js, future files), plus index.html, sw.js
+   data-lineups-*.js, future files), plus index.html, sw.js
    (CACHE_NAME bump, contracts C3/C4) and futbolbase.db.
 
 Static YAML checks only — no network, no workflow execution.

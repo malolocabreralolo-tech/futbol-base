@@ -70,7 +70,7 @@ jobs:
           git config user.name  "GitHub Actions"
           git config user.email "actions@github.com"
           # generate_js.py reescribe TODOS los data-*.js (incl.
-          # data-matchdetail-keys.js, data-seasons.js, data-season-*.js),
+          # data-seasons.js, data-season-*.js y data-lineups-*.js),
           # bumpea ?v= en index.html y CACHE_NAME en sw.js: glob estable en
           # vez de lista frágil, idéntico en los dos sitios de git add.
           # En scrape_only solo cambia el raw (import/generate saltados) -> git

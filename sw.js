@@ -58,9 +58,7 @@ const STATIC_ASSETS = [
   './data-prebenjamin.js',
   './data-history.js',
   './data-goleadores.js',
-  './data-matchdetail-keys.js',
   './data-shields.js',
-  './data-stats.js',
   './data-seasons.js',
   './data-maspalomas-cup-2026.js',
 ];

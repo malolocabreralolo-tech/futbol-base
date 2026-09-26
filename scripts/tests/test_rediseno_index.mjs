@@ -10,6 +10,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tabbar } from '../../src/ui.js';
+import { WORLDS, worldFiles } from './fixture-site.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const INDEX = readFileSync(join(ROOT, 'index.html'), 'utf8');
@@ -24,12 +25,11 @@ test('esqueleto: saltar al contenido, cabecera, la barra de ui.tabbar y main#con
   assert.doesNotMatch(INDEX, /<h1\b/, 'el h1 lo pone cada pantalla');
 });
 
-test('datos inmediatos: los nueve data-*.js de antes, en el mismo orden (decisión 5), y después el arranque', () => {
+test('datos inmediatos: los siete que lee la portada, en el orden de antes (decisión 5 de B2; B4, decisión 1), y después el arranque', () => {
   const scripts = [...INDEX.matchAll(/<script\b[^>]*\bsrc="\.\/([^"?]+)\?v=\d{8}[a-z]?"[^>]*><\/script>/g)].map((m) => m[1]);
   assert.deepEqual(scripts, [
     'data-benjamin.js', 'data-prebenjamin.js', 'data-history.js', 'data-goleadores.js',
-    'data-matchdetail-keys.js', 'data-shields.js', 'data-stats.js', 'data-seasons.js',
-    'data-maspalomas-cup-2026.js',
+    'data-shields.js', 'data-seasons.js', 'data-maspalomas-cup-2026.js',
   ]);
   // app.js no se arranca al importarse: index.html lo importa (versionado, como los datos) y llama a start.
   const boot = INDEX.match(/<script type="module">[\s\S]*?<\/script>/);
@@ -103,4 +103,19 @@ test('CODIGO es la huella del código del árbol: src/*.js y acta.css (scripts/c
   for (const file of files) hash.update(Buffer.concat([Buffer.from(`${file}\0`), readFileSync(join(ROOT, file)), Buffer.from('\0')]));
   assert.equal((INDEX.match(/const CODIGO = '([0-9a-f]{8})';/) || [])[1], hash.digest('hex').slice(0, 8),
     'CODIGO desfasado: ejecuta python3 scripts/codigo.py');
+});
+
+// B4 (decisiones 1 y 3): data-matchdetail-keys.js, data-stats.js y data-players-<S>.js ya no los lee
+// nadie (el ⚽ de las listas se fue con la app anterior, Récords sale del modelo y la plantilla, de las
+// actas) y el generador ya no los escribe (su prueba, en test_pygen_fixes.py). Si volvieran, cada carga
+// en frío los descargaría para nada. Una fusión con main que se quede con los que el bot regeneró
+// antes de publicar B4 también sale aquí.
+const RETIRED = /data-(?:matchdetail-keys|stats|players-\d{4}-\d{4})\.js/;
+test('los datos retirados en B4 no vuelven: ni en index.html, ni en sw.js, ni en el repositorio, ni en los mundos de las pruebas', () => {
+  assert.doesNotMatch(INDEX, RETIRED);
+  assert.doesNotMatch(readFileSync(join(ROOT, 'sw.js'), 'utf8'), RETIRED);
+  assert.deepEqual(readdirSync(ROOT).filter((file) => RETIRED.test(file)), []);
+  for (const name of Object.keys(WORLDS)) {
+    assert.deepEqual(Object.keys(worldFiles(name)).filter((file) => RETIRED.test(file)), [], `mundo ${name}`);
+  }
 });

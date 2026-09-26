@@ -39,7 +39,8 @@ def test_bump_cache_version_sube_todas_las_marcas_y_nada_mas(site):
     assert len(versions) == 1, versions
     (version,) = versions
     assert version.startswith(date.today().strftime("%Y%m%d"))
-    assert len(VERSION_RE.findall(after)) == len(VERSION_RE.findall(before)) >= 11
+    # Las 9 de B4 (decisión 1): la hoja, los 7 datos inmediatos y el import de app.js.
+    assert len(VERSION_RE.findall(after)) == len(VERSION_RE.findall(before)) == 9
     assert f"Última actualización: {date.today().strftime('%d/%m/%Y')}" in after
 
     def neutral(text):

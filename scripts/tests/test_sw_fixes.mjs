@@ -98,11 +98,14 @@ test('cada entrada de STATIC_ASSETS existe en el repositorio', () => {
   }
 });
 
-test('invariant: data-matchdetail.js lazy (not precached), keys file eager', () => {
+// Los data-*.js del precache son exactamente los inmediatos de index.html, en su orden (spec §5.5): ni
+// falta uno (la primera apertura sin conexión saldría sin él) ni sobra uno (B4 retiró los que ya no
+// lee nadie, decisión 1). data-matchdetail.js es perezoso: nunca en el precache.
+test('invariant: los data-*.js de STATIC_ASSETS son los inmediatos de index.html; data-matchdetail.js, perezoso, no', () => {
+  const eager = [...idxSrc.matchAll(/<script\b[^>]*\bsrc="(\.\/data-[\w.-]+\.js)\?v=[0-9a-z]+"/g)].map((m) => m[1]);
+  assert.deepEqual([...sw.STATIC_ASSETS].filter((url) => /^\.\/data-[\w.-]+\.js$/.test(url)), eager);
   assert.ok(!sw.STATIC_ASSETS.includes('./data-matchdetail.js'),
     'data-matchdetail.js must NOT be precached');
-  assert.ok(sw.STATIC_ASSETS.includes('./data-matchdetail-keys.js'),
-    'data-matchdetail-keys.js must be precached');
 });
 
 // ─── 2. strategy: SWR reachable for data-*.js, cache-first for the rest ───

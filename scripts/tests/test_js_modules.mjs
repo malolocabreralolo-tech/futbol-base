@@ -28,11 +28,9 @@ function loadDataFile(filename) {
     'SEASON_2021_2022', 'SEASON_2022_2023', 'SEASON_2023_2024',
     'SEASON_2024_2025', 'SEASON_2025_2026',
     'GOL_BENJ', 'GOL_PREBENJ',
-    'MATCH_DETAIL', 'MATCH_DETAIL_KEYS',
+    'MATCH_DETAIL',
     'LINEUPS_2021_2022', 'LINEUPS_2022_2023', 'LINEUPS_2023_2024',
     'LINEUPS_2024_2025', 'LINEUPS_2025_2026',
-    'PLAYERS_2021_2022', 'PLAYERS_2022_2023', 'PLAYERS_2023_2024',
-    'PLAYERS_2024_2025', 'PLAYERS_2025_2026',
   ];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
@@ -170,34 +168,15 @@ test('state.js exports a single-flight ensureMatchDetail loader', () => {
     'must not use globalThis/window for matchdetail');
 });
 
-// wiring: eager keys file, lazy heavy file, sw not precaching the heavy one
+// wiring: the heavy file is lazy (neither eager, with or without defer, nor precached); its keys file,
+// data-matchdetail-keys.js, went in B4 (decisión 1): the ⚽ badge left with the previous app.
 test('index.html + sw.js wired for lazy matchdetail', () => {
   const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
   const sw = readFileSync(join(ROOT, 'sw.js'), 'utf8');
-  assert.ok(/<script src="\.\/data-matchdetail-keys\.js\?v=/.test(idx),
-    'index.html must eager-load data-matchdetail-keys.js');
-  assert.ok(!/<script src="\.\/data-matchdetail\.js\?v=/.test(idx),
+  assert.ok(!/<script\b[^>]*\bsrc="\.\/data-matchdetail\.js\?v=/.test(idx),
     'index.html must NOT eager-load the heavy data-matchdetail.js');
   assert.ok(!/['"]\.\/data-matchdetail\.js['"]/.test(sw),
     'sw.js STATIC_ASSETS must not precache data-matchdetail.js');
-  assert.ok(/['"]\.\/data-matchdetail-keys\.js['"]/.test(sw),
-    'sw.js must precache data-matchdetail-keys.js');
-});
-
-// build invariant: keys index == exactly the matches with a goal timeline
-test('data-matchdetail-keys.js exactly mirrors keys with goal timelines', () => {
-  const { MATCH_DETAIL } = loadDataFile('data-matchdetail.js');
-  const { MATCH_DETAIL_KEYS } = loadDataFile('data-matchdetail-keys.js');
-  assert.ok(MATCH_DETAIL && typeof MATCH_DETAIL === 'object', 'MATCH_DETAIL object');
-  assert.ok(MATCH_DETAIL_KEYS && typeof MATCH_DETAIL_KEYS === 'object',
-    'MATCH_DETAIL_KEYS object');
-  const expected = Object.keys(MATCH_DETAIL)
-    .filter(k => MATCH_DETAIL[k] && MATCH_DETAIL[k].g && MATCH_DETAIL[k].g.length > 0)
-    .sort();
-  const got = Object.keys(MATCH_DETAIL_KEYS).sort();
-  assert.deepEqual(got, expected);
-  assert.ok(got.length > 0, 'expected a non-empty key set');
-  for (const k of got) assert.ok(MATCH_DETAIL_KEYS[k], `truthy value for ${k}`);
 });
 
 // ensurePlayers se fue en la revisión final de B2 (M5): la plantilla sale de LINEUPS (spec §4.6).
@@ -214,28 +193,24 @@ test('state.js exports ensureLineups (SP-2)', () => {
   }
 });
 
-// ─── data-lineups-*.js / data-players-*.js invariants ─────────────────────
+// ─── data-lineups-*.js invariants ──────────────────────────────────────────
 // SP-1 actas data files. Tests only run when at least one season has been
 // scraped + imported + generated (the files exist in the repo). Skipped
-// otherwise so the suite stays green before the first scrape.
-import { readdirSync, existsSync } from 'node:fs';
+// otherwise so the suite stays green before the first scrape. B4 (decisión 1)
+// retired data-players-*.js: the squad comes from LINEUPS (spec §4.6).
+import { readdirSync } from 'node:fs';
 
 test('actas data files: lineups events reference players in the same match', () => {
   const files = readdirSync(ROOT).filter(f => /^data-lineups-\d{4}-\d{4}\.js$/.test(f));
   if (files.length === 0) { console.log('  (skip: no data-lineups-*.js files yet)'); return; }
   for (const f of files) {
     const season = f.match(/data-lineups-(\d{4}-\d{4})\.js/)[1];
-    const playersFile = `data-players-${season}.js`;
-    assert.ok(existsSync(join(ROOT, playersFile)), `${playersFile} must exist alongside ${f}`);
     const linVar = `LINEUPS_${season.replace('-', '_')}`;
-    const plaVar = `PLAYERS_${season.replace('-', '_')}`;
     const Lin = loadDataFile(f)[linVar];
     // Una temporada que la lista de loadDataFile aún no conoce (p. ej.
     // data-lineups-2026-2027.js al activarla) se salta en vez de bloquear al bot.
     if (!Lin) continue;
-    const Pla = loadDataFile(playersFile)[plaVar];
     assert.ok(Lin && typeof Lin === 'object', `${linVar} must load`);
-    assert.ok(Pla && typeof Pla === 'object', `${plaVar} must load`);
     // Invariant 1: every event in LINEUPS references a player in the same match's lineup
     // Una clave repetida ({dup:true, list}) se comprueba partido a partido.
     const partidos = Object.entries(Lin).flatMap(([k, v]) => entriesOf(v).map(e => [k, e]));
@@ -251,18 +226,6 @@ test('actas data files: lineups events reference players in the same match', () 
         for (const name of [ev.n, ev.n2].filter(Boolean)) {
           assert.ok(pool.has(name), `${f} ${matchKey}: event "${ev.t}" refs unknown player "${name}" (side=${ev.s})`);
         }
-      }
-    }
-    // Invariant 2: every team_id in PLAYERS has a well-formed roster array
-    for (const [tid, list] of Object.entries(Pla)) {
-      assert.ok(Array.isArray(list) && list.length > 0, `${plaVar} team ${tid} must have a non-empty list`);
-      for (const pl of list) {
-        assert.equal(typeof pl.n, 'string', `${plaVar} ${tid} player n must be string: ${JSON.stringify(pl)}`);
-        for (const k of ['ap', 'st', 'g', 'y', 'rd']) {
-          assert.equal(typeof pl[k], 'number', `${plaVar} ${tid} player ${pl.n}: ${k} must be number`);
-          assert.ok(pl[k] >= 0, `${plaVar} ${tid} player ${pl.n}: ${k} >= 0`);
-        }
-        assert.ok(pl.st <= pl.ap, `${plaVar} ${tid} ${pl.n}: starters <= appearances`);
       }
     }
   }

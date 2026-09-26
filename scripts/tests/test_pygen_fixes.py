@@ -107,44 +107,6 @@ class TestTeamsMappingNormalization:
         assert normalize_for_teams_mapping("") == ""
         assert normalize_for_teams_mapping(None) == ""
 
-    def test_real_db_no_collisions_any_season(self, tmp_path):
-        """Cada equipo con appearances conserva su clave en TEAMS_<S> en TODAS
-        las temporadas de la DB real (cero colisiones, mapeo inyectivo)."""
-        if not os.path.exists(DB_PATH):
-            pytest.skip("futbolbase.db not present")
-        from scripts.generate_js import generate_players_js
-        # backup API: safe copy even if another writer is mid-transaction
-        src = sqlite3.connect(DB_PATH)
-        conn = sqlite3.connect(str(tmp_path / "fb.db"))
-        src.backup(conn)
-        src.close()
-        for sid, sname in conn.execute("SELECT id, name FROM seasons ORDER BY id").fetchall():
-            expected_ids = {r[0] for r in conn.execute("""
-                SELECT DISTINCT t.id FROM teams t
-                  JOIN appearances a ON a.team_id=t.id
-                  JOIN matches m ON m.id=a.match_id
-                  JOIN groups g ON g.id=m.group_id
-                 WHERE g.season_id=?""", (sid,))}
-            if not expected_ids:
-                continue
-            js = generate_players_js(conn, sname)
-            teams = _parse_const(js, "TEAMS_" + sname.replace("-", "_"))
-            assert len(teams) == len(expected_ids), (
-                f"{sname}: {len(expected_ids) - len(teams)} colisión(es) de clave en TEAMS_"
-            )
-            assert set(teams.values()) == expected_ids, f"{sname}: team ids perdidos en TEAMS_"
-
-    def test_real_db_output_deterministic(self, tmp_path):
-        """Misma DB → mismo JS byte a byte (necesario para C4)."""
-        if not os.path.exists(DB_PATH):
-            pytest.skip("futbolbase.db not present")
-        from scripts.generate_js import generate_players_js
-        src = sqlite3.connect(DB_PATH)
-        conn = sqlite3.connect(str(tmp_path / "fb.db"))
-        src.backup(conn)
-        src.close()
-        assert generate_players_js(conn, "2025-2026") == generate_players_js(conn, "2025-2026")
-
 
 # ─── Fix 2: substitutions pairing in generate_lineups_js ────────────────────
 
@@ -456,86 +418,10 @@ class TestStandingsPointsRepair:
         assert changed is False
 
 
-# ─── Fix (2026-06-15): season most/least stats ignore qualifying mini-groups ──
-
-class TestSeasonGoalRecords:
-    """mostGoals/leastConceded leían `standings` directo incluyendo la fase
-    previa de 5 partidos (UD Valleseco gc=0 ganaba a una defensa de temporada
-    completa). Deben leer standings EFECTIVAS y excluir grupos de pocos
-    partidos. NO re-leen `matches`, que está incompleto (stored es lo
-    autoritativo) — esto cubre el falso positivo del hallazgo #4."""
-
-    def _seed(self, conn):
-        conn.executescript("""
-          INSERT INTO groups (id, season_id, category_id, code, name, phase) VALUES
-            (1, 1, 1, 'A1',  'Grupo A1',  'Segunda Fase A'),
-            (2, 1, 1, 'FF1', 'Grupo FF1', 'Primera Fase GC');
-          INSERT INTO teams (id, name) VALUES
-            (1,'Fortaleza'), (2,'Goleadora'), (3,'Mini Qual'), (4,'Rival');
-          -- A1: temporada completa (played 14)
-          INSERT INTO standings (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
-            (1, 2, 1, 36, 14, 12, 0, 2, 60, 12, 48),
-            (1, 1, 2, 30, 14, 10, 0, 4, 25,  8, 17);
-          -- FF1: fase previa de 5 partidos; Mini Qual gf alto y gc 0 (debe ignorarse)
-          INSERT INTO standings (group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
-            (2, 3, 1, 15, 5, 5, 0, 0, 100,  0, 100),
-            (2, 4, 2,  0, 5, 0, 0, 5,   0,100,-100);
-        """)
-
-    def _season(self, conn):
-        from scripts.generate_js import generate_stats_js
-        return _parse_const(generate_stats_js(conn), "STATS")["benjamin"]["season"]
-
-    def test_least_conceded_ignores_qualifying_phase(self):
-        conn = _synth_conn(); self._seed(conn)
-        lc = self._season(conn)["leastConceded"]
-        assert lc == {"team": "Fortaleza", "gc": 8}, \
-            f"leastConceded debe ignorar grupos de pocos partidos (Mini Qual gc=0 en 5j); got {lc}"
-
-    def test_most_goals_ignores_qualifying_phase(self):
-        conn = _synth_conn(); self._seed(conn)
-        mg = self._season(conn)["mostGoals"]
-        assert mg == {"team": "Goleadora", "gf": 60}, \
-            f"mostGoals no debe salir de un grupo de 5 partidos (Mini Qual gf=100); got {mg}"
-
-    def test_corrupt_points_dont_affect_goal_records(self):
-        # un row con puntos corruptos (reparados por get_effective_standings)
-        # no debe alterar los GF/GC usados aquí
-        conn = _synth_conn(); self._seed(conn)
-        conn.execute("UPDATE standings SET points=0 WHERE team_id=1")  # Fortaleza pts corrupto
-        lc = self._season(conn)["leastConceded"]
-        assert lc == {"team": "Fortaleza", "gc": 8}
-
-
-class TestSeasonTotalsExcludeCups:
-    """totalMatches/totalGoals/biggestWin no deben incluir los partidos de cup
-    (knockout), coherente con mostGoals/leastConceded que ya los excluyen."""
-
-    def _seed(self, conn):
-        conn.executescript("""
-          INSERT INTO groups (id, season_id, category_id, code, name, phase) VALUES
-            (1, 1, 1, 'A1', 'Liga', 'Segunda Fase A'),
-            (2, 1, 1, 'BCA1', 'Cup', 'Copa de Campeones');
-          INSERT INTO teams (id, name) VALUES (1,'L1'),(2,'L2'),(3,'C1'),(4,'C2');
-          INSERT INTO matches (group_id, jornada, home_team_id, away_team_id, home_score, away_score)
-            VALUES (1, 'Jornada 1', 1, 2, 2, 1),
-                   (2, 'Final', 3, 4, 9, 0);
-        """)
-
-    def test_totals_and_biggestwin_exclude_cups(self):
-        from scripts.generate_js import generate_stats_js
-        conn = _synth_conn(); self._seed(conn)
-        season = _parse_const(generate_stats_js(conn), "STATS")["benjamin"]["season"]
-        assert season["totalMatches"] == 1, f"solo el partido de liga; got {season['totalMatches']}"
-        assert season["totalGoals"] == 3, f"2+1, sin los 9 del cup; got {season['totalGoals']}"
-        # biggestWin debe ser el de liga (2-1), no el cup 9-0
-        assert season["biggestWin"]["score"] == "2-1", f"got {season['biggestWin']}"
-
-
 # ─── Fix (2026-06-15): match-detail/lineup keys mirror the frontend (#11) ────
 
 class TestMatchKeySanitize:
-    """Las claves de MATCH_DETAIL/MATCH_DETAIL_KEYS/LINEUPS usaban hs/as_ crudos;
+    """Las claves de MATCH_DETAIL/LINEUPS usaban hs/as_ crudos;
     el frontend (render.js/miequipo.js/modals.js) las construye con scores
     sanitizados. Un score fuera de rango → la clave del backend ('41736-0') no
     casaba con la del frontend ('null-0') → badge ⚽ / alineación invisibles.
@@ -557,21 +443,18 @@ class TestMatchKeySanitize:
                         VALUES (1, 1, 1, 7, 'starter')""")
 
     def test_corrupt_score_key_uses_null_everywhere(self, capsys):
-        from scripts.generate_js import (generate_matchdetail_js,
-                                         generate_matchdetail_keys_js,
-                                         generate_lineups_js)
+        from scripts.generate_js import generate_matchdetail_js, generate_lineups_js
         conn = _synth_conn(); self._seed_goals(conn, 41736, 0)
         for out, what in [(generate_matchdetail_js(conn), "MATCH_DETAIL"),
-                          (generate_matchdetail_keys_js(conn), "MATCH_DETAIL_KEYS"),
                           (generate_lineups_js(conn, "2025-2026"), "LINEUPS")]:
             assert "Home FC|Away FC|null-0" in out, f"{what} debe usar 'null' para score corrupto"
             assert "41736" not in out, f"{what} no debe llevar el score corrupto"
             assert "None-0" not in out, f"{what} debe usar 'null' (JS), no 'None' (Python)"
 
     def test_sane_score_key_unchanged(self):
-        from scripts.generate_js import generate_matchdetail_keys_js, generate_lineups_js
+        from scripts.generate_js import generate_matchdetail_js, generate_lineups_js
         conn = _synth_conn(); self._seed_goals(conn, 3, 1)
-        assert "Home FC|Away FC|3-1" in generate_matchdetail_keys_js(conn)
+        assert "Home FC|Away FC|3-1" in generate_matchdetail_js(conn)
         assert "Home FC|Away FC|3-1" in generate_lineups_js(conn, "2025-2026")
 
 
@@ -840,24 +723,6 @@ class TestMatchKeyCollisions:
         assert [(e["s"], e["gr"]) for e in entry["list"]] == [
             ("2025-2026", "PG2"), ("2026-2027", "PG2")]
 
-    def test_keys_index_skips_dup_keys(self):
-        """MATCH_DETAIL_KEYS == claves con .g (invariante de test_js_modules):
-        una clave repetida no tiene .g, así que el ⚽ no debe prometer una
-        cronología que el modal no va a pintar."""
-        from scripts.generate_js import generate_matchdetail_keys_js
-        conn = _synth_conn()
-        self._seed_calero(conn)
-        conn.executescript("""
-          INSERT INTO teams (id, name) VALUES (3, 'UD Guía');
-          INSERT INTO matches (id, group_id, jornada, date, home_team_id, away_team_id,
-                               home_score, away_score)
-            VALUES (3, 10, 'Jornada 4', '2025-10-31', 3, 1, 1, 0);
-          INSERT INTO goals (match_id, minute, player_name, running_score, side, type)
-            VALUES (3, 11, 'Z', '1-0', 'h', 'r');
-        """)
-        keys = _parse_tail_const(generate_matchdetail_keys_js(conn), "MATCH_DETAIL_KEYS")
-        assert keys == {"UD Guía|CD Calero|1-0": 1}
-
     def test_lineups_entry_carries_season_group_and_cod(self):
         from scripts.generate_js import generate_lineups_js
         conn = _synth_conn()
@@ -935,3 +800,73 @@ class TestMatchKeyCollisions:
         ff15 = ff15s[0]
         assert "FF15" in grs and grs <= {"FF15", "PG2"}, grs
         assert len(ff15["g"]) == 12 and ff15["g"][-1][2] == "1-11"
+
+
+# ─── B4 (decisión 1): las salidas del generador, sin los datos retirados ─────
+
+# Lo que B4 retiró: nadie lo lee (el ⚽ de las listas se fue con la app anterior, Récords sale del
+# modelo y la plantilla, de las actas), y el generador ya no lo escribe.
+_RETIRED = re.compile(r"^data-(matchdetail-keys|stats|players-\d{4}-\d{4})\.js$")
+
+
+class TestGeneratorOutputs:
+    """generate_js.main() con una base sintética en una raíz temporal, como la activación de temporada
+    (activate_season.apply_manifest): escribe exactamente sus salidas, ninguna retirada, y otra pasada
+    con la misma base no cambia ni un byte, ni la versión ni el pie (C4). Nunca los data-*.js vivos."""
+
+    def _site(self, tmp_path):
+        db = tmp_path / "fb.db"
+        conn = sqlite3.connect(str(db))
+        conn.executescript(_SCHEMA)
+        conn.executescript("""
+          INSERT INTO seasons (id, name, start_year, end_year, is_current)
+            VALUES (1, '2025-2026', 2025, 2026, 1), (2, '2024-2025', 2024, 2025, 0);
+          INSERT INTO categories (id, name) VALUES (1, 'BENJAMIN'), (2, 'PREBENJAMIN');
+          INSERT INTO groups (id, season_id, category_id, code, name, full_name, phase, island, current_jornada)
+            VALUES (1, 1, 1, 'A1', 'Grupo A1', 'SEGUNDA FASE BENJAMIN A-G1', 'Segunda Fase A', 'grancanaria', 'Jornada 1'),
+                   (2, 1, 2, 'PG2', 'Grupo 2', 'PREBENJAMIN PRIMERA GRAN CANARIA G-2', 'Liga', 'grancanaria', 'Jornada 1'),
+                   (3, 2, 2, 'PG2', 'Grupo 2', 'PREBENJAMIN PRIMERA GRAN CANARIA G-2', 'Liga', 'grancanaria', 'Jornada 1');
+          INSERT INTO teams (id, name) VALUES (1, 'Home FC'), (2, 'Away FC');
+          INSERT INTO players (id, full_name, norm_name) VALUES (1, 'PEREZ, JUAN', 'perez juan');
+          INSERT INTO matches (id, group_id, jornada, date, home_team_id, away_team_id,
+                               home_score, away_score, cod_acta)
+            VALUES (1, 1, 'Jornada 1', '2025-10-04', 1, 2, 1, 0, 90001),
+                   (2, 3, 'Jornada 1', '2024-10-05', 2, 1, 0, 2, 80001);
+          INSERT INTO goals (match_id, minute, player_name, running_score, side, type)
+            VALUES (1, 10, 'PEREZ, JUAN', '1-0', 'h', 'r');
+          INSERT INTO appearances (match_id, team_id, player_id, dorsal, role, goals)
+            VALUES (1, 1, 1, 7, 'starter', 1), (2, 1, 1, 7, 'starter', 2);
+          INSERT INTO scorers (group_id, player_name, team_id, goals, games)
+            VALUES (1, 'PEREZ, JUAN', 1, 1, 1);
+        """)
+        conn.commit()
+        conn.close()
+        site = tmp_path / "site"
+        site.mkdir()
+        (site / "index.html").write_text(
+            '<script src="./data-seasons.js?v=20260101"></script>\n'
+            '<span id="legacyUpdated" hidden>Última actualización: 01/01/2026</span>\n',
+            encoding="utf-8",
+        )
+        (site / "sw.js").write_text("const CACHE_NAME = 'futbolbase-v20260101';\n", encoding="utf-8")
+        return db, site
+
+    def test_main_writes_its_outputs_and_none_retired(self, tmp_path, monkeypatch):
+        import scripts.generate_js as generate_js
+        db, site = self._site(tmp_path)
+        monkeypatch.setattr(generate_js, "PROJECT_ROOT", str(site))
+        monkeypatch.setattr(generate_js, "get_connection", lambda: sqlite3.connect(str(db)))
+        generate_js.main()
+        written = sorted(p.name for p in site.glob("data-*"))
+        assert [name for name in written if _RETIRED.match(name)] == [], "el generador escribe datos retirados"
+        assert written == [
+            "data-benjamin.js", "data-goleadores.js", "data-history.js",
+            "data-lineups-2024-2025.js", "data-lineups-2025-2026.js", "data-matchdetail.js",
+            "data-prebenjamin.js", "data-season-2024-2025.js", "data-seasons.js",
+        ]
+        # Otra pasada con la misma base: ni un byte distinto, y sin subir la versión ni el pie (C4).
+        index = (site / "index.html").read_text(encoding="utf-8")
+        snapshot = generate_js.snapshot_data_files(str(site))
+        generate_js.main()
+        assert generate_js.snapshot_data_files(str(site)) == snapshot
+        assert (site / "index.html").read_text(encoding="utf-8") == index

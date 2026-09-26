@@ -15,11 +15,12 @@ import { fixture } from './fixtures/rediseno/load.mjs';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const read = (path) => readFileSync(join(ROOT, path), 'utf8');
 
-// El <script> de data-seasons.js lleva la versión de los datos; el de data-matchdetail-keys.js,
-// otra, para comprobar que ya no manda.
+// El <script> de data-seasons.js lleva la versión de los datos; el de data-benjamin.js, otra, para
+// comprobar que solo manda la de data-seasons.js (la app anterior la tomaba de data-matchdetail-keys.js,
+// que B4 retiró).
 const scripts = {
   'data-seasons.js': './data-seasons.js?v=20260923j',
-  'data-matchdetail-keys.js': './data-matchdetail-keys.js?v=VIEJA',
+  'data-benjamin.js': './data-benjamin.js?v=VIEJA',
 };
 globalThis.document = {
   querySelector(selector) {
@@ -100,7 +101,7 @@ test('ensureHealth: null si falla, un solo vuelo al reintentar, memoria y la ver
   assert.deepEqual(requests, ['./data-health.json?v=20260923j', './data-health.json?v=20260923j']);
 });
 
-test('cada petición perezosa lleva la versión de data-seasons.js, nunca la de data-matchdetail-keys.js', async () => {
+test('cada petición perezosa lleva la versión de data-seasons.js, nunca la de otro <script> de datos', async () => {
   requests.length = 0;
   assert.ok(await state.ensureMatchDetail());
   assert.ok(await state.ensureSeasonData('2024-2025'));

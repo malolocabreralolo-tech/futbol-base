@@ -186,6 +186,12 @@ async function codeDeploy(browser) {
   let failedState = false;   // y ya la dio
   let release;
   const held = new Promise((resolve) => { release = resolve; });
+  // Para el diagnóstico si el SW de «b» no llega a mandar: cada petición al llegar y al acabar, y las
+  // que siguen sin respuesta (ms desde el inicio del escenario).
+  const started = Date.now();
+  const requests = [];
+  const pending = new Map();
+  let lastRequest = 0;
   // El código de cada versión: el del árbol con sus marcas y, en «b», el cambio de exportaciones y la marca.
   const code = (file) => {
     if (!(file === 'index.html' || file === 'sw.js' || file === 'acta.css' || /^src\/[^/]+\.js$/.test(file))) return null;
@@ -201,6 +207,14 @@ async function codeDeploy(browser) {
     return text;
   };
   const server = createServer(async (req, res) => {
+    const id = ++lastRequest;
+    const dest = req.headers['sec-fetch-dest'] || '-';
+    pending.set(id, `${Date.now() - started}ms ${dest} ${req.url}`);
+    requests.push(`${Date.now() - started}ms → ${dest} ${req.url}${down ? ' (sin conexión)' : ''}`);
+    res.on('close', () => {
+      pending.delete(id);
+      requests.push(`${Date.now() - started}ms ← ${res.headersSent ? res.statusCode : 'cortada'} ${req.url}`);
+    });
     const url = new URL(req.url, 'http://portal.test');
     const file = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.slice(1));
     if (down) { req.socket.destroy(); return; }
@@ -290,23 +304,37 @@ async function codeDeploy(browser) {
     // Se suelta la instalación del SW de «b»: toma el mando y borra la caché de «a». Se espera desde
     // una página que el SW sirve de la red sin guardar nada (manifest.json), para que ninguna
     // revalidación del SW de «a» toque su caché mientras «b» se activa; y, como la comprobación de la
-    // publicación, pidiendo la actualización en cada vuelta. Si no llega, el error dice cómo quedó.
+    // publicación, pidiendo la actualización en cada vuelta. Si no llega, el error dice cómo quedó: los
+    // SW en cada vuelta, las peticiones sin respuesta y las del servidor desde que se soltó.
+    const releasedAt = requests.length;
     release();
     const probe = await context.newPage();
     await probe.goto(home.replace(/index\.html$/, 'manifest.json'));
+    await probe.evaluate(() => { window.estadosSW = []; window.inicioSW = performance.now(); });
     const workers = () => probe.evaluate(async () => {
       const registration = await navigator.serviceWorker.getRegistration();
       return { caches: await caches.keys(), installing: registration?.installing?.state ?? null, waiting: registration?.waiting?.state ?? null,
-        active: registration?.active?.state ?? null, controlled: !!navigator.serviceWorker.controller };
+        active: registration?.active?.state ?? null, controlled: !!navigator.serviceWorker.controller, vueltas: window.estadosSW };
     });
     await waitForAsync(probe, async (name) => {
       const registration = await navigator.serviceWorker.getRegistration();
       try { await registration?.update(); } catch { /* ya se está instalando */ }
       const keys = await caches.keys();
+      // Cada cambio de estado de los SW, con los ms desde que empezó la espera.
+      const state = [registration?.installing?.state, registration?.waiting?.state, registration?.active?.state,
+        navigator.serviceWorker.controller === registration?.active, keys.length].join('/');
+      if (window.estadosSW.at(-1)?.endsWith(` ${state}`) !== true) window.estadosSW.push(`${Math.round(performance.now() - window.inicioSW)}ms ${state}`);
       return keys.length === 1 && keys[0] === name && registration?.active?.state === 'activated'
         && navigator.serviceWorker.controller === registration.active;
     }, `futbolbase-v${CODE_B}`, { timeout: 30000, interval: 500, label: 'despliegue de código, el SW de «b» al mando' })
-      .catch(async (error) => { throw new Error(`${error.message.split('\n')[0]}: ${JSON.stringify(await workers())}`); });
+      .catch(async (error) => {
+        // Sin las comprobaciones de sw.js de cada vuelta, que taparían el resto.
+        const since = requests.slice(releasedAt);
+        const others = since.filter((line) => !line.endsWith(' /sw.js'));
+        throw new Error(`${error.message.split('\n')[0]}: ${JSON.stringify(await workers())}\n`
+          + `sin respuesta (${pending.size}): ${JSON.stringify([...pending.values()])}\n`
+          + `peticiones desde que se soltó «b» (y ${(since.length - others.length) / 2} comprobaciones de sw.js):\n  ${others.slice(0, 150).join('\n  ')}`);
+      });
     await probe.close();
     // Con el SW de «b» al mando desde la navegación: «b» entera.
     o = await open('despliegue de código, con el SW de «b»');

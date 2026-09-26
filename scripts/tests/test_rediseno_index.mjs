@@ -3,12 +3,15 @@
 // que lee el bot (generate_js.py y source_health.py) se ejecuta de verdad en
 // test_index_bot_contract.py; aquí, la forma. Desde B3 (decisiones 155 y 156), el arranque limpia el
 // código de otras versiones una vez por versión de código (CODIGO, la huella de src/*.js y acta.css).
+// Desde B4, los datos inmediatos van con defer, el arranque, en una función asíncrona (decisiones 4 y
+// 5 de B4), y el registro del SW, tras load; los iconos y el manifiesto, en test_rediseno_pwa.mjs.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 import { tabbar } from '../../src/ui.js';
 import { WORLDS, worldFiles } from './fixture-site.mjs';
 
@@ -25,12 +28,16 @@ test('esqueleto: saltar al contenido, cabecera, la barra de ui.tabbar y main#con
   assert.doesNotMatch(INDEX, /<h1\b/, 'el h1 lo pone cada pantalla');
 });
 
-test('datos inmediatos: los siete que lee la portada, en el orden de antes (decisión 5 de B2; B4, decisión 1), y después el arranque', () => {
+test('datos inmediatos: los siete que lee la portada, con defer y en el orden de antes (decisión 5 de B2; B4, decisiones 1 y 4), y después el arranque', () => {
   const scripts = [...INDEX.matchAll(/<script\b[^>]*\bsrc="\.\/([^"?]+)\?v=\d{8}[a-z]?"[^>]*><\/script>/g)].map((m) => m[1]);
   assert.deepEqual(scripts, [
     'data-benjamin.js', 'data-prebenjamin.js', 'data-history.js', 'data-goleadores.js',
     'data-shields.js', 'data-seasons.js', 'data-maspalomas-cup-2026.js',
   ]);
+  // Con defer se ejecutan en el orden del documento cuando termina el análisis, y el módulo en línea,
+  // detrás: los globales ya están cuando arranca app.js (spec §5.4; decisión 4 de B4).
+  const deferred = [...INDEX.matchAll(/<script defer src="\.\/([^"?]+)\?v=\d{8}[a-z]?"><\/script>/g)].map((m) => m[1]);
+  assert.deepEqual(deferred, scripts, 'los siete, con defer');
   // app.js no se arranca al importarse: index.html lo importa (versionado, como los datos) y llama a start.
   const boot = INDEX.match(/<script type="module">[\s\S]*?<\/script>/);
   assert.ok(boot, 'falta el arranque');
@@ -58,18 +65,19 @@ test('datos inmediatos: los siete que lee la portada, en el orden de antes (deci
   // El marcador se apunta solo si un SW manda en la página: una apertura que se lo salta (Mayús+Recargar,
   // «Bypass for network») con el SW anterior todavía activo no purgó nada, y apuntarlo igual dejaría la
   // limpieza sin hacer para siempre (ronda de arreglos 1, reproducido con bypass.mjs).
-  assert.ok(boot[0].includes("start(document, window);\n      if (navigator.serviceWorker?.controller) {\n        try { localStorage.setItem('futbol-base:codigo', CODIGO); } catch"),
+  assert.match(boot[0], /start\(document, window\);\s*if \(navigator\.serviceWorker\?\.controller\) \{\s*try \{ localStorage\.setItem\('futbol-base:codigo', CODIGO\); \} catch/,
     'el marcador se apunta solo si hay un SW al mando (ronda de arreglos 1)');
   assert.doesNotMatch(boot[0], /src\/render\.js/, 'la limpieza de la app anterior queda dentro de la general');
-  assert.doesNotMatch(INDEX, /<script\b[^>]*\bdefer\b/, 'defer llega en B4');
 });
 
 test('si el arranque falla, un aviso con estilos en línea y «Reintentar», que busca el SW nuevo y recarga (R2-3)', () => {
   const boot = INDEX.match(/<script type="module">[\s\S]*?<\/script>/)[0];
   // Todo el arranque (el marcador, la limpieza, el import, start y el marcador otra vez) va dentro del
   // try: sin conexión en plena transición no hay acta.css ni los módulos nuevos, y la página nunca se
-  // queda en «Cargando…».
-  assert.match(boot, /^<script type="module">\s*(?:\/\/[^\n]*\s*)*try \{\s*const CODIGO = '[0-9a-f]{8}';/);
+  // queda en «Cargando…». Y el try, en una función asíncrona que se llama al cerrarla, sin await de
+  // nivel superior en el módulo (decisión 5 de B4): antes, solo comentarios; después, nada.
+  assert.match(boot, /^<script type="module">\s*(?:\/\/[^\n]*\s*)*\(async \(\) => \{\s*try \{\s*const CODIGO = '[0-9a-f]{8}';/);
+  assert.match(boot, /\}\)\(\);\s*<\/script>$/, 'la función asíncrona cierra el módulo');
   assert.ok(boot.indexOf('} catch (error) {') > boot.indexOf("localStorage.setItem('futbol-base:codigo', CODIGO)"), 'el catch recoge el import, start y el marcador');
   assert.match(boot, /innerHTML = `<div role="alert" style="[^"]+">\s*<p style="[^"]+">No se pudo abrir la versión nueva de la app\. Comprueba la conexión y pulsa Reintentar\.<\/p>\s*<button type="button" id="reintentar-arranque" style="[^"]*min-height:44px[^"]*">Reintentar<\/button>\s*<\/div>`;/);
   const retry = boot.slice(boot.indexOf("getElementById('reintentar-arranque')"));
@@ -83,7 +91,7 @@ test('marcas del bot: una sola versión en todas las ?v=, data-seasons.js versio
   assert.match([...versions][0], /^\d{8}[a-z]?$/);
   // La hoja va en una URL nueva, acta.css: el SW de la app anterior sirve style.css desde su caché.
   assert.match(INDEX, /<link rel="stylesheet" href="\.\/acta\.css\?v=\d{8}[a-z]?">/);
-  assert.match(INDEX, /<script src="\.\/data-seasons\.js\?v=\d{8}[a-z]?"><\/script>/);
+  assert.match(INDEX, /<script defer src="\.\/data-seasons\.js\?v=\d{8}[a-z]?"><\/script>/);
   assert.match(INDEX, /<span id="legacyUpdated" hidden>Última actualización: \d{2}\/\d{2}\/\d{4}<\/span>/);
   assert.equal((INDEX.match(/Última actualización: /g) || []).length, 1);
 });
@@ -118,4 +126,40 @@ test('los datos retirados en B4 no vuelven: ni en index.html, ni en sw.js, ni en
   for (const name of Object.keys(WORLDS)) {
     assert.deepEqual(Object.keys(worldFiles(name)).filter((file) => RETIRED.test(file)), [], `mundo ${name}`);
   }
+});
+
+// El SW se registra tras el evento load (Plan B4): con los datos en defer, el <script> del registro corre
+// durante el análisis, y en la primera visita su precache (unos 2 MB) competía con los datos y los
+// módulos de la portada. Si load ya pasó, en seguida. El contrato de §10 se conserva: register('./sw.js')
+// y .update(), sin unregister, dentro de if ('serviceWorker' in navigator). Se ejecuta el <script> real
+// con un navegador falso, durante el análisis y ya cargada la página.
+test('el service worker se registra tras load, o en seguida si load ya pasó, con register(\'./sw.js\') y .update() (§10)', async () => {
+  const script = [...INDEX.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]).find((text) => text.includes('serviceWorker'));
+  assert.ok(script, 'falta el <script> del registro');
+  assert.match(script, /if \('serviceWorker' in navigator\) \{/);
+  assert.match(script, /navigator\.serviceWorker\.register\('\.\/sw\.js'\)\s*\.then\(reg => reg\.update\(\)\)/, 'el literal de §10');
+  assert.doesNotMatch(script, /unregister\s*\(/, 'sin unregister');
+  const run = (readyState) => {
+    const calls = [];
+    const listeners = {};
+    const register = (url) => { calls.push(url); return Promise.resolve({ update: () => calls.push('update') }); };
+    vm.runInContext(script, vm.createContext({
+      navigator: { serviceWorker: { register } },
+      document: { readyState },
+      addEventListener: (type, listener) => { listeners[type] = listener; },
+    }));
+    return { calls, listeners };
+  };
+  const settle = () => new Promise((resolve) => setImmediate(resolve));
+  const parsing = run('loading');
+  await settle();
+  assert.deepEqual(parsing.calls, [], 'durante el análisis no se registra');
+  assert.deepEqual(Object.keys(parsing.listeners), ['load']);
+  parsing.listeners.load();
+  await settle();
+  assert.deepEqual(parsing.calls, ['./sw.js', 'update'], 'tras load, se registra y busca la versión nueva');
+  const loaded = run('complete');
+  await settle();
+  assert.deepEqual(loaded.calls, ['./sw.js', 'update'], 'si load ya pasó, en seguida');
+  assert.deepEqual(Object.keys(loaded.listeners), []);
 });

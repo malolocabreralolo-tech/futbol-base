@@ -1,18 +1,16 @@
 {
-  "name": "Futbol Base Las Palmas",
-  "short_name": "Futbol Base LP",
-  "description": "Tus equipos de fútbol base en Canarias: calendario, resultados y clasificaciones.",
-  "start_url": "./index.html",
+  "id": "/futbol-base/index.html",
+  "name": "Fútbol Base Las Palmas",
+  "short_name": "Fútbol Base LP",
+  "description": "Tu equipo de fútbol base en Canarias: próximo partido, resultados, clasificación y goleadores. Sin publicidad.",
+  "start_url": "./index.html#/",
   "display": "standalone",
-  "background_color": "#0a0f1a",
-  "theme_color": "#0a0f1a",
   "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
   "icons": [
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230a0f1a' width='100' height='100' rx='20'/><text y='.9em' font-size='80' x='10'>%E2%9A%BD</text></svg>",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

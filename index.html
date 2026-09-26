@@ -11,8 +11,8 @@
   <meta name="apple-mobile-web-app-title" content="Fútbol Base LP">
   <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#15171C" media="(prefers-color-scheme: dark)">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+  <link rel="apple-touch-icon" href="./icons/icon-180.png">
+  <link rel="icon" type="image/png" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="./acta.css?v=20260925b">
 </head>
@@ -25,14 +25,16 @@
   <span id="legacyUpdated" hidden>Última actualización: 23/09/2026</span>
 
   <!-- Datos inmediatos: los siete que lee la portada, en el orden de antes del corte (Plan B2,
-       decisión 5). B4 retiró los dos que ya no leía nadie (decisión 1 de B4). -->
-  <script src="./data-benjamin.js?v=20260925b"></script>
-  <script src="./data-prebenjamin.js?v=20260925b"></script>
-  <script src="./data-history.js?v=20260925b"></script>
-  <script src="./data-goleadores.js?v=20260925b"></script>
-  <script src="./data-shields.js?v=20260925b"></script>
-  <script src="./data-seasons.js?v=20260925b"></script>
-  <script src="./data-maspalomas-cup-2026.js?v=20260925b"></script>
+       decisión 5). B4 retiró los dos que ya no leía nadie (decisión 1 de B4). Con defer (spec §5.4;
+       decisión 4 de B4) se ejecutan en este orden al terminar el análisis, y el módulo del arranque,
+       detrás. -->
+  <script defer src="./data-benjamin.js?v=20260925b"></script>
+  <script defer src="./data-prebenjamin.js?v=20260925b"></script>
+  <script defer src="./data-history.js?v=20260925b"></script>
+  <script defer src="./data-goleadores.js?v=20260925b"></script>
+  <script defer src="./data-shields.js?v=20260925b"></script>
+  <script defer src="./data-seasons.js?v=20260925b"></script>
+  <script defer src="./data-maspalomas-cup-2026.js?v=20260925b"></script>
   <script type="module">
     // Un SW de otra versión (el de la versión anterior o el de la app de antes del rediseño) sirve
     // los módulos de src/ desde su caché, aunque cambie la ?v=, y los revalida de uno en uno en
@@ -53,53 +55,55 @@
     // Si el arranque falla (sin conexión en plena transición, cuando esa caché ya guarda este
     // index.html pero no la hoja ni los módulos nuevos, o un módulo que no llega), un aviso con
     // estilos en línea y «Reintentar»: nunca «Cargando…» para siempre. Es texto fijo, sin datos.
-    try {
-      const CODIGO = 'be0acbf3';
-      let seen = null;
-      try { seen = localStorage.getItem('futbol-base:codigo'); } catch { /* sin almacenamiento */ }
-      if (navigator.serviceWorker?.controller && seen !== CODIGO) {
-        try {
-          const version = (document.querySelector('script[src*="data-seasons.js"]')?.getAttribute('src').match(/[?&]v=([^&#]+)/) || [])[1];
-          const home = new URL('./', location.href).pathname;
-          let stale = false;
-          for (const name of await caches.keys()) {
-            // Solo las cachés de esta app: el origen es de todos los proyectos de la cuenta.
-            if (!name.startsWith('futbolbase-v') || name === `futbolbase-v${version}`) continue;
-            const cache = await caches.open(name);
-            for (const request of await cache.keys()) {
-              const { pathname } = new URL(request.url);
-              if (pathname.startsWith(home) && /\/src\/[^/]+\.js$|\.css$/.test(pathname) && await cache.delete(request)) stale = true;
+    (async () => {
+      try {
+        const CODIGO = 'be0acbf3';
+        let seen = null;
+        try { seen = localStorage.getItem('futbol-base:codigo'); } catch { /* sin almacenamiento */ }
+        if (navigator.serviceWorker?.controller && seen !== CODIGO) {
+          try {
+            const version = (document.querySelector('script[src*="data-seasons.js"]')?.getAttribute('src').match(/[?&]v=([^&#]+)/) || [])[1];
+            const home = new URL('./', location.href).pathname;
+            let stale = false;
+            for (const name of await caches.keys()) {
+              // Solo las cachés de esta app: el origen es de todos los proyectos de la cuenta.
+              if (!name.startsWith('futbolbase-v') || name === `futbolbase-v${version}`) continue;
+              const cache = await caches.open(name);
+              for (const request of await cache.keys()) {
+                const { pathname } = new URL(request.url);
+                if (pathname.startsWith(home) && /\/src\/[^/]+\.js$|\.css$/.test(pathname) && await cache.delete(request)) stale = true;
+              }
             }
-          }
-          const sheet = document.querySelector('link[rel="stylesheet"]');
-          if (stale && sheet) {
-            const fresh = sheet.cloneNode();
-            fresh.href = `${sheet.href}&c=${CODIGO}`;
-            await new Promise((resolve) => { fresh.onload = fresh.onerror = resolve; sheet.after(fresh); });
-            if (fresh.sheet) sheet.remove(); else fresh.remove();
-          }
-        } catch { /* sin Cache Storage: no hay nada que quitar */ }
+            const sheet = document.querySelector('link[rel="stylesheet"]');
+            if (stale && sheet) {
+              const fresh = sheet.cloneNode();
+              fresh.href = `${sheet.href}&c=${CODIGO}`;
+              await new Promise((resolve) => { fresh.onload = fresh.onerror = resolve; sheet.after(fresh); });
+              if (fresh.sheet) sheet.remove(); else fresh.remove();
+            }
+          } catch { /* sin Cache Storage: no hay nada que quitar */ }
+        }
+        const { start } = await import('./src/app.js?v=20260925b');
+        start(document, window);
+        if (navigator.serviceWorker?.controller) {
+          try { localStorage.setItem('futbol-base:codigo', CODIGO); } catch { /* sin almacenamiento */ }
+        }
+      } catch (error) {
+        console.error('[arranque]', error);
+        document.getElementById('contenido').innerHTML = `<div role="alert" style="max-width:40rem;margin:0 auto;padding:24px 16px;font:16px/1.5 system-ui,sans-serif">
+          <p style="margin:0 0 16px">No se pudo abrir la versión nueva de la app. Comprueba la conexión y pulsa Reintentar.</p>
+          <button type="button" id="reintentar-arranque" style="min-height:44px;padding:0 20px;border:0;border-radius:0;background:#C0182B;color:#FFFFFF;font:inherit;font-weight:700">Reintentar</button>
+        </div>`;
+        document.getElementById('reintentar-arranque').addEventListener('click', async () => {
+          // Que el navegador busque ya el SW nuevo (sin esperarlo más de 3 s) y otra vez desde el principio.
+          try {
+            const registration = await navigator.serviceWorker?.getRegistration();
+            if (registration) await Promise.race([registration.update(), new Promise((resolve) => setTimeout(resolve, 3000))]);
+          } catch { /* sin SW o sin red: se recarga igual */ }
+          location.reload();
+        });
       }
-      const { start } = await import('./src/app.js?v=20260925b');
-      start(document, window);
-      if (navigator.serviceWorker?.controller) {
-        try { localStorage.setItem('futbol-base:codigo', CODIGO); } catch { /* sin almacenamiento */ }
-      }
-    } catch (error) {
-      console.error('[arranque]', error);
-      document.getElementById('contenido').innerHTML = `<div role="alert" style="max-width:40rem;margin:0 auto;padding:24px 16px;font:16px/1.5 system-ui,sans-serif">
-        <p style="margin:0 0 16px">No se pudo abrir la versión nueva de la app. Comprueba la conexión y pulsa Reintentar.</p>
-        <button type="button" id="reintentar-arranque" style="min-height:44px;padding:0 20px;border:0;border-radius:0;background:#C0182B;color:#FFFFFF;font:inherit;font-weight:700">Reintentar</button>
-      </div>`;
-      document.getElementById('reintentar-arranque').addEventListener('click', async () => {
-        // Que el navegador busque ya el SW nuevo (sin esperarlo más de 3 s) y otra vez desde el principio.
-        try {
-          const registration = await navigator.serviceWorker?.getRegistration();
-          if (registration) await Promise.race([registration.update(), new Promise((resolve) => setTimeout(resolve, 3000))]);
-        } catch { /* sin SW o sin red: se recarga igual */ }
-        location.reload();
-      });
-    }
+    })();
   </script>
   <script>
     // Standard SW registration: the browser's update cycle detects a
@@ -107,10 +111,15 @@
     // version take over immediately. registration.update() forces a check on
     // every load. (Never unregister here: that re-installed the full ~500KB
     // precache on EVERY visit.)
+    // Tras el evento load (Plan B4): con los datos en defer, este guion corre durante el análisis, y en la
+    // primera visita el precache del SW (unos 2 MB) competía con los datos y los módulos de la portada.
+    // Si load ya pasó, en seguida.
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js')
+      const register = () => navigator.serviceWorker.register('./sw.js')
         .then(reg => reg.update())
         .catch(() => {});
+      if (document.readyState === 'complete') register();
+      else addEventListener('load', register, { once: true });
     }
   </script>
 </body>

@@ -4265,7 +4265,7 @@ marcas de main: iguales
 retirados en el árbol: 0
 ```
 
-Con un `main` simulado en el que el bot había regenerado tres retirados y `data-benjamin.js` y subido sus marcas a `20260927` (el ensayo del ensamblado; después, pytest 504 y node 739 en verde):
+Con un `main` simulado en el que el bot había regenerado tres retirados y `data-benjamin.js` y subido sus marcas a `20260927` (el ensayo del ensamblado; después, pytest 511 y node 740 en verde):
 ```text
 de 33e4cff466415f02fbc5f9ff2089738903af1382 a origin/main, index.html y sw.js solo cambian las marcas de versión
 CONFLICTO (modificar / eliminar): data-matchdetail-keys.js eliminado en HEAD y modificado en origin/main. Versión origin/main de data-matchdetail-keys.js restante en el árbol.
@@ -4329,9 +4329,9 @@ done
 ```
 Esperado:
 ```text
-504 passed, 5 skipped
-# tests 739
-# pass 739
+511 passed, 5 skipped
+# tests 740
+# pass 740
 # fail 0
 pasada 1: 21 PASS; otras líneas: 0
 pasada 2: 21 PASS; otras líneas: 0
@@ -4371,7 +4371,7 @@ bueno del usuario, B4 se publica: los datos que ya no leía nadie fuera, los
 inmediatos con defer, el manifiesto y los iconos de la PWA, las miniaturas
 de los escudos y el SW que solo borra sus propias cachés.
 
-Verificado: pytest 504 (5 saltadas), node 739, los tres smoke tres veces
+Verificado: pytest 511 (5 saltadas), node 740, los tres smoke tres veces
 seguidas y el presupuesto de §5.4 en local, en verde; y el paso de B3 a B4,
 ensayado en local con publicar-b4.mjs.
 
@@ -4810,6 +4810,8 @@ Esperado: `el bot, en verde con B4: <id>`, con `Tests Python (bloquean el commit
 
 Lo que B4 deja fuera a propósito, lo que sus tareas dejan para B5 y lo de «Para B4 y siguientes» del plan B3 que sigue abierto. Lo que allí no cambia no se repite: basta remitir a su sección.
 
+**Antes de activar 2026/27:** `scripts/tests/test_season_preparation.py` (`test_activation_generates_new_season_and_retains_every_old_sporting_row` y `test_apply_recalculates_codigo_for_the_new_config`) copian el árbol vivo (`src/config.js` y los `data-*.js`) y activan 2026-2027 encima. El día que esa temporada se active de verdad, el árbol vivo ya estará activado y esas dos pruebas fallan: el bot deja de publicar hasta arreglarlas. Arreglo: que copien un árbol sintético, o que fijen la temporada de partida de la copia en vez de leerla del árbol vivo.
+
 ### Lo que B4 deja fuera a propósito
 
 - Los torneos perezosos (decisión 2), con su medición: el `pending` del router y los `needs` que describe el plan B3 («Torneos perezosos»).
@@ -4825,7 +4827,11 @@ Lo que B4 deja fuera a propósito, lo que sus tareas dejan para B5 y lo de «Par
 - `presupuesto.mjs` en el CI, como trabajo informativo que no bloquee, con la mediana de 5.
 - La primera publicación de código después de B4: B4 no cambia `CODIGO`, así que el caso de un despliegue de código sin módulos nuevos, cuya limpieza podría saltarse sin red (plan B3, «Antes de publicar B3», Minor 9), sigue sin ejercerse.
 - Sin conexión, tras cada cambio de SW los escudos desaparecen (B4 de la revisión, aparcado en la decisión 57; ya pasaba en B3): `activate` borra la caché anterior, la única con los escudos (se guardan según se usan), y la primera apertura sin red tras cada subida de versión pinta monogramas; en temporada, tras cada jornada, y la familia abre la app en campos sin cobertura. Trasladar las entradas de `/escudos/` en `activate` exige versionar las URL de las miniaturas (que un escudo cambiado no se quede para siempre en la caché), y eso toca `crest()` de `src/ui.js`; la otra salida, precachear las 176 miniaturas (586 KB), se aparta de §5.5. Punto de partida: la prueba de la revisión, `$S/rev/sim/actualizacion.mjs`.
-- `test_season_preparation.py`: sus dos pruebas de activar 2026/27 fallan sobre un árbol ya activado, también sobre B3 (lo vio la revisión); se arreglan el día de activar.
+- La plantilla sin conexión: precachear `data-lineups-<temporada del portal>.js` (unos 139 KB), o decir «sin conexión» en su bloque.
+- Mirar si el SW del otro proyecto del origen borra las cachés `futbolbase-v*` (lo contrario de la decisión 8).
+- Un precache a medias seguido de `activate` puede dejar huecos sin red (previo a B4).
+- `fetch_mygol.py` sube `?v=\d{8}` sin la letra (guion antiguo, a mano).
+- `trim_shields.py` guarda PNG con nombre `.jpg` (previo).
 
 ### Del plan B3, «Para B4 y siguientes», lo que sigue abierto
 

@@ -52,7 +52,7 @@ GIT_EDITOR=true git rebase --continue
 - En un rebase, «theirs» es el commit de la rama que se está aplicando: su estructura.
 - `sync_versions.py` le pone las marcas de `origin/main`.
 
-Se repite en cada parada hasta que termine el rebase. Un conflicto en cualquier otro fichero se resuelve a mano: el bot nunca toca `src/`, `scripts/` ni `docs/`.
+Se repite en cada parada hasta que termine el rebase. Un conflicto en cualquier otro fichero se resuelve a mano: el bot nunca toca `src/` ni `docs/`; en `scripts/` solo comitea lo que generan `fetch-fiflp*.yml` (`scripts/fiflp_*_raw.json`, `scripts/tests/fixtures/acta_*.html`), que la rama no toca.
 
 ## Después de rebasar
 
@@ -87,7 +87,7 @@ El PR borrador #2 hacia `main` quedó cerrado al publicar B2, y un push a la ram
 
 Con el visto bueno del usuario, sin ningún workflow en marcha y con el árbol limpio. El paso de publicar de cada plan (el de B3, Tarea 12, paso 10) tiene las comprobaciones de la web; esto es lo que se repite en cada fase:
 
-1. **Traer `main`** con un merge (`git merge --no-edit origin/main`): en un merge, «ours» es la rama. Si chocan `index.html` o `sw.js`, `git checkout --ours` de esos dos y `python3 scripts/sync_versions.py --from origin/main`; al final, `python3 scripts/sync_versions.py --from origin/main --check`. Un conflicto en otro fichero se resuelve a mano: el bot nunca toca `src/`, `scripts/` ni `docs/`. Si la fase borró un `data-*.js` que el bot sigue regenerando en `main` (B4: `data-matchdetail-keys.js`, `data-stats.js` y `data-players-*.js`), sale un conflicto «modificado y borrado»: se resuelve con `git rm` de esos ficheros.
+1. **Traer `main`** con un merge (`git merge --no-edit origin/main`): en un merge, «ours» es la rama. Si chocan `index.html` o `sw.js`, `git checkout --ours` de esos dos y `python3 scripts/sync_versions.py --from origin/main`; al final, `python3 scripts/sync_versions.py --from origin/main --check`. Un conflicto en otro fichero se resuelve a mano: el bot nunca toca `src/` ni `docs/`; en `scripts/` solo comitea lo que generan `fetch-fiflp*.yml` (`scripts/fiflp_*_raw.json`, `scripts/tests/fixtures/acta_*.html`), que la rama no toca. Si la fase borró un `data-*.js` que el bot sigue regenerando en `main` (B4: `data-matchdetail-keys.js`, `data-stats.js` y `data-players-*.js`), sale un conflicto «modificado y borrado»: se resuelve con `git rm` de esos ficheros. Resuelto todo, `git add` de lo resuelto y `git commit` termina el merge. Si fue limpio (sin conflicto) pero se queda con las marcas de una versión que no llegó a publicarse en `main` (decisión 53: el bot comitea `data-health.json` varias veces al día y la fusión suele ser limpia), `--check` falla al final: `python3 scripts/sync_versions.py --from origin/main`, `git add index.html sw.js` y `git commit --amend --no-edit` lo meten en el commit de la fusión. Y un retirado que `main` añada sin conflicto (p. ej. un `data-players-<temporada>.js` nuevo al activar una temporada) no lo avisa el merge: se comprueba a mano y se quita con `git rm`. El bloque completo, con sus comprobaciones, está en el paso de publicar del plan (Tarea 7, paso 2).
 2. **Subir la versión** con `scripts/publicar.py`: las `?v=` de `index.html` y `CACHE_NAME` de `sw.js` a la vez, con la fecha UTC (o la letra siguiente, si no es mayor que la vigente), y `CODIGO`, sin tocar «Última actualización»:
 
    ```bash

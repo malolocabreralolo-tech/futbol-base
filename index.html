@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="./icons/icon-180.png">
   <link rel="icon" type="image/png" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./acta.css?v=20260925b">
+  <link rel="stylesheet" href="./acta.css?v=20260926">
 </head>
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -28,13 +28,13 @@
        decisión 5). B4 retiró los dos que ya no leía nadie (decisión 1 de B4). Con defer (spec §5.4;
        decisión 4 de B4) se ejecutan en este orden al terminar el análisis, y el módulo del arranque,
        detrás. -->
-  <script defer src="./data-benjamin.js?v=20260925b"></script>
-  <script defer src="./data-prebenjamin.js?v=20260925b"></script>
-  <script defer src="./data-history.js?v=20260925b"></script>
-  <script defer src="./data-goleadores.js?v=20260925b"></script>
-  <script defer src="./data-shields.js?v=20260925b"></script>
-  <script defer src="./data-seasons.js?v=20260925b"></script>
-  <script defer src="./data-maspalomas-cup-2026.js?v=20260925b"></script>
+  <script defer src="./data-benjamin.js?v=20260926"></script>
+  <script defer src="./data-prebenjamin.js?v=20260926"></script>
+  <script defer src="./data-history.js?v=20260926"></script>
+  <script defer src="./data-goleadores.js?v=20260926"></script>
+  <script defer src="./data-shields.js?v=20260926"></script>
+  <script defer src="./data-seasons.js?v=20260926"></script>
+  <script defer src="./data-maspalomas-cup-2026.js?v=20260926"></script>
   <script type="module">
     // Un SW de otra versión (el de la versión anterior o el de la app de antes del rediseño) sirve
     // los módulos de src/ desde su caché, aunque cambie la ?v=, y los revalida de uno en uno en
@@ -83,7 +83,7 @@
             }
           } catch { /* sin Cache Storage: no hay nada que quitar */ }
         }
-        const { start } = await import('./src/app.js?v=20260925b');
+        const { start } = await import('./src/app.js?v=20260926');
         start(document, window);
         if (navigator.serviceWorker?.controller) {
           try { localStorage.setItem('futbol-base:codigo', CODIGO); } catch { /* sin almacenamiento */ }

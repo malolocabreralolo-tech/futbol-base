@@ -1,13 +1,13 @@
 # Rebase y publicación de la rama del rediseño (`rediseno-acta`)
 
-El rediseño «Acta» se construye en la rama `rediseno-acta`, y cada fase se publica al terminarla, con el visto bueno del usuario: `main` avanza hasta la rama con avance rápido (B2 en `376e981`, B3 en `862486f`). Entre una publicación y otra, el bot sigue comiteando en `main` cada pocas horas, y la rama trae `main` a menudo (spec §12). Este es el procedimiento (Plan B2, decisión 8), y al final, el de publicar (Plan B4, decisión 10).
+El rediseño «Acta» se construye en la rama `rediseno-acta`, y cada fase se publica al terminarla, con el visto bueno del usuario: `main` avanza hasta la rama con avance rápido (B2 en `376e981`, B3 en `862486f` y B4 en `a66a36b`). Entre una publicación y otra, el bot sigue comiteando en `main` cada pocas horas, y la rama trae `main` a menudo (spec §12). Este es el procedimiento (Plan B2, decisión 8), y al final, el de publicar (Plan B4, decisión 10).
 
 ## Qué choca y qué se queda
 
 El bot (`update.yml`, `fetch-fiflp.yml` y `fetch-fiflp-actas.yml`) comitea tres cosas:
 
 - **`data-*.js`, `data-health.json` y `futbolbase.db`.** La rama no los toca, así que no chocan. Si alguno chocara, se queda el de `main`: `git checkout --ours -- <fichero>` (en un rebase, «ours» es `main`). La excepción son los `data-*.js` que la rama retira a propósito (B4: `data-matchdetail-keys.js`, `data-stats.js` y `data-players-*.js`): si el bot los regeneró en `main`, chocan como «borrados en la rama y modificados en `main`», y se resuelven con `git rm`, nunca con el de `main`.
-- **`sw.js`.** El bot solo cambia `CACHE_NAME` en la línea 1, y la rama cambia `STATIC_ASSETS`. Git suele mezclarlo solo.
+- **`sw.js`.** El bot solo cambia `CACHE_NAME`, en la línea 1. La línea 2, `CRESTS_CACHE` (el sello de `escudos/`, Plan B5), solo la cambia `scripts/build_crests.py`, al añadir o cambiar un escudo; y la rama cambia el resto (`STATIC_ASSETS`, `SEASON_FILES`…). Git no mezcla solo dos cambios en líneas contiguas: si el bot subió la versión y la rama trae otra línea 2 (la primera vez, al traer B5), `sw.js` choca, y se resuelve como `index.html`, con la estructura de la rama y las marcas de `main` (abajo).
 - **`index.html`.** El bot sube todas las `?v=` y el literal oculto «Última actualización». Desde el corte, la rama tiene otro `index.html`, y el choque es casi seguro.
 
 Siempre se queda **la estructura de la rama con las marcas de versión de `main`**: las `?v=`, «Última actualización» y `CACHE_NAME`. Lo hace `scripts/sync_versions.py`. `CACHE_NAME` y las `?v=` no se suben a mano: las sube `scripts/publicar.py` al publicar una fase (abajo).

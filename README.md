@@ -6,15 +6,13 @@ Resultados y seguimiento de Benjamín y Prebenjamín de Gran Canaria, Lanzarote 
 
 ## Para las familias
 
-- Varios equipos favoritos guardados en el dispositivo.
-- Próximo partido con fecha, hora canaria y campo cuando la fuente los publica; último resultado, posición y racha.
-- Últimos cinco encuentros y calendario completo desplegable.
-- Clasificaciones y jornadas con búsqueda por equipo, isla y fase.
-- Enlaces directos a equipo, partido y jornada; copia y WhatsApp.
+- Un equipo, el tuyo: la portada sigue a «mi equipo» (próximo partido con fecha, hora canaria y campo cuando la fuente los publica; último resultado, clasificación y goleadores) y cambia con el momento de la temporada. Los equipos que se miran sin cambiarlo quedan en «Vistos hace poco» (hasta 8).
+- Jornada, Tabla (puntos, goles, forma, casa y fuera) y Partido (goles, alineaciones del acta y cara a cara).
+- Explorar: buscador de equipos, ligas y copas de las tres islas, goleadores completos, récords y archivo desde 2021/22.
+- Enlaces directos a cada pantalla (también los antiguos, de WhatsApp) y botón de compartir.
 - Calendario `.ics` y enlace al mapa para campos conocidos.
-- Goleadores, detalles disponibles y archivo desde 2021/22.
-- Temas claro y oscuro, navegación móvil, teclado y PWA instalable.
-- Información de cobertura y fuentes, con fechas separadas de comprobación y de cambio de datos.
+- Tema claro u oscuro, el del sistema; navegación móvil y con teclado; y PWA instalable, que abre sin conexión lo ya visto.
+- Datos y fuentes: cobertura, y fechas separadas de comprobación y de cambio de datos.
 
 Los marcadores ausentes se muestran como «sin resultado». La clasificación puede incluir partidos que no aparecen en el calendario. Las discrepancias entre la fuente y los resultados ya registrados se señalan en «Datos y fuentes».
 
@@ -36,7 +34,9 @@ node scripts/tests/pwa-smoke.mjs
 Las pruebas de navegador usan Chrome instalado; se puede indicar su ruta con `CHROME`.
 
 ```text
-src/                         Interfaz, favoritos, rutas, calendario y fuentes
+src/                         La app, en módulos planos sin compilar: arranque, rutas, modelo, mi equipo y pantallas
+acta.css                     La hoja, con los temas claro y oscuro
+escudos/, escudos/s/         Los escudos y sus miniaturas (scripts/build_crests.py)
 src/config.js                Temporada y equipo inicial compartidos con Python
 scripts/fetch_futbolaspalmas.py Importación con protección de temporada
 scripts/generate_js.py        Generador de archivos publicados
@@ -57,4 +57,4 @@ bash scripts/update.sh --local  # importar, probar y crear commit local
 
 La [guía de nueva temporada](docs/temporada-nueva.md) explica la verificación y activación, con copia de seguridad y conservación del archivo. La configuración de 2026/27 está preparada; sus grupos se activarán cuando haya calendarios fechados verificables.
 
-Los cambios solo de interfaz requieren actualizar el parámetro `?v=` de `index.html` y `CACHE_NAME` de `sw.js`, además de mantener la lista de módulos precargados.
+Un cambio de código (`src/` o `acta.css`) necesita `python3 scripts/codigo.py` antes de las pruebas: escribe en `index.html` `CODIGO`, la versión del código con la que el arranque quita la de la versión anterior de las cachés del SW. `STATIC_ASSETS` de `sw.js` sigue el grafo de imports de `src/app.js` (lo comprueba `scripts/tests/test_sw_fixes.mjs`). Para publicar, `python3 scripts/publicar.py` sube a la vez las `?v=` de `index.html`, `CACHE_NAME` de `sw.js` y `CODIGO`, sin tocar «Última actualización»; el procedimiento completo está en [docs/rediseno-rebase.md](docs/rediseno-rebase.md). Un escudo nuevo se añade como dice la guía de nueva temporada: `scripts/build_crests.py` escribe su miniatura y el sello de `escudos/` en la línea 2 de `sw.js`.

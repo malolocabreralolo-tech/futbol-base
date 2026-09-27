@@ -35,7 +35,7 @@ Capturas del diseño anterior: `…/rediseno-2026-09-23/antes/`.
 
 **Plan A, datos (se publica solo, sin cambiar la interfaz actual).** Los cambios de exportación de §9 y la corrección del duplicado de Lanzarote.
 
-**Plan B, rediseño.** Todo lo demás: interfaz, service worker, manifiesto y pruebas. Se publica de una vez cuando esté completo.
+**Plan B, rediseño.** Todo lo demás: interfaz, service worker, manifiesto y pruebas. Se publica de una vez cuando esté completo. *(Nota: se publicó por fases, cada una al terminarla; véase «Lo que cambió al construirlo», punto 1.)*
 
 **Fuera de alcance:**
 - notificaciones, cuentas, datos en directo y suscripción `webcal`;
@@ -416,7 +416,7 @@ Maqueta: `5-4-explorar.png`.
 |---|---|
 | `app.js` | Arranque: almacén, router y primera pantalla |
 | `config.js` | Sin cambios (`export const PORTAL = {JSON}`) |
-| `state.js` | **Carga de datos y funciones de dominio heredadas.** Cargadores perezosos con un único vuelo por petición: `ensureSeasonData`, `ensureMatchDetail`, `ensureLineups`, `ensurePlayers`, `ensureStats` y `ensureSeasonCups` (nombra literalmente `MASPALOMAS_CUP_BENJAMIN` y `MASPALOMAS_CUP_PREBENJAMIN`). `dataVersion()`. Funciones puras de jornada, copa y escudo: `knockoutRoundLabel`, `matchAdvancer`, `bracketChampion`, `isRoundRobinCup`, `shieldFile(name)` (fichero de escudo exacto o normalizado, sin HTML; sustituye a `teamBadge`), `normalizeTeamName`, `normalizeForTeamsMapping`, `countMatches`… **Pierde** el HTML y el estado de interfaz `S` y `FEATURED`. El componente de escudo, con miniatura, tamaños, carga diferida y monograma, vive en `ui.js` |
+| `state.js` | **Carga de datos y funciones de dominio heredadas.** Cargadores perezosos con un único vuelo por petición: `ensureSeasonData`, `ensureMatchDetail`, `ensureLineups`, `ensurePlayers`, `ensureStats` y `ensureSeasonCups` (nombra literalmente `MASPALOMAS_CUP_BENJAMIN` y `MASPALOMAS_CUP_PREBENJAMIN`). `dataVersion()`. Funciones puras de jornada, copa y escudo: `knockoutRoundLabel`, `matchAdvancer`, `bracketChampion`, `isRoundRobinCup`, `shieldFile(name)` (fichero de escudo exacto o normalizado, sin HTML; sustituye a `teamBadge`), `normalizeTeamName`, `normalizeForTeamsMapping`, `countMatches`… **Pierde** el HTML y el estado de interfaz `S` y `FEATURED`. El componente de escudo, con miniatura, tamaños, carga diferida y monograma, vive en `ui.js` *(Nota: sin `ensurePlayers`, `ensureStats` ni `ensureSeasonCups`, y desde B5 sin `matchAdvancer`, `bracketChampion` ni `countMatches`; véase «Lo que cambió al construirlo», puntos 4, 5 y 10.)* |
 | `model.js` | Modelo normalizado (§5.3) y funciones puras de §5.6 |
 | `myteam.js` | Identidad de club y resolución de mi equipo (§6) |
 | `links.js` | `parseRoute`/`routeHref` (formato nuevo), `readRoute` (legado) y `translateLegacy`. Fechas (`fixtureISO`, `displayDate`, `kickoffUTC`, `countdownLabel`), `buildCalendar` (ICS), `venueUrl` y compartir |
@@ -510,8 +510,8 @@ Cups    { season, cat, groups: Group[] }                   // torneos (Maspaloma
   - `data-benjamin.js`, `data-prebenjamin.js`, `data-history.js`, `data-goleadores.js`, `data-shields.js` y `data-seasons.js`.
   - Se leen con identificador desnudo y comprobación `typeof`, nunca con `globalThis` ni `window`.
 - **Perezosos** (`fetch` + expresión regular + `JSON.parse`, con un único vuelo por petición):
-  - `data-season-*.js`, `data-matchdetail.js`, `data-lineups-*.js` y `data-players-*.js` (como hoy);
-  - **nuevos:** `data-stats.js` (Récords) y `data-maspalomas-cup-2026.js` (Explorar, Copa, Verano, buscador y ficha de equipo).
+  - `data-season-*.js`, `data-matchdetail.js`, `data-lineups-*.js` y `data-players-*.js` (como hoy); *(Nota: `data-players-*.js` se retiró en B4; véase «Lo que cambió al construirlo», punto 4.)*
+  - **nuevos:** `data-stats.js` (Récords) y `data-maspalomas-cup-2026.js` (Explorar, Copa, Verano, buscador y ficha de equipo). *(Nota: `data-stats.js` se retiró y los torneos siguen inmediatos; véase «Lo que cambió al construirlo», puntos 4 y 5.)*
 - **`dataVersion()`:** todos los perezosos toman `?v=` de `script[src*="data-seasons.js"]`, que siempre se mantiene. Hay un test que comprueba que cada petición perezosa lleva la versión actual.
 - **Se deja de generar `data-matchdetail-keys.js`.** Se tocan a la vez:
   - `generate_js.py` (generador y lista de salida);
@@ -531,17 +531,17 @@ Cups    { season, cat, groups: Group[] }                   // torneos (Maspaloma
 ### 5.5 PWA
 
 - **Contrato de `sw.js` sin cambios:**
-  - la línea 1 es `CACHE_NAME`;
+  - la línea 1 es `CACHE_NAME`; *(Nota: y, desde B5, la línea 2 es `CRESTS_CACHE`; véase «Lo que cambió al construirlo», punto 8.)*
   - los literales `STATIC_ASSETS` y `SEASON_FILES`;
   - `classifyRequest`, `staleKeysFor`, `matchIgnoringVersion`, `versionedAssetURL` y `putAndPurge`.
 - **`STATIC_ASSETS`**:
-  - `./`, `./index.html`, `./style.css`, `./manifest.json` y `./data-health.json`;
+  - `./`, `./index.html`, `./style.css`, `./manifest.json` y `./data-health.json`; *(Nota: la hoja es `./acta.css`; véase «Lo que cambió al construirlo», punto 3.)*
   - los iconos de `icons/`;
   - `fonts/*.woff2`;
   - todo el grafo de imports estáticos de `src/app.js`;
   - los `data-*` inmediatos.
-- **`SEASON_FILES`:** los `data-season-*.js`, más `data-maspalomas-cup-2026.js` y `data-stats.js`, que son perezosos pero se usan en la portada y en el buscador sin conexión.
-- Las miniaturas de escudos se guardan en caché según se usan (cache-first).
+- **`SEASON_FILES`:** los `data-season-*.js`, más `data-maspalomas-cup-2026.js` y `data-stats.js`, que son perezosos pero se usan en la portada y en el buscador sin conexión. *(Nota: los torneos van en `STATIC_ASSETS`, `data-stats.js` se retiró y entra la plantilla de la temporada del portal; véase «Lo que cambió al construirlo», puntos 4, 5 y 9.)*
+- Las miniaturas de escudos se guardan en caché según se usan (cache-first). *(Nota: en su propia caché, `CRESTS_CACHE`, desde B5; véase «Lo que cambió al construirlo», punto 8.)*
 - **Manifiesto:**
   - iconos PNG en `icons/` (192, 512 y maskable 512) y `apple-touch-icon` PNG de 180;
   - `theme_color` y `background_color` del tema claro;
@@ -758,20 +758,20 @@ La fuente no puede deshacer los cambios. La interfaz actual tiene que seguir fun
 
 Rama `rediseno-acta`. `tests.yml` no corre en push a ramas, así que cada fase se verifica:
 - en local: `pytest`, `node --test scripts/tests/test_*.mjs` y los tres smoke;
-- con un **PR borrador** hacia `main`, que sí dispara `tests.yml`.
+- con un **PR borrador** hacia `main`, que sí dispara `tests.yml`. *(Nota: el PR borrador se cerró al publicar B2, y el CI de la rama se lanza a mano; véase «Lo que cambió al construirlo», punto 2.)*
 
 La rama se rebasa a menudo sobre `main`, porque el bot comitea `index.html`, `sw.js` y `data-*`.
 
 1. **B1, cimientos, sin tocar la app actual.** Ficheros nuevos que la app vieja no importa:
    - `html.js`, `model.js`, `myteam.js`, `store.js`, `ui.js` y las rutas nuevas en `links.js`;
-   - `style.css` nuevo como `style-acta.css`, que todavía no se enlaza;
+   - `style.css` nuevo como `style-acta.css`, que todavía no se enlaza; *(Nota: la hoja se llama `acta.css`; véase «Lo que cambió al construirlo», punto 3.)*
    - `fonts/` e `icons/`;
    - tests unitarios de §5.6 y de §11 («casos reales»).
 
    La app actual y todas sus suites siguen en verde.
 2. **Corte (un solo commit), al empezar B2:**
    - `index.html` pasa al esqueleto y al `app.js` nuevos;
-   - `style-acta.css` sustituye a `style.css`;
+   - `style-acta.css` sustituye a `style.css`; *(Nota: la hoja se llama `acta.css`; véase «Lo que cambió al construirlo», punto 3.)*
    - se borran los 9 módulos viejos;
    - se mueven funciones puras y se cambian firmas;
    - se borran los tests de detalle visual y se reescriben los de intención;
@@ -783,13 +783,42 @@ La rama se rebasa a menudo sobre `main`, porque el bot comitea `index.html`, `sw
 4. **B3, secundarias:** Equipo, Explorar, Ligas (con «Comparar grupos»), Copa, Goleadores, Temporadas, Récords, Fuentes y Ajustes.
 5. **B4, PWA y rendimiento:**
    - miniaturas de escudos;
-   - `defer` y carga perezosa;
+   - `defer` y carga perezosa; *(Nota: `defer`, sí; de la carga perezosa, `data-stats.js` se retiró y los torneos siguen inmediatos; véase «Lo que cambió al construirlo», puntos 4 y 5.)*
    - baja de `data-matchdetail-keys.js`;
    - `sw.js`, manifiesto e iconos;
    - despliegue con `touch_footer=False`;
    - medición del presupuesto de §5.4.
 6. **B5, cierre:**
    - pruebas de navegador completas y verificación visual (§11), con capturas para el usuario;
-   - rebase final, subida de versión sin tocar el pie, publicación (sin workflows en marcha) y comprobación en la web publicada.
+   - rebase final, subida de versión sin tocar el pie, publicación (sin workflows en marcha) y comprobación en la web publicada. *(Nota: cada fase se publicó al terminarla, y B5 es la última publicación de la rama; véase «Lo que cambió al construirlo», punto 1.)*
 
 El Plan A se ejecuta y se publica antes que el B, y el B parte de sus datos.
+
+## Lo que cambió al construirlo
+
+Adenda del plan B5 (27/09/2026), al cerrar el rediseño. El diseño de arriba es el aprobado y no se reescribe: aquí va lo que se apartó de su texto al construirlo y por qué, un punto por línea, con el plan y la decisión que lo explican (los planes, en `docs/superpowers/plans/`). Las frases de arriba que quedaron falsas llevan una nota que remite a su punto.
+
+1. **Publicación por fases** (§2 y §12): por decisión del usuario («publicando cada fase al terminarla»), cada fase del Plan B se publicó al terminarla, y `main` avanzó hasta la rama con avance rápido (B2 en `376e981`, B3 en `862486f`, B4 en `a66a36b`, y B5); lo que el texto dejaba para la publicación de B5 valió para cada una (plan B3, restricciones globales; Plan B4, decisiones 10 y 13; el procedimiento, en `docs/rediseno-rebase.md`).
+2. **El CI de la rama, a mano** (§12): el PR borrador #2 se cerró al publicar B2; el CI de la rama se lanza con `gh workflow run tests.yml --ref rediseno-acta`, y `main` solo avanza con esa ejecución en verde (Plan B4, decisión 13).
+3. **La hoja es `acta.css`** (§5.5 y §12), no `style.css` ni `style-acta.css`: una URL nueva, para que el SW de la app anterior (*cache-first* y sin mirar la `?v=`) no diera la hoja vieja a la portada nueva (Plan B2, decisión 115).
+4. **`data-stats.js` y `data-players-*.js`, retirados** (§5.4 y §5.5): Récords sale del modelo (`seasonRecords`), que sirve también para las temporadas pasadas y aplica el mínimo de §4.7 (Plan B3, decisión 26), y la plantilla, de las actas (§4.11); B4 dejó de generarlos, con `data-matchdetail-keys.js` (Plan B4, decisión 1).
+5. **Los torneos, inmediatos** (§5.4, §5.5 y §12): `data-maspalomas-cup-2026.js` se carga con `defer`, como los demás datos inmediatos, y va en `STATIC_ASSETS`: pesa 5,7 KB con gzip, la portada en D (cada verano) lo lee al arrancar para «Verano», y perezoso habría tocado el router y siete pantallas (Plan B4, decisión 2; cerrado sin hacer en el punto 12).
+6. **Sin `modulepreload`**: metería los módulos en el mapa de módulos antes de la limpieza del arranque por `CODIGO`, y tras publicar código la app arrancaría con módulos viejos; cuesta 180 ms en la primera visita de un navegador nuevo, y nada en la app instalada (Plan B4, decisión 6).
+7. **El SW se registra tras `load`**: con los datos en `defer`, su precache competía con la primera visita (86 ms más en la portada) (Plan B4, decisión 15).
+8. **Los escudos, en su propia caché** (§5.5): la línea 2 de `sw.js` es `const CRESTS_CACHE = 'futbolbase-escudos-<sello>';`, con el sello de `escudos/` que escribe `scripts/build_crests.py`; los escudos van *cache-first* contra ella, que no cambia con cada subida de datos del bot, así que sin conexión siguen ahí, y un escudo nuevo o cambiado da otro sello (Plan B5, decisión 1).
+9. **La plantilla de la temporada del portal, en el precache** (§5.5): `SEASON_FILES` lleva `data-lineups-<temporada del portal>.js` (11 KB con gzip), para que la ficha de Equipo funcione sin conexión, y `scripts/activate_season.py` la cambia por la de la temporada nueva al activarla (Plan B5, decisión 2).
+10. **`state.js`, sin las funciones que nadie usaba** (§5.2): `matchAdvancer`, `bracketDrawAdvancer`, `bracketChampion` y `countMatches` se fueron en B5, porque quién pasó y el campeón de un cuadro los da `bracket()`, de `model.js` (Plan B5, decisión 6); `ensurePlayers` salió en B3, y `ensureStats` y `ensureSeasonCups` no llegaron a hacer falta (puntos 4 y 5).
+11. **Los esqueletos de las pantallas de B3** (§7): tienen el alto de lo que llega tras ellos en una temporada pasada a 390 px, medido con las fixtures; en la primera visita de la temporada en curso, o a 1440 px, el bloque de verdad puede ser más alto o más bajo (Plan B5, decisiones 4 y 37).
+12. **Cerrado sin hacer**, con su porqué (Plan B5, decisión 9):
+    - los torneos perezosos: el punto 5;
+    - `modulepreload`: el punto 6;
+    - virtualizar Goleadores: medido, y resuelto con páginas de 200 filas (cada «Ver 200 más», de 0,32 a 0,47 s con la CPU ×4; Plan B3, decisión 159);
+    - las acciones de los `fetch-fiflp*.yml` en Node 24: solo avisan de Node 20, GitHub ya las ejecuta en Node 24 y se lanzan a mano (Plan B4, decisión 55);
+    - `scripts/fetch_mygol.py`: ningún workflow ni guion lo llama;
+    - memorizar `seasonRecords`: 7 ms con las fixtures y 52 ms con los datos vivos de benjamín, solo al cambiar de categoría en Récords;
+    - la ficha de Equipo sin esperar a las actas: con la plantilla del portal en el precache (punto 9), la espera solo queda en otras temporadas, de 5 a 18 KB con gzip;
+    - `SIZE = 138` en `build_crests.py`: las miniaturas son de 96 px y en las cabeceras de 46 px a DPR 3 el navegador las amplía a 138, pero las hojas de contacto de B4 no enseñaron la diferencia (Plan B4, decisiones 17 y 40);
+    - los cHRM de Safari: 25 originales llevan un cHRM suelto que Chrome no aplica y su miniatura no lleva; sin un Safari a mano no se comprobó cómo los pinta (Plan B4, decisión 17);
+    - el precache a medias: una instalación del SW que no pudo bajar algún fichero deja ese hueco sin conexión hasta que se pide con red, y se cura solo;
+    - la caché HTTP de 600 s sin SW: sin SW al mando, unos 10 minutos tras publicar código un navegador puede mezclar módulos; lo cerraría versionar el grafo de módulos, y los import maps subirían el suelo de Safari a 16.4 (plan B3, «Antes de publicar B3»);
+    - los alias de los equipos renombrados en Partido: las temporadas anteriores y el cara a cara pierden los equipos que la fuente renombra («VICTORIA, REAL CLUB» frente a «RC Victoria»), y arreglarlo pide una tabla de alias por fuente.

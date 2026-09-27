@@ -31,11 +31,23 @@ export async function waitForAsync(page, predicate, arg, { timeout = 15000, inte
 // Una acción de Playwright (un clic, la espera de un localizador, una navegación) con la etiqueta de su
 // paso (el escenario, el ancho y el tema) delante de su error, como el tiempo agotado de waitForAsync:
 // un fallo de la CI se lee sin reproducirlo (B5, decisión 7). Devuelve lo que devuelve la acción.
+// Reescribir solo error.message no basta: Playwright ya ha formado error.stack para cuando este
+// helper lo recibe, V8 no lo vuelve a formatear al cambiar message, y tanto Node (al imprimir un
+// error no capturado) como util.inspect muestran stack, no message. Por eso stack se reescribe
+// también: si ya contiene el mensaje sin etiqueta (el caso normal), se sustituye ahí mismo; si no, la
+// etiqueta va delante de stack entero. El reemplazo va con una función (no con el string de
+// error.message) porque un selector puede llevar un "$" (p. ej. [href$="…"]), y String.replace lee un
+// "$&" o un "$1" del reemplazo como patrón, no como texto, cuando el reemplazo es un string (revisión
+// final de B5, arreglo 1).
 export async function labeled(label, action) {
   try {
     return await action();
   } catch (error) {
-    if (error instanceof Error) error.message = `${label}: ${error.message}`;
+    if (error instanceof Error) {
+      const { stack, message } = error;
+      error.message = `${label}: ${message}`;
+      if (typeof stack === 'string') error.stack = stack.includes(message) ? stack.replace(message, () => error.message) : `${label}: ${stack}`;
+    }
     throw error;
   }
 }

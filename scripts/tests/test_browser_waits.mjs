@@ -5,6 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
+import { inspect } from 'node:util';
 import { labeled, waitForAsync } from './browser-wait.mjs';
 
 const dir = new URL('./', import.meta.url);
@@ -52,8 +53,36 @@ test('waitForAsync nombra el escenario, el ancho y el tema cuando se agota (B3, 
 
 test('labeled pone la etiqueta del paso delante del error de un clic o de una espera, y devuelve lo que devuelve la acción (B5, decisión 7)', async () => {
   assert.equal(await labeled('390px en claro, portada', async () => 7), 7);
-  await assert.rejects(labeled('390px en oscuro: clic en #contenido #round-prev', async () => { throw new Error('page.click: Timeout 8000ms exceeded.'); }),
-    /^Error: 390px en oscuro: clic en #contenido #round-prev: page\.click: Timeout 8000ms exceeded\.$/);
+
+  const label = '390px en oscuro: clic en #contenido #round-prev';
+  const raw = 'page.click: Timeout 8000ms exceeded.';
+  const error = new Error(raw);
+  // Playwright ya ha formado error.stack (lo lee o lo fija él mismo) antes de que labeled lo reciba:
+  // leerlo aquí, antes de lanzar, reproduce eso. Si se leyera por primera vez después de cambiar
+  // message, V8 lo formatearía ya con la etiqueta puesta, y la prueba pasaría aunque labeled no
+  // tocara stack para nada: el caso que colaba con un `new Error(...)` suelto, sin leer antes su stack.
+  const stackBefore = error.stack;
+  let caught;
+  try { await labeled(label, async () => { throw error; }); } catch (err) { caught = err; }
+  const expected = `${label}: ${raw}`;
+  assert.equal(caught, error);
+  assert.equal(caught.message, expected);
+  assert.notEqual(caught.stack, stackBefore);
+  assert.equal(caught.stack.split('\n')[0], `Error: ${expected}`);
+  assert.equal(inspect(caught).split('\n')[0], `Error: ${expected}`);
+
+  // Un selector puede llevar un "$" (p. ej. [href$="…"]): sustituir con el string de error.message en
+  // vez de con una función leería un "$1" o un "$&" del mensaje como patrón de reemplazo, no como texto.
+  const dollarLabel = '390px en oscuro: clic en selector con $';
+  const dollarRaw = "page.click: Timeout 300ms exceeded. selector: 'a[href$=\"x\"]:nth-child($1)$&'";
+  const dollarError = new Error(dollarRaw);
+  const dollarStackBefore = dollarError.stack;
+  let dollarCaught;
+  try { await labeled(dollarLabel, async () => { throw dollarError; }); } catch (err) { dollarCaught = err; }
+  const dollarExpected = `${dollarLabel}: ${dollarRaw}`;
+  assert.equal(dollarCaught.message, dollarExpected);
+  assert.notEqual(dollarCaught.stack, dollarStackBefore);
+  assert.equal(dollarCaught.stack.split('\n')[0], `Error: ${dollarExpected}`);
 });
 
 test('cada clic, espera de localizador y navegación de interaction-smoke y capturas lleva su etiqueta (labeled)', () => {

@@ -51,7 +51,8 @@
     // siempre (ronda de arreglos 1). Si el arranque falla, o si no hay SW al mando, la apertura
     // siguiente vuelve a intentarlo (decisión 155 de B3). Sin SW al mando no hay caché
     // de SW que limpiar, pero la caché HTTP de GitHub Pages (max-age=600) puede dar durante 10 minutos
-    // un módulo viejo a este app.js: queda para B5 (B4 no versiona el grafo de módulos).
+    // un módulo viejo a este app.js: B5 lo cerró sin arreglar (decisión 9 de B5; spec, «Lo que cambió
+    // al construirlo», punto 12, y plan B5, «Después de B5»); lo cerraría versionar el grafo de módulos.
     // Si el arranque falla (sin conexión en plena transición, cuando esa caché ya guarda este
     // index.html pero no la hoja ni los módulos nuevos, o un módulo que no llega), un aviso con
     // estilos en línea y «Reintentar»: nunca «Cargando…» para siempre. Es texto fijo, sin datos.

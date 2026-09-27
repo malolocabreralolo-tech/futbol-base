@@ -627,7 +627,7 @@ Test con datos reales: para PG2 Las Mesas salen MCP3 (Grupo C, 3.º) y MCPK1 (Co
 
 ## 7. Estados, errores y honestidad
 
-- **Carga:** esqueleto con las dimensiones finales, sin saltos.
+- **Carga:** esqueleto con las dimensiones finales, sin saltos. *(Nota: el alto del esqueleto es el de lo que llega tras él en una temporada pasada a 390 px, medido con las fixtures; en la primera visita de la temporada en curso, o a 1440 px, el bloque de verdad puede ser más alto o más bajo; véase «Lo que cambió al construirlo», punto 11.)*
 - **Error de un fichero:** caja «No se pudieron cargar los datos de <qué>» con «Reintentar». Nunca se cae a datos de otra temporada.
 - **Cobertura** (`coverageNote`): cuando se calcula desde el calendario y no coincide con el PJ de la clasificación.
   - Descuenta los partidos contra retirados y lo dice: «26 partidos en el calendario y 2 contra CD Batán (retirado)».

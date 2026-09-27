@@ -35,7 +35,21 @@ function homeCtx({
   return stale ? { ...ctx, resolution: { ...ctx.resolution, stale: true } } : ctx;
 }
 
-// sha1 del render de la portada en e82eb86 (antes de team-view.js), con las fixtures de B1 y B3.
+// La jornada 30 de PG2 sin fecha publicada (el próximo partido de Las Mesas, el 31/05/2026) y el de la
+// jornada 18 sin hora (el del 01/03/2026): los dos casos de C y de A que las fixtures no traen.
+function undatedJ30() {
+  const raw = currentAt('2026-05-31');
+  raw.history.PG2['Jornada 30'][0][0] = '';
+  return raw;
+}
+function untimedJ18() {
+  const raw = currentAt('2026-03-01');
+  raw.history.PG2['Jornada 18'].find((m) => m[1] === 'Las Mesas Hu.' || m[2] === 'Las Mesas Hu.')[6] = '';
+  return raw;
+}
+
+// sha1 del render de la portada en e82eb86 (antes de team-view.js), con las fixtures de B1 y B3; las
+// cinco últimas, de B5 (decisión 7), del render de 0208d26, el mismo tras la limpieza de la Tarea 3.
 const HOME = {
   A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, 'd2f5931423b8be75b9ebbde851b3a38e5e96fdbd'],
   'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, '36ee90d79396ec6aadf918c43759259e3006ab85'],
@@ -49,6 +63,11 @@ const HOME = {
   'D sin data-health': [{ today: '2026-09-23', withHealth: null, legacyDate: '23/09/2026' }, '5b4cccbb3d4f250a7764fe0c265af96ec2f5bdfd'],
   E: [{ myTeam: { name: 'Las Mesas Hu. B', season: '2025-2026', cat: 'benjamin', groupId: 'FF13' }, today: '2026-09-23' }, 'bede1e6746de45c5d2cf5882130d5d6594e6257d'],
   X: [{ raw: nextSeasonRaw({ benjamin: ['A1'], prebenjamin: ['PG3'] }), today: '2026-10-01', portalSeason: '2026-2027', goles: false }, 'b60fcec7f40d3730d9150338f6377318bec65bad'],
+  'D sin «Verano»': [{ myTeam: { ...LAS_MESAS, name: 'RC Victoria' }, today: '2026-09-23' }, 'd9d70e4f3ada9f803926984c100b10f92c268756'],
+  'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, 'c66ab809f8278913dc471b5f9938a2a971b19c37'],
+  'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '44d2ab6c198ed8fef0e51219670c7416797dc793'],
+  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, 'c00167cf24e6dd20e59b75af8e5b33e549acba96'],
+  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, '1a3daa6fe3cab0381b86f2bc85ba9701da145e59'],
 };
 
 test('la portada pinta lo mismo que antes de la vista compartida, byte a byte, en A, B, C, D, E y X (decisión 8)', () => {
@@ -56,6 +75,15 @@ test('la portada pinta lo mismo que antes de la vista compartida, byte a byte, e
     const out = s(home.render(homeCtx(options)));
     assert.equal(createHash('sha1').update(out).digest('hex'), sha1, name);
   }
+  // Lo que fija cada huella de B5, en claro: que el caso es el que dice su nombre.
+  const text = (options) => s(home.render(homeCtx(options)));
+  const [verano, sinFecha, pendiente, pocos, sinHora] = ['D sin «Verano»', 'C, próximo partido sin fecha publicada',
+    'C, resultado pendiente de publicar', 'A con menos de cinco resultados', 'A con la hora por confirmar'].map((name) => text(HOME[name][0]));
+  assert.ok(verano.includes('data-state="D"') && !verano.includes('Verano'));
+  assert.ok(sinFecha.includes('data-state="C"') && sinFecha.includes('Próximo partido sin fecha publicada'));
+  assert.ok(pendiente.includes('data-state="C"') && pendiente.includes('Resultado pendiente de publicar'));
+  assert.ok(pocos.includes('data-state="A"') && pocos.includes('Últimos resultados') && !pocos.includes('Últimos cinco'));
+  assert.match(sinHora, /<div class="cell is-muted"><dt class="cell-label">Hora<\/dt><dd class="cell-value">por confirmar<\/dd><\/div>/);
 });
 
 // ── teamState (decisión 9) ──────────────────────────────────────────────

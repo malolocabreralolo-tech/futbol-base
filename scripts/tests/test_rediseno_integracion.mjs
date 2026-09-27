@@ -6,9 +6,6 @@
 // que el router deja pasar porque la pantalla los sabe leer.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { fakeBrowser, memoryStorage } from './fixtures/rediseno/fake-browser.mjs';
 import { ctxFor, datasetsFor } from './fixtures/rediseno/screens.mjs';
@@ -19,6 +16,7 @@ import { SCREENS } from '../../src/links.js';
 import { STORE_KEY, LEGACY_KEY } from '../../src/store.js';
 import { SCREEN_MAP } from '../../src/screens.js';
 import { start, startContext } from '../../src/app.js';
+import { SESSION_KEY } from '../../src/router.js';
 import { screen as home } from '../../src/screen-home.js';
 import { screen as jornada } from '../../src/screen-jornada.js';
 import { screen as tabla } from '../../src/screen-tabla.js';
@@ -26,7 +24,6 @@ import { screen as partido } from '../../src/screen-partido.js';
 import { screen as equipo } from '../../src/screen-equipo.js';
 import { screen as ajustes } from '../../src/screen-ajustes.js';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const shields = fixture('shields');
 const raw = fixture('current-2025-2026');
 const real = buildSeason({ name: raw.season, current: true, ...raw });
@@ -271,25 +268,58 @@ test('aviso sin conexión en vivo: aparece al arrancar sin conexión, se va con 
   assert.match(slot(), /Sin conexión\.<\/b> Datos del 23\/09\/2026/, 'sin conexión otra vez: el aviso vuelve, con la fecha correcta');
 });
 
-// app.js es el punto de entrada: start(doc, win) lo llama index.html. Además de su conducta (arriba),
-// el orden de su cableado con el navegador se comprueba en el código; en el navegador, en el paso 6
-// y en la Tarea 13.
-const APP = readFileSync(join(ROOT, 'src/app.js'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
-const routerStart = APP.indexOf('startRouter({');
-
-test('app.js: crestFallback en captura y mi equipo guardado, los dos antes del primer pintado', () => {
-  const crest = APP.search(/doc\.addEventListener\(\s*'error',[^;]*crestFallback\([^;]*,\s*true\s*\)/);
-  assert.ok(crest >= 0, 'falta el manejador de errores de imagen en captura');
-  const save = APP.search(/myTeamToSave\(store\.myTeam,/);
-  assert.ok(save >= 0, 'falta guardar mi equipo al arrancar');
-  assert.ok(routerStart > crest && routerStart > save, 'los dos van antes de startRouter');
+// El cableado de app.js con el navegador, por su conducta (B5, decisión 7; antes se leía su código):
+// lo que start() escucha y guarda antes del primer pintado, la sesión y «Hacer mi equipo».
+test('start: la cadena de los escudos, en captura, y el cambio de fase guardado, los dos antes del primer pintado', async () => {
+  const ff5 = { name: 'Las Mesas Hu.', season: '2025-2026', cat: 'benjamin', groupId: 'FF5' };
+  const storage = new Map([[STORE_KEY, JSON.stringify({ myTeam: ff5, recent: [] })]]);
+  installData(currentAt('2026-03-01'));
+  const page = fakeBrowser('#/', { storage });
+  // Cada escucha del documento y cada escritura del almacén, con si la pantalla ya estaba pintada.
+  const seen = [];
+  const onError = [];
+  const listen = page.doc.addEventListener;
+  page.doc.addEventListener = (type, fn, capture) => {
+    seen.push(['escucha', type, capture === true, page.main.innerHTML === '']);
+    if (type === 'error') onError.push(fn);
+    listen(type, fn, capture);
+  };
+  const setItem = page.win.localStorage.setItem;
+  page.win.localStorage.setItem = (key, value) => {
+    seen.push(['guarda', key, page.main.innerHTML === '']);
+    setItem(key, value);
+  };
+  const router = start(page.doc, page.win, PORTAL_2526, { now: () => new Date('2026-03-01T12:00:00Z') });
+  await router.idle();
+  assert.deepEqual(seen.slice(0, 3), [['escucha', 'error', true, true], ['guarda', STORE_KEY, true], ['escucha', 'click', false, true]],
+    'los escudos (en captura) y el cambio de fase (FF5 → A2), antes de que el router pinte');
+  assert.equal(saved(storage).groupId, 'A2');
+  assert.equal(stateOf(page), 'A');
+  // La escucha de los errores de imagen es la cadena de los escudos: miniatura → original → monograma.
+  const img = {
+    tagName: 'IMG', classList: { contains: (c) => c === 'crest' }, attrs: { src: './escudos/s/huracan.png', 'data-full': './escudos/huracan.png' },
+    getAttribute(n) { return this.attrs[n] ?? null; }, setAttribute(n, v) { this.attrs[n] = v; },
+  };
+  onError.forEach((fn) => fn({ target: img }));
+  assert.equal(img.attrs.src, './escudos/huracan.png');
 });
 
-// El aviso sin conexión en vivo (online/offline y offlineNotice) ya se comprueba por conducta,
-// arriba: aquí solo lo que esa prueba no puede ver desde fuera (sesión y la forma de saveMyTeam).
-test('app.js: sesión y «Hacer mi equipo» con saveStore', () => {
-  assert.match(APP, /session: safeStorage\(\(\) => win\.sessionStorage\)/);
-  assert.match(APP, /saveMyTeam\(myTeam\) \{\s*store = \{ \.\.\.store, myTeam \};\s*return saveStore\(storage, store\);/);
+test('start: el último destino principal, en la sesión de la pestaña; «Hacer mi equipo», en el almacén con saveStore o, si falla, en memoria', async () => {
+  const storage = new Map();
+  const { page, router } = await load(storage, { today: '2026-03-01', hash: '#/tabla' });
+  assert.equal(page.win.sessionStorage.getItem(SESSION_KEY), 'tabla');
+  const huracan = { name: 'AD Huracán', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' };
+  assert.equal(router.nav.saveMyTeam(huracan), true);
+  await router.idle();
+  assert.deepEqual(saved(storage), huracan);
+  // Con el almacén lleno (setItem lanza): false, y la portada ya es la del equipo nuevo, en memoria.
+  page.win.localStorage.setItem = () => { throw new Error('QuotaExceededError'); };
+  assert.equal(router.nav.saveMyTeam({ ...huracan, name: 'Acodetti' }), false);
+  await router.idle();
+  page.type('#/');
+  await router.idle();
+  assert.match(page.main.innerHTML, /<h1>Acodetti<\/h1>/);
+  assert.deepEqual(saved(storage), huracan, 'en el almacén, el último que se pudo guardar');
 });
 // ── Plan B3, tarea 1: paso 0 del router, vistos hace poco y «Borrar datos» con start() ──
 

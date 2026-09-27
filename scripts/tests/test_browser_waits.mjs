@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { waitForAsync } from './browser-wait.mjs';
+import { labeled, waitForAsync } from './browser-wait.mjs';
 
 const dir = new URL('./', import.meta.url);
 
@@ -48,4 +48,20 @@ test('waitForAsync nombra el escenario, el ancho y el tema cuando se agota (B3, 
   const page = { evaluate: async () => false };
   await assert.rejects(waitForAsync(page, () => false, null, { timeout: 30, interval: 5, label: '390px en oscuro, ficha de AD Huracán' }),
     /^Error: waitForAsync \(390px en oscuro, ficha de AD Huracán\): condition not met after 30ms/);
+});
+
+test('labeled pone la etiqueta del paso delante del error de un clic o de una espera, y devuelve lo que devuelve la acción (B5, decisión 7)', async () => {
+  assert.equal(await labeled('390px en claro, portada', async () => 7), 7);
+  await assert.rejects(labeled('390px en oscuro: clic en #contenido #round-prev', async () => { throw new Error('page.click: Timeout 8000ms exceeded.'); }),
+    /^Error: 390px en oscuro: clic en #contenido #round-prev: page\.click: Timeout 8000ms exceeded\.$/);
+});
+
+test('cada clic, espera de localizador y navegación de interaction-smoke y capturas lleva su etiqueta (labeled)', () => {
+  const offenders = [];
+  for (const file of ['interaction-smoke.mjs', 'capturas.mjs']) {
+    readFileSync(new URL(file, dir), 'utf8').split('\n').forEach((line, i) => {
+      if (/\.(?:click|waitFor|goBack|reload)\(/.test(line) && !/labeled\(/.test(line) && !/^\s*\/\//.test(line)) offenders.push(`${file}:${i + 1}`);
+    });
+  }
+  assert.deepEqual(offenders, [], 'envuélvelos con labeled (browser-wait.mjs)');
 });

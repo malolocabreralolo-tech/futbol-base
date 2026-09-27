@@ -11,7 +11,7 @@ import { createRequire } from 'node:module';
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { startServer, findChrome } from './render-smoke.mjs';
-import { waitForAsync } from './browser-wait.mjs';
+import { labeled, waitForAsync } from './browser-wait.mjs';
 import { useWorld } from './fixture-site.mjs';
 
 const out = process.env.OUT;
@@ -95,8 +95,8 @@ try {
         // Lo que se abre antes de la foto, con su localizador: sin esperas fijas. Después, el ratón a
         // la esquina: nada queda subrayado por :hover en la foto.
         for (const [button, shown] of options.act || []) {
-          await page.locator(button).first().click();
-          await page.locator(shown).first().waitFor();
+          await labeled(`${label}: clic en ${button}`, () => page.locator(button).first().click());
+          await labeled(`${label}: espera a ${shown}`, () => page.locator(shown).first().waitFor());
         }
         if (options.act) await page.mouse.move(0, 0);
         // La ventana, del alto de la página: todo queda a la vista y los escudos diferidos cargan.

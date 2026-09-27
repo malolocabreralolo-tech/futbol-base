@@ -27,3 +27,15 @@ export async function waitForAsync(page, predicate, arg, { timeout = 15000, inte
     await new Promise(resolve => setTimeout(resolve, interval));
   }
 }
+
+// Una acción de Playwright (un clic, la espera de un localizador, una navegación) con la etiqueta de su
+// paso (el escenario, el ancho y el tema) delante de su error, como el tiempo agotado de waitForAsync:
+// un fallo de la CI se lee sin reproducirlo (B5, decisión 7). Devuelve lo que devuelve la acción.
+export async function labeled(label, action) {
+  try {
+    return await action();
+  } catch (error) {
+    if (error instanceof Error) error.message = `${label}: ${error.message}`;
+    throw error;
+  }
+}

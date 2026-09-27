@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { createRequire } from 'node:module';
 import { startServer, findChrome } from './render-smoke.mjs';
-import { waitForAsync } from './browser-wait.mjs';
+import { labeled, waitForAsync } from './browser-wait.mjs';
 import { useWorld, STORE_KEY } from './fixture-site.mjs';
 
 // npm install --no-save --package-lock=false playwright@1.58.0
@@ -35,6 +35,9 @@ import { useWorld, STORE_KEY } from './fixture-site.mjs';
 // De B5: una vez, a 390 px, el «Reintentar» de la Plantilla, los Goles y las Alineaciones (un 503 y
 // luego 200): cada bloque se pinta en su sitio, sin volver arriba (decisión 3); y el paso del
 // esqueleto a la ficha de Equipo de una temporada pasada, sin desplazar lo de arriba (decisión 4).
+// Y lo que faltaba (decisión 7): el calendario de escritorio de la portada (desde 1024 px), Intro en
+// los buscadores de Explorar y de Goleadores (ni recarga ni cambia la dirección) y la portada en B, C,
+// D, E y X a 320 px. Cada clic, espera de localizador y navegación lleva su etiqueta (labeled).
 // Sin esperas fijas: cada paso espera a su condición (waitForAsync, que al agotarse dice el escenario,
 // el ancho y el tema) o a su localizador.
 const { chromium } = createRequire(import.meta.url)('playwright');
@@ -131,6 +134,27 @@ async function checkLayout(page, width, label) {
   return m;
 }
 
+// Un clic en `selector`, con la etiqueta de su paso en el error de un tiempo agotado (labeled).
+const click = (page, selector, label) => labeled(`${label}: clic en ${selector}`, () => page.click(selector));
+
+// Intro en el campo con el foco: el formulario no se envía (su submit lleva preventDefault, que se lee
+// en la ventana, después de los de la pantalla; una escucha por página), la dirección y el historial no
+// cambian y la página es la misma (su marca sigue). Devuelve el id del elemento con el foco después.
+async function pressEnter(page, label) {
+  const before = await page.evaluate(() => {
+    window.__marca = 'sin recargar';
+    if (!window.__submits) addEventListener('submit', (event) => window.__submits.push(event.defaultPrevented));
+    window.__submits = [];
+    return { hash: location.hash, length: history.length };
+  });
+  await labeled(`${label}: Intro`, () => page.keyboard.press('Enter'));
+  await waitForAsync(page, () => window.__submits.length === 1, null, { label: `${label}: el envío del formulario` });
+  const after = await page.evaluate(() => ({ prevented: window.__submits[0], marca: window.__marca, hash: location.hash, length: history.length, focus: document.activeElement?.id || null }));
+  assert.equal(after.prevented, true, `${label}: Intro no envía el formulario`);
+  assert.deepEqual([after.marca, after.hash, after.length], ['sin recargar', before.hash, before.length], `${label}: Intro no recarga ni cambia la dirección`);
+  return after.focus;
+}
+
 const newContext = (viewport, colorScheme) => browser.newContext({
   viewport, colorScheme, serviceWorkers: 'block', locale: 'es-ES', timezoneId: 'Atlantic/Canary', reducedMotion: 'reduce',
 });
@@ -156,41 +180,50 @@ async function scenarios(viewport, colorScheme) {
     assert.equal(s.state, 'A', `${label}: la portada del 01/03/2026 está en A`);
     assert.deepEqual(s.tabs, ['#/ page'], label);
     assert.equal((await checkLayout(page, viewport.width, `${label}, portada`)).paper, PAPER[colorScheme], `${label}: fondo del tema`);
+    // El calendario de escritorio (spec §4.8): desde 1024 px, en su hueco, los 26 partidos de Las Mesas;
+    // por debajo, el hueco vacío (se pinta solo lo visible, §5.1).
+    const calendar = await page.evaluate(() => {
+      const slot = document.querySelector('#contenido [data-slot="calendario"]');
+      return { slot: Boolean(slot), rows: slot ? slot.querySelectorAll('#calendario a.match-row').length : null,
+        context: slot?.querySelector('#calendario .block-context')?.textContent ?? null };
+    });
+    assert.deepEqual(calendar, viewport.width >= 1024 ? { slot: true, rows: 26, context: '26 partidos' } : { slot: true, rows: 0, context: null },
+      `${label}: el calendario de la portada, solo en escritorio`);
 
     // 2. Jornada por la barra; anterior y siguiente cambian la jornada sin entrada nueva.
-    await page.click('.tabbar a.tab[href="#/jornada"]');
+    await click(page, '.tabbar a.tab[href="#/jornada"]', label);
     s = await paintedAs(page, 'jornada', { hash: '#/jornada', round: 'Jornada 17 de 30', label: `${label}, jornada` });
     assert.deepEqual(s.tabs, ['#/jornada page'], label);
     const entries = s.length;
     assert.equal(s.focus, 'H1', `${label}: al cambiar de pantalla, el foco va al h1`);
-    await page.click('#contenido #round-prev');
+    await click(page, '#contenido #round-prev', label);
     s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&g=PG2&r=Jornada%2016', round: 'Jornada 16 de 30', label: `${label}, jornada anterior` });
     assert.equal(s.focus, 'round-prev', `${label}: al cambiar de jornada, el foco se queda en «‹»`);
-    await page.click('#contenido #round-next');
+    await click(page, '#contenido #round-next', label);
     s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&g=PG2&r=Jornada%2017', round: 'Jornada 17 de 30', label: `${label}, jornada siguiente` });
     assert.equal(s.focus, 'round-next', `${label}: al cambiar de jornada, el foco se queda en «›»`);
     assert.equal(s.length, entries, `${label}: cambiar de jornada usa replaceState`);
     await checkLayout(page, viewport.width, `${label}, jornada`);
 
     // 3. Abrir el partido propio de la jornada (va el primero) y volver con Atrás.
-    await page.click('#contenido a.match-row.is-mine');
+    await click(page, '#contenido a.match-row.is-mine', label);
     s = await paintedAs(page, 'partido', { label: `${label}, partido` });
     assert.equal(s.h1, 'Partido: Las Mesas Hu. – Unión Viera', label);
     assert.equal(s.focus, 'H1', `${label}: en el partido, el foco va al h1`);
     assert.deepEqual(s.tabs, ['#/jornada true'], `${label}: Partido lleva el destino de origen`);
     await checkLayout(page, viewport.width, `${label}, partido`);
-    await page.goBack();
+    await labeled(`${label}: Atrás`, () => page.goBack());
     s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&g=PG2&r=Jornada%2017', round: 'Jornada 17 de 30', label: `${label}, Atrás desde el partido` });
 
     // 4. Tabla: cada vista, sin entrada nueva, con sus columnas.
-    await page.click('.tabbar a.tab[href="#/tabla"]');
+    await click(page, '.tabbar a.tab[href="#/tabla"]', label);
     s = await paintedAs(page, 'tabla', { hash: '#/tabla', label: `${label}, tabla` });
     const tabEntries = s.length;
     const selector = viewport.width < 1024 ? '.tabla-views.is-narrow' : '.tabla-views.is-wide';
     const prefix = viewport.width < 1024 ? 'vista' : 'vista-ancha';
     const views = viewport.width < 1024 ? ['Goles', 'Forma', 'Casa', 'Fuera', 'Puntos'] : ['Casa', 'Fuera', 'Todas'];
     for (const view of views) {
-      await page.locator(`#contenido ${selector} a.segment`, { hasText: view }).click();
+      await labeled(`${label}: vista ${view}`, () => page.locator(`#contenido ${selector} a.segment`, { hasText: view }).click());
       await waitForAsync(page, ([sel, v]) => document.querySelector(`#contenido ${sel} a.segment[aria-current]`)?.textContent === v, [selector, view], { label: `${label}, vista ${view} de la Tabla` });
       s = await snapshot(page);
       assert.equal(s.heads, HEADS[view], `${label}: columnas de la vista ${view}`);
@@ -201,17 +234,17 @@ async function scenarios(viewport, colorScheme) {
 
     // 5. «Otro grupo» → Ligas → Tabla (§11): las ligas de prebenjamín de Gran Canaria, con Tabla como
     // destino (la barra no cambia); la liga abre sus grupos, y el grupo, su Tabla.
-    await page.click('#contenido a.screen-action');
+    await click(page, '#contenido a.screen-action', label);
     s = await paintedAs(page, 'ligas', { hash: '#/ligas?s=2025-2026&c=prebenjamin&i=grancanaria&to=tabla', label: `${label}, «Otro grupo»` });
     assert.equal(s.h1, 'Ligas', label);
     assert.deepEqual(s.tabs, ['#/tabla true'], label);
     await checkLayout(page, viewport.width, `${label}, ligas`);
-    await page.click('#contenido a.link-row');
+    await click(page, '#contenido a.link-row', label);
     s = await paintedAs(page, 'ligas', { hash: '#/ligas?s=2025-2026&c=prebenjamin&f=grancanaria&to=tabla', label: `${label}, grupos de la liga` });
     assert.equal(s.h1, 'Gran Canaria', label);
     assert.deepEqual(s.tabs, ['#/tabla true'], label);
     await checkLayout(page, viewport.width, `${label}, grupos de la liga`);
-    await page.click('#contenido a.group-row[href="#/tabla?s=2025-2026&g=PG3"]');
+    await click(page, '#contenido a.group-row[href="#/tabla?s=2025-2026&g=PG3"]', label);
     s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG3', label: `${label}, Tabla del grupo elegido` });
     assert.deepEqual(s.tabs, ['#/tabla page'], label);
     await page.close();
@@ -224,7 +257,7 @@ async function scenarios(viewport, colorScheme) {
     assert.equal(s.h1, 'Partido: AD Huracán – Las Mesas Hu.', label);
     assert.deepEqual(s.tabs, ['#/ true'], `${label}: enlace directo a un partido de mi equipo`);
     await checkLayout(direct, viewport.width, `${label}, partido enlazado`);
-    await direct.click('#contenido a.back');
+    await click(direct, '#contenido a.back', label);
     s = await paintedAs(direct, 'jornada', { hash: '#/jornada?s=2025-2026&g=PG2&r=Jornada%2015', round: 'Jornada 15 de 30', label: `${label}, «‹» del partido enlazado` });
     assert.deepEqual(s.tabs, ['#/jornada page'], label);
     await direct.close();
@@ -255,7 +288,7 @@ async function checkBracket(page, width, label) {
     return;
   }
   assert.ok(before.scrolls, `${label}: el cuadro se desliza dentro de su caja`);
-  await page.click('#contenido #ronda-6-tab');
+  await click(page, '#contenido #ronda-6-tab', label);
   await waitForAsync(page, () => document.querySelector('#ronda-6-tab')?.hasAttribute('aria-current')
     && document.querySelector('#contenido .bracket').scrollLeft > 0, null, { label: `${label}: la pestaña «Final» del cuadro` });
   const after = await state();
@@ -284,7 +317,7 @@ async function scenariosB3(viewport, colorScheme) {
 
     // 1. «Cambiar» → Explorar con el foco en el buscador; escribir «hurac» letra a letra filtra la
     //    lista y apunta la búsqueda en la dirección sin entradas nuevas (decisión 4 de B3).
-    await page.click('#contenido a.screen-action');
+    await click(page, '#contenido a.screen-action', label);
     s = await paintedAs(page, 'explorar', { hash: '#/explorar#buscar', label: `${label}, «Cambiar»` });
     assert.equal(s.focus, 'buscar', `${label}: «Cambiar» deja el foco en el buscador`);
     const entries = s.length;
@@ -295,10 +328,13 @@ async function scenariosB3(viewport, colorScheme) {
     assert.equal(s.length, entries, `${label}: escribir no crea una entrada por letra`);
     assert.equal(s.focus, 'buscar', `${label}: el foco sigue en el buscador`);
     await checkLayout(page, viewport.width, `${label}, Explorar con resultados`);
+    // Intro en el buscador: la lista se queda, y el foco también (se sigue escribiendo).
+    assert.equal(await pressEnter(page, `${label}, buscador de Explorar`), 'buscar', `${label}: tras Intro, el foco sigue en el buscador`);
+    assert.ok(await page.locator('#resultados a.search-result').count() > 0, `${label}: tras Intro, los resultados siguen`);
 
     // 2. Su ficha: Explorar marcado, «Hacer mi equipo» y la ficha en «Vistos hace poco»; mi equipo
     //    sigue siendo Las Mesas Hu., también en la portada.
-    await page.click(`#resultados a.search-result[href="${HURACAN}"]`);
+    await click(page, `#resultados a.search-result[href="${HURACAN}"]`, label);
     s = await paintedAs(page, 'equipo', { hash: HURACAN, label: `${label}, ficha de AD Huracán` });
     assert.equal(s.h1, 'AD Huracán', label);
     assert.deepEqual(s.tabs, ['#/explorar true'], `${label}: la ficha de otro equipo cuelga de Explorar`);
@@ -307,7 +343,7 @@ async function scenariosB3(viewport, colorScheme) {
     const seen = await stored();
     assert.deepEqual(seen.myTeam, LAS_MESAS, `${label}: visitar una ficha no cambia mi equipo`);
     assert.deepEqual(seen.recent[0], { s: '2025-2026', g: 'PG2', t: 'AD Huracán' }, `${label}: la ficha va a «Vistos hace poco»`);
-    await page.click('.tabbar a.tab[href="#/"]');
+    await click(page, '.tabbar a.tab[href="#/"]', label);
     s = await paintedAs(page, 'home', { hash: '#/', label: `${label}, portada tras la ficha` });
     assert.equal(s.h1, 'Las Mesas Hu.', `${label}: la portada sigue siendo la de mi equipo`);
 
@@ -316,25 +352,33 @@ async function scenariosB3(viewport, colorScheme) {
     for (const [hash, screen, steps] of B3_SCREENS) {
       await go(hash, screen, screen);
       for (const [button, shown] of steps) {
-        await page.locator(button).first().click();
-        await page.locator(shown).first().waitFor();
+        await labeled(`${label}, ${screen}: clic en ${button}`, () => page.locator(button).first().click());
+        await labeled(`${label}, ${screen}: espera a ${shown}`, () => page.locator(shown).first().waitFor());
       }
       await checkLayout(page, viewport.width, `${label}, ${screen}`);
       if (screen === 'copa') await checkBracket(page, viewport.width, `${label}, cuadro de copa`);
     }
 
+    // Intro en el buscador de Goleadores: tras filtrar, ni recarga ni cambia la dirección, y cierra el
+    // teclado (el campo pierde el foco).
+    await go('#/goleadores', 'goleadores', 'Goleadores');
+    await click(page, '#buscar-goleador', label);
+    await page.keyboard.type('mesas');
+    await waitForAsync(page, () => location.hash === '#/goleadores?s=2025-2026&q=mesas', null, { label: `${label}, buscar «mesas» en Goleadores` });
+    assert.notEqual(await pressEnter(page, `${label}, buscador de Goleadores`), 'buscar-goleador', `${label}: tras Intro, el teclado se cierra`);
+
     // 4. «Hacer mi equipo» desde la ficha: se guarda, la barra pasa a Mi equipo y, al recargar, la
     //    portada es la del equipo nuevo.
     await go(HURACAN, 'equipo', 'ficha otra vez');
-    await page.click('#contenido button[data-action="hacer-mi-equipo"]');
+    await click(page, '#contenido button[data-action="hacer-mi-equipo"]', label);
     await waitForAsync(page, () => !document.querySelector('#contenido button[data-action="hacer-mi-equipo"]')
       && document.querySelector('.tabbar a.tab[aria-current]')?.getAttribute('href') === '#/', null, { label: `${label}, «Hacer mi equipo»` });
     assert.deepEqual((await stored()).myTeam, AD_HURACAN, `${label}: «Hacer mi equipo» lo guarda en ${STORE_KEY}`);
-    await page.reload();
+    await labeled(`${label}: recargar`, () => page.reload());
     s = await paintedAs(page, 'equipo', { hash: HURACAN, label: `${label}, ficha tras recargar` });
     assert.deepEqual(s.tabs, ['#/ true'], `${label}: tras recargar, la ficha es mi equipo`);
     assert.equal(await page.locator('#contenido button[data-action="hacer-mi-equipo"]').count(), 0, label);
-    await page.click('.tabbar a.tab[href="#/"]');
+    await click(page, '.tabbar a.tab[href="#/"]', label);
     s = await paintedAs(page, 'home', { hash: '#/', label: `${label}, portada del equipo nuevo` });
     assert.equal(s.h1, 'AD Huracán', `${label}: la portada es la del equipo nuevo`);
 
@@ -368,7 +412,7 @@ async function retryBlocks() {
         return { y: scrollY, length: history.length };
       }, id);
       assert.ok(before.y > 0, `${label}, ${step}: el bloque está más abajo del principio`);
-      await page.click(`#${id} button[data-action="retry"]`);
+      await click(page, `#${id} button[data-action="retry"]`, `${label}, ${step}`);
       await waitForAsync(page, (sel) => document.querySelector(sel) !== null, done, { label: `${label}, ${step}` });
       const after = await page.evaluate((block) => ({
         y: scrollY, length: history.length,
@@ -402,6 +446,29 @@ async function retryBlocks() {
     assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
   } finally {
     await context.close();
+  }
+}
+
+// La portada en B, C, D, E y X a 320 px (B3, «Sin prueba todavía»; B5, decisión 7): sin desplazamiento
+// horizontal y sin que la barra tape el final, como la de A en los escenarios de cada ancho.
+async function homeStates() {
+  for (const world of ['B', 'C', 'D', 'E', 'X']) {
+    const label = `320px en claro, portada en ${world}`;
+    const context = await newContext({ width: 320, height: 568 }, 'light');
+    try {
+      await useWorld(context, world);
+      const page = await context.newPage();
+      page.setDefaultTimeout(8000);
+      const errors = [];
+      page.on('pageerror', (error) => errors.push(error.message));
+      await page.goto(`${base}#/`);
+      const s = await paintedAs(page, 'home', { label });
+      assert.equal(s.state, world, `${label}: el estado del mundo`);
+      await checkLayout(page, 320, label);
+      assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
+    } finally {
+      await context.close();
+    }
   }
 }
 
@@ -488,11 +555,11 @@ async function answerE() {
     assert.equal(s.state, 'E', 'mundo E: la pregunta');
     const choice = page.locator('#contenido [data-action="elegir"][data-index="0"]');
     const name = await choice.locator('.choice-name').textContent();
-    await choice.click();
+    await labeled('mundo E: la respuesta', () => choice.click());
     await waitForAsync(page, () => document.querySelector('#contenido section[data-screen="home"]')?.getAttribute('data-state') !== 'E', null, { label: 'mundo E, la respuesta' });
     const saved = await page.evaluate((key) => JSON.parse(localStorage.getItem(key)).myTeam, STORE_KEY);
     assert.deepEqual(saved, { name, season: '2025-2026', cat: 'benjamin', groupId: 'A2' }, 'la respuesta se guarda');
-    await page.reload();
+    await labeled('mundo E: recargar', () => page.reload());
     s = await paintedAs(page, 'home', { label: 'mundo E, tras recargar' });
     assert.notEqual(s.state, 'E', 'tras recargar no vuelve a preguntar');
     assert.equal(s.h1, name, 'la portada es la del equipo elegido');
@@ -511,9 +578,9 @@ try {
     for (const colorScheme of ['light', 'dark']) {
       const label = nameOf(viewport, colorScheme);
       await scenarios(viewport, colorScheme);
-      console.log(`PASS: ${label}: barra, jornadas, vistas de Tabla, partido con Atrás y con «‹», el 8–1 enlazado, enlace antiguo y «Otro grupo» → Ligas → Tabla, el foco en su sitio y sin desplazamiento horizontal`);
+      console.log(`PASS: ${label}: barra, calendario de la portada solo en escritorio, jornadas, vistas de Tabla, partido con Atrás y con «‹», el 8–1 enlazado, enlace antiguo y «Otro grupo» → Ligas → Tabla, el foco en su sitio y sin desplazamiento horizontal`);
       await scenariosB3(viewport, colorScheme);
-      console.log(`PASS: ${label}: buscar «hurac» sin una entrada por letra y abrir su ficha sin cambiar mi equipo, las pantallas de B3 sin desplazamiento horizontal (el cuadro de copa, dentro de su caja) y «Hacer mi equipo», guardado y respetado al recargar`);
+      console.log(`PASS: ${label}: buscar «hurac» sin una entrada por letra y abrir su ficha sin cambiar mi equipo, Intro sin recargar en los dos buscadores, las pantallas de B3 sin desplazamiento horizontal (el cuadro de copa, dentro de su caja) y «Hacer mi equipo», guardado y respetado al recargar`);
     }
   }
   await answerE();
@@ -522,6 +589,8 @@ try {
   console.log('PASS: 390px en claro, «Reintentar» de la Plantilla, las Alineaciones y los Goles (un 503 y luego 200): cada bloque, en su sitio, sin volver arriba y con el foco en su título');
   await skeletonShift();
   console.log('PASS: 390px en claro, del esqueleto a la ficha de Equipo de 2024/25: la cabecera y el primer bloque, en su sitio y casi del mismo alto; desplazamiento por debajo de 0,1');
+  await homeStates();
+  console.log('PASS: 320px en claro, la portada en B, C, D, E y X: sin desplazamiento horizontal y sin que la barra tape el final');
 } finally {
   if (browser) await browser.close();
   server.closeAllConnections();

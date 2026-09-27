@@ -205,3 +205,15 @@ test('CSS: columnas por vista solo por debajo de 1024 px; cada selector en su an
     .match(/class="[^"]+"/g).flatMap(m => m.slice(7, -1).split(/\s+/)));
   assert.deepEqual([...used].filter(c => !rules.classes.has(c)), []);
 });
+
+// ── Plan B5, Tarea 7: el contexto de la clasificación con la jornada en curso (B3, «Sin prueba todavía») ──
+
+test('a mitad de temporada, la clasificación dice hasta qué jornada llega, sin «, final»; sin jornada de la fuente, nada', () => {
+  const raw = currentAt('2026-03-01');
+  const pg2 = raw.prebenjamin.find((g) => g.id === 'PG2');
+  pg2.jornada = 'Jornada 17';
+  const at = (current) => render({ g: 'PG2' }, { today: '2026-03-01', datasets: datasetsFor({ golPrebenj: GOL_PG2, current }) });
+  assert.match(at(raw), /<h2 class="block-title">Clasificación<\/h2><p class="block-context">jornada 17<\/p><\/div>/);
+  pg2.jornada = null;
+  assert.match(at(raw), /<h2 class="block-title">Clasificación<\/h2><\/div><div class="box tabla-puntos">/);
+});

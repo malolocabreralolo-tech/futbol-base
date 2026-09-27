@@ -1,7 +1,8 @@
 // Marco de la app (spec §4.1, §4.8, §4.10, §7 y §8): cabecera con la marca y la barra,
 // aria-current de la barra, aviso sin conexión, esqueletos de carga, caja de error y aviso de
 // redirección. Todo son funciones puras que devuelven Html, salvo updateTabbar, que cambia la
-// barra ya pintada del documento que recibe. La cabecera de cada pantalla es screenHead (ui.js).
+// barra ya pintada del documento que recibe, y retryBlock, que vuelve a pintar un bloque de la
+// pantalla. La cabecera de cada pantalla es screenHead (ui.js).
 // No toca el navegador al importarse.
 import { html } from './html.js';
 import { tabbar, notice, screenHead } from './ui.js';
@@ -78,6 +79,38 @@ export function skeleton(screenId) {
 // por data-action="retry". Nunca se cae a datos de otra temporada.
 export function errorBox(what) {
   return html`<div class="box error-box" role="alert"><p class="error-text">No se pudieron cargar los datos de ${what}.</p><div class="buttons"><button class="button is-main" type="button" data-action="retry">Reintentar</button></div></div>`;
+}
+
+// «Reintentar» de un bloque que falló en el primer pintado (B5, decisión 3): la Plantilla de Equipo
+// y los Goles y las Alineaciones de Partido, que lo atienden en su mount sin pasar por el router (con
+// stopPropagation, como la Trayectoria). Vuelve a pedir lo que le falta (`load`, que nunca rechaza: los
+// cargadores de state.js dan null) y pinta de nuevo el bloque `#id` de `section` en su sitio, con
+// `paint()` (su Html: una sección con el mismo id). El resto de la pantalla, el desplazamiento y la
+// ruta se quedan, y el foco va al título del bloque (tabindex -1, como el h1 del router). Mientras
+// carga, su botón dice «Cargando…» y no se puede volver a pulsar. Si el bloque ya no está en la página
+// (otra navegación lo quitó), no pinta nada. Devuelve el bloque nuevo, o null.
+export async function retryBlock(section, id, button, load, paint) {
+  const current = section.querySelector(`#${id}`);
+  if (!current) return null;
+  button.disabled = true;
+  button.textContent = 'Cargando…';
+  await load();
+  if (!current.isConnected) return null;
+  // El desplazamiento, donde estaba: sin esto, el anclaje del navegador (scroll anchoring) sube la
+  // página tanto como crece el bloque, para dejar quieto lo de debajo, y el bloque nuevo quedaría
+  // por encima de la vista.
+  const view = current.ownerDocument?.defaultView || null;
+  const y = view ? view.scrollY : null;
+  // Html de html``, que escapa cada dato, como el pintado del router (spec §5.1).
+  current.outerHTML = String(paint());
+  if (view && view.scrollY !== y) view.scrollTo(view.scrollX, y);
+  const fresh = section.querySelector(`#${id}`);
+  const title = fresh && fresh.querySelector('.block-title');
+  if (title) {
+    if (!title.hasAttribute('tabindex')) title.setAttribute('tabindex', '-1');
+    title.focus({ preventScroll: true });
+  }
+  return fresh;
 }
 
 // La pantalla entera cuando falla una carga o el pintado: su h1 y la caja de error.

@@ -6,6 +6,7 @@ import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { currentAt, nextSeasonRaw, goleadores, lineupsFor, archive } from './fixtures/rediseno/simulate.mjs';
 import { ctxFor, datasetsFor, pastSeasonRaw, cssRules } from './fixtures/rediseno/screens.mjs';
+import { fakeSection } from './fixtures/rediseno/fake-browser.mjs';
 import { anyCards, findGroup, playerMatches, pointsProgression, teamSquad } from '../../src/model.js';
 import { teamTrajectory } from '../../src/myteam.js';
 import { pointsChart } from '../../src/ui.js';
@@ -398,7 +399,9 @@ test('la plantilla en la ficha: N.º, jugador (un botón con aria-expanded), PJ,
   assert.match(squad, /<tbody><tr><td class="sq-dorsal">9<\/td><th scope="row" class="sq-name"><button type="button" class="squad-player" data-action="jugador" data-index="0" aria-expanded="false">Liam Garcia Larsen<\/button><\/th><td class="sq-num">9<\/td><td class="sq-num">9<\/td><td class="sq-goals">21<\/td><\/tr>/);
   assert.equal((squad.match(/class="squad-player"/g) || []).length, 10);
   assert.doesNotMatch(squad, /squad-detail|Tarjetas/, 'el detalle lo pinta mount; sin tarjetas en la temporada, sin su columna');
-  assert.match(out, /<\/section><p class="notice">Actas de 9 de 20 partidos jugados; 1 acta más llega incompleta \(sin uno de los dos equipos\) y no cuenta\.<\/p>/);
+  // La nota va dentro de su bloque (B5, decisión 3: una sola sección, que su «Reintentar» pinta en su sitio).
+  assert.match(squad, /<\/table><\/div><p class="notice">Actas de 9 de 20 partidos jugados; 1 acta más llega incompleta \(sin uno de los dos equipos\) y no cuenta\.<\/p><\/section>$/);
+  assert.match(squad, /^<section class="block" id="plantilla">/);
   // Con una tarjeta en la temporada (en otro grupo), las columnas de tarjetas.
   const cards = structuredClone(ACTAS['2025-2026']);
   const ff1 = Object.values(cards).find((acta) => acta.gr === 'FF1');
@@ -548,4 +551,55 @@ test('estilos de la evolución, la plantilla y la trayectoria: cada clase existe
   for (const selector of ['.squad-player', '.squad-match', '.team-toggle', '.traj-row']) assert.match(decl(selector), /min-height:\s*44px/, selector);
   const mine = rules.filter((r) => /squad|traj|team-|points-/.test(r.selector)).map((r) => r.body).join(';');
   assert.doesNotMatch(mine, /border-radius|box-shadow|text-transform/);
+});
+
+// ── Plan B5, Tarea 4: «Reintentar» de la Plantilla, sin perder el sitio (decisión 3) ──
+
+test('«Reintentar» de la Plantilla: lo atiende la ficha, vuelve a pedir las actas y pinta solo su bloque, con el foco en su título', async (t) => {
+  t.mock.method(console, 'warn', () => {});
+  const saved = globalThis.fetch;
+  const asked = [];
+  let up = false;
+  globalThis.fetch = async (url) => {
+    asked.push(String(url));
+    return up ? { ok: true, status: 200, text: async () => `const LINEUPS_2025_2026=${JSON.stringify(lineupsFor('2025-2026'))};` }
+      : { ok: false, status: 503, text: async () => '' };
+  };
+  const flush = async () => { for (let i = 0; i < 5; i += 1) await new Promise((resolve) => setImmediate(resolve)); };
+  try {
+    // La ficha de Guayarmina (A1) con las actas caídas: su Plantilla, con la caja de error.
+    const ctx = ctxAt(A1('Guayarmina'), '2026-09-23', { datasets: datasetsFor({ ...goleadores(), lineups: { '2025-2026': null } }) });
+    const failed = blockOf(s(screen.render(ctx)), 'Plantilla');
+    assert.match(failed, /^<section class="block" id="plantilla">.*No se pudieron cargar los datos de las actas de 2025\/26\..*data-action="retry"/);
+    const page = fakeSection('equipo', { plantilla: failed });
+    screen.mount(page.section, ctx, { addRecent: () => true });
+    // Sin red todavía: la ficha lo atiende (el router no se entera) y vuelve a pintar la caja.
+    const first = page.clickIn('plantilla', { 'data-action': 'retry' });
+    assert.deepEqual([first.event.prevented, first.event.stopped], [true, true]);
+    assert.deepEqual([first.target.disabled, first.target.textContent], [true, 'Cargando…']);
+    await flush();
+    assert.deepEqual(asked, ['./data-lineups-2025-2026.js']);
+    assert.equal(page.block('plantilla').markup, failed, 'otra vez la caja, con su botón');
+    // Con red: la plantilla en su sitio (la de render con las actas ya cargadas) y el foco en su título.
+    up = true;
+    page.clickIn('plantilla', { 'data-action': 'retry' });
+    await flush();
+    assert.equal(asked.length, 2);
+    const block = page.block('plantilla');
+    assert.equal(block.markup, blockOf(s(screen.render(ctx)), 'Plantilla'));
+    assert.match(block.markup, /<table class="squad">/);
+    assert.equal(page.focus.el, block.title);
+    assert.equal(block.title.tabindex, '-1');
+    assert.deepEqual(block.title.options, { preventScroll: true });
+    // Un grupo sin actas (PG2): tras el «Reintentar», el bloque lo dice en lugar de irse.
+    const pg2 = ctxAt(HURACAN, '2026-09-23', { datasets: datasetsFor({ ...goleadores(), lineups: { '2025-2026': null } }) });
+    const none = fakeSection('equipo', { plantilla: blockOf(s(screen.render(pg2)), 'Plantilla') });
+    screen.mount(none.section, pg2, { addRecent: () => true });
+    none.clickIn('plantilla', { 'data-action': 'retry' });
+    await flush();
+    assert.equal(none.block('plantilla').markup, '<section class="block" id="plantilla"><div class="block-head"><h2 class="block-title">Plantilla</h2></div><p class="empty">La federación no ha publicado actas de este grupo.</p></section>');
+    assert.equal(asked.length, 2, 'las actas ya llegaron: no se vuelven a pedir');
+  } finally {
+    globalThis.fetch = saved;
+  }
 });

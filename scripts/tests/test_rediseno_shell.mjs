@@ -8,8 +8,10 @@ import { fileURLToPath } from 'node:url';
 import { SCREENS } from '../../src/links.js';
 import { tabbar, screenHead } from '../../src/ui.js';
 import {
-  renderHeader, updateTabbar, offlineNotice, skeleton, errorBox, errorScreen, routeNotice, routeTitle,
+  renderHeader, updateTabbar, offlineNotice, skeleton, errorBox, errorScreen, routeNotice, routeTitle, retryBlock,
 } from '../../src/shell.js';
+import { fakeSection } from './fixtures/rediseno/fake-browser.mjs';
+import { block } from '../../src/ui.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const read = (path) => readFileSync(join(ROOT, path), 'utf8');
@@ -178,4 +180,27 @@ test('index.html: la cabecera de renderHeader, con la barra dentro, y el esquele
   assert.equal(main[1].trim(), s(skeleton('home')));
   assert.match(page, /<a class="skip-link" href="#contenido">/);
   assert.ok(page.indexOf('<header class="shell-header">') < page.indexOf('<main id="contenido"'));
+});
+
+// ── Plan B5, Tarea 4: «Reintentar» de un bloque, en su sitio (decisión 3) ──
+
+test('retryBlock: vuelve a pedir, pinta el bloque en su sitio y lleva el foco a su título; si ya no está, nada', async () => {
+  const failed = s(block('Goles', errorBox('la cronología de goles'), { id: 'goles' }));
+  const page = fakeSection('partido', { goles: failed });
+  const button = { disabled: false, textContent: 'Reintentar' };
+  const loads = [];
+  const fresh = await retryBlock(page.section, 'goles', button, async () => { loads.push('carga'); }, () => block('Goles', errorBox('otra cosa'), { id: 'goles' }));
+  assert.deepEqual(loads, ['carga']);
+  assert.deepEqual([button.disabled, button.textContent], [true, 'Cargando…']);
+  assert.equal(fresh, page.block('goles'));
+  assert.match(fresh.markup, /No se pudieron cargar los datos de otra cosa\./);
+  assert.equal(page.focus.el, fresh.title);
+  // Otra navegación quitó el bloque mientras cargaba: no se pinta nada.
+  let release;
+  const pending = retryBlock(page.section, 'goles', { }, () => new Promise((resolve) => { release = resolve; }), () => { throw new Error('no debe pintar'); });
+  page.block('goles').outerHTML = '';
+  release();
+  assert.equal(await pending, null);
+  // Sin el bloque, ni se pide nada.
+  assert.equal(await retryBlock(page.section, 'goles', {}, () => { throw new Error('no debe pedir'); }, () => ''), null);
 });

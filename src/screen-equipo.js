@@ -15,11 +15,12 @@ import {
 } from './model.js';
 import { routeIsMine, teamTrajectory } from './myteam.js';
 import { matchHref, routeHref, teamHref, weekdayDate } from './links.js';
-import { errorBox } from './shell.js';
+import { errorBox, retryBlock } from './shell.js';
 import { ensureHealth, ensureLineups, ensureSeasonData, loadSeasons } from './state.js';
 import { coverageText, missingResults, mountTeamView, teamColumns, teamView } from './team-view.js';
 
 const TRAJECTORY_ID = 'trayectoria';
+const SQUAD_ID = 'plantilla';
 
 // El grupo y el equipo de la ruta, o null: el equipo tiene que estar en la clasificación o en el
 // calendario de un grupo de liga (la misma regla que el router, hasTeam).
@@ -101,11 +102,13 @@ function squadNote(actas, skipped, played) {
 // La plantilla del grupo y la temporada desde las actas (LINEUPS_<S>), si el grupo tiene alguna:
 // jugador (un botón que despliega sus partidos), PJ, titular y goles, y las tarjetas solo si alguien
 // de la temporada tiene alguna. Sin actas del grupo, nada (la mayoría no tiene). Si la carga falló
-// (null), la caja de error con el «Reintentar» del router; sin pedir (undefined: nunca en la app,
-// donde needs las trae antes de pintar), nada.
+// (null), la caja de error con su «Reintentar», que atiende la ficha (retrySquad: solo este bloque, sin
+// volver arriba; B5, decisión 3); sin pedir (undefined: nunca en la app, donde needs las trae antes de
+// pintar), nada. Siempre una sola sección, #plantilla (con la nota de las actas dentro), para que ese
+// «Reintentar» la pinte en su sitio.
 function squadBlock(ctx, group, name) {
   const lineups = ctx.datasets?.lineups?.[group.season];
-  if (lineups === null) return block('Plantilla', errorBox(`las actas de ${seasonLabel(group.season)}`));
+  if (lineups === null) return block('Plantilla', errorBox(`las actas de ${seasonLabel(group.season)}`), { id: SQUAD_ID });
   if (!lineups) return '';
   const { rows, actas, skipped, groupActas } = teamSquad(lineups, { group, team: name });
   if (!groupActas) return '';
@@ -115,13 +118,23 @@ function squadBlock(ctx, group, name) {
     const why = skipped
       ? `${incomplete} (sin uno de los dos equipos): no se puede saber su plantilla.`
       : 'La federación no ha publicado actas de sus partidos.';
-    return block('Plantilla', empty(why));
+    return block('Plantilla', empty(why), { id: SQUAD_ID });
   }
   const cards = anyCards(lineups);
   const head = html`<tr><th scope="col" class="sq-dorsal"><abbr title="Dorsal">N.º</abbr></th><th scope="col" class="sq-name">Jugador</th><th scope="col" class="sq-num"><abbr title="Partidos jugados">PJ</abbr></th><th scope="col" class="sq-num"><abbr title="Partidos de titular">Tit.</abbr></th><th scope="col" class="sq-goals">Goles</th>${cards ? html`<th scope="col" class="sq-num"><abbr title="Tarjetas amarillas">TA</abbr></th><th scope="col" class="sq-num"><abbr title="Tarjetas rojas">TR</abbr></th>` : ''}</tr>`;
   const body = rows.map((r, i) => html`<tr><td class="sq-dorsal">${r.dorsal ?? ''}</td><th scope="row" class="sq-name"><button type="button" class="squad-player" data-action="jugador" data-index="${i}" aria-expanded="false">${playerName(r.name)}</button></th><td class="sq-num">${r.ap}</td><td class="sq-num">${r.st}</td><td class="sq-goals">${r.g}</td>${cards ? html`<td class="sq-num">${r.y}</td><td class="sq-num">${r.rd}</td>` : ''}</tr>`);
-  return html`${box(html`<table class="squad"><caption class="vh">Plantilla de ${name}: toca un jugador para ver sus partidos</caption><thead>${head}</thead><tbody>${body}</tbody></table>`,
-    { title: 'Plantilla', context: 'según las actas' })}${notice(null, squadNote(actas, skipped, played))}`;
+  return block('Plantilla', html`${box(html`<table class="squad"><caption class="vh">Plantilla de ${name}: toca un jugador para ver sus partidos</caption><thead>${head}</thead><tbody>${body}</tbody></table>`)}${notice(null, squadNote(actas, skipped, played))}`,
+    { context: 'según las actas', id: SQUAD_ID });
+}
+
+// «Reintentar» de la Plantilla (B5, decisión 3): vuelve a pedir las actas de su temporada y pinta el
+// bloque en su sitio (retryBlock, shell.js). Si el grupo resulta no tener actas, lo dice: el bloque no
+// desaparece bajo el dedo de quien pulsó.
+function retrySquad(section, ctx, team, button) {
+  const s = team.group.season;
+  return retryBlock(section, SQUAD_ID, button,
+    () => ensureLineups(s).then((data) => { ctx.datasets.lineups[s] = data; }),
+    () => squadBlock(ctx, team.group, team.name) || block('Plantilla', empty('La federación no ha publicado actas de este grupo.'), { id: SQUAD_ID }));
 }
 
 // ── Trayectoria (decisión 14) ───────────────────────────────────────────
@@ -244,7 +257,8 @@ function mount(root, ctx, nav) {
   const section = root.matches && root.matches('[data-screen="equipo"]') ? root : root.querySelector('[data-screen="equipo"]');
   if (!section) return undefined;
   // La escucha va en la sección, que se sustituye en cada pintado: nunca se acumula. «‹» y el
-  // «Reintentar» de la pantalla siguen hasta el router; el de la trayectoria es de su panel.
+  // «Reintentar» de la pantalla siguen hasta el router; el de la trayectoria es de su panel, y el de la
+  // plantilla, de su bloque.
   section.addEventListener('click', (event) => {
     const target = event.target.closest('[data-action]');
     if (!target || !section.contains(target)) return;
@@ -264,6 +278,10 @@ function mount(root, ctx, nav) {
       event.preventDefault();
       event.stopPropagation();
       showTrajectory(section, ctx, team.name);
+    } else if (action === 'retry' && target.closest(`#${SQUAD_ID}`)) {
+      event.preventDefault();
+      event.stopPropagation();
+      retrySquad(section, ctx, team, target);
     }
   });
   return mountTeamView(section, ctx, team, { calendar: 'always' });

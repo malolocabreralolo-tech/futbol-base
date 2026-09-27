@@ -3,9 +3,10 @@
 // acta, el cara a cara del grupo con las temporadas anteriores bajo demanda y
 // el contexto de los dos equipos.
 // render(ctx) es pura y síncrona: no toca el DOM ni el reloj (hoy llega en
-// ctx.today). mount(root, ctx) pone el comportamiento: compartir y desplegar
-// las temporadas anteriores (con su «Reintentar»). «‹» y el «Reintentar» de la
-// pantalla son del router (data-action="back" y "retry").
+// ctx.today). mount(root, ctx) pone el comportamiento: compartir, desplegar
+// las temporadas anteriores (con su «Reintentar») y el «Reintentar» de los Goles
+// y de las Alineaciones, que los pinta en su sitio (B5, decisión 3). «‹» y el
+// «Reintentar» de la pantalla son del router (data-action="back" y "retry").
 import { html, join } from './html.js';
 import { block, box, cells, crest, empty, formChips, notice, score, screenHead, shareStatus } from './ui.js';
 import {
@@ -16,10 +17,13 @@ import { countdownLabel, dayMonth, matchHref, shareAndAnnounce, weekdayDate } fr
 import {
   ensureLineups, ensureMatchDetail, ensureSeasonData, loadSeasons, normalizeTeamName,
 } from './state.js';
-import { errorBox } from './shell.js';
+import { errorBox, retryBlock } from './shell.js';
 
 const DASH = '–';
 const PREVIOUS_ID = 'partido-anteriores';
+// Los bloques que pueden fallar en el primer pintado, con su «Reintentar» (B5, decisión 3).
+const GOALS_ID = 'goles';
+const LINEUPS_ID = 'alineaciones';
 const LOADERS = { ensureMatchDetail, ensureLineups, ensureSeasonData };
 
 // ── Textos y fechas ──────────────────────────────────────────────────────
@@ -139,12 +143,12 @@ function goalsBlock(match, group, ctx) {
   const lineups = (ctx.datasets.lineups || {})[match.season];
   // Sin data-matchdetail.js no se sabe si hay cronología de futbolaspalmas, que
   // manda sobre el acta: caja de error, nunca el acta en su lugar.
-  if (detail == null) return block('Goles', errorBox('la cronología de goles'));
+  if (detail == null) return block('Goles', errorBox('la cronología de goles'), { id: GOALS_ID });
   const timeline = timelineFor(match, detail, lineups || null);
   const scoreless = match.hs === 0 && match.as === 0;
   if (!timeline) {
-    if (lineups == null) return block('Goles', errorBox('la cronología de goles'));
-    return block('Goles', empty(scoreless ? 'Partido sin goles.' : 'Ninguna fuente publica quién marcó en este partido.'));
+    if (lineups == null) return block('Goles', errorBox('la cronología de goles'), { id: GOALS_ID });
+    return block('Goles', empty(scoreless ? 'Partido sin goles.' : 'Ninguna fuente publica quién marcó en este partido.'), { id: GOALS_ID });
   }
   const { source, goals, mismatch } = timeline;
   const mine = mineSide(ctx, match);
@@ -161,7 +165,7 @@ function goalsBlock(match, group, ctx) {
   const warning = mismatch
     ? notice('Los goles no cuadran con el marcador:', `${TIMELINE_SOURCE[source]} suma ${dashed(mismatch.timeline)} y ${scoreSource(group)} es ${dashed(mismatch.score)}.`)
     : '';
-  return block('Goles', html`${body}${warning}`, { context: source === 'futbolaspalmas' ? 'minuto a minuto' : 'según el acta' });
+  return block('Goles', html`${body}${warning}`, { context: source === 'futbolaspalmas' ? 'minuto a minuto' : 'según el acta', id: GOALS_ID });
 }
 
 function lineupTable(players, team, side) {
@@ -181,9 +185,9 @@ function lineupsBlock(match, group, ctx) {
   // La Maspalomas Cup no es de la federación: nunca tiene acta.
   if (/maspalomas/.test(String(group.compKey || ''))) return '';
   const lineups = (ctx.datasets.lineups || {})[match.season];
-  if (lineups == null) return block('Alineaciones', errorBox(`las actas de ${seasonLabel(match.season)}`));
+  if (lineups == null) return block('Alineaciones', errorBox(`las actas de ${seasonLabel(match.season)}`), { id: LINEUPS_ID });
   const acta = actaFor(match, lineups);
-  if (!acta) return block('Alineaciones', empty('La federación no ha publicado el acta de este partido.'));
+  if (!acta) return block('Alineaciones', empty('La federación no ha publicado el acta de este partido.'), { id: LINEUPS_ID });
   const team = (side) => {
     const name = side === 'home' ? match.home : match.away;
     const label = side === 'home' ? 'Local' : 'Visitante';
@@ -192,8 +196,8 @@ function lineupsBlock(match, group, ctx) {
   const link = acta.cod
     ? html`<a class="pt-acta" href="${actaUrl(acta.cod)}" target="_blank" rel="noopener noreferrer">Ver acta oficial<span class="vh"> (web de la federación, en otra pestaña)</span></a>`
     : '';
-  return box(html`<div class="pt-lu-teams">${team('home')}${team('away')}</div><div class="pt-lu-foot">${staff('Árbitro/a', acta.ref)}${link}</div>`,
-    { title: 'Alineaciones', context: acta.cod ? `acta nº ${acta.cod}` : null });
+  return block('Alineaciones', box(html`<div class="pt-lu-teams">${team('home')}${team('away')}</div><div class="pt-lu-foot">${staff('Árbitro/a', acta.ref)}${link}</div>`),
+    { context: acta.cod ? `acta nº ${acta.cod}` : null, id: LINEUPS_ID });
 }
 
 function h2hRow(group, m, { current, today, phase = null }) {
@@ -427,23 +431,42 @@ function sharePartido(button, section) {
     section.querySelector('.share-status'));
 }
 
+// «Reintentar» de los Goles o de las Alineaciones (B5, decisión 3): vuelve a pedir lo que le faltó a
+// ese bloque (a los Goles, la cronología y, si tampoco llegaron, las actas; a las Alineaciones, las
+// actas) y pinta solo ese bloque en su sitio (retryBlock, shell.js). El otro, si también falló, sigue
+// con su caja hasta que se pulse la suya.
+function retryMatchBlock(section, ctx, id, button) {
+  const { group, match } = locate(ctx);
+  if (!match) return null;
+  const data = ctx.datasets;
+  const lineups = data.lineups || (data.lineups = {});
+  const load = () => Promise.all([
+    id === GOALS_ID && data.matchDetail == null ? LOADERS.ensureMatchDetail().then((d) => { data.matchDetail = d; }) : null,
+    lineups[match.season] == null ? LOADERS.ensureLineups(match.season).then((d) => { lineups[match.season] = d; }) : null,
+  ]);
+  return retryBlock(section, id, button, load, () => (id === GOALS_ID ? goalsBlock(match, group, ctx) : lineupsBlock(match, group, ctx)));
+}
+
 export function mount(root, ctx) {
   const section = root && root.matches && root.matches('[data-screen="partido"]') ? root : root && root.querySelector('[data-screen="partido"]');
   if (!section) return;
   // Un solo manejador en la sección, que se va con ella al repintar. Atiende Compartir, el
-  // desplegable de temporadas anteriores y su «Reintentar»; «‹» y el «Reintentar» de la pantalla
-  // siguen hasta el router, que escucha en el documento.
+  // desplegable de temporadas anteriores y su «Reintentar», y el «Reintentar» de los Goles y de las
+  // Alineaciones; «‹» y el «Reintentar» de la pantalla siguen hasta el router, que escucha en el
+  // documento.
   section.addEventListener('click', (event) => {
     const target = event.target && event.target.closest ? event.target.closest('[data-action]') : null;
     if (!target || !section.contains(target)) return;
     const action = target.getAttribute('data-action');
     const inPanel = Boolean(target.closest(`#${PREVIOUS_ID}`));
-    if (action !== 'share' && action !== 'previous' && !(action === 'retry' && inPanel)) return;
+    const inBlock = action === 'retry' ? [GOALS_ID, LINEUPS_ID].find((id) => target.closest(`#${id}`)) : undefined;
+    if (action !== 'share' && action !== 'previous' && !(action === 'retry' && (inPanel || inBlock))) return;
     event.preventDefault();
     event.stopPropagation();
     if (action === 'share') sharePartido(target, section);
     else if (action === 'previous') togglePrevious(section, ctx, target);
-    else showPrevious(section, ctx);
+    else if (inPanel) showPrevious(section, ctx);
+    else retryMatchBlock(section, ctx, inBlock, target);
   });
 }
 

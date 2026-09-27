@@ -10,6 +10,7 @@ import { currentAt, datasetsFrom as baseDatasets } from './fixtures/rediseno/sim
 import { actaFor, createModel, findMatch } from '../../src/model.js';
 import { ensureLineups, loadSeasons } from '../../src/state.js';
 import { ctxFor } from './fixtures/rediseno/screens.mjs';
+import { fakeSection } from './fixtures/rediseno/fake-browser.mjs';
 import {
   partidoNeeds, pastSeasons, previousBlock, previousMeetings, previousPanelContent, screen,
 } from '../../src/screen-partido.js';
@@ -503,4 +504,92 @@ test('acta.css: cada clase de la pantalla existe; marcador de 40 px; pulsables d
   const own = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter((m) => m[1].includes('.pt-'));
   assert.ok(own.length > 40);
   for (const [, selector, body] of own) assert.doesNotMatch(body, /border-radius|text-transform:\s*uppercase/, selector.trim());
+});
+
+// ── Plan B5, Tarea 4: «Reintentar» de los Goles y de las Alineaciones, sin perder el sitio (decisión 3) ──
+
+const flush = async () => { for (let i = 0; i < 5; i += 1) await new Promise((resolve) => setImmediate(resolve)); };
+// Un fetch que sirve la cronología y las actas de las fixtures, o un 503 mientras `down`.
+function fakeFetch() {
+  const net = { down: true, asked: [] };
+  const FILES = {
+    'data-matchdetail.js': () => `const MATCH_DETAIL=${JSON.stringify(fixture('matchdetail'))};`,
+    'data-lineups-2025-2026.js': () => `const LINEUPS_2025_2026=${JSON.stringify(fixture('lineups-2025-2026'))};`,
+  };
+  net.fetch = async (url) => {
+    const file = String(url).replace(/^\.\//, '').replace(/\?.*$/, '');
+    net.asked.push(file);
+    return net.down || !FILES[file] ? { ok: false, status: 503, text: async () => '' } : { ok: true, status: 200, text: async () => FILES[file]() };
+  };
+  return net;
+}
+
+test('«Reintentar» de las Alineaciones: vuelve a pedir las actas y pinta solo su bloque; los Goles, que también fallaron, siguen con su caja', async (t) => {
+  t.mock.method(console, 'warn', () => {});
+  const saved = globalThis.fetch;
+  const net = fakeFetch();
+  globalThis.fetch = net.fetch;
+  try {
+    // Moya–Guayarmina (A1, J11): sin actas, ni sus alineaciones ni sus goles (no tiene cronología).
+    const sinActas = datasetsFrom();
+    sinActas.lineups = { '2025-2026': null };
+    const ctx = ctxOf(A1_J11, { datasets: sinActas });
+    const out = String(screen.render(ctx));
+    const goles = blockOf(out, 'Goles');
+    const alineaciones = blockOf(out, 'Alineaciones');
+    assert.ok(goles.startsWith('<section class="block" id="goles">') && failBox(goles, 'la cronología de goles'));
+    assert.ok(alineaciones.startsWith('<section class="block" id="alineaciones">') && failBox(alineaciones, 'las actas de 2025/26'));
+    const page = fakeSection('partido', { goles, alineaciones });
+    screen.mount(page.section, ctx);
+    const first = page.clickIn('alineaciones', { 'data-action': 'retry' });
+    assert.deepEqual([first.event.prevented, first.event.stopped], [true, true], 'el router (en el documento) no se entera');
+    await flush();
+    assert.equal(page.block('alineaciones').markup, alineaciones, 'sin red, otra vez la caja');
+    net.down = false;
+    page.clickIn('alineaciones', { 'data-action': 'retry' });
+    await flush();
+    assert.deepEqual(net.asked, ['data-lineups-2025-2026.js', 'data-lineups-2025-2026.js'], 'solo las actas: la cronología ya estaba');
+    const now = String(screen.render(ctx));
+    assert.equal(page.block('alineaciones').markup, blockOf(now, 'Alineaciones'));
+    assert.ok(text(page.block('alineaciones').markup).startsWith('Alineaciones acta nº'));
+    assert.equal(page.focus.el, page.block('alineaciones').title);
+    assert.equal(page.block('goles').markup, goles, 'solo ese bloque: los Goles, con su caja hasta que se pulse la suya');
+    // Su «Reintentar»: las actas ya están, y los goles salen del acta.
+    page.clickIn('goles', { 'data-action': 'retry' });
+    await flush();
+    assert.equal(net.asked.length, 2, 'nada que volver a pedir');
+    assert.equal(page.block('goles').markup, blockOf(now, 'Goles'));
+    assert.ok(text(page.block('goles').markup).startsWith('Goles según el acta'));
+    assert.equal(page.focus.el, page.block('goles').title);
+  } finally {
+    globalThis.fetch = saved;
+  }
+});
+
+test('«Reintentar» de los Goles sin la cronología: la vuelve a pedir y pinta la de futbolaspalmas en su sitio', async (t) => {
+  t.mock.method(console, 'error', () => {});
+  const saved = globalThis.fetch;
+  const net = fakeFetch();
+  globalThis.fetch = net.fetch;
+  try {
+    const sinCronologia = datasetsFrom();
+    sinCronologia.matchDetail = null;
+    const ctx = ctxOf(A1_J1, { datasets: sinCronologia });
+    const goles = blockOf(String(screen.render(ctx)), 'Goles');
+    assert.ok(failBox(goles, 'la cronología de goles'));
+    const page = fakeSection('partido', { goles });
+    screen.mount(page.section, ctx);
+    net.down = false;
+    const click = page.clickIn('goles', { 'data-action': 'retry' });
+    assert.deepEqual([click.event.prevented, click.event.stopped, click.target.textContent], [true, true, 'Cargando…']);
+    await flush();
+    assert.deepEqual(net.asked, ['data-matchdetail.js'], 'la cronología; las actas ya estaban');
+    assert.ok(text(page.block('goles').markup).startsWith('Goles minuto a minuto'));
+    assert.equal(page.focus.el, page.block('goles').title);
+    // Un «Reintentar» que no es de un bloque (la pantalla entera) sigue hasta el router.
+    const other = page.clickIn('ninguno', { 'data-action': 'retry' });
+    assert.deepEqual([other.event.prevented, other.event.stopped], [false, false]);
+  } finally {
+    globalThis.fetch = saved;
+  }
 });

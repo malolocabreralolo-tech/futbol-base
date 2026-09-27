@@ -32,6 +32,8 @@ import { useWorld, STORE_KEY } from './fixture-site.mjs';
 //   del equipo nuevo.
 // Y una vez, en el mundo E (§11, caso 3): la respuesta a la pregunta se guarda y, al recargar, la
 // portada es la de ese equipo, sin preguntar.
+// De B5: una vez, a 390 px, el «Reintentar» de la Plantilla, los Goles y las Alineaciones (un 503 y
+// luego 200): cada bloque se pinta en su sitio, sin volver arriba (decisión 3).
 // Sin esperas fijas: cada paso espera a su condición (waitForAsync, que al agotarse dice el escenario,
 // el ancho y el tema) o a su localizador.
 const { chromium } = createRequire(import.meta.url)('playwright');
@@ -341,6 +343,67 @@ async function scenariosB3(viewport, colorScheme) {
   }
 }
 
+// «Reintentar» de un bloque (B5, decisión 3): la primera petición de las actas y la de la cronología
+// fallan (503) y las siguientes llegan (200). La Plantilla de Guayarmina y las Alineaciones y los Goles
+// de Moya–Guayarmina se pintan en su sitio: la página no vuelve arriba, la pantalla no se repinta (la
+// marca de su sección sigue) y el foco va al título del bloque.
+async function retryBlocks() {
+  const label = '390px en claro, «Reintentar» de un bloque';
+  const context = await newContext({ width: 390, height: 844 }, 'light');
+  const errors = [];
+  try {
+    await useWorld(context, 'D');
+    const failed = new Set();
+    await context.route(/\/data-(?:lineups-2025-2026\.js|matchdetail\.js)(\?.*)?$/, (route) => {
+      const path = new URL(route.request().url()).pathname;
+      if (failed.has(path)) return route.fallback();
+      failed.add(path);
+      return route.fulfill({ status: 503, contentType: 'text/plain', body: 'no disponible' });
+    });
+    const retry = async (page, id, done, step) => {
+      const before = await page.evaluate((block) => {
+        document.querySelector(`#${block}`).scrollIntoView();
+        document.querySelector('#contenido section[data-screen]').dataset.marca = 'sin repintar';
+        return { y: scrollY, length: history.length };
+      }, id);
+      assert.ok(before.y > 0, `${label}, ${step}: el bloque está más abajo del principio`);
+      await page.click(`#${id} button[data-action="retry"]`);
+      await waitForAsync(page, (sel) => document.querySelector(sel) !== null, done, { label: `${label}, ${step}` });
+      const after = await page.evaluate((block) => ({
+        y: scrollY, length: history.length,
+        marca: document.querySelector('#contenido section[data-screen]').dataset.marca,
+        focus: document.activeElement?.closest(`#${block}`) && document.activeElement.classList.contains('block-title'),
+      }), id);
+      assert.equal(after.y, before.y, `${label}, ${step}: el desplazamiento se queda`);
+      assert.equal(after.marca, 'sin repintar', `${label}, ${step}: solo se pinta el bloque`);
+      assert.equal(after.length, before.length, `${label}, ${step}: sin entradas nuevas`);
+      assert.ok(after.focus, `${label}, ${step}: el foco, en el título del bloque`);
+    };
+    const open = async (hash, screen, step) => {
+      const page = await context.newPage();
+      page.setDefaultTimeout(8000);
+      page.on('pageerror', (error) => errors.push(error.message));
+      await page.goto(base + hash);
+      await paintedAs(page, screen, { label: `${label}, ${step}` });
+      return page;
+    };
+    const ficha = await open('#/equipo?s=2025-2026&g=A1&t=Guayarmina', 'equipo', 'la ficha');
+    assert.equal(await ficha.locator('#plantilla .error-box').count(), 1, `${label}: la Plantilla, con su caja de error`);
+    await retry(ficha, 'plantilla', '#plantilla table.squad', 'la Plantilla');
+    await ficha.close();
+    failed.clear();
+    const partido = await open('#/partido?s=2025-2026&g=A1&r=Jornada%2011&h=Moya&a=Guayarmina', 'partido', 'el partido');
+    assert.equal(await partido.locator('#goles .error-box, #alineaciones .error-box').count(), 2, `${label}: los Goles y las Alineaciones, con su caja`);
+    await retry(partido, 'alineaciones', '#alineaciones .pt-lu-teams', 'las Alineaciones');
+    assert.equal(await partido.locator('#goles .error-box').count(), 1, `${label}: los Goles siguen con la suya`);
+    await retry(partido, 'goles', '#goles .pt-glists, #goles .pt-goals', 'los Goles');
+    await partido.close();
+    assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
+  } finally {
+    await context.close();
+  }
+}
+
 // Mundo E (§11, caso 3): «Las Mesas Hu. B» guardado en FF13 pregunta; la respuesta se guarda en el
 // almacén y, al recargar, la portada es la de ese equipo, sin preguntar (M6 de la revisión).
 async function answerE() {
@@ -386,6 +449,8 @@ try {
   }
   await answerE();
   console.log('PASS: mundo E (§11, caso 3): la respuesta se guarda y, al recargar, la portada de ese equipo sin preguntar');
+  await retryBlocks();
+  console.log('PASS: 390px en claro, «Reintentar» de la Plantilla, las Alineaciones y los Goles (un 503 y luego 200): cada bloque, en su sitio, sin volver arriba y con el foco en su título');
 } finally {
   if (browser) await browser.close();
   server.closeAllConnections();

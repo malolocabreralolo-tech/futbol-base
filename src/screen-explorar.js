@@ -6,17 +6,15 @@
 // Atrás no recorre cada letra (decisión 4 de B3). La temporada de la ruta la carga el router
 // (decisión 2); el foco del ancla #buscar lo pone el router, nunca mount.
 import { html } from './html.js';
-import { screenHead, block, crest, empty, notice, searchBox, seasonPicker, linkRow, listEs } from './ui.js';
+import { screenHead, block, countLabel, crest, empty, notice, searchBox, seasonPicker, linkRow, listEs } from './ui.js';
 import { errorBox } from './shell.js';
-import { competitionKey, competitions, findGroup, groupSummary, searchKey, searchTeams, seasonLabel } from './model.js';
+import {
+  CATEGORIES, CAT_NAMES, CAT_SHORT, competitionKey, competitions, findGroup, groupSummary, searchKey, searchTeams, seasonLabel,
+} from './model.js';
 import { canaryDateTime, dayMonth, monthName, routeHref, teamHref } from './links.js';
 import { ensureHealth } from './state.js';
 
-const CAT_NAMES = { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' };
-const CAT_SHORT = { benjamin: 'benj.', prebenjamin: 'preb.' };
-const CAT_KEYS = ['benjamin', 'prebenjamin'];
 const PICKER_ID = 'temporada';
-const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const shieldsOf = ctx => (ctx.datasets && ctx.datasets.shields) || {};
 const seasonOf = ctx => (ctx.params && ctx.params.s) || ctx.portal.season;
 
@@ -50,8 +48,8 @@ export function searchView(ctx, q) {
   const shields = shieldsOf(ctx);
   const list = (entries, cup) => html`<ul class="box search-list">${entries.map(entry => resultRow(entry, { cup, shields }))}</ul>`;
   return {
-    list: html`${leagues.length ? block('Resultados', list(leagues, false), { context: count(leagues.length, 'equipo', 'equipos') }) : ''}${cups.length ? block('En copas y torneos', list(cups, true), { context: count(cups.length, 'equipo', 'equipos') }) : ''}`,
-    status: count(total, 'equipo encontrado', 'equipos encontrados'),
+    list: html`${leagues.length ? block('Resultados', list(leagues, false), { context: countLabel(leagues.length, 'equipo', 'equipos') }) : ''}${cups.length ? block('En copas y torneos', list(cups, true), { context: countLabel(cups.length, 'equipo', 'equipos') }) : ''}`,
+    status: countLabel(total, 'equipo encontrado', 'equipos encontrados'),
   };
 }
 
@@ -87,9 +85,9 @@ function leaguesBlock(ctx, s) {
   const leagues = competitions(ctx.model, s).filter(c => c.kind === 'liga');
   if (!leagues.length) return block('Ligas', empty(`No hay ligas en la temporada ${seasonLabel(s)}.`));
   const total = leagues.reduce((n, c) => n + c.groups.length, 0);
-  const cats = CAT_KEYS.map(cat => [cat, leagues.filter(c => c.cat === cat)]).filter(([, list]) => list.length);
-  return block('Ligas', html`<div class="box">${cats.map(([cat, list]) => html`<h3 class="link-head">${CAT_NAMES[cat]}</h3><ul class="link-list">${list.map(c => html`<li>${linkRow(routeHref('ligas', { s, c: cat, f: c.key }), c.label, { context: count(c.groups.length, 'grupo', 'grupos') })}</li>`)}</ul>`)}</div>`,
-    { context: count(total, 'grupo', 'grupos') });
+  const cats = CATEGORIES.map(cat => [cat, leagues.filter(c => c.cat === cat)]).filter(([, list]) => list.length);
+  return block('Ligas', html`<div class="box">${cats.map(([cat, list]) => html`<h3 class="link-head">${CAT_NAMES[cat]}</h3><ul class="link-list">${list.map(c => html`<li>${linkRow(routeHref('ligas', { s, c: cat, f: c.key }), c.label, { context: countLabel(c.groups.length, 'grupo', 'grupos') })}</li>`)}</ul>`)}</div>`,
+    { context: countLabel(total, 'grupo', 'grupos') });
 }
 
 // Los meses de un torneo («junio», «junio y julio»), de las fechas de sus partidos.
@@ -115,11 +113,11 @@ function cupsBlock(ctx, s) {
     const { cup } = competitionKey(groups[0], s);
     const champions = groups.map(g => groupSummary(g).champion).filter(Boolean);
     if (cup === 'campeones' && champions.length) {
-      const context = champions.length === groups.length ? count(champions.length, 'campeón', 'campeones') : count(groups.length, 'grupo', 'grupos');
+      const context = champions.length === groups.length ? countLabel(champions.length, 'campeón', 'campeones') : countLabel(groups.length, 'grupo', 'grupos');
       return linkRow(href, label, { context, detail: listEs(champions) });
     }
     if (cup === 'maspalomas') return linkRow(href, label, { context: monthsOf(groups) });
-    return linkRow(href, label, { context: count(groups.length, 'grupo', 'grupos') });
+    return linkRow(href, label, { context: countLabel(groups.length, 'grupo', 'grupos') });
   });
   return block('Copas y torneos', html`<ul class="box link-list">${rows.map(row => html`<li>${row}</li>`)}</ul>`);
 }

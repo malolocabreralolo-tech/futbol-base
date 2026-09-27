@@ -283,7 +283,13 @@ export function buildCups({ season, benjamin = [], prebenjamin = [] } = {}) {
  * una temporada, que ninguna fase cae en 'otra-…'. */
 
 const ISLAND_NAMES = { grancanaria: 'Gran Canaria', lanzarote: 'Lanzarote', fuerteventura: 'Fuerteventura' };
-const CAT_NAMES = { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' };
+// Las categorías de la app en su orden y sus nombres, una sola vez (B5, decisión 6): el de títulos y
+// etiquetas («Benjamín»), el de dentro de una frase («benjamín») y el corto de «Vistos hace poco»
+// («benj.»). Los usan el modelo y las pantallas.
+export const CATEGORIES = ['benjamin', 'prebenjamin'];
+export const CAT_NAMES = { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' };
+export const CAT_WORDS = { benjamin: 'benjamín', prebenjamin: 'prebenjamín' };
+export const CAT_SHORT = { benjamin: 'benj.', prebenjamin: 'preb.' };
 const upperFirst = s => s.charAt(0).toUpperCase() + s.slice(1);
 const foldText = s => String(s ?? '').normalize('NFD').replace(/\p{M}/gu, '')
   .toLowerCase().replace(/\s+/g, ' ').trim();
@@ -1234,7 +1240,6 @@ export function topPhase(entries) {
   return entries.filter(entry => phaseLevel(entry.group) === top);
 }
 
-const CAT_ORDER = ['benjamin', 'prebenjamin'];
 const ISLAND_ORDER = ['grancanaria', 'lanzarote', 'fuerteventura'];
 // Dentro de un nivel y una isla: la división, la fase y la copa, de la primera a la última de la
 // temporada (la Liga Oro antes que la Plata; la Preferente antes que la Primera). La fuente ordena los
@@ -1323,7 +1328,7 @@ export function searchTeams(model, season, query) {
   }
   const leagues = [...byTeam.values()].flatMap(list => topPhase(list));
   const tier = entry => (entry.key.startsWith(key) ? 0 : ` ${entry.key}`.includes(` ${key}`) ? 1 : 2);
-  const order = (a, b) => tier(a) - tier(b) || byName(a.name, b.name) || rankOf(CAT_ORDER, a.group.cat) - rankOf(CAT_ORDER, b.group.cat);
+  const order = (a, b) => tier(a) - tier(b) || byName(a.name, b.name) || rankOf(CATEGORIES, a.group.cat) - rankOf(CATEGORIES, b.group.cat);
   const out = list => list.sort(order).map(({ name, group }) => ({ name, cat: group.cat, group }));
   return { leagues: out(leagues), cups: out(hits.filter(hit => hit.group.kind !== 'league')) };
 }
@@ -1352,7 +1357,7 @@ export function competitions(model, season, { cat = null, island = null } = {}) 
     }
     entries.get(id).groups.push(group);
   }
-  const rank = e => [rankOf(CAT_ORDER, e.cat), e.kind === 'liga' ? 0 : 1, -e.level, rankOf(ISLAND_ORDER, e.ck.island),
+  const rank = e => [rankOf(CATEGORIES, e.cat), e.kind === 'liga' ? 0 : 1, -e.level, rankOf(ISLAND_ORDER, e.ck.island),
     rankOf(DIVISION_ORDER, e.ck.division), rankOf(PHASE_ORDER, e.ck.phase), rankOf(CUP_ORDER, e.ck.cup)];
   return [...entries.values()]
     .sort((a, b) => {

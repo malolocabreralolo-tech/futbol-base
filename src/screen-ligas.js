@@ -10,16 +10,15 @@
 // La temporada de la ruta la carga el router (decisión 2), que también deja `c`, `i` y `to` válidos o
 // los quita (decisión 3); la barra marca el destino de `to` (activeTab).
 import { html } from './html.js';
-import { screenHead, block, crest, empty, notice, linkRow, listEs } from './ui.js';
+import { screenHead, block, countLabel, crest, decimal, empty, notice, linkRow, listEs, signed } from './ui.js';
 import { errorBox } from './shell.js';
-import { competitions, compareGroups, groupSummary, seasonLabel } from './model.js';
+import {
+  CATEGORIES, CAT_NAMES, CAT_WORDS, competitions, compareGroups, groupSummary, seasonLabel,
+} from './model.js';
 import { routeHref, teamHref } from './links.js';
 import { myTeamIn } from './myteam.js';
 
-const CAT_NAMES = { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' };
 const ISLAND_NAMES = { grancanaria: 'Gran Canaria', lanzarote: 'Lanzarote', fuerteventura: 'Fuerteventura' };
-const CAT_KEYS = ['benjamin', 'prebenjamin'];
-const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const shieldsOf = ctx => (ctx.datasets && ctx.datasets.shields) || {};
 const seasonOf = ctx => (ctx.params && ctx.params.s) || ctx.portal.season;
 
@@ -37,7 +36,7 @@ const comparable = entry => entry.groups.filter(g => g.kind === 'league').length
 
 // «Benjamín», «Benjamín y prebenjamín»; «de Gran Canaria» si llega la isla.
 function scopeText(cats, island) {
-  const names = cats.map((cat, k) => (k ? CAT_NAMES[cat].toLowerCase() : CAT_NAMES[cat]));
+  const names = cats.map((cat, k) => (k ? CAT_WORDS[cat] : CAT_NAMES[cat]));
   return `${listEs(names)}${island ? ` de ${ISLAND_NAMES[island]}` : ''}`;
 }
 
@@ -47,13 +46,13 @@ function competitionsBlocks(ctx, view) {
   const { s, c, i, to, list } = view;
   if (!list.length) {
     const what = to ? 'ligas' : 'competiciones';
-    const cats = c ? [c] : CAT_KEYS;
-    return empty(`No hay ${what} de ${listEs(cats.map(cat => CAT_NAMES[cat].toLowerCase()))}${i ? ` en ${ISLAND_NAMES[i]}` : ''} en la temporada ${seasonLabel(s)}.`);
+    const cats = c ? [c] : CATEGORIES;
+    return empty(`No hay ${what} de ${listEs(cats.map(cat => CAT_WORDS[cat]))}${i ? ` en ${ISLAND_NAMES[i]}` : ''} en la temporada ${seasonLabel(s)}.`);
   }
-  return CAT_KEYS.map(cat => list.filter(e => e.cat === cat)).filter(entries => entries.length).map((entries) => {
+  return CATEGORIES.map(cat => list.filter(e => e.cat === cat)).filter(entries => entries.length).map((entries) => {
     const total = entries.reduce((n, e) => n + e.groups.length, 0);
-    const rows = entries.map(e => html`<li>${linkRow(routeHref('ligas', { s, c: e.cat, f: e.key, to }), e.label, { context: count(e.groups.length, 'grupo', 'grupos') })}</li>`);
-    return block(CAT_NAMES[entries[0].cat], html`<ul class="box link-list">${rows}</ul>`, { context: count(total, 'grupo', 'grupos') });
+    const rows = entries.map(e => html`<li>${linkRow(routeHref('ligas', { s, c: e.cat, f: e.key, to }), e.label, { context: countLabel(e.groups.length, 'grupo', 'grupos') })}</li>`);
+    return block(CAT_NAMES[entries[0].cat], html`<ul class="box link-list">${rows}</ul>`, { context: countLabel(total, 'grupo', 'grupos') });
   });
 }
 
@@ -66,17 +65,13 @@ function groupRow(ctx, group, to) {
   const g = groupSummary(group);
   const s = group.season;
   const target = group.kind === 'league' ? (to || 'tabla') : 'copa';
-  const detail = [g.teams ? count(g.teams, 'equipo', 'equipos') : null, g.leader ? `líder: ${g.leader}` : null,
+  const detail = [g.teams ? countLabel(g.teams, 'equipo', 'equipos') : null, g.leader ? `líder: ${g.leader}` : null,
     g.champion ? `campeón: ${g.champion}` : null].filter(Boolean).join(' · ');
   const r = ctx.resolution;
   const mine = r && r.status === 'ok' && r.group && r.group.season === s && r.group.id === group.id;
   const title = mine ? html`${g.label}<span class="vh"> (grupo de mi equipo)</span>` : g.label;
   return html`<li>${linkRow(routeHref(target, { s, g: group.id }), title, { detail, context: g.round ? g.round.toLowerCase() : null, cls: mine ? 'group-row is-mine' : 'group-row' })}</li>`;
 }
-
-// «2,82»: los puntos por partido con dos decimales y coma; la diferencia de goles con su signo («−30»).
-const ppjText = ppj => ppj.toFixed(2).replace('.', ',');
-const signed = n => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '0');
 
 /* La tabla de «Comparar grupos» de una competición (decisión 21), la que mount pinta bajo demanda:
  * compareGroups con su grupo en una columna («2» por «Grupo 2») y la diferencia de goles, que desempata;
@@ -89,10 +84,10 @@ export function compareView(ctx, entry) {
   const body = compareGroups(entry.groups).map((row, k) => {
     const group = byId.get(row.groupId);
     const isMine = mine.get(row.groupId) === row.team;
-    const cells = html`<td class="st-pos">${k + 1}</td><th scope="row" class="st-team"><a class="st-link" href="${teamHref(group.season, group.id, row.team)}">${crest(row.team, { shields })}<span class="st-name">${row.team}</span></a>${isMine ? html`<span class="vh"> (mi equipo)</span>` : ''}</th><td class="cmp-group">${row.groupLabel.replace(/^Grupo\s+/i, '')}</td><td class="st-num st-pj">${row.pj}</td><td class="st-dg">${signed(row.dg)}</td><td class="st-pts">${row.pts}</td><td class="cmp-ppj">${row.retired ? html`<span class="st-retired">retirado</span>` : ppjText(row.ppj)}</td>`;
+    const cells = html`<td class="st-pos">${k + 1}</td><th scope="row" class="st-team"><a class="st-link" href="${teamHref(group.season, group.id, row.team)}">${crest(row.team, { shields })}<span class="st-name">${row.team}</span></a>${isMine ? html`<span class="vh"> (mi equipo)</span>` : ''}</th><td class="cmp-group">${row.groupLabel.replace(/^Grupo\s+/i, '')}</td><td class="st-num st-pj">${row.pj}</td><td class="st-dg">${signed(row.dg)}</td><td class="st-pts">${row.pts}</td><td class="cmp-ppj">${row.retired ? html`<span class="st-retired">retirado</span>` : decimal(row.ppj, 2)}</td>`;
     return html`<tr${isMine ? html` class="is-mine"` : ''}>${cells}</tr>`;
   });
-  const caption = `Comparación de los grupos de ${entry.label}, ${CAT_NAMES[entry.cat].toLowerCase()}`;
+  const caption = `Comparación de los grupos de ${entry.label}, ${CAT_WORDS[entry.cat]}`;
   return html`${notice(null, 'Por puntos por partido; a igualdad, por puntos, diferencia de goles y nombre. Los retirados, al final.')}<div class="box"><table class="standings compare-table"><caption class="vh">${caption}</caption><thead><tr><th scope="col" class="st-pos"><abbr title="Posición">#</abbr></th><th scope="col" class="st-team">Equipo</th><th scope="col" class="cmp-group"><abbr title="Grupo">Gr.</abbr></th><th scope="col" class="st-num st-pj"><abbr title="Partidos jugados">J</abbr></th><th scope="col" class="st-dg"><abbr title="Diferencia de goles">DG</abbr></th><th scope="col" class="st-pts"><abbr title="Puntos">Pts</abbr></th><th scope="col" class="cmp-ppj"><abbr title="Puntos por partido">Pts/J</abbr></th></tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
@@ -107,7 +102,7 @@ function groupsBlocks(ctx, view) {
     const compare = comparable(entry)
       ? html`<button class="button compare-toggle" type="button" id="${id}" data-action="comparar" aria-expanded="false" aria-controls="${id}-tabla">Comparar grupos</button><div class="compare" id="${id}-tabla" hidden></div>`
       : '';
-    return block(CAT_NAMES[entry.cat], html`<ul class="box link-list">${rows}</ul>${compare}`, { context: count(entry.groups.length, 'grupo', 'grupos') });
+    return block(CAT_NAMES[entry.cat], html`<ul class="box link-list">${rows}</ul>${compare}`, { context: countLabel(entry.groups.length, 'grupo', 'grupos') });
   });
 }
 
@@ -127,7 +122,7 @@ function render(ctx) {
     const head = screenHead(chosen[0].label, { sub: `${scopeText(cats, null)} · ${seasonLabel(s)}`, back });
     return html`<section data-screen="ligas">${head}${groupsBlocks(ctx, view)}</section>`;
   }
-  const head = screenHead('Ligas', { sub: `${scopeText(c ? [c] : CAT_KEYS, i)} · ${seasonLabel(s)}`, back });
+  const head = screenHead('Ligas', { sub: `${scopeText(c ? [c] : CATEGORIES, i)} · ${seasonLabel(s)}`, back });
   return html`<section data-screen="ligas">${head}${f ? groupsBlocks(ctx, view) : competitionsBlocks(ctx, view)}</section>`;
 }
 

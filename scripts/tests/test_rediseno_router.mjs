@@ -7,11 +7,12 @@ import { existsSync } from 'node:fs';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { fakeBrowser } from './fixtures/rediseno/fake-browser.mjs';
 import { buildSeason, buildCups, findGroup, findRound, findMatch, seasonLabel } from '../../src/model.js';
-import { buildClubIndex } from '../../src/myteam.js';
+import { buildClubIndex, routeIsMine } from '../../src/myteam.js';
 import { teamNames } from './fixtures/rediseno/simulate.mjs';
 import { html } from '../../src/html.js';
 import { SCREENS, parseRoute, routeHref } from '../../src/links.js';
-import { resolveParams, historyMode, parentOf, activeTab, routeIsMine, startRouter } from '../../src/router.js';
+import * as routerModule from '../../src/router.js';
+import { resolveParams, historyMode, parentOf, activeTab, startRouter } from '../../src/router.js';
 import { SCREEN_MAP } from '../../src/screens.js';
 
 const PORTAL = '2025-2026';
@@ -210,7 +211,8 @@ test('activeTab: el destino marcado de cada fila de §4.1, "page" en los princip
   }
 });
 
-test('routeIsMine: el partido o la ficha de mi equipo, en su grupo y su temporada', () => {
+test('routeIsMine (myteam.js desde B5): el partido o la ficha de mi equipo, en su grupo y su temporada', () => {
+  assert.equal('routeIsMine' in routerModule, false, 'es del terreno de myteam.js (B5, decisión 6)');
   const R = (hash) => ({ screen: parseRoute(hash).screen, params: { s: PORTAL, ...parseRoute(hash).params } });
   assert.equal(routeIsMine(R(J30), OK), true);
   assert.equal(routeIsMine(R(OTHER), OK), false);
@@ -1075,4 +1077,54 @@ test('nav.addRecent llama a actions.addRecent sin volver a pintar; nav.clearData
   assert.equal(r2.nav.addRecent(entry), false);
   await r2.nav.clearData();
   assert.deepEqual(bare.entries(), ['#/ajustes', '#/']);
+});
+
+// ── Plan B5, Tarea 3: nav.update ligado a su mount y el «‹» del DOM por goBack (decisión 6) ──
+
+test('nav.update de un mount que ya no es el vigente no toca la ruta nueva y devuelve false; el del vigente, sí (B5, decisión 6)', async () => {
+  const b = fakeBrowser('#/');
+  const navs = [];
+  const explorar = screen('explorar', { mount: (root, ctx, n) => { navs.push(n); } });
+  const router = startRouter({ screens: { ...allScreens(), explorar }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/explorar' });
+  await router.idle();
+  const [first] = navs;
+  assert.equal(first.update({ s: PORTAL, q: 'Mes' }), true, 'el de la pantalla vigente apunta la búsqueda');
+  assert.deepEqual(b.entries(), ['#/', '#/explorar?s=2025-2026&q=Mes']);
+  // Otra navegación: la ficha. Un update tardío de Explorar (un temporizador) no la reescribe.
+  b.click({ href: '#/equipo?g=PG2&t=Acodetti' });
+  await router.idle();
+  assert.equal(first.update({ s: PORTAL, q: 'Mesa' }), false);
+  assert.deepEqual(b.entries(), ['#/', '#/explorar?s=2025-2026&q=Mes', '#/equipo?g=PG2&t=Acodetti']);
+  assert.deepEqual(router.current(), { screen: 'equipo', params: { g: 'PG2', t: 'Acodetti', s: PORTAL } });
+  // De vuelta en Explorar: su mount nuevo trae el suyo; el del pintado anterior sigue sin poder.
+  b.win.history.back();
+  await tick();
+  await router.idle();
+  assert.equal(navs.length, 2);
+  assert.equal(first.update({ s: PORTAL, q: 'M' }), false, 'es de un pintado que ya no está');
+  assert.equal(navs[1].update({ s: PORTAL, q: 'Mesas' }), true);
+  assert.equal(b.hash(), '#/explorar?s=2025-2026&q=Mesas');
+});
+
+test('el «‹» del DOM con entrada anterior de la app pasa por goBack: idle() espera el pintado de la vuelta (B5, decisión 6)', async () => {
+  const b = fakeBrowser('#/');
+  const gate = deferred();
+  let calls = 0;
+  const home = screen('home', { needs: () => (++calls === 1 ? [] : [gate.promise]) });
+  const router = startRouter({ screens: { '': home, tabla: screen('tabla') }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  b.click({ href: '#/tabla' });
+  await router.idle();
+  assert.equal(b.click({ href: '#/', 'data-action': 'back' }), true);
+  let done = false;
+  const back = router.idle().then(() => { done = true; });
+  await tick();
+  assert.equal(done, false, 'Mi equipo espera a sus needs: la vuelta todavía no está pintada');
+  assert.match(b.root.innerHTML, /data-skeleton="home"/);
+  gate.resolve();
+  await back;
+  assert.equal(b.index(), 0);
+  assert.match(b.root.innerHTML, /<h1>home<\/h1>/);
 });

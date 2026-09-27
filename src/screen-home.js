@@ -1,7 +1,8 @@
 // Mi equipo, la portada (spec §4.2, §4.8, §6.4 y §7).
 //
 // render(ctx) es puro y síncrono: homeState decide el estado (E, X, D, B, C o A, en ese orden) sobre
-// la resolución de mi equipo. E y X son de la portada; D, B, C y A los pinta la vista de equipo
+// la resolución de mi equipo, y la vista de equipo lo recibe (teamState, una vez por pintado: B5,
+// decisión 6). E y X son de la portada; D, B, C y A los pinta la vista de equipo
 // (team-view.js, decisión 8 de B3), la misma de la ficha de Equipo, aquí con «Cambiar», la caja de la
 // temporada siguiente, el aviso stale y el calendario de escritorio. El estado va en data-state, que
 // usan las pruebas de navegador. mount(root, ctx, nav) añade el comportamiento. Nada toca el DOM al
@@ -48,7 +49,7 @@ export const screen = {
       return html`<section data-screen="home" data-state="${state}">${state === 'E' ? stateE(ctx, shields) : stateX(ctx, shields)}</section>`;
     }
     const view = teamView(ctx, { group: r.group, name: r.name }, {
-      action: 'change', nextSeason: true, stale: r.stale || null, calendar: 'wide', mine: true, shields,
+      action: 'change', nextSeason: true, stale: r.stale || null, calendar: 'wide', mine: true, shields, state,
     });
     return html`<section data-screen="home" data-state="${view.state}">${view.head}${teamColumns(view.main, view.aside, view.rest)}</section>`;
   },

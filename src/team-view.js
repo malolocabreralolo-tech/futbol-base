@@ -5,7 +5,8 @@
 // comportamiento. Todo es puro salvo mountTeamView, y nada toca el DOM al importarse.
 import { html } from './html.js';
 import {
-  block, box, cells, crest, empty, listEs, matchRow, notice, screenHead, shareStatus, sourcePhrase, standingsTable,
+  block, box, cells, countLabel, crest, decimal, empty, listEs, matchRow, notice, score, screenHead, shareStatus,
+  sourcePhrase, standingsTable,
 } from './ui.js';
 import {
   competitionKey, lastResults, matchState, penaltyWinner, playerName, retiredTeams, roundOf, seasonLabel,
@@ -24,10 +25,6 @@ import { teamScorers } from './state.js';
 
 // '2026-10-04' → 'dom 4 oct'
 const shortDate = weekdayDate;
-
-const score = (a, b) => `${a}–${b}`;
-// 3.25 → '3,3': un decimal con coma, sin los datos de idioma del motor.
-const oneDecimal = n => n.toFixed(1).replace('.', ',');
 
 // «Cambiar» y las demás búsquedas abren Explorar con el buscador enfocado: el ancla #buscar va tras
 // la ruta, como #calendario en la ficha de equipo. La usan también E y X de la portada.
@@ -173,7 +170,7 @@ function figuresBlock(ctx, group, name) {
   const content = html`${cells([
     { label: 'Goles a favor', value: sum.gf ?? '—' },
     { label: 'En contra', value: sum.gc ?? '—' },
-    { label: 'Por partido', value: sum.perMatch ? `${oneDecimal(sum.perMatch.gf)} – ${oneDecimal(sum.perMatch.gc)}` : '—' },
+    { label: 'Por partido', value: sum.perMatch ? `${decimal(sum.perMatch.gf, 1)} – ${decimal(sum.perMatch.gc, 1)}` : '—' },
   ])}${cells([
     { label: 'En casa', value: record(sum.home) },
     { label: 'Fuera', value: record(sum.away) },
@@ -265,16 +262,15 @@ export function nextSeasonBox(ctx, name, next) {
 function endedBlock(ctx, group, name) {
   const sum = seasonSummary(name, group);
   const top = scorersOf(ctx, group, name)[0] || null;
-  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
   const content = html`${cells([
     { label: 'Posición', value: sum.pos != null ? `${sum.pos}.º de ${sum.of}` : '—' },
     { label: 'Puntos', value: sum.pts ?? '—' },
     { label: 'Balance', value: sum.g != null ? `${sum.g}G ${sum.e}E ${sum.p}P` : '—' },
   ])}${cells([
-    { label: 'A favor', value: sum.gf != null ? plural(sum.gf, 'gol', 'goles') : '—' },
-    { label: 'En contra', value: sum.gc != null ? plural(sum.gc, 'gol', 'goles') : '—' },
+    { label: 'A favor', value: sum.gf != null ? countLabel(sum.gf, 'gol', 'goles') : '—' },
+    { label: 'En contra', value: sum.gc != null ? countLabel(sum.gc, 'gol', 'goles') : '—' },
     { label: 'Último', value: sum.last ? `${score(sum.last.gf, sum.last.gc)} ${teamShort(sum.last.rival)}` : '—' },
-  ])}${top ? html`<p class="home-top"><span class="cell-label">Máximo goleador</span><span class="home-top-name"><b>${playerName(top.name)}</b>, ${plural(top.goals, 'gol', 'goles')} en ${plural(top.games, 'partido', 'partidos')}</span></p>` : ''}`;
+  ])}${top ? html`<p class="home-top"><span class="cell-label">Máximo goleador</span><span class="home-top-name"><b>${playerName(top.name)}</b>, ${countLabel(top.goals, 'gol', 'goles')} en ${countLabel(top.games, 'partido', 'partidos')}</span></p>` : ''}`;
   return box(content, { title: `Así terminó ${seasonLabel(group.season)}`, context: group.label });
 }
 
@@ -364,14 +360,16 @@ function endedView(v, nextSeason) {
 // - calendar: 'wide', el hueco que mount llena en escritorio (Mi equipo); 'always', el calendario
 //   completo en render, con su ancla #calendario (Equipo);
 // - mine: si el equipo es mi equipo (el texto oculto de su fila en la clasificación);
-// - shields: los escudos.
+// - shields: los escudos;
+// - state: el estado, si quien llama ya lo calculó (la portada, con homeState: teamState una sola vez
+//   por pintado, B5, decisión 6); sin él, teamState.
 // El «‹» es el del router (ctx.backHref): la portada no lo tiene y la ficha sí.
 export function teamView(ctx, { group, name }, {
-  action = null, nextSeason = false, stale = null, calendar = 'wide', mine = false, shields = {},
+  action = null, nextSeason = false, stale = null, calendar = 'wide', mine = false, shields = {}, state = null,
 } = {}) {
-  const state = teamState({ group, name, todayISO: ctx.today, portalSeason: ctx.portal.season });
+  const shown = state || teamState({ group, name, todayISO: ctx.today, portalSeason: ctx.portal.season });
   const v = { ctx, group, name, shields, action, stale, calendar, mine, back: ctx.backHref || null };
-  return { state, ...(state === 'D' ? endedView(v, nextSeason) : seasonView(v, state)) };
+  return { state: shown, ...(shown === 'D' ? endedView(v, nextSeason) : seasonView(v, shown)) };
 }
 
 // ── Calendario completo del equipo (spec §4.6 y §4.8) ───────────────────

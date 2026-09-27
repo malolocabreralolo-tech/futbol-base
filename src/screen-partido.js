@@ -7,7 +7,7 @@
 // las temporadas anteriores (con su «Reintentar»). «‹» y el «Reintentar» de la
 // pantalla son del router (data-action="back" y "retry").
 import { html, join } from './html.js';
-import { block, box, cells, crest, empty, formChips, notice, screenHead, shareStatus } from './ui.js';
+import { block, box, cells, crest, empty, formChips, notice, score, screenHead, shareStatus } from './ui.js';
 import {
   actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, penaltyWinner, playerName,
   roundOf, seasonLabel, teamShort, timelineFor,
@@ -24,7 +24,6 @@ const LOADERS = { ensureMatchDetail, ensureLineups, ensureSeasonData };
 
 // ── Textos y fechas ──────────────────────────────────────────────────────
 
-const score = (home, away) => `${home}${DASH}${away}`;
 const dashed = (pair) => String(pair ?? '').replace('-', DASH);
 
 // Día del calendario (AAAA-MM-DD), con los nombres de links.js (Tarea 7), sin los datos de idioma

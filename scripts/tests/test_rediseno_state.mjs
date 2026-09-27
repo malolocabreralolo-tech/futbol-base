@@ -203,10 +203,12 @@ test('decisiones 1 y 2: state.js sin estado de interfaz, sin HTML y sin lo que y
     // M5 de la revisión final de B2: las heredadas que nadie usaba en src/, index.html ni sw.js.
     'getData', 'withSeasonCup', 'countStats', 'getSeasonError', 'ensurePlayers', 'phaseIcon',
     'unifiedPrebenLeagueGroups', 'validJorGroup', 'jornadaLabel', 'groupJornadaLabel', 'knockoutRoundsSource',
-    'getPhases']) {
+    'getPhases',
+    // B5, decisión 6: las cuatro que nadie usaba en src/ (quién pasó y el campeón son bracket(), de model.js).
+    'countMatches', 'matchAdvancer', 'bracketDrawAdvancer', 'bracketChampion']) {
     assert.equal(gone in state, false, `${gone} sigue en state.js`);
   }
-  for (const kept of ['countMatches', 'groupScorers', 'teamScorers']) {
+  for (const kept of ['groupScorers', 'teamScorers']) {
     assert.equal(typeof state[kept], 'function', kept);
   }
   assert.doesNotMatch(read('src/state.js'), /<(img|span|div|table|svg)\b/, 'state.js ya no pinta HTML');

@@ -1381,7 +1381,6 @@ abbr[title] { text-decoration: none; }
 .fu-state { font-size: 12.5px; font-weight: 600; color: var(--mute); white-space: nowrap; }
 .fu-state.is-alert { font-weight: 800; color: var(--ink); }
 .fu-detail { grid-column: 1 / -1; font-size: 12.5px; color: var(--mute); overflow-wrap: anywhere; }
-.fu-failed .buttons { margin-top: 10px; border: 1.5px solid var(--ink); }
 
 /* ── Ajustes: mi equipo y «Borrar datos de esta app» en dos pasos (decisión 29 de B3) ─── */
 

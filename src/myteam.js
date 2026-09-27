@@ -315,6 +315,17 @@ export function myTeamIn(group, myTeam, resolution) {
   return listed ? name : null;
 }
 
+// ¿Es de mi equipo este partido o esta ficha? Mismo grupo y temporada que el resuelto, y su nombre. La
+// usan la barra (router.js) y la ficha de Equipo; vivía en router.js (B5, decisión 6).
+export function routeIsMine(route, resolution) {
+  if (resolution?.status !== 'ok' || !resolution.group) return false;
+  const params = route?.params || {};
+  if (params.s !== resolution.group.season || params.g !== resolution.group.id) return false;
+  if (route.screen === 'partido') return params.h === resolution.name || params.a === resolution.name;
+  if (route.screen === 'equipo') return params.t === resolution.name;
+  return false;
+}
+
 // ---- Trayectoria (spec §4.6 y §6.1; decisión 14 de B3) ----
 
 // El club de `name` (el índice de clubes de todo lo cargado, §6.1) en cada temporada de `seasons` que

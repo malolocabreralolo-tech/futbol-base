@@ -2,10 +2,11 @@
 // última comprobación y el último cambio de data-health.json; una fila por grupo comprobado, con la
 // etiqueta del modelo, su estado en palabras, su mensaje y el enlace a su fuente; los grupos de la
 // temporada sin página web comprobada, en una línea; y la temporada siguiente, con la caja de la
-// portada (nextSeasonBox). Sin data-health, un vacío con el «Reintentar» del router.
+// portada (nextSeasonBox). Sin data-health, la caja de error de §7 (errorBox, B5, decisión 6), con
+// el «Reintentar» del router.
 import { html } from './html.js';
-import { block, box, cells, empty, listEs, notice, screenHead } from './ui.js';
-import { routeTitle } from './shell.js';
+import { block, box, cells, countLabel, empty, listEs, notice, screenHead } from './ui.js';
+import { errorBox, routeTitle } from './shell.js';
 import { canaryDateTime, dayMonthLong } from './links.js';
 import { seasonLabel } from './model.js';
 import { ensureHealth } from './state.js';
@@ -51,7 +52,7 @@ function summary(rows) {
   const errors = count((r) => r.status === 'error');
   const other = rows.length - ok - pending - errors;
   return listEs([
-    ok ? `${ok} ${ok === 1 ? 'correcta' : 'correctas'}` : '',
+    ok ? countLabel(ok, 'correcta', 'correctas') : '',
     pending ? `${pending} con revisión pendiente` : '',
     errors ? `${errors} con error` : '',
     other ? `${other} sin estado` : '',
@@ -74,10 +75,10 @@ function sourcesNote(rows) {
 function render(ctx) {
   const health = ctx.health;
   const title = routeTitle('fuentes');
-  // Sin data-health (needs lo pidió y falló): el vacío y el «Reintentar» del router, que vuelve a
-  // llamar a needs, y needs lo vuelve a pedir.
+  // Sin data-health (needs lo pidió y falló): la caja de error, anunciada, con el «Reintentar» del
+  // router, que vuelve a llamar a needs, y needs lo vuelve a pedir.
   if (!health || typeof health !== 'object') {
-    return html`<section data-screen="fuentes">${screenHead(title, { back: ctx.backHref })}<div class="block"><div class="empty fu-failed"><p>No se pudo cargar el estado de las fuentes.</p><div class="buttons"><button class="button is-main" type="button" data-action="retry">Reintentar</button></div></div></div></section>`;
+    return html`<section data-screen="fuentes">${screenHead(title, { back: ctx.backHref })}<div class="block">${errorBox('la comprobación de las fuentes')}</div></section>`;
   }
   const checkedSeason = SEASON_RE.test(String(health.season)) ? health.season : null;
   const { rows, unchecked } = healthRows(health, checkedSeason ? ctx.model.season(checkedSeason) : null);
@@ -91,7 +92,7 @@ function render(ctx) {
   ]), { title: 'Estado de los datos' });
   const list = rows.length ? html`<ul class="box fu-list">${rows.map(checkRow)}</ul>` : empty('Todavía no hay ningún grupo comprobado.');
   const n = unchecked.length;
-  const missing = n ? notice(null, `${n} ${n === 1 ? 'grupo' : 'grupos'} sin página web comprobada; sus datos vienen de la federación: ${unchecked.map((group) => group.label).join('; ')}.`) : '';
+  const missing = n ? notice(null, `${countLabel(n, 'grupo', 'grupos')} sin página web comprobada; sus datos vienen de la federación: ${unchecked.map((group) => group.label).join('; ')}.`) : '';
   // La temporada siguiente, con el texto de la portada en D (§4.2 D) y el nombre de mi equipo.
   const next = health.nextSeason;
   const mine = ctx.resolution && ctx.resolution.status === 'ok' ? ctx.resolution.name : (ctx.myTeam && ctx.myTeam.name) || '';

@@ -6,8 +6,8 @@
 // nav.update, sin crear entradas ni mover el cursor (decisión 4). Solo hay goleadores de la temporada
 // del portal: las pasadas dicen que no los hay.
 import { html, join } from './html.js';
-import { crest, empty, notice, screenHead, searchBox, segmented } from './ui.js';
-import { findGroup, playerName, searchKey, seasonLabel } from './model.js';
+import { countLabel, crest, empty, notice, screenHead, searchBox, segmented } from './ui.js';
+import { CATEGORIES, CAT_NAMES, CAT_WORDS, findGroup, playerName, searchKey, seasonLabel } from './model.js';
 import { routeHref, teamHref } from './links.js';
 import { categoryScorers, groupScorers, rankScorers } from './state.js';
 import { defaultCategory } from './myteam.js';
@@ -21,9 +21,7 @@ import { defaultCategory } from './myteam.js';
 export const PAGE_ROWS = 200;
 export const SEARCH_FIRST = 30;
 export const SEARCH_ROWS = 100;
-const CATS = [{ value: 'benjamin', label: 'Benjamín' }, { value: 'prebenjamin', label: 'Prebenjamín' }];
-const CAT_LABEL = { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' };
-const CAT_NAME = { benjamin: 'benjamín', prebenjamin: 'prebenjamín' };
+const CATS = CATEGORIES.map((value) => ({ value, label: CAT_NAMES[value] }));
 const BODY_ID = 'goleadores-filas';
 
 // Las palabras de una búsqueda, con la normalización del buscador de Explorar (searchKey de model.js:
@@ -52,8 +50,16 @@ export function filterScorers(rows, { team = '', query = '' } = {}) {
 
 // La lista de la ruta, entera y con su puesto en ella (rankScorers, el mismo de Récords), que se
 // conserva al filtrar: la de un grupo (groupScorers, null si la fuente no lo publica) o la de la
-// categoría (categoryScorers), y cuántos grupos suma. Cada fila lleva su clave de búsqueda.
+// categoría (categoryScorers), y cuántos grupos suma. Cada fila lleva su clave de búsqueda. Una vez
+// por pintado (B5, decisión 6): render y mount reciben el mismo ctx del router, y el mount la toma de
+// aquí; cada tecla filtra esa lista, sin volver a hacerla.
+const lists = new WeakMap();
 function listOf(ctx) {
+  if (!lists.has(ctx)) lists.set(ctx, buildList(ctx));
+  return lists.get(ctx);
+}
+
+function buildList(ctx) {
   const { params, model } = ctx;
   const s = params.s || ctx.portal.season;
   const group = params.g ? findGroup(model, s, params.g) : null;
@@ -82,9 +88,9 @@ function moreText(left, page) {
 // «13 de 586 jugadores» con un filtro; si no, «586 jugadores de 8 grupos» o, en un grupo, «149 jugadores».
 function countText(shown, list) {
   const total = list.rows.length;
-  if (shown !== total) return `${shown} de ${total} ${total === 1 ? 'jugador' : 'jugadores'}`;
-  const players = `${total} ${total === 1 ? 'jugador' : 'jugadores'}`;
-  return list.group ? players : `${players} de ${list.groups} ${list.groups === 1 ? 'grupo' : 'grupos'}`;
+  if (shown !== total) return `${shown} de ${countLabel(total, 'jugador', 'jugadores')}`;
+  const players = countLabel(total, 'jugador', 'jugadores');
+  return list.group ? players : `${players} de ${countLabel(list.groups, 'grupo', 'grupos')}`;
 }
 
 function noneText(team, query) {
@@ -100,7 +106,7 @@ function noneText(team, query) {
 // escribir, con SEARCH_FIRST filas como mucho.
 function scorersList(rows, list, { team, query, shields, first = firstRows(query) }) {
   if (!rows.length) return empty(noneText(team, query));
-  const caption = list.group ? `Goleadores de ${list.group.label}` : `Goleadores de ${CAT_NAME[list.cat]}, todos los grupos`;
+  const caption = list.group ? `Goleadores de ${list.group.label}` : `Goleadores de ${CAT_WORDS[list.cat]}, todos los grupos`;
   const table = html`<div class="box"><table class="standings group-scorers gol-table"><caption class="vh">${caption}</caption><thead><tr><th scope="col" class="st-pos"><abbr title="Puesto">#</abbr></th><th scope="col" class="gol-player">Jugador</th><th scope="col" class="sc-goals">Goles</th><th scope="col" class="sc-pj"><abbr title="Partidos jugados">PJ</abbr></th></tr></thead><tbody id="${BODY_ID}">${rows.slice(0, first).map((row) => scorerRow(row, list.s, shields))}</tbody></table></div>`;
   const more = rows.length > first
     ? html`<button type="button" class="gol-more" data-action="ver-mas" aria-controls="${BODY_ID}">${moreText(rows.length - first, moreRows(query))}</button>`
@@ -114,7 +120,7 @@ function render(ctx) {
   const list = listOf(ctx);
   const { s, cat, group } = list;
   const past = s !== ctx.portal.season;
-  const where = group ? group.label : `${CAT_LABEL[cat]}, todos los grupos`;
+  const where = group ? group.label : `${CAT_NAMES[cat]}, todos los grupos`;
   const action = group ? { href: routeHref('goleadores', { s, c: group.cat, t: params.t }), label: 'Todos los grupos' } : null;
   const head = screenHead('Goleadores', { sub: past ? `${where} · ${seasonLabel(s)}` : where, back: ctx.backHref, action });
   const screenHtml = (content) => html`<section data-screen="goleadores">${head}${content}</section>`;
@@ -122,7 +128,7 @@ function render(ctx) {
   const cats = group ? '' : html`<nav class="gol-cats" aria-label="Categoría">${segmented(CATS, cat, (value) => routeHref('goleadores', { s, c: value }), { idPrefix: 'categoria' })}</nav>`;
   if (!list.rows) return screenHtml(html`${cats}${empty('La fuente de este grupo no publica goleadores.')}`);
   if (!list.rows.length) {
-    return screenHtml(html`${cats}${empty(group ? 'Todavía no hay goles registrados en este grupo.' : `Todavía no hay goleadores de ${CAT_NAME[cat]} en la temporada ${seasonLabel(s)}.`)}`);
+    return screenHtml(html`${cats}${empty(group ? 'Todavía no hay goles registrados en este grupo.' : `Todavía no hay goleadores de ${CAT_WORDS[cat]} en la temporada ${seasonLabel(s)}.`)}`);
   }
   const team = params.t || '';
   const rows = filterScorers(list.rows, { team, query: params.q });

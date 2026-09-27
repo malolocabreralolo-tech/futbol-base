@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { html } from '../../src/html.js';
 import {
   crest, crestFallback, monogram, block, box, cells, matchRow, standingsTable,
-  formChips, segmented, notice, empty, tabbar, listEs, shareStatus, sourcePhrase,
+  formChips, segmented, notice, empty, tabbar, listEs, shareStatus, sourcePhrase, countLabel, score, signed, decimal,
 } from '../../src/ui.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -392,4 +392,17 @@ test('cada clase que emite screenHead existe en acta.css', () => {
   const out = s(screenHead('t', { sub: 's', back: '#', action: { href: '#', label: 'a' } }));
   const used = new Set([...out.matchAll(/class="([^"]+)"/g)].flatMap(m => m[1].split(/\s+/)));
   assert.deepEqual([...used].filter(c => !defined.has(c)), []);
+});
+
+// ── Plan B5, Tarea 3: las cifras y los recuentos de todas las pantallas, una sola vez (decisión 6) ──
+
+test('countLabel, score, signed y decimal: una sola definición, la de ui.js', () => {
+  assert.equal(countLabel(1, 'grupo', 'grupos'), '1 grupo');
+  assert.equal(countLabel(0, 'grupo', 'grupos'), '0 grupos');
+  assert.equal(countLabel(3, 'acta más llega incompleta', 'actas más llegan incompletas'), '3 actas más llegan incompletas');
+  assert.equal(score(2, 7), '2–7');
+  assert.deepEqual([24, -30, 0, null, undefined].map(signed), ['+24', '−30', '0', '', '']);
+  assert.equal(decimal(8.0123, 2), '8,01');
+  assert.equal(decimal(3.25, 1), '3,3');
+  assert.equal(decimal(48 / 17, 2), '2,82');
 });

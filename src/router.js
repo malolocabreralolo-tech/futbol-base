@@ -1,16 +1,18 @@
 // Router del rediseño (spec §4.1, §5.1, §7 y §8). La ruta vive en el hash
 // (#/<pantalla>?<parámetros>) y es la fuente de verdad de lo que se ve.
 // - Funciones puras: resolveParams (valores por defecto y redirecciones de §4.1),
-//   historyMode (pushState o replaceState), parentOf («‹»), activeTab y routeIsMine (barra).
+//   historyMode (pushState o replaceState), parentOf («‹») y activeTab (barra, con routeIsMine de
+//   myteam.js).
 // - startRouter, la parte con DOM: hashchange y popstate, enlaces antiguos, token de
 //   navegación, la temporada pendiente, needs → render → mount, desplazamiento por entrada del
 //   historial, foco al h1 (o al control del ancla), «‹» y Reintentar; y el nav de las pantallas,
-//   con la búsqueda que se apunta sin pintar (update), los vistos hace poco y «Borrar datos».
+//   con la búsqueda que se apunta sin pintar (update, solo desde el mount vigente), los vistos hace
+//   poco y «Borrar datos».
 // No toca el navegador al importarse: startRouter recibe `window`.
 import { Html } from './html.js';
 import { parseRoute, routeHref, translateLegacy } from './links.js';
 import { findGroup, findMatch, findRound, seasonLabel } from './model.js';
-import { sameClub } from './myteam.js';
+import { routeIsMine, sameClub } from './myteam.js';
 import { skeleton, errorScreen, routeNotice, routeTitle, updateTabbar } from './shell.js';
 import { normalizeTeamName, seasonNeeds } from './state.js';
 
@@ -228,16 +230,6 @@ export function activeTab(route, lastPrimary, isMine) {
   return { active: 'explorar', current: 'true' };
 }
 
-// ¿Es de mi equipo este partido o esta ficha? Mismo grupo y temporada que el resuelto, y su nombre.
-export function routeIsMine(route, resolution) {
-  if (resolution?.status !== 'ok' || !resolution.group) return false;
-  const params = route?.params || {};
-  if (params.s !== resolution.group.season || params.g !== resolution.group.id) return false;
-  if (route.screen === 'partido') return params.h === resolution.name || params.a === resolution.name;
-  if (route.screen === 'equipo') return params.t === resolution.name;
-  return false;
-}
-
 // ── startRouter ──────────────────────────────────────────────────────────
 
 // Qué no se pudo cargar, para «No se pudieron cargar los datos de <qué>»: el `what` del error o
@@ -448,7 +440,7 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
         nesting.push({ target, focusId });
         let done;
         try {
-          done = screen.mount(root, ctx, nav);
+          done = screen.mount(root, ctx, navFor(my));
         } catch (err) {
           // Un mount que lanza deja la pantalla pintada (decisión del controlador, B2 ronda 1): sus
           // enlaces los atiende igual el router por delegación; la caja de error es solo de needs y render.
@@ -508,7 +500,8 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
   // pueden llegar dos popstate, a entradas distintas (el segundo pinta sin pendiente que resolver);
   // en el navegador falso de las pruebas llegan a la misma entrada y onLocation descarta el segundo.
   // Sin encadenar, el pendiente del primero se perdía y su promesa se quedaba colgada para siempre
-  // (B2, ronda 2, hallazgo único).
+  // (B2, ronda 2, hallazgo único). El «‹» del DOM también pasa por aquí (B5, decisión 6): idle()
+  // espera su vuelta, como la de nav.back().
   function goBack() {
     if ((entry()?.fbIdx ?? 0) > 0) {
       const earlier = pendingBack;
@@ -549,7 +542,7 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     }
     if (action === 'back' && (entry()?.fbIdx ?? 0) > 0) {
       event.preventDefault();
-      hist.back();
+      goBack();
       return;
     }
     if (el.tagName !== 'A' || el.hasAttribute('download')) return;
@@ -619,6 +612,11 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       return navigate('#/', 'push');
     },
   };
+
+  // El nav que recibe cada mount: el de arriba, con su update ligado a esa navegación (B5, decisión
+  // 6). Un update que llega cuando ya empezó otra (el temporizador de una pantalla anterior, que ningún
+  // buscador usa hoy) no reescribe la ruta nueva: devuelve false sin tocar nada.
+  const navFor = (my) => ({ ...nav, update: (params) => my === token && update(params) });
 
   if ('scrollRestoration' in hist) hist.scrollRestoration = 'manual';
   win.addEventListener('popstate', onLocation);

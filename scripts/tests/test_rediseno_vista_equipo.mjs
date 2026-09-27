@@ -242,3 +242,22 @@ test('cada clase de la vista existe en acta.css, y `rest` va debajo de lo princi
   assert.match(decl('.has-rest > .home-rest', DESKTOP), /grid-column:\s*1/);
   assert.match(decl('.has-rest > .home-rest', DESKTOP), /grid-row:\s*2/);
 });
+
+// ── Plan B5, Tarea 3: el estado, una vez por pintado de la portada (decisión 6) ──
+
+test('teamView con `state`: la vista del estado que le dan, sin volver a calcularlo; sin él, teamState', () => {
+  const ctx = equipoCtx(HURACAN, '2026-09-23', fixture('current-2025-2026'));
+  const own = viewOf(ctx, { action: 'make', calendar: 'always' });
+  assert.equal(own.state, 'D');
+  assert.deepEqual(own.main.map(titles).flat(), ['Así terminó 2025/26']);
+  // Con el estado de quien ya lo calculó (la portada, con homeState), ese: aquí, uno que no es el suyo.
+  const given = viewOf(ctx, { action: 'make', calendar: 'always', state: 'A' });
+  assert.equal(given.state, 'A');
+  assert.deepEqual(given.main.map(titles).flat(), ['Próximo partido', 'Últimos cinco']);
+  // La portada le pasa el suyo: el mismo pintado, byte a byte, que sin él (las huellas de arriba).
+  const home = homeCtx({ today: '2026-09-23' });
+  const r = home.resolution;
+  const state = homeState({ resolution: r, todayISO: home.today, portalSeason: home.portal.season });
+  const opts = { action: 'change', nextSeason: true, calendar: 'wide', mine: true, shields: home.datasets.shields };
+  assert.deepEqual(teamView(home, { group: r.group, name: r.name }, { ...opts, state }), teamView(home, { group: r.group, name: r.name }, opts));
+});

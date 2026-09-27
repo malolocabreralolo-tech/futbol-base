@@ -8,21 +8,18 @@
 // equipo juega en él (decisión 3 de B3); las dos ramas defensivas de render son para lo que no pasa
 // por el router.
 import { html, join } from './html.js';
-import { block, box, cells, empty, listEs, notice, pointsChart, screenHead } from './ui.js';
+import { block, box, cells, countLabel, empty, listEs, notice, pointsChart, score, screenHead } from './ui.js';
 import {
   anyCards, coverageNote, findGroup, playerMatches, playerName, pointsProgression, seasonLabel, teamFixtures,
   teamShort, teamSquad,
 } from './model.js';
-import { teamTrajectory } from './myteam.js';
+import { routeIsMine, teamTrajectory } from './myteam.js';
 import { matchHref, routeHref, teamHref, weekdayDate } from './links.js';
-import { routeIsMine } from './router.js';
 import { errorBox } from './shell.js';
 import { ensureHealth, ensureLineups, ensureSeasonData, loadSeasons } from './state.js';
 import { coverageText, missingResults, mountTeamView, teamColumns, teamView } from './team-view.js';
 
 const TRAJECTORY_ID = 'trayectoria';
-const score = (a, b) => `${a}–${b}`;
-const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 // El grupo y el equipo de la ruta, o null: el equipo tiene que estar en la clasificación o en el
 // calendario de un grupo de liga (la misma regla que el router, hasTeam).
@@ -49,10 +46,10 @@ export function pointsNote(name, group, today) {
   if (!row || row.pts == null || last == null || last === row.pts) return null;
   const coverage = coverageNote(name, group);
   const missing = missingResults(name, group, today);
-  const points = plural(last, 'punto', 'puntos');
+  const points = countLabel(last, 'punto', 'puntos');
   if (coverage && coverage.vsRetired > 0 && !missing && coverage.withResult + coverage.vsRetired === coverage.played) {
     const whom = `${listEs(coverage.retired)} (${coverage.retired.length > 1 ? 'retirados' : 'retirado'})`;
-    return { label: 'Cobertura:', text: `la gráfica suma ${points} con los ${coverage.withResult} partidos del calendario; la clasificación oficial da ${row.pts}, con ${plural(coverage.vsRetired, 'partido', 'partidos')} más contra ${whom}.` };
+    return { label: 'Cobertura:', text: `la gráfica suma ${points} con los ${coverage.withResult} partidos del calendario; la clasificación oficial da ${row.pts}, con ${countLabel(coverage.vsRetired, 'partido', 'partidos')} más contra ${whom}.` };
   }
   const why = coverageText(coverage, missing);
   if (why) return { label: 'Cobertura:', text: `la gráfica suma ${points} con el calendario y la clasificación oficial da ${row.pts}: ${why.charAt(0).toLowerCase()}${why.slice(1)}.` };
@@ -90,15 +87,15 @@ export function playerDetail(lineups, group, team, player) {
     const rival = home ? match.away : match.home;
     const round = group.rounds.find(r => r.key === match.roundKey);
     const when = [round ? round.label : match.roundKey, weekdayDate(match.dateISO)].filter(Boolean).join(' · ');
-    return html`<li><a class="squad-match" href="${matchHref(match)}"><span class="squad-when">${when}</span><span class="squad-rival">${home ? 'en casa contra' : 'fuera contra'} ${teamShort(rival)}</span><span class="squad-score">${home ? score(match.hs, match.as) : score(match.as, match.hs)}</span><span class="squad-goals">${goals ? plural(goals, 'gol', 'goles') : 'sin goles'}</span></a></li>`;
+    return html`<li><a class="squad-match" href="${matchHref(match)}"><span class="squad-when">${when}</span><span class="squad-rival">${home ? 'en casa contra' : 'fuera contra'} ${teamShort(rival)}</span><span class="squad-score">${home ? score(match.hs, match.as) : score(match.as, match.hs)}</span><span class="squad-goals">${goals ? countLabel(goals, 'gol', 'goles') : 'sin goles'}</span></a></li>`;
   });
   return html`<ul class="squad-matches">${items}</ul>`;
 }
 
 // Actas de N de M partidos jugados (spec §7): cuántos partidos del equipo tienen acta que cuenta.
 function squadNote(actas, skipped, played) {
-  const incomplete = skipped ? `; ${plural(skipped, 'acta más llega incompleta', 'actas más llegan incompletas')} (sin uno de los dos equipos) y no ${skipped === 1 ? 'cuenta' : 'cuentan'}` : '';
-  return `Actas de ${actas} de ${plural(played, 'partido jugado', 'partidos jugados')}${incomplete}.`;
+  const incomplete = skipped ? `; ${countLabel(skipped, 'acta más llega incompleta', 'actas más llegan incompletas')} (sin uno de los dos equipos) y no ${skipped === 1 ? 'cuenta' : 'cuentan'}` : '';
+  return `Actas de ${actas} de ${countLabel(played, 'partido jugado', 'partidos jugados')}${incomplete}.`;
 }
 
 // La plantilla del grupo y la temporada desde las actas (LINEUPS_<S>), si el grupo tiene alguna:
@@ -140,7 +137,7 @@ function trajectoryBlock() {
 // y cada una abre la Tabla de ese grupo y esa temporada.
 export function trajectoryList(rows) {
   const seasons = [...new Set(rows.map(r => r.season))];
-  return join(seasons.map(season => html`<h3 class="traj-season">${seasonLabel(season)}</h3><div class="box">${rows.filter(r => r.season === season).map(r => html`<a class="traj-row" href="${routeHref('tabla', { s: r.season, g: r.group.id })}"><span class="traj-team">${r.name}</span><span class="traj-group">${r.group.label}</span><span class="traj-pos">${r.pos != null ? `${r.pos}.º de ${r.group.standings.length}` : '—'}</span><span class="traj-pts">${r.pts != null ? plural(r.pts, 'punto', 'puntos') : ''}</span></a>`)}</div>`));
+  return join(seasons.map(season => html`<h3 class="traj-season">${seasonLabel(season)}</h3><div class="box">${rows.filter(r => r.season === season).map(r => html`<a class="traj-row" href="${routeHref('tabla', { s: r.season, g: r.group.id })}"><span class="traj-team">${r.name}</span><span class="traj-group">${r.group.label}</span><span class="traj-pos">${r.pos != null ? `${r.pos}.º de ${r.group.standings.length}` : '—'}</span><span class="traj-pts">${r.pts != null ? countLabel(r.pts, 'punto', 'puntos') : ''}</span></a>`)}</div>`));
 }
 
 // Carga el archivo que falte (loadSeasons, de state.js) y arma el panel; nunca lanza. Un fallo de la

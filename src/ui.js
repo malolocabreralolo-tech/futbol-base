@@ -101,18 +101,39 @@ export function matchNote(match, state) {
 export function matchRow(match, { mine = false, today, shields, href } = {}) {
   if (!today) throw new TypeError('matchRow necesita today (AAAA-MM-DD): el reloj se inyecta');
   const state = matchState(match, today);
-  const score = state === 'jugado'
-    ? html`<span class="match-score">${match.hs}–${match.as}</span>`
+  const result = state === 'jugado'
+    ? html`<span class="match-score">${score(match.hs, match.as)}</span>`
     : html`<span class="match-score is-pending">–</span>`;
   const note = matchNote(match, state);
-  const inner = html`${mine ? html`<span class="vh">Partido de mi equipo. </span>` : ''}<span class="match-time">${match.time || ''}</span><span class="match-team match-home"><span class="match-name">${match.home}</span>${crest(match.home, { shields })}</span>${score}<span class="match-team match-away">${crest(match.away, { shields })}<span class="match-name">${match.away}</span></span>${note ? html`<span class="match-note">${note}</span>` : ''}`;
+  const inner = html`${mine ? html`<span class="vh">Partido de mi equipo. </span>` : ''}<span class="match-time">${match.time || ''}</span><span class="match-team match-home"><span class="match-name">${match.home}</span>${crest(match.home, { shields })}</span>${result}<span class="match-team match-away">${crest(match.away, { shields })}<span class="match-name">${match.away}</span></span>${note ? html`<span class="match-note">${note}</span>` : ''}`;
   const cls = mine ? 'match-row is-mine' : 'match-row';
   return href ? html`<a class="${cls}" href="${href}">${inner}</a>` : html`<div class="${cls}">${inner}</div>`;
 }
 
-// ── Tabla ───────────────────────────────────────────────────────────────
+// ── Cifras y recuentos, una sola vez (B5, decisión 6) ───────────────────
 
-const signed = (n) => (n == null ? '' : n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '0');
+// «1 grupo», «3 grupos»: la cifra con la palabra en singular o en plural.
+export function countLabel(n, one, many) {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
+// Un marcador, «2–7», con la raya de las maquetas.
+export function score(a, b) {
+  return `${a}–${b}`;
+}
+
+// Una diferencia con su signo: «+24», «−30» o «0»; '' sin dato.
+export function signed(n) {
+  return n == null ? '' : n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '0';
+}
+
+// Una cifra con `digits` decimales y coma, sin los datos de idioma del motor (decisión 123 de B2):
+// decimal(8.0123, 2) → «8,01».
+export function decimal(n, digits) {
+  return n.toFixed(digits).replace('.', ',');
+}
+
+// ── Tabla ───────────────────────────────────────────────────────────────
 
 const COLUMNS = {
   pj: { label: 'J', title: 'Partidos jugados', cls: 'st-num st-pj', cell: (r) => r.pj },

@@ -133,3 +133,24 @@ test('ningún módulo formatea con los datos de idioma del motor: ni toLocale*St
     assert.doesNotMatch(code(read(`src/${f}`)), /\.toLocale(?:Date|Time)?String\(|Intl\.[A-Za-z]+Format\(\s*['"]es/, f);
   }
 });
+
+// ── Plan B5, Tarea 3: lo compartido, una sola vez (decisión 6; principio I2 del plan B3) ──
+// Los nombres de categoría viven en model.js; el plural, el marcador, el signo y los decimales, en
+// ui.js. Ningún otro módulo vuelve a escribirlos.
+test('los nombres de categoría, en model.js; countLabel, score, signed y decimal, en ui.js; ningún otro módulo los repite', async () => {
+  const model = await import('../../src/model.js');
+  assert.deepEqual(model.CATEGORIES, ['benjamin', 'prebenjamin']);
+  assert.deepEqual(model.CAT_NAMES, { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' });
+  assert.deepEqual(model.CAT_WORDS, { benjamin: 'benjamín', prebenjamin: 'prebenjamín' });
+  assert.deepEqual(model.CAT_SHORT, { benjamin: 'benj.', prebenjamin: 'preb.' });
+  const HOME_OF = { 'nombres de categoría': 'model.js', plural: 'ui.js', decimales: 'ui.js', 'un ayudante con nombre': 'ui.js' };
+  const PATTERNS = {
+    'nombres de categoría': /\{\s*benjamin:\s*'/,
+    plural: /\? one : many/,
+    decimales: /\.toFixed\(/,
+    'un ayudante con nombre': /\bconst (?:score|signed|plural|decimals|oneDecimal|ppjText) = /,
+  };
+  const again = MODULES.flatMap((f) => Object.entries(PATTERNS)
+    .filter(([what, re]) => re.test(code(read(`src/${f}`))) && HOME_OF[what] !== f).map(([what]) => `${f}: ${what}`));
+  assert.deepEqual(again, []);
+});

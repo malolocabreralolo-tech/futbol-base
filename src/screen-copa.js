@@ -7,7 +7,7 @@
 // - Liguilla (cup-league): la clasificación, con la fila de mi equipo, y los partidos.
 // render(ctx) es pura. El router garantiza que `g` existe en `s` y no es de liga (decisión 3).
 import { html } from './html.js';
-import { block, box, crest, empty, matchNote, matchRow, screenHead, standingsTable } from './ui.js';
+import { block, box, countLabel, crest, empty, matchNote, matchRow, screenHead, standingsTable } from './ui.js';
 import { errorBox } from './shell.js';
 import { bracket, findGroup, matchState, seasonLabel } from './model.js';
 import { dayMonth, matchHref, weekdayDate } from './links.js';
@@ -66,8 +66,7 @@ function bracketView(group, me, today, shields) {
   if (!rounds.length) return block('Cuadro', empty('La fuente todavía no ha publicado los partidos de esta copa.'));
   const tabs = html`<div class="bracket-tabs" role="group" aria-label="Rondas del cuadro">${rounds.map((round, i) => html`<button type="button" class="bracket-tab" id="ronda-${i + 1}-tab" data-action="ronda" aria-controls="ronda-${i + 1}"${i === 0 ? html` aria-current="true"` : ''}>${round.label}</button>`)}</div>`;
   const columns = rounds.map((round, i) => html`<section class="bracket-round" id="ronda-${i + 1}" aria-labelledby="ronda-${i + 1}-titulo"><div class="bracket-head"><h3 class="bracket-title" id="ronda-${i + 1}-titulo">${round.label}</h3>${round.dateFrom ? html`<p class="bracket-date">${dayMonth(round.dateFrom)}</p>` : ''}</div><ol class="bracket-matches">${round.matches.map((item) => html`<li>${bracketMatch(item, me, today, shields)}</li>`)}</ol></section>`);
-  const count = `${rounds.length} ${rounds.length === 1 ? 'ronda' : 'rondas'}`;
-  return html`${championBlock(rounds, champion, me, today, shields)}${block('Cuadro', html`${tabs}<div class="bracket" role="region" aria-label="Cuadro, una columna por ronda" tabindex="0">${columns}</div>`, { context: count })}`;
+  return html`${championBlock(rounds, champion, me, today, shields)}${block('Cuadro', html`${tabs}<div class="bracket" role="region" aria-label="Cuadro, una columna por ronda" tabindex="0">${columns}</div>`, { context: countLabel(rounds.length, 'ronda', 'rondas') })}`;
 }
 
 // ── Liguilla ─────────────────────────────────────────────────────────────

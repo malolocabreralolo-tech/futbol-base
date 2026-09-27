@@ -5,21 +5,21 @@
 // equipo. Una temporada pasada la carga el router antes de pintar (decisión 2 de B3): needs no pide
 // nada.
 import { html } from './html.js';
-import { block, box, cells, crest, empty, screenHead, segmented } from './ui.js';
+import { block, box, cells, crest, decimal, empty, score, screenHead, segmented } from './ui.js';
 import { errorBox } from './shell.js';
-import { playerName, roundOf, seasonLabel, seasonRecords, RECORD_MIN_PJ, RECORD_MIN_SIDE } from './model.js';
+import {
+  CATEGORIES, CAT_NAMES, CAT_WORDS, playerName, roundOf, seasonLabel, seasonRecords, RECORD_MIN_PJ, RECORD_MIN_SIDE,
+} from './model.js';
 import { matchHref, routeHref, teamHref, weekdayDate } from './links.js';
 import { categoryScorers, rankScorers } from './state.js';
 import { defaultCategory } from './myteam.js';
 
-const CATS = [{ value: 'benjamin', label: 'Benjamín' }, { value: 'prebenjamin', label: 'Prebenjamín' }];
-const CAT_WORD = { benjamin: 'benjamín', prebenjamin: 'prebenjamín' };
+const CATS = CATEGORIES.map((value) => ({ value, label: CAT_NAMES[value] }));
 export const TOP_SCORERS = 30;
 const TOP_RANK = 3;
 
-// Cifras sin los datos de idioma del motor (decisión 123 de B2): 3253 → «3.253», 8.0123 → «8,01».
+// Miles con punto, sin los datos de idioma del motor (decisión 123 de B2): 3253 → «3.253».
 const thousands = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-const decimals = (n, digits) => n.toFixed(digits).replace('.', ',');
 
 // Una fila de récord: qué es (opcional), el equipo o el partido, la cifra y el detalle. Enlaza siempre.
 function recordRow({ href, what = null, main, figure, detail }) {
@@ -34,7 +34,7 @@ function matchRow(what, match, env) {
   const round = roundOf(env.group(match.groupId), match);
   const detail = [env.where(match.groupId), round ? round.label.toLowerCase() : match.roundKey, weekdayDate(match.dateISO)]
     .filter(Boolean).join(' · ');
-  return recordRow({ href: matchHref(match), what, main: html`<span class="rc-name">${match.home} – ${match.away}</span>`, figure: `${match.hs}–${match.as}`, detail });
+  return recordRow({ href: matchHref(match), what, main: html`<span class="rc-name">${match.home} – ${match.away}</span>`, figure: score(match.hs, match.as), detail });
 }
 
 function teamsBlock(records, env) {
@@ -66,10 +66,10 @@ function scorersBlock(ctx, c, env) {
   const { s } = env;
   if (s !== ctx.portal.season) return block(title, empty('Esta web solo guarda los goleadores de la temporada actual.'));
   const all = rankScorers(categoryScorers(ctx.model.scorers(s, c)));
-  if (!all.length) return block(title, empty(`Todavía no hay goleadores publicados de ${CAT_WORD[c]}.`));
+  if (!all.length) return block(title, empty(`Todavía no hay goleadores publicados de ${CAT_WORDS[c]}.`));
   const rows = all.slice(0, TOP_SCORERS).map((row) => html`<tr><td class="st-pos">${row.pos}</td><th scope="row" class="st-team"><a class="st-link" href="${teamHref(s, row.groupId, row.team)}">${crest(row.team, { shields: env.shields })}<span class="rc-who"><span class="st-name">${playerName(row.name)}</span><span class="rc-team">${row.team}</span></span></a></th><td class="sc-goals">${row.goals}</td><td class="sc-pj">${row.games}</td></tr>`);
   const more = html`<a class="more" href="${routeHref('goleadores', { s, c })}">ver todos (${thousands(all.length)})</a>`;
-  return block(title, html`<div class="box"><table class="standings rc-scorers"><caption class="vh">Máximos goleadores de ${CAT_WORD[c]}, temporada ${seasonLabel(s)}</caption><thead><tr><th scope="col" class="st-pos"><abbr title="Puesto">#</abbr></th><th scope="col" class="st-team">Jugador</th><th scope="col" class="sc-goals">Goles</th><th scope="col" class="sc-pj"><abbr title="Partidos jugados">PJ</abbr></th></tr></thead><tbody>${rows}</tbody></table></div>`, { context: more });
+  return block(title, html`<div class="box"><table class="standings rc-scorers"><caption class="vh">Máximos goleadores de ${CAT_WORDS[c]}, temporada ${seasonLabel(s)}</caption><thead><tr><th scope="col" class="st-pos"><abbr title="Puesto">#</abbr></th><th scope="col" class="st-team">Jugador</th><th scope="col" class="sc-goals">Goles</th><th scope="col" class="sc-pj"><abbr title="Partidos jugados">PJ</abbr></th></tr></thead><tbody>${rows}</tbody></table></div>`, { context: more });
 }
 
 function render(ctx) {
@@ -86,8 +86,8 @@ function render(ctx) {
   const records = seasonRecords(season, c);
   if (!records.totals.matches) {
     const leagues = season.groups.some((group) => group.cat === c && group.kind === 'league');
-    const why = leagues ? `Aún no se ha jugado ningún partido de liga de ${CAT_WORD[c]} en la temporada ${seasonLabel(s)}.`
-      : `No hay ligas de ${CAT_WORD[c]} en la temporada ${seasonLabel(s)}.`;
+    const why = leagues ? `Aún no se ha jugado ningún partido de liga de ${CAT_WORDS[c]} en la temporada ${seasonLabel(s)}.`
+      : `No hay ligas de ${CAT_WORDS[c]} en la temporada ${seasonLabel(s)}.`;
     return html`<section data-screen="records">${head}${picker}<div class="block">${empty(why)}</div></section>`;
   }
   const group = (id) => season.groups.find((g) => g.id === id) || null;
@@ -101,7 +101,7 @@ function render(ctx) {
     box(cells([
       { label: 'Partidos', value: thousands(totals.matches) },
       { label: 'Goles', value: thousands(totals.goals) },
-      { label: 'Por partido', value: decimals(totals.avg, 2) },
+      { label: 'Por partido', value: decimal(totals.avg, 2) },
     ]), { title: 'Totales', context: 'partidos de liga con resultado' }),
     block('Partidos', html`<ul class="box rc-list">${[
       matchRow('Mayor goleada', records.biggestWin, env),
@@ -113,9 +113,9 @@ function render(ctx) {
     rankingBlock('Mejor racha invicta', 'partidos sin perder', streaks.unbeaten, env,
       { figure: (r) => r.n, none: 'Ningún equipo ha sumado todavía un punto.' }),
     rankingBlock('Mejores en casa', `puntos por partido, con ${RECORD_MIN_SIDE} o más`, records.bestHome, env,
-      { figure: (r) => decimals(r.ppj, 2), detail: (r) => `${r.pts} puntos en ${r.pj} partidos`, none: `Ningún equipo ha jugado todavía ${RECORD_MIN_SIDE} partidos en casa.` }),
+      { figure: (r) => decimal(r.ppj, 2), detail: (r) => `${r.pts} puntos en ${r.pj} partidos`, none: `Ningún equipo ha jugado todavía ${RECORD_MIN_SIDE} partidos en casa.` }),
     rankingBlock('Mejores fuera', `puntos por partido, con ${RECORD_MIN_SIDE} o más`, records.bestAway, env,
-      { figure: (r) => decimals(r.ppj, 2), detail: (r) => `${r.pts} puntos en ${r.pj} partidos`, none: `Ningún equipo ha jugado todavía ${RECORD_MIN_SIDE} partidos fuera.` }),
+      { figure: (r) => decimal(r.ppj, 2), detail: (r) => `${r.pts} puntos en ${r.pj} partidos`, none: `Ningún equipo ha jugado todavía ${RECORD_MIN_SIDE} partidos fuera.` }),
   ];
   return html`<section data-screen="records">${head}${picker}<div class="rc-cols"><div class="rc-records">${main}</div><div class="rc-top">${scorersBlock(ctx, c, env)}</div></div></section>`;
 }

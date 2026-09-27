@@ -304,3 +304,27 @@ test('CSS: el equipo es un enlace de 44 px que no agranda la fila, «Ver N más�
   const used = new Set(out.match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));
   assert.deepEqual([...used].filter((c) => !rules.classes.has(c)), []);
 });
+
+// ── Plan B5, Tarea 3: la lista de la ruta, una vez por pintado (decisión 6) ──
+
+test('la lista de la ruta, una vez por pintado y ninguna por tecla: render y mount comparten la del mismo ctx', () => {
+  const base = ctxOf({ c: 'benjamin' });
+  let built = 0;
+  const ctx = { ...base, model: { ...base.model, scorers: (...args) => { built += 1; return base.model.scorers(...args); } } };
+  assert.equal(rows(s(screen.render(ctx))).length, PAGE_ROWS);
+  assert.equal(built, 1);
+  const input = { id: 'buscar-goleador', value: '' };
+  const on = {};
+  const found = { '[data-scorers]': { innerHTML: '' }, '.gol-count': { textContent: '' }, '#buscar-goleador': input };
+  const section = { matches: (sel) => sel === '[data-screen="goleadores"]', querySelector: (sel) => found[sel] || null, addEventListener: (type, fn) => { on[type] = fn; } };
+  screen.mount(section, ctx, { update: () => true });
+  for (const value of ['m', 'me', 'mes', 'mesas', '']) {
+    input.value = value;
+    on.input({ target: input });
+  }
+  assert.equal(built, 1, 'mount y cada tecla usan la lista que hizo render');
+  assert.equal(found['.gol-count'].textContent, '586 jugadores de 8 grupos');
+  // Otro pintado, con su ctx: otra lista.
+  screen.render({ ...ctx });
+  assert.equal(built, 2);
+});

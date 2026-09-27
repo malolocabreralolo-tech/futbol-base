@@ -2,21 +2,17 @@
  * Node test runner — fixes frontend de la revisión 2026-06-15.
  * Run: node --test scripts/tests/test_review0615_frontend.mjs
  *
- * Quedan las funciones de state.js que usa el modelo del rediseño (etiquetas de
- * ronda, detector de copa, quién pasó y campeón, liguilla o cuadro) y
- * countMatches. validJorGroup, knockoutRoundsSource, unifiedPrebenLeagueGroups,
- * countStats, phaseIcon y groupJornadaLabel se fueron con sus pruebas en la
- * revisión final de B2 (M5): nada de src/, index.html ni sw.js las usaba.
+ * Quedan las funciones de state.js que usa el modelo del rediseño: las etiquetas
+ * de ronda, el detector de copa y liguilla o cuadro. validJorGroup,
+ * knockoutRoundsSource, unifiedPrebenLeagueGroups, countStats, phaseIcon y
+ * groupJornadaLabel se fueron con sus pruebas en la revisión final de B2 (M5);
+ * countMatches, matchAdvancer, bracketDrawAdvancer y bracketChampion, en B5
+ * (decisión 6): nada de src/ las usaba. Quién pasó y el campeón de un cuadro son
+ * bracket(), de model.js, con sus pruebas en test_rediseno_copa.mjs.
  */
 
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { readFileSync } from 'node:fs';
-import vm from 'node:vm';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 /* ─── Etiqueta de ronda por NOMBRE explícito (no por posición) ─────────────
  * Las rondas salían intercambiadas (Final↔Semifinales) cuando el orden era
@@ -63,20 +59,6 @@ test('isCupGroup detecta cups por código/fase', async () => {
   assert.equal(isCupGroup({ id: 'A1', phase: 'Segunda Fase A' }), false);
 });
 
-/* ─── M4: empates por penaltis muestran quién avanzó ─────────────────────── */
-
-test('bracketDrawAdvancer: el que aparece en ronda posterior avanzó', async () => {
-  const { bracketDrawAdvancer } = await import('../../src/state.js');
-  const jor = { C: [['', 'A', 'B', 1, 1]], S: [['', 'B', 'X', 0, 3]] };
-  assert.equal(bracketDrawAdvancer(jor, ['C', 'S'], 0, 'A', 'B'), 'away');
-  assert.equal(bracketDrawAdvancer(jor, ['C', 'S'], 0, 'B', 'A'), 'home');
-});
-
-test('bracketDrawAdvancer: null si ninguno aparece después (final)', async () => {
-  const { bracketDrawAdvancer } = await import('../../src/state.js');
-  assert.equal(bracketDrawAdvancer({ F: [['', 'A', 'B', 2, 2]] }, ['F'], 0, 'A', 'B'), null);
-});
-
 // ── Copa de Campeones 2023-24: grupos round-robin (1 ronda, >2 partidos) ──
 // Deben renderizarse como TABLA de clasificación, NO como bracket (que
 // knockoutRoundLabel etiquetaría "Final" por posición — bug). Los cups
@@ -100,142 +82,6 @@ test('isRoundRobinCup: 1 ronda con 1 partido (una final suelta) → false', asyn
   assert.equal(isRoundRobinCup({}), false);
   assert.equal(isRoundRobinCup(null), false);
 });
-/* Campeón de un cuadro sin clasificación (Maspalomas Cup: grupos que son
- * bracket puro, standings vacío). Antes la cabecera decía "0 equipos" y la
- * final decidida en penaltis se quedaba sin campeón: bracketDrawAdvancer mira
- * quién aparece en la ronda SIGUIENTE, y después de la final no hay ninguna. */
-
-test('matchAdvancer: la 6ª columna manda sobre la deducción', async () => {
-  const { matchAdvancer } = await import('../../src/state.js');
-  const jornadas = { 'F': [['27/06', 'A', 'B', 2, 2, 'away']] };
-  const rounds = ['F'];
-  assert.equal(matchAdvancer(jornadas.F[0], jornadas, rounds, 0), 'away');
-  // Marcador decisivo: gana quien marcó más, la columna no hace falta.
-  assert.equal(matchAdvancer(['27/06', 'A', 'B', 3, 1], jornadas, rounds, 0), 'home');
-  assert.equal(matchAdvancer(['27/06', 'A', 'B', 0, 1], jornadas, rounds, 0), 'away');
-  // Sin jugar no avanza nadie.
-  assert.equal(matchAdvancer(['27/06', 'A', 'B', null, null], jornadas, rounds, 0), null);
-});
-
-test('matchAdvancer: sin 6ª columna sigue deduciendo del cuadro (histórico)', async () => {
-  const { matchAdvancer } = await import('../../src/state.js');
-  const jornadas = {
-    'S': [['26/06', 'A', 'B', 1, 1], ['26/06', 'C', 'D', 2, 0]],
-    'F': [['27/06', 'B', 'C', 3, 0]],
-  };
-  const rounds = ['S', 'F'];
-  // A-B empatan; B aparece en la final → pasó B.
-  assert.equal(matchAdvancer(jornadas.S[0], jornadas, rounds, 0), 'away');
-});
-
-test('bracketChampion: sale del ganador de la final, penaltis incluidos', async () => {
-  const { bracketChampion } = await import('../../src/state.js');
-  const conPenaltis = { 'F': [['27/06', 'AD Huracán A', 'UD Vecindario A', 2, 2, 'away']] };
-  assert.equal(bracketChampion(conPenaltis, ['F']), 'UD Vecindario A');
-  const conMarcador = { 'F': [['27/06', 'Gáldar CF', 'CD Jovero', 7, 2]] };
-  assert.equal(bracketChampion(conMarcador, ['F']), 'Gáldar CF');
-});
-
-test('bracketChampion: null cuando la última ronda no decide', async () => {
-  const { bracketChampion } = await import('../../src/state.js');
-  // Empate sin dato de penaltis ni ronda posterior: no inventamos campeón.
-  assert.equal(bracketChampion({ 'F': [['27/06', 'A', 'B', 1, 1]] }, ['F']), null);
-  // Última ronda con varios partidos (liguilla): no es una final.
-  assert.equal(bracketChampion({ 'R': [['1/06','A','B',1,0], ['1/06','C','D',2,0]] }, ['R']), null);
-  // Final sin jugar.
-  assert.equal(bracketChampion({ 'F': [['27/06', 'A', 'B', null, null]] }, ['F']), null);
-  assert.equal(bracketChampion({}, []), null);
-});
-
-/* Plan A §9.3: los cuadros de la Maspalomas pasan a filas de 9 columnas
- * [día, local, visitante, gl, gv, pen|null, hora, campo, tanda|null]. La
- * interfaz actual solo lee 0-5 en el cuadro (matchAdvancer, bracketChampion,
- * buildKnockoutBracket) y 6-7 como hora y campo (getHistoricalJornadaMatches,
- * enlace directo de init.js). Estas pruebas fijan que la fila nueva no la
- * rompe. */
-test('matchAdvancer/bracketChampion: fila de 9 columnas con pen null y tanda', async () => {
-  const { matchAdvancer, bracketChampion, isRoundRobinCup } = await import('../../src/state.js');
-  const jornadas = {
-    'S': [['27/06', 'A', 'B', 1, 1, null, '09:00', 'CD 1.1', null],
-          ['27/06', 'C', 'D', 2, 0, null, '09:00', 'CD 1.2', null]],
-    'F': [['27/06', 'B', 'C', 2, 2, 'away', '17:00', 'CD 1.1', '3-4']],
-  };
-  const rounds = ['S', 'F'];
-  // pen null en un empate: se sigue deduciendo del cuadro (B juega la final).
-  assert.equal(matchAdvancer(jornadas.S[0], jornadas, rounds, 0), 'away');
-  assert.equal(matchAdvancer(jornadas.S[1], jornadas, rounds, 0), 'home');
-  // En la final manda el índice 5; la tanda del índice 8 no interfiere.
-  assert.equal(matchAdvancer(jornadas.F[0], jornadas, rounds, 1), 'away');
-  assert.equal(bracketChampion(jornadas, rounds), 'C');
-  assert.equal(isRoundRobinCup(jornadas), false);
-});
-
-test('Maspalomas publicada: cada partido de cuadro tiene quién pasó y cada cuadro su campeón', async () => {
-  // El torneo terminó el 27/06/2026 y update.yml no regenera este fichero.
-  const { matchAdvancer, bracketChampion, isRoundRobinCup, countMatches } = await import('../../src/state.js');
-  const ctx = {};
-  vm.createContext(ctx);
-  vm.runInContext(readFileSync(join(ROOT, 'data-maspalomas-cup-2026.js'), 'utf8')
-    + ';this.P = MASPALOMAS_CUP_PREBENJAMIN; this.B = MASPALOMAS_CUP_BENJAMIN;', ctx);
-  const champions = {};
-  for (const g of [...ctx.P, ...ctx.B].filter(x => x.jornadas)) {
-    const rounds = Object.keys(g.jornadas);
-    assert.equal(isRoundRobinCup(g.jornadas), false, `${g.id} se pintaría como tabla`);
-    rounds.forEach((r, i) => g.jornadas[r].forEach(m => {
-      assert.ok(matchAdvancer(m, g.jornadas, rounds, i), `${g.id} ${r}: ${JSON.stringify(m)}`);
-    }));
-    champions[g.id] = bracketChampion(g.jornadas, rounds);
-    // El chip «N partidos» cuenta la lista inline del cuadro, que no cambia.
-    assert.equal(countMatches([g], {}), g.matches.length);
-  }
-  assert.deepEqual(champions, {
-    MCPK1: 'CF Unión Viera', MCPK2: 'AD Huracán',
-    MCBK1: 'Gáldar CF', MCBK2: 'UD Vecindario A',
-  });
-});
-
-/* ─── countMatches: el chip "N partidos" de la stats-bar ───────────────────
- * Bug encontrado en la revisión 25/07: en la temporada ACTUAL los grupos solo
- * llevan la última jornada inline (el resto vive en HISTORY), así que la suma
- * ingenua daba 78 partidos en prebenjamín. El parche previo sustituía el total
- * por HIST_MATCHES pero SOLO para benjamín, y HIST_MATCHES es el total de LAS
- * DOS categorías: benjamín inflaba (2705 en vez de 2126) y prebenjamín
- * contaba una jornada. */
-
-test('countMatches: la temporada actual cuenta desde HISTORY, no la jornada inline', async () => {
-  const { countMatches } = await import('../../src/state.js');
-  const grupos = [{ id: 'A1', matches: [1, 2, 3] }];           // solo la última jornada
-  const HIST = { A1: { J1: [1, 2, 3], J2: [1, 2, 3], J3: [1, 2] } };
-  assert.equal(countMatches(grupos, HIST), 8);
-  // Sin HISTORY (histórica) el per-season file ya trae todo inline.
-  assert.equal(countMatches(grupos, null), 3);
-});
-
-test('countMatches: los grupos que no pasan por la DB cuentan sus partidos inline', async () => {
-  const { countMatches } = await import('../../src/state.js');
-  // La Maspalomas Cup no está en HISTORY y lleva todos sus partidos inline:
-  // si se ignorasen, desaparecerían del recuento.
-  const grupos = [
-    { id: 'A1', matches: [1] },
-    { id: 'MCB1', matches: [1, 2, 3, 4, 5, 6] },
-  ];
-  const HIST = { A1: { J1: [1, 2, 3, 4] } };
-  assert.equal(countMatches(grupos, HIST), 10);
-});
-
-test('countMatches: cuadros sin lista matches suman por jornadas', async () => {
-  const { countMatches } = await import('../../src/state.js');
-  const grupos = [{ id: 'MCBK1', jornadas: { Previa: [1, 2], Final: [1] } }];
-  assert.equal(countMatches(grupos, null), 3);
-});
-
-test('countMatches: tolera entradas vacías', async () => {
-  const { countMatches } = await import('../../src/state.js');
-  assert.equal(countMatches([], null), 0);
-  assert.equal(countMatches(null, null), 0);
-  assert.equal(countMatches([{ id: 'X', standings: [] }], null), 0);
-});
-
 /* Copas insulares 2023-24 (Lanzarote / Fuerteventura): se llaman "Copa" pero
  * son LIGUILLAS de jornadas numeradas con clasificación completa, no cuadros.
  * isKnockoutGroup las marca como copa por la fase, así que sin esto se

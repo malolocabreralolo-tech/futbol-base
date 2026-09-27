@@ -10,6 +10,7 @@ import { fixture } from './fixtures/rediseno/load.mjs';
 import { fakeBrowser, memoryStorage } from './fixtures/rediseno/fake-browser.mjs';
 import { startContext } from '../../src/app.js';
 import { startRouter } from '../../src/router.js';
+import { errorBox } from '../../src/shell.js';
 import { SCREEN_MAP } from '../../src/screens.js';
 import { screen, healthRows } from '../../src/screen-fuentes.js';
 
@@ -98,10 +99,11 @@ test('la temporada siguiente, con el texto de la portada en D; sin «pendiente»
   assert.doesNotMatch(render(edited((h) => { delete h.nextSeason; })), /aparecerá aquí/);
 });
 
-test('sin data-health: el vacío y el «Reintentar» del router, sin inventar nada', () => {
+test('sin data-health: la caja de error de §7 (errorBox), anunciada y con el «Reintentar» del router, sin inventar nada (B5, decisión 6)', () => {
   for (const health of [null, undefined]) {
     const out = render(withHealth(health));
-    assert.match(out, /^<section data-screen="fuentes"><header class="screen-head">.*<h1>Datos y fuentes<\/h1><\/div><\/header><div class="block"><div class="empty fu-failed"><p>No se pudo cargar el estado de las fuentes\.<\/p><div class="buttons"><button class="button is-main" type="button" data-action="retry">Reintentar<\/button><\/div><\/div><\/div><\/section>$/, String(health));
+    assert.match(out, /^<section data-screen="fuentes"><header class="screen-head">.*<h1>Datos y fuentes<\/h1><\/div><\/header><div class="block"><div class="box error-box" role="alert"><p class="error-text">No se pudieron cargar los datos de la comprobación de las fuentes\.<\/p><div class="buttons"><button class="button is-main" type="button" data-action="retry">Reintentar<\/button><\/div><\/div><\/div><\/section>$/, String(health));
+    assert.ok(out.includes(String(errorBox('la comprobación de las fuentes'))), 'la caja de shell.js, la de todas las pantallas');
   }
 });
 
@@ -125,7 +127,7 @@ test('needs pide data-health si no está, también si ya falló; el «Reintentar
     await router.idle();
     assert.deepEqual(asked, ['./data-health.json'], 'sin pedir todavía: lo pide');
     assert.equal(datasets.health, null);
-    assert.match(b.root.innerHTML, /No se pudo cargar el estado de las fuentes\./);
+    assert.match(b.root.innerHTML, /No se pudieron cargar los datos de la comprobación de las fuentes\./);
     // «Reintentar» es el del router: vuelve a llamar a needs, que lo vuelve a pedir (ya falló: null).
     fail = false;
     assert.equal(b.click({ 'data-action': 'retry', type: 'button' }, 'button'), true);
@@ -147,7 +149,8 @@ test('registro y CSS: la ruta pinta Fuentes; solo clases que existen y filas de 
   const rules = cssRules();
   const outs = [render(), render(withHealth(null)), render(edited((h) => { h.groups.PG3.url = ''; h.groups.PG3.status = 'error'; }))];
   const used = new Set(outs.join('').match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));
-  assert.deepEqual([...used].filter((c) => !rules.classes.has(c)), []);
+  // error-box es el gancho de la caja de error de shell.js, sin regla propia (como en test_rediseno_shell).
+  assert.deepEqual([...used].filter((c) => !rules.classes.has(c) && c !== 'error-box'), []);
   assert.match(rules.filter((r) => r.media === null && r.selector === '.fu-row').map((r) => r.body).join(';'), /min-height:\s*44px/);
   assert.equal(text(render()).includes('undefined'), false);
 });

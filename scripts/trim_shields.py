@@ -112,7 +112,8 @@ def main():
     print(f"→ data-shields.js actualizado con nombres locales ({len(local_shields)} equipos)")
 
     # Las miniaturas de los escudos nuevos (Plan B4, decisión 52): la app pide primero escudos/s/<nombre>.png,
-    # y sin ella Tests sale en rojo (test_build_crests.py). build_crests.py escribe solo las que faltan.
+    # y sin ella Tests sale en rojo (test_build_crests.py). build_crests.py escribe solo las que faltan, y
+    # el sello nuevo de escudos/ en la línea 2 de sw.js (decisión 1 del plan B5).
     if downloaded:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import build_crests

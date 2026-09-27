@@ -1,4 +1,5 @@
-"""Plan B4, Tarea 4: las miniaturas de los escudos (spec §5.4; decisiones 9, 51 y 56).
+"""Plan B4, Tarea 4: las miniaturas de los escudos (spec §5.4; decisiones 9, 51 y 56). Plan B5, Tarea 1: el
+sello de escudos/ en la línea 2 de sw.js, el nombre de la caché de los escudos (decisión 1 de B5).
 
 Sin Pillow, salvo dos (el CI y el bot solo instalan pytest y pyyaml): las cabeceras de los PNG (IHDR) y
 de los JPEG (SOF, y el giro de su EXIF) se leen a mano, y `build_crests.py --check` compara los nombres y
@@ -10,6 +11,7 @@ añadido o cambiado a mano en main sin su miniatura no puede dejar de publicar l
 Tests (que corre también cuando solo cambia escudos/) siguen estrictas, y trim_shields.py ya hace las
 miniaturas de lo que trae; a mano, `python3 scripts/build_crests.py`.
 """
+import hashlib
 import io
 import os
 import re
@@ -188,6 +190,14 @@ def test_check_runs_without_pillow():
     assert run.returncode == 0, run.stdout + run.stderr
 
 
+@LIVE
+def test_sw_js_carries_the_seal_of_escudos():
+    # La línea 2 de sw.js (CRESTS_CACHE, la caché de los escudos del SW) lleva el sello de escudos/ tal como
+    # está: con el de antes, los móviles seguirían con la caché de escudos anterior y un escudo cambiado no
+    # llegaría nunca (decisión 1 de B5). Lo arregla python3 scripts/build_crests.py.
+    assert build_crests.read_seal((ROOT / "sw.js").read_text(encoding="utf-8")) == build_crests.seal(ROOT)
+
+
 def test_check_finds_missing_stale_extra_and_clashing_thumbnails(tmp_path, capsys):
     thumbs = tmp_path / "escudos" / "s"
     thumbs.mkdir(parents=True)
@@ -216,6 +226,67 @@ def test_check_finds_missing_stale_extra_and_clashing_thumbnails(tmp_path, capsy
     (tmp_path / "escudos" / "a.jpg").write_bytes(b"a en JPEG")
     code, out = check()
     assert code == 1 and "mismo nombre: escudos/a.jpg y escudos/a.png darían escudos/s/a.png" in out
+
+
+def _sealed_site(tmp_path, seal="00000000"):
+    """Un árbol de prueba sin Pillow: el original a.png, su miniatura al día y un sw.js con `seal` en su línea 2."""
+    (tmp_path / "escudos" / "s").mkdir(parents=True)
+    original = b"el original de a"
+    (tmp_path / "escudos" / "a.png").write_bytes(original)
+    (tmp_path / "escudos" / "s" / "a.png").write_bytes(_png_with_tag(build_crests.source_tag(original)))
+    (tmp_path / "sw.js").write_text("const CACHE_NAME = 'futbolbase-v20260926';\n"
+                                    f"const CRESTS_CACHE = 'futbolbase-escudos-{seal}';\n"
+                                    "const OFFLINE_URL = './index.html';\n", encoding="utf-8")
+    return tmp_path
+
+
+def test_the_seal_is_the_sha1_of_the_list_of_every_file_of_escudos_with_its_sha1(tmp_path):
+    # Decisión 1 de B5: las 8 primeras cifras hex del sha1 de la lista ordenada de «<ruta>:<sha1 del fichero>»
+    # de todo escudos/, originales y miniaturas. Los ocultos (un .DS_Store) no cuentan: la app nunca los pide,
+    # y en el CI no estarían.
+    site = _sealed_site(tmp_path)
+
+    def sha1(data):
+        return hashlib.sha1(data).hexdigest()
+
+    listing = "".join(f"{rel}:{sha1((site / rel).read_bytes())}\n" for rel in ("escudos/a.png", "escudos/s/a.png"))
+    assert build_crests.seal(site) == sha1(listing.encode("utf-8"))[:8]
+    before = build_crests.seal(site)
+    (site / "escudos" / ".DS_Store").write_bytes(b"de otro ordenador")
+    assert build_crests.seal(site) == before
+    (site / "escudos" / "s" / "a.png").write_bytes(b"otra miniatura")
+    assert build_crests.seal(site) != before
+    assert build_crests.read_seal((site / "sw.js").read_text(encoding="utf-8")) == "00000000"
+    assert build_crests.read_seal("const CACHE_NAME = 'futbolbase-v20260926';\nconst OFFLINE_URL = './index.html';\n") is None
+
+
+def test_build_writes_the_seal_in_line_2_of_sw_js_and_check_compares_it(tmp_path, capsys, monkeypatch):
+    # Sin nada que dibujar, build_crests.py no necesita Pillow: el CI lo prueba igual.
+    monkeypatch.setitem(sys.modules, "PIL", None)
+    site = _sealed_site(tmp_path)
+    want = build_crests.seal(site)
+    assert build_crests.main(["--check", "--root", str(site)]) == 1
+    assert capsys.readouterr().out == (f"sello de sw.js: 00000000 (el de escudos/ es {want})\n"
+                                       "escudos/s: 1 al día, 1 por arreglar: python3 scripts/build_crests.py\n")
+    before = (site / "sw.js").read_text(encoding="utf-8").split("\n")
+    assert build_crests.main(["--root", str(site)]) == 0
+    assert capsys.readouterr().out == f"escudos/s: 0 escritas, 1 al día, 0 borradas\nsello de sw.js: {want} (antes, 00000000)\n"
+    after = (site / "sw.js").read_text(encoding="utf-8").split("\n")
+    assert after[1] == f"const CRESTS_CACHE = 'futbolbase-escudos-{want}';"
+    assert after[:1] + after[2:] == before[:1] + before[2:], "solo cambia la línea 2"
+    assert build_crests.main(["--check", "--root", str(site)]) == 0
+    assert capsys.readouterr().out == "escudos/s: 1 al día\n"
+    # Una miniatura que sobra se borra, y el sello vuelve a ser el de lo que queda: el mismo.
+    (site / "escudos" / "s" / "b.png").write_bytes(_png_with_tag("x"))
+    assert build_crests.main(["--root", str(site)]) == 0
+    assert capsys.readouterr().out == "borrada: escudos/s/b.png\nescudos/s: 0 escritas, 1 al día, 1 borradas\n"
+    # Un sw.js sin la línea 2 del contrato: ni se toca ni se arregla solo.
+    (site / "sw.js").write_text("const CACHE_NAME = 'futbolbase-v20260926';\n", encoding="utf-8")
+    assert build_crests.main(["--check", "--root", str(site)]) == 1
+    assert capsys.readouterr().out.splitlines()[0] == f"sello de sw.js: falta la línea 2, const CRESTS_CACHE (el de escudos/ es {want})"
+    assert build_crests.main(["--root", str(site)]) == 1
+    assert capsys.readouterr().out.splitlines()[-1] == "sello de sw.js: falta la línea 2, const CRESTS_CACHE: nada escrito"
+    assert (site / "sw.js").read_text(encoding="utf-8") == "const CACHE_NAME = 'futbolbase-v20260926';\n"
 
 
 @LIVE
@@ -255,9 +326,10 @@ def test_build_writes_srgb_thumbnails_and_only_what_changed(tmp_path, capsys):
 @LIVE
 def test_a_crest_without_its_thumbnail_stops_tests_and_never_the_bots(tmp_path):
     # Una copia del árbol con un escudo nuevo sin su miniatura (un commit a mano en main): con
-    # GITHUB_WORKFLOW=Tests fallan las tres pruebas que lo miran; dentro del bot (update.yml) se saltan
-    # todas las de escudos/ y ninguna falla, así que el bot sigue publicando los datos.
-    for rel in ("scripts/build_crests.py", "scripts/tests/test_build_crests.py", "src/ui.js", "icons/icon-180.png"):
+    # GITHUB_WORKFLOW=Tests fallan las cuatro pruebas que lo miran (las tres de las miniaturas y el sello de
+    # sw.js, que ya no es el de escudos/); dentro del bot (update.yml) se saltan todas las de escudos/ y
+    # ninguna falla, así que el bot sigue publicando los datos.
+    for rel in ("scripts/build_crests.py", "scripts/tests/test_build_crests.py", "src/ui.js", "icons/icon-180.png", "sw.js"):
         (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / rel, tmp_path / rel)
     shutil.copytree(ESCUDOS, tmp_path / "escudos")
@@ -271,7 +343,7 @@ def test_a_crest_without_its_thumbnail_stops_tests_and_never_the_bots(tmp_path):
         return run.stdout.strip().splitlines()[-1]
 
     in_tests = summary("Tests")
-    assert in_tests.startswith("3 failed, "), in_tests
+    assert in_tests.startswith("4 failed, "), in_tests
     in_the_bot = summary("Actualización automática")
     assert "failed" not in in_the_bot and int(re.search(r"(\d+) skipped", in_the_bot).group(1)) >= 7, in_the_bot
 

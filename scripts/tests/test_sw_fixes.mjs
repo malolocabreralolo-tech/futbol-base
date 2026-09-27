@@ -10,6 +10,9 @@
  *   3. old ?v= query entries are purged from the cache on successful put
  *   4. index.html uses standard SW registration (no unregister-on-every-load)
  *   5. C3: CACHE_NAME literal on line 1, matcheable by /futbolbase-v[0-9a-z]+/
+ *   6. activate: solo las cachés de esta app de otras versiones (decisión 8 de B4)
+ *   7. los escudos, en su propia caché: CRESTS_CACHE en la línea 2, con el sello de
+ *      escudos/, que el bot no toca y activate no borra (decisión 1 de B5)
  *
  * sw.js is a classic script (not a module): it is loaded in a vm context with
  * a stubbed `self`, and its pure decision functions (classifyRequest,
@@ -39,7 +42,7 @@ function loadSw(globals = {}) {
   };
   const ctx = { self: selfStub, console, URL, ...globals };
   vm.createContext(ctx);
-  const probes = ['CACHE_NAME', 'STATIC_ASSETS', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
+  const probes = ['CACHE_NAME', 'CRESTS_CACHE', 'STATIC_ASSETS', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
     .join(',');
@@ -133,9 +136,14 @@ test('classifyRequest: code/styles/images → cache-first; html → swr', () => 
   assert.equal(sw.classifyRequest('/'), 'swr');
 });
 
-test('classifyRequest: escudos clause fixed (pathname starts with "/")', () => {
-  assert.equal(sw.classifyRequest('/futbol-base/escudos/100x100arucas.png'), 'cache-first');
-  assert.equal(sw.classifyRequest('/escudos/100x100arucas.png'), 'cache-first');
+test('classifyRequest: los escudos, originales y miniaturas, van a su propia caché (decisión 1 de B5)', () => {
+  // El pathname empieza por "/" (la cláusula de escudos arreglada en 2026-06-11), y la rama de los
+  // escudos va antes del cache-first genérico, que casaría con sus .png y .jpg.
+  assert.equal(sw.classifyRequest('/futbol-base/escudos/100x100arucas.png'), 'escudo');
+  assert.equal(sw.classifyRequest('/escudos/100x100arucas.png'), 'escudo');
+  assert.equal(sw.classifyRequest('/futbol-base/escudos/s/100x100arucas.png'), 'escudo');
+  assert.equal(sw.classifyRequest('/futbol-base/escudos/joveroLasRosas.jpg'), 'escudo');
+  assert.equal(sw.classifyRequest('/futbol-base/icons/icon-192.png'), 'cache-first');
 });
 
 test('source contract: fetch handler dispatches via classifyRequest, data- before generic js', () => {
@@ -210,6 +218,17 @@ test('C3: CACHE_NAME literal on line 1, bumpable via /futbolbase-v[0-9a-z]+/', (
     'CACHE_NAME value must match futbolbase-v[0-9a-z]+');
 });
 
+// La línea 2 es la caché de los escudos (decisión 1 de B5): su nombre lleva el sello de escudos/, que
+// escribe scripts/build_crests.py (test_build_crests.py comprueba que es el de escudos/ tal como está), y
+// la expresión con la que el bot sube la versión (futbolbase-v[0-9a-z]+) no la alcanza
+// (test_index_bot_contract.py lo ejecuta, con sync_versions.py y publicar.py).
+test('CRESTS_CACHE literal on line 2, with the seal of escudos/ and out of reach of the bot', () => {
+  const second = swSrc.split('\n')[1];
+  assert.match(second, /^const CRESTS_CACHE = 'futbolbase-escudos-[0-9a-f]{8}';$/);
+  assert.equal(sw.CRESTS_CACHE, second.slice("const CRESTS_CACHE = '".length, -2));
+  assert.doesNotMatch(second, /futbolbase-v[0-9a-z]+/);
+});
+
 test('el SW busca en caché ignorando la ?v=: si no, el precache es basura', () => {
   const s = swSrc;
   // STATIC_ASSETS guarda './data-benjamin.js' y la página pide
@@ -249,16 +268,50 @@ test('only the active cache is read; exact URLs precede unversioned precache', a
   assert.deepEqual(calls, [false, true]);
 });
 
-// ─── 6. activate: solo las cachés de esta app (decisión 8 de B4) ────────────
-test('activate solo borra las cachés futbolbase-v* de otras versiones: el origen es compartido (decisión 8 de B4)', async () => {
-  // malolocabreralolo-tech.github.io lo comparte otro proyecto de la cuenta: sus cachés no se tocan.
+// ─── 6. activate: solo las cachés de esta app (decisión 8 de B4 y 1 de B5) ──
+test('activate solo borra las cachés de esta app de otras versiones, futbolbase-v* y futbolbase-escudos-*: el origen es compartido (decisión 8 de B4 y 1 de B5)', async () => {
+  // malolocabreralolo-tech.github.io lo comparte otro proyecto de la cuenta: sus cachés no se tocan. La
+  // de los escudos se queda mientras su sello sea el de CRESTS_CACHE, aunque cambie CACHE_NAME.
+  assert.match(sw.CRESTS_CACHE ?? '', /^futbolbase-escudos-[0-9a-f]{8}$/);
+  assert.notEqual(sw.CRESTS_CACHE, 'futbolbase-escudos-00000000');
   const deleted = [];
   const worker = loadSw({ caches: {
-    keys: async () => ['futbolbase-v20250101', sw.CACHE_NAME, 'futbolbase-v20991231z', 'otro-proyecto-v1', 'workbox-precache-v2', 'futbolbase'],
+    keys: async () => ['futbolbase-v20250101', sw.CACHE_NAME, 'futbolbase-v20991231z', 'otro-proyecto-v1', 'workbox-precache-v2', 'futbolbase',
+      sw.CRESTS_CACHE, 'futbolbase-escudos-00000000', 'futbolbase-escudos', 'otro-proyecto-escudos-1'],
     delete: async (name) => { deleted.push(name); return true; },
   } });
   let done;
   worker.listeners.activate({ waitUntil: (promise) => { done = promise; } });
   await done;
-  assert.deepEqual(deleted.sort(), ['futbolbase-v20250101', 'futbolbase-v20991231z']);
+  assert.deepEqual(deleted.sort(), ['futbolbase-escudos-00000000', 'futbolbase-v20250101', 'futbolbase-v20991231z']);
+});
+
+// ─── 7. los escudos, en su propia caché (decisión 1 de B5) ──────────────────
+test('los escudos se sirven de CRESTS_CACHE; si no están, de la red con su sello como ?v=, y se guardan allí (decisión 1 de B5)', async () => {
+  // El fetch de verdad, con unas cachés y una red falsas: nunca se abre CACHE_NAME, que cambia con cada
+  // subida de datos, y la red se pide con el sello como ?v= (la clave de la caché HTTP del navegador).
+  const seal = (sw.CRESTS_CACHE ?? '').replace('futbolbase-escudos-', '');
+  assert.match(seal, /^[0-9a-f]{8}$/);
+  const opened = [];
+  const stored = new Map();
+  const asked = [];
+  const worker = loadSw({
+    caches: {
+      open: async (name) => {
+        opened.push(name);
+        return { match: async (request) => stored.get(request.url), put: async (request, response) => { stored.set(request.url, response); } };
+      },
+    },
+    fetch: async (url, init) => { asked.push(`${url} ${init.cache}`); return { ok: true, clone() { return this; } }; },
+  });
+  const serve = (url) => new Promise((resolve) => {
+    worker.listeners.fetch({ request: { url, method: 'GET' }, respondWith: resolve, waitUntil: () => {} });
+  });
+  const url = 'https://example.test/futbol-base/escudos/s/huracan.png';
+  const first = await serve(url);
+  assert.deepEqual(asked, [`${url}?v=${seal} no-cache`], 'la primera vez, de la red, con el sello');
+  assert.equal(stored.get(url), first, 'y ya guardado en CRESTS_CACHE al responder');
+  assert.equal(await serve(url), first, 'la segunda, de CRESTS_CACHE');
+  assert.equal(asked.length, 1, 'sin volver a la red');
+  assert.deepEqual([...new Set(opened)], [sw.CRESTS_CACHE], 'nunca CACHE_NAME');
 });

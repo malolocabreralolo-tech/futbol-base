@@ -15,17 +15,26 @@ Cada original escudos/<nombre>.<ext> da escudos/s/<nombre>.png, la imagen que la
   --check sabe, sin Pillow, si una miniatura falta, sobra o se quedó atrás (un original cambiado
   con el mismo nombre).
 
+Y el sello de escudos/ (decisión 1 del plan B5): las 8 primeras cifras hex del sha1 de la lista ordenada
+de «<ruta>:<sha1 del fichero>» de todos sus ficheros, originales y miniaturas (sin los ocultos, que la app
+nunca pide). Va en la línea 2 de sw.js, `const CRESTS_CACHE = 'futbolbase-escudos-<sello>';`, el nombre
+de la caché de los escudos del SW: una subida de datos del bot no lo cambia, así que los escudos ya vistos
+siguen ahí sin conexión; un escudo nuevo o cambiado da otro sello, y el SW nuevo borra la caché anterior.
+Se escribe al terminar las miniaturas, y --check lo compara.
+
 Se ejecuta a mano al añadir o cambiar un escudo, como build_icons.py, y trim_shields.py lo llama al
 terminar si trajo alguno. El bot no toca escudos/ (data-shields.js se mantiene a mano): sin la miniatura,
 Tests sale en rojo (test_build_crests.py), nunca el bot. Escribe solo las miniaturas que faltan o se
-quedaron atrás y borra las que sobran.
+quedaron atrás y borra las que sobran. Pillow solo hace falta si hay alguna que escribir.
 
 Uso: python3 scripts/build_crests.py [--check] [--root R]
-  --check: no escribe ni necesita Pillow; sale con 1 si falta, sobra o se quedó atrás alguna.
+  --check: no escribe ni necesita Pillow; sale con 1 si falta, sobra o se quedó atrás alguna, o si el
+  sello de sw.js no es el de escudos/.
 """
 import argparse
 import hashlib
 import io
+import re
 import struct
 import sys
 from pathlib import Path
@@ -36,6 +45,7 @@ COLORS = 256
 RECIPE = f"{SIZE}px octree{COLORS}"
 TAG = "escudo"
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+SEAL_LINE = re.compile(r"const CRESTS_CACHE = 'futbolbase-escudos-([0-9a-f]{8})';")
 
 
 def thumb_name(original: str) -> str:
@@ -97,6 +107,24 @@ def survey(root):
     return state
 
 
+def seal(root) -> str:
+    """El sello de escudos/: las 8 primeras cifras hex del sha1 de la lista ordenada de «<ruta>:<sha1>\\n»
+    de todos sus ficheros (originales y miniaturas; la ruta, desde la raíz), sin los ocultos."""
+    root = Path(root)
+    folder = root / "escudos"
+    lines = sorted(f"{p.relative_to(root).as_posix()}:{hashlib.sha1(p.read_bytes()).hexdigest()}\n"
+                   for p in folder.rglob("*")
+                   if p.is_file() and not any(part.startswith(".") for part in p.relative_to(folder).parts))
+    return hashlib.sha1("".join(lines).encode("utf-8")).hexdigest()[:8]
+
+
+def read_seal(worker: str):
+    """El sello de la línea 2 de un sw.js (CRESTS_CACHE), o None si esa línea no es la del contrato."""
+    lines = worker.split("\n")
+    found = SEAL_LINE.fullmatch(lines[1]) if len(lines) > 1 else None
+    return found.group(1) if found else None
+
+
 def make_thumbnail(original: Path, target: Path):
     """Escribe la miniatura de `original` en `target` (con Pillow). `ImageCms.PyCMSError` y un original que
     Pillow no abre suben tal cual: `main` los captura por fichero y sigue con los demás."""
@@ -136,6 +164,7 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     root = Path(args.root)
     state = survey(root)
+    worker = root / "sw.js"  # sin sw.js (un árbol de prueba), no hay sello que mirar
     rel = lambda p: p.relative_to(root).as_posix()  # noqa: E731
     for group in state["colisiones"]:
         print(f"mismo nombre: {' y '.join(rel(p) for p in group)} darían escudos/s/{thumb_name(group[0].name)}")
@@ -145,30 +174,46 @@ def main(argv=None) -> int:
         for extra in state["sobran"]:
             print(f"sobra: {rel(extra)}")
         problems = len(state["colisiones"]) + len(state["pendientes"]) + len(state["sobran"])
+        if worker.is_file():
+            have, want = read_seal(worker.read_text(encoding="utf-8")), seal(root)
+            if have != want:
+                print(f"sello de sw.js: {have or 'falta la línea 2, const CRESTS_CACHE'} (el de escudos/ es {want})")
+                problems += 1
         print(f"escudos/s: {state['al_dia']} al día" + (f", {problems} por arreglar: python3 scripts/build_crests.py" if problems else ""))
         return 1 if problems else 0
     if state["colisiones"]:
         return 1
-    try:
-        import PIL  # noqa: F401
-    except ImportError:
-        print("build_crests.py necesita Pillow: pip install Pillow")
-        return 1
-    from PIL import ImageCms, UnidentifiedImageError
     failed = 0
-    for original, thumb, _ in state["pendientes"]:
+    if state["pendientes"]:
         try:
-            make_thumbnail(original, thumb)
-        except (ImageCms.PyCMSError, UnidentifiedImageError) as exc:
-            print(f"no se pudo: {original.name}: {exc}")
-            failed += 1
-            continue
-        print(f"escrita: {rel(thumb)}")
+            from PIL import ImageCms, UnidentifiedImageError
+        except ImportError:
+            print("build_crests.py necesita Pillow: pip install Pillow")
+            return 1
+        for original, thumb, _ in state["pendientes"]:
+            try:
+                make_thumbnail(original, thumb)
+            except (ImageCms.PyCMSError, UnidentifiedImageError) as exc:
+                print(f"no se pudo: {original.name}: {exc}")
+                failed += 1
+                continue
+            print(f"escrita: {rel(thumb)}")
     for extra in state["sobran"]:
         extra.unlink()
         print(f"borrada: {rel(extra)}")
     summary = f"escudos/s: {len(state['pendientes']) - failed} escritas, {state['al_dia']} al día, {len(state['sobran'])} borradas"
     print(summary + (f", {failed} con error" if failed else ""))
+    if worker.is_file():
+        text = worker.read_text(encoding="utf-8")
+        have, want = read_seal(text), seal(root)
+        if have is None:
+            print("sello de sw.js: falta la línea 2, const CRESTS_CACHE: nada escrito")
+            return 1
+        if have != want:
+            lines = text.split("\n")
+            lines[1] = f"const CRESTS_CACHE = 'futbolbase-escudos-{want}';"
+            worker.write_text("\n".join(lines), encoding="utf-8")
+            print(f"sello de sw.js: {want} (antes, {have})")
     return 1 if failed else 0
 
 

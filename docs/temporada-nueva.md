@@ -93,7 +93,7 @@ python3 scripts/build_crests.py
 python3 scripts/build_crests.py --check
 ```
 
-La segunda orden tiene que acabar en «al día». Se comitean los tres: el original, su miniatura y `data-shields.js`. `scripts/tests/test_build_crests.py` lo exige: sin la miniatura, o con una que se quedó atrás, `Tests` sale en rojo. El bot no: dentro de él esas pruebas se saltan, porque nunca toca `escudos/` y no puede dejar de publicar los datos por un escudo. `scripts/trim_shields.py`, si trae escudos nuevos de la federación, ya genera sus miniaturas al terminar.
+La segunda orden tiene que acabar en «al día». Se comitean los cuatro: el original, su miniatura, `data-shields.js` y `sw.js`, en cuya línea 2 la primera orden escribe el sello nuevo de `escudos/` (`CRESTS_CACHE`, la caché de los escudos de la app instalada: con otro sello, los móviles la cambian y piden el escudo nuevo; Plan B5, decisión 1). `scripts/tests/test_build_crests.py` lo exige: sin la miniatura, con una que se quedó atrás o con el sello de antes, `Tests` sale en rojo. El bot no: dentro de él esas pruebas se saltan, porque nunca toca `escudos/` y no puede dejar de publicar los datos por un escudo. `scripts/trim_shields.py`, si trae escudos nuevos de la federación, ya genera sus miniaturas al terminar.
 
 Comprobar ambas categorías, el equipo inicial y al menos un partido del archivo en el navegador. Incorporar los archivos generados, `src/config.js`, `data-health.json`, `index.html`, `sw.js` y la base al commit de publicación. No incorporar las copias de seguridad. GitHub Pages publica desde `main`.
 

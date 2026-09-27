@@ -15,7 +15,8 @@
 // con conexión abre la app nueva. Con el SW nuevo activo, la app nueva funciona sin conexión: la
 // portada, Jornada y el buscador de Explorar (B3), con los datos precacheados.
 // Después, un segundo escenario: un despliegue de código sobre el SW de la propia rama (codeDeploy).
-// En los dos, ni la app nueva ni su SW piden los datos que B4 retiró (decisión 3 de B4).
+// En los dos, ni la app nueva ni su SW piden los datos que B4 retiró (decisión 3 de B4). Y un tercero:
+// sin conexión tras una subida de datos del bot, los escudos ya vistos siguen ahí (dataDeploy).
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -188,6 +189,46 @@ async function settle(condition, label, timeout = 15000) {
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
 }
+// Espera, sin ninguna página de la app abierta, a que mande el SW de la versión cuya caché es `cache`
+// (futbolbase-v…), y devuelve lo que vio la última vuelta, con todas las cachés. En cada vuelta, una
+// página nueva de sonda (manifest.json, que el SW sirve de la red sin tocar su caché) pide la
+// actualización, mira el estado y se cierra en seguida, como quien abre la app y la cierra: con una
+// página de la app abierta, Chrome puede no activar el SW nuevo (codeDeploy). Solo cuentan las
+// futbolbase-v*: la caché de los escudos va aparte (decisión 1 de B5). Si no llega en 30 s, el error
+// dice cómo quedaron los SW en cada vuelta y lo que añada `diagnose`.
+async function takeOver(context, probeUrl, cache, label, diagnose = () => '') {
+  const states = [];
+  const waitStart = Date.now();
+  const look = async () => {
+    const page = await context.newPage();
+    try {
+      await page.goto(probeUrl);
+      return await page.evaluate(async () => {
+        const registration = await navigator.serviceWorker.getRegistration();
+        try { await registration?.update(); } catch { /* ya se está instalando */ }
+        return { caches: await caches.keys(), installing: registration?.installing?.state ?? null, waiting: registration?.waiting?.state ?? null,
+          active: registration?.active?.state ?? null, controlled: !!registration?.active && navigator.serviceWorker.controller === registration.active };
+      });
+    } finally {
+      await page.close();
+    }
+  };
+  for (;;) {
+    // Una navegación que falla en una vuelta cuenta como «todavía no», con su error en los estados.
+    const seen = await look().catch((error) => ({ caches: [], installing: null, waiting: null, active: null, controlled: false,
+      error: error.message.split('\n')[0] }));
+    // Cada cambio de estado de los SW, con los ms desde que empezó la espera.
+    const state = [seen.installing, seen.waiting, seen.active, seen.controlled, seen.caches.length, seen.error ?? ''].join('/');
+    if (states.at(-1)?.endsWith(` ${state}`) !== true) states.push(`${Date.now() - waitStart}ms ${state}`);
+    const versions = seen.caches.filter((name) => name.startsWith('futbolbase-v'));
+    if (versions.length === 1 && versions[0] === cache && seen.active === 'activated' && seen.controlled) return seen;
+    if (Date.now() - waitStart >= 30000) {
+      throw new Error(`${label}: condition not met after 30000ms: ${JSON.stringify({ ...seen, vueltas: states })}${diagnose()}`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+}
+
 async function codeDeploy(browser) {
   let phase = 'a';
   let down = false;          // sin conexión: el servidor corta cada conexión
@@ -342,40 +383,13 @@ async function codeDeploy(browser) {
       });
     }));
     await racer.close();
-    const states = [];
-    const waitStart = Date.now();
-    const look = async () => {
-      const page = await context.newPage();
-      try {
-        await page.goto(probeUrl);
-        return await page.evaluate(async () => {
-          const registration = await navigator.serviceWorker.getRegistration();
-          try { await registration?.update(); } catch { /* ya se está instalando */ }
-          return { caches: await caches.keys(), installing: registration?.installing?.state ?? null, waiting: registration?.waiting?.state ?? null,
-            active: registration?.active?.state ?? null, controlled: !!registration?.active && navigator.serviceWorker.controller === registration.active };
-        });
-      } finally {
-        await page.close();
-      }
-    };
-    for (;;) {
-      // Una navegación que falla en una vuelta cuenta como «todavía no», con su error en los estados.
-      const seen = await look().catch((error) => ({ caches: [], installing: null, waiting: null, active: null, controlled: false,
-        error: error.message.split('\n')[0] }));
-      // Cada cambio de estado de los SW, con los ms desde que empezó la espera.
-      const state = [seen.installing, seen.waiting, seen.active, seen.controlled, seen.caches.length, seen.error ?? ''].join('/');
-      if (states.at(-1)?.endsWith(` ${state}`) !== true) states.push(`${Date.now() - waitStart}ms ${state}`);
-      if (seen.caches.length === 1 && seen.caches[0] === `futbolbase-v${CODE_B}` && seen.active === 'activated' && seen.controlled) break;
-      if (Date.now() - waitStart >= 30000) {
-        // Sin las comprobaciones de sw.js de cada vuelta, que taparían el resto.
-        const since = requests.slice(releasedAt);
-        const others = since.filter((line) => !line.endsWith(' /sw.js'));
-        throw new Error(`despliegue de código, el SW de «b» al mando: condition not met after 30000ms: ${JSON.stringify({ ...seen, vueltas: states })}\n`
-          + `sin respuesta (${pending.size}): ${JSON.stringify([...pending.values()])}\n`
-          + `peticiones desde que se soltó «b» (y ${(since.length - others.length) / 2} comprobaciones de sw.js):\n  ${others.slice(0, 150).join('\n  ')}`);
-      }
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
+    await takeOver(context, probeUrl, `futbolbase-v${CODE_B}`, 'despliegue de código, el SW de «b» al mando', () => {
+      // Sin las comprobaciones de sw.js de cada vuelta, que taparían el resto.
+      const since = requests.slice(releasedAt);
+      const others = since.filter((line) => !line.endsWith(' /sw.js'));
+      return `\nsin respuesta (${pending.size}): ${JSON.stringify([...pending.values()])}\n`
+        + `peticiones desde que se soltó «b» (y ${(since.length - others.length) / 2} comprobaciones de sw.js):\n  ${others.slice(0, 150).join('\n  ')}`;
+    });
     // Con el SW de «b» al mando desde la navegación: «b» entera.
     o = await open('despliegue de código, con el SW de «b»');
     whole('con el SW de «b»', o.seen, '"b"');
@@ -384,6 +398,129 @@ async function codeDeploy(browser) {
     console.log('PASS: despliegue de código sobre el SW de la rama: la 1.ª apertura es la versión anterior; la 2.ª, con su revalidación de state.js fallida, y la 3.ª, sin conexión, la nueva entera (su hoja y sus módulos, sin el aviso del arranque); con el SW nuevo, también, y sin pedir datos retirados');
   } finally {
     release();
+    await context.close();
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
+  }
+}
+
+// ── 3. Sin conexión tras una subida de datos del bot (decisión 1 de B5) ─────────────────────────────
+// Cada subida de datos del bot cambia CACHE_NAME, y el SW nuevo, al activarse, borra la caché anterior.
+// Los escudos se guardan según se usan (cache-first, §5.5) y antes iban en esa caché: se iban con ella,
+// y la primera apertura sin red tras cada subida pintaba monogramas. Ahora van en la suya, CRESTS_CACHE,
+// con el sello de escudos/, que solo cambia con un escudo:
+//  - «a» (el árbol publicado como 20991231a) instalada, y una apertura de la ficha de Unión Viera (A1)
+//    con su SW al mando, que guarda sus escudos;
+//  - se publica «b», solo datos (sube CACHE_NAME; escudos/ igual): su SW toma el mando (takeOver) y
+//    borra la caché de «a». Sin conexión, la ficha pinta los mismos escudos, en miniatura, y ningún
+//    monograma más; la caché de los escudos es la misma;
+//  - se publica «c», con el escudo de Unión Viera cambiado y su sello nuevo, como lo dejaría
+//    build_crests.py: su SW borra la caché de escudos anterior, y la apertura siguiente guarda el escudo
+//    nuevo en la nueva.
+// Los datos, los congelados (FROZEN); el código y los escudos, los del árbol; sin caché HTTP (no-store).
+const DATA = { a: '20991231a', b: '20991231b', c: '20991231c' };
+const FICHA = '#/equipo?s=2025-2026&g=A1&t=Uni%C3%B3n%20Viera';
+const CHANGED = 'escudos/s/unionviera.png';   // el escudo que cambia en «c»
+const REPLACEMENT = 'escudos/s/huracan.png';  // lo que sirve «c» en su lugar
+const NEW_SEAL = 'c0c0c0c0';
+async function dataDeploy(browser) {
+  let phase = 'a';
+  let down = false;          // sin conexión: el servidor corta cada conexión
+  const treeCrests = (read(ROOT, 'sw.js').match(/^const CRESTS_CACHE = '(futbolbase-escudos-[0-9a-f]{8})';$/m) || [])[1];
+  assert.notEqual(treeCrests, `futbolbase-escudos-${NEW_SEAL}`);
+  assert.notEqual(statSync(join(ROOT, CHANGED)).size, statSync(join(ROOT, REPLACEMENT)).size);
+  const server = createServer(async (req, res) => {
+    if (down) { req.socket.destroy(); return; }
+    const url = new URL(req.url, 'http://portal.test');
+    const file = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.slice(1));
+    try {
+      const data = frozen(file);
+      if (data || file.startsWith('data-')) {
+        if (!data) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
+        res.writeHead(data ? 200 : 404, { 'Content-Type': data ? data.type : 'text/plain', 'Cache-Control': 'no-store' });
+        res.end(data ? data.body : 'no está congelado');
+        return;
+      }
+      if (file === 'index.html' || file === 'sw.js') {
+        let text = read(ROOT, file).replaceAll(TREE_VERSION, DATA[phase]);
+        if (file === 'sw.js' && phase === 'c') text = text.replace(/futbolbase-escudos-[0-9a-f]{8}/, `futbolbase-escudos-${NEW_SEAL}`);
+        res.writeHead(200, { 'Content-Type': `${file === 'sw.js' ? 'text/javascript' : 'text/html'}; charset=utf-8`, 'Cache-Control': 'no-store' });
+        res.end(text);
+        return;
+      }
+      const source = phase === 'c' && file === CHANGED ? `/${REPLACEMENT}` : req.url;
+      const response = await fetch(`http://127.0.0.1:${upstream.address().port}${source}`);
+      res.writeHead(response.status, { 'Content-Type': response.headers.get('content-type') || 'text/plain', 'Cache-Control': 'no-store' });
+      res.end(Buffer.from(await response.arrayBuffer()));
+    } catch {
+      res.writeHead(500);
+      res.end();
+    }
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const home = `http://127.0.0.1:${server.address().port}/index.html`;
+  const probeUrl = home.replace(/index\.html$/, 'manifest.json');
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'es-ES', timezoneId: 'Atlantic/Canary' });
+  // El reloj de las páginas, el día de los datos congelados (23/09/2026): la ficha es la misma cada día.
+  await context.clock.setFixedTime(new Date('2026-09-23T12:00:00Z'));
+  // Una apertura de la ficha en una página nueva, y sus escudos: también los diferidos (loading="lazy"),
+  // que se piden ya para que la cuenta no dependa del alto de la ventana; cuando cada <img> ha cargado o,
+  // si no pudo, ha pasado a monograma (crestFallback: la miniatura, el original y el monograma).
+  const open = async (label) => {
+    const page = await context.newPage();
+    page.setDefaultTimeout(20000);
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto(home + FICHA);
+    await waitForAsync(page, () => !!document.querySelector('#contenido section[data-screen], #contenido [role="alert"]'), null, { label });
+    await page.evaluate(() => document.querySelectorAll('#contenido img.crest[loading="lazy"]').forEach((img) => { img.loading = 'eager'; }));
+    await waitForAsync(page, () => [...document.querySelectorAll('#contenido img.crest')].every((img) => img.complete && img.naturalWidth > 0),
+      null, { label: `${label}, sus escudos` });
+    const seen = await page.evaluate(() => {
+      const imgs = [...document.querySelectorAll('#contenido img.crest')];
+      const mini = imgs.filter((img) => new URL(img.currentSrc).pathname.startsWith('/escudos/s/')).length;
+      return { screen: document.querySelector('#contenido section[data-screen]')?.getAttribute('data-screen') ?? null,
+        mini, orig: imgs.length - mini, mono: document.querySelectorAll('#contenido .mono').length };
+    });
+    return { page, seen: { ...seen, errores: errors } };
+  };
+  try {
+    // «a» instalada: la 1.ª apertura registra su SW, que toma el mando (clients.claim) con su precache.
+    let o = await open('sin conexión tras una subida de datos, «a»');
+    await waitForAsync(o.page, (name) => caches.keys().then((keys) => keys.includes(name) && !!navigator.serviceWorker.controller),
+      `futbolbase-v${DATA.a}`, { label: 'sin conexión tras una subida de datos, «a» instalada' });
+    await o.page.close();
+    // Con el SW de «a» al mando, la ficha le pide sus escudos, y él los guarda.
+    o = await open('sin conexión tras una subida de datos, «a» con su SW');
+    const online = o.seen;
+    assert.ok(online.screen === 'equipo' && online.mini > 0 && online.orig === 0 && online.errores.length === 0,
+      `sin conexión tras una subida de datos, «a» con su SW: ${JSON.stringify(online)}`);
+    await o.page.close();
+    // Se publica «b», solo datos: su SW toma el mando y borra la caché de «a».
+    phase = 'b';
+    let seen = await takeOver(context, probeUrl, `futbolbase-v${DATA.b}`, 'sin conexión tras una subida de datos, el SW de «b» al mando');
+    // Sin conexión, la misma ficha: los mismos escudos, en miniatura.
+    down = true;
+    o = await open('sin conexión tras una subida de datos, «b» sin conexión');
+    assert.deepEqual(o.seen, online, 'sin conexión tras una subida de datos, la ficha no pinta lo mismo que con conexión');
+    await o.page.close();
+    down = false;
+    assert.deepEqual(seen.caches.filter((name) => name.startsWith('futbolbase-escudos-')), [treeCrests],
+      `la caché de los escudos, tras una subida de datos: ${JSON.stringify(seen.caches)}`);
+    // Se publica «c», con un escudo cambiado y su sello nuevo: su SW borra la caché de escudos anterior...
+    phase = 'c';
+    seen = await takeOver(context, probeUrl, `futbolbase-v${DATA.c}`, 'un escudo cambiado, el SW de «c» al mando');
+    assert.deepEqual(seen.caches.filter((name) => name.startsWith('futbolbase-escudos-')), [],
+      `con un escudo cambiado, la caché de escudos anterior sigue ahí: ${JSON.stringify(seen.caches)}`);
+    // ... y la apertura siguiente guarda el escudo nuevo en la caché nueva.
+    o = await open('un escudo cambiado, «c»');
+    await waitForAsync(o.page, async ([name, path, size]) => {
+      const response = await (await caches.open(name)).match(path);
+      return !!response && (await response.arrayBuffer()).byteLength === size;
+    }, [`futbolbase-escudos-${NEW_SEAL}`, `./${CHANGED}`, statSync(join(ROOT, REPLACEMENT)).size], { label: 'un escudo cambiado, el nuevo en la caché nueva' });
+    await o.page.close();
+    console.log(`PASS: sin conexión tras una subida de datos: la ficha pinta sus ${online.mini} escudos en miniatura, como con conexión, porque su caché (${treeCrests}) no cambia con CACHE_NAME; con un escudo cambiado, su sello nuevo da otra caché, con el escudo nuevo`);
+  } finally {
     await context.close();
     server.closeAllConnections();
     await new Promise((resolve) => server.close(resolve));
@@ -531,6 +668,7 @@ try {
   console.log(`PASS: de la app anterior (su SW real) al rediseño, con datos congelados: la 1.ª apertura es la anterior; sin conexión a medias, el aviso con «Reintentar»; la 2.ª y la 3.ª, la nueva con acta.css y sin mezclar módulos; con ${expected}, la portada, Jornada y el buscador de Explorar funcionan sin conexión, y ni la app nueva ni su SW piden los datos retirados`);
   await context.close();
   await codeDeploy(browser);
+  await dataDeploy(browser);
 } finally {
   if (browser) await browser.close();
   proxy.closeAllConnections();

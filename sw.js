@@ -1,16 +1,29 @@
 const CACHE_NAME = 'futbolbase-v20260926';
+const CRESTS_CACHE = 'futbolbase-escudos-860679a5';
 const OFFLINE_URL = './index.html';
 
-// Version the network URL too: a CDN can still serve a cached previous HTML
-// document for the bare path after a deployment. Cache keys remain stable.
-function versionedAssetURL(request) {
+// Los escudos (escudos/, originales y miniaturas) van en su propia caché,
+// CRESTS_CACHE, no en CACHE_NAME, que cambia con cada subida de datos del bot
+// (decisión 1 de B5): al activarse cada versión nueva se borraban con la
+// anterior, y la primera apertura sin red pintaba monogramas. Su nombre lleva
+// el sello de escudos/ (las 8 primeras cifras hex del sha1 de la lista
+// ordenada de «<ruta>:<sha1 del fichero>»), que escribe y comprueba
+// scripts/build_crests.py: un escudo nuevo o cambiado da otro sello, y
+// `activate` borra la caché anterior. El bot no toca esta línea: sus
+// expresiones buscan futbolbase-v (test_index_bot_contract.py).
+
+// La URL de red lleva la versión (?v=), y las claves de la caché, no. GitHub
+// Pages purga su CDN en cada despliegue y su clave no mira la query: la ?v=
+// solo cambia la clave de la caché HTTP del navegador. Los escudos llevan su
+// sello en vez de la versión de los datos (decisión 1 de B5).
+function versionedAssetURL(request, version = CACHE_NAME.replace('futbolbase-v', '')) {
   const url = new URL(typeof request === 'string' ? request : request.url, self.location.href);
-  url.searchParams.set('v', CACHE_NAME.replace('futbolbase-v', ''));
+  url.searchParams.set('v', version);
   return url.href;
 }
 
-function fetchFresh(request, cache = 'no-cache') {
-  return fetch(versionedAssetURL(request), { cache, credentials: 'same-origin' });
+function fetchFresh(request, cache = 'no-cache', version) {
+  return fetch(versionedAssetURL(request, version), { cache, credentials: 'same-origin' });
 }
 
 // Static assets — cached on install (spec §5.5): the page, the stylesheet, the
@@ -77,7 +90,11 @@ const SEASON_FILES = [
 //                    NOTE: the data- check runs BEFORE the generic .js check —
 //                    otherwise cache-first would capture all .js and make this
 //                    branch unreachable.
-//   'cache-first' -> code, styles, images, fonts, escudos (immutable per ?v=).
+//   'escudo'      -> escudos/ (originales y miniaturas): cache-first en
+//                    CRESTS_CACHE, que no cambia con los datos (decisión 1 de
+//                    B5). Antes del cache-first genérico, que casaría con sus
+//                    .png y .jpg.
+//   'cache-first' -> code, styles, images, fonts (immutable per ?v=).
 //   'network'     -> everything else (network, offline fallback).
 function classifyRequest(pathname) {
   const file = pathname.split('/').pop();
@@ -90,8 +107,8 @@ function classifyRequest(pathname) {
   // igual de rápido y la siguiente carga ya lleva el arreglo.
   if (pathname.includes('/src/') && pathname.endsWith('.js')) return 'swr';
   if (pathname.endsWith('/') || pathname.endsWith('.html')) return 'swr';
-  if (/\.(js|css|png|jpg|jpeg|webp|svg|woff2?|ico)$/.test(pathname) ||
-      pathname.includes('/escudos/')) return 'cache-first';
+  if (pathname.includes('/escudos/')) return 'escudo';
+  if (/\.(js|css|png|jpg|jpeg|webp|svg|woff2?|ico)$/.test(pathname)) return 'cache-first';
   return 'network';
 }
 
@@ -153,14 +170,16 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
-// Solo las cachés de esta app (futbolbase-v*) de otras versiones: el origen
-// (malolocabreralolo-tech.github.io) lo comparte otro proyecto de la cuenta, y
-// sus cachés no se tocan (decisión 8 de B4). La limpieza del arranque de
-// index.html se limita a lo mismo.
+// Solo las cachés de esta app de otras versiones: las futbolbase-v* que no son
+// CACHE_NAME y las futbolbase-escudos-* que no son CRESTS_CACHE (decisión 1 de
+// B5). El origen (malolocabreralolo-tech.github.io) lo comparte otro proyecto
+// de la cuenta, y sus cachés no se tocan (decisión 8 de B4). La limpieza del
+// arranque de index.html solo mira las futbolbase-v* (código y hojas).
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k.startsWith('futbolbase-v') && k !== CACHE_NAME).map(k => caches.delete(k)))
+      Promise.all(keys.filter(k => (k.startsWith('futbolbase-v') && k !== CACHE_NAME)
+        || (k.startsWith('futbolbase-escudos-') && k !== CRESTS_CACHE)).map(k => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });
@@ -189,7 +208,24 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Cache-first for static assets (js, css, images, fonts, escudos)
+  // Escudos: cache-first contra CRESTS_CACHE (decisión 1 de B5); de la red, con
+  // el sello como ?v=. La copia se guarda antes de responder (un escudo pesa
+  // unos KB): el que se ve ya está en la caché, aunque la app se cierre en
+  // seguida. Si no se puede guardar, se pinta igual.
+  if (strategy === 'escudo') {
+    e.respondWith(
+      caches.open(CRESTS_CACHE).then(async cache => {
+        const cached = await cache.match(e.request);
+        if (cached) return cached;
+        const response = await fetchFresh(e.request, 'no-cache', CRESTS_CACHE.replace('futbolbase-escudos-', ''));
+        if (response.ok) await cache.put(e.request, response.clone()).catch(() => {});
+        return response;
+      })
+    );
+    return;
+  }
+
+  // Cache-first for static assets (js, css, images, fonts)
   if (strategy === 'cache-first') {
     e.respondWith(
       matchIgnoringVersion(e.request).then(cached => {

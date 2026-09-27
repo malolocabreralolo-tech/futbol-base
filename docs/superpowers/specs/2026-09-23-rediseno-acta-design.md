@@ -469,7 +469,7 @@ Cups    { season, cat, groups: Group[] }                   // torneos (Maspaloma
 - **Fechas:** `fixtureISO` (tres formatos, año según la temporada).
 - **Temporada actual:** partidos desde `HISTORY[id]` (nunca desde `matches` inline, que solo trae una jornada) y tabla desde `standings`.
 - **Históricas:** `SEASON_*.{cat}[i].jornadas`.
-- **Torneos** (`Cups`): capa aparte, asíncrona y memorizada por separado (`ensureSeasonCups`). El `Season` memorizado **no** depende de ella.
+- **Torneos** (`Cups`): capa aparte, asíncrona y memorizada por separado (`ensureSeasonCups`). *(Nota: los torneos son inmediatos (`defer`), no asíncronos, y `ensureSeasonCups` no llegó a hacer falta; véase «Lo que cambió al construirlo», puntos 5 y 10.)* El `Season` memorizado **no** depende de ella.
   - Fase de grupos: filas inline con su adaptador; `kind = 'cup-league'`.
   - Cuadros: `jornadas` + `pen` + `tanda`; `kind = 'cup-bracket'`.
 - **`groupKind(group)`:** un solo detector, que unifica `isCupGroup` e `isKnockoutGroup` y aplica `isRoundRobinCup` (la regla del embudo).

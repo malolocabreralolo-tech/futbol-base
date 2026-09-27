@@ -109,6 +109,26 @@ def seed_season(conn, manifest, evidence):
                         VALUES(?,?,?,?,?,?,?,?,?)""", (gid, round_name, dt, kickoff, team_ids[home], team_ids[away], hs, away_score, venue))
 
 
+LINEUPS_URL = re.compile(r"\./data-lineups-\d{4}-\d{4}\.js")
+
+
+def season_files_for(worker, closing, opening):
+    """sw.js con SEASON_FILES al activar `opening`: delante, el archivo de la temporada que se cierra
+    (data-season-<closing>.js), si no estaba; y al final, la plantilla de la temporada del portal, la de
+    `opening` en lugar de la de `closing` (data-lineups-<S>.js; Plan B5, decisión 2). El fichero de la
+    nueva todavía no existe (sin actas no hay plantilla): el precache del SW lo salta (allSettled) y la
+    app, con su 404, da la temporada sin actas. El resto de sw.js, igual."""
+    start = worker.index("const SEASON_FILES = [")
+    end = worker.index("];", start) + len("];")
+    entries = [url for url in re.findall(r"'([^']+)'", worker[start:end]) if not LINEUPS_URL.fullmatch(url)]
+    archive = f"./data-season-{closing}.js"
+    if archive not in entries:
+        entries.insert(0, archive)
+    entries.append(f"./data-lineups-{opening}.js")
+    literal = "const SEASON_FILES = [\n" + "".join(f"  '{url}',\n" for url in entries) + "];"
+    return worker[:start] + literal + worker[end:]
+
+
 def apply_manifest(manifest, evidence, root=Path(PROJECT_ROOT)):
     """Generate in a temporary checkout before replacing any live artifact."""
     import generate_js
@@ -142,10 +162,8 @@ def apply_manifest(manifest, evidence, root=Path(PROJECT_ROOT)):
         finally:
             conn.close()
         sw_path = stage / "sw.js"
-        archive_url = f'./data-season-{config["season"]}.js'
-        worker = sw_path.read_text()
-        if archive_url not in worker:
-            sw_path.write_text(worker.replace('const SEASON_FILES = [', f"const SEASON_FILES = [\n  '{archive_url}',"))
+        sw_path.write_text(season_files_for(sw_path.read_text(encoding="utf-8"), config["season"], manifest["season"]),
+                           encoding="utf-8")
         config.update(season=manifest["season"], defaultTeam=manifest["defaultTeam"],
                       nextSeason=f'{manifest["season"].split("-")[1]}-{int(manifest["season"].split("-")[1]) + 1}')
         (stage / "src/config.js").write_text("export const PORTAL = " + json.dumps(config, ensure_ascii=False, indent=2) + ";\n")

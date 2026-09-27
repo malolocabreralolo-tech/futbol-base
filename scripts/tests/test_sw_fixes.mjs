@@ -42,7 +42,7 @@ function loadSw(globals = {}) {
   };
   const ctx = { self: selfStub, console, URL, ...globals };
   vm.createContext(ctx);
-  const probes = ['CACHE_NAME', 'CRESTS_CACHE', 'STATIC_ASSETS', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
+  const probes = ['CACHE_NAME', 'CRESTS_CACHE', 'STATIC_ASSETS', 'SEASON_FILES', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
     .join(',');
@@ -109,6 +109,20 @@ test('invariant: los data-*.js de STATIC_ASSETS son los inmediatos de index.html
   assert.deepEqual([...sw.STATIC_ASSETS].filter((url) => /^\.\/data-[\w.-]+\.js$/.test(url)), eager);
   assert.ok(!sw.STATIC_ASSETS.includes('./data-matchdetail.js'),
     'data-matchdetail.js must NOT be precached');
+});
+
+// SEASON_FILES (decisión 2 de B5): los archivos de las temporadas pasadas y la plantilla de la temporada del
+// portal, que es la siguiente a la última archivada (activate_season.py cambia las dos a la vez, sin leer
+// config.js). Ninguna prueba exige que existan: al activar una temporada, su plantilla no existe hasta que
+// llegan sus actas, y el precache la salta (allSettled).
+test('SEASON_FILES: las temporadas archivadas y la plantilla de la del portal, la siguiente a la última archivada (decisión 2 de B5)', () => {
+  const files = [...sw.SEASON_FILES];
+  const archived = files.filter((url) => /^\.\/data-season-\d{4}-\d{4}\.js$/.test(url));
+  const lineups = files.filter((url) => /^\.\/data-lineups-\d{4}-\d{4}\.js$/.test(url));
+  assert.equal(archived.length + lineups.length, files.length, `solo archivos y la plantilla: ${files.join(', ')}`);
+  assert.equal(lineups.length, 1, `una plantilla, la de la temporada del portal: ${files.join(', ')}`);
+  const last = Math.max(...archived.map((url) => Number(url.match(/-(\d{4})\.js$/)[1])));
+  assert.equal(lineups[0], `./data-lineups-${last}-${last + 1}.js`);
 });
 
 // ─── 2. strategy: SWR reachable for data-*.js, cache-first for the rest ───

@@ -76,12 +76,19 @@ const STATIC_ASSETS = [
   './data-maspalomas-cup-2026.js',
 ];
 
-// Season data files — loaded lazily by the app, precache when available
+// Season data files — loaded lazily by the app, precache when available: los
+// archivos de las temporadas pasadas y la plantilla de la temporada del portal
+// (sus actas, data-lineups-<S>.js; decisión 2 de B5), para que su ficha de
+// Equipo funcione sin conexión. scripts/activate_season.py añade el archivo de
+// la temporada que cierra y cambia la plantilla por la de la nueva, aunque ese
+// fichero aún no exista (sin actas): el precache lo salta (allSettled) y la
+// app, con su 404, da la temporada sin actas.
 const SEASON_FILES = [
   './data-season-2024-2025.js',
   './data-season-2023-2024.js',
   './data-season-2022-2023.js',
   './data-season-2021-2022.js',
+  './data-lineups-2025-2026.js',
 ];
 
 // Pure: decide the caching strategy for a same-origin GET pathname.

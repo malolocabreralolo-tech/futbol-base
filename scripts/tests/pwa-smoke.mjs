@@ -49,7 +49,8 @@ const NOTICE = 'No se pudo abrir la versión nueva de la app. Comprueba la conex
 // Los datos y la configuración de las dos versiones, congelados (R2-2 de la revisión adversarial): las
 // fixtures de B1, el día de los datos de hoy (23/09/2026), y el config.js de la app anterior (2025/26,
 // con Las Mesas en PG2). Lo que las fixtures no traen, vacío: las temporadas archivadas, que el SW
-// anterior precachea todas, y las fichas de jugadores, que la app anterior pide para su portada.
+// anterior precachea todas, las fichas de jugadores, que la app anterior pide para su portada, y la
+// plantilla de otra temporada, que el SW del árbol precachea cuando ya ha activado otra (decisión 2 de B5).
 const js = (pairs) => ({ type: 'text/javascript', body: pairs.map(([name, value]) => `const ${name}=${JSON.stringify(value)};`).join('\n') + '\n' });
 const FROZEN = (() => {
   const raw = fixture('current-2025-2026');
@@ -75,9 +76,10 @@ const FROZEN = (() => {
 })();
 function frozen(file) {
   if (Object.hasOwn(FROZEN, file)) return FROZEN[file];
-  const [, kind, from, to] = file.match(/^data-(season|players)-(\d{4})-(\d{4})\.js$/) || [];
+  const [, kind, from, to] = file.match(/^data-(season|players|lineups)-(\d{4})-(\d{4})\.js$/) || [];
   if (kind === 'season') return js([[`SEASON_${from}_${to}`, { name: `${from}-${to}`, current: false, benjamin: [], prebenjamin: [] }]]);
   if (kind === 'players') return js([[`PLAYERS_${from}_${to}`, {}], [`TEAMS_${from}_${to}`, {}]]);
+  if (kind === 'lineups') return js([[`LINEUPS_${from}_${to}`, {}]]);
   return null;
 }
 // Los datos que B4 retiró (decisiones 1 y 3 de B4). Solo los pide la app anterior (su index.html los
@@ -404,7 +406,7 @@ async function codeDeploy(browser) {
   }
 }
 
-// ── 3. Sin conexión tras una subida de datos del bot (decisión 1 de B5) ─────────────────────────────
+// ── 3. Sin conexión tras una subida de datos del bot (decisiones 1 y 2 de B5) ───────────────────────
 // Cada subida de datos del bot cambia CACHE_NAME, y el SW nuevo, al activarse, borra la caché anterior.
 // Los escudos se guardan según se usan (cache-first, §5.5) y antes iban en esa caché: se iban con ella,
 // y la primera apertura sin red tras cada subida pintaba monogramas. Ahora van en la suya, CRESTS_CACHE,
@@ -413,7 +415,8 @@ async function codeDeploy(browser) {
 //    con su SW al mando, que guarda sus escudos;
 //  - se publica «b», solo datos (sube CACHE_NAME; escudos/ igual): su SW toma el mando (takeOver) y
 //    borra la caché de «a». Sin conexión, la ficha pinta los mismos escudos, en miniatura, y ningún
-//    monograma más; la caché de los escudos es la misma;
+//    monograma más; la caché de los escudos es la misma. Y su plantilla, la de la temporada del portal,
+//    que el SW precachea (SEASON_FILES) en cada versión: sin ella, la caja de error;
 //  - se publica «c», con el escudo de Unión Viera cambiado y su sello nuevo, como lo dejaría
 //    build_crests.py: su SW borra la caché de escudos anterior, y la apertura siguiente guarda el escudo
 //    nuevo en la nueva.
@@ -443,6 +446,9 @@ async function dataDeploy(browser) {
       }
       if (file === 'index.html' || file === 'sw.js') {
         let text = read(ROOT, file).replaceAll(TREE_VERSION, DATA[phase]);
+        // La plantilla que precachea el SW, la de la temporada del portal de los datos congelados (2025-26),
+        // también cuando el árbol ya precachee la de otra (activate_season.py la cambia al activarla).
+        if (file === 'sw.js') text = text.replace(/'\.\/data-lineups-\d{4}-\d{4}\.js'/, "'./data-lineups-2025-2026.js'");
         if (file === 'sw.js' && phase === 'c') text = text.replace(/futbolbase-escudos-[0-9a-f]{8}/, `futbolbase-escudos-${NEW_SEAL}`);
         res.writeHead(200, { 'Content-Type': `${file === 'sw.js' ? 'text/javascript' : 'text/html'}; charset=utf-8`, 'Cache-Control': 'no-store' });
         res.end(text);
@@ -465,7 +471,8 @@ async function dataDeploy(browser) {
   await context.clock.setFixedTime(new Date('2026-09-23T12:00:00Z'));
   // Una apertura de la ficha en una página nueva, y sus escudos: también los diferidos (loading="lazy"),
   // que se piden ya para que la cuenta no dependa del alto de la ventana; cuando cada <img> ha cargado o,
-  // si no pudo, ha pasado a monograma (crestFallback: la miniatura, el original y el monograma).
+  // si no pudo, ha pasado a monograma (crestFallback: la miniatura, el original y el monograma). Y si
+  // pinta la tabla de su plantilla.
   const open = async (label) => {
     const page = await context.newPage();
     page.setDefaultTimeout(20000);
@@ -480,7 +487,8 @@ async function dataDeploy(browser) {
       const imgs = [...document.querySelectorAll('#contenido img.crest')];
       const mini = imgs.filter((img) => new URL(img.currentSrc).pathname.startsWith('/escudos/s/')).length;
       return { screen: document.querySelector('#contenido section[data-screen]')?.getAttribute('data-screen') ?? null,
-        mini, orig: imgs.length - mini, mono: document.querySelectorAll('#contenido .mono').length };
+        mini, orig: imgs.length - mini, mono: document.querySelectorAll('#contenido .mono').length,
+        plantilla: !!document.querySelector('#contenido table.squad') };
     });
     return { page, seen: { ...seen, errores: errors } };
   };
@@ -493,13 +501,13 @@ async function dataDeploy(browser) {
     // Con el SW de «a» al mando, la ficha le pide sus escudos, y él los guarda.
     o = await open('sin conexión tras una subida de datos, «a» con su SW');
     const online = o.seen;
-    assert.ok(online.screen === 'equipo' && online.mini > 0 && online.orig === 0 && online.errores.length === 0,
+    assert.ok(online.screen === 'equipo' && online.plantilla && online.mini > 0 && online.orig === 0 && online.errores.length === 0,
       `sin conexión tras una subida de datos, «a» con su SW: ${JSON.stringify(online)}`);
     await o.page.close();
     // Se publica «b», solo datos: su SW toma el mando y borra la caché de «a».
     phase = 'b';
     let seen = await takeOver(context, probeUrl, `futbolbase-v${DATA.b}`, 'sin conexión tras una subida de datos, el SW de «b» al mando');
-    // Sin conexión, la misma ficha: los mismos escudos, en miniatura.
+    // Sin conexión, la misma ficha: los mismos escudos, en miniatura, y su plantilla.
     down = true;
     o = await open('sin conexión tras una subida de datos, «b» sin conexión');
     assert.deepEqual(o.seen, online, 'sin conexión tras una subida de datos, la ficha no pinta lo mismo que con conexión');
@@ -519,7 +527,7 @@ async function dataDeploy(browser) {
       return !!response && (await response.arrayBuffer()).byteLength === size;
     }, [`futbolbase-escudos-${NEW_SEAL}`, `./${CHANGED}`, statSync(join(ROOT, REPLACEMENT)).size], { label: 'un escudo cambiado, el nuevo en la caché nueva' });
     await o.page.close();
-    console.log(`PASS: sin conexión tras una subida de datos: la ficha pinta sus ${online.mini} escudos en miniatura, como con conexión, porque su caché (${treeCrests}) no cambia con CACHE_NAME; con un escudo cambiado, su sello nuevo da otra caché, con el escudo nuevo`);
+    console.log(`PASS: sin conexión tras una subida de datos: la ficha pinta sus ${online.mini} escudos en miniatura, como con conexión, porque su caché (${treeCrests}) no cambia con CACHE_NAME, y su plantilla de 2025/26, del precache; con un escudo cambiado, su sello nuevo da otra caché, con el escudo nuevo`);
   } finally {
     await context.close();
     server.closeAllConnections();

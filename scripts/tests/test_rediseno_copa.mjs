@@ -406,3 +406,49 @@ test('CSS: el único desplazamiento horizontal es el del cuadro, con ajuste; en 
   const used = new Set(out.match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));
   assert.deepEqual([...used].filter((c) => !rules.classes.has(c)), []);
 });
+
+// ── Plan B5, Tarea 6: dos textos de Copa (decisión 5) ──
+
+test('una final empatada de la que la fuente no dice quién ganó: el bloque «Campeón» lo dice, con su marcador (§7)', () => {
+  // MCBK2, la final de la Copa Oro (2–2): sin la columna de penaltis ni la tanda, como las copas de la federación.
+  const ds = all();
+  const final = ds.cupBenjamin.find((g) => g.id === 'MCBK2').jornadas['27-06-2026 ( Final )'][0];
+  final[5] = null;
+  final[8] = null;
+  const out = render({ g: 'MCBK2' }, { datasets: ds });
+  assert.match(out, /<h2 class="block-title">Campeón<\/h2><\/div><p class="empty">La final acabó en empate \(2–2\) y la fuente no dice quién ganó\.<\/p><\/section>/);
+  assert.doesNotMatch(blockOf(out, 'Campeón'), /Todavía no hay campeón|penaltis|cup-champion/);
+  // En el cuadro, la final sin «pasó»: nadie lo dice.
+  const lastCell = cells(out).at(-1);
+  assert.equal(lastCell.text, '17:00 · CD 1.1 HA AD Huracán A 2 VA UD Vecindario A 2');
+  assert.equal(bracket(findGroup(ctxOf({ g: 'MCBK2' }, { datasets: ds }).model, PORTAL_SEASON, 'MCBK2')).champion, null);
+  // Con la columna de penaltis, su campeón; sin resultado, que todavía no lo hay.
+  assert.match(render({ g: 'MCBK2' }), /<span class="cup-champion-name">UD Vecindario A<\/span>/);
+  final[3] = null;
+  final[4] = null;
+  assert.match(render({ g: 'MCBK2' }, { datasets: ds }), /<p class="empty">Todavía no hay campeón: la final no tiene resultado publicado\.<\/p>/);
+});
+
+test('una liguilla con partidos sin fecha: van juntos al final, bajo un único «Sin fecha», y ninguna fila lo repite', () => {
+  // MCP3 (una sola ronda): los dos últimos partidos, sin fecha ni resultado.
+  const ds = all();
+  const rows = ds.cupPrebenjamin.find((g) => g.id === 'MCP3').matches;
+  for (const row of rows.slice(-2)) Object.assign(row, { 0: '', 4: null, 5: null });
+  const matches = blockOf(render({ g: 'MCP3' }, { datasets: ds }), 'Partidos');
+  assert.match(matches, /<p class="block-context">6 partidos<\/p>/);
+  assert.equal((matches.match(/sin fecha/gi) || []).length, 1, 'una sola vez');
+  const [dated, undated] = matches.split('<h3 class="day-title">Sin fecha</h3>');
+  assert.match(dated, /<ol class="box cal">(?:<li><p class="cal-when">[^<]+<\/p><a class="match-row[^>]*>.*?<\/a><\/li>){4}<\/ol>$/);
+  assert.match(undated, /^<ol class="box cal">(?:<li><a class="match-row[^>]*>.*?<\/a><\/li>){2}<\/ol><\/section>$/);
+  assert.doesNotMatch(undated, /match-note/, 'sin la nota «sin fecha» en cada fila');
+  // Con varias jornadas (la Copa Fuerteventura 2023-24), cada uno lleva la suya.
+  const archived = archive('2023-2024');
+  const cfv1 = archived.benjamin.find((g) => g.id === 'CFV1');
+  cfv1.jornadas['2'][0][0] = '';
+  cfv1.jornadas['5'][1][0] = '';
+  const several = blockOf(render({ s: '2023-2024', g: 'CFV1' }, { datasets: datasetsFor({ seasonRaw: { '2023-2024': archived } }) }), 'Partidos');
+  assert.match(several, /<p class="block-context">36 partidos<\/p>/);
+  const late = several.split('<h3 class="day-title">Sin fecha</h3>')[1];
+  assert.deepEqual([...late.matchAll(/<p class="cal-when">([^<]*)<\/p>/g)].map((m) => m[1]), ['Jornada 2', 'Jornada 5']);
+  assert.equal((several.match(/sin fecha/gi) || []).length, 1);
+});

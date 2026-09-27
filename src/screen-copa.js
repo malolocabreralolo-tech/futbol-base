@@ -7,7 +7,7 @@
 // - Liguilla (cup-league): la clasificación, con la fila de mi equipo, y los partidos.
 // render(ctx) es pura. El router garantiza que `g` existe en `s` y no es de liga (decisión 3).
 import { html } from './html.js';
-import { block, box, countLabel, crest, empty, matchNote, matchRow, screenHead, standingsTable } from './ui.js';
+import { block, box, countLabel, crest, empty, matchNote, matchRow, score, screenHead, standingsTable } from './ui.js';
 import { errorBox } from './shell.js';
 import { bracket, findGroup, matchState, seasonLabel } from './model.js';
 import { dayMonth, matchHref, weekdayDate } from './links.js';
@@ -48,10 +48,23 @@ function bracketMatch({ match, advancer, conflict }, me, today, shields) {
   return html`<a class="${mine ? 'bm is-mine' : 'bm'}" href="${matchHref(match)}">${mine ? html`<span class="vh">Partido de mi equipo. </span>` : ''}${when ? html`<span class="bm-when">${when}</span>` : ''}${line('home')}${line('away')}${note}</a>`;
 }
 
-// El campeón, arriba (spec §4.7): quién pasó de la final, con su escudo, y la final debajo.
+// La final: el único partido de la última ronda, si es la «Final» (la regla de bracket, model.js).
+function finalOf(rounds) {
+  const last = rounds[rounds.length - 1];
+  return last && last.label === 'Final' && last.matches.length === 1 ? last.matches[0].match : null;
+}
+
+// El campeón, arriba (spec §4.7): quién pasó de la final, con su escudo, y la final debajo. Sin él, por
+// qué: una final empatada de la que la fuente no dice quién ganó (sin columna de penaltis ni tanda), con
+// su marcador, o una final todavía sin resultado (§7, honestidad: B5, decisión 5).
 function championBlock(rounds, champion, me, today, shields) {
-  if (!champion) return block('Campeón', empty('Todavía no hay campeón: la final no tiene resultado publicado.'));
-  const final = rounds[rounds.length - 1].matches[0].match;
+  const final = finalOf(rounds);
+  if (!champion) {
+    const drawn = final && matchState(final, today) === 'jugado' && final.hs === final.as;
+    return block('Campeón', empty(drawn
+      ? `La final acabó en empate (${score(final.hs, final.as)}) y la fuente no dice quién ganó.`
+      : 'Todavía no hay campeón: la final no tiene resultado publicado.'));
+  }
   const mine = champion === me;
   const name = html`<p class="${mine ? 'cup-champion is-mine' : 'cup-champion'}">${crest(champion, { size: 32, shields, lazy: false })}<span class="cup-champion-name">${champion}</span>${mine ? html`<span class="vh"> (mi equipo)</span>` : ''}</p>`;
   const row = matchRow(final, { mine: plays(me, final), today, shields, href: matchHref(final) });
@@ -72,15 +85,21 @@ function bracketView(group, me, today, shields) {
 // ── Liguilla ─────────────────────────────────────────────────────────────
 
 // La clasificación de la fuente con la fila de mi equipo, y los partidos en su orden, cada uno con
-// su día (y su jornada, si hay varias). Sin enlaces a las fichas: la de un equipo de copa es la copa.
+// su día (y su jornada, si hay varias). Los que no tienen fecha van juntos al final, bajo un único «Sin
+// fecha», con el título de día de Jornada, y ninguna fila lo repite (B5, decisión 5); cada uno, con su
+// jornada si hay varias. Sin enlaces a las fichas: la de un equipo de copa es la copa.
 function leagueView(group, me, today, shields) {
   const table = group.standings.length
     ? box(standingsTable(group.standings, { view: 'puntos', mine: me, shields, caption: `Clasificación de ${group.label}` }), { title: 'Clasificación' })
     : block('Clasificación', empty('Clasificación sin publicar.'));
   const several = group.rounds.length > 1;
-  const items = group.rounds.flatMap((round) => round.matches.map((m) => html`<li><p class="cal-when">${several ? `${round.label} · ` : ''}${weekdayDate(m.dateISO) || 'sin fecha'}</p>${matchRow(m, { mine: plays(me, m), today, shields, href: matchHref(m) })}</li>`));
-  const matches = items.length
-    ? block('Partidos', html`<ol class="box cal">${items}</ol>`, { context: `${items.length} partidos` })
+  const all = group.rounds.flatMap((round) => round.matches.map((m) => ({ round, m })));
+  const row = ({ round, m }, when) => html`<li>${when ? html`<p class="cal-when">${when}</p>` : ''}${matchRow(m, { mine: plays(me, m), today, shields, href: matchHref(m), note: Boolean(m.dateISO) })}</li>`;
+  const dated = all.filter(({ m }) => m.dateISO).map((x) => row(x, `${several ? `${x.round.label} · ` : ''}${weekdayDate(x.m.dateISO)}`));
+  const undated = all.filter(({ m }) => !m.dateISO).map((x) => row(x, several ? x.round.label : ''));
+  const list = html`${dated.length ? html`<ol class="box cal">${dated}</ol>` : ''}${undated.length ? html`<h3 class="day-title">Sin fecha</h3><ol class="box cal">${undated}</ol>` : ''}`;
+  const matches = all.length
+    ? block('Partidos', list, { context: `${all.length} partidos` })
     : block('Partidos', empty('La fuente todavía no ha publicado los partidos de esta copa.'));
   return html`${table}${matches}`;
 }

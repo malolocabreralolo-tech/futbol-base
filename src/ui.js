@@ -98,13 +98,15 @@ export function matchNote(match, state) {
   return null;
 }
 
-export function matchRow(match, { mine = false, today, shields, href } = {}) {
+// note: false, sin la nota, donde la lista ya la dice (los «Sin fecha» de una liguilla de Copa, B5,
+// decisión 5).
+export function matchRow(match, { mine = false, today, shields, href, note: withNote = true } = {}) {
   if (!today) throw new TypeError('matchRow necesita today (AAAA-MM-DD): el reloj se inyecta');
   const state = matchState(match, today);
   const result = state === 'jugado'
     ? html`<span class="match-score">${score(match.hs, match.as)}</span>`
     : html`<span class="match-score is-pending">–</span>`;
-  const note = matchNote(match, state);
+  const note = withNote ? matchNote(match, state) : null;
   const inner = html`${mine ? html`<span class="vh">Partido de mi equipo. </span>` : ''}<span class="match-time">${match.time || ''}</span><span class="match-team match-home"><span class="match-name">${match.home}</span>${crest(match.home, { shields })}</span>${result}<span class="match-team match-away">${crest(match.away, { shields })}<span class="match-name">${match.away}</span></span>${note ? html`<span class="match-note">${note}</span>` : ''}`;
   const cls = mine ? 'match-row is-mine' : 'match-row';
   return href ? html`<a class="${cls}" href="${href}">${inner}</a>` : html`<div class="${cls}">${inner}</div>`;

@@ -33,7 +33,8 @@ import { useWorld, STORE_KEY } from './fixture-site.mjs';
 // Y una vez, en el mundo E (§11, caso 3): la respuesta a la pregunta se guarda y, al recargar, la
 // portada es la de ese equipo, sin preguntar.
 // De B5: una vez, a 390 px, el «Reintentar» de la Plantilla, los Goles y las Alineaciones (un 503 y
-// luego 200): cada bloque se pinta en su sitio, sin volver arriba (decisión 3).
+// luego 200): cada bloque se pinta en su sitio, sin volver arriba (decisión 3); y el paso del
+// esqueleto a la ficha de Equipo de una temporada pasada, sin desplazar lo de arriba (decisión 4).
 // Sin esperas fijas: cada paso espera a su condición (waitForAsync, que al agotarse dice el escenario,
 // el ancho y el tema) o a su localizador.
 const { chromium } = createRequire(import.meta.url)('playwright');
@@ -404,6 +405,74 @@ async function retryBlocks() {
   }
 }
 
+// La puntuación de desplazamiento de un paso (la fórmula de la API Layout Instability, spec §5.4): de las
+// parejas [antes, después] ({ top, left, width, height }) que se mueven, la región de impacto (la unión de
+// sus rectángulos en la ventana) por la distancia (el mayor movimiento), cada una sobre la ventana.
+function shiftScore(pairs, vw, vh) {
+  const moved = pairs.filter(([a, b]) => Math.abs(a.top - b.top) >= 1 || Math.abs(a.left - b.left) >= 1);
+  if (!moved.length) return 0;
+  const spans = moved.flatMap(([a, b]) => [a, b]).map((r) => [Math.max(0, r.top), Math.min(vh, r.top + r.height)])
+    .filter(([top, bottom]) => bottom > top).sort((x, y) => x[0] - y[0]);
+  let covered = 0;
+  let end = -Infinity;
+  for (const [top, bottom] of spans) {
+    if (bottom > end) { covered += bottom - Math.max(top, end); end = bottom; }
+  }
+  const width = Math.min(vw, Math.max(...moved.flatMap(([a, b]) => [a.width, b.width])));
+  const distance = Math.max(...moved.map(([a, b]) => Math.max(Math.abs(a.top - b.top), Math.abs(a.left - b.left))));
+  return ((covered * width) / (vw * vh)) * (distance / Math.max(vw, vh));
+}
+
+// El esqueleto de Equipo (B5, decisión 4): la ficha de Las Mesas en 2024/25, con la carga de esa
+// temporada retenida hasta medir el esqueleto. Al llegar la pantalla, lo de arriba no se mueve: la
+// cabecera y el primer bloque empiezan donde empezaban, el bloque tiene casi el mismo alto (±15 %) y la
+// puntuación de desplazamiento del paso (shiftScore de esas dos parejas, más las entradas layout-shift
+// del navegador) queda por debajo de 0,1.
+async function skeletonShift() {
+  const label = '390px en claro, esqueleto de Equipo';
+  const context = await newContext({ width: 390, height: 844 }, 'light');
+  try {
+    await useWorld(context, 'D');
+    let release;
+    const held = new Promise((resolve) => { release = resolve; });
+    await context.route(/\/data-season-2024-2025\.js(\?.*)?$/, async (route) => { await held; return route.fallback(); });
+    const page = await context.newPage();
+    page.setDefaultTimeout(8000);
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.addInitScript(() => {
+      window.__shifts = 0;
+      new PerformanceObserver((list) => { for (const e of list.getEntries()) if (!e.hadRecentInput) window.__shifts += e.value; })
+        .observe({ type: 'layout-shift', buffered: true });
+    });
+    await page.goto(`${base}#/equipo?s=2024-2025&g=PGC2&t=Las%20Mesas%20Hu.`, { waitUntil: 'commit' });
+    await waitForAsync(page, () => document.querySelector('#contenido [data-skeleton="equipo"] .box.skeleton') !== null, null, { label: `${label}: el esqueleto` });
+    const geometry = (skeleton) => page.evaluate((isSkeleton) => {
+      const rect = (el) => { const r = el.getBoundingClientRect(); return { top: r.top, left: r.left, width: r.width, height: r.height }; };
+      const root = document.querySelector(isSkeleton ? '#contenido [data-skeleton]' : '#contenido section[data-screen]');
+      return {
+        head: rect(root.querySelector(isSkeleton ? '.sk-head' : 'header.screen-head')),
+        block: rect(root.querySelector(isSkeleton ? '.block' : 'section.block')),
+        shifts: window.__shifts, vw: innerWidth, vh: innerHeight,
+      };
+    }, skeleton);
+    const before = await geometry(true);
+    release();
+    await paintedAs(page, 'equipo', { label });
+    const after = await geometry(false);
+    const pairs = [[before.head, after.head], [before.block, after.block]];
+    const score = shiftScore(pairs, after.vw, after.vh) + (after.shifts - before.shifts);
+    assert.ok(Math.abs(before.head.height - after.head.height) <= 1, `${label}: la cabecera, del mismo alto (${JSON.stringify([before.head, after.head])})`);
+    assert.ok(Math.abs(before.block.top - after.block.top) <= 1, `${label}: el primer bloque empieza donde empezaba (${before.block.top} y ${after.block.top})`);
+    assert.ok(Math.abs(before.block.height - after.block.height) <= 0.15 * after.block.height,
+      `${label}: el alto del primer bloque se acerca al de verdad (${before.block.height} y ${after.block.height})`);
+    assert.ok(score < 0.1, `${label}: puntuación de desplazamiento ${score}`);
+    assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
+  } finally {
+    await context.close();
+  }
+}
+
 // Mundo E (§11, caso 3): «Las Mesas Hu. B» guardado en FF13 pregunta; la respuesta se guarda en el
 // almacén y, al recargar, la portada es la de ese equipo, sin preguntar (M6 de la revisión).
 async function answerE() {
@@ -451,6 +520,8 @@ try {
   console.log('PASS: mundo E (§11, caso 3): la respuesta se guarda y, al recargar, la portada de ese equipo sin preguntar');
   await retryBlocks();
   console.log('PASS: 390px en claro, «Reintentar» de la Plantilla, las Alineaciones y los Goles (un 503 y luego 200): cada bloque, en su sitio, sin volver arriba y con el foco en su título');
+  await skeletonShift();
+  console.log('PASS: 390px en claro, del esqueleto a la ficha de Equipo de 2024/25: la cabecera y el primer bloque, en su sitio y casi del mismo alto; desplazamiento por debajo de 0,1');
 } finally {
   if (browser) await browser.close();
   server.closeAllConnections();

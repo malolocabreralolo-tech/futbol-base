@@ -64,7 +64,7 @@ test('offlineNotice: «Sin conexión. Datos del …» con lastDataChange o, si f
 });
 
 test('skeleton: cabecera y primeras cajas de cada pantalla, ocupado, sin h1 ni data-screen', () => {
-  for (const id of ['home', 'jornada', 'tabla', 'partido', 'ajustes']) {
+  for (const id of ['home', 'jornada', 'tabla', 'partido', 'equipo', 'explorar', 'ligas', 'records', 'copa', 'goleadores', 'ajustes']) {
     const out = s(skeleton(id));
     assert.match(out, new RegExp(`^<div class="skeleton-screen" data-skeleton="${id}" aria-busy="true"><p class="vh" role="status">Cargando…</p>`), id);
     assert.match(out, /<div class="screen-head sk-head" aria-hidden="true">/, id);
@@ -73,8 +73,10 @@ test('skeleton: cabecera y primeras cajas de cada pantalla, ocupado, sin h1 ni d
   }
   assert.match(s(skeleton('home')), /<span class="sk sk-crest"><\/span>.*<div class="box skeleton sk-box-home"><\/div>/);
   assert.doesNotMatch(s(skeleton('jornada')), /sk-crest/);
-  // Las pantallas de B3 comparten el esqueleto genérico (la provisional de B2 ya no existe).
-  assert.equal(s(skeleton('explorar')), s(skeleton('ajustes')).replace('data-skeleton="ajustes"', 'data-skeleton="explorar"'));
+  // Temporadas, Fuentes y Ajustes comparten el genérico; las otras seis de B3 tienen el suyo (B5, decisión 4).
+  for (const id of ['temporadas', 'fuentes']) {
+    assert.equal(s(skeleton(id)), s(skeleton('ajustes')).replace('data-skeleton="ajustes"', `data-skeleton="${id}"`), id);
+  }
 });
 
 test('errorBox: «No se pudieron cargar los datos de <qué>» y Reintentar con data-action="retry"', () => {
@@ -165,7 +167,7 @@ test('cada clase que emite shell.js existe en acta.css (salvo los ganchos del ro
   const HOOKS = new Set(['skeleton-screen', 'sk-head', 'error-box', 'route-notice']);
   const out = [renderHeader(), offlineNotice(null, '23/09/2026'),
     screenHead('t', { sub: 's', action: { href: '#', label: 'a' }, back: '#' }),
-    ...['home', 'jornada', 'tabla', 'partido', 'ajustes'].map(skeleton),
+    ...['home', 'jornada', 'tabla', 'partido', 'equipo', 'explorar', 'ligas', 'records', 'copa', 'goleadores', 'ajustes'].map(skeleton),
     errorScreen({ screenId: 'home', title: 't', what: 'w' }), routeNotice('x')].map(String).join('');
   const used = new Set([...out.matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)));
   assert.deepEqual([...used].filter((c) => !defined.has(c) && !HOOKS.has(c)), []);
@@ -203,4 +205,31 @@ test('retryBlock: vuelve a pedir, pinta el bloque en su sitio y lleva el foco a 
   assert.equal(await pending, null);
   // Sin el bloque, ni se pide nada.
   assert.equal(await retryBlock(page.section, 'goles', {}, () => { throw new Error('no debe pedir'); }, () => ''), null);
+});
+
+// ── Plan B5, Tarea 5: el esqueleto propio de las seis pantallas de B3 (decisión 4) ──
+
+// Las cajas de cada una, en orden: lo que va antes de su primer bloque y ese bloque.
+const B3_SKELETONS = {
+  equipo: ['sk-box-team'], explorar: ['sk-box-search', 'sk-box-leagues'], ligas: ['sk-box-groups'],
+  records: ['sk-box-cats', 'sk-box-totals'], copa: ['sk-box-champion'], goleadores: ['sk-box-note'],
+};
+
+test('las seis pantallas de B3, con su esqueleto: sus cajas con el alto medido a 390 px, el título de bloque (salvo Goleadores) y el escudo en Equipo', () => {
+  const generic = s(skeleton('ajustes')).replace(' data-skeleton="ajustes"', '');
+  for (const [id, boxes] of Object.entries(B3_SKELETONS)) {
+    const out = s(skeleton(id));
+    assert.notEqual(out.replace(` data-skeleton="${id}"`, ''), generic, `${id}: el suyo, no el genérico`);
+    assert.deepEqual([...out.matchAll(/<div class="box skeleton ([\w-]+)"><\/div>/g)].map((m) => m[1]), boxes, id);
+    assert.equal(out.includes('<span class="sk sk-block-title"></span>'), id !== 'goleadores', `${id}: el título de bloque`);
+    assert.equal(out.includes('<span class="sk sk-crest"></span>'), id === 'equipo', `${id}: el escudo en la cabecera`);
+  }
+  // El alto de cada caja, el de lo que se ve tras el esqueleto a 390 px con las fixtures (Tarea 5, paso 0).
+  const height = (cls) => Number((decl(`.${cls}`).match(/(?:^|;)\s*height:\s*(\d+)px/) || [])[1]);
+  assert.deepEqual(Object.fromEntries(Object.values(B3_SKELETONS).flat().map((cls) => [cls, height(cls)])), {
+    'sk-box-team': 147, 'sk-box-search': 54, 'sk-box-leagues': 319, 'sk-box-groups': 197,
+    'sk-box-cats': 46, 'sk-box-totals': 54, 'sk-box-champion': 99, 'sk-box-note': 65,
+  });
+  assert.match(decl('.sk-box-search'), /margin-top:\s*16px/);
+  assert.match(decl('.sk-box-cats'), /margin-top:\s*14px/);
 });

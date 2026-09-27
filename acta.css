@@ -478,6 +478,16 @@ abbr[title] { text-decoration: none; }
 .sk-rows-10 { height: 474px; }
 .sk-box-match { height: 240px; }
 .sk-box { height: 96px; }
+/* Las seis de B3 (B5, decisión 4): el primer bloque de lo que se ve tras su esqueleto, medido a 390 px
+ * con las fixtures (título de 19 px y 7 de margen, más la caja). */
+.sk-box-team { height: 147px; }
+.sk-box-search { height: 54px; margin-top: 16px; }
+.sk-box-leagues { height: 319px; }
+.sk-box-groups { height: 197px; }
+.sk-box-cats { height: 46px; margin-top: 14px; }
+.sk-box-totals { height: 54px; }
+.sk-box-champion { height: 99px; }
+.sk-box-note { height: 65px; }
 
 /* ── Caja de error y aviso de redirección (spec §7 y §4.1) ────────────── */
 

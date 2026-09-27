@@ -65,11 +65,25 @@ const BODIES = {
   jornada: html`<div class="box skeleton sk-box-round"></div><span class="sk sk-day"></span><div class="box skeleton sk-rows-6"></div>`,
   tabla: html`<div class="box skeleton sk-box-seg"></div><div class="block"><span class="sk sk-block-title"></span><div class="box skeleton sk-rows-10"></div></div>`,
   partido: html`<div class="block"><span class="sk sk-block-title"></span><div class="box skeleton sk-box-match"></div></div>`,
+  // Las seis de B3 (B5, decisión 4): lo que va antes de su primer bloque (el buscador de Explorar, el
+  // selector de categoría de Récords) y ese bloque, con su título y el alto que tiene a 390 px con las
+  // fixtures, en lo que se ve tras el esqueleto: Equipo de una temporada pasada («Así terminó»),
+  // Explorar («Ligas»), Ligas (su primera categoría), Récords («Totales»), Copa («Campeón») y Goleadores
+  // de una temporada pasada, que solo dice que no los hay (sin título de bloque, como ella).
+  equipo: html`<div class="block"><span class="sk sk-block-title"></span><div class="box skeleton sk-box-team"></div></div>`,
+  explorar: html`<div class="box skeleton sk-box-search"></div><div class="block"><span class="sk sk-block-title"></span><div class="box skeleton sk-box-leagues"></div></div>`,
+  ligas: html`<div class="block"><span class="sk sk-block-title"></span><div class="box skeleton sk-box-groups"></div></div>`,
+  records: html`<div class="box skeleton sk-box-cats"></div><div class="block"><span class="sk sk-block-title"></span><div class="box skeleton sk-box-totals"></div></div>`,
+  copa: html`<div class="block"><span class="sk sk-block-title"></span><div class="box skeleton sk-box-champion"></div></div>`,
+  goleadores: html`<div class="box skeleton sk-box-note"></div>`,
 };
+// Temporadas, Fuentes y Ajustes: el genérico (listas cortas, que casi nunca esperan a nada).
 const OTHER = html`<div class="block"><div class="box skeleton sk-box"></div></div>`;
+// Las cabeceras con escudo: Mi equipo y la ficha de Equipo.
+const WITH_CREST = new Set(['home', 'equipo']);
 
 export function skeleton(screenId) {
-  const head = html`<div class="screen-head sk-head" aria-hidden="true">${screenId === 'home' ? html`<span class="sk sk-crest"></span>` : ''}<span class="screen-head-text"><span class="sk sk-title"></span><span class="sk sk-sub"></span></span></div>`;
+  const head = html`<div class="screen-head sk-head" aria-hidden="true">${WITH_CREST.has(screenId) ? html`<span class="sk sk-crest"></span>` : ''}<span class="screen-head-text"><span class="sk sk-title"></span><span class="sk sk-sub"></span></span></div>`;
   return html`<div class="skeleton-screen" data-skeleton="${screenId}" aria-busy="true"><p class="vh" role="status">Cargando…</p>${head}${Object.hasOwn(BODIES, screenId) ? BODIES[screenId] : OTHER}</div>`;
 }
 

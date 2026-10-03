@@ -183,7 +183,7 @@ def import_season(conn, folder, season, log=print):
     pseudo = [{"island": island, "standings": entry.get("standings") or [],
                "jornadas": [{"matches": [{"home": m[1], "away": m[2]} for m in matches]}]}
               for entry, code, n, phase, island, matches in plans]
-    names = known_names(pseudo, conn, years=[start, start + 1, start - 1])
+    names = known_names(pseudo, conn, years=[start, start + 1, start - 1], keep_existing=True)
     name = lambda raw_name: names.get(clean_team_name(raw_name), clean_team_name(raw_name))
 
     for entry, code, n, phase, island, matches in plans:

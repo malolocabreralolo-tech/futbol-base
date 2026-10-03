@@ -380,14 +380,16 @@ def pretty_name(raw):
     return " ".join(out) + (f" {letter}" if letter else "")
 
 
-def known_names(raw, conn, years=None):
+def known_names(raw, conn, years=None, keep_existing=False):
     """{nombre limpio de FIFLP: nombre que ya usa la base}. Un club que vuelve
     conserva su nombre, su escudo y su histórico; lo que no casa se queda con su
     nombre de FIFLP (mejor un nombre feo que fundir dos clubes).
 
     Se busca en los equipos de las temporadas de `years` (años de inicio, en ese
     orden); por defecto, primero la temporada que se cierra y después la
-    anterior (la última de la base y la de antes). La letra de filial manda: 'ARGUINEGUIN, C.D. "C"' no es
+    anterior (la última de la base y la de antes). Con `keep_existing`, un nombre
+    que ya es de un equipo de la base no se pasa a forma de portal (al activar,
+    club_id renombra esa fila; en una temporada pasada no se toca). La letra de filial manda: 'ARGUINEGUIN, C.D. "C"' no es
     'Arguineguín' (el emparejamiento por tokens lo admitía con penalización);
     si la base no tiene ese filial, se nombra como su primer equipo más la
     letra ('Arguineguín C'). Y si el primer equipo del club es nuevo, su filial
@@ -468,8 +470,9 @@ def known_names(raw, conn, years=None):
             names[n] = f"{next(iter(same))} {letter}"
     # Lo que no casa con la base va con forma de portal; el filial de un club
     # nuevo, como su primer equipo más la letra.
+    existing = {r[0] for r in conn.execute("SELECT name FROM teams")} if keep_existing else set()
     for n in crudos:
-        if not _portal_style(names[n]):
+        if not _portal_style(names[n]) and names[n] not in existing:
             names[n] = pretty_name(names[n])
     for n in crudos:
         letter = _filial(n)

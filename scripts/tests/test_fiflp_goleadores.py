@@ -161,3 +161,22 @@ def test_finals_and_closing_tournaments_are_never_recomputed_as_leagues():
                   "Torneo Cierre Prebenjamín", "Clausura Benjamín"):
         assert not _is_league_group("X1", phase), phase
     assert _is_league_group("GC1", "Primera Fase GC") and _is_league_group("FV21", "Fase 2 Fuerteventura")
+
+
+def test_filial_letters_and_cups_without_standings_match_their_group():
+    conn = base()
+    conn.executescript("""
+      INSERT INTO teams(id, name) VALUES (9, 'Tamaraceite B'), (10, 'Moya B'), (11, 'Arucas B'), (12, 'Gáldar B');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase) VALUES
+        (4, 1, 2, 'P3', 'Grupo 3', 'Primera Fase GC'), (5, 1, 2, 'PCC1', 'Grupo 1', 'Copa de Campeones');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+        (4, 9, 1, 9, 3, 3, 0, 0, 9, 1, 8), (4, 10, 2, 6, 3, 2, 0, 1, 5, 3, 2), (4, 11, 3, 3, 3, 1, 0, 2, 2, 5, -3);
+      INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES
+        (5, 'Ronda 1', '2025-06-01', 1, 5, 2, 0), (5, 'Ronda 1', '2025-06-01', 6, 7, 1, 0),
+        (5, 'Ronda 1', '2025-06-01', 3, 8, 3, 1), (5, 'Ronda 1', '2025-06-01', 4, 12, 0, 1);
+    """)
+    filiales = entry("900", "3", "LIGA PREBENJAMIN", ['TAMARACEITE, U.D. "B"', 'MOYA, U.D. "B"', 'ARUCAS, C.F. "B"'], [])
+    assert G.by_teams(conn, 1, filiales) == 4                     # P3, no P1 (los primeros equipos)
+    copa = {**entry("901", "1", "COPA CAMPEONES PREBENJAMIN", [], [["A, B", "TAMARACEITE, U.D. A", 1, 2, 0],
+            ["C, D", "GUIA, U.D.", 1, 1, 0], ["E, F", "MOYA, U.D.", 1, 3, 0]]), "standings": []}
+    assert G.by_teams(conn, 1, copa) == 5                         # 3 de sus 8 equipos: basta, son los de los goleadores

@@ -7,10 +7,11 @@ temporada (match_group):
   1. por sus actas: las del índice de la temporada (fiflp_actas_<S>_index.json,
      cod_acta → competición y grupo) ya importadas en un partido de la base; el
      grupo de la mayoría, si son al menos 3 y dos tercios;
-  2. si no, por sus equipos: los de su clasificación (o, sin ella, los de sus
-     goleadores) contra los de cada grupo de la base de la misma categoría; el
-     que más comparte, si son al menos 3, dos tercios de los de los dos lados, y
-     ningún otro grupo empata.
+  2. si no, por sus equipos (match_teams: uno a uno, con la letra de filial):
+     los de su clasificación contra los de cada grupo de la base de la misma
+     categoría; el que más comparte, si son al menos 3, dos tercios de los de
+     los dos lados, y ningún otro grupo empata. Sin clasificación (una copa),
+     los equipos de sus goleadores, que deben estar en el grupo.
 
 Solo se escriben los goleadores de un grupo de la base que no tenga ninguno o
 cuyos goleadores vengan de aquí (tabla fiflp_scorer_groups): los que ya trae
@@ -25,7 +26,8 @@ import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from acta_reconciler import normalize_team_name, _names_match  # noqa: E402
+from fiflp_names import match_teams, team_key, team_score  # noqa: E402
+from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
 from update_fiflp import write_scorers  # noqa: E402
 
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -62,9 +64,11 @@ def _db_groups_one(conn, gid):
 
 
 def _overlap(fiflp_teams, db_teams):
-    """Cuántos equipos de la federación tienen su pareja en el grupo de la base."""
-    norm_db = [normalize_team_name(t) for t in db_teams]
-    return sum(1 for t in fiflp_teams if any(_names_match(normalize_team_name(t), d) for d in norm_db))
+    """(parejas, puntuación) de los equipos de la federación en el grupo de la base,
+    uno a uno (match_teams). La puntuación desempata: 'TITE, C.D. "B"' casa mejor
+    con 'Tite B' que con 'CD Tite' (la letra de filial)."""
+    pairs = match_teams(sorted({clean_team_name(t) for t in fiflp_teams} - {""}), db_teams)
+    return len(pairs), round(sum(team_score(team_key(a), team_key(b)) for a, b in pairs.items()), 6)
 
 
 def by_actas(conn, index, comp, grupo):
@@ -85,14 +89,18 @@ def by_actas(conn, index, comp, grupo):
 
 
 def by_teams(conn, season_id, entry):
-    teams = [r["team"] for r in entry.get("standings") or []] or sorted({r[1] for r in entry.get("scorers") or []})
+    """Con clasificación, sus equipos deben estar en los dos lados (dos tercios de
+    cada uno); sin ella (una copa: solo los equipos de sus goleadores, que no son
+    todos), basta con que los de los goleadores estén en el grupo."""
+    standings = [r["team"] for r in entry.get("standings") or []]
+    teams = standings or sorted({r[1] for r in entry.get("scorers") or []})
     if len(teams) < 3:
         return None
     scored = []
     for gid, db_teams in _db_groups(conn, season_id, _category(entry.get("comp_name"))).items():
-        n = _overlap(teams, db_teams)
-        if n >= 3 and n * 3 >= len(teams) * 2 and n * 3 >= len(db_teams) * 2:
-            scored.append((n, gid))
+        n, quality = _overlap(teams, db_teams)
+        if n >= 3 and n * 3 >= len(teams) * 2 and (not standings or n * 3 >= len(db_teams) * 2):
+            scored.append(((n, quality), gid))
     scored.sort(reverse=True)
     if not scored or (len(scored) > 1 and scored[1][0] == scored[0][0]):
         return None

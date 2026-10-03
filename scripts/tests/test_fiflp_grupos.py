@@ -22,7 +22,8 @@ def base():
       INSERT INTO categories(id, name) VALUES (1, 'BENJAMIN'), (2, 'PREBENJAMIN');
       INSERT INTO groups(id, season_id, category_id, code, name, full_name, phase, island) VALUES
         (1, 1, 1, 'GC1', 'Grupo 1', 'BENJAMIN PRIMERA FASE GC - Grupo 1', 'Primera Fase GC', 'grancanaria');
-      INSERT INTO teams(id, name) VALUES (1, 'Tamaraceite'), (2, 'AD Huracán'), (3, 'Moya'), (4, 'Arucas'), (5, 'Haría');
+      INSERT INTO teams(id, name) VALUES (1, 'Tamaraceite'), (2, 'AD Huracán'), (3, 'Moya'), (4, 'Arucas'), (5, 'Haría'),
+        (6, 'FUTBOL P.D.C. 2016, C.D.');
       INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
         (1, 1, 1, 9, 3, 3, 0, 0, 9, 1, 8), (1, 2, 2, 6, 3, 2, 0, 1, 5, 3, 2),
         (1, 3, 3, 3, 3, 1, 0, 2, 2, 5, -3), (1, 4, 4, 0, 3, 0, 0, 3, 1, 8, -7);
@@ -66,11 +67,13 @@ def test_missing_groups_are_created_with_their_matches_lineups_and_table(tmp_pat
         # Una competición sin código conocido.
         "999:1": entry("999", "1", "LIGA RARA BENJAMIN", "GRUPO 1", ["A, C.D.", "B, C.D.", "C, C.D."]),
     }
-    index = {"700": {"comp_id": "893", "grupo": "2", "jornada": "1"},
+    index = {"699": {"comp_id": "956", "grupo": "7", "jornada": "1"},
+             "700": {"comp_id": "893", "grupo": "2", "jornada": "1"},
              "701": {"comp_id": "893", "grupo": "2", "jornada": "1"},
              "702": {"comp_id": "893", "grupo": "2", "jornada": "2"},
              "800": {"comp_id": "956", "grupo": "7", "jornada": "1"}}
-    actas = {"700": acta(700, "1", "06-11-2021", "GUIA, U.D.", "GALDAR, C.D.", 1, 0, "PEREZ, LUIS"),
+    actas = {"699": acta(699, "1", "06-11-2021", "FUTBOL P.D.C. 2016, C.D.", "SAN ISIDRO, U.D.", 2, 1),
+             "700": acta(700, "1", "06-11-2021", "GUIA, U.D.", "GALDAR, C.D.", 1, 0, "PEREZ, LUIS"),
              "701": acta(701, "1", "06-11-2021", "FIRGAS, U.D.", "TEROR, C.F.", 0, 0),
              "702": {"header": {"season": "2021/2022"}},          # sin aplanar: no cuenta
              "800": acta(800, "1", "12-06-2022", "HARIA, C.D.", "TEGUISE, U.D.", 1, 0, "LOPEZ, ANA")}
@@ -94,6 +97,11 @@ def test_missing_groups_are_created_with_their_matches_lineups_and_table(tmp_pat
     final = conn.execute("""SELECT t1.name FROM matches m JOIN groups g ON g.id=m.group_id
                             JOIN teams t1 ON t1.id=m.home_team_id WHERE g.code='LZ1F1'""").fetchone()[0]
     assert final == "Haría"
+    # Un equipo que la base ya tiene con la grafía de la federación conserva su fila (no se duplica
+    # con forma de portal); uno que no tiene, entra con forma de portal.
+    names = {r[0] for r in conn.execute("""SELECT DISTINCT t.name FROM matches m JOIN groups g ON g.id=m.group_id
+        JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id) WHERE g.code='LZ1F1'""")}
+    assert names == {"Haría", "Teguise", "FUTBOL P.D.C. 2016, C.D.", "San Isidro"}
     # Sin cambios en las fuentes, nada; con una acta nueva, el grupo se rehace sin duplicar.
     assert GR.import_changed_grupos(conn, str(tmp_path), log=lines.append) == {}
     index["703"] = {"comp_id": "893", "grupo": "2", "jornada": "2"}

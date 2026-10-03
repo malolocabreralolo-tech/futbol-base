@@ -4,7 +4,8 @@ discover_fiflp_comps.py — Lists ALL benjamin/prebenjamin competitions for each
 FIFLP season, looking specifically for Copa de Campeones / Tercera Fase / Fase
 Final / Final variants we haven't configured yet.
 
-Loops temporadas 17→21 (2021-22 → 2025-26) and dumps competition catalog.
+Loops temporadas 17→22 (2021-22 → 2026-27) and MERGES them into the catalog
+(keeps any season already there that this run does not visit).
 
 Output: scripts/fiflp_comps_catalog.json
 """
@@ -25,7 +26,13 @@ SEASONS = [
     ("19", "2023-2024"),
     ("20", "2024-2025"),
     ("21", "2025-2026"),
+    ("22", "2026-2027"),
 ]
+
+# DISCOVER_SEASONS=22 -> only those CodTemporada (comma-separated).
+_only = os.environ.get("DISCOVER_SEASONS", "")
+if _only:
+    SEASONS = [s for s in SEASONS if s[0] in _only.split(",")]
 
 KEYWORDS = [
     "benjamin", "benjamín", "prebenjamin", "prebenjamín",
@@ -35,6 +42,9 @@ KEYWORDS = [
 
 def main():
     results = {}
+    if os.path.exists(OUTPUT):
+        with open(OUTPUT, encoding="utf-8") as f:
+            results = json.load(f)
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(user_agent=(
@@ -52,7 +62,8 @@ def main():
                 page.wait_for_timeout(3000)
             except Exception as e:
                 print(f"  goto err: {e}")
-                results[season_name] = {"error": str(e), "competitions": []}
+                # Un fallo de red no borra lo que ya estaba en el catálogo.
+                results.setdefault(season_name, {"error": str(e), "competitions": []})
                 continue
 
             comps = page.evaluate("""
@@ -65,6 +76,9 @@ def main():
                 }
             """)
             print(f"  Total competitions: {len(comps)}")
+            if not comps and results.get(season_name, {}).get("all"):
+                print("  (vacío: se conserva el catálogo anterior)")
+                continue
 
             # Filter to benjamin/prebenjamin/cup-related ones
             relevant = []

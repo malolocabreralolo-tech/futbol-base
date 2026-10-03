@@ -19,6 +19,7 @@ incertidumbre externa.
 Uso:
     ISLAS_SEASON=19 python3 scripts/fetch_fiflp_islas.py
     ISLAS_SEASON=19 SCRAPE_IDS=1328,1330 python3 scripts/fetch_fiflp_islas.py
+    ISLAS_SEASON=22 python3 scripts/fetch_fiflp_islas.py   # 2026-27, IDs del catálogo
 """
 import os
 import re
@@ -105,7 +106,43 @@ COMPS_BY_SEASON = {
     ],
 }
 
+# Temporada en curso o recién publicada: los IDs aún no se conocen al escribir
+# el código, así que salen del catálogo (discover_fiflp_comps.py) por nombre.
+CATALOG_SEASONS = {"22": "2026-2027"}
+
+
+def _fold(text):
+    import unicodedata
+    return "".join(ch for ch in unicodedata.normalize("NFD", text)
+                   if unicodedata.category(ch) != "Mn").upper()
+
+
+def comps_from_catalog(season_name, catalog=None):
+    """Competiciones benjamín/prebenjamín de fútbol 7/8 (nada de sala) de una
+    temporada del catálogo FIFLP. La fase provisional es el nombre de FIFLP;
+    el import decide la fase que ve la web."""
+    if catalog is None:
+        import json
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            "fiflp_comps_catalog.json")
+        with open(path, encoding="utf-8") as f:
+            catalog = json.load(f)
+    comps = []
+    for c in (catalog.get(season_name) or {}).get("all", []):
+        name = _fold(c["name"])
+        if "BENJAMIN" not in name or "SALA" in name or "LPFS" in name:
+            continue
+        island = ("lanzarote" if "LANZAROTE" in name else
+                  "fuerteventura" if "FUERTEVENTURA" in name else "grancanaria")
+        comps.append({"id": c["id"], "name": c["name"],
+                      "cat": "prebenjamin" if "PREBENJAMIN" in name else "benjamin",
+                      "island": island, "phase": c["name"]})
+    return comps
+
+
 SEASON = os.environ.get("ISLAS_SEASON", "19")
+if SEASON in CATALOG_SEASONS and SEASON not in COMPS_BY_SEASON:
+    COMPS_BY_SEASON[SEASON] = comps_from_catalog(CATALOG_SEASONS[SEASON])
 if SEASON not in COMPS_BY_SEASON:
     sys.exit(f"ISLAS_SEASON={SEASON!r} no soportada. Opciones: "
              f"{', '.join(sorted(COMPS_BY_SEASON))}")

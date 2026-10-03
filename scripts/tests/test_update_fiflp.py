@@ -255,6 +255,8 @@ def test_a_new_phase_is_added_to_the_current_season_without_touching_it():
     with pytest.raises(ValueError):
         validate_manifest(phase2, "2025-2026", adding=True)   # solo la temporada en curso
     validate_manifest(phase2, "2026-2027", adding=True)       # sin equipo inicial: no hace falta
+    two = {"season": "2026-2027", "groups": [{**GROUP, "id": "A2"}, {**GROUP, "id": "A3"}]}
+    assert len(verify_sources(two, fiflp_raw=raw(), names=NAMES)) == 2, "los nombres valen para todos los grupos"
     add_groups(conn, phase2, verify_sources(phase2, fiflp_raw=raw(), names=NAMES))
     assert [r[0] for r in conn.execute("SELECT code FROM groups ORDER BY code")] == ["A1", "PG1"]
     assert conn.execute("SELECT count(*) FROM seasons WHERE is_current=1").fetchone()[0] == 1
@@ -282,6 +284,26 @@ def test_known_names_respect_the_filial_letter_new_clubs_and_the_island():
     assert names['ARGUINEGUIN, C.D. "A"'] == "Arguineguín"
     assert names['ARGUINEGUIN, C.D. "B"'] == "Arguineguín B"
     assert names['ARGUINEGUIN, C.D. "C"'] == "Arguineguín C", "un filial nunca es su primer equipo"
-    assert names['C.D. DE FUTBOL ATHLETICO BACHICAN LAS MESAS "B"'].startswith("C.D. DE FUTBOL"), "club nuevo: no es UD Las Mesas B"
+    # Club nuevo: ni su filial es 'Las Mesas B' (UD Las Mesas), ni lleva la grafía de la federación.
+    assert names['CF ATLETICO BACHICAN LAS MESAS "A"'] == "Atlético Bachicán Las Mesas"
+    assert names['C.D. DE FUTBOL ATHLETICO BACHICAN LAS MESAS "B"'] == "Atlético Bachicán Las Mesas B"
     assert names['INTERNACIONAL GALDAR "B"'] != "Internacional B", "el Internacional B de la base es de Lanzarote"
     assert names['MESAS HURACAN, U.D. LAS'] == "Las Mesas Hu."
+
+
+def test_pretty_name_gives_federation_names_the_portal_form():
+    from activate_season import pretty_name
+    assert pretty_name('ATLETICO FOMENTO, CLUB "A"') == "Atlético Fomento"
+    assert pretty_name('UNION SUR YAIZA, C.D. "B"') == "Unión Sur Yaiza B"
+    assert pretty_name("CD MIGUEL LEON") == "Miguel León"
+    assert pretty_name('PUERTO DEL CARMEN, F.C "B"') == "Puerto del Carmen B"
+    assert pretty_name("SIMUSETTI C. F.") == "Simusetti"
+    assert pretty_name('GARITA, C.F.S. LA "B"') == "La Garita B"
+
+
+def test_a_club_stored_with_the_federation_spelling_takes_the_portal_form():
+    from activate_season import club_id
+    conn = db()
+    conn.execute("""INSERT INTO teams(name) VALUES ('ATLETICO FOMENTO, CLUB')""")
+    tid = club_id(conn, "Atlético Fomento")
+    assert conn.execute("SELECT id, name FROM teams").fetchall() == [(tid, "Atlético Fomento")]

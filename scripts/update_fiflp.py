@@ -213,11 +213,18 @@ def scrape_group(page, F, url, stored, today):
     if not F.goto(page, f"{F.BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
                         f"&CodCompeticion={comp}&CodGrupo={code}"):
         raise RuntimeError("no carga el calendario de la federación")
-    options = page.evaluate("""() => {
-        const sel = document.querySelector('select[name="jornada"]');
-        return sel ? Array.from(sel.options).filter(o => o.value && o.value !== '0')
-                       .map(o => ({value: o.value, text: o.text.trim()})) : [];
-    }""")
+    options = []
+    for _ in range(4):        # FIFLP a veces tarda en servir el desplegable («0J»)
+        options = page.evaluate("""() => {
+            const sel = document.querySelector('select[name="jornada"]');
+            return sel ? Array.from(sel.options).filter(o => o.value && o.value !== '0')
+                           .map(o => ({value: o.value, text: o.text.trim()})) : [];
+        }""")
+        if options:
+            break
+        page.wait_for_timeout(3000)
+    if not options and stored:
+        raise RuntimeError("la federación no sirvió las jornadas del grupo")
     for opt in rounds_to_refresh(options, stored, today):
         label, when = option_round(opt["text"])
         page.evaluate(f"BuscarPartidos('{opt['value']}')")

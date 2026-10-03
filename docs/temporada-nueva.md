@@ -18,10 +18,10 @@ gh workflow run discover-fiflp.yml            # escribe scripts/fiflp_comps_cata
 gh workflow run fetch-fiflp-islas.yml -f temporada=22   # escribe scripts/fiflp_islas_22_raw.json
 git pull
 # 3. Manifiesto (códigos y fases con el convenio de 2025/26; aborta si una competición no encaja)
-python3 scripts/fiflp_manifest.py scripts/fiflp_islas_22_raw.json 2026-2027 --team "Las Mesas" --cat prebenjamin > temporada-2026-2027.json
+python3 scripts/fiflp_manifest.py scripts/fiflp_islas_22_raw.json 2026-2027 --team "Las Mesas" --cat prebenjamin > docs/temporadas/2026-2027.json
 # 4. Verificar y activar con la evidencia del raw (nombres reconciliados con la base)
-python3 scripts/activate_season.py temporada-2026-2027.json --fiflp-raw scripts/fiflp_islas_22_raw.json
-python3 scripts/activate_season.py temporada-2026-2027.json --fiflp-raw scripts/fiflp_islas_22_raw.json --apply
+python3 scripts/activate_season.py docs/temporadas/2026-2027.json --fiflp-raw scripts/fiflp_islas_22_raw.json
+python3 scripts/activate_season.py docs/temporadas/2026-2027.json --fiflp-raw scripts/fiflp_islas_22_raw.json --apply
 ```
 
 Los grupos quedan con su URL de la federación. `fetch_futbolaspalmas.py` los salta y, con `FIFLP_UPDATE=1` (lo pone `update.yml`, que instala Playwright), llama a `update_fiflp.py`: clasificación oficial (no ofuscada) con el mismo guard de no-regresión, y solo las jornadas recientes, próximas, pendientes o nuevas. Un marcador nuevo entra siempre; uno guardado solo se cambia si el nuevo cuadra mejor con los goles de la clasificación (la ofuscación de FIFLP hace que ~1 de cada 10 se lea mal). Cuando la federación publique una fase nueva (Segunda Fase, Fase 2 insular) se repiten los pasos 1-2 (ampliando `CATALOG_SEASONS`/la tanda si hace falta) y se añaden sus grupos a la temporada en curso, sin cambiar de temporada:

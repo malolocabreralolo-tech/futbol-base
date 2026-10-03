@@ -148,11 +148,11 @@ def verify_sources(manifest, fetcher=fetch, fiflp_raw=None, names=None):
             raise ValueError(f'{group["id"]}: faltan clasificación o partidos con año verificable')
         if any(not first <= date.fromisoformat(m[0]) <= last for m in matches):
             raise ValueError(f'{group["id"]}: el calendario contiene fechas de otra temporada')
-        names = {r[1] for r in standings}
-        if any(m[1] not in names or m[2] not in names for m in matches):
+        table = {r[1] for r in standings}
+        if any(m[1] not in table or m[2] not in table for m in matches):
             raise ValueError(f'{group["id"]}: calendario y clasificación tienen equipos diferentes')
         default = manifest.get("defaultTeam") or {}
-        if group["id"] == default.get("groupId") and default["name"] not in names:
+        if group["id"] == default.get("groupId") and default["name"] not in table:
             raise ValueError("El equipo inicial no aparece en la clasificación verificada")
         evidence.append({"group": group, "rounds": rounds, "standings": standings,
                          "current": current_round(rounds)})
@@ -172,6 +172,10 @@ def club_id(conn, name):
     if key:
         for tid, existing in conn.execute("SELECT id, name FROM teams").fetchall():
             if _teams_key(existing) == key:
+                # El mismo club guardado con la grafía de la federación toma la
+                # forma de portal, en todas sus temporadas.
+                if not _portal_style(existing) and _portal_style(name):
+                    conn.execute("UPDATE teams SET name=? WHERE id=?", (name, tid))
                 return tid
     return conn.execute("INSERT INTO teams(name) VALUES(?)", (name,)).lastrowid
 
@@ -332,6 +336,47 @@ def _filial(name):
     return "" if letter == "A" else letter
 
 
+def _portal_style(name):
+    """'Carnevali', 'Atl. Angostura'; no 'DANIEL CARNEVALI, C.D. "A"' (federación)."""
+    return not ('"' in name or ", " in name or (name == name.upper() and re.search(r"[A-Z]{4}", name)))
+
+
+_ABBR = re.compile(r"^(?:[A-Z]\.\s?){1,3}$|^(?:CD|CF|UD|AD|SD|FC|CFS|CEF)$")
+_ACCENTS = {"ATLETICO": "Atlético", "UNION": "Unión", "LEON": "León", "SUAREZ": "Suárez", "JOSE": "José",
+            "MARIA": "María", "GALDAR": "Gáldar", "TIAS": "Tías", "BACHICAN": "Bachicán", "MARTIN": "Martín",
+            "LAZARO": "Lázaro", "NICOLAS": "Nicolás", "BARTOLOME": "Bartolomé", "AGUIMES": "Agüimes",
+            "MOGAN": "Mogán", "JINAMAR": "Jinámar", "GUIA": "Guía", "BRIGIDA": "Brígida", "MARITIMA": "Marítima",
+            "ARGUINEGUIN": "Arguineguín", "VELEZ": "Vélez", "ATHLETICO": "Athlético"}
+_SMALL = {"DE", "DEL", "Y"}
+
+
+def pretty_name(raw):
+    """Un nombre de la federación con forma de portal, para los clubes que la base
+    no conoce: 'ATLETICO FOMENTO, CLUB "A"' -> 'Atlético Fomento', 'UNION SUR
+    YAIZA, C.D. "B"' -> 'Unión Sur Yaiza B', 'CD MIGUEL LEON' -> 'Miguel León'."""
+    quoted = re.search(r'"([B-H])"\s*$', raw)       # la federación la escribe entre comillas
+    letter = quoted.group(1) if quoted else ""
+    text = re.sub(r',?\s*"[A-H]"\s*$', "", raw.strip()).strip()
+    main, _, tail = text.partition(", ")
+    # 'C.D.', 'F.C', 'C. F.', 'C.F.S.': letras sueltas con punto, enteras, antes de trocear.
+    strip_abbr = lambda t: re.sub(r"(?<![A-Z])(?:[A-Z]\.\s?)+[A-Z]?(?![A-Za-z])", " ", t.upper())
+    words = lambda t: [w for w in re.split(r"[\s,]+", strip_abbr(t)) if w and not _ABBR.match(w)]
+    lead = [w for w in words(tail) if w not in ("CLUB",)]
+    body = words(main)
+    if body[:2] == ["DE", "FUTBOL"]:
+        body = body[2:]
+    tokens = [w for w in lead + body if w != "CLUB"] or words(main)
+    out = []
+    for i, w in enumerate(tokens):
+        if w in _ACCENTS:
+            out.append(_ACCENTS[w])
+        elif w in _SMALL and i:
+            out.append(w.lower())
+        else:
+            out.append(w.capitalize())
+    return " ".join(out) + (f" {letter}" if letter else "")
+
+
 def known_names(raw, conn):
     """{nombre limpio de FIFLP: nombre que ya usa la base}. Un club que vuelve
     conserva su nombre, su escudo y su histórico; lo que no casa se queda con su
@@ -375,15 +420,31 @@ def known_names(raw, conn):
 
     # Primeros equipos y filiales por separado: el emparejamiento es uno a uno,
     # y un filial que se llevara el nombre del primer equipo lo dejaría sin él.
+    # 'CHATUR SAN FERNANDO "A"' en un grupo y 'CHATUR SAN FERNANDO' en otro son
+    # el mismo equipo: se emparejan juntos, o solo uno se llevaría el nombre de
+    # la base y el club quedaría partido en dos.
+    stem = lambda n: re.sub(r',?\s*"A"\s*$', "", n).strip()
     names = {n: n for n in crudos}
-    for subset in ([n for n in crudos if not _filial(n)], [n for n in crudos if _filial(n)]):
-        rest = subset
-        for offset in (0, 1):
-            found = canonical_names(rest, [], pool(offset))
-            for n in rest:
-                if found.get(n, n) != n and fits(n, found[n]):
-                    names[n] = found[n]
-            rest = [n for n in rest if names[n] == n]
+    firsts_subset = [n for n in crudos if not _filial(n)]
+    for subset in (firsts_subset, [n for n in crudos if _filial(n)]):
+        variants = {}
+        for n in subset:
+            variants.setdefault(stem(n), []).append(n)
+        rest = sorted(variants)
+        filial = subset is not firsts_subset
+        # La base arrastra el mismo club con dos grafías ('Carnevali' y 'DANIEL
+        # CARNEVALI, C.D. "A"'): primero los nombres del portal y solo después
+        # los que quedaron con la grafía de la federación. Y un primer equipo
+        # solo se busca entre primeros equipos; un filial, entre filiales.
+        passes = [(offset, nice) for nice in (True, False) for offset in (0, 1)]
+        for offset, nice in passes:
+            candidates = [c for c in pool(offset) if bool(_filial(c)) == filial and (not nice or _portal_style(c))]
+            found = canonical_names(rest, [], candidates)
+            for key in rest:
+                if found.get(key, key) != key and all(fits(n, found[key]) for n in variants[key]):
+                    for n in variants[key]:
+                        names[n] = found[key]
+            rest = [key for key in rest if names[variants[key][0]] == variants[key][0]]
 
     firsts = [n for n in crudos if not _filial(n)]
     for n in crudos:
@@ -397,6 +458,17 @@ def known_names(raw, conn):
             names[n] = n                      # primer equipo nuevo: su filial también
         elif names[n] == n and len(same) == 1 and next(iter(same)) not in firsts:
             names[n] = f"{next(iter(same))} {letter}"
+    # Lo que no casa con la base va con forma de portal; el filial de un club
+    # nuevo, como su primer equipo más la letra.
+    for n in crudos:
+        if not _portal_style(names[n]):
+            names[n] = pretty_name(names[n])
+    for n in crudos:
+        letter = _filial(n)
+        core = team_key(n)[0]
+        near = [f for f in firsts if team_score((core, ""), (team_key(f)[0], "")) >= MIN_TEAM_SCORE]
+        if letter and names[n] == pretty_name(n) and len({names[f] for f in near}) == 1:
+            names[n] = f"{names[near[0]]} {letter}"
     return names
 
 

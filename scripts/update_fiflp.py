@@ -47,9 +47,10 @@ def fiflp_groups(conn, season_id):
 
 
 def option_round(text):
-    """'3 - 17/10/2026' -> ('Jornada 3', date(2026, 10, 17)); sin fecha, None."""
+    """'3 - 17-10-2026' (así lo escribe FIFLP; también con barras) ->
+    ('Jornada 3', date(2026, 10, 17)); sin fecha, None."""
     num, _, day = (text or "").partition(" - ")
-    m = re.fullmatch(r"(\d{2})/(\d{2})/(\d{4})", day.strip())
+    m = re.fullmatch(r"(\d{2})[-/](\d{2})[-/](\d{4})", day.strip())
     when = date(int(m.group(3)), int(m.group(2)), int(m.group(1))) if m else None
     return f"Jornada {num.strip()}", when
 

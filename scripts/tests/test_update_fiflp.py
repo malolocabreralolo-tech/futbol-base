@@ -132,13 +132,21 @@ def scraped_round(hs, as_):
                            "hs": hs, "as": as_, "date": "2026-10-03", "time": "10:15", "venue": "LAS MESAS"}]}
 
 
+def test_option_round_reads_the_real_federation_format():
+    assert U.option_round("1 - 11-10-2026") == ("Jornada 1", date(2026, 10, 11))
+    assert U.option_round("12 - 31/01/2027") == ("Jornada 12", date(2027, 1, 31))
+    assert U.option_round("5") == ("Jornada 5", None)
+
+
 def test_rounds_to_refresh_recent_new_and_overdue_only():
     today = date(2026, 10, 20)
     stored = {"Jornada 1": ("2026-10-03", False), "Jornada 2": ("2026-06-01", True),
               "Jornada 3": ("2026-10-17", True), "Jornada 9": ("2027-03-01", True)}
-    options = [{"value": "1", "text": "1 - 03/10/2026"}, {"value": "2", "text": "2 - 01/09/2026"},
-               {"value": "3", "text": "3 - 17/10/2026"}, {"value": "9", "text": "9 - 01/03/2027"},
-               {"value": "10", "text": "10 - 08/03/2027"}]
+    # El desplegable real de FIFLP escribe la fecha con guiones ('1 - 11-10-2026');
+    # una versión de esta prueba con barras dejó al bot sin leer ninguna jornada.
+    options = [{"value": "1", "text": "1 - 03-10-2026"}, {"value": "2", "text": "2 - 01-09-2026"},
+               {"value": "3", "text": "3 - 17-10-2026"}, {"value": "9", "text": "9 - 01-03-2027"},
+               {"value": "10", "text": "10 - 08-03-2027"}]
     picked = [o["value"] for o in U.rounds_to_refresh(options, stored, today)]
     # 1 y 3: recientes; 2: resultado pendiente desde hace 49 días; 10: nueva; 9: lejana y ya guardada.
     assert picked == ["1", "2", "3", "10"]

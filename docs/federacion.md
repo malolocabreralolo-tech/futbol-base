@@ -56,4 +56,6 @@ Goleadores de temporadas pasadas: `goleadores-federacion.yml` (`fetch_fiflp_gole
 gh workflow run goleadores-federacion.yml -f temporadas=17,18,19,20,21
 ```
 
+Grupos que la base no tiene (`import_fiflp_grupos.py`, también en el bot): un grupo del raw de goleadores que no casa con ninguno de la base se crea con el código de sus grupos hermanos (o de `COMP_META`/`EXTRA_META`: finales, semifinales y torneos de cierre o clausura, que la web trata como copas con su nombre), su clasificación oficial y sus partidos desde las cabeceras de sus actas aplanadas. Si el código ya es de otro grupo, se salta. Quedan en `fiflp_groups` y se rehacen cuando cambian sus fuentes.
+
 Las actas de temporadas pasadas se emparejan con su partido por nombres, fecha y marcador (`acta_reconciler.py`); las que no casan quedan en `scripts/fiflp_actas_unmatched.json`. Una competición completa de benjamín son ~2.500 actas: mejor por grupos, para no cargar la web de la federación.

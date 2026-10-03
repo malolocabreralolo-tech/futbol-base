@@ -884,8 +884,13 @@ def main():
         migrate(conn)
         print("\nActas descargadas de la federación (raws nuevos o cambiados)")
         import_changed_raws(conn)
+        # Los grupos de temporadas pasadas que la base no tiene (finales,
+        # torneos, ligas insulares sin archivar), con sus partidos y actas.
+        from import_fiflp_grupos import import_changed_grupos
+        print("\nGrupos de temporadas pasadas que faltaban (federación)")
+        import_changed_grupos(conn)
         # Y los goleadores de temporadas pasadas (goleadores-federacion.yml),
-        # después de las actas: casan sus grupos por las actas importadas.
+        # después de las actas y los grupos: casan sus grupos por las actas.
         from import_fiflp_goleadores import import_changed_goleadores
         print("\nGoleadores de temporadas pasadas de la federación (raws nuevos o cambiados)")
         import_changed_goleadores(conn)

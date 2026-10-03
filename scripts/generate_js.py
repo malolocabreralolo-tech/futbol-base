@@ -236,6 +236,9 @@ def _is_league_group(code, phase):
     semantics) must never be recomputed as a league table."""
     if "copa" in (phase or "").lower():
         return False
+    # Finales, semifinales y torneos de cierre o clausura (isCupGroup de src/state.js).
+    if re.match(r"(semi)?final\b|torneo\b|clausura\b", (phase or "").lower()):
+        return False
     if (code or "").upper().startswith(("PCC", "BC")):
         return False
     return True

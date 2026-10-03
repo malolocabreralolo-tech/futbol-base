@@ -315,6 +315,11 @@ const PHASE_TABLE = [
     cup: 'campeones', cupKey: 'copa-campeones', name: 'Copa de Campeones',
     ...(m[1] ? { group: `Fase ${m[1].toUpperCase()}` } : {}),
   })],
+  // Finales y semifinales de la federación que se juegan aparte de su liga o su copa («Final Liga
+  // Primera Lanzarote», «Semifinal Copa Cabildo Primera Lanzarote»): cada una, su competición.
+  [/^(?:semi)?final\b/, (m, raw) => ({ cup: 'final', cupKey: `final-${slugOf(raw.phase)}`, name: String(raw.phase).trim() })],
+  // Torneos de cierre y de clausura de temporada («Torneo Cierre Prebenjamín», «Clausura Benjamín»).
+  [/^(?:torneo|clausura)\b/, (m, raw) => ({ cup: 'torneo', cupKey: `torneo-${slugOf(raw.phase)}`, name: String(raw.phase).trim() })],
   // «Copa Cabildo Preferente Lanzarote» y «Copa Cabildo Primera Lanzarote» (2023-24)
   [/^copa cabildo (preferente|primera)\b/, m => ({
     cup: 'insular', cupKey: 'copa-cabildo', division: m[1], name: `Copa Cabildo ${upperFirst(m[1])}`,
@@ -1276,7 +1281,7 @@ const ISLAND_ORDER = ['grancanaria', 'lanzarote', 'fuerteventura'];
 const DIVISION_ORDER = ['preferente', 'primera', 'unica'];
 const PHASE_ORDER = ['segunda-fase', 'segunda-a', 'segunda-b', 'segunda-c', 'segunda-d', 'segunda-e', 'fase-2',
   'oro', 'plata', 'bronce', 'primera-fase', 'fase-1', null];
-const CUP_ORDER = [null, 'campeones', 'insular', 'maspalomas'];
+const CUP_ORDER = [null, 'campeones', 'insular', 'final', 'torneo', 'maspalomas'];
 const rankOf = (list, value) => (list.includes(value) ? list.indexOf(value) : list.length);
 // Orden de nombres sin tildes ni mayúsculas, el mismo en todos los motores (sin datos de idioma).
 function byName(a, b) {

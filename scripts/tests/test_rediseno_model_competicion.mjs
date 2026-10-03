@@ -221,9 +221,13 @@ test('Preferente y Primera Fase GC: la misma fase significa cosas distintas seg�
 });
 
 test('Fase desconocida: sin clasificar (division null), pero con clave y etiqueta usables', () => {
-  const nueva = { season: '2026-2027', cat: 'prebenjamin', id: 'TC1', phase: 'Torneo Cierre', island: 'grancanaria', name: 'Grupo 1' };
+  const nueva = { season: '2026-2027', cat: 'prebenjamin', id: 'LV1', phase: 'Liga de Verano', island: 'grancanaria', name: 'Grupo 1' };
   assert.deepEqual(ck(nueva), { cat: 'prebenjamin', island: 'grancanaria', division: null, phase: null, cup: null,
-    key: 'otra-torneo-cierre', label: 'Torneo Cierre' });
-  assert.equal(label(nueva), 'Prebenjamín, Torneo Cierre, Grupo 1');
-  assert.equal(ck({ ...nueva, island: 'lanzarote' }).key, 'lanzarote-otra-torneo-cierre');
+    key: 'otra-liga-de-verano', label: 'Liga de Verano' });
+  assert.equal(label(nueva), 'Prebenjamín, Liga de Verano, Grupo 1');
+  assert.equal(ck({ ...nueva, island: 'lanzarote' }).key, 'lanzarote-otra-liga-de-verano');
+  // Los torneos de cierre de la federación ya tienen su sitio: copas con su nombre (2026-10).
+  const torneo = { ...nueva, id: 'TPC1', phase: 'Torneo Cierre' };
+  assert.deepEqual([ck(torneo).cup, ck(torneo).key, ck(torneo).label], ['torneo', 'torneo-torneo-cierre', 'Torneo Cierre']);
+  assert.equal(label(torneo), 'Prebenjamín, Torneo Cierre, Grupo 1');
 });

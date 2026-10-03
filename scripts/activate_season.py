@@ -380,13 +380,14 @@ def pretty_name(raw):
     return " ".join(out) + (f" {letter}" if letter else "")
 
 
-def known_names(raw, conn):
+def known_names(raw, conn, years=None):
     """{nombre limpio de FIFLP: nombre que ya usa la base}. Un club que vuelve
     conserva su nombre, su escudo y su histórico; lo que no casa se queda con su
     nombre de FIFLP (mejor un nombre feo que fundir dos clubes).
 
-    Se busca primero entre los equipos de la temporada que se cierra y después
-    en la anterior. La letra de filial manda: 'ARGUINEGUIN, C.D. "C"' no es
+    Se busca en los equipos de las temporadas de `years` (años de inicio, en ese
+    orden); por defecto, primero la temporada que se cierra y después la
+    anterior (la última de la base y la de antes). La letra de filial manda: 'ARGUINEGUIN, C.D. "C"' no es
     'Arguineguín' (el emparejamiento por tokens lo admitía con penalización);
     si la base no tiene ese filial, se nombra como su primer equipo más la
     letra ('Arguineguín C'). Y si el primer equipo del club es nuevo, su filial
@@ -394,11 +395,15 @@ def known_names(raw, conn):
     from import_fiflp_cups_2324 import clean_team_name
     from fiflp_names import canonical_names, is_bye, team_key, team_score, MIN_TEAM_SCORE
 
-    def pool(offset):
+    if years is None:
+        top = conn.execute("SELECT max(start_year) FROM seasons").fetchone()[0]
+        years = [top, top - 1]
+
+    def pool(year):
         return [r[0] for r in conn.execute(
             """SELECT DISTINCT t.name FROM teams t JOIN standings st ON st.team_id=t.id
                JOIN groups g ON g.id=st.group_id JOIN seasons s ON s.id=g.season_id
-               WHERE s.start_year = (SELECT max(start_year) FROM seasons) - ?""", (offset,))]
+               WHERE s.start_year = ?""", (year,))]
 
     # Un equipo no cambia de isla: un nombre de la base que solo ha jugado en
     # otra isla no es este equipo ('Internacional B' de Lanzarote no es el
@@ -439,9 +444,9 @@ def known_names(raw, conn):
         # CARNEVALI, C.D. "A"'): primero los nombres del portal y solo después
         # los que quedaron con la grafía de la federación. Y un primer equipo
         # solo se busca entre primeros equipos; un filial, entre filiales.
-        passes = [(offset, nice) for nice in (True, False) for offset in (0, 1)]
-        for offset, nice in passes:
-            candidates = [c for c in pool(offset) if bool(_filial(c)) == filial and (not nice or _portal_style(c))]
+        passes = [(year, nice) for nice in (True, False) for year in years]
+        for year, nice in passes:
+            candidates = [c for c in pool(year) if bool(_filial(c)) == filial and (not nice or _portal_style(c))]
             found = canonical_names(rest, [], candidates)
             for key in rest:
                 if found.get(key, key) != key and all(fits(n, found[key]) for n in variants[key]):

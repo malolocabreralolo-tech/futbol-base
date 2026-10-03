@@ -62,3 +62,26 @@ test('racha actual: la más fuerte de al menos dos partidos', () => {
   assert.equal(formStreak([r(1, 0), r(0, 1)]), null);     // una derrota suelta no es racha
   assert.equal(formStreak([]), null);
 });
+
+// Finales, semifinales y torneos de cierre de la federación (temporadas pasadas importadas de la federación):
+// copas con su propio nombre, después de las ligas y las copas insulares.
+import { competitionKey, groupKind } from '../../src/model.js';
+import { isCupGroup } from '../../src/state.js';
+
+test('finales, semifinales y torneos de cierre: copas con su nombre', () => {
+  const g = (phase, island = 'lanzarote') => ({ id: 'X1', phase, island, cat: 'benjamin', name: 'Grupo 1' });
+  for (const phase of ['Final Liga Primera Lanzarote', 'Semifinal Copa Cabildo Primera Lanzarote', 'Torneo Cierre Prebenjamín', 'Clausura Benjamín']) {
+    assert.ok(isCupGroup(g(phase)), phase);
+  }
+  assert.ok(!isCupGroup(g('Primera Fase GC')) && !isCupGroup(g('Fase 2 Fuerteventura')));
+  const final = competitionKey(g('Final Liga Primera Lanzarote'), '2023-2024');
+  assert.equal(final.cup, 'final');
+  assert.equal(final.label, 'Final Liga Primera Lanzarote');
+  assert.notEqual(final.key, competitionKey(g('Final Copa Cabildo Primera Lanzarote'), '2023-2024').key);
+  const torneo = competitionKey(g('Torneo Cierre Prebenjamín', 'grancanaria'), '2023-2024');
+  assert.deepEqual([torneo.cup, torneo.label], ['torneo', 'Torneo Cierre Prebenjamín']);
+  // Una final suelta (una ronda, un partido) es un cuadro; un torneo con jornadas de liguilla, una tabla.
+  const m = { home: 'A', away: 'B', hs: 1, as: 0 };
+  assert.equal(groupKind(g('Final Liga Primera Lanzarote'), [{ key: 'Jornada 1', matches: [m] }]), 'cup-bracket');
+  assert.equal(groupKind(g('Torneo Cierre Prebenjamín'), [{ key: 'Jornada 1', matches: [m, m, m] }, { key: 'Jornada 2', matches: [m, m, m] }]), 'cup-league');
+});

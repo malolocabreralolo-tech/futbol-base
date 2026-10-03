@@ -153,3 +153,11 @@ def test_the_scraper_starts_as_actions_runs_it():
     out = subprocess.run([sys.executable, "scripts/fetch_fiflp_goleadores.py", "--help"], cwd=ROOT, env=env,
                          capture_output=True, text=True)
     assert out.returncode == 0, out.stderr
+
+
+def test_finals_and_closing_tournaments_are_never_recomputed_as_leagues():
+    from generate_js import _is_league_group
+    for phase in ("Final Liga Primera Lanzarote", "Semifinal Copa Cabildo Primera Lanzarote",
+                  "Torneo Cierre Prebenjamín", "Clausura Benjamín"):
+        assert not _is_league_group("X1", phase), phase
+    assert _is_league_group("GC1", "Primera Fase GC") and _is_league_group("FV21", "Fase 2 Fuerteventura")

@@ -86,13 +86,15 @@ export function sortJornadaKeys(keys) {
 }
 
 /* A cup / knockout group (vs a regular league group). By code prefix
- * (PCC or BC) or phase ("Copa"/"Campeón"). */
+ * (PCC or BC) or phase ("Copa"/"Campeón", y las finales, semifinales y torneos
+ * de cierre o clausura de la federación, que se juegan aparte de su liga). */
 export function isCupGroup(g) {
   const id = ((g && g.id) || '').toUpperCase();
   if (id.startsWith('PCC') || id.startsWith('BC')) return true;
   if (id.startsWith('MCP') || id.startsWith('MCB')) return true;
   const phase = ((g && g.phase) || '').toLowerCase();
-  return phase.includes('copa') || phase.includes('campeon') || phase.includes('maspalomas');
+  return phase.includes('copa') || phase.includes('campeon') || phase.includes('maspalomas')
+    || /^(?:semi)?final\b|^torneo\b|^clausura\b/.test(phase);
 }
 
 /* Friendly label for a knockout round. Prefers the explicit round name in the

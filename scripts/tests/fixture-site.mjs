@@ -8,7 +8,7 @@
 // Campeones en los mundos del 23/09/2026, las cuatro copas de la Maspalomas y las actas de A1 y FF1.
 import { fixture } from './fixtures/rediseno/load.mjs';
 import {
-  archive, cupsRaw, currentAt, goleadores, lineupsFor, nextSeasonRaw, withChampions,
+  archive, cupsRaw, currentAt, goleadores, groupLineups, lineupGroups, nextSeasonRaw, withChampions,
 } from './fixtures/rediseno/simulate.mjs';
 
 export const STORE_KEY = 'futbol-base:v2';
@@ -166,7 +166,9 @@ function files(w) {
     'data-maspalomas-cup-2026.js': js([['MASPALOMAS_CUP_BENJAMIN', cups.benjamin], ['MASPALOMAS_CUP_PREBENJAMIN', cups.prebenjamin]]),
     ...archived,
     'data-matchdetail.js': js([['MATCH_DETAIL', fixture('matchdetail')]]),
-    'data-lineups-2025-2026.js': js([['LINEUPS_2025_2026', lineupsFor('2025-2026')]]),
+    // Las actas, por grupo: los que tienen (A1 y FF1); el de cualquier otro, un 404 (sin actas).
+    ...Object.fromEntries(lineupGroups('2025-2026').map((g) => [`data-lineups-2025-2026-${g}.js`,
+      js([[`LINEUPS_2025_2026_${g}`, groupLineups('2025-2026', g)]])])),
     'data-health.json': { type: 'application/json', body: JSON.stringify(healthOn(w.today)) },
   };
 }

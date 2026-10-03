@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { currentAt, nextSeasonRaw, goleadores, lineupsFor, archive } from './fixtures/rediseno/simulate.mjs';
+import { currentAt, nextSeasonRaw, goleadores, groupLineups, lineupsFor, seasonLineups, archive } from './fixtures/rediseno/simulate.mjs';
 import { ctxFor, datasetsFor, pastSeasonRaw, cssRules } from './fixtures/rediseno/screens.mjs';
 import { fakeSection } from './fixtures/rediseno/fake-browser.mjs';
 import { anyCards, findGroup, playerMatches, pointsProgression, teamSquad } from '../../src/model.js';
@@ -64,7 +64,7 @@ test('needs: data-health.json una sola vez por sesión (null si falló), y nunca
   globalThis.fetch = async () => { calls += 1; return { ok: false, status: 503, text: async () => '' }; };
   console.warn = () => {};
   try {
-    const datasets = { lineups: { '2025-2026': {} } };
+    const datasets = { lineups: { '2025-2026/PG2': {} } };
     const loads = screen.needs(HURACAN, datasets);
     assert.equal(loads.length, 1);
     await Promise.all(loads);
@@ -285,7 +285,7 @@ test('cada clase que emite la ficha existe en acta.css', () => {
 
 // ── Plan B3, Tarea 5: evolución de puntos, plantilla y trayectoria (decisiones 12 a 14) ──────────
 
-const ACTAS = { '2025-2026': lineupsFor('2025-2026') };
+const ACTAS = seasonLineups('2025-2026');
 const A1 = (t) => ({ s: '2025-2026', g: 'A1', t });
 // La ficha con las actas ya cargadas (lo que hace needs), el 23/09/2026 salvo otro día.
 const withActas = (params, today = '2026-09-23', { lineups = ACTAS, myTeam } = {}) => s(screen.render(ctxFor('equipo', params, {
@@ -357,33 +357,33 @@ test('la nota de la gráfica: «Cobertura:» si al calendario le faltan partidos
 });
 
 test('teamSquad: las actas de A1 por (s, gr), sin las de un lado vacío; Liam Garcia Larsen, 9 PJ, 9 de titular y 21 goles', () => {
-  const squad = teamSquad(ACTAS['2025-2026'], { group: a1(), team: 'Guayarmina' });
+  const squad = teamSquad(ACTAS['2025-2026/A1'], { group: a1(), team: 'Guayarmina' });
   assert.deepEqual([squad.rows.length, squad.actas, squad.skipped, squad.groupActas], [10, 9, 1, 44]);
   assert.deepEqual(squad.rows[0], { name: 'GARCIA LARSEN, LIAM', dorsal: 9, ap: 9, st: 9, g: 21, y: 0, rd: 0 });
   assert.deepEqual(squad.rows[1], { name: 'RAMOS MENDOZA, FRANCISCO ADUEN', dorsal: 10, ap: 9, st: 8, g: 20, y: 0, rd: 0 });
   // Las actas de FF1 de la misma temporada no cuentan en A1 (con ellas, Garcia Larsen sumaría 26 en 11).
   assert.equal(squad.rows.reduce((n, r) => n + r.g, 0), teamSquad(fixture('lineups-2025-2026'), { group: a1(), team: 'Guayarmina' }).rows.reduce((n, r) => n + r.g, 0));
   // Goleta: sus 10 actas traen al rival en `home` y `away` vacío; Gran Canaria C no tiene ninguna.
-  assert.deepEqual(Object.values(teamSquad(ACTAS['2025-2026'], { group: a1(), team: 'Goleta' })).map((v) => (Array.isArray(v) ? v.length : v)), [0, 0, 10, 44]);
-  assert.deepEqual(Object.values(teamSquad(ACTAS['2025-2026'], { group: a1(), team: 'Gran Canaria C' })).map((v) => (Array.isArray(v) ? v.length : v)), [0, 0, 0, 44]);
+  assert.deepEqual(Object.values(teamSquad(ACTAS['2025-2026/A1'], { group: a1(), team: 'Goleta' })).map((v) => (Array.isArray(v) ? v.length : v)), [0, 0, 10, 44]);
+  assert.deepEqual(Object.values(teamSquad(ACTAS['2025-2026/A1'], { group: a1(), team: 'Gran Canaria C' })).map((v) => (Array.isArray(v) ? v.length : v)), [0, 0, 0, 44]);
   // Dorsal: el más repetido (Hmiddouch lleva el 6, el 11 y el 7) y, si empatan, el de su acta más reciente
   // (Galván Medina, el 2 y el 6 dos veces cada uno: el 6, el del 14/03).
-  const dorsal = (team, name) => teamSquad(ACTAS['2025-2026'], { group: a1(), team }).rows.find((r) => r.name === name).dorsal;
+  const dorsal = (team, name) => teamSquad(ACTAS['2025-2026/A1'], { group: a1(), team }).rows.find((r) => r.name === name).dorsal;
   assert.equal(dorsal('San Nicolás', 'HMIDDOUCH, ADAM'), 7);
   assert.equal(dorsal('Unión Viera', 'GALVAN MEDINA, ADRIAN'), 6);
   // Una clave repetida ({dup, list}): cuenta la entrada de su (s, gr), la de A1, y nada más.
-  const dup = { ...ACTAS['2025-2026'] };
+  const dup = { ...ACTAS['2025-2026/A1'] };
   const key = 'Guayarmina|Santidad|8-4';
   dup[key] = { dup: true, list: [dup[key], { ...dup[key], gr: 'FF1' }] };
   assert.deepEqual(teamSquad(dup, { group: a1(), team: 'Guayarmina' }).rows[0], squad.rows[0]);
 });
 
 test('playerMatches y playerDetail: sus partidos en orden de fecha, con el marcador desde su equipo y el enlace a cada uno', () => {
-  const matches = playerMatches(ACTAS['2025-2026'], { group: a1(), team: 'Guayarmina', player: 'GARCIA LARSEN, LIAM' });
+  const matches = playerMatches(ACTAS['2025-2026/A1'], { group: a1(), team: 'Guayarmina', player: 'GARCIA LARSEN, LIAM' });
   assert.equal(matches.length, 9);
   assert.deepEqual(matches.map((m) => [m.match.roundKey, m.side, m.goals]).slice(0, 2), [['Jornada 1', 'home', 1], ['Jornada 2', 'away', 1]]);
   assert.equal(matches.reduce((n, m) => n + m.goals, 0), 21);
-  const detail = s(playerDetail(ACTAS['2025-2026'], a1(), 'Guayarmina', 'GARCIA LARSEN, LIAM'));
+  const detail = s(playerDetail(ACTAS['2025-2026/A1'], a1(), 'Guayarmina', 'GARCIA LARSEN, LIAM'));
   const items = [...detail.matchAll(/<a class="squad-match" href="([^"]+)">(.*?)<\/a>/g)];
   assert.equal(items.length, 9);
   assert.equal(items[1][1], '#/partido?s=2025-2026&amp;g=A1&amp;r=Jornada%202&amp;h=UD%20Valleseco&amp;a=Guayarmina');
@@ -402,13 +402,16 @@ test('la plantilla en la ficha: N.º, jugador (un botón con aria-expanded), PJ,
   // La nota va dentro de su bloque (B5, decisión 3: una sola sección, que su «Reintentar» pinta en su sitio).
   assert.match(squad, /<\/table><\/div><p class="notice">Actas de 9 de 20 partidos jugados; 1 acta más llega incompleta \(sin uno de los dos equipos\) y no cuenta\.<\/p><\/section>$/);
   assert.match(squad, /^<section class="block" id="plantilla">/);
-  // Con una tarjeta en la temporada (en otro grupo), las columnas de tarjetas.
-  const cards = structuredClone(ACTAS['2025-2026']);
-  const ff1 = Object.values(cards).find((acta) => acta.gr === 'FF1');
-  ff1.home[0].y = 1;
-  assert.equal(anyCards(ACTAS['2025-2026']), false);
+  // Con una tarjeta en el grupo (de otro equipo), las columnas de tarjetas; en otro grupo, no.
+  const ff1 = structuredClone(ACTAS['2025-2026/FF1']);
+  Object.values(ff1)[0].home[0].y = 1;
+  assert.match(blockOf(withActas(A1('Guayarmina'), '2026-09-23', { lineups: { ...ACTAS, '2025-2026/FF1': ff1 } }), 'Plantilla'), /<table class="squad">/);
+  assert.doesNotMatch(blockOf(withActas(A1('Guayarmina'), '2026-09-23', { lineups: { ...ACTAS, '2025-2026/FF1': ff1 } }), 'Plantilla'), /Tarjetas/);
+  const cards = structuredClone(ACTAS['2025-2026/A1']);
+  Object.values(cards).find((acta) => !acta.dup && acta.away.length).away[0].y = 1;
+  assert.equal(anyCards(ACTAS['2025-2026/A1']), false);
   assert.equal(anyCards(cards), true);
-  assert.match(blockOf(withActas(A1('Guayarmina'), '2026-09-23', { lineups: { '2025-2026': cards } }), 'Plantilla'),
+  assert.match(blockOf(withActas(A1('Guayarmina'), '2026-09-23', { lineups: { ...ACTAS, '2025-2026/A1': cards } }), 'Plantilla'),
     /<th scope="col" class="sq-num"><abbr title="Tarjetas amarillas">TA<\/abbr><\/th><th scope="col" class="sq-num"><abbr title="Tarjetas rojas">TR<\/abbr><\/th><\/tr>/);
 });
 
@@ -417,30 +420,30 @@ test('la plantilla dice lo que falta: actas incompletas (Goleta), ninguna del eq
     'Plantilla Las 10 actas de sus partidos llegan incompletas (sin uno de los dos equipos): no se puede saber su plantilla.');
   assert.equal(text(blockOf(withActas(A1('Gran Canaria C')), 'Plantilla')), 'Plantilla La federación no ha publicado actas de sus partidos.');
   assert.equal(blockOf(withActas(HURACAN), 'Plantilla'), null, 'PG2 no tiene actas: la mayoría de grupos, tampoco');
-  const failed = withActas(A1('Guayarmina'), '2026-09-23', { lineups: { '2025-2026': null } });
+  const failed = withActas(A1('Guayarmina'), '2026-09-23', { lineups: { ...ACTAS, '2025-2026/A1': null } });
   assert.match(blockOf(failed, 'Plantilla'), /No se pudieron cargar los datos de las actas de 2025\/26\..*data-action="retry"/);
 });
 
-test('needs: las actas de la temporada de la ruta una vez (un 404 es «sin actas»); un fallo se vuelve a pedir en la visita siguiente', async () => {
+test('needs: las actas del grupo de la ruta una vez (un 404 es «sin actas»); un fallo se vuelve a pedir en la visita siguiente', async () => {
   const saved = { fetch: globalThis.fetch, warn: console.warn };
   let calls = 0;
   let up = false;
   globalThis.fetch = async () => {
     calls += 1;
-    return up ? { ok: true, status: 200, text: async () => `const LINEUPS_2021_2022=${JSON.stringify({ 'A|B|1-0': { s: '2021-2022', gr: 'X' } })};` }
+    return up ? { ok: true, status: 200, text: async () => `const LINEUPS_2021_2022_X1=${JSON.stringify({ 'A|B|1-0': { s: '2021-2022', gr: 'X1' } })};` }
       : { ok: false, status: 503, text: async () => '' };
   };
   console.warn = () => {};
   try {
     const datasets = { health: null };
-    await Promise.all(screen.needs({ s: '2021-2022' }, datasets));
-    assert.equal(datasets.lineups['2021-2022'], null, 'falló: la plantilla enseña su caja de error');
+    await Promise.all(screen.needs({ s: '2021-2022', g: 'X1' }, datasets));
+    assert.equal(datasets.lineups['2021-2022/X1'], null, 'falló: la plantilla enseña su caja de error');
     up = true;
-    const again = screen.needs({ s: '2021-2022' }, datasets);
+    const again = screen.needs({ s: '2021-2022', g: 'X1' }, datasets);
     assert.equal(again.length, 1, 'la visita siguiente lo vuelve a pedir');
     await Promise.all(again);
-    assert.deepEqual(Object.keys(datasets.lineups['2021-2022']), ['A|B|1-0']);
-    assert.deepEqual(screen.needs({ s: '2021-2022' }, datasets), [], 'cargadas, no se vuelven a pedir');
+    assert.deepEqual(Object.keys(datasets.lineups['2021-2022/X1']), ['A|B|1-0']);
+    assert.deepEqual(screen.needs({ s: '2021-2022', g: 'X1' }, datasets), [], 'cargadas, no se vuelven a pedir');
     assert.equal(calls, 2);
   } finally {
     globalThis.fetch = saved.fetch;
@@ -543,7 +546,7 @@ test('la columna de consulta de la ficha: la clasificación, goleadores y cifras
 
 test('estilos de la evolución, la plantilla y la trayectoria: cada clase existe, lo pulsable mide 44 px y sin radio ni sombra', () => {
   const rules = cssRules();
-  const out = [withActas(A1('Guayarmina')), withActas(A1('Goleta')), s(playerDetail(ACTAS['2025-2026'], a1(), 'Guayarmina', 'GARCIA LARSEN, LIAM'))].join('')
+  const out = [withActas(A1('Guayarmina')), withActas(A1('Goleta')), s(playerDetail(ACTAS['2025-2026/A1'], a1(), 'Guayarmina', 'GARCIA LARSEN, LIAM'))].join('')
     + '<tr class="squad-detail"></tr><p class="team-loading"></p><h3 class="traj-season"></h3><a class="traj-row"><span class="traj-team"></span><span class="traj-group"></span><span class="traj-pos"></span><span class="traj-pts"></span></a>';
   const missing = [...new Set([...out.matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)))].filter((c) => !rules.classes.has(c));
   assert.deepEqual(missing, []);
@@ -562,13 +565,16 @@ test('«Reintentar» de la Plantilla: lo atiende la ficha, vuelve a pedir las ac
   let up = false;
   globalThis.fetch = async (url) => {
     asked.push(String(url));
-    return up ? { ok: true, status: 200, text: async () => `const LINEUPS_2025_2026=${JSON.stringify(lineupsFor('2025-2026'))};` }
-      : { ok: false, status: 503, text: async () => '' };
+    if (!up) return { ok: false, status: 503, text: async () => '' };
+    // Solo A1 tiene actas en las fixtures (y FF1): el fichero de PG2 no existe.
+    return /data-lineups-2025-2026-A1\.js/.test(String(url))
+      ? { ok: true, status: 200, text: async () => `const LINEUPS_2025_2026_A1=${JSON.stringify(groupLineups('2025-2026', 'A1'))};` }
+      : { ok: false, status: 404, text: async () => '' };
   };
   const flush = async () => { for (let i = 0; i < 5; i += 1) await new Promise((resolve) => setImmediate(resolve)); };
   try {
     // La ficha de Guayarmina (A1) con las actas caídas: su Plantilla, con la caja de error.
-    const ctx = ctxAt(A1('Guayarmina'), '2026-09-23', { datasets: datasetsFor({ ...goleadores(), lineups: { '2025-2026': null } }) });
+    const ctx = ctxAt(A1('Guayarmina'), '2026-09-23', { datasets: datasetsFor({ ...goleadores(), lineups: { '2025-2026/A1': null } }) });
     const failed = blockOf(s(screen.render(ctx)), 'Plantilla');
     assert.match(failed, /^<section class="block" id="plantilla">.*No se pudieron cargar los datos de las actas de 2025\/26\..*data-action="retry"/);
     const page = fakeSection('equipo', { plantilla: failed });
@@ -578,7 +584,7 @@ test('«Reintentar» de la Plantilla: lo atiende la ficha, vuelve a pedir las ac
     assert.deepEqual([first.event.prevented, first.event.stopped], [true, true]);
     assert.deepEqual([first.target.disabled, first.target.textContent], [true, 'Cargando…']);
     await flush();
-    assert.deepEqual(asked, ['./data-lineups-2025-2026.js']);
+    assert.deepEqual(asked, ['./data-lineups-2025-2026-A1.js']);
     assert.equal(page.block('plantilla').markup, failed, 'otra vez la caja, con su botón');
     // Con red: la plantilla en su sitio (la de render con las actas ya cargadas) y el foco en su título.
     up = true;
@@ -592,13 +598,13 @@ test('«Reintentar» de la Plantilla: lo atiende la ficha, vuelve a pedir las ac
     assert.equal(block.title.tabindex, '-1');
     assert.deepEqual(block.title.options, { preventScroll: true });
     // Un grupo sin actas (PG2): tras el «Reintentar», el bloque lo dice en lugar de irse.
-    const pg2 = ctxAt(HURACAN, '2026-09-23', { datasets: datasetsFor({ ...goleadores(), lineups: { '2025-2026': null } }) });
+    const pg2 = ctxAt(HURACAN, '2026-09-23', { datasets: datasetsFor({ ...goleadores(), lineups: { '2025-2026/PG2': null } }) });
     const none = fakeSection('equipo', { plantilla: blockOf(s(screen.render(pg2)), 'Plantilla') });
     screen.mount(none.section, pg2, { addRecent: () => true });
     none.clickIn('plantilla', { 'data-action': 'retry' });
     await flush();
     assert.equal(none.block('plantilla').markup, '<section class="block" id="plantilla"><div class="block-head"><h2 class="block-title">Plantilla</h2></div><p class="empty">La federación no ha publicado actas de este grupo.</p></section>');
-    assert.equal(asked.length, 2, 'las actas ya llegaron: no se vuelven a pedir');
+    assert.deepEqual(asked.slice(2), ['./data-lineups-2025-2026-PG2.js'], 'las de PG2, su propio fichero (un 404: sin actas)');
   } finally {
     globalThis.fetch = saved;
   }

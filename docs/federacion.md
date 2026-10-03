@@ -31,6 +31,8 @@ La federación no publica el nombre de algunos niños (en 2025/26, por ejemplo, 
 1. Clasificación y jornadas recientes, próximas, pendientes o nuevas de cada grupo.
 2. Con el plazo que quede (25 min): directorio de campos (si falta alguno de la temporada), actas de los partidos jugados (`matches.fiflp_acta` → `cod_acta` al importarla; hasta 60 por pasada; 4 intentos por acta; se relee si la jornada contradice el marcador sin ser una cifra de más) y goleadores de cada grupo con algo jugado.
 
+Actas publicadas: un fichero por grupo, `data-lineups-<S>-<grupo>.js` (`const LINEUPS_<S>_<grupo>`), que la ficha de Equipo y Partido piden con `ensureLineups(temporada, grupo)` (un 404 es «sin actas»). Una temporada entera con todas sus actas pesa ~10 MB; un grupo, unos cientos de KB (comprimidos, decenas). El service worker no las precachea: guarda las que se usan y cada versión nueva vuelve a bajar las de los grupos ya vistos (`lineupsToCarry`, como mucho 12), para que la plantilla de mi equipo siga sin conexión tras una subida de datos.
+
 Jugadores: `players.fiflp_id` es el id de la federación (el mismo niño de prebenjamín a benjamín). Un gol en propia puerta no suma al jugador y en las alineaciones publicadas va del lado al que suma.
 
 ## Rellenar temporadas pasadas

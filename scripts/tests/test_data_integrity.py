@@ -341,7 +341,7 @@ def test_generate_lineups_js_shape(tmp_path):
     conn = sqlite3.connect(str(db))
     migrate(conn)
     # use the importer test fixture pattern (inline mini raw)
-    real = conn.execute("""SELECT m.id, s.name, t1.name, t2.name, m.date, m.home_score, m.away_score
+    real = conn.execute("""SELECT m.id, s.name, t1.name, t2.name, m.date, m.home_score, m.away_score, g.code
         FROM matches m JOIN groups g ON g.id=m.group_id JOIN seasons s ON s.id=g.season_id
         JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
         WHERE m.home_score IS NOT NULL LIMIT 1""").fetchone()
@@ -358,7 +358,7 @@ def test_generate_lineups_js_shape(tmp_path):
     p = tmp_path / "raw.json"
     p.write_text(json.dumps(raw))
     import_raw(conn, str(p))
-    js = generate_lineups_js(conn, real[1])
+    js = generate_lineups_js(conn, real[1], real[7])
     # Has a const var and our match key
     assert re.search(r"const LINEUPS_[\w]+\s*=", js)
     # Contains both player names (acta lineups present)

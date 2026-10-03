@@ -138,3 +138,36 @@ export function lineupsFor(season) {
   if (season !== '2025-2026') return {};
   return { ...fixture('lineups-2025-2026'), ...fixture('lineups-2025-2026-ff1') };
 }
+
+// Las actas van por grupo (data-lineups-<S>-<grupo>.js): lo que ensureLineups(season, group) deja en
+// datasets.lineups[`${season}/${group}`], las entradas congeladas de su `gr` (también dentro de las
+// {dup}); {} si el grupo no tiene ninguna (un 404).
+export function groupLineups(season, group, lineups = lineupsFor(season)) {
+  const out = {};
+  for (const [key, entry] of Object.entries(lineups || {})) {
+    const list = (entry && entry.dup ? entry.list || [] : [entry]).filter((e) => e && e.s === season && e.gr === group);
+    if (list.length === 1) out[key] = list[0];
+    else if (list.length > 1) out[key] = { dup: true, list };
+  }
+  return out;
+}
+
+// Los grupos con actas congeladas de una temporada: A1 y FF1 en 2025-26.
+export function lineupGroups(season, lineups = lineupsFor(season)) {
+  const groups = new Set();
+  for (const entry of Object.values(lineups || {})) {
+    for (const e of entry && entry.dup ? entry.list || [] : [entry]) if (e && e.s === season) groups.add(e.gr);
+  }
+  return [...groups].sort();
+}
+
+// datasets.lineups con las actas de esos grupos ya cargadas (groupLineups; {} los que no tienen):
+// por defecto, todos los de las fixtures de la temporada actual (current-2025-2026, los torneos y los
+// que tienen actas), como si se hubiera visitado cada uno.
+export function seasonLineups(season, groups = null, lineups = lineupsFor(season)) {
+  const raw = fixture('current-2025-2026');
+  const cups = cupsRaw({ extra: true });
+  const ids = groups || [...new Set([...raw.benjamin, ...raw.prebenjamin, ...cups.benjamin, ...cups.prebenjamin]
+    .map((g) => g.id).concat(lineupGroups(season, lineups)))];
+  return Object.fromEntries(ids.map((g) => [`${season}/${g}`, groupLineups(season, g, lineups)]));
+}

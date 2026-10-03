@@ -237,22 +237,21 @@ def insert_groups(conn, sid, evidence):
                     VALUES(?,?,?,?,?,?,?,?,?)""", (gid, round_name, dt, kickoff, team_ids[home], team_ids[away], hs, away_score, venue))
 
 
+# Las plantillas de temporada entera (data-lineups-<S>.js) que precacheaba el SW antes de partir las
+# actas por grupo: si un sw.js antiguo aún las lleva, se quitan.
 LINEUPS_URL = re.compile(r"\./data-lineups-\d{4}-\d{4}\.js")
 
 
 def season_files_for(worker, closing, opening):
     """sw.js con SEASON_FILES al activar `opening`: delante, el archivo de la temporada que se cierra
-    (data-season-<closing>.js), si no estaba; y al final, la plantilla de la temporada del portal, la de
-    `opening` en lugar de la de `closing` (data-lineups-<S>.js; Plan B5, decisión 2). El fichero de la
-    nueva todavía no existe (sin actas no hay plantilla): el precache del SW lo salta (allSettled) y la
-    app, con su 404, da la temporada sin actas. El resto de sw.js, igual."""
+    (data-season-<closing>.js), si no estaba. Las actas, por grupo, no se precachean (el SW conserva las
+    ya usadas entre versiones). El resto de sw.js, igual."""
     start = worker.index("const SEASON_FILES = [")
     end = worker.index("];", start) + len("];")
     entries = [url for url in re.findall(r"'([^']+)'", worker[start:end]) if not LINEUPS_URL.fullmatch(url)]
     archive = f"./data-season-{closing}.js"
     if archive not in entries:
         entries.insert(0, archive)
-    entries.append(f"./data-lineups-{opening}.js")
     literal = "const SEASON_FILES = [\n" + "".join(f"  '{url}',\n" for url in entries) + "];"
     return worker[:start] + literal + worker[end:]
 
@@ -311,6 +310,10 @@ def apply_manifest(manifest, evidence, root=Path(PROJECT_ROOT)):
         try:
             for path in artifacts:
                 shutil.copy2(path, root / path.relative_to(stage))
+            # Las actas que el generador ya no escribe (data-lineups-*, por grupo) se van también del árbol.
+            for path in root.glob("data-lineups-*.js"):
+                if not (stage / path.name).exists():
+                    path.unlink()
         except Exception:
             for path in artifacts:
                 relative = path.relative_to(stage)

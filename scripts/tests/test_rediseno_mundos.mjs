@@ -9,7 +9,7 @@ import { strict as assert } from 'node:assert';
 import vm from 'node:vm';
 import { WORLDS, worldFiles } from './fixture-site.mjs';
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { archive, goleadores, lineupsFor } from './fixtures/rediseno/simulate.mjs';
+import { archive, goleadores, groupLineups, lineupsFor } from './fixtures/rediseno/simulate.mjs';
 import { buildSeason } from '../../src/model.js';
 
 // Los globales que declara un fichero servido, como los lee el navegador; en este reino (los objetos
@@ -70,5 +70,10 @@ test('los datos de B3: goleadores congelados, la Copa de Campeones el 23/09, las
   const cups = globalsOf(d['data-maspalomas-cup-2026.js']);
   assert.deepEqual([cups.MASPALOMAS_CUP_BENJAMIN.map((g) => g.id), cups.MASPALOMAS_CUP_PREBENJAMIN.map((g) => g.id)],
     [['MCB16', 'MCBK1', 'MCBK2'], ['MCP3', 'MCPK1', 'MCPK2']]);
-  assert.deepEqual(Object.keys(globalsOf(d['data-lineups-2025-2026.js']).LINEUPS_2025_2026), Object.keys(lineupsFor('2025-2026')));
+  // Las actas, un fichero por grupo con actas (A1 y FF1), con las suyas.
+  assert.deepEqual(Object.keys(d).filter((f) => f.startsWith('data-lineups-')), ['data-lineups-2025-2026-A1.js', 'data-lineups-2025-2026-FF1.js']);
+  for (const g of ['A1', 'FF1']) {
+    assert.deepEqual(Object.keys(globalsOf(d[`data-lineups-2025-2026-${g}.js`])[`LINEUPS_2025_2026_${g}`]), Object.keys(groupLineups('2025-2026', g)));
+  }
+  assert.equal(Object.keys(groupLineups('2025-2026', 'A1')).length + Object.keys(groupLineups('2025-2026', 'FF1')).length, Object.keys(lineupsFor('2025-2026')).length);
 });

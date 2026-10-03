@@ -134,8 +134,8 @@ class TestLineupsSubstitutions:
         from scripts.generate_js import generate_lineups_js
         conn = _synth_conn()
         self._seed(conn)
-        js = generate_lineups_js(conn, "2025-2026")
-        data = _parse_const(js, "LINEUPS_2025_2026")
+        js = generate_lineups_js(conn, "2025-2026", "A1")
+        data = _parse_const(js, "LINEUPS_2025_2026_A1")
         events = data["Home FC|Away FC|1-0"]["events"]
         subs = [e for e in events if e.get("t") == "sub"]
         assert len(subs) == 1, f"cada cambio debe emitir UN evento, no {len(subs)}: {subs}"
@@ -151,8 +151,8 @@ class TestLineupsSubstitutions:
         self._seed(conn)
         conn.execute("""INSERT INTO match_events (id, match_id, team_id, player_id, kind, minute, pair_id)
                         VALUES (3, 1, 1, 1, 'sub_out', 55, NULL)""")
-        js = generate_lineups_js(conn, "2025-2026")
-        data = _parse_const(js, "LINEUPS_2025_2026")
+        js = generate_lineups_js(conn, "2025-2026", "A1")
+        data = _parse_const(js, "LINEUPS_2025_2026_A1")
         events = data["Home FC|Away FC|1-0"]["events"]
         loose = [e for e in events if e.get("t") == "sub_out"]
         assert len(loose) == 1 and loose[0]["n"] == "SALE, PEPE"
@@ -446,7 +446,7 @@ class TestMatchKeySanitize:
         from scripts.generate_js import generate_matchdetail_js, generate_lineups_js
         conn = _synth_conn(); self._seed_goals(conn, 41736, 0)
         for out, what in [(generate_matchdetail_js(conn), "MATCH_DETAIL"),
-                          (generate_lineups_js(conn, "2025-2026"), "LINEUPS")]:
+                          (generate_lineups_js(conn, "2025-2026", "A1"), "LINEUPS")]:
             assert "Home FC|Away FC|null-0" in out, f"{what} debe usar 'null' para score corrupto"
             assert "41736" not in out, f"{what} no debe llevar el score corrupto"
             assert "None-0" not in out, f"{what} debe usar 'null' (JS), no 'None' (Python)"
@@ -455,7 +455,7 @@ class TestMatchKeySanitize:
         from scripts.generate_js import generate_matchdetail_js, generate_lineups_js
         conn = _synth_conn(); self._seed_goals(conn, 3, 1)
         assert "Home FC|Away FC|3-1" in generate_matchdetail_js(conn)
-        assert "Home FC|Away FC|3-1" in generate_lineups_js(conn, "2025-2026")
+        assert "Home FC|Away FC|3-1" in generate_lineups_js(conn, "2025-2026", "A1")
 
 
 # ─── Fix (2026-06-15): knockout round ordering (cups) ───────────────────────
@@ -727,23 +727,25 @@ class TestMatchKeyCollisions:
         from scripts.generate_js import generate_lineups_js
         conn = _synth_conn()
         self._seed_calero(conn, cod_ff15=258611)
-        lin = _parse_tail_const(generate_lineups_js(conn, "2025-2026"), "LINEUPS_2025_2026")
+        lin = _parse_tail_const(generate_lineups_js(conn, "2025-2026", "FF15"), "LINEUPS_2025_2026_FF15")
         entry = lin[self.KEY]
         assert (entry["s"], entry["gr"], entry["cod"]) == ("2025-2026", "FF15", 258611)
         assert entry["home"][0]["n"] == "GOMEZ, RAUL"
         assert set(entry) == {"s", "gr", "cod", "home", "away", "events",
                               "coachH", "coachA", "ref"}
 
-    def test_lineups_same_key_twice_in_a_season_is_a_dup_list(self):
-        from scripts.generate_js import generate_lineups_js
+    def test_lineups_same_key_in_two_groups_goes_to_each_group_file(self):
+        """Las actas van por grupo (data-lineups-<S>-<grupo>.js): el mismo cruce con el mismo marcador
+        en dos grupos de la temporada sale una vez en el fichero de cada uno, sin dup."""
+        from scripts.generate_js import lineups_files
         conn = _synth_conn()
         self._seed_calero(conn, cod_pg2=125782, cod_ff15=258611)
-        lin = _parse_tail_const(generate_lineups_js(conn, "2025-2026"), "LINEUPS_2025_2026")
-        entry = lin[self.KEY]
-        assert entry["dup"] is True and "home" not in entry
-        assert [(e["s"], e["gr"], e["cod"]) for e in entry["list"]] == [
-            ("2025-2026", "PG2", 125782), ("2025-2026", "FF15", 258611)]
-        assert [e["home"][0]["n"] for e in entry["list"]] == ["PEREZ, JUAN", "GOMEZ, RAUL"]
+        files = lineups_files(conn)
+        assert sorted(files) == ["data-lineups-2025-2026-FF15.js", "data-lineups-2025-2026-PG2.js"]
+        for code, cod, first in (("PG2", 125782, "PEREZ, JUAN"), ("FF15", 258611, "GOMEZ, RAUL")):
+            entry = _parse_tail_const(files[f"data-lineups-2025-2026-{code}.js"], f"LINEUPS_2025_2026_{code}")[self.KEY]
+            assert (entry["s"], entry["gr"], entry["cod"]) == ("2025-2026", code, cod)
+            assert entry["home"][0]["n"] == first
 
     def _real_conn(self, tmp_path):
         if not os.path.exists(DB_PATH):
@@ -756,9 +758,9 @@ class TestMatchKeyCollisions:
 
     def test_real_db_no_key_is_silently_overwritten(self, tmp_path):
         """Base real: cada partido con goles sale UNA vez en MATCH_DETAIL y cada
-        partido con acta UNA vez en el LINEUPS_<S> de su temporada, con su
+        partido con acta UNA vez en el LINEUPS_<S>_<grupo> de su grupo, con su
         (s, gr[, cod]), sea como entrada suelta o dentro de un dup."""
-        from scripts.generate_js import generate_matchdetail_js, generate_lineups_js
+        from scripts.generate_js import generate_matchdetail_js, lineups_files
         conn = self._real_conn(tmp_path)
         md = _parse_tail_const(generate_matchdetail_js(conn), "MATCH_DETAIL")
         got = sorted((e["s"], e["gr"]) for v in md.values() for e in _entries(v))
@@ -768,16 +770,18 @@ class TestMatchKeyCollisions:
               JOIN seasons s ON s.id = gr.season_id
              WHERE m.id IN (SELECT match_id FROM goals)""").fetchall())
         assert got == want, "MATCH_DETAIL perdió o duplicó partidos con goles"
-        for sid, sname in conn.execute("SELECT id, name FROM seasons").fetchall():
-            lin = _parse_tail_const(generate_lineups_js(conn, sname),
-                                    "LINEUPS_" + sname.replace("-", "_"))
-            got = sorted((e["s"], e["gr"], e["cod"]) for v in lin.values() for e in _entries(v))
-            want = sorted(conn.execute("""
-                SELECT ?, gr.code, m.cod_acta FROM matches m
-                  JOIN groups gr ON gr.id = m.group_id
-                 WHERE gr.season_id = ? AND m.cod_acta IS NOT NULL""",
-                (sname, sid)).fetchall())
-            assert got == want, f"LINEUPS_{sname} perdió o duplicó actas"
+        got = []
+        for name, js in lineups_files(conn).items():
+            sname, code = re.match(r"data-lineups-(\d{4}-\d{4})-(\w+)\.js$", name).groups()
+            lin = _parse_tail_const(js, f"LINEUPS_{sname.replace('-', '_')}_{code}")
+            entries = [e for v in lin.values() for e in _entries(v)]
+            assert {(e["s"], e["gr"]) for e in entries} == {(sname, code)}, f"{name} lleva actas de otro grupo"
+            got += [(e["s"], e["gr"], e["cod"]) for e in entries]
+        want = sorted(conn.execute("""
+            SELECT s.name, gr.code, m.cod_acta FROM matches m
+              JOIN groups gr ON gr.id = m.group_id JOIN seasons s ON s.id = gr.season_id
+             WHERE m.cod_acta IS NOT NULL""").fetchall())
+        assert sorted(got) == want, "LINEUPS perdió o duplicó actas"
 
     def test_real_db_calero_timeline_is_tagged_ff15(self, tmp_path):
         """En la base real solo el partido de FF15 (12 goles) tiene cronología;
@@ -861,7 +865,7 @@ class TestGeneratorOutputs:
         assert [name for name in written if _RETIRED.match(name)] == [], "el generador escribe datos retirados"
         assert written == [
             "data-benjamin.js", "data-goleadores.js", "data-history.js",
-            "data-lineups-2024-2025.js", "data-lineups-2025-2026.js", "data-matchdetail.js",
+            "data-lineups-2024-2025-PG2.js", "data-lineups-2025-2026-A1.js", "data-matchdetail.js",
             "data-prebenjamin.js", "data-season-2024-2025.js", "data-seasons.js",
         ]
         # Otra pasada con la misma base: ni un byte distinto, y sin subir la versión ni el pie (C4).

@@ -42,7 +42,7 @@ function loadSw(globals = {}) {
   };
   const ctx = { self: selfStub, console, URL, ...globals };
   vm.createContext(ctx);
-  const probes = ['CACHE_NAME', 'CRESTS_CACHE', 'STATIC_ASSETS', 'SEASON_FILES', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
+  const probes = ['CACHE_NAME', 'CRESTS_CACHE', 'STATIC_ASSETS', 'SEASON_FILES', 'LINEUPS_KEEP', 'lineupsToCarry', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
     .join(',');
@@ -111,18 +111,28 @@ test('invariant: los data-*.js de STATIC_ASSETS son los inmediatos de index.html
     'data-matchdetail.js must NOT be precached');
 });
 
-// SEASON_FILES (decisión 2 de B5): los archivos de las temporadas pasadas y la plantilla de la temporada del
-// portal, que es la siguiente a la última archivada (activate_season.py cambia las dos a la vez, sin leer
-// config.js). Ninguna prueba exige que existan: al activar una temporada, su plantilla no existe hasta que
-// llegan sus actas, y el precache la salta (allSettled).
-test('SEASON_FILES: las temporadas archivadas y la plantilla de la del portal, la siguiente a la última archivada (decisión 2 de B5)', () => {
+// SEASON_FILES: los archivos de las temporadas pasadas (activate_season.py añade el de la que cierra).
+// Las actas van por grupo y no se precachean: serían ~10 MB por temporada en cada subida de datos.
+test('SEASON_FILES: solo las temporadas archivadas, sin actas', () => {
   const files = [...sw.SEASON_FILES];
-  const archived = files.filter((url) => /^\.\/data-season-\d{4}-\d{4}\.js$/.test(url));
-  const lineups = files.filter((url) => /^\.\/data-lineups-\d{4}-\d{4}\.js$/.test(url));
-  assert.equal(archived.length + lineups.length, files.length, `solo archivos y la plantilla: ${files.join(', ')}`);
-  assert.equal(lineups.length, 1, `una plantilla, la de la temporada del portal: ${files.join(', ')}`);
-  const last = Math.max(...archived.map((url) => Number(url.match(/-(\d{4})\.js$/)[1])));
-  assert.equal(lineups[0], `./data-lineups-${last}-${last + 1}.js`);
+  assert.ok(files.length > 0);
+  for (const url of files) assert.match(url, /^\.\/data-season-\d{4}-\d{4}\.js$/);
+});
+
+// Las actas de grupo ya usadas pasan a la versión nueva (decisión 2 de B5: la ficha de mi equipo, ya
+// vista, sigue con su plantilla sin conexión tras una subida de datos): sin repetir, las más recientes
+// y como mucho LINEUPS_KEEP; ni los demás datos ni las actas antiguas, de temporada entera.
+test('lineupsToCarry: las actas de grupo de las cachés anteriores, sin repetir, las más recientes', () => {
+  const base = 'https://x.github.io/futbol-base/';
+  const urls = [
+    `${base}data-lineups-2025-2026-A1.js?v=1`, `${base}data-benjamin.js?v=1`, `${base}data-lineups-2025-2026.js`,
+    `${base}data-lineups-2026-2027-FF3.js`, `${base}data-lineups-2025-2026-A1.js?v=2`,
+  ];
+  assert.deepEqual([...sw.lineupsToCarry(urls)], ['./data-lineups-2026-2027-FF3.js', './data-lineups-2025-2026-A1.js']);
+  const many = Array.from({ length: 20 }, (_, i) => `${base}data-lineups-2025-2026-P${i + 1}.js`);
+  const kept = [...sw.lineupsToCarry(many)];
+  assert.equal(kept.length, sw.LINEUPS_KEEP);
+  assert.equal(kept.at(-1), './data-lineups-2025-2026-P20.js');
 });
 
 // ─── 2. strategy: SWR reachable for data-*.js, cache-first for the rest ───
@@ -135,7 +145,7 @@ test('classifyRequest: data-*.js → stale-while-revalidate (reachable branch)',
   assert.equal(sw.classifyRequest('/futbol-base/data-benjamin.js?v=1'.split('?')[0]), 'swr');
   assert.equal(sw.classifyRequest('/futbol-base/data-benjamin.js'), 'swr');
   assert.equal(sw.classifyRequest('/futbol-base/data-matchdetail.js'), 'swr');
-  assert.equal(sw.classifyRequest('/data-lineups-2024-2025.js'), 'swr');
+  assert.equal(sw.classifyRequest('/data-lineups-2024-2025-A1.js'), 'swr');
 });
 
 test('classifyRequest: code/styles/images → cache-first; html → swr', () => {

@@ -15,7 +15,7 @@ import {
 } from './model.js';
 import { countdownLabel, dayMonth, matchHref, shareAndAnnounce, weekdayDate } from './links.js';
 import {
-  ensureLineups, ensureMatchDetail, ensureSeasonData, loadSeasons, normalizeTeamName,
+  ensureLineups, ensureMatchDetail, ensureSeasonData, lineupsKey, loadSeasons, normalizeTeamName,
 } from './state.js';
 import { errorBox, retryBlock } from './shell.js';
 
@@ -140,7 +140,7 @@ function goalsLists(goals, match, mine) {
 
 function goalsBlock(match, group, ctx) {
   const detail = ctx.datasets.matchDetail;
-  const lineups = (ctx.datasets.lineups || {})[match.season];
+  const lineups = (ctx.datasets.lineups || {})[lineupsKey(match.season, match.groupId)];
   // Sin data-matchdetail.js no se sabe si hay cronología de futbolaspalmas, que
   // manda sobre el acta: caja de error, nunca el acta en su lugar.
   if (detail == null) return block('Goles', errorBox('la cronología de goles'), { id: GOALS_ID });
@@ -188,7 +188,7 @@ const delegates = (d) => (d && (d.equipo || d.campo))
 function lineupsBlock(match, group, ctx) {
   // La Maspalomas Cup no es de la federación: nunca tiene acta.
   if (/maspalomas/.test(String(group.compKey || ''))) return '';
-  const lineups = (ctx.datasets.lineups || {})[match.season];
+  const lineups = (ctx.datasets.lineups || {})[lineupsKey(match.season, match.groupId)];
   if (lineups == null) return block('Alineaciones', errorBox(`las actas de ${seasonLabel(match.season)}`), { id: LINEUPS_ID });
   const acta = actaFor(match, lineups);
   if (!acta) return block('Alineaciones', empty('La federación no ha publicado el acta de este partido.'), { id: LINEUPS_ID });
@@ -362,7 +362,7 @@ export function render(ctx) {
   return screenHtml(html`${head}<div class="pt-cols"><div class="pt-main">${main}</div><div class="pt-aside">${side}</div></div>`);
 }
 
-// Cargas perezosas (spec §5.4): la cronología, las actas de la temporada del
+// Cargas perezosas (spec §5.4): la cronología, las actas del grupo del
 // partido y, si es pasada, la temporada. Los cargadores devuelven null si
 // fallan. La cronología y las actas son opcionales: el bloque que las necesita
 // pinta la caja de error y el resto se pinta. La temporada es imprescindible:
@@ -371,12 +371,11 @@ export function partidoNeeds(params, datasets, loaders = LOADERS) {
   const seasons = datasets.seasons || [];
   const s = (params && params.s) || (seasons.find((x) => x.current) || {}).name;
   if (!s) return [];
+  const g = params && params.g;
   if (!datasets.lineups) datasets.lineups = {};
   if (!datasets.seasonRaw) datasets.seasonRaw = {};
-  const loads = [
-    loaders.ensureMatchDetail().then((data) => { datasets.matchDetail = data; }),
-    loaders.ensureLineups(s).then((data) => { datasets.lineups[s] = data; }),
-  ];
+  const loads = [loaders.ensureMatchDetail().then((data) => { datasets.matchDetail = data; })];
+  if (g) loads.push(loaders.ensureLineups(s, g).then((data) => { datasets.lineups[lineupsKey(s, g)] = data; }));
   const listed = seasons.find((x) => x.name === s);
   if (listed && !listed.current && !datasets.seasonRaw[s]) {
     loads.push(loaders.ensureSeasonData(s).then((raw) => {
@@ -446,7 +445,9 @@ function retryMatchBlock(section, ctx, id, button) {
   const lineups = data.lineups || (data.lineups = {});
   const load = () => Promise.all([
     id === GOALS_ID && data.matchDetail == null ? LOADERS.ensureMatchDetail().then((d) => { data.matchDetail = d; }) : null,
-    lineups[match.season] == null ? LOADERS.ensureLineups(match.season).then((d) => { lineups[match.season] = d; }) : null,
+    lineups[lineupsKey(match.season, match.groupId)] == null
+      ? LOADERS.ensureLineups(match.season, match.groupId).then((d) => { lineups[lineupsKey(match.season, match.groupId)] = d; })
+      : null,
   ]);
   return retryBlock(section, id, button, load, () => (id === GOALS_ID ? goalsBlock(match, group, ctx) : lineupsBlock(match, group, ctx)));
 }

@@ -177,7 +177,7 @@ def test_published_lineup_has_ids_delegates_and_the_own_goal_on_the_right_side()
     from generate_js import generate_lineups_js
     conn = base()
     U.apply_acta(conn, 1, 280291, acta(SBD), log=lambda *_: None)
-    js = generate_lineups_js(conn, "2026-2027")
+    js = generate_lineups_js(conn, "2026-2027", conn.execute("SELECT code FROM groups WHERE id=1").fetchone()[0])
     obj = json.loads(re.search(r"= (\{.*\});", js, re.S).group(1))
     entry = next(iter(obj.values()))
     assert next(p for p in entry["home"] if p["n"] == "SERRANO DOMINGUEZ, LEYRE")["id"] == 55181078

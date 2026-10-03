@@ -399,7 +399,7 @@ async function retryBlocks() {
   try {
     await useWorld(context, 'D');
     const failed = new Set();
-    await context.route(/\/data-(?:lineups-2025-2026\.js|matchdetail\.js)(\?.*)?$/, (route) => {
+    await context.route(/\/data-(?:lineups-2025-2026-A1\.js|matchdetail\.js)(\?.*)?$/, (route) => {
       const path = new URL(route.request().url()).pathname;
       if (failed.has(path)) return route.fallback();
       failed.add(path);

@@ -174,31 +174,31 @@ test('state.js guards BENJAMIN/PREBENJAMIN with the typeof pattern', () => {
 
 test('ensureLineups: a failed fetch is NOT cached for the session', async () => {
   fetchImpl = async () => ({ ok: false, status: 503, text: async () => '' });
-  const first = await state.ensureLineups('2024-2025');
+  const first = await state.ensureLineups('2024-2025', 'A1');
   assert.equal(first, null, 'failure returns the null sentinel');
 
   fetchImpl = async () => ({
     ok: true, status: 200,
-    text: async () => 'const LINEUPS_2024_2025={"M|N|1-0":{"home":[],"away":[],"events":[]}};',
+    text: async () => 'const LINEUPS_2024_2025_A1={"M|N|1-0":{"home":[],"away":[],"events":[]}};',
   });
-  const second = await state.ensureLineups('2024-2025');
+  const second = await state.ensureLineups('2024-2025', 'A1');
   assert.ok(second && second['M|N|1-0'], 'retry after failure must refetch and succeed');
 });
 
 test('ensureLineups: a 404 IS cached for the session (fetch called once); a 503 is not (ronda de arreglos 1)', async () => {
   let calls404 = 0;
   fetchImpl = async () => { calls404 += 1; return { ok: false, status: 404, text: async () => '' }; };
-  const first = await state.ensureLineups('2029-2030');
+  const first = await state.ensureLineups('2029-2030', 'A1');
   assert.deepEqual(first, {}, '404: sin fichero de actas (temporada sin actas), {}');
-  const second = await state.ensureLineups('2029-2030');
+  const second = await state.ensureLineups('2029-2030', 'A1');
   assert.deepEqual(second, {});
   assert.equal(calls404, 1, '404: la segunda llamada no repite el fetch, queda en caché');
 
   let calls503 = 0;
   fetchImpl = async () => { calls503 += 1; return { ok: false, status: 503, text: async () => '' }; };
-  const third = await state.ensureLineups('2028-2029');
+  const third = await state.ensureLineups('2028-2029', 'A1');
   assert.equal(third, null);
-  const fourth = await state.ensureLineups('2028-2029');
+  const fourth = await state.ensureLineups('2028-2029', 'A1');
   assert.equal(fourth, null);
   assert.equal(calls503, 2, '503: cada llamada repite el fetch, nunca se guarda en caché');
 });

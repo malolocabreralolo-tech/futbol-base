@@ -36,7 +36,7 @@ const bodies = {
   'data-matchdetail.js': 'const MATCH_DETAIL={"a|b|1-0":{"s":"2025-2026","gr":"PG2","g":[]}};',
   'data-season-2024-2025.js': 'const SEASON_2024_2025={"name":"2024-2025","current":false,"benjamin":[],"prebenjamin":[]};',
   'data-season-2023-2024.js': 'const SEASON_2023_2024={"name":"2023-2024","current":false,"benjamin":[],"prebenjamin":[]};',
-  'data-lineups-2025-2026.js': 'const LINEUPS_2025_2026={};',
+  'data-lineups-2025-2026-A1.js': 'const LINEUPS_2025_2026_A1={};',
   'data-health.json': null,   // cada prueba de ensureHealth decide
 };
 globalThis.fetch = async (url) => {
@@ -74,7 +74,7 @@ test('nada espera para siempre: cada petición perezosa se corta a los 15 s y la
   console.error = () => {};
   console.warn = () => {};
   try {
-    const loads = [state.ensureMatchDetail(), state.ensureSeasonData('2022-2023'), state.ensureLineups('2023-2024'),
+    const loads = [state.ensureMatchDetail(), state.ensureSeasonData('2022-2023'), state.ensureLineups('2023-2024', 'A1'),
       state.ensureHealth()];
     assert.equal(hung.length, 4, hung.join(', '));
     t.mock.timers.tick(state.LAZY_TIMEOUT_MS - 1);
@@ -105,9 +105,9 @@ test('cada petición perezosa lleva la versión de data-seasons.js, nunca la de 
   requests.length = 0;
   assert.ok(await state.ensureMatchDetail());
   assert.ok(await state.ensureSeasonData('2024-2025'));
-  assert.ok(await state.ensureLineups('2025-2026'));
+  assert.ok(await state.ensureLineups('2025-2026', 'A1'));
   assert.deepEqual(requests.map((url) => url.replace(/\?.*$/, '')), [
-    './data-matchdetail.js', './data-season-2024-2025.js', './data-lineups-2025-2026.js',
+    './data-matchdetail.js', './data-season-2024-2025.js', './data-lineups-2025-2026-A1.js',
   ]);
   for (const url of requests) assert.match(url, /\?v=20260923j$/, url);
 });

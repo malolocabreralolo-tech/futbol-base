@@ -289,8 +289,10 @@ export async function ensureSeasonData(seasonName) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────
- * SP-2: lazy-loader for data-lineups-<S>.js (data-players-<S>.js is no
- * longer read: the plantilla comes from LINEUPS, spec §4.6).
+ * Las actas de un grupo: lazy-loader for data-lineups-<S>-<grupo>.js (una
+ * temporada entera con todas sus actas pesa ~10 MB; la ficha de un equipo o un
+ * partido solo necesita las de su grupo). data-players-<S>.js is no longer
+ * read: the plantilla comes from LINEUPS (spec §4.6).
  * Same shape as ensureMatchDetail. Parse data file text with a regex
  * and JSON.parse the const value — never read via the global object.
  * (Lesson 2026-05-18: const top-level declarations don't become
@@ -323,35 +325,38 @@ const _lineupsPromise = {};
 
 function _seasonSuffix(season) { return season.replace('-', '_'); }
 
+// La clave de las actas de un grupo en datasets.lineups (y en la caché del cargador).
+export function lineupsKey(season, group) { return `${season}/${group}`; }
+
 /* On failure the loader returns a null sentinel WITHOUT caching it and
  * clears its single-flight promise, so a later call retries the fetch
  * (a transient network error no longer blanks the feature for the whole
  * session). Callers already null-check (UI empty-state). */
-export async function ensureLineups(season) {
-  if (_lineups[season] !== undefined) return _lineups[season];
-  if (_lineupsPromise[season]) return _lineupsPromise[season];
-  _lineupsPromise[season] = (async () => {
-    const suffix = _seasonSuffix(season);
+export async function ensureLineups(season, group) {
+  const key = lineupsKey(season, group);
+  if (_lineups[key] !== undefined) return _lineups[key];
+  if (_lineupsPromise[key]) return _lineupsPromise[key];
+  _lineupsPromise[key] = (async () => {
+    const name = 'LINEUPS_' + _seasonSuffix(season) + '_' + group;
     try {
-      const r = await fetchData(`data-lineups-${season}.js`);
-      // generate_js.py solo escribe data-lineups-<S>.js si la temporada tiene
+      const r = await fetchData(`data-lineups-${season}-${group}.js`);
+      // generate_js.py solo escribe data-lineups-<S>-<grupo>.js si el grupo tiene
       // alguna acta: sin fichero (404) no hay actas, y eso no es un error de
-      // carga (una temporada recién activada, por ejemplo).
-      if (r.status === 404) { _lineups[season] = {}; return _lineups[season]; }
+      // carga (la mayoría de los grupos de futbolaspalmas, o uno recién empezado).
+      if (r.status === 404) { _lineups[key] = {}; return _lineups[key]; }
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const txt = await r.text();
-      const re = new RegExp('const LINEUPS_' + suffix + '\\s*=\\s*(\\{[\\s\\S]*\\});');
-      const m = txt.match(re);
-      if (!m) throw new Error('LINEUPS_' + suffix + ' not parseable');
-      _lineups[season] = JSON.parse(m[1]);
-      return _lineups[season];
+      const m = txt.match(new RegExp('const ' + name + '\\s*=\\s*(\\{[\\s\\S]*\\});'));
+      if (!m) throw new Error(name + ' not parseable');
+      _lineups[key] = JSON.parse(m[1]);
+      return _lineups[key];
     } catch (e) {
       console.warn('[state] ensureLineups failed:', e.message);
-      _lineupsPromise[season] = null; // clear single-flight → retry allowed
-      return null;                    // error sentinel (never cached)
+      _lineupsPromise[key] = null; // clear single-flight → retry allowed
+      return null;                 // error sentinel (never cached)
     }
   })();
-  return _lineupsPromise[season];
+  return _lineupsPromise[key];
 }
 
 // data-health.json (spec §4.10 y §7): la comprobación de las fuentes, parseada, o null si no

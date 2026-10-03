@@ -18,7 +18,7 @@ test('un goleador sin nombre publicado se dice así y cuenta en la lista', () =>
 
 // Delegados del acta de la federación en Partido (delH/delA del generador).
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { datasetsFrom as baseDatasets } from './fixtures/rediseno/simulate.mjs';
+import { datasetsFrom as baseDatasets, seasonLineups } from './fixtures/rediseno/simulate.mjs';
 import { ctxFor } from './fixtures/rediseno/screens.mjs';
 import { screen } from '../../src/screen-partido.js';
 
@@ -29,7 +29,7 @@ test('Partido: los delegados del acta, solo si constan', () => {
   lineups[key].delH = { equipo: 'PEREZ GARCIA, ANA', campo: 'LOPEZ DIAZ, LUIS' };
   const datasets = baseDatasets(fixture('current-2025-2026'), {
     golBenj: [], golPrebenj: [], seasons: [{ name: '2025-2026', current: true }], matchDetail: fixture('matchdetail'),
-    lineups: { '2025-2026': lineups }, health: fixture('health'),
+    lineups: { ...seasonLineups('2025-2026'), '2025-2026/A1': lineups }, health: fixture('health'),
   });
   const params = { s: '2025-2026', g: 'A1', r: 'Jornada 3', h: 'Unión Viera', a: 'Santidad' };
   const out = String(screen.render(ctxFor('partido', params, { today: '2026-09-23', datasets })));

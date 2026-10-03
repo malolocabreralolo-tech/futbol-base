@@ -29,14 +29,23 @@ function loadDataFile(filename) {
     'SEASON_2024_2025', 'SEASON_2025_2026',
     'GOL_BENJ', 'GOL_PREBENJ',
     'MATCH_DETAIL',
-    'LINEUPS_2021_2022', 'LINEUPS_2022_2023', 'LINEUPS_2023_2024',
-    'LINEUPS_2024_2025', 'LINEUPS_2025_2026',
   ];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
     .join(',');
   vm.runInContext(`${txt}\nthis.__exports={${probe}};`, ctx);
   return ctx.__exports;
+}
+
+// Las actas de un grupo: data-lineups-<S>-<grupo>.js declara LINEUPS_<S>_<grupo>.
+const LINEUPS_FILE = /^data-lineups-(\d{4}-\d{4})-([A-Za-z0-9]+)\.js$/;
+function loadLineupsFile(filename) {
+  const [, season, group] = filename.match(LINEUPS_FILE);
+  const name = `LINEUPS_${season.replace('-', '_')}_${group}`;
+  const ctx = {};
+  vm.createContext(ctx);
+  vm.runInContext(`${readFileSync(join(ROOT, filename), 'utf8')}\nthis.__lin=typeof ${name}!=='undefined'?${name}:undefined;`, ctx);
+  return { season, group, name, Lin: ctx.__lin };
 }
 
 // ─── normalizeTeamName ────────────────────────────────────────────────────
@@ -201,15 +210,10 @@ test('state.js exports ensureLineups (SP-2)', () => {
 import { readdirSync } from 'node:fs';
 
 test('actas data files: lineups events reference players in the same match', () => {
-  const files = readdirSync(ROOT).filter(f => /^data-lineups-\d{4}-\d{4}\.js$/.test(f));
+  const files = readdirSync(ROOT).filter(f => LINEUPS_FILE.test(f));
   if (files.length === 0) { console.log('  (skip: no data-lineups-*.js files yet)'); return; }
   for (const f of files) {
-    const season = f.match(/data-lineups-(\d{4}-\d{4})\.js/)[1];
-    const linVar = `LINEUPS_${season.replace('-', '_')}`;
-    const Lin = loadDataFile(f)[linVar];
-    // Una temporada que la lista de loadDataFile aún no conoce (p. ej.
-    // data-lineups-2026-2027.js al activarla) se salta en vez de bloquear al bot.
-    if (!Lin) continue;
+    const { name: linVar, Lin } = loadLineupsFile(f);
     assert.ok(Lin && typeof Lin === 'object', `${linVar} must load`);
     // Invariant 1: every event in LINEUPS references a player in the same match's lineup
     // Una clave repetida ({dup:true, list}) se comprueba partido a partido.
@@ -268,13 +272,14 @@ test('MATCH_DETAIL: cada entrada lleva s y gr; las claves repetidas van en list'
   }
 });
 
-test('LINEUPS_<S>: cada entrada lleva s de su fichero, gr y cod', () => {
-  const files = readdirSync(ROOT).filter(f => /^data-lineups-\d{4}-\d{4}\.js$/.test(f));
+test('LINEUPS_<S>_<grupo>: cada entrada lleva s y gr de su fichero, y cod; solo ficheros por grupo', () => {
+  const all = readdirSync(ROOT).filter(f => /^data-lineups-.*\.js$/.test(f));
+  assert.deepEqual(all.filter(f => !LINEUPS_FILE.test(f)), [], 'las actas van por grupo: data-lineups-<S>-<grupo>.js');
+  const files = all;
   assert.ok(files.length > 0, 'hay ficheros data-lineups-*.js');
   for (const f of files) {
-    const season = f.match(/data-lineups-(\d{4}-\d{4})\.js/)[1];
-    const Lin = loadDataFile(f)[`LINEUPS_${season.replace('-', '_')}`];
-    if (!Lin) continue;   // temporada que loadDataFile aún no conoce (2026-2027…)
+    const { season, group, name, Lin } = loadLineupsFile(f);
+    assert.ok(Lin && typeof Lin === 'object', `${f}: declara ${name}`);
     for (const [k, v] of Object.entries(Lin)) {
       if (v.dup) {
         assert.ok(Array.isArray(v.list) && v.list.length >= 2, `${f} ${k}: dup con 2 o más entradas`);
@@ -282,7 +287,7 @@ test('LINEUPS_<S>: cada entrada lleva s de su fichero, gr y cod', () => {
       }
       for (const e of entriesOf(v)) {
         assert.equal(e.s, season, `${f} ${k}: s`);
-        assert.ok(typeof e.gr === 'string' && e.gr.length > 0, `${f} ${k}: gr`);
+        assert.equal(e.gr, group, `${f} ${k}: gr`);
         assert.ok(Number.isInteger(e.cod) && e.cod > 0, `${f} ${k}: cod`);
       }
     }

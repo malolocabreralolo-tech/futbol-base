@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20261003q';
+const CACHE_NAME = 'futbolbase-v20261003r';
 const CRESTS_CACHE = 'futbolbase-escudos-9c59eb8e';
 const OFFLINE_URL = './index.html';
 
@@ -77,20 +77,48 @@ const STATIC_ASSETS = [
 ];
 
 // Season data files — loaded lazily by the app, precache when available: los
-// archivos de las temporadas pasadas y la plantilla de la temporada del portal
-// (sus actas, data-lineups-<S>.js; decisión 2 de B5), para que su ficha de
-// Equipo funcione sin conexión. scripts/activate_season.py añade el archivo de
-// la temporada que cierra y cambia la plantilla por la de la nueva, aunque ese
-// fichero aún no exista (sin actas): el precache lo salta (allSettled) y la
-// app, con su 404, da la temporada sin actas.
+// archivos de las temporadas pasadas. scripts/activate_season.py añade el de la
+// temporada que cierra.
 const SEASON_FILES = [
   './data-season-2025-2026.js',
   './data-season-2024-2025.js',
   './data-season-2023-2024.js',
   './data-season-2022-2023.js',
   './data-season-2021-2022.js',
-  './data-lineups-2026-2027.js',
 ];
+
+// Las actas van por grupo (data-lineups-<S>-<grupo>.js): precachearlas todas
+// serían ~10 MB por temporada en cada subida de datos. Se guardan según se
+// usan (stale-while-revalidate) y cada versión nueva vuelve a bajar, al
+// instalarse, las de los grupos que ya estaban en la caché de la anterior
+// (las LINEUPS_KEEP más recientes), antes de que `activate` la borre: la
+// ficha de mi equipo, ya vista, sigue con su plantilla sin conexión tras una
+// subida de datos (decisión 2 de B5).
+const LINEUPS_KEEP = 12;
+
+// Pure: de las URLs de las cachés anteriores (en orden de inserción, la más
+// reciente al final), las rutas relativas de las actas de grupo que hay que
+// volver a bajar, sin repetir y como mucho `keep`.
+function lineupsToCarry(urls, keep = LINEUPS_KEEP) {
+  const files = [];
+  for (const url of urls) {
+    const file = new URL(url).pathname.split('/').pop();
+    if (!/^data-lineups-\d{4}-\d{4}-[A-Za-z0-9]+\.js$/.test(file)) continue;
+    const i = files.indexOf(file);
+    if (i >= 0) files.splice(i, 1);
+    files.push(file);
+  }
+  return files.slice(-keep).map(file => './' + file);
+}
+
+async function usedLineups() {
+  const urls = [];
+  for (const name of await caches.keys()) {
+    if (!name.startsWith('futbolbase-v') || name === CACHE_NAME) continue;
+    for (const request of await (await caches.open(name)).keys()) urls.push(request.url);
+  }
+  return lineupsToCarry(urls);
+}
 
 // Pure: decide the caching strategy for a same-origin GET pathname.
 //   'swr'         -> stale-while-revalidate: HTML + data-*.js (freshness matters,
@@ -165,7 +193,8 @@ self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(async c => {
       // One unavailable asset must not discard all the successful downloads.
-      const results = await Promise.allSettled([...STATIC_ASSETS, ...SEASON_FILES].map(async url => {
+      const carried = await usedLineups().catch(() => []);
+      const results = await Promise.allSettled([...STATIC_ASSETS, ...SEASON_FILES, ...carried].map(async url => {
         const response = await fetchFresh(url, 'reload');
         if (!response.ok) throw new Error(url + ': HTTP ' + response.status);
         await c.put(url, response);

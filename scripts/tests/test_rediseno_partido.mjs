@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { currentAt, datasetsFrom as baseDatasets } from './fixtures/rediseno/simulate.mjs';
+import { currentAt, datasetsFrom as baseDatasets, seasonLineups } from './fixtures/rediseno/simulate.mjs';
 import { actaFor, createModel, findMatch } from '../../src/model.js';
 import { ensureLineups, loadSeasons } from '../../src/state.js';
 import { ctxFor } from './fixtures/rediseno/screens.mjs';
@@ -24,7 +24,7 @@ const TODAY = '2026-09-23';
 function datasetsFrom(raw = fixture('current-2025-2026')) {
   return baseDatasets(raw, {
     golBenj: [], golPrebenj: [], seasons: SEASONS, matchDetail: fixture('matchdetail'),
-    lineups: { '2025-2026': fixture('lineups-2025-2026') }, health: fixture('health'),
+    lineups: seasonLineups('2025-2026', null, fixture('lineups-2025-2026')), health: fixture('health'),
   });
 }
 
@@ -233,7 +233,7 @@ test('Cronología con nombre y minuto a null y acta sin goles (plan B1, «Para B
 
   const acta = { s: '2025-2026', gr: 'PG2', cod: 1, home: [{ n: 'PEREZ, ANA', dn: 1, r: 'starter', g: 0 }], away: [], events: [], coachH: null, coachA: null, ref: null };
   const ds2 = datasetsFrom();
-  ds2.lineups = { '2025-2026': { ...ds2.lineups['2025-2026'], 'Las Mesas Hu.|AD Huracán|2-7': acta } };
+  ds2.lineups = { ...ds2.lineups, '2025-2026/PG2': { ...ds2.lineups['2025-2026/PG2'], 'Las Mesas Hu.|AD Huracán|2-7': acta } };
   const out2 = render(PG2_J30, { datasets: ds2 });
   assert.equal(text(blockOf(out2, 'Goles')),
     'Goles según el acta El acta no recoge quién marcó. Los goles no cuadran con el marcador: el acta de la federación suma 0–0 y el resultado de futbolaspalmas es 2–7.');
@@ -257,7 +257,7 @@ test('Partido de una temporada pasada: su temporada en la cabecera y sus enlaces
   const ds = datasetsFrom();
   const hist = fixture('historical-2024-2025');
   ds.seasonRaw['2024-2025'] = { name: '2024-2025', current: false, benjamin: hist.benjamin, prebenjamin: hist.prebenjamin };
-  ds.lineups['2024-2025'] = {};
+  ds.lineups['2024-2025/PGC2'] = {};
   const out = render({ s: '2024-2025', g: 'PGC2', r: '6', h: 'Las Mesas Hu.', a: 'AD Huracán' }, { datasets: ds });
   assert.match(out, /<p class="screen-sub">Jornada 6 · Prebenjamín, Grupo 2 de Gran Canaria · 2024\/25<\/p>/);
   assert.match(out, /<a class="back" href="#\/jornada\?s=2024-2025&amp;g=PGC2&amp;r=6" data-action="back"/);
@@ -389,29 +389,29 @@ test('previousPanelContent: un fallo tras cargar (dato mal formado) da la caja d
   }
 });
 
-test('needs pide la cronología, las actas de la temporada del partido y, si es pasada, la temporada, que es la única que rechaza', async () => {
+test('needs pide la cronología, las actas del grupo del partido y, si es pasada, la temporada, que es la única que rechaza', async () => {
   const calls = [];
   const loaders = {
     ensureMatchDetail: async () => { calls.push('cronología'); return { k: 1 }; },
-    ensureLineups: async (s) => { calls.push(`actas ${s}`); return s === '2024-2025' ? null : {}; },
+    ensureLineups: async (s, g) => { calls.push(`actas ${s} ${g}`); return s === '2024-2025' ? null : {}; },
     ensureSeasonData: async (s) => { calls.push(`temporada ${s}`); return { name: s, current: false, benjamin: [], prebenjamin: [] }; },
   };
   const ds = { seasons: SEASONS, seasonRaw: {}, lineups: {}, matchDetail: null };
   const loads = partidoNeeds({ s: '2025-2026', g: 'PG2' }, ds, loaders);
   assert.equal(loads.length, 2);
   await Promise.all(loads);
-  assert.deepEqual(calls, ['cronología', 'actas 2025-2026']);
-  assert.deepEqual([ds.matchDetail, ds.lineups['2025-2026']], [{ k: 1 }, {}]);
+  assert.deepEqual(calls, ['cronología', 'actas 2025-2026 PG2']);
+  assert.deepEqual([ds.matchDetail, ds.lineups['2025-2026/PG2']], [{ k: 1 }, {}]);
   calls.length = 0;
   await Promise.all(partidoNeeds({ s: '2024-2025', g: 'PGC2' }, ds, loaders));
-  assert.deepEqual(calls, ['cronología', 'actas 2024-2025', 'temporada 2024-2025']);
-  assert.equal(ds.lineups['2024-2025'], null, 'el fallo queda anotado para la caja de error');
+  assert.deepEqual(calls, ['cronología', 'actas 2024-2025 PGC2', 'temporada 2024-2025']);
+  assert.equal(ds.lineups['2024-2025/PGC2'], null, 'el fallo queda anotado para la caja de error');
   assert.equal(ds.seasonRaw['2024-2025'].name, '2024-2025');
   // Sin `s`, la temporada actual de SEASONS; una temporada ya cargada no se pide otra vez.
   calls.length = 0;
   await Promise.all(partidoNeeds({ g: 'PG2' }, ds, loaders));
   await Promise.all(partidoNeeds({ s: '2024-2025', g: 'PGC2' }, ds, loaders));
-  assert.deepEqual(calls, ['cronología', 'actas 2025-2026', 'cronología', 'actas 2024-2025']);
+  assert.deepEqual(calls, ['cronología', 'actas 2025-2026 PG2', 'cronología', 'actas 2024-2025 PGC2']);
   // La temporada del partido es imprescindible: si no llega, la carga rechaza con «la temporada …»,
   // el <qué> de la caja de error del router. Cronología y actas no rechazan nunca.
   const failing = { ...loaders, ensureSeasonData: async () => null };
@@ -458,15 +458,19 @@ test('ensureLineups: sin fichero de actas (404) no hay actas; otro fallo da null
   let status = 404;
   globalThis.fetch = async (url) => {
     seen.push(url);
-    return { ok: status === 200, status, text: async () => 'const LINEUPS_2031_2032 = {"a|b|1-0":{"s":"2031-2032","gr":"X"}};\n' };
+    return { ok: status === 200, status, text: async () => 'const LINEUPS_2031_2032_X1 = {"a|b|1-0":{"s":"2031-2032","gr":"X1"}};\n' };
   };
   try {
-    assert.deepEqual(await ensureLineups('2030-2031'), {});
-    assert.match(seen[0], /^\.\/data-lineups-2030-2031\.js\?v=20260923j$/);
+    assert.deepEqual(await ensureLineups('2030-2031', 'X1'), {});
+    assert.match(seen[0], /^\.\/data-lineups-2030-2031-X1\.js\?v=20260923j$/);
     status = 503;
-    assert.equal(await ensureLineups('2031-2032'), null);
+    assert.equal(await ensureLineups('2031-2032', 'X1'), null);
     status = 200;
-    assert.deepEqual(Object.keys(await ensureLineups('2031-2032')), ['a|b|1-0']);
+    assert.deepEqual(Object.keys(await ensureLineups('2031-2032', 'X1')), ['a|b|1-0']);
+    // Cada grupo, su fichero: el de otro grupo de la misma temporada se pide aparte.
+    status = 404;
+    assert.deepEqual(await ensureLineups('2031-2032', 'X2'), {});
+    assert.match(seen.at(-1), /^\.\/data-lineups-2031-2032-X2\.js\?v=20260923j$/);
   } finally {
     globalThis.document = saved.document;
     globalThis.fetch = saved.fetch;
@@ -514,7 +518,7 @@ function fakeFetch() {
   const net = { down: true, asked: [] };
   const FILES = {
     'data-matchdetail.js': () => `const MATCH_DETAIL=${JSON.stringify(fixture('matchdetail'))};`,
-    'data-lineups-2025-2026.js': () => `const LINEUPS_2025_2026=${JSON.stringify(fixture('lineups-2025-2026'))};`,
+    'data-lineups-2025-2026-A1.js': () => `const LINEUPS_2025_2026_A1=${JSON.stringify(fixture('lineups-2025-2026'))};`,
   };
   net.fetch = async (url) => {
     const file = String(url).replace(/^\.\//, '').replace(/\?.*$/, '');
@@ -532,7 +536,7 @@ test('«Reintentar» de las Alineaciones: vuelve a pedir las actas y pinta solo 
   try {
     // Moya–Guayarmina (A1, J11): sin actas, ni sus alineaciones ni sus goles (no tiene cronología).
     const sinActas = datasetsFrom();
-    sinActas.lineups = { '2025-2026': null };
+    sinActas.lineups = { '2025-2026/A1': null };
     const ctx = ctxOf(A1_J11, { datasets: sinActas });
     const out = String(screen.render(ctx));
     const goles = blockOf(out, 'Goles');
@@ -548,7 +552,7 @@ test('«Reintentar» de las Alineaciones: vuelve a pedir las actas y pinta solo 
     net.down = false;
     page.clickIn('alineaciones', { 'data-action': 'retry' });
     await flush();
-    assert.deepEqual(net.asked, ['data-lineups-2025-2026.js', 'data-lineups-2025-2026.js'], 'solo las actas: la cronología ya estaba');
+    assert.deepEqual(net.asked, ['data-lineups-2025-2026-A1.js', 'data-lineups-2025-2026-A1.js'], 'solo las actas del grupo: la cronología ya estaba');
     const now = String(screen.render(ctx));
     assert.equal(page.block('alineaciones').markup, blockOf(now, 'Alineaciones'));
     assert.ok(text(page.block('alineaciones').markup).startsWith('Alineaciones acta nº'));

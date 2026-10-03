@@ -173,29 +173,29 @@ WORKER = ("const CACHE_NAME = 'futbolbase-v20280101';\n"
           "function classifyRequest(pathname) {}\n")
 
 
-def test_season_files_swap_the_portal_lineups_and_keep_every_archive():
-    # Plan B5, decisión 2: al activar 2029-2030, el archivo de 2028-2029 entra delante y la plantilla que
-    # se precachea pasa a ser la de 2029-2030, aunque ese fichero todavía no exista; el resto, igual.
+def test_season_files_add_the_closing_archive_and_drop_whole_season_lineups():
+    # Al activar 2029-2030, el archivo de 2028-2029 entra delante; una plantilla de temporada entera de
+    # un sw.js antiguo se quita (las actas van por grupo y no se precachean); el resto, igual.
     out = activate_season.season_files_for(WORKER, "2028-2029", "2029-2030")
     assert out == WORKER.replace("  './data-season-2027-2028.js',\n  './data-lineups-2028-2029.js',\n",
-                                 "  './data-season-2028-2029.js',\n  './data-season-2027-2028.js',\n  './data-lineups-2029-2030.js',\n")
+                                 "  './data-season-2028-2029.js',\n  './data-season-2027-2028.js',\n")
     assert activate_season.season_files_for(out, "2028-2029", "2029-2030") == out, "otra vez con la misma temporada: igual"
-    # El sw.js del repositorio, con la temporada de su propia plantilla (nunca la de config.js): activar
+    # El sw.js del repositorio, con la temporada de su último archivo (nunca la de config.js): activar
     # la siguiente solo toca SEASON_FILES.
     real = (ROOT / "sw.js").read_text(encoding="utf-8")
-    portal = re.search(r"'\./data-lineups-(\d{4}-\d{4})\.js'", real).group(1)
+    last = max(re.findall(r"'\./data-season-\d{4}-(\d{4})\.js'", real))
+    portal = f"{last}-{int(last) + 1}"
     after = activate_season.season_files_for(real, portal, next_season(portal))
-    assert f"'./data-season-{portal}.js'" in after and f"'./data-lineups-{next_season(portal)}.js'" in after
-    assert f"'./data-lineups-{portal}.js'" not in after
+    assert f"'./data-season-{portal}.js'" in after and "data-lineups-" not in after.split("const SEASON_FILES")[1].split("];")[0]
     literal = re.compile(r"const SEASON_FILES = \[[^\]]*\];")
     assert literal.sub("", after) == literal.sub("", real)
 
 
-def test_activation_on_a_synthetic_tree_precaches_the_lineups_of_the_new_season(tmp_path):
+def test_activation_on_a_synthetic_tree_archives_the_closing_season(tmp_path):
     # apply_manifest entero sobre un árbol sintético con sus propias temporadas (2028-2029 → 2029-2030, años
     # que acepta el lector de calendarios de fetch_futbolaspalmas.py): ni los data-*.js, ni el config.js ni la
-    # base vivos. La temporada que se cierra tiene un acta, y su plantilla; la nueva todavía no tiene ninguna,
-    # y SEASON_FILES ya precachea la suya (Plan B5, decisión 2).
+    # base vivos. La temporada que se cierra tiene un acta, y las actas de su grupo; la nueva todavía no
+    # tiene ninguna.
     closing, opening = "2028-2029", "2029-2030"
     (tmp_path / "src").mkdir()
     (tmp_path / "src" / "config.js").write_text("export const PORTAL = " + json.dumps(
@@ -224,11 +224,10 @@ def test_activation_on_a_synthetic_tree_precaches_the_lineups_of_the_new_season(
     apply_manifest(manifest, evidence_for(manifest), tmp_path)
     assert load_config(tmp_path / "src/config.js")["season"] == opening
     worker = (tmp_path / "sw.js").read_text(encoding="utf-8")
-    assert ("const SEASON_FILES = [\n  './data-season-2028-2029.js',\n  './data-season-2027-2028.js',\n"
-            "  './data-lineups-2029-2030.js',\n];") in worker
+    assert "const SEASON_FILES = [\n  './data-season-2028-2029.js',\n  './data-season-2027-2028.js',\n];" in worker
     assert worker.splitlines()[1] == "const CRESTS_CACHE = 'futbolbase-escudos-00000000';"
-    assert (tmp_path / "data-season-2028-2029.js").exists() and (tmp_path / "data-lineups-2028-2029.js").exists()
-    assert not (tmp_path / "data-lineups-2029-2030.js").exists()
+    assert (tmp_path / "data-season-2028-2029.js").exists() and (tmp_path / "data-lineups-2028-2029-OLD1.js").exists()
+    assert not list(tmp_path.glob("data-lineups-2029-2030*.js"))
 
 
 def test_apply_recalculates_codigo_for_the_new_config(tmp_path):

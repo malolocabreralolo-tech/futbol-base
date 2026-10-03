@@ -16,7 +16,7 @@ import {
 import { routeIsMine, teamTrajectory } from './myteam.js';
 import { matchHref, routeHref, teamHref, weekdayDate } from './links.js';
 import { errorBox, retryBlock } from './shell.js';
-import { ensureHealth, ensureLineups, ensureSeasonData, loadSeasons } from './state.js';
+import { ensureHealth, ensureLineups, ensureSeasonData, lineupsKey, loadSeasons } from './state.js';
 import { coverageText, missingResults, mountTeamView, teamColumns, teamView } from './team-view.js';
 
 const TRAJECTORY_ID = 'trayectoria';
@@ -99,15 +99,15 @@ function squadNote(actas, skipped, played) {
   return `Actas de ${actas} de ${countLabel(played, 'partido jugado', 'partidos jugados')}${incomplete}.`;
 }
 
-// La plantilla del grupo y la temporada desde las actas (LINEUPS_<S>), si el grupo tiene alguna:
+// La plantilla del grupo y la temporada desde las actas del grupo (LINEUPS_<S>_<grupo>), si tiene alguna:
 // jugador (un botón que despliega sus partidos), PJ, titular y goles, y las tarjetas solo si alguien
-// de la temporada tiene alguna. Sin actas del grupo, nada (la mayoría no tiene). Si la carga falló
+// del grupo tiene alguna. Sin actas del grupo, nada (la mayoría no tiene). Si la carga falló
 // (null), la caja de error con su «Reintentar», que atiende la ficha (retrySquad: solo este bloque, sin
 // volver arriba; B5, decisión 3); sin pedir (undefined: nunca en la app, donde needs las trae antes de
 // pintar), nada. Siempre una sola sección, #plantilla (con la nota de las actas dentro), para que ese
 // «Reintentar» la pinte en su sitio.
 function squadBlock(ctx, group, name) {
-  const lineups = ctx.datasets?.lineups?.[group.season];
+  const lineups = ctx.datasets?.lineups?.[lineupsKey(group.season, group.id)];
   if (lineups === null) return block('Plantilla', errorBox(`las actas de ${seasonLabel(group.season)}`), { id: SQUAD_ID });
   if (!lineups) return '';
   const { rows, actas, skipped, groupActas } = teamSquad(lineups, { group, team: name });
@@ -127,13 +127,13 @@ function squadBlock(ctx, group, name) {
     { context: 'según las actas', id: SQUAD_ID });
 }
 
-// «Reintentar» de la Plantilla (B5, decisión 3): vuelve a pedir las actas de su temporada y pinta el
+// «Reintentar» de la Plantilla (B5, decisión 3): vuelve a pedir las actas de su grupo y pinta el
 // bloque en su sitio (retryBlock, shell.js). Si el grupo resulta no tener actas, lo dice: el bloque no
 // desaparece bajo el dedo de quien pulsó.
 function retrySquad(section, ctx, team, button) {
-  const s = team.group.season;
+  const { season, id } = team.group;
   return retryBlock(section, SQUAD_ID, button,
-    () => ensureLineups(s).then((data) => { ctx.datasets.lineups[s] = data; }),
+    () => ensureLineups(season, id).then((data) => { ctx.datasets.lineups[lineupsKey(season, id)] = data; }),
     () => squadBlock(ctx, team.group, team.name) || block('Plantilla', empty('La federación no ha publicado actas de este grupo.'), { id: SQUAD_ID }));
 }
 
@@ -217,7 +217,7 @@ function togglePlayer(ctx, team, button) {
     button.removeAttribute('aria-controls');
     return;
   }
-  const lineups = ctx.datasets.lineups[team.group.season];
+  const lineups = ctx.datasets.lineups[lineupsKey(team.group.season, team.group.id)];
   const player = teamSquad(lineups, { group: team.group, team: team.name }).rows[Number(button.getAttribute('data-index'))];
   if (!player) return;
   // Html de html``, que escapa cada dato (spec §5.1).
@@ -290,15 +290,17 @@ function mount(root, ctx, nav) {
 export const screen = {
   id: 'equipo',
   // data-health.json (la frescura de A, B y C), una vez por sesión, como la portada: undefined sin
-  // pedir y null si falló. Y las actas de la temporada de la ruta (la plantilla): {} con un 404 y null
+  // pedir y null si falló. Y las actas del grupo de la ruta (la plantilla): {} con un 404 y null
   // si fallan, que la plantilla dice con su caja de error; un fallo se vuelve a pedir en la visita
   // siguiente. Nunca rechaza. La temporada de la ruta la carga el router (decisión 2 de B3).
   needs: (params, datasets) => {
     const loads = [];
     if (datasets.health === undefined) loads.push(ensureHealth().then((health) => { datasets.health = health; }));
     const s = params && params.s;
+    const g = params && params.g;
+    const key = lineupsKey(s, g);
     if (!datasets.lineups) datasets.lineups = {};
-    if (s && !datasets.lineups[s]) loads.push(ensureLineups(s).then((data) => { datasets.lineups[s] = data; }));
+    if (s && g && !datasets.lineups[key]) loads.push(ensureLineups(s, g).then((data) => { datasets.lineups[key] = data; }));
     return loads;
   },
   render,

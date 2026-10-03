@@ -90,7 +90,7 @@ const seasonFile = (name, { benjamin = [], prebenjamin = [] }) => `const SEASON_
 const FILES = {
   'data-health.json': () => JSON.stringify(fixture('health')),
   'data-matchdetail.js': () => `const MATCH_DETAIL=${JSON.stringify(fixture('matchdetail'))};`,
-  'data-lineups-2025-2026.js': () => `const LINEUPS_2025_2026=${JSON.stringify(fixture('lineups-2025-2026'))};`,
+  'data-lineups-2025-2026-A1.js': () => `const LINEUPS_2025_2026_A1=${JSON.stringify(fixture('lineups-2025-2026'))};`,
   'data-season-2024-2025.js': () => seasonFile('2024-2025', fixture('historical-2024-2025')),
 };
 globalThis.fetch = async (url) => {

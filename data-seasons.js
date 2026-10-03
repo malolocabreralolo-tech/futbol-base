@@ -1,1 +1,1 @@
-const SEASONS=[{"name":"2025-2026","current":true},{"name":"2024-2025","current":false},{"name":"2023-2024","current":false},{"name":"2022-2023","current":false},{"name":"2021-2022","current":false}];
+const SEASONS=[{"name":"2026-2027","current":true},{"name":"2025-2026","current":false},{"name":"2024-2025","current":false},{"name":"2023-2024","current":false},{"name":"2022-2023","current":false},{"name":"2021-2022","current":false}];

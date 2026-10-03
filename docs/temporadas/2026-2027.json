@@ -1,0 +1,307 @@
+{
+  "season": "2026-2027",
+  "groups": [
+    {
+      "id": "FF1",
+      "cat": "benjamin",
+      "name": "Grupo 1",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 1",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55233602"
+    },
+    {
+      "id": "FF2",
+      "cat": "benjamin",
+      "name": "Grupo 2",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 2",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55233951"
+    },
+    {
+      "id": "FF3",
+      "cat": "benjamin",
+      "name": "Grupo 3",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 3",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55233955"
+    },
+    {
+      "id": "FF4",
+      "cat": "benjamin",
+      "name": "Grupo 4",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 4",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234209"
+    },
+    {
+      "id": "FF5",
+      "cat": "benjamin",
+      "name": "Grupo 5",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 5",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234218"
+    },
+    {
+      "id": "FF6",
+      "cat": "benjamin",
+      "name": "Grupo 6",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 6",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234221"
+    },
+    {
+      "id": "FF7",
+      "cat": "benjamin",
+      "name": "Grupo 7",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 7",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234226"
+    },
+    {
+      "id": "FF8",
+      "cat": "benjamin",
+      "name": "Grupo 8",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 8",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234230"
+    },
+    {
+      "id": "FF9",
+      "cat": "benjamin",
+      "name": "Grupo 9",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 9",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234233"
+    },
+    {
+      "id": "FF10",
+      "cat": "benjamin",
+      "name": "Grupo 10",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 10",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234236"
+    },
+    {
+      "id": "FF11",
+      "cat": "benjamin",
+      "name": "Grupo 11",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 11",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234238"
+    },
+    {
+      "id": "FF12",
+      "cat": "benjamin",
+      "name": "Grupo 12",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 12",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234320"
+    },
+    {
+      "id": "FF13",
+      "cat": "benjamin",
+      "name": "Grupo 13",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 13",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234324"
+    },
+    {
+      "id": "FF14",
+      "cat": "benjamin",
+      "name": "Grupo 14",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 14",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234329"
+    },
+    {
+      "id": "FF15",
+      "cat": "benjamin",
+      "name": "Grupo 15",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 15",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234377"
+    },
+    {
+      "id": "FF16",
+      "cat": "benjamin",
+      "name": "Grupo 16",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 16",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234393"
+    },
+    {
+      "id": "FF17",
+      "cat": "benjamin",
+      "name": "Grupo 17",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 17",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234461"
+    },
+    {
+      "id": "FF18",
+      "cat": "benjamin",
+      "name": "Grupo 18",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 18",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234465"
+    },
+    {
+      "id": "FF19",
+      "cat": "benjamin",
+      "name": "Grupo 19",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 19",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234483"
+    },
+    {
+      "id": "FF20",
+      "cat": "benjamin",
+      "name": "Grupo 20",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 20",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234515"
+    },
+    {
+      "id": "FF21",
+      "cat": "benjamin",
+      "name": "Grupo 21",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 21",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234517"
+    },
+    {
+      "id": "FF22",
+      "cat": "benjamin",
+      "name": "Grupo 22",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 22",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234531"
+    },
+    {
+      "id": "FF23",
+      "cat": "benjamin",
+      "name": "Grupo 23",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 23",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234534"
+    },
+    {
+      "id": "FF24",
+      "cat": "benjamin",
+      "name": "Grupo 24",
+      "phase": "Primera Fase GC",
+      "island": "grancanaria",
+      "fullName": "BENJAMIN PRIMERA FASE GC - GRUPO 24",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234556"
+    },
+    {
+      "id": "LZ1",
+      "cat": "benjamin",
+      "name": "Grupo 1",
+      "phase": "Lanzarote Fase 1",
+      "island": "lanzarote",
+      "fullName": "BENJAMIN LANZAROTE FASE 1 - GRUPO 1",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976982&CodGrupo=55134233"
+    },
+    {
+      "id": "LZ2",
+      "cat": "benjamin",
+      "name": "Grupo 2",
+      "phase": "Lanzarote Fase 1",
+      "island": "lanzarote",
+      "fullName": "BENJAMIN LANZAROTE FASE 1 - GRUPO 2",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976982&CodGrupo=55134273"
+    },
+    {
+      "id": "LZ3",
+      "cat": "benjamin",
+      "name": "Grupo 3",
+      "phase": "Lanzarote Fase 1",
+      "island": "lanzarote",
+      "fullName": "BENJAMIN LANZAROTE FASE 1 - GRUPO 3",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976982&CodGrupo=55141374"
+    },
+    {
+      "id": "LZ4",
+      "cat": "benjamin",
+      "name": "Grupo 4",
+      "phase": "Lanzarote Fase 1",
+      "island": "lanzarote",
+      "fullName": "BENJAMIN LANZAROTE FASE 1 - GRUPO 4",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976982&CodGrupo=55141489"
+    },
+    {
+      "id": "LZ5",
+      "cat": "benjamin",
+      "name": "Grupo 5",
+      "phase": "Lanzarote Fase 1",
+      "island": "lanzarote",
+      "fullName": "BENJAMIN LANZAROTE FASE 1 - GRUPO 5",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976982&CodGrupo=55141783"
+    },
+    {
+      "id": "PG1",
+      "cat": "prebenjamin",
+      "name": "Grupo 1",
+      "phase": "Gran Canaria",
+      "island": "grancanaria",
+      "fullName": "PREBENJAMIN GRAN CANARIA - GRUPO 1",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247183"
+    },
+    {
+      "id": "PG2",
+      "cat": "prebenjamin",
+      "name": "Grupo 2",
+      "phase": "Gran Canaria",
+      "island": "grancanaria",
+      "fullName": "PREBENJAMIN GRAN CANARIA - GRUPO 2",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247208"
+    },
+    {
+      "id": "PG3",
+      "cat": "prebenjamin",
+      "name": "Grupo 3",
+      "phase": "Gran Canaria",
+      "island": "grancanaria",
+      "fullName": "PREBENJAMIN GRAN CANARIA - GRUPO 3",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247221"
+    },
+    {
+      "id": "PG4",
+      "cat": "prebenjamin",
+      "name": "Grupo 4",
+      "phase": "Gran Canaria",
+      "island": "grancanaria",
+      "fullName": "PREBENJAMIN GRAN CANARIA - GRUPO 4",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247234"
+    }
+  ],
+  "defaultTeam": {
+    "cat": "prebenjamin",
+    "groupId": "PG2",
+    "name": "Las Mesas Hu."
+  }
+}

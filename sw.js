@@ -1,5 +1,5 @@
-const CACHE_NAME = 'futbolbase-v20260927';
-const CRESTS_CACHE = 'futbolbase-escudos-860679a5';
+const CACHE_NAME = 'futbolbase-v20261003';
+const CRESTS_CACHE = 'futbolbase-escudos-f41efff4';
 const OFFLINE_URL = './index.html';
 
 // Los escudos (escudos/, originales y miniaturas) van en su propia caché,
@@ -84,11 +84,12 @@ const STATIC_ASSETS = [
 // fichero aún no exista (sin actas): el precache lo salta (allSettled) y la
 // app, con su 404, da la temporada sin actas.
 const SEASON_FILES = [
+  './data-season-2025-2026.js',
   './data-season-2024-2025.js',
   './data-season-2023-2024.js',
   './data-season-2022-2023.js',
   './data-season-2021-2022.js',
-  './data-lineups-2025-2026.js',
+  './data-lineups-2026-2027.js',
 ];
 
 // Pure: decide the caching strategy for a same-origin GET pathname.

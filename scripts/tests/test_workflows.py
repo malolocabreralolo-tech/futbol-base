@@ -350,3 +350,19 @@ def test_actas_retry_reruns_the_suites_after_reimporting():
     retry = text[text.index("for attempt in 1 2 3 4 5; do"):]
     assert retry.index("import_fiflp_actas.py") < retry.index("python3 -m pytest scripts/tests/") < retry.index("git commit")
     assert "node --test scripts/tests/test_*.mjs" in retry
+
+
+# ----------------------------------------------- goleadores-federacion.yml
+
+def test_goleadores_federacion_only_commits_its_raws_even_when_cut():
+    """Solo descarga y sube sus raw (la base la toca el bot al importarlos):
+    con if: always() para no perder una descarga cortada, y push rebasando."""
+    data = _load("goleadores-federacion.yml")
+    steps = data["jobs"]["scrape"]["steps"]
+    upload = next(s for s in steps if s.get("name") == "Subir los raw")
+    assert upload.get("if") == "always()"
+    assert "scripts/fiflp_goleadores_*_raw.json" in upload["run"]
+    assert "futbolbase.db" not in upload["run"] and "data-*.js" not in upload["run"]
+    assert "git pull --rebase origin main" in upload["run"]
+    scrape = next(s for s in steps if "fetch_fiflp_goleadores.py" in s.get("run", ""))
+    assert "$TEMPORADAS" in scrape["run"] and "${{" not in scrape["run"], "la entrada va por env, no interpolada"

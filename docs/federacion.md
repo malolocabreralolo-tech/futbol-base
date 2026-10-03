@@ -50,4 +50,10 @@ gh workflow run fetch-fiflp-actas.yml -f temporada=21 -f comps=54422885,54422953
    -f "grupos=54422885:GRUPO 5,54422885:GRUPO 13,54422953:GRUPO 2" -f do_import=true
 ```
 
+Goleadores de temporadas pasadas: `goleadores-federacion.yml` (`fetch_fiflp_goleadores.py`) guarda la clasificación oficial y los goleadores de cada grupo del catálogo en `scripts/fiflp_goleadores_<S>_raw.json` (reanudable). El bot los importa (`import_fiflp_goleadores.py`): cada grupo de la federación casa con uno de la base por sus actas importadas (índice de actas) o por sus equipos (dos tercios de los de los dos lados, sin empate), y solo se escriben en grupos sin goleadores o que ya rellenó él (`fiflp_scorer_groups`); los de futbolaspalmas se quedan.
+
+```bash
+gh workflow run goleadores-federacion.yml -f temporadas=17,18,19,20,21
+```
+
 Las actas de temporadas pasadas se emparejan con su partido por nombres, fecha y marcador (`acta_reconciler.py`); las que no casan quedan en `scripts/fiflp_actas_unmatched.json`. Una competición completa de benjamín son ~2.500 actas: mejor por grupos, para no cargar la web de la federación.

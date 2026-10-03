@@ -1,0 +1,62 @@
+name: Goleadores de la federación (temporadas pasadas)
+
+# Descarga la clasificación oficial y los goleadores de cada grupo de benjamín y
+# prebenjamín de las temporadas pedidas (scripts/fetch_fiflp_goleadores.py) y
+# solo sube los raw (scripts/fiflp_goleadores_<S>_raw.json): la base y los
+# data-*.js los pone al día el bot (update.yml) al importarlos
+# (import_fiflp_goleadores.py), así dos workflows nunca chocan en futbolbase.db.
+# Reanudable: si no acaba, relanzarlo sigue por donde iba. Ver docs/federacion.md.
+on:
+  workflow_dispatch:
+    inputs:
+      temporadas:
+        description: 'CodTemporada separadas por comas (17=2021-22 … 21=2025-26)'
+        required: false
+        default: '17,18,19,20,21'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goleadores-federacion
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Instalar Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+      - name: Descargar goleadores y clasificaciones
+        env:
+          TEMPORADAS: ${{ inputs.temporadas }}
+        run: python3 scripts/fetch_fiflp_goleadores.py --temporadas "$TEMPORADAS" --max-minutes 320
+        timeout-minutes: 335
+      # if: always(): una descarga cortada sube lo que lleva (guarda cada grupo).
+      - name: Subir los raw
+        if: always()
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          shopt -s nullglob
+          for f in scripts/fiflp_goleadores_*_raw.json; do git add "$f"; done
+          if git diff --cached --quiet; then
+            echo "Nada nuevo que subir."
+            exit 0
+          fi
+          git commit -m "goleadores: clasificaciones y goleadores de la federación (temporadas pasadas)"
+          # Solo toca sus propios ficheros: rebasar sobre lo que haya subido el
+          # bot entretanto no choca nunca.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && exit 0
+            echo "push fallido (intento $i), reintento..."
+            sleep $((i * 15))
+          done
+          exit 1

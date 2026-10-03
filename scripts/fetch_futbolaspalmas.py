@@ -884,6 +884,11 @@ def main():
         migrate(conn)
         print("\nActas descargadas de la federación (raws nuevos o cambiados)")
         import_changed_raws(conn)
+        # Y los goleadores de temporadas pasadas (goleadores-federacion.yml),
+        # después de las actas: casan sus grupos por las actas importadas.
+        from import_fiflp_goleadores import import_changed_goleadores
+        print("\nGoleadores de temporadas pasadas de la federación (raws nuevos o cambiados)")
+        import_changed_goleadores(conn)
         from generate_js import main as generate_main
         generate_main()
     finally:

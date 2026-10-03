@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+"""fetch_fiflp_goleadores.py — Goleadores y clasificación oficial de cada grupo
+de benjamín y prebenjamín de temporadas pasadas, de la web de la federación.
+
+Recorre las competiciones del catálogo (fiflp_comps_catalog.json, las mismas
+que las actas: benjamín y prebenjamín de fútbol 7/8, sin sala) y, de cada
+grupo, guarda:
+  - la clasificación (NFG_VisClasificacion, no ofuscada): para casar el grupo
+    con el de la base aunque no tenga actas importadas;
+  - los goleadores (NFG_CMP_Goleadores, aplanados con fiflp_render): jugador,
+    equipo, partidos, goles y penaltis.
+
+Solo escribe scripts/fiflp_goleadores_<S>_raw.json (reanudable: un grupo ya
+leído no se vuelve a pedir). Lo importa el bot (import_fiflp_goleadores.py).
+Solo funciona desde GitHub Actions (goleadores-federacion.yml): FIFLP contesta
+vacío a las IPs domésticas.
+
+  python3 scripts/fetch_fiflp_goleadores.py --temporadas 17,18,19,20,21 [--max-minutes 320]
+"""
+import argparse
+import json
+import sys
+import time
+from datetime import date
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from fetch_fiflp_actas import SEASON_NAME, catalog_comps, _options  # noqa: E402
+from fiflp_render import flatten  # noqa: E402
+from update_fiflp import GOLEADORES_URL, parse_goleadores  # noqa: E402
+
+HERE = Path(__file__).resolve().parent
+
+
+def raw_path(season_code):
+    return HERE / f"fiflp_goleadores_{SEASON_NAME[season_code]}_raw.json"
+
+
+def comp_names(season_code):
+    """{id: nombre} de las competiciones de la temporada, del catálogo."""
+    entry = json.loads((HERE / "fiflp_comps_catalog.json").read_text(encoding="utf-8")).get(SEASON_NAME[season_code]) or {}
+    return {c["id"]: c["name"] for c in entry.get("all", [])}
+
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def save(path, data):
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def done(entry):
+    """Un grupo ya leído: la página de goleadores cargó (aunque no tenga ninguno)."""
+    return bool(entry and entry.get("ok"))
+
+
+def scrape_group(page, F, season, comp, grupo):
+    """(clasificación, goleadores, ok) de un grupo."""
+    standings = []
+    if F.goto(page, f"{F.BASE}/NFG_VisClasificacion?cod_primaria=1000120&CodTemporada={season}"
+                    f"&codcompeticion={comp}&codgrupo={grupo}&codjornada=99"):
+        standings = F.parse_standings(page)
+    F.delay()
+    if not F.goto(page, F.BASE + GOLEADORES_URL.format(comp=comp, season=season, group=grupo)):
+        return standings, [], False
+    flatten(page)
+    scorers = [list(r) for r in parse_goleadores(page.content())]
+    F.delay()
+    return standings, scorers, True
+
+
+def run(page, F, seasons, deadline, log=print):
+    for season in seasons:
+        path = raw_path(season)
+        data = load(path)
+        names = comp_names(season)
+        comps = catalog_comps(season)
+        log(f"Temporada {SEASON_NAME[season]}: {len(comps)} competiciones")
+        for comp in comps:
+            if time.monotonic() > deadline:
+                log("  plazo agotado: sigue en la próxima tanda")
+                return False
+            base = f"{F.BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}&CodCompeticion={comp}"
+            if not F.goto(page, base):
+                log(f"  ! {comp}: no carga")
+                continue
+            try:
+                labels = dict(page.evaluate("""() => Array.from(document.querySelectorAll('select[name="grupo"] option'))
+                    .map(o => [o.value, o.text.trim()])""") or [])
+            except Exception:
+                labels = {}
+            grupos = _options(page, "grupo")
+            F.delay()
+            new = 0
+            for grupo in grupos:
+                key = f"{comp}:{grupo}"
+                if done(data.get(key)):
+                    continue
+                if time.monotonic() > deadline:
+                    break
+                standings, scorers, ok = scrape_group(page, F, season, comp, grupo)
+                data[key] = {"comp": comp, "comp_name": names.get(comp, ""), "grupo": grupo,
+                             "grupo_name": labels.get(grupo, ""), "standings": standings,
+                             "scorers": scorers, "ok": ok, "fetched": date.today().isoformat()}
+                new += 1
+                save(path, data)
+            log(f"  {comp} {names.get(comp, '')[:50]}: {len(grupos)} grupos, {new} leídos")
+    return True
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--temporadas", default="17,18,19,20,21")
+    ap.add_argument("--max-minutes", type=float, default=320)
+    args = ap.parse_args(argv)
+    seasons = [s.strip() for s in args.temporadas.split(",") if s.strip()]
+    for s in seasons:
+        if s not in SEASON_NAME:
+            sys.exit(f"temporada desconocida: {s}")
+    deadline = time.monotonic() + args.max_minutes * 60
+    import fetch_fiflp_2425 as F
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page(user_agent=(
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"))
+        page.set_default_timeout(30000)
+        try:
+            complete = run(page, F, seasons, deadline)
+        finally:
+            browser.close()
+    print("Completo." if complete else "Incompleto: relanzar para seguir.")
+
+
+if __name__ == "__main__":
+    main()

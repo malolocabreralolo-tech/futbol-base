@@ -447,12 +447,14 @@ def parse_goleadores(html):
     return rows
 
 
-def write_scorers(conn, group_id, rows):
+def write_scorers(conn, group_id, rows, group_teams=None):
     """Sustituye los goleadores del grupo con los de la federación, con los
-    nombres de equipo que ya usa la base."""
+    nombres de equipo que ya usa la base (`group_teams`; por defecto, los de su
+    clasificación)."""
     if not rows:
         return 0
-    group_teams = [r[1] for r in stored_standings(conn, group_id)]
+    if group_teams is None:
+        group_teams = [r[1] for r in stored_standings(conn, group_id)]
     names = name_map([team for _, team, *_ in rows], group_teams)
     ids = {}
     for _, team, *_ in rows:

@@ -38,7 +38,8 @@ src/                         La app, en módulos planos sin compilar: arranque, 
 acta.css                     La hoja, con los temas claro y oscuro
 escudos/, escudos/s/         Los escudos y sus miniaturas (scripts/build_crests.py)
 src/config.js                Temporada y equipo inicial compartidos con Python
-scripts/fetch_futbolaspalmas.py Importación con protección de temporada
+scripts/fetch_futbolaspalmas.py Importación con protección de temporada (grupos de futbolaspalmas)
+scripts/update_fiflp.py      Grupos de la federación (FIFLP): tabla y jornadas, con navegador
 scripts/generate_js.py        Generador de archivos publicados
 data-*.js                    Datos actuales e históricos
 futbolbase.db                 Base de datos
@@ -55,6 +56,6 @@ bash scripts/update.sh          # importar, probar y publicar
 bash scripts/update.sh --local  # importar, probar y crear commit local
 ```
 
-La [guía de nueva temporada](docs/temporada-nueva.md) explica la verificación y activación, con copia de seguridad y conservación del archivo. La configuración de 2026/27 está preparada; sus grupos se activarán cuando haya calendarios fechados verificables.
+La [guía de nueva temporada](docs/temporada-nueva.md) explica la verificación y activación, con copia de seguridad y conservación del archivo. La temporada 2026/27 se activó el 3 de octubre de 2026 desde la federación (FIFLP): futbolaspalmas.com migró a una app nueva sin benjamín ni prebenjamín; la guía explica también cómo añadir una fase nueva a mitad de temporada (`activate_season.py --add`).
 
 Un cambio de código (`src/` o `acta.css`) necesita `python3 scripts/codigo.py` antes de las pruebas: escribe en `index.html` `CODIGO`, la versión del código con la que el arranque quita la de la versión anterior de las cachés del SW. `STATIC_ASSETS` de `sw.js` sigue el grafo de imports de `src/app.js` (lo comprueba `scripts/tests/test_sw_fixes.mjs`). Para publicar, `python3 scripts/publicar.py` sube a la vez las `?v=` de `index.html`, `CACHE_NAME` de `sw.js` y `CODIGO`, sin tocar «Última actualización»; el procedimiento completo está en [docs/rediseno-rebase.md](docs/rediseno-rebase.md). Un escudo nuevo se añade como dice la guía de nueva temporada: `scripts/build_crests.py` escribe su miniatura y el sello de `escudos/` en la línea 2 de `sw.js`.

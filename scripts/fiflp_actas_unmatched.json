@@ -5238,6 +5238,22 @@
     },
     "reason": "no candidate match"
   },
+  "238626": {
+    "header": {
+      "away_score": 6,
+      "away_team": "BECERRIL VALKYRIAS, C.D.",
+      "city": "Gáldar",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "10-10-2025",
+      "home_score": 6,
+      "home_team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+      "jornada": "1",
+      "season": "2025/2026",
+      "time": "17:00",
+      "venue": "VENANCIO MONZON F8"
+    },
+    "reason": "no candidate match"
+  },
   "238634": {
     "header": {
       "away_score": 3,
@@ -5398,6 +5414,1011 @@
     },
     "reason": "no candidate match"
   },
+  "238734": {
+    "header": {
+      "away_score": 2,
+      "away_team": "BECERRIL VALKYRIAS, C.D.",
+      "city": "Moya",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "06-02-2026",
+      "home_score": 7,
+      "home_team": "MOYA, U.D.",
+      "jornada": "14",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "GARCIA HERNANDEZ \"MOYA\""
+    },
+    "reason": "no candidate match"
+  },
+  "238739": {
+    "header": {
+      "away_score": 1,
+      "away_team": "COSTA AYALA, UNION JUVENIL",
+      "city": "Vega De San Mateo",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "14-02-2026",
+      "home_score": 5,
+      "home_team": "PANADERIA PULIDO SAN MATEO, C.F.",
+      "jornada": "15",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "SAN MATEO"
+    },
+    "reason": "no candidate match"
+  },
+  "238742": {
+    "header": {
+      "away_score": 3,
+      "away_team": "TAMARACEITE, U.D.",
+      "city": "Santa María De Guía De Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "13-02-2026",
+      "home_score": 4,
+      "home_team": "BECERRIL VALKYRIAS, C.D.",
+      "jornada": "15",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "CMF LA ATALAYA"
+    },
+    "reason": "no candidate match"
+  },
+  "238746": {
+    "header": {
+      "away_score": 2,
+      "away_team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+      "city": "Santa María De Guía De Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "20-02-2026",
+      "home_score": 5,
+      "home_team": "BECERRIL VALKYRIAS, C.D.",
+      "jornada": "16",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "CMF LA ATALAYA"
+    },
+    "reason": "no candidate match"
+  },
+  "238754": {
+    "header": {
+      "away_score": 5,
+      "away_team": "BECERRIL VALKYRIAS, C.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "28-02-2026",
+      "home_score": 0,
+      "home_team": "ACODETTI C.F B",
+      "jornada": "17",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "LA MAYORDOMIA 1"
+    },
+    "reason": "no candidate match"
+  },
+  "238761": {
+    "header": {
+      "away_score": 3,
+      "away_team": "ATALAYA, U.D.",
+      "city": "Santa María De Guía De Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "06-03-2026",
+      "home_score": 2,
+      "home_team": "BECERRIL VALKYRIAS, C.D.",
+      "jornada": "18",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "CMF LA ATALAYA"
+    },
+    "reason": "no candidate match"
+  },
+  "238762": {
+    "header": {
+      "away_score": 4,
+      "away_team": "ACODETTI C.F B",
+      "city": "Gáldar",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "10-03-2026",
+      "home_score": 4,
+      "home_team": "BARRIAL, U.D.",
+      "jornada": "18",
+      "season": "2025/2026",
+      "time": "16:15",
+      "venue": "ANTONIO CASTILLO"
+    },
+    "reason": "no candidate match"
+  },
+  "238781": {
+    "header": {
+      "away_score": 5,
+      "away_team": "TAMARACEITE, U.D.",
+      "city": "Gáldar",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "30-03-2026",
+      "home_score": 0,
+      "home_team": "ROQUE AMAGRO DE GALDAR, C.D.",
+      "jornada": "20",
+      "season": "2025/2026",
+      "time": "18:30",
+      "venue": "ANTONIO CASTILLO"
+    },
+    "reason": "no candidate match"
+  },
+  "238786": {
+    "header": {
+      "away_score": 0,
+      "away_team": "GUAYARMINA, C.D.",
+      "city": "Santa María De Guía De Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "27-03-2026",
+      "home_score": 6,
+      "home_team": "BECERRIL VALKYRIAS, C.D.",
+      "jornada": "21",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "CMF LA ATALAYA"
+    },
+    "reason": "no candidate match"
+  },
+  "238794": {
+    "header": {
+      "away_score": 0,
+      "away_team": "BECERRIL VALKYRIAS, C.D.",
+      "city": "Vega De San Mateo",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "11-04-2026",
+      "home_score": 9,
+      "home_team": "PANADERIA PULIDO SAN MATEO, C.F.",
+      "jornada": "22",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "SAN MATEO"
+    },
+    "reason": "no candidate match"
+  },
+  "238803": {
+    "header": {
+      "away_score": 6,
+      "away_team": "SAN ISIDRO, C.D.",
+      "city": "Santa María De Guía De Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "17-04-2026",
+      "home_score": 3,
+      "home_team": "BECERRIL VALKYRIAS, C.D.",
+      "jornada": "23",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "CMF LA ATALAYA"
+    },
+    "reason": "no candidate match"
+  },
+  "238811": {
+    "header": {
+      "away_score": 3,
+      "away_team": "BECERRIL VALKYRIAS, C.D.",
+      "city": "Gáldar",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "24-04-2026",
+      "home_score": 2,
+      "home_team": "ROQUE AMAGRO DE GALDAR, C.D.",
+      "jornada": "24",
+      "season": "2025/2026",
+      "time": "18:30",
+      "venue": "ANTONIO CASTILLO"
+    },
+    "reason": "no candidate match"
+  },
+  "238820": {
+    "header": {
+      "away_score": 6,
+      "away_team": "ARUCAS C.F. A",
+      "city": "Santa María De Guía De Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "29-04-2026",
+      "home_score": 1,
+      "home_team": "BECERRIL VALKYRIAS, C.D.",
+      "jornada": "25",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "GUIA"
+    },
+    "reason": "no candidate match"
+  },
+  "238828": {
+    "header": {
+      "away_score": 1,
+      "away_team": "BECERRIL VALKYRIAS, C.D.",
+      "city": "Firgas",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "12-05-2026",
+      "home_score": 3,
+      "home_team": "FIRGAS, C.D.",
+      "jornada": "26",
+      "season": "2025/2026",
+      "time": "18:30",
+      "venue": "DOMINGO PONCE"
+    },
+    "reason": "no candidate match"
+  },
+  "238837": {
+    "header": {
+      "away_score": 6,
+      "away_team": "COSTA AYALA, UNION JUVENIL",
+      "city": "Santa María De Guía De Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "15-05-2026",
+      "home_score": 2,
+      "home_team": "BECERRIL VALKYRIAS, C.D.",
+      "jornada": "27",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "CMF LA ATALAYA"
+    },
+    "reason": "no candidate match"
+  },
+  "239586": {
+    "header": {
+      "away_score": 0,
+      "away_team": "CALERO, C.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "12-10-2025",
+      "home_score": 8,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "1",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239591": {
+    "header": {
+      "away_score": 1,
+      "away_team": "VILLA DE SANTA BRIGIDA, U.D. A",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "11-10-2025",
+      "home_score": 6,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "1",
+      "season": "2025/2026",
+      "time": "09:05",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239595": {
+    "header": {
+      "away_score": 1,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "19-10-2025",
+      "home_score": 6,
+      "home_team": "HURACAN, A.D.",
+      "jornada": "2",
+      "season": "2025/2026",
+      "time": "10:30",
+      "venue": "PEPE GONÇALVEZ"
+    },
+    "reason": "no candidate match"
+  },
+  "239600": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "18-10-2025",
+      "home_score": 5,
+      "home_team": "ACODETTI C.F A",
+      "jornada": "2",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "LA MAYORDOMIA 1"
+    },
+    "reason": "no candidate match"
+  },
+  "239601": {
+    "header": {
+      "away_score": 3,
+      "away_team": "CALERO, C.D.",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "26-10-2025",
+      "home_score": 0,
+      "home_team": "ATLETICO FOMENTO, CLUB",
+      "jornada": "3",
+      "season": "2025/2026"
+    },
+    "reason": "no candidate match"
+  },
+  "239603": {
+    "header": {
+      "away_score": 0,
+      "away_team": "JINAMAR, U.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "26-10-2025",
+      "home_score": 8,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "3",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239608": {
+    "header": {
+      "away_score": 9,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Arucas",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "26-10-2025",
+      "home_score": 2,
+      "home_team": "ARUCAS C.F. B",
+      "jornada": "3",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "ELIAS RISKALL"
+    },
+    "reason": "no candidate match"
+  },
+  "239612": {
+    "header": {
+      "away_score": 1,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "08-11-2025",
+      "home_score": 7,
+      "home_team": "UNION VIERA, C.F.",
+      "jornada": "4",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "ALFONSO SILVA"
+    },
+    "reason": "no candidate match"
+  },
+  "239616": {
+    "header": {
+      "away_score": 1,
+      "away_team": "GARITA, C.F.S. LA",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "08-11-2025",
+      "home_score": 1,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "4",
+      "season": "2025/2026",
+      "time": "10:30",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239620": {
+    "header": {
+      "away_score": 5,
+      "away_team": "VETERANOS DEL PILA, C.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "16-11-2025",
+      "home_score": 2,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "5",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239623": {
+    "header": {
+      "away_score": 6,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "14-11-2025",
+      "home_score": 0,
+      "home_team": "HUESAS, U.D. LAS",
+      "jornada": "5",
+      "season": "2025/2026",
+      "time": "17:00",
+      "venue": "LAS HUESAS"
+    },
+    "reason": "no candidate match"
+  },
+  "239629": {
+    "header": {
+      "away_score": 7,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Santa Brígida",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "22-11-2025",
+      "home_score": 1,
+      "home_team": "VILLA DE SANTA BRIGIDA, U.D. A",
+      "jornada": "6",
+      "season": "2025/2026",
+      "time": "10:30",
+      "venue": "LOS OLIVOS"
+    },
+    "reason": "no candidate match"
+  },
+  "239631": {
+    "header": {
+      "away_score": 1,
+      "away_team": "MESAS HURACAN, U.D. LAS",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "22-11-2025",
+      "home_score": 3,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "6",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239637": {
+    "header": {
+      "away_score": 6,
+      "away_team": "ACODETTI C.F A",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "30-11-2025",
+      "home_score": 4,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "7",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239638": {
+    "header": {
+      "away_score": 2,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "30-11-2025",
+      "home_score": 1,
+      "home_team": "TELDE, U.D. A",
+      "jornada": "7",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "PABLO HERNANDEZ"
+    },
+    "reason": "no candidate match"
+  },
+  "239654": {
+    "header": {
+      "away_score": 3,
+      "away_team": "GARITA, C.F.S. LA",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "21-12-2025",
+      "home_score": 5,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "9",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239663": {
+    "header": {
+      "away_score": 7,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "11-01-2026",
+      "home_score": 2,
+      "home_team": "HUESAS, U.D. LAS",
+      "jornada": "10",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "LAS HUESAS"
+    },
+    "reason": "no candidate match"
+  },
+  "239668": {
+    "header": {
+      "away_score": 4,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "15-01-2026",
+      "home_score": 1,
+      "home_team": "CALERO, C.D.",
+      "jornada": "11",
+      "season": "2025/2026",
+      "time": "18:00",
+      "venue": "EL CALERO"
+    },
+    "reason": "no candidate match"
+  },
+  "239671": {
+    "header": {
+      "away_score": 0,
+      "away_team": "MESAS HURACAN, U.D. LAS",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "18-01-2026",
+      "home_score": 3,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "11",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239676": {
+    "header": {
+      "away_score": 6,
+      "away_team": "HURACAN, A.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "24-01-2026",
+      "home_score": 0,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "12",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239680": {
+    "header": {
+      "away_score": 5,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "25-01-2026",
+      "home_score": 4,
+      "home_team": "TELDE, U.D. A",
+      "jornada": "12",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "PABLO HERNANDEZ"
+    },
+    "reason": "no candidate match"
+  },
+  "239683": {
+    "header": {
+      "away_score": 5,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "30-01-2026",
+      "home_score": 0,
+      "home_team": "JINAMAR, U.D.",
+      "jornada": "13",
+      "season": "2025/2026",
+      "time": "18:00",
+      "venue": "E.M. JINAMAR"
+    },
+    "reason": "no candidate match"
+  },
+  "239688": {
+    "header": {
+      "away_score": 7,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Arucas",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "01-02-2026",
+      "home_score": 0,
+      "home_team": "ARUCAS C.F. B",
+      "jornada": "13",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "ELIAS RISKALL"
+    },
+    "reason": "no candidate match"
+  },
+  "239691": {
+    "header": {
+      "away_score": 4,
+      "away_team": "UNION VIERA, C.F.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "07-02-2026",
+      "home_score": 1,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "14",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239698": {
+    "header": {
+      "away_score": 2,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "14-02-2026",
+      "home_score": 7,
+      "home_team": "VETERANOS DEL PILA, C.D.",
+      "jornada": "15",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MANUEL NARANJO SOSA 1"
+    },
+    "reason": "no candidate match"
+  },
+  "239706": {
+    "header": {
+      "away_score": 10,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "19-02-2026",
+      "home_score": 2,
+      "home_team": "CALERO, C.D.",
+      "jornada": "16",
+      "season": "2025/2026",
+      "time": "18:00",
+      "venue": "EL CALERO"
+    },
+    "reason": "no candidate match"
+  },
+  "239711": {
+    "header": {
+      "away_score": 7,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Santa Brígida",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "21-02-2026",
+      "home_score": 3,
+      "home_team": "VILLA DE SANTA BRIGIDA, U.D. A",
+      "jornada": "16",
+      "season": "2025/2026",
+      "time": "10:30",
+      "venue": "LOS OLIVOS"
+    },
+    "reason": "no candidate match"
+  },
+  "239715": {
+    "header": {
+      "away_score": 2,
+      "away_team": "HURACAN, A.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "01-03-2026",
+      "home_score": 2,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "17",
+      "season": "2025/2026",
+      "time": "10:30",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239720": {
+    "header": {
+      "away_score": 5,
+      "away_team": "ACODETTI C.F A",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "28-02-2026",
+      "home_score": 1,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "17",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239723": {
+    "header": {
+      "away_score": 5,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "06-03-2026",
+      "home_score": 0,
+      "home_team": "JINAMAR, U.D.",
+      "jornada": "18",
+      "season": "2025/2026",
+      "time": "18:00",
+      "venue": "E.M. JINAMAR"
+    },
+    "reason": "no candidate match"
+  },
+  "239728": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ARUCAS C.F. B",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "07-03-2026",
+      "home_score": 8,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "18",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239732": {
+    "header": {
+      "away_score": 4,
+      "away_team": "UNION VIERA, C.F.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "15-03-2026",
+      "home_score": 3,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "19",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239736": {
+    "header": {
+      "away_score": 2,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "12-03-2026",
+      "home_score": 6,
+      "home_team": "GARITA, C.F.S. LA",
+      "jornada": "19",
+      "season": "2025/2026",
+      "time": "17:00",
+      "venue": "REMUDAS"
+    },
+    "reason": "no candidate match"
+  },
+  "239749": {
+    "header": {
+      "away_score": 1,
+      "away_team": "VILLA DE SANTA BRIGIDA, U.D. A",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "29-03-2026",
+      "home_score": 14,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "21",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239751": {
+    "header": {
+      "away_score": 4,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "28-03-2026",
+      "home_score": 6,
+      "home_team": "MESAS HURACAN, U.D. LAS",
+      "jornada": "21",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "C.M. LA SUERTE"
+    },
+    "reason": "no candidate match"
+  },
+  "239757": {
+    "header": {
+      "away_score": 0,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "11-04-2026",
+      "home_score": 7,
+      "home_team": "ACODETTI C.F A",
+      "jornada": "22",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "LA MAYORDOMIA 1"
+    },
+    "reason": "no candidate match"
+  },
+  "239758": {
+    "header": {
+      "away_score": 2,
+      "away_team": "TELDE, U.D. A",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "11-04-2026",
+      "home_score": 2,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "22",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239766": {
+    "header": {
+      "away_score": 4,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "19-04-2026",
+      "home_score": 7,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "23",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239774": {
+    "header": {
+      "away_score": 3,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Telde",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "25-04-2026",
+      "home_score": 4,
+      "home_team": "GARITA, C.F.S. LA",
+      "jornada": "24",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "REMUDAS"
+    },
+    "reason": "no candidate match"
+  },
+  "239783": {
+    "header": {
+      "away_score": 1,
+      "away_team": "HUESAS, U.D. LAS",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "03-05-2026",
+      "home_score": 2,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "25",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239788": {
+    "header": {
+      "away_score": 1,
+      "away_team": "CALERO, C.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "09-05-2026",
+      "home_score": 8,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "26",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239791": {
+    "header": {
+      "away_score": 8,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "05-05-2026",
+      "home_score": 1,
+      "home_team": "MESAS HURACAN, U.D. LAS",
+      "jornada": "26",
+      "season": "2025/2026",
+      "time": "18:30",
+      "venue": "C.M. LA SUERTE"
+    },
+    "reason": "no candidate match"
+  },
+  "239796": {
+    "header": {
+      "away_score": 2,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "16-05-2026",
+      "home_score": 7,
+      "home_team": "HURACAN, A.D.",
+      "jornada": "27",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "PEPE GONÇALVEZ"
+    },
+    "reason": "no candidate match"
+  },
+  "239800": {
+    "header": {
+      "away_score": 1,
+      "away_team": "TELDE, U.D. A",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "17-05-2026",
+      "home_score": 7,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "27",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239803": {
+    "header": {
+      "away_score": 1,
+      "away_team": "JINAMAR, U.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "23-05-2026",
+      "home_score": 1,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "28",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
+  "239808": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ARUCAS C.F. B",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "24-05-2026",
+      "home_score": 12,
+      "home_team": "VICTORIA, REAL CLUB",
+      "jornada": "28",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "PUERTO PI (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "239811": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ATLETICO G.C., C.F.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "28-05-2026",
+      "home_score": 6,
+      "home_team": "UNION VIERA, C.F.",
+      "jornada": "29",
+      "season": "2025/2026",
+      "time": "17:00",
+      "venue": "ALFONSO SILVA"
+    },
+    "reason": "no candidate match"
+  },
+  "239818": {
+    "header": {
+      "away_score": 5,
+      "away_team": "VETERANOS DEL PILA, C.D.",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "06-06-2026",
+      "home_score": 5,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "30",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
   "239831": {
     "header": {
       "away_score": 0,
@@ -5408,6 +6429,214 @@
       "home_team": "ATALAYA, U.D. B",
       "jornada": "3",
       "season": "2025/2026"
+    },
+    "reason": "no candidate match"
+  },
+  "240564": {
+    "header": {
+      "away_score": 7,
+      "away_team": "LA UNION DE VECINDARIO",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "11-10-2025",
+      "home_score": 0,
+      "home_team": "ESTRELLA C.F.",
+      "jornada": "1",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "LAS PALMITAS ANEXO F8"
+    },
+    "reason": "no candidate match"
+  },
+  "240572": {
+    "header": {
+      "away_score": 0,
+      "away_team": "INGENIO, C.D. B",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "18-10-2025",
+      "home_score": 21,
+      "home_team": "LA UNION DE VECINDARIO",
+      "jornada": "2",
+      "season": "2025/2026",
+      "time": "10:30",
+      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
+    },
+    "reason": "no candidate match"
+  },
+  "240579": {
+    "header": {
+      "away_score": 6,
+      "away_team": "LA UNION DE VECINDARIO",
+      "city": "San Bartolomé De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "25-10-2025",
+      "home_score": 0,
+      "home_team": "MASPALOMAS, C.D.",
+      "jornada": "3",
+      "season": "2025/2026",
+      "time": "12:00",
+      "venue": "MASPALOMAS 4 (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "240587": {
+    "header": {
+      "away_score": 1,
+      "away_team": "TABLERO, C.D.",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "05-11-2025",
+      "home_score": 8,
+      "home_team": "LA UNION DE VECINDARIO",
+      "jornada": "4",
+      "season": "2025/2026",
+      "time": "19:00",
+      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
+    },
+    "reason": "no candidate match"
+  },
+  "240594": {
+    "header": {
+      "away_score": 13,
+      "away_team": "LA UNION DE VECINDARIO",
+      "city": "San Bartolomé De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "15-11-2025",
+      "home_score": 1,
+      "home_team": "MASPA TRAINING, C.D. B",
+      "jornada": "5",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MASPALOMAS 4 (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "240602": {
+    "header": {
+      "away_score": 0,
+      "away_team": "ARGUINEGUIN, C.D. A",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "22-11-2025",
+      "home_score": 8,
+      "home_team": "LA UNION DE VECINDARIO",
+      "jornada": "6",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
+    },
+    "reason": "no candidate match"
+  },
+  "240624": {
+    "header": {
+      "away_score": 6,
+      "away_team": "LA UNION DE VECINDARIO",
+      "city": "Ingenio",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "20-12-2025",
+      "home_score": 1,
+      "home_team": "INGENIO, C.D. A",
+      "jornada": "9",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "CRISTOBAL HERRERA"
+    },
+    "reason": "no candidate match"
+  },
+  "240640": {
+    "header": {
+      "away_score": 1,
+      "away_team": "SAN PEDRO MARTIR, C.D.",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "16-01-2026",
+      "home_score": 2,
+      "home_team": "LA UNION DE VECINDARIO",
+      "jornada": "11",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
+    },
+    "reason": "no candidate match"
+  },
+  "240649": {
+    "header": {
+      "away_score": 4,
+      "away_team": "LA UNION DE VECINDARIO",
+      "city": "San Bartolomé De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "24-01-2026",
+      "home_score": 2,
+      "home_team": "MASPA TRAINING, C.D.",
+      "jornada": "12",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "MASPALOMAS 4 (F8)"
+    },
+    "reason": "no candidate match"
+  },
+  "240657": {
+    "header": {
+      "away_score": 3,
+      "away_team": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "29-01-2026",
+      "home_score": 8,
+      "home_team": "LA UNION DE VECINDARIO",
+      "jornada": "13",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
+    },
+    "reason": "no candidate match"
+  },
+  "240666": {
+    "header": {
+      "away_score": 9,
+      "away_team": "LA UNION DE VECINDARIO",
+      "city": "Ingenio",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "05-02-2026",
+      "home_score": 2,
+      "home_team": "CARRIZAL, C.F. UNION",
+      "jornada": "14",
+      "season": "2025/2026",
+      "time": "18:00",
+      "venue": "EL TORIL"
+    },
+    "reason": "no candidate match"
+  },
+  "240674": {
+    "header": {
+      "away_score": 2,
+      "away_team": "ARINAGA, C.D.",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "14-02-2026",
+      "home_score": 6,
+      "home_team": "LA UNION DE VECINDARIO",
+      "jornada": "15",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
+    },
+    "reason": "no candidate match"
+  },
+  "240684": {
+    "header": {
+      "away_score": 0,
+      "away_team": "ESTRELLA C.F.",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "21-02-2026",
+      "home_score": 6,
+      "home_team": "LA UNION DE VECINDARIO",
+      "jornada": "16",
+      "season": "2025/2026",
+      "time": "09:00",
+      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
     },
     "reason": "no candidate match"
   },
@@ -5736,6 +6965,22 @@
     },
     "reason": "no candidate match"
   },
+  "254206": {
+    "header": {
+      "away_score": 1,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "23-12-2025",
+      "home_score": 4,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "8",
+      "season": "2025/2026",
+      "time": "16:30",
+      "venue": "MUNDIAL 82 ANEXO"
+    },
+    "reason": "no candidate match"
+  },
   "254213": {
     "header": {
       "away_score": null,
@@ -5746,6 +6991,22 @@
       "home_team": "GOLETA, C.D. A",
       "jornada": "2",
       "season": "2025/2026"
+    },
+    "reason": "no candidate match"
+  },
+  "254264": {
+    "header": {
+      "away_score": 3,
+      "away_team": "DORAMAS, C.D.",
+      "city": "Santa Lucía De Tirajana",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
+      "date": "18-12-2025",
+      "home_score": 8,
+      "home_team": "LA UNION DE VECINDARIO",
+      "jornada": "8",
+      "season": "2025/2026",
+      "time": "16:15",
+      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
     },
     "reason": "no candidate match"
   },
@@ -5762,6 +7023,54 @@
       "season": "2025/2026",
       "time": "17:30",
       "venue": "VENANCIO MONZON F8"
+    },
+    "reason": "no candidate match"
+  },
+  "258259": {
+    "header": {
+      "away_score": 7,
+      "away_team": "SANTIDAD BANOT, C.D.",
+      "city": "Firgas",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "23-03-2026",
+      "home_score": 4,
+      "home_team": "FIRGAS, C.D.",
+      "jornada": "20",
+      "season": "2025/2026",
+      "time": "17:30",
+      "venue": "DOMINGO PONCE"
+    },
+    "reason": "no candidate match"
+  },
+  "258293": {
+    "header": {
+      "away_score": 1,
+      "away_team": "BECERRIL VALKYRIAS, C.D.",
+      "city": "Gáldar",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "07-04-2026",
+      "home_score": 2,
+      "home_team": "BARRIAL, U.D.",
+      "jornada": "20",
+      "season": "2025/2026",
+      "time": "18:30",
+      "venue": "ANTONIO CASTILLO"
+    },
+    "reason": "no candidate match"
+  },
+  "258318": {
+    "header": {
+      "away_score": 1,
+      "away_team": "HUESAS, U.D. LAS",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "01-04-2026",
+      "home_score": 5,
+      "home_team": "ATLETICO G.C., C.F.",
+      "jornada": "20",
+      "season": "2025/2026",
+      "time": "17:00",
+      "venue": "MUNDIAL 82 ANEXO"
     },
     "reason": "no candidate match"
   },
@@ -5788,6 +7097,22 @@
       "home_team": "MOYA, U.D. A",
       "jornada": "14",
       "season": "2025/2026"
+    },
+    "reason": "no candidate match"
+  },
+  "258607": {
+    "header": {
+      "away_score": 7,
+      "away_team": "VICTORIA, REAL CLUB",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
+      "date": "31-03-2026",
+      "home_score": 1,
+      "home_team": "VETERANOS DEL PILA, C.D.",
+      "jornada": "20",
+      "season": "2025/2026",
+      "time": "17:00",
+      "venue": "MANUEL NARANJO SOSA 1"
     },
     "reason": "no candidate match"
   }

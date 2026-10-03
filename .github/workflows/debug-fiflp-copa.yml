@@ -15,6 +15,10 @@ on:
         description: 'CodTemporada (20=2024-25, 21=2025-26)'
         required: false
         default: '20'
+      scores:
+        description: 'Jornadas a volcar con estilos de cada dígito del marcador, 3 cargas (0 = no)'
+        required: false
+        default: '0'
 
 permissions:
   contents: write
@@ -43,10 +47,12 @@ jobs:
           DBG_COMP: ${{ inputs.comp }}
           DBG_GRUPO: ${{ inputs.grupo }}
           DBG_SEASON: ${{ inputs.season }}
+          DBG_SCORES: ${{ inputs.scores }}
         run: python3 scripts/debug_fiflp_copa.py
         timeout-minutes: 5
 
       - name: Commit debug output
+        if: inputs.scores == '0'
         run: |
           git config user.name  "GitHub Actions"
           git config user.email "actions@github.com"

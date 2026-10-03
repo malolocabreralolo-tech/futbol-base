@@ -68,6 +68,50 @@ def main():
                 name: s.name, options: Array.from(s.options).slice(0, 40).map(o => [o.value, o.text.trim()])}))
         """)
 
+        # DBG_SCORES=N: solo las N primeras jornadas, cada una en 3 cargas, y al
+        # log (el JSON está en .gitignore) cada elemento de cada marcador con sus
+        # estilos computados: qué distingue al dígito real de los señuelos.
+        rich = int(os.environ.get("DBG_SCORES", "0") or 0)
+        if rich:
+            jornada_opts = jornada_opts[:rich]
+            for jor in jornada_opts:
+                for load in range(3):
+                    page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                    page.wait_for_timeout(3500)
+                    page.evaluate(f"BuscarPartidos('{jor['value']}')")
+                    page.wait_for_timeout(3000)
+                    cells = page.evaluate(r"""
+                      () => {
+                        const st = (el, p) => { const c = getComputedStyle(el, p || null);
+                          return [c.display, c.visibility, c.opacity, c.fontSize, c.color, c.position, c.left, c.textIndent,
+                                  c.width, c.overflow, c.clipPath, c.transform].join('|'); };
+                        const out = [];
+                        for (const tr of document.querySelectorAll('tr')) {
+                          const tds = Array.from(tr.querySelectorAll('td'));
+                          const td = tds.find(t => t.querySelector('.wid2_resultado_cerrada'));
+                          if (!td) continue;
+                          const spans = Array.from(td.querySelectorAll('.wid2_resultado_cerrada'));
+                          out.push({ home: (tds[0] && tds[0].innerText.trim().slice(0, 22)) || '',
+                            spans: spans.map(sp => ({ inner: sp.innerText, html: sp.innerHTML.slice(0, 700),
+                              els: [sp, ...sp.querySelectorAll('*')].map(el => {
+                                const r = el.getBoundingClientRect();
+                                const own = Array.from(el.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent.trim()).join('');
+                                return [el.tagName, el.id, el.className, own, st(el), Math.round(r.width) + 'x' + Math.round(r.height),
+                                        getComputedStyle(el, '::before').content, getComputedStyle(el, '::after').content].join(' ¦ ');
+                              }) })) });
+                        }
+                        return out;
+                      }
+                    """)
+                    print(f"\n##### {jor['text']} · carga {load + 1}")
+                    for c in cells:
+                        print(f"--- {c['home']}")
+                        for i, sp in enumerate(c["spans"]):
+                            print(f"  span{i} innerText={sp['inner']!r}")
+                            print(f"    html={sp['html']}")
+                            for e in sp["els"]:
+                                print(f"    {e}")
+
         # For each jornada: trigger the load, capture HTML structure
         for jor in jornada_opts:
             print(f"\n=== {jor['text']} ===")

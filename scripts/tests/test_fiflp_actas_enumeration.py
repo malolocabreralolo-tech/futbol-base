@@ -65,3 +65,12 @@ def test_only_the_requested_groups(monkeypatch):
     assert {r["grupo"] for r in out} == {"G2"}
     monkeypatch.setattr(A, "GROUP_FILTER", ["99999:GRUPO 2"])          # de otra competición: nada
     assert A.enumerate_actas_main(page, "21", "54422888") == []
+
+
+def test_backfill_takes_the_catalog_competitions_without_futsal_and_rereads_old_actas():
+    comps = A.catalog_comps("21")
+    assert "54422888" in comps and "54976641" in comps            # liga prebenjamín y Clausura Benjamín
+    assert "54422904" not in comps                                # LIGA BENJAMIN FUTBOL SALA
+    assert A.catalog_comps("99") == []
+    assert A.needs_rescrape({"header": {}, "lineups": {}})        # lector de mayo: sin «consistent»
+    assert not A.needs_rescrape({"header": {}, "consistent": True})

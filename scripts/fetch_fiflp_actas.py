@@ -51,6 +51,34 @@ KEYWORDS_BENJ = ("BENJAMIN", "BENJAMÍN", "PREBENJAMIN", "PREBENJAMÍN")
 ACTA_HREF = re.compile(r"NFG_CmpPartido[^\"'\s]*CodActa=(\d+)", re.IGNORECASE)
 
 
+def catalog_comps(season_code):
+    """Ids de las competiciones benjamín/prebenjamín de fútbol 7/8 (sin sala)
+    de la temporada, del catálogo; [] si el catálogo no la tiene."""
+    path = Path(__file__).parent / "fiflp_comps_catalog.json"
+    if season_code not in SEASON_NAME or not path.exists():
+        return []
+    entry = json.loads(path.read_text(encoding="utf-8")).get(SEASON_NAME[season_code]) or {}
+    fold = lambda t: t.upper().replace("Í", "I").replace("É", "E")
+    return [c["id"] for c in entry.get("all", [])
+            if "BENJAMIN" in fold(c["name"]) and "SALA" not in fold(c["name"]) and "LPFS" not in fold(c["name"])]
+
+
+def index_path(season_code):
+    """Índice de actas enumeradas (cod_acta → comp, grupo, jornada): una tanda
+    encadenada no vuelve a recorrer todas las jornadas de la temporada."""
+    return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_index.json"
+
+
+def status_path(season_code):
+    return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_status.json"
+
+
+def needs_rescrape(acta):
+    """Las actas leídas antes de octubre de 2026 (acta_parser, sin aplanar)
+    traen la cabecera mal descifrada y sin minutos: se vuelven a leer."""
+    return isinstance(acta, dict) and "consistent" not in acta
+
+
 # ── Low-level helpers ─────────────────────────────────────────────────────────
 
 def delay(extra=0):
@@ -418,6 +446,10 @@ def parse_args():
                     help="Optional comma-separated comp IDs (override auto-discovery)")
     ap.add_argument("--max-actas", type=int, default=0,
                     help="Cap on number of actas to process (0 = unlimited)")
+    ap.add_argument("--max-minutes", type=int, default=0,
+                    help="Minutos de descarga antes de parar limpio (0 = 330)")
+    ap.add_argument("--reindex", action="store_true",
+                    help="Volver a enumerar aunque haya índice (una fase nueva publicada)")
     ap.add_argument("--grupos", default="",
                     help="Solo estos grupos: 'GRUPO 5', '54422885:GRUPO 13' o el CodGrupo, separados por comas")
     ap.add_argument("--dump-fixture", default="",
@@ -440,6 +472,10 @@ def main():
     # Resolve comp list
     if args.comps:
         comps = [c.strip() for c in args.comps.split(",") if c.strip()]
+    elif catalog_comps(season):
+        # Las competiciones benjamín/prebenjamín de fútbol 7/8 de esa temporada
+        # (sin sala) del catálogo de la federación (discover_fiflp_comps.py).
+        comps = catalog_comps(season)
     elif season in KNOWN_COMPS:
         comps = KNOWN_COMPS[season]
     else:
@@ -459,13 +495,25 @@ def main():
         br = p.chromium.launch(headless=True)
         page = br.new_context(user_agent=UA).new_page()
 
-        # --- Enumerate targets ---
+        # --- Enumerate targets (o el índice de una tanda anterior) ---
+        index = {}
+        if index_path(season).exists() and not args.reindex:
+            index = json.loads(index_path(season).read_text(encoding="utf-8"))
         all_targets = []
         for comp_id in comps:
+            cached = [dict(v, cod_acta=k) for k, v in index.items()
+                      if str(v.get("comp_id")) == str(comp_id) and _wanted(comp_id, v.get("grupo"), v.get("grupo_name"))]
+            if cached and not GROUP_FILTER:
+                print(f"  comp {comp_id}: {len(cached)} actas del índice")
+                all_targets += cached
+                continue
             print(f"  enumerating comp {comp_id} (cascade)...")
             actas, strategy = enumerate_actas_cascade(page, season, comp_id)
             all_targets += actas
+            for t in actas:
+                index[t["cod_acta"]] = {k: v for k, v in t.items() if k != "cod_acta"}
             delay()
+        index_path(season).write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
 
         # Dedupe all_targets by cod_acta (multiple comps may reference same acta)
         seen_t: set = set()
@@ -477,11 +525,11 @@ def main():
         all_targets = deduped
 
         # Filter out already scraped (resume support)
-        pending = [t for t in all_targets if t["cod_acta"] not in raw]
+        pending = [t for t in all_targets if t["cod_acta"] not in raw or needs_rescrape(raw[t["cod_acta"]])]
         print(f"Enumerated {len(all_targets)} actas total, {len(pending)} pending")
 
         # --- Fetch + parse loop ---
-        BUDGET = 5.5 * 3600   # leave headroom under GitHub Actions 6h timeout
+        BUDGET = (args.max_minutes or 330) * 60   # bajo el timeout del job, para guardar y subir
         run_start = time.time()
 
         for i, t in enumerate(pending):
@@ -518,7 +566,10 @@ def main():
         br.close()
 
     save_raw(season, raw)
-    print(f"Done season {season}: total {len(raw)} actas in raw")
+    left = sum(1 for t in all_targets if t["cod_acta"] not in raw or needs_rescrape(raw[t["cod_acta"]]))
+    status_path(season).write_text(json.dumps({"season": SEASON_NAME[season], "enumerated": len(all_targets),
+                                               "in_raw": len(raw), "pending": left}, indent=1) + "\n", encoding="utf-8")
+    print(f"Done season {season}: total {len(raw)} actas in raw, {left} pending")
 
 
 if __name__ == "__main__":

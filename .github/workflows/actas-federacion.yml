@@ -1,0 +1,121 @@
+name: Actas de la federación (relleno encadenado)
+
+# Descarga las actas de una temporada en tandas de ~5,5 h y se relanza sola
+# hasta acabarla; después pasa a la siguiente de la cola. Solo sube el raw
+# (scripts/fiflp_actas_<S>_raw.json, su índice y su estado): la base y los
+# data-*.js los pone al día el bot (update.yml) al importar los raw nuevos,
+# así dos workflows nunca chocan en futbolbase.db. Ver docs/federacion.md.
+on:
+  workflow_dispatch:
+    inputs:
+      temporada:
+        description: 'CodTemporada (17=2021-22 … 21=2025-26)'
+        required: true
+        type: choice
+        options: ['17', '18', '19', '20', '21']
+      cola:
+        description: 'Temporadas que siguen al acabar esta, separadas por comas (p. ej. 19,18,17)'
+        required: false
+        default: ''
+      tandas:
+        description: 'Tandas que quedan como máximo (freno del encadenado)'
+        required: false
+        default: '40'
+      comps:
+        description: 'Competiciones (vacío = las benjamín/prebenjamín del catálogo, sin sala)'
+        required: false
+        default: ''
+      reindex:
+        description: 'Volver a enumerar aunque haya índice'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: actas-federacion
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Instalar Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+      - name: Descargar actas (tanda)
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+          TEMP_INPUT: ${{ inputs.temporada }}
+          COMPS_INPUT: ${{ inputs.comps }}
+          REINDEX: ${{ inputs.reindex }}
+        run: |
+          ARGS="--temporada $TEMP_INPUT --max-minutes 320"
+          if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
+          if [ "$REINDEX" = "true" ]; then ARGS="$ARGS --reindex"; fi
+          python3 scripts/fetch_fiflp_actas.py $ARGS
+        timeout-minutes: 335
+      # if: always(): una tanda cortada sube lo que lleva (el scraper guarda
+      # cada 25 actas y reanuda por el índice).
+      - name: Subir el raw
+        if: always()
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+          TEMP_INPUT: ${{ inputs.temporada }}
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
+          for f in raw index status; do
+            [ -e "scripts/fiflp_actas_${LABEL}_${f}.json" ] && git add "scripts/fiflp_actas_${LABEL}_${f}.json"
+          done
+          if git diff --cached --quiet; then
+            echo "Nada nuevo que subir."
+            exit 0
+          fi
+          git commit -m "actas: tanda de la federación, temporada $LABEL"
+          # Solo toca sus propios ficheros: rebasar sobre lo que haya subido el
+          # bot entretanto no choca nunca.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && exit 0
+            echo "push fallido (intento $i), reintento..."
+            sleep $((i * 15))
+          done
+          exit 1
+      - name: Siguiente tanda
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: ${{ github.workspace }}
+          TEMP_INPUT: ${{ inputs.temporada }}
+          COLA: ${{ inputs.cola }}
+          TANDAS: ${{ inputs.tandas }}
+          COMPS_INPUT: ${{ inputs.comps }}
+        run: |
+          LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
+          STATUS="scripts/fiflp_actas_${LABEL}_status.json"
+          PENDING=$(python3 -c "import json; print(json.load(open('$STATUS'))['pending'])" 2>/dev/null || echo 1)
+          LEFT=$((TANDAS - 1))
+          if [ "$LEFT" -le 0 ]; then
+            echo "Freno: sin tandas. Pendientes en $LABEL: $PENDING"
+          elif [ "$PENDING" -gt 0 ]; then
+            echo "Quedan $PENDING actas de $LABEL: otra tanda."
+            gh workflow run actas-federacion.yml --ref main -f temporada="$TEMP_INPUT" -f cola="$COLA" -f tandas="$LEFT" -f comps="$COMPS_INPUT"
+          elif [ -n "$COLA" ]; then
+            NEXT="${COLA%%,*}"
+            REST=""
+            case "$COLA" in *,*) REST="${COLA#*,}" ;; esac
+            echo "Temporada $LABEL terminada: sigue la $NEXT."
+            gh workflow run actas-federacion.yml --ref main -f temporada="$NEXT" -f cola="$REST" -f tandas="$LEFT"
+          else
+            echo "Cola terminada."
+          fi

@@ -384,7 +384,26 @@ def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None, max_retries=2):
         out_path.write_text(html, encoding="utf-8")
         print(f"  dumped fixture: {out_path}")
     try:
-        result = parse_acta(html)
+        # Primero el acta tal como se ve (fiflp_render aplana la ofuscación de
+        # marcadores, parciales y minutos; fiflp_acta la lee y comprueba que los
+        # parciales cuadran). Si la página no tiene la forma de acta moderna,
+        # el parser estático de siempre.
+        result = None
+        try:
+            try:
+                from scripts.fiflp_render import flatten
+                from scripts.fiflp_acta import parse_flat_acta
+            except ImportError:
+                from fiflp_render import flatten
+                from fiflp_acta import parse_flat_acta
+            flatten(page)
+            flat = parse_flat_acta(page.content())
+            if flat["header"].get("home_team") and flat["lineups"]["home"]:
+                result = flat
+        except Exception as ex:
+            print(f"  ! aplanado acta={cod_acta}: {ex}")
+        if result is None:
+            result = parse_acta(html)
     except Exception as ex:
         print(f"  ! parse error acta={cod_acta}: {ex}")
         return None

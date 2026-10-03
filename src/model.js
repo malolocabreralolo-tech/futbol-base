@@ -751,6 +751,9 @@ export function bestStreaks(season, cat) {
  * mayúsculas por minúsculas. El texto con minúsculas se respeta tal cual. */
 export function playerName(raw) {
   let text = String(raw ?? '').replace(/\s+/g, ' ').trim();
+  // Un niño cuyo nombre la federación no publica (el club no lo autoriza):
+  // generate_js le da la clave '#<grupo>-<n>' para que cuente en la lista.
+  if (text.startsWith('#')) return 'Sin nombre publicado';
   const comma = text.indexOf(',');
   if (comma !== -1) {
     text = [text.slice(comma + 1).trim(), text.slice(0, comma).trim()].filter(Boolean).join(' ');

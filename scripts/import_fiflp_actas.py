@@ -36,15 +36,50 @@ def _norm_player(name: str) -> str:
     return s
 
 
-def _get_or_create_player(conn, name: str) -> int:
+def _has_fiflp_id(conn) -> bool:
+    return any(r[1] == "fiflp_id" for r in conn.execute("PRAGMA table_info(players)"))
+
+
+def _get_or_create_player(conn, name: str, fiflp_id: int = None) -> int:
+    """El jugador por su id de la federación (estable entre temporadas: el
+    mismo niño de prebenjamín a benjamín) y, si no, por nombre normalizado.
+    Un homónimo con otro id de la federación es OTRO niño: entra con la clave
+    'NOMBRE#id' para no fundirlos."""
     norm = _norm_player(name)
-    r = conn.execute("SELECT id FROM players WHERE norm_name=?", (norm,)).fetchone()
+    with_id = fiflp_id is not None and _has_fiflp_id(conn)
+    if with_id:
+        r = conn.execute("SELECT id FROM players WHERE fiflp_id=?", (fiflp_id,)).fetchone()
+        if r:
+            return r[0]
+    r = conn.execute("SELECT id, " + ("fiflp_id" if with_id else "NULL") +
+                     " FROM players WHERE norm_name=?", (norm,)).fetchone()
+    # Una fila antigua sin id solo se adopta si el nombre lleva apellidos: un
+    # nombre de pila suelto ('LUCAS', como publica la federación a algunos
+    # niños) es de cualquiera, y le daría al niño nuevo la historia de otro.
+    adopt = r and r[1] is None and (not with_id or "," in name)
+    if r and (not with_id or r[1] == fiflp_id or adopt):
+        if with_id and r[1] is None:
+            conn.execute("UPDATE players SET fiflp_id=? WHERE id=?", (fiflp_id, r[0]))
+        return r[0]
+    if r:                                   # mismo nombre, otro id: homónimo
+        norm = f"{norm}#{fiflp_id}"
+    if with_id:
+        cur = conn.execute("INSERT INTO players(full_name, norm_name, fiflp_id) VALUES(?, ?, ?)",
+                           (name, norm, fiflp_id))
+    else:
+        cur = conn.execute("INSERT INTO players(full_name, norm_name) VALUES(?, ?)", (name, norm))
+    return cur.lastrowid
+
+
+ANON_NORM = "#SIN NOMBRE PUBLICADO"
+
+
+def _anonymous_player(conn) -> int:
+    """La fila única de «jugador sin nombre publicado» (full_name vacío)."""
+    r = conn.execute("SELECT id FROM players WHERE norm_name=?", (ANON_NORM,)).fetchone()
     if r:
         return r[0]
-    cur = conn.execute(
-        "INSERT INTO players(full_name, norm_name) VALUES(?, ?)", (name, norm)
-    )
-    return cur.lastrowid
+    return conn.execute("INSERT INTO players(full_name, norm_name) VALUES('', ?)", (ANON_NORM,)).lastrowid
 
 
 def _team_id_by_side(conn, mid: int, side: str) -> int:
@@ -96,7 +131,7 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
     for side in ("home", "away"):
         team_id = _team_id_by_side(conn, mid, side)
         for p in (acta.get("lineups") or {}).get(side, []):
-            pid = _get_or_create_player(conn, p["name"])
+            pid = _get_or_create_player(conn, p["name"], p.get("fiflp_id"))
             name_to_pid[(side, p["name"])] = (pid, team_id)
             conn.execute(
                 """INSERT INTO appearances
@@ -111,6 +146,16 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
 
     for ev in acta.get("events") or []:
         side = ev["side"]
+        if not ev.get("player_name"):
+            # Gol de un niño cuyo nombre la federación no publica: queda en la
+            # cronología con un jugador «sin nombre» (sin aparición ni ficha).
+            if ev["kind"] == "goal" and side in ("home", "away"):
+                conn.execute(
+                    """INSERT INTO match_events(match_id, team_id, player_id, kind, minute, goal_type, pair_id)
+                       VALUES (?, ?, ?, 'goal', ?, ?, NULL)""",
+                    (mid, _team_id_by_side(conn, mid, side), _anonymous_player(conn), ev.get("minute"),
+                     ev.get("goal_type")))
+            continue
         key = (side, ev["player_name"])
 
         # Player in event but not in lineup (e.g. scorer who was unlisted sub)
@@ -156,8 +201,11 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
                     (new_id, event_id_by_pair[pair_idx]),
                 )
 
-        # Bump appearance counters
-        if kind == "goal":
+        # Bump appearance counters. Un gol en propia puerta no es gol del
+        # jugador (suma al rival): queda en match_events, pero no en su ficha.
+        if kind == "goal" and ev.get("goal_type") == "own":
+            pass
+        elif kind == "goal":
             conn.execute(
                 "UPDATE appearances SET goals=goals+1 WHERE match_id=? AND player_id=?",
                 (mid, pid),
@@ -187,6 +235,15 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
                 "INSERT OR IGNORE INTO match_staff(match_id, team_id, kind, name) VALUES(?, ?, ?, ?)",
                 (mid, tid, "coach", staff[key]),
             )
+    # Delegados de campo y de equipo (acta de la federación, 2026-10).
+    for side in ("home", "away"):
+        delegates = staff.get(f"delegates_{side}") or {}
+        for field, kind in (("campo", "delegate_field"), ("equipo", "delegate_team")):
+            if delegates.get(field):
+                conn.execute(
+                    "INSERT OR IGNORE INTO match_staff(match_id, team_id, kind, name) VALUES(?, ?, ?, ?)",
+                    (mid, _team_id_by_side(conn, mid, side), kind, delegates[field]),
+                )
 
     return True
 

@@ -332,3 +332,12 @@ def test_update_sh_gates_publishing_on_the_test_suites():
         assert marca in contenido, f"update.sh debe correr {marca}"
     assert contenido.index("pytest") < contenido.index("git commit")
     assert contenido.index("node --test") < contenido.index("git commit")
+
+
+def test_update_push_rebases_and_retries():
+    """El bot tarda hasta ~30 min con las actas de la federación: un push ajeno a
+    main en ese rato no debe tirar el trabajo (pasó el 3/10/2026: «rejected»)."""
+    runs = _runs(_load("update.yml"), "update")
+    commit_run = next(r for r in runs if "Actualización automática" in r and "git commit" in r)
+    assert "git pull --rebase origin main" in commit_run
+    assert "git rebase --abort" in commit_run

@@ -47,8 +47,10 @@ NAMES = {'MESAS HURACAN, U.D. LAS "A"': "Las Mesas Hu.", 'TABLERO, C.D. "A"': "T
 
 
 def db():
+    from migrate_actas_schema import migrate
     conn = sqlite3.connect(":memory:")
     conn.executescript(SCHEMA)
+    migrate(conn)          # cod_acta, fiflp_acta, players.fiflp_id, delegados (lo hace el bot al arrancar)
     conn.execute("INSERT INTO seasons(name,start_year,end_year,is_current) VALUES('2025-2026',2025,2026,1)")
     conn.execute("INSERT INTO categories(name) VALUES('BENJAMIN'),('PREBENJAMIN')")
     conn.commit()

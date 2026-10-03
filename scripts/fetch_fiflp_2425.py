@@ -189,9 +189,17 @@ RENDERED_SCORE_JS = """(cell) => {
       const st = getComputedStyle(node);
       if (st.display === 'none' || parseFloat(st.opacity) === 0) return '';
       const own = st.visibility === 'visible' && parseFloat(st.fontSize) > 0;
-      let out = own ? digits(getComputedStyle(node, '::before').content) : '';
+      // El propio pseudo-elemento también puede estar oculto (el señuelo
+      // '#idh:before{content:"\\0031";display:none}': Haría 41-2 era 4-2).
+      const pseudo = where => {
+        const ps = getComputedStyle(node, where);
+        const seen = ps.display !== 'none' && ps.visibility === 'visible'
+            && parseFloat(ps.opacity || '1') > 0 && parseFloat(ps.fontSize || '1') > 0;
+        return own && seen ? digits(ps.content) : '';
+      };
+      let out = pseudo('::before');
       for (const child of node.childNodes) out += walk(child);
-      if (own) out += digits(getComputedStyle(node, '::after').content);
+      out += pseudo('::after');
       return out;
     };
     return Array.from(cell.querySelectorAll('.wid2_resultado_cerrada')).map(span => {
@@ -266,7 +274,10 @@ def parse_matches(page):
                     referee = vl.split(':', 1)[-1].strip() if ':' in vl else vl
                 elif not venue and vl and not re.match(r'^[\d\-:/\s]+$', vl):
                     venue = vl
+        # El código del acta (o de la previa, antes del partido) de la federación.
+        acta = re.search(r"CodActa=(\d+)", table.inner_html())
         matches.append({"home": home, "away": away, "hs": hs, "as": as_,
+                        "fiflp_acta": int(acta.group(1)) if acta else None,
                         "date": date_str, "time": time_str,
                         "venue": venue, "referee": referee})
     return matches

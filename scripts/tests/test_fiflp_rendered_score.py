@@ -26,6 +26,9 @@ CASES = [
      '<i class="fa-solid"><i id="d" class="fa-1"><span style="display:none;">1</span></i></i>', (5, 1)),
     ('3 -', '<span style="visibility:hidden">9</span>0', (3, 0)),
     ('<i class="once"></i> -', '<i class="fa-solid">1<span style="font-size:0">8</span>2</i>', (11, 12)),
+    # Señuelo en un PSEUDO-elemento oculto (Haría 2026-27: se leía 41 con la tabla en 4).
+    ('<i class="fa-solid"><style>#h1::after{content:"\\0031";display:none}</style><i id="h1" class="fa-4"></i></i> -',
+     '<i class="fa-solid"><style>#h2::before{content:"\\0037";visibility:hidden}</style><i id="h2"></i>2</i>', (4, 2)),
 ]
 
 

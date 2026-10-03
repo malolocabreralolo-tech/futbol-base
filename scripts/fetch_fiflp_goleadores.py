@@ -24,7 +24,9 @@ import time
 from datetime import date
 from pathlib import Path
 
+# scripts/ (sus módulos) y la raíz (fetch_fiflp_actas importa scripts.acta_parser).
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(1, str(Path(__file__).resolve().parents[1]))
 from fetch_fiflp_actas import SEASON_NAME, catalog_comps, _options  # noqa: E402
 from fiflp_render import flatten  # noqa: E402
 from update_fiflp import GOLEADORES_URL, parse_goleadores  # noqa: E402

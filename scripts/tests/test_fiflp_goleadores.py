@@ -143,3 +143,13 @@ def test_the_scraper_saves_standings_and_scorers_and_resumes(tmp_path, monkeypat
     F.visited.clear()
     S.run(FakePage(html), F, ["20"], time.monotonic() + 60, log=lambda *_: None)
     assert [u for u in F.visited if "Goleadores" in u] == [F.BASE + S.GOLEADORES_URL.format(comp="900", season="20", group="12")]
+
+
+def test_the_scraper_starts_as_actions_runs_it():
+    """Sin PYTHONPATH, desde la raíz (el paso del workflow): los imports cargan."""
+    import os
+    import subprocess
+    env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
+    out = subprocess.run([sys.executable, "scripts/fetch_fiflp_goleadores.py", "--help"], cwd=ROOT, env=env,
+                         capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr

@@ -60,6 +60,13 @@ def main():
         """)
         print(f"Jornadas: {len(jornada_opts)}")
         result["jornada_options"] = jornada_opts
+        # Sin jornadas no hay nada más que mirar: el texto visible de la página
+        # y los desplegables dicen si el grupo existe sin calendario o si falló.
+        result["page_text"] = page.inner_text("body")[:4000]
+        result["selects"] = page.evaluate("""
+            () => Array.from(document.querySelectorAll('select')).map(s => ({
+                name: s.name, options: Array.from(s.options).slice(0, 40).map(o => [o.value, o.text.trim()])}))
+        """)
 
         # For each jornada: trigger the load, capture HTML structure
         for jor in jornada_opts:

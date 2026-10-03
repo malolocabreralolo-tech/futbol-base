@@ -11,6 +11,10 @@ on:
         description: 'Optional: comma-separated comp IDs (override auto-discovery)'
         required: false
         default: ''
+      grupos:
+        description: "Solo estos grupos: 'GRUPO 5', '54422885:GRUPO 13' o el CodGrupo, separados por comas (vacío = todos)"
+        required: false
+        default: ''
       do_import:
         description: 'Run import + generate_js after scraping'
         required: false
@@ -49,6 +53,7 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
           TEMP_INPUT: ${{ inputs.temporada }}
           COMPS_INPUT: ${{ inputs.comps }}
+          GRUPOS_INPUT: ${{ inputs.grupos }}
           MAX_INPUT: ${{ inputs.max_actas }}
           DUMP_INPUT: ${{ inputs.dump_fixture }}
         run: |
@@ -56,7 +61,7 @@ jobs:
           if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
           if [ "$MAX_INPUT" != "0" ] && [ -n "$MAX_INPUT" ]; then ARGS="$ARGS --max-actas $MAX_INPUT"; fi
           if [ -n "$DUMP_INPUT" ]; then ARGS="$ARGS --dump-fixture $DUMP_INPUT"; fi
-          python3 scripts/fetch_fiflp_actas.py $ARGS
+          python3 scripts/fetch_fiflp_actas.py $ARGS --grupos "$GRUPOS_INPUT"
       - name: Import + generate (if requested)
         if: ${{ inputs.do_import == true }}
         env:

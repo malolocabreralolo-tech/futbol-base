@@ -42,3 +42,26 @@ def test_every_group_and_round_is_read_by_url(monkeypatch):
     assert sorted(r["cod_acta"] for r in out) == ["110", "120", "210", "220"]      # sin la previa
     assert {r["grupo"] for r in out} == {"G1", "G2"}
     assert any(u.endswith("&CodGrupo=G2&CodJornada=2") for u in page.urls)
+
+
+def test_only_the_requested_groups(monkeypatch):
+    page = Page()
+    page.evaluate_orig = page.evaluate
+
+    def evaluate(js, *a):
+        if "o.text.trim()" in js:
+            return [["G1", "GRUPO 1"], ["G2", "GRUPO 2"]]
+        return page.evaluate_orig(js, *a)
+    page.evaluate = evaluate
+
+    def goto(p, url, *a, **k):
+        p.url = url
+        p.urls.append(url)
+        return True
+    monkeypatch.setattr(A, "goto", goto)
+    monkeypatch.setattr(A, "delay", lambda *a, **k: None)
+    monkeypatch.setattr(A, "GROUP_FILTER", ["54422888:GRUPO 2"])
+    out = A.enumerate_actas_main(page, "21", "54422888")
+    assert {r["grupo"] for r in out} == {"G2"}
+    monkeypatch.setattr(A, "GROUP_FILTER", ["99999:GRUPO 2"])          # de otra competición: nada
+    assert A.enumerate_actas_main(page, "21", "54422888") == []

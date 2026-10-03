@@ -147,6 +147,23 @@ def _options(page, name, tries=4):
     return []
 
 
+# --grupos: solo estos grupos. Entradas separadas por comas: 'GRUPO 5' (en todas
+# las competiciones) o '54422885:GRUPO 13' (en esa); también vale el CodGrupo.
+GROUP_FILTER = []
+
+
+def _wanted(comp_id, value, text):
+    if not GROUP_FILTER:
+        return True
+    for entry in GROUP_FILTER:
+        comp, _, name = entry.rpartition(":")
+        if comp and comp != str(comp_id):
+            continue
+        if name.strip().upper() in (str(value).upper(), (text or "").strip().upper()):
+            return True
+    return False
+
+
 def enumerate_actas_main(page, season, comp_id):
     """Returns list of dicts: [{cod_acta, comp_id, grupo, jornada}, ...].
 
@@ -160,7 +177,12 @@ def enumerate_actas_main(page, season, comp_id):
     base = f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}&CodCompeticion={comp_id}"
     if not goto(page, base):
         return out
-    grupos = _options(page, "grupo")
+    try:
+        labels = dict(page.evaluate("""() => Array.from(document.querySelectorAll('select[name="grupo"] option'))
+            .map(o => [o.value, o.text.trim()])""") or [])
+    except Exception:
+        labels = {}
+    grupos = [g for g in _options(page, "grupo") if _wanted(comp_id, g, labels.get(g))]
     for grupo in grupos:
         if not goto(page, f"{base}&CodGrupo={grupo}"):
             continue
@@ -396,6 +418,8 @@ def parse_args():
                     help="Optional comma-separated comp IDs (override auto-discovery)")
     ap.add_argument("--max-actas", type=int, default=0,
                     help="Cap on number of actas to process (0 = unlimited)")
+    ap.add_argument("--grupos", default="",
+                    help="Solo estos grupos: 'GRUPO 5', '54422885:GRUPO 13' o el CodGrupo, separados por comas")
     ap.add_argument("--dump-fixture", default="",
                     help="CodActa whose raw HTML to dump to scripts/tests/fixtures/")
     return ap.parse_args()
@@ -410,6 +434,7 @@ def main():
     from playwright.sync_api import sync_playwright  # noqa: F401
 
     args = parse_args()
+    GROUP_FILTER[:] = [g.strip() for g in args.grupos.split(",") if g.strip()]
     season = args.temporada
 
     # Resolve comp list

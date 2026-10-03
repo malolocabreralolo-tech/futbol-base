@@ -1,0 +1,61 @@
+name: Sonda FIFLP (páginas públicas de un grupo)
+
+# Qué publica la federación para un grupo (goleadores, actas, fichas…): guarda
+# muestras HTML y un resumen como artefacto, sin tocar la base ni el repo.
+# Análisis en local: gh run download <id> -n probe-fiflp
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: 'CodTemporada (21=2025-26, 22=2026-27)'
+        required: true
+        default: '22'
+      comp:
+        description: 'CodCompeticion'
+        required: true
+        default: '54976982'
+      grupo:
+        description: 'CodGrupo'
+        required: true
+        default: '55141374'
+      samples:
+        description: 'Ejemplos por tipo de página'
+        required: false
+        default: '3'
+      extra:
+        description: 'URLs relativas a NPcd, separadas por espacios'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Instalar Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+      - name: Sondear
+        env:
+          PROBE_SEASON: ${{ inputs.season }}
+          PROBE_COMP: ${{ inputs.comp }}
+          PROBE_GRUPO: ${{ inputs.grupo }}
+          PROBE_SAMPLES: ${{ inputs.samples }}
+          PROBE_EXTRA: ${{ inputs.extra }}
+        run: python3 scripts/probe_fiflp.py
+        timeout-minutes: 25
+      - name: Subir muestras
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: probe-fiflp
+          path: probe_out/
+          retention-days: 14

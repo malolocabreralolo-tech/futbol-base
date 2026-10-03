@@ -13,6 +13,7 @@ Public API:
 import re
 import unicodedata
 from datetime import datetime, timedelta
+from functools import lru_cache
 
 
 _CLUB_SUFFIX = re.compile(
@@ -23,6 +24,10 @@ _CLUB_SUFFIX = re.compile(
 )
 
 
+# Pura: cada acta compara su cabecera con TODOS los partidos de la temporada, así
+# que una temporada entera (miles de actas) repetía la misma normalización
+# millones de veces.
+@lru_cache(maxsize=None)
 def normalize_team_name(s: str) -> str:
     """Aggressively normalize a team name so FIFLP acta spellings and Wayback DB
     spellings of the same team collapse to the same string.

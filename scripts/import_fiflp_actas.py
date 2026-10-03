@@ -5,8 +5,14 @@ appearances/match_events/match_staff for that match and re-insert. Unmatched
 actas are appended to scripts/fiflp_actas_unmatched.json (deduplicated by
 cod_acta key).
 
+El bot (fetch_futbolaspalmas.py) llama a import_changed_raws: importa cada
+scripts/fiflp_actas_<S>_raw.json que haya cambiado desde la última vez (sha1 en
+la tabla raw_imports), con solo las actas leídas aplanadas (las descarga
+actas-federacion.yml).
+
 CLI: python3 scripts/import_fiflp_actas.py path/to/raw.json [--db futbolbase.db]
 """
+import hashlib
 import json
 import os
 import re
@@ -310,11 +316,21 @@ def _purge_orphan_cod_actas(conn, raw: dict) -> int:
     return cleared
 
 
-def import_raw(conn, raw_path: str) -> dict:
+def flattened(acta) -> bool:
+    """Un acta leída aplanada (fiflp_render.FLATTEN_JS + fiflp_acta; trae
+    `consistent`). Las de antes de octubre de 2026 (acta_parser, sin aplanar)
+    traen marcadores y minutos mal descifrados: actas-federacion.yml las vuelve
+    a descargar, y hasta entonces se quedan como estén en la base."""
+    return isinstance(acta, dict) and "consistent" in acta
+
+
+def import_raw(conn, raw_path: str, only=None) -> dict:
     """Read raw_path JSON and import each acta into conn.
 
+    `only(acta)`: si se da, solo se importan las actas que lo cumplen; las demás
+    cuentan en "skipped" y no se tocan (tampoco se purgan: siguen en el raw).
     Returns {"matched": int, "unmatched": int, "duplicates": int,
-    "orphans_cleared": int}. Commits the connection after processing all actas.
+    "orphans_cleared": int, "skipped": int}. Commits the connection after processing all actas.
     Unmatched actas are written to fiflp_actas_unmatched.json (by cod_acta key).
     Two actas reconciling to the same match are reported as duplicates (first
     one wins, the rest are skipped with a warning). Matches holding a cod_acta
@@ -326,6 +342,7 @@ def import_raw(conn, raw_path: str) -> dict:
     matched = 0
     unmatched = 0
     duplicates = 0
+    skipped = 0
     um = _load_unmatched()
     claimed = {}  # match_id -> cod_acta that claimed it in this run
 
@@ -333,6 +350,9 @@ def import_raw(conn, raw_path: str) -> dict:
 
     for cod_acta_str, acta in raw.items():
         cod_acta = int(cod_acta_str)
+        if only is not None and not only(acta):
+            skipped += 1
+            continue
         mid = reconcile_acta(conn, acta.get("header") or {})
         if not mid:
             unmatched += 1
@@ -358,7 +378,40 @@ def import_raw(conn, raw_path: str) -> dict:
         "unmatched": unmatched,
         "duplicates": duplicates,
         "orphans_cleared": orphans_cleared,
+        "skipped": skipped,
     }
+
+
+RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
+SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
+    """Importa cada fiflp_actas_<S>_raw.json de `folder` que haya cambiado desde
+    la última importación (su sha1, en la tabla raw_imports), con solo las actas
+    aplanadas (`flattened`). Las tandas de actas-federacion.yml solo descargan
+    y comitean el raw; el bot lo importa en su pasada siguiente. Devuelve
+    {fichero: informe de import_raw} de los importados."""
+    conn.execute("""CREATE TABLE IF NOT EXISTS raw_imports (
+        path TEXT PRIMARY KEY, sha1 TEXT NOT NULL, imported_at TEXT NOT NULL)""")
+    reports = {}
+    for name in sorted(os.listdir(folder)):
+        if not RAW_FILE.match(name):
+            continue
+        path = os.path.join(folder, name)
+        with open(path, "rb") as f:
+            digest = hashlib.sha1(f.read()).hexdigest()
+        row = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (name,)).fetchone()
+        if row and row[0] == digest:
+            continue
+        report = import_raw(conn, path, only=flattened)
+        conn.execute("INSERT OR REPLACE INTO raw_imports(path, sha1, imported_at) VALUES (?, ?, datetime('now'))",
+                     (name, digest))
+        conn.commit()
+        log(f"  {name}: {report['matched']} actas importadas, {report['unmatched']} sin partido, "
+            f"{report['skipped']} sin aplanar (pendientes de volver a descargar)")
+        reports[name] = report
+    return reports
 
 
 # ---------------------------------------------------------------------------

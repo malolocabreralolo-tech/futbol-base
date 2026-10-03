@@ -877,6 +877,13 @@ def main():
         if os.environ.get("FIFLP_UPDATE") == "1":
             from update_fiflp import update_groups
             update_groups(conn, season_id)
+        # Las actas de temporadas pasadas que han descargado las tandas de
+        # actas-federacion.yml (solo los raws que han cambiado).
+        from migrate_actas_schema import migrate
+        from import_fiflp_actas import import_changed_raws
+        migrate(conn)
+        print("\nActas descargadas de la federación (raws nuevos o cambiados)")
+        import_changed_raws(conn)
         from generate_js import main as generate_main
         generate_main()
     finally:

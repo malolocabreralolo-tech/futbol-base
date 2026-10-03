@@ -37,6 +37,12 @@ Jugadores: `players.fiflp_id` es el id de la federación (el mismo niño de preb
 
 ## Rellenar temporadas pasadas
 
+`actas-federacion.yml` descarga, en tandas encadenadas que se relanzan solas, las actas de todas las competiciones de benjamín y prebenjamín de una temporada (y sigue con las de la cola), y solo comitea el raw (`scripts/fiflp_actas_<S>_raw.json`). El bot las importa en su pasada siguiente (`import_changed_raws`: los raws cuyo sha1 no está en la tabla `raw_imports`), solo las leídas aplanadas (traen `consistent`); las de antes de octubre de 2026 se quedan como estén hasta que una tanda las vuelve a descargar.
+
+```bash
+gh workflow run actas-federacion.yml -f temporada=20 -f cola=19,18,17,21 -f tandas=40
+```
+
 ```bash
 # Actas de una competición entera o de unos grupos (resumible; importa, genera y publica)
 gh workflow run fetch-fiflp-actas.yml -f temporada=21 -f comps=54422888 -f do_import=true

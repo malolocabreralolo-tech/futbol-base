@@ -487,3 +487,49 @@ def test_both_passes_end_to_end_with_a_simulated_federation(monkeypatch):
     assert U.missing_venues(conn, 1) == []
     (code, url, status, msg), = recorded
     assert code == "LZ3" and status == "ok" and "1/1 actas" in msg and "142 goleadores" in msg
+
+
+# ── El bot importa las actas que descargan las tandas (actas-federacion.yml) ──
+
+def past_base():
+    """2025-26 con el Tamaraceite–Huracán del acta TAMA y otro partido con un acta
+    importada antes de octubre de 2026 (sin aplanar)."""
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    migrate(conn)
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (1, '2025-2026', 2025, 2026, 0);
+      INSERT INTO categories(id, name) VALUES (1, 'BENJAMIN');
+      INSERT INTO groups(id, season_id, category_id, code, island, full_name) VALUES (1, 1, 1, 'A2', 'grancanaria', 'SEGUNDA FASE BENJAMIN A-G2');
+      INSERT INTO teams(id, name) VALUES (1, 'Tamaraceite'), (2, 'AD Huracán'), (3, 'Moya');
+      INSERT INTO matches(id, group_id, jornada, date, home_team_id, away_team_id, home_score, away_score, cod_acta)
+        VALUES (1, 1, 'Jornada 1', '2025-11-30', 1, 2, 2, 1, NULL),
+               (2, 1, 'Jornada 2', '2025-12-06', 3, 1, 0, 4, 100);
+    """)
+    return conn
+
+
+def test_the_bot_imports_changed_raws_once_and_only_flattened_actas(tmp_path):
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = past_base()
+    old = {"header": {"season": "2025/2026", "date": "06-12-2025", "home_team": "MOYA, U.D.", "away_team": "TAMARACEITE, U.D. A",
+                      "home_score": 0, "away_score": 4}, "lineups": {"home": [], "away": []}, "events": [], "staff": {}}
+    raw = tmp_path / "fiflp_actas_2025-2026_raw.json"
+    raw.write_text(json.dumps({"262000": acta(TAMA), "100": old}), encoding="utf-8")
+    (tmp_path / "otra_cosa.json").write_text("{}", encoding="utf-8")
+    lines = []
+    reports = I.import_changed_raws(conn, str(tmp_path), log=lines.append)
+    assert reports["fiflp_actas_2025-2026_raw.json"]["matched"] == 1
+    assert reports["fiflp_actas_2025-2026_raw.json"]["skipped"] == 1
+    assert "1 actas importadas, 0 sin partido, 1 sin aplanar" in lines[0]
+    # El acta aplanada, importada; la antigua (sin aplanar) sigue como estaba: ni se reimporta ni se purga.
+    assert conn.execute("SELECT cod_acta FROM matches ORDER BY id").fetchall() == [(262000,), (100,)]
+    assert conn.execute("SELECT count(*) FROM appearances WHERE match_id=1").fetchone()[0] > 0
+    # Sin cambios en el raw, nada que hacer.
+    assert I.import_changed_raws(conn, str(tmp_path), log=lines.append) == {}
+    # Un raw que cambia (otra tanda) se vuelve a importar entero, sin duplicar nada.
+    apps = conn.execute("SELECT count(*) FROM appearances").fetchone()[0]
+    raw.write_text(json.dumps({"262000": acta(TAMA), "100": old}, indent=1), encoding="utf-8")
+    assert list(I.import_changed_raws(conn, str(tmp_path), log=lines.append)) == ["fiflp_actas_2025-2026_raw.json"]
+    assert conn.execute("SELECT count(*) FROM appearances").fetchone()[0] == apps

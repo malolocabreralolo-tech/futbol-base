@@ -146,6 +146,11 @@ jobs:
               python3 scripts/import_fiflp_actas.py "$RAW"
               python3 scripts/generate_js.py
             fi
+            # Lo reimportado sobre el main nuevo se vuelve a probar antes de
+            # empujar (el 3/10/2026 un reintento publicó actas sin pasar las
+            # pruebas y dejó en rojo «Tests» y al bot).
+            python3 -m pytest scripts/tests/ -q
+            node --test scripts/tests/test_*.mjs
             stage_all
             if git diff --cached --quiet; then
               echo "After re-apply, no diff vs origin — our work is already there. Exiting clean."

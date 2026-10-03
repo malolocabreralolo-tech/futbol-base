@@ -341,3 +341,12 @@ def test_update_push_rebases_and_retries():
     commit_run = next(r for r in runs if "Actualización automática" in r and "git commit" in r)
     assert "git pull --rebase origin main" in commit_run
     assert "git rebase --abort" in commit_run
+
+
+def test_actas_retry_reruns_the_suites_after_reimporting():
+    """El reintento de push reimporta sobre el main nuevo: tiene que volver a
+    pasar las pruebas antes de empujar (3/10/2026: publicó en rojo)."""
+    text = (WF_DIR / "fetch-fiflp-actas.yml").read_text()
+    retry = text[text.index("for attempt in 1 2 3 4 5; do"):]
+    assert retry.index("import_fiflp_actas.py") < retry.index("python3 -m pytest scripts/tests/") < retry.index("git commit")
+    assert "node --test scripts/tests/test_*.mjs" in retry

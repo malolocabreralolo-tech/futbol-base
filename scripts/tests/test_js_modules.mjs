@@ -218,7 +218,10 @@ test('actas data files: lineups events reference players in the same match', () 
       const homeNames = new Set((match.home || []).map(p => p.n));
       const awayNames = new Set((match.away || []).map(p => p.n));
       for (const ev of match.events || []) {
-        const pool = ev.s === 'h' ? homeNames : awayNames;
+        // Un gol en propia puerta va del lado al que suma (generate_js, 2026-10), y lo marca un
+        // jugador del otro lado. El gol de un niño sin nombre publicado no nombra a nadie (n '').
+        const own = ev.t === 'goal' && ev.gt === 'own';
+        const pool = (ev.s === 'h') !== own ? homeNames : awayNames;
         // Some events have n (single) and some have n+n2 (paired subs). The
         // 'extra-event-player auto-add' rule in the importer means events can
         // refer to players who DID get an appearance row for that match —

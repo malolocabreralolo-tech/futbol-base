@@ -357,9 +357,15 @@ def pretty_name(raw):
     """Un nombre de la federación con forma de portal, para los clubes que la base
     no conoce: 'ATLETICO FOMENTO, CLUB "A"' -> 'Atlético Fomento', 'UNION SUR
     YAIZA, C.D. "B"' -> 'Unión Sur Yaiza B', 'CD MIGUEL LEON' -> 'Miguel León'."""
-    quoted = re.search(r'"([B-H])"\s*$', raw)       # la federación la escribe entre comillas
-    letter = quoted.group(1) if quoted else ""
-    text = re.sub(r',?\s*"[A-H]"\s*$', "", raw.strip()).strip()
+    # La federación escribe la letra entre comillas, a veces dos veces ('X B, C.D. "B"') o
+    # con una B de más ('INTERNACIONAL PH D "DB"': el filial D).
+    quoted = re.search(r'"([A-H])B?"\s*$', raw)
+    letter = quoted.group(1) if quoted and quoted.group(1) != "A" else ""
+    text = re.sub(r',?\s*"[A-H]B?"\s*$', "", raw.strip()).strip()
+    if quoted:
+        main_, sep, tail_ = text.partition(", ")
+        main_ = re.sub(rf"\s+{quoted.group(1)}$", "", main_)
+        text = main_ + sep + tail_
     main, _, tail = text.partition(", ")
     # 'C.D.', 'F.C', 'C. F.', 'C.F.S.': letras sueltas con punto, enteras, antes de trocear.
     strip_abbr = lambda t: re.sub(r"(?<![A-Z])(?:[A-Z]\.\s?)+[A-Z]?(?![A-Za-z])", " ", t.upper())
@@ -466,7 +472,8 @@ def known_names(raw, conn, years=None, keep_existing=False):
         near = [f for f in firsts if team_score((core, ""), (team_key(f)[0], "")) >= MIN_TEAM_SCORE]
         if not same and near and all(names[f] == f for f in near):
             names[n] = n                      # primer equipo nuevo: su filial también
-        elif names[n] == n and len(same) == 1 and next(iter(same)) not in firsts:
+        elif (names[n] == n and len(same) == 1 and next(iter(same)) not in firsts
+              and _portal_style(next(iter(same)))):
             names[n] = f"{next(iter(same))} {letter}"
     # Lo que no casa con la base va con forma de portal; el filial de un club
     # nuevo, como su primer equipo más la letra.
@@ -478,7 +485,8 @@ def known_names(raw, conn, years=None, keep_existing=False):
         letter = _filial(n)
         core = team_key(n)[0]
         near = [f for f in firsts if team_score((core, ""), (team_key(f)[0], "")) >= MIN_TEAM_SCORE]
-        if letter and names[n] == pretty_name(n) and len({names[f] for f in near}) == 1:
+        if (letter and names[n] == pretty_name(n) and len({names[f] for f in near}) == 1
+                and _portal_style(names[near[0]])):
             names[n] = f"{names[near[0]]} {letter}"
     return names
 

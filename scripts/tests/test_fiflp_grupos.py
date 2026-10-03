@@ -126,3 +126,33 @@ def test_a_missing_group_whose_code_is_taken_is_skipped(tmp_path):
     # COMP_META no tiene 893 → sin código; nunca se pisa GC1.
     assert report["created"] == 0
     assert conn.execute("SELECT count(*) FROM groups").fetchone()[0] == 1
+
+
+def test_two_clubs_never_share_a_name():
+    conn = base()
+    conn.execute("INSERT INTO teams(name) VALUES ('UD Tarajalejo')")
+    names = GR.unique_names({"TARAJALEJO, U.D.": "UD Tarajalejo",
+                             "GRAN TARAJAL SOC. TAMAS., U.D.": "UD Tarajalejo",
+                             'INGENIO "B", C.D. "B"': "Ingenio B", 'INGENIO B, C.D. "B"': "Ingenio B"}, conn)
+    assert names["TARAJALEJO, U.D."] == "UD Tarajalejo"
+    assert names["GRAN TARAJAL SOC. TAMAS., U.D."] not in ("UD Tarajalejo",)
+    # Las variantes del mismo club sí comparten nombre.
+    assert names['INGENIO "B", C.D. "B"'] == names['INGENIO B, C.D. "B"'] == "Ingenio B"
+
+
+def test_a_failing_import_never_stops_the_bot_update(monkeypatch):
+    import fetch_futbolaspalmas as FB
+    import import_fiflp_actas
+    import import_fiflp_goleadores
+    import import_fiflp_grupos
+    conn = base()
+    lines, done = [], []
+    def boom(conn):
+        raise RuntimeError("roto")
+    # Nada de leer los raws de verdad: cada paso, sustituido.
+    monkeypatch.setattr(import_fiflp_actas, "import_changed_raws", lambda conn: done.append("actas"))
+    monkeypatch.setattr(import_fiflp_grupos, "import_changed_grupos", boom)
+    monkeypatch.setattr(import_fiflp_goleadores, "import_changed_goleadores", lambda conn: done.append("goleadores"))
+    FB.import_past_seasons(conn, log=lines.append)
+    assert any("ERROR" in line and "roto" in line for line in lines)
+    assert done == ["actas", "goleadores"]                  # el paso siguiente se hace igual

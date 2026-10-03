@@ -58,7 +58,8 @@ EXTRA_META = {
     "1695": ("CLZ1S", "Semifinal Copa Cabildo Primera Lanzarote", "lanzarote"),
     "1683": ("CLZ1F", "Final Copa Cabildo Primera Lanzarote", "lanzarote"),
     "1731": ("TPFL", "Torneo Cierre Prebenjamín Fuerteventura-Lanzarote", "fuerteventura"),
-    # 2025-26
+    # 2025-26: la Fase 1 de Lanzarote (la Fase 2, 54422886, es LZ1-4, de futbolaspalmas)
+    "54422884": ("LZF", "Lanzarote Fase 1", "lanzarote"),
     "54976641": ("CLB", "Clausura Benjamín", "grancanaria"),
     "54969359": ("CLP", "Torneo Clausura Prebenjamín", "grancanaria"),
 }
@@ -111,6 +112,36 @@ def group_matches(index, actas, comp, grupo):
                     int(cod), acta))
     key = lambda m: (int(m[0]) if m[0].isdigit() else 999, m[5][6:] + m[5][3:5] + m[5][:2], m[6])
     return sorted(out, key=key)
+
+
+def unique_names(names, conn):
+    """Dos clubes distintos (otra clave de equipo) que known_names ha llevado al
+    mismo nombre ('GRAN TARAJAL SOC. TAMAS., U.D.' y 'TARAJALEJO, U.D.' → 'UD
+    Tarajalejo'): se lo queda el que mejor casa con él; los demás, su nombre con
+    forma de portal (o el de la federación, si ese ya es de otro equipo)."""
+    from activate_season import pretty_name
+    from fiflp_names import team_key, team_score
+    existing = {r[0] for r in conn.execute("SELECT name FROM teams")}
+    by_target = {}
+    for raw_name, target in names.items():
+        by_target.setdefault(target, []).append(raw_name)
+    out = dict(names)
+    taken = set(names.values())
+    for target, raws in by_target.items():
+        clubs = {}
+        for raw_name in raws:
+            clubs.setdefault(team_key(raw_name), []).append(raw_name)
+        if len(clubs) < 2:
+            continue
+        best = max(clubs, key=lambda key: (team_score(key, team_key(target)), key))
+        for key, members in clubs.items():
+            if key == best:
+                continue
+            for raw_name in members:
+                pretty = pretty_name(raw_name)
+                out[raw_name] = pretty if pretty not in existing and pretty not in taken else raw_name
+                taken.add(out[raw_name])
+    return out
 
 
 def _load(path, default):
@@ -183,11 +214,18 @@ def import_season(conn, folder, season, log=print):
     pseudo = [{"island": island, "standings": entry.get("standings") or [],
                "jornadas": [{"matches": [{"home": m[1], "away": m[2]} for m in matches]}]}
               for entry, code, n, phase, island, matches in plans]
-    names = known_names(pseudo, conn, years=[start, start + 1, start - 1], keep_existing=True)
+    # Los nombres de la base, de la temporada más cercana a la más lejana.
+    years = sorted({r[0] for r in conn.execute("SELECT start_year FROM seasons")}, key=lambda y: (abs(y - start), y < start))
+    names = unique_names(known_names(pseudo, conn, years=years, keep_existing=True), conn)
     name = lambda raw_name: names.get(clean_team_name(raw_name), clean_team_name(raw_name))
 
     for entry, code, n, phase, island, matches in plans:
         ident = (str(entry["comp"]), str(entry["grupo"]))
+        rows = [name(r["team"]) for r in entry.get("standings") or [] if clean_team_name(r.get("team"))]
+        if len(rows) != len(set(rows)):
+            report["clash"] += 1
+            log(f"  ! [{code}] dos equipos de la clasificación acabarían con el mismo nombre: se salta")
+            continue
         cat = _category(entry.get("comp_name"))
         cat_id = get_or_create_category(conn, cat)
         standings = [r for r in entry.get("standings") or [] if clean_team_name(r.get("team"))]
@@ -216,9 +254,11 @@ def import_season(conn, folder, season, log=print):
             conn.execute("INSERT OR REPLACE INTO fiflp_groups(group_id, season_id, comp, grupo) VALUES (?,?,?,?)",
                          (group_id, season_id, *ident))
             conn.commit()
-        except Exception:
+        except Exception as exc:
             conn.rollback()
-            raise
+            report["clash"] += 1
+            log(f"  ! [{code}] no se pudo importar ({exc}): se salta")
+            continue
         report["redone" if redo else "created"] += 1
         log(f"  [{code}] {phase}, Grupo {n}: {len(matches)} partidos, {len(standings)} equipos en la clasificación")
     return report

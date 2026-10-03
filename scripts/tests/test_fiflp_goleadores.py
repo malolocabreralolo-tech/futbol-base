@@ -180,3 +180,23 @@ def test_filial_letters_and_cups_without_standings_match_their_group():
     copa = {**entry("901", "1", "COPA CAMPEONES PREBENJAMIN", [], [["A, B", "TAMARACEITE, U.D. A", 1, 2, 0],
             ["C, D", "GUIA, U.D.", 1, 1, 0], ["E, F", "MOYA, U.D.", 1, 3, 0]]), "standings": []}
     assert G.by_teams(conn, 1, copa) == 5                         # 3 de sus 8 equipos: basta, son los de los goleadores
+
+
+def test_scorer_teams_cross_by_their_standings_row_when_names_do_not_match(tmp_path):
+    """El archivo antiguo abrevia ('Muelle Mesa Lz.'): la fila de la clasificación, igual en las dos
+    fuentes, dice qué equipo es."""
+    conn = base()
+    conn.executescript("""
+      INSERT INTO teams(id, name) VALUES (20, 'Muelle Mesa Lz.');
+      UPDATE standings SET team_id=20 WHERE group_id=1 AND team_id=4;
+    """)
+    fed = entry("900", "1", "LIGA PREBENJAMIN", ["TAMARACEITE, U.D. A", "HURACAN, A.D. A", "MOYA, U.D.",
+                "MUELLE MESA Y LOPEZ, U.D."], [["RUIZ, PEPE", "MUELLE MESA Y LOPEZ, U.D.", 3, 1, 0]])
+    for i, (pts, w, l) in enumerate([(9, 3, 0), (6, 2, 1), (3, 1, 2), (0, 0, 3)]):
+        fed["standings"][i].update(pts=pts, j=3, g=w, e=0, p=l)
+    bridge = G.team_bridge(conn, 1, fed)
+    assert bridge["MUELLE MESA Y LOPEZ, U.D."] == "Muelle Mesa Lz."
+    assert bridge["TAMARACEITE, U.D. A"] == "Tamaraceite"
+    write(tmp_path, {"900:1": fed})
+    G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None)
+    assert conn.execute("""SELECT t.name FROM scorers s JOIN teams t ON t.id=s.team_id WHERE s.group_id=1""").fetchall() == [("Muelle Mesa Lz.",)]

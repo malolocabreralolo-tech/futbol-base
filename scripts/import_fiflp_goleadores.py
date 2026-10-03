@@ -88,6 +88,11 @@ def by_actas(conn, index, comp, grupo):
     return gid if n >= 3 and n * 3 >= total * 2 else None
 
 
+def _is_cup(text):
+    t = (text or "").upper()
+    return any(w in t for w in ("COPA", "CAMPEON", "FINAL", "TORNEO", "CLAUSURA"))
+
+
 def by_teams(conn, season_id, entry):
     """Con clasificación, sus equipos deben estar en los dos lados (dos tercios de
     cada uno); sin ella (una copa: solo los equipos de sus goleadores, que no son
@@ -96,19 +101,92 @@ def by_teams(conn, season_id, entry):
     teams = standings or sorted({r[1] for r in entry.get("scorers") or []})
     if len(teams) < 3:
         return None
+    # Desempates (una copa insular con los mismos equipos que un grupo de su liga): el mismo tipo
+    # de competición (copa o liga), el tamaño más parecido y la puntuación de los nombres.
+    cup = _is_cup(entry.get("comp_name"))
+    phases = dict(conn.execute("SELECT id, phase FROM groups WHERE season_id=?", (season_id,)).fetchall())
     scored = []
     for gid, db_teams in _db_groups(conn, season_id, _category(entry.get("comp_name"))).items():
         n, quality = _overlap(teams, db_teams)
         if n >= 3 and n * 3 >= len(teams) * 2 and (not standings or n * 3 >= len(db_teams) * 2):
-            scored.append(((n, quality), gid))
+            same_kind = _is_cup(phases.get(gid)) == cup
+            scored.append(((n, same_kind, -abs(len(db_teams) - len(teams)), quality), gid))
     scored.sort(reverse=True)
     if not scored or (len(scored) > 1 and scored[1][0] == scored[0][0]):
         return None
     return scored[0][1]
 
 
+def by_owner(conn, season_id, entry):
+    """El grupo que creó import_fiflp_grupos.py para ese grupo de la federación."""
+    try:
+        row = conn.execute("SELECT group_id FROM fiflp_groups WHERE season_id=? AND comp=? AND grupo=?",
+                           (season_id, str(entry["comp"]), str(entry["grupo"]))).fetchone()
+    except Exception:            # sin la tabla todavía
+        return None
+    return row[0] if row else None
+
+
 def match_group(conn, season_id, index, entry):
-    return by_actas(conn, index, entry["comp"], entry["grupo"]) or by_teams(conn, season_id, entry)
+    return (by_owner(conn, season_id, entry) or by_actas(conn, index, entry["comp"], entry["grupo"])
+            or by_teams(conn, season_id, entry))
+
+
+def team_bridge(conn, group_id, entry):
+    """{nombre de la federación: nombre en la base} de los equipos de un grupo ya
+    casado. Primero por su fila de la clasificación oficial, que es la misma en
+    las dos fuentes (puntos, partidos, victorias, empates y derrotas iguales, y
+    única en los dos lados); después por el nombre (match_teams); y lo que quede,
+    por el puesto. Así casan 'MUELLE MESA Y LOPEZ, U.D.' y 'Muelle Mesa Lz.' del
+    archivo antiguo."""
+    from fetch_futbolaspalmas import stored_standings
+    db_rows = stored_standings(conn, group_id)
+    fed = {clean_team_name(r.get("team")): r for r in entry.get("standings") or [] if clean_team_name(r.get("team"))}
+    stats = lambda r: (r.get("pts"), r.get("j"), r.get("g"), r.get("e"), r.get("p"))
+    out, used = {}, set()
+    for name, row in fed.items():
+        same = [d for d in db_rows if tuple(d[2:7]) == stats(row)]
+        twins = [n for n, r in fed.items() if stats(r) == stats(row)]
+        if len(same) == 1 and len(twins) == 1 and same[0][1] not in used:
+            out[name] = same[0][1]
+            used.add(same[0][1])
+    rest = sorted((set(fed) | {clean_team_name(r[1]) for r in entry.get("scorers") or []}) - set(out) - {""})
+    free = sorted(set(_db_groups_one(conn, group_id)) - used)
+    for name, db_name in match_teams(rest, free).items():
+        out[name] = db_name
+        used.add(db_name)
+    # Lo que sobra de los dos lados en un grupo ya casado: el nombre más parecido letra a letra
+    # ('MUELLE MESA Y LOPEZ, U.D.' y 'Muelle Mesa Lz.', 'GUINIGUADA APOLINARIO' y 'Guniguada').
+    import difflib
+    letters = lambda t: re.sub(r"[^a-z]", "", fold(re.sub(r"\b(?:C\.?\s?[DF]|U\.?\s?D|A\.?\s?D|S\.?\s?D)\.?", " ", t.upper())))
+    pairs = sorted(((difflib.SequenceMatcher(None, letters(a), letters(b)).ratio(), a, b)
+                    for a in fed if a not in out for b in set(_db_groups_one(conn, group_id)) - used), reverse=True)
+    for ratio, a, b in pairs:
+        if ratio >= 0.5 and a not in out and b not in used:
+            out[a] = b
+            used.add(b)
+    for name, row in fed.items():
+        if name not in out:
+            pick = next((d for d in db_rows if d[1] not in used and d[0] == row.get("pos")), None)
+            if pick:
+                out[name] = pick[1]
+                used.add(pick[1])
+    return out
+
+
+def fold(text):
+    import unicodedata
+    return "".join(c for c in unicodedata.normalize("NFD", text or "") if unicodedata.category(c) != "Mn").lower()
+
+
+def scorer_team(name, bridge):
+    """El nombre en la base del equipo de un goleador: la página de goleadores escribe a veces el
+    nombre sin las comillas de la letra ('ATLETICO G.C. A, C.F. A' por '… C.F. "A"')."""
+    clean = clean_team_name(name)
+    if clean in bridge:
+        return bridge[clean]
+    key = lambda t: re.sub(r"\s+", " ", t.replace('"', "")).strip().upper()
+    return next((v for k, v in bridge.items() if key(k) == key(clean)), name)
 
 
 def import_raw(conn, path, log=print):
@@ -147,7 +225,9 @@ def import_raw(conn, path, log=print):
             report["kept"] += 1
             continue
         teams = sorted(_db_groups_one(conn, gid))
-        write_scorers(conn, gid, [tuple(r) for r in entry["scorers"]], group_teams=teams)
+        bridge = team_bridge(conn, gid, entry)
+        rows = [(r[0], scorer_team(r[1], bridge), *r[2:]) for r in entry["scorers"]]
+        write_scorers(conn, gid, rows, group_teams=teams)
         conn.execute("INSERT OR REPLACE INTO fiflp_scorer_groups(group_id, comp, grupo) VALUES (?, ?, ?)",
                      (gid, str(entry["comp"]), str(entry["grupo"])))
         report["written"] += 1

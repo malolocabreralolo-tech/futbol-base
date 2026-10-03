@@ -859,6 +859,30 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────
 
+def import_past_seasons(conn, log=print):
+    """Lo que descargan de temporadas pasadas actas-federacion.yml y
+    goleadores-federacion.yml (solo los raws nuevos o cambiados): actas, grupos
+    que faltaban (finales, torneos, ligas insulares sin archivar) y goleadores,
+    en ese orden (los goleadores casan sus grupos por las actas). Un fallo aquí
+    se apunta y no para la actualización de la temporada en curso."""
+    import traceback
+    from migrate_actas_schema import migrate
+    from import_fiflp_actas import import_changed_raws
+    from import_fiflp_grupos import import_changed_grupos
+    from import_fiflp_goleadores import import_changed_goleadores
+    steps = [("Actas descargadas de la federación (raws nuevos o cambiados)", import_changed_raws),
+             ("Grupos de temporadas pasadas que faltaban (federación)", import_changed_grupos),
+             ("Goleadores de temporadas pasadas de la federación (raws nuevos o cambiados)", import_changed_goleadores)]
+    migrate(conn)
+    for title, step in steps:
+        log(f"\n{title}")
+        try:
+            step(conn)
+        except Exception:
+            conn.rollback()
+            log("  ! ERROR (no para la actualización):\n" + traceback.format_exc())
+
+
 def main():
     conn = get_connection()
     init_db(conn)
@@ -877,23 +901,7 @@ def main():
         if os.environ.get("FIFLP_UPDATE") == "1":
             from update_fiflp import update_groups
             update_groups(conn, season_id)
-        # Las actas de temporadas pasadas que han descargado las tandas de
-        # actas-federacion.yml (solo los raws que han cambiado).
-        from migrate_actas_schema import migrate
-        from import_fiflp_actas import import_changed_raws
-        migrate(conn)
-        print("\nActas descargadas de la federación (raws nuevos o cambiados)")
-        import_changed_raws(conn)
-        # Los grupos de temporadas pasadas que la base no tiene (finales,
-        # torneos, ligas insulares sin archivar), con sus partidos y actas.
-        from import_fiflp_grupos import import_changed_grupos
-        print("\nGrupos de temporadas pasadas que faltaban (federación)")
-        import_changed_grupos(conn)
-        # Y los goleadores de temporadas pasadas (goleadores-federacion.yml),
-        # después de las actas y los grupos: casan sus grupos por las actas.
-        from import_fiflp_goleadores import import_changed_goleadores
-        print("\nGoleadores de temporadas pasadas de la federación (raws nuevos o cambiados)")
-        import_changed_goleadores(conn)
+        import_past_seasons(conn)
         from generate_js import main as generate_main
         generate_main()
     finally:

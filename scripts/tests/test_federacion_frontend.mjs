@@ -51,3 +51,14 @@ test('«Cómo llegar» va a la dirección del directorio de campos si se conoce'
   assert.equal(venueDetails('Otro campo', campos), '');
   assert.equal(venueDetails('x', null), '');
 });
+
+import { formStreak } from '../../src/model.js';
+
+test('racha actual: la más fuerte de al menos dos partidos', () => {
+  const r = (gf, gc) => ({ gf, gc });
+  assert.deepEqual(formStreak([r(0, 2), r(3, 1), r(2, 0), r(4, 1)]), { kind: 'victorias', n: 3 });
+  assert.deepEqual(formStreak([r(0, 2), r(1, 1), r(3, 0), r(2, 2)]), { kind: 'sin perder', n: 3 });
+  assert.deepEqual(formStreak([r(5, 0), r(0, 1), r(1, 3)]), { kind: 'derrotas', n: 2 });
+  assert.equal(formStreak([r(1, 0), r(0, 1)]), null);     // una derrota suelta no es racha
+  assert.equal(formStreak([]), null);
+});

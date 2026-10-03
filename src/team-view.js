@@ -164,6 +164,11 @@ export function coverageText(coverage, missing = 0) {
   return text;
 }
 
+// «3 victorias seguidas», «4 partidos sin perder», «2 derrotas seguidas» (formStreak), o null.
+const streakText = (s) => (!s ? null
+  : s.kind === 'victorias' ? `${s.n} victorias seguidas`
+    : s.kind === 'sin perder' ? `${s.n} partidos sin perder` : `${s.n} derrotas seguidas`);
+
 function figuresBlock(ctx, group, name) {
   const sum = seasonSummary(name, group);
   const record = r => `${r.g}G ${r.e}E ${r.p}P`;
@@ -178,6 +183,10 @@ function figuresBlock(ctx, group, name) {
   ])}${cells([
     { label: 'Mejor resultado', value: result(sum.best) ?? '—' },
     { label: 'Peor derrota', value: result(sum.worst) ?? 'ninguna', muted: !sum.worst },
+  ])}${cells([
+    { label: 'Racha', value: streakText(sum.streak) ?? '—', muted: !sum.streak },
+    { label: 'Porterías a cero', value: sum.cleanSheets },
+    { label: 'Sin marcar', value: sum.blanks },
   ])}`;
   const note = coverageText(sum.coverage, missingResults(name, group, ctx.today));
   return html`${box(content, { title: 'La temporada en cifras' })}${note ? notice('Cobertura:', note) : ''}`;

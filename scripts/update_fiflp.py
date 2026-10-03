@@ -552,14 +552,15 @@ def update_groups(conn, season_id, today=None):
     print(f"\nFederación (FIFLP): {len(groups)} grupos")
     pending = {code: url for _, code, url in groups}
     try:
-        _scrape_all(conn, groups, today, pending)
+        _with_browser(lambda page, F: run_passes(page, F, conn, season_id, groups, today, pending))
     except Exception as e:      # sin navegador o FIFLP caída: se informa, no se tumba el run
         print(f"  ! la federación no se pudo consultar: {e}")
         for code, url in pending.items():
             source_health.record(code, url, "error", e)
 
 
-def _scrape_all(conn, groups, today, pending):
+def _with_browser(work):
+    """Abre Chromium y llama a work(page, F) con el scraper de la federación."""
     import fetch_fiflp_2425 as F
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
@@ -568,56 +569,65 @@ def _scrape_all(conn, groups, today, pending):
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"))
         page.set_default_timeout(30000)
-        import time
-        deadline = time.monotonic() + DEADLINE_SECONDS
-        results = {}
-        for group_id, code, url in groups:
-            print(f"  [{code}]", flush=True)
-            try:
-                raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today)
-                status, msg = update_group(conn, group_id, code, raw_standings, raw_rounds)
-            except Exception as e:          # un grupo que falla no tumba a los demás
-                conn.rollback()
-                status, msg = "error", e
-                print(f"    ! error: {e}")
-            results[code] = [status, msg]
-        # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
-        # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
-        # El directorio de campos, solo si falta alguno de los de la temporada.
         try:
-            if missing_venues(conn, season_id):
-                print(f"\n  Campos: {update_campos(page, F, conn)} en el directorio de la federación")
+            work(page, F)
+        finally:
+            browser.close()
+
+
+def run_passes(page, F, conn, season_id, groups, today, pending, deadline_seconds=None):
+    """Las dos pasadas del bot sobre una página ya abierta (inyectable en las
+    pruebas): clasificación y jornadas de cada grupo; después, con lo que quede
+    de plazo, el directorio de campos, las actas y los goleadores."""
+    import time
+    deadline = time.monotonic() + (DEADLINE_SECONDS if deadline_seconds is None else deadline_seconds)
+    results = {}
+    for group_id, code, url in groups:
+        print(f"  [{code}]", flush=True)
+        try:
+            raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today)
+            status, msg = update_group(conn, group_id, code, raw_standings, raw_rounds)
+        except Exception as e:          # un grupo que falla no tumba a los demás
+            conn.rollback()
+            status, msg = "error", e
+            print(f"    ! error: {e}")
+        results[code] = [status, msg]
+    # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
+    # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
+    # El directorio de campos, solo si falta alguno de los de la temporada.
+    try:
+        if missing_venues(conn, season_id):
+            print(f"\n  Campos: {update_campos(page, F, conn)} en el directorio de la federación")
+    except Exception as e:
+        conn.rollback()
+        print(f"  ! campos: {e}")
+    budget = MAX_ACTAS_PER_RUN
+    print("\n  Actas y goleadores")
+    for group_id, code, url in groups:
+        if results[code][0] != "ok" or time.monotonic() > deadline:
+            continue
+        notes = []
+        try:
+            done, read = import_actas(page, F, conn, group_id, budget, deadline)
+            budget -= read
+            if read:
+                notes.append(f"{done}/{read} actas")
         except Exception as e:
             conn.rollback()
-            print(f"  ! campos: {e}")
-        budget = MAX_ACTAS_PER_RUN
-        print("\n  Actas y goleadores")
-        for group_id, code, url in groups:
-            if results[code][0] != "ok" or time.monotonic() > deadline:
-                continue
-            notes = []
-            try:
-                done, read = import_actas(page, F, conn, group_id, budget, deadline)
-                budget -= read
-                if read:
-                    notes.append(f"{done}/{read} actas")
-            except Exception as e:
-                conn.rollback()
-                notes.append(f"actas: {e}")
-            try:
-                if time.monotonic() <= deadline:
-                    scorers = update_goleadores(page, F, conn, group_id, url)
-                    if scorers:
-                        notes.append(f"{scorers} goleadores")
-            except Exception as e:
-                conn.rollback()
-                notes.append(f"goleadores: {e}")
-            if notes:
-                print(f"  [{code}] " + ", ".join(notes))
-                results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
-        if time.monotonic() > deadline:
-            print("  (plazo agotado: el resto de actas y goleadores, en la próxima pasada)")
-        for group_id, code, url in groups:
-            source_health.record(code, url, *results[code])
-            pending.pop(code, None)
-        browser.close()
+            notes.append(f"actas: {e}")
+        try:
+            if time.monotonic() <= deadline:
+                scorers = update_goleadores(page, F, conn, group_id, url)
+                if scorers:
+                    notes.append(f"{scorers} goleadores")
+        except Exception as e:
+            conn.rollback()
+            notes.append(f"goleadores: {e}")
+        if notes:
+            print(f"  [{code}] " + ", ".join(notes))
+            results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
+    if time.monotonic() > deadline:
+        print("  (plazo agotado: el resto de actas y goleadores, en la próxima pasada)")
+    for group_id, code, url in groups:
+        source_health.record(code, url, *results[code])
+        pending.pop(code, None)

@@ -203,7 +203,8 @@ test('goleadores del equipo (C): los 5 primeros de Las Mesas, nunca los de otro 
 test('la temporada en cifras (C): de la tabla y del calendario, con la nota de cobertura del caso 6 de §11', () => {
   const out = render(CASES.C);
   assert.equal(text(blockOf(out, 'La temporada en cifras')), 'La temporada en cifras Goles a favor 90 En contra 120 '
-    + 'Por partido 3,2 – 4,6 En casa 5G 1E 7P Fuera 5G 0E 8P Mejor resultado 9–2 Calero Peor derrota 1–11 Unión Viera');
+    + 'Por partido 3,2 – 4,6 En casa 5G 1E 7P Fuera 5G 0E 8P Mejor resultado 9–2 Calero Peor derrota 1–11 Unión Viera '
+    + 'Racha — Porterías a cero 1 Sin marcar 4');
   assert.match(out, /<\/section><p class="notice"><b>Cobertura:<\/b> 26 partidos en el calendario y 2 contra CD Batán \(retirado\)<\/p>/);
 });
 

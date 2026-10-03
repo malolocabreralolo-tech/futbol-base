@@ -638,6 +638,24 @@ export function homeAwayTable(group, side) {
   return rows.map(({ row }, i) => ({ ...row, pos: i + 1 }));
 }
 
+/* Racha actual de una lista de resultados (de más antiguo a más reciente, con gf y gc):
+ * { kind: 'victorias' | 'sin perder' | 'derrotas', n } si dura al menos 2 partidos, o null.
+ * Manda la más fuerte: tres victorias seguidas no se dicen «tres sin perder». */
+export function formStreak(results) {
+  const list = Array.isArray(results) ? results : [];
+  const run = (test) => {
+    let n = 0;
+    for (let i = list.length - 1; i >= 0 && test(list[i]); i -= 1) n += 1;
+    return n;
+  };
+  const wins = run(r => r.gf > r.gc);
+  if (wins >= 2) return { kind: 'victorias', n: wins };
+  const unbeaten = run(r => r.gf >= r.gc);
+  if (unbeaten >= 2) return { kind: 'sin perder', n: unbeaten };
+  const losses = run(r => r.gf < r.gc);
+  return losses >= 2 ? { kind: 'derrotas', n: losses } : null;
+}
+
 /* «La temporada en cifras» y «Así terminó» (§4.2). Puesto, puntos, balance y
  * goles, de la clasificación; el resto, del calendario sin retirados. best,
  * worst y last tienen la forma de lastResults, o null. */
@@ -667,6 +685,9 @@ export function seasonSummary(team, group) {
     best,
     worst,
     last: results[results.length - 1] || null,
+    streak: formStreak(results),
+    cleanSheets: results.filter(r => r.gc === 0).length,
+    blanks: results.filter(r => r.gf === 0).length,
     coverage: coverageNote(team, group),
   };
 }

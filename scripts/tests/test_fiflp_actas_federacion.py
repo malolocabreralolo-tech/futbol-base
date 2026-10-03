@@ -442,3 +442,48 @@ def test_campos_directory_page_and_venue_matching():
     js = generate_campos_js(conn)
     assert json.loads(js[len("const CAMPOS="):-1]) == {
         "Agapito Reyes Viera F-8": ["C. Mosta, 1B", "Arrecife", "Hierba Artificial", "Fútbol 11"]}
+
+
+def test_both_passes_end_to_end_with_a_simulated_federation(monkeypatch):
+    """run_passes entero: jornada → acta (marcador y alineaciones) → goleadores →
+    directorio de campos → estado por grupo. Sin red: una página falsa sirve las
+    fixtures reales según la URL."""
+    from datetime import date
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    recorded = []
+    monkeypatch.setattr(U.source_health, "record", lambda *a: recorded.append(a))
+    conn = base()
+    _table(conn, (0, 0, 0), (0, 0, 0))
+
+    class Page:
+        url = ""
+        def evaluate(self, js, *a):
+            return [{"value": "1", "text": "1 - 03-10-2026"}] if "select[name=" in js else 0
+        def wait_for_timeout(self, ms):
+            pass
+        def content(self):
+            if "NFG_CmpPartido" in self.url:
+                return (FIX / SBD).read_text(encoding="utf-8")
+            if "NFG_CMP_Goleadores" in self.url:
+                return (FIX / "goleadores_2526_A2.html").read_text(encoding="utf-8")
+            if "NFG_LstCampos" in self.url:
+                return (FIX / "campos_fiflp_p1.html").read_text(encoding="utf-8", errors="replace")
+            return "<html></html>"
+
+    class Fed(_F):
+        def goto(self, page, url):
+            page.url = url
+            return True
+        def parse_matches(self, page):
+            return [{"home": "SAN BARTOLOME, C.F D", "away": 'PUERTO DEL CARMEN, F.C. "A"', "hs": 3, "as": 1,
+                     "date": "03-10-2026", "time": "09:00", "venue": "AGAPITO REYES VIERA F-8", "fiflp_acta": 280291}]
+    page = Page()
+    groups = U.fiflp_groups(conn, 1)
+    U.run_passes(page, Fed(page), conn, 1, groups, date(2026, 10, 5), {g[1]: g[2] for g in groups})
+    assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=1").fetchone() == (3, 21, 280291)
+    assert conn.execute("SELECT count(*) FROM appearances").fetchone()[0] == 22
+    assert conn.execute("SELECT count(*) FROM scorers WHERE group_id=1").fetchone()[0] == 142
+    assert conn.execute("SELECT address FROM venues WHERE name='AGAPITO REYES VIERA'").fetchone() == ("C. Mosta, 1B",)
+    assert U.missing_venues(conn, 1) == []
+    (code, url, status, msg), = recorded
+    assert code == "LZ3" and status == "ok" and "1/1 actas" in msg and "142 goleadores" in msg

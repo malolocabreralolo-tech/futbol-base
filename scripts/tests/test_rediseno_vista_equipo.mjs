@@ -50,13 +50,15 @@ function untimedJ18() {
 
 // sha1 del render de la portada en e82eb86 (antes de team-view.js), con las fixtures de B1 y B3; las
 // cinco últimas, de B5 (decisión 7), del render de 0208d26, el mismo tras la limpieza de la Tarea 3.
+// 2026-10: los casos A y C, con la fila nueva de «La temporada en cifras» (racha, porterías a cero y
+// partidos sin marcar); B, D, E y X no la pintan y siguen idénticos.
 const HOME = {
-  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, 'd2f5931423b8be75b9ebbde851b3a38e5e96fdbd'],
-  'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, '36ee90d79396ec6aadf918c43759259e3006ab85'],
+  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, '51799c4cadd2ae587f1184284638cf99caef172e'],
+  'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, 'b59a50f92f1e9b5d5e043fb5faaa3655494cc2dc'],
   B: [{ raw: nextSeasonRaw({ benjamin: ['A1', 'B2', 'FF15'], prebenjamin: ['PG2', 'PG3'] }), myTeam: { ...LAS_MESAS, season: '2026-2027' }, today: '2026-10-01', portalSeason: '2026-2027', goles: false }, 'f9dc827c94ffca632bf20b41beae657ff4d0b82c'],
   'B de CD Batán': [{ raw: currentAt('2026-03-01'), myTeam: { ...LAS_MESAS, name: 'CD Batán' }, today: '2026-03-01' }, '2d4254386c0df15f9d8f51dbb4e883ad2b1bea35'],
-  C: [{ raw: currentAt('2026-06-03'), today: '2026-06-03' }, '68e1ed49d51ca2234fe1f91f83422a0eac70b3a1'],
-  'C con stale': [{ raw: currentAt('2026-06-03'), today: '2026-06-03', stale: true }, '0abeb7bdfe52298e42d4b1e6c15e335de6abeb67'],
+  C: [{ raw: currentAt('2026-06-03'), today: '2026-06-03' }, '0b1a6cf75ff62aa449e1f0e21a55af9db4a58d3a'],
+  'C con stale': [{ raw: currentAt('2026-06-03'), today: '2026-06-03', stale: true }, '28324436cd1deb99af7a02d028ea21698aba8977'],
   D: [{ today: '2026-09-23' }, '29d8588f52801b3beaa13249e8e232ea2da44831'],
   'D con stale': [{ today: '2026-09-23', stale: true }, '70554db17aaa9a2c711ad0f6ed6b7b0c03c54a4c'],
   'D con 2026/27 lista': [{ today: '2026-06-15', withHealth: { ...fixture('health'), nextSeason: { name: '2026-2027', status: 'ready' } } }, '5370b799ff36efa6d4beec955b4244649301d00c'],
@@ -64,10 +66,10 @@ const HOME = {
   E: [{ myTeam: { name: 'Las Mesas Hu. B', season: '2025-2026', cat: 'benjamin', groupId: 'FF13' }, today: '2026-09-23' }, 'bede1e6746de45c5d2cf5882130d5d6594e6257d'],
   X: [{ raw: nextSeasonRaw({ benjamin: ['A1'], prebenjamin: ['PG3'] }), today: '2026-10-01', portalSeason: '2026-2027', goles: false }, 'b60fcec7f40d3730d9150338f6377318bec65bad'],
   'D sin «Verano»': [{ myTeam: { ...LAS_MESAS, name: 'RC Victoria' }, today: '2026-09-23' }, 'd9d70e4f3ada9f803926984c100b10f92c268756'],
-  'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, 'c66ab809f8278913dc471b5f9938a2a971b19c37'],
-  'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '44d2ab6c198ed8fef0e51219670c7416797dc793'],
-  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, 'c00167cf24e6dd20e59b75af8e5b33e549acba96'],
-  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, '1a3daa6fe3cab0381b86f2bc85ba9701da145e59'],
+  'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, '157c48fea5da4382a59ded28e8b064b069ec3c8e'],
+  'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '271fd39c450aa74196d2e86bf839e2fcd29d8f27'],
+  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, '218c4bbcc2257136ac587ce74454d9c23a4551b4'],
+  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, '9ef8d6f3630245cbe1c237607b32287d605e9b33'],
 };
 
 test('la portada pinta lo mismo que antes de la vista compartida, byte a byte, en A, B, C, D, E y X (decisión 8)', () => {

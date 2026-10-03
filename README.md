@@ -39,7 +39,7 @@ acta.css                     La hoja, con los temas claro y oscuro
 escudos/, escudos/s/         Los escudos y sus miniaturas (scripts/build_crests.py)
 src/config.js                Temporada y equipo inicial compartidos con Python
 scripts/fetch_futbolaspalmas.py Importación con protección de temporada (grupos de futbolaspalmas)
-scripts/update_fiflp.py      Grupos de la federación (FIFLP): tabla y jornadas, con navegador
+scripts/update_fiflp.py      Grupos de la federación (FIFLP): tabla, jornadas, actas, goleadores y campos (docs/federacion.md)
 scripts/generate_js.py        Generador de archivos publicados
 data-*.js                    Datos actuales e históricos
 futbolbase.db                 Base de datos

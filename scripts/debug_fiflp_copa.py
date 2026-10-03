@@ -73,6 +73,13 @@ def main():
         # estilos computados: qué distingue al dígito real de los señuelos.
         rich = int(os.environ.get("DBG_SCORES", "0") or 0)
         if rich:
+            rules = page.evaluate(r"""() => { const out = [];
+                for (const sh of document.styleSheets) { let rs; try { rs = sh.cssRules; } catch (e) { out.push('(no legible) ' + sh.href); continue; }
+                  for (const r of rs) { const t = r.cssText; if (/\.(fa|m)-\d|wid2_resultado|ntype|idh/.test(t)) out.push(t.slice(0, 300)); } }
+                return out.slice(0, 120); }""")
+            print("##### REGLAS CSS")
+            for r in rules:
+                print("   ", r)
             jornada_opts = jornada_opts[:rich]
             for jor in jornada_opts:
                 for load in range(3):
@@ -97,7 +104,8 @@ def main():
                                 const r = el.getBoundingClientRect();
                                 const own = Array.from(el.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent.trim()).join('');
                                 return [el.tagName, el.id, el.className, own, st(el), Math.round(r.width) + 'x' + Math.round(r.height),
-                                        getComputedStyle(el, '::before').content, getComputedStyle(el, '::after').content].join(' ¦ ');
+                                        getComputedStyle(el, '::before').content, getComputedStyle(el, '::after').content,
+                                        'B[' + st(el, '::before') + ']', 'A[' + st(el, '::after') + ']'].join(' ¦ ');
                               }) })) });
                         }
                         return out;

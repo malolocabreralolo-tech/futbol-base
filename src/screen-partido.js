@@ -180,6 +180,10 @@ function lineupTable(players, team, side) {
 }
 
 const staff = (label, name) => html`<p class="pt-staff"><span class="pt-staff-label">${label}:</span> ${name ? playerName(name) : html`<span class="pt-none">no consta</span>`}</p>`;
+// Delegados del acta de la federación (delH/delA = { equipo, campo }): solo si constan, sin «no consta».
+const delegates = (d) => (d && (d.equipo || d.campo))
+  ? html`${d.equipo ? staff('Delegado/a', d.equipo) : ''}${d.campo ? staff('Delegado/a de campo', d.campo) : ''}`
+  : '';
 
 function lineupsBlock(match, group, ctx) {
   // La Maspalomas Cup no es de la federación: nunca tiene acta.
@@ -191,7 +195,7 @@ function lineupsBlock(match, group, ctx) {
   const team = (side) => {
     const name = side === 'home' ? match.home : match.away;
     const label = side === 'home' ? 'Local' : 'Visitante';
-    return html`<div class="pt-lu-team"><h3 class="pt-lu-head"><span class="pt-side">${label}</span> ${name}</h3>${lineupTable(acta[side] || [], name, label.toLowerCase())}${staff('Entrenador/a', side === 'home' ? acta.coachH : acta.coachA)}</div>`;
+    return html`<div class="pt-lu-team"><h3 class="pt-lu-head"><span class="pt-side">${label}</span> ${name}</h3>${lineupTable(acta[side] || [], name, label.toLowerCase())}${staff('Entrenador/a', side === 'home' ? acta.coachH : acta.coachA)}${delegates(side === 'home' ? acta.delH : acta.delA)}</div>`;
   };
   const link = acta.cod
     ? html`<a class="pt-acta" href="${actaUrl(acta.cod)}" target="_blank" rel="noopener noreferrer">Ver acta oficial<span class="vh"> (web de la federación, en otra pestaña)</span></a>`

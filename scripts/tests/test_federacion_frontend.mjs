@@ -15,3 +15,27 @@ test('un goleador sin nombre publicado se dice así y cuenta en la lista', () =>
   const two = [{ id: 'A2', s: [['#A2-1', 'Las Mesas Hu.', 5, 3]] }, { id: 'FF5', s: [['#FF5-1', 'Las Mesas Hu.', 4, 3]] }];
   assert.equal(categoryScorers(two).length, 2);
 });
+
+// Delegados del acta de la federación en Partido (delH/delA del generador).
+import { fixture } from './fixtures/rediseno/load.mjs';
+import { datasetsFrom as baseDatasets } from './fixtures/rediseno/simulate.mjs';
+import { ctxFor } from './fixtures/rediseno/screens.mjs';
+import { screen } from '../../src/screen-partido.js';
+
+test('Partido: los delegados del acta, solo si constan', () => {
+  const lineups = structuredClone(fixture('lineups-2025-2026'));
+  const key = Object.keys(lineups).find(k => k.startsWith('Unión Viera|Santidad|'));
+  assert.ok(key, 'la fixture trae el acta de A1 J3');
+  lineups[key].delH = { equipo: 'PEREZ GARCIA, ANA', campo: 'LOPEZ DIAZ, LUIS' };
+  const datasets = baseDatasets(fixture('current-2025-2026'), {
+    golBenj: [], golPrebenj: [], seasons: [{ name: '2025-2026', current: true }], matchDetail: fixture('matchdetail'),
+    lineups: { '2025-2026': lineups }, health: fixture('health'),
+  });
+  const params = { s: '2025-2026', g: 'A1', r: 'Jornada 3', h: 'Unión Viera', a: 'Santidad' };
+  const out = String(screen.render(ctxFor('partido', params, { today: '2026-09-23', datasets })));
+  const t = out.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  assert.ok(t.includes('Delegado/a: Ana Perez Garcia'));
+  assert.ok(t.includes('Delegado/a de campo: Luis Lopez Diaz'));
+  // El visitante no trae delegados: para ellos no se pinta nada (ni «no consta»).
+  assert.equal((t.match(/Delegado\/a: /g) || []).length, 1);
+});

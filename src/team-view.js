@@ -15,7 +15,7 @@ import {
 import { showNextSeasonBox, summerCups, teamState } from './myteam.js';
 import {
   buildCalendar, checkedCell, checkedPhrase, countdownLabel, dayMonth, downloadCalendar, matchHref, monthName,
-  routeHref, shareAndAnnounce, teamCalendarEvents, teamHref, venueUrl, weekdayDate,
+  routeHref, shareAndAnnounce, teamCalendarEvents, teamHref, venueDetails, venueUrl, weekdayDate,
 } from './links.js';
 import { teamScorers } from './state.js';
 
@@ -74,7 +74,7 @@ const staleNotice = stale => (stale
 
 // ── Próximo partido (A y B) y último partido (C) ────────────────────────
 
-function nextBlock(m, group, today, shields) {
+function nextBlock(m, group, today, shields, campos = null) {
   const round = roundOf(group, m);
   const when = cells([
     { label: 'Jornada', value: round && round.n != null ? round.n : (round ? round.label : m.roundKey) },
@@ -82,8 +82,9 @@ function nextBlock(m, group, today, shields) {
     { label: 'Hora', value: m.time || 'por confirmar', muted: !m.time },
   ]);
   const teams = html`<div class="fixture">${side(m.home, 'Local', shields)}<span class="fixture-vs" aria-hidden="true">–</span>${side(m.away, 'Visitante', shields)}</div>`;
-  const venue = html`<p class="fixture-venue"><span class="cell-label">Campo</span><span class="${m.venue ? 'fixture-place' : 'fixture-place is-muted'}">${m.venue || 'no publicado'}</span></p>`;
-  const buttons = html`<div class="buttons">${m.venue ? html`<a class="button is-main" href="${venueUrl(m.venue, group.island)}" target="_blank" rel="noopener noreferrer">Cómo llegar</a>` : ''}<button type="button" class="${m.venue ? 'button' : 'button is-main'}" data-action="calendario">Calendario</button><button type="button" class="button" data-action="compartir">Compartir</button></div>`;
+  const details = venueDetails(m.venue, campos);
+  const venue = html`<p class="fixture-venue"><span class="cell-label">Campo</span><span class="${m.venue ? 'fixture-place' : 'fixture-place is-muted'}">${m.venue || 'no publicado'}</span>${details ? html`<span class="fixture-place-kind">${details}</span>` : ''}</p>`;
+  const buttons = html`<div class="buttons">${m.venue ? html`<a class="button is-main" href="${venueUrl(m.venue, group.island, campos)}" target="_blank" rel="noopener noreferrer">Cómo llegar</a>` : ''}<button type="button" class="${m.venue ? 'button' : 'button is-main'}" data-action="calendario">Calendario</button><button type="button" class="button" data-action="compartir">Compartir</button></div>`;
   return html`${box(html`${when}${teams}${venue}${buttons}`, { title: 'Próximo partido', context: countdownLabel(m.dateISO, today) })}${shareStatus()}`;
 }
 
@@ -212,7 +213,7 @@ function seasonView(v, state) {
   const { ctx, group, name, shields } = v;
   const fx = teamFixtures(name, group, ctx.today);
   const top = state === 'C' ? lastBlock(fx, group, shields)
-    : fx.next ? nextBlock(fx.next, group, ctx.today, shields)
+    : fx.next ? nextBlock(fx.next, group, ctx.today, shields, ctx.datasets && ctx.datasets.campos)
       : box(html`<p class="home-note">${noNextText(fx, { finished: false })}</p>`, { title: 'Próximo partido' });
   const results = lastResults(name, group, 5);
   const main = [top];

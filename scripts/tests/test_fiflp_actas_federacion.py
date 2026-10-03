@@ -422,3 +422,23 @@ def test_migration_rebuilds_an_old_match_staff_without_losing_rows():
     assert conn.execute("SELECT id, kind, name FROM match_staff ORDER BY id").fetchall() == [(7, "referee", "X"), (8, "coach", "Y")]
     conn.execute("INSERT INTO match_staff(match_id, team_id, kind, name) VALUES (1, 2, 'delegate_team', 'Z')")
     assert "fiflp_id" in [r[1] for r in conn.execute("PRAGMA table_info(players)")]
+
+
+# ── Directorio de campos ─────────────────────────────────────────────────
+
+def test_campos_directory_page_and_venue_matching():
+    from generate_js import venue_key, generate_campos_js
+    rows, pages = U.parse_campos((FIX / "campos_fiflp_p1.html").read_text(encoding="utf-8", errors="replace"))
+    assert len(rows) == 20 and pages == 13
+    assert ("AGAPITO REYES VIERA", "C. Mosta, 1B", "Arrecife", "Hierba Artificial", "Fútbol 11", 222) in rows
+    assert venue_key("Cirilo Lorenzo Alonso F-8") == "CIRILO LORENZO ALONSO"
+    assert venue_key("JAVIER ARMAS REYES (F8)") == venue_key("Javier Armas Reyes")
+    conn = base()
+    conn.execute("UPDATE matches SET venue='Agapito Reyes Viera F-8'")
+    assert U.missing_venues(conn, 1) == ["Agapito Reyes Viera F-8"]
+    conn.executemany("INSERT INTO venues(name, norm, address, city, surface, kind, code) VALUES (?,?,?,?,?,?,?)",
+                     [(r[0], venue_key(r[0]), *r[1:]) for r in rows])
+    assert U.missing_venues(conn, 1) == []
+    js = generate_campos_js(conn)
+    assert json.loads(js[len("const CAMPOS="):-1]) == {
+        "Agapito Reyes Viera F-8": ["C. Mosta, 1B", "Arrecife", "Hierba Artificial", "Fútbol 11"]}

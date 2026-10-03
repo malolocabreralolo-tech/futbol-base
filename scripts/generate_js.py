@@ -403,7 +403,10 @@ def generate_history_js(conn):
         sorted_jornadas = dict(sorted(jornadas.items(), key=lambda x: _jornada_sort_key(x[0])))
         history[code] = sorted_jornadas
 
-    js = "const HISTORY=" + js_val(history) + ";"
+    # El directorio de campos va con el calendario (CAMPOS, para «Cómo llegar»):
+    # un fichero inmediato nuevo rompería la primera apertura sin red con el SW
+    # anterior, que no lo tiene y devolvería index.html en su lugar.
+    js = "const HISTORY=" + js_val(history) + ";\n" + generate_campos_js(conn) + "\n"
     js += f"const HIST_MATCHES={total_matches};"
     return js
 
@@ -649,6 +652,41 @@ def generate_goleadores_js(conn):
         parts.append(f"const {var_name}=" + js_val(entries) + ";")
 
     return "\n".join(parts)
+
+
+def venue_key(name):
+    """Clave para casar el campo del calendario con el directorio de la
+    federación: sin tildes ni signos, y sin el tipo de campo pegado al nombre
+    ('Cirilo Lorenzo Alonso F-8' = 'CIRILO LORENZO ALONSO')."""
+    import unicodedata
+    text = unicodedata.normalize("NFKD", str(name or "")).encode("ascii", "ignore").decode().upper()
+    text = re.sub(r"\(?\bF\s*-?\s*(?:7|8|11)\b\)?", " ", text)
+    text = re.sub(r"[^A-Z0-9 ]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def generate_campos_js(conn):
+    """CAMPOS (en data-history.js) = {campo del calendario: [dirección, localidad,
+    superficie, tipo]} para los partidos de la temporada actual (directorio de
+    campos de la federación). Casa por venue_key y, si no, por un único campo
+    del directorio que empiece igual."""
+    has = conn.execute("SELECT 1 FROM sqlite_master WHERE name='venues'").fetchone()
+    directory = conn.execute("SELECT norm, address, city, surface, kind FROM venues").fetchall() if has else []
+    by_key = {r[0]: r[1:] for r in directory}
+    used = [r[0] for r in conn.execute(
+        """SELECT DISTINCT m.venue FROM matches m JOIN groups g ON g.id=m.group_id
+           JOIN seasons s ON s.id=g.season_id
+           WHERE s.is_current=1 AND m.venue IS NOT NULL AND m.venue <> '' ORDER BY m.venue""")]
+    out = {}
+    for venue in used:
+        key = venue_key(venue)
+        info = by_key.get(key)
+        if info is None and len(key) >= 6:
+            near = [v for k, v in by_key.items() if k.startswith(key) or key.startswith(k)]
+            info = near[0] if len(near) == 1 else None
+        if info:
+            out[venue] = list(info)
+    return "const CAMPOS=" + js_val(out) + ";"
 
 
 def get_historical_jornadas(conn, group_id, include_details=False):

@@ -562,6 +562,8 @@ abbr[title] { text-decoration: none; }
 .fixture-venue { display: flex; flex-direction: column; gap: 1px; padding: 6px 8px 8px; }
 .fixture-place { font-size: 15px; overflow-wrap: anywhere; }
 .fixture-place.is-muted { font-size: 13.5px; font-weight: 600; color: var(--mute); }
+/* Superficie y tipo del campo (directorio de campos de la federación). */
+.fixture-place-kind { display: block; font-size: 13px; color: var(--mute); margin-top: 2px; }
 
 .result {
   display: grid;

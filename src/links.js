@@ -18,10 +18,22 @@ export function readRoute(hash = '') {
   };
 }
 
-export function venueUrl(venue, island = '') {
+// campos: CAMPOS de data-campos.js ({campo: [dirección, localidad, superficie, tipo]}, el
+// directorio de campos de la federación). Con la dirección, el mapa va al sitio exacto.
+export function venueUrl(venue, island = '', campos = null) {
   if (!venue || !String(venue).trim()) return '';
   const names = { grancanaria: 'Gran Canaria', lanzarote: 'Lanzarote', fuerteventura: 'Fuerteventura' };
-  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${venue}, ${names[island] || island || 'Canarias'}, España`);
+  const info = campos && Object.hasOwn(campos, venue) ? campos[venue] : null;
+  const where = info && info[0]
+    ? `${venue}, ${info[0]}, ${info[1] || names[island] || 'Canarias'}`
+    : `${venue}, ${names[island] || island || 'Canarias'}`;
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${where}, España`);
+}
+
+// «Hierba Artificial · Fútbol 8» del directorio de campos, o ''.
+export function venueDetails(venue, campos = null) {
+  const info = campos && venue && Object.hasOwn(campos, venue) ? campos[venue] : null;
+  return info ? [info[2], info[3]].filter(Boolean).join(' · ') : '';
 }
 
 // Resolve a date against its SEASON, never against the day the archive is read.

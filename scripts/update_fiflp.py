@@ -492,6 +492,55 @@ def update_goleadores(page, F, conn, group_id, url, log=print):
     return n
 
 
+CAMPOS_URL = "/NFG_LstCampos?cod_primaria=1000122&NPcd_Page={page}&NPcd_PageLines=100"
+
+
+def parse_campos(html):
+    """[(nombre, dirección, localidad, superficie, tipo, código)] de una página
+    de NFG_LstCampos, y el total de páginas."""
+    import html as _h
+    rows = []
+    for row in re.findall(r"<tr\b.*?</tr>", html, re.S):
+        cells = [re.sub(r"\s+", " ", _h.unescape(re.sub(r"<[^>]+>", " ", c))).strip()
+                 for c in re.findall(r"<td\b[^>]*>(.*?)</td>", row, re.S)]
+        code = re.search(r"Codigo_Campo=(\d+)", row)
+        if len(cells) < 6 or not cells[0] or not code:
+            continue
+        clean = lambda v: None if v in ("", "-") else v
+        rows.append((cells[0], clean(cells[1]), clean(cells[2]), clean(cells[4]), clean(cells[5]), int(code.group(1))))
+    total = re.search(r'pagination-panel-total">\s*(\d+)', html)
+    return rows, int(total.group(1)) if total else 1
+
+
+def missing_venues(conn, season_id):
+    """Campos de los partidos de la temporada que el directorio no tiene."""
+    from generate_js import venue_key
+    known = {r[0] for r in conn.execute("SELECT norm FROM venues")}
+    used = {r[0] for r in conn.execute(
+        """SELECT DISTINCT m.venue FROM matches m JOIN groups g ON g.id=m.group_id
+           WHERE g.season_id=? AND m.venue IS NOT NULL AND m.venue <> ''""", (season_id,))}
+    return sorted(v for v in used if venue_key(v) not in known)
+
+
+def update_campos(page, F, conn):
+    """Refresca el directorio de campos (3 páginas de 100). Devuelve cuántos."""
+    from generate_js import venue_key
+    rows, pages = [], 1
+    for n in range(1, 30):
+        if n > pages or not F.goto(page, F.BASE + CAMPOS_URL.format(page=n)):
+            break
+        got, pages = parse_campos(page.content())
+        rows += got
+        F.delay()
+    if not rows:
+        return 0
+    conn.execute("DELETE FROM venues")
+    conn.executemany("INSERT OR REPLACE INTO venues(name, norm, address, city, surface, kind, code) VALUES (?,?,?,?,?,?,?)",
+                     [(r[0], venue_key(r[0]), *r[1:]) for r in rows])
+    conn.commit()
+    return len(rows)
+
+
 def update_groups(conn, season_id, today=None):
     """Recorre los grupos de la federación de la temporada en curso."""
     groups = fiflp_groups(conn, season_id)
@@ -534,6 +583,13 @@ def _scrape_all(conn, groups, today, pending):
             results[code] = [status, msg]
         # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
         # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
+        # El directorio de campos, solo si falta alguno de los de la temporada.
+        try:
+            if missing_venues(conn, season_id):
+                print(f"\n  Campos: {update_campos(page, F, conn)} en el directorio de la federación")
+        except Exception as e:
+            conn.rollback()
+            print(f"  ! campos: {e}")
         budget = MAX_ACTAS_PER_RUN
         print("\n  Actas y goleadores")
         for group_id, code, url in groups:

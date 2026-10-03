@@ -51,6 +51,17 @@ DDL = [
         UNIQUE(match_id, team_id, kind, name)
     )""",
     """CREATE INDEX IF NOT EXISTS idx_match_staff_match ON match_staff(match_id)""",
+    # Directorio de campos de la federación (NFG_LstCampos): dirección exacta
+    # para «Cómo llegar», superficie y tipo de campo (2026-10).
+    """CREATE TABLE IF NOT EXISTS venues (
+        name    TEXT PRIMARY KEY,
+        norm    TEXT NOT NULL,
+        address TEXT,
+        city    TEXT,
+        surface TEXT,
+        kind    TEXT,
+        code    INTEGER
+    )""",
 ]
 
 

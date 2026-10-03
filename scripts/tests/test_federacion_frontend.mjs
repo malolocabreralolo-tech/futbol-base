@@ -39,3 +39,15 @@ test('Partido: los delegados del acta, solo si constan', () => {
   // El visitante no trae delegados: para ellos no se pinta nada (ni «no consta»).
   assert.equal((t.match(/Delegado\/a: /g) || []).length, 1);
 });
+
+import { venueUrl, venueDetails } from '../../src/links.js';
+
+test('«Cómo llegar» va a la dirección del directorio de campos si se conoce', () => {
+  const campos = { 'Agapito Reyes Viera F-8': ['C. Mosta, 1B', 'Arrecife', 'Hierba Artificial', 'Fútbol 11'] };
+  const q = (url) => new URL(url).searchParams.get('query');
+  assert.equal(q(venueUrl('Agapito Reyes Viera F-8', 'lanzarote', campos)), 'Agapito Reyes Viera F-8, C. Mosta, 1B, Arrecife, España');
+  assert.equal(q(venueUrl('Otro campo', 'lanzarote', campos)), 'Otro campo, Lanzarote, España');
+  assert.equal(venueDetails('Agapito Reyes Viera F-8', campos), 'Hierba Artificial · Fútbol 11');
+  assert.equal(venueDetails('Otro campo', campos), '');
+  assert.equal(venueDetails('x', null), '');
+});

@@ -186,6 +186,7 @@ export function readGlobals() {
     golBenj: typeof GOL_BENJ !== 'undefined' ? GOL_BENJ : null,
     golPrebenj: typeof GOL_PREBENJ !== 'undefined' ? GOL_PREBENJ : null,
     shields: typeof SHIELDS !== 'undefined' ? SHIELDS : null,
+    campos: typeof CAMPOS !== 'undefined' ? CAMPOS : null,
     seasons: typeof SEASONS !== 'undefined' ? SEASONS : null,
     cupBenjamin: typeof MASPALOMAS_CUP_BENJAMIN !== 'undefined' ? MASPALOMAS_CUP_BENJAMIN : null,
     cupPrebenjamin: typeof MASPALOMAS_CUP_PREBENJAMIN !== 'undefined' ? MASPALOMAS_CUP_PREBENJAMIN : null,

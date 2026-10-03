@@ -132,7 +132,7 @@ test('goleadores: un vacío que dice por qué, en PFV2, sin goles aún y en una 
   assert.match(render({ g: 'PFV2' }), /<h2 class="block-title">Goleadores del grupo<\/h2><\/div><p class="empty">La fuente de este grupo no publica goleadores\.<\/p>/);
   assert.match(render({ g: 'PG2' }, opts({ golPrebenj: [{ id: 'PG2', s: [] }] })), /<p class="empty">Todavía no hay goles registrados en este grupo\.<\/p>/);
   const past = render({ s: '2024-2025', g: 'P1' }, { datasets: datasetsFor({ golPrebenj: GOL_PG2, seasonRaw: { '2024-2025': pastSeasonRaw() } }) });
-  assert.match(past, /<p class="empty">Esta web solo guarda los goleadores de la temporada actual\.<\/p>/);
+  assert.match(past, /<p class="empty">No hay goleadores de esta temporada en esta web\.<\/p>/);
 });
 
 test('procedencia: sourceInfo (datos) con «Ver fuente»; sin enlace si el grupo no lo trae', () => {

@@ -124,7 +124,8 @@ function render(ctx) {
   const action = group ? { href: routeHref('goleadores', { s, c: group.cat, t: params.t }), label: 'Todos los grupos' } : null;
   const head = screenHead('Goleadores', { sub: past ? `${where} · ${seasonLabel(s)}` : where, back: ctx.backHref, action });
   const screenHtml = (content) => html`<section data-screen="goleadores">${head}${content}</section>`;
-  if (past) return screenHtml(empty(`No hay goleadores de la temporada ${seasonLabel(s)}: esta web solo guarda los de la temporada actual.`));
+  // Una temporada pasada sin goleadores archivados (solo los hay desde 2025/26).
+  if (past && !ctx.model.scorers(s, cat).length) return screenHtml(empty(`No hay goleadores de la temporada ${seasonLabel(s)} en esta web.`));
   const cats = group ? '' : html`<nav class="gol-cats" aria-label="Categoría">${segmented(CATS, cat, (value) => routeHref('goleadores', { s, c: value }), { idPrefix: 'categoria' })}</nav>`;
   if (!list.rows) return screenHtml(html`${cats}${empty('La fuente de este grupo no publica goleadores.')}`);
   if (!list.rows.length) {

@@ -101,12 +101,18 @@ test('clubIndex(): se rehace al cargar otra temporada, y sus nombres entran en e
   assert.equal(model.clubIndex(), after);
 });
 
-test('scorers(season, cat): los goleadores de la temporada actual; [] en las pasadas', () => {
+test('scorers(season, cat): los de la temporada actual; de una pasada, los de su archivo (gol) o []', () => {
   const golPrebenj = [{ id: 'PG2', g: 'PREBENJAMIN GC GRUPO 2', s: [['De La Rosa Perello, Theo', 'Las Mesas Hu.', 12, 17]] }];
   const model = createModel(datasetsFrom(fixture('current-2025-2026'), { golPrebenj }), { portalSeason: PORTAL_SEASON });
   assert.equal(model.scorers(PORTAL_SEASON, 'prebenjamin'), golPrebenj);
   assert.deepEqual(model.scorers(PORTAL_SEASON, 'benjamin'), [], 'sin data-goleadores.js');
-  assert.deepEqual(model.scorers('2024-2025', 'prebenjamin'), []);
+  assert.deepEqual(model.scorers('2024-2025', 'prebenjamin'), [], 'sin cargar');
+  // 2026-10: el data-season-<S>.js de una temporada archivada trae sus goleadores en `gol`.
+  const archived = datasetsFrom(fixture('current-2025-2026'), { golPrebenj: [] });
+  archived.seasonRaw = { '2024-2025': { name: '2024-2025', benjamin: [], prebenjamin: [], gol: { prebenjamin: golPrebenj } } };
+  const past = createModel(archived, { portalSeason: PORTAL_SEASON });
+  assert.equal(past.scorers('2024-2025', 'prebenjamin'), golPrebenj);
+  assert.deepEqual(past.scorers('2024-2025', 'benjamin'), [], 'sin esa categoría en el archivo');
 });
 
 test('buildClubIndex llega inyectado: sin él, clubIndex() lanza, y model.js no importa de myteam.js', () => {

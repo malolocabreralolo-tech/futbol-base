@@ -951,10 +951,15 @@ export function createModel(datasets, { portalSeason, buildClubIndex = null } = 
       }
       return index;
     },
-    // Goleadores de la temporada actual (GOL_BENJ o GOL_PREBENJ: [{ id, g, s: [[jugador, equipo,
-    // goles, partidos]] }]), los que recibe teamScorers; [] en las pasadas, que no los tienen.
+    // Goleadores (GOL_BENJ o GOL_PREBENJ: [{ id, g, s: [[jugador, equipo, goles, partidos]] }]), los
+    // que recibe teamScorers. De una temporada pasada, los de su data-season-<S>.js (`gol`), si los
+    // trae; si no, o sin cargar, [].
     scorers(season, cat) {
-      if (season !== portalSeason) return [];
+      if (season !== portalSeason) {
+        const raw = data.seasonRaw && Object.hasOwn(data.seasonRaw, season) ? data.seasonRaw[season] : null;
+        const gol = raw && raw.gol ? raw.gol[cat] : null;
+        return Array.isArray(gol) ? gol : [];
+      }
       const gol = cat === 'benjamin' ? data.golBenj : cat === 'prebenjamin' ? data.golPrebenj : null;
       return Array.isArray(gol) ? gol : [];
     },

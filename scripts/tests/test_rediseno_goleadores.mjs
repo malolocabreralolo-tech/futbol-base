@@ -159,7 +159,7 @@ test('q de la dirección: render pinta la misma búsqueda, con el texto en el bu
 test('sin goleadores: una temporada pasada, un grupo que no los publica, uno sin goles y una categoría sin datos', () => {
   const past = render({ s: '2024-2025', c: 'benjamin' }, { datasets: datasetsFor({ ...goleadores(), seasonRaw: { '2024-2025': archive('2024-2025') } }) });
   assert.match(past, /<p class="screen-sub">Benjamín, todos los grupos · 2024\/25<\/p>/);
-  assert.match(past, /<p class="empty">No hay goleadores de la temporada 2024\/25: esta web solo guarda los de la temporada actual\.<\/p><\/section>$/);
+  assert.match(past, /<p class="empty">No hay goleadores de la temporada 2024\/25 en esta web\.<\/p><\/section>$/);
   assert.doesNotMatch(past, /buscar-goleador|gol-cats/);
   assert.match(render({ g: 'PFV2' }), /<p class="empty">La fuente de este grupo no publica goleadores\.<\/p>/);
   assert.match(render({ g: 'BCA1' }, { datasets: datasetsFor({ ...goleadores(), champions: true }) }), /<p class="empty">La fuente de este grupo no publica goleadores\.<\/p>/);
@@ -327,4 +327,14 @@ test('la lista de la ruta, una vez por pintado y ninguna por tecla: render y mou
   // Otro pintado, con su ctx: otra lista.
   screen.render({ ...ctx });
   assert.equal(built, 2);
+});
+
+
+test('goleadores de una temporada archivada: la lista de su data-season (gol), con su temporada', () => {
+  const raw = { ...archive('2024-2025'), gol: { benjamin: [{ id: 'A1', g: 'X', s: [['PEREZ, ANA', 'Atalaya', 9, 10], ['#A1-1', 'Atalaya', 4, 8]] }] } };
+  const out = render({ s: '2024-2025', c: 'benjamin' }, { datasets: datasetsFor({ ...goleadores(), seasonRaw: { '2024-2025': raw } }) });
+  assert.match(out, /<p class="screen-sub">Benjamín, todos los grupos · 2024\/25<\/p>/);
+  assert.match(out, /Ana Perez/);
+  assert.match(out, /Sin nombre publicado/);
+  assert.doesNotMatch(out, /No hay goleadores/);
 });

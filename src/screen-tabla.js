@@ -55,7 +55,7 @@ function standingsContext(group, today, portalSeason) {
 function scorersBlock(group, scorers, historical, shields) {
   const s = group.season;
   if (!scorers || !scorers.length) {
-    const why = historical ? 'Esta web solo guarda los goleadores de la temporada actual.'
+    const why = historical ? 'No hay goleadores de esta temporada en esta web.'
       : scorers ? 'Todavía no hay goles registrados en este grupo.'
         : 'La fuente de este grupo no publica goleadores.';
     return block('Goleadores del grupo', empty(why));

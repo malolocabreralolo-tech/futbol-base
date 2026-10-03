@@ -609,49 +609,42 @@ def _goleadores_group_name(code, full_name, category_name):
     return f"BENJAMIN {cleaned}"
 
 
-def generate_goleadores_js(conn):
-    """Generate data-goleadores.js with top scorers per group.
-
-    Reads from the `scorers` table, refreshed each scrape from the
-    goleadores-base.php endpoint of futbolaspalmas.com.
-    """
-    parts = []
-
-    for cat_name, var_name in [("BENJAMIN", "GOL_BENJ"), ("PREBENJAMIN", "GOL_PREBENJ")]:
+def goleadores_entries(conn, cat_name, season_name=None):
+    """[{id, g, s: [[jugador, equipo, goles, partidos]]}] de una categoría, de la
+    temporada actual o de `season_name`. Los niños sin nombre publicado llevan la
+    clave '#<grupo>-<n>' (el frontend dice «Sin nombre publicado»)."""
+    if season_name is None:
         groups = get_groups_for_category(conn, cat_name)
-        entries = []
+    else:
+        groups = conn.execute(
+            """SELECT g.id, g.code, g.name, g.full_name, g.phase, g.island, g.url, g.current_jornada
+               FROM groups g JOIN seasons s ON s.id=g.season_id JOIN categories c ON c.id=g.category_id
+               WHERE s.name=? AND UPPER(c.name)=? ORDER BY g.code""", (season_name, cat_name)).fetchall()
+    entries = []
+    for gid, code, name, full_name, phase, island, url, current_jornada in groups:
+        scorers = conn.execute(
+            """SELECT s.player_name, t.name, s.goals, s.games
+               FROM scorers s JOIN teams t ON s.team_id = t.id
+               WHERE s.group_id = ? ORDER BY s.goals DESC, s.games ASC""", (gid,)).fetchall()
+        rows, anon = [], 0
+        for player, team, goals, games in scorers:
+            if not player or player.startswith("#"):
+                anon += 1
+                player = f"#{code}-{anon}"
+            rows.append([player, team, goals, games])
+        if scorers:
+            entries.append({"id": code, "g": _goleadores_group_name(code, full_name or "", cat_name), "s": rows})
+    return entries
 
-        for gid, code, name, full_name, phase, island, url, current_jornada in groups:
-            gol_name = _goleadores_group_name(code, full_name, cat_name)
 
-            scorers = conn.execute(
-                """SELECT s.player_name, t.name, s.goals, s.games
-                   FROM scorers s
-                   JOIN teams t ON s.team_id = t.id
-                   WHERE s.group_id = ?
-                   ORDER BY s.goals DESC, s.games ASC""",
-                (gid,),
-            ).fetchall()
+def generate_goleadores_js(conn):
+    """Generate data-goleadores.js with top scorers per group (temporada actual).
 
-            # La federación no publica el nombre de algunos niños (el club no lo
-            # autoriza): no entran en la lista, pero se resumen por equipo
-            # (jugadores y goles) para poder decirlo en la web.
-            # La federación no publica el nombre de algunos niños (el club no lo
-            # autoriza): van en la lista con la clave '#<grupo>-<n>', que el
-            # frontend muestra como «Sin nombre publicado». Fuera de la lista,
-            # el puesto de los demás y el máximo goleador del equipo mentirían.
-            rows, anon = [], 0
-            for name, team, goals, games in scorers:
-                if not name or name.startswith("#"):
-                    anon += 1
-                    name = f"#{code}-{anon}"
-                rows.append([name, team, goals, games])
-            if scorers:
-                entries.append({"id": code, "g": gol_name, "s": rows})
-
-        parts.append(f"const {var_name}=" + js_val(entries) + ";")
-
-    return "\n".join(parts)
+    Reads from the `scorers` table: desde 2026-27, los goleadores de la
+    federación (update_fiflp.update_goleadores); antes, los de futbolaspalmas.
+    """
+    return "\n".join(f"const {var_name}=" + js_val(goleadores_entries(conn, cat_name)) + ";"
+                     for cat_name, var_name in [("BENJAMIN", "GOL_BENJ"), ("PREBENJAMIN", "GOL_PREBENJ")])
 
 
 def venue_key(name):
@@ -777,6 +770,12 @@ def generate_seasons_js(conn):
                         "jornadas": hist_jornadas,
                     })
                 entry[cat_key] = groups_data
+            # Los goleadores de la temporada archivada, si la base los tiene
+            # (2025-26: los de futbolaspalmas; desde 2026-27, los de la federación).
+            gol = {cat_key: goleadores_entries(conn, cat_name, season_name)
+                   for cat_name, cat_key in [("BENJAMIN", "benjamin"), ("PREBENJAMIN", "prebenjamin")]}
+            if any(gol.values()):
+                entry["gol"] = gol
 
         seasons_list.append(entry)
 

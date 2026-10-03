@@ -261,3 +261,27 @@ def test_a_new_phase_is_added_to_the_current_season_without_touching_it():
     again = {"season": "2026-2027", "groups": [GROUP]}
     with pytest.raises(ValueError, match="ya existen"):
         add_groups(conn, again, verify_sources(again, fiflp_raw=raw(), names=NAMES))
+
+
+def test_known_names_respect_the_filial_letter_new_clubs_and_the_island():
+    from activate_season import known_names
+    conn = db()
+    conn.execute("INSERT INTO seasons(name,start_year,end_year,is_current) VALUES('2024-2025',2024,2025,0)")
+    conn.executescript("""
+      INSERT INTO groups(id, season_id, category_id, code, island) VALUES (1, 1, 1, 'FF1', 'grancanaria'), (2, 1, 1, 'LZ1', 'lanzarote');
+      INSERT INTO teams(id, name) VALUES (1, 'Arguineguín'), (2, 'Arguineguín B'), (3, 'Las Mesas B'), (4, 'Internacional B'), (5, 'Las Mesas Hu.');
+      INSERT INTO standings(group_id, team_id, position) VALUES (1, 1, 1), (1, 2, 2), (1, 3, 3), (2, 4, 1), (1, 5, 4);
+    """)
+    def group(island, teams):
+        return {"island": island, "standings": [], "jornadas": [{"num": "1", "matches": [
+            {"home": a, "away": b} for a, b in zip(teams[::2], teams[1::2])]}]}
+    raw = [group("grancanaria", ['ARGUINEGUIN, C.D. "A"', 'ARGUINEGUIN, C.D. "B"', 'ARGUINEGUIN, C.D. "C"',
+                                 'CF ATLETICO BACHICAN LAS MESAS "A"', 'C.D. DE FUTBOL ATHLETICO BACHICAN LAS MESAS "B"',
+                                 'INTERNACIONAL GALDAR "B"', 'MESAS HURACAN, U.D. LAS', 'TABLERO, C.D.'])]
+    names = known_names(raw, conn)
+    assert names['ARGUINEGUIN, C.D. "A"'] == "Arguineguín"
+    assert names['ARGUINEGUIN, C.D. "B"'] == "Arguineguín B"
+    assert names['ARGUINEGUIN, C.D. "C"'] == "Arguineguín C", "un filial nunca es su primer equipo"
+    assert names['C.D. DE FUTBOL ATHLETICO BACHICAN LAS MESAS "B"'].startswith("C.D. DE FUTBOL"), "club nuevo: no es UD Las Mesas B"
+    assert names['INTERNACIONAL GALDAR "B"'] != "Internacional B", "el Internacional B de la base es de Lanzarote"
+    assert names['MESAS HURACAN, U.D. LAS'] == "Las Mesas Hu."

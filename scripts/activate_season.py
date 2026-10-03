@@ -106,6 +106,12 @@ def fiflp_evidence(group, raw, names=None):
                 _iso(m.get("date") or jornada.get("date")), name(home), name(away),
                 m.get("hs") if both else None, m.get("as") if both else None,
                 (m.get("time") or "") or None, (m.get("venue") or "") or None])
+    from fiflp_names import team_key
+    crudos = {clean_team_name(t) for t in [r.get("team") for r in entry.get("standings") or []] +
+              [m.get(s) for j in entry.get("jornadas") or [] for m in j.get("matches") or [] for s in ("home", "away")]}
+    crudos = {t for t in crudos if t and not is_bye(t)}
+    if len({(team_key(t)[0], _filial(t)) for t in crudos}) != len({name(t) for t in crudos}):
+        raise ValueError(f'{group["id"]}: dos equipos distintos acabarían con el mismo nombre')
     standings = [[r.get("pos"), name(r.get("team")), r.get("pts"), r.get("j"), r.get("g"), r.get("e"),
                   r.get("p"), r.get("gf"), r.get("gc"), r.get("df")]
                  for r in entry.get("standings") or [] if clean_team_name(r.get("team"))]
@@ -319,24 +325,78 @@ def apply_manifest(manifest, evidence, root=Path(PROJECT_ROOT)):
     return backup
 
 
+def _filial(name):
+    """Letra de filial (B, C…); la A es el primer equipo, como no llevar letra."""
+    from fiflp_names import team_key
+    letter = team_key(name)[1]
+    return "" if letter == "A" else letter
+
+
 def known_names(raw, conn):
-    """{nombre limpio de FIFLP: nombre que ya usa la base}. Se busca entre los
-    equipos con clasificación de las dos últimas temporadas: un club que vuelve
-    conserva su nombre, su escudo y su histórico. Lo que no casa se queda con su
-    nombre de FIFLP (mejor un nombre feo que fundir dos clubes)."""
+    """{nombre limpio de FIFLP: nombre que ya usa la base}. Un club que vuelve
+    conserva su nombre, su escudo y su histórico; lo que no casa se queda con su
+    nombre de FIFLP (mejor un nombre feo que fundir dos clubes).
+
+    Se busca primero entre los equipos de la temporada que se cierra y después
+    en la anterior. La letra de filial manda: 'ARGUINEGUIN, C.D. "C"' no es
+    'Arguineguín' (el emparejamiento por tokens lo admitía con penalización);
+    si la base no tiene ese filial, se nombra como su primer equipo más la
+    letra ('Arguineguín C'). Y si el primer equipo del club es nuevo, su filial
+    también: 'BACHICAN LAS MESAS "B"' no es 'Las Mesas B' (UD Las Mesas)."""
     from import_fiflp_cups_2324 import clean_team_name
-    from fiflp_names import canonical_names, is_bye
-    pool = [r[0] for r in conn.execute(
-        """SELECT DISTINCT t.name FROM teams t JOIN standings st ON st.team_id=t.id
-           JOIN groups g ON g.id=st.group_id JOIN seasons s ON s.id=g.season_id
-           WHERE s.start_year >= (SELECT max(start_year) - 1 FROM seasons)""")]
-    names = {}
+    from fiflp_names import canonical_names, is_bye, team_key, team_score, MIN_TEAM_SCORE
+
+    def pool(offset):
+        return [r[0] for r in conn.execute(
+            """SELECT DISTINCT t.name FROM teams t JOIN standings st ON st.team_id=t.id
+               JOIN groups g ON g.id=st.group_id JOIN seasons s ON s.id=g.season_id
+               WHERE s.start_year = (SELECT max(start_year) FROM seasons) - ?""", (offset,))]
+
+    # Un equipo no cambia de isla: un nombre de la base que solo ha jugado en
+    # otra isla no es este equipo ('Internacional B' de Lanzarote no es el
+    # filial de un club de Gran Canaria).
+    base_islands = {}
+    for name, island in conn.execute(
+            """SELECT DISTINCT t.name, g.island FROM teams t JOIN standings st ON st.team_id=t.id
+               JOIN groups g ON g.id=st.group_id WHERE g.island IS NOT NULL"""):
+        base_islands.setdefault(name, set()).add(island)
+    islands = {}
     for entry in raw:
-        crudos = {clean_team_name(m.get(side)) for j in entry.get("jornadas") or []
-                  for m in j.get("matches") or [] for side in ("home", "away")}
-        crudos |= {clean_team_name(r.get("team")) for r in entry.get("standings") or []}
-        crudos = sorted(n for n in crudos if n and not is_bye(n))
-        names.update(canonical_names(crudos, [], pool))
+        teams = {clean_team_name(m.get(side)) for j in entry.get("jornadas") or []
+                 for m in j.get("matches") or [] for side in ("home", "away")}
+        teams |= {clean_team_name(r.get("team")) for r in entry.get("standings") or []}
+        for t in teams:
+            islands.setdefault(t, set()).add(entry.get("island") or "grancanaria")
+    crudos = sorted(n for n in islands if n and not is_bye(n))
+
+    def fits(n, canon):
+        return (_filial(canon) == _filial(n) and
+                (canon not in base_islands or base_islands[canon] & islands[n]))
+
+    # Primeros equipos y filiales por separado: el emparejamiento es uno a uno,
+    # y un filial que se llevara el nombre del primer equipo lo dejaría sin él.
+    names = {n: n for n in crudos}
+    for subset in ([n for n in crudos if not _filial(n)], [n for n in crudos if _filial(n)]):
+        rest = subset
+        for offset in (0, 1):
+            found = canonical_names(rest, [], pool(offset))
+            for n in rest:
+                if found.get(n, n) != n and fits(n, found[n]):
+                    names[n] = found[n]
+            rest = [n for n in rest if names[n] == n]
+
+    firsts = [n for n in crudos if not _filial(n)]
+    for n in crudos:
+        letter = _filial(n)
+        if not letter:
+            continue
+        core = team_key(n)[0]
+        same = {names[f] for f in firsts if team_key(f)[0] == core}
+        near = [f for f in firsts if team_score((core, ""), (team_key(f)[0], "")) >= MIN_TEAM_SCORE]
+        if not same and near and all(names[f] == f for f in near):
+            names[n] = n                      # primer equipo nuevo: su filial también
+        elif names[n] == n and len(same) == 1 and next(iter(same)) not in firsts:
+            names[n] = f"{next(iter(same))} {letter}"
     return names
 
 

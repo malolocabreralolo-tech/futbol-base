@@ -159,7 +159,27 @@ _comps = COMPS_BY_SEASON[SEASON]
 F.COMPETITIONS = ([c for c in _comps if c["id"] in _ids.split(",")]
                   if _ids else _comps)
 
+def drop_empty_groups(path):
+    """El scraper reanuda saltándose los grupos ya guardados, también los que
+    se guardaron VACÍOS porque FIFLP no sirvió el desplegable a tiempo (pasó con
+    el prebenjamín 2026-27: «0J» en tres grupos que tenían 26 jornadas). Se
+    quitan antes de reanudar para que se vuelvan a intentar."""
+    import json
+    if not os.path.exists(path):
+        return 0
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    kept = [g for g in data if g.get("jornadas") or g.get("standings")]
+    if len(kept) != len(data):
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(kept, f, ensure_ascii=False, indent=2)
+    return len(data) - len(kept)
+
+
 if __name__ == "__main__":
     print(f"Temporada {SEASON} · {len(F.COMPETITIONS)} competiciones · "
           f"salida {os.path.basename(F.OUTPUT_PATH)}")
+    vacios = drop_empty_groups(F.OUTPUT_PATH)
+    if vacios:
+        print(f"{vacios} grupos vacíos del raw se vuelven a intentar")
     F.main()

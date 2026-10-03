@@ -90,13 +90,16 @@ def name_map(scraped_names, group_teams):
 
 
 def deviation(conn, group_id, override=None):
-    """Suma de |GF partidos − GF tabla| + |GC partidos − GC tabla| por equipo.
-    `override` = (match_id, gl, gv) para medir cómo quedaría con otro marcador."""
-    table = {tid: (gf, gc) for tid, gf, gc in conn.execute(
-        "SELECT team_id, gf, gc FROM standings WHERE group_id=?", (group_id,))}
-    if not table or any(v[0] is None for v in table.values()):
+    """Suma de |GF partidos − GF tabla| + |GC partidos − GC tabla| de los equipos
+    COMPARABLES: los que tienen en la tabla oficial tantos partidos como
+    resultados en la base (si la tabla va atrasada, la diferencia no dice nada
+    del marcador). `override` = (match_id, gl, gv): cómo quedaría con otro.
+    None si la tabla no trae goles."""
+    table = {tid: (pj, gf, gc) for tid, pj, gf, gc in conn.execute(
+        "SELECT team_id, played, gf, gc FROM standings WHERE group_id=?", (group_id,))}
+    if not table or any(v[1] is None for v in table.values()):
         return None
-    goals = {tid: [0, 0] for tid in table}
+    goals = {tid: [0, 0, 0] for tid in table}
     for mid, h, a, hs, as_ in conn.execute(
             """SELECT id, home_team_id, away_team_id, home_score, away_score
                FROM matches WHERE group_id=?""", (group_id,)):
@@ -106,9 +109,44 @@ def deviation(conn, group_id, override=None):
             continue
         for tid, f, c in ((h, hs, as_), (a, as_, hs)):
             if tid in goals:
-                goals[tid][0] += f
-                goals[tid][1] += c
-    return sum(abs(goals[t][0] - table[t][0]) + abs(goals[t][1] - table[t][1]) for t in table)
+                goals[tid][0] += 1
+                goals[tid][1] += f
+                goals[tid][2] += c
+    return sum(abs(goals[t][1] - table[t][1]) + abs(goals[t][2] - table[t][2])
+               for t in table if goals[t][0] == table[t][0])
+
+
+def _drop_one_digit(n):
+    """15 -> {1, 5}; 213 -> {13, 23, 21}. La ofuscación de FIFLP cuela una cifra de más."""
+    s = str(n)
+    return {int(s[:i] + s[i + 1:]) for i in range(len(s))} if len(s) > 1 else set()
+
+
+def reconcile_with_table(conn, group_id, log=print):
+    """Corrige los marcadores con una cifra de más que la clasificación oficial
+    desmiente. Solo acepta un cambio que baje la desviación de los equipos
+    comparables; se repite mientras mejore. Devuelve cuántos corrigió."""
+    fixed = 0
+    while True:
+        before = deviation(conn, group_id)
+        if not before:
+            return fixed
+        best = None
+        for mid, hs, as_, home, away in conn.execute(
+                """SELECT m.id, m.home_score, m.away_score, h.name, a.name FROM matches m
+                   JOIN teams h ON h.id=m.home_team_id JOIN teams a ON a.id=m.away_team_id
+                   WHERE m.group_id=? AND m.home_score IS NOT NULL AND m.away_score IS NOT NULL
+                   AND (m.home_score > 9 OR m.away_score > 9)""", (group_id,)).fetchall():
+            for cand in [(h, as_) for h in _drop_one_digit(hs)] + [(hs, a) for a in _drop_one_digit(as_)]:
+                after = deviation(conn, group_id, (mid, *cand))
+                if after is not None and after < before and (best is None or after < best[0]):
+                    best = (after, mid, cand, (home, hs, as_, away))
+        if best is None:
+            return fixed
+        _, mid, (hs, as_), (home, old_h, old_a, away) = best
+        conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (hs, as_, mid))
+        log(f"    corregido con la tabla {home} {old_h}-{old_a} {away} → {hs}-{as_}")
+        fixed += 1
 
 
 def write_standings(conn, group_id, rows):
@@ -261,6 +299,7 @@ def update_group(conn, group_id, code, raw_standings, raw_rounds, log=print):
                           "time": m.get("time") or "", "venue": m.get("venue") or ""})
         for i, n in enumerate(write_round(conn, group_id, label, clean, log)):
             totals[i] += n
+    totals[2] += reconcile_with_table(conn, group_id, log)
     current = current_round(conn, group_id)
     if current:
         conn.execute("UPDATE groups SET current_jornada=? WHERE id=?", (current, group_id))

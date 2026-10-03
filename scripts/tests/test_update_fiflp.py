@@ -315,3 +315,24 @@ def test_a_club_stored_with_the_federation_spelling_takes_the_portal_form():
     conn.execute("""INSERT INTO teams(name) VALUES ('ATLETICO FOMENTO, CLUB')""")
     tid = club_id(conn, "Atlético Fomento")
     assert conn.execute("SELECT id, name FROM teams").fetchall() == [(tid, "Atlético Fomento")]
+
+
+def test_a_score_with_an_extra_digit_is_fixed_with_the_official_table():
+    conn, gid = seeded()
+    ids = {n: conn.execute("SELECT id FROM teams WHERE name=?", (n,)).fetchone()[0]
+           for n in ("Las Mesas Hu.", "Tablero", "Arucas")}
+    conn.execute("UPDATE matches SET home_score=41, away_score=2 WHERE jornada='Jornada 1'")   # se ve 4-2
+    conn.execute("DELETE FROM standings WHERE group_id=?", (gid,))
+    for pos, (name, pj, gf, gc) in enumerate([("Las Mesas Hu.", 1, 4, 2), ("Arucas", 0, 0, 0), ("Tablero", 1, 2, 4)], 1):
+        conn.execute("""INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+                        VALUES (?,?,?,?,?,0,0,0,?,?,?)""", (gid, ids[name], pos, 0, pj, gf, gc, gf - gc))
+    assert U.reconcile_with_table(conn, gid, log=lambda *_: None) == 1
+    assert conn.execute("SELECT home_score, away_score FROM matches WHERE jornada='Jornada 1'").fetchone() == (4, 2)
+
+
+def test_a_lagging_table_never_pulls_a_score_towards_zero():
+    conn, gid = seeded()
+    conn.execute("UPDATE matches SET home_score=3, away_score=21 WHERE jornada='Jornada 1'")
+    # La tabla oficial aún no cuenta ese partido (J=0 para los dos): nada que comparar.
+    assert U.reconcile_with_table(conn, gid, log=lambda *_: None) == 0
+    assert conn.execute("SELECT home_score, away_score FROM matches WHERE jornada='Jornada 1'").fetchone() == (3, 21)

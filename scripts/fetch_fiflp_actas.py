@@ -133,87 +133,48 @@ def discover_comps(page, season_code):
 
 # ── Enumeration: Strategy 1 — main path (comp→grupo→jornada→anchor) ──────────
 
+def _options(page, name, tries=4):
+    """Valores del desplegable `name` (grupo, jornada); FIFLP a veces tarda en servirlo."""
+    for _ in range(tries):
+        try:
+            values = page.evaluate(f"""() => Array.from(document.querySelectorAll('select[name="{name}"] option'))
+                .filter(o => o.value && o.value !== '0').map(o => o.value)""")
+        except Exception:
+            values = []
+        if values:
+            return values
+        page.wait_for_timeout(3000)
+    return []
+
+
 def enumerate_actas_main(page, season, comp_id):
     """Returns list of dicts: [{cod_acta, comp_id, grupo, jornada}, ...].
 
-    Navigates the NFG_CmpJornada dropdown tree: comp → grupo → jornada →
-    BuscarPartidos(jornada) → scan anchors for CodActa.
+    comp → grupo → jornada por URL directa (&CodGrupo=G&CodJornada=N) y los
+    CodActa de cada jornada. Antes elegía grupo con select_option y jornada con
+    BuscarPartidos sobre el formulario de búsqueda, que la página trae OCULTO
+    (#portlet_search, display:none): select_option daba timeout en todos los
+    grupos salvo el primero (2025-26: solo el grupo 1 del prebenjamín).
     """
     out = []
-    # IMPORTANT: navigate WITHOUT comp_id in URL, then use page.select_option
-    # to trigger the FIFLP AJAX. Putting comp_id in the URL skips the AJAX and
-    # the grupo/jornada selects load empty / null. Pattern matches the proven
-    # fetch_fiflp.py::scrape_competition.
-    if not goto(page, f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"):
+    base = f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}&CodCompeticion={comp_id}"
+    if not goto(page, base):
         return out
-    try:
-        page.select_option('select[name="competicion"]', comp_id)
-        page.wait_for_timeout(2000)
-    except Exception as e:
-        print(f"  WARN season={season} comp={comp_id} could not select competition: {e}")
-        return out
-    grupos = page.evaluate("""
-        () => Array.from(document.querySelectorAll('select[name="grupo"] option'))
-                   .filter(o => o.value && o.value !== '0')
-                   .map(o => o.value)""")
+    grupos = _options(page, "grupo")
     for grupo in grupos:
-        # Select grupo + wait for AJAX/navigation to settle, then poll for jornadas
-        # to populate. Up to 3 attempts since FIFLP races our read on flaky days.
-        jornadas = []
-        for attempt in range(3):
-            try:
-                page.select_option('select[name="grupo"]', grupo)
-            except Exception as e:
-                print(f"  WARN season={season} comp={comp_id} grupo={grupo} select failed: {e}")
-                break
-            # Settle: navigation or AJAX
-            try:
-                page.wait_for_load_state("networkidle", timeout=10000)
-            except Exception:
-                page.wait_for_timeout(3000)
-            # Poll the DOM until jornada select is populated, max 8s total
-            try:
-                page.wait_for_function(
-                    "document.querySelectorAll('select[name=\"jornada\"] option').length > 1",
-                    timeout=8000,
-                )
-            except Exception:
-                pass  # may still be empty; we'll check below
-            try:
-                jornadas = page.evaluate("""
-                    () => Array.from(document.querySelectorAll('select[name="jornada"] option'))
-                               .filter(o => o.value && o.value !== '0')
-                               .map(o => o.value)""")
-            except Exception:
-                jornadas = []
-            if jornadas:
-                break
-            # Empty: re-load the comp page and retry grupo selection
-            print(f"  retry season={season} comp={comp_id} grupo={grupo} attempt={attempt+1}")
-            if not goto(page, f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"):
-                break
-            try:
-                page.select_option('select[name="competicion"]', comp_id)
-                page.wait_for_timeout(2000)
-            except Exception:
-                break
+        if not goto(page, f"{base}&CodGrupo={grupo}"):
+            continue
+        jornadas = _options(page, "jornada")
         if not jornadas:
             print(f"  WARN season={season} comp={comp_id} grupo={grupo} jornadas:0")
             continue
         for jornada in jornadas:
-            try:
-                page.evaluate(f"BuscarPartidos('{jornada}')")
-                page.wait_for_timeout(1500)
-            except Exception:
+            if not goto(page, f"{base}&CodGrupo={grupo}&CodJornada={jornada}"):
                 continue
             html = page.content()
             for m in ACTA_HREF.finditer(html):
-                out.append({
-                    "cod_acta": m.group(1),
-                    "comp_id":  comp_id,
-                    "grupo":    grupo,
-                    "jornada":  jornada,
-                })
+                out.append({"cod_acta": m.group(1), "comp_id": comp_id, "grupo": grupo, "jornada": jornada})
+            delay()
     # dedupe by cod_acta
     seen, uniq = set(), []
     for r in out:

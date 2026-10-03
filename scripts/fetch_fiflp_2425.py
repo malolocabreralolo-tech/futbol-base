@@ -169,36 +169,44 @@ def _extract_score_from_html(score_html):
     return None, None
 
 
+# Lee lo que el navegador PINTA, en orden: texto visible + ::before/::after de
+# cada elemento, saltando <script>/<style>, lo que tiene display:none (los
+# señuelos '<span style="display:none">22</span>') y lo invisible. La versión
+# anterior tomaba los dígitos CSS y descartaba el texto visible si había alguno:
+# '2<i class="fa-1"></i>' (se ve «21») salía 1, y dos lecturas de la misma
+# jornada de 2026-27 discrepaban. El 4.º argumento de ntype es otro señuelo, y
+# sus scripts ni se ejecutan al cargar la jornada por AJAX.
+RENDERED_SCORE_JS = """(cell) => {
+    const digits = c => (!c || c === 'none' || c === 'normal') ? ''
+        : (c.replace(/^["']|["']$/g, '').match(/\\d/g) || []).join('');
+    const walk = node => {
+      if (node.nodeType === 3) {
+        const st = getComputedStyle(node.parentElement);
+        const seen = st.visibility === 'visible' && parseFloat(st.fontSize) > 0;
+        return seen ? (node.textContent.match(/\\d/g) || []).join('') : '';
+      }
+      if (node.nodeType !== 1 || node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return '';
+      const st = getComputedStyle(node);
+      if (st.display === 'none' || parseFloat(st.opacity) === 0) return '';
+      const own = st.visibility === 'visible' && parseFloat(st.fontSize) > 0;
+      let out = own ? digits(getComputedStyle(node, '::before').content) : '';
+      for (const child of node.childNodes) out += walk(child);
+      if (own) out += digits(getComputedStyle(node, '::after').content);
+      return out;
+    };
+    return Array.from(cell.querySelectorAll('.wid2_resultado_cerrada')).map(span => {
+      const d = walk(span);
+      return d === '' ? null : parseInt(d, 10);
+    });
+}"""
+
+
 def _scores_from_browser(score_cell):
-    """Read the actually-RENDERED score from the browser after FIFLP's anti-
-    scrape JS runs. The score is variably obfuscated PER MATCH — the real digit
-    may be (a) the ntype-computed class 'm-N', (b) CSS ::before/::after content
-    (e.g. "11"), or (c) plain visible text (hidden display:none decoys are
-    excluded by innerText). Each `.wid2_resultado_cerrada` span is one score
-    (home, away), possibly multi-digit. Returns [home, away] (ints or None).
-    This is the AUTHORITATIVE source (what the user sees); the static HTML
-    parser is only a fallback. Verified against official standings (2024-25)."""
+    """[local, visitante] tal como se ven en el navegador (ints o None). Cada
+    `.wid2_resultado_cerrada` es un marcador, quizá de varias cifras. Es la
+    fuente AUTORITATIVA; el parser estático solo es el último recurso."""
     try:
-        return score_cell.evaluate("""(cell) => {
-            const readSpan = (span) => {
-              let digits = '';
-              for (const el of [span, ...span.querySelectorAll('*')]) {
-                const cm = (el.className || '').match(/\\bm-(\\d)\\b/);
-                if (cm) { digits += cm[1]; continue; }
-                for (const p of ['::before', '::after']) {
-                  const c = (window.getComputedStyle(el, p).content || '').replace(/["']/g,'');
-                  const m = c.match(/\\d+/);
-                  if (m) digits += m[0];
-                }
-              }
-              if (!digits) {
-                const m = (span.innerText || '').match(/\\d+/);
-                if (m) digits = m[0];
-              }
-              return digits === '' ? null : parseInt(digits);
-            };
-            return Array.from(cell.querySelectorAll('.wid2_resultado_cerrada')).map(readSpan);
-        }""")
+        return score_cell.evaluate(RENDERED_SCORE_JS)
     except Exception:
         return []
 

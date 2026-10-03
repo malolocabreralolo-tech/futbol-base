@@ -7868,7 +7868,1984 @@
     "group_id": "55247208",
     "group_name": "GRUPO 2",
     "standings": [],
-    "jornadas": []
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "11-10-2026",
+        "matches": [
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "16:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "18:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-10-2026",
+            "time": "09:30",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "11-10-2026",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "18-10-2026",
+        "matches": [
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "12:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-10-2026",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "25-10-2026",
+        "matches": [
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "25-10-2026",
+            "time": "09:30",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "25-10-2026",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "08-11-2026",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "16:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "16:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "08-11-2026",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "15-11-2026",
+        "matches": [
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "13:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-11-2026",
+            "time": "09:00",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-11-2026",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "22-11-2026",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "29-11-2026",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "29-11-2026",
+            "time": "09:00",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "29-11-2026",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "13-12-2026",
+        "matches": [
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "13-12-2026",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "20-12-2026",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "20-12-2026",
+            "time": "09:30",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-12-2026",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "17-01-2027",
+        "matches": [
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "17-01-2027",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "24-01-2027",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "24-01-2027",
+            "time": "09:30",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-01-2027",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "31-01-2027",
+        "matches": [
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2027",
+            "time": "09:30",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2027",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "07-02-2027",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "07-02-2027",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "14-02-2027",
+        "matches": [
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "14-02-2027",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "21-02-2027",
+        "matches": [
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "21-02-2027",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "28-02-2027",
+        "matches": [
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "10:30",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "28-02-2027",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "07-03-2027",
+        "matches": [
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2027",
+            "time": "09:00",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2027",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "14-03-2027",
+        "matches": [
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "14-03-2027",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "19",
+        "date": "21-03-2027",
+        "matches": [
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2027",
+            "time": "09:00",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2027",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "20",
+        "date": "04-04-2027",
+        "matches": [
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "04-04-2027",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "21",
+        "date": "11-04-2027",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2027",
+            "time": "09:00",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2027",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "22",
+        "date": "18-04-2027",
+        "matches": [
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-04-2027",
+            "time": "11:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "23",
+        "date": "25-04-2027",
+        "matches": [
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "25-04-2027",
+            "time": "09:30",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "25-04-2027",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "24",
+        "date": "09-05-2027",
+        "matches": [
+          {
+            "home": "HURACAN, A.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "10:30",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "10:30",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "09-05-2027",
+            "time": "12:00",
+            "venue": "PUERTO PI (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "25",
+        "date": "16-05-2027",
+        "matches": [
+          {
+            "home": "GLAUCUS, C.D.",
+            "away": "HURACAN, A.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "ARUCAS C.F. \"B\"",
+            "away": "VICTORIA, REAL CLUB",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "09:00",
+            "venue": "JAVIER ARMAS REYES (F8)",
+            "referee": ""
+          },
+          {
+            "home": "VILLA DE SANTA BRIGIDA, U.D.",
+            "away": "ATLETICO ANGOSTURA,",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "10:30",
+            "venue": "LOS OLIVOS",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D.",
+            "away": "CF ATLETICO BACHICAN LAS MESAS",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "MESAS HURACAN, U.D. LAS",
+            "away": "FOMENTO, ATLÉTICO \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "10:30",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "UNION VIERA, C.F.",
+            "away": "ACODETTI C.F \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "16-05-2027",
+            "time": "09:00",
+            "venue": "ALFONSO SILVA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "26",
+        "date": "23-05-2027",
+        "matches": [
+          {
+            "home": "ACODETTI C.F \"A\"",
+            "away": "VILLA DE SANTA BRIGIDA, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CF ATLETICO BACHICAN LAS MESAS",
+            "away": "UNION VIERA, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "FOMENTO, ATLÉTICO \"A\"",
+            "away": "TAMARACEITE, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "BATAN",
+            "referee": ""
+          },
+          {
+            "home": "HURACAN, A.D.",
+            "away": "MESAS HURACAN, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "C.M. LA SUERTE",
+            "referee": ""
+          },
+          {
+            "home": "PANADERIA PULIDO SAN MATEO, C.F.",
+            "away": "GLAUCUS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "SAN MATEO",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO ANGOSTURA,",
+            "away": "ARUCAS C.F. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "E.M. GUINIGUADA",
+            "referee": ""
+          },
+          {
+            "home": "VICTORIA, REAL CLUB",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      }
+    ]
   },
   {
     "competition_id": "54977022",
@@ -7879,7 +9856,1984 @@
     "group_id": "55247221",
     "group_name": "GRUPO 3",
     "standings": [],
-    "jornadas": []
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "11-10-2026",
+        "matches": [
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "09:00",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "10:30",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "12:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "12:30",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "11-10-2026",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "18-10-2026",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "16-10-2026",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-10-2026",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "16:30",
+            "venue": "EL CALERO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "25-10-2026",
+        "matches": [
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "09:00",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "12:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "13:30",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "17:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "25-10-2026",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "08-11-2026",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-11-2026",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "10:30",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "16:30",
+            "venue": "EL CALERO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "15-11-2026",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "13-11-2026",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "15-11-2026",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "22-11-2026",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-11-2026",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "16:30",
+            "venue": "EL CALERO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "29-11-2026",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "27-11-2026",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "27-11-2026",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "13-12-2026",
+        "matches": [
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "16:30",
+            "venue": "EL CALERO",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "13-12-2026",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "20-12-2026",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "18-12-2026",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-12-2026",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "17-01-2027",
+        "matches": [
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "17:00",
+            "venue": "EL CALERO",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-01-2027",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "24-01-2027",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "22-01-2027",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "22-01-2027",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "31-01-2027",
+        "matches": [
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2027",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "07-02-2027",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "05-02-2027",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "05-02-2027",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "17:00",
+            "venue": "EL CALERO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "14-02-2027",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-02-2027",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "12-02-2027",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "16:30",
+            "venue": "EL CALERO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "21-02-2027",
+        "matches": [
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-02-2027",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "28-02-2027",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "26-02-2027",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "16:30",
+            "venue": "EL CALERO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "07-03-2027",
+        "matches": [
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2027",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "14-03-2027",
+        "matches": [
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "12-03-2027",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "17:00",
+            "venue": "EL CALERO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "19",
+        "date": "21-03-2027",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "19-03-2027",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2027",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "20",
+        "date": "04-04-2027",
+        "matches": [
+          {
+            "home": "CALERO, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "04-04-2027",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "21",
+        "date": "11-04-2027",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "09-04-2027",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-04-2027",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "22",
+        "date": "18-04-2027",
+        "matches": [
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "16:30",
+            "venue": "EL CALERO",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-04-2027",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "23",
+        "date": "25-04-2027",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "23-04-2027",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "23-04-2027",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "24",
+        "date": "09-05-2027",
+        "matches": [
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "10:30",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "10:30",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "11:00",
+            "venue": "VALSEQUILLO - ANEXO F8",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "18:00",
+            "venue": "EL CALERO",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "25",
+        "date": "16-05-2027",
+        "matches": [
+          {
+            "home": "DORAMAS, C.D. \"B\"",
+            "away": "HUESAS, U.D. LAS",
+            "hs": null,
+            "as": null,
+            "date": "14-05-2027",
+            "time": "17:00",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "HEIDELBERG, C.F.",
+            "away": "GARITA, C.F.S. LA",
+            "hs": null,
+            "as": null,
+            "date": "14-05-2027",
+            "time": "17:30",
+            "venue": "MANUEL BETANCOR",
+            "referee": ""
+          },
+          {
+            "home": "TELDE, U.D. \"A\"",
+            "away": "ACODETTI C.F \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "09:00",
+            "venue": "PABLO HERNANDEZ",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"B\"",
+            "away": "ATLETICO G.C., C.F.",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D. \"B\"",
+            "away": "VALSEQUILLO, C.D. U.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CALERO, C.D.",
+            "away": "VETERANOS DEL PILA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "17:00",
+            "venue": "EL CALERO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "TAMARACEITE, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "26",
+        "date": "23-05-2027",
+        "matches": [
+          {
+            "home": "VALSEQUILLO, C.D. U.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ACODETTI C.F \"B\"",
+            "away": "CALERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "LA MAYORDOMIA 1",
+            "referee": ""
+          },
+          {
+            "home": "ATLETICO G.C., C.F.",
+            "away": "TELDE, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "MUNDIAL 82 ANEXO",
+            "referee": ""
+          },
+          {
+            "home": "GARITA, C.F.S. LA",
+            "away": "INGENIO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "REMUDAS",
+            "referee": ""
+          },
+          {
+            "home": "HUESAS, U.D. LAS",
+            "away": "HEIDELBERG, C.F.",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "LAS HUESAS",
+            "referee": ""
+          },
+          {
+            "home": "TAMARACEITE, U.D. \"B\"",
+            "away": "DORAMAS, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "JUAN GUEDES",
+            "referee": ""
+          },
+          {
+            "home": "VETERANOS DEL PILA, C.D.",
+            "away": "MASPA TRAINING, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "date": "22-05-2027",
+            "time": "09:00",
+            "venue": "MANUEL NARANJO SOSA 1",
+            "referee": ""
+          }
+        ]
+      }
+    ]
   },
   {
     "competition_id": "54977022",
@@ -7890,6 +11844,1983 @@
     "group_id": "55247234",
     "group_name": "GRUPO 4",
     "standings": [],
-    "jornadas": []
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "11-10-2026",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "08-10-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "09-10-2026",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "10:30",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-10-2026",
+            "time": "12:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "11-10-2026",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "18-10-2026",
+        "matches": [
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-10-2026",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-10-2026",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "10:30",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-10-2026",
+            "time": "12:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "25-10-2026",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "22-10-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "23-10-2026",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "10:30",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-10-2026",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (4)",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "25-10-2026",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "08-11-2026",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-11-2026",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-11-2026",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "06-11-2026",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-11-2026",
+            "time": "10:30",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "15-11-2026",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-11-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "13-11-2026",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "09:00",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "14-11-2026",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-11-2026",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "22-11-2026",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-11-2026",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "20-11-2026",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "20-11-2026",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-11-2026",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "29-11-2026",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "26-11-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "27-11-2026",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "10:30",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "28-11-2026",
+            "time": "13:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "29-11-2026",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "13-12-2026",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "11-12-2026",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "11-12-2026",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "11-12-2026",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "12-12-2026",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "20-12-2026",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-12-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "18-12-2026",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "19-12-2026",
+            "time": "10:30",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "10",
+        "date": "17-01-2027",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "15-01-2027",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "15-01-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-01-2027",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "16-01-2027",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-01-2027",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "11",
+        "date": "24-01-2027",
+        "matches": [
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "22-01-2027",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "23-01-2027",
+            "time": "10:30",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "12",
+        "date": "31-01-2027",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "28-01-2027",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "29-01-2027",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "29-01-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "30-01-2027",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "31-01-2027",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "13",
+        "date": "07-02-2027",
+        "matches": [
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "05-02-2027",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "05-02-2027",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "06-02-2027",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "14",
+        "date": "14-02-2027",
+        "matches": [
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "12-02-2027",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-02-2027",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-02-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "15",
+        "date": "21-02-2027",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "18-02-2027",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "19-02-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:00",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-02-2027",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-02-2027",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "16",
+        "date": "28-02-2027",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "26-02-2027",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "26-02-2027",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "27-02-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "17",
+        "date": "07-03-2027",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "04-03-2027",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "05-03-2027",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "09:00",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "06-03-2027",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-03-2027",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "18",
+        "date": "14-03-2027",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "12-03-2027",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-03-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "12-03-2027",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "13-03-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "19",
+        "date": "21-03-2027",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "18-03-2027",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "19-03-2027",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "09:00",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "20-03-2027",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-03-2027",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "20",
+        "date": "04-04-2027",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "02-04-2027",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "02-04-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "02-04-2027",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "03-04-2027",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "21",
+        "date": "11-04-2027",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "08-04-2027",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "09-04-2027",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "10-04-2027",
+            "time": "10:30",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "11-04-2027",
+            "time": "10:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "22",
+        "date": "18-04-2027",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "16-04-2027",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "16-04-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "16-04-2027",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "17-04-2027",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "23",
+        "date": "25-04-2027",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "22-04-2027",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "23-04-2027",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "24-04-2027",
+            "time": "10:30",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "24",
+        "date": "09-05-2027",
+        "matches": [
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "07-05-2027",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "07-05-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "07-05-2027",
+            "time": "18:00",
+            "venue": "ELEUTERIO VALERON",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "08-05-2027",
+            "time": "10:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "09-05-2027",
+            "time": "09:00",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "25",
+        "date": "16-05-2027",
+        "matches": [
+          {
+            "home": "ARINAGA, C.D.",
+            "away": "LA UNION DE VECINDARIO",
+            "hs": null,
+            "as": null,
+            "date": "14-05-2027",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE ARINAGA",
+            "referee": ""
+          },
+          {
+            "home": "TABLERO, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "MASPA TRAINING, C.D.",
+            "away": "ARGUINEGUIN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 4 (F8)",
+            "referee": ""
+          },
+          {
+            "home": "INGENIO, C.D. \"A\"",
+            "away": "BALOS, U.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "09:00",
+            "venue": "CRISTOBAL HERRERA",
+            "referee": ""
+          },
+          {
+            "home": "CHATUR SAN FERNANDO",
+            "away": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "09:00",
+            "venue": "MASPALOMAS 3",
+            "referee": ""
+          },
+          {
+            "home": "CARRIZAL, C.F. UNION",
+            "away": "DORAMAS, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "09:00",
+            "venue": "EL TORIL",
+            "referee": ""
+          },
+          {
+            "home": "CD FUTBOLTEC",
+            "away": "SAN PEDRO MARTIR, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "15-05-2027",
+            "time": "10:30",
+            "venue": "CAPELLANIA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "26",
+        "date": "23-05-2027",
+        "matches": [
+          {
+            "home": "ARGUINEGUIN, C.D. \"A\"",
+            "away": "TABLERO, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-05-2027",
+            "time": "17:30",
+            "venue": "ARGUINEGUIN",
+            "referee": ""
+          },
+          {
+            "home": "BALOS, U.D.",
+            "away": "MASPA TRAINING, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-05-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE BALOS - MOMO CABRERA",
+            "referee": ""
+          },
+          {
+            "home": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+            "away": "INGENIO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "date": "21-05-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "DORAMAS, C.D.",
+            "away": "CHATUR SAN FERNANDO",
+            "hs": null,
+            "as": null,
+            "date": "21-05-2027",
+            "time": "17:30",
+            "venue": "CRUCE ARINAGA F8 (3)",
+            "referee": ""
+          },
+          {
+            "home": "LA UNION DE VECINDARIO",
+            "away": "CARRIZAL, C.F. UNION",
+            "hs": null,
+            "as": null,
+            "date": "21-05-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO",
+            "referee": ""
+          },
+          {
+            "home": "SAN PEDRO MARTIR, C.D.",
+            "away": "ARINAGA, C.D.",
+            "hs": null,
+            "as": null,
+            "date": "21-05-2027",
+            "time": "17:30",
+            "venue": "CAMPO MUNICIPAL DE DOCTORAL - JUANITO LUJÁN",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CD FUTBOLTEC",
+            "hs": null,
+            "as": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      }
+    ]
   }
 ]

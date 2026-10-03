@@ -2,9 +2,35 @@
 
 `src/config.js` contiene la configuración compartida por navegador e importador: temporada, siguiente temporada, equipo inicial y zona horaria. El importador exige que esa temporada coincida con la única fila `is_current=1` de SQLite.
 
-## Estado a 9 de septiembre de 2026
+## Lo que pasó en 2026/27 (octubre de 2026)
 
-La temporada publicada es 2025/26. Las URLs revisadas siguen ofreciendo calendarios de esa temporada; un encabezado «2026/27» no prueba que los partidos correspondan a ella. El portal indica que los grupos de 2026/27 están pendientes de verificación.
+futbolaspalmas.com migró a una app nueva (`directo.php?liga_id=N`, con API JSON: `?action=get_full_calendar&liga_id=N` y `?action=get_live_data&liga_id=N`) y sus URLs de siempre se quedaron sirviendo 2025/26 congelado. A 3 de octubre la app publicaba hasta alevín, pero **ni benjamín ni prebenjamín**. La federación sí había publicado grupos y calendario: la temporada 2026/27 se activó desde **FIFLP** (abajo, «Activar desde la federación»), y el bot la pone al día con `scripts/update_fiflp.py`. La pregunta 3 de `discover_temporada.py` avisa el día que la app del portal añada estas categorías (entonces convendrá un lector de su API JSON: trae goleadores y marcadores sin ofuscar).
+
+## Activar desde la federación (FIFLP)
+
+FIFLP contesta vacío a las IPs domésticas: el scrape va en GitHub Actions y todo lo demás en local.
+
+```bash
+# 1. Catálogo de competiciones de la temporada nueva (CodTemporada = año inicial − 2004)
+gh workflow run discover-fiflp.yml            # escribe scripts/fiflp_comps_catalog.json
+# 2. Grupos, clasificaciones y calendarios (tanda = CodTemporada; las competiciones
+#    salen del catálogo: CATALOG_SEASONS en scripts/fetch_fiflp_islas.py)
+gh workflow run fetch-fiflp-islas.yml -f temporada=22   # escribe scripts/fiflp_islas_22_raw.json
+git pull
+# 3. Manifiesto (códigos y fases con el convenio de 2025/26; aborta si una competición no encaja)
+python3 scripts/fiflp_manifest.py scripts/fiflp_islas_22_raw.json 2026-2027 --team "Las Mesas" --cat prebenjamin > temporada-2026-2027.json
+# 4. Verificar y activar con la evidencia del raw (nombres reconciliados con la base)
+python3 scripts/activate_season.py temporada-2026-2027.json --fiflp-raw scripts/fiflp_islas_22_raw.json
+python3 scripts/activate_season.py temporada-2026-2027.json --fiflp-raw scripts/fiflp_islas_22_raw.json --apply
+```
+
+Los grupos quedan con su URL de la federación. `fetch_futbolaspalmas.py` los salta y, con `FIFLP_UPDATE=1` (lo pone `update.yml`, que instala Playwright), llama a `update_fiflp.py`: clasificación oficial (no ofuscada) con el mismo guard de no-regresión, y solo las jornadas recientes, próximas, pendientes o nuevas. Un marcador nuevo entra siempre; uno guardado solo se cambia si el nuevo cuadra mejor con los goles de la clasificación (la ofuscación de FIFLP hace que ~1 de cada 10 se lea mal). Cuando la federación publique una fase nueva (Segunda Fase, Fase 2 insular) se repiten los pasos 1-2 (ampliando `CATALOG_SEASONS`/la tanda si hace falta) y se añaden sus grupos a la temporada en curso, sin cambiar de temporada:
+
+```bash
+python3 scripts/fiflp_manifest.py scripts/fiflp_islas_22_raw.json 2026-2027 --comps <ids nuevos> > fase.json
+python3 scripts/activate_season.py fase.json --fiflp-raw scripts/fiflp_islas_22_raw.json --add          # verifica
+python3 scripts/activate_season.py fase.json --fiflp-raw scripts/fiflp_islas_22_raw.json --add --apply  # escribe y genera
+```
 
 ## Descubrir y comprobar candidatos
 

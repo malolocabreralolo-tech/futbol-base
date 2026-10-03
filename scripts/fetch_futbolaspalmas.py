@@ -583,7 +583,10 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
 
     for group in groups:
         url = group.get("url", "")
-        if not url:
+        # Solo los grupos de este portal: los de la federación (www.fiflp.com)
+        # los pone al día update_fiflp.py, y descargarlos aquí como si fueran
+        # de futbolaspalmas daría tablas vacías y un falso cambio de temporada.
+        if not url or "futbolaspalmas.com" not in url:
             continue
 
         group_code = group["id"]
@@ -869,6 +872,11 @@ def main():
             print(f"\n{os.path.basename(js_path)}")
             process_file(conn, js_path, var_name, stats_var, season_id, category_id)
         conn.commit()
+        # Grupos de la federación: necesitan navegador y solo responden desde
+        # GitHub Actions (update.yml pone FIFLP_UPDATE=1 e instala Playwright).
+        if os.environ.get("FIFLP_UPDATE") == "1":
+            from update_fiflp import update_groups
+            update_groups(conn, season_id)
         from generate_js import main as generate_main
         generate_main()
     finally:

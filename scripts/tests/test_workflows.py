@@ -90,7 +90,8 @@ def test_update_has_concurrency_and_timeout():
     assert conc, "update.yml must declare a concurrency group"
     assert conc.get("group") == "update-data"
     assert conc.get("cancel-in-progress") is False
-    assert data["jobs"]["update"].get("timeout-minutes") == 30
+    # 45 desde 2026/27: los grupos de la federación se leen con navegador.
+    assert data["jobs"]["update"].get("timeout-minutes") == 45
 
 
 def test_update_stages_all_generate_js_outputs():

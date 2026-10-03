@@ -16,7 +16,8 @@ jobs:
   update:
     # La imagen fijada y las acciones en Node 24, como tests.yml (plan B4, decisión 55; test_workflows.py).
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    # 45: los grupos de la federación se leen con navegador (~2-3 s por página).
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -30,9 +31,18 @@ jobs:
       - name: Instalar dependencias de test
         run: pip install pytest pyyaml
 
-      - name: Actualizar datos desde futbolaspalmas.com
+      # Desde 2026/27 los grupos vienen de la federación (FIFLP), que solo
+      # responde a un navegador y no a IPs domésticas: update_fiflp.py.
+      - name: Instalar Playwright (grupos de la federación)
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: Actualizar datos desde futbolaspalmas.com y la federación
         id: scrape
         continue-on-error: true
+        env:
+          FIFLP_UPDATE: '1'
         run: python3 scripts/fetch_futbolaspalmas.py
 
       # Los push del bot (GITHUB_TOKEN) NO disparan tests.yml (anti-recursión

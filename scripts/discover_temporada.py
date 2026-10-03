@@ -16,6 +16,12 @@ Esta sonda contesta las dos preguntas del paso 1 del documento SIN escribir nada
      (benjamín por los enlaces de la portada, prebenjamín por patrón numerado,
      que es como está documentado)
 
+  3. ¿Publica ya benjamín o prebenjamín la app nueva del portal? En 2026/27
+     futbolaspalmas pasó a una app (directo.php?liga_id=N, con API JSON) cuyas
+     ligas salen del desplegable de cualquier página de categoría. En octubre
+     de 2026 llegaba hasta alevín; la temporada se sacó de la federación
+     (update_fiflp.py). Esta pregunta avisa el día que el portal las añada.
+
     python3 scripts/discover_temporada.py            # resumen
     python3 scripts/discover_temporada.py --todas    # comprueba TODOS los grupos
 """
@@ -45,6 +51,24 @@ def benjamin_links(html):
     urls = set(re.findall(
         r'https://futbolaspalmas\.com/[a-z0-9-]*benjamin[a-z0-9-]*/', html or ''))
     return sorted(u for u in urls if u != "https://futbolaspalmas.com/benjamin/")
+
+
+APP_URL = "https://futbolaspalmas.com/benjamin/"
+
+
+def app_ligas(html):
+    """[(liga_id, nombre)] de benjamín/prebenjamín en el desplegable de la app
+    nueva del portal (<select id="selector-liga">)."""
+    from html import unescape
+    m = re.search(r'(?s)<select[^>]*id="selector-liga"[^>]*>(.*?)</select>', html or "")
+    if not m:
+        return []
+    out = []
+    for value, text in re.findall(r'(?s)<option[^>]*value="(\d+)"[^>]*>(.*?)</option>', m.group(1)):
+        name = re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", "", text))).strip()
+        if "benjam" in name.lower().replace("í", "i"):
+            out.append((value, name))
+    return out
 
 
 def prebenjamin_links(maximo=PREBENJAMIN_MAX):
@@ -151,6 +175,17 @@ def main():
           f"({len(prebe) - len(candidatas)} URLs sin tabla)")
     for u, n, jornada in candidatas:
         print(f"      + {u} · {n} eq J{jornada}")
+
+    print("\n3) App nueva del portal (directo.php)")
+    try:
+        ligas = app_ligas(fetch(APP_URL))
+    except Exception as e:
+        print(f"   no se pudo leer la app: {e}")
+        ligas = None
+    if ligas == []:
+        print("   sin ligas de benjamín ni prebenjamín todavía")
+    for liga_id, nombre in ligas or []:
+        print(f"      + liga_id={liga_id} · {nombre}")
 
     print("\nResumen")
     if cambiados:

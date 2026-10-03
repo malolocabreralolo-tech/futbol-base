@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from discover_temporada import (benjamin_links, prebenjamin_links,  # noqa: E402
+from discover_temporada import (app_ligas, benjamin_links, prebenjamin_links,  # noqa: E402
                                 PREBENJAMIN_MAX)
 
 PORTADA = """
@@ -72,3 +72,20 @@ class TestCandidatasConTabla:
         from discover_temporada import candidatas_con_tabla
         urls = prebenjamin_links(3)
         assert candidatas_con_tabla(urls, lambda u: ([], None), pausa=0) == []
+
+
+class TestAppLigas:
+    """La app nueva del portal (2026/27) lista sus ligas en un desplegable."""
+    HTML = ('<select id="selector-liga" onchange="cambiarLiga()">'
+            '<option value="HOY" selected> (Selecciona una competición)</option>'
+            '<option value="77" >Liga Alevin Gran Canaria Grupo 1</option>'
+            '<option value="130" >Liga Benjamín Gran Canaria Grupo 1</option>'
+            '<option value="140" >Liga Prebenjamin Gran Canaria  Grupo 2</option>'
+            '</select><option value="9">Benjamin fuera del desplegable</option>')
+
+    def test_only_benjamin_and_prebenjamin_inside_the_selector(self):
+        assert app_ligas(self.HTML) == [("130", "Liga Benjamín Gran Canaria Grupo 1"),
+                                        ("140", "Liga Prebenjamin Gran Canaria Grupo 2")]
+
+    def test_no_selector_no_ligas(self):
+        assert app_ligas("<html></html>") == [] and app_ligas(None) == []

@@ -3,6 +3,11 @@
 
 Examples and manifest format: docs/temporada-nueva.md. Verification downloads
 the actual fixture tables: a new year in a website heading is insufficient.
+
+A group can come from futbolaspalmas.com (its URL is downloaded here) or from
+the federation, FIFLP (its URL names CodCompeticion/CodGrupo). FIFLP answers
+empty to home IPs, so its tables are scraped in GitHub Actions
+(fetch_fiflp_islas.py) and verified here from that raw file: --fiflp-raw.
 """
 import argparse
 from datetime import date, datetime, timezone
@@ -12,19 +17,26 @@ import re
 import shutil
 import sqlite3
 import tempfile
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from db import get_connection, PROJECT_ROOT
 from fetch_futbolaspalmas import fetch, parse_all_matches, parse_standings
 from portal_config import load_config
 
+SOURCE_HOSTS = ("futbolaspalmas.com", "www.fiflp.com")
 
-def validate_manifest(manifest, current):
+
+def validate_manifest(manifest, current, adding=False):
+    """`adding`: grupos nuevos (una fase que la fuente publica a mitad de
+    temporada) para la temporada EN CURSO, sin cambiar de temporada."""
     season = manifest.get("season", "")
     if not re.fullmatch(r"20\d{2}-20\d{2}", season):
         raise ValueError("Temporada inválida")
     start, end = map(int, season.split("-"))
-    if end != start + 1 or start != int(current.split("-")[1]):
+    if adding:
+        if season != current:
+            raise ValueError("Solo se añaden grupos a la temporada en curso")
+    elif end != start + 1 or start != int(current.split("-")[1]):
         raise ValueError("Solo se puede activar la temporada inmediatamente siguiente")
     groups = manifest.get("groups", [])
     if not groups:
@@ -42,22 +54,89 @@ def validate_manifest(manifest, current):
         if not group.get("name") or not group.get("phase"):
             raise ValueError("Faltan nombre o fase del grupo")
         parsed = urlparse(group.get("url", ""))
-        if parsed.scheme != "https" or parsed.hostname != "futbolaspalmas.com" or parsed.username or parsed.password:
-            raise ValueError("La URL debe ser HTTPS de futbolaspalmas.com")
+        if parsed.scheme != "https" or parsed.hostname not in SOURCE_HOSTS or parsed.username or parsed.password:
+            raise ValueError("La URL debe ser HTTPS de futbolaspalmas.com o de la federación (www.fiflp.com)")
+        if parsed.hostname == "www.fiflp.com" and not fiflp_ids(group["url"]):
+            raise ValueError("La URL de la federación debe llevar CodCompeticion y CodGrupo")
+    if adding:
+        return
     team = manifest.get("defaultTeam", {})
     if not team.get("name") or not any(g["id"] == team.get("groupId") and g["cat"] == team.get("cat") for g in groups):
         raise ValueError("El equipo inicial debe pertenecer a uno de los grupos")
 
 
-def verify_sources(manifest, fetcher=fetch):
+def fiflp_ids(url):
+    """(CodCompeticion, CodGrupo) de una URL de la federación, o None."""
+    query = {k.lower(): v[0] for k, v in parse_qs(urlparse(url).query).items()}
+    comp, group = query.get("codcompeticion"), query.get("codgrupo")
+    return (comp, group) if comp and group else None
+
+
+def _iso(day):
+    """'03-10-2026' (FIFLP) -> '2026-10-03'; lo que ya es ISO se queda igual."""
+    m = re.fullmatch(r"(\d{2})[-/](\d{2})[-/](\d{4})", (day or "").strip())
+    return f"{m.group(3)}-{m.group(2)}-{m.group(1)}" if m else (day or "").strip()
+
+
+def fiflp_evidence(group, raw, names=None):
+    """(rounds, standings) de un grupo de la federación, sacados del raw de
+    fetch_fiflp_islas.py con la misma forma que dan los parsers de futbolaspalmas:
+    rounds {'Jornada N': [[fecha ISO, local, visitante, gl, gv, hora, campo]]} y
+    standings [[pos, equipo, pts, J, G, E, P, GF, GC, DF]]. `names` traduce el
+    nombre de FIFLP al que ya usa la base (escudo, histórico, ficha). Antes de la
+    primera jornada FIFLP no publica clasificación: sale de los equipos del
+    calendario, todo a cero y por orden alfabético."""
+    from import_fiflp_cups_2324 import clean_team_name
+    from fiflp_names import is_bye
+    comp, code = fiflp_ids(group["url"])
+    entry = next((g for g in raw if str(g.get("competition_id")) == comp and str(g.get("group_id")) == code), None)
+    if entry is None:
+        raise ValueError(f'{group["id"]}: la federación no tiene ese grupo en el raw')
+    names = names or {}
+    name = lambda raw_name: names.get(clean_team_name(raw_name), clean_team_name(raw_name))
+    rounds = {}
+    for jornada in entry.get("jornadas") or []:
+        label = f'Jornada {str(jornada.get("num", "")).strip()}'
+        for m in jornada.get("matches") or []:
+            home, away = clean_team_name(m.get("home")), clean_team_name(m.get("away"))
+            if not home or not away or home == away or is_bye(home) or is_bye(away):
+                continue
+            both = m.get("hs") is not None and m.get("as") is not None
+            rounds.setdefault(label, []).append([
+                _iso(m.get("date") or jornada.get("date")), name(home), name(away),
+                m.get("hs") if both else None, m.get("as") if both else None,
+                (m.get("time") or "") or None, (m.get("venue") or "") or None])
+    standings = [[r.get("pos"), name(r.get("team")), r.get("pts"), r.get("j"), r.get("g"), r.get("e"),
+                  r.get("p"), r.get("gf"), r.get("gc"), r.get("df")]
+                 for r in entry.get("standings") or [] if clean_team_name(r.get("team"))]
+    if not standings:
+        teams = sorted({t for ms in rounds.values() for m in ms for t in (m[1], m[2])})
+        standings = [[i, t, 0, 0, 0, 0, 0, 0, 0, 0] for i, t in enumerate(teams, 1)]
+    return rounds, standings
+
+
+def current_round(rounds, today=None):
+    """La jornada que la portada debe enseñar: la última con algún resultado y,
+    antes de empezar, la primera. La última del calendario no sirve: a principio
+    de temporada sería la de mayo."""
+    played = [label for label, ms in rounds.items() if any(m[3] is not None for m in ms)]
+    return played[-1] if played else next(iter(rounds))
+
+
+def verify_sources(manifest, fetcher=fetch, fiflp_raw=None, names=None):
     """Return source evidence, or fail before making any database/file writes."""
     start, end = map(int, manifest["season"].split("-"))
     first, last = date(start, 7, 1), date(end, 6, 30)
     evidence = []
     for group in manifest["groups"]:
-        url = group["url"].rstrip("/") + "/"
-        rounds = parse_all_matches(fetcher(url), include_details=True)
-        standings = parse_standings(fetcher(url + "mostrar_clasi.php"))
+        if urlparse(group["url"]).hostname == "www.fiflp.com":
+            if fiflp_raw is None:
+                raise ValueError(f'{group["id"]}: los grupos de la federación se verifican con --fiflp-raw')
+            rounds, standings = fiflp_evidence(group, fiflp_raw, names)
+        else:
+            url = group["url"].rstrip("/") + "/"
+            rounds = parse_all_matches(fetcher(url), include_details=True)
+            standings = parse_standings(fetcher(url + "mostrar_clasi.php"))
         matches = [m for entries in rounds.values() for m in entries]
         if not standings or not matches:
             raise ValueError(f'{group["id"]}: faltan clasificación o partidos con año verificable')
@@ -66,11 +145,29 @@ def verify_sources(manifest, fetcher=fetch):
         names = {r[1] for r in standings}
         if any(m[1] not in names or m[2] not in names for m in matches):
             raise ValueError(f'{group["id"]}: calendario y clasificación tienen equipos diferentes')
-        default = manifest["defaultTeam"]
-        if group["id"] == default["groupId"] and default["name"] not in names:
+        default = manifest.get("defaultTeam") or {}
+        if group["id"] == default.get("groupId") and default["name"] not in names:
             raise ValueError("El equipo inicial no aparece en la clasificación verificada")
-        evidence.append({"group": group, "rounds": rounds, "standings": standings})
+        evidence.append({"group": group, "rounds": rounds, "standings": standings,
+                         "current": current_round(rounds)})
     return evidence
+
+
+def club_id(conn, name):
+    """El equipo por su nombre exacto o, si no, el mismo CLUB con otra grafía
+    (la clave del contrato C1, que conserva la letra de filial); si no existe,
+    se crea. Como db.get_or_create_team, pero sin su commit: la activación
+    entera es una sola transacción."""
+    from db import _teams_key
+    row = conn.execute("SELECT id FROM teams WHERE name=?", (name,)).fetchone()
+    if row:
+        return row[0]
+    key = _teams_key(name)
+    if key:
+        for tid, existing in conn.execute("SELECT id, name FROM teams").fetchall():
+            if _teams_key(existing) == key:
+                return tid
+    return conn.execute("INSERT INTO teams(name) VALUES(?)", (name,)).lastrowid
 
 
 def seed_season(conn, manifest, evidence):
@@ -88,25 +185,46 @@ def seed_season(conn, manifest, evidence):
         conn.execute("UPDATE seasons SET is_current=0")
         sid = conn.execute("INSERT INTO seasons(name,start_year,end_year,is_current) VALUES(?,?,?,1)",
                            (manifest["season"], start, end)).lastrowid
-        for item in evidence:
-            g = item["group"]
-            cat = conn.execute("SELECT id FROM categories WHERE lower(name)=?", (g["cat"],)).fetchone()
-            if not cat:
-                raise ValueError("Falta la categoría en la base")
-            gid = conn.execute("""INSERT INTO groups(season_id,category_id,code,name,full_name,phase,island,url,current_jornada)
-                VALUES(?,?,?,?,?,?,?,?,?)""", (sid, cat[0], g["id"], g["name"], g.get("fullName", g["name"]),
-                g["phase"], g["island"], g["url"], next(reversed(item["rounds"])))).lastrowid
-            team_ids = {}
-            for row in item["standings"]:
-                conn.execute("INSERT OR IGNORE INTO teams(name) VALUES(?)", (row[1],))
-                tid = conn.execute("SELECT id FROM teams WHERE name=?", (row[1],)).fetchone()[0]
-                team_ids[row[1]] = tid
-                conn.execute("""INSERT INTO standings(group_id,team_id,position,points,played,won,drawn,lost,gf,gc,gd)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?)""", (gid, tid, row[0], *row[2:]))
-            for round_name, matches in item["rounds"].items():
-                for dt, home, away, hs, away_score, kickoff, venue in matches:
-                    conn.execute("""INSERT INTO matches(group_id,jornada,date,time,home_team_id,away_team_id,home_score,away_score,venue)
-                        VALUES(?,?,?,?,?,?,?,?,?)""", (gid, round_name, dt, kickoff, team_ids[home], team_ids[away], hs, away_score, venue))
+        insert_groups(conn, sid, evidence)
+
+
+def add_groups(conn, manifest, evidence):
+    """Grupos nuevos en la temporada en curso, en una sola transacción. No toca
+    ningún grupo existente: un código que ya está aborta antes de escribir."""
+    current = conn.execute("SELECT id, name FROM seasons WHERE is_current=1").fetchall()
+    if len(current) != 1:
+        raise ValueError("Debe existir una sola temporada actual")
+    sid, name = current[0]
+    validate_manifest(manifest, name, adding=True)
+    if [e["group"] for e in evidence] != manifest["groups"]:
+        raise ValueError("La evidencia no corresponde al manifiesto completo")
+    taken = {r[0] for r in conn.execute("SELECT code FROM groups WHERE season_id=?", (sid,))}
+    clash = sorted(taken & {g["id"] for g in manifest["groups"]})
+    if clash:
+        raise ValueError(f"Estos códigos ya existen en la temporada: {clash}")
+    with conn:
+        insert_groups(conn, sid, evidence)
+
+
+def insert_groups(conn, sid, evidence):
+    """Grupos con su clasificación y su calendario, ya verificados (verify_sources)."""
+    for item in evidence:
+        g = item["group"]
+        cat = conn.execute("SELECT id FROM categories WHERE lower(name)=?", (g["cat"],)).fetchone()
+        if not cat:
+            raise ValueError("Falta la categoría en la base")
+        gid = conn.execute("""INSERT INTO groups(season_id,category_id,code,name,full_name,phase,island,url,current_jornada)
+            VALUES(?,?,?,?,?,?,?,?,?)""", (sid, cat[0], g["id"], g["name"], g.get("fullName", g["name"]),
+            g["phase"], g["island"], g["url"], item.get("current") or next(reversed(item["rounds"])))).lastrowid
+        team_ids = {}
+        for row in item["standings"]:
+            team_ids[row[1]] = club_id(conn, row[1])
+            conn.execute("""INSERT INTO standings(group_id,team_id,position,points,played,won,drawn,lost,gf,gc,gd)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?)""", (gid, team_ids[row[1]], row[0], *row[2:]))
+        for round_name, matches in item["rounds"].items():
+            for dt, home, away, hs, away_score, kickoff, venue in matches:
+                conn.execute("""INSERT INTO matches(group_id,jornada,date,time,home_team_id,away_team_id,home_score,away_score,venue)
+                    VALUES(?,?,?,?,?,?,?,?,?)""", (gid, round_name, dt, kickoff, team_ids[home], team_ids[away], hs, away_score, venue))
 
 
 LINEUPS_URL = re.compile(r"\./data-lineups-\d{4}-\d{4}\.js")
@@ -201,16 +319,61 @@ def apply_manifest(manifest, evidence, root=Path(PROJECT_ROOT)):
     return backup
 
 
+def known_names(raw, conn):
+    """{nombre limpio de FIFLP: nombre que ya usa la base}. Se busca entre los
+    equipos con clasificación de las dos últimas temporadas: un club que vuelve
+    conserva su nombre, su escudo y su histórico. Lo que no casa se queda con su
+    nombre de FIFLP (mejor un nombre feo que fundir dos clubes)."""
+    from import_fiflp_cups_2324 import clean_team_name
+    from fiflp_names import canonical_names, is_bye
+    pool = [r[0] for r in conn.execute(
+        """SELECT DISTINCT t.name FROM teams t JOIN standings st ON st.team_id=t.id
+           JOIN groups g ON g.id=st.group_id JOIN seasons s ON s.id=g.season_id
+           WHERE s.start_year >= (SELECT max(start_year) - 1 FROM seasons)""")]
+    names = {}
+    for entry in raw:
+        crudos = {clean_team_name(m.get(side)) for j in entry.get("jornadas") or []
+                  for m in j.get("matches") or [] for side in ("home", "away")}
+        crudos |= {clean_team_name(r.get("team")) for r in entry.get("standings") or []}
+        crudos = sorted(n for n in crudos if n and not is_bye(n))
+        names.update(canonical_names(crudos, [], pool))
+    return names
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--apply", action="store_true", help="activar tras verificar; crea copia y genera primero en temporal")
+    parser.add_argument("--fiflp-raw", type=Path, help="raw de fetch_fiflp_islas.py para los grupos de la federación")
+    parser.add_argument("--add", action="store_true",
+                        help="añadir los grupos del manifiesto a la temporada EN CURSO (fase nueva); con --apply escribe")
     args = parser.parse_args()
     manifest = json.loads(args.manifest.read_text())
-    validate_manifest(manifest, load_config()["season"])
-    evidence = verify_sources(manifest)
+    validate_manifest(manifest, load_config()["season"], adding=args.add)
+    raw = names = None
+    if args.fiflp_raw:
+        raw = json.loads(args.fiflp_raw.read_text())
+        conn = get_connection()
+        try:
+            names = known_names(raw, conn)
+        finally:
+            conn.close()
+    evidence = verify_sources(manifest, fiflp_raw=raw, names=names)
     print(f'{manifest["season"]}: {len(evidence)} grupos verificados con calendarios fechados.')
-    if args.apply:
+    if args.add and args.apply:
+        import generate_js
+        backup = Path(PROJECT_ROOT) / "backups" / ("grupos-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"))
+        backup.mkdir(parents=True)
+        conn = get_connection()
+        try:
+            with sqlite3.connect(backup / "futbolbase.db") as copy:
+                conn.backup(copy)
+            add_groups(conn, manifest, evidence)
+        finally:
+            conn.close()
+        generate_js.main()
+        print(f"Grupos añadidos. Copia de la base: {backup}")
+    elif args.apply:
         print(f"Temporada activada. Copia anterior: {apply_manifest(manifest, evidence)}")
     else:
         print("Solo comprobación. No se ha modificado la base ni la configuración.")

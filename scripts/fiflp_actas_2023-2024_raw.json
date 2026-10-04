@@ -62975,7 +62975,7 @@
       "date": "13-04-2024",
       "home_team": "SPORTING TIAS \"B\", C.F. B",
       "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "home_score": 0,
+      "home_score": null,
       "away_score": 0,
       "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)"
     },
@@ -130084,7 +130084,7 @@
       "home_team": "ALTAVISTA C.F.",
       "away_team": "ARRECIFE, C.D.",
       "home_score": 0,
-      "away_score": null,
+      "away_score": 0,
       "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)"
     },
     "lineups": {
@@ -207843,7 +207843,7 @@
       "home_team": "CASA PASTORES, C.F.",
       "away_team": "BALOS \"A\", U.D. A",
       "home_score": 0,
-      "away_score": 0,
+      "away_score": null,
       "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 12)"
     },
     "lineups": {
@@ -643538,7 +643538,7 @@
       "home_team": "PEÑA DE LA AMISTAD \"A\", C.D. A",
       "away_team": "HERBANIA \"B\", C.D. B",
       "home_score": 0,
-      "away_score": null,
+      "away_score": 0,
       "competition": "LIGA BENJAMIN F-8 DE FUERTEVENTURA (GRUPO 2)"
     },
     "lineups": {

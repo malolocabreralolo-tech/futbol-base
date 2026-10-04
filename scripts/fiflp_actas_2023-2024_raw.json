@@ -62975,7 +62975,7 @@
       "date": "13-04-2024",
       "home_team": "SPORTING TIAS \"B\", C.F. B",
       "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "home_score": 0,
+      "home_score": null,
       "away_score": 0,
       "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)"
     },
@@ -130083,8 +130083,8 @@
       "date": "07-06-2024",
       "home_team": "ALTAVISTA C.F.",
       "away_team": "ARRECIFE, C.D.",
-      "home_score": 0,
-      "away_score": null,
+      "home_score": null,
+      "away_score": 0,
       "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)"
     },
     "lineups": {

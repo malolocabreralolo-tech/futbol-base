@@ -643537,8 +643537,8 @@
       "date": "14-10-2023",
       "home_team": "PEÑA DE LA AMISTAD \"A\", C.D. A",
       "away_team": "HERBANIA \"B\", C.D. B",
-      "home_score": 0,
-      "away_score": 0,
+      "home_score": null,
+      "away_score": null,
       "competition": "LIGA BENJAMIN F-8 DE FUERTEVENTURA (GRUPO 2)"
     },
     "lineups": {

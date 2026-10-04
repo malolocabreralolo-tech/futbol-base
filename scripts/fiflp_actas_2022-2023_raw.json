@@ -698492,5 +698492,3255 @@
       "grupo": "146742",
       "jornada": "34"
     }
+  },
+  "145602": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "26",
+      "date": "06-05-2023",
+      "time": "10:30",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 5,
+      "away_score": 2,
+      "home_team": "MESAS \"B\", U.D. LAS B",
+      "away_team": "MASPA TRAINING \"C\", C.D. C",
+      "venue": "LAS MESAS F8 (1)",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "GONZALEZ ARTEAGA, ADIRAN",
+          "role": "starter",
+          "fiflp_id": 222018
+        },
+        {
+          "dorsal": 4,
+          "name": "REYES RODRIGUEZ, CARLOS JESUS",
+          "role": "starter",
+          "fiflp_id": 216932
+        },
+        {
+          "dorsal": 6,
+          "name": "SEGURA SUAREZ, DYLAN",
+          "role": "starter",
+          "fiflp_id": 221933
+        },
+        {
+          "dorsal": 10,
+          "name": "PEREZ ALONSO, ALEXIS DANIEL",
+          "role": "starter",
+          "fiflp_id": 217109
+        },
+        {
+          "dorsal": 14,
+          "name": "SORIANO SUAREZ, AITOR",
+          "role": "starter",
+          "fiflp_id": 217231
+        },
+        {
+          "dorsal": 21,
+          "name": "RODRIGUEZ SANCHEZ, NICOLAS",
+          "role": "starter",
+          "fiflp_id": 221424
+        },
+        {
+          "dorsal": 29,
+          "name": "MONZON DURAN, GABRIEL",
+          "role": "starter",
+          "fiflp_id": 215979
+        },
+        {
+          "dorsal": 5,
+          "name": "DAMASO MOLINA, JAVIER",
+          "role": "sub",
+          "fiflp_id": 216933
+        },
+        {
+          "dorsal": 7,
+          "name": "MARTINEZ CRUZ, MOISES ALEJANDRO",
+          "role": "sub",
+          "fiflp_id": 225045
+        },
+        {
+          "dorsal": 9,
+          "name": "SAAVEDRA REYES, DIEGO",
+          "role": "sub",
+          "fiflp_id": 221418
+        },
+        {
+          "dorsal": 15,
+          "name": "BATISTA GODOY, ARIDAI EFRAIN",
+          "role": "sub",
+          "fiflp_id": 220031
+        },
+        {
+          "dorsal": 27,
+          "name": "TALAVERA DUQUE, CARLOS IVAN",
+          "role": "sub",
+          "fiflp_id": 221789
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "CALIARI, FEDERICO",
+          "role": "starter",
+          "fiflp_id": 224044
+        },
+        {
+          "dorsal": 2,
+          "name": "VEGA MARTINEZ, CARLOS RAUL",
+          "role": "starter",
+          "fiflp_id": 221899
+        },
+        {
+          "dorsal": 3,
+          "name": "SUAREZ RAMOS, LIAM",
+          "role": "starter",
+          "fiflp_id": 221901
+        },
+        {
+          "dorsal": 4,
+          "name": "RAMOS LEUNG, ENZO",
+          "role": "starter",
+          "fiflp_id": 222475
+        },
+        {
+          "dorsal": 5,
+          "name": "GONZALEZ PEREZ, DARIO",
+          "role": "starter",
+          "fiflp_id": 221897
+        },
+        {
+          "dorsal": 6,
+          "name": "CONCEPCION CALDERIN, ALEJANDRO NAHUEL",
+          "role": "starter",
+          "fiflp_id": 221895
+        },
+        {
+          "dorsal": 7,
+          "name": "QUEVEDO PEREZ, ENRIQUE",
+          "role": "starter",
+          "fiflp_id": 221892
+        },
+        {
+          "dorsal": 8,
+          "name": "ARRIBAS MARTIN, ANGEL",
+          "role": "starter",
+          "fiflp_id": 221898
+        },
+        {
+          "dorsal": 9,
+          "name": "RUFO GARCIA, JOEL",
+          "role": "sub",
+          "fiflp_id": 222474
+        },
+        {
+          "dorsal": 10,
+          "name": "VELAZQUEZ VEGA, LEO",
+          "role": "sub",
+          "fiflp_id": 221894
+        },
+        {
+          "dorsal": 11,
+          "name": "DIOUF CARRO, GALLAS",
+          "role": "sub",
+          "fiflp_id": 221893
+        },
+        {
+          "dorsal": 12,
+          "name": "CALVO ALLMANN, MIGUEL",
+          "role": "sub",
+          "fiflp_id": 221900
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') DAMASO MOLINA, JAVIER",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') PEREZ ALONSO, ALEXIS DANIEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(')",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') RODRIGUEZ SANCHEZ, NICOLAS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') RODRIGUEZ SANCHEZ, NICOLAS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          5,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') RUFO GARCIA, JOEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          5,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') RUFO GARCIA, JOEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          5,
+          2
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "ALFONSO VEGA, VÍCTOR MANUEL",
+      "referees": [
+        "Árbitro/a Principal ALFONSO VEGA, VÍCTOR MANUEL"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": "SISAT SANTANA, AIRAN ISDAURYS",
+        "equipo": "SISAT SANTANA, AIRAN ISDAURYS"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "PAULSEM BAUTE, JUAN PEDRO"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145602,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "26"
+    }
+  },
+  "145607": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "26",
+      "date": "06-05-2023",
+      "time": "10:30",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 10,
+      "away_score": 0,
+      "home_team": "ARUCAS C.F. \"C\" C",
+      "away_team": "VETERANOS DEL PILA \"B\", C.D. B",
+      "venue": "ELIAS RISKALL F8 (1)",
+      "city": "ARUCAS (CAPITAL MUNICIPAL)"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "GUTIERREZ SOSA, ETHAN JOEL",
+          "role": "starter",
+          "fiflp_id": 213517
+        },
+        {
+          "dorsal": 4,
+          "name": "SANCHEZ CORBI, NOAH",
+          "role": "starter",
+          "fiflp_id": 215511
+        },
+        {
+          "dorsal": 9,
+          "name": "GARCIA MARTIN, ENZO",
+          "role": "starter",
+          "fiflp_id": 216035
+        },
+        {
+          "dorsal": 10,
+          "name": "LEON DIAZ, NESTOR RAFAEL",
+          "role": "starter",
+          "fiflp_id": 214376
+        },
+        {
+          "dorsal": 13,
+          "name": "HENRIQUEZ BATISTA, ARDANI",
+          "role": "starter",
+          "fiflp_id": 221114
+        },
+        {
+          "dorsal": 14,
+          "name": "PEREZ MENDOZA, YASSIEL",
+          "role": "starter",
+          "fiflp_id": 215883
+        },
+        {
+          "dorsal": 15,
+          "name": "SANTANA ARMAS, KILIAN YADIEL",
+          "role": "starter",
+          "fiflp_id": 219666
+        },
+        {
+          "dorsal": 2,
+          "name": "MATEO GARCIA, HUGO",
+          "role": "sub",
+          "fiflp_id": 219580
+        },
+        {
+          "dorsal": 3,
+          "name": "NAVARRO BAEZ, ABEL BENEHI",
+          "role": "sub",
+          "fiflp_id": 216679
+        },
+        {
+          "dorsal": 6,
+          "name": "LOPEZ SEQUEIRO, ALEJANDRO",
+          "role": "sub",
+          "fiflp_id": 214183
+        },
+        {
+          "dorsal": 8,
+          "name": "LOPEZ SEQUEIRO, NICOLAS",
+          "role": "sub",
+          "fiflp_id": 217105
+        },
+        {
+          "dorsal": 11,
+          "name": "DAMASO MONTESDEOCA, ASIER",
+          "role": "sub",
+          "fiflp_id": 219664
+        },
+        {
+          "dorsal": 12,
+          "name": "MACIAS PAEZ, LUCAS",
+          "role": "sub",
+          "fiflp_id": 216613
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "PORTELA ROLDAN, MIGUEL",
+          "role": "starter",
+          "fiflp_id": 222936
+        },
+        {
+          "dorsal": 2,
+          "name": "SANTANA HERNANDEZ, JAVIER",
+          "role": "starter",
+          "fiflp_id": 222937
+        },
+        {
+          "dorsal": 3,
+          "name": "HERNANDEZ CASTILLO, DANIEL",
+          "role": "starter",
+          "fiflp_id": 223212
+        },
+        {
+          "dorsal": 4,
+          "name": "CALLEJA GONZÁLEZ, LEONARDO DAVID",
+          "role": "starter",
+          "fiflp_id": 222940
+        },
+        {
+          "dorsal": 5,
+          "name": "FRANCHY ZALDIVAR, THIAGO",
+          "role": "starter",
+          "fiflp_id": 222941
+        },
+        {
+          "dorsal": 6,
+          "name": "CONFORTO JULIA, MARCO",
+          "role": "starter",
+          "fiflp_id": 219354
+        },
+        {
+          "dorsal": 7,
+          "name": "USAR ORTEGA, LIAM",
+          "role": "starter",
+          "fiflp_id": 217521
+        },
+        {
+          "dorsal": 8,
+          "name": "SOSA NEGRIN, AITOR",
+          "role": "starter",
+          "fiflp_id": 223214
+        },
+        {
+          "dorsal": 9,
+          "name": "PEREZ RUIZ, HUGO",
+          "role": "sub",
+          "fiflp_id": 225801
+        },
+        {
+          "dorsal": 10,
+          "name": "TRUJILLO SANTANA, MATTIA",
+          "role": "sub",
+          "fiflp_id": 223204
+        },
+        {
+          "dorsal": 11,
+          "name": "PAEZ HERNANDEZ, RODRIGO",
+          "role": "sub",
+          "fiflp_id": 222935
+        },
+        {
+          "dorsal": 12,
+          "name": "SITO, NICOLO",
+          "role": "sub",
+          "fiflp_id": 224913
+        },
+        {
+          "dorsal": 14,
+          "name": "RODRIGUEZ TRUJILLO, MARTIN",
+          "role": "sub",
+          "fiflp_id": 220032
+        },
+        {
+          "dorsal": 16,
+          "name": "CARMONA MOLINA, ISAAC",
+          "role": "sub",
+          "fiflp_id": 222942
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') LOPEZ SEQUEIRO, ALEJANDRO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') LEON DIAZ, NESTOR RAFAEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') GARCIA MARTIN, ENZO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(')",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(')",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          5,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') SANTANA ARMAS, KILIAN YADIEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          6,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') HENRIQUEZ BATISTA, ARDANI",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          7,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') HENRIQUEZ BATISTA, ARDANI",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          8,
+          0
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "GARCÍA MEDINA, RUBÉN",
+      "referees": [
+        "Árbitro/a Principal GARCÍA MEDINA, RUBÉN"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": "BATISTA RIO, CRISTO R",
+        "equipo": "BATISTA RIO, CRISTO R"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": null
+      }
+    },
+    "consistent": false,
+    "cod_acta": 145607,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "26"
+    }
+  },
+  "145605": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "26",
+      "date": "07-05-2023",
+      "time": "09:00",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 1,
+      "away_score": 5,
+      "home_team": "BARRIO DEL ATLANTICO \"B\", C.F. B",
+      "away_team": "VICTORIA \"B\", REAL CLUB B",
+      "venue": "PARQUE ATLANTICO F8(1)",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 3,
+          "name": "MORENO MARTIN, ASIER",
+          "role": "starter",
+          "fiflp_id": 213909
+        },
+        {
+          "dorsal": 4,
+          "name": "KIRSCH SANCHEZ, ADRIAN",
+          "role": "starter",
+          "fiflp_id": 216983
+        },
+        {
+          "dorsal": 7,
+          "name": "RUIZ NAVARRO, ASIER",
+          "role": "starter",
+          "fiflp_id": 220043
+        },
+        {
+          "dorsal": 8,
+          "name": "OJEDA BALADER, ESIEL DAVID",
+          "role": "starter",
+          "fiflp_id": 219484
+        },
+        {
+          "dorsal": 9,
+          "name": "RONQUETE BATISTA, LEONARDO",
+          "role": "starter",
+          "fiflp_id": 221239
+        },
+        {
+          "dorsal": 10,
+          "name": "HENRIQUEZ SANCHEZ, YADEL",
+          "role": "starter",
+          "fiflp_id": 219485
+        },
+        {
+          "dorsal": 11,
+          "name": "SANTANA DIAZ, JAVIER",
+          "role": "starter",
+          "fiflp_id": 219483
+        },
+        {
+          "dorsal": 13,
+          "name": "FARIÑAS ARROYO, LIAM",
+          "role": "starter",
+          "fiflp_id": 220204
+        },
+        {
+          "dorsal": 1,
+          "name": "MORENO MORA, DANIELA DEL CARMEN",
+          "role": "sub",
+          "fiflp_id": 225444
+        },
+        {
+          "dorsal": 5,
+          "name": "GONZALEZ QUEVEDO, AIRAM",
+          "role": "sub",
+          "fiflp_id": 223242
+        },
+        {
+          "dorsal": 6,
+          "name": "FERRERO TACORONTE, HUGO",
+          "role": "sub",
+          "fiflp_id": 223200
+        },
+        {
+          "dorsal": 12,
+          "name": "GARCIA MONAGAS, IONE",
+          "role": "sub",
+          "fiflp_id": 220203
+        },
+        {
+          "dorsal": 14,
+          "name": "CORTES ALMECIGA, KEVIN MATEO",
+          "role": "sub",
+          "fiflp_id": 224036
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 2,
+          "name": "OUJO MONTEIRO, DIEGO",
+          "role": "starter",
+          "fiflp_id": 224813
+        },
+        {
+          "dorsal": 3,
+          "name": "MORON SOTO, DYLAN GABRIEL",
+          "role": "starter",
+          "fiflp_id": 223436
+        },
+        {
+          "dorsal": 7,
+          "name": "PEREIRA JIMENEZ, FRANCISCO NEIZAN",
+          "role": "starter",
+          "fiflp_id": 219716
+        },
+        {
+          "dorsal": 8,
+          "name": "SANCHEZ GONZALEZ, MIGUEL",
+          "role": "starter",
+          "fiflp_id": 217154
+        },
+        {
+          "dorsal": 9,
+          "name": "VILAR RUIZ, ADRIEL",
+          "role": "starter",
+          "fiflp_id": 219931
+        },
+        {
+          "dorsal": 11,
+          "name": "BETANCOR MARTIN, SERGIO",
+          "role": "starter",
+          "fiflp_id": 220349
+        },
+        {
+          "dorsal": 13,
+          "name": "MONTESDEOCA CARMONA, IGNACIO",
+          "role": "starter",
+          "fiflp_id": 220127
+        },
+        {
+          "dorsal": 14,
+          "name": "SANTANA MESA, AITOR",
+          "role": "starter",
+          "fiflp_id": 224814
+        },
+        {
+          "dorsal": 1,
+          "name": "MEDINA JUSTO, CARLOS",
+          "role": "sub",
+          "fiflp_id": 219714
+        },
+        {
+          "dorsal": 4,
+          "name": "PORTELA HERNANDEZ, CRISTIAN",
+          "role": "sub",
+          "fiflp_id": 224980
+        },
+        {
+          "dorsal": 6,
+          "name": "SANTANA SOSA, JOSE ASIER",
+          "role": "sub",
+          "fiflp_id": 217720
+        },
+        {
+          "dorsal": 10,
+          "name": "ENRIC",
+          "role": "sub",
+          "fiflp_id": 217373
+        },
+        {
+          "dorsal": 12,
+          "name": "MACHIN SOSA, LIAM",
+          "role": "sub",
+          "fiflp_id": 219715
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') MORENO MARTIN, ASIER",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') SANCHEZ GONZALEZ, MIGUEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') MACHIN SOSA, LIAM",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(')",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') VILAR RUIZ, ADRIEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          4
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') BETANCOR MARTIN, SERGIO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          5
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "TRASHORRAS DEL HOYO, RICARDO",
+      "referees": [
+        "Árbitro/a Principal TRASHORRAS DEL HOYO, RICARDO"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": null,
+        "equipo": "RUIZ BATISTA, AYTHAMY"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "ALCON CARDABA, DAVID G"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145605,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "26"
+    }
+  },
+  "145608": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "26",
+      "date": "07-05-2023",
+      "time": "09:00",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 4,
+      "away_score": 11,
+      "home_team": "SAN JUAN TRES PALMAS ATLETICO, C.D.",
+      "away_team": "GUINIGUADA APOLINARIO \"B\", C.D. B",
+      "venue": "HOYA LA PLATA F8 (1)",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "SANTANA OJEDA, DIEGO FERNANDO",
+          "role": "starter",
+          "fiflp_id": 222992
+        },
+        {
+          "dorsal": 2,
+          "name": "OYONO ANGUE, REGINALDO",
+          "role": "starter",
+          "fiflp_id": 224358
+        },
+        {
+          "dorsal": 3,
+          "name": "SUAREZ SUAREZ, YARI",
+          "role": "starter",
+          "fiflp_id": 225315
+        },
+        {
+          "dorsal": 4,
+          "name": "NIEVES RAMOS, BRUNO",
+          "role": "starter",
+          "fiflp_id": 222986
+        },
+        {
+          "dorsal": 5,
+          "name": "CABRERA ALAMO, EYDAN ANTONIO",
+          "role": "starter",
+          "fiflp_id": 225197
+        },
+        {
+          "dorsal": 6,
+          "name": "DENIZ SANCHEZ, MIGUEL ANGEL",
+          "role": "starter",
+          "fiflp_id": 222988
+        },
+        {
+          "dorsal": 7,
+          "name": "PERDOMO TORREJON, TAYRA",
+          "role": "starter",
+          "fiflp_id": 223814
+        },
+        {
+          "dorsal": 8,
+          "name": "LOPEZ SUAREZ, KILIAN JOSE",
+          "role": "starter",
+          "fiflp_id": 216515
+        },
+        {
+          "dorsal": 9,
+          "name": "KAISSA BOUALAM, MOSAAB",
+          "role": "sub",
+          "fiflp_id": 223369
+        },
+        {
+          "dorsal": 10,
+          "name": "AFONSO MEDINA, JUAN MANUEL",
+          "role": "sub",
+          "fiflp_id": 225316
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "GONZALEZ SANTANA, AIMAR",
+          "role": "starter",
+          "fiflp_id": 222850
+        },
+        {
+          "dorsal": 2,
+          "name": "FLEITAS GUTIERREZ, HERNAN",
+          "role": "starter",
+          "fiflp_id": 224809
+        },
+        {
+          "dorsal": 3,
+          "name": "DYLAN.J",
+          "role": "starter",
+          "fiflp_id": 222844
+        },
+        {
+          "dorsal": 4,
+          "name": "ESPINOSA PEREZ, NEYMAR OCTAVIO",
+          "role": "starter",
+          "fiflp_id": 222853
+        },
+        {
+          "dorsal": 5,
+          "name": "ARMAS RAMIREZ, AITOR",
+          "role": "starter",
+          "fiflp_id": 224697
+        },
+        {
+          "dorsal": 6,
+          "name": "ALONSO SILGADO, DIEGO",
+          "role": "starter",
+          "fiflp_id": 222845
+        },
+        {
+          "dorsal": 7,
+          "name": "GUZMAN MONTESDEOCA, LUKA",
+          "role": "starter",
+          "fiflp_id": 222843
+        },
+        {
+          "dorsal": 8,
+          "name": "GALVAN DIAZ, LUCAS",
+          "role": "starter",
+          "fiflp_id": 224696
+        },
+        {
+          "dorsal": 9,
+          "name": "SANTANA GARCIA, DARIEL",
+          "role": "sub",
+          "fiflp_id": 224735
+        },
+        {
+          "dorsal": 10,
+          "name": "SOCORRO CABRERA, LEO",
+          "role": "sub",
+          "fiflp_id": 220480
+        },
+        {
+          "dorsal": 11,
+          "name": "MOLINA DE LA CHICA, DARIEL",
+          "role": "sub",
+          "fiflp_id": 222849
+        },
+        {
+          "dorsal": 12,
+          "name": "ACOSTA CRUZ, DORIAN MIGEL",
+          "role": "sub",
+          "fiflp_id": 219748
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') ACOSTA CRUZ, DORIAN MIGEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') GUZMAN MONTESDEOCA, LUKA",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') GUZMAN MONTESDEOCA, LUKA",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') GUZMAN MONTESDEOCA, LUKA",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          4
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') GUZMAN MONTESDEOCA, LUKA",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          5
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') GUZMAN MONTESDEOCA, LUKA",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          6
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') DYLAN.J",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          7
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') DENIZ SANCHEZ, MIGUEL ANGEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          7
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') KAISSA BOUALAM, MOSAAB",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          7
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') KAISSA BOUALAM, MOSAAB",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          3,
+          7
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') OYONO ANGUE, REGINALDO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          7
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') GALVAN DIAZ, LUCAS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          8
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') GALVAN DIAZ, LUCAS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          9
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') SANTANA GARCIA, DARIEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          10
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') SANTANA GARCIA, DARIEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          11
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "GAMIA SUNDAY, CRISTÓBAL",
+      "referees": [
+        "Árbitro/a Principal GAMIA SUNDAY, CRISTÓBAL"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": null,
+        "equipo": "ABRANTE MEDINA, RUYMAN"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "MARTIN RIVERA, ANTONIO SAMUEL"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145608,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "26"
+    }
+  },
+  "145614": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "27",
+      "date": "13-05-2023",
+      "time": "09:00",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 1,
+      "away_score": 4,
+      "home_team": "VICTORIA \"B\", REAL CLUB B",
+      "away_team": "CORAZON DE MARIA \"D\", C.D. DB",
+      "venue": "PUERTO PI (F8)",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 3,
+          "name": "MORON SOTO, DYLAN GABRIEL",
+          "role": "starter",
+          "fiflp_id": 223436
+        },
+        {
+          "dorsal": 4,
+          "name": "PORTELA HERNANDEZ, CRISTIAN",
+          "role": "starter",
+          "fiflp_id": 224980
+        },
+        {
+          "dorsal": 6,
+          "name": "SANTANA SOSA, JOSE ASIER",
+          "role": "starter",
+          "fiflp_id": 217720
+        },
+        {
+          "dorsal": 7,
+          "name": "PEREIRA JIMENEZ, FRANCISCO NEIZAN",
+          "role": "starter",
+          "fiflp_id": 219716
+        },
+        {
+          "dorsal": 10,
+          "name": "MACHIN SOSA, LIAM",
+          "role": "starter",
+          "fiflp_id": 219715
+        },
+        {
+          "dorsal": 12,
+          "name": "SANCHEZ GONZALEZ, MIGUEL",
+          "role": "starter",
+          "fiflp_id": 217154
+        },
+        {
+          "dorsal": 13,
+          "name": "MONTESDEOCA CARMONA, IGNACIO",
+          "role": "starter",
+          "fiflp_id": 220127
+        },
+        {
+          "dorsal": 9,
+          "name": "ENRIC",
+          "role": "sub",
+          "fiflp_id": 217373
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "ROJANO MORENO, MANUEL",
+          "role": "starter",
+          "fiflp_id": 224653
+        },
+        {
+          "dorsal": 2,
+          "name": "BLANCO GONZALEZ, MARTIN",
+          "role": "starter",
+          "fiflp_id": 224709
+        },
+        {
+          "dorsal": 3,
+          "name": "GONZALEZ CRUZ, ENZO",
+          "role": "starter",
+          "fiflp_id": 222766
+        },
+        {
+          "dorsal": 4,
+          "name": "LEON PAREDES, HUGO",
+          "role": "starter",
+          "fiflp_id": 224707
+        },
+        {
+          "dorsal": 5,
+          "name": "MORENO ARBELO, JAVIER",
+          "role": "starter",
+          "fiflp_id": 223070
+        },
+        {
+          "dorsal": 6,
+          "name": "VALENTIN TEJERA, DARIO JESUS",
+          "role": "starter",
+          "fiflp_id": 224710
+        },
+        {
+          "dorsal": 7,
+          "name": "BRETONES TRUJILLO, CARLOS",
+          "role": "starter",
+          "fiflp_id": 224712
+        },
+        {
+          "dorsal": 8,
+          "name": "HERNANDEZ GUERRA, MATIAS",
+          "role": "starter",
+          "fiflp_id": 222950
+        },
+        {
+          "dorsal": 9,
+          "name": "VEGA GONZALEZ, JORGE",
+          "role": "sub",
+          "fiflp_id": 222767
+        },
+        {
+          "dorsal": 10,
+          "name": "LEON PAREDES, DANIEL",
+          "role": "sub",
+          "fiflp_id": 224708
+        },
+        {
+          "dorsal": 11,
+          "name": "LOBO SAMPER, CARLOS",
+          "role": "sub",
+          "fiflp_id": 219933
+        },
+        {
+          "dorsal": 12,
+          "name": "MELIAN ORTEGA, CLAUDIA",
+          "role": "sub",
+          "fiflp_id": 223357
+        },
+        {
+          "dorsal": 13,
+          "name": "CASTRO MACHIN, MIGUEL",
+          "role": "sub",
+          "fiflp_id": 223358
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') SANCHEZ GONZALEZ, MIGUEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') LOBO SAMPER, CARLOS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') HERNANDEZ GUERRA, MATIAS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') LEON PAREDES, HUGO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') BRETONES TRUJILLO, CARLOS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          4
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "DÍAZ FELIPE, YERAY",
+      "referees": [
+        "Árbitro/a Principal DÍAZ FELIPE, YERAY"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": null,
+        "equipo": "ALCON CARDABA, AITOR"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "VALDIVIA DIEPA, JAVIER"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145614,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "27"
+    }
+  },
+  "145616": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "27",
+      "date": "13-05-2023",
+      "time": "09:00",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 5,
+      "away_score": 3,
+      "home_team": "VETERANOS DEL PILA \"B\", C.D. B",
+      "away_team": "SAN JUAN TRES PALMAS ATLETICO, C.D.",
+      "venue": "MANUEL NARANJO SOSA 1",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 2,
+          "name": "SITO, NICOLO",
+          "role": "starter",
+          "fiflp_id": 224913
+        },
+        {
+          "dorsal": 3,
+          "name": "TORRADO DE LARA, JAIME",
+          "role": "starter",
+          "fiflp_id": 223215
+        },
+        {
+          "dorsal": 4,
+          "name": "SANTANA HERNANDEZ, JAVIER",
+          "role": "starter",
+          "fiflp_id": 222937
+        },
+        {
+          "dorsal": 5,
+          "name": "PAEZ HERNANDEZ, RODRIGO",
+          "role": "starter",
+          "fiflp_id": 222935
+        },
+        {
+          "dorsal": 6,
+          "name": "TRUJILLO SANTANA, MATTIA",
+          "role": "starter",
+          "fiflp_id": 223204
+        },
+        {
+          "dorsal": 7,
+          "name": "TRUJILLO HERNANDEZ, RAMSES",
+          "role": "starter",
+          "fiflp_id": 222939
+        },
+        {
+          "dorsal": 8,
+          "name": "CONFORTO JULIA, MARCO",
+          "role": "starter",
+          "fiflp_id": 219354
+        },
+        {
+          "dorsal": 13,
+          "name": "HERNANDEZ CASTILLO, DANIEL",
+          "role": "starter",
+          "fiflp_id": 223212
+        },
+        {
+          "dorsal": 9,
+          "name": "CARMONA MOLINA, ISAAC",
+          "role": "sub",
+          "fiflp_id": 222942
+        },
+        {
+          "dorsal": 10,
+          "name": "FRANCHY ZALDIVAR, THIAGO",
+          "role": "sub",
+          "fiflp_id": 222941
+        },
+        {
+          "dorsal": 11,
+          "name": "PORTELA ROLDAN, MIGUEL",
+          "role": "sub",
+          "fiflp_id": 222936
+        },
+        {
+          "dorsal": 12,
+          "name": "RODRIGUEZ TRUJILLO, MARTIN",
+          "role": "sub",
+          "fiflp_id": 220032
+        },
+        {
+          "dorsal": 14,
+          "name": "CALLEJA GONZÁLEZ, LEONARDO DAVID",
+          "role": "sub",
+          "fiflp_id": 222940
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "SANTANA OJEDA, DIEGO FERNANDO",
+          "role": "starter",
+          "fiflp_id": 222992
+        },
+        {
+          "dorsal": 2,
+          "name": "OYONO ANGUE, REGINALDO",
+          "role": "starter",
+          "fiflp_id": 224358
+        },
+        {
+          "dorsal": 3,
+          "name": "RODRIGUEZ HERNANDEZ, ROMEO",
+          "role": "starter",
+          "fiflp_id": 222987
+        },
+        {
+          "dorsal": 4,
+          "name": "CABRERA ALAMO, EYDAN ANTONIO",
+          "role": "starter",
+          "fiflp_id": 225197
+        },
+        {
+          "dorsal": 5,
+          "name": "VELAZQUEZ HEREDIA, JERIEL",
+          "role": "starter",
+          "fiflp_id": 225395
+        },
+        {
+          "dorsal": 6,
+          "name": "DENIZ SANCHEZ, MIGUEL ANGEL",
+          "role": "starter",
+          "fiflp_id": 222988
+        },
+        {
+          "dorsal": 7,
+          "name": "LOPEZ SUAREZ, KILIAN JOSE",
+          "role": "starter",
+          "fiflp_id": 216515
+        },
+        {
+          "dorsal": 8,
+          "name": "KAISSA BOUALAM, MOSAAB",
+          "role": "starter",
+          "fiflp_id": 223369
+        },
+        {
+          "dorsal": 10,
+          "name": "NIEVES RAMOS, BRUNO",
+          "role": "sub",
+          "fiflp_id": 222986
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') LOPEZ SUAREZ, KILIAN JOSE",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') LOPEZ SUAREZ, KILIAN JOSE",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') CONFORTO JULIA, MARCO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') CONFORTO JULIA, MARCO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') PAEZ HERNANDEZ, RODRIGO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          3,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') CARMONA MOLINA, ISAAC",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') NIEVES RAMOS, BRUNO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') TRUJILLO SANTANA, MATTIA",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          5,
+          3
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "SUÁREZ VEGA, JOSÉ MANUEL",
+      "referees": [
+        "Árbitro/a Principal SUÁREZ VEGA, JOSÉ MANUEL"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": "RODRIGUEZ GONZALEZ, JORGE",
+        "equipo": "CARAZO EUGENIO, JEREMI"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "ABRANTE MEDINA, RUYMAN"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145616,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "27"
+    }
+  },
+  "145611": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "27",
+      "date": "13-05-2023",
+      "time": "10:30",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 1,
+      "away_score": 6,
+      "home_team": "MASPA TRAINING \"C\", C.D. C",
+      "away_team": "UNION VIERA \"B\", C.F. B",
+      "venue": "MASPALOMAS 2 F8 (2)",
+      "city": "San Bartolomé De Tirajana"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "FERRARONS POUTANEN, JOEL ANTON",
+          "role": "starter",
+          "fiflp_id": 224658
+        },
+        {
+          "dorsal": 2,
+          "name": "SUAREZ RAMOS, LIAM",
+          "role": "starter",
+          "fiflp_id": 221901
+        },
+        {
+          "dorsal": 3,
+          "name": "VEGA MARTINEZ, CARLOS RAUL",
+          "role": "starter",
+          "fiflp_id": 221899
+        },
+        {
+          "dorsal": 4,
+          "name": "RAMOS LEUNG, ENZO",
+          "role": "starter",
+          "fiflp_id": 222475
+        },
+        {
+          "dorsal": 5,
+          "name": "VELAZQUEZ VEGA, LEO",
+          "role": "starter",
+          "fiflp_id": 221894
+        },
+        {
+          "dorsal": 6,
+          "name": "DIOUF CARRO, GALLAS",
+          "role": "starter",
+          "fiflp_id": 221893
+        },
+        {
+          "dorsal": 7,
+          "name": "SANTANA KOKALY, ANDONI",
+          "role": "starter",
+          "fiflp_id": 221896
+        },
+        {
+          "dorsal": 8,
+          "name": "ARRIBAS MARTIN, ANGEL",
+          "role": "starter",
+          "fiflp_id": 221898
+        },
+        {
+          "dorsal": 9,
+          "name": "QUEVEDO PEREZ, ENRIQUE",
+          "role": "sub",
+          "fiflp_id": 221892
+        },
+        {
+          "dorsal": 10,
+          "name": "GONZALEZ PEREZ, DARIO",
+          "role": "sub",
+          "fiflp_id": 221897
+        },
+        {
+          "dorsal": 11,
+          "name": "CONCEPCION CALDERIN, ALEJANDRO NAHUEL",
+          "role": "sub",
+          "fiflp_id": 221895
+        },
+        {
+          "dorsal": 12,
+          "name": "RUFO GARCIA, JOEL",
+          "role": "sub",
+          "fiflp_id": 222474
+        },
+        {
+          "dorsal": 13,
+          "name": "CALIARI, FEDERICO",
+          "role": "sub",
+          "fiflp_id": 224044
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "MELIAN SANTANA, AIRAM",
+          "role": "starter",
+          "fiflp_id": 218208
+        },
+        {
+          "dorsal": 2,
+          "name": "GONZALEZ MARCUZZI, DANTE",
+          "role": "starter",
+          "fiflp_id": 218212
+        },
+        {
+          "dorsal": 3,
+          "name": "RUANO SUAREZ, EDUARDO",
+          "role": "starter",
+          "fiflp_id": 218203
+        },
+        {
+          "dorsal": 4,
+          "name": "MARTIN REYES, AITOR",
+          "role": "starter",
+          "fiflp_id": 218775
+        },
+        {
+          "dorsal": 5,
+          "name": "BETANCOR SANTANA, ALVARO",
+          "role": "starter",
+          "fiflp_id": 222007
+        },
+        {
+          "dorsal": 6,
+          "name": "DENIZ HENRIQUEZ, HUGO",
+          "role": "starter",
+          "fiflp_id": 218205
+        },
+        {
+          "dorsal": 7,
+          "name": "ALAMO CABRERA, ALVARO",
+          "role": "starter",
+          "fiflp_id": 218206
+        },
+        {
+          "dorsal": 8,
+          "name": "CARRERO SUAREZ, ALEJANDRO",
+          "role": "starter",
+          "fiflp_id": 222183
+        },
+        {
+          "dorsal": 9,
+          "name": "PATO RUIZ, ADRIEM",
+          "role": "sub",
+          "fiflp_id": 218207
+        },
+        {
+          "dorsal": 10,
+          "name": "SOSA SANTANA, DYLAN",
+          "role": "sub",
+          "fiflp_id": 222008
+        },
+        {
+          "dorsal": 11,
+          "name": "RODRIGUEZ GUEDES, ALVARO",
+          "role": "sub",
+          "fiflp_id": 219814
+        },
+        {
+          "dorsal": 12,
+          "name": "RODRIGUEZ MATEO, ADAM",
+          "role": "sub",
+          "fiflp_id": 222009
+        },
+        {
+          "dorsal": 13,
+          "name": "NAVARRO GARCIA, MARCOS ALEXIS",
+          "role": "sub",
+          "fiflp_id": 222929
+        },
+        {
+          "dorsal": 14,
+          "name": "MARTINEZ SANTANA, DIEGO",
+          "role": "sub",
+          "fiflp_id": 223028
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') DENIZ HENRIQUEZ, HUGO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') ALAMO CABRERA, ALVARO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') QUEVEDO PEREZ, ENRIQUE",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') BETANCOR SANTANA, ALVARO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') RODRIGUEZ MATEO, ADAM",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          4
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') CARRERO SUAREZ, ALEJANDRO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          5
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') CARRERO SUAREZ, ALEJANDRO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          6
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "TRUJILLO CABRERA, ALEJANDRO DAVID",
+      "referees": [
+        "Árbitro/a Principal TRUJILLO CABRERA, ALEJANDRO DAVID"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": "PAULSEM BAUTE, JUAN PEDRO",
+        "equipo": "PAULSEM BAUTE, JUAN PEDRO"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "RODRIGUEZ GUERRA, CRISTIAN PABLO"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145611,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "27"
+    }
+  },
+  "145612": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "27",
+      "date": "13-05-2023",
+      "time": "10:30",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 6,
+      "away_score": 3,
+      "home_team": "BARRIAL ATLETICO, U.D.",
+      "away_team": "TAMARACEITE \"B\", U.D. B",
+      "venue": "ANTONIO CASTILLO",
+      "city": "Gáldar"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "PULIDO MENDOZA, DARIO",
+          "role": "starter",
+          "fiflp_id": 222974
+        },
+        {
+          "dorsal": 2,
+          "name": "GUERRA GARCIA, IKER",
+          "role": "starter",
+          "fiflp_id": 222972
+        },
+        {
+          "dorsal": 3,
+          "name": "SUAREZ MENDOZA, DIEGO",
+          "role": "starter",
+          "fiflp_id": 222973
+        },
+        {
+          "dorsal": 4,
+          "name": "FALCON MOLINA, YERAY FERNANDO",
+          "role": "starter",
+          "fiflp_id": 214292
+        },
+        {
+          "dorsal": 5,
+          "name": "BARROSO DEL PINO, ARIDANI FRANCISCO",
+          "role": "starter",
+          "fiflp_id": 222971
+        },
+        {
+          "dorsal": 6,
+          "name": "VALDERRAMA SOSA, PABLO",
+          "role": "starter",
+          "fiflp_id": 214291
+        },
+        {
+          "dorsal": 7,
+          "name": "BENITEZ OJEDA, IAN JOSE",
+          "role": "starter",
+          "fiflp_id": 219537
+        },
+        {
+          "dorsal": 8,
+          "name": "DIAZ LOPEZ, JAVIER",
+          "role": "starter",
+          "fiflp_id": 217505
+        },
+        {
+          "dorsal": 9,
+          "name": "GUIJARRO VERA, ACAYMO DANIEL",
+          "role": "sub",
+          "fiflp_id": 214538
+        },
+        {
+          "dorsal": 10,
+          "name": "SANTANA GARCIA, ALVARO",
+          "role": "sub",
+          "fiflp_id": 222970
+        },
+        {
+          "dorsal": 11,
+          "name": "MEDEROS NAVARRO, HUGO",
+          "role": "sub",
+          "fiflp_id": 225442
+        },
+        {
+          "dorsal": 12,
+          "name": "DIAZ QUINTANA, ACAYMO",
+          "role": "sub",
+          "fiflp_id": 221382
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "LUGO SOTO, FABIAN EDUARDO",
+          "role": "starter",
+          "fiflp_id": 219661
+        },
+        {
+          "dorsal": 2,
+          "name": "PAN CABALLER, MARIO",
+          "role": "starter",
+          "fiflp_id": 219594
+        },
+        {
+          "dorsal": 4,
+          "name": "FABELO SOSA, ASIER",
+          "role": "starter",
+          "fiflp_id": 219599
+        },
+        {
+          "dorsal": 5,
+          "name": "YAÑEZ VIVAS, RODRIGO",
+          "role": "starter",
+          "fiflp_id": 223504
+        },
+        {
+          "dorsal": 7,
+          "name": "ALMEDIA QUESADA, EIDAN DANIEL",
+          "role": "starter",
+          "fiflp_id": 223503
+        },
+        {
+          "dorsal": 9,
+          "name": "SOSA PEREZ, YADIEL",
+          "role": "starter",
+          "fiflp_id": 217053
+        },
+        {
+          "dorsal": 10,
+          "name": "MEDINA MELIAN, ALVARO",
+          "role": "starter",
+          "fiflp_id": 215892
+        },
+        {
+          "dorsal": 11,
+          "name": "SANTANA SOTO, ALVARO",
+          "role": "starter",
+          "fiflp_id": 219595
+        },
+        {
+          "dorsal": 6,
+          "name": "SOTO HERRERA, ADRIANO",
+          "role": "sub",
+          "fiflp_id": 223501
+        },
+        {
+          "dorsal": 13,
+          "name": "GIL GARCIA, OSCAR",
+          "role": "sub",
+          "fiflp_id": 217054
+        },
+        {
+          "dorsal": 14,
+          "name": "MEDINA RODRIGUEZ, DIEGO",
+          "role": "sub",
+          "fiflp_id": 217051
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') VALDERRAMA SOSA, PABLO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') VALDERRAMA SOSA, PABLO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') VALDERRAMA SOSA, PABLO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') VALDERRAMA SOSA, PABLO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') MEDINA MELIAN, ALVARO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') MEDINA MELIAN, ALVARO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') MEDINA MELIAN, ALVARO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') DIAZ LOPEZ, JAVIER",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          5,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') GUERRA GARCIA, IKER",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          6,
+          3
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "CRUZ GIL, FRANCISCO EZEQUIEL",
+      "referees": [
+        "Árbitro/a Principal CRUZ GIL, FRANCISCO EZEQUIEL"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": "VALDERRAMA ARIAS, JESUS",
+        "equipo": "VALDERRAMA ARIAS, JESUS"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "DEL PAZO ESCUDERO, EMILIO"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145612,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "27"
+    }
+  },
+  "145617": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "27",
+      "date": "13-05-2023",
+      "time": "10:30",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 8,
+      "away_score": 1,
+      "home_team": "GUINIGUADA APOLINARIO \"B\", C.D. B",
+      "away_team": "PEDRO HIDALGO \"B\", U.D. B",
+      "venue": "LOMO APOLINARIO F8",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "GONZALEZ SANTANA, AIMAR",
+          "role": "starter",
+          "fiflp_id": 222850
+        },
+        {
+          "dorsal": 2,
+          "name": "MOLINA DE LA CHICA, DARIEL",
+          "role": "starter",
+          "fiflp_id": 222849
+        },
+        {
+          "dorsal": 3,
+          "name": "DYLAN.J",
+          "role": "starter",
+          "fiflp_id": 222844
+        },
+        {
+          "dorsal": 4,
+          "name": "ESPINOSA PEREZ, NEYMAR OCTAVIO",
+          "role": "starter",
+          "fiflp_id": 222853
+        },
+        {
+          "dorsal": 5,
+          "name": "FLEITAS GUTIERREZ, HERNAN",
+          "role": "starter",
+          "fiflp_id": 224809
+        },
+        {
+          "dorsal": 6,
+          "name": "SANTANA GARCIA, DARIEL",
+          "role": "starter",
+          "fiflp_id": 224735
+        },
+        {
+          "dorsal": 7,
+          "name": "ALONSO SILGADO, DIEGO",
+          "role": "starter",
+          "fiflp_id": 222845
+        },
+        {
+          "dorsal": 8,
+          "name": "BETANCOR ALCOCER, GUILLERMO",
+          "role": "starter",
+          "fiflp_id": 223980
+        },
+        {
+          "dorsal": 9,
+          "name": "GUZMAN MONTESDEOCA, LUKA",
+          "role": "sub",
+          "fiflp_id": 222843
+        },
+        {
+          "dorsal": 10,
+          "name": "ACOSTA CRUZ, DORIAN MIGEL",
+          "role": "sub",
+          "fiflp_id": 219748
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "ESPINOSA ALAMO, IRINEY SAMUEL",
+          "role": "starter",
+          "fiflp_id": 220144
+        },
+        {
+          "dorsal": 3,
+          "name": "OJEDA OJEDA, EVA",
+          "role": "starter",
+          "fiflp_id": 220142
+        },
+        {
+          "dorsal": 4,
+          "name": "SANTANA MONTESDEOCA, DYLAN ISMAEL",
+          "role": "starter",
+          "fiflp_id": 224333
+        },
+        {
+          "dorsal": 6,
+          "name": "UCHA GONZALEZ, HUGO",
+          "role": "starter",
+          "fiflp_id": 224965
+        },
+        {
+          "dorsal": 7,
+          "name": "PEREZ TRAVIESO, VALERIA",
+          "role": "starter",
+          "fiflp_id": 223723
+        },
+        {
+          "dorsal": 9,
+          "name": "JIMENEZ GUILLEN, GABRIEL SANTIAGO",
+          "role": "starter",
+          "fiflp_id": 221174
+        },
+        {
+          "dorsal": 10,
+          "name": "TAISMA RUANO, JESUS",
+          "role": "starter",
+          "fiflp_id": 224932
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') JIMENEZ GUILLEN, GABRIEL SANTIAGO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') GUZMAN MONTESDEOCA, LUKA",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') GUZMAN MONTESDEOCA, LUKA",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') DYLAN.J",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          3,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') BETANCOR ALCOCER, GUILLERMO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') BETANCOR ALCOCER, GUILLERMO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          5,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') SANTANA GARCIA, DARIEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          6,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') SANTANA GARCIA, DARIEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          7,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') SANTANA GARCIA, DARIEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          8,
+          1
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "NIEVES SUÁREZ, JESÚS NAUZET",
+      "referees": [
+        "Árbitro/a Principal NIEVES SUÁREZ, JESÚS NAUZET"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": "ANTON DEL VALLE, ANGEL LUIS",
+        "equipo": "MARTIN RIVERA, ANTONIO SAMUEL"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "COSTAS CURBELO, CARLO"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145617,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "27"
+    }
+  },
+  "145615": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "27",
+      "date": "13-05-2023",
+      "time": "11:00",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 3,
+      "away_score": 3,
+      "home_team": "LOMO BLANCO S.J.A. \"B\", C.D. B",
+      "away_team": "ARUCAS C.F. \"C\" C",
+      "venue": "JOSE RUANO TEJERA F8(2)",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "REYES MONZON, FRANCISCO",
+          "role": "starter",
+          "fiflp_id": 224172
+        },
+        {
+          "dorsal": 2,
+          "name": "SANTANA TOPHAN, FRANCISCO DAIREN",
+          "role": "starter",
+          "fiflp_id": 216566
+        },
+        {
+          "dorsal": 3,
+          "name": "MARRERO BAUTISTA, YEIDAN",
+          "role": "starter",
+          "fiflp_id": 223440
+        },
+        {
+          "dorsal": 4,
+          "name": "MEDINA SOSA, ANGEL",
+          "role": "starter",
+          "fiflp_id": 217111
+        },
+        {
+          "dorsal": 5,
+          "name": "MASCARETTI, SAMUELE",
+          "role": "starter",
+          "fiflp_id": 221371
+        },
+        {
+          "dorsal": 6,
+          "name": "MARTIN CRUZ, LUCAS",
+          "role": "starter",
+          "fiflp_id": 216947
+        },
+        {
+          "dorsal": 7,
+          "name": "MEDINA SOSA, GABRIEL",
+          "role": "starter",
+          "fiflp_id": 217110
+        },
+        {
+          "dorsal": 8,
+          "name": "RODRIGUEZ GOMEZ, CARLOS",
+          "role": "starter",
+          "fiflp_id": 217068
+        },
+        {
+          "dorsal": 9,
+          "name": "NAVARRO GONZALEZ, ERIC",
+          "role": "sub",
+          "fiflp_id": 224170
+        },
+        {
+          "dorsal": 10,
+          "name": "VIERA SANTANA, YADEL",
+          "role": "sub",
+          "fiflp_id": 221490
+        },
+        {
+          "dorsal": 13,
+          "name": "ROSARIO HENRIQUEZ, UZIEL",
+          "role": "sub",
+          "fiflp_id": 218610
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 2,
+          "name": "MATEO GARCIA, HUGO",
+          "role": "starter",
+          "fiflp_id": 219580
+        },
+        {
+          "dorsal": 4,
+          "name": "SANCHEZ CORBI, NOAH",
+          "role": "starter",
+          "fiflp_id": 215511
+        },
+        {
+          "dorsal": 9,
+          "name": "GARCIA MARTIN, ENZO",
+          "role": "starter",
+          "fiflp_id": 216035
+        },
+        {
+          "dorsal": 10,
+          "name": "LEON DIAZ, NESTOR RAFAEL",
+          "role": "starter",
+          "fiflp_id": 214376
+        },
+        {
+          "dorsal": 12,
+          "name": "MACIAS PAEZ, LUCAS",
+          "role": "starter",
+          "fiflp_id": 216613
+        },
+        {
+          "dorsal": 13,
+          "name": "HENRIQUEZ BATISTA, ARDANI",
+          "role": "starter",
+          "fiflp_id": 221114
+        },
+        {
+          "dorsal": 3,
+          "name": "NAVARRO BAEZ, ABEL BENEHI",
+          "role": "sub",
+          "fiflp_id": 216679
+        },
+        {
+          "dorsal": 6,
+          "name": "LOPEZ SEQUEIRO, ALEJANDRO",
+          "role": "sub",
+          "fiflp_id": 214183
+        },
+        {
+          "dorsal": 8,
+          "name": "LOPEZ SEQUEIRO, NICOLAS",
+          "role": "sub",
+          "fiflp_id": 217105
+        },
+        {
+          "dorsal": 11,
+          "name": "DAMASO MONTESDEOCA, ASIER",
+          "role": "sub",
+          "fiflp_id": 219664
+        },
+        {
+          "dorsal": 14,
+          "name": "PEREZ MENDOZA, YASSIEL",
+          "role": "sub",
+          "fiflp_id": 215883
+        },
+        {
+          "dorsal": 15,
+          "name": "SANTANA ARMAS, KILIAN YADIEL",
+          "role": "sub",
+          "fiflp_id": 219666
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') MARTIN CRUZ, LUCAS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(')",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(')",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') RODRIGUEZ GOMEZ, CARLOS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') MATEO GARCIA, HUGO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') MARRERO BAUTISTA, YEIDAN",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          3,
+          3
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "MUÑOZ GUERRA, LUIS ALBERTO",
+      "referees": [
+        "Árbitro/a Principal MUÑOZ GUERRA, LUIS ALBERTO"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": "NAVARRO PERDOMO, ADRIEL",
+        "equipo": "NAVARRO PERDOMO, ADRIEL"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "BATISTA RIO, CRISTO R"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145615,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "27"
+    }
+  },
+  "145613": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "27",
+      "date": "14-05-2023",
+      "time": "09:00",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 4,
+      "away_score": 1,
+      "home_team": "SIMUSETTI C. F. \"B\" B",
+      "away_team": "BARRIO DEL ATLANTICO \"B\", C.F. B",
+      "venue": "LA MAYORDOMÍA 1 F8 (1)",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "HUGO",
+          "role": "starter",
+          "fiflp_id": 217965
+        },
+        {
+          "dorsal": 2,
+          "name": "MEDINA GUEDES, ALVARO",
+          "role": "starter",
+          "fiflp_id": 219037
+        },
+        {
+          "dorsal": 3,
+          "name": "HERNANDEZ HERNANDEZ, LUCAS",
+          "role": "starter",
+          "fiflp_id": 218478
+        },
+        {
+          "dorsal": 4,
+          "name": "BAEZ GONZALEZ, FABIO",
+          "role": "starter",
+          "fiflp_id": 213465
+        },
+        {
+          "dorsal": 5,
+          "name": "DE LA FE ORTEGA, DIEGO PATRICIO",
+          "role": "starter",
+          "fiflp_id": 215987
+        },
+        {
+          "dorsal": 6,
+          "name": "CASTELLANO ALMEIDA, ALEJANDRO",
+          "role": "starter",
+          "fiflp_id": 215971
+        },
+        {
+          "dorsal": 7,
+          "name": "FERNANDEZ LOPEZ, FRANCISCO",
+          "role": "starter",
+          "fiflp_id": 218584
+        },
+        {
+          "dorsal": 8,
+          "name": "MATEOS MONAGAS, MARCOS",
+          "role": "starter",
+          "fiflp_id": 216260
+        },
+        {
+          "dorsal": 9,
+          "name": "TRUJILLO ALEMAN, HUGO",
+          "role": "sub",
+          "fiflp_id": 218583
+        },
+        {
+          "dorsal": 10,
+          "name": "NIETO VILLANUEVA, JULEN MIKEL",
+          "role": "sub",
+          "fiflp_id": 219399
+        },
+        {
+          "dorsal": 11,
+          "name": "GIL VAN OUDENHOVE, EMIEL JOSE",
+          "role": "sub",
+          "fiflp_id": 224915
+        },
+        {
+          "dorsal": 12,
+          "name": "LLARENA HUERTAS, ALEJANDRO",
+          "role": "sub",
+          "fiflp_id": 217504
+        },
+        {
+          "dorsal": 13,
+          "name": "AGUILAR LASO, JONATAN DEREK",
+          "role": "sub",
+          "fiflp_id": 219597
+        },
+        {
+          "dorsal": 14,
+          "name": "DIALLO QUINTANA, NEIZAN",
+          "role": "sub",
+          "fiflp_id": 218911
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "MORENO MORA, DANIELA DEL CARMEN",
+          "role": "starter",
+          "fiflp_id": 225444
+        },
+        {
+          "dorsal": 3,
+          "name": "PEREZ CIORDIA, DIEGO",
+          "role": "starter",
+          "fiflp_id": 219481
+        },
+        {
+          "dorsal": 4,
+          "name": "KIRSCH SANCHEZ, ADRIAN",
+          "role": "starter",
+          "fiflp_id": 216983
+        },
+        {
+          "dorsal": 5,
+          "name": "MORENO MARTIN, ASIER",
+          "role": "starter",
+          "fiflp_id": 213909
+        },
+        {
+          "dorsal": 6,
+          "name": "FERRERO TACORONTE, HUGO",
+          "role": "starter",
+          "fiflp_id": 223200
+        },
+        {
+          "dorsal": 7,
+          "name": "RUIZ NAVARRO, ASIER",
+          "role": "starter",
+          "fiflp_id": 220043
+        },
+        {
+          "dorsal": 8,
+          "name": "OJEDA BALADER, ESIEL DAVID",
+          "role": "starter",
+          "fiflp_id": 219484
+        },
+        {
+          "dorsal": 10,
+          "name": "CORTES ALMECIGA, KEVIN MATEO",
+          "role": "sub",
+          "fiflp_id": 224036
+        },
+        {
+          "dorsal": 11,
+          "name": "SANTANA DIAZ, JAVIER",
+          "role": "sub",
+          "fiflp_id": 219483
+        },
+        {
+          "dorsal": 12,
+          "name": "GARCIA MONAGAS, IONE",
+          "role": "sub",
+          "fiflp_id": 220203
+        },
+        {
+          "dorsal": 13,
+          "name": "FARIÑAS ARROYO, LIAM",
+          "role": "sub",
+          "fiflp_id": 220204
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') MATEOS MONAGAS, MARCOS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') FERNANDEZ LOPEZ, FRANCISCO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          2,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') FERNANDEZ LOPEZ, FRANCISCO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          3,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') NIETO VILLANUEVA, JULEN MIKEL",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') CORTES ALMECIGA, KEVIN MATEO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          4,
+          1
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "CABRERA SANTANA, ATTENERY DEL CARMEN",
+      "referees": [
+        "Árbitro/a Principal CABRERA SANTANA, ATTENERY DEL CARMEN"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": "BAEZ DIAZ, FRANCISCO J",
+        "equipo": "BAEZ DIAZ, FRANCISCO J"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "RUIZ BATISTA, AYTHAMY"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145613,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "27"
+    }
+  },
+  "145624": {
+    "header": {
+      "season": "2022/2023",
+      "jornada": "28",
+      "date": "19-05-2023",
+      "time": "18:30",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)",
+      "home_score": 1,
+      "away_score": 6,
+      "home_team": "PEDRO HIDALGO \"B\", U.D. B",
+      "away_team": "VETERANOS DEL PILA \"B\", C.D. B",
+      "venue": "JOSE V. SEPULVEDA F8 (1)",
+      "city": "Las Palmas de Gran Canaria"
+    },
+    "lineups": {
+      "home": [
+        {
+          "dorsal": 1,
+          "name": "SANABRIA MARTIN, DANIEL",
+          "role": "starter",
+          "fiflp_id": 224171
+        },
+        {
+          "dorsal": 2,
+          "name": "SANTANA MONTESDEOCA, DYLAN ISMAEL",
+          "role": "starter",
+          "fiflp_id": 224333
+        },
+        {
+          "dorsal": 3,
+          "name": "OJEDA OJEDA, EVA",
+          "role": "starter",
+          "fiflp_id": 220142
+        },
+        {
+          "dorsal": 4,
+          "name": "OJEDA OJEDA, YARA",
+          "role": "starter",
+          "fiflp_id": 220143
+        },
+        {
+          "dorsal": 5,
+          "name": "GONZALEZ CABRERA, DORIAM",
+          "role": "starter",
+          "fiflp_id": 223722
+        },
+        {
+          "dorsal": 6,
+          "name": "UCHA GONZALEZ, HUGO",
+          "role": "starter",
+          "fiflp_id": 224965
+        },
+        {
+          "dorsal": 7,
+          "name": "ESPINOSA ALAMO, IRINEY SAMUEL",
+          "role": "starter",
+          "fiflp_id": 220144
+        },
+        {
+          "dorsal": 9,
+          "name": "PEREZ TRAVIESO, VALERIA",
+          "role": "starter",
+          "fiflp_id": 223723
+        },
+        {
+          "dorsal": 8,
+          "name": "TAISMA RUANO, JESUS",
+          "role": "sub",
+          "fiflp_id": 224932
+        },
+        {
+          "dorsal": 10,
+          "name": "JIMENEZ GUILLEN, GABRIEL SANTIAGO",
+          "role": "sub",
+          "fiflp_id": 221174
+        },
+        {
+          "dorsal": 11,
+          "name": "SANTANA MEDINA, IKER",
+          "role": "sub",
+          "fiflp_id": 223179
+        }
+      ],
+      "away": [
+        {
+          "dorsal": 1,
+          "name": "PORTELA ROLDAN, MIGUEL",
+          "role": "starter",
+          "fiflp_id": 222936
+        },
+        {
+          "dorsal": 2,
+          "name": "SITO, NICOLO",
+          "role": "starter",
+          "fiflp_id": 224913
+        },
+        {
+          "dorsal": 3,
+          "name": "TORRADO DE LARA, JAIME",
+          "role": "starter",
+          "fiflp_id": 223215
+        },
+        {
+          "dorsal": 4,
+          "name": "SANTANA HERNANDEZ, JAVIER",
+          "role": "starter",
+          "fiflp_id": 222937
+        },
+        {
+          "dorsal": 5,
+          "name": "TRUJILLO HERNANDEZ, RAMSES",
+          "role": "starter",
+          "fiflp_id": 222939
+        },
+        {
+          "dorsal": 6,
+          "name": "CALLEJA GONZÁLEZ, LEONARDO DAVID",
+          "role": "starter",
+          "fiflp_id": 222940
+        },
+        {
+          "dorsal": 7,
+          "name": "TRUJILLO SANTANA, MATTIA",
+          "role": "starter",
+          "fiflp_id": 223204
+        },
+        {
+          "dorsal": 8,
+          "name": "CONFORTO JULIA, MARCO",
+          "role": "starter",
+          "fiflp_id": 219354
+        },
+        {
+          "dorsal": 9,
+          "name": "CARMONA MOLINA, ISAAC",
+          "role": "sub",
+          "fiflp_id": 222942
+        },
+        {
+          "dorsal": 10,
+          "name": "RODRIGUEZ TRUJILLO, MARTIN",
+          "role": "sub",
+          "fiflp_id": 220032
+        },
+        {
+          "dorsal": 11,
+          "name": "FRANCHY ZALDIVAR, THIAGO",
+          "role": "sub",
+          "fiflp_id": 222941
+        },
+        {
+          "dorsal": 12,
+          "name": "HERNANDEZ CASTILLO, DANIEL",
+          "role": "sub",
+          "fiflp_id": 223212
+        },
+        {
+          "dorsal": 14,
+          "name": "SOSA NEGRIN, AITOR",
+          "role": "sub",
+          "fiflp_id": 223214
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') CONFORTO JULIA, MARCO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          1
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') CONFORTO JULIA, MARCO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          2
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') TRUJILLO HERNANDEZ, RAMSES",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          3
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') FRANCHY ZALDIVAR, THIAGO",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          4
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "(') CARMONA MOLINA, ISAAC",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          0,
+          5
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') SANTANA MONTESDEOCA, DYLAN ISMAEL",
+        "minute": null,
+        "goal_type": "own",
+        "score": [
+          0,
+          6
+        ]
+      },
+      {
+        "kind": "goal",
+        "side": "home",
+        "player_name": "(') TAISMA RUANO, JESUS",
+        "minute": null,
+        "goal_type": "normal",
+        "score": [
+          1,
+          6
+        ]
+      }
+    ],
+    "staff": {
+      "referee": "TRASHORRAS DEL HOYO, RICARDO",
+      "referees": [
+        "Árbitro/a Principal TRASHORRAS DEL HOYO, RICARDO"
+      ],
+      "coach_home": null,
+      "coach_away": null,
+      "delegates_home": {
+        "campo": null,
+        "equipo": "COSTAS CURBELO, CARLO"
+      },
+      "delegates_away": {
+        "campo": null,
+        "equipo": "RODRIGUEZ GONZALEZ, JORGE"
+      }
+    },
+    "consistent": true,
+    "cod_acta": 145624,
+    "enumeration": {
+      "comp_id": "1094",
+      "grupo": "145402",
+      "jornada": "28"
+    }
   }
 }

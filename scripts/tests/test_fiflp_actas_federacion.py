@@ -644,3 +644,46 @@ def test_a_first_pass_match_with_a_dropped_digit_is_fixed_when_the_table_agrees(
     report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2024-2025_raw.json"), only=I.flattened)
     assert report["scores_fixed"] == 1 and report["matched"] == 4
     assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=1").fetchone() == (1, 11, 190958)
+
+
+def test_a_missing_match_of_a_clear_group_is_created_from_its_acta(tmp_path):
+    """LZ12 2024-25 tenía 90 de sus 132 partidos: el acta coherente de un cruce que no está en el
+    grupo crea el partido, con la jornada y la fecha con la forma de las del grupo."""
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = group_base()
+    conn.execute("DELETE FROM matches WHERE id=5")          # Moya–Arucas no está en el calendario
+    # La clasificación, la del calendario completo (con Moya–Arucas 3-1).
+    for team, played, gf, gc in ((1, 2, 15, 0), (2, 3, 4, 9), (3, 2, 5, 1), (4, 3, 1, 15)):
+        conn.execute("UPDATE standings SET played=?, gf=?, gc=? WHERE group_id=1 AND team_id=?", (played, gf, gc, team))
+    raw = {"1": flat("MOYA, U.D.", "TAMARACEITE, U.D. A", 1, 2, "04-10-2025"),
+           "3": flat("TAMARACEITE, U.D. A", "ARUCAS C.F. A", 3, 0, "11-10-2025"),
+           "2": flat("ARUCAS C.F. A", "VALKYRIAS BEC.", 0, 9, "04-10-2025"),
+           "5": flat("MOYA, U.D.", "ARUCAS C.F. A", 3, 1, "18-10-2025")}
+    raw["5"]["header"]["jornada"] = "3"
+    (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
+    assert report["gaps_filled"] == 1 and report["unmatched"] == 0
+    row = conn.execute("""SELECT m.jornada, m.date, m.home_score, m.away_score, m.cod_acta FROM matches m
+        JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
+        WHERE t1.name='Moya' AND t2.name='Arucas'""").fetchone()
+    assert row == ("Jornada 3", "18/10", 3, 1, 5)
+
+
+
+def test_a_created_match_that_would_part_the_group_from_its_table_is_undone(tmp_path):
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = group_base()
+    conn.execute("DELETE FROM matches WHERE id=5")
+    for team, played, gf, gc in ((1, 2, 15, 0), (2, 3, 4, 9), (3, 2, 5, 1), (4, 3, 1, 15)):
+        conn.execute("UPDATE standings SET played=?, gf=?, gc=? WHERE group_id=1 AND team_id=?", (played, gf, gc, team))
+    raw = {"1": flat("MOYA, U.D.", "TAMARACEITE, U.D. A", 1, 2, "04-10-2025"),
+           "3": flat("TAMARACEITE, U.D. A", "ARUCAS C.F. A", 3, 0, "11-10-2025"),
+           "2": flat("ARUCAS C.F. A", "VALKYRIAS BEC.", 0, 9, "04-10-2025"),
+           "5": flat("MOYA, U.D.", "ARUCAS C.F. A", 7, 1, "18-10-2025")}     # 7-1: no cuadra con la tabla
+    (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
+    assert report["gaps_filled"] == 0 and report["unmatched"] == 1
+    assert conn.execute("SELECT count(*) FROM matches").fetchone()[0] == 5
+    assert conn.execute("SELECT count(*) FROM appearances a JOIN players p ON p.id=a.player_id WHERE p.full_name LIKE 'H, MOYA%'").fetchone()[0] == 1   # la del acta deshecha, fuera

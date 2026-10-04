@@ -414,6 +414,15 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
         um.pop(str(cod_acta_str), None)
         matched += 1
 
+    # Huecos del calendario: un acta coherente sin partido, de un grupo claro, cuyo cruce no
+    # existe en ese grupo (LZ12 2024-25 tenía 90 de sus 132 partidos), crea el suyo.
+    left = [(c, a) for c, a in pending if str(c) in um]
+    added = fill_gaps(conn, raw_path, left, votes, claimed)
+    for cod_acta_str in added:
+        um.pop(str(cod_acta_str), None)
+        unmatched -= 1
+        matched += 1
+
     # Los marcadores de las actas y la clasificación oficial, grupo a grupo, sin alejar nunca
     # el grupo de su clasificación (fiflp_tables.settle).
     from fiflp_tables import official_rows, settle
@@ -434,6 +443,7 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
         "skipped": skipped,
         "scores_fixed": fixed,
         "official_tables": tables,
+        "gaps_filled": len(added),
     }
 
 
@@ -461,6 +471,76 @@ def _propose_fix(conn, fixes, gid, mid, acta):
     row = conn.execute("SELECT home_score, away_score FROM matches WHERE id=?", (mid,)).fetchone()
     if row and tuple(row) != (h["home_score"], h["away_score"]):
         fixes.setdefault(gid, {})[mid] = (h["home_score"], h["away_score"])
+
+
+def _like(sample, value, kind):
+    """La jornada o la fecha de un partido nuevo con la forma de las del grupo."""
+    if kind == "jornada":
+        return f"Jornada {value}" if str(sample or "").startswith("Jornada ") else str(value)
+    d, m, y = value.split("-") if value and re.match(r"^\d{2}-\d{2}-\d{4}$", value) else (None, None, None)
+    if not d:
+        return value or ""
+    if re.match(r"^\d{2}/\d{2}$", sample or ""):
+        return f"{d}/{m}"
+    if re.match(r"^\d{4}-\d{2}-\d{2}$", sample or ""):
+        return f"{y}-{m}-{d}"
+    return value
+
+
+def fill_gaps(conn, raw_path, left, votes, claimed):
+    """[cod_acta] de las actas que crean su partido: coherentes, de un grupo de la federación con
+    grupo de la base claro (la mayoría de sus actas casadas), con los dos equipos en ese grupo y
+    sin ningún partido de ese cruce (local y visitante) en él. Por grupo, dentro de un SAVEPOINT:
+    si el grupo se aleja de su clasificación (la medida de score_deviation), se deshace."""
+    sys.path.insert(0, SCRIPTS_DIR)
+    from fiflp_names import match_teams
+    from score_deviation import group_deviation
+    import import_fiflp_goleadores as G
+    gol = _gol_entries(raw_path)
+    by_group = {}
+    for cod, acta in left:
+        fed = _fed_group(acta)
+        h = acta.get("header") or {}
+        if not fed or not acta.get("consistent") or h.get("home_score") is None or h.get("away_score") is None:
+            continue
+        gid = _majority(votes.get(fed, {}))
+        if gid:
+            by_group.setdefault((gid, fed), []).append((cod, acta))
+    added = []
+    for (gid, fed), actas in by_group.items():
+        teams = sorted(G._db_groups_one(conn, gid))
+        bridge = G.team_bridge(conn, gid, gol[fed]) if fed in gol else {}
+        sample = conn.execute("SELECT jornada, date FROM matches WHERE group_id=? LIMIT 1", (gid,)).fetchone() or ("", "")
+        d0 = group_deviation(conn, gid)["dev"]
+        conn.execute("SAVEPOINT huecos")
+        mine = []
+        for cod, acta in actas:
+            h = acta["header"]
+            names = [G.scorer_team(G.clean_team_name(h.get(side)), bridge) for side in ("home_team", "away_team")]
+            loose = match_teams([n for n in names if n not in teams], teams)
+            home, away = (loose.get(n, n) for n in names)
+            if home not in teams or away not in teams or home == away:
+                continue
+            ids = [conn.execute("SELECT id FROM teams WHERE name=?", (t,)).fetchone()[0] for t in (home, away)]
+            if conn.execute("SELECT 1 FROM matches WHERE group_id=? AND home_team_id=? AND away_team_id=?",
+                            (gid, *ids)).fetchone():
+                continue
+            cur = conn.execute("""INSERT INTO matches (group_id, jornada, date, time, home_team_id, away_team_id,
+                                  home_score, away_score, venue) VALUES (?,?,?,?,?,?,?,?,?)""",
+                               (gid, _like(sample[0], h.get("jornada") or "", "jornada"),
+                                _like(sample[1], h.get("date"), "date"), h.get("time") or "", *ids,
+                                h["home_score"], h["away_score"], h.get("venue") or ""))
+            claimed[cur.lastrowid] = int(cod)
+            _import_one(conn, int(cod), acta, mid=cur.lastrowid)
+            mine.append(cod)
+        if mine and group_deviation(conn, gid)["dev"] > d0:
+            conn.execute("ROLLBACK TO huecos")
+            for cod in mine:
+                claimed.pop(next((m for m, c in claimed.items() if c == int(cod)), None), None)
+            mine = []
+        conn.execute("RELEASE huecos")
+        added += mine
+    return added
 
 
 def _majority(v):
@@ -545,8 +625,8 @@ def reconcile_in_groups(conn, raw_path, pending, votes):
 
 RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
 # Entra en la huella de cada raw: al cambiar la lógica de importación, subirla
-# hace que el bot reimporte una vez todos los raws (4: correcciones también desde la primera pasada).
-IMPORT_VERSION = "4"
+# hace que el bot reimporte una vez todos los raws (5: relleno de huecos del calendario).
+IMPORT_VERSION = "5"
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -575,7 +655,7 @@ def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
         log(f"  {name}: {report['matched']} actas importadas, {report['unmatched']} sin partido, "
             f"{report['skipped']} sin aplanar (pendientes de volver a descargar); "
             f"{report['scores_fixed']} marcadores corregidos por su acta, "
-            f"{report['official_tables']} clasificaciones oficiales")
+            f"{report['official_tables']} clasificaciones oficiales, {report['gaps_filled']} partidos que faltaban")
         reports[name] = report
     return reports
 

@@ -93,6 +93,13 @@ jobs:
             sleep $((i * 15))
           done
           exit 1
+      # El bot importa el raw nuevo y publica (sus cron llegan con horas de retraso o no llegan);
+      # si ya está corriendo, este queda en cola (concurrency update-data).
+      - name: Importar y publicar (bot)
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run update.yml --ref main || echo "no se pudo lanzar el bot; lo hará su cron"
       # !cancelled(): también si la descarga se pasó de tiempo (lo que llevaba ya está subido).
       - name: Siguiente tanda
         if: ${{ !cancelled() }}

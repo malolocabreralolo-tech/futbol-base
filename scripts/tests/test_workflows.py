@@ -377,3 +377,11 @@ def test_actas_federacion_chains_per_season_survives_a_timeout_and_stops_when_st
     nxt = next(s for s in steps if s.get("name") == "Siguiente tanda")
     assert nxt["if"] == "${{ !cancelled() }}"
     assert "fetched" in nxt["run"] and "unenumerated_comps" in nxt["run"]
+
+
+def test_scrapes_launch_the_bot_to_import_what_they_uploaded():
+    for name in ("actas-federacion.yml", "goleadores-federacion.yml"):
+        data = _load(name)
+        assert data["permissions"].get("actions") == "write", name
+        step = next(s for s in data["jobs"]["scrape"]["steps"] if s.get("name") == "Importar y publicar (bot)")
+        assert "gh workflow run update.yml" in step["run"] and step["if"] == "${{ !cancelled() }}", name

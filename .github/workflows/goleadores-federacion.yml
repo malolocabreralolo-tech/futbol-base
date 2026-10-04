@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: goleadores-federacion
@@ -60,3 +61,8 @@ jobs:
             sleep $((i * 15))
           done
           exit 1
+      - name: Importar y publicar (bot)
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run update.yml --ref main || echo "no se pudo lanzar el bot; lo hará su cron"

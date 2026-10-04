@@ -258,3 +258,25 @@ def test_a_team_written_with_the_letter_elsewhere_is_the_same_team():
     assert G.scorer_team('PLAYAS DE SOTAVENTO "C", U.D. "C"', bridge) == "UD Sotavento C"
     assert G.scorer_team('PLAYAS DE SOTAVENTO "A", U.D. "A"', bridge) == "UD Sotavento"
     assert G.scorer_team("OTRO, C.D.", bridge) == "OTRO, C.D."
+
+
+
+def test_a_group_created_later_gets_its_scorers_without_the_raw_changing(tmp_path):
+    """Una final que crea import_fiflp_grupos.py cuando llegan sus actas, después de importar los
+    goleadores: el raw no cambia, pero los grupos de la temporada sí, y se vuelve a importar."""
+    conn = base()
+    raw = {"902:1": entry("902", "1", "COPA PREBENJAMIN", ["X, C.D.", "Y, C.D.", "Z, C.D."], [["A, B", "X, C.D.", 1, 1, 0]])}
+    write(tmp_path, raw)
+    assert G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None)["fiflp_goleadores_2024-2025_raw.json"]["unmatched"] == 1
+    assert G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None) == {}
+    # Se crea el grupo de esa copa (como haría import_fiflp_grupos.py) y queda en fiflp_groups.
+    conn.executescript("""
+      INSERT INTO teams(id, name) VALUES (30, 'X'), (31, 'Y'), (32, 'Z');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase) VALUES (9, 1, 2, 'CP1', 'Grupo 1', 'Copa X');
+      CREATE TABLE IF NOT EXISTS fiflp_groups (group_id INTEGER PRIMARY KEY, season_id INTEGER NOT NULL, comp TEXT NOT NULL, grupo TEXT NOT NULL);
+      INSERT INTO fiflp_groups VALUES (9, 1, '902', '1');
+      INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES (9, '1', '01-06-2025', 30, 31, 1, 0);
+    """)
+    report = G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None)["fiflp_goleadores_2024-2025_raw.json"]
+    assert report["written"] == 1
+    assert conn.execute("SELECT player_name FROM scorers WHERE group_id=9").fetchall() == [("A, B",)]

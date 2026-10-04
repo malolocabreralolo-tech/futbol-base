@@ -257,7 +257,15 @@ def import_changed_goleadores(conn, folder=SCRIPTS_DIR, log=print):
             continue
         path = os.path.join(folder, name)
         with open(path, "rb") as f:
-            digest = hashlib.sha1(GOLEADORES_VERSION.encode() + f.read()).hexdigest()
+            content = f.read()
+        # También los grupos que creó import_fiflp_grupos.py en esa temporada: una final creada después
+        # (cuando llegan sus actas) se quedaba sin goleadores porque el raw no había cambiado.
+        try:
+            owned = conn.execute("""SELECT f.group_id FROM fiflp_groups f JOIN seasons s ON s.id=f.season_id
+                                    WHERE s.name=? ORDER BY f.group_id""", (RAW_FILE.match(name).group(1),)).fetchall()
+        except Exception:          # sin la tabla todavía
+            owned = []
+        digest = hashlib.sha1(GOLEADORES_VERSION.encode() + content + repr(owned).encode()).hexdigest()
         row = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (name,)).fetchone()
         if row and row[0] == digest:
             continue

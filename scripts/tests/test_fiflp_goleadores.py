@@ -1,6 +1,7 @@
 """Goleadores de temporadas pasadas desde la federación (2026-10): el raw que
 descarga goleadores-federacion.yml y su importación en los grupos de la base."""
 import json
+import pytest
 import sqlite3
 import sys
 from pathlib import Path
@@ -200,3 +201,40 @@ def test_scorer_teams_cross_by_their_standings_row_when_names_do_not_match(tmp_p
     write(tmp_path, {"900:1": fed})
     G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None)
     assert conn.execute("""SELECT t.name FROM scorers s JOIN teams t ON t.id=s.team_id WHERE s.group_id=1""").fetchall() == [("Muelle Mesa Lz.",)]
+
+
+def test_crests_are_read_from_the_team_cell_in_a_real_browser():
+    pytest = __import__("pytest")
+    pw = pytest.importorskip("playwright.sync_api")
+    import fetch_fiflp_goleadores as S
+    html = """<table><tr>
+      <td><img src="https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_1_haria.jpg"> HARIA C.F.</td>
+      <td>4 - 2</td>
+      <td>LANZAROTE, U.D. "A" <img src="https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_2_lanza.png">
+          <script>eval("x")</script></td></tr></table>"""
+    try:
+        with pw.sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = browser.new_page()
+            page.set_content(html)
+            crests = page.evaluate(S.CRESTS_JS)
+            browser.close()
+    except Exception as exc:          # sin Chromium en este entorno
+        pytest.skip(f"sin navegador: {exc}")
+    assert crests == {"HARIA C.F.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_1_haria.jpg",
+                      'LANZAROTE, U.D. "A"': "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_2_lanza.png"}
+
+
+def test_crests_only_mode_fills_crests_of_groups_already_read(tmp_path, monkeypatch):
+    import time
+    import fetch_fiflp_goleadores as S
+    monkeypatch.setattr(S, "catalog_comps", lambda season: ["900"])
+    monkeypatch.setattr(S, "comp_names", lambda season: {"900": "LIGA"})
+    monkeypatch.setattr(S, "raw_path", lambda season: tmp_path / "raw.json")
+    (tmp_path / "raw.json").write_text(json.dumps({"900:11": {"comp": "900", "grupo": "11", "ok": True,
+        "standings": [{"team": "HARIA C.F."}], "scorers": []}}), encoding="utf-8")
+    monkeypatch.setattr(S, "scrape_crests", lambda page, F, season, comp, grupo, teams: {"HARIA C.F.": "u"})
+    monkeypatch.setattr(S, "scrape_group", lambda *a: pytest.fail("no vuelve a leer goleadores"))
+    S.run(FakePage(""), FakeF(), ["20"], time.monotonic() + 60, log=lambda *_: None, crests_only=True)
+    raw = json.loads((tmp_path / "raw.json").read_text())
+    assert raw["900:11"]["crests"] == {"HARIA C.F.": "u"} and "900:12" not in raw

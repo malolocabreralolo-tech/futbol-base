@@ -13,6 +13,11 @@ on:
         description: 'CodTemporada separadas por comas (17=2021-22 … 21=2025-26)'
         required: false
         default: '17,18,19,20,21'
+      escudos:
+        description: 'Solo los escudos de los grupos ya leídos'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -38,7 +43,12 @@ jobs:
       - name: Descargar goleadores y clasificaciones
         env:
           TEMPORADAS: ${{ inputs.temporadas }}
-        run: python3 scripts/fetch_fiflp_goleadores.py --temporadas "$TEMPORADAS" --max-minutes 320
+          ESCUDOS: ${{ inputs.escudos }}
+          PYTHONUNBUFFERED: '1'
+        run: |
+          ARGS="--temporadas $TEMPORADAS --max-minutes 320"
+          if [ "$ESCUDOS" = "true" ]; then ARGS="$ARGS --escudos"; fi
+          python3 scripts/fetch_fiflp_goleadores.py $ARGS
         timeout-minutes: 335
       # if: always(): una descarga cortada sube lo que lleva (guarda cada grupo).
       - name: Subir los raw

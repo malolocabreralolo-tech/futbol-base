@@ -8,7 +8,9 @@ grupo, guarda:
   - la clasificación (NFG_VisClasificacion, no ofuscada): para casar el grupo
     con el de la base aunque no tenga actas importadas;
   - los goleadores (NFG_CMP_Goleadores, aplanados con fiflp_render): jugador,
-    equipo, partidos, goles y penaltis.
+    equipo, partidos, goles y penaltis;
+  - el escudo de cada equipo (la URL de la imagen que va en su celda de una
+    jornada; --escudos rellena solo eso en los grupos ya leídos).
 
 Solo escribe scripts/fiflp_goleadores_<S>_raw.json (reanudable: un grupo ya
 leído no se vuelve a pedir). Lo importa el bot (import_fiflp_goleadores.py).
@@ -57,6 +59,38 @@ def done(entry):
     return bool(entry and entry.get("ok"))
 
 
+CRESTS_JS = r"""() => {
+  const out = {};
+  for (const img of document.querySelectorAll('img[src*="/Clubes/"]')) {
+    const cell = img.closest('td');
+    if (!cell) continue;
+    const clone = cell.cloneNode(true);
+    clone.querySelectorAll('script, style').forEach(n => n.remove());
+    const name = clone.textContent.replace(/\s+/g, ' ').trim();
+    if (name && name.length < 80 && !out[name]) out[name] = img.src;
+  }
+  return out;
+}"""
+
+
+def scrape_crests(page, F, season, comp, grupo, teams):
+    """{equipo: URL de su escudo} de las jornadas del grupo (el escudo va en la celda
+    del equipo): la que sirve por defecto y, si falta alguno (un descanso), otra."""
+    base = f"{F.BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}&CodCompeticion={comp}&CodGrupo={grupo}"
+    crests = {}
+    for url in (base, base + "&CodJornada=1", base + "&CodJornada=2"):
+        if not F.goto(page, url):
+            continue
+        try:
+            crests.update({k: v for k, v in (page.evaluate(CRESTS_JS) or {}).items() if k not in crests})
+        except Exception:
+            pass
+        F.delay()
+        if teams and all(t in crests for t in teams):
+            break
+    return crests
+
+
 def scrape_group(page, F, season, comp, grupo):
     """(clasificación, goleadores, ok) de un grupo."""
     standings = []
@@ -72,7 +106,7 @@ def scrape_group(page, F, season, comp, grupo):
     return standings, scorers, True
 
 
-def run(page, F, seasons, deadline, log=print):
+def run(page, F, seasons, deadline, log=print, crests_only=False):
     for season in seasons:
         path = raw_path(season)
         data = load(path)
@@ -97,15 +131,21 @@ def run(page, F, seasons, deadline, log=print):
             new = 0
             for grupo in grupos:
                 key = f"{comp}:{grupo}"
-                if done(data.get(key)):
-                    continue
                 if time.monotonic() > deadline:
                     break
-                standings, scorers, ok = scrape_group(page, F, season, comp, grupo)
-                data[key] = {"comp": comp, "comp_name": names.get(comp, ""), "grupo": grupo,
-                             "grupo_name": labels.get(grupo, ""), "standings": standings,
-                             "scorers": scorers, "ok": ok, "fetched": date.today().isoformat()}
-                new += 1
+                entry = data.get(key)
+                if not done(entry):
+                    if crests_only:
+                        continue
+                    standings, scorers, ok = scrape_group(page, F, season, comp, grupo)
+                    entry = data[key] = {"comp": comp, "comp_name": names.get(comp, ""), "grupo": grupo,
+                                         "grupo_name": labels.get(grupo, ""), "standings": standings,
+                                         "scorers": scorers, "ok": ok, "fetched": date.today().isoformat()}
+                    new += 1
+                if "crests" not in entry:
+                    teams = [r["team"] for r in entry.get("standings") or []]
+                    entry["crests"] = scrape_crests(page, F, season, comp, grupo, teams)
+                    new += 1
                 save(path, data)
             log(f"  {comp} {names.get(comp, '')[:50]}: {len(grupos)} grupos, {new} leídos")
     return True
@@ -115,6 +155,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--temporadas", default="17,18,19,20,21")
     ap.add_argument("--max-minutes", type=float, default=320)
+    ap.add_argument("--escudos", action="store_true", help="solo los escudos de los grupos ya leídos")
     args = ap.parse_args(argv)
     seasons = [s.strip() for s in args.temporadas.split(",") if s.strip()]
     for s in seasons:
@@ -130,7 +171,7 @@ def main(argv=None):
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"))
         page.set_default_timeout(30000)
         try:
-            complete = run(page, F, seasons, deadline)
+            complete = run(page, F, seasons, deadline, crests_only=args.escudos)
         finally:
             browser.close()
     print("Completo." if complete else "Incompleto: relanzar para seguir.")

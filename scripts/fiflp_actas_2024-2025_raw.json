@@ -465249,7 +465249,7 @@
       "date": "02-11-2024",
       "home_team": "GRAN TARAJAL SOC. TAMAS., U.D.",
       "away_team": "TAMASITE, C.D. A",
-      "home_score": 0,
+      "home_score": null,
       "away_score": 3,
       "competition": "LIGA BENJAMIN F-8 DE FUERTEVENTURA PRIMERA FASE (GRUPO 3)"
     },
@@ -695814,7 +695814,7 @@
       "date": "08-06-2025",
       "home_team": "TAMASITE, C.D. B",
       "away_team": "FUERTEKLUB, C.D.",
-      "home_score": 0,
+      "home_score": null,
       "away_score": null,
       "competition": "torneo pre-benjamin cierre temporada fuerteventura-lanzarote (GRUPO 1)"
     },
@@ -695888,7 +695888,7 @@
         "kind": "goal",
         "side": "away",
         "player_name": "PEREZ NUEZ, ALTHAY",
-        "minute": null,
+        "minute": 30,
         "goal_type": "normal"
       },
       {
@@ -696116,7 +696116,7 @@
       "date": "08-06-2025",
       "home_team": "ORIENTACION MARITIMA, C.D. B",
       "away_team": "TETIR C.F., UNION",
-      "home_score": 0,
+      "home_score": null,
       "away_score": 4,
       "competition": "torneo pre-benjamin cierre temporada fuerteventura-lanzarote (GRUPO 1)"
     },
@@ -696189,22 +696189,22 @@
       {
         "kind": "goal",
         "side": "away",
+        "player_name": "CABRERA MURO, UNAI",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
         "player_name": "CASTELLANO CASTELLANO, NESTOR",
-        "minute": 0,
+        "minute": null,
         "goal_type": "normal"
       },
       {
         "kind": "goal",
         "side": "away",
         "player_name": "BETANCOR SANTANA, ARAY",
-        "minute": 0,
-        "goal_type": "normal"
-      },
-      {
-        "kind": "goal",
-        "side": "away",
-        "player_name": "CABRERA MURO, UNAI",
-        "minute": 30,
+        "minute": null,
         "goal_type": "normal"
       },
       {

@@ -130084,7 +130084,7 @@
       "home_team": "ALTAVISTA C.F.",
       "away_team": "ARRECIFE, C.D.",
       "home_score": 0,
-      "away_score": 0,
+      "away_score": null,
       "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)"
     },
     "lineups": {

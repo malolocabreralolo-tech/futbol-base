@@ -2,7 +2,8 @@
 // los estados A, B, C, D, E y X de la portada, más error, vacío y sin conexión, y las de B3 (la ficha
 // en A y en D con su plantilla y su trayectoria abiertas, Explorar con resultados, Ligas con
 // «Comparar grupos» abierto, el cuadro y la liguilla de Copa, Goleadores, Récords, Temporadas, Fuentes
-// y Ajustes), a 390 px en claro y en oscuro y a 1440 px en claro. Salen de los mundos de fixtures de
+// y Ajustes), y la portada con la plantilla y la trayectoria abiertas (Guayarmina en A1, desde el
+// 04/10/2026), a 390 px en claro y en oscuro y a 1440 px en claro. Salen de los mundos de fixtures de
 // fixture-site.mjs (datos congelados y reloj fijado), así que no dependen del día. Cada captura es la
 // pantalla entera: la ventana crece hasta el alto de la página, con la barra en su sitio.
 // Uso, desde la raíz del repo: OUT=<directorio> node scripts/tests/capturas.mjs
@@ -53,6 +54,11 @@ const SHOTS = [
   // B3: la ficha a mitad de temporada (A) y terminada (D), con la plantilla y la trayectoria abiertas.
   ['equipo-A', 'A', GUAYARMINA, ['equipo', 'A'], { act: OPEN_SQUAD_AND_TRAJECTORY }],
   ['equipo-D', 'D', GUAYARMINA, ['equipo', 'D'], { act: OPEN_SQUAD_AND_TRAJECTORY }],
+  // Mi equipo con todo lo de la ficha (04/10/2026): la portada de Guayarmina (A1, con actas) terminada,
+  // con su plantilla y su trayectoria abiertas.
+  ['portada-plantilla', 'D', '#/', ['home', 'D'], {
+    myTeam: { name: 'Guayarmina', season: '2025-2026', cat: 'benjamin', groupId: 'A1' }, act: OPEN_SQUAD_AND_TRAJECTORY,
+  }],
   // Explorar con los resultados de «hurac» (la búsqueda va en la ruta).
   ['explorar', 'D', '#/explorar?s=2025-2026&q=hurac', ['explorar', null]],
   // Ligas: los grupos de prebenjamín de Gran Canaria, con «Comparar grupos» abierto.
@@ -83,7 +89,7 @@ try {
         timezoneId: 'Atlantic/Canary', reducedMotion: 'reduce',
       });
       try {
-        await useWorld(context, world, { fail: options.fail || [] });
+        await useWorld(context, world, { fail: options.fail || [], myTeam: options.myTeam || null });
         const page = await context.newPage();
         page.setDefaultTimeout(10000);
         page.on('pageerror', (error) => problems.push(`${label}: ${error.message}`));
@@ -92,6 +98,9 @@ try {
           const section = document.querySelector('#contenido section[data-screen]');
           return section && section.getAttribute('data-screen') === s && section.getAttribute('data-state') === st;
         }, [screen, state], { label });
+        // La plantilla de la portada llega después del pintado (fillSquad): su hueco, resuelto antes de
+        // abrir nada y de medir la página.
+        await waitForAsync(page, () => !document.querySelector('#contenido [data-slot]'), null, { label: `${label}, la plantilla` });
         // Lo que se abre antes de la foto, con su localizador: sin esperas fijas. Después, el ratón a
         // la esquina: nada queda subrayado por :hover en la foto.
         for (const [button, shown] of options.act || []) {

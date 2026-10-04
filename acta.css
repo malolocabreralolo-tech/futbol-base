@@ -660,22 +660,9 @@ abbr[title] { text-decoration: none; }
   font-weight: 700;
   color: var(--ink);
 }
-.home-all {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  margin-top: 18px;
-  padding: 0 12px;
-  border: 1.5px solid var(--ink);
-  font-weight: 800;
-  color: var(--ink);
-  text-align: center;
-  text-decoration: none;
-}
 
-/* Calendario completo del equipo: en Mi equipo, solo en escritorio, y lo pinta mount; en la ficha
- * de Equipo se pinta siempre, a cualquier ancho, en render (calendar: 'always'). */
+/* Calendario completo del equipo: en Mi equipo y en la ficha, siempre y a cualquier ancho, en render
+ * (con su .ics); en móvil, al final. */
 .cal { margin: 0; padding: 0; list-style: none; }
 .box.cal > li + li { border-top-color: var(--line); }
 .cal-when { padding: 6px 6px 0; font-size: 11.5px; font-weight: 600; color: var(--mute); }
@@ -691,8 +678,7 @@ abbr[title] { text-decoration: none; }
 }
 
 @media (hover: hover) {
-  a.summer-row:hover .summer-main,
-  a.home-all:hover { text-decoration: underline; }
+  a.summer-row:hover .summer-main { text-decoration: underline; }
 }
 
 /* ── Jornada: navegación, días y botonera (spec §4.3) ─────────────────── */

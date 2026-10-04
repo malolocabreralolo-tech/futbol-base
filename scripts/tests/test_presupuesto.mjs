@@ -100,7 +100,7 @@ test('presupuesto: argumentos, mediana y el informe con sus umbrales (spec §5.4
     ok: true,
     lines: [
       'portada: 2692 ms (< 3000); LCP 2768 ms (< 3000); FCP 620 ms; 331 KB; mediana de 3',
-      'CLS: 0,0001 (< 0,1): 390 px 0,0000 y 1440 px 0,0001; máximo de 3, mundo A',
+      'CLS: 0,0001 (< 0,1): 390 px 0,0000 y 1440 px 0,0001; máximo de 3, mundo A (Las Mesas, sin actas, y Guayarmina, A1 con actas)',
       'imágenes de Tabla: 47,3 KB (< 300): 15 imágenes, PG2',
       'PRESUPUESTO: OK',
     ],

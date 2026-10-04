@@ -1,8 +1,8 @@
 // Plan B3, Tarea 3: la vista de equipo compartida (team-view.js; decisiones 8 a 10 de B3), el estado
 // de un equipo (teamState, myteam.js) y lo que la acompaña en ui.js: block sin título, el texto
-// oculto de la fila resaltada y el de formChips (recomendación 4 de B1). La portada pinta lo mismo
-// que antes de la vista compartida, byte a byte: lo fijan sus huellas. Solo fixtures y `today`
-// inyectado; el ctx es el común (ctxFor).
+// oculto de la fila resaltada y el de formChips (recomendación 4 de B1). La portada es la vista de la
+// ficha con su cabecera: lo fijan sus huellas. Solo fixtures y `today` inyectado; el ctx es el común
+// (ctxFor).
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { createHash } from 'node:crypto';
@@ -22,7 +22,7 @@ const titles = (h) => [...s(h).matchAll(/<h2 class="block-title">(.*?)<\/h2>/g)]
 const LAS_MESAS = { name: 'Las Mesas Hu.', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' };
 const HURACAN = { s: '2025-2026', g: 'PG2', t: 'AD Huracán' };
 
-// ── La portada no cambia (decisión 8): huellas de su render antes de la vista compartida ──
+// ── La portada es la vista de la ficha con su cabecera: lo fijan sus huellas ──
 
 // El ctx de la portada de test_rediseno_portada.mjs, con los goleadores congelados de la Tarea 2.
 function homeCtx({
@@ -52,27 +52,30 @@ function untimedJ18() {
 // cinco últimas, de B5 (decisión 7), del render de 0208d26, el mismo tras la limpieza de la Tarea 3.
 // 2026-10: los casos A y C, con la fila nueva de «La temporada en cifras» (racha, porterías a cero y
 // partidos sin marcar); B, D, E y X no la pintan y siguen idénticos.
+// 2026-10-04: todos salvo E y X, con lo de la ficha: el calendario completo siempre (#calendario y su
+// .ics), la evolución de puntos, el hueco de la plantilla (homeCtx no trae actas) y la trayectoria; E y
+// X no pasan por la vista de equipo y siguen idénticos.
 const HOME = {
-  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, '51799c4cadd2ae587f1184284638cf99caef172e'],
-  'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, 'b59a50f92f1e9b5d5e043fb5faaa3655494cc2dc'],
-  B: [{ raw: nextSeasonRaw({ benjamin: ['A1', 'B2', 'FF15'], prebenjamin: ['PG2', 'PG3'] }), myTeam: { ...LAS_MESAS, season: '2026-2027' }, today: '2026-10-01', portalSeason: '2026-2027', goles: false }, 'f9dc827c94ffca632bf20b41beae657ff4d0b82c'],
-  'B de CD Batán': [{ raw: currentAt('2026-03-01'), myTeam: { ...LAS_MESAS, name: 'CD Batán' }, today: '2026-03-01' }, '2d4254386c0df15f9d8f51dbb4e883ad2b1bea35'],
-  C: [{ raw: currentAt('2026-06-03'), today: '2026-06-03' }, '0b1a6cf75ff62aa449e1f0e21a55af9db4a58d3a'],
-  'C con stale': [{ raw: currentAt('2026-06-03'), today: '2026-06-03', stale: true }, '28324436cd1deb99af7a02d028ea21698aba8977'],
-  D: [{ today: '2026-09-23' }, '29d8588f52801b3beaa13249e8e232ea2da44831'],
-  'D con stale': [{ today: '2026-09-23', stale: true }, '70554db17aaa9a2c711ad0f6ed6b7b0c03c54a4c'],
-  'D con 2026/27 lista': [{ today: '2026-06-15', withHealth: { ...fixture('health'), nextSeason: { name: '2026-2027', status: 'ready' } } }, '5370b799ff36efa6d4beec955b4244649301d00c'],
-  'D sin data-health': [{ today: '2026-09-23', withHealth: null, legacyDate: '23/09/2026' }, '5b4cccbb3d4f250a7764fe0c265af96ec2f5bdfd'],
+  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, '062616427c1cf19db58ae77a448cfcba9d4e7d24'],
+  'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, '6d60fb613c156c2f417aacf20283b56c12638296'],
+  B: [{ raw: nextSeasonRaw({ benjamin: ['A1', 'B2', 'FF15'], prebenjamin: ['PG2', 'PG3'] }), myTeam: { ...LAS_MESAS, season: '2026-2027' }, today: '2026-10-01', portalSeason: '2026-2027', goles: false }, '8f38ff09c03b854b3c67b06379db98f43a7906a5'],
+  'B de CD Batán': [{ raw: currentAt('2026-03-01'), myTeam: { ...LAS_MESAS, name: 'CD Batán' }, today: '2026-03-01' }, 'ec9408309fb1e01858c0f10de2323a8cb2b9b978'],
+  C: [{ raw: currentAt('2026-06-03'), today: '2026-06-03' }, '78c2ccf15140bcba7f4ab32cec7d977cb15b925d'],
+  'C con stale': [{ raw: currentAt('2026-06-03'), today: '2026-06-03', stale: true }, '55cd7df7d8cd584c80a5b1387b314fdd2c98c007'],
+  D: [{ today: '2026-09-23' }, 'f87e4cdba48b2842da8307c4622412e7a028af29'],
+  'D con stale': [{ today: '2026-09-23', stale: true }, '4a012403a8464d66a961e6754f4ad1ef3da84cd8'],
+  'D con 2026/27 lista': [{ today: '2026-06-15', withHealth: { ...fixture('health'), nextSeason: { name: '2026-2027', status: 'ready' } } }, '23d56557e72ace1bacfa47bf48efcdb93f5d74b0'],
+  'D sin data-health': [{ today: '2026-09-23', withHealth: null, legacyDate: '23/09/2026' }, '242aed028208c777fcfe06596347f7567bd076da'],
   E: [{ myTeam: { name: 'Las Mesas Hu. B', season: '2025-2026', cat: 'benjamin', groupId: 'FF13' }, today: '2026-09-23' }, 'bede1e6746de45c5d2cf5882130d5d6594e6257d'],
   X: [{ raw: nextSeasonRaw({ benjamin: ['A1'], prebenjamin: ['PG3'] }), today: '2026-10-01', portalSeason: '2026-2027', goles: false }, 'b60fcec7f40d3730d9150338f6377318bec65bad'],
-  'D sin «Verano»': [{ myTeam: { ...LAS_MESAS, name: 'RC Victoria' }, today: '2026-09-23' }, 'd9d70e4f3ada9f803926984c100b10f92c268756'],
-  'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, '157c48fea5da4382a59ded28e8b064b069ec3c8e'],
-  'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '271fd39c450aa74196d2e86bf839e2fcd29d8f27'],
-  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, '218c4bbcc2257136ac587ce74454d9c23a4551b4'],
-  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, '9ef8d6f3630245cbe1c237607b32287d605e9b33'],
+  'D sin «Verano»': [{ myTeam: { ...LAS_MESAS, name: 'RC Victoria' }, today: '2026-09-23' }, 'd286ecc605a4802ca61f4f102e7000f7e0d5d8c5'],
+  'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, 'c2444e026d549f3ac3dc941e2a92e056c9d04fc8'],
+  'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '5744594dda12a29f299cc39c80e98519e0b0fd47'],
+  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, 'f245004e9b5e0b3d21c3241147ed7940179da926'],
+  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, 'f40e8faf1c07dda0534dc3df64a38879a1a470d2'],
 };
 
-test('la portada pinta lo mismo que antes de la vista compartida, byte a byte, en A, B, C, D, E y X (decisión 8)', () => {
+test('la portada pinta, byte a byte, lo que fijan sus huellas en A, B, C, D, E y X', () => {
   for (const [name, [options, sha1]] of Object.entries(HOME)) {
     const out = s(home.render(homeCtx(options)));
     assert.equal(createHash('sha1').update(out).digest('hex'), sha1, name);
@@ -86,6 +89,20 @@ test('la portada pinta lo mismo que antes de la vista compartida, byte a byte, e
   assert.ok(pendiente.includes('data-state="C"') && pendiente.includes('Resultado pendiente de publicar'));
   assert.ok(pocos.includes('data-state="A"') && pocos.includes('Últimos resultados') && !pocos.includes('Últimos cinco'));
   assert.match(sinHora, /<div class="cell is-muted"><dt class="cell-label">Hora<\/dt><dd class="cell-value">por confirmar<\/dd><\/div>/);
+  // Lo de la ficha (2026-10-04), en claro. A: el calendario completo con su .ics y la consulta entera,
+  // con el hueco de la plantilla (homeCtx no trae actas).
+  const [a, b, d] = ['A', 'B', 'D'].map((name) => text(HOME[name][0]));
+  const calendar = (out) => out.match(/<section class="block" id="calendario">[\s\S]*?<\/section>/)[0];
+  assert.equal((calendar(a).match(/<a class="match-row"/g) || []).length, 26);
+  assert.match(calendar(a), /data-action="calendario-equipo"/);
+  const side = (out) => titles(out.match(/<div class="home-side">([\s\S]*)<\/div><div class="home-rest">/)[1]);
+  assert.deepEqual(side(a), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Evolución de puntos', 'Plantilla', 'Trayectoria']);
+  assert.match(a, /<section class="block" id="plantilla" data-slot="plantilla" aria-busy="true">/);
+  // B: sin nada jugado, ni evolución ni plantilla; D: el calendario, sin «Ver toda la temporada».
+  assert.deepEqual(side(b), ['Clasificación', 'Trayectoria']);
+  assert.doesNotMatch(b, /Plantilla/);
+  assert.doesNotMatch(d, /home-all/);
+  assert.match(d, /<div class="home-rest"><section class="block" id="calendario">/);
 });
 
 // ── teamState (decisión 9) ──────────────────────────────────────────────
@@ -152,7 +169,7 @@ test('teamHeader: «Cambiar» a Explorar con el buscador, «Hacer mi equipo» co
 
 test('A de otro equipo con las opciones de la ficha (AD Huracán, 01/03/2026): su partido, su fila «este equipo» y el calendario en render', () => {
   const ctx = equipoCtx(HURACAN, '2026-03-01');
-  const view = viewOf(ctx, { action: 'make', calendar: 'always' });
+  const view = viewOf(ctx, { action: 'make' });
   assert.equal(view.state, 'A');
   assert.match(s(view.head), /^<header class="screen-head"><a class="back" href="#\/explorar"[^>]*>‹<\/a><img class="crest crest-46"[^>]*>/);
   assert.match(s(view.head), /<h1>AD Huracán<\/h1><p class="screen-sub">Prebenjamín, Grupo 2 de Gran Canaria<\/p><\/div><button type="button" class="screen-action team-make" data-action="hacer-mi-equipo">Hacer mi equipo<\/button><\/header>$/);
@@ -168,19 +185,18 @@ test('A de otro equipo con las opciones de la ficha (AD Huracán, 01/03/2026): s
   assert.match(s(view.rest[0]), /^<section class="block" id="calendario"><div class="block-head"><h2 class="block-title">Calendario<\/h2><p class="block-context">26 partidos<\/p><\/div>/);
   assert.equal((s(view.rest[0]).match(/<a class="match-row" href="#\/partido\?s=2025-2026&amp;g=PG2&amp;/g) || []).length, 26);
   assert.doesNotMatch([...view.main, ...view.aside].map(s).join(''), /data-slot/);
-  // Con las opciones de la portada, el hueco y el enlace a la ficha, sin `rest`.
-  const wide = viewOf(ctx, { action: 'change' });
-  assert.deepEqual(wide.rest, []);
-  assert.ok(s(wide.main.at(-1)) === '<div data-slot="calendario"></div>');
-  assert.match(s(wide.main[1]), /href="#\/equipo\?s=2025-2026&amp;g=PG2&amp;t=AD%20Hurac%C3%A1n#calendario"/);
+  // Con las opciones de la portada, lo mismo: el calendario en `rest` y el ancla de la página.
+  const portada = viewOf(ctx, { action: 'change' });
+  assert.equal(portada.rest.length, 1);
+  assert.match(s(portada.main[1]), /href="#calendario"/);
 });
 
 test('C y D de la ficha: sin aviso stale ni caja de la temporada siguiente, y D sin «Ver toda la temporada»', () => {
-  const c = viewOf(equipoCtx(HURACAN, '2026-06-03'), { action: 'make', calendar: 'always' });
+  const c = viewOf(equipoCtx(HURACAN, '2026-06-03'), { action: 'make' });
   assert.equal(c.state, 'C');
   assert.match(text(c.main[0]), /^Último partido jornada 30 · mar 2 jun Local Las Mesas Hu\. 2–7 Visitante AD Huracán Ya ha jugado todos sus partidos$/);
   const ctx = equipoCtx(HURACAN, '2026-09-23', fixture('current-2025-2026'));
-  const d = viewOf(ctx, { action: 'make', calendar: 'always' });
+  const d = viewOf(ctx, { action: 'make' });
   assert.equal(d.state, 'D');
   assert.match(s(d.head), /<h1>AD Huracán<\/h1><p class="screen-sub">Temporada 2025\/26 terminada<\/p>/);
   assert.deepEqual(d.main.map(titles).flat(), ['Así terminó 2025/26']);
@@ -189,16 +205,17 @@ test('C y D de la ficha: sin aviso stale ni caja de la temporada siguiente, y D 
   assert.deepEqual(d.aside.map(titles).flat(), ['Clasificación final']);
   assert.match(s(d.aside[0]), /<span class="vh"> \(este equipo\)<\/span>/);
   assert.match(s(d.rest[0]), /^<section class="block" id="calendario">/);
-  // La misma D con las opciones de la portada: la caja de 2026/27, «Ver toda la temporada» y el aviso stale.
+  // La misma D con las opciones de la portada: la caja de 2026/27 y el aviso stale; sin «Ver toda la
+  // temporada», porque el calendario completo ya está en la página.
   const portada = viewOf(ctx, { action: 'change', nextSeason: true, stale: true, mine: true });
   assert.match(s(portada.head), /<p class="screen-sub">A la espera de la temporada 2026\/27<\/p>.*<b>¿Sigue tu equipo en la Segunda Fase\?<\/b>/);
   assert.deepEqual(portada.main.map(titles).flat(), ['Temporada 2026/27', 'Así terminó 2025/26']);
-  assert.match(s(portada.main.at(-1)), /^<a class="home-all" href="#\/equipo\?s=2025-2026&amp;g=PG2&amp;t=AD%20Hurac%C3%A1n">Ver toda la temporada 2025\/26<\/a>$/);
+  assert.doesNotMatch(portada.main.join(''), /home-all/);
   assert.match(s(portada.aside[0]), /<span class="vh"> \(mi equipo\)<\/span>/);
-  assert.deepEqual(portada.rest, []);
+  assert.match(s(portada.rest[0]), /^<section class="block" id="calendario">/);
 });
 
-test('teamColumns: sin `rest`, el marcado de la portada; con él, la tercera parte y .has-rest', () => {
+test('teamColumns: sin `rest`, las dos columnas de siempre; con él, la tercera parte y .has-rest', () => {
   assert.equal(s(teamColumns(['a'], ['b'])), '<div class="home-cols"><div class="home-main">a</div><div class="home-side">b</div></div>');
   assert.equal(s(teamColumns(['a'], ['b'], ['', null])), '<div class="home-cols"><div class="home-main">a</div><div class="home-side">b</div></div>');
   assert.equal(s(teamColumns(['a'], ['b'], ['c'])),
@@ -223,7 +240,7 @@ function fakeSection() {
   return section;
 }
 
-test('mountTeamView: «Compartir» comparte el próximo partido del equipo de la vista, no el de mi equipo; sin calendario de escritorio en la ficha', async () => {
+test('mountTeamView: «Compartir» comparte el próximo partido del equipo de la vista, no el de mi equipo', async () => {
   const ctx = equipoCtx(HURACAN, '2026-03-01');
   const group = findGroup(ctx.model, '2025-2026', 'PG2');
   const section = fakeSection();
@@ -232,7 +249,7 @@ test('mountTeamView: «Compartir» comparte el próximo partido del equipo de la
     value: { clipboard: { writeText: async () => { throw new Error('denegado'); } } } });
   globalThis.location = { href: 'https://x.test/futbol-base/index.html#/equipo?g=PG2' };
   try {
-    assert.equal(mountTeamView(section, ctx, { group, name: 'AD Huracán' }, { calendar: 'always' }), undefined);
+    assert.equal(mountTeamView(section, ctx, { group, name: 'AD Huracán' }), undefined);
     const button = { getAttribute: (name) => ({ 'data-action': 'compartir' })[name] };
     section.onClick({ target: { closest: () => button } });
     await new Promise((resolve) => setImmediate(resolve));
@@ -258,8 +275,8 @@ const decl = (selector, media = (m) => m === null) => {
 
 test('cada clase de la vista existe en acta.css, y `rest` va debajo de lo principal en escritorio y al final en móvil', () => {
   const views = [
-    viewOf(equipoCtx(HURACAN, '2026-03-01'), { action: 'make', calendar: 'always' }),
-    viewOf(equipoCtx(HURACAN, '2026-09-23', fixture('current-2025-2026')), { action: 'make', calendar: 'always' }),
+    viewOf(equipoCtx(HURACAN, '2026-03-01'), { action: 'make' }),
+    viewOf(equipoCtx(HURACAN, '2026-09-23', fixture('current-2025-2026')), { action: 'make' }),
   ];
   const out = views.map((v) => s(v.head) + s(teamColumns(v.main, v.aside, v.rest))).join('');
   const missing = [...new Set([...out.matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)))].filter((c) => !RULES.classes.has(c));
@@ -277,17 +294,17 @@ test('cada clase de la vista existe en acta.css, y `rest` va debajo de lo princi
 
 test('teamView con `state`: la vista del estado que le dan, sin volver a calcularlo; sin él, teamState', () => {
   const ctx = equipoCtx(HURACAN, '2026-09-23', fixture('current-2025-2026'));
-  const own = viewOf(ctx, { action: 'make', calendar: 'always' });
+  const own = viewOf(ctx, { action: 'make' });
   assert.equal(own.state, 'D');
   assert.deepEqual(own.main.map(titles).flat(), ['Así terminó 2025/26']);
   // Con el estado de quien ya lo calculó (la portada, con homeState), ese: aquí, uno que no es el suyo.
-  const given = viewOf(ctx, { action: 'make', calendar: 'always', state: 'A' });
+  const given = viewOf(ctx, { action: 'make', state: 'A' });
   assert.equal(given.state, 'A');
   assert.deepEqual(given.main.map(titles).flat(), ['Próximo partido', 'Últimos cinco']);
   // La portada le pasa el suyo: el mismo pintado, byte a byte, que sin él (las huellas de arriba).
   const home = homeCtx({ today: '2026-09-23' });
   const r = home.resolution;
   const state = homeState({ resolution: r, todayISO: home.today, portalSeason: home.portal.season });
-  const opts = { action: 'change', nextSeason: true, calendar: 'wide', mine: true, shields: home.datasets.shields };
+  const opts = { action: 'change', nextSeason: true, mine: true, shields: home.datasets.shields };
   assert.deepEqual(teamView(home, { group: r.group, name: r.name }, { ...opts, state }), teamView(home, { group: r.group, name: r.name }, opts));
 });

@@ -169,7 +169,8 @@ test('Últimos cinco (C, 03/06/2026): G/E/P con texto oculto, marcador de Las Me
     'G Ganado, 9–2 fuera contra Calero', 'P Perdido, 2–7 en casa contra Huracán']);
   assert.equal(cells[3][1], '#/partido?s=2025-2026&amp;g=PG2&amp;r=Jornada%2029&amp;h=CD%20Calero&amp;a=Las%20Mesas%20Hu.');
   assert.match(block, /<ol class="last5 last5-5"><li><a class="last5-cell" href="[^"]+"><span class="form-chip form-e" aria-hidden="true">E<\/span><span class="vh">Empatado, <\/span><span class="last5-score">1–1<\/span>/);
-  assert.match(block, /<p class="block-context"><a class="more" href="#\/equipo\?s=2025-2026&amp;g=PG2&amp;t=Las%20Mesas%20Hu\.#calendario">calendario completo<\/a><\/p>/);
+  // «calendario completo» es el ancla de la misma portada (el calendario ya está en la página).
+  assert.match(block, /<p class="block-context"><a class="more" href="#calendario">calendario completo<\/a><\/p>/);
   // Con menos de cinco partidos jugados, «Últimos resultados» con los que haya.
   const early = render({ raw: currentAt('2025-10-25'), today: '2025-10-25' });
   assert.match(early, /data-state="A"/);
@@ -269,7 +270,8 @@ test('B, primera causa (2026/27 simulada, 01/10/2026): próximo partido normal, 
   assert.equal((table.match(/<td class="st-pts">0<\/td>/g) || []).length, 15);
   assert.doesNotMatch(table, /block-context/, 'sin jornada jugada no hay «tras la jornada»');
   // Nunca datos de 2025/26 bajo los títulos de 2026/27 (ni la comprobación de data-health de 2025-26).
-  assert.doesNotMatch(out, /2025/);
+  // Los enlaces del calendario llevan «Jornada%2025»: lo que no puede salir es la temporada.
+  assert.doesNotMatch(out, /2025-2026|2025\/26/);
   // Clasificación vacía: el vacío «Clasificación sin publicar».
   const raw = structuredClone(CASES.B.raw);
   raw.prebenjamin.find(g => g.id === 'PG2').standings = [];
@@ -346,7 +348,7 @@ test('stale (decisión 20 de B1): el aviso bajo la cabecera en C y en D, y nunca
   for (const [state, options] of [['C', CASES.C], ['D', CASES.D]]) {
     const out = render(stale(options.today, options));
     assert.match(out, new RegExp(`data-state="${state}"`));
-    assert.ok(out.includes(`Cambiar</a></header>${aviso}<div class="home-cols">`), state);
+    assert.ok(out.includes(`Cambiar</a></header>${aviso}<div class="home-cols has-rest">`), state);
     assert.ok(!render(options).includes('Segunda Fase?'), `${state} sin stale`);
   }
   assert.ok(!render(stale('2026-03-01', CASES.A)).includes('Segunda Fase?'));
@@ -377,7 +379,8 @@ test('los nombres con comillas y signos se escapan en el texto y en los enlaces'
   assert.match(out, /data-state="C"/);
   assert.doesNotMatch(out, /"B"|<x>/);
   assert.match(out, /<h1>MESAS, U\.D\. LAS &quot;B&quot; &lt;x&gt;<\/h1>/);
-  assert.match(out, /t=MESAS%2C%20U\.D\.%20LAS%20%22B%22%20%3Cx%3E#calendario"/);
+  // En los enlaces: el de su fila de la clasificación, a su ficha.
+  assert.match(out, /t=MESAS%2C%20U\.D\.%20LAS%20%22B%22%20%3Cx%3E"/);
 });
 
 test('ni inglés ni emoji: Local/Visitante y G/E/P en todos los estados', () => {
@@ -632,8 +635,10 @@ test('Verano de PG2 (caso 8 de §11): MCP3 y MCPK1 con el puesto, los partidos d
   assert.ok(!titles(render({ ...CASES.D, myTeam: { ...LAS_MESAS, name: 'RC Victoria' } })).some(t => t.startsWith('Verano')));
 });
 
-test('«Ver toda la temporada 2025/26» abre la ficha del equipo en esa temporada y grupo', () => {
-  assert.match(render(CASES.D), /<a class="home-all" href="#\/equipo\?s=2025-2026&amp;g=PG2&amp;t=Las%20Mesas%20Hu\.">Ver toda la temporada 2025\/26<\/a>/);
+test('D sin «Ver toda la temporada»: el calendario ya está en la portada', () => {
+  const out = render(CASES.D);
+  assert.doesNotMatch(out, /home-all|Ver toda la temporada/);
+  assert.match(out, /<section class="block" id="calendario">/);
 });
 
 test('«Clasificación final»: la fila propia con dos arriba y dos abajo, con #, Equipo, J, DG y Pts, y «ver completa»', () => {
@@ -659,30 +664,32 @@ test('standingsTable: la vista «resumen» es #, Equipo, J, DG y Pts', () => {
   assert.match(out, /<td class="st-pos">9<\/td><th scope="row" class="st-team">.*<\/th><td class="st-num st-pj">28<\/td><td class="st-dg">−30<\/td><td class="st-pts">37<\/td><\/tr>/);
 });
 
-test('dos columnas (§4.8): a la izquierda el partido, Últimos cinco y el hueco del calendario; a la derecha la clasificación, goleadores y cifras', () => {
+test('dos columnas (§4.8), como la ficha: a la izquierda lo principal y el calendario; a la derecha la consulta entera', () => {
+  // Las tres partes de la vista de equipo (teamColumns): lo principal, la consulta y lo largo (`rest`).
   const columnsOf = markup => {
-    const m = String(markup).match(/<div class="home-cols"><div class="home-main">([\s\S]*)<\/div><div class="home-side">([\s\S]*)<\/div><\/div><\/section>$/);
-    return { main: m[1], side: m[2] };
+    const m = String(markup).match(/<div class="home-cols has-rest"><div class="home-main">([\s\S]*)<\/div><div class="home-side">([\s\S]*)<\/div><div class="home-rest">([\s\S]*)<\/div><\/div><\/section>$/);
+    return { main: m[1], side: m[2], rest: m[3] };
   };
   const a = columnsOf(render(CASES.A));
   assert.deepEqual(titles(a.main), ['Próximo partido', 'Últimos cinco']);
-  assert.ok(a.main.endsWith('<div data-slot="calendario"></div>'));
-  assert.deepEqual(titles(a.side), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras']);
-  assert.match(a.side, /<p class="home-fresh">.*<\/p>$/);
+  assert.deepEqual(titles(a.side), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Evolución de puntos', 'Plantilla', 'Trayectoria']);
+  assert.match(a.side, /<p class="home-fresh">.*<\/p><section class="block"><div class="block-head"><h2 class="block-title">Evolución de puntos<\/h2>/);
+  assert.deepEqual(titles(a.rest), ['Calendario']);
   const c = columnsOf(render(CASES.C));
   assert.deepEqual(titles(c.main), ['Último partido', 'Últimos cinco']);
   const b = columnsOf(render(CASES.B));
   assert.deepEqual(titles(b.main), ['Próximo partido']);
-  assert.match(b.main, /<p class="empty">Aún no se ha jugado ninguna jornada<\/p><\/section><div data-slot="calendario"><\/div>$/);
-  assert.deepEqual(titles(b.side), ['Clasificación']);
+  assert.match(b.main, /<p class="empty">Aún no se ha jugado ninguna jornada<\/p><\/section>$/);
+  assert.deepEqual(titles(b.side), ['Clasificación', 'Trayectoria']);
+  assert.deepEqual(titles(b.rest), ['Calendario']);
   const d = columnsOf(render(CASES.D));
   assert.deepEqual(titles(d.main), ['Temporada 2026/27', 'Así terminó 2025/26', 'Verano: Maspalomas Cup 2026']);
-  assert.match(d.main, /<a class="home-all" href="[^"]+">Ver toda la temporada 2025\/26<\/a>$/);
-  assert.deepEqual(titles(d.side), ['Clasificación final']);
-  assert.doesNotMatch(d.main, /data-slot/);
+  assert.deepEqual(titles(d.side), ['Clasificación final', 'Evolución de puntos', 'Plantilla', 'Trayectoria']);
+  assert.deepEqual(titles(d.rest), ['Calendario']);
+  for (const out of [a, b, c, d].map(x => x.main + x.side + x.rest)) assert.doesNotMatch(out, /data-slot="calendario"|home-all/);
 });
 
-test('teamCalendar: el calendario completo de escritorio, en orden de jornada, con su estado y un enlace por partido', () => {
+test('teamCalendar: el calendario completo, en orden de jornada, con su estado y un enlace por partido', () => {
   const raw = currentAt('2026-06-02');
   const pg2 = buildSeason({ name: raw.season, current: true, ...raw }).groups.find(g => g.id === 'PG2');
   const out = String(teamCalendar('Las Mesas Hu.', pg2, { today: '2026-06-03', shields }));
@@ -703,9 +710,6 @@ test('estilos de D y de escritorio: dos columnas desde 1024 px, filas de verano 
   assert.match(cols, /grid-template-columns:\s*minmax\(0, 1fr\) minmax\(0, 1fr\)/);
   assert.doesNotMatch(decl('.home-cols'), /display:\s*(grid|flex)/, 'en móvil las columnas se apilan');
   assert.match(decl('.summer-row'), /min-height:\s*44px/);
-  const all = decl('.home-all');
-  assert.match(all, /min-height:\s*48px/);
-  assert.match(all, /border:\s*1\.5px solid var\(--ink\)/);
   assert.match(decl('.summer-note'), /color:\s*var\(--ink\)/);
-  assert.doesNotMatch(CSS, /(data-slot|\.cal\b|#calendario)[^{]*\{[^}]*display:\s*none/, 'lo pinta mount, no se esconde');
+  assert.doesNotMatch(CSS, /(data-slot|\.cal\b|#calendario)[^{]*\{[^}]*display:\s*none/, 'se pinta en render, no se esconde');
 });

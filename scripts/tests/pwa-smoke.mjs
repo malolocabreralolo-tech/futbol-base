@@ -26,6 +26,7 @@ import { fileURLToPath } from 'node:url';
 import { startServer, findChrome } from './render-smoke.mjs';
 import { waitForAsync } from './browser-wait.mjs';
 import { fixture } from './fixtures/rediseno/load.mjs';
+import { STORE_KEY } from '../../src/store.js';
 
 const { chromium } = createRequire(import.meta.url)('playwright');
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
@@ -85,6 +86,10 @@ function frozen(file) {
   if (kind === 'lineups') return js([[`LINEUPS_${from}_${to}`, {}]]);
   return null;
 }
+// Las actas de un grupo sin fixture: un 404 esperado (el grupo no tiene actas), como en Pages; la
+// portada pide las de mi equipo tras pintarse (fillSquad), y las de PG2 no existen.
+const NO_LINEUPS = /^data-lineups-\d{4}-\d{4}-[A-Za-z0-9]+\.js$/;
+
 // Los datos que B4 retiró (decisiones 1 y 3 de B4). Solo los pide la app anterior (su index.html los
 // nombra, su SW los precachea y su portada pide las fichas de jugadores), y el mundo se los sigue
 // sirviendo; la app nueva y su SW, nunca. Cada petición se apunta con su ?v=: las del SW nuevo, y las
@@ -132,7 +137,7 @@ const proxy = createServer(async (req, res) => {
     // Datos y config.js, congelados y los mismos en las dos versiones; ningún data-* vivo.
     const data = frozen(file);
     if (data || file.startsWith('data-')) {
-      if (!data) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
+      if (!data && !NO_LINEUPS.test(file)) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
       // Una CDN que aún guarda las URL sin ?v= de antes de publicar: el SW nuevo las pide con ?v=.
       const stale = phase === 'nueva' && isConfig && !url.searchParams.has('v');
       res.writeHead(data ? 200 : 404, { 'Content-Type': data ? data.type : 'text/plain', 'Cache-Control': cacheControl });
@@ -287,7 +292,7 @@ async function codeDeploy(browser) {
       }
       const data = frozen(file);
       if (data || file.startsWith('data-')) {
-        if (!data) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
+        if (!data && !NO_LINEUPS.test(file)) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
         res.writeHead(data ? 200 : 404, { 'Content-Type': data ? data.type : 'text/plain', 'Cache-Control': 'no-store' });
         res.end(data ? data.body : 'no está congelado');
         return;
@@ -420,7 +425,8 @@ async function codeDeploy(browser) {
 //    borra la caché de «a». Sin conexión, la ficha pinta los mismos escudos, en miniatura, y ningún
 //    monograma más; la caché de los escudos es la misma. Y su plantilla: las actas de su grupo, que el
 //    SW de «b» vuelve a bajar al instalarse porque estaban en la caché de «a» (lineupsToCarry); sin
-//    ellas, la caja de error;
+//    ellas, la caja de error. Y Mi equipo con Unión Viera guardado, sin conexión: la plantilla de la
+//    portada (fillSquad), con esas mismas actas;
 //  - se publica «c», con el escudo de Unión Viera cambiado y su sello nuevo, como lo dejaría
 //    build_crests.py: su SW borra la caché de escudos anterior, y la apertura siguiente guarda el escudo
 //    nuevo en la nueva.
@@ -443,7 +449,7 @@ async function dataDeploy(browser) {
     try {
       const data = frozen(file);
       if (data || file.startsWith('data-')) {
-        if (!data) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
+        if (!data && !NO_LINEUPS.test(file)) console.error('PWA fixture HTTP 404 (sin dato congelado)', req.url);
         res.writeHead(data ? 200 : 404, { 'Content-Type': data ? data.type : 'text/plain', 'Cache-Control': 'no-store' });
         res.end(data ? data.body : 'no está congelado');
         return;
@@ -513,6 +519,22 @@ async function dataDeploy(browser) {
     o = await open('sin conexión tras una subida de datos, «b» sin conexión');
     assert.deepEqual(o.seen, online, 'sin conexión tras una subida de datos, la ficha no pinta lo mismo que con conexión');
     await o.page.close();
+    // Mi equipo, sin conexión, con Unión Viera (A1) guardado: la plantilla de la portada, con las actas
+    // que el SW de «b» heredó. Desde aquí, cada página nueva lo tiene guardado.
+    await context.addInitScript(([key, value]) => {
+      try { localStorage.setItem(key, value); } catch { /* almacén bloqueado */ }
+    }, [STORE_KEY, JSON.stringify({ myTeam: { name: 'Unión Viera', season: '2025-2026', cat: 'benjamin', groupId: 'A1' }, recent: [] })]);
+    const mine = await context.newPage();
+    mine.setDefaultTimeout(20000);
+    const mineErrors = [];
+    mine.on('pageerror', (error) => mineErrors.push(error.message));
+    await mine.goto(`${home}#/`);
+    await mine.locator(`#contenido ${HOME}`).waitFor();
+    assert.equal(await mine.locator('#contenido h1').textContent(), 'Unión Viera', 'sin conexión tras una subida de datos, Mi equipo es Unión Viera');
+    await waitForAsync(mine, () => !document.querySelector('#contenido [data-slot]'), null, { label: 'sin conexión tras una subida de datos, la plantilla de Mi equipo' });
+    assert.equal(await mine.locator('#plantilla table.squad').count(), 1, 'sin conexión tras una subida de datos, Mi equipo sin su plantilla');
+    assert.deepEqual(mineErrors, [], 'sin conexión tras una subida de datos, Mi equipo: sin errores de JavaScript');
+    await mine.close();
     down = false;
     assert.deepEqual(seen.caches.filter((name) => name.startsWith('futbolbase-escudos-')), [treeCrests],
       `la caché de los escudos, tras una subida de datos: ${JSON.stringify(seen.caches)}`);
@@ -528,7 +550,7 @@ async function dataDeploy(browser) {
       return !!response && (await response.arrayBuffer()).byteLength === size;
     }, [`futbolbase-escudos-${NEW_SEAL}`, `./${CHANGED}`, statSync(join(ROOT, REPLACEMENT)).size], { label: 'un escudo cambiado, el nuevo en la caché nueva' });
     await o.page.close();
-    console.log(`PASS: sin conexión tras una subida de datos: la ficha pinta sus ${online.mini} escudos en miniatura, como con conexión, porque su caché (${treeCrests}) no cambia con CACHE_NAME, y su plantilla, con las actas de A1 que el SW nuevo heredó de la caché anterior; con un escudo cambiado, su sello nuevo da otra caché, con el escudo nuevo`);
+    console.log(`PASS: sin conexión tras una subida de datos: la ficha pinta sus ${online.mini} escudos en miniatura, como con conexión, porque su caché (${treeCrests}) no cambia con CACHE_NAME, y su plantilla y la de Mi equipo con Unión Viera, con las actas de A1 que el SW nuevo heredó de la caché anterior; con un escudo cambiado, su sello nuevo da otra caché, con el escudo nuevo`);
   } finally {
     await context.close();
     server.closeAllConnections();
@@ -651,6 +673,14 @@ try {
   await opening('sin conexión', 'nueva');
   assert.match(await page.locator(HOME).getAttribute('data-state'), /^[ABCD]$/);
   assert.equal(await page.locator('h1').count(), 1);
+  // Su plantilla, sin las actas de PG2 (no existen): sin conexión, un vacío tranquilo, nunca la caja de
+  // error (fillSquad, D4 del 04/10/2026).
+  await waitForAsync(page, () => !document.querySelector('#contenido [data-slot]'), null, { label: 'sin conexión, la plantilla de la portada' });
+  assert.equal(await page.locator('#contenido .error-box').count(), 0, 'la portada sin conexión: sin cajas de error');
+  if (await page.locator('#plantilla').count()) {
+    assert.match(await page.locator('#plantilla').textContent(), /^Plantilla\s*Sin conexión/, 'la plantilla sin conexión: el vacío tranquilo');
+  }
+  assert.deepEqual(errors, [], 'la portada sin conexión: sin errores de JavaScript');
   const precached = await page.evaluate(async (name) => (await (await caches.open(name)).keys()).map((r) => new URL(r.url).pathname), expected);
   for (const path of ['/fonts/PublicSans-latin.woff2', '/icons/icon-192.png', '/src/screen-home.js', '/src/screen-jornada.js', '/src/screen-explorar.js', '/acta.css']) {
     assert.ok(precached.includes(path), `${path} is not precached`);

@@ -163,8 +163,10 @@ export function fakeBrowser(hash = '#/', { storage = new Map(), deferBack = fals
 // por id (blocks: { id: markup }). Un bloque se sustituye con outerHTML, como en un navegador: el que
 // sale deja de estar conectado y el nuevo, si trae el mismo id, se encuentra otra vez, con su título
 // (.block-title), que guarda el foco que recibe. clickIn(id, attrs) pulsa un botón con esos atributos
-// dentro del bloque `id`, y devuelve el evento ({ prevented, stopped }) y el botón.
-export function fakeSection(screenId, blocks = {}) {
+// dentro del bloque `id`, y devuelve el evento ({ prevented, stopped }) y el botón. Con `view`, la
+// sección es de un documento con esa ventana (ownerDocument.defaultView, la que usa fillSquad); sin
+// ella, no tiene documento, como en Node.
+export function fakeSection(screenId, blocks = {}, { view = null } = {}) {
   const listeners = [];
   const painted = new Map();
   const focus = { el: null };
@@ -190,6 +192,7 @@ export function fakeSection(screenId, blocks = {}) {
   };
   for (const [id, markup] of Object.entries(blocks)) painted.set(id, makeBlock(id, String(markup)));
   const section = {
+    ownerDocument: view ? { defaultView: view } : undefined,
     matches: (sel) => sel === `[data-screen="${screenId}"]`,
     contains: () => true,
     addEventListener: (type, fn) => { if (type === 'click') listeners.push(fn); },

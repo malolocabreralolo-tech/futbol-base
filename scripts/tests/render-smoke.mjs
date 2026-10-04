@@ -15,7 +15,8 @@ import { useWorld } from './fixture-site.mjs';
  * red when a season ends or starts: the home screen (<section data-screen="home">) must be in
  * state A, B, C or D, with its screen header (header.screen-head), one h1 with the team name and
  * at least one block. E (asking which team), X (team absent), the error box («Reintentar») and
- * the skeleton of index.html left untouched (app.js threw) fail. Unit-tested in
+ * the skeleton of index.html left untouched (app.js threw) fail; the error box of the Plantilla
+ * (#plantilla, filled after the first paint) fails with its own message. Unit-tested in
  * test_rediseno_smoke.mjs with the real screen over frozen fixtures.
  *
  * Run directly (`node scripts/tests/render-smoke.mjs`) to exercise the real
@@ -43,7 +44,11 @@ export function checkRenderedDom(dom, { teamName } = {}) {
     else if (teamName && !h1[0].includes(teamName)) failures.push(`el h1 dice «${h1[0]}», no «${teamName}»`);
     if (!/<section class="block">/.test(dom)) failures.push('la portada no tiene ningún bloque');
   }
-  if (/data-action="retry"/.test(dom)) failures.push('caja de error con «Reintentar»: la portada no pudo cargar sus datos');
+  // La Plantilla se llena después del primer pintado (fillSquad): su caja de error es la de las actas
+  // de su grupo, no la de la portada, y se dice aparte.
+  const squad = (dom.match(/<section\b[^>]*\bid="plantilla"[^>]*>[\s\S]*?<\/section>/) || [''])[0];
+  if (/data-action="retry"/.test(squad)) failures.push('la Plantilla de la portada no pudo cargar las actas de su grupo');
+  if (/data-action="retry"/.test(squad ? dom.replace(squad, '') : dom)) failures.push('caja de error con «Reintentar»: la portada no pudo cargar sus datos');
   if (/class="box skeleton[" ]|data-skeleton="/.test(dom)) failures.push('el esqueleto de index.html sigue ahí: app.js no pintó la portada');
   return { ok: failures.length === 0, failures, state };
 }
@@ -140,10 +145,13 @@ async function fixtureStateD(chrome, port) {
     page.on('pageerror', (error) => errors.push(error.message));
     await page.goto(`http://127.0.0.1:${port}/index.html#/`);
     await page.locator('#contenido section[data-screen="home"][data-state]').waitFor({ timeout: 15000 });
+    // La plantilla llega después (fillSquad): se espera a que su hueco se resuelva (en PG2, un 404).
+    await page.waitForFunction(() => !document.querySelector('#contenido [data-slot]'), null, { timeout: 15000 });
     const dom = await page.content();
     const { failures, state } = checkRenderedDom(dom, { teamName: 'Las Mesas Hu.' });
     const titles = [...dom.matchAll(/<h2 class="block-title">([^<]*)<\/h2>/g)].map((m) => m[1]);
-    const wanted = ['Temporada 2026/27', 'Así terminó 2025/26', 'Verano: Maspalomas Cup 2026', 'Clasificación final'];
+    const wanted = ['Temporada 2026/27', 'Así terminó 2025/26', 'Verano: Maspalomas Cup 2026', 'Clasificación final',
+      'Evolución de puntos', 'Trayectoria', 'Calendario'];
     return [
       ...failures,
       ...(state === 'D' ? [] : [`la portada del 23/09/2026 está en ${state}, no en D`]),
@@ -192,7 +200,7 @@ async function main() {
       console.log(`PASS: render smoke OK — Mi equipo en estado ${state} (DOM ${dom.length} bytes)`);
       const problems = await fixtureStateD(chrome, port);
       if (!problems.length) {
-        console.log('PASS: estado D con las fixtures y el reloj del 23/09/2026: «Temporada 2026/27», «Así terminó 2025/26», «Verano» y la clasificación final');
+        console.log('PASS: estado D con las fixtures y el reloj del 23/09/2026: «Temporada 2026/27», «Así terminó 2025/26», «Verano», la clasificación final, la evolución de puntos, la trayectoria y el calendario');
         process.exit(0);
       }
       console.error('FAIL: estado D con las fixtures:');

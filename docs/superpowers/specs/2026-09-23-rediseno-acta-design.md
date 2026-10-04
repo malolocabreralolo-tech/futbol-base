@@ -169,6 +169,8 @@ La ruta vive en el hash con forma `#/<pantalla>?<parámetros>`. No hay modales: 
 
 Maquetas: `4-acta-roja.png` (estado A) y `6-1-pretemporada.png` (estado D). El estado lo decide `homeState()` (§5.6), que se **evalúa en este orden**. Solo cuentan los partidos de liga que no son contra retirados (§5.3), y el próximo partido es siempre el primer partido en estado `pendiente`.
 
+*(Nota: desde octubre de 2026, debajo de lo de cada estado van la evolución de puntos, la plantilla, la trayectoria y el calendario completo de la ficha (§4.6), en su orden; véase «Lo que cambió al construirlo», punto 13.)*
+
 **E. Elegir equipo.**
 - Cuándo: `resolveMyTeam` devuelve `ask` (§6.3).
 - En lugar del contenido va una caja «¿En qué equipo juega ahora?» con los candidatos (escudo, nombre, categoría y etiqueta de grupo) y la opción «Ninguno: buscar otro equipo», que lleva a Explorar.
@@ -189,7 +191,7 @@ Maquetas: `4-acta-roja.png` (estado A) y `6-1-pretemporada.png` (estado D). El e
     - No hay casilla de «se revisa cada…», porque el sistema no comprueba la temporada siguiente.
   - **«Así terminó 2025/26»** (`seasonSummary`): posición «de N», puntos, balance G/E/P, goles a favor y en contra, último resultado y máximo goleador del equipo.
   - **«Verano»:** torneos de la categoría del equipo en los que participó (§6.4). Muestra la fase de grupos (puesto) y cada partido de cuadro, con «pasó por penaltis» cuando toque.
-  - **«Ver toda la temporada 2025/26»**, que abre `#/equipo?s=2025-2026&g=<grupo>&t=<nombre>`.
+  - **«Ver toda la temporada 2025/26»**, que abre `#/equipo?s=2025-2026&g=<grupo>&t=<nombre>`. *(Nota: retirado, porque el calendario completo ya está en la portada; véase «Lo que cambió al construirlo», punto 13.)*
   - **«Clasificación final»:** la fila propia y las dos de arriba y abajo, con #, Equipo, J, DG y Pts, más «ver completa», que abre `#/tabla?s&g`.
 
 **B. Inicio de temporada.**
@@ -213,7 +215,7 @@ Maquetas: `4-acta-roja.png` (estado A) y `6-1-pretemporada.png` (estado D). El e
     - *Compartir*, con `navigator.share` y el enlace al partido (si no hay `share`, copia el enlace).
 - **Últimos cinco:**
   - casillas con G/E/P, el marcador desde el punto de vista del equipo y el rival (`teamShort`); cada casilla abre el partido;
-  - enlace «calendario completo», que abre `#/equipo?s&g&t` de mi equipo en su ancla `#calendario`.
+  - enlace «calendario completo», que abre `#/equipo?s&g&t` de mi equipo en su ancla `#calendario`. *(Nota: es el ancla `#calendario` de la propia portada; véase «Lo que cambió al construirlo», punto 13.)*
 - **Clasificación completa**, con la fila propia resaltada.
 - **Goleadores del equipo:** los 5 primeros y «ver todos», que abre `#/goleadores?s&g&t`.
 - **La temporada en cifras** (`seasonSummary`, calculada con el modelo y nunca con `STATS`):
@@ -291,7 +293,7 @@ Maqueta: `5-3-partido.png`.
 
 ### 4.6 Equipo (cualquier equipo)
 
-Mismo esqueleto que Mi equipo, con los estados A, B, C o D; el D sin la caja de la temporada siguiente. Además:
+Mismo esqueleto que Mi equipo, con los estados A, B, C o D; el D sin la caja de la temporada siguiente. Además: *(Nota: desde octubre de 2026, Mi equipo también lleva el calendario, la evolución de puntos, la plantilla y la trayectoria; a la ficha solo le quedan «‹», «Hacer mi equipo» y «Vistos hace poco»; véase «Lo que cambió al construirlo», punto 13.)*
 - **«Hacer mi equipo»** arriba (salvo si ya lo es).
 - **Calendario completo** del equipo (ancla `#calendario`), con cada partido y su estado (§5.3), y el botón «Calendario del equipo (.ics)» con todos los partidos de la temporada.
 - **Evolución de puntos:** gráfica de línea sólida en tinta, sin puntos ni trazos discontinuos (preferencia del usuario), jornada a jornada, calculada con el modelo.
@@ -353,7 +355,7 @@ Maqueta: `5-4-explorar.png`.
 - **Mi equipo en dos columnas.**
   - Izquierda: próximo o último partido, Últimos cinco y calendario completo del equipo.
   - Derecha: clasificación, goleadores y cifras.
-  - En móvil, el calendario completo no está en la portada, sino en «calendario completo».
+  - En móvil, el calendario completo no está en la portada, sino en «calendario completo». *(Nota: ya no es así: en móvil va al final de la portada, y la derecha suma la evolución de puntos, la plantilla y la trayectoria; véase «Lo que cambió al construirlo», punto 13.)*
 - **Tabla:** todas las columnas. **Jornada:** los días en dos columnas si caben.
 - **Tableta (769–1023 px):** diseño móvil centrado a 640 px, con la barra inferior.
 
@@ -375,8 +377,8 @@ Maqueta: `5-4-explorar.png`.
 |---|---|
 | Top 30 goleadores globales | Récords (30) y `#/goleadores` (lista completa) |
 | Comparativa de prebenjamín por puntos por partido | «Comparar grupos» en `#/ligas` |
-| Evolución de puntos de la ficha de equipo | Ficha de equipo (§4.6) |
-| `.ics` de la temporada del equipo | Ficha de equipo (§4.6) |
+| Evolución de puntos de la ficha de equipo | Ficha de equipo (§4.6) *(Nota: y Mi equipo; véase «Lo que cambió al construirlo», punto 13.)* |
+| `.ics` de la temporada del equipo | Ficha de equipo (§4.6) *(Nota: y Mi equipo; véase «Lo que cambió al construirlo», punto 13.)* |
 | `.ics` de la jornada | *Calendario del grupo* (solo partidos futuros) |
 | Por isla | Explorar → Ligas (filtrado por isla) |
 | Estadísticas | Récords |
@@ -822,3 +824,11 @@ Adenda del plan B5 (27/09/2026), al cerrar el rediseño. El diseño de arriba es
     - el precache a medias: una instalación del SW que no pudo bajar algún fichero deja ese hueco sin conexión hasta que se pide con red, y se cura solo;
     - la caché HTTP de 600 s sin SW: sin SW al mando, unos 10 minutos tras publicar código un navegador puede mezclar módulos; lo cerraría versionar el grafo de módulos, y los import maps subirían el suelo de Safari a 16.4 (plan B3, «Antes de publicar B3»);
     - los alias de los equipos renombrados en Partido: las temporadas anteriores y el cara a cara pierden los equipos que la fuente renombra («VICTORIA, REAL CLUB» frente a «RC Victoria»), y arreglarlo pide una tabla de alias por fuente.
+13. **Mi equipo, con todo lo de la ficha** (§4.2, §4.6, §4.8 y §4.11): a petición del usuario (4/10/2026), la portada es la vista de la ficha de su equipo con la cabecera de la portada (plan del 4/10/2026, `docs/superpowers/plans/2026-10-04-plan-mi-equipo-completo.md`):
+    - D1, el mismo orden que la ficha: en móvil, la cabecera, lo principal, la consulta (con la evolución de puntos, la plantilla y la trayectoria) y al final el calendario; en escritorio, lo principal y el calendario a la izquierda y la consulta entera a la derecha;
+    - D2, el calendario completo siempre, con su `.ics` y en render: se retiran el calendario de escritorio, la opción `calendar` de la vista de equipo y «Ver toda la temporada», y «calendario completo» es el ancla `#calendario` de la portada;
+    - D3, los bloques de la consulta de la ficha, en un módulo compartido, `src/team-extras.js` (`teamExtras` y `mountTeamExtras`), que importa de `team-view.js` y no al revés;
+    - D4, la plantilla no bloquea la portada: su `needs` sigue pidiendo solo `data-health.json`, render pinta un hueco que `fillSquad` llena tras `load` y con el navegador libre, guardando las actas en `datasets.lineups`, y sin conexión dice que la plantilla llegará al volver la conexión, sin caja de error;
+    - D5, la trayectoria, bajo demanda y con el mismo código de la ficha;
+    - D6, la ficha no cambia: el mismo render, byte a byte, y su `needs` sigue esperando a las actas;
+    - D7, lo que es solo de la portada se queda: «Cambiar», la caja de la temporada siguiente, el aviso stale, E y X, y no apuntarse en «Vistos hace poco».

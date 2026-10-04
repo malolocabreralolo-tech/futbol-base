@@ -10,9 +10,11 @@
 //   #contenido section[data-screen="home"] entra en el documento (el esqueleto estático no cuenta).
 //   La mediana de N aperturas (3), la suya y la del LCP, tiene que bajar de 3.000 ms.
 // - CLS: el mundo A de fixture-site.mjs (datos congelados y reloj fijado), con el mismo perfil, a 390
-//   (DPR 3) y a 1440 px. De cada apertura, la suma de los desplazamientos sin interacción (una cota
-//   superior del CLS de web-vitals); el máximo de N por ancho, menor de 0,1. Siempre en local: el
-//   mundo A lo sirve Playwright.
+//   (DPR 3) y a 1440 px, con dos equipos guardados: Las Mesas (PG2, sin actas) y Guayarmina (A1, con
+//   102 KB de actas, cuya plantilla llena su hueco después del pintado). De cada apertura, con la
+//   plantilla ya resuelta, la suma de los desplazamientos sin interacción (una cota superior del CLS
+//   de web-vitals); el máximo de N por ancho y equipo, menor de 0,1. Siempre en local: el mundo A lo
+//   sirve Playwright.
 // - Imágenes de Tabla: index.html#/tabla?s=2025-2026&g=PG2 con los datos del árbol (o los de --web), en
 //   frío y con todas las imágenes de la pantalla (las diferidas se piden ya): la suma de los bytes
 //   transferidos, menos de 300 KB (de 1.024 bytes).
@@ -65,7 +67,7 @@ export function report({ home, lcp, fcp, kb, runs, cls, tabla }) {
     ok,
     lines: [
       `portada: ${Math.round(home)} ms (< ${LIMITS.home}); LCP ${Math.round(lcp)} ms (< ${LIMITS.lcp}); FCP ${Math.round(fcp)} ms; ${Math.round(kb)} KB; mediana de ${runs}`,
-      `CLS: ${comma(clsMax, 4)} (< ${comma(LIMITS.cls, 1)}): ${Object.entries(cls).map(([width, value]) => `${width} px ${comma(value, 4)}`).join(' y ')}; máximo de ${runs}, mundo A`,
+      `CLS: ${comma(clsMax, 4)} (< ${comma(LIMITS.cls, 1)}): ${Object.entries(cls).map(([width, value]) => `${width} px ${comma(value, 4)}`).join(' y ')}; máximo de ${runs}, mundo A (Las Mesas, sin actas, y Guayarmina, A1 con actas)`,
       `imágenes de Tabla: ${comma(tablaKB, 1)} KB (< ${LIMITS.tablaKB}): ${tabla.images} imágenes, PG2`,
       `PRESUPUESTO: ${ok ? 'OK' : 'MAL'}`,
     ],
@@ -89,10 +91,12 @@ function observers() {
     .observe({ type: 'layout-shift', buffered: true });
 }
 
-// La portada en el documento, la fuente cargada y las imágenes a la vista, completas.
-function homeReady() {
+// La portada en el documento, la fuente cargada y las imágenes a la vista, completas. Con `squad`,
+// también la plantilla resuelta: el hueco que llena fillSquad después del pintado también desplaza.
+function homeReady(squad = false) {
   const measured = window.__presupuesto;
   if (!measured || measured.home === null || document.fonts.status !== 'loaded') return false;
+  if (squad && document.querySelector('#contenido [data-slot]')) return false;
   return [...document.images].every((img) => {
     const box = img.getBoundingClientRect();
     return img.complete || box.bottom <= 0 || box.top >= innerHeight || box.width === 0;
@@ -107,12 +111,13 @@ function tablaReady() {
 }
 
 // Una apertura en frío: contexto nuevo sin SW, caché desactivada y, si throttle, la red y la CPU del
-// perfil. Cuenta lo que hay en vuelo y los bytes transferidos, en total y de las imágenes.
-async function coldPage(browser, { width, height, dpr }, { throttle = true, world = null } = {}) {
+// perfil. Cuenta lo que hay en vuelo y los bytes transferidos, en total y de las imágenes. `myTeam`:
+// otro equipo guardado en el mundo (useWorld).
+async function coldPage(browser, { width, height, dpr }, { throttle = true, world = null, myTeam = null } = {}) {
   const context = await browser.newContext({
     viewport: { width, height }, deviceScaleFactor: dpr, locale: 'es-ES', timezoneId: 'Atlantic/Canary', serviceWorkers: 'block',
   });
-  if (world) await useWorld(context, world);
+  if (world) await useWorld(context, world, { myTeam });
   const page = await context.newPage();
   const cdp = await context.newCDPSession(page);
   await cdp.send('Network.enable');
@@ -136,11 +141,11 @@ async function coldPage(browser, { width, height, dpr }, { throttle = true, worl
 }
 
 // La página está quieta: su condición se cumple y no hay nada en vuelo, en dos comprobaciones seguidas
-// (cada 100 ms, como waitForAsync). Después, dos fotogramas y una tarea.
-async function settle(page, net, ready, label) {
+// (cada 100 ms, como waitForAsync). Después, dos fotogramas y una tarea. `arg` va a la condición.
+async function settle(page, net, ready, label, arg = null) {
   const deadline = Date.now() + 90000;
   for (let calm = 0; calm < 2;) {
-    await waitForAsync(page, ready, null, { timeout: Math.max(1, deadline - Date.now()), interval: 100, label });
+    await waitForAsync(page, ready, arg, { timeout: Math.max(1, deadline - Date.now()), interval: 100, label });
     calm = net.pending.size === 0 ? calm + 1 : 0;
     if (calm < 2) {
       if (Date.now() > deadline) throw new Error(`${label}: ${net.pending.size} peticiones siguen en vuelo tras 90 s`);
@@ -171,16 +176,20 @@ async function measureHome(browser, site, runs) {
   return { home: of('home'), lcp: of('lcp'), fcp: of('fcp'), kb: of('kb') };
 }
 
+// Los equipos de la medida del CLS: el del mundo (Las Mesas, PG2, sin actas: el hueco de la plantilla
+// se va) y Guayarmina (A1, con actas: el hueco se llena con su tabla).
+const CLS_TEAMS = [['Las Mesas', null], ['Guayarmina', { name: 'Guayarmina', season: '2025-2026', cat: 'benjamin', groupId: 'A1' }]];
+
 async function measureCls(browser, site, runs) {
   const cls = {};
   for (const device of [PHONE, DESKTOP]) {
     cls[device.width] = 0;
-    for (let i = 1; i <= runs; i += 1) {
-      const { context, page, net } = await coldPage(browser, device, { world: 'A' });
+    for (const [team, myTeam] of CLS_TEAMS) for (let i = 1; i <= runs; i += 1) {
+      const { context, page, net } = await coldPage(browser, device, { world: 'A', myTeam });
       try {
         await page.goto(new URL('index.html', site).href, { waitUntil: 'commit', timeout: 90000 });
-        const label = `CLS a ${device.width} px, apertura ${i}`;
-        await settle(page, net, homeReady, label);
+        const label = `CLS a ${device.width} px con ${team}, apertura ${i}`;
+        await settle(page, net, homeReady, label, true);
         const { state, value } = await page.evaluate(() => ({
           state: document.querySelector('#contenido section[data-screen="home"]').getAttribute('data-state'),
           value: window.__presupuesto.cls,

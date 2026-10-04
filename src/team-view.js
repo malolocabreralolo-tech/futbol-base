@@ -1,8 +1,9 @@
 // Vista de equipo (spec §4.2, §4.6 y §4.8; decisión 8 de B3): los estados A, B, C y D de un equipo
-// en su grupo, por `{ group, name }`. La comparten Mi equipo (screen-home.js, que pone la resolución
-// de mi equipo, E y X) y la ficha de Equipo (screen-equipo.js). No es una pantalla: teamView da la
-// cabecera y los bloques de cada columna, teamColumns los coloca y mountTeamView pone su
-// comportamiento. Todo es puro salvo mountTeamView, y nada toca el DOM al importarse.
+// en su grupo, por `{ group, name }`, con el calendario completo y su .ics. La comparten Mi equipo
+// (screen-home.js, que pone la resolución de mi equipo, E y X) y la ficha de Equipo
+// (screen-equipo.js), que le añaden a la consulta los bloques de team-extras.js. No es una pantalla:
+// teamView da la cabecera y los bloques de cada columna, teamColumns los coloca y mountTeamView pone
+// su comportamiento. Todo es puro salvo mountTeamView, y nada toca el DOM al importarse.
 import { html } from './html.js';
 import {
   block, box, cells, countLabel, crest, decimal, empty, listEs, matchRow, notice, score, screenHead, shareStatus,
@@ -27,7 +28,7 @@ import { teamScorers } from './state.js';
 const shortDate = weekdayDate;
 
 // «Cambiar» y las demás búsquedas abren Explorar con el buscador enfocado: el ancla #buscar va tras
-// la ruta, como #calendario en la ficha de equipo. La usan también E y X de la portada.
+// la ruta, como #calendario en la vista de equipo. La usan también E y X de la portada.
 export const SEARCH_HREF = `${routeHref('explorar')}#buscar`;
 
 // ── Cabecera y columnas ─────────────────────────────────────────────────
@@ -47,9 +48,9 @@ export function teamHeader(name, subtitle, { shields = {}, action = null, back =
 }
 
 // Lo principal y lo de consulta; en escritorio, dos columnas (spec §4.8). `rest`, lo largo (el
-// calendario completo de la ficha): en móvil va al final, detrás de la consulta, y en escritorio
-// debajo de lo principal, en la columna izquierda (.has-rest en acta.css). Sin `rest`, el marcado de
-// siempre.
+// calendario completo, en Mi equipo y en la ficha): en móvil va al final, detrás de la consulta, y en
+// escritorio debajo de lo principal, en la columna izquierda (.has-rest en acta.css). Sin `rest`, el
+// marcado de siempre.
 export function teamColumns(main, aside, rest = []) {
   const more = rest.filter(Boolean);
   return more.length
@@ -107,7 +108,7 @@ function lastBlock(fx, group, shields) {
 
 const LETTER = { G: 'Ganado', E: 'Empatado', P: 'Perdido' };
 
-// «calendario completo»: en Mi equipo abre la ficha en su ancla; en la ficha, el ancla de la página.
+// «calendario completo»: el ancla de la misma página, en Mi equipo y en la ficha.
 function lastFiveBlock(results, calendarHref) {
   const items = results.map(r => html`<li><a class="last5-cell" href="${matchHref(r.match)}"><span class="form-chip form-${r.letter.toLowerCase()}" aria-hidden="true">${r.letter}</span><span class="vh">${LETTER[r.letter]}, </span><span class="last5-score">${score(r.gf, r.gc)}</span><span class="last5-rival"><span class="vh">${r.side === 'casa' ? 'en casa contra ' : 'fuera contra '}</span>${teamShort(r.rival)}</span></a></li>`);
   const more = html`<a class="more" href="${calendarHref}">calendario completo</a>`;
@@ -215,9 +216,6 @@ function notPlayedText(group, name) {
   return `${name} todavía no ha jugado ningún partido en este grupo`;
 }
 
-// Hueco del calendario en la columna principal de A, B y C de Mi equipo: mount lo pinta en escritorio.
-const CALENDAR_SLOT = html`<div data-slot="calendario"></div>`;
-
 function seasonView(v, state) {
   const { ctx, group, name, shields } = v;
   const fx = teamFixtures(name, group, ctx.today);
@@ -228,15 +226,12 @@ function seasonView(v, state) {
   const main = [top];
   const aside = [standingsBlock(group, name, v)];
   if (results.length) {
-    const calendarHref = v.calendar === 'always' ? '#calendario' : `${teamHref(group.season, group.id, name)}#calendario`;
-    main.push(lastFiveBlock(results, calendarHref));
+    main.push(lastFiveBlock(results, '#calendario'));
     aside.push(scorersBlock(ctx, group, name), figuresBlock(ctx, group, name));
   } else {
     main.push(block(null, empty(notPlayedText(group, name))));
   }
-  const rest = [];
-  if (v.calendar === 'always') rest.push(teamCalendar(name, group, { today: ctx.today, shields, ics: true }));
-  else main.push(CALENDAR_SLOT);
+  const rest = [teamCalendar(name, group, { today: ctx.today, shields, ics: true })];
   aside.push(freshness(ctx, group));
   const head = html`${teamHeader(name, group.label, v)}${state === 'C' ? staleNotice(v.stale) : ''}`;
   return { head, main, aside, rest };
@@ -341,21 +336,19 @@ function finalStandings(group, name, { shields, mine }) {
   }), { title: 'Clasificación final', context: more });
 }
 
-// En la ficha (calendar 'always') no hay caja de la temporada siguiente (§4.6) ni «Ver toda la
-// temporada», que llevaría a la misma ficha: su calendario completo ya está en la página.
+// La caja de la temporada siguiente, solo en Mi equipo (§4.6). Ni en la ficha ni en Mi equipo hay
+// «Ver toda la temporada»: el calendario completo ya está en la página.
 function endedView(v, nextSeason) {
   const { ctx, group, name, shields } = v;
   const withBox = nextSeason && showNextSeasonBox({ group, health: ctx.health, portalSeason: ctx.portal.season });
   const next = nextSeasonOf(group.season);
   const subtitle = withBox ? `A la espera de la temporada ${seasonLabel(next)}` : `Temporada ${seasonLabel(group.season)} terminada`;
-  const always = v.calendar === 'always';
   const main = [
     withBox ? nextSeasonBox(ctx, name, next) : '',
     endedBlock(ctx, group, name),
     ...summerBlocks(ctx, group, name),
-    always ? '' : html`<a class="home-all" href="${teamHref(group.season, group.id, name)}">Ver toda la temporada ${seasonLabel(group.season)}</a>`,
   ];
-  const rest = always ? [teamCalendar(name, group, { today: ctx.today, shields, ics: true })] : [];
+  const rest = [teamCalendar(name, group, { today: ctx.today, shields, ics: true })];
   return { head: html`${teamHeader(name, subtitle, v)}${staleNotice(v.stale)}`, main, aside: [finalStandings(group, name, v)], rest };
 }
 
@@ -367,26 +360,25 @@ function endedView(v, nextSeason) {
 // - action: 'change' («Cambiar», Mi equipo), 'make' («Hacer mi equipo», Equipo) o null;
 // - nextSeason: la caja de la temporada siguiente en D (solo Mi equipo);
 // - stale: el aviso de la decisión 20 de B1 en C y D (solo Mi equipo);
-// - calendar: 'wide', el hueco que mount llena en escritorio (Mi equipo); 'always', el calendario
-//   completo en render, con su ancla #calendario (Equipo);
 // - mine: si el equipo es mi equipo (el texto oculto de su fila en la clasificación);
 // - shields: los escudos;
 // - state: el estado, si quien llama ya lo calculó (la portada, con homeState: teamState una sola vez
 //   por pintado, B5, decisión 6); sin él, teamState.
 // El «‹» es el del router (ctx.backHref): la portada no lo tiene y la ficha sí.
 export function teamView(ctx, { group, name }, {
-  action = null, nextSeason = false, stale = null, calendar = 'wide', mine = false, shields = {}, state = null,
+  action = null, nextSeason = false, stale = null, mine = false, shields = {}, state = null,
 } = {}) {
   const shown = state || teamState({ group, name, todayISO: ctx.today, portalSeason: ctx.portal.season });
-  const v = { ctx, group, name, shields, action, stale, calendar, mine, back: ctx.backHref || null };
+  const v = { ctx, group, name, shields, action, stale, mine, back: ctx.backHref || null };
   return { state: shown, ...(shown === 'D' ? endedView(v, nextSeason) : seasonView(v, shown)) };
 }
 
 // ── Calendario completo del equipo (spec §4.6 y §4.8) ───────────────────
 
 // Todos sus partidos del grupo, en orden de jornada y con su estado (spec §5.3). El bloque lleva
-// siempre el ancla #calendario, también sin partidos (un retirado). Con `ics` (la ficha), encima de la
-// lista, «Calendario del equipo (.ics)» con todos sus partidos con fecha (decisión 15 de B3), si los hay.
+// siempre el ancla #calendario, también sin partidos (un retirado). Con `ics` (las dos pantallas),
+// encima de la lista, «Calendario del equipo (.ics)» con todos sus partidos con fecha (decisión 15 de
+// B3), si los hay.
 export function teamCalendar(team, group, { today, shields = {}, ics = false } = {}) {
   const items = group.rounds.flatMap(round => round.matches.filter(m => m.home === team || m.away === team).map(m => ({ round, m })));
   if (!items.length) return block('Calendario', empty('Sin partidos en el calendario de este grupo'), { id: 'calendario' });
@@ -395,26 +387,6 @@ export function teamCalendar(team, group, { today, shields = {}, ics = false } =
     ? html`<div class="box cal-actions"><div class="buttons"><button type="button" class="button" data-action="calendario-equipo">Calendario del equipo (.ics)</button></div></div>`
     : '';
   return block('Calendario', html`${download}<ol class="box cal">${rows}</ol>`, { context: `${items.length} partidos`, id: 'calendario' });
-}
-
-// Solo en escritorio: se pinta al montar y al cruzar los 1024 px, nunca oculto con CSS (spec §5.1: se
-// pinta solo lo visible). El router llama a la limpieza que devuelve mount justo antes del próximo
-// pintado (paint() de router.js): por eso wideCalendar devuelve la suya, que quita el escuchador de
-// matchMedia (que no es del DOM y no desaparece solo al sustituir la sección).
-const WIDE = '(min-width: 1024px)';
-function wideCalendar(section, ctx, { group, name }) {
-  const slot = section.querySelector('[data-slot="calendario"]');
-  if (!slot || typeof matchMedia !== 'function') return null;
-  const query = matchMedia(WIDE);
-  const off = () => { if (typeof query.removeEventListener === 'function') query.removeEventListener('change', paint); };
-  const paint = () => {
-    if (!slot.isConnected) { off(); return; }
-    // Html de la plantilla html``, que escapa toda interpolación, como el pintado del router.
-    slot.innerHTML = query.matches ? String(teamCalendar(name, group, { today: ctx.today, shields: ctx.datasets?.shields || {} })) : '';
-  };
-  paint();
-  if (typeof query.addEventListener === 'function') query.addEventListener('change', paint);
-  return off;
 }
 
 // ── Compartir y calendario del próximo partido ──────────────────────────
@@ -441,15 +413,14 @@ export function matchCalendar(match, group, { url = '', now = new Date() } = {})
 }
 
 // El comportamiento de la vista en su sección (la que se sustituye en cada pintado: la escucha nunca
-// se acumula): «Calendario» y «Compartir» del próximo partido del equipo; con calendar 'always', el
-// .ics de todos sus partidos, y con 'wide', el calendario de escritorio. Devuelve la limpieza de ese
-// calendario, o undefined.
-export function mountTeamView(section, ctx, { group, name }, { calendar = 'wide' } = {}) {
+// se acumula): «Calendario» y «Compartir» del próximo partido del equipo y el .ics de todos sus
+// partidos. No deja nada que limpiar: devuelve undefined.
+export function mountTeamView(section, ctx, { group, name }) {
   section.addEventListener('click', event => {
     const target = event.target.closest('[data-action]');
     if (!target || !section.contains(target)) return;
     const action = target.getAttribute('data-action');
-    if (action === 'calendario-equipo' && calendar === 'always') {
+    if (action === 'calendario-equipo') {
       // El enlace del .ics es el de la ficha, con su temporada (decisiones 28 y 101 de B2).
       const url = new URL(teamHref(group.season, group.id, name), location.href.split(/[?#]/)[0]).href;
       downloadCalendar(teamCalendarEvents(name, group), { season: group.season, group: group.id, name, url });
@@ -464,5 +435,5 @@ export function mountTeamView(section, ctx, { group, name }, { calendar = 'wide'
     // La respuesta común (links.js): «Enlace copiado.» o el enlace, en la región de estado.
     else shareAndAnnounce(data, section.querySelector('.share-status'));
   });
-  return calendar === 'wide' ? wideCalendar(section, ctx, { group, name }) || undefined : undefined;
+  return undefined;
 }

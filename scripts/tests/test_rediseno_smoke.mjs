@@ -64,3 +64,17 @@ test('rechaza la caja de error, el esqueleto sin sustituir y otro equipo en el h
   assert.equal(other.ok, false);
   assert.ok(other.failures.some((f) => /AD Huracán/.test(f)), other.failures.join('; '));
 });
+
+// Mi equipo con todo lo de la ficha (04/10/2026): la Plantilla se llena después del primer pintado, y
+// si sus actas fallan, su caja de error lo dice con su propio mensaje, no con el de la portada.
+test('la caja de error de la Plantilla falla con su propio mensaje, no con el de la portada', () => {
+  const squadError = '<section class="block" id="plantilla"><div class="block-head"><h2 class="block-title">Plantilla</h2></div><div class="box error-box" role="alert"><p class="error-text">No se pudieron cargar los datos de las actas de 2025/26.</p><div class="buttons"><button class="button is-main" type="button" data-action="retry">Reintentar</button></div></div></section>';
+  const main = home({ raw: currentAt('2026-03-01'), today: '2026-03-01' });
+  assert.match(main, /<section class="block" id="plantilla" data-slot="plantilla" aria-busy="true">.*?<\/section>/);
+  const failed = main.replace(/<section class="block" id="plantilla" data-slot="plantilla" aria-busy="true">.*?<\/section>/, squadError);
+  const result = checkRenderedDom(pageWith(failed), { teamName: TEAM });
+  assert.equal(result.ok, false);
+  assert.deepEqual(result.failures, ['la Plantilla de la portada no pudo cargar las actas de su grupo']);
+  // Con el hueco todavía sin llenar, o ya lleno, la portada pasa.
+  assert.deepEqual(checkRenderedDom(pageWith(main), { teamName: TEAM }).failures, []);
+});

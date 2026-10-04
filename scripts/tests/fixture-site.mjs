@@ -183,8 +183,9 @@ export function worldFiles(name) {
 
 // Instala el mundo `name` en un contexto de Playwright: rutas de los datos y de config.js (el resto
 // lo sirve el servidor estático de siempre), el reloj en su día (a mediodía de Canarias) y, si el
-// mundo lo trae, mi equipo guardado. `fail`: ficheros que responden 503 (la caja de error).
-export async function useWorld(context, name, { fail = [] } = {}) {
+// mundo lo trae, mi equipo guardado. `fail`: ficheros que responden 503 (la caja de error). `myTeam`:
+// otro equipo guardado en lugar del del mundo (Guayarmina en A1, la plantilla de la portada).
+export async function useWorld(context, name, { fail = [], myTeam = null } = {}) {
   const w = WORLDS[name];
   if (!w) throw new Error(`mundo desconocido: ${name}`);
   const served = files(w);
@@ -196,10 +197,11 @@ export async function useWorld(context, name, { fail = [] } = {}) {
       : route.fulfill({ status: 404, contentType: 'text/plain', body: 'no está en el mundo de fixtures' });
   });
   await context.clock.setFixedTime(new Date(`${w.today}T12:00:00Z`));
-  if (w.myTeam) {
+  const saved = myTeam || w.myTeam;
+  if (saved) {
     await context.addInitScript(([key, value]) => {
       try { if (!localStorage.getItem(key)) localStorage.setItem(key, value); } catch { /* almacén bloqueado */ }
-    }, [STORE_KEY, JSON.stringify({ myTeam: w.myTeam, recent: [] })]);
+    }, [STORE_KEY, JSON.stringify({ myTeam: saved, recent: [] })]);
   }
   return w;
 }

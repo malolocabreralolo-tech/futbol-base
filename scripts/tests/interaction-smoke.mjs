@@ -35,9 +35,12 @@ import { useWorld, STORE_KEY } from './fixture-site.mjs';
 // De B5: una vez, a 390 px, el «Reintentar» de la Plantilla, los Goles y las Alineaciones (un 503 y
 // luego 200): cada bloque se pinta en su sitio, sin volver arriba (decisión 3); y el paso del
 // esqueleto a la ficha de Equipo de una temporada pasada, sin desplazar lo de arriba (decisión 4).
-// Y lo que faltaba (decisión 7): el calendario de escritorio de la portada (desde 1024 px), Intro en
-// los buscadores de Explorar y de Goleadores (ni recarga ni cambia la dirección) y la portada en B, C,
-// D, E y X a 320 px. Cada clic, espera de localizador y navegación lleva su etiqueta (labeled).
+// Y lo que faltaba (decisión 7): Intro en los buscadores de Explorar y de Goleadores (ni recarga ni
+// cambia la dirección) y la portada en B, C, D, E y X a 320 px.
+// De Mi equipo con todo lo de la ficha (04/10/2026): el calendario completo de la portada a todos los
+// anchos (al final en móvil, a la izquierda en escritorio) y, una vez a 390 px, su plantilla sin
+// bloquearla, con su «Reintentar» y sin conexión (homeSquad). Cada clic, espera de localizador y
+// navegación lleva su etiqueta (labeled).
 // Sin esperas fijas: cada paso espera a su condición (waitForAsync, que al agotarse dice el escenario,
 // el ancho y el tema) o a su localizador.
 const { chromium } = createRequire(import.meta.url)('playwright');
@@ -60,6 +63,8 @@ const HEADS = {
 const HURACAN = '#/equipo?s=2025-2026&g=PG2&t=AD%20Hurac%C3%A1n';
 const LAS_MESAS = { name: 'Las Mesas Hu.', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' };
 const AD_HURACAN = { name: 'AD Huracán', season: '2025-2026', cat: 'prebenjamin', groupId: 'PG2' };
+// Guayarmina, en A1: el único grupo de liga de las fixtures con actas (la plantilla de la portada).
+const GUAYARMINA = { name: 'Guayarmina', season: '2025-2026', cat: 'benjamin', groupId: 'A1' };
 // Las pantallas de B3 que se miden sin desplazamiento horizontal (Explorar, la ficha de AD Huracán y
 // Ligas, en sus propios pasos): [ruta, pantalla, lo que se despliega antes: [botón, lo que aparece]].
 const B3_SCREENS = [
@@ -134,6 +139,11 @@ async function checkLayout(page, width, label) {
   return m;
 }
 
+// La plantilla de la portada llega después del pintado (fillSquad, D4 del 04/10/2026): antes de medir
+// la portada, su hueco se resuelve (en PG2, sin actas, un 404 que lo quita).
+const squadSettled = (page, label) => waitForAsync(page, () => !document.querySelector('#contenido [data-slot]'), null,
+  { label: `${label}: la plantilla de la portada` });
+
 // Un clic en `selector`, con la etiqueta de su paso en el error de un tiempo agotado (labeled).
 const click = (page, selector, label) => labeled(`${label}: clic en ${selector}`, () => page.click(selector));
 
@@ -179,16 +189,26 @@ async function scenarios(viewport, colorScheme) {
     let s = await paintedAs(page, 'home', { label: `${label}, portada` });
     assert.equal(s.state, 'A', `${label}: la portada del 01/03/2026 está en A`);
     assert.deepEqual(s.tabs, ['#/ page'], label);
+    await squadSettled(page, `${label}, portada`);
     assert.equal((await checkLayout(page, viewport.width, `${label}, portada`)).paper, PAPER[colorScheme], `${label}: fondo del tema`);
-    // El calendario de escritorio (spec §4.8): desde 1024 px, en su hueco, los 26 partidos de Las Mesas;
-    // por debajo, el hueco vacío (se pinta solo lo visible, §5.1).
+    // El calendario completo (spec §4.8), a todos los anchos y en render: los 26 partidos de Las Mesas
+    // con su .ics. En móvil y tableta, al final, debajo de la consulta; en escritorio, a la izquierda.
     const calendar = await page.evaluate(() => {
-      const slot = document.querySelector('#contenido [data-slot="calendario"]');
-      return { slot: Boolean(slot), rows: slot ? slot.querySelectorAll('#calendario a.match-row').length : null,
-        context: slot?.querySelector('#calendario .block-context')?.textContent ?? null };
+      const cal = document.querySelector('#contenido .home-rest #calendario');
+      const side = document.querySelector('#contenido .home-side').getBoundingClientRect();
+      const rect = cal ? cal.getBoundingClientRect() : null;
+      return {
+        rows: cal ? cal.querySelectorAll('a.match-row').length : null,
+        context: cal?.querySelector('.block-context')?.textContent ?? null,
+        ics: cal ? cal.querySelectorAll('button[data-action="calendario-equipo"]').length : null,
+        slot: document.querySelectorAll('#contenido [data-slot="calendario"]').length,
+        below: rect ? rect.top >= side.bottom - 1 : null, left: rect ? rect.left < side.left : null,
+      };
     });
-    assert.deepEqual(calendar, viewport.width >= 1024 ? { slot: true, rows: 26, context: '26 partidos' } : { slot: true, rows: 0, context: null },
-      `${label}: el calendario de la portada, solo en escritorio`);
+    assert.deepEqual([calendar.rows, calendar.context, calendar.ics, calendar.slot], [26, '26 partidos', 1, 0],
+      `${label}: el calendario completo de la portada, con su .ics`);
+    if (viewport.width < 1024) assert.ok(calendar.below, `${label}: en móvil, el calendario va al final, debajo de la consulta`);
+    else assert.ok(calendar.left, `${label}: en escritorio, el calendario va a la izquierda`);
 
     // 2. Jornada por la barra; anterior y siguiente cambian la jornada sin entrada nueva.
     await click(page, '.tabbar a.tab[href="#/jornada"]', label);
@@ -388,6 +408,29 @@ async function scenariosB3(viewport, colorScheme) {
   }
 }
 
+// «Reintentar» de un bloque en su sitio (B5, decisión 3): con el bloque `id` más abajo del principio, el
+// clic en su botón lo pinta sin volver arriba, sin repintar la pantalla (la marca de su sección sigue),
+// sin entradas nuevas en el historial y con el foco en su título. `done`: lo que aparece al terminar.
+async function retryInPlace(page, id, done, label) {
+  const before = await page.evaluate((block) => {
+    document.querySelector(`#${block}`).scrollIntoView();
+    document.querySelector('#contenido section[data-screen]').dataset.marca = 'sin repintar';
+    return { y: scrollY, length: history.length };
+  }, id);
+  assert.ok(before.y > 0, `${label}: el bloque está más abajo del principio`);
+  await click(page, `#${id} button[data-action="retry"]`, label);
+  await waitForAsync(page, (sel) => document.querySelector(sel) !== null, done, { label });
+  const after = await page.evaluate((block) => ({
+    y: scrollY, length: history.length,
+    marca: document.querySelector('#contenido section[data-screen]').dataset.marca,
+    focus: document.activeElement?.closest(`#${block}`) && document.activeElement.classList.contains('block-title'),
+  }), id);
+  assert.equal(after.y, before.y, `${label}: el desplazamiento se queda`);
+  assert.equal(after.marca, 'sin repintar', `${label}: solo se pinta el bloque`);
+  assert.equal(after.length, before.length, `${label}: sin entradas nuevas`);
+  assert.ok(after.focus, `${label}: el foco, en el título del bloque`);
+}
+
 // «Reintentar» de un bloque (B5, decisión 3): la primera petición de las actas y la de la cronología
 // fallan (503) y las siguientes llegan (200). La Plantilla de Guayarmina y las Alineaciones y los Goles
 // de Moya–Guayarmina se pintan en su sitio: la página no vuelve arriba, la pantalla no se repinta (la
@@ -405,25 +448,7 @@ async function retryBlocks() {
       failed.add(path);
       return route.fulfill({ status: 503, contentType: 'text/plain', body: 'no disponible' });
     });
-    const retry = async (page, id, done, step) => {
-      const before = await page.evaluate((block) => {
-        document.querySelector(`#${block}`).scrollIntoView();
-        document.querySelector('#contenido section[data-screen]').dataset.marca = 'sin repintar';
-        return { y: scrollY, length: history.length };
-      }, id);
-      assert.ok(before.y > 0, `${label}, ${step}: el bloque está más abajo del principio`);
-      await click(page, `#${id} button[data-action="retry"]`, `${label}, ${step}`);
-      await waitForAsync(page, (sel) => document.querySelector(sel) !== null, done, { label: `${label}, ${step}` });
-      const after = await page.evaluate((block) => ({
-        y: scrollY, length: history.length,
-        marca: document.querySelector('#contenido section[data-screen]').dataset.marca,
-        focus: document.activeElement?.closest(`#${block}`) && document.activeElement.classList.contains('block-title'),
-      }), id);
-      assert.equal(after.y, before.y, `${label}, ${step}: el desplazamiento se queda`);
-      assert.equal(after.marca, 'sin repintar', `${label}, ${step}: solo se pinta el bloque`);
-      assert.equal(after.length, before.length, `${label}, ${step}: sin entradas nuevas`);
-      assert.ok(after.focus, `${label}, ${step}: el foco, en el título del bloque`);
-    };
+    const retry = (page, id, done, step) => retryInPlace(page, id, done, `${label}, ${step}`);
     const open = async (hash, screen, step) => {
       const page = await context.newPage();
       page.setDefaultTimeout(8000);
@@ -464,11 +489,116 @@ async function homeStates() {
       await page.goto(`${base}#/`);
       const s = await paintedAs(page, 'home', { label });
       assert.equal(s.state, world, `${label}: el estado del mundo`);
+      await squadSettled(page, label);
       await checkLayout(page, 320, label);
       assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
     } finally {
       await context.close();
     }
+  }
+}
+
+// Mi equipo con todo lo de la ficha (04/10/2026, D4): la plantilla no bloquea la portada. Guayarmina
+// (A1) en el mundo A, con las actas de A1 retenidas en una compuerta: la portada ya está pintada, con
+// el hueco de la plantilla; un 503 pinta su caja de error en su sitio, sin mover el foco; su
+// «Reintentar», la tabla (retryInPlace); el jugador y la trayectoria se despliegan; Jornada y Mi equipo
+// por la barra la traen ya en el pintado, sin hueco ni otra petición; y en una página nueva sin
+// conexión, un vacío tranquilo, sin alerta, que se rellena solo al volver la conexión.
+async function homeSquad() {
+  const label = '390px en claro, plantilla de la portada';
+  const context = await newContext({ width: 390, height: 844 }, 'light');
+  const errors = [];
+  try {
+    await useWorld(context, 'A', { myTeam: GUAYARMINA });
+    // La compuerta: cada petición de las actas de A1 espera a `gate` y hace lo que diga ('503', 'abort'
+    // o 'pass', que deja pasar las del mundo); `requested` cuenta las que han llegado.
+    let open = null;
+    let gate = null;
+    const close = () => { gate = new Promise((resolve) => { open = resolve; }); };
+    let requested = 0;
+    close();
+    await context.route(/\/data-lineups-2025-2026-A1\.js(\?.*)?$/, async (route) => {
+      requested += 1;
+      const how = await gate;
+      if (how === '503') return route.fulfill({ status: 503, contentType: 'text/plain', body: 'no disponible' });
+      if (how === 'abort') return route.abort('internetdisconnected');
+      return route.fallback();
+    });
+    // Lo que se espera en Node (las peticiones que llegan a la compuerta), con su etiqueta.
+    const until = async (condition, what) => {
+      for (const deadline = Date.now() + 15000; !condition();) {
+        if (Date.now() > deadline) throw new Error(`${label}: ${what}`);
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+    };
+    const openHome = async (step) => {
+      const page = await context.newPage();
+      page.setDefaultTimeout(8000);
+      page.on('pageerror', (error) => errors.push(error.message));
+      await page.goto(`${base}#/`);
+      return [page, await paintedAs(page, 'home', { label: `${label}, ${step}` })];
+    };
+    const [page, s] = await openHome('portada');
+    await until(() => requested === 1, 'tras cargar, la portada pide las actas de A1');
+    assert.deepEqual([s.state, s.h1], ['A', 'Guayarmina'], `${label}: la portada de Guayarmina, en A`);
+    const pending = await page.evaluate(() => {
+      window.__antes = document.activeElement;
+      const slot = document.querySelector('#plantilla');
+      return {
+        slot: Boolean(slot && slot.matches('[data-slot][aria-busy="true"]')),
+        text: slot?.querySelector('.team-loading')?.textContent ?? null,
+        next: [...document.querySelectorAll('#contenido .block-title')].some((h) => h.textContent === 'Próximo partido'),
+      };
+    });
+    assert.deepEqual(pending, { slot: true, text: 'Cargando la plantilla…', next: true },
+      `${label}: con las actas retenidas, la portada ya está pintada, con el hueco de la plantilla`);
+    // Un 503: la caja de error en su sitio, sin mover el foco.
+    open('503');
+    await labeled(`${label}: la caja de error de la plantilla`, () => page.locator('#plantilla .error-box').waitFor());
+    assert.ok(await page.evaluate(() => document.activeElement === window.__antes && !document.querySelector('#contenido [data-slot]')),
+      `${label}: la caja de error, en el hueco y sin mover el foco`);
+    // Su «Reintentar»: la tabla, en su sitio.
+    gate = Promise.resolve('pass');
+    await retryInPlace(page, 'plantilla', '#plantilla table.squad', `${label}, «Reintentar»`);
+    assert.equal(requested, 2, `${label}: «Reintentar» vuelve a pedir las actas`);
+    // El jugador y la trayectoria.
+    await click(page, '#plantilla button.squad-player', label);
+    await labeled(`${label}: los partidos del jugador`, () => page.locator('#plantilla tr.squad-detail a.squad-match').first().waitFor());
+    await click(page, '#contenido button[data-action="trayectoria"]', label);
+    await labeled(`${label}: la trayectoria`, () => page.locator('#trayectoria a.traj-row').first().waitFor());
+    await checkLayout(page, 390, `${label}, con todo desplegado`);
+    // Jornada y Mi equipo por la barra: la plantilla, ya en el pintado.
+    await click(page, '.tabbar a.tab[href="#/jornada"]', label);
+    await paintedAs(page, 'jornada', { hash: '#/jornada', label: `${label}, Jornada` });
+    await click(page, '.tabbar a.tab[href="#/"]', label);
+    await paintedAs(page, 'home', { hash: '#/', label: `${label}, otra vez Mi equipo` });
+    const again = await page.evaluate(() => ({
+      table: Boolean(document.querySelector('#plantilla table.squad')), slot: Boolean(document.querySelector('#contenido [data-slot]')),
+    }));
+    assert.deepEqual(again, { table: true, slot: false }, `${label}: de vuelta en Mi equipo, la plantilla ya en el pintado`);
+    assert.equal(requested, 2, `${label}: sin pedir las actas otra vez`);
+    await page.close();
+    // Sin conexión, en una página nueva: las actas retenidas no llegan y la plantilla lo dice sin
+    // alarma; al volver la conexión, se rellena sola.
+    close();
+    const [offline] = await openHome('página nueva');
+    await until(() => requested === 3, 'la página nueva pide las actas');
+    await context.setOffline(true);
+    open('abort');
+    await labeled(`${label}: el vacío sin conexión`, () => offline.locator('#plantilla .empty').waitFor());
+    const quiet = await offline.evaluate(() => ({
+      text: document.querySelector('#plantilla .empty').textContent,
+      alarm: document.querySelectorAll('#plantilla .error-box, #plantilla [role="alert"]').length,
+    }));
+    assert.ok(quiet.text.startsWith('Sin conexión'), `${label}: sin conexión, «${quiet.text}»`);
+    assert.equal(quiet.alarm, 0, `${label}: sin conexión, ni caja de error ni alerta`);
+    gate = Promise.resolve('pass');
+    await context.setOffline(false);
+    await labeled(`${label}: la plantilla al volver la conexión`, () => offline.locator('#plantilla table.squad').waitFor());
+    await offline.close();
+    assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
+  } finally {
+    await context.close();
   }
 }
 
@@ -578,7 +708,7 @@ try {
     for (const colorScheme of ['light', 'dark']) {
       const label = nameOf(viewport, colorScheme);
       await scenarios(viewport, colorScheme);
-      console.log(`PASS: ${label}: barra, calendario de la portada solo en escritorio, jornadas, vistas de Tabla, partido con Atrás y con «‹», el 8–1 enlazado, enlace antiguo y «Otro grupo» → Ligas → Tabla, el foco en su sitio y sin desplazamiento horizontal`);
+      console.log(`PASS: ${label}: barra, calendario completo de la portada a todos los anchos (al final en móvil, a la izquierda en escritorio), jornadas, vistas de Tabla, partido con Atrás y con «‹», el 8–1 enlazado, enlace antiguo y «Otro grupo» → Ligas → Tabla, el foco en su sitio y sin desplazamiento horizontal`);
       await scenariosB3(viewport, colorScheme);
       console.log(`PASS: ${label}: buscar «hurac» sin una entrada por letra y abrir su ficha sin cambiar mi equipo, Intro sin recargar en los dos buscadores, las pantallas de B3 sin desplazamiento horizontal (el cuadro de copa, dentro de su caja) y «Hacer mi equipo», guardado y respetado al recargar`);
     }
@@ -591,6 +721,8 @@ try {
   console.log('PASS: 390px en claro, del esqueleto a la ficha de Equipo de 2024/25: la cabecera y el primer bloque, en su sitio y casi del mismo alto; desplazamiento por debajo de 0,1');
   await homeStates();
   console.log('PASS: 320px en claro, la portada en B, C, D, E y X: sin desplazamiento horizontal y sin que la barra tape el final');
+  await homeSquad();
+  console.log('PASS: 390px en claro, la plantilla de la portada: no la bloquea (con las actas retenidas, ya pintada con su hueco), un 503 en su sitio sin mover el foco, su «Reintentar» sin volver arriba, el jugador y la trayectoria, de vuelta en Mi equipo ya pintada y, sin conexión, un vacío tranquilo que se rellena al volver la conexión');
 } finally {
   if (browser) await browser.close();
   server.closeAllConnections();

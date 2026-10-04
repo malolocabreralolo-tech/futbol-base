@@ -3,16 +3,18 @@
 // render(ctx) es puro y síncrono: homeState decide el estado (E, X, D, B, C o A, en ese orden) sobre
 // la resolución de mi equipo, y la vista de equipo lo recibe (teamState, una vez por pintado: B5,
 // decisión 6). E y X son de la portada; D, B, C y A los pinta la vista de equipo
-// (team-view.js, decisión 8 de B3), la misma de la ficha de Equipo, aquí con «Cambiar», la caja de la
-// temporada siguiente, el aviso stale y el calendario de escritorio. El estado va en data-state, que
-// usan las pruebas de navegador. mount(root, ctx, nav) añade el comportamiento. Nada toca el DOM al
-// importarse.
+// (team-view.js, decisión 8 de B3), la misma vista de la ficha, con su consulta completa
+// (team-extras.js) y el calendario con su .ics; aquí, con «Cambiar», la caja de la temporada
+// siguiente y el aviso stale; la plantilla no espera a las actas (fillSquad). El estado va en
+// data-state, que usan las pruebas de navegador. mount(root, ctx, nav) añade el comportamiento. Nada
+// toca el DOM al importarse.
 import { html } from './html.js';
 import { block, box, crest, empty } from './ui.js';
 import { seasonLabel } from './model.js';
 import { homeState } from './myteam.js';
 import { ensureHealth } from './state.js';
 import { SEARCH_HREF, mountTeamView, teamColumns, teamHeader, teamView } from './team-view.js';
+import { fillSquad, mountTeamExtras, squadPending, teamExtras } from './team-extras.js';
 
 // ── Estado E: elegir equipo (spec §4.2 y §6.3) ──────────────────────────
 
@@ -48,10 +50,11 @@ export const screen = {
     if (state === 'E' || state === 'X') {
       return html`<section data-screen="home" data-state="${state}">${state === 'E' ? stateE(ctx, shields) : stateX(ctx, shields)}</section>`;
     }
-    const view = teamView(ctx, { group: r.group, name: r.name }, {
-      action: 'change', nextSeason: true, stale: r.stale || null, calendar: 'wide', mine: true, shields, state,
-    });
-    return html`<section data-screen="home" data-state="${view.state}">${view.head}${teamColumns(view.main, view.aside, view.rest)}</section>`;
+    const team = { group: r.group, name: r.name };
+    const view = teamView(ctx, team, { action: 'change', nextSeason: true, stale: r.stale || null, mine: true, shields, state });
+    // La consulta de la ficha, en su orden; la plantilla, sin esperar a las actas (lazySquad).
+    const aside = [...view.aside, ...teamExtras(ctx, r.group, r.name, { lazySquad: true })];
+    return html`<section data-screen="home" data-state="${view.state}">${view.head}${teamColumns(view.main, aside, view.rest)}</section>`;
   },
   mount(root, ctx, nav) {
     const section = root.matches && root.matches('[data-screen="home"]') ? root : root.querySelector('[data-screen="home"]');
@@ -69,6 +72,13 @@ export const screen = {
       });
       return undefined;
     }
-    return r && r.status === 'ok' ? mountTeamView(section, ctx, { group: r.group, name: r.name }, { calendar: 'wide' }) : undefined;
+    if (!r || r.status !== 'ok') return undefined;
+    const team = { group: r.group, name: r.name };
+    // Como en la ficha: los extras (jugador, trayectoria y sus «Reintentar») y después la vista
+    // («Calendario», «Compartir» y el .ics). Si la plantilla espera a las actas, fillSquad llena su
+    // hueco y devuelve su limpieza, que el router llama antes del pintado siguiente.
+    mountTeamExtras(section, ctx, team);
+    mountTeamView(section, ctx, team);
+    return squadPending(ctx, r.group, r.name) ? fillSquad(section, ctx, team) : undefined;
   },
 };

@@ -12,7 +12,8 @@ import { teamTrajectory } from '../../src/myteam.js';
 import { pointsChart } from '../../src/ui.js';
 import { buildCalendar, teamCalendarEvents } from '../../src/links.js';
 import { SCREEN_MAP } from '../../src/screens.js';
-import { screen, playerDetail, pointsNote, trajectoryContent } from '../../src/screen-equipo.js';
+import { screen } from '../../src/screen-equipo.js';
+import { playerDetail, pointsNote, trajectoryContent } from '../../src/team-extras.js';
 
 const s = (h) => String(h);
 const text = (h) => s(h).replace(/<[^>]*>/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'")

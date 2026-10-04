@@ -82,7 +82,9 @@ jobs:
             for intento in 1 2 3; do
               if git push; then break; fi
               if [ "$intento" = 3 ]; then exit 1; fi
-              git pull --rebase origin main || { git rebase --abort; echo "conflicto con main: se rehará en la próxima pasada"; exit 1; }
+              # --autostash: la importación de actas deja cambios sin subir (fiflp_actas_unmatched.json)
+              # y sin él git se niega a rebasar (4/10/2026: «You have unstaged changes»).
+              git pull --rebase --autostash origin main || { git rebase --abort; echo "conflicto con main: se rehará en la próxima pasada"; exit 1; }
             done
           fi
 

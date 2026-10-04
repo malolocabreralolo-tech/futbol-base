@@ -339,7 +339,7 @@ def test_update_push_rebases_and_retries():
     main en ese rato no debe tirar el trabajo (pasó el 3/10/2026: «rejected»)."""
     runs = _runs(_load("update.yml"), "update")
     commit_run = next(r for r in runs if "Actualización automática" in r and "git commit" in r)
-    assert "git pull --rebase origin main" in commit_run
+    assert "git pull --rebase --autostash origin main" in commit_run, "con cambios sin subir, git no rebasa"
     assert "git rebase --abort" in commit_run
 
 

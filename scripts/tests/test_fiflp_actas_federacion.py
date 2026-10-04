@@ -533,3 +533,83 @@ def test_the_bot_imports_changed_raws_once_and_only_flattened_actas(tmp_path):
     raw.write_text(json.dumps({"262000": acta(TAMA), "100": old}, indent=1), encoding="utf-8")
     assert list(I.import_changed_raws(conn, str(tmp_path), log=lines.append)) == ["fiflp_actas_2025-2026_raw.json"]
     assert conn.execute("SELECT count(*) FROM appearances").fetchone()[0] == apps
+
+
+# ── Segunda pasada: dentro del grupo de su grupo de la federación ──
+
+def test_a_yearless_calendar_date_is_compared_by_day_and_month():
+    from acta_reconciler import _contradicts
+    row = lambda date: (1, "A", "B", date, 2, 1)
+    assert _contradicts({"date": "19-10-2024", "home_score": 2, "away_score": 1}, row("05/04"))
+    assert not _contradicts({"date": "19-10-2024", "home_score": 2, "away_score": 1}, row("20/10"))
+    assert not _contradicts({"date": "01-01-2025", "home_score": 2, "away_score": 1}, row("31/12"))   # cambio de año
+
+
+def group_base():
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    migrate(conn)
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (1, '2025-2026', 2025, 2026, 0);
+      INSERT INTO categories(id, name) VALUES (1, 'PREBENJAMIN');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase) VALUES
+        (1, 1, 1, 'PG1', 'Grupo 1', 'Gran Canaria'), (2, 1, 1, 'CP1', 'Grupo 1', 'Copa X');
+      INSERT INTO teams(id, name) VALUES (1, 'Valkyrias Bec.'), (2, 'Moya'), (3, 'Tamaraceite'), (4, 'Arucas');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+        (1, 1, 1, 9, 3, 3, 0, 0, 30, 2, 28), (1, 3, 2, 6, 3, 2, 0, 1, 9, 5, 4),
+        (1, 2, 3, 3, 3, 1, 0, 2, 4, 20, -16), (1, 4, 4, 0, 3, 0, 0, 3, 1, 17, -16);
+      INSERT INTO matches(id, group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES
+        (1, 1, 'Jornada 1', '04/10', 2, 3, 1, 2), (2, 1, 'Jornada 1', '04/10', 4, 1, 0, 9),
+        (3, 1, 'Jornada 2', '11/10', 3, 4, 3, 0), (4, 1, 'Jornada 2', '11/10', 1, 2, 6, 0),
+        (5, 1, 'Jornada 3', '18/10', 2, 4, 3, 1),
+        (6, 2, 'Ronda 1', '07/06', 3, 4, 3, 0);
+    """)
+    return conn
+
+
+def flat(home, away, hs, as_, date, comp="9", grupo="1", consistent=True):
+    return {"header": {"season": "2025/2026", "date": date, "home_team": home, "away_team": away,
+                       "home_score": hs, "away_score": as_},
+            "lineups": {"home": [{"dorsal": 1, "name": f"H, {home[:4]}", "role": "starter"}],
+                        "away": [{"dorsal": 1, "name": f"A, {away[:4]}", "role": "starter"}]},
+            "events": [], "staff": {}, "consistent": consistent,
+            "enumeration": {"comp_id": comp, "grupo": grupo, "jornada": "1"}}
+
+
+def test_unmatched_names_are_found_in_their_group_and_a_consistent_acta_fixes_a_misread_score(tmp_path):
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = group_base()
+    raw = {
+        "1": flat("MOYA, U.D.", "TAMARACEITE, U.D. A", 1, 2, "04-10-2025"),
+        "3": flat("TAMARACEITE, U.D. A", "ARUCAS C.F. A", 3, 0, "11-10-2025"),
+        "5": flat("MOYA, U.D.", "ARUCAS C.F. A", 3, 1, "18-10-2025"),
+        # 'BECERRIL VALKYRIAS' no casa por nombres con 'Valkyrias Bec.'; el calendario dice 9 y el acta 19.
+        "2": flat("ARUCAS C.F. A", "BECERRIL VALKYRIAS, C.D.", 0, 19, "04-10-2025"),
+        "4": flat("BECERRIL VALKYRIAS, C.D.", "MOYA, U.D.", 6, 0, "11-10-2025"),
+        # Una copa con los mismos equipos y el mismo marcador que un partido de liga: no se casa con él.
+        "6": flat("TAMARACEITE, U.D. A", "ARUCAS C.F. A", 3, 0, "07-06-2026", comp="77"),
+    }
+    (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    gol = {"9:1": {"comp": "9", "grupo": "1", "comp_name": "LIGA PREBENJAMIN", "grupo_name": "GRUPO 1", "ok": True,
+                   "standings": [{"pos": 1, "team": "BECERRIL VALKYRIAS, C.D.", "pts": 9, "j": 3, "g": 3, "e": 0, "p": 0}],
+                   "scorers": []}}
+    (tmp_path / "fiflp_goleadores_2025-2026_raw.json").write_text(json.dumps(gol), encoding="utf-8")
+    report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
+    assert report["matched"] == 6 and report["unmatched"] == 0 and report["scores_fixed"] == 1
+    assert conn.execute("SELECT id, cod_acta, home_score, away_score FROM matches ORDER BY id").fetchall() == [
+        (1, 1, 1, 2), (2, 2, 0, 19), (3, 3, 3, 0), (4, 4, 6, 0), (5, 5, 3, 1), (6, 6, 3, 0)]
+
+
+def test_an_inconsistent_acta_never_overwrites_the_calendar_score(tmp_path):
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = group_base()
+    raw = {"1": flat("MOYA, U.D.", "TAMARACEITE, U.D. A", 1, 2, "04-10-2025"),
+           "3": flat("TAMARACEITE, U.D. A", "ARUCAS C.F. A", 3, 0, "11-10-2025"),
+           "5": flat("MOYA, U.D.", "ARUCAS C.F. A", 3, 1, "18-10-2025"),
+           "2": flat("ARUCAS C.F. A", "BECERRIL VALKYRIAS, C.D.", 0, 19, "04-10-2025", consistent=False)}
+    (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
+    assert report["scores_fixed"] == 0
+    assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=2").fetchone() == (0, 9, None)

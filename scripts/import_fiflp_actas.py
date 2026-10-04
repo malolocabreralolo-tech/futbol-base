@@ -21,12 +21,12 @@ import sys
 import unicodedata
 
 try:
-    from scripts.acta_reconciler import reconcile_acta
+    from scripts.acta_reconciler import reconcile_acta, _contradicts
 except ImportError:
     # Direct CLI run (`python3 scripts/import_fiflp_actas.py`): sys.path[0] is
     # scripts/, so the `scripts.` package is not importable. Add the repo root.
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from scripts.acta_reconciler import reconcile_acta
+    from scripts.acta_reconciler import reconcile_acta, _contradicts
 
 UNMATCHED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_actas_unmatched.json")
 
@@ -343,23 +343,39 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
     unmatched = 0
     duplicates = 0
     skipped = 0
+    fixed = 0
     um = _load_unmatched()
     claimed = {}  # match_id -> cod_acta that claimed it in this run
 
     orphans_cleared = _purge_orphan_cod_actas(conn, raw)
 
+    votes = {}       # grupo de la federación -> {grupo de la base: actas}
+    first, pending = [], []
     for cod_acta_str, acta in raw.items():
-        cod_acta = int(cod_acta_str)
         if only is not None and not only(acta):
             skipped += 1
             continue
         mid = reconcile_acta(conn, acta.get("header") or {})
         if not mid:
-            unmatched += 1
-            um[str(cod_acta_str)] = {
-                "header": (acta.get("header") or {}),
-                "reason": "no candidate match",
-            }
+            pending.append((cod_acta_str, acta))
+            continue
+        gid = conn.execute("SELECT group_id FROM matches WHERE id=?", (mid,)).fetchone()[0]
+        first.append((cod_acta_str, acta, mid, gid))
+        fed = _fed_group(acta)
+        if fed:
+            votes.setdefault(fed, {}).setdefault(gid, 0)
+            votes[fed][gid] += 1
+    major = {fed: _majority(v) for fed, v in votes.items()}
+    owner = {gid: fed for fed, gid in major.items() if gid}
+
+    for cod_acta_str, acta, mid, gid in first:
+        cod_acta = int(cod_acta_str)
+        # Casada por nombres en un grupo que no es el de su grupo de la federación, o que es el
+        # de otro grupo de la federación (el acta de una copa con el partido de liga de los
+        # mismos equipos): a la segunda pasada.
+        fed = _fed_group(acta)
+        if fed and ((major.get(fed) and major[fed] != gid) or owner.get(gid) not in (None, fed)):
+            pending.append((cod_acta_str, acta))
             continue
         prev = claimed.get(mid)
         if prev is not None and prev != cod_acta:
@@ -371,6 +387,39 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
         _import_one(conn, cod_acta, acta, mid=mid)
         matched += 1
 
+    # Segunda pasada: las que no casaron por nombres ('BECERRIL VALKYRIAS, C.D.' frente a
+    # 'Valkyrias Bec.'), dentro del grupo de la base de su grupo de la federación. Un acta
+    # coherente manda sobre un marcador mal leído del calendario (un 16-0 guardado como 6-0).
+    known = {int(k) for k in raw if str(k).isdigit()}
+    in_group, official = reconcile_in_groups(conn, raw_path, pending, votes)
+    fixes = {}       # grupo de la base -> {partido: marcador del acta}
+    for cod_acta_str, acta in pending:
+        cod_acta = int(cod_acta_str)
+        mid, fix = in_group.get(cod_acta_str, (None, False))
+        held = conn.execute("SELECT cod_acta FROM matches WHERE id=?", (mid,)).fetchone() if mid else None
+        if (not mid or claimed.get(mid) not in (None, cod_acta)
+                or (held and held[0] not in (None, cod_acta) and held[0] in known)):
+            unmatched += 1
+            um[str(cod_acta_str)] = {"header": (acta.get("header") or {}), "reason": "no candidate match"}
+            continue
+        claimed[mid] = cod_acta
+        if fix:
+            gid = conn.execute("SELECT group_id FROM matches WHERE id=?", (mid,)).fetchone()[0]
+            fixes.setdefault(gid, {})[mid] = (acta["header"]["home_score"], acta["header"]["away_score"])
+        _import_one(conn, cod_acta, acta, mid=mid)
+        um.pop(str(cod_acta_str), None)
+        matched += 1
+
+    # Los marcadores de las actas y la clasificación oficial, grupo a grupo, sin alejar nunca
+    # el grupo de su clasificación (fiflp_tables.settle).
+    from fiflp_tables import official_rows, settle
+    tables = 0
+    for gid, group_fixes in fixes.items():
+        entry = official.get(gid)
+        choice = settle(conn, gid, group_fixes, official_rows(conn, gid, entry) if entry else None)
+        fixed += len(group_fixes) if "fixes" in choice else 0
+        tables += choice.startswith("official")
+
     conn.commit()
     _save_unmatched(um)
     return {
@@ -379,10 +428,100 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
         "duplicates": duplicates,
         "orphans_cleared": orphans_cleared,
         "skipped": skipped,
+        "scores_fixed": fixed,
+        "official_tables": tables,
     }
 
 
+def _fed_group(acta):
+    e = acta.get("enumeration") or {}
+    return (str(e["comp_id"]), str(e["grupo"])) if e.get("comp_id") and e.get("grupo") else None
+
+
+def _majority(v):
+    """El grupo de la base de la mayoría (al menos 3 actas y dos tercios), o None."""
+    if not v:
+        return None
+    gid, n = max(v.items(), key=lambda kv: kv[1])
+    return gid if n >= 3 and n * 3 >= sum(v.values()) * 2 else None
+
+
+def reconcile_in_groups(conn, raw_path, pending, votes):
+    """({cod_acta: (match_id, corregir el marcador)}, {grupo de la base: su entrada del raw de
+    goleadores}) de las actas que no casaron por nombres, buscadas en el
+    grupo de la base de su grupo de la federación: el de la mayoría de sus actas ya
+    casadas (al menos 3 y dos tercios) o, si no, el que casa con su entrada del raw
+    de goleadores (import_fiflp_goleadores.match_group). Los nombres se traducen con
+    team_bridge (la clasificación oficial) y, si no, match_teams; el partido debe
+    tener esos dos equipos en ese orden y la fecha (±1 día) no puede contradecir
+    el acta; el marcador tampoco, salvo que el acta sea coherente (entonces se
+    propone corregir el del calendario: lo decide fiflp_tables.settle)."""
+    sys.path.insert(0, SCRIPTS_DIR)
+    from fiflp_names import match_teams
+    import import_fiflp_goleadores as G
+    folder = os.path.dirname(os.path.abspath(raw_path))
+    m = RAW_FILE.match(os.path.basename(raw_path))
+    season = m.group(1) if m else None
+    row = conn.execute("SELECT id FROM seasons WHERE name=?", (season,)).fetchone() if season else None
+    if not row:
+        return {}, {}
+    season_id = row[0]
+    gol_path = os.path.join(folder, f"fiflp_goleadores_{season}_raw.json")
+    gol = {}
+    if os.path.exists(gol_path):
+        with open(gol_path, encoding="utf-8") as f:
+            gol = {(str(e["comp"]), str(e["grupo"])): e for e in json.load(f).values()}
+    index_path = os.path.join(folder, f"fiflp_actas_{season}_index.json")
+    index = {}
+    if os.path.exists(index_path):
+        with open(index_path, encoding="utf-8") as f:
+            index = json.load(f)
+
+    groups, bridges, out, official = {}, {}, {}, {}
+    for cod, acta in pending:
+        fed = _fed_group(acta)
+        if not fed:
+            continue
+        if fed not in groups:
+            gid = _majority(votes.get(fed, {}))
+            if not gid and fed in gol:
+                gid = G.match_group(conn, season_id, index, gol[fed])
+            groups[fed] = gid
+            if gid and fed in gol:
+                official[gid] = gol[fed]
+            if gid:
+                teams = sorted(G._db_groups_one(conn, gid))
+                bridge = G.team_bridge(conn, gid, gol[fed]) if fed in gol else {}
+                bridges[fed] = (bridge, teams)
+        gid = groups[fed]
+        if not gid:
+            continue
+        bridge, teams = bridges[fed]
+        h = acta.get("header") or {}
+        names = []
+        for side in ("home_team", "away_team"):
+            raw_name = G.clean_team_name(h.get(side))
+            names.append(G.scorer_team(raw_name, bridge) if raw_name else None)
+        loose = match_teams([n for n in names if n and n not in teams], teams)
+        home, away = (loose.get(n, n) if n else None for n in names)
+        if home not in teams or away not in teams:
+            continue
+        rows = conn.execute("""SELECT m.id, t1.name, t2.name, m.date, m.home_score, m.away_score
+            FROM matches m JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
+            WHERE m.group_id=? AND t1.name=? AND t2.name=?""", (gid, home, away)).fetchall()
+        # Con el acta coherente, el marcador no descarta: es el del calendario el que puede estar mal.
+        consistent = bool(acta.get("consistent")) and h.get("home_score") is not None and h.get("away_score") is not None
+        rows = [r for r in rows if not _contradicts(h, r, check_score=not consistent)]
+        if len(rows) == 1:
+            r = rows[0]
+            out[cod] = (r[0], consistent and (r[4], r[5]) != (h["home_score"], h["away_score"]))
+    return out, official
+
+
 RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
+# Entra en la huella de cada raw: al cambiar la lógica de importación, subirla
+# hace que el bot reimporte una vez todos los raws (3: segunda pasada por grupo y fiflp_tables).
+IMPORT_VERSION = "3"
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -400,7 +539,7 @@ def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
             continue
         path = os.path.join(folder, name)
         with open(path, "rb") as f:
-            digest = hashlib.sha1(f.read()).hexdigest()
+            digest = hashlib.sha1(IMPORT_VERSION.encode() + f.read()).hexdigest()
         row = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (name,)).fetchone()
         if row and row[0] == digest:
             continue
@@ -409,7 +548,9 @@ def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
                      (name, digest))
         conn.commit()
         log(f"  {name}: {report['matched']} actas importadas, {report['unmatched']} sin partido, "
-            f"{report['skipped']} sin aplanar (pendientes de volver a descargar)")
+            f"{report['skipped']} sin aplanar (pendientes de volver a descargar); "
+            f"{report['scores_fixed']} marcadores corregidos por su acta, "
+            f"{report['official_tables']} clasificaciones oficiales")
         reports[name] = report
     return reports
 

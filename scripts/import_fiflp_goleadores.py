@@ -29,9 +29,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fiflp_names import match_teams, team_key, team_score  # noqa: E402
 from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
 from update_fiflp import write_scorers  # noqa: E402
+from fiflp_tables import official_rows, settle  # noqa: E402
 
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 RAW_FILE = re.compile(r"^fiflp_goleadores_(\d{4}-\d{4})_raw\.json$")
+GOLEADORES_VERSION = "3"   # en la huella: subirla reimporta los goleadores de todas las temporadas
 
 
 def _category(comp_name):
@@ -194,7 +196,7 @@ def import_raw(conn, path, log=print):
     sin goleadores (o con los de aquí). Devuelve {escritos, sin_grupo, ya_tenían}."""
     season = RAW_FILE.match(os.path.basename(path)).group(1)
     row = conn.execute("SELECT id FROM seasons WHERE name=?", (season,)).fetchone()
-    report = {"written": 0, "unmatched": 0, "kept": 0}
+    report = {"written": 0, "unmatched": 0, "kept": 0, "tables": 0}
     if not row:
         return report
     season_id = row[0]
@@ -219,6 +221,9 @@ def import_raw(conn, path, log=print):
             report["unmatched"] += 1
             continue
         claimed.add(gid)
+        # La clasificación oficial, si no aleja el grupo de su calendario (fiflp_tables.settle).
+        if settle(conn, gid, {}, official_rows(conn, gid, entry)).startswith("official"):
+            report["tables"] += 1
         mine = conn.execute("SELECT 1 FROM fiflp_scorer_groups WHERE group_id=?", (gid,)).fetchone()
         has = conn.execute("SELECT 1 FROM scorers WHERE group_id=? LIMIT 1", (gid,)).fetchone()
         if has and not mine:
@@ -246,7 +251,7 @@ def import_changed_goleadores(conn, folder=SCRIPTS_DIR, log=print):
             continue
         path = os.path.join(folder, name)
         with open(path, "rb") as f:
-            digest = hashlib.sha1(f.read()).hexdigest()
+            digest = hashlib.sha1(GOLEADORES_VERSION.encode() + f.read()).hexdigest()
         row = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (name,)).fetchone()
         if row and row[0] == digest:
             continue
@@ -255,7 +260,7 @@ def import_changed_goleadores(conn, folder=SCRIPTS_DIR, log=print):
                      (name, digest))
         conn.commit()
         log(f"  {name}: goleadores de {report['written']} grupos; {report['unmatched']} grupos sin pareja en la base; "
-            f"{report['kept']} ya tenían los de futbolaspalmas")
+            f"{report['kept']} ya tenían los de futbolaspalmas; {report['tables']} clasificaciones oficiales")
         reports[name] = report
     return reports
 

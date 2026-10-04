@@ -264,8 +264,11 @@ def import_season(conn, folder, season, log=print):
     return report
 
 
+GRUPOS_VERSION = "2"   # en la huella: subirla rehace los grupos de todas las temporadas
+
+
 def sources_digest(folder, season):
-    h = hashlib.sha1()
+    h = hashlib.sha1(GRUPOS_VERSION.encode())
     for kind in ("goleadores", "actas"):
         for suffix in (("raw",) if kind == "goleadores" else ("index", "raw")):
             path = os.path.join(folder, f"fiflp_{kind}_{season}_{suffix}.json")

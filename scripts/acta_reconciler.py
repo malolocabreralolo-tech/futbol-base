@@ -130,18 +130,39 @@ def _parse_date(s: str):
     return None
 
 
-def _contradicts(header: dict, row) -> bool:
+def _short_date(s, target):
+    """'05/04' (día/mes sin año, como los calendarios del archivo antiguo) con el
+    año que lo deja más cerca de `target`; None si no tiene esa forma."""
+    m = re.match(r"^(\d{2})/(\d{2})$", s or "")
+    if not m:
+        return None
+    best = None
+    for year in (target.year - 1, target.year, target.year + 1):
+        try:
+            d = datetime(year, int(m.group(2)), int(m.group(1))).date()
+        except ValueError:
+            continue
+        if best is None or abs((d - target).days) < abs((best - target).days):
+            best = d
+    return best
+
+
+def _contradicts(header: dict, row, check_score=True) -> bool:
     """True if the acta header's date or score CONTRADICT a candidate match row.
 
     row = (id, home_name, away_name, date, home_score, away_score).
     Only fields present and parseable on BOTH sides are compared; missing or
-    unparseable data never counts as a contradiction.
+    unparseable data never counts as a contradiction. Una fecha sin año
+    ('05/04') se compara por día y mes: sin eso, el acta de una copa (19-10) se
+    casaba con el partido de liga de los mismos equipos y el mismo marcador.
     """
     target = _parse_date(header.get("date"))
     if target:
-        d = _parse_date(row[3])
+        d = _parse_date(row[3]) or _short_date(row[3], target)
         if d and abs((d - target).days) > 1:
             return True
+    if not check_score:
+        return False
     hs = header.get("home_score")
     asc_ = header.get("away_score")
     if (hs is not None and asc_ is not None
@@ -207,7 +228,7 @@ def reconcile_acta(conn, header: dict):
     if target:
         narrowed = []
         for r in candidates:
-            d = _parse_date(r[3])
+            d = _parse_date(r[3]) or _short_date(r[3], target)
             if d and abs((d - target).days) <= 1:
                 narrowed.append(r)
         if len(narrowed) == 1:

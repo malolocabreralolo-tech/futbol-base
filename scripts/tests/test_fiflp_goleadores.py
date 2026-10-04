@@ -67,7 +67,7 @@ def test_groups_match_by_their_teams_or_their_actas_and_scorers_land_with_base_n
               "503": {"comp_id": "900", "grupo": "2"}})
     lines = []
     reports = G.import_changed_goleadores(conn, str(tmp_path), log=lines.append)
-    assert reports["fiflp_goleadores_2024-2025_raw.json"] == {"written": 2, "unmatched": 1, "kept": 1, "tables": 0}
+    assert reports["fiflp_goleadores_2024-2025_raw.json"] == {"written": 2, "unmatched": 1, "kept": 1, "tables": 2}
     rows = lambda gid: conn.execute("""SELECT s.player_name, t.name, s.goals, s.games FROM scorers s
         JOIN teams t ON t.id=s.team_id WHERE s.group_id=? ORDER BY s.goals DESC""", (gid,)).fetchall()
     assert rows(1) == [("GARCIA, LUIS", "Tamaraceite", 5, 3), ("#1", "AD Huracán", 4, 3)]

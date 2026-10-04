@@ -114,6 +114,26 @@ def group_matches(index, actas, comp, grupo):
     return sorted(out, key=key)
 
 
+def _same_team_in_group(name, entry, matches):
+    """`name` con los equipos de la clasificación que no salen en el calendario llevados a los del
+    calendario que no salen en la clasificación."""
+    from fiflp_names import match_teams
+    table = {name(r["team"]): r["team"] for r in entry.get("standings") or [] if clean_team_name(r.get("team"))}
+    calendar = {name(m[1]) for m in matches} | {name(m[2]) for m in matches}
+    only_table = sorted(set(table) - calendar)
+    only_calendar = sorted(calendar - set(table))
+    if not only_table or not only_calendar:
+        return name
+    pairs = match_teams(only_table, only_calendar)
+    rest_t = [t for t in only_table if t not in pairs]
+    rest_c = [c for c in only_calendar if c not in pairs.values()]
+    if len(rest_t) == 1 and len(rest_c) == 1:
+        pairs[rest_t[0]] = rest_c[0]
+    if not pairs:
+        return name
+    return lambda raw_name: pairs.get(name(raw_name), name(raw_name))
+
+
 def _referenced(conn, team_id):
     for table, column in (("standings", "team_id"), ("matches", "home_team_id"), ("matches", "away_team_id"),
                           ("scorers", "team_id"), ("appearances", "team_id"), ("match_events", "team_id"),
@@ -230,6 +250,10 @@ def import_season(conn, folder, season, log=print):
 
     for entry, code, n, phase, island, matches in plans:
         ident = (str(entry["comp"]), str(entry["grupo"]))
+        # La federación escribe a veces un equipo de dos formas en el mismo grupo ('TINAJOB "B"' en la
+        # clasificación y 'TINAJO "B"' en las actas): el que solo sale en la tabla es el que solo sale en
+        # el calendario (match_teams, y si queda uno a cada lado, ese).
+        name = _same_team_in_group(name, entry, matches)
         rows = [name(r["team"]) for r in entry.get("standings") or [] if clean_team_name(r.get("team"))]
         if len(rows) != len(set(rows)):
             report["clash"] += 1
@@ -280,7 +304,7 @@ def import_season(conn, folder, season, log=print):
     return report
 
 
-GRUPOS_VERSION = "3"   # en la huella: subirla rehace los grupos de todas las temporadas
+GRUPOS_VERSION = "4"   # en la huella: subirla rehace los grupos de todas las temporadas
 
 
 def sources_digest(folder, season):

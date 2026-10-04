@@ -527,8 +527,10 @@ def fill_gaps(conn, raw_path, left, votes, claimed):
             if home not in teams or away not in teams or home == away:
                 continue
             ids = [conn.execute("SELECT id FROM teams WHERE name=?", (t,)).fetchone()[0] for t in (home, away)]
-            if conn.execute("SELECT 1 FROM matches WHERE group_id=? AND home_team_id=? AND away_team_id=?",
-                            (gid, *ids)).fetchone():
+            # Un cruce que ya está: se salta, salvo que todos sus partidos tengan ya su propia acta (ligas
+            # en las que los mismos equipos se enfrentan más de dos veces: es otro enfrentamiento).
+            if conn.execute("""SELECT 1 FROM matches WHERE group_id=? AND home_team_id=? AND away_team_id=?
+                               AND (cod_acta IS NULL OR cod_acta=?)""", (gid, *ids, int(cod))).fetchone():
                 continue
             cur = conn.execute("""INSERT INTO matches (group_id, jornada, date, time, home_team_id, away_team_id,
                                   home_score, away_score, venue) VALUES (?,?,?,?,?,?,?,?,?)""",
@@ -538,7 +540,9 @@ def fill_gaps(conn, raw_path, left, votes, claimed):
             claimed[cur.lastrowid] = int(cod)
             _import_one(conn, int(cod), acta, mid=cur.lastrowid)
             mine.append(cod)
-        if mine and group_deviation(conn, gid)["dev"] > d0:
+        # Con partidos nuevos: la clasificación oficial si cuadra con el calendario completado (la
+        # preferida, como en fiflp_tables.settle); si no, la guardada, si no se aleja; si ninguna, fuera.
+        if mine and not _official_fits(conn, gid, gol.get(fed), d0) and group_deviation(conn, gid)["dev"] > d0:
             conn.execute("ROLLBACK TO huecos")
             for cod in mine:
                 claimed.pop(next((m for m, c in claimed.items() if c == int(cod)), None), None)
@@ -546,6 +550,28 @@ def fill_gaps(conn, raw_path, left, votes, claimed):
         conn.execute("RELEASE huecos")
         added += mine
     return added
+
+
+def _official_fits(conn, gid, entry, d0):
+    """Con el calendario ya completado por las actas, ¿cuadra la clasificación oficial de la federación
+    (la tabla guardada del archivo antiguo puede ser de media temporada: LZP1 2021-22 llegaba a la
+    jornada 15 de 26)? Si cuadra (sus partidos jugados son los del calendario y el desvío no pasa del
+    que había), la pone y devuelve True."""
+    if not entry:
+        return False
+    from fiflp_tables import admissible, is_league, official_rows, write_table
+    from score_deviation import group_deviation
+    rows = official_rows(conn, gid, entry)
+    if not rows or not is_league(conn, gid) or not admissible(conn, gid, rows):
+        return False
+    conn.execute("SAVEPOINT oficial")
+    write_table(conn, gid, rows)
+    if group_deviation(conn, gid)["dev"] > d0:
+        conn.execute("ROLLBACK TO oficial")
+        conn.execute("RELEASE oficial")
+        return False
+    conn.execute("RELEASE oficial")
+    return True
 
 
 def _last_round(conn, gid):
@@ -636,17 +662,21 @@ def reconcile_in_groups(conn, raw_path, pending, votes):
             WHERE m.group_id=? AND t1.name=? AND t2.name=?""", (gid, home, away)).fetchall()
         # Con el acta coherente, el marcador no descarta: es el del calendario el que puede estar mal.
         consistent = bool(acta.get("consistent")) and h.get("home_score") is not None and h.get("away_score") is not None
-        rows = [r for r in rows if not _contradicts(h, r, check_score=not consistent)]
-        if len(rows) == 1:
-            r = rows[0]
+        same = [r for r in rows if not _contradicts(h, r, check_score=not consistent)]
+        if not same and not consistent:
+            # Un acta incoherente del mismo cruce el mismo día (el calendario antiguo con el marcador mal
+            # leído): se vincula por sus alineaciones, pero su marcador no manda.
+            same = [r for r in rows if not _contradicts(h, r, check_score=False)]
+        if len(same) == 1:
+            r = same[0]
             out[cod] = (r[0], consistent and (r[4], r[5]) != (h["home_score"], h["away_score"]))
     return out, official
 
 
 RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
 # Entra en la huella de cada raw: al cambiar la lógica de importación, subirla
-# hace que el bot reimporte una vez todos los raws (6: huecos del calendario y su última jornada).
-IMPORT_VERSION = "6"
+# hace que el bot reimporte una vez todos los raws (7: huecos del calendario, también otro enfrentamiento del mismo cruce).
+IMPORT_VERSION = "9"
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 

@@ -13,8 +13,8 @@ cuadraban, y corregir solo el marcador con el acta «empeoraba» el grupo
   - las dos cosas;
 y se queda la opción con menos desvío (group_deviation, la misma medida que la
 vigilancia de test_score_deviation.py), con preferencia por lo oficial si
-empatan. La oficial solo entra si los partidos jugados de cada equipo son los
-mismos que en la guardada (si la federación anuló los de un retirado, no). Nunca una que se aleje más que lo que había: la vigilancia no salta.
+empatan. La oficial solo entra si ningún equipo tiene en el calendario más
+partidos que en ella (si la federación anuló los de un retirado, no). Nunca una que se aleje más que lo que había: la vigilancia no salta.
 Un grupo sin clasificación guardada recibe la oficial siempre. Solo grupos de
 liga: las copas tienen su propia tabla (synth_copa_campeones.py) o ninguna.
 """
@@ -60,6 +60,18 @@ def _deviation_with(conn, group_id, rows, fixes):
         conn.execute("RELEASE tabla_oficial")
 
 
+def admissible(conn, group_id, official):
+    """¿Ningún equipo tiene en el calendario más partidos que en la oficial? Los de más serían los que la
+    federación anuló (un retirado) y el calendario conserva; los de menos, partidos que el calendario
+    del archivo antiguo no guardó, y la oficial sigue siendo la buena."""
+    games = {}
+    for home, away in conn.execute("""SELECT home_team_id, away_team_id FROM matches
+                                      WHERE group_id=? AND home_score IS NOT NULL AND away_score IS NOT NULL""", (group_id,)):
+        games[home] = games.get(home, 0) + 1
+        games[away] = games.get(away, 0) + 1
+    return all(games.get(r[0], 0) <= (r[3] or 0) for r in official)
+
+
 def is_league(conn, group_id):
     from generate_js import _is_league_group
     row = conn.execute("SELECT code, phase FROM groups WHERE id=?", (group_id,)).fetchone()
@@ -72,12 +84,13 @@ def settle(conn, group_id, fixes, official=None):
     opción ('keep', 'fixes', 'official', 'official+fixes')."""
     if official and not is_league(conn, group_id):
         official = None
-    played = dict(conn.execute("SELECT team_id, played FROM standings WHERE group_id=?", (group_id,)).fetchall())
-    stored = len(played)
-    # Con otros partidos jugados (la federación anula los de un equipo retirado, que siguen en el
-    # calendario), la oficial no cuadraría con el calendario aunque la medida, que solo cuenta los
-    # equipos con todos sus partidos, no lo viera: no se usa.
-    if official and any(r[0] in played and played[r[0]] != r[3] for r in official):
+    stored = conn.execute("SELECT COUNT(*) FROM standings WHERE group_id=?", (group_id,)).fetchone()[0]
+    # La oficial solo si sus partidos jugados son los del calendario, equipo a equipo: si la federación
+    # anuló los de un retirado (que siguen en el calendario), no cuadraría aunque la medida, que solo
+    # cuenta los equipos con todos sus partidos, no lo viera. Se compara con el calendario y no con la
+    # tabla guardada, que en el archivo antiguo puede ser de media temporada (LZP1 2021-22: jornada 15
+    # de 26) mientras las actas completan el calendario.
+    if official and not admissible(conn, group_id, official):
         official = None
     d0 = group_deviation(conn, group_id)["dev"]
     options = [("keep", d0, None, {})]

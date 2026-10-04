@@ -167,3 +167,13 @@ def test_pretty_names_without_the_federation_letter_marks():
     assert pretty_name('PLAYAS DE SOTAVENTO B, U.D. "B"') == "Playas de Sotavento B"
     assert pretty_name('INTERNACIONAL PH D "DB"') == "Internacional Ph D"
     assert pretty_name("COSTA AYALA, UNION JUVENIL") == "Unión Juvenil Costa Ayala"
+
+
+
+def test_a_team_written_two_ways_in_one_group_gets_one_name():
+    """'TINAJOB "B"' en la clasificación y 'TINAJO "B"' en las actas: el mismo equipo, un nombre."""
+    name = lambda raw: {"TINAJOB, C.D. \"B\"": "Tinajob B", "TINAJO \"B\", C.D. B": "Tinajo B"}.get(raw, raw.title())
+    entry = {"standings": [{"team": 'TINAJOB, C.D. "B"'}, {"team": "HARIA, C.F."}]}
+    matches = [("1", 'TINAJO "B", C.D. B', "HARIA, C.F.", 1, 0, "", "", "", 1, {})]
+    fixed = GR._same_team_in_group(name, entry, matches)
+    assert fixed('TINAJOB, C.D. "B"') == "Tinajo B" and fixed("HARIA, C.F.") == "Haria, C.F."

@@ -591,8 +591,14 @@ def test_unmatched_names_are_found_in_their_group_and_a_consistent_acta_fixes_a_
         "6": flat("TAMARACEITE, U.D. A", "ARUCAS C.F. A", 3, 0, "07-06-2026", comp="77"),
     }
     (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    # La clasificación oficial, la del calendario con el marcador del acta (Arucas 0-19 Valkyrias).
+    row = lambda pos, team, pts, j, g, e, p, gf, gc: {"pos": pos, "team": team, "pts": pts, "j": j, "g": g, "e": e,
+                                                      "p": p, "gf": gf, "gc": gc}
     gol = {"9:1": {"comp": "9", "grupo": "1", "comp_name": "LIGA PREBENJAMIN", "grupo_name": "GRUPO 1", "ok": True,
-                   "standings": [{"pos": 1, "team": "BECERRIL VALKYRIAS, C.D.", "pts": 9, "j": 3, "g": 3, "e": 0, "p": 0}],
+                   "standings": [row(1, "BECERRIL VALKYRIAS, C.D.", 6, 2, 2, 0, 0, 25, 0),
+                                 row(2, "TAMARACEITE, U.D. A", 6, 2, 2, 0, 0, 5, 1),
+                                 row(3, "MOYA, U.D.", 3, 3, 1, 0, 2, 4, 9),
+                                 row(4, "ARUCAS C.F. A", 0, 3, 0, 0, 3, 1, 25)],
                    "scorers": []}}
     (tmp_path / "fiflp_goleadores_2025-2026_raw.json").write_text(json.dumps(gol), encoding="utf-8")
     report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
@@ -611,8 +617,9 @@ def test_an_inconsistent_acta_never_overwrites_the_calendar_score(tmp_path):
            "2": flat("ARUCAS C.F. A", "BECERRIL VALKYRIAS, C.D.", 0, 19, "04-10-2025", consistent=False)}
     (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
     report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
+    # Se vincula por sus alineaciones (mismo cruce, mismo día), pero su marcador no manda.
     assert report["scores_fixed"] == 0
-    assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=2").fetchone() == (0, 9, None)
+    assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=2").fetchone() == (0, 9, 2)
 
 
 def test_a_first_pass_match_with_a_dropped_digit_is_fixed_when_the_table_agrees(tmp_path):
@@ -724,3 +731,46 @@ def test_a_real_browser_aborts_the_ads_and_keeps_the_federation_styles():
         pytest.skip(f"sin navegador o sin red: {exc}")
     assert any("doubleclick" in u for u in seen["failed"])
     assert not any("doubleclick" in u for u in seen["ok"])
+
+
+
+def test_a_third_meeting_of_the_same_teams_gets_its_own_match():
+    """Ligas a tres vueltas: Moya–Arucas ya está con su acta; otra acta de Moya–Arucas, otro día, es
+    otro enfrentamiento y crea su partido (el cruce con un partido sin acta, en cambio, se salta)."""
+    import import_fiflp_actas as I
+    conn = group_base()
+    conn.execute("UPDATE matches SET cod_acta=5 WHERE id=5")       # Moya–Arucas 3-1, con su acta
+    for team, played, gf, gc in ((1, 2, 15, 0), (2, 4, 6, 9), (3, 2, 5, 1), (4, 4, 1, 17)):
+        conn.execute("UPDATE standings SET played=?, gf=?, gc=? WHERE group_id=1 AND team_id=?", (played, gf, gc, team))
+    votes = {("9", "1"): {1: 3}}
+    added = I.fill_gaps(conn, "/tmp/fiflp_actas_2025-2026_raw.json",
+                        [("50", flat("MOYA, U.D.", "ARUCAS C.F. A", 2, 0, "08-11-2025"))], votes, {})
+    assert added == ["50"]
+    assert conn.execute("SELECT count(*) FROM matches WHERE home_team_id=2 AND away_team_id=4").fetchone()[0] == 2
+
+
+
+def test_a_truncated_old_calendar_is_completed_when_the_official_table_fits(tmp_path):
+    """El archivo antiguo guardó media temporada (calendario y tabla): las actas completan el calendario,
+    la tabla vieja ya no cuadra, pero la oficial de la federación sí: se quedan los partidos y la oficial."""
+    import import_fiflp_actas as I
+    conn = group_base()
+    conn.execute("DELETE FROM matches WHERE id=5")
+    # La tabla vieja (de antes de la jornada 3) y las actas de la jornada 3.
+    gol_entry = {"comp": "9", "grupo": "1", "comp_name": "LIGA PREBENJAMIN", "grupo_name": "GRUPO 1", "ok": True,
+                 "standings": [{"pos": 1, "team": "VALKYRIAS BEC.", "pts": 6, "j": 2, "g": 2, "e": 0, "p": 0, "gf": 15, "gc": 0},
+                               {"pos": 2, "team": "TAMARACEITE, U.D. A", "pts": 6, "j": 2, "g": 2, "e": 0, "p": 0, "gf": 5, "gc": 1},
+                               {"pos": 3, "team": "MOYA, U.D.", "pts": 3, "j": 3, "g": 1, "e": 0, "p": 2, "gf": 4, "gc": 9},
+                               {"pos": 4, "team": "ARUCAS C.F. A", "pts": 0, "j": 3, "g": 0, "e": 0, "p": 3, "gf": 1, "gc": 15}],
+                 "scorers": []}
+    (tmp_path / "fiflp_goleadores_2025-2026_raw.json").write_text(json.dumps({"9:1": gol_entry}), encoding="utf-8")
+    for team, played, gf, gc in ((1, 2, 15, 0), (2, 2, 1, 8), (3, 2, 5, 1), (4, 2, 0, 12)):
+        conn.execute("UPDATE standings SET played=?, gf=?, gc=? WHERE group_id=1 AND team_id=?", (played, gf, gc, team))
+    votes = {("9", "1"): {1: 4}}
+    from score_deviation import group_deviation
+    d_before = group_deviation(conn, 1)["dev"]
+    added = I.fill_gaps(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"),
+                        [("5", flat("MOYA, U.D.", "ARUCAS C.F. A", 3, 1, "18-10-2025"))], votes, {})
+    assert added == ["5"]
+    assert conn.execute("SELECT played, gf, gc FROM standings WHERE team_id=2").fetchone() == (3, 4, 9)
+    assert group_deviation(conn, 1)["dev"] <= d_before

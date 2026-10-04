@@ -114,6 +114,15 @@ def group_matches(index, actas, comp, grupo):
     return sorted(out, key=key)
 
 
+def _referenced(conn, team_id):
+    for table, column in (("standings", "team_id"), ("matches", "home_team_id"), ("matches", "away_team_id"),
+                          ("scorers", "team_id"), ("appearances", "team_id"), ("match_events", "team_id"),
+                          ("match_staff", "team_id")):
+        if conn.execute(f"SELECT 1 FROM {table} WHERE {column}=? LIMIT 1", (team_id,)).fetchone():
+            return True
+    return False
+
+
 def unique_names(names, conn):
     """Dos clubes distintos (otra clave de equipo) que known_names ha llevado al
     mismo nombre ('GRAN TARAJAL SOC. TAMAS., U.D.' y 'TARAJALEJO, U.D.' → 'UD
@@ -235,6 +244,9 @@ def import_season(conn, folder, season, log=print):
             conn, season_id, cat_id, code, name=f"Grupo {n}", full_name=f"{cat} {phase.upper()} - GRUPO {n}",
             phase=phase, island=island, url="", current_jornada=matches[-1][0] if matches else "")
         redo = ident in owned
+        before = {r[0] for r in conn.execute("""SELECT team_id FROM standings WHERE group_id=?
+            UNION SELECT home_team_id FROM matches WHERE group_id=? UNION SELECT away_team_id FROM matches WHERE group_id=?""",
+            (group_id, group_id, group_id))} if redo else set()
         try:
             conn.execute("DELETE FROM standings WHERE group_id=?", (group_id,))
             delete_group_matches(conn, group_id)
@@ -253,6 +265,10 @@ def import_season(conn, folder, season, log=print):
                               r.get("e"), r.get("p"), r.get("gf"), r.get("gc"), r.get("df")))
             conn.execute("INSERT OR REPLACE INTO fiflp_groups(group_id, season_id, comp, grupo) VALUES (?,?,?,?)",
                          (group_id, season_id, *ident))
+            # Un equipo que el grupo rehecho ya no usa (otro nombre) y nadie más usa, fuera.
+            for tid in before:
+                if not _referenced(conn, tid):
+                    conn.execute("DELETE FROM teams WHERE id=?", (tid,))
             conn.commit()
         except Exception as exc:
             conn.rollback()
@@ -264,7 +280,7 @@ def import_season(conn, folder, season, log=print):
     return report
 
 
-GRUPOS_VERSION = "2"   # en la huella: subirla rehace los grupos de todas las temporadas
+GRUPOS_VERSION = "3"   # en la huella: subirla rehace los grupos de todas las temporadas
 
 
 def sources_digest(folder, season):

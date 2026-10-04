@@ -156,3 +156,14 @@ def test_a_failing_import_never_stops_the_bot_update(monkeypatch):
     FB.import_past_seasons(conn, log=lines.append)
     assert any("ERROR" in line and "roto" in line for line in lines)
     assert done == ["actas", "goleadores"]                  # el paso siguiente se hace igual
+
+
+
+def test_pretty_names_without_the_federation_letter_marks():
+    from activate_season import pretty_name
+    assert pretty_name('PEÑA DE LA AMISTAD "A", C.D. A') == "Peña de La Amistad"
+    assert pretty_name('35600 "A", C.D. A') == "35600"
+    assert pretty_name('PLAYAS DE SOTAVENTO "A", U.D A') == "Playas de Sotavento"
+    assert pretty_name('PLAYAS DE SOTAVENTO B, U.D. "B"') == "Playas de Sotavento B"
+    assert pretty_name('INTERNACIONAL PH D "DB"') == "Internacional Ph D"
+    assert pretty_name("COSTA AYALA, UNION JUVENIL") == "Unión Juvenil Costa Ayala"

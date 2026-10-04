@@ -357,15 +357,21 @@ def pretty_name(raw):
     """Un nombre de la federación con forma de portal, para los clubes que la base
     no conoce: 'ATLETICO FOMENTO, CLUB "A"' -> 'Atlético Fomento', 'UNION SUR
     YAIZA, C.D. "B"' -> 'Unión Sur Yaiza B', 'CD MIGUEL LEON' -> 'Miguel León'."""
-    # La federación escribe la letra entre comillas, a veces dos veces ('X B, C.D. "B"') o
-    # con una B de más ('INTERNACIONAL PH D "DB"': el filial D).
-    quoted = re.search(r'"([A-H])B?"\s*$', raw)
-    letter = quoted.group(1) if quoted and quoted.group(1) != "A" else ""
-    text = re.sub(r',?\s*"[A-H]B?"\s*$', "", raw.strip()).strip()
-    if quoted:
-        main_, sep, tail_ = text.partition(", ")
-        main_ = re.sub(rf"\s+{quoted.group(1)}$", "", main_)
-        text = main_ + sep + tail_
+    # La federación escribe la letra entre comillas, a veces dos veces ('X B, C.D. "B"'), con una
+    # B de más ('INTERNACIONAL PH D "DB"': el filial D) o entre comillas en medio y suelta al final
+    # ('PEÑA DE LA AMISTAD "A", C.D. A').
+    quoted = re.findall(r'"([A-H])B?"', raw)
+    char = quoted[-1] if quoted else None
+    text = re.sub(r'\s*"[A-H]B?"', "", raw.strip()).strip().rstrip(",").strip()
+    main_, sep, tail_ = text.partition(", ")
+    bare = re.search(r"\s([A-H])$", tail_)
+    if not char and bare and len(tail_.split()) > 1:
+        char = bare.group(1)
+    if char:
+        main_ = re.sub(rf"\s+{char}$", "", main_)
+        tail_ = re.sub(rf"\s+{char}$", "", tail_) if len(tail_.split()) > 1 else tail_
+    text = main_ + sep + tail_
+    letter = char if char and char != "A" else ""
     main, _, tail = text.partition(", ")
     # 'C.D.', 'F.C', 'C. F.', 'C.F.S.': letras sueltas con punto, enteras, antes de trocear.
     strip_abbr = lambda t: re.sub(r"(?<![A-Z])(?:[A-Z]\.\s?)+[A-Z]?(?![A-Za-z])", " ", t.upper())

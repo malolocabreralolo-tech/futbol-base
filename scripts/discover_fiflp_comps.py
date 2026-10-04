@@ -21,6 +21,11 @@ OUTPUT = os.path.join(SCRIPT_DIR, "fiflp_comps_catalog.json")
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 
 SEASONS = [
+    # Anteriores a la web (2017-18 a 2020-21): su catálogo, para descargar sus datos.
+    ("13", "2017-2018"),
+    ("14", "2018-2019"),
+    ("15", "2019-2020"),
+    ("16", "2020-2021"),
     ("17", "2021-2022"),
     ("18", "2022-2023"),
     ("19", "2023-2024"),

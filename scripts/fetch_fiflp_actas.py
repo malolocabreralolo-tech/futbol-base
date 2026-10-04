@@ -27,6 +27,11 @@ UA   = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/120 Safari/537")
 
 SEASON_NAME = {
+    # 13-16: temporadas anteriores a la web (2017-18 a 2020-21), solo para descargar sus datos.
+    "13": "2017-2018",
+    "14": "2018-2019",
+    "15": "2019-2020",
+    "16": "2020-2021",
     "17": "2021-2022",
     "18": "2022-2023",
     "19": "2023-2024",

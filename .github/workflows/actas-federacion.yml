@@ -9,10 +9,10 @@ on:
   workflow_dispatch:
     inputs:
       temporada:
-        description: 'CodTemporada (17=2021-22 … 21=2025-26)'
+        description: 'CodTemporada (13=2017-18 … 21=2025-26)'
         required: true
         type: choice
-        options: ['17', '18', '19', '20', '21']
+        options: ['13', '14', '15', '16', '17', '18', '19', '20', '21']
       cola:
         description: 'Temporadas que siguen al acabar esta, separadas por comas (p. ej. 19,18,17)'
         required: false

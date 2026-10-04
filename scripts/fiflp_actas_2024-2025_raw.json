@@ -465250,7 +465250,7 @@
       "home_team": "GRAN TARAJAL SOC. TAMAS., U.D.",
       "away_team": "TAMASITE, C.D. A",
       "home_score": 0,
-      "away_score": 3,
+      "away_score": null,
       "competition": "LIGA BENJAMIN F-8 DE FUERTEVENTURA PRIMERA FASE (GRUPO 3)"
     },
     "lineups": {
@@ -465319,7 +465319,8 @@
       "comp_id": "1579",
       "grupo": "187953",
       "jornada": "2"
-    }
+    },
+    "rescrape_failed": true
   },
   "187965": {
     "header": {
@@ -589264,7 +589265,8 @@
       "comp_id": "1576",
       "grupo": "189675",
       "jornada": "3"
-    }
+    },
+    "rescrape_failed": true
   },
   "189692": {
     "header": {
@@ -695909,7 +695911,8 @@
       "comp_id": "1731",
       "grupo": "197018",
       "jornada": "1"
-    }
+    },
+    "rescrape_failed": true
   },
   "197018": {
     "header": {
@@ -695918,7 +695921,7 @@
       "date": "08-06-2025",
       "home_team": "ARRECIFE, C.D. B",
       "away_team": "STEAUA DE TIRAJANA CLUB DEPORTIVO",
-      "home_score": 0,
+      "home_score": null,
       "away_score": 0,
       "competition": "torneo pre-benjamin cierre temporada fuerteventura-lanzarote (GRUPO 1)"
     },
@@ -695937,7 +695940,8 @@
       "comp_id": "1731",
       "grupo": "197018",
       "jornada": "1"
-    }
+    },
+    "rescrape_failed": true
   },
   "197020": {
     "header": {
@@ -696189,28 +696193,28 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "ALFONSO BARRIOS, JEYKO",
-        "minute": 30,
-        "goal_type": "normal"
-      },
-      {
-        "kind": "goal",
-        "side": "away",
-        "player_name": "CASTELLANO CASTELLANO, NESTOR",
+        "player_name": "CABRERA MURO, UNAI",
         "minute": 31,
         "goal_type": "normal"
       },
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "CABRERA MURO, UNAI",
-        "minute": 32,
+        "player_name": "CASTELLANO CASTELLANO, NESTOR",
+        "minute": null,
         "goal_type": "normal"
       },
       {
         "kind": "goal",
         "side": "away",
         "player_name": "BETANCOR SANTANA, ARAY",
+        "minute": null,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "ALFONSO BARRIOS, JEYKO",
         "minute": null,
         "goal_type": "normal"
       }
@@ -696225,7 +696229,8 @@
       "comp_id": "1731",
       "grupo": "197018",
       "jornada": "1"
-    }
+    },
+    "rescrape_failed": true
   },
   "197033": {
     "header": {
@@ -696661,7 +696666,7 @@
       "date": "08-06-2025",
       "home_team": "STEAUA DE TIRAJANA CLUB DEPORTIVO",
       "away_team": "TITE, C.D. B",
-      "home_score": null,
+      "home_score": 0,
       "away_score": 0,
       "competition": "torneo pre-benjamin cierre temporada fuerteventura-lanzarote (GRUPO 1)"
     },
@@ -696680,7 +696685,8 @@
       "comp_id": "1731",
       "grupo": "197018",
       "jornada": "1"
-    }
+    },
+    "rescrape_failed": true
   },
   "197026": {
     "header": {
@@ -838570,7 +838576,8 @@
       "comp_id": "1582",
       "grupo": "191559",
       "jornada": "2"
-    }
+    },
+    "rescrape_failed": true
   },
   "191564": {
     "header": {
@@ -849786,7 +849793,8 @@
       "comp_id": "1582",
       "grupo": "191615",
       "jornada": "2"
-    }
+    },
+    "rescrape_failed": true
   },
   "191622": {
     "header": {
@@ -858840,8 +858848,8 @@
       "date": "02-03-2025",
       "home_team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO B",
       "away_team": "JANDIA, U.D.",
-      "home_score": null,
-      "away_score": 3,
+      "home_score": 0,
+      "away_score": null,
       "competition": "LIGA PREBENJAMIN FUERTEVENTURA (GRUPO 3)"
     },
     "lineups": {
@@ -858925,7 +858933,8 @@
       "comp_id": "1582",
       "grupo": "191615",
       "jornada": "11"
-    }
+    },
+    "rescrape_failed": true
   },
   "191668": {
     "header": {

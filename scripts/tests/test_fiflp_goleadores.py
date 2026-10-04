@@ -238,3 +238,16 @@ def test_crests_only_mode_fills_crests_of_groups_already_read(tmp_path, monkeypa
     S.run(FakePage(""), FakeF(), ["20"], time.monotonic() + 60, log=lambda *_: None, crests_only=True)
     raw = json.loads((tmp_path / "raw.json").read_text())
     assert raw["900:11"]["crests"] == {"HARIA C.F.": "u"} and "900:12" not in raw
+
+
+def test_teams_without_crest_get_the_federation_one(tmp_path, monkeypatch):
+    import escudos_federacion as E
+    conn = base()
+    monkeypatch.setattr(E, "load_shields", lambda: {"Tamaraceite": "tama.png"})
+    raw = {"900:1": {**entry("900", "1", "LIGA PREBENJAMIN", FED_P1, []),
+                     "crests": {"TAMARACEITE, U.D. A": "https://x/t.png", "HURACAN, A.D. A": "https://x/h.png",
+                                "MOYA, U.D.": "https://x/m.png", "ARUCAS, C.F.": "https://x/a.png"}}}
+    (tmp_path / "fiflp_goleadores_2024-2025_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    found = E.candidates(conn, tmp_path)
+    # Tamaraceite ya tiene; los demás, el de la federación con su nombre de la base.
+    assert found == {"AD Huracán": "https://x/h.png", "Moya": "https://x/m.png", "Arucas": "https://x/a.png"}

@@ -77,18 +77,19 @@ def install(found, log=print):
     from trim_shields import fetch_image, trim_transparent
     from PIL import Image
     shields = load_shields()
-    added = 0
+    added, files = 0, {}          # un fichero por escudo: los filiales comparten el de su club
     for name, url in sorted(found.items()):
-        try:
-            img = trim_transparent(Image.open(BytesIO(fetch_image(url))))
-        except Exception as exc:
-            log(f"  ! {name}: no se pudo bajar {url} ({exc})")
-            continue
-        filename = f"fed_{slug(name)}.png"
-        img.save(ROOT / "escudos" / filename, optimize=True)
-        shields[name] = filename
+        if url not in files:
+            try:
+                img = trim_transparent(Image.open(BytesIO(fetch_image(url))))
+            except Exception as exc:
+                log(f"  ! {name}: no se pudo bajar {url} ({exc})")
+                continue
+            files[url] = f"fed_{slug(name)}.png"
+            img.save(ROOT / "escudos" / files[url], optimize=True)
+        shields[name] = files[url]
         added += 1
-        log(f"  {name} → escudos/{filename}")
+        log(f"  {name} → escudos/{files[url]}")
     SHIELDS_PATH.write_text("const SHIELDS=" + json.dumps(shields, ensure_ascii=False, separators=(",", ":")) + ";\n",
                             encoding="utf-8")
     if added:

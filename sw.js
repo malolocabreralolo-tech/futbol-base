@@ -1,5 +1,5 @@
-const CACHE_NAME = 'futbolbase-v20261004c';
-const CRESTS_CACHE = 'futbolbase-escudos-9c59eb8e';
+const CACHE_NAME = 'futbolbase-v20261004d';
+const CRESTS_CACHE = 'futbolbase-escudos-9b44f6d5';
 const OFFLINE_URL = './index.html';
 
 // Los escudos (escudos/, originales y miniaturas) van en su propia caché,

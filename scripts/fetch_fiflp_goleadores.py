@@ -30,7 +30,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(1, str(Path(__file__).resolve().parents[1]))
 from fetch_fiflp_actas import SEASON_NAME, catalog_comps, _options  # noqa: E402
-from fiflp_render import flatten  # noqa: E402
+from fiflp_render import flatten, fiflp_only  # noqa: E402
 from update_fiflp import GOLEADORES_URL, parse_goleadores  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
@@ -169,6 +169,7 @@ def main(argv=None):
         page = browser.new_page(user_agent=(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"))
+        fiflp_only(page)   # sin la publicidad de la federación, que colgaba las cargas
         page.set_default_timeout(30000)
         try:
             complete = run(page, F, seasons, deadline, crests_only=args.escudos)

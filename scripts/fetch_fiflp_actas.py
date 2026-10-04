@@ -460,6 +460,15 @@ def parse_args():
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
+def _fiflp_only(page):
+    """Sin la publicidad de la federación (fiflp_render.fiflp_only), que colgaba la carga de cada acta."""
+    try:
+        from scripts.fiflp_render import fiflp_only
+    except ImportError:
+        from fiflp_render import fiflp_only
+    return fiflp_only(page)
+
+
 def fetch_parallel(pending, workers, over, on_result, dump_fixture="", open_page=None):
     """Lee las actas de `pending` con `workers` navegadores a la vez sobre una cola
     común (la federación tarda: leídas de una en una salían ~45 s por acta).
@@ -475,7 +484,7 @@ def fetch_parallel(pending, workers, over, on_result, dump_fixture="", open_page
         from playwright.sync_api import sync_playwright
         pw = sync_playwright().start()
         br = pw.chromium.launch(headless=True)
-        page = br.new_context(user_agent=UA).new_page()
+        page = _fiflp_only(br.new_context(user_agent=UA).new_page())
         return page, lambda: (br.close(), pw.stop())
 
     def worker():
@@ -524,7 +533,7 @@ def main():
         # auto-discover (used for seasons 17 and 18)
         with sync_playwright() as p:
             br = p.chromium.launch(headless=True)
-            page = br.new_context(user_agent=UA).new_page()
+            page = _fiflp_only(br.new_context(user_agent=UA).new_page())
             comps = discover_comps(page, season)
             br.close()
 
@@ -541,7 +550,7 @@ def main():
 
     with sync_playwright() as p:
         br = p.chromium.launch(headless=True)
-        page = br.new_context(user_agent=UA).new_page()
+        page = _fiflp_only(br.new_context(user_agent=UA).new_page())
 
         # --- Enumerate targets (o el índice de una tanda anterior) ---
         index = {}

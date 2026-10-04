@@ -68,3 +68,24 @@ def flatten(page, selector=None):
         handle = page.query_selector(selector)
         return handle.evaluate(FLATTEN_JS) if handle else 0
     return page.evaluate(f"({FLATTEN_JS})(document.body)")
+
+
+# Las páginas de la federación cargan decenas de scripts de publicidad y medición (refinery89,
+# doubleclick, prebid, consentmanager, criteo…) que retrasan el «documento cargado» hasta el límite
+# de 30 s de goto: cada acta tardaba ~55 s con sus reintentos (4/10/2026) y el bot agotaba su plazo.
+# Solo hace falta lo de la federación: sus páginas y scripts (www.fiflp.com), las hojas de estilo con
+# los glifos de las cifras que lee el aplanado (files.fiflp.com) y los escudos (filesnovanet.es).
+FIFLP_HOSTS = ("fiflp.com", "filesnovanet.es")
+
+
+def fiflp_request(url):
+    """¿Deja pasar esta petición? Solo las de la federación."""
+    from urllib.parse import urlparse
+    host = (urlparse(url).hostname or "").lower()
+    return any(host == h or host.endswith("." + h) for h in FIFLP_HOSTS)
+
+
+def fiflp_only(page):
+    """La página bloquea toda petición que no sea de la federación (fiflp_request)."""
+    page.route("**/*", lambda route: route.continue_() if fiflp_request(route.request.url) else route.abort())
+    return page

@@ -690,3 +690,37 @@ def test_a_created_match_that_would_part_the_group_from_its_table_is_undone(tmp_
     assert report["gaps_filled"] == 0 and report["unmatched"] == 1
     assert conn.execute("SELECT count(*) FROM matches").fetchone()[0] == 5
     assert conn.execute("SELECT count(*) FROM appearances a JOIN players p ON p.id=a.player_id WHERE p.full_name LIKE 'H, MOYA%'").fetchone()[0] == 1   # la del acta deshecha, fuera
+
+
+# ── Sin la publicidad de la federación ──
+
+def test_only_federation_requests_go_through():
+    from fiflp_render import fiflp_request
+    for url in ("https://www.fiflp.com/pnfg/NPcd/NFG_CmpPartido?CodActa=1",
+                "https://files.fiflp.com/pnfg/css/web_responsive_2/nova_marco/nova2/fontawesome-6/css/all.css",
+                "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_1.jpg", "/pnfg/script/nova2/nova.js"
+                .replace("/pnfg", "https://www.fiflp.com/pnfg")):
+        assert fiflp_request(url), url
+    for url in ("https://securepubads.g.doubleclick.net/tag/js/gpt.js", "https://tags.refinery89.com/fiflpcom.js",
+                "https://cdn.consentmanager.net/delivery/js/cmp_final.min.js", "https://fiflp.com.evil.net/x.js"):
+        assert not fiflp_request(url), url
+
+
+def test_a_real_browser_aborts_the_ads_and_keeps_the_federation_styles():
+    sync_api = pytest.importorskip("playwright.sync_api")
+    from fiflp_render import fiflp_only
+    seen = {"ok": [], "failed": []}
+    try:
+        with sync_api.sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = fiflp_only(browser.new_page())
+            page.on("requestfailed", lambda r: seen["failed"].append(r.url))
+            page.on("requestfinished", lambda r: seen["ok"].append(r.url))
+            page.set_content('<link rel="stylesheet" href="https://files.fiflp.com/pnfg/css/web_responsive_2/nova_marco/nova2/fontawesome-6/css/all.css">'
+                             '<script src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script><p>x</p>',
+                             wait_until="load", timeout=30000)
+            browser.close()
+    except Exception as exc:          # sin Chromium o sin red en este entorno
+        pytest.skip(f"sin navegador o sin red: {exc}")
+    assert any("doubleclick" in u for u in seen["failed"])
+    assert not any("doubleclick" in u for u in seen["ok"])

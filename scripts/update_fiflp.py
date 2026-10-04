@@ -30,7 +30,7 @@ from db import get_or_create_team
 from fiflp_names import canonical_names, is_bye
 from import_fiflp_cups_2324 import clean_team_name
 from activate_season import fiflp_ids, _iso
-from fiflp_render import flatten
+from fiflp_render import flatten, fiflp_only
 from fetch_futbolaspalmas import standings_regression, stored_standings
 from generate_js import _repair_incoherent_points
 from fiflp_names import team_key, team_score
@@ -570,6 +570,7 @@ def _with_browser(work):
         page = browser.new_page(user_agent=(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"))
+        fiflp_only(page)   # sin la publicidad de la federación, que colgaba las cargas
         page.set_default_timeout(30000)
         try:
             work(page, F)

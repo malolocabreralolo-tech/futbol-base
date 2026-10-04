@@ -59,8 +59,8 @@ export function fakeBrowser(hash = '#/', { storage = new Map(), deferBack = fals
       removeAttribute: (n) => { delete el.attrs[n]; },
       hasAttribute: (n) => Object.hasOwn(el.attrs, n),
       closest: (selector) => (matches(el, selector) ? el : null),
-      focus: () => { el.focused++; doc.activeElement = el; },
-      scrollIntoView: () => { el.scrolled++; },
+      focus: (options) => { el.focused++; el.focusOptions = options; doc.activeElement = el; },
+      scrollIntoView: (options) => { el.scrolled++; el.scrollOptions = options; },
       addEventListener: (type, fn) => { (el.listeners[type] ||= []).push(fn); },
       removeEventListener: (type, fn) => { el.listeners[type] = (el.listeners[type] || []).filter((f) => f !== fn); },
     };

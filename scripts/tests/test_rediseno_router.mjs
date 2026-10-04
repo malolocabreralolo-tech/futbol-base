@@ -656,6 +656,18 @@ test('«Saltar al contenido» lleva el foco a main sin cambiar la ruta', async (
   assert.equal(b.main.getAttribute('tabindex'), '-1');
 });
 
+test('un ancla interna lleva su destino arriba de la ventana y le da el foco sin desplazar («calendario completo» de Mi equipo)', async () => {
+  const b = fakeBrowser('#/');
+  const home = screen('home', { body: () => html`<div id="calendario">Calendario</div>` });
+  const router = startRouter({ screens: { '': home }, root: b.root, getContext: context(), window: b.win });
+  await router.idle();
+  assert.equal(b.click({ class: 'more', href: '#calendario' }), true);
+  assert.deepEqual(b.entries(), ['#/'], 'la ruta no cambia');
+  const cal = b.doc.getElementById('calendario');
+  assert.deepEqual([cal.focused, cal.focusOptions, cal.getAttribute('tabindex')], [1, { preventScroll: true }, '-1']);
+  assert.deepEqual([cal.scrolled, cal.scrollOptions], [1, { block: 'start' }], 'el título y el .ics, a la vista');
+});
+
 test('un ancla interna cuyo destino no existe no cambia la ruta ni repinta (se previene igual)', async () => {
   const b = fakeBrowser('#/');
   const log = [];

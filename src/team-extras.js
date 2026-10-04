@@ -199,11 +199,20 @@ function togglePlayer(ctx, team, button) {
   button.setAttribute('aria-controls', id);
 }
 
+// Pinta el panel de la trayectoria: «Cargando…» y después lo que dé trajectoryContent. Si el foco
+// estaba dentro (su «Reintentar», que sale del DOM), va al título del bloque (tabindex -1, como
+// retryBlock en shell.js): sin esto caería en <body> y el siguiente Tab empezaría arriba.
 async function showTrajectory(section, ctx, name) {
   const panel = section.querySelector(`#${TRAJECTORY_ID}`);
   if (!panel) return;
+  const active = panel.ownerDocument?.activeElement;
+  const title = active && panel.contains(active) ? panel.closest('.block')?.querySelector('.block-title') : null;
   panel.setAttribute('aria-busy', 'true');
   panel.innerHTML = String(html`<p class="team-loading">Cargando la trayectoria…</p>`);
+  if (title) {
+    if (!title.hasAttribute('tabindex')) title.setAttribute('tabindex', '-1');
+    title.focus({ preventScroll: true });
+  }
   const content = await trajectoryContent(ctx, name);
   // Una respuesta lenta nunca pinta sobre otra pantalla.
   if (!panel.isConnected) return;
@@ -248,9 +257,13 @@ export function mountTeamExtras(section, ctx, team) {
 
 // ── La plantilla de la portada, sin esperar (D4) ────────────────────────
 
-// Lo que fillSquad hace cuando la página ha cargado y el navegador está libre (requestIdleCallback con
-// 1 s de tope; sin él, setTimeout): las actas no compiten con los escudos del primer pintado.
-// Devuelve la cancelación.
+// Lo que fillSquad hace tras `load` y con el navegador libre (requestIdleCallback con 1 s de tope;
+// sin él, como en Safari, setTimeout). Si la portada se pinta antes de `load` (data-health.json ya en
+// la caché del SW), espera a que acaben los recursos de la página. En la primera apertura en frío, no:
+// la portada espera a data-health.json, que con fetch no retrasa `load`, y se pinta con la página ya
+// cargada; solo queda esperar a que el navegador esté libre, y las actas (48 KB con gzip las mayores)
+// pueden coincidir con los escudos que aún bajan (con el perfil del presupuesto, se piden unos 220 ms
+// tras el pintado). Devuelve la cancelación.
 function afterLoad(win, run) {
   let idle = null; let timer = null;
   const start = () => {
@@ -266,6 +279,18 @@ function afterLoad(win, run) {
   };
 }
 
+// Lo primero que se ve tras el hueco, en el orden del documento, como elige su ancla el navegador: el
+// bloque siguiente de su columna o, si la columna ya quedó por encima de la ventana, lo que la sigue
+// (en móvil, el calendario). null si no hay nada a la vista.
+function anchorAfter(slot) {
+  for (let el = slot; el && !el.hasAttribute('data-screen'); el = el.parentElement) {
+    for (let next = el.nextElementSibling; next; next = next.nextElementSibling) {
+      if (next.getBoundingClientRect().bottom > 0) return next;
+    }
+  }
+  return null;
+}
+
 // Llena el hueco de la plantilla de la portada (squadSlot) con las actas de su grupo, sin mover el
 // foco. Lo que llega se guarda siempre en datasets.lineups, aunque ya no se esté en la portada: la
 // siguiente, o la ficha, lo pintan en el acto. Solo pinta si el hueco sigue en la página: con las
@@ -273,6 +298,12 @@ function afterLoad(win, run) {
 // «Reintentar» (retrySquad) o, sin conexión, el vacío tranquilo de offlineSquad, que se rellena solo
 // al volver la conexión. Devuelve la limpieza (el router la llama antes del pintado siguiente).
 // `load`, `win` y `when` se inyectan en las pruebas; la ventana es la del documento de la sección.
+//
+// El hueco no tiene el alto de la plantilla (spec §7, con su nota): no se sabe hasta que llegan las
+// actas, y sin ellas se quita. Si el hueco ya quedó por encima de la ventana (se bajó al calendario
+// mientras llegaban), lo que se está mirando no se mueve: la página se desplaza lo mismo que se movió
+// lo primero que se ve tras él (anchorAfter). Es lo que hace el anclaje del desplazamiento de Chrome y
+// Firefox, que Safari no trae; si el navegador ya lo compensó, no queda nada que mover.
 export function fillSquad(section, ctx, team, {
   load = ensureLineups, win = section.ownerDocument?.defaultView || null, when = run => afterLoad(win, run),
 } = {}) {
@@ -282,7 +313,12 @@ export function fillSquad(section, ctx, team, {
   let alive = true;
   const paint = (markup) => {
     const slot = section.querySelector(`#${SQUAD_ID}`);
-    if (alive && slot && slot.isConnected) slot.outerHTML = String(markup);   // '' lo quita
+    if (!alive || !slot || !slot.isConnected) return;
+    const anchor = typeof slot.getBoundingClientRect === 'function' && slot.getBoundingClientRect().top < 0 ? anchorAfter(slot) : null;
+    const top = anchor ? anchor.getBoundingClientRect().top : 0;
+    slot.outerHTML = String(markup);   // '' lo quita
+    const moved = anchor && anchor.isConnected ? anchor.getBoundingClientRect().top - top : 0;
+    if (Math.abs(moved) >= 1) win.scrollBy(0, moved);
   };
   const onOnline = () => { win.removeEventListener('online', onOnline); run(); };
   async function run() {

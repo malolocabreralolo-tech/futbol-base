@@ -261,11 +261,111 @@ test('fillSquad tras salir de la portada: guarda las actas pero no pinta, ni en 
   assert.equal(cancelled, 1);
 });
 
+test('fillSquad sin `when`, antes de `load`: espera al evento load y luego al navegador libre (1 s de tope); la limpieza quita el escuchador o cancela la espera', async () => {
+  const ctx = homeCtx(MARCH, { myTeam: GUAYARMINA });
+  // Una ventana que aún carga, con requestIdleCallback que guarda cada espera en `idle`.
+  const loading = (readyState = 'loading') => {
+    const win = fakeWindow();
+    win.document = { readyState };
+    win.idle = [];
+    win.cancelled = [];
+    win.requestIdleCallback = (fn, options) => { win.idle.push({ fn, options }); return win.idle.length; };
+    win.cancelIdleCallback = (id) => { win.cancelled.push(id); };
+    return win;
+  };
+  let calls = 0;
+  const load = async () => { calls += 1; return groupLineups('2025-2026', 'A1'); };
+  const win = loading();
+  const page = fakeSection('home', { plantilla: SLOT });
+  fillSquad(page.section, ctx, team(ctx), { load, win });
+  assert.deepEqual([calls, win.listeners.load.length, win.idle.length], [0, 1, 0], 'antes de load, nada');
+  win.fire('load');
+  assert.deepEqual([calls, win.idle.length, win.idle[0].options], [0, 1, { timeout: 1000 }], 'tras load, espera al navegador libre');
+  win.idle[0].fn();
+  await flush();
+  assert.equal(calls, 1);
+  assert.match(page.block('plantilla').markup, /<table class="squad">/);
+  // La limpieza antes de load: quita el escuchador y nunca pide.
+  const early = loading();
+  fillSquad(fakeSection('home', { plantilla: SLOT }).section, homeCtx(MARCH, { myTeam: GUAYARMINA }), team(ctx), { load, win: early })();
+  assert.deepEqual(early.listeners.load, []);
+  // La limpieza con la espera ya puesta (la página ya cargada): la cancela.
+  const ready = loading('complete');
+  const stop = fillSquad(fakeSection('home', { plantilla: SLOT }).section, homeCtx(MARCH, { myTeam: GUAYARMINA }), team(ctx), { load, win: ready });
+  assert.equal(ready.idle.length, 1);
+  stop();
+  assert.deepEqual(ready.cancelled, [1]);
+  assert.equal(calls, 1);
+});
+
+test('fillSquad sin requestIdleCallback (Safari): setTimeout tras load, que la limpieza cancela', async () => {
+  const ctx = homeCtx(MARCH, { myTeam: GUAYARMINA });
+  let calls = 0;
+  const load = async () => { calls += 1; return groupLineups('2025-2026', 'A1'); };
+  const win = fakeWindow();
+  win.document = { readyState: 'complete' };
+  const page = fakeSection('home', { plantilla: SLOT });
+  fillSquad(page.section, ctx, team(ctx), { load, win });
+  assert.equal(calls, 0, 'en el turno siguiente, no en este');
+  await new Promise((resolve) => setTimeout(resolve, 5));
+  await flush();
+  assert.equal(calls, 1);
+  assert.match(page.block('plantilla').markup, /<table class="squad">/);
+  const stop = fillSquad(fakeSection('home', { plantilla: SLOT }).section, homeCtx(MARCH, { myTeam: GUAYARMINA }), team(ctx), { load, win });
+  stop();
+  await new Promise((resolve) => setTimeout(resolve, 5));
+  assert.equal(calls, 1, 'cancelado');
+});
+
+test('fillSquad con el hueco ya por encima de la ventana: lo que se mira no se mueve (spec §7, nota del punto 13)', async () => {
+  // Móvil: la columna de la consulta (el hueco, de 45 px, y la trayectoria) y debajo el calendario.
+  // `grow`: lo que crece el bloque al llenarse (negativo: se quita); `moves`: lo que baja con él
+  // (en escritorio el calendario va en la otra columna); `anchored`: el navegador ya lo compensó.
+  async function page({ slotTop, grow, moves = ['traj', 'rest'], anchored = false, data = groupLineups('2025-2026', 'A1') }) {
+    const scrolls = [];
+    const win = fakeWindow();
+    win.scrollBy = (x, y) => { scrolls.push(y); };
+    const rect = (top, height) => {
+      const el = { top, isConnected: true, hasAttribute: () => false, getBoundingClientRect: () => ({ top: el.top, bottom: el.top + height }) };
+      return el;
+    };
+    const screenEl = { hasAttribute: (n) => n === 'data-screen' };
+    const rest = rect(slotTop + 45 + 60, 1800);
+    const side = { hasAttribute: () => false, parentElement: screenEl, nextElementSibling: rest };
+    const traj = rect(slotTop + 45, 60);
+    let current = null;
+    const slot = {
+      ...rect(slotTop, 45), parentElement: side, nextElementSibling: traj,
+      set outerHTML(_value) {
+        slot.isConnected = false;
+        current = null;
+        if (anchored) return;
+        if (moves.includes('traj')) traj.top += grow;
+        if (moves.includes('rest')) rest.top += grow;
+      },
+    };
+    slot.getBoundingClientRect = () => ({ top: slotTop, bottom: slotTop + 45 });
+    current = slot;
+    const section = { querySelector: (sel) => (sel === '#plantilla' ? current : null) };
+    const ctx = homeCtx(MARCH, { myTeam: GUAYARMINA });
+    fillSquad(section, ctx, team(ctx), { load: async () => data, win, when: now });
+    await flush();
+    assert.equal(slot.isConnected, false, 'el hueco se pintó');
+    return scrolls;
+  }
+  assert.deepEqual(await page({ slotTop: -400, grow: 521 }), [521], 'llega la tabla: la página baja lo que crece');
+  assert.deepEqual(await page({ slotTop: -400, grow: -64, data: {} }), [-64], 'sin actas se quita: sube lo que mide');
+  assert.deepEqual(await page({ slotTop: -1000, grow: 521 }), [521], 'con la trayectoria también arriba, el calendario');
+  assert.deepEqual(await page({ slotTop: -1000, grow: 521, moves: ['traj'] }), [], 'en escritorio el calendario no se mueve');
+  assert.deepEqual(await page({ slotTop: 120, grow: 521 }), [], 'el hueco, a la vista: se ve llenarse');
+  assert.deepEqual(await page({ slotTop: -400, grow: 521, anchored: true }), [], 'el navegador ya lo compensó');
+});
+
 // ── 11. mount: jugador y trayectoria ─────────────────────────────────────
 
 const ARCHIVE = [{ name: '2025-2026', current: true }, { name: '2024-2025', current: false }, { name: '2023-2024', current: false }];
 
-test('mount de la portada: un jugador despliega sus partidos y «Ver la trayectoria» carga su panel, con su propio «Reintentar»', async () => {
+test('mount de la portada: un jugador despliega sus partidos y «Ver la trayectoria» carga su panel, con su propio «Reintentar», que deja el foco en el título del bloque', async () => {
   // El jugador: la fila de sus partidos, debajo de la suya, al desplegarlo; al plegarlo, se quita.
   const ctx = homeCtx(MARCH, { myTeam: GUAYARMINA, datasets: datasetsAt(MARCH, { lineups: seasonLineups('2025-2026') }) });
   const listeners = [];
@@ -298,7 +398,19 @@ test('mount de la portada: un jugador despliega sus partidos y «Ver la trayecto
   console.error = () => {};
   try {
     const archived = ctxFor('', {}, { today: '2026-09-23', datasets: datasetsFor({ seasons: ARCHIVE, lineups: { '2025-2026/PG2': {} } }) });
-    const panel = { innerHTML: '', hidden: true, isConnected: true, setAttribute() {}, removeAttribute() {}, hasChildNodes: () => panel.innerHTML !== '' };
+    // El documento del panel, con el foco, y el título de su bloque (Trayectoria).
+    const doc = { activeElement: null };
+    const title = {
+      tabindex: null, options: null,
+      hasAttribute: (n) => n === 'tabindex' && title.tabindex !== null,
+      setAttribute: (n, v) => { if (n === 'tabindex') title.tabindex = String(v); },
+      focus: (options) => { title.options = options; doc.activeElement = title; },
+    };
+    const panel = {
+      innerHTML: '', hidden: true, isConnected: true, setAttribute() {}, removeAttribute() {}, hasChildNodes: () => panel.innerHTML !== '',
+      ownerDocument: doc, contains: (el) => Boolean(el && el.inPanel),
+      closest: (sel) => (sel === '.block' ? { querySelector: (q) => (q === '.block-title' ? title : null) } : null),
+    };
     const heard = [];
     const page = {
       matches: (sel) => sel === '[data-screen="home"]', addEventListener: (type, fn) => { if (type === 'click') heard.push(fn); }, contains: () => true,
@@ -307,17 +419,23 @@ test('mount de la portada: un jugador despliega sus partidos y «Ver la trayecto
     screen.mount(page, archived, {});
     const toggle = { 'data-action': 'trayectoria', 'aria-expanded': 'false' };
     const button = { textContent: 'Ver la trayectoria', getAttribute: (n) => toggle[n], setAttribute: (n, v) => { toggle[n] = v; }, closest: (sel) => (sel === '[data-action]' ? button : null) };
+    doc.activeElement = button;
     heard.forEach((fn) => fn({ target: button }));
     assert.deepEqual([toggle['aria-expanded'], button.textContent, panel.hidden], ['true', 'Ocultar la trayectoria', false]);
     await flush();
     assert.match(panel.innerHTML, /No se pudieron cargar los datos de la trayectoria\./, '2023-24 no llega');
+    assert.deepEqual([doc.activeElement, title.options], [button, null], 'el foco, fuera del panel: se queda en su botón');
     served.add('2023-2024');
-    const retry = { getAttribute: (n) => ({ 'data-action': 'retry' })[n], closest: (sel) => (sel === '[data-action]' ? retry : sel === '#trayectoria' ? panel : null) };
+    const retry = { inPanel: true, getAttribute: (n) => ({ 'data-action': 'retry' })[n], closest: (sel) => (sel === '[data-action]' ? retry : sel === '#trayectoria' ? panel : null) };
     const event = { target: retry, prevented: 0, stopped: 0, preventDefault() { event.prevented += 1; }, stopPropagation() { event.stopped += 1; } };
+    // Con el teclado, el foco está en su «Reintentar», que sale del DOM: pasa al título del bloque.
+    doc.activeElement = retry;
     heard.forEach((fn) => fn(event));
     assert.deepEqual([event.prevented, event.stopped], [1, 1]);
+    assert.deepEqual([doc.activeElement, title.tabindex, title.options], [title, '-1', { preventScroll: true }]);
     await flush();
     assert.equal((panel.innerHTML.match(/<a class="traj-row"/g) || []).length, 10);
+    assert.equal(doc.activeElement, title, 'y ahí sigue con la trayectoria pintada');
   } finally {
     globalThis.fetch = saved.fetch;
     console.error = saved.error;

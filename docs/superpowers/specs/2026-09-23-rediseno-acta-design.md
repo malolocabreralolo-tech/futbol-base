@@ -369,7 +369,7 @@ Maqueta: `5-4-explorar.png`.
 ### 4.10 Sin conexión
 
 - Aviso en la cabecera: «Sin conexión. Datos del <lastDataChange de data-health o, si falta, del literal 'Última actualización'>».
-- Lo que requiere un fichero perezoso que no está en caché muestra la caja de error con «Reintentar» (§7).
+- Lo que requiere un fichero perezoso que no está en caché muestra la caja de error con «Reintentar» (§7). *(Nota: salvo la plantilla de Mi equipo, que sin conexión dice que llegará al volver la conexión, sin caja de error, y se rellena sola; en la ficha, la misma plantilla sigue con su caja; véase «Lo que cambió al construirlo», punto 13.)*
 
 ### 4.11 Funciones del diseño anterior: dónde quedan
 
@@ -629,7 +629,7 @@ Test con datos reales: para PG2 Las Mesas salen MCP3 (Grupo C, 3.º) y MCPK1 (Co
 
 ## 7. Estados, errores y honestidad
 
-- **Carga:** esqueleto con las dimensiones finales, sin saltos. *(Nota: el alto del esqueleto es el de lo que llega tras él en una temporada pasada a 390 px, medido con las fixtures; en la primera visita de la temporada en curso, o a 1440 px, el bloque de verdad puede ser más alto o más bajo; véase «Lo que cambió al construirlo», punto 11.)*
+- **Carga:** esqueleto con las dimensiones finales, sin saltos. *(Nota: el alto del esqueleto es el de lo que llega tras él en una temporada pasada a 390 px, medido con las fixtures; en la primera visita de la temporada en curso, o a 1440 px, el bloque de verdad puede ser más alto o más bajo; véase «Lo que cambió al construirlo», punto 11. Tampoco el hueco de la plantilla de Mi equipo: no se sabe su alto hasta que llegan las actas, y sin actas se quita; si ya quedó por encima de la ventana, la página se desplaza para que lo que se mira no se mueva; véase el punto 13.)*
 - **Error de un fichero:** caja «No se pudieron cargar los datos de <qué>» con «Reintentar». Nunca se cae a datos de otra temporada.
 - **Cobertura** (`coverageNote`): cuando se calcula desde el calendario y no coincide con el PJ de la clasificación.
   - Descuenta los partidos contra retirados y lo dice: «26 partidos en el calendario y 2 contra CD Batán (retirado)».
@@ -824,11 +824,11 @@ Adenda del plan B5 (27/09/2026), al cerrar el rediseño. El diseño de arriba es
     - el precache a medias: una instalación del SW que no pudo bajar algún fichero deja ese hueco sin conexión hasta que se pide con red, y se cura solo;
     - la caché HTTP de 600 s sin SW: sin SW al mando, unos 10 minutos tras publicar código un navegador puede mezclar módulos; lo cerraría versionar el grafo de módulos, y los import maps subirían el suelo de Safari a 16.4 (plan B3, «Antes de publicar B3»);
     - los alias de los equipos renombrados en Partido: las temporadas anteriores y el cara a cara pierden los equipos que la fuente renombra («VICTORIA, REAL CLUB» frente a «RC Victoria»), y arreglarlo pide una tabla de alias por fuente.
-13. **Mi equipo, con todo lo de la ficha** (§4.2, §4.6, §4.8 y §4.11): a petición del usuario (4/10/2026), la portada es la vista de la ficha de su equipo con la cabecera de la portada (plan del 4/10/2026, `docs/superpowers/plans/2026-10-04-plan-mi-equipo-completo.md`):
+13. **Mi equipo, con todo lo de la ficha** (§4.2, §4.6, §4.8, §4.10, §4.11 y §7): a petición del usuario (4/10/2026), la portada es la vista de la ficha de su equipo con la cabecera de la portada (plan del 4/10/2026, `docs/superpowers/plans/2026-10-04-plan-mi-equipo-completo.md`):
     - D1, el mismo orden que la ficha: en móvil, la cabecera, lo principal, la consulta (con la evolución de puntos, la plantilla y la trayectoria) y al final el calendario; en escritorio, lo principal y el calendario a la izquierda y la consulta entera a la derecha;
-    - D2, el calendario completo siempre, con su `.ics` y en render: se retiran el calendario de escritorio, la opción `calendar` de la vista de equipo y «Ver toda la temporada», y «calendario completo» es el ancla `#calendario` de la portada;
+    - D2, el calendario completo siempre, con su `.ics` y en render: se retiran el calendario de escritorio, la opción `calendar` de la vista de equipo y «Ver toda la temporada», y «calendario completo» es el ancla `#calendario` de la portada, que el router lleva arriba de la ventana con el foco (como el ancla de una ruta: un `focus()` a secas centraba el calendario, de 1.800 px a 390 px, y dejaba su título y su `.ics` por encima);
     - D3, los bloques de la consulta de la ficha, en un módulo compartido, `src/team-extras.js` (`teamExtras` y `mountTeamExtras`), que importa de `team-view.js` y no al revés;
-    - D4, la plantilla no bloquea la portada: su `needs` sigue pidiendo solo `data-health.json`, render pinta un hueco que `fillSquad` llena tras `load` y con el navegador libre, guardando las actas en `datasets.lineups`, y sin conexión dice que la plantilla llegará al volver la conexión, sin caja de error;
+    - D4, la plantilla no bloquea la portada: su `needs` sigue pidiendo solo `data-health.json`, render pinta un hueco que `fillSquad` llena tras `load` y con el navegador libre, guardando las actas en `datasets.lineups`, y sin conexión dice que la plantilla llegará al volver la conexión, sin caja de error (§4.10). En la primera apertura en frío la portada ya se pinta tras `load` (espera a `data-health.json`, que no lo retrasa), así que solo queda esperar al navegador libre y las actas pueden coincidir con los escudos que aún bajan. El hueco no tiene el alto de la plantilla, contra §7: no se sabe hasta que llegan las actas, y en un grupo sin actas se quita; si ya quedó por encima de la ventana (se bajó al calendario mientras llegaban), `fillSquad` desplaza la página lo que se movió lo primero que se ve tras él, como el anclaje del desplazamiento de Chrome y Firefox, que Safari no trae;
     - D5, la trayectoria, bajo demanda y con el mismo código de la ficha;
     - D6, la ficha no cambia: el mismo render, byte a byte, y su `needs` sigue esperando a las actas;
     - D7, lo que es solo de la portada se queda: «Cambiar», la caja de la temporada siguiente, el aviso stale, E y X, y no apuntarse en «Vistos hace poco».

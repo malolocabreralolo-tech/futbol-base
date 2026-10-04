@@ -39,8 +39,10 @@ import { useWorld, STORE_KEY } from './fixture-site.mjs';
 // cambia la dirección) y la portada en B, C, D, E y X a 320 px.
 // De Mi equipo con todo lo de la ficha (04/10/2026): el calendario completo de la portada a todos los
 // anchos (al final en móvil, a la izquierda en escritorio) y, una vez a 390 px, su plantilla sin
-// bloquearla, con su «Reintentar» y sin conexión (homeSquad). Cada clic, espera de localizador y
-// navegación lleva su etiqueta (labeled).
+// bloquearla, con su «Reintentar» y sin conexión (homeSquad). De la revisión: «calendario completo»
+// deja el título y el .ics a la vista, el «Reintentar» de la trayectoria deja el foco en su título y el
+// hueco de la plantilla no mueve el calendario que se mira (squadShift). Cada clic, espera de
+// localizador y navegación lleva su etiqueta (labeled).
 // Sin esperas fijas: cada paso espera a su condición (waitForAsync, que al agotarse dice el escenario,
 // el ancho y el tema) o a su localizador.
 const { chromium } = createRequire(import.meta.url)('playwright');
@@ -209,6 +211,18 @@ async function scenarios(viewport, colorScheme) {
       `${label}: el calendario completo de la portada, con su .ics`);
     if (viewport.width < 1024) assert.ok(calendar.below, `${label}: en móvil, el calendario va al final, debajo de la consulta`);
     else assert.ok(calendar.left, `${label}: en escritorio, el calendario va a la izquierda`);
+    // «calendario completo» lo lleva arriba de la ventana, con su título y su .ics a la vista, el foco y
+    // la misma ruta (un focus() a secas lo centraba y, en móvil, los dejaba por encima).
+    await click(page, '#contenido a.more[href="#calendario"]', label);
+    const jumped = await page.evaluate(() => {
+      const cal = document.querySelector('#calendario');
+      const title = cal.querySelector('.block-title').getBoundingClientRect();
+      const ics = cal.querySelector('button[data-action="calendario-equipo"]').getBoundingClientRect();
+      return { title: title.top, ics: [ics.top, ics.bottom], vh: innerHeight, focus: document.activeElement === cal, hash: location.hash };
+    });
+    assert.ok(jumped.title >= -1 && jumped.ics[0] >= 0 && jumped.ics[1] <= jumped.vh,
+      `${label}: «calendario completo», con su título y su .ics a la vista (${JSON.stringify(jumped)})`);
+    assert.deepEqual([jumped.focus, jumped.hash], [true, '#/'], `${label}: «calendario completo», con el foco y sin cambiar la ruta`);
 
     // 2. Jornada por la barra; anterior y siguiente cambian la jornada sin entrada nueva.
     await click(page, '.tabbar a.tab[href="#/jornada"]', label);
@@ -561,11 +575,26 @@ async function homeSquad() {
     gate = Promise.resolve('pass');
     await retryInPlace(page, 'plantilla', '#plantilla table.squad', `${label}, «Reintentar»`);
     assert.equal(requested, 2, `${label}: «Reintentar» vuelve a pedir las actas`);
-    // El jugador y la trayectoria.
+    // El jugador y la trayectoria, cuya primera carga de 2024/25 falla (503): su «Reintentar», con el
+    // teclado, la pinta y deja el foco en el título del bloque, no en <body>.
     await click(page, '#plantilla button.squad-player', label);
     await labeled(`${label}: los partidos del jugador`, () => page.locator('#plantilla tr.squad-detail a.squad-match').first().waitFor());
+    let seasonFailed = false;
+    await context.route(/\/data-season-2024-2025\.js(\?.*)?$/, (route) => {
+      if (seasonFailed) return route.fallback();
+      seasonFailed = true;
+      return route.fulfill({ status: 503, contentType: 'text/plain', body: 'no disponible' });
+    });
     await click(page, '#contenido button[data-action="trayectoria"]', label);
+    await labeled(`${label}: la caja de error de la trayectoria`, () => page.locator('#trayectoria .error-box').waitFor());
+    await labeled(`${label}: el foco en el «Reintentar» de la trayectoria`, () => page.focus('#trayectoria button[data-action="retry"]'));
+    await labeled(`${label}: Intro en el «Reintentar» de la trayectoria`, () => page.keyboard.press('Enter'));
     await labeled(`${label}: la trayectoria`, () => page.locator('#trayectoria a.traj-row').first().waitFor());
+    const trajFocus = await page.evaluate(() => {
+      const el = document.activeElement;
+      return { title: el?.classList.contains('block-title') ?? false, text: el?.textContent ?? null, owns: Boolean(el?.closest('.block')?.querySelector('#trayectoria')) };
+    });
+    assert.deepEqual(trajFocus, { title: true, text: 'Trayectoria', owns: true }, `${label}: tras el «Reintentar» de la trayectoria, el foco en el título de su bloque`);
     await checkLayout(page, 390, `${label}, con todo desplegado`);
     // Jornada y Mi equipo por la barra: la plantilla, ya en el pintado.
     await click(page, '.tabbar a.tab[href="#/jornada"]', label);
@@ -599,6 +628,60 @@ async function homeSquad() {
     assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
   } finally {
     await context.close();
+  }
+}
+
+// El hueco de la plantilla de la portada no mueve lo que se mira (spec §7, nota del punto 13): a 390 px,
+// con las actas retenidas, «calendario completo» y, al llegar, el título del calendario sigue donde
+// estaba, tanto si la plantilla llega (Guayarmina, A1) como si el grupo no tiene actas y el hueco se
+// quita (Las Mesas, PG2, un 404). Con el anclaje del desplazamiento de Chrome y sin él
+// (overflow-anchor: none, como Safari): fillSquad compensa solo lo que el navegador no compensó.
+async function squadShift() {
+  for (const [who, myTeam, file, filled] of [
+    ['Guayarmina', GUAYARMINA, 'A1', true], ['Las Mesas', LAS_MESAS, 'PG2', false],
+  ]) {
+    for (const anchoring of [true, false]) {
+      const label = `390px en claro, el hueco de la plantilla de ${who} ${anchoring ? 'con' : 'sin'} anclaje`;
+      const context = await newContext({ width: 390, height: 844 }, 'light');
+      try {
+        await useWorld(context, 'A', { myTeam });
+        let release;
+        const held = new Promise((resolve) => { release = resolve; });
+        let requested = false;
+        await context.route(new RegExp(`/data-lineups-2025-2026-${file}\\.js(\\?.*)?$`), async (route) => {
+          requested = true;
+          await held;
+          return route.fallback();
+        });
+        const page = await context.newPage();
+        page.setDefaultTimeout(8000);
+        const errors = [];
+        page.on('pageerror', (error) => errors.push(error.message));
+        await page.goto(`${base}#/`);
+        await paintedAs(page, 'home', { label });
+        await waitForAsync(page, () => document.querySelector('#plantilla[data-slot]') !== null, null, { label: `${label}: el hueco` });
+        for (const deadline = Date.now() + 8000; !requested;) {
+          if (Date.now() > deadline) throw new Error(`${label}: la portada no pidió las actas`);
+          await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+        if (!anchoring) await page.addStyleTag({ content: '* { overflow-anchor: none !important; }' });
+        await click(page, '#contenido a.more[href="#calendario"]', label);
+        const where = () => page.evaluate(() => new Promise((resolve) => {
+          // Tras dos fotogramas, por si el navegador ajusta el desplazamiento en el siguiente.
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve(document.querySelector('#calendario .block-title').getBoundingClientRect().top)));
+        }));
+        const before = await where();
+        assert.ok(Math.abs(before) <= 1, `${label}: «calendario completo», arriba (${before})`);
+        release();
+        await squadSettled(page, label);
+        const after = await where();
+        assert.equal(await page.locator('#plantilla table.squad').count(), filled ? 1 : 0, `${label}: ${filled ? 'la plantilla llega' : 'sin actas, el hueco se quita'}`);
+        assert.ok(Math.abs(after - before) <= 1, `${label}: el calendario no se mueve (${before} → ${after})`);
+        assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
+      } finally {
+        await context.close();
+      }
+    }
   }
 }
 
@@ -722,7 +805,9 @@ try {
   await homeStates();
   console.log('PASS: 320px en claro, la portada en B, C, D, E y X: sin desplazamiento horizontal y sin que la barra tape el final');
   await homeSquad();
-  console.log('PASS: 390px en claro, la plantilla de la portada: no la bloquea (con las actas retenidas, ya pintada con su hueco), un 503 en su sitio sin mover el foco, su «Reintentar» sin volver arriba, el jugador y la trayectoria, de vuelta en Mi equipo ya pintada y, sin conexión, un vacío tranquilo que se rellena al volver la conexión');
+  console.log('PASS: 390px en claro, la plantilla de la portada: no la bloquea (con las actas retenidas, ya pintada con su hueco), un 503 en su sitio sin mover el foco, su «Reintentar» sin volver arriba, el jugador y la trayectoria (su «Reintentar» con el teclado deja el foco en su título), de vuelta en Mi equipo ya pintada y, sin conexión, un vacío tranquilo que se rellena al volver la conexión');
+  await squadShift();
+  console.log('PASS: 390px en claro, el hueco de la plantilla de la portada: con el calendario a la vista, ni la plantilla que llega (Guayarmina) ni el hueco que se quita (Las Mesas, sin actas) lo mueven, con el anclaje del navegador y sin él');
 } finally {
   if (browser) await browser.close();
   server.closeAllConnections();

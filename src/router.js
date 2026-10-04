@@ -555,12 +555,16 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
     } else if (href.length > 1 && href.startsWith('#')) {
       // Un ancla interna nunca cambia la ruta (spec §4.1): se previene siempre, exista o no su
       // destino. Si no, un hash sin ruta («#calendario») lo trataría el navegador y acabaría en
-      // Mi equipo, con una entrada nueva (B2, ronda 1, hallazgo 5).
+      // Mi equipo, con una entrada nueva (B2, ronda 1, hallazgo 5). El destino va arriba de la
+      // ventana, como el ancla de una ruta en place(), y se lleva el foco sin desplazar: un focus() a
+      // secas centra lo que no cabe, y en Mi equipo a 390 px el calendario (1.800 px) quedaba con su
+      // título y su .ics por encima de la vista.
       event.preventDefault();
       const dest = doc.getElementById(decode(href.slice(1)));
       if (!dest) return;
       if (!dest.hasAttribute('tabindex')) dest.setAttribute('tabindex', '-1');
-      dest.focus();
+      dest.focus({ preventScroll: true });
+      dest.scrollIntoView({ block: 'start' });
     }
   }
 

@@ -2,6 +2,10 @@
  "1014:148896": {
   "comp": "1014",
   "comp_name": "FINAL COPA BENJAMIN FUERTEVENTURA",
+  "crests": {
+   "BREÑAMEN \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+   "HERBANIA \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg"
+  },
   "fetched": "2026-10-03",
   "grupo": "148896",
   "grupo_name": "GRUPO 1",
@@ -62,6 +66,14 @@
  "1092:146122": {
   "comp": "1092",
   "comp_name": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA",
+  "crests": {
+   "ACODETTI C.F. \"A\" \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000169100_ESCUDOS_ACF_Y_SCF_PX400.png",
+   "ARUCAS C.F. \"A\" \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000160419_nuevo_escudo.jpeg",
+   "BARRIO DEL ATLANTICO \"A\", C.F. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000001483_Escudo_Barrio.jpg",
+   "LOMO BLANCO S.J.A. \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000122389_145891.jpeg",
+   "PALMAS, U.D. LAS": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015561_ESCUDO_UDLP.png",
+   "SIMUSETTI C. F. \"A\" \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000048169_simusetti.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "146122",
   "grupo_name": "GRUPO 1",
@@ -1125,6 +1137,14 @@
  "1092:146304": {
   "comp": "1092",
   "comp_name": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA",
+  "crests": {
+   "ARGUINEGUIN \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000037533_ESCUDO_NUEVO__CD_ARGUINEGUIN_2.png",
+   "ATLETICO G.C. \"A\", C.F. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000063327_IMG_4418.png",
+   "CARRIZAL \"A\", C.F. UNION \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png",
+   "DORAMAS \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000523_ESCUDO_DORAMAS.jpg",
+   "PASEO COMERCIAL DE VECINDARIO \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000652_escudo.png",
+   "UNION VIERA \"A\", C.F. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000001356_UNION_VIERA_1162_CalidadVectorial.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "146304",
   "grupo_name": "GRUPO 2",
@@ -2063,6 +2083,16 @@
  "1093:138333": {
   "comp": "1093",
   "comp_name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE",
+  "crests": {
+   "ARRECIFE, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000002764_LOGO_C.D._ARRECIFE.jpg",
+   "LANZAROTE \"A\", U.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000045245_5120_imgbank_1704726253.png",
+   "LOMO \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000018275_escudo_lomo_VEC_01.jpg",
+   "PALMEIROS DE COSTA T \"A\"., U.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015562_logoUDP.png",
+   "SAN BARTOLOME \"A\", C.F. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015950_escudo.jpg",
+   "TAHICHE \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000068077_ESCUDO.png",
+   "TEGUISE \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017528_31c1899b7280c90b4ada30703d89cce4.jpg",
+   "TITE \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000009658_200x200Tite.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "138333",
   "grupo_name": "GRUPO 1",
@@ -11469,6 +11499,16 @@
  "1095:138515": {
   "comp": "1095",
   "comp_name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE",
+  "crests": {
+   "INTERNACIONAL PH \"A\" \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000570_Escudo_Inter_Playa_Honda.jpg",
+   "INTERNACIONAL PH \"C\" \"C\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000570_Escudo_Inter_Playa_Honda.jpg",
+   "LANZAROTE \"B\", U.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000045245_5120_imgbank_1704726253.png",
+   "LOMO \"B\", C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000018275_escudo_lomo_VEC_01.jpg",
+   "PUERTO DEL CARMEN \"A\", F.C. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000454_Logo__PDC.jpg",
+   "SAN BARTOLOME \"C\", C.F. \"C\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015950_escudo.jpg",
+   "TAHICHE \"B\", C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000068077_ESCUDO.png",
+   "TITE \"B\", C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000009658_200x200Tite.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "138515",
   "grupo_name": "GRUPO 1",
@@ -12242,6 +12282,14 @@
  "1095:138647": {
   "comp": "1095",
   "comp_name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE",
+  "crests": {
+   "INTERNACIONAL PH \"B\" \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000570_Escudo_Inter_Playa_Honda.jpg",
+   "LOMO \"C\", C.D. \"C\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000018275_escudo_lomo_VEC_01.jpg",
+   "PALMEIROS DE COSTA T \"B\"., U.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015562_logoUDP.png",
+   "SAN BARTOLOME \"B\", C.F. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015950_escudo.jpg",
+   "TAHICHE \"C\", C.D. \"C\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000068077_ESCUDO.png",
+   "TEGUISE \"B\", C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017528_31c1899b7280c90b4ada30703d89cce4.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "138647",
   "grupo_name": "GRUPO 2",
@@ -13202,6 +13250,11 @@
  "1096:144153": {
   "comp": "1096",
   "comp_name": "LIGA BENJAMIN F-8 FUERTEVENTURA",
+  "crests": {
+   "COTILLO, C.D. EL": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000087575_ESCUDO_1.png",
+   "EURO DE LAJARES, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000432_ESCUDO.jpg",
+   "OLIVA, C.D. LA": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015742_ESCUDO_CD_LA_OLIVA.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "144153",
   "grupo_name": "GRUPO 1",
@@ -13780,6 +13833,14 @@
  "1096:144243": {
   "comp": "1096",
   "comp_name": "LIGA BENJAMIN F-8 FUERTEVENTURA",
+  "crests": {
+   "35600 \"B\", CD \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+   "35600,\"A\" C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+   "CHARCO ATLETICO, C.D. EL": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000010776_charco.png",
+   "HERBANIA \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+   "HERBANIA \"B\", C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+   "TETIR C.F., UNION": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000077663_Escudo___copia.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "144243",
   "grupo_name": "GRUPO 2",
@@ -14706,6 +14767,13 @@
  "1096:144450": {
   "comp": "1096",
   "comp_name": "LIGA BENJAMIN F-8 FUERTEVENTURA",
+  "crests": {
+   "BREÑAMEN \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+   "BREÑAMEN \"B\", C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+   "EUROPEAN F.U., CD": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000097954_foto_escudo_1.jpg",
+   "PLAYAS DE SOTAVENTO \"A\", U.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG",
+   "PLAYAS DE SOTAVENTO \"B\", U.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG"
+  },
   "fetched": "2026-10-03",
   "grupo": "144450",
   "grupo_name": "GRUPO 3",
@@ -15507,6 +15575,11 @@
  "1097:148701": {
   "comp": "1097",
   "comp_name": "COPA BENJAMIN F-8 FUERTEVENTURA",
+  "crests": {
+   "35600 \"B\", CD \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+   "COTILLO, C.D. EL": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000087575_ESCUDO_1.png",
+   "OLIVA, C.D. LA": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015742_ESCUDO_CD_LA_OLIVA.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "148701",
   "grupo_name": "GRUPO 1",
@@ -15828,6 +15901,11 @@
  "1097:148716": {
   "comp": "1097",
   "comp_name": "COPA BENJAMIN F-8 FUERTEVENTURA",
+  "crests": {
+   "CHARCO ATLETICO, C.D. EL": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000010776_charco.png",
+   "HERBANIA \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+   "TETIR C.F., UNION": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000077663_Escudo___copia.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "148716",
   "grupo_name": "GRUPO 2",
@@ -16198,6 +16276,10 @@
  "1097:148731": {
   "comp": "1097",
   "comp_name": "COPA BENJAMIN F-8 FUERTEVENTURA",
+  "crests": {
+   "BREÑAMEN \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+   "PLAYAS DE SOTAVENTO \"B\", U.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG"
+  },
   "fetched": "2026-10-03",
   "grupo": "148731",
   "grupo_name": "GRUPO 3",
@@ -16603,6 +16685,16 @@
  "1098:146436": {
   "comp": "1098",
   "comp_name": "LIGA PREBENJAMIN DE GRAN CANARIA",
+  "crests": {
+   "ACODETTI C.F \"B\" \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000169100_ESCUDOS_ACF_Y_SCF_PX400.png",
+   "ARUCAS C.F. \"A\" \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000160419_nuevo_escudo.jpeg",
+   "ARUCAS C.F. \"B\" \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000160419_nuevo_escudo.jpeg",
+   "BARRIO DEL ATLANTICO, C.F.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000001483_Escudo_Barrio.jpg",
+   "COSTA AYALA, UNION JUVENIL": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000126937_logo_l__nea_1.jpg",
+   "PILETAS, A.D. U.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000033206_ESCUDO_NUEVO_PILE.jpg",
+   "ROQUE AMAGRO-ALUVIDRIO, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000149_Logo_Arreglado.png",
+   "VALLESECO, U.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000013868_IMG_20250804_WA0022.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "146436",
   "grupo_name": "GRUPO 1",
@@ -18152,6 +18244,16 @@
  "1098:146742": {
   "comp": "1098",
   "comp_name": "LIGA PREBENJAMIN DE GRAN CANARIA",
+  "crests": {
+   "ACODETTI C.F \"A\" \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000169100_ESCUDOS_ACF_Y_SCF_PX400.png",
+   "ARENA FUTBOLTEC, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000191739_WhatsApp_Image_2026_10_02_at_16.04.46.jpeg",
+   "CARRIZAL, C.F. UNION": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png",
+   "DORAMAS \"A\", C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000523_ESCUDO_DORAMAS.jpg",
+   "INGENIO, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000785_ESCUDO.png",
+   "LOMO BLANCO, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000122389_145891.jpeg",
+   "SIMUSETTI C. F.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000048169_simusetti.jpg",
+   "UNION VIERA, C.F.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000001356_UNION_VIERA_1162_CalidadVectorial.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "146742",
   "grupo_name": "GRUPO 2",
@@ -19834,6 +19936,14 @@
  "1128:148613": {
   "comp": "1128",
   "comp_name": "COPA DELEGACION BENJAMIN FUERTEVENTURA",
+  "crests": {
+   "35600,\"A\" C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+   "BREÑAMEN \"B\", C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+   "EURO DE LAJARES, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000432_ESCUDO.jpg",
+   "EUROPEAN F.U., CD": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000097954_foto_escudo_1.jpg",
+   "HERBANIA \"B\", C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+   "PLAYAS DE SOTAVENTO \"A\", U.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG"
+  },
   "fetched": "2026-10-03",
   "grupo": "148613",
   "grupo_name": "GRUPO 1",
@@ -20404,6 +20514,9 @@
  "1157:148811": {
   "comp": "1157",
   "comp_name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE",
+  "crests": {
+   "INTERNACIONAL PH \"A\" \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000570_Escudo_Inter_Playa_Honda.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "148811",
   "grupo_name": "GRUPO 1",
@@ -20436,6 +20549,11 @@
  "1165:148893": {
   "comp": "1165",
   "comp_name": "FINAL LIGA BENJAMIN FUERTEVENTURA",
+  "crests": {
+   "35600,\"A\" C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+   "EURO DE LAJARES, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000432_ESCUDO.jpg",
+   "PLAYAS DE SOTAVENTO \"A\", U.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG"
+  },
   "fetched": "2026-10-03",
   "grupo": "148893",
   "grupo_name": "GRUPO 1",

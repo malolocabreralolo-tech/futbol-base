@@ -2718,6 +2718,7 @@
  "54422885:54726386": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726386",
   "grupo_name": "GRUPO 1",
@@ -3005,6 +3006,7 @@
  "54422885:54726387": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726387",
   "grupo_name": "GRUPO 2",
@@ -3424,6 +3426,7 @@
  "54422885:54726412": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726412",
   "grupo_name": "GRUPO 3",
@@ -3857,6 +3860,7 @@
  "54422885:54726418": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726418",
   "grupo_name": "GRUPO 4",
@@ -4297,6 +4301,7 @@
  "54422885:54726429": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726429",
   "grupo_name": "GRUPO 5",
@@ -4723,6 +4728,7 @@
  "54422885:54726432": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726432",
   "grupo_name": "GRUPO 6",
@@ -5240,6 +5246,7 @@
  "54422885:54726477": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726477",
   "grupo_name": "GRUPO 7",
@@ -5541,6 +5548,7 @@
  "54422885:54726511": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726511",
   "grupo_name": "GRUPO 8",
@@ -5988,6 +5996,7 @@
  "54422885:54726515": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726515",
   "grupo_name": "GRUPO 9",
@@ -6337,6 +6346,7 @@
  "54422885:54726527": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726527",
   "grupo_name": "GRUPO 10",
@@ -6791,6 +6801,7 @@
  "54422885:54726529": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726529",
   "grupo_name": "GRUPO 11",
@@ -7196,6 +7207,11 @@
  "54422885:54726557": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "ATLETICO FOMENTO, CLUB \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000429_abd58a34_fb18_4ad4_896b_7093c2c63bcf.JPG",
+   "HURACAN, A.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000124447_LOGO.png",
+   "PILETAS, A.D. U.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000033206_ESCUDO_NUEVO_PILE.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726557",
   "grupo_name": "GRUPO 12",
@@ -7497,6 +7513,7 @@
  "54422885:54726565": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {},
   "fetched": "2026-10-03",
   "grupo": "54726565",
   "grupo_name": "GRUPO 13",
@@ -7860,6 +7877,10 @@
  "54422885:54726567": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "ATLETICO G.C., C.F. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000063327_IMG_4418.png",
+   "MARZASPORT, ATLETICO": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000056112_ESCUDO_MARZASPORT.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726567",
   "grupo_name": "GRUPO 14",
@@ -8223,6 +8244,10 @@
  "54422885:54726573": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "CALERO, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000011338_escudo_calero_trazado.png",
+   "LONGUERAS, C.D. LAS \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000028524_c.d.longueras_escudo_color__4__page_0001.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726573",
   "grupo_name": "GRUPO 15",
@@ -8614,6 +8639,10 @@
  "54422885:54726576": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "LONGUERAS, C.D. LAS \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000028524_c.d.longueras_escudo_color__4__page_0001.jpg",
+   "VALLINAMAR, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000069441_100x100vallinamar__2_.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726576",
   "grupo_name": "GRUPO 16",
@@ -9019,6 +9048,10 @@
  "54422885:54726597": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "CARRIZAL, C.F. UNION": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png",
+   "VALDECASAS, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000128500_ESCUDO_VADECASAS_PNG.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726597",
   "grupo_name": "GRUPO 17",
@@ -9369,6 +9402,13 @@
  "54422885:54726599": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "ARENA FUTBOLTEC, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000191739_WhatsApp_Image_2026_10_02_at_16.04.46.jpeg",
+   "ARINAGA, C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000018982_ESCUDO.jpg",
+   "DORAMAS, CD \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000523_ESCUDO_DORAMAS.jpg",
+   "INGENIO, C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000785_ESCUDO.png",
+   "JOVERO-LAS ROSAS, C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000128802_ESCUDO_DEL_CLUB.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726599",
   "grupo_name": "GRUPO 18",
@@ -9830,6 +9870,12 @@
  "54422885:54726607": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "CERRUDA SANTA LUCIA DE TIRAJANA, C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000035220_100x100cerruda.png",
+   "DORAMAS, C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000523_ESCUDO_DORAMAS.jpg",
+   "INGENIO, C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000785_ESCUDO.png",
+   "LA UNION DE VECINDARIO \"C\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000652_escudo.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726607",
   "grupo_name": "GRUPO 19",
@@ -10242,6 +10288,13 @@
  "54422885:54726610": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "ARINAGA, C.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000018982_ESCUDO.jpg",
+   "CASA PASTORES, C.F. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000125575_cf_casa_pastores.jpg",
+   "CERRUDA SANTA LUCIA DE TIRAJANA, C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000035220_100x100cerruda.png",
+   "JOVERO-LAS ROSAS, C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000128802_ESCUDO_DEL_CLUB.jpg",
+   "LA UNION DE VECINDARIO \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000652_escudo.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726610",
   "grupo_name": "GRUPO 20",
@@ -10598,6 +10651,11 @@
  "54422885:54726613": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "BALOS, U.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000016119_Sin_t__tulo_1.jpg",
+   "CASA PASTORES, C.D. C.F. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000125575_cf_casa_pastores.jpg",
+   "LA UNION DE VECINDARIO \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000000652_escudo.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726613",
   "grupo_name": "GRUPO 21",
@@ -10982,6 +11040,9 @@
  "54422885:54726618": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "ARGUINEGUIN, C.D. \"B\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000037533_ESCUDO_NUEVO__CD_ARGUINEGUIN_2.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726618",
   "grupo_name": "GRUPO 22",
@@ -11366,6 +11427,9 @@
  "54422885:54726627": {
   "comp": "54422885",
   "comp_name": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA",
+  "crests": {
+   "ARGUINEGUIN, C.D. \"A\"": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000037533_ESCUDO_NUEVO__CD_ARGUINEGUIN_2.png"
+  },
   "fetched": "2026-10-03",
   "grupo": "54726627",
   "grupo_name": "GRUPO 23",
@@ -38147,6 +38211,9 @@
  "54976641:54976642": {
   "comp": "54976641",
   "comp_name": "CLAUSURA BENJAMÍN",
+  "crests": {
+   "TARAJALEJO, U.D.": "https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/00100_0000051447_IMG_20250905_WA0012.jpg"
+  },
   "fetched": "2026-10-03",
   "grupo": "54976642",
   "grupo_name": "ELIMINATORIA",

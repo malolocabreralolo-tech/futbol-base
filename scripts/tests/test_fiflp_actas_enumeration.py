@@ -117,3 +117,12 @@ def test_actas_are_read_by_several_browsers_from_one_queue_until_the_deadline(mo
     seen.clear()
     A.fetch_parallel(pending, 2, lambda: True, on_result, open_page=open_page)
     assert seen == []
+
+
+def test_an_acta_that_cannot_be_flattened_is_not_asked_for_again():
+    """Un acta que, releída con el lector aplanado, sigue sin aplanarse queda marcada: cada tanda la
+    volvía a pedir y la cadena no paraba nunca."""
+    old = {"header": {"season": "2023/2024"}}
+    assert A.needs_rescrape(old)
+    assert not A.needs_rescrape({**old, "rescrape_failed": True})
+    assert not A.needs_rescrape({**old, "consistent": True})

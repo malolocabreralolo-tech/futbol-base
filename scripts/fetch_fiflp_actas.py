@@ -80,8 +80,12 @@ def status_path(season_code):
 
 def needs_rescrape(acta):
     """Las actas leídas antes de octubre de 2026 (acta_parser, sin aplanar)
-    traen la cabecera mal descifrada y sin minutos: se vuelven a leer."""
-    return isinstance(acta, dict) and "consistent" not in acta
+    traen la cabecera mal descifrada y sin minutos: se vuelven a leer. Una que
+    ya se releyó con el lector aplanado y aun así no se dejó aplanar
+    (`rescrape_failed`: la página de algunos partidos no tiene la forma de acta)
+    no se vuelve a pedir: si no, cada tanda la leía otra vez y la cadena no
+    paraba nunca (4/10/2026)."""
+    return isinstance(acta, dict) and "consistent" not in acta and not acta.get("rescrape_failed")
 
 
 # ── Low-level helpers ─────────────────────────────────────────────────────────
@@ -612,9 +616,13 @@ def main():
             return
         acta["cod_acta"] = int(cod)
         acta["enumeration"] = {"comp_id": t["comp_id"], "grupo": t["grupo"], "jornada": t["jornada"]}
+        flat = "consistent" in acta
+        if not flat:
+            acta["rescrape_failed"] = True     # leída ya con el lector nuevo: no se vuelve a pedir
         with lock:
             raw[cod] = acta
-            fetched += 1
+            # Solo cuenta como acta nueva la que se dejó aplanar: la cadena sigue mientras avanza.
+            fetched += flat
             # save every 25 actas to survive crashes
             if fetched % 25 == 0:
                 save_raw(season, raw)

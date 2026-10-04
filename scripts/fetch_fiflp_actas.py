@@ -12,7 +12,7 @@ CLI:
 
 Designed to run only in GitHub Actions (FIFLP blocks the local IP).
 """
-import os, sys, re, json, time, random, argparse
+import os, sys, re, json, time, random, argparse, threading
 from pathlib import Path
 from scripts.acta_parser import parse_acta
 
@@ -443,6 +443,8 @@ def parse_args():
                     help="CodTemporada: 17..21")
     ap.add_argument("--comps", default="",
                     help="Optional comma-separated comp IDs (override auto-discovery)")
+    ap.add_argument("--workers", type=int, default=2,
+                    help="navegadores a la vez leyendo actas (por defecto 2)")
     ap.add_argument("--max-actas", type=int, default=0,
                     help="Cap on number of actas to process (0 = unlimited)")
     ap.add_argument("--max-minutes", type=int, default=0,
@@ -457,6 +459,47 @@ def parse_args():
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+
+def fetch_parallel(pending, workers, over, on_result, dump_fixture="", open_page=None):
+    """Lee las actas de `pending` con `workers` navegadores a la vez sobre una cola
+    común (la federación tarda: leídas de una en una salían ~45 s por acta).
+    Cada hilo tiene su Playwright y su página (la API síncrona va por hilo);
+    on_result(target, acta) se llama desde los hilos. Para cuando over() es cierto.
+    open_page() -> (page, close): inyectable en las pruebas."""
+    import queue
+    tasks = queue.Queue()
+    for t in pending:
+        tasks.put(t)
+
+    def default_open():
+        from playwright.sync_api import sync_playwright
+        pw = sync_playwright().start()
+        br = pw.chromium.launch(headless=True)
+        page = br.new_context(user_agent=UA).new_page()
+        return page, lambda: (br.close(), pw.stop())
+
+    def worker():
+        page, close = (open_page or default_open)()
+        try:
+            while not over():
+                try:
+                    t = tasks.get_nowait()
+                except queue.Empty:
+                    return
+                try:
+                    on_result(t, fetch_and_parse_acta(page, t["cod_acta"], dump_fixture))
+                except Exception as ex:
+                    print(f"  ! acta {t['cod_acta']}: {ex}")
+                delay()
+        finally:
+            close()
+
+    threads = [threading.Thread(target=worker, daemon=True) for _ in range(max(1, workers))]
+    for th in threads:
+        th.start()
+    for th in threads:
+        th.join()
+
 
 def main():
     # Lazy import — keeps the module importable in environments without playwright
@@ -541,39 +584,37 @@ def main():
         print(f"Enumerated {len(all_targets)} actas total, {len(pending)} pending")
 
         # --- Fetch + parse loop ---
-        for i, t in enumerate(pending):
-            if args.max_actas and i >= args.max_actas:
-                break
-            if over():
-                print(
-                    f"  time budget reached, stopping cleanly "
-                    f"with {len(raw)} actas saved"
-                )
-                break
-            cod = t["cod_acta"]
-            acta = fetch_and_parse_acta(page, cod, args.dump_fixture)
-            if acta is None:
-                continue
-            if is_empty_acta(acta):
-                # Anti-scrape blank survived all retries: do NOT persist it as
-                # done, so the next incremental run retries this acta.
-                print(f"  ! acta {cod} empty after retries — not persisted (will retry next run)")
-                continue
-            acta["cod_acta"]    = int(cod)
-            acta["enumeration"] = {
-                "comp_id": t["comp_id"],
-                "grupo":   t["grupo"],
-                "jornada": t["jornada"],
-            }
+        br.close()
+
+    if args.max_actas:
+        pending = pending[:args.max_actas]
+    lock = threading.Lock()
+    started = time.time()
+
+    def on_result(t, acta):
+        nonlocal fetched
+        cod = t["cod_acta"]
+        if acta is None:
+            return
+        if is_empty_acta(acta):
+            # Anti-scrape blank survived all retries: do NOT persist it as
+            # done, so the next incremental run retries this acta.
+            print(f"  ! acta {cod} empty after retries — not persisted (will retry next run)")
+            return
+        acta["cod_acta"] = int(cod)
+        acta["enumeration"] = {"comp_id": t["comp_id"], "grupo": t["grupo"], "jornada": t["jornada"]}
+        with lock:
             raw[cod] = acta
             fetched += 1
             # save every 25 actas to survive crashes
-            if (i + 1) % 25 == 0:
+            if fetched % 25 == 0:
                 save_raw(season, raw)
-                print(f"    progress: {i+1}/{len(pending)} (saved)")
-            delay()
+                rate = (time.time() - started) / fetched
+                print(f"    progress: {fetched}/{len(pending)} (saved; {rate:.1f} s por acta)")
 
-        br.close()
+    fetch_parallel(pending, args.workers, over, on_result, dump_fixture=args.dump_fixture)
+    if over():
+        print(f"  time budget reached, stopping cleanly with {len(raw)} actas saved")
 
     save_raw(season, raw)
     left = sum(1 for t in all_targets if t["cod_acta"] not in raw or needs_rescrape(raw[t["cod_acta"]]))

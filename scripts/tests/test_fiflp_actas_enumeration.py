@@ -90,3 +90,30 @@ def test_an_empty_answer_is_retried_and_the_slow_strategies_never_run(monkeypatc
     assert (len(res), label, calls) == (1, "main", ["9", "9"])
     monkeypatch.setattr(A, "enumerate_actas_main", lambda *a: [])
     assert A.enumerate_actas_cascade(None, "20", "9") == ([], "none")
+
+
+def test_actas_are_read_by_several_browsers_from_one_queue_until_the_deadline(monkeypatch):
+    import threading
+    seen, opened, closed = [], [], []
+    lock = threading.Lock()
+    monkeypatch.setattr(A, "delay", lambda *a, **k: None)
+    monkeypatch.setattr(A, "fetch_and_parse_acta", lambda page, cod, dump="": {"page": page, "cod": cod})
+
+    def open_page():
+        with lock:
+            opened.append(len(opened))
+            n = opened[-1]
+        return f"p{n}", lambda: closed.append(n)
+
+    def on_result(t, acta):
+        with lock:
+            seen.append((t["cod_acta"], acta["page"]))
+
+    pending = [{"cod_acta": str(i)} for i in range(30)]
+    A.fetch_parallel(pending, 3, lambda: False, on_result, open_page=open_page)
+    assert sorted(c for c, _ in seen) == sorted(str(i) for i in range(30))   # cada acta, una vez
+    assert len(opened) == 3 and sorted(closed) == [0, 1, 2]
+    # Con el plazo agotado no se lee ninguna más.
+    seen.clear()
+    A.fetch_parallel(pending, 2, lambda: True, on_result, open_page=open_page)
+    assert seen == []

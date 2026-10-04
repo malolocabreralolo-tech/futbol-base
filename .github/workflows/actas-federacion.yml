@@ -35,8 +35,9 @@ permissions:
   contents: write
   actions: write
 
+# Una cadena por temporada (pueden correr varias a la vez, cada una sube solo sus ficheros).
 concurrency:
-  group: actas-federacion
+  group: actas-federacion-${{ inputs.temporada }}
   cancel-in-progress: false
 
 jobs:
@@ -58,6 +59,7 @@ jobs:
           TEMP_INPUT: ${{ inputs.temporada }}
           COMPS_INPUT: ${{ inputs.comps }}
           REINDEX: ${{ inputs.reindex }}
+          PYTHONUNBUFFERED: '1'
         run: |
           ARGS="--temporada $TEMP_INPUT --max-minutes 320"
           if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
@@ -91,8 +93,9 @@ jobs:
             sleep $((i * 15))
           done
           exit 1
+      # !cancelled(): también si la descarga se pasó de tiempo (lo que llevaba ya está subido).
       - name: Siguiente tanda
-        if: success()
+        if: ${{ !cancelled() }}
         env:
           GH_TOKEN: ${{ github.token }}
           PYTHONPATH: ${{ github.workspace }}
@@ -104,10 +107,13 @@ jobs:
           LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
           STATUS="scripts/fiflp_actas_${LABEL}_status.json"
           PENDING=$(python3 -c "import json; print(json.load(open('$STATUS'))['pending'])" 2>/dev/null || echo 1)
+          # Una tanda que no trajo ninguna acta ni dejó competiciones sin enumerar no avanza: las
+          # que quedan no se dejan leer (se reintentan cuando se vuelva a lanzar la temporada).
+          STUCK=$(python3 -c "import json; d=json.load(open('$STATUS')); print(int(d.get('fetched', 1) == 0 and not d.get('unenumerated_comps')))" 2>/dev/null || echo 0)
           LEFT=$((TANDAS - 1))
           if [ "$LEFT" -le 0 ]; then
             echo "Freno: sin tandas. Pendientes en $LABEL: $PENDING"
-          elif [ "$PENDING" -gt 0 ]; then
+          elif [ "$PENDING" -gt 0 ] && [ "$STUCK" = "0" ]; then
             echo "Quedan $PENDING actas de $LABEL: otra tanda."
             gh workflow run actas-federacion.yml --ref main -f temporada="$TEMP_INPUT" -f cola="$COLA" -f tandas="$LEFT" -f comps="$COMPS_INPUT"
           elif [ -n "$COLA" ]; then

@@ -1,6 +1,7 @@
 """El enumerador de actas de temporadas pasadas va por URL directa (2026-10):
 elegir grupo con select_option sobre el formulario OCULTO de FIFLP daba timeout
 en todos los grupos salvo el primero."""
+import pytest
 import sys
 from pathlib import Path
 
@@ -74,3 +75,18 @@ def test_backfill_takes_the_catalog_competitions_without_futsal_and_rereads_old_
     assert A.catalog_comps("99") == []
     assert A.needs_rescrape({"header": {}, "lineups": {}})        # lector de mayo: sin «consistent»
     assert not A.needs_rescrape({"header": {}, "consistent": True})
+
+
+def test_an_empty_answer_is_retried_and_the_slow_strategies_never_run(monkeypatch):
+    """La federación sirve a veces la página sin desplegables: se reintenta por URL. Las estrategias
+    antiguas (la página de cada equipo) comían horas de la tanda y ya no se usan solas."""
+    calls = []
+    answers = iter([[], [{"cod_acta": "1", "comp_id": "9", "grupo": "1", "jornada": "1"}]])
+    monkeypatch.setattr(A, "enumerate_actas_main", lambda page, season, comp: calls.append(comp) or next(answers))
+    monkeypatch.setattr(A, "enumerate_actas_via_teams", lambda *a: pytest.fail("estrategia lenta"))
+    monkeypatch.setattr(A, "enumerate_actas_lstpartidos", lambda *a: pytest.fail("estrategia lenta"))
+    monkeypatch.setattr(A.time, "sleep", lambda s: None)
+    res, label = A.enumerate_actas_cascade(None, "20", "9")
+    assert (len(res), label, calls) == (1, "main", ["9", "9"])
+    monkeypatch.setattr(A, "enumerate_actas_main", lambda *a: [])
+    assert A.enumerate_actas_cascade(None, "20", "9") == ([], "none")

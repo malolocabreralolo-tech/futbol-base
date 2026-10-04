@@ -308,30 +308,24 @@ def enumerate_actas_by_range(page, season, comp_id, lo, hi):
 
 # ── Enumeration: Cascade (strategies 1 → 2 → 3; 4 is manual) ────────────────
 
-def enumerate_actas_cascade(page, season, comp_id):
-    """Try enumeration strategies 1→3; return first non-empty result.
+def enumerate_actas_cascade(page, season, comp_id, tries=3):
+    """Las actas de una competición por URL directa (enumerate_actas_main), con
+    reintentos: la federación sirve a veces la página sin los desplegables de
+    grupo o jornada, y eso no quiere decir que no haya actas.
 
-    Strategy precedence:
-      1. main       — NFG_CmpJornada dropdown (grupo→jornada→BuscarPartidos)
-      2. lstpart.   — NFG_LstPartidos flat list
-      3. teams      — walk each team's NFG_CmpEquipo page
-
-    Strategy 4 (enumerate_actas_by_range) is NOT auto-invoked: it fetches
-    every CodActa in a numeric range and is expensive. Invoke it manually
-    when strategies 1-3 yield nothing for an old season.
+    Las estrategias antiguas (NFG_LstPartidos, la página de cada equipo) ya no
+    se usan solas: recorrer los equipos llevaba horas por competición y comía
+    el plazo de la tanda (3/10/2026: 11 competiciones de 2024-25 sin enumerar).
 
     Returns (list_of_target_dicts, strategy_label_str).
     """
-    for label, fn in (
-        ("main",      lambda: enumerate_actas_main(page, season, comp_id)),
-        ("lstpart.",  lambda: enumerate_actas_lstpartidos(page, season, comp_id)),
-        ("teams",     lambda: enumerate_actas_via_teams(page, season, comp_id)),
-    ):
-        res = fn()
+    for attempt in range(tries):
+        res = enumerate_actas_main(page, season, comp_id)
         if res:
-            print(f"  comp {comp_id} via strategy={label}: {len(res)} actas")
-            return res, label
-    print(f"  comp {comp_id}: NO actas via strategies 1-3 — needs range scan (manual)")
+            print(f"  comp {comp_id}: {len(res)} actas (intento {attempt + 1})")
+            return res, "main"
+        time.sleep(20 * (attempt + 1))
+    print(f"  comp {comp_id}: sin actas tras {tries} intentos")
     return [], "none"
 
 
@@ -490,6 +484,12 @@ def main():
 
     raw = load_raw(season)
     print(f"Resume state: {len(raw)} actas already scraped")
+    fetched = 0
+    # El plazo cuenta desde el arranque: enumerar también lleva su tiempo.
+    BUDGET = (args.max_minutes or 330) * 60   # bajo el timeout del job, para guardar y subir
+    run_start = time.time()
+    over = lambda: time.time() - run_start > BUDGET
+    unenumerated = 0
 
     with sync_playwright() as p:
         br = p.chromium.launch(headless=True)
@@ -507,11 +507,18 @@ def main():
                 print(f"  comp {comp_id}: {len(cached)} actas del índice")
                 all_targets += cached
                 continue
-            print(f"  enumerating comp {comp_id} (cascade)...")
+            if over():
+                unenumerated += 1         # la tanda siguiente la enumera
+                continue
+            started = time.time()
+            print(f"  enumerating comp {comp_id}...")
             actas, strategy = enumerate_actas_cascade(page, season, comp_id)
             all_targets += actas
             for t in actas:
                 index[t["cod_acta"]] = {k: v for k, v in t.items() if k != "cod_acta"}
+            # Tras cada competición: una tanda cortada no pierde lo enumerado.
+            index_path(season).write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
+            print(f"    ({time.time() - started:.0f} s)")
             delay()
         index_path(season).write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
 
@@ -529,13 +536,10 @@ def main():
         print(f"Enumerated {len(all_targets)} actas total, {len(pending)} pending")
 
         # --- Fetch + parse loop ---
-        BUDGET = (args.max_minutes or 330) * 60   # bajo el timeout del job, para guardar y subir
-        run_start = time.time()
-
         for i, t in enumerate(pending):
             if args.max_actas and i >= args.max_actas:
                 break
-            if time.time() - run_start > BUDGET:
+            if over():
                 print(
                     f"  time budget reached, stopping cleanly "
                     f"with {len(raw)} actas saved"
@@ -557,6 +561,7 @@ def main():
                 "jornada": t["jornada"],
             }
             raw[cod] = acta
+            fetched += 1
             # save every 25 actas to survive crashes
             if (i + 1) % 25 == 0:
                 save_raw(season, raw)
@@ -567,8 +572,11 @@ def main():
 
     save_raw(season, raw)
     left = sum(1 for t in all_targets if t["cod_acta"] not in raw or needs_rescrape(raw[t["cod_acta"]]))
+    # Una competición sin enumerar por falta de plazo cuenta como pendiente: la cadena sigue.
     status_path(season).write_text(json.dumps({"season": SEASON_NAME[season], "enumerated": len(all_targets),
-                                               "in_raw": len(raw), "pending": left}, indent=1) + "\n", encoding="utf-8")
+                                               "in_raw": len(raw), "pending": left + unenumerated,
+                                               "unenumerated_comps": unenumerated, "fetched": fetched},
+                                              indent=1) + "\n", encoding="utf-8")
     print(f"Done season {season}: total {len(raw)} actas in raw, {left} pending")
 
 

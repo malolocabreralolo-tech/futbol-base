@@ -366,3 +366,14 @@ def test_goleadores_federacion_only_commits_its_raws_even_when_cut():
     assert "git pull --rebase origin main" in upload["run"]
     scrape = next(s for s in steps if "fetch_fiflp_goleadores.py" in s.get("run", ""))
     assert "$TEMPORADAS" in scrape["run"] and "${{" not in scrape["run"], "la entrada va por env, no interpolada"
+
+
+def test_actas_federacion_chains_per_season_survives_a_timeout_and_stops_when_stuck():
+    data = _load("actas-federacion.yml")
+    assert "${{ inputs.temporada }}" in data["concurrency"]["group"], "una cadena por temporada"
+    steps = data["jobs"]["scrape"]["steps"]
+    scrape = next(s for s in steps if "fetch_fiflp_actas.py" in s.get("run", ""))
+    assert scrape["env"].get("PYTHONUNBUFFERED") == "1", "sin búfer: el log no se pierde si se corta"
+    nxt = next(s for s in steps if s.get("name") == "Siguiente tanda")
+    assert nxt["if"] == "${{ !cancelled() }}"
+    assert "fetched" in nxt["run"] and "unenumerated_comps" in nxt["run"]

@@ -696189,28 +696189,28 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "BETANCOR SANTANA, ARAY",
-        "minute": 0,
-        "goal_type": "normal"
-      },
-      {
-        "kind": "goal",
-        "side": "away",
-        "player_name": "CASTELLANO CASTELLANO, NESTOR",
+        "player_name": "ALFONSO BARRIOS, JEYKO",
         "minute": 30,
         "goal_type": "normal"
       },
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "CABRERA MURO, UNAI",
-        "minute": null,
+        "player_name": "CASTELLANO CASTELLANO, NESTOR",
+        "minute": 31,
         "goal_type": "normal"
       },
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "ALFONSO BARRIOS, JEYKO",
+        "player_name": "CABRERA MURO, UNAI",
+        "minute": 32,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "BETANCOR SANTANA, ARAY",
         "minute": null,
         "goal_type": "normal"
       }
@@ -849741,7 +849741,7 @@
       "date": "17-11-2024",
       "home_team": "GRAN TARAJAL SOC. TAMAS, U.D.",
       "away_team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO",
-      "home_score": null,
+      "home_score": 0,
       "away_score": 3,
       "competition": "LIGA PREBENJAMIN FUERTEVENTURA (GRUPO 3)"
     },
@@ -858840,7 +858840,7 @@
       "date": "02-03-2025",
       "home_team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO B",
       "away_team": "JANDIA, U.D.",
-      "home_score": 0,
+      "home_score": null,
       "away_score": 3,
       "competition": "LIGA PREBENJAMIN FUERTEVENTURA (GRUPO 3)"
     },

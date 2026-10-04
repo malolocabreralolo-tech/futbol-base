@@ -9403,7 +9403,8 @@
       "comp_id": "891",
       "grupo": "125780",
       "jornada": "6"
-    }
+    },
+    "rescrape_failed": true
   },
   "125834": {
     "header": {
@@ -212966,7 +212967,8 @@
       "comp_id": "893",
       "grupo": "126260",
       "jornada": "1"
-    }
+    },
+    "rescrape_failed": true
   },
   "126266": {
     "header": {
@@ -274635,7 +274637,7 @@
       "home_team": "MAJORERAS-GUAYADEQUE \"A\", C.F. LAS A",
       "away_team": "MOGAN, C.F.",
       "home_score": 1,
-      "away_score": null,
+      "away_score": 4,
       "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 3)"
     },
     "lineups": {
@@ -274702,6 +274704,20 @@
       {
         "kind": "goal",
         "side": "away",
+        "player_name": "ARMAS SANTANA, IZAN",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
+        "player_name": "HIBOUT GONZALEZ, DYLAN",
+        "minute": 30,
+        "goal_type": "normal"
+      },
+      {
+        "kind": "goal",
+        "side": "away",
         "player_name": "HERNANDEZ BAZHINOV, IVAN",
         "minute": null,
         "goal_type": "normal"
@@ -274709,21 +274725,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "ARMAS SANTANA, IZAN",
-        "minute": null,
-        "goal_type": "normal"
-      },
-      {
-        "kind": "goal",
-        "side": "away",
         "player_name": "SEGURA ZAIDA, ANDRES",
-        "minute": null,
-        "goal_type": "normal"
-      },
-      {
-        "kind": "goal",
-        "side": "away",
-        "player_name": "HIBOUT GONZALEZ, DYLAN",
         "minute": null,
         "goal_type": "normal"
       }
@@ -274738,7 +274740,8 @@
       "comp_id": "893",
       "grupo": "126500",
       "jornada": "1"
-    }
+    },
+    "rescrape_failed": true
   },
   "126501": {
     "header": {
@@ -321155,7 +321158,7 @@
       "home_team": "LONGUERAS, C.D. LAS",
       "away_team": "AGUIMES C.F.",
       "home_score": 0,
-      "away_score": null,
+      "away_score": 0,
       "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 3)"
     },
     "lineups": {
@@ -321173,7 +321176,8 @@
       "comp_id": "893",
       "grupo": "126500",
       "jornada": "26"
-    }
+    },
+    "rescrape_failed": true
   },
   "126675": {
     "header": {

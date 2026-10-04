@@ -385,3 +385,11 @@ def test_scrapes_launch_the_bot_to_import_what_they_uploaded():
         assert data["permissions"].get("actions") == "write", name
         step = next(s for s in data["jobs"]["scrape"]["steps"] if s.get("name") == "Importar y publicar (bot)")
         assert "gh workflow run update.yml" in step["run"] and step["if"] == "${{ !cancelled() }}", name
+
+
+def test_the_bot_works_on_the_current_main_not_on_the_dispatch_commit():
+    """Un workflow_dispatch en cola usa el commit del momento en que se lanzó; el bot, que sube la
+    base, tiene que partir del main de cuando arranca."""
+    steps = _load("update.yml")["jobs"]["update"]["steps"]
+    checkout = next(s for s in steps if str(s.get("uses", "")).startswith("actions/checkout"))
+    assert checkout.get("with", {}).get("ref") == "main"

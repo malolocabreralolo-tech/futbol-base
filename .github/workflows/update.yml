@@ -20,8 +20,13 @@ jobs:
     timeout-minutes: 45
 
     steps:
+      # ref: main, el main de AHORA: un workflow_dispatch en cola (las tandas de actas lanzan el bot)
+      # trabaja por defecto sobre el commit del momento en que se lanzó, y al arrancar tras otra pasada
+      # se pisaba con la base que ella subió (4/10/2026: conflicto en futbolbase.db).
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v6

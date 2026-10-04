@@ -367,6 +367,9 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
             votes[fed][gid] += 1
     major = {fed: _majority(v) for fed, v in votes.items()}
     owner = {gid: fed for fed, gid in major.items() if gid}
+    gol = _gol_entries(raw_path)
+    official = {gid: gol[fed] for fed, gid in major.items() if gid and fed in gol}
+    fixes = {}       # grupo de la base -> {partido: marcador del acta}
 
     for cod_acta_str, acta, mid, gid in first:
         cod_acta = int(cod_acta_str)
@@ -384,6 +387,7 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
                   f"already claimed by acta {prev} in this run — skipped")
             continue
         claimed[mid] = cod_acta
+        _propose_fix(conn, fixes, gid, mid, acta)
         _import_one(conn, cod_acta, acta, mid=mid)
         matched += 1
 
@@ -391,8 +395,8 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
     # 'Valkyrias Bec.'), dentro del grupo de la base de su grupo de la federación. Un acta
     # coherente manda sobre un marcador mal leído del calendario (un 16-0 guardado como 6-0).
     known = {int(k) for k in raw if str(k).isdigit()}
-    in_group, official = reconcile_in_groups(conn, raw_path, pending, votes)
-    fixes = {}       # grupo de la base -> {partido: marcador del acta}
+    in_group, more_official = reconcile_in_groups(conn, raw_path, pending, votes)
+    official.update(more_official)
     for cod_acta_str, acta in pending:
         cod_acta = int(cod_acta_str)
         mid, fix = in_group.get(cod_acta_str, (None, False))
@@ -436,6 +440,27 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
 def _fed_group(acta):
     e = acta.get("enumeration") or {}
     return (str(e["comp_id"]), str(e["grupo"])) if e.get("comp_id") and e.get("grupo") else None
+
+
+def _gol_entries(raw_path):
+    """{grupo de la federación: su entrada del raw de goleadores de la temporada}."""
+    m = RAW_FILE.match(os.path.basename(raw_path))
+    path = os.path.join(os.path.dirname(os.path.abspath(raw_path)), f"fiflp_goleadores_{m.group(1)}_raw.json") if m else ""
+    if not path or not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return {(str(e["comp"]), str(e["grupo"])): e for e in json.load(f).values()}
+
+
+def _propose_fix(conn, fixes, gid, mid, acta):
+    """Un acta coherente casada con un partido de otro marcador (un 1-11 guardado como 1-1, la
+    cifra que perdía la ofuscación antigua) propone el suyo; lo decide fiflp_tables.settle."""
+    h = acta.get("header") or {}
+    if not acta.get("consistent") or h.get("home_score") is None or h.get("away_score") is None:
+        return
+    row = conn.execute("SELECT home_score, away_score FROM matches WHERE id=?", (mid,)).fetchone()
+    if row and tuple(row) != (h["home_score"], h["away_score"]):
+        fixes.setdefault(gid, {})[mid] = (h["home_score"], h["away_score"])
 
 
 def _majority(v):
@@ -520,8 +545,8 @@ def reconcile_in_groups(conn, raw_path, pending, votes):
 
 RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
 # Entra en la huella de cada raw: al cambiar la lógica de importación, subirla
-# hace que el bot reimporte una vez todos los raws (3: segunda pasada por grupo y fiflp_tables).
-IMPORT_VERSION = "3"
+# hace que el bot reimporte una vez todos los raws (4: correcciones también desde la primera pasada).
+IMPORT_VERSION = "4"
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 

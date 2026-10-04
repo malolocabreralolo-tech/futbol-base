@@ -613,3 +613,34 @@ def test_an_inconsistent_acta_never_overwrites_the_calendar_score(tmp_path):
     report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
     assert report["scores_fixed"] == 0
     assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=2").fetchone() == (0, 9, None)
+
+
+def test_a_first_pass_match_with_a_dropped_digit_is_fixed_when_the_table_agrees(tmp_path):
+    """La ofuscación antigua perdía cifras (1-11 guardado como 1-1). El acta coherente casa por
+    nombres y fecha; la clasificación guardada (de la federación, sin ofuscar) dice 1-11."""
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    migrate(conn)
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (1, '2024-2025', 2024, 2025, 0);
+      INSERT INTO categories(id, name) VALUES (1, 'BENJAMIN');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase, island) VALUES (1, 1, 1, 'LZ11', 'Grupo 1', 'Primera Lanzarote', 'lanzarote');
+      INSERT INTO teams(id, name) VALUES (1, 'San Bartolomé D'), (2, 'UD Lanzarote B');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+        (1, 2, 1, 10, 4, 3, 1, 0, 21, 4, 17), (1, 1, 2, 1, 4, 0, 1, 3, 4, 21, -17);
+      INSERT INTO matches(id, group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES
+        (1, 1, '1', '23/02', 1, 2, 1, 1), (2, 1, '2', '02/03', 2, 1, 3, 0),
+        (3, 1, '3', '09/03', 1, 2, 2, 2), (4, 1, '4', '16/03', 2, 1, 5, 1);
+    """)
+    raw = {"190958": flat("SAN BARTOLOME D, C.F", "LANZAROTE, U.D. B", 1, 11, "23-02-2025"),
+           "190960": flat("LANZAROTE, U.D. B", "SAN BARTOLOME D, C.F", 3, 0, "02-03-2025"),
+           "190962": flat("SAN BARTOLOME D, C.F", "LANZAROTE, U.D. B", 2, 2, "09-03-2025"),
+           "190964": flat("LANZAROTE, U.D. B", "SAN BARTOLOME D, C.F", 5, 1, "16-03-2025")}
+    for a in raw.values():
+        a["header"]["season"] = "2024/2025"
+    (tmp_path / "fiflp_actas_2024-2025_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2024-2025_raw.json"), only=I.flattened)
+    assert report["scores_fixed"] == 1 and report["matched"] == 4
+    assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=1").fetchone() == (1, 11, 190958)

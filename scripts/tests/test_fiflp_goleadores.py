@@ -251,3 +251,10 @@ def test_teams_without_crest_get_the_federation_one(tmp_path, monkeypatch):
     found = E.candidates(conn, tmp_path)
     # Tamaraceite ya tiene; los demás, el de la federación con su nombre de la base.
     assert found == {"AD Huracán": "https://x/h.png", "Moya": "https://x/m.png", "Arucas": "https://x/a.png"}
+
+
+def test_a_team_written_with_the_letter_elsewhere_is_the_same_team():
+    bridge = {'PLAYAS DE SOTAVENTO A, U.D. "A"': "UD Sotavento", 'PLAYAS DE SOTAVENTO C, U.D. "C"': "UD Sotavento C"}
+    assert G.scorer_team('PLAYAS DE SOTAVENTO "C", U.D. "C"', bridge) == "UD Sotavento C"
+    assert G.scorer_team('PLAYAS DE SOTAVENTO "A", U.D. "A"', bridge) == "UD Sotavento"
+    assert G.scorer_team("OTRO, C.D.", bridge) == "OTRO, C.D."

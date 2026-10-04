@@ -76,8 +76,12 @@ def candidates(conn, folder=ROOT / "scripts"):
 def install(found, log=print):
     from trim_shields import fetch_image, trim_transparent
     from PIL import Image
+    import hashlib
     shields = load_shields()
-    added, files = 0, {}          # un fichero por escudo: los filiales comparten el de su club
+    # Un fichero por escudo: los filiales comparten el de su club, y uno que ya está en escudos/
+    # (el mismo contenido, de una pasada anterior) se reutiliza.
+    have = {hashlib.sha1(p.read_bytes()).hexdigest(): p.name for p in (ROOT / "escudos").glob("fed_*.png")}
+    added, files = 0, {}
     for name, url in sorted(found.items()):
         if url not in files:
             try:
@@ -85,8 +89,13 @@ def install(found, log=print):
             except Exception as exc:
                 log(f"  ! {name}: no se pudo bajar {url} ({exc})")
                 continue
-            files[url] = f"fed_{slug(name)}.png"
-            img.save(ROOT / "escudos" / files[url], optimize=True)
+            buf = BytesIO()
+            img.save(buf, format="PNG", optimize=True)
+            digest = hashlib.sha1(buf.getvalue()).hexdigest()
+            if digest not in have:
+                have[digest] = f"fed_{slug(name)}.png"
+                (ROOT / "escudos" / have[digest]).write_bytes(buf.getvalue())
+            files[url] = have[digest]
         shields[name] = files[url]
         added += 1
         log(f"  {name} → escudos/{files[url]}")

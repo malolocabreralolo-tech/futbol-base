@@ -188,7 +188,13 @@ def scorer_team(name, bridge):
     if clean in bridge:
         return bridge[clean]
     key = lambda t: re.sub(r"\s+", " ", t.replace('"', "")).strip().upper()
-    return next((v for k, v in bridge.items() if key(k) == key(clean)), name)
+    same = next((v for k, v in bridge.items() if key(k) == key(clean)), None)
+    if same:
+        return same
+    # La letra en otro sitio ('PLAYAS DE SOTAVENTO "C", U.D. "C"' en una jornada y '… C, U.D. "C"'
+    # en la clasificación): la misma clave de equipo (núcleo y letra de filial), si es única.
+    hits = {v for k, v in bridge.items() if team_key(k) == team_key(clean)}
+    return hits.pop() if len(hits) == 1 else name
 
 
 def import_raw(conn, path, log=print):

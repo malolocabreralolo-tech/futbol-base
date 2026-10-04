@@ -589194,7 +589194,7 @@
       "date": "09-11-2024",
       "home_team": "VETERANOS DEL PILA, C.D. B",
       "away_team": "ATLETICO FOMENTO, CLUB B",
-      "home_score": 0,
+      "home_score": null,
       "away_score": 3,
       "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 6)"
     },
@@ -695814,7 +695814,7 @@
       "date": "08-06-2025",
       "home_team": "TAMASITE, C.D. B",
       "away_team": "FUERTEKLUB, C.D.",
-      "home_score": 0,
+      "home_score": null,
       "away_score": 2,
       "competition": "torneo pre-benjamin cierre temporada fuerteventura-lanzarote (GRUPO 1)"
     },
@@ -695888,7 +695888,7 @@
         "kind": "goal",
         "side": "away",
         "player_name": "PEREZ NUEZ, ALTHAY",
-        "minute": 30,
+        "minute": null,
         "goal_type": "normal"
       },
       {
@@ -695918,8 +695918,8 @@
       "date": "08-06-2025",
       "home_team": "ARRECIFE, C.D. B",
       "away_team": "STEAUA DE TIRAJANA CLUB DEPORTIVO",
-      "home_score": 0,
-      "away_score": null,
+      "home_score": null,
+      "away_score": 0,
       "competition": "torneo pre-benjamin cierre temporada fuerteventura-lanzarote (GRUPO 1)"
     },
     "lineups": {
@@ -696189,8 +696189,8 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "BETANCOR SANTANA, ARAY",
-        "minute": 30,
+        "player_name": "ALFONSO BARRIOS, JEYKO",
+        "minute": 0,
         "goal_type": "normal"
       },
       {
@@ -696210,7 +696210,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "ALFONSO BARRIOS, JEYKO",
+        "player_name": "BETANCOR SANTANA, ARAY",
         "minute": null,
         "goal_type": "normal"
       }

@@ -433,6 +433,11 @@ def import_raw(conn, raw_path: str, only=None) -> dict:
         fixed += len(group_fixes) if "fixes" in choice else 0
         tables += choice.startswith("official")
 
+    # En temporadas cerradas, la jornada «en curso» de cada grupo con actas, la última.
+    for (gid,) in conn.execute(f"SELECT DISTINCT group_id FROM matches WHERE id IN ({','.join('?' * len(claimed))})",
+                               list(claimed)).fetchall() if claimed else []:
+        _last_round(conn, gid)
+
     conn.commit()
     _save_unmatched(um)
     return {
@@ -543,6 +548,21 @@ def fill_gaps(conn, raw_path, left, votes, claimed):
     return added
 
 
+def _last_round(conn, gid):
+    """En una temporada cerrada, la jornada «en curso» del grupo es la última (con los partidos
+    nuevos, LZ12 2024-25 seguía diciendo «jornada 15, final» con 22)."""
+    row = conn.execute("""SELECT g.current_jornada, s.is_current FROM groups g JOIN seasons s ON s.id=g.season_id
+                          WHERE g.id=?""", (gid,)).fetchone()
+    if not row or row[1]:
+        return
+    numbers = [int(m.group(1)) for (j,) in conn.execute("SELECT DISTINCT jornada FROM matches WHERE group_id=?", (gid,))
+               for m in [re.match(r"^(?:Jornada )?(\d+)$", j or "")] if m]
+    current = re.match(r"^(?:Jornada )?(\d+)$", row[0] or "")
+    if numbers and current and int(current.group(1)) < max(numbers):
+        label = f"Jornada {max(numbers)}" if (row[0] or "").startswith("Jornada ") else str(max(numbers))
+        conn.execute("UPDATE groups SET current_jornada=? WHERE id=?", (label, gid))
+
+
 def _majority(v):
     """El grupo de la base de la mayoría (al menos 3 actas y dos tercios), o None."""
     if not v:
@@ -625,8 +645,8 @@ def reconcile_in_groups(conn, raw_path, pending, votes):
 
 RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
 # Entra en la huella de cada raw: al cambiar la lógica de importación, subirla
-# hace que el bot reimporte una vez todos los raws (5: relleno de huecos del calendario).
-IMPORT_VERSION = "5"
+# hace que el bot reimporte una vez todos los raws (6: huecos del calendario y su última jornada).
+IMPORT_VERSION = "6"
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 

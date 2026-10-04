@@ -653,6 +653,7 @@ def test_a_missing_match_of_a_clear_group_is_created_from_its_acta(tmp_path):
     I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
     conn = group_base()
     conn.execute("DELETE FROM matches WHERE id=5")          # Moya–Arucas no está en el calendario
+    conn.execute("UPDATE groups SET current_jornada='Jornada 2' WHERE id=1")
     # La clasificación, la del calendario completo (con Moya–Arucas 3-1).
     for team, played, gf, gc in ((1, 2, 15, 0), (2, 3, 4, 9), (3, 2, 5, 1), (4, 3, 1, 15)):
         conn.execute("UPDATE standings SET played=?, gf=?, gc=? WHERE group_id=1 AND team_id=?", (played, gf, gc, team))
@@ -668,6 +669,8 @@ def test_a_missing_match_of_a_clear_group_is_created_from_its_acta(tmp_path):
         JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
         WHERE t1.name='Moya' AND t2.name='Arucas'""").fetchone()
     assert row == ("Jornada 3", "18/10", 3, 1, 5)
+    # Temporada cerrada: su jornada «en curso» pasa a ser la última.
+    assert conn.execute("SELECT current_jornada FROM groups WHERE id=1").fetchone()[0] == "Jornada 3"
 
 
 

@@ -197,6 +197,28 @@ def scorer_team(name, bridge):
     return hits.pop() if len(hits) == 1 else name
 
 
+def _retired_names(conn, season_id, rows, known, words):
+    """Las filas de goleadores de una temporada archivada con el equipo resuelto: el de los equipos que
+    no tienen pareja en el grupo (los retirados, que no salen en la clasificación), el de un equipo de
+    la base de esa temporada si casa (match_teams, con la misma letra de filial) y, si no, su nombre
+    con forma de portal (pretty_name de modern_fed_name): nunca 'SAN ISIDRO B, C.D. B' en la web. Antes
+    que todo eso, el de import_fiflp_grupos.ARCHIVE_NAMES, si lo tiene."""
+    from activate_season import pretty_name, _filial
+    from fiflp_names import modern_fed_name
+    from import_fiflp_grupos import ARCHIVE_NAMES
+    loose = sorted({r[1] for r in rows if r[1] not in known})
+    if not loose:
+        return rows
+    season_teams = sorted({r[0] for r in conn.execute("""
+        SELECT t.name FROM teams t JOIN standings s ON s.team_id=t.id JOIN groups g ON g.id=s.group_id
+         WHERE g.season_id=?""", (season_id,))} - set(known))
+    modern = {name: modern_fed_name(clean_team_name(name), words) for name in loose}
+    pairs = {a: b for a, b in match_teams(sorted(set(modern.values())), season_teams).items()
+             if _filial(a) == _filial(b)}
+    resolved = {name: ARCHIVE_NAMES.get(m) or pairs.get(m) or pretty_name(m) for name, m in modern.items()}
+    return [(r[0], resolved.get(r[1], r[1]), *r[2:]) for r in rows]
+
+
 def import_raw(conn, path, log=print):
     """Escribe los goleadores de cada grupo del raw que case con uno de la base
     sin goleadores (o con los de aquí). Devuelve {escritos, sin_grupo, ya_tenían}."""
@@ -217,6 +239,14 @@ def import_raw(conn, path, log=print):
         index = {str(e["cod_acta"]): e for e in data} if isinstance(data, list) else data
     conn.execute("""CREATE TABLE IF NOT EXISTS fiflp_scorer_groups (
         group_id INTEGER PRIMARY KEY, comp TEXT NOT NULL, grupo TEXT NOT NULL)""")
+    # Importación perezosa: import_fiflp_grupos importa este módulo.
+    from import_fiflp_grupos import ARCHIVE_SEASONS
+    archived = season in ARCHIVE_SEASONS
+    if archived:
+        from fiflp_names import fed_words
+        words = fed_words([r[1] for e in raw.values() for r in e.get("scorers") or []]
+                          + [r.get("team") for e in raw.values() for r in e.get("standings") or []],
+                          [r[0] for r in conn.execute("SELECT name FROM teams")])
     claimed = set()
     for key in sorted(raw):
         entry = raw[key]
@@ -238,6 +268,8 @@ def import_raw(conn, path, log=print):
         teams = sorted(_db_groups_one(conn, gid))
         bridge = team_bridge(conn, gid, entry)
         rows = [(r[0], scorer_team(r[1], bridge), *r[2:]) for r in entry["scorers"]]
+        if archived:
+            rows = _retired_names(conn, season_id, rows, set(bridge.values()) | set(teams), words)
         write_scorers(conn, gid, rows, group_teams=teams)
         conn.execute("INSERT OR REPLACE INTO fiflp_scorer_groups(group_id, comp, grupo) VALUES (?, ?, ?)",
                      (gid, str(entry["comp"]), str(entry["grupo"])))
@@ -248,12 +280,17 @@ def import_raw(conn, path, log=print):
 
 def import_changed_goleadores(conn, folder=SCRIPTS_DIR, log=print):
     """import_raw de cada fiflp_goleadores_<S>_raw.json que haya cambiado desde la
-    última vez (sha1 en raw_imports)."""
+    última vez (sha1 en raw_imports). El de una temporada que no está en la base
+    (una archivada, hasta que la da de alta import_fiflp_grupos) se salta sin
+    grabar su huella."""
     conn.execute("""CREATE TABLE IF NOT EXISTS raw_imports (
         path TEXT PRIMARY KEY, sha1 TEXT NOT NULL, imported_at TEXT NOT NULL)""")
     reports = {}
     for name in sorted(os.listdir(folder)):
         if not RAW_FILE.match(name):
+            continue
+        season = RAW_FILE.match(name).group(1)
+        if not conn.execute("SELECT 1 FROM seasons WHERE name=?", (season,)).fetchone():
             continue
         path = os.path.join(folder, name)
         with open(path, "rb") as f:
@@ -262,10 +299,14 @@ def import_changed_goleadores(conn, folder=SCRIPTS_DIR, log=print):
         # (cuando llegan sus actas) se quedaba sin goleadores porque el raw no había cambiado.
         try:
             owned = conn.execute("""SELECT f.group_id FROM fiflp_groups f JOIN seasons s ON s.id=f.season_id
-                                    WHERE s.name=? ORDER BY f.group_id""", (RAW_FILE.match(name).group(1),)).fetchall()
+                                    WHERE s.name=? ORDER BY f.group_id""", (season,)).fetchall()
         except Exception:          # sin la tabla todavía
             owned = []
-        digest = hashlib.sha1(GOLEADORES_VERSION.encode() + content + repr(owned).encode()).hexdigest()
+        # Y la huella de sus grupos (grupos:<S>): al rehacer un grupo, un equipo que cambia de nombre
+        # deja de ser el de sus goleadores, que se quedaban con el team_id viejo.
+        grupos = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (f"grupos:{season}",)).fetchone()
+        digest = hashlib.sha1(GOLEADORES_VERSION.encode() + content + repr(owned).encode()
+                              + (grupos[0].encode() if grupos else b"")).hexdigest()
         row = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (name,)).fetchone()
         if row and row[0] == digest:
             continue

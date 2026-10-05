@@ -111,6 +111,11 @@ export function groupKind(raw, rounds = []) {
   const cup = isCupGroup(raw) || id.endsWith('KO')
     || (keys.length > 0 && keys.every(k => /ronda/i.test(k)));
   if (!cup) return 'league';
+  // Una copa sin partidos pero con su clasificación ya jugada (la Copa Fuerteventura y la copa
+  // prebenjamín de Gran Canaria de las temporadas archivadas, que se juegan como liga y de las que la
+  // federación no publicó las actas): la liguilla, con la tabla oficial, que es lo único que hay. Como
+  // cuadro saldría vacío. Con la tabla a cero (una copa que no ha empezado), el cuadro de siempre.
+  if (!rounds.length && (raw.standings || []).some(r => Array.isArray(r) && numberOrNull(r[3]) > 0)) return 'cup-league';
   const jornadas = Object.fromEntries(rounds.map(r => [r.key, r.matches]));
   return isRoundRobinCup(jornadas) ? 'cup-league' : 'cup-bracket';
 }
@@ -197,8 +202,11 @@ export function buildGroup(raw, { season, cat, current = false, history = null }
     matches: (jornadas[key] || []).map(row => toMatch(row, { season, groupId: raw.id, roundKey: key })),
   }));
   const kind = groupKind(raw, rounds);
+  // Una semifinal que se juega aparte («Semifinal Liga Primera Lanzarote», LZ1S) no acaba en la final:
+  // su última ronda son las semifinales, una antes de la que daría la posición.
+  const tail = /^semifinal/.test(foldText(raw.phase)) ? 1 : 0;
   rounds.forEach((round, idx) => {
-    round.label = kind === 'cup-bracket' ? knockoutRoundLabel(round.key, idx, rounds.length) : roundLabel(round.key);
+    round.label = kind === 'cup-bracket' ? knockoutRoundLabel(round.key, idx, rounds.length + tail) : roundLabel(round.key);
     const dates = round.matches.map(m => m.dateISO).filter(Boolean).sort();
     round.dateFrom = dates.length ? dates[0] : null;
     round.dateTo = dates.length ? dates[dates.length - 1] : null;
@@ -269,8 +277,8 @@ export function buildCups({ season, benjamin = [], prebenjamin = [] } = {}) {
  * competitionKey(raw, season) → { cat, island, division, phase, cup, key, label }
  *   division: 'preferente' | 'primera' | 'unica' | null
  *   phase:    'primera-fase' | 'segunda-fase' | 'segunda-a'…'segunda-e' |
- *             'fase-1' | 'fase-2' | 'oro' | 'plata' | 'bronce' | null
- *   cup:      'campeones' | 'insular' | 'maspalomas' | null
+ *             'fase-1' | 'fase-2' | 'superliga' | 'oro' | 'plata' | 'bronce' | null
+ *   cup:      'campeones' | 'insular' | 'final' | 'torneo' | 'maspalomas' | null
  *   key:      clave de la competición para #/ligas?f= (única en su temporada
  *             y categoría; sin categoría ni temporada, que van en c y s)
  *   label:    nombre legible de la competición, sin categoría ni grupo
@@ -296,9 +304,10 @@ const foldText = s => String(s ?? '').normalize('NFD').replace(/\p{M}/gu, '')
 const slugOf = s => foldText(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const seasonEndYear = season => (/^\d{4}-(\d{4})$/.exec(String(season)) || [])[1] || '';
 
-/* Tabla de equivalencias. Cubre las 29 fases reales de la base (56
- * combinaciones de temporada, categoría y fase entre 2021-22 y 2025-26, en
- * phases.json) y la Maspalomas Cup. Se lee sobre la fase sin tildes y en
+/* Tabla de equivalencias. Cubre las fases reales de la base: las de 2021-22 a
+ * 2025-26 (56 combinaciones de temporada, categoría y fase, en phases.json), las
+ * de las temporadas archivadas de 2017-18 a 2020-21 (phases-archivo.json) y la
+ * Maspalomas Cup. Se lee sobre la fase sin tildes y en
  * minúsculas, y manda la primera regla que casa. Cada regla da los ejes que
  * no son los de por defecto (division 'unica', phase null, cup null) y:
  *   name:   nombre legible, sin categoría ni isla ('' = la liga de la isla);
@@ -348,6 +357,9 @@ const PHASE_TABLE = [
   [/^preferente\b/, () => ({ division: 'preferente', name: 'Preferente' })],
   // «Primera Lanzarote»
   [/^primera\b/, () => ({ division: 'primera', name: 'Primera' })],
+  // «Superliga Fuerteventura» (2017-18 y 2018-19): los seis primeros de la liga, después de ella; una
+  // fase de nivel 2, como la Fase 2.
+  [/^superliga\b/, () => ({ phase: 'superliga', name: 'Superliga' })],
   // La liga de la isla: «Gran Canaria», «Lanzarote» y «Fuerteventura». En
   // benjamín de Fuerteventura 2025-26 el nivel va en el nombre del grupo
   // («Liga Oro», «Liga Plata», «Liga Bronce»), que pasa a ser la competición.
@@ -491,7 +503,9 @@ export function retiredTeams(group) {
   const retired = new Set();
   for (const row of standings) {
     if (withResult.has(row.team)) continue;
-    const gone = !inCalendar.has(row.team) && row.pj > 0 && row.g + row.e === 0;
+    // Sin calendario (los grupos archivados de los que la federación no publicó las actas), no estar en
+    // él no dice nada: el que perdió todos sus partidos no es un retirado.
+    const gone = inCalendar.size > 0 && !inCalendar.has(row.team) && row.pj > 0 && row.g + row.e === 0;
     if (gone || (row.pj === 0 && finished)) retired.add(row.team);
   }
   if (standings.length && withResult.size) {
@@ -1252,14 +1266,15 @@ export function anyCards(lineups) {
  */
 
 /* Nivel de la fase de un grupo: 2 para la Segunda Fase (con letra o sin ella), la Fase 2 de
- * Fuerteventura y sus ligas Oro, Plata y Bronce, que se juegan después de la primera fase; 1 para
+ * Fuerteventura, sus ligas Oro, Plata y Bronce y su Superliga (2017-18 y 2018-19), que se juegan
+ * después de la primera fase; 1 para
  * todo lo demás. Es la regla de «la fase más alta» de mi equipo (myteam.js), del buscador y del orden
  * de las competiciones: vive aquí porque model.js no puede importar de myteam.js (sería un ciclo).
  * Memorizado por identidad del objeto Group: el valor sale solo del propio grupo (su fase, vía
  * competitionKey), y el WeakMap no retiene los grupos que ya no se usan. */
 const PHASE_LEVEL = {
   'segunda-fase': 2, 'segunda-a': 2, 'segunda-b': 2, 'segunda-c': 2, 'segunda-d': 2, 'segunda-e': 2,
-  'fase-2': 2, oro: 2, plata: 2, bronce: 2,
+  'fase-2': 2, oro: 2, plata: 2, bronce: 2, superliga: 2,
 };
 const levels = new WeakMap();
 export function phaseLevel(group) {
@@ -1280,7 +1295,7 @@ const ISLAND_ORDER = ['grancanaria', 'lanzarote', 'fuerteventura'];
 // grupos por su código (FB, FO, FP), y ese orden no sirve.
 const DIVISION_ORDER = ['preferente', 'primera', 'unica'];
 const PHASE_ORDER = ['segunda-fase', 'segunda-a', 'segunda-b', 'segunda-c', 'segunda-d', 'segunda-e', 'fase-2',
-  'oro', 'plata', 'bronce', 'primera-fase', 'fase-1', null];
+  'superliga', 'oro', 'plata', 'bronce', 'primera-fase', 'fase-1', null];
 const CUP_ORDER = [null, 'campeones', 'insular', 'final', 'torneo', 'maspalomas'];
 const rankOf = (list, value) => (list.includes(value) ? list.indexOf(value) : list.length);
 // Orden de nombres sin tildes ni mayúsculas, el mismo en todos los motores (sin datos de idioma).

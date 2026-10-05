@@ -88,7 +88,7 @@ Después de activar, fija la línea base de desvío de marcadores para que la te
 python3 scripts/score_deviation.py --write-baseline
 ```
 
-Comprueba también, a mano, que ninguna fase de la temporada nueva cae en «otra-…», la clave que da `competitionKey` (`src/model.js`) a una fase que no reconoce. Ninguna prueba lo detecta, y a propósito: `phases.json` está congelada, y una fase nueva de la fuente no debe bloquear al bot. Pero una fase sin clasificar recibe en `src/myteam.js` el nivel de la Primera Fase, así que una «Tercera Fase» nunca provocaría un cambio de fase:
+Comprueba también, a mano, que ninguna fase de la temporada nueva cae en «otra-…», la clave que da `competitionKey` (`src/model.js`) a una fase que no reconoce. Ninguna prueba lo detecta, y a propósito: `phases.json` y `phases-archivo.json` (las de las temporadas archivadas, 2017-18 a 2020-21, que también deben dar «0 en otra-…»; se comprueban con la misma sonda sobre su `data-season-<S>.js`) están congeladas, y una fase nueva de la fuente no debe bloquear al bot. Pero una fase sin clasificar recibe en `src/myteam.js` el nivel de la Primera Fase, así que una «Tercera Fase» nunca provocaría un cambio de fase:
 
 ```bash
 node --input-type=module -e "
@@ -110,7 +110,7 @@ La última línea debe acabar en «0 en otra-…». Si sale algún grupo (fuera 
 
 La activación vuelve a verificar las fuentes. Guarda una copia en `backups/temporada-FECHA/`, prepara la nueva base y genera los archivos en un directorio temporal. Solo tras completar esa generación reemplaza los archivos de trabajo. No publica ni hace push por su cuenta.
 
-Se conservan partidos, clasificaciones, goleadores y actas anteriores. Se crea `data-season-2025-2026.js` y la Copa Maspalomas 2026 permanece asociada a 2025/26, también al consultar el archivo. En `sw.js`, `SEASON_FILES` gana ese archivo y cambia la plantilla que la app instalada guarda para abrir sin conexión, `data-lineups-2025-2026.js`, por la de la temporada nueva, `data-lineups-2026-2027.js`, aunque todavía no exista: sin actas no hay plantilla; cuando lleguen, la app la guardará al abrirla con red, y el SW, en su versión siguiente (Plan B5, decisión 2). Los favoritos siguen guardados: si un equipo cambia de grupo o categoría, la portada permite elegir su nueva ubicación.
+Se conservan partidos, clasificaciones, goleadores y actas anteriores. Se crea `data-season-2025-2026.js` y la Copa Maspalomas 2026 permanece asociada a 2025/26, también al consultar el archivo. En `sw.js`, `SEASON_FILES` gana ese archivo (lo pone `activate_season.season_files_for` y lo mantiene también `generate_js.py`, `sync_season_files`, que lo iguala a los `data-season-<S>.js` que escribe, de la más nueva a la más vieja) y cambia la plantilla que la app instalada guarda para abrir sin conexión, `data-lineups-2025-2026.js`, por la de la temporada nueva, `data-lineups-2026-2027.js`, aunque todavía no exista: sin actas no hay plantilla; cuando lleguen, la app la guardará al abrirla con red, y el SW, en su versión siguiente (Plan B5, decisión 2). Los favoritos siguen guardados: si un equipo cambia de grupo o categoría, la portada permite elegir su nueva ubicación.
 
 Un equipo nuevo puede traer un escudo nuevo, y un escudo se puede cambiar en cualquier momento. `data-shields.js` se mantiene a mano, y la app pide primero la miniatura de cada escudo, `escudos/s/<nombre sin extensión>.png` (spec §5.4; Plan B4, Tarea 4). Se copia el original a `escudos/`, se añade su entrada a `data-shields.js` y se generan las miniaturas, con Pillow (solo en local):
 

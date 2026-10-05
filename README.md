@@ -8,7 +8,7 @@ Resultados y seguimiento de Benjamín y Prebenjamín de Gran Canaria, Lanzarote 
 
 - Un equipo, el tuyo: la portada sigue a «mi equipo» (próximo partido con fecha, hora canaria y campo cuando la fuente los publica; último resultado, clasificación y goleadores) y cambia con el momento de la temporada. Los equipos que se miran sin cambiarlo quedan en «Vistos hace poco» (hasta 8).
 - Jornada, Tabla (puntos, goles, forma, casa y fuera) y Partido (goles, alineaciones del acta y cara a cara).
-- Explorar: buscador de equipos, ligas y copas de las tres islas, goleadores completos, récords y archivo desde 2021/22.
+- Explorar: buscador de equipos, ligas y copas de las tres islas, goleadores completos, récords y archivo desde 2017/18.
 - Enlaces directos a cada pantalla (también los antiguos, de WhatsApp) y botón de compartir.
 - Calendario `.ics` y enlace al mapa para campos conocidos.
 - Tema claro u oscuro, el del sistema; navegación móvil y con teclado; y PWA instalable, que abre sin conexión la app, sus datos inmediatos, las temporadas anteriores y la plantilla de la actual (precargadas) y los escudos ya vistos; el resto —el detalle de un partido, la plantilla de otra temporada— hay que volver a verlo con conexión tras cada actualización de datos.

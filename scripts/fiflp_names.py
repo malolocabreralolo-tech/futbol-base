@@ -59,6 +59,99 @@ def is_bye(name):
     return fold(name) in _DESCANSO
 
 
+# Abreviaturas que la federación de 2017-2021 escribe pegadas a la coma
+# ('CARRIZAL,CFU', 'VICTORIA,RC').
+_FED_ABBR = {'CFU': 'C.F.U.', 'CF': 'C.F.', 'CD': 'C.D.', 'UD': 'U.D.', 'RC': 'R.C.', 'SD': 'S.D.',
+             'AD': 'A.D.', 'FC': 'F.C.'}
+_LETRA = '[A-H]'
+_SUELTA = r'(?<![^\s,]){x}(?![^\s,])'          # la letra como palabra: no la de 'T.' ni la de 'A.D.'
+# Lo que cierra el nombre de un club sin coma ('ESTRELLAB C.F. "B"'): abreviaturas y la letra entre comillas.
+_COLA = re.compile(r'^(.*?)((?:\s+(?:"[A-H]"|(?:[A-Z]\.\s?)+[A-Z]?\.?|CFU|CF|CD|UD|FC|SD|AD))*)$')
+
+
+def _glued(token, words):
+    """¿Es `token` una palabra con la letra de filial pegada ('GUIAA', 'MASPALOMASB')? Lo es si tiene
+    4 letras o más, acaba en A-F, no está en `words` y su raíz (sin esa letra) sí."""
+    word = fold(token)
+    return (len(word) >= 4 and token[-1] in 'ABCDEF' and word not in words and word[:-1] in words)
+
+
+def fed_words(names, known=()):
+    """Las palabras (plegadas) de los nombres de `known` (los equipos de la base) y de `names` (los de
+    la federación), sin las que son otra de ellas con la letra pegada ('GUIAA' si está 'GUIA'): el
+    vocabulario de modern_fed_name."""
+    base = {t for n in known for t in fold(n).split()}
+    raw = {t for n in names for t in fold(_ABREVIATURA.sub(' ', str(n or ''))).split()}
+    every = base | raw
+    return frozenset(base | {t for t in raw if not _glued(t, every - {t})})
+
+
+def modern_fed_name(name, words=frozenset()):
+    """Un nombre de la federación de 2017-2021 con la forma de los de 2021 en adelante, la que conocen
+    known_names y pretty_name. Idempotente; no toca team_key, match_teams ni los normalizadores con
+    contrato. `words`: el vocabulario de fed_words, para separar la letra pegada.
+
+      'ARUCAS D CF "DB"'              -> 'ARUCAS CF "D"'        (la B de más; si no, era Arucas)
+      'ARUCAS B, C.F. "B"'            -> 'ARUCAS, C.F. "B"'     (la letra repetida, fuera)
+      'TEROR BALOMPIE A, U.D.'        -> 'TEROR BALOMPIE, U.D. "A"'
+      'GUIAA, U.D. "A"'               -> 'GUIA, U.D. "A"'       (con 'GUIA' en `words`)
+      'VETERANOS DEL PILA.A, C.D. "A"' -> 'VETERANOS DEL PILA, C.D. "A"'
+      'VETERANOS DEL PILA."A", C.D. A' -> 'VETERANOS DEL PILA, C.D. "A"'  (las cabeceras de las actas)
+      'CORAZON DE MARIA "D", C.D. DB' -> 'CORAZON DE MARIA, C.D. "D"'
+      'CARRIZAL,CFU'                  -> 'CARRIZAL, C.F.U.'
+      'PUERTOS DE L.P. A, C.E.F. "A"' -> 'PUERTOS DE LAS PALMAS, C.E.F. "A"'
+    """
+    n = re.sub(r'\s+', ' ', str(name or '')).strip()
+    if not n:
+        return n
+    # Comas en lugar de puntos ('C,F,') y abreviaturas pegadas a la coma ('VICTORIA,RC').
+    n = re.sub(r'\b([A-Z]),([A-Z]),', r'\1.\2.', n)
+    n = re.sub(r',(CFU|CF|CD|UD|RC|SD|AD|FC)\b\.?', lambda m: ', ' + _FED_ABBR[m.group(1)], n)
+    # La letra pegada detrás de la coma ('MASPALOMAS,A C.D. "A"'): va delante de ella.
+    n = re.sub(rf'(\S),({_LETRA}) ', r'\1 \2, ', n)
+    n = re.sub(r',(?=\S)', ', ', n)
+    # La letra pegada a una abreviatura ('ATLETICO G.C.A', 'PUERTOS DE L.P.A') o tras un punto ('PILA.A').
+    n = re.sub(rf'((?:\b[A-Z]\.){{2,}})({_LETRA})(?=[\s,]|$)', r'\1 \2', n)
+    n = re.sub(rf'\b([A-ZÑÁÉÍÓÚ]{{2,}})\.({_LETRA})(?=[\s,]|$)', r'\1 \2', n)
+    # El punto pegado a la letra entre comillas ('PILA."A"').
+    n = re.sub(rf'\b([A-ZÑÁÉÍÓÚ]{{2,}})\.(?="{_LETRA}")', r'\1 ', n)
+    # Abreviaturas sin su último punto ('C.F A', 'U.D B').
+    n = re.sub(r'\b([A-Z])\.([A-Z])(?=[\s",]|$)', r'\1.\2.', n)
+    # Las abreviaturas que se comían el nombre.
+    n = re.sub(r'\bL\.\s?P\.', 'LAS PALMAS', n)
+    # La B de más de la letra del filial: '"DB"' es el filial D ('ARUCAS D CF "DB"' no es Arucas).
+    n = re.sub(rf'"({_LETRA})B"', r'"\1"', n)
+    # También al final de las cabeceras de las actas, detrás de su letra entre comillas
+    # ('CORAZON DE MARIA "D", C.D. DB').
+    m = re.search(rf'\s({_LETRA})B$', n)
+    if m and (re.search(_SUELTA.format(x=m.group(1)), n[:m.start()]) or f'"{m.group(1)}"' in n[:m.start()]):
+        n = n[:m.start()] + ' ' + m.group(1)
+    # Sin comillas, la letra suelta del final o de antes de la coma va entre comillas.
+    if not re.search(rf'"{_LETRA}"', n):
+        m = re.match(rf'^(.*\S)\s({_LETRA})$', n) or re.match(rf'^([^,]*\S)\s({_LETRA}),\s*(.*)$', n)
+        if m and m.lastindex == 2:
+            n = f'{m.group(1)} "{m.group(2)}"'
+        elif m:
+            n = f'{m.group(1)}, {m.group(3)} "{m.group(2)}"'
+    # La letra pegada a la última palabra del nombre ('GUIAA', 'MASPALOMASB', 'ROQUE AMAGROA').
+    main, sep, tail = n.partition(',')
+    if not sep:
+        main, tail = _COLA.match(n).groups()
+    m = re.search(r'([A-ZÑÁÉÍÓÚ]+)$', main)
+    if m and _glued(m.group(1), words):
+        main = main[:m.end() - 1] + ' ' + main[m.end() - 1:]
+    n = main + sep + tail
+    # La letra entre comillas, una vez y al final; la suelta que la repite, fuera.
+    quoted = re.findall(rf'"({_LETRA})"', n)
+    if quoted:
+        letter = quoted[-1]
+        n = re.sub(rf'\s*"{_LETRA}"', ' ', n)
+        n = re.sub(_SUELTA.format(x=letter), '', n)
+        n = f'{n} "{letter}"'
+    n = re.sub(r'\s+,', ',', re.sub(r'\s+', ' ', n)).strip()
+    return re.sub(r',\s*(?="|$)', ' ', n).strip()
+
+
 def team_key(name):
     """(núcleo, filial): tokens distintivos y la letra de filial, si la hay.
 

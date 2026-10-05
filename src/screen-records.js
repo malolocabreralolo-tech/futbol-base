@@ -84,18 +84,24 @@ function render(ctx) {
   if (!season) return html`<section data-screen="records">${head}${errorBox(`la temporada ${seasonLabel(s)}`)}</section>`;
   const picker = html`<nav class="rc-cats" aria-label="Categoría">${segmented(CATS, c, (value) => routeHref('records', { s, c: value }), { idPrefix: 'categoria' })}</nav>`;
   const records = seasonRecords(season, c);
-  if (!records.totals.matches) {
-    const leagues = season.groups.some((group) => group.cat === c && group.kind === 'league');
-    const why = leagues ? `Aún no se ha jugado ningún partido de liga de ${CAT_WORDS[c]} en la temporada ${seasonLabel(s)}.`
-      : `No hay ligas de ${CAT_WORDS[c]} en la temporada ${seasonLabel(s)}.`;
-    return html`<section data-screen="records">${head}${picker}<div class="block">${empty(why)}</div></section>`;
-  }
   const group = (id) => season.groups.find((g) => g.id === id) || null;
   const env = {
     s, group,
     shields: (ctx.datasets && ctx.datasets.shields) || {},
     where: (id) => (group(id) ? group(id).label.replace(/^(?:Benjamín|Prebenjamín), /, '') : id),
   };
+  if (!records.totals.matches) {
+    const leagues = season.groups.some((g) => g.cat === c && g.kind === 'league');
+    const nothing = (why) => html`<section data-screen="records">${head}${picker}<div class="block">${empty(why)}</div></section>`;
+    if (!leagues) return nothing(`No hay ligas de ${CAT_WORDS[c]} en la temporada ${seasonLabel(s)}.`);
+    if (s === ctx.portal.season) return nothing(`Aún no se ha jugado ningún partido de liga de ${CAT_WORDS[c]} en la temporada ${seasonLabel(s)}.`);
+    // Una temporada cerrada con las ligas y sin sus partidos (una archivada de la que la federación no
+    // publicó las actas): no se ha quedado a medias, y de sus clasificaciones oficiales salen el ataque y
+    // la defensa.
+    const why = `La fuente no publicó los partidos de liga de ${CAT_WORDS[c]} de la temporada ${seasonLabel(s)}`;
+    if (!records.bestAttack) return nothing(`${why}.`);
+    return html`<section data-screen="records">${head}${picker}<div class="block">${empty(`${why}: solo hay récords de sus clasificaciones.`)}</div>${teamsBlock(records, env)}</section>`;
+  }
   const { totals, streaks } = records;
   const main = [
     box(cells([

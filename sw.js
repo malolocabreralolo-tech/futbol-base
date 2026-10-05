@@ -79,7 +79,8 @@ const STATIC_ASSETS = [
 
 // Season data files — loaded lazily by the app, precache when available: los
 // archivos de las temporadas pasadas. scripts/activate_season.py añade el de la
-// temporada que cierra.
+// temporada que cierra, y lo mantiene generate_js.py (sync_season_files): las
+// temporadas archivadas, de la más nueva a la más vieja. No se toca a mano.
 const SEASON_FILES = [
   './data-season-2025-2026.js',
   './data-season-2024-2025.js',

@@ -18,15 +18,27 @@ se salta (mejor un grupo de menos que pisar uno). Los nombres de los equipos,
 los que ya usa la base en esa temporada o en las de al lado (known_names).
 Los grupos creados aquí quedan en fiflp_groups y se rehacen cuando cambian sus
 fuentes. El bot llama a import_changed_grupos (sha1 de las fuentes en raw_imports).
+
+Las temporadas archivadas (ARCHIVE_SEASONS, 2017-18 a 2020-21) no están en la
+base hasta que llegan sus fuentes: import_season da de alta cada una junto con
+su primer grupo, y solo cuando ha terminado la descarga de sus actas
+(actas_complete, la regla de actas-federacion.yml para pasar a la temporada
+siguiente); si al final no crea ningún grupo, la borra. Sus grupos son todos de
+la federación: el código, la fase y la isla salen, si no hay otra cosa, del
+nombre de su competición (meta_by_name), y los nombres de sus equipos pasan
+antes por fiflp_names.modern_fed_name (los formatos de 2017-2021) y prefieren
+los de 2021 en adelante a los que haya inventado otra archivada.
 """
 import hashlib
 import json
 import os
 import re
 import sys
+import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from db import get_or_create_category, get_or_create_group, get_or_create_team, delete_group_matches  # noqa: E402
+from db import (get_or_create_category, get_or_create_group, get_or_create_season, get_or_create_team,  # noqa: E402
+                delete_group_matches)
 from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
 from import_fiflp_goleadores import match_group, _category  # noqa: E402
 from import_fiflp_islas import COMP_META  # noqa: E402
@@ -66,6 +78,51 @@ EXTRA_META = {
 ISLAND_OF_PREFIX = (("LZ", "lanzarote"), ("CLZ", "lanzarote"), ("PLZ", "lanzarote"),
                     ("FV", "fuerteventura"), ("CFV", "fuerteventura"), ("PFV", "fuerteventura"))
 
+# Las temporadas archivadas de la federación (CodTemporada 13 a 16): import_season da de alta cada una
+# con su primer grupo, cuando ha terminado la descarga de sus actas. La lista es cerrada: un raw suelto
+# de 2015-16 o de 2016-17 no da de alta nada.
+ARCHIVE_SEASONS = ("2017-2018", "2018-2019", "2019-2020", "2020-2021")
+ARCHIVE_YEARS = {int(s[:4]) for s in ARCHIVE_SEASONS}
+# Nombre de la federación ya modernizado (fiflp_names.modern_fed_name) → nombre de la base: lo que
+# known_names no acierta en las archivadas, tras revisar la lista de sus equipos nuevos (también los
+# goleadores de un equipo retirado, import_fiflp_goleadores._retired_names).
+ARCHIVE_NAMES = {
+    # Clubes distintos que known_names fundía con otro por compartir palabras.
+    'SIETE PALMAS, A.D. "A"': "Siete Palmas",                 # no UD Las Palmas
+    'SIETE PALMAS, A.D. "B"': "Siete Palmas B",
+    "APOLINARIO C.F.": "Apolinario",                          # no Guiniguada Apolinario
+    "POLIGONO DE ARINAGA, C.F.": "Polígono de Arinaga",       # no CD Arinaga
+    'GRAN TARAJAL SOC. TAMAS., U.D. "A"': "GRAN TARAJAL SOC. TAMAS., U.D.",   # no UD Tarajalejo
+    'GRAN TARAJAL SOC. TAMAS., U.D. "B"': "Gran Tarajal B",
+    "SPORTING ARBOL BONITO, C.F.": "Sporting Árbol Bonito",   # no Real Sporting (San José)
+    "VEG. ARBOL BONITO, C.F.": "Veg. Árbol Bonito",
+    # El primer equipo y el «Atlético» del mismo club, que team_key y la clave del contrato C1 no
+    # distinguen (ATLETICO es ruido): como en la base, 'San Juan' y 'San Juan At.'.
+    "SAN JUAN TRES PALMAS, C.D.": "San Juan",
+    'SAN JUAN TRES PALMAS, C.D. "A"': "San Juan",
+    "SAN JUAN TRES PALMAS ATCO., C.D.": "San Juan At.",
+    "SAN JUAN TRES PALMAS ATLETICO, C.D.": "San Juan At.",
+    "COLEGIO NORTE VIERA, C.D.": "Colegio Norte Viera",
+    'COLEGIO NORTE VIERA, C.D. "A"': "Colegio Norte Viera",
+    "COLEGIO NORTE VIERA ATLETICO, C.D.": "Colegio Norte Viera At.",
+    # El mismo club con otro nombre: Cruz de Barrial Balompié es UD Barrial desde 2018-19 (ese año, ya
+    # en prebenjamín); Football Project, con su patrocinador.
+    "CRUZ DE BARRIAL BALOMPIE, C.D.": "UD Barrial",
+    'CRUZ DE BARRIAL BALOMPIE, C.D. "A"': "UD Barrial",
+    'CRUZ DE BARRIAL BALOMPIE, C.D. "B"': "UD Barrial B",
+    "FOOTBALL PROJECT-FUND GRUBE, C.D.": "Football Project",
+    # U.D. Las Mesas con otro patrocinador: Bachicao hasta 2019-20 y Huracán desde 2020-21, que ocupa su
+    # plaza de Preferente, nunca los dos en una temporada; su B se llama igual en 2018-19 y en 2021-24
+    # ('MESAS B, U.D. LAS "B"'). Sin esto, el B iba detrás del primer equipo, nuevo para known_names.
+    "MESAS BACHICAO, U.D. LAS": "Las Mesas Hu.",
+    'MESAS BACHICAO, U.D. LAS "A"': "Las Mesas Hu.",
+    'MESAS, U.D. LAS "B"': "Las Mesas B",
+    # Las tildes que pretty_name no sabe poner, y el retirado de 2020-21 con el nombre de la base.
+    "SAGRADO CORAZON, C.D.": "Sagrado Corazón",
+    "ARGUINEGUIN SANTA AGUEDA, C.D.": "Arguineguín Santa Águeda",
+    'ORIENTACION MARITIMA, C.D. "A"': "O. Marítima",
+}
+
 
 def group_number(name):
     m = re.search(r"(\d+)", name or "")
@@ -76,10 +133,87 @@ def _iso_island(prefix):
     return next((island for p, island in ISLAND_OF_PREFIX if prefix.startswith(p)), "grancanaria")
 
 
-def comp_meta(conn, comp, siblings):
+def _fold(text):
+    """Mayúsculas sin tildes ni signos, sin la modalidad ('F-8', 'FUTBOL-7') y con 1ª/2ª en letra."""
+    text = unicodedata.normalize("NFD", text or "")
+    text = "".join(c for c in text if unicodedata.category(c) != "Mn").upper()
+    text = re.sub(r"\bF-?[78]\b|\bFUTBOL-?[78]\b", " ", text)
+    text = text.replace("2ª", "SEGUNDA ").replace("1ª", "PRIMERA ")
+    return re.sub(r"\s+", " ", re.sub(r"[^A-Z0-9 ]", " ", text)).strip()
+
+
+ISLANDS = (("FUERTEVENTURA", "fuerteventura"), ("LANZAROTE", "lanzarote"))
+
+
+def _island(name):
+    return next((island for word, island in ISLANDS if word in name), "grancanaria")
+
+
+def meta_by_name(comp_name):
+    """(prefijo de código, fase, isla) de una competición de fútbol 7/8 de benjamín o
+    prebenjamín por su nombre en el catálogo, con los convenios de 2021-22 ('LIGA
+    PREFERENTE BENJAMIN F-8 GRAN CANARIA' → BPGC, 'Preferente GC'); None si no es de
+    las conocidas (fútbol sala, o un formato nuevo). Las finales y semifinales, las de
+    su competición base con F o S detrás. Solo para las temporadas archivadas
+    (comp_meta con by_name)."""
+    n = _fold(comp_name)
+    if "SALA" in n:
+        return None
+    pre = "PREBENJAMIN" in n.replace(" ", "")
+    island = _island(n)
+    m = re.match(r"^(SEMI)?FINAL(?:ES)? (.+)$", n)
+    if m:
+        base = meta_by_name(m.group(2))
+        if not base:
+            return None
+        prefix, phase, isl = base
+        league = not phase.startswith("Copa")
+        kind = "Semifinal" if m.group(1) else "Final"
+        return prefix + kind[0], f"{kind} {'Liga ' if league else ''}{phase}", isl
+    if "CAMPEONES" in n:
+        return ("PCC" if pre else "BC"), "Copa de Campeones", island
+    if pre:
+        # La copa prebenjamín de Gran Canaria (2018-19): «Copa Gran Canaria», sin repetir la categoría
+        # en la etiqueta («Prebenjamín, Copa Gran Canaria, Grupo 1»).
+        if n.startswith("COPA"):
+            return ("PCGC", "Copa Gran Canaria", island) if island == "grancanaria" else None
+        if n.startswith("LIGA"):
+            return {"grancanaria": ("PGC", "Primera Fase GC"), "lanzarote": ("PLZ", "Lanzarote"),
+                    "fuerteventura": ("PFV", "Fuerteventura")}[island] + (island,)
+        return None
+    if n.startswith("SUPERLIGA") and island == "fuerteventura":
+        return "FVS", "Superliga Fuerteventura", island
+    m = re.match(r"^COPA CABILDO .*\b(PREFERENTE|PRIMERA)\b", n)
+    if m and island == "lanzarote":
+        return ("CLZP", "Copa Cabildo Preferente Lanzarote", island) if m.group(1) == "PREFERENTE" \
+            else ("CLZ1", "Copa Cabildo Primera Lanzarote", island)
+    if n.startswith("COPA DELEGACION") and island != "grancanaria":
+        return ("CLZ", "Copa Delegación Lanzarote", island) if island == "lanzarote" \
+            else ("CFVD", "Copa Delegación Fuerteventura", island)
+    if n.startswith("COPA") and island == "fuerteventura":
+        return "CFV", "Copa Fuerteventura", island
+    if "SEGUNDA FASE" in n:
+        if island == "fuerteventura":
+            return "FV2", "Fase 2 Fuerteventura", island
+        return None  # Gran Canaria: SF (2023-24), A..E (2024-25 y 2025-26), por id
+    if not n.startswith("LIGA"):
+        return None
+    if "PREFERENTE" in n:
+        return ("LZP", "Preferente Lanzarote", island) if island == "lanzarote" else \
+            ("BPGC", "Preferente GC", island) if island == "grancanaria" else None
+    if re.search(r"\bPRIMERA\b", n) and "PRIMERA FASE" not in n:
+        return ("LZ1", "Primera Lanzarote", island) if island == "lanzarote" else \
+            ("GC", "Primera Fase GC", island) if island == "grancanaria" else None
+    if island == "fuerteventura":
+        return ("FV1", "Fase 1 Fuerteventura", island) if "PRIMERA FASE" in n else ("FV1", "Fuerteventura", island)
+    return None
+
+
+def comp_meta(conn, comp, siblings, comp_name="", by_name=False):
     """(prefijo, fase, isla) de una competición: la de un grupo hermano ya en la
-    base (su código menos el número de su grupo), la de COMP_META o la de
-    EXTRA_META; None si no se sabe."""
+    base (su código menos el número de su grupo), la de EXTRA_META o la de
+    COMP_META y, con `by_name` (las temporadas archivadas), la de su nombre
+    (meta_by_name); None si no se sabe."""
     for entry, gid in siblings:
         row = conn.execute("SELECT code, phase, island FROM groups WHERE id=?", (gid,)).fetchone()
         n = str(group_number(entry.get("grupo_name")))
@@ -90,7 +224,22 @@ def comp_meta(conn, comp, siblings):
     if comp in COMP_META:
         prefix, phase = COMP_META[comp]
         return prefix, phase, _iso_island(prefix)
-    return None
+    return meta_by_name(comp_name) if by_name else None
+
+
+def actas_complete(folder, season):
+    """¿Ha terminado la descarga de las actas de `season`? Hay raw e índice y su
+    _status.json dice que no queda ninguna (pending 0) o que la última tanda no
+    trajo ninguna sin dejar competiciones por enumerar: la regla de
+    actas-federacion.yml para pasar a la temporada siguiente. Sin estado, no."""
+    paths = [os.path.join(folder, f"fiflp_actas_{season}_{suffix}.json") for suffix in ("raw", "index", "status")]
+    if not all(os.path.exists(p) for p in paths):
+        return False
+    try:
+        status = _load(paths[2], {})
+    except ValueError:
+        return False
+    return status.get("pending") == 0 or (status.get("fetched", 1) == 0 and not status.get("unenumerated_comps"))
 
 
 def group_matches(index, actas, comp, grupo):
@@ -159,7 +308,10 @@ def unique_names(names, conn):
     for target, raws in by_target.items():
         clubs = {}
         for raw_name in raws:
-            clubs.setdefault(team_key(raw_name), []).append(raw_name)
+            # La letra A es el primer equipo, como no llevar letra: 'UNION VIERA A, C.F. "A"' y 'UNION
+            # VIERA, C.F.' son el mismo club (known_names los lleva juntos a 'Unión Viera').
+            core, filial = team_key(raw_name)
+            clubs.setdefault((core, "" if filial == "A" else filial), []).append(raw_name)
         if len(clubs) < 2:
             continue
         best = max(clubs, key=lambda key: (team_score(key, team_key(target)), key))
@@ -180,31 +332,58 @@ def _load(path, default):
         return json.load(f)
 
 
+def _modernized(conn, raw, actas):
+    """Copias del raw de goleadores y de las actas de una temporada archivada con los nombres de los
+    equipos (clasificación y cabeceras) con la forma de 2021 en adelante (fiflp_names.modern_fed_name,
+    con el vocabulario de los nombres de la temporada y de los equipos de la base)."""
+    from fiflp_names import fed_words, modern_fed_name
+    fed = [r.get("team") for e in raw.values() for r in e.get("standings") or []]
+    fed += [(a.get("header") or {}).get(side) for a in actas.values() if isinstance(a, dict)
+            for side in ("home_team", "away_team")]
+    words = fed_words([n for n in fed if n], [r[0] for r in conn.execute("SELECT name FROM teams")])
+    modern = lambda n: modern_fed_name(n, words) if n else n
+    raw = {key: {**entry, "standings": [{**r, "team": modern(r.get("team"))} for r in entry.get("standings") or []]}
+           for key, entry in raw.items()}
+    actas = {cod: ({**a, "header": {**a["header"], "home_team": modern(a["header"].get("home_team")),
+                                    "away_team": modern(a["header"].get("away_team"))}}
+                   if isinstance(a, dict) and isinstance(a.get("header"), dict) else a)
+             for cod, a in actas.items()}
+    return raw, actas
+
+
 def import_season(conn, folder, season, log=print):
     """Crea (o rehace) los grupos de la federación de `season` que la base no
-    tiene. Devuelve {creados, rehechos, ya_estaban, sin_código, choques}."""
+    tiene. Una temporada archivada que no está en la base se da de alta con su
+    primer grupo (y se borra si al final no crea ninguno). Devuelve {creados,
+    rehechos, ya_estaban, sin_código, choques, vacíos} y, si la ha dado de
+    alta, season_created."""
     from activate_season import known_names
-    report = {"created": 0, "redone": 0, "existing": 0, "no_meta": 0, "clash": 0}
+    report = {"created": 0, "redone": 0, "existing": 0, "no_meta": 0, "clash": 0, "empty": 0}
+    archived = season in ARCHIVE_SEASONS
     row = conn.execute("SELECT id, start_year FROM seasons WHERE name=?", (season,)).fetchone()
-    if not row:
+    if not row and not archived:
         return report
-    season_id, start = row
+    # Una archivada que falta: sin fila todavía (se da de alta con su primer grupo, más abajo).
+    season_id, start = row if row else (None, int(season[:4]))
     raw = _load(os.path.join(folder, f"fiflp_goleadores_{season}_raw.json"), {})
     index = _load(os.path.join(folder, f"fiflp_actas_{season}_index.json"), {})
     actas = _load(os.path.join(folder, f"fiflp_actas_{season}_raw.json"), {})
+    if archived:
+        raw, actas = _modernized(conn, raw, actas)
     conn.execute("""CREATE TABLE IF NOT EXISTS fiflp_groups (
         group_id INTEGER PRIMARY KEY, season_id INTEGER NOT NULL, comp TEXT NOT NULL, grupo TEXT NOT NULL)""")
     owned = {(c, g): gid for gid, c, g in conn.execute(
-        "SELECT group_id, comp, grupo FROM fiflp_groups WHERE season_id=?", (season_id,))}
+        "SELECT group_id, comp, grupo FROM fiflp_groups WHERE season_id=?", (season_id,))} if season_id else {}
 
-    # Qué grupos de la federación ya están en la base (y con qué grupo) y cuáles faltan.
+    # Qué grupos de la federación ya están en la base (y con qué grupo) y cuáles faltan. Sin la
+    # temporada en la base, faltan todos.
     mapped, missing = {}, []
     for key in sorted(raw):
         entry = raw[key]
         if not entry.get("ok"):
             continue
         ident = (str(entry["comp"]), str(entry["grupo"]))
-        if ident in owned:
+        if ident in owned or season_id is None:
             missing.append(entry)
             continue
         gid = match_group(conn, season_id, index, entry)
@@ -215,13 +394,19 @@ def import_season(conn, folder, season, log=print):
             missing.append(entry)
 
     plans = []
-    codes = {r[0]: r[1] for r in conn.execute("SELECT code, id FROM groups WHERE season_id=?", (season_id,))}
+    codes = {r[0]: r[1] for r in conn.execute("SELECT code, id FROM groups WHERE season_id=?", (season_id,))} \
+        if season_id else {}
     for entry in missing:
         ident = (str(entry["comp"]), str(entry["grupo"]))
-        meta = comp_meta(conn, ident[0], mapped.get(ident[0], []))
+        meta = comp_meta(conn, ident[0], mapped.get(ident[0], []), entry.get("comp_name") or "", by_name=archived)
         if not meta:
             report["no_meta"] += 1
             log(f"  ! {season} {entry.get('comp_name')} {entry.get('grupo_name')}: competición sin código")
+            continue
+        matches = group_matches(index, actas, *ident)
+        # Sin clasificación ni actas (una final de la que no hay nada todavía): nada que crear.
+        if not matches and not entry.get("standings"):
+            report["empty"] += 1
             continue
         prefix, phase, island = meta
         n = group_number(entry.get("grupo_name"))
@@ -230,22 +415,30 @@ def import_season(conn, folder, season, log=print):
             report["clash"] += 1
             log(f"  ! {season} {entry.get('comp_name')} {entry.get('grupo_name')}: el código {code} ya es de otro grupo")
             continue
-        matches = group_matches(index, actas, *ident)
-        if not matches and not entry.get("standings"):
-            continue
         codes[code] = owned.get(ident) or ("nuevo", ident)
         plans.append((entry, code, n, phase, island, matches))
     if not plans:
         conn.commit()
         return report
+    if season_id is None:
+        season_id = get_or_create_season(conn, season, start, start + 1)
+        report["season_created"] = True
 
     # Los nombres de los equipos, todos los grupos nuevos de la temporada a la vez.
     pseudo = [{"island": island, "standings": entry.get("standings") or [],
                "jornadas": [{"matches": [{"home": m[1], "away": m[2]} for m in matches]}]}
               for entry, code, n, phase, island, matches in plans]
-    # Los nombres de la base, de la temporada más cercana a la más lejana.
-    years = sorted({r[0] for r in conn.execute("SELECT start_year FROM seasons")}, key=lambda y: (abs(y - start), y < start))
+    # Los nombres de la base: primero los de la propia temporada (los de una que se rehace), después los
+    # de 2021 en adelante y, en una archivada, al final los de las otras archivadas, que pueden ser
+    # inventados (pretty_name); en cada grupo, de la más cercana a la más lejana. Una temporada de
+    # 2021-22 en adelante nunca mira las archivadas.
+    all_years = {r[0] for r in conn.execute("SELECT start_year FROM seasons")} | {start}
+    if start not in ARCHIVE_YEARS:
+        all_years -= ARCHIVE_YEARS
+    years = sorted(all_years, key=lambda y: (y != start, y in ARCHIVE_YEARS, abs(y - start), y < start))
     names = unique_names(known_names(pseudo, conn, years=years, keep_existing=True), conn)
+    if archived:
+        names.update({k: v for k, v in ARCHIVE_NAMES.items() if k in names})
     name = lambda raw_name: names.get(clean_team_name(raw_name), clean_team_name(raw_name))
 
     for entry, code, n, phase, island, matches in plans:
@@ -301,18 +494,29 @@ def import_season(conn, folder, season, log=print):
             continue
         report["redone" if redo else "created"] += 1
         log(f"  [{code}] {phase}, Grupo {n}: {len(matches)} partidos, {len(standings)} equipos en la clasificación")
+    # Una archivada dada de alta aquí que al final no tiene ningún grupo (todos saltados): fuera, o
+    # sería una temporada vacía en la web.
+    if report.get("season_created") and not report["created"]:
+        conn.execute("DELETE FROM seasons WHERE id=? AND NOT EXISTS (SELECT 1 FROM groups WHERE season_id=?)",
+                     (season_id, season_id))
+        conn.commit()
+        log(f"  {season}: ningún grupo creado; la temporada no se queda en la base")
     return report
 
 
-GRUPOS_VERSION = "4"   # en la huella: subirla rehace los grupos de todas las temporadas
+# En la huella: subirla rehace los grupos de todas las temporadas. 5: la huella deja la ruta absoluta
+# (otra carpeta con el mismo contenido da la misma) y lleva IMPORT_VERSION de import_fiflp_actas; la
+# primera pasada rehace una vez los grupos propios de 2021-22 a 2025-26 (14, 2, 4, 9 y 5), igual que
+# estaban (los mismos nombres, partidos y actas).
+GRUPOS_VERSION = "5"
 
 
 def sources_digest(folder, season):
-    h = hashlib.sha1(GRUPOS_VERSION.encode())
+    h = hashlib.sha1((GRUPOS_VERSION + import_fiflp_actas.IMPORT_VERSION).encode())
     for kind in ("goleadores", "actas"):
         for suffix in (("raw",) if kind == "goleadores" else ("index", "raw")):
             path = os.path.join(folder, f"fiflp_{kind}_{season}_{suffix}.json")
-            h.update(path.encode())
+            h.update(os.path.basename(path).encode())
             if os.path.exists(path):
                 with open(path, "rb") as f:
                     h.update(f.read())
@@ -321,7 +525,10 @@ def sources_digest(folder, season):
 
 def import_changed_grupos(conn, folder=SCRIPTS_DIR, log=print):
     """import_season de cada temporada con raw de goleadores cuyas fuentes hayan
-    cambiado desde la última vez (sha1 en raw_imports, clave grupos:<S>)."""
+    cambiado desde la última vez (sha1 en raw_imports, clave grupos:<S>). Una
+    temporada que no está en la base no graba huella: si no es archivada se salta;
+    si lo es, se mira siempre (sin su huella) y se importa en cuanto ha terminado
+    la descarga de sus actas (actas_complete)."""
     conn.execute("""CREATE TABLE IF NOT EXISTS raw_imports (
         path TEXT PRIMARY KEY, sha1 TEXT NOT NULL, imported_at TEXT NOT NULL)""")
     reports = {}
@@ -332,14 +539,23 @@ def import_changed_grupos(conn, folder=SCRIPTS_DIR, log=print):
         season = m.group(1)
         key, digest = f"grupos:{season}", sources_digest(folder, season)
         row = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (key,)).fetchone()
-        if row and row[0] == digest:
+        if not conn.execute("SELECT 1 FROM seasons WHERE name=?", (season,)).fetchone():
+            if season not in ARCHIVE_SEASONS:
+                continue
+            if not actas_complete(folder, season):
+                log(f"  {season}: esperando a que acabe la descarga de sus actas")
+                continue
+        elif row and row[0] == digest:
             continue
         report = import_season(conn, folder, season, log=log)
-        conn.execute("INSERT OR REPLACE INTO raw_imports(path, sha1, imported_at) VALUES (?, ?, datetime('now'))",
-                     (key, digest))
-        conn.commit()
-        log(f"  {season}: {report['created']} grupos nuevos, {report['redone']} rehechos, {report['existing']} ya "
-            f"estaban; {report['no_meta']} sin código, {report['clash']} con el código ocupado")
+        # La huella, solo si la temporada está en la base después de importar.
+        if conn.execute("SELECT 1 FROM seasons WHERE name=?", (season,)).fetchone():
+            conn.execute("INSERT OR REPLACE INTO raw_imports(path, sha1, imported_at) VALUES (?, ?, datetime('now'))",
+                         (key, digest))
+            conn.commit()
+        log(f"  {season}: {'temporada nueva; ' if report.get('season_created') else ''}{report['created']} grupos "
+            f"nuevos, {report['redone']} rehechos, {report['existing']} ya estaban; {report['no_meta']} sin código, "
+            f"{report['clash']} con el código ocupado, {report['empty']} sin clasificación ni actas")
         reports[season] = report
     return reports
 

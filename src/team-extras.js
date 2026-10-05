@@ -136,8 +136,8 @@ function retrySquad(section, ctx, team, button) {
 
 // ── Trayectoria (decisión 14) ───────────────────────────────────────────
 
-// El botón y su panel, vacío hasta que se despliega: la trayectoria carga todo el archivo (hasta 0,9
-// MB), así que solo se pide bajo demanda.
+// El botón y su panel, vacío hasta que se despliega: la trayectoria carga todo el archivo (unos 3 MB
+// sin comprimir con las nueve temporadas archivadas), así que solo se pide bajo demanda.
 function trajectoryBlock() {
   return block('Trayectoria', html`<button type="button" class="team-toggle" data-action="trayectoria" aria-expanded="false" aria-controls="${TRAJECTORY_ID}">Ver la trayectoria</button><div id="${TRAJECTORY_ID}" class="team-panel" aria-live="polite" hidden></div>`,
     { context: 'todas las temporadas' });

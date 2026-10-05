@@ -9,7 +9,7 @@ import { ctxFor, datasetsFor, cssRules, PORTAL_SEASON } from './fixtures/redisen
 import { screen } from '../../src/screen-copa.js';
 import { screen as partido, previousMeetings } from '../../src/screen-partido.js';
 import { SCREEN_MAP } from '../../src/screens.js';
-import { bracket, findGroup, findMatch, groupSummary } from '../../src/model.js';
+import { bracket, buildGroup, findGroup, findMatch, groupSummary } from '../../src/model.js';
 import { cupTeamOf } from '../../src/myteam.js';
 
 const TODAY = '2026-09-23';
@@ -451,4 +451,36 @@ test('una liguilla con partidos sin fecha: van juntos al final, bajo un único �
   const late = several.split('<h3 class="day-title">Sin fecha</h3>')[1];
   assert.deepEqual([...late.matchAll(/<p class="cal-when">([^<]*)<\/p>/g)].map((m) => m[1]), ['Jornada 2', 'Jornada 5']);
   assert.equal((several.match(/sin fecha/gi) || []).length, 1);
+});
+
+// Temporadas archivadas: la federación juega aparte las semifinales de la Primera de Lanzarote (LZ1S,
+// 2017-18 y 2018-19), una sola ronda de dos partidos. No acaba en la final: son las «Semifinales».
+test('una semifinal que se juega aparte se llama «Semifinales»; una final suelta sigue siendo la «Final»', () => {
+  const row = (home, away, hs, as) => ['05-05-2018', home, away, hs, as, null, '10:00', 'MUNICIPAL'];
+  const semi = buildGroup({ id: 'LZ1S1', name: 'Grupo 1', phase: 'Semifinal Liga Primera Lanzarote', island: 'lanzarote',
+    jornadas: { 1: [row('CD Tinajo', 'Haría CF', 3, 1), row('UD Lanzarote', 'Teguise', 2, 0)] } },
+  { season: '2017-2018', cat: 'benjamin' });
+  assert.equal(semi.kind, 'cup-bracket');
+  assert.deepEqual(semi.rounds.map((r) => r.label), ['Semifinales']);
+  const final = buildGroup({ id: 'LZ1F1', name: 'Grupo 1', phase: 'Final Liga Primera Lanzarote', island: 'lanzarote',
+    jornadas: { 1: [row('CD Tinajo', 'UD Lanzarote', 2, 1)] } }, { season: '2017-2018', cat: 'benjamin' });
+  assert.equal(final.kind, 'cup-bracket');
+  assert.deepEqual(final.rounds.map((r) => r.label), ['Final']);
+});
+
+// Temporadas archivadas: la Copa Fuerteventura de 2017-18 y 2018-19 y la copa prebenjamín de Gran Canaria
+// se juegan como liga y la federación no publicó sus actas. Con la clasificación oficial y sin partidos,
+// la copa es una liguilla (groupKind): la tabla y, en una temporada cerrada, que la fuente no los publicó.
+test('una copa de una temporada cerrada con la tabla y sin partidos: su clasificación, nunca un cuadro vacío', () => {
+  const ds = all();
+  const old = archive('2023-2024');
+  const cfv1 = old.benjamin.find((g) => g.id === 'CFV1');
+  cfv1.jornadas = {};
+  ds.seasonRaw['2023-2024'] = old;
+  assert.equal(findGroup(ctxOf({ g: 'MCPK1' }, { datasets: ds }).model, '2023-2024', 'CFV1').kind, 'cup-league');
+  const out = render({ s: '2023-2024', g: 'CFV1' }, { datasets: ds });
+  assert.match(out, /<h2 class="block-title">Clasificación<\/h2>/);
+  assert.equal((blockOf(out, 'Clasificación').match(/<tr>/g) || []).length - 1, cfv1.standings.length);
+  assert.match(blockOf(out, 'Partidos'), /<p class="empty">La fuente no publicó los partidos de esta copa\.<\/p>/);
+  assert.doesNotMatch(out, /Cuadro|todavía/);
 });

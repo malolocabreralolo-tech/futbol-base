@@ -162,6 +162,10 @@ def test_finals_and_closing_tournaments_are_never_recomputed_as_leagues():
                   "Torneo Cierre Prebenjamín", "Clausura Benjamín"):
         assert not _is_league_group("X1", phase), phase
     assert _is_league_group("GC1", "Primera Fase GC") and _is_league_group("FV21", "Fase 2 Fuerteventura")
+    # Las semifinales que se juegan aparte (Lanzarote, 2017-18 y 2018-19): meta_by_name les da la fase en
+    # singular, como a las de la Copa Cabildo.
+    assert _is_league_group("LZ1S1", "Semifinal Liga Primera Lanzarote") is False
+    assert _is_league_group("FVS1", "Superliga Fuerteventura") is True
 
 
 def test_filial_letters_and_cups_without_standings_match_their_group():
@@ -280,3 +284,57 @@ def test_a_group_created_later_gets_its_scorers_without_the_raw_changing(tmp_pat
     report = G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None)["fiflp_goleadores_2024-2025_raw.json"]
     assert report["written"] == 1
     assert conn.execute("SELECT player_name FROM scorers WHERE group_id=9").fetchall() == [("A, B",)]
+
+
+def test_a_season_not_in_the_base_leaves_no_fingerprint_and_groups_redone_reimport(tmp_path):
+    conn = base()
+    raw = {"471:1": entry("471", "1", "LIGA BENJAMIN F-8 FUERTEVENTURA", ["X, C.D.", "Y, C.D.", "Z, C.D."],
+                          [["A, B", "X, C.D.", 1, 1, 0]])}
+    # 2019-20 todavía no está en la base (la da de alta import_fiflp_grupos): ni importación ni huella.
+    (tmp_path / "fiflp_goleadores_2019-2020_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    assert G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None) == {}
+    assert not conn.execute("SELECT 1 FROM raw_imports WHERE path='fiflp_goleadores_2019-2020_raw.json'").fetchone()
+    # La huella de una temporada que sí está lleva la de sus grupos (grupos:<S>): al rehacerlos, se reimporta.
+    write(tmp_path, {"900:1": entry("900", "1", "LIGA PREBENJAMIN GRAN CANARIA", FED_P1, [["GARCIA, LUIS",
+                                                                                       "TAMARACEITE, U.D. A", 3, 5, 1]])})
+    assert list(G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None)) == ["fiflp_goleadores_2024-2025_raw.json"]
+    assert G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None) == {}
+    conn.execute("INSERT INTO raw_imports(path, sha1, imported_at) VALUES ('grupos:2024-2025', 'otra', datetime('now'))")
+    assert list(G.import_changed_goleadores(conn, str(tmp_path), log=lambda *_: None)) == ["fiflp_goleadores_2024-2025_raw.json"]
+
+
+def test_a_retired_team_of_an_archived_season_gets_a_portal_name():
+    """Un equipo que se retira (en los goleadores, no en la clasificación) de una temporada archivada:
+    el nombre de un equipo de esa temporada si casa, con la misma letra; si no, con forma de portal."""
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    migrate(conn)
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (1, '2020-2021', 2020, 2021, 0);
+      INSERT INTO categories(id, name) VALUES (1, 'BENJAMIN'), (2, 'PREBENJAMIN');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase) VALUES
+        (1, 1, 1, 'GC1', 'Grupo 1', 'Primera Fase GC'), (2, 1, 2, 'PGC1', 'Grupo 1', 'Primera Fase GC');
+      INSERT INTO teams(id, name) VALUES (1, 'Moya'), (2, 'CD Firgas'), (3, 'UD Teror'), (4, 'Guía B');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+        (1, 1, 1, 3, 1, 1, 0, 0, 2, 0, 2), (1, 2, 2, 0, 1, 0, 0, 1, 0, 2, -2), (2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+        (2, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+      CREATE TABLE fiflp_groups (group_id INTEGER PRIMARY KEY, season_id INTEGER NOT NULL, comp TEXT NOT NULL,
+                                 grupo TEXT NOT NULL);
+      INSERT INTO fiflp_groups VALUES (1, 1, '618', '1');
+    """)
+    raw = {"618:1": {"comp": "618", "grupo": "1", "comp_name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA",
+                     "grupo_name": "GRUPO 1", "ok": True,
+                     "standings": [{"pos": 1, "team": "MOYA, U.D.", "pts": 3, "j": 1, "g": 1, "e": 0, "p": 0},
+                                   {"pos": 2, "team": "FIRGAS, C.D.", "pts": 0, "j": 1, "g": 0, "e": 0, "p": 1}],
+                     # Teror (del grupo prebenjamín) y Guía A se retiraron del grupo: solo están aquí.
+                     "scorers": [["P, UNO", "MOYA, U.D.", 1, 2, 0], ["P, DOS", "TEROR BALOMPIE, U.D.", 3, 4, 0],
+                                 ["P, TRES", "GUIA A, U.D. A", 2, 1, 0], ["P, CUATRO", "SAN ISIDRO B, C.D. B", 1, 1, 0]]}}
+    import tempfile
+    with tempfile.TemporaryDirectory() as folder:
+        path = Path(folder) / "fiflp_goleadores_2020-2021_raw.json"
+        path.write_text(json.dumps(raw), encoding="utf-8")
+        G.import_raw(conn, str(path), log=lambda *_: None)
+    teams = dict(conn.execute("""SELECT sc.player_name, t.name FROM scorers sc JOIN teams t ON t.id=sc.team_id
+                                 WHERE sc.group_id=1""").fetchall())
+    # 'Guía B' es de otra letra: no es el Guía A retirado.
+    assert teams == {"P, UNO": "Moya", "P, DOS": "UD Teror", "P, TRES": "Guía", "P, CUATRO": "San Isidro B"}

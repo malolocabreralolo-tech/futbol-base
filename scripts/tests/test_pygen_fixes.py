@@ -561,6 +561,52 @@ class TestConditionalBump:
         assert bump_if_changed(before, root) is True
 
 
+class TestSyncSeasonFiles:
+    """sw.js SEASON_FILES = los data-season-<S>.js que escribe el generador (una temporada archivada
+    nueva entra en la misma pasada del bot que publica su archivo), de la más nueva a la más vieja,
+    con el formato de activate_season.season_files_for; el resto de sw.js, igual."""
+
+    WORKER = ("const CACHE_NAME = 'futbolbase-v20261005';\n"
+              "const CRESTS_CACHE = 'futbolbase-escudos-00000000';\n"
+              "// Season data files\n"
+              "const SEASON_FILES = [\n  './data-season-2025-2026.js',\n  './data-season-2024-2025.js',\n];\n\n"
+              "const LINEUPS_KEEP = 12;\n")
+
+    def test_archived_seasons_join_in_descending_order(self, tmp_path):
+        from scripts.generate_js import sync_season_files
+        (tmp_path / "sw.js").write_text(self.WORKER, encoding="utf-8")
+        names = ["2025-2026", "2024-2025", "2020-2021", "2019-2020", "2018-2019", "2017-2018"]
+        assert sync_season_files(names[::-1], str(tmp_path)) is True
+        sw = (tmp_path / "sw.js").read_text(encoding="utf-8")
+        literal = "const SEASON_FILES = [\n" + "".join(f"  './data-season-{s}.js',\n" for s in names) + "];"
+        assert literal in sw
+        literal_re = re.compile(r"const SEASON_FILES = \[[^\]]*\];")
+        assert literal_re.sub("", sw) == literal_re.sub("", self.WORKER), "el resto de sw.js no cambia"
+        # Otra vez con las mismas temporadas: nada que escribir (ni un byte, ni la fecha del fichero).
+        mtime = os.stat(tmp_path / "sw.js").st_mtime_ns
+        assert sync_season_files(names, str(tmp_path)) is False
+        assert (tmp_path / "sw.js").read_text(encoding="utf-8") == sw
+        assert os.stat(tmp_path / "sw.js").st_mtime_ns == mtime
+
+    def test_same_order_as_the_activation(self, tmp_path):
+        """Al activar una temporada, season_files_for pone delante la que cierra y el generador, después,
+        no cambia nada; las que ya estaban se quedan (la activación sintética de test_season_preparation
+        lleva una que su base no tiene)."""
+        from scripts.generate_js import sync_season_files
+        from scripts.activate_season import season_files_for
+        worker = season_files_for(self.WORKER, "2026-2027", "2027-2028")
+        (tmp_path / "sw.js").write_text(worker, encoding="utf-8")
+        assert sync_season_files(["2026-2027"], str(tmp_path)) is False
+        assert (tmp_path / "sw.js").read_text(encoding="utf-8") == worker
+
+    def test_without_the_literal_nothing_is_written(self, tmp_path):
+        from scripts.generate_js import sync_season_files
+        assert sync_season_files(["2024-2025"], str(tmp_path)) is False          # sin sw.js
+        (tmp_path / "sw.js").write_text("const CACHE_NAME = 'futbolbase-v20260101';\n", encoding="utf-8")
+        assert sync_season_files(["2024-2025"], str(tmp_path)) is False
+        assert (tmp_path / "sw.js").read_text(encoding="utf-8") == "const CACHE_NAME = 'futbolbase-v20260101';\n"
+
+
 class TestTeamLookupIsCollisionAware:
     """El portal escribe 'Arucas CF' donde la base tiene 'Arucas'. Si
     get_or_create_team empareja solo por nombre exacto, cada scrape vuelve a

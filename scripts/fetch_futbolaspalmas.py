@@ -863,8 +863,11 @@ def import_past_seasons(conn, log=print):
     """Lo que descargan de temporadas pasadas actas-federacion.yml y
     goleadores-federacion.yml (solo los raws nuevos o cambiados): actas, grupos
     que faltaban (finales, torneos, ligas insulares sin archivar) y goleadores,
-    en ese orden (los goleadores casan sus grupos por las actas). Un fallo aquí
-    se apunta y no para la actualización de la temporada en curso."""
+    en ese orden (los goleadores casan sus grupos por las actas). Los grupos dan
+    de alta también las temporadas archivadas (import_fiflp_grupos.
+    ARCHIVE_SEASONS, 2017-18 a 2020-21) en cuanto termina la descarga de sus
+    actas. Un fallo aquí se apunta y no para la actualización de la temporada en
+    curso."""
     import traceback
     from migrate_actas_schema import migrate
     from import_fiflp_actas import import_changed_raws

@@ -388,7 +388,8 @@ def pretty_name(raw):
         elif w in _SMALL and i:
             out.append(w.lower())
         else:
-            out.append(w.capitalize())
+            # Con guion, cada parte con mayúscula: 'LAS MAJORERAS-GUAYADEQUE' -> 'Las Majoreras-Guayadeque'.
+            out.append("-".join(_ACCENTS.get(p, p.capitalize()) for p in w.split("-")))
     return " ".join(out) + (f" {letter}" if letter else "")
 
 

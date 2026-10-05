@@ -271,3 +271,75 @@ class TestForcedLastPairing:
         from fiflp_names import canonical_names
         canon = canonical_names(['UNO RARO'], [], ['Firgas'])
         assert canon['UNO RARO'] == 'UNO RARO'
+
+
+class TestModernFedName:
+    """Los formatos de la federación de 2017-2021 (temporadas archivadas), con la forma de los de
+    2021 en adelante: modern_fed_name, con el vocabulario de fed_words. Casos reales de los raws de
+    goleadores de 2017-18 a 2020-21."""
+
+    WORDS = frozenset({'GUIA', 'TELDE', 'AMAGRO', 'BALOS', 'ESTRELLA', 'MARITIMA', 'MASPALOMAS', 'HOMBRE',
+                       'TINAJO', 'PILA'})
+
+    def modern(self, name):
+        from fiflp_names import modern_fed_name
+        return modern_fed_name(name, self.WORDS)
+
+    def test_the_extra_b_of_the_filial_letter(self):
+        # '"DB"' es el filial D: sin quitar la B, 'ARUCAS D CF "DB"' casaba con Arucas.
+        assert self.modern('ARUCAS D CF "DB"') == 'ARUCAS CF "D"'
+        assert self.modern('VETERANOS DEL PILA D, C.D. "DB"') == 'VETERANOS DEL PILA, C.D. "D"'
+        assert self.modern('ARUCAS C.F. D DB') == 'ARUCAS C.F. "D"'          # la página de goleadores
+
+    def test_a_loose_letter_repeating_the_quoted_one_goes(self):
+        assert self.modern('ARUCAS B, C.F. "B"') == 'ARUCAS, C.F. "B"'
+        assert self.modern('ARUCAS A C.F. "A"') == 'ARUCAS C.F. "A"'
+        assert self.modern('ACODETTI C.F. C "C"') == 'ACODETTI C.F. "C"'
+        assert self.modern('CASA PASTORES, A C.F. "A"') == 'CASA PASTORES, C.F. "A"'
+        # La de una abreviatura con punto no es una letra suelta.
+        assert self.modern('PALMEIROS DE COSTA T. A, U.D. "A"') == 'PALMEIROS DE COSTA T., U.D. "A"'
+
+    def test_a_loose_letter_without_quotes_gets_them(self):
+        assert self.modern('INGENIO B') == 'INGENIO "B"'
+        assert self.modern('TEROR BALOMPIE A, U.D.') == 'TEROR BALOMPIE, U.D. "A"'
+        assert self.modern('ACODETTI A, C.F. A') == 'ACODETTI, C.F. "A"'
+
+    def test_a_glued_letter_is_split_off(self):
+        assert self.modern('GUIAA, U.D. "A"') == 'GUIA, U.D. "A"'
+        assert self.modern('TELDEA, U.D. "A"') == 'TELDE, U.D. "A"'
+        assert self.modern('ROQUE AMAGROA, C.D. "A"') == 'ROQUE AMAGRO, C.D. "A"'
+        assert self.modern('BALOSB, U.D. "B"') == 'BALOS, U.D. "B"'
+        assert self.modern('ESTRELLAA, C.F. "A"') == 'ESTRELLA, C.F. "A"'
+        assert self.modern('ESTRELLAB C.F. B') == 'ESTRELLA C.F. "B"'
+        assert self.modern('ORIENTACION MARITIMAC, C.D. "C"') == 'ORIENTACION MARITIMA, C.D. "C"'
+        assert self.modern('VETERANOS DEL PILA.A, C.D. "A"') == 'VETERANOS DEL PILA, C.D. "A"'
+        # Sin la raíz en el vocabulario, no se toca: 'MOYA' no es 'MOY' más una A.
+        assert self.modern('MOYA, U.D.') == 'MOYA, U.D.'
+        from fiflp_names import modern_fed_name
+        assert modern_fed_name('GUIAA, U.D. "A"') == 'GUIAA, U.D. "A"'
+
+    def test_abbreviations_glued_to_the_comma(self):
+        assert self.modern('CARRIZAL,CFU') == 'CARRIZAL, C.F.U.'
+        assert self.modern('VICTORIA,RC') == 'VICTORIA, R.C.'
+        assert self.modern('JOVERO LAS ROSAS, C,F,') == 'JOVERO LAS ROSAS, C.F.'
+        assert self.modern('MASPALOMAS,A C.D. "A"') == 'MASPALOMAS, C.D. "A"'
+        assert self.modern('ATLETICO G.C.A, C.F. "A"') == 'ATLETICO G.C., C.F. "A"'
+
+    def test_eaten_abbreviations(self):
+        assert self.modern('PUERTOS DE L.P. A, C.E.F. "A"') == 'PUERTOS DE LAS PALMAS, C.E.F. "A"'
+        assert self.modern('PUERTOS DE L.P.A, C.E.F. "A"') == 'PUERTOS DE LAS PALMAS, C.E.F. "A"'
+
+    def test_idempotent(self):
+        names = ['ARUCAS D CF "DB"', 'ARUCAS B, C.F. "B"', 'INGENIO B', 'TEROR BALOMPIE A, U.D.', 'GUIAA, U.D. "A"',
+                 'ESTRELLAB C.F. B', 'VETERANOS DEL PILA.A, C.D. "A"', 'CARRIZAL,CFU', 'VICTORIA,RC',
+                 'JOVERO LAS ROSAS, C,F,', '35600,A C.D. A', 'PUERTOS DE L.P.A, C.E.F. "A"', 'TINAJOB, U.D. B',
+                 'CORAZON DE MARIA D, C.D. DB', 'PALMAS, U.D. LAS', 'C.D ARINAGA B "B"']
+        for name in names:
+            once = self.modern(name)
+            assert self.modern(once) == once, name
+
+    def test_the_vocabulary_drops_the_glued_forms(self):
+        from fiflp_names import fed_words
+        words = fed_words(['GUIAA, U.D. "A"', 'GUIA B, U.D. "B"', 'TINAJOB, U.D. "B"'], ['CD Tinajo'])
+        assert 'GUIA' in words and 'TINAJO' in words
+        assert 'GUIAA' not in words and 'TINAJOB' not in words

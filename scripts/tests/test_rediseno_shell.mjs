@@ -97,7 +97,7 @@ test('errorScreen: la pantalla con su h1, «‹» si tiene padre y la caja de er
 
 test('routeTitle: un título por ruta de §4.1; routeNotice: aviso anunciado con role="status"', () => {
   assert.deepEqual(SCREENS.map(routeTitle), ['Mi equipo', 'Jornada', 'Tabla', 'Explorar', 'Partido', 'Equipo', 'Ligas',
-    'Copa', 'Goleadores', 'Temporadas anteriores', 'Récords', 'Datos y fuentes', 'Ajustes']);
+    'Copa', 'Goleadores', 'Temporadas anteriores', 'Récords', 'Datos y fuentes', 'Ajustes', 'Jugador']);
   assert.equal(routeTitle('desconocida'), 'Mi equipo');
   assert.equal(s(routeNotice('Elige tu equipo en Mi equipo')), '<p class="notice route-notice" role="status">Elige tu equipo en Mi equipo</p>');
 });

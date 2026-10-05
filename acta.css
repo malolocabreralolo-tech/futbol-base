@@ -825,6 +825,7 @@ abbr[title] { text-decoration: none; }
 .pt-lineup th, .pt-lineup td { padding: 6px 4px; border-bottom: 1px solid var(--line); font-weight: 400; text-align: left; vertical-align: top; }
 .pt-lineup thead th { padding-top: 0; border-bottom: 1.5px solid var(--ink); font-size: 11.5px; font-weight: 600; color: var(--mute); }
 .pt-lineup .pt-player { overflow-wrap: anywhere; }
+.pt-lineup .pt-player a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
 .pt-lineup .pt-dorsal { width: 38px; padding-right: 10px; color: var(--mute); text-align: right; }
 .pt-lineup .pt-pgoals { width: 52px; font-weight: 800; color: var(--ink); text-align: right; }
 .pt-lineup thead .pt-pgoals { font-weight: 600; color: var(--mute); }
@@ -961,6 +962,8 @@ abbr[title] { text-decoration: none; }
 .squad-rival { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .squad-score { font-weight: 800; white-space: nowrap; }
 .squad-goals { font-size: 12.5px; color: var(--mute); white-space: nowrap; }
+/* «Ver su trayectoria»: la ficha del jugador, bajo sus partidos. */
+.squad-more { margin: 8px 10px 0; }
 
 /* Trayectoria: el botón que la carga bajo demanda y su panel, una caja por temporada. */
 .team-toggle {

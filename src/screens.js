@@ -14,7 +14,8 @@ import { screen as records } from './screen-records.js';
 import { screen as temporadas } from './screen-temporadas.js';
 import { screen as fuentes } from './screen-fuentes.js';
 import { screen as ajustes } from './screen-ajustes.js';
+import { screen as jugador } from './screen-jugador.js';
 
-const READY = { '': home, jornada, tabla, partido, equipo, explorar, ligas, copa, goleadores, records, temporadas, fuentes, ajustes };
+const READY = { '': home, jornada, tabla, partido, equipo, explorar, ligas, copa, goleadores, records, temporadas, fuentes, ajustes, jugador };
 
 export const SCREEN_MAP = Object.freeze(Object.fromEntries(SCREENS.map((name) => [name, READY[name]])));

@@ -15,6 +15,7 @@ import { homeState } from './myteam.js';
 import { ensureHealth } from './state.js';
 import { SEARCH_HREF, mountTeamView, teamColumns, teamHeader, teamView } from './team-view.js';
 import { fillSquad, mountTeamExtras, squadPending, teamExtras } from './team-extras.js';
+import { followedBlock } from './screen-jugador.js';
 
 // ── Estado E: elegir equipo (spec §4.2 y §6.3) ──────────────────────────
 
@@ -48,13 +49,14 @@ export const screen = {
     const r = ctx.resolution;
     const state = homeState({ resolution: r, todayISO: ctx.today, portalSeason: ctx.portal.season });
     if (state === 'E' || state === 'X') {
-      return html`<section data-screen="home" data-state="${state}">${state === 'E' ? stateE(ctx, shields) : stateX(ctx, shields)}</section>`;
+      return html`<section data-screen="home" data-state="${state}">${state === 'E' ? stateE(ctx, shields) : stateX(ctx, shields)}${followedBlock(ctx)}</section>`;
     }
     const team = { group: r.group, name: r.name };
     const view = teamView(ctx, team, { action: 'change', nextSeason: true, stale: r.stale || null, mine: true, shields, state });
     // La consulta de la ficha, en su orden; la plantilla, sin esperar a las actas (lazySquad).
     const aside = [...view.aside, ...teamExtras(ctx, r.group, r.name, { lazySquad: true })];
-    return html`<section data-screen="home" data-state="${view.state}">${view.head}${teamColumns(view.main, aside, view.rest)}</section>`;
+    // Los jugadores seguidos (la ficha de jugador), al final, si hay alguno.
+    return html`<section data-screen="home" data-state="${view.state}">${view.head}${teamColumns(view.main, aside, view.rest)}${followedBlock(ctx)}</section>`;
   },
   mount(root, ctx, nav) {
     const section = root.matches && root.matches('[data-screen="home"]') ? root : root.querySelector('[data-screen="home"]');

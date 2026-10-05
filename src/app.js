@@ -8,6 +8,7 @@ import { readGlobals, ensureHealth } from './state.js';
 import { createModel, seasonLabel } from './model.js';
 import { buildClubIndex, resolveMyTeam, myTeamToSave } from './myteam.js';
 import { loadStore, saveStore, safeStorage, addRecent, clearStore } from './store.js';
+import { loadFollowed, saveFollowed, toggleFollowed } from './followed.js';
 import { canaryTodayISO, parseRoute } from './links.js';
 import { crestFallback } from './ui.js';
 import { errorScreen, offlineNotice, routeTitle, updateTabbar } from './shell.js';
@@ -16,10 +17,10 @@ import { SCREEN_MAP } from './screens.js';
 
 // Los datos de un pintado (el ctx de las pantallas sin la ruta, que añade el router): mi equipo
 // resuelto contra la temporada del portal con el «hoy» de Canarias, un solo reloj (decisión 4), y
-// los vistos hace poco del almacén (decisión 5 de B3).
-function contextFor({ model, myTeam, recent = [], portal, datasets, today, legacyDate = null }) {
+// los vistos hace poco del almacén (decisión 5 de B3), y los jugadores seguidos (followed.js).
+function contextFor({ model, myTeam, recent = [], followed = [], portal, datasets, today, legacyDate = null }) {
   const resolution = resolveMyTeam(myTeam, model.season(portal.season), model.clubIndex(), today);
-  return { model, myTeam, recent, resolution, today, health: datasets.health, datasets, portal, legacyDate };
+  return { model, myTeam, recent, followed, resolution, today, health: datasets.health, datasets, portal, legacyDate };
 }
 
 // El mismo contexto desde un almacén y con el día que se le pida: la base de las pruebas de las
@@ -28,7 +29,7 @@ export function startContext({ storage, portal, datasets, today }) {
   const store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
   const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
   const base = { season: portal.season, defaultTeam: portal.defaultTeam };
-  return { ...contextFor({ model, myTeam: store.myTeam, recent: store.recent, portal: base, datasets, today }), lastPrimary: 'miequipo' };
+  return { ...contextFor({ model, myTeam: store.myTeam, recent: store.recent, followed: loadFollowed(storage), portal: base, datasets, today }), lastPrimary: 'miequipo' };
 }
 
 // Los datos inmediatos sin los que no hay temporada: sin uno de ellos, ni X ni B serían verdad.
@@ -86,8 +87,9 @@ export function start(doc, win, config = PORTAL, { now = () => new Date() } = {}
 
   const model = createModel(datasets, { portalSeason: portal.season, buildClubIndex });
   let store = loadStore(storage, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });
+  let followed = loadFollowed(storage);
   const getContext = () => contextFor({
-    model, myTeam: store.myTeam, recent: store.recent, portal, datasets, today: canaryTodayISO(now(), config.timeZone), legacyDate,
+    model, myTeam: store.myTeam, recent: store.recent, followed, portal, datasets, today: canaryTodayISO(now(), config.timeZone), legacyDate,
   });
 
   // El cambio de fase que se resuelve sin preguntar (FF5 → A2) queda guardado desde el arranque
@@ -129,7 +131,14 @@ export function start(doc, win, config = PORTAL, { now = () => new Date() } = {}
       // «Borrar datos de esta app» (§4.7 y §4.9): el almacén, con la clave v1 y las antiguas, y el
       // último destino de la sesión; en memoria, lo de un almacén vacío (loadStore sin almacenamiento
       // da el equipo por defecto), aunque el navegador no deje borrar.
+      // «Seguir a este jugador» (la ficha de jugador): entra el primero o sale; se guarda o, si el
+      // almacenamiento falla, queda en memoria.
+      toggleFollow(player) {
+        followed = toggleFollowed(followed, player);
+        return saveFollowed(storage, followed);
+      },
       clearData() {
+        followed = [];
         clearStore(storage);
         safeStorage(() => win.sessionStorage).removeItem(SESSION_KEY);
         store = loadStore(null, { defaultTeam: portal.defaultTeam, portalSeason: portal.season });

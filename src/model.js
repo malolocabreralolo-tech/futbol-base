@@ -1223,6 +1223,7 @@ export function teamSquad(lineups, { group, team }) {
   list.forEach(({ acta, side }, at) => {
     for (const p of acta[side]) {
       const row = players.get(p.n) || { name: p.n, dorsals: new Map(), ap: 0, st: 0, g: 0, y: 0, rd: 0 };
+      if (row.id == null && p.id != null) row.id = p.id;
       row.ap += 1;
       if (p.r === 'starter') row.st += 1;
       row.g += p.g | 0;
@@ -1233,7 +1234,8 @@ export function teamSquad(lineups, { group, team }) {
     }
   });
   const dorsalOf = dorsals => [...dorsals].sort(([, a], [, b]) => b.n - a.n || b.at - a.at)[0]?.[0] ?? null;
-  const rows = [...players.values()].map(({ name, dorsals, ap, st, g, y, rd }) => ({ name, dorsal: dorsalOf(dorsals), ap, st, g, y, rd }));
+  // id: el de la federación (su ficha de jugador), si el acta lo trae.
+  const rows = [...players.values()].map(({ name, id, dorsals, ap, st, g, y, rd }) => ({ name, ...(id != null ? { id } : {}), dorsal: dorsalOf(dorsals), ap, st, g, y, rd }));
   rows.sort((a, b) => b.g - a.g || b.ap - a.ap || playerName(a.name).localeCompare(playerName(b.name), 'es'));
   return { rows, actas: list.length, skipped, groupActas: groupActas(lineups, group) };
 }

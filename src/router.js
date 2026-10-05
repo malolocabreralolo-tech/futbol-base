@@ -24,7 +24,7 @@ const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas'];
 // Lo que se cambia sin crear entrada en el historial (§4.1): jornada, vista de Tabla y búsqueda.
 const REPLACE_ONLY = { jornada: ['r'], tabla: ['v'], explorar: ['q'], goleadores: ['q'] };
 // Pantallas que se abren desde Explorar: su «‹» sin historial lleva a #/explorar.
-const UNDER_EXPLORE = new Set(['equipo', 'copa', 'goleadores', 'ligas', 'temporadas', 'records', 'fuentes', 'ajustes']);
+const UNDER_EXPLORE = new Set(['equipo', 'copa', 'goleadores', 'ligas', 'temporadas', 'records', 'fuentes', 'ajustes', 'jugador']);
 const MAX_REDIRECTS = 5;
 // El último destino principal, en la sesión (app.js lo borra con «Borrar datos», decisión 6 de B3).
 export const SESSION_KEY = 'futbol-base:destino';
@@ -64,6 +64,8 @@ export function resolveParams(route, ctx) {
   const screen = route.screen;
   const raw = route.params || {};
   if (NO_PARAMS.has(screen)) return { params: {} };
+  // Jugador: solo su id de la federación (un número); su ficha no depende de ninguna temporada.
+  if (screen === 'jugador') return { params: /^\d+$/.test(raw.id || '') ? { id: raw.id } : {} };
   const portal = ctx.portal.season;
   if (raw.s && raw.s !== portal && !knownSeason(ctx, raw.s)) {
     return redirect(screen, omit(raw, 's'), `No existe la temporada ${seasonLabel(raw.s)}; te enseñamos la actual`);
@@ -604,6 +606,12 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       return saved;
     },
     update,
+    // «Seguir a este jugador»: lo guarda app.js y se vuelve a pintar la ruta (el botón cambia).
+    toggleFollow(player) {
+      const saved = actions.toggleFollow ? actions.toggleFollow(player) : false;
+      show('refresh');
+      return saved;
+    },
     // «Vistos hace poco» (decisión 5 de B3): Equipo apunta su ficha en su mount; lo guarda app.js,
     // sin volver a pintar. Devuelve si quedó guardado en el almacén (false: solo en memoria).
     addRecent(entry) {

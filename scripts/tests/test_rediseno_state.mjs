@@ -129,7 +129,7 @@ test('todas las peticiones perezosas pasan por fetchData(): la versión de los d
   assert.equal((src.match(/\bfetch\(/g) || []).length, 1, 'un solo fetch en state.js, el de fetchData');
   assert.match(src, /await fetch\(`\.\/\$\{file\}\$\{dataQuery\(\)\}`, \{ signal: controller\.signal \}\)/);
   const loaders = src.match(/await fetchData\(/g) || [];
-  assert.equal(loaders.length, 4, 'matchdetail, temporadas, actas y data-health');
+  assert.equal(loaders.length, 5, 'matchdetail, temporadas, actas, fichas de jugador y data-health');
   assert.doesNotMatch(src, /data-matchdetail-keys\.js"\]/, 'la versión ya no sale de data-matchdetail-keys.js');
 });
 

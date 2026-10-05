@@ -13,7 +13,7 @@ import {
   actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, penaltyWinner, playerName,
   roundOf, seasonLabel, teamShort, timelineFor,
 } from './model.js';
-import { countdownLabel, dayMonth, matchHref, shareAndAnnounce, weekdayDate } from './links.js';
+import { countdownLabel, dayMonth, matchHref, playerHref, shareAndAnnounce, weekdayDate } from './links.js';
 import {
   ensureLineups, ensureMatchDetail, ensureSeasonData, lineupsKey, loadSeasons, normalizeTeamName,
 } from './state.js';
@@ -172,7 +172,9 @@ function lineupTable(players, team, side) {
   const byDorsal = (a, b) => (a.dn ?? 999) - (b.dn ?? 999) || playerName(a.n).localeCompare(playerName(b.n), 'es');
   const starters = players.filter((p) => p.r === 'starter').sort(byDorsal);
   const subs = players.filter((p) => p.r !== 'starter').sort(byDorsal);
-  const row = (p) => html`<tr><td class="pt-dorsal">${p.dn ?? ''}</td><th scope="row" class="pt-player">${playerName(p.n)}</th><td class="pt-pgoals">${p.g > 0 ? html`${p.g}<span class="vh"> ${p.g === 1 ? 'gol' : 'goles'}</span>` : ''}</td></tr>`;
+  // Con su id de la federación, el nombre lleva a su ficha de jugador.
+  const who = (p) => (playerHref(p.id) ? html`<a href="${playerHref(p.id)}">${playerName(p.n)}</a>` : playerName(p.n));
+  const row = (p) => html`<tr><td class="pt-dorsal">${p.dn ?? ''}</td><th scope="row" class="pt-player">${who(p)}</th><td class="pt-pgoals">${p.g > 0 ? html`${p.g}<span class="vh"> ${p.g === 1 ? 'gol' : 'goles'}</span>` : ''}</td></tr>`;
   const part = (title, list) => (list.length
     ? html`<tbody><tr class="pt-lu-group"><th scope="rowgroup" colspan="3">${title}</th></tr>${list.map(row)}</tbody>`
     : '');

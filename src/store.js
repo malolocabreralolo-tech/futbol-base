@@ -14,6 +14,8 @@ import { normalizeTeamName } from './state.js';
 export const STORE_KEY = 'futbol-base:v2';
 export const LEGACY_KEY = 'futbol-base:favorites:v1';
 export const MAX_RECENT = 8;
+// Los jugadores seguidos (followed.js) van en su propia clave: «Borrar datos» también la borra.
+export const FOLLOWED_KEY = 'futbol-base:jugadores';
 
 const CATS = ['benjamin', 'prebenjamin'];
 const isText = value => typeof value === 'string' && value !== '';
@@ -130,10 +132,11 @@ export function addRecent(state, entry) {
 }
 
 // «Borrar datos de esta app» (§4.7 y §4.9; decisión 6 de B3): v2, la clave v1 (si se quedara, la
-// carga siguiente volvería a migrarla) y las claves `season`, `cat` y `theme` de la app anterior.
+// carga siguiente volvería a migrarla), los jugadores seguidos y las claves `season`, `cat` y
+// `theme` de la app anterior.
 // Nunca storage.clear(): el origen (malolocabreralolo-tech.github.io) es de más proyectos. Devuelve
 // false si alguna no se pudo borrar; nunca lanza.
 export function clearStore(storage) {
   const store = safeStorage(storage);
-  return [STORE_KEY, LEGACY_KEY, 'season', 'cat', 'theme'].map((key) => store.removeItem(key)).every(Boolean);
+  return [STORE_KEY, LEGACY_KEY, FOLLOWED_KEY, 'season', 'cat', 'theme'].map((key) => store.removeItem(key)).every(Boolean);
 }

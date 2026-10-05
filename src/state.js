@@ -361,6 +361,36 @@ export async function ensureLineups(season, group) {
   return _lineupsPromise[key];
 }
 
+/* Las fichas de jugador: data-jugadores-<k>.js, el trozo del id de la federación módulo
+ * JUGADORES_SHARDS (generate_js.jugadores_files). Como ensureLineups: un vuelo por trozo, null
+ * si falla (sin guardarlo, para reintentar) y el texto parseado, nunca el global. */
+export const JUGADORES_SHARDS = 16;
+export const jugadoresShard = (id) => Number(id) % JUGADORES_SHARDS;
+const _jugadores = {};
+const _jugadoresPromise = {};
+
+export async function ensureJugadores(shard) {
+  if (_jugadores[shard] !== undefined) return _jugadores[shard];
+  if (_jugadoresPromise[shard]) return _jugadoresPromise[shard];
+  _jugadoresPromise[shard] = (async () => {
+    const name = 'JUGADORES_' + shard;
+    try {
+      const r = await fetchData(`data-jugadores-${shard}.js`);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const txt = await r.text();
+      const m = txt.match(new RegExp('const ' + name + '\\s*=\\s*(\\{[\\s\\S]*\\});'));
+      if (!m) throw new Error(name + ' not parseable');
+      _jugadores[shard] = JSON.parse(m[1]);
+      return _jugadores[shard];
+    } catch (e) {
+      console.warn('[state] ensureJugadores failed:', e.message);
+      _jugadoresPromise[shard] = null;
+      return null;
+    }
+  })();
+  return _jugadoresPromise[shard];
+}
+
 // data-health.json (spec §4.10 y §7): la comprobación de las fuentes, parseada, o null si no
 // llega (sin conexión, por ejemplo). Un único vuelo: las llamadas simultáneas comparten la
 // petición; un fallo no se memoriza y la siguiente llamada reintenta.

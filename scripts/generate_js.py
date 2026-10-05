@@ -605,6 +605,75 @@ def write_lineups(conn, root=None):
     return files
 
 
+# La ficha de cada jugador (por su id de la federación, el mismo niño de prebenjamín a benjamín y de
+# una temporada a otra): 16 ficheros, el del id módulo 16, para que abrir una ficha no baje todas.
+JUGADORES_SHARDS = 16
+
+
+def _season_day(text, start_year):
+    """'AAAA-MM-DD', 'DD-MM-AAAA' o 'DD/MM' (sin año: de julio a diciembre, el año de inicio de la
+    temporada) → 'AAAA-MM-DD', o None."""
+    text = (text or "").strip()
+    m = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})", text)
+    if m:
+        return text
+    m = re.fullmatch(r"(\d{1,2})[-/](\d{1,2})(?:[-/](\d{4}))?", text)
+    if not m:
+        return None
+    day, month = int(m.group(1)), int(m.group(2))
+    year = int(m.group(3)) if m.group(3) else (start_year if month >= 7 else start_year + 1)
+    return f"{year:04d}-{month:02d}-{day:02d}"
+
+
+def jugadores_files(conn):
+    """{fichero: contenido} de los data-jugadores-<k>.js: const JUGADORES_<k> =
+       {"p": {"<fiflp_id>": {"n": nombre, "c": [[temporada, grupo, equipo,
+       partidos, titular, goles, amarillas, rojas], ...]}}, "g": {"<temporada>/
+       <grupo>": [categoría, nombre, fase, isla]}}: una fila por grupo y equipo,
+       en orden de temporada y de primer partido del grupo, y de cada grupo lo
+       que la app necesita para nombrarlo (model.groupLabel)."""
+    if not any(r[1] == "fiflp_id" for r in conn.execute("PRAGMA table_info(players)")):
+        return {}
+    # El primer día de cada grupo (las fechas vienen en tres formatos).
+    first_day = {}
+    for gid, day, start in conn.execute("""SELECT m.group_id, m.date, s.start_year FROM matches m
+                                             JOIN groups g ON g.id=m.group_id JOIN seasons s ON s.id=g.season_id"""):
+        iso = _season_day(day, start)
+        if iso and (gid not in first_day or iso < first_day[gid]):
+            first_day[gid] = iso
+    rows = conn.execute("""
+        SELECT p.fiflp_id, p.full_name, s.name, s.start_year, g.id, g.code, t.name, COUNT(*),
+               SUM(a.role='starter'), SUM(a.goals), SUM(a.yellow), SUM(a.red),
+               LOWER(c.name), g.name, g.phase, g.island
+          FROM appearances a JOIN players p ON p.id=a.player_id
+          JOIN matches m ON m.id=a.match_id JOIN groups g ON g.id=m.group_id
+          JOIN seasons s ON s.id=g.season_id JOIN teams t ON t.id=a.team_id
+          JOIN categories c ON c.id=g.category_id
+         WHERE p.fiflp_id IS NOT NULL
+         GROUP BY p.id, g.id, a.team_id""").fetchall()
+    rows.sort(key=lambda r: (r[0], r[3], first_day.get(r[4], "9999"), r[5], r[6]))
+    shards = [{"p": {}, "g": {}} for _ in range(JUGADORES_SHARDS)]
+    for fid, name, season, _, _, code, team, pj, tit, goals, yellow, red, cat, gname, phase, island in rows:
+        shard = shards[fid % JUGADORES_SHARDS]
+        shard["p"].setdefault(str(fid), {"n": name, "c": []})["c"].append(
+            [season, code, team, pj, tit, goals, yellow, red])
+        shard["g"].setdefault(f"{season}/{code}", [cat, gname, phase, island])
+    return {f"data-jugadores-{k}.js": f"const JUGADORES_{k} = "
+            + json.dumps(shard, ensure_ascii=False, separators=(",", ":")) + ";\n"
+            for k, shard in enumerate(shards)}
+
+
+def write_jugadores(conn, root=None):
+    root = root or PROJECT_ROOT
+    files = jugadores_files(conn)
+    for name, content in files.items():
+        with open(os.path.join(root, name), "w", encoding="utf-8") as f:
+            f.write(content)
+    total = sum(len(c) for c in files.values())
+    print(f"  {len(files)} ficheros data-jugadores-<k>.js, {total:,} bytes")
+    return files
+
+
 def generate_shields_js(conn):
     """Generate data-shields.js with team shield filenames."""
     rows = conn.execute(
@@ -1023,6 +1092,10 @@ def main():
     # Actas: un data-lineups-<S>-<grupo>.js por grupo con alguna acta.
     print("\n9. data-lineups-<S>-<grupo>.js (actas)")
     write_lineups(conn)
+
+    # Fichas de jugador: data-jugadores-<k>.js.
+    print("\n9b. data-jugadores-<k>.js (fichas de jugador)")
+    write_jugadores(conn)
 
     print("\n10. Cache version (only if data changed — C4)")
     bump_if_changed(before_snapshot)

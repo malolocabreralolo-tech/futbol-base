@@ -14,6 +14,7 @@ const TITLES = {
   '': 'Mi equipo', jornada: 'Jornada', tabla: 'Tabla', explorar: 'Explorar', partido: 'Partido',
   equipo: 'Equipo', ligas: 'Ligas', copa: 'Copa', goleadores: 'Goleadores',
   temporadas: 'Temporadas anteriores', records: 'Récords', fuentes: 'Datos y fuentes', ajustes: 'Ajustes',
+  jugador: 'Jugador',
 };
 
 export function routeTitle(screen) {

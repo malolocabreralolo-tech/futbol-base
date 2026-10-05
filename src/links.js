@@ -178,7 +178,7 @@ export function downloadCalendar(matches, options) {
 
 /* ====== Rutas del rediseño (spec §4.1): '#/<pantalla>?<parámetros>' ====== */
 
-export const SCREENS = ['', 'jornada', 'tabla', 'explorar', 'partido', 'equipo', 'ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes'];
+export const SCREENS = ['', 'jornada', 'tabla', 'explorar', 'partido', 'equipo', 'ligas', 'copa', 'goleadores', 'temporadas', 'records', 'fuentes', 'ajustes', 'jugador'];
 // Orden estable de los parámetros en los enlaces; los que no están aquí van detrás, por orden alfabético.
 const PARAM_ORDER = ['s', 'c', 'i', 'f', 'g', 'r', 'h', 'a', 't', 'v', 'q', 'to'];
 
@@ -212,6 +212,11 @@ export function matchHref(match) {
 
 export function teamHref(season, groupId, team) {
   return routeHref('equipo', { s: season, g: groupId, t: team });
+}
+
+// La ficha de un jugador por su id de la federación (el `id` de las actas), o null sin él.
+export function playerHref(id) {
+  return id != null && /^\d+$/.test(String(id)) ? routeHref('jugador', { id: String(id) }) : null;
 }
 
 // Enlaces antiguos ('#section=…', compartidos por WhatsApp) → ruta nueva (tabla de §4.1).

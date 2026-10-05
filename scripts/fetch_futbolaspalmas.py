@@ -867,15 +867,16 @@ def import_past_seasons(conn, log=print):
     de alta también las temporadas archivadas (import_fiflp_grupos.
     ARCHIVE_SEASONS, 2017-18 a 2020-21) en cuanto termina la descarga de sus
     actas. Un fallo aquí se apunta y no para la actualización de la temporada en
-    curso."""
+    curso. Al final se borran los jugadores que se han quedado sin uso."""
     import traceback
     from migrate_actas_schema import migrate
-    from import_fiflp_actas import import_changed_raws
+    from import_fiflp_actas import import_changed_raws, prune_players
     from import_fiflp_grupos import import_changed_grupos
     from import_fiflp_goleadores import import_changed_goleadores
     steps = [("Actas descargadas de la federación (raws nuevos o cambiados)", import_changed_raws),
              ("Grupos de temporadas pasadas que faltaban (federación)", import_changed_grupos),
-             ("Goleadores de temporadas pasadas de la federación (raws nuevos o cambiados)", import_changed_goleadores)]
+             ("Goleadores de temporadas pasadas de la federación (raws nuevos o cambiados)", import_changed_goleadores),
+             ("Jugadores que ya no salen en ninguna acta", prune_players)]
     migrate(conn)
     for title, step in steps:
         log(f"\n{title}")

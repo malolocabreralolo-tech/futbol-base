@@ -110,6 +110,11 @@ def _team(block_html):
     return lineup, {k: _person(v) for k, v in staff.items()}
 
 
+def clean_scorer(text):
+    """El nombre del goleador sin la marca del minuto, «(12')» o «(')» cuando falta."""
+    return re.sub(r"\(\s*\d*\s*'\s*\)", "", text or "").strip()
+
+
 def _goals(block_html):
     goals = []
     for row in re.findall(r"<tr\b.*?</tr>", block_html, re.S):
@@ -119,7 +124,8 @@ def _goals(block_html):
         score = re.search(r"(\d+)\s*-\s*(\d+)", _text(cells[0]))
         rest = _text(cells[1])
         minute = re.search(r"\((\d+)'\)", rest)
-        name = re.sub(r"\(\d+'\)", "", rest).strip()
+        # «(')» sin cifras: la federación no siempre publica el minuto.
+        name = clean_scorer(rest)
         if not score:
             continue
         # Sin nombre: un niño cuyo nombre la federación no publica. El gol

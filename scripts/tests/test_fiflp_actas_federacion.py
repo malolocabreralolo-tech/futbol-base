@@ -261,6 +261,30 @@ def test_a_goal_by_a_child_without_a_published_name_still_counts():
     assert a["events"][-1]["player_name"] is None and a["events"][-1]["score"] == [2, 1]
 
 
+def test_a_goal_without_its_minute_keeps_the_scorers_name_clean():
+    # La federación a veces publica «(')» sin el minuto: el nombre no la arrastra.
+    html = (FIX / SBD).read_text(encoding="utf-8")
+    events = parse_flat_acta(re.sub(r"\((\d+)'\)", "(')", html))["events"]
+    assert [e["player_name"] for e in events] == [e["player_name"] for e in acta(SBD)["events"]]
+    assert all(e["minute"] is None for e in events if e["kind"] == "goal")
+
+
+def test_an_old_raw_with_the_empty_minute_mark_credits_the_lineup_player():
+    import import_fiflp_actas as I
+    conn = base()
+    a = acta(SBD)
+    a["events"] = [{**e, "player_name": "(') " + e["player_name"]} if e.get("player_name") else e
+                   for e in a["events"]]
+    assert U.apply_acta(conn, 1, 280291, a, log=lambda *_: None)
+    assert conn.execute("SELECT count(*) FROM players WHERE full_name LIKE '(%'").fetchone()[0] == 0
+    assert conn.execute("SELECT count(*) FROM appearances").fetchone()[0] == 22
+    assert conn.execute("SELECT sum(goals) FROM appearances WHERE team_id=2").fetchone()[0] == 18
+    # Los jugadores que dejó una importación anterior y ya no salen en ningún acta se borran.
+    conn.execute("INSERT INTO players(full_name, norm_name) VALUES (?, ?)", ("(') FANTASMA, NIÑO", "(') FANTASMA, NINO"))
+    assert I.prune_players(conn, log=lambda *_: None) == 1
+    assert I.prune_players(conn, log=lambda *_: None) == 0
+
+
 def test_failed_actas_are_spaced_out_and_dropped_and_new_ones_go_first():
     conn = base()
     conn.execute("""INSERT INTO matches(id, group_id, jornada, date, home_team_id, away_team_id, home_score, away_score, fiflp_acta)

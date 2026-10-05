@@ -22,11 +22,13 @@ import unicodedata
 
 try:
     from scripts.acta_reconciler import reconcile_acta, _contradicts
+    from scripts.fiflp_acta import clean_scorer
 except ImportError:
     # Direct CLI run (`python3 scripts/import_fiflp_actas.py`): sys.path[0] is
     # scripts/, so the `scripts.` package is not importable. Add the repo root.
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from scripts.acta_reconciler import reconcile_acta, _contradicts
+    from scripts.fiflp_acta import clean_scorer
 
 UNMATCHED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_actas_unmatched.json")
 
@@ -152,6 +154,8 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
 
     for ev in acta.get("events") or []:
         side = ev["side"]
+        # Los raws leídos antes de que el lector quitara la marca «(')» la traen pegada al nombre.
+        ev = {**ev, "player_name": clean_scorer(ev.get("player_name")) or None}
         if not ev.get("player_name"):
             # Gol de un niño cuyo nombre la federación no publica: queda en la
             # cronología con un jugador «sin nombre» (sin aparición ni ficha).
@@ -697,7 +701,7 @@ RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
 # Entra en la huella de cada raw: al cambiar la lógica de importación, subirla
 # hace que el bot reimporte una vez todos los raws (7: huecos del calendario, también otro enfrentamiento del mismo cruce).
 # También entra en la huella de grupos (import_fiflp_grupos.sources_digest): subirla los rehace.
-IMPORT_VERSION = "9"
+IMPORT_VERSION = "10"
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -749,6 +753,19 @@ def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
             f"{report['owned']} de grupos creados desde la federación (los importa import_fiflp_grupos)")
         reports[name] = report
     return reports
+
+
+def prune_players(conn, log=print) -> int:
+    """Borra los jugadores que ya no salen en ninguna alineación ni suceso (los
+    que dejó una importación anterior, como los «(') NOMBRE» de goles cuyo minuto
+    no publicó la federación). Devuelve cuántos."""
+    n = conn.execute("""DELETE FROM players WHERE
+                          NOT EXISTS (SELECT 1 FROM appearances a WHERE a.player_id=players.id)
+                          AND NOT EXISTS (SELECT 1 FROM match_events e WHERE e.player_id=players.id)""").rowcount
+    conn.commit()
+    if n:
+        log(f"  {n} jugadores sin alineaciones ni sucesos borrados")
+    return n
 
 
 # ---------------------------------------------------------------------------

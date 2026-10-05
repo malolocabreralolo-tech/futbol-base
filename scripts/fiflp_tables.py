@@ -61,15 +61,15 @@ def _deviation_with(conn, group_id, rows, fixes):
 
 
 def admissible(conn, group_id, official):
-    """¿Ningún equipo tiene en el calendario más partidos que en la oficial? Los de más serían los que la
-    federación anuló (un retirado) y el calendario conserva; los de menos, partidos que el calendario
-    del archivo antiguo no guardó, y la oficial sigue siendo la buena."""
+    """¿Cada equipo tiene en el calendario los mismos partidos jugados que en la oficial? Si no, la
+    oficial no describe este calendario (partidos anulados que el calendario conserva, o partidos que
+    al calendario le faltan) y escribirla dejaría la clasificación en desacuerdo con los resultados."""
     games = {}
     for home, away in conn.execute("""SELECT home_team_id, away_team_id FROM matches
                                       WHERE group_id=? AND home_score IS NOT NULL AND away_score IS NOT NULL""", (group_id,)):
         games[home] = games.get(home, 0) + 1
         games[away] = games.get(away, 0) + 1
-    return all(games.get(r[0], 0) <= (r[3] or 0) for r in official)
+    return all(games.get(r[0], 0) == (r[3] or 0) for r in official)
 
 
 def is_league(conn, group_id):

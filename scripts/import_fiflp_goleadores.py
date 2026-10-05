@@ -26,7 +26,7 @@ import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from fiflp_names import match_teams, team_key, team_score  # noqa: E402
+from fiflp_names import fed_alias, match_teams, team_key, team_score  # noqa: E402
 from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
 from update_fiflp import write_scorers  # noqa: E402
 from fiflp_tables import official_rows, settle  # noqa: E402
@@ -194,7 +194,11 @@ def scorer_team(name, bridge):
     # La letra en otro sitio ('PLAYAS DE SOTAVENTO "C", U.D. "C"' en una jornada y '… C, U.D. "C"'
     # en la clasificación): la misma clave de equipo (núcleo y letra de filial), si es única.
     hits = {v for k, v in bridge.items() if team_key(k) == team_key(clean)}
-    return hits.pop() if len(hits) == 1 else name
+    if len(hits) == 1:
+        return hits.pop()
+    # Un club cuyo nombre de la federación ya se revisó a mano (fiflp_team_names.json): el de la base,
+    # nunca una fila nueva con la grafía de la federación.
+    return fed_alias(clean) or name
 
 
 def _retired_names(conn, season_id, rows, known, words):
@@ -215,7 +219,7 @@ def _retired_names(conn, season_id, rows, known, words):
     modern = {name: modern_fed_name(clean_team_name(name), words) for name in loose}
     pairs = {a: b for a, b in match_teams(sorted(set(modern.values())), season_teams).items()
              if _filial(a) == _filial(b)}
-    resolved = {name: ARCHIVE_NAMES.get(m) or pairs.get(m) or pretty_name(m) for name, m in modern.items()}
+    resolved = {name: ARCHIVE_NAMES.get(m) or fed_alias(m) or pairs.get(m) or pretty_name(m) for name, m in modern.items()}
     return [(r[0], resolved.get(r[1], r[1]), *r[2:]) for r in rows]
 
 

@@ -110,8 +110,9 @@ test('shields no-regression: fixed normalize resolves >= names than the broken o
   }
   // Cota de cordura ("se han cargado datos de verdad"), no del contraste de
   // abajo. Bajó de 400 a 300 el 26/07/2026: fundir los clubes duplicados
-  // (mismo equipo con dos grafías) redujo los nombres distintos de ~450 a ~390.
-  assert.ok(names.size > 300, `expected >300 team names, got ${names.size}`);
+  // (mismo equipo con dos grafías) redujo los nombres distintos de ~450 a ~390. Y de 300 a 250 el
+  // 05/10/2026: los ~110 con el nombre de la federación pasaron al del portal (fix_nombres_federacion).
+  assert.ok(names.size > 250, `expected >250 team names, got ${names.size}`);
 
   const before = makeResolver(normBroken);
   const after = makeResolver(state.normalizeTeamName);

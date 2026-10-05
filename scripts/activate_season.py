@@ -408,7 +408,7 @@ def known_names(raw, conn, years=None, keep_existing=False):
     letra ('Arguineguín C'). Y si el primer equipo del club es nuevo, su filial
     también: 'BACHICAN LAS MESAS "B"' no es 'Las Mesas B' (UD Las Mesas)."""
     from import_fiflp_cups_2324 import clean_team_name
-    from fiflp_names import canonical_names, is_bye, team_key, team_score, MIN_TEAM_SCORE
+    from fiflp_names import canonical_names, fed_alias, is_bye, team_key, team_score, MIN_TEAM_SCORE
 
     if years is None:
         top = conn.execute("SELECT max(start_year) FROM seasons").fetchone()[0]
@@ -468,6 +468,12 @@ def known_names(raw, conn, years=None, keep_existing=False):
                     for n in variants[key]:
                         names[n] = found[key]
             rest = [key for key in rest if names[variants[key][0]] == variants[key][0]]
+
+    # Los nombres de la federación ya revisados a mano (fiflp_team_names.json) mandan sobre el
+    # emparejamiento: el club que se fundió o renombró no vuelve con otra grafía al rehacer un grupo.
+    # Antes de los filiales, que toman el nombre de su primer equipo.
+    for n in crudos:
+        names[n] = fed_alias(n) or names[n]
 
     firsts = [n for n in crudos if not _filial(n)]
     for n in crudos:

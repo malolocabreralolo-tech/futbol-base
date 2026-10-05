@@ -21,8 +21,11 @@ Este módulo es solo para los importadores de relleno; NO toca las
 normalizaciones con contrato (normalize_team_name del reconciliador,
 normalize_for_teams_mapping de generate_js).
 """
+import json
+import os
 import re
 import unicodedata
+from functools import lru_cache
 
 # Tipo de entidad y ruido: no distinguen a un club.
 _NOISE = {
@@ -52,6 +55,47 @@ def fold(name):
 # la última letra ('D' de U.D., 'F' de C.F.) se cuela como letra de filial y
 # entonces 'SAN PEDRO ATALAYA, U.D.' parece un filial D que no existe.
 _ABREVIATURA = re.compile(r'\b(?:[A-Za-zÁÉÍÓÚÑ]\.){2,}')
+
+
+# Nombres de la federación revisados a mano ({nombre de la federación: nombre en la base}), los que
+# fundió o renombró scripts/_archive/fix_nombres_federacion.py con la prueba de las alineaciones.
+FED_NAMES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_team_names.json")
+
+
+def fed_alias_key(name):
+    """La clave de un nombre de la federación sin puntuación ni espacios: 'PALMEIROS DE COSTA T ,
+    U.D. "B"' y 'PALMEIROS DE COSTA T., U.D. "B"' son la misma."""
+    return re.sub(r"[^A-Z0-9]", "", fold(name or "").upper())
+
+
+@lru_cache(maxsize=1)
+def _alias_tables():
+    if not os.path.exists(FED_NAMES_PATH):
+        return {}, {}
+    with open(FED_NAMES_PATH, encoding="utf-8") as f:
+        table = json.load(f)
+    exact = {fed_alias_key(k): v for k, v in table.items()}
+    # Por la clave del club y la letra (team_key), para las grafías que no están en la tabla (las de
+    # 2017-2021 pasan antes por modern_fed_name): solo las que dan un único nombre.
+    loose = {}
+    for k, v in table.items():
+        loose.setdefault(_club_key(k), set()).add(v)
+    return exact, {key: next(iter(v)) for key, v in loose.items() if len(v) == 1}
+
+
+def _club_key(name):
+    """team_key con la A como el primer equipo, igual que sin letra ('X "A"' es 'X')."""
+    core, letter = team_key(name)
+    return core, "" if letter == "A" else letter
+
+
+def fed_alias(name):
+    """El nombre en la base de un nombre de la federación revisado a mano, o None."""
+    exact, loose = _alias_tables()
+    return exact.get(fed_alias_key(name)) or loose.get(_club_key(name))
+
+
+fed_alias.cache_clear = _alias_tables.cache_clear
 
 
 def is_bye(name):

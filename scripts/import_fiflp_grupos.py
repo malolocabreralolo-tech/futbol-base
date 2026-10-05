@@ -111,6 +111,12 @@ ARCHIVE_NAMES = {
     'CRUZ DE BARRIAL BALOMPIE, C.D. "A"': "UD Barrial",
     'CRUZ DE BARRIAL BALOMPIE, C.D. "B"': "UD Barrial B",
     "FOOTBALL PROJECT-FUND GRUBE, C.D.": "Football Project",
+    # U.D. Las Mesas con otro patrocinador: Bachicao hasta 2019-20 y Huracán desde 2020-21, que ocupa su
+    # plaza de Preferente, nunca los dos en una temporada; su B se llama igual en 2018-19 y en 2021-24
+    # ('MESAS B, U.D. LAS "B"'). Sin esto, el B iba detrás del primer equipo, nuevo para known_names.
+    "MESAS BACHICAO, U.D. LAS": "Las Mesas Hu.",
+    'MESAS BACHICAO, U.D. LAS "A"': "Las Mesas Hu.",
+    'MESAS, U.D. LAS "B"': "Las Mesas B",
     # Las tildes que pretty_name no sabe poner, y el retirado de 2020-21 con el nombre de la base.
     "SAGRADO CORAZON, C.D.": "Sagrado Corazón",
     "ARGUINEGUIN SANTA AGUEDA, C.D.": "Arguineguín Santa Águeda",

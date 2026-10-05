@@ -290,6 +290,9 @@ class TestModernFedName:
         assert self.modern('ARUCAS D CF "DB"') == 'ARUCAS CF "D"'
         assert self.modern('VETERANOS DEL PILA D, C.D. "DB"') == 'VETERANOS DEL PILA, C.D. "D"'
         assert self.modern('ARUCAS C.F. D DB') == 'ARUCAS C.F. "D"'          # la página de goleadores
+        # Las cabeceras de las actas de 2020-21: la letra entre comillas delante y la «DB» al final.
+        assert self.modern('ARUCAS C.F. "D" DB') == 'ARUCAS C.F. "D"'
+        assert self.modern('CORAZON DE MARIA "D", C.D. DB') == 'CORAZON DE MARIA, C.D. "D"'
 
     def test_a_loose_letter_repeating_the_quoted_one_goes(self):
         assert self.modern('ARUCAS B, C.F. "B"') == 'ARUCAS, C.F. "B"'
@@ -313,6 +316,7 @@ class TestModernFedName:
         assert self.modern('ESTRELLAB C.F. B') == 'ESTRELLA C.F. "B"'
         assert self.modern('ORIENTACION MARITIMAC, C.D. "C"') == 'ORIENTACION MARITIMA, C.D. "C"'
         assert self.modern('VETERANOS DEL PILA.A, C.D. "A"') == 'VETERANOS DEL PILA, C.D. "A"'
+        assert self.modern('VETERANOS DEL PILA."A", C.D. A') == 'VETERANOS DEL PILA, C.D. "A"'
         # Sin la raíz en el vocabulario, no se toca: 'MOYA' no es 'MOY' más una A.
         assert self.modern('MOYA, U.D.') == 'MOYA, U.D.'
         from fiflp_names import modern_fed_name
@@ -333,7 +337,8 @@ class TestModernFedName:
         names = ['ARUCAS D CF "DB"', 'ARUCAS B, C.F. "B"', 'INGENIO B', 'TEROR BALOMPIE A, U.D.', 'GUIAA, U.D. "A"',
                  'ESTRELLAB C.F. B', 'VETERANOS DEL PILA.A, C.D. "A"', 'CARRIZAL,CFU', 'VICTORIA,RC',
                  'JOVERO LAS ROSAS, C,F,', '35600,A C.D. A', 'PUERTOS DE L.P.A, C.E.F. "A"', 'TINAJOB, U.D. B',
-                 'CORAZON DE MARIA D, C.D. DB', 'PALMAS, U.D. LAS', 'C.D ARINAGA B "B"']
+                 'CORAZON DE MARIA D, C.D. DB', 'PALMAS, U.D. LAS', 'C.D ARINAGA B "B"', 'ARUCAS C.F. "D" DB',
+                 'CORAZON DE MARIA "D", C.D. DB', 'VETERANOS DEL PILA."A", C.D. A']
         for name in names:
             once = self.modern(name)
             assert self.modern(once) == once, name

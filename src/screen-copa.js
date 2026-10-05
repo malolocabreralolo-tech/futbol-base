@@ -19,6 +19,10 @@ const mineOf = (ctx) => (ctx.resolution && ctx.resolution.status === 'ok'
   ? { name: ctx.resolution.name, cat: ctx.resolution.cat }
   : ctx.myTeam);
 const plays = (me, m) => me !== null && (m.home === me || m.away === me);
+// Una copa sin partidos: la fuente todavía no los ha publicado o, en una temporada cerrada, no los
+// publicó (las copas de las temporadas archivadas de las que la federación no dio las actas).
+const noMatches = (closed) => empty(closed ? 'La fuente no publicó los partidos de esta copa.'
+  : 'La fuente todavía no ha publicado los partidos de esta copa.');
 
 // ── Cuadro ───────────────────────────────────────────────────────────────
 
@@ -74,9 +78,9 @@ function championBlock(rounds, champion, me, today, shields) {
 // Las rondas en columnas, con sus pestañas. Los id son estables (ronda-N y ronda-N-tab): las
 // pestañas apuntan a su columna, y mount desplaza el contenedor hasta ella. En el primer pintado se
 // ve la primera ronda.
-function bracketView(group, me, today, shields) {
+function bracketView(group, me, today, shields, closed) {
   const { rounds, champion } = bracket(group);
-  if (!rounds.length) return block('Cuadro', empty('La fuente todavía no ha publicado los partidos de esta copa.'));
+  if (!rounds.length) return block('Cuadro', noMatches(closed));
   const tabs = html`<div class="bracket-tabs" role="group" aria-label="Rondas del cuadro">${rounds.map((round, i) => html`<button type="button" class="bracket-tab" id="ronda-${i + 1}-tab" data-action="ronda" aria-controls="ronda-${i + 1}"${i === 0 ? html` aria-current="true"` : ''}>${round.label}</button>`)}</div>`;
   const columns = rounds.map((round, i) => html`<section class="bracket-round" id="ronda-${i + 1}" aria-labelledby="ronda-${i + 1}-titulo"><div class="bracket-head"><h3 class="bracket-title" id="ronda-${i + 1}-titulo">${round.label}</h3>${round.dateFrom ? html`<p class="bracket-date">${dayMonth(round.dateFrom)}</p>` : ''}</div><ol class="bracket-matches">${round.matches.map((item) => html`<li>${bracketMatch(item, me, today, shields)}</li>`)}</ol></section>`);
   return html`${championBlock(rounds, champion, me, today, shields)}${block('Cuadro', html`${tabs}<div class="bracket" role="region" aria-label="Cuadro, una columna por ronda" tabindex="0">${columns}</div>`, { context: countLabel(rounds.length, 'ronda', 'rondas') })}`;
@@ -87,8 +91,9 @@ function bracketView(group, me, today, shields) {
 // La clasificación de la fuente con la fila de mi equipo, y los partidos en su orden, cada uno con
 // su día (y su jornada, si hay varias). Los que no tienen fecha van juntos al final, bajo un único «Sin
 // fecha», con el título de día de Jornada, y ninguna fila lo repite (B5, decisión 5); cada uno, con su
-// jornada si hay varias. Sin enlaces a las fichas: la de un equipo de copa es la copa.
-function leagueView(group, me, today, shields) {
+// jornada si hay varias. Sin enlaces a las fichas: la de un equipo de copa es la copa. Una copa con
+// la tabla y sin partidos (groupKind) es una liguilla: la tabla, y el vacío de los partidos.
+function leagueView(group, me, today, shields, closed) {
   const table = group.standings.length
     ? box(standingsTable(group.standings, { view: 'puntos', mine: me, shields, caption: `Clasificación de ${group.label}` }), { title: 'Clasificación' })
     : block('Clasificación', empty('Clasificación sin publicar.'));
@@ -100,7 +105,7 @@ function leagueView(group, me, today, shields) {
   const list = html`${dated.length ? html`<ol class="box cal">${dated}</ol>` : ''}${undated.length ? html`<h3 class="day-title">Sin fecha</h3><ol class="box cal">${undated}</ol>` : ''}`;
   const matches = all.length
     ? block('Partidos', list, { context: `${all.length} partidos` })
-    : block('Partidos', empty('La fuente todavía no ha publicado los partidos de esta copa.'));
+    : block('Partidos', noMatches(closed));
   return html`${table}${matches}`;
 }
 
@@ -122,7 +127,8 @@ function render(ctx) {
   }
   const sub = s === ctx.portal.season ? group.label : `${group.label} · ${seasonLabel(s)}`;
   const me = cupTeamOf(group, mineOf(ctx), model.clubIndex());
-  const body = group.kind === 'cup-bracket' ? bracketView(group, me, today, shields) : leagueView(group, me, today, shields);
+  const closed = s !== ctx.portal.season;
+  const body = (group.kind === 'cup-bracket' ? bracketView : leagueView)(group, me, today, shields, closed);
   return html`<section data-screen="copa">${screenHead('Copa', { sub, back })}${body}</section>`;
 }
 

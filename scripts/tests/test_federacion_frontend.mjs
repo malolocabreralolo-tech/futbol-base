@@ -86,11 +86,37 @@ test('finales, semifinales y torneos de cierre: copas con su nombre', () => {
   assert.equal(groupKind(g('Torneo Cierre Prebenjamín'), [{ key: 'Jornada 1', matches: [m, m, m] }, { key: 'Jornada 2', matches: [m, m, m] }]), 'cup-league');
 });
 
-// Temporadas archivadas (2017-18 a 2020-21): las semifinales de Lanzarote con su nombre en plural, la
-// Superliga de Fuerteventura (una liga) y la copa prebenjamín de Gran Canaria.
-test('archivadas: «Semifinales …» y la Copa Gran Canaria son copas; la Superliga, una liga', () => {
-  assert.ok(isCupGroup({ id: 'LZ1S1', phase: 'Semifinales Liga Primera Lanzarote' }));
+// Temporadas archivadas (2017-18 a 2020-21): las semifinales de Lanzarote (meta_by_name les da la fase en
+// singular), la Superliga de Fuerteventura (una liga) y la copa prebenjamín de Gran Canaria.
+test('archivadas: la «Semifinal …» y la Copa Gran Canaria son copas; la Superliga, una liga', () => {
   assert.ok(isCupGroup({ id: 'LZ1S1', phase: 'Semifinal Liga Primera Lanzarote' }));
   assert.ok(!isCupGroup({ id: 'FVS1', phase: 'Superliga Fuerteventura' }));
   assert.ok(isCupGroup({ id: 'PCGC1', phase: 'Copa Gran Canaria' }));
+});
+
+// Grupos archivados con su clasificación oficial y sin partidos (la federación no publicó sus actas):
+// una copa así es una liguilla con su tabla, no un cuadro vacío, y el que perdió todos sus partidos no
+// es un retirado.
+import { buildGroup, retiredTeams } from '../../src/model.js';
+
+test('archivadas sin partidos: la copa con la tabla jugada es una liguilla, y nadie es un retirado', () => {
+  const row = (pos, team, pj, g, e, p) => [pos, team, 3 * g + e, pj, g, e, p, 3 * g, 2 * p, 3 * g - 2 * p];
+  const table = [row(1, 'CD Herbania', 8, 6, 2, 0), row(2, 'Peña Amistad', 8, 4, 1, 3), row(3, 'CD Corralejo D', 8, 0, 0, 8)];
+  const cfv1 = { id: 'CFV1', name: 'Grupo 1', phase: 'Copa Fuerteventura', island: 'fuerteventura', standings: table, jornadas: {} };
+  assert.equal(groupKind(cfv1, []), 'cup-league');
+  assert.equal(groupKind({ ...cfv1, id: 'PCGC1', phase: 'Copa Gran Canaria' }, []), 'cup-league');
+  // Con la tabla a cero (una copa que no ha empezado) o sin ella, el cuadro de siempre.
+  assert.equal(groupKind({ ...cfv1, standings: table.map((r) => [r[0], r[1], 0, 0, 0, 0, 0, 0, 0, 0]) }, []), 'cup-bracket');
+  assert.equal(groupKind({ ...cfv1, standings: [] }, []), 'cup-bracket');
+  const group = buildGroup(cfv1, { season: '2018-2019', cat: 'benjamin' });
+  assert.equal(group.kind, 'cup-league');
+  assert.deepEqual(group.standings.map((r) => [r.team, r.retired]), [['CD Herbania', false], ['Peña Amistad', false], ['CD Corralejo D', false]]);
+  // Una liga sin partidos, igual: sin calendario, no estar en él no hace a nadie retirado.
+  const gc2 = buildGroup({ ...cfv1, id: 'GC2', phase: 'Primera Fase GC', island: 'grancanaria' }, { season: '2017-2018', cat: 'benjamin' });
+  assert.equal(gc2.kind, 'league');
+  assert.equal(retiredTeams(gc2).size, 0);
+  // Con calendario, el que no está en él y no ha ganado ni empatado nada sí lo es (spec §5.3).
+  const played = buildGroup({ ...cfv1, id: 'GC2', phase: 'Primera Fase GC', jornadas: { 1: [['01-10-2017', 'CD Herbania', 'Peña Amistad', 2, 1, null, '10:00', 'X']] } },
+    { season: '2017-2018', cat: 'benjamin' });
+  assert.deepEqual([...retiredTeams(played)], ['CD Corralejo D']);
 });

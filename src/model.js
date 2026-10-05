@@ -111,6 +111,11 @@ export function groupKind(raw, rounds = []) {
   const cup = isCupGroup(raw) || id.endsWith('KO')
     || (keys.length > 0 && keys.every(k => /ronda/i.test(k)));
   if (!cup) return 'league';
+  // Una copa sin partidos pero con su clasificación ya jugada (la Copa Fuerteventura y la copa
+  // prebenjamín de Gran Canaria de las temporadas archivadas, que se juegan como liga y de las que la
+  // federación no publicó las actas): la liguilla, con la tabla oficial, que es lo único que hay. Como
+  // cuadro saldría vacío. Con la tabla a cero (una copa que no ha empezado), el cuadro de siempre.
+  if (!rounds.length && (raw.standings || []).some(r => Array.isArray(r) && numberOrNull(r[3]) > 0)) return 'cup-league';
   const jornadas = Object.fromEntries(rounds.map(r => [r.key, r.matches]));
   return isRoundRobinCup(jornadas) ? 'cup-league' : 'cup-bracket';
 }
@@ -197,7 +202,7 @@ export function buildGroup(raw, { season, cat, current = false, history = null }
     matches: (jornadas[key] || []).map(row => toMatch(row, { season, groupId: raw.id, roundKey: key })),
   }));
   const kind = groupKind(raw, rounds);
-  // Una semifinal que se juega aparte («Semifinales Liga Primera Lanzarote», LZ1S) no acaba en la final:
+  // Una semifinal que se juega aparte («Semifinal Liga Primera Lanzarote», LZ1S) no acaba en la final:
   // su última ronda son las semifinales, una antes de la que daría la posición.
   const tail = /^semifinal/.test(foldText(raw.phase)) ? 1 : 0;
   rounds.forEach((round, idx) => {
@@ -321,7 +326,7 @@ const PHASE_TABLE = [
   })],
   // Finales y semifinales de la federación que se juegan aparte de su liga o su copa («Final Liga
   // Primera Lanzarote», «Semifinal Copa Cabildo Primera Lanzarote»): cada una, su competición.
-  [/^(?:semi)?final(?:es)?\b/, (m, raw) => ({ cup: 'final', cupKey: `final-${slugOf(raw.phase)}`, name: String(raw.phase).trim() })],
+  [/^(?:semi)?final\b/, (m, raw) => ({ cup: 'final', cupKey: `final-${slugOf(raw.phase)}`, name: String(raw.phase).trim() })],
   // Torneos de cierre y de clausura de temporada («Torneo Cierre Prebenjamín», «Clausura Benjamín»).
   [/^(?:torneo|clausura)\b/, (m, raw) => ({ cup: 'torneo', cupKey: `torneo-${slugOf(raw.phase)}`, name: String(raw.phase).trim() })],
   // «Copa Cabildo Preferente Lanzarote» y «Copa Cabildo Primera Lanzarote» (2023-24)
@@ -498,7 +503,9 @@ export function retiredTeams(group) {
   const retired = new Set();
   for (const row of standings) {
     if (withResult.has(row.team)) continue;
-    const gone = !inCalendar.has(row.team) && row.pj > 0 && row.g + row.e === 0;
+    // Sin calendario (los grupos archivados de los que la federación no publicó las actas), no estar en
+    // él no dice nada: el que perdió todos sus partidos no es un retirado.
+    const gone = inCalendar.size > 0 && !inCalendar.has(row.team) && row.pj > 0 && row.g + row.e === 0;
     if (gone || (row.pj === 0 && finished)) retired.add(row.team);
   }
   if (standings.length && withResult.size) {

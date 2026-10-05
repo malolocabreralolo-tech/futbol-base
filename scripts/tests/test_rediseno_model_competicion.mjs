@@ -283,8 +283,6 @@ test('Semifinales y finales que se juegan aparte, la Copa Gran Canaria prebenjam
   const lz1s1 = archived('2017-2018', 'benjamin', 'LZ1S1', 'Semifinal Liga Primera Lanzarote', 'lanzarote', 'Grupo 1');
   assert.equal(ck(lz1s1).cup, 'final');
   assert.equal(label(lz1s1), 'Benjamín, Semifinal Liga Primera Lanzarote, Grupo 1');
-  // Con el nombre en plural de la federación, igual.
-  assert.equal(ck({ ...lz1s1, phase: 'Semifinales Liga Primera Lanzarote' }).cup, 'final');
   const lz1f1 = archived('2018-2019', 'benjamin', 'LZ1F1', 'Final Liga Primera Lanzarote', 'lanzarote', 'Grupo 1');
   assert.equal(ck(lz1f1).cup, 'final');
   const pcgc1 = archived('2018-2019', 'prebenjamin', 'PCGC1', 'Copa Gran Canaria', 'grancanaria', 'Grupo 1');

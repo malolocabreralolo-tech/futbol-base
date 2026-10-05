@@ -162,8 +162,8 @@ def test_finals_and_closing_tournaments_are_never_recomputed_as_leagues():
                   "Torneo Cierre Prebenjamín", "Clausura Benjamín"):
         assert not _is_league_group("X1", phase), phase
     assert _is_league_group("GC1", "Primera Fase GC") and _is_league_group("FV21", "Fase 2 Fuerteventura")
-    # Las semifinales que se juegan aparte (Lanzarote, 2017-18 y 2018-19), en singular y en plural.
-    assert _is_league_group("LZ1S1", "Semifinales Liga Primera Lanzarote") is False
+    # Las semifinales que se juegan aparte (Lanzarote, 2017-18 y 2018-19): meta_by_name les da la fase en
+    # singular, como a las de la Copa Cabildo.
     assert _is_league_group("LZ1S1", "Semifinal Liga Primera Lanzarote") is False
     assert _is_league_group("FVS1", "Superliga Fuerteventura") is True
 

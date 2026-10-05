@@ -418,6 +418,29 @@ def test_an_archived_season_prefers_the_names_of_2021_onwards_to_those_invented_
     assert "UD Guía" in names and "Guia Inventado" not in names
 
 
+def test_las_mesas_with_another_sponsor_is_the_same_club_and_its_b_keeps_its_name(tmp_path):
+    """U.D. Las Mesas Bachicao (2017-20) es Las Mesas Hu. (desde 2020-21), y su B, con el mismo nombre
+    de la federación en 2018-19 y en 2021-24, Las Mesas B: nunca 'Las Mesas Bachicao B'."""
+    conn = archive_base()
+    conn.executescript("""
+      INSERT INTO groups(id, season_id, category_id, code, name, full_name, phase, island) VALUES
+        (2, 1, 1, 'BPGC1', 'Grupo 1', 'BENJAMIN PREFERENTE GC - Grupo 1', 'Preferente GC', 'grancanaria');
+      INSERT INTO teams(id, name) VALUES (15, 'Las Mesas Hu.'), (57, 'Las Mesas B');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+        (2, 15, 1, 3, 1, 1, 0, 0, 3, 0, 3), (1, 57, 5, 0, 3, 0, 0, 3, 0, 9, -9);
+    """)
+    raw = {"280:1": entry("280", "1", "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA", "GRUPO 1",
+                          ['MESAS BACHICAO A, U.D. LAS "A"', "FIRGAS, C.D."]),
+           "303:12": entry("303", "12", "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA", "GRUPO 2",
+                           ['MESAS B, U.D. LAS "B"', "MOYA, U.D.", "VALLESECO, U.D."])}
+    write_archive(tmp_path, raw, {})
+    GR.import_changed_grupos(conn, str(tmp_path), log=lambda *_: None)
+    rows = dict(conn.execute("""SELECT t.name, t.id FROM standings st JOIN teams t ON t.id=st.team_id
+        JOIN groups g ON g.id=st.group_id JOIN seasons s ON s.id=g.season_id WHERE s.name=?""", (ARCHIVED,)))
+    assert rows["Las Mesas Hu."] == 15 and rows["Las Mesas B"] == 57
+    assert not any("Bachicao" in name for name, in conn.execute("SELECT name FROM teams"))
+
+
 def test_a_2021_onwards_season_never_looks_at_archived_names_nor_modernises_them(tmp_path, monkeypatch):
     import fiflp_names
     conn = base()

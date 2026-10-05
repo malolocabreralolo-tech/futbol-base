@@ -96,6 +96,8 @@ def modern_fed_name(name, words=frozenset()):
       'TEROR BALOMPIE A, U.D.'        -> 'TEROR BALOMPIE, U.D. "A"'
       'GUIAA, U.D. "A"'               -> 'GUIA, U.D. "A"'       (con 'GUIA' en `words`)
       'VETERANOS DEL PILA.A, C.D. "A"' -> 'VETERANOS DEL PILA, C.D. "A"'
+      'VETERANOS DEL PILA."A", C.D. A' -> 'VETERANOS DEL PILA, C.D. "A"'  (las cabeceras de las actas)
+      'CORAZON DE MARIA "D", C.D. DB' -> 'CORAZON DE MARIA, C.D. "D"'
       'CARRIZAL,CFU'                  -> 'CARRIZAL, C.F.U.'
       'PUERTOS DE L.P. A, C.E.F. "A"' -> 'PUERTOS DE LAS PALMAS, C.E.F. "A"'
     """
@@ -111,14 +113,18 @@ def modern_fed_name(name, words=frozenset()):
     # La letra pegada a una abreviatura ('ATLETICO G.C.A', 'PUERTOS DE L.P.A') o tras un punto ('PILA.A').
     n = re.sub(rf'((?:\b[A-Z]\.){{2,}})({_LETRA})(?=[\s,]|$)', r'\1 \2', n)
     n = re.sub(rf'\b([A-ZÑÁÉÍÓÚ]{{2,}})\.({_LETRA})(?=[\s,]|$)', r'\1 \2', n)
+    # El punto pegado a la letra entre comillas ('PILA."A"').
+    n = re.sub(rf'\b([A-ZÑÁÉÍÓÚ]{{2,}})\.(?="{_LETRA}")', r'\1 ', n)
     # Abreviaturas sin su último punto ('C.F A', 'U.D B').
     n = re.sub(r'\b([A-Z])\.([A-Z])(?=[\s",]|$)', r'\1.\2.', n)
     # Las abreviaturas que se comían el nombre.
     n = re.sub(r'\bL\.\s?P\.', 'LAS PALMAS', n)
     # La B de más de la letra del filial: '"DB"' es el filial D ('ARUCAS D CF "DB"' no es Arucas).
     n = re.sub(rf'"({_LETRA})B"', r'"\1"', n)
+    # También al final de las cabeceras de las actas, detrás de su letra entre comillas
+    # ('CORAZON DE MARIA "D", C.D. DB').
     m = re.search(rf'\s({_LETRA})B$', n)
-    if m and re.search(_SUELTA.format(x=m.group(1)), n[:m.start()]):
+    if m and (re.search(_SUELTA.format(x=m.group(1)), n[:m.start()]) or f'"{m.group(1)}"' in n[:m.start()]):
         n = n[:m.start()] + ' ' + m.group(1)
     # Sin comillas, la letra suelta del final o de antes de la coma va entre comillas.
     if not re.search(rf'"{_LETRA}"', n):

@@ -209,6 +209,24 @@ test('una temporada pasada: los mismos récords con su temporada en cada enlace,
   assert.doesNotMatch(out, /rc-scorers|ver todos/);
 });
 
+// Una temporada archivada de la que la federación no publicó las actas (2018-19): las ligas con su
+// clasificación oficial y sin partidos. No es una temporada en curso («aún no se ha jugado»): lo que no
+// publicó la fuente y, de las tablas, el ataque y la defensa.
+test('una temporada cerrada con las ligas y sin sus partidos: lo que no publicó la fuente y los récords de las tablas', () => {
+  const bare = archive('2024-2025');
+  for (const group of bare.benjamin) group.jornadas = {};
+  const at = (c) => String(screen.render(ctxFor('records', { s: '2024-2025', c }, { datasets: data({ seasonRaw: { '2024-2025': bare } }) })));
+  const out = at('benjamin');
+  assert.match(out, /<\/nav><div class="block"><p class="empty">La fuente no publicó los partidos de liga de benjamín de la temporada 2024\/25: solo hay récords de sus clasificaciones\.<\/p><\/div>/);
+  assert.equal(rowsOf(blockOf(out, 'Ataque y defensa'))[0][4], escape(teamHref('2024-2025', 'A1', 'AD Huracán')));
+  assert.doesNotMatch(out, /Aún no se ha jugado|Totales|Mayor goleada|racha|Máximos goleadores/);
+  // Sin ningún equipo con los partidos mínimos en la tabla, solo la frase.
+  for (const group of bare.benjamin) group.standings = group.standings.map((r) => [r[0], r[1], 0, 0, 0, 0, 0, 0, 0, 0]);
+  assert.match(at('benjamin'), /<\/nav><div class="block"><p class="empty">La fuente no publicó los partidos de liga de benjamín de la temporada 2024\/25\.<\/p><\/div><\/section>$/);
+  // La otra categoría, con sus partidos, como siempre.
+  assert.match(at('prebenjamin'), /<h2 class="block-title">Totales<\/h2>/);
+});
+
 test('sin ligas de la categoría, sin la temporada o sin goleadores: nunca en blanco', () => {
   const none = render({ s: '2023-2024', c: 'prebenjamin' });
   assert.match(none, /<nav class="rc-cats" aria-label="Categoría">.*<\/nav><div class="block"><p class="empty">No hay ligas de prebenjamín en la temporada 2023\/24\.<\/p><\/div><\/section>$/);

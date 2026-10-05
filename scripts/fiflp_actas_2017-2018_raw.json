@@ -1,0 +1,147 @@
+{
+  "44865": {
+    "header": {
+      "season": "2017/2018",
+      "jornada": "1",
+      "date": "04-11-2017",
+      "home_team": "LOMO \"A\", C.D. A",
+      "away_team": "PUERTO DEL CARMEN \"A\", F.C. A",
+      "home_score": 0,
+      "away_score": null,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 44865,
+    "enumeration": {
+      "comp_id": "184",
+      "grupo": "44864",
+      "jornada": "1"
+    },
+    "rescrape_failed": true
+  },
+  "41503": {
+    "header": {
+      "season": "2017/2018",
+      "jornada": "1",
+      "date": "07-10-2017",
+      "home_team": "CLARET \"A\", A.D. A",
+      "away_team": "UNION MORAL, C.D.",
+      "home_score": 0,
+      "away_score": 0,
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 41503,
+    "enumeration": {
+      "comp_id": "173",
+      "grupo": "41502",
+      "jornada": "1"
+    },
+    "rescrape_failed": true
+  },
+  "41998": {
+    "header": {
+      "season": "2017/2018",
+      "jornada": "3",
+      "date": "21-10-2017",
+      "home_team": "TEROR BALOMPIE, U.D.",
+      "away_team": "SANTIDAD BANOT \"A\", C.F. A",
+      "home_score": 0,
+      "away_score": null,
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 41998,
+    "enumeration": {
+      "comp_id": "174",
+      "grupo": "41982",
+      "jornada": "3"
+    },
+    "rescrape_failed": true
+  },
+  "42977": {
+    "header": {
+      "season": "2017/2018",
+      "jornada": "5",
+      "date": "04-11-2017",
+      "home_team": "DORAMAS \"A\", C.D. A",
+      "away_team": "MASPALOMAS,\"A\" C.D. A",
+      "home_score": 0,
+      "away_score": 0,
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 5)"
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 42977,
+    "enumeration": {
+      "comp_id": "174",
+      "grupo": "42942",
+      "jornada": "5"
+    },
+    "rescrape_failed": true
+  },
+  "45960": {
+    "header": {
+      "season": "2017/2018",
+      "jornada": "1",
+      "date": "20-10-2017",
+      "home_team": "UNION MORAL, CD",
+      "away_team": "VALLESECO, U.D.",
+      "home_score": 0,
+      "away_score": 0,
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)"
+    },
+    "lineups": {
+      "home": [],
+      "away": []
+    },
+    "events": [],
+    "staff": {
+      "referee": null,
+      "coach_home": null,
+      "coach_away": null
+    },
+    "cod_acta": 45960,
+    "enumeration": {
+      "comp_id": "217",
+      "grupo": "45956",
+      "jornada": "1"
+    },
+    "rescrape_failed": true
+  }
+}

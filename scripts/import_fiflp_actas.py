@@ -21,13 +21,13 @@ import sys
 import unicodedata
 
 try:
-    from scripts.acta_reconciler import reconcile_acta, _contradicts
+    from scripts.acta_reconciler import reconcile_acta, _contradicts, same_round_and_score
     from scripts.fiflp_acta import clean_scorer
 except ImportError:
     # Direct CLI run (`python3 scripts/import_fiflp_actas.py`): sys.path[0] is
     # scripts/, so the `scripts.` package is not importable. Add the repo root.
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from scripts.acta_reconciler import reconcile_acta, _contradicts
+    from scripts.acta_reconciler import reconcile_acta, _contradicts, same_round_and_score
     from scripts.fiflp_acta import clean_scorer
 
 UNMATCHED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_actas_unmatched.json")
@@ -390,6 +390,7 @@ def import_raw(conn, raw_path: str, only=None, owned=None) -> dict:
     gol = _gol_entries(raw_path)
     official = {gid: gol[fed] for fed, gid in major.items() if gid and fed in gol}
     fixes = {}       # grupo de la base -> {partido: marcador del acta}
+    unsure = {}      # grupo de la base -> {partido: acta incoherente de otro marcador}
 
     for cod_acta_str, acta, mid, gid in first:
         cod_acta = int(cod_acta_str)
@@ -409,6 +410,7 @@ def import_raw(conn, raw_path: str, only=None, owned=None) -> dict:
             continue
         claimed[mid] = cod_acta
         _propose_fix(conn, fixes, gid, mid, acta)
+        _propose_unsure(conn, unsure, gid, mid, acta)
         _import_one(conn, cod_acta, acta, mid=mid)
         matched += 1
 
@@ -428,9 +430,10 @@ def import_raw(conn, raw_path: str, only=None, owned=None) -> dict:
             um[str(cod_acta_str)] = {"header": (acta.get("header") or {}), "reason": "no candidate match"}
             continue
         claimed[mid] = cod_acta
+        gid = conn.execute("SELECT group_id FROM matches WHERE id=?", (mid,)).fetchone()[0]
         if fix:
-            gid = conn.execute("SELECT group_id FROM matches WHERE id=?", (mid,)).fetchone()[0]
             fixes.setdefault(gid, {})[mid] = (acta["header"]["home_score"], acta["header"]["away_score"])
+        _propose_unsure(conn, unsure, gid, mid, acta)
         _import_one(conn, cod_acta, acta, mid=mid)
         um.pop(str(cod_acta_str), None)
         matched += 1
@@ -453,6 +456,9 @@ def import_raw(conn, raw_path: str, only=None, owned=None) -> dict:
         choice = settle(conn, gid, group_fixes, official_rows(conn, gid, entry) if entry else None)
         fixed += len(group_fixes) if "fixes" in choice else 0
         tables += choice.startswith("official")
+    # Y después, uno a uno, los de las actas incoherentes que acercan el grupo a su clasificación.
+    for gid, proposals in unsure.items():
+        fixed += unsure_fixes(conn, gid, proposals)
 
     # En temporadas cerradas, la jornada «en curso» de cada grupo con actas, la última.
     for (gid,) in conn.execute(f"SELECT DISTINCT group_id FROM matches WHERE id IN ({','.join('?' * len(claimed))})",
@@ -500,6 +506,15 @@ def _propose_fix(conn, fixes, gid, mid, acta):
         fixes.setdefault(gid, {})[mid] = (h["home_score"], h["away_score"])
 
 
+def _propose_unsure(conn, unsure, gid, mid, acta):
+    """Un acta incoherente casada con un partido de otro marcador: candidata para unsure_fixes."""
+    if acta.get("consistent"):
+        return
+    row = conn.execute("SELECT home_score, away_score FROM matches WHERE id=?", (mid,)).fetchone()
+    if row and row[0] is not None and any(s != tuple(row) for s in _scores(acta)):
+        unsure.setdefault(gid, {})[mid] = acta
+
+
 def _like(sample, value, kind):
     """La jornada o la fecha de un partido nuevo con la forma de las del grupo."""
     if kind == "jornada":
@@ -518,7 +533,11 @@ def fill_gaps(conn, raw_path, left, votes, claimed):
     """[cod_acta] de las actas que crean su partido: coherentes, de un grupo de la federación con
     grupo de la base claro (la mayoría de sus actas casadas), con los dos equipos en ese grupo y
     sin ningún partido de ese cruce (local y visitante) en él. Por grupo, dentro de un SAVEPOINT:
-    si el grupo se aleja de su clasificación (la medida de score_deviation), se deshace."""
+    si el grupo se aleja de su clasificación (la medida de score_deviation), se deshace; sin ningún
+    equipo con el calendario completo antes (un archivo cortado, LZP1 2021-22 hasta la jornada 15 de
+    26), no hay medida que empeorar y las actas coherentes se quedan. Después, las incoherentes del
+    mismo grupo (su marcador no es seguro) solo si completan el calendario de algún equipo y la
+    clasificación lo confirma (rows_that_fit)."""
     sys.path.insert(0, SCRIPTS_DIR)
     from fiflp_names import match_teams
     from score_deviation import group_deviation
@@ -528,7 +547,7 @@ def fill_gaps(conn, raw_path, left, votes, claimed):
     for cod, acta in left:
         fed = _fed_group(acta)
         h = acta.get("header") or {}
-        if not fed or not acta.get("consistent") or h.get("home_score") is None or h.get("away_score") is None:
+        if not fed or not _scores(acta):
             continue
         gid = _majority(votes.get(fed, {}))
         if gid:
@@ -538,10 +557,13 @@ def fill_gaps(conn, raw_path, left, votes, claimed):
         teams = sorted(G._db_groups_one(conn, gid))
         bridge = G.team_bridge(conn, gid, gol[fed]) if fed in gol else {}
         sample = conn.execute("SELECT jornada, date FROM matches WHERE group_id=? LIMIT 1", (gid,)).fetchone() or ("", "")
-        d0 = group_deviation(conn, gid)["dev"]
+        before = group_deviation(conn, gid)
+        d0 = before["dev"]
         conn.execute("SAVEPOINT huecos")
         mine = []
         for cod, acta in actas:
+            if not acta.get("consistent"):
+                continue
             h = acta["header"]
             names = [G.scorer_team(G.clean_team_name(h.get(side)), bridge) for side in ("home_team", "away_team")]
             loose = match_teams([n for n in names if n not in teams], teams)
@@ -564,14 +586,99 @@ def fill_gaps(conn, raw_path, left, votes, claimed):
             mine.append(cod)
         # Con partidos nuevos: la clasificación oficial si cuadra con el calendario completado (la
         # preferida, como en fiflp_tables.settle); si no, la guardada, si no se aleja; si ninguna, fuera.
-        if mine and not _official_fits(conn, gid, gol.get(fed), d0) and group_deviation(conn, gid)["dev"] > d0:
+        if (mine and not _official_fits(conn, gid, gol.get(fed), d0) and before["complete"]
+                and group_deviation(conn, gid)["dev"] > d0):
             conn.execute("ROLLBACK TO huecos")
             for cod in mine:
                 claimed.pop(next((m for m, c in claimed.items() if c == int(cod)), None), None)
             mine = []
         conn.execute("RELEASE huecos")
         added += mine
+        added += _fill_unsure(conn, gid, [(c, a) for c, a in actas if not a.get("consistent")], teams, bridge,
+                              sample, claimed, gol.get(fed))
     return added
+
+
+def _scores(acta):
+    """Los marcadores posibles de un acta incoherente: el de su cabecera y el de su último gol."""
+    h = acta.get("header") or {}
+    out = []
+    if h.get("home_score") is not None and h.get("away_score") is not None:
+        out.append((h["home_score"], h["away_score"]))
+    goals = [e.get("score") for e in acta.get("events") or [] if e.get("kind") == "goal" and e.get("score")]
+    if goals and tuple(goals[-1]) not in out:
+        out.append(tuple(goals[-1]))
+    return out
+
+
+def _fill_unsure(conn, gid, actas, teams, bridge, sample, claimed, entry):
+    """Las actas incoherentes de un grupo que crean su partido: una a una, con el marcador de su
+    cabecera o el de su último gol, solo si así algún equipo más tiene su calendario completo y el
+    desvío con la clasificación no sube (los equipos que completa cuadran). Vueltas hasta que no
+    entra ninguna más; al final, la oficial si ya cuadra con el calendario."""
+    from fiflp_names import match_teams
+    from score_deviation import group_deviation
+    import import_fiflp_goleadores as G
+    added, waiting = [], list(actas)
+    while waiting:
+        progress = False
+        for cod, acta in list(waiting):
+            h = acta["header"]
+            names = [G.scorer_team(G.clean_team_name(h.get(side)), bridge) for side in ("home_team", "away_team")]
+            loose = match_teams([n for n in names if n not in teams], teams)
+            home, away = (loose.get(n, n) for n in names)
+            if home not in teams or away not in teams or home == away:
+                waiting.remove((cod, acta))
+                continue
+            ids = [conn.execute("SELECT id FROM teams WHERE name=?", (t,)).fetchone()[0] for t in (home, away)]
+            if conn.execute("""SELECT 1 FROM matches WHERE group_id=? AND home_team_id=? AND away_team_id=?
+                               AND (cod_acta IS NULL OR cod_acta=?)""", (gid, *ids, int(cod))).fetchone():
+                waiting.remove((cod, acta))
+                continue
+            before = group_deviation(conn, gid)
+            for hs, as_ in _scores(acta):
+                conn.execute("SAVEPOINT incoherente")
+                cur = conn.execute("""INSERT INTO matches (group_id, jornada, date, time, home_team_id, away_team_id,
+                                      home_score, away_score, venue) VALUES (?,?,?,?,?,?,?,?,?)""",
+                                   (gid, _like(sample[0], h.get("jornada") or "", "jornada"),
+                                    _like(sample[1], h.get("date"), "date"), h.get("time") or "", *ids, hs, as_,
+                                    h.get("venue") or ""))
+                after = group_deviation(conn, gid)
+                if after["complete"] > before["complete"] and after["dev"] <= before["dev"]:
+                    claimed[cur.lastrowid] = int(cod)
+                    _import_one(conn, int(cod), acta, mid=cur.lastrowid)
+                    conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (hs, as_, cur.lastrowid))
+                    conn.execute("RELEASE incoherente")
+                    added.append(cod)
+                    waiting.remove((cod, acta))
+                    progress = True
+                    break
+                conn.execute("ROLLBACK TO incoherente")
+                conn.execute("RELEASE incoherente")
+        if not progress:
+            break
+    if added:
+        _official_fits(conn, gid, entry, group_deviation(conn, gid)["dev"])
+    return added
+
+
+def unsure_fixes(conn, gid, proposals):
+    """Los marcadores de actas incoherentes casadas con un partido de otro marcador ({partido:
+    acta}): uno a uno, el de su cabecera o el de su último gol, solo si acerca el grupo a su
+    clasificación (un 12-2 guardado como 2-2 cuyo acta solo llega al 11-2). Devuelve cuántos."""
+    from score_deviation import group_deviation
+    fixed = 0
+    for mid, acta in proposals.items():
+        row = conn.execute("SELECT home_score, away_score FROM matches WHERE id=?", (mid,)).fetchone()
+        if not row:
+            continue
+        now = group_deviation(conn, gid)["dev"]
+        best = min(((group_deviation(conn, gid, {mid: s})["dev"], s) for s in _scores(acta) if s != tuple(row)),
+                   default=None)
+        if best and best[0] < now:
+            conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (*best[1], mid))
+            fixed += 1
+    return fixed
 
 
 def _official_fits(conn, gid, entry, d0):
@@ -681,7 +788,7 @@ def reconcile_in_groups(conn, raw_path, pending, votes, exclude=frozenset()):
         home, away = (loose.get(n, n) if n else None for n in names)
         if home not in teams or away not in teams:
             continue
-        rows = conn.execute("""SELECT m.id, t1.name, t2.name, m.date, m.home_score, m.away_score
+        rows = conn.execute("""SELECT m.id, t1.name, t2.name, m.date, m.home_score, m.away_score, m.jornada
             FROM matches m JOIN teams t1 ON t1.id=m.home_team_id JOIN teams t2 ON t2.id=m.away_team_id
             WHERE m.group_id=? AND t1.name=? AND t2.name=?""", (gid, home, away)).fetchall()
         # Con el acta coherente, el marcador no descarta: es el del calendario el que puede estar mal.
@@ -691,6 +798,11 @@ def reconcile_in_groups(conn, raw_path, pending, votes, exclude=frozenset()):
             # Un acta incoherente del mismo cruce el mismo día (el calendario antiguo con el marcador mal
             # leído): se vincula por sus alineaciones, pero su marcador no manda.
             same = [r for r in rows if not _contradicts(h, r, check_score=False)]
+        if not same:
+            # La fecha del calendario antiguo no cuadra, pero la jornada y el marcador sí; con el acta
+            # coherente, basta la jornada (el marcador del calendario puede estar mal: lo decide settle).
+            same = [r for r in rows if same_round_and_score(h, r)
+                    or (consistent and same_round_and_score(h, (*r[:4], h["home_score"], h["away_score"], r[6])))]
         if len(same) == 1:
             r = same[0]
             out[cod] = (r[0], consistent and (r[4], r[5]) != (h["home_score"], h["away_score"]))
@@ -701,7 +813,7 @@ RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
 # Entra en la huella de cada raw: al cambiar la lógica de importación, subirla
 # hace que el bot reimporte una vez todos los raws (7: huecos del calendario, también otro enfrentamiento del mismo cruce).
 # También entra en la huella de grupos (import_fiflp_grupos.sources_digest): subirla los rehace.
-IMPORT_VERSION = "10"
+IMPORT_VERSION = "11"
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 

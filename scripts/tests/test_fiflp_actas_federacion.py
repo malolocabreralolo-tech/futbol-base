@@ -798,3 +798,104 @@ def test_a_truncated_old_calendar_is_completed_when_the_official_table_fits(tmp_
     assert added == ["5"]
     assert conn.execute("SELECT played, gf, gc FROM standings WHERE team_id=2").fetchone() == (3, 4, 9)
     assert group_deviation(conn, 1)["dev"] <= d_before
+
+
+# ── Calendarios antiguos: fechas de otro día y calendarios cortados (2021-22) ──
+
+def test_an_old_calendar_date_does_not_hide_the_match_of_the_same_round_and_score(tmp_path):
+    """El archivo de 2021-22 trae a veces la fecha de otro día ('22/12' para un partido del 3/12):
+    con los mismos equipos, la misma jornada y el mismo marcador, el acta es de ese partido."""
+    import import_fiflp_actas as I
+    from acta_reconciler import reconcile_acta
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = group_base()
+    header = {"season": "2025/2026", "date": "29-11-2025", "home_team": "MOYA, U.D.", "away_team": "ARUCAS C.F. A",
+              "home_score": 3, "away_score": 1, "jornada": "3"}
+    assert reconcile_acta(conn, header) == 5
+    assert reconcile_acta(conn, {**header, "jornada": "2"}) is None          # otra jornada: no
+    assert reconcile_acta(conn, {**header, "home_score": 4}) is None         # otro marcador: no
+
+
+def truncated_base():
+    """Una liga de 4 a una vuelta (6 partidos) con el calendario cortado a media jornada 2 y la
+    clasificación oficial final: ningún equipo tiene su calendario completo."""
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    migrate(conn)
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (1, '2025-2026', 2025, 2026, 0);
+      INSERT INTO categories(id, name) VALUES (1, 'BENJAMIN');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase, island) VALUES (1, 1, 1, 'LZP1', 'Grupo 1', 'Preferente Lanzarote', 'lanzarote');
+      INSERT INTO teams(id, name) VALUES (1, 'Haría'), (2, 'Teguise'), (3, 'Tinajo'), (4, 'Yaiza');
+      INSERT INTO matches(id, group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES
+        (1, 1, '1', '04/10', 1, 2, 2, 0), (2, 1, '1', '04/10', 3, 4, 1, 1), (3, 1, '2', '11/10', 1, 3, 3, 1);
+    """)
+    # J2: Haría 3-1 Tinajo, Teguise 0-0 Yaiza; J3: Haría 1-2 Yaiza, Teguise 2-1 Tinajo.
+    for team, pts, played, gf, gc in ((1, 6, 3, 6, 3), (2, 4, 3, 2, 3), (3, 1, 3, 3, 6), (4, 5, 3, 3, 2)):
+        conn.execute("INSERT INTO standings(group_id, team_id, position, points, played, gf, gc) VALUES (1, ?, ?, ?, ?, ?, ?)",
+                     (team, team, pts, played, gf, gc))
+    return conn
+
+
+def test_a_truncated_calendar_without_any_complete_team_takes_its_consistent_actas_and_the_sure_unsure_ones(tmp_path):
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = truncated_base()
+    raw = {"1": flat("HARIA, C.D.", "TEGUISE, C.D.", 2, 0, "04-10-2025"),
+           "2": flat("TINAJO, U.D.", "YAIZA, C.D.", 1, 1, "04-10-2025"),
+           "3": flat("HARIA, C.D.", "TINAJO, U.D.", 3, 1, "11-10-2025"),
+           "4": flat("TEGUISE, C.D.", "YAIZA, C.D.", 0, 0, "11-10-2025"),
+           "5": flat("HARIA, C.D.", "YAIZA, C.D.", 1, 2, "18-10-2025"),
+           # Incoherente: la cabecera perdió una cifra (1-1); su último gol dice 2-1, lo que da la tabla.
+           "6": flat("TEGUISE, C.D.", "TINAJO, U.D.", 1, 1, "18-10-2025", consistent=False)}
+    raw["6"]["events"] = [{"kind": "goal", "side": "home", "score": [1, 0], "player_name": "X"},
+                          {"kind": "goal", "side": "away", "score": [1, 1], "player_name": "Y"},
+                          {"kind": "goal", "side": "home", "score": [2, 1], "player_name": "X"}]
+    for k, j in (("1", "1"), ("2", "1"), ("3", "2"), ("4", "2"), ("5", "3"), ("6", "3")):
+        raw[k]["header"]["jornada"] = j
+    (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
+    assert report["gaps_filled"] == 3 and report["unmatched"] == 0
+    assert conn.execute("""SELECT home_score, away_score FROM matches m JOIN teams t ON t.id=m.home_team_id
+                           WHERE t.name='Teguise' AND m.away_team_id=3""").fetchone() == (2, 1)
+    from score_deviation import group_deviation
+    assert group_deviation(conn, 1) == {"dev": 0, "complete": 4, "teams": 4}
+
+
+def test_an_unsure_acta_that_never_fits_the_table_leaves_no_match(tmp_path):
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = truncated_base()
+    conn.executescript("""INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES
+        (1, '2', '11/10', 2, 4, 0, 0), (1, '3', '18/10', 1, 4, 1, 2)""")
+    raw = {"6": flat("TEGUISE, C.D.", "TINAJO, U.D.", 5, 1, "18-10-2025", consistent=False)}
+    raw["6"]["header"]["jornada"] = "3"
+    raw.update({"1": flat("HARIA, C.D.", "TEGUISE, C.D.", 2, 0, "04-10-2025"),
+                "2": flat("TINAJO, U.D.", "YAIZA, C.D.", 1, 1, "04-10-2025"),
+                "3": flat("HARIA, C.D.", "TINAJO, U.D.", 3, 1, "11-10-2025")})
+    (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
+    assert report["gaps_filled"] == 0 and report["unmatched"] == 1
+    assert conn.execute("SELECT count(*) FROM matches").fetchone()[0] == 5
+
+
+def test_an_unsure_acta_fixes_a_dropped_digit_only_when_the_table_agrees(tmp_path):
+    """LZP1 2021-22: UD Lanzarote 12-2 UD Palmeiros guardado como 2-2; el acta, incoherente (su último
+    gol es el 11-2), dice 12-2 en la cabecera: la clasificación lo confirma."""
+    import import_fiflp_actas as I
+    I.UNMATCHED_PATH = str(tmp_path / "unmatched.json")
+    conn = truncated_base()
+    conn.executescript("""INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES
+        (1, '2', '11/10', 2, 4, 0, 0), (1, '3', '18/10', 1, 4, 1, 2), (1, '3', '18/10', 2, 3, 2, 1)""")
+    conn.execute("UPDATE matches SET home_score=2, away_score=0 WHERE id=1")
+    conn.execute("UPDATE standings SET gf=16 WHERE team_id=1")      # Haría 12-0 Teguise, no 2-0
+    conn.execute("UPDATE standings SET gc=13 WHERE team_id=2")
+    raw = {"1": flat("HARIA, C.D.", "TEGUISE, C.D.", 12, 0, "04-10-2025", consistent=False),
+           "2": flat("TINAJO, U.D.", "YAIZA, C.D.", 1, 1, "04-10-2025"),
+           "3": flat("HARIA, C.D.", "TINAJO, U.D.", 3, 1, "11-10-2025"),
+           "5": flat("HARIA, C.D.", "YAIZA, C.D.", 1, 2, "18-10-2025")}
+    raw["1"]["events"] = [{"kind": "goal", "side": "home", "score": [11, 0], "player_name": "X"}]
+    (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    report = I.import_raw(conn, str(tmp_path / "fiflp_actas_2025-2026_raw.json"), only=I.flattened)
+    assert report["scores_fixed"] == 1
+    assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=1").fetchone() == (12, 0, 1)

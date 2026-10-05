@@ -172,6 +172,22 @@ def _contradicts(header: dict, row, check_score=True) -> bool:
     return False
 
 
+def _round_number(text):
+    m = re.search(r"\d+", str(text or ""))
+    return int(m.group()) if m else None
+
+
+def same_round_and_score(header: dict, row) -> bool:
+    """¿El acta es de la misma jornada (por su número) y con el mismo marcador que el partido?
+    row = (id, home_name, away_name, date, home_score, away_score, jornada). Los calendarios antiguos
+    (el archivo de 2021-22) traen a veces la fecha de otro día: con los mismos equipos, la misma
+    jornada y el mismo marcador, el partido es ese aunque la fecha no cuadre."""
+    hs, asc_ = header.get("home_score"), header.get("away_score")
+    j = _round_number(header.get("jornada"))
+    return (j is not None and len(row) > 6 and j == _round_number(row[6])
+            and hs is not None and asc_ is not None and (row[4], row[5]) == (hs, asc_))
+
+
 def reconcile_acta(conn, header: dict):
     """Return matches.id if exactly one match can be identified, else None.
 
@@ -193,7 +209,7 @@ def reconcile_acta(conn, header: dict):
 
     rows = conn.execute(
         """
-        SELECT m.id, t1.name, t2.name, m.date, m.home_score, m.away_score
+        SELECT m.id, t1.name, t2.name, m.date, m.home_score, m.away_score, m.jornada
           FROM matches m
           JOIN groups g ON g.id=m.group_id
           JOIN teams t1 ON t1.id=m.home_team_id
@@ -211,7 +227,7 @@ def reconcile_acta(conn, header: dict):
 
     if len(candidates) == 1:
         cand = candidates[0]
-        if _contradicts(header, cand):
+        if _contradicts(header, cand) and not same_round_and_score(header, cand):
             print(
                 f"  ! reconcile rejected: acta '{header.get('home_team')}' vs "
                 f"'{header.get('away_team')}' ({header.get('date')}, "
@@ -244,4 +260,8 @@ def reconcile_acta(conn, header: dict):
         if len(narrowed) == 1:
             return narrowed[0][0]
 
+    # La misma jornada y el mismo marcador, aunque la fecha del calendario no cuadre.
+    narrowed = [r for r in candidates if same_round_and_score(header, r)]
+    if len(narrowed) == 1:
+        return narrowed[0][0]
     return None

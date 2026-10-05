@@ -1,6 +1,8 @@
 // Fixtures congeladas del rediseño «Acta» (spec §11). Las generan una sola vez
 // build_fixtures.mjs (las 9 de B1) y build_fixtures_b3.mjs (las 6 de B3) y se
-// commitean. Las pruebas test_rediseno_*.mjs leen solo estos JSON: nunca los
+// commitean; phases-archivo.json (las fases de las temporadas archivadas, de
+// 2017-18 a 2020-21) salió una vez de la base de la simulación de su
+// importación. Las pruebas test_rediseno_*.mjs leen solo estos JSON: nunca los
 // data-*.js ni src/config.js vivos.
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -12,7 +14,7 @@ export const FIXTURE_NAMES = [
   'current-2025-2026', 'historical-2024-2025', 'cups-2025-2026', 'matchdetail',
   'lineups-2025-2026', 'shields', 'health', 'phases', 'favorites-v1',
   'gol-2025-2026', 'campeones-2025-2026', 'historical-2023-2024', 'historical-2024-2025-b3',
-  'lineups-2025-2026-ff1', 'cups-extra-2025-2026',
+  'lineups-2025-2026-ff1', 'cups-extra-2025-2026', 'phases-archivo',
 ];
 
 // Lee y parsea <name>.json en cada llamada: cada prueba recibe su propia copia

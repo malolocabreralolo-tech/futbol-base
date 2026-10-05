@@ -2,13 +2,14 @@
  * Rediseño «Acta», Tarea 4: competitionKey y groupLabel (spec §5.3, §4.7).
  * Run: node --test scripts/tests/test_rediseno_model_competicion.mjs
  *
- * phases.json trae todas las fases reales de la base (2021-22 a 2025-26).
+ * phases.json trae todas las fases reales de la base (2021-22 a 2025-26), y
+ * phases-archivo.json, las de las temporadas archivadas (2017-18 a 2020-21).
  * Solo fixtures congeladas; nunca los data-*.js ni src/config.js vivos.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { fixture } from './fixtures/rediseno/load.mjs';
-import { competitionKey, groupLabel, buildSeason, buildCups } from '../../src/model.js';
+import { competitionKey, groupLabel, buildSeason, buildCups, phaseLevel } from '../../src/model.js';
 
 const KEY_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 let phasesCache = null;
@@ -230,4 +231,75 @@ test('Fase desconocida: sin clasificar (division null), pero con clave y etiquet
   const torneo = { ...nueva, id: 'TPC1', phase: 'Torneo Cierre' };
   assert.deepEqual([ck(torneo).cup, ck(torneo).key, ck(torneo).label], ['torneo', 'torneo-torneo-cierre', 'Torneo Cierre']);
   assert.equal(label(torneo), 'Prebenjamín, Torneo Cierre, Grupo 1');
+});
+
+// ── Temporadas archivadas, 2017-18 a 2020-21 (phases-archivo.json) ─────────
+
+let archiveCache = null;
+const archive = () => (archiveCache ??= fixture('phases-archivo'));
+/* Grupo de una temporada archivada, comprobado contra phases-archivo.json. */
+function archived(season, cat, id, phase, island, name) {
+  const found = archive().some(e => e.season === season && e.cat === cat && e.code === id
+    && e.phase === phase && e.island === island && e.name === name);
+  assert.ok(found, `${season} ${cat} ${id} «${phase}» no está en phases-archivo.json`);
+  return { season, cat, id, phase, island, name };
+}
+
+test('phases-archivo.json: ninguna fase sin clasificar, cada fase es su competición y etiquetas únicas', () => {
+  const all = archive();
+  assert.deepEqual([...new Set(all.map(e => e.season))].sort(), ['2017-2018', '2018-2019', '2019-2020', '2020-2021']);
+  const otras = all.filter(e => competitionKey(rawOf(e), e.season).key.includes('otra-'))
+    .map(e => `${e.season} ${e.cat} ${e.code} «${e.phase}»`);
+  assert.deepEqual(otras, []);
+  const byKey = new Map();
+  const labels = new Map();
+  for (const e of all) {
+    const c = competitionKey({ id: e.code, phase: e.phase, island: e.island, cat: catOf(e) }, e.season);
+    assert.notEqual(c.division, null, e.code);
+    assert.match(c.key, KEY_RE, e.code);
+    const k = `${e.season}|${catOf(e)}|${c.key}`;
+    if (!byKey.has(k)) byKey.set(k, new Set());
+    byKey.get(k).add(e.phase);
+    const l = `${e.season}|${groupLabel({ ...rawOf(e), season: e.season })}`;
+    assert.ok(!labels.has(l), `${l}: ${labels.get(l)} y ${e.code}`);
+    labels.set(l, e.code);
+  }
+  assert.deepEqual([...byKey].filter(([, ps]) => ps.size > 1), []);
+});
+
+test('Superliga de Fuerteventura (2017-18 y 2018-19): su competición, de nivel 2, después de la liga', () => {
+  for (const season of ['2017-2018', '2018-2019']) {
+    const fvs1 = archived(season, 'benjamin', 'FVS1', 'Superliga Fuerteventura', 'fuerteventura', 'Grupo 1');
+    assert.deepEqual(ck(fvs1), { cat: 'benjamin', island: 'fuerteventura', division: 'unica', phase: 'superliga',
+      cup: null, key: 'fuerteventura-superliga', label: 'Superliga de Fuerteventura' });
+    assert.equal(label(fvs1), 'Benjamín, Superliga, Grupo 1 de Fuerteventura');
+    assert.equal(phaseLevel(fvs1), 2);
+  }
+  const fv11 = archived('2018-2019', 'benjamin', 'FV11', 'Fuerteventura', 'fuerteventura', 'Grupo 1');
+  assert.equal(phaseLevel(fv11), 1);
+});
+
+test('Semifinales y finales que se juegan aparte, la Copa Gran Canaria prebenjamín y la Copa de Campeones', () => {
+  const lz1s1 = archived('2017-2018', 'benjamin', 'LZ1S1', 'Semifinal Liga Primera Lanzarote', 'lanzarote', 'Grupo 1');
+  assert.equal(ck(lz1s1).cup, 'final');
+  assert.equal(label(lz1s1), 'Benjamín, Semifinal Liga Primera Lanzarote, Grupo 1');
+  // Con el nombre en plural de la federación, igual.
+  assert.equal(ck({ ...lz1s1, phase: 'Semifinales Liga Primera Lanzarote' }).cup, 'final');
+  const lz1f1 = archived('2018-2019', 'benjamin', 'LZ1F1', 'Final Liga Primera Lanzarote', 'lanzarote', 'Grupo 1');
+  assert.equal(ck(lz1f1).cup, 'final');
+  const pcgc1 = archived('2018-2019', 'prebenjamin', 'PCGC1', 'Copa Gran Canaria', 'grancanaria', 'Grupo 1');
+  assert.equal(label(pcgc1), 'Prebenjamín, Copa Gran Canaria, Grupo 1');
+  assert.equal(ck(pcgc1).cup, 'insular');
+  const pcc1 = archived('2018-2019', 'prebenjamin', 'PCC1', 'Copa de Campeones', 'grancanaria', 'Grupo 1');
+  assert.equal(ck(pcc1).cup, 'campeones');
+  assert.equal(ck(pcc1).key, 'copa-campeones');
+});
+
+test('Primera Fase GC de las archivadas: la división Primera en benjamín y la liga de la isla en prebenjamín', () => {
+  const gc1 = archived('2017-2018', 'benjamin', 'GC1', 'Primera Fase GC', 'grancanaria', 'Grupo 1');
+  assert.equal(ck(gc1).division, 'primera');
+  assert.equal(label(gc1), 'Benjamín, Primera, Grupo 1');
+  const pgc1 = archived('2017-2018', 'prebenjamin', 'PGC1', 'Primera Fase GC', 'grancanaria', 'Grupo 1');
+  assert.equal(ck(pgc1).key, 'grancanaria');
+  assert.equal(label(pgc1), 'Prebenjamín, Grupo 1 de Gran Canaria');
 });

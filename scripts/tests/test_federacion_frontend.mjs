@@ -85,3 +85,12 @@ test('finales, semifinales y torneos de cierre: copas con su nombre', () => {
   assert.equal(groupKind(g('Final Liga Primera Lanzarote'), [{ key: 'Jornada 1', matches: [m] }]), 'cup-bracket');
   assert.equal(groupKind(g('Torneo Cierre Prebenjamín'), [{ key: 'Jornada 1', matches: [m, m, m] }, { key: 'Jornada 2', matches: [m, m, m] }]), 'cup-league');
 });
+
+// Temporadas archivadas (2017-18 a 2020-21): las semifinales de Lanzarote con su nombre en plural, la
+// Superliga de Fuerteventura (una liga) y la copa prebenjamín de Gran Canaria.
+test('archivadas: «Semifinales …» y la Copa Gran Canaria son copas; la Superliga, una liga', () => {
+  assert.ok(isCupGroup({ id: 'LZ1S1', phase: 'Semifinales Liga Primera Lanzarote' }));
+  assert.ok(isCupGroup({ id: 'LZ1S1', phase: 'Semifinal Liga Primera Lanzarote' }));
+  assert.ok(!isCupGroup({ id: 'FVS1', phase: 'Superliga Fuerteventura' }));
+  assert.ok(isCupGroup({ id: 'PCGC1', phase: 'Copa Gran Canaria' }));
+});

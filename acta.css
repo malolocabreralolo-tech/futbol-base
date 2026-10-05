@@ -1094,6 +1094,11 @@ abbr[title] { text-decoration: none; }
   right: 0;
   z-index: 30;
   min-width: 150px;
+  /* Con el archivo desde 2017/18 son diez temporadas (unos 450 px de opciones de 44 px): el menú se
+     desplaza por dentro y no tira de la página. */
+  max-height: min(70vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   margin: 0;
   padding: 0;
   list-style: none;

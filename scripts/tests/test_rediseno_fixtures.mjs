@@ -20,7 +20,7 @@ test('fixtures: existen todas, se parsean y cada llamada devuelve una copia nuev
     'current-2025-2026', 'historical-2024-2025', 'cups-2025-2026', 'matchdetail',
     'lineups-2025-2026', 'shields', 'health', 'phases', 'favorites-v1',
     'gol-2025-2026', 'campeones-2025-2026', 'historical-2023-2024', 'historical-2024-2025-b3',
-    'lineups-2025-2026-ff1', 'cups-extra-2025-2026',
+    'lineups-2025-2026-ff1', 'cups-extra-2025-2026', 'phases-archivo',
   ]);
   for (const name of FIXTURE_NAMES) assert.ok(fixture(name), name);
   const copia = fixture('favorites-v1');

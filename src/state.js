@@ -94,7 +94,7 @@ export function isCupGroup(g) {
   if (id.startsWith('MCP') || id.startsWith('MCB')) return true;
   const phase = ((g && g.phase) || '').toLowerCase();
   return phase.includes('copa') || phase.includes('campeon') || phase.includes('maspalomas')
-    || /^(?:semi)?final\b|^torneo\b|^clausura\b/.test(phase);
+    || /^(?:semi)?final(?:es)?\b|^torneo\b|^clausura\b/.test(phase);
 }
 
 /* Friendly label for a knockout round. Prefers the explicit round name in the

@@ -119,6 +119,18 @@ test('SEASON_FILES: solo las temporadas archivadas, sin actas', () => {
   for (const url of files) assert.match(url, /^\.\/data-season-\d{4}-\d{4}\.js$/);
 });
 
+// Invariante: SEASON_FILES son las temporadas no actuales de data-seasons.js, en el mismo orden (de la
+// más nueva a la más vieja). Lo mantiene generate_js.py (sync_season_files) en la misma pasada del bot
+// que publica una temporada archivada nueva: sin precachearla, sin conexión se rompen la Trayectoria y
+// «Ver temporadas anteriores», que cargan el archivo entero.
+test('invariant: SEASON_FILES = las temporadas no actuales de data-seasons.js, en su orden', () => {
+  const ctx = {};
+  vm.createContext(ctx);
+  vm.runInContext(`${readFileSync(join(ROOT, 'data-seasons.js'), 'utf8')}\nthis.__s = SEASONS;`, ctx);
+  const past = Array.from(ctx.__s).filter((s) => !s.current).map((s) => `./data-season-${s.name}.js`);
+  assert.deepEqual([...sw.SEASON_FILES], past);
+});
+
 // Las actas de grupo ya usadas pasan a la versión nueva (decisión 2 de B5: la ficha de mi equipo, ya
 // vista, sigue con su plantilla sin conexión tras una subida de datos): sin repetir, las más recientes
 // y como mucho LINEUPS_KEEP; ni los demás datos ni las actas antiguas, de temporada entera.

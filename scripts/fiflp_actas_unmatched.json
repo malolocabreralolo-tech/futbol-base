@@ -1,18 +1,101 @@
 {
-  "125780": {
+  "118388": {
     "header": {
-      "away_score": null,
-      "away_team": null,
-      "competition": null,
-      "date": null,
-      "home_score": null,
-      "home_team": null,
-      "jornada": null,
-      "season": null
+      "away_score": 1,
+      "away_team": "UNION SUR YAIZA \"A\", C.D. A",
+      "city": "Tinajo",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
+      "date": "12-03-2022",
+      "home_score": 3,
+      "home_team": "TINAJO\"A\", U.D. A",
+      "jornada": "18",
+      "season": "2021/2022",
+      "time": "09:15",
+      "venue": "LOS VOLCANES F8(1)"
     },
     "reason": "no candidate match"
   },
-  "125781": {
+  "118396": {
+    "header": {
+      "away_score": 4,
+      "away_team": "ALTAVISTA C.F.",
+      "city": "Yaiza",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
+      "date": "17-03-2022",
+      "home_score": 7,
+      "home_team": "UNION SUR YAIZA \"A\", C.D. A",
+      "jornada": "19",
+      "season": "2021/2022",
+      "time": "19:29",
+      "venue": "MUNICIPAL DE YAIZA F8(1)"
+    },
+    "reason": "no candidate match"
+  },
+  "118411": {
+    "header": {
+      "away_score": 1,
+      "away_team": "LOMO \"A\", C.D. A",
+      "city": "Yaiza",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
+      "date": "30-03-2022",
+      "home_score": 7,
+      "home_team": "UNION SUR YAIZA \"A\", C.D. A",
+      "jornada": "21",
+      "season": "2021/2022",
+      "time": "19:27",
+      "venue": "MUNICIPAL DE YAIZA F8(1)"
+    },
+    "reason": "no candidate match"
+  },
+  "118421": {
+    "header": {
+      "away_score": 8,
+      "away_team": "LANZAROTE \"A\", U.D. A",
+      "city": "PUERTO DEL CARMEN",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
+      "date": "09-04-2022",
+      "home_score": 0,
+      "home_team": "PUERTO DEL CARMEN, F.C.",
+      "jornada": "22",
+      "season": "2021/2022",
+      "time": "09:15",
+      "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)"
+    },
+    "reason": "no candidate match"
+  },
+  "118430": {
+    "header": {
+      "away_score": 10,
+      "away_team": "SAN BARTOLOME \"A\", C.F. A",
+      "city": "Arrecife",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
+      "date": "30-04-2022",
+      "home_score": 6,
+      "home_team": "LOMO \"A\", C.D. A",
+      "jornada": "24",
+      "season": "2021/2022",
+      "time": "09:15",
+      "venue": "PUERTO ARRECIFE F8(1)"
+    },
+    "reason": "no candidate match"
+  },
+  "118447": {
+    "header": {
+      "away_score": 3,
+      "away_team": "TINAJO\"A\", U.D. A",
+      "city": "PUERTO DEL CARMEN",
+      "competition": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
+      "date": "21-05-2022",
+      "home_score": 2,
+      "home_team": "PUERTO DEL CARMEN, F.C.",
+      "jornada": "26",
+      "season": "2021/2022",
+      "time": "09:15",
+      "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)"
+    },
+    "reason": "no candidate match"
+  },
+  "125780": {
     "header": {
       "away_score": null,
       "away_team": null,
@@ -77,58 +160,6 @@
     },
     "reason": "no candidate match"
   },
-  "125786": {
-    "header": {
-      "away_score": null,
-      "away_team": null,
-      "competition": null,
-      "date": null,
-      "home_score": null,
-      "home_team": null,
-      "jornada": null,
-      "season": null
-    },
-    "reason": "no candidate match"
-  },
-  "125787": {
-    "header": {
-      "away_score": null,
-      "away_team": null,
-      "competition": null,
-      "date": null,
-      "home_score": null,
-      "home_team": null,
-      "jornada": null,
-      "season": null
-    },
-    "reason": "no candidate match"
-  },
-  "125788": {
-    "header": {
-      "away_score": 2,
-      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "13-11-2021",
-      "home_score": 1,
-      "home_team": "HUESAS \"A\", U.D. LAS A",
-      "jornada": "2",
-      "season": "2021/2022"
-    },
-    "reason": "no candidate match"
-  },
-  "125789": {
-    "header": {
-      "away_score": 3,
-      "away_team": "HEIDELBERG, C.F.",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "13-11-2021",
-      "home_score": 9,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "2",
-      "season": "2021/2022"
-    },
-    "reason": "no candidate match"
-  },
   "125790": {
     "header": {
       "away_score": null,
@@ -168,19 +199,6 @@
     },
     "reason": "no candidate match"
   },
-  "125795": {
-    "header": {
-      "away_score": null,
-      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "12-11-2021",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "2",
-      "season": "2021/2022"
-    },
-    "reason": "no candidate match"
-  },
   "146122": {
     "header": {
       "away_score": null,
@@ -194,71 +212,6 @@
     },
     "reason": "no candidate match"
   },
-  "146123": {
-    "header": {
-      "away_score": 4,
-      "away_team": "VICTORIA \"A\", REAL CLUB A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "22-10-2022",
-      "home_score": 4,
-      "home_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "jornada": "1",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146124": {
-    "header": {
-      "away_score": 3,
-      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "23-10-2022",
-      "home_score": 3,
-      "home_team": "GAREPA VIERA, C.F.",
-      "jornada": "1",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146126": {
-    "header": {
-      "away_score": null,
-      "away_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "22-10-2022",
-      "home_score": 5,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "1",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146128": {
-    "header": {
-      "away_score": 3,
-      "away_team": "SIMUSETTI C. F. \"A\" A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "22-10-2022",
-      "home_score": null,
-      "home_team": "TORRES, U.D. LAS",
-      "jornada": "1",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146129": {
-    "header": {
-      "away_score": 3,
-      "away_team": "TORRES, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "26-10-2022",
-      "home_score": 6,
-      "home_team": "ARUCAS C.F. \"A\" A",
-      "jornada": "2",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
   "146130": {
     "header": {
       "away_score": null,
@@ -267,19 +220,6 @@
       "date": "29-10-2022",
       "home_score": null,
       "home_team": "VICTORIA \"A\", REAL CLUB A",
-      "jornada": "2",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146131": {
-    "header": {
-      "away_score": 7,
-      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "29-10-2022",
-      "home_score": 2,
-      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
       "jornada": "2",
       "season": "2022/2023"
     },
@@ -311,123 +251,6 @@
     },
     "reason": "no candidate match"
   },
-  "146137": {
-    "header": {
-      "away_score": null,
-      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "05-11-2022",
-      "home_score": 5,
-      "home_team": "ACODETTI C.F. \"A\" A",
-      "jornada": "3",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146138": {
-    "header": {
-      "away_score": 5,
-      "away_team": "TAMARACEITE \"A\", U.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "05-11-2022",
-      "home_score": null,
-      "home_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "jornada": "3",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146141": {
-    "header": {
-      "away_score": null,
-      "away_team": "SIMUSETTI C. F. \"A\" A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "05-11-2022",
-      "home_score": null,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "3",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146142": {
-    "header": {
-      "away_score": 0,
-      "away_team": "VETERANOS DEL PILA.\"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "05-11-2022",
-      "home_score": null,
-      "home_team": "TORRES, U.D. LAS",
-      "jornada": "3",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146143": {
-    "header": {
-      "away_score": 3,
-      "away_team": "TORRES, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "12-11-2022",
-      "home_score": null,
-      "home_team": "VICTORIA \"A\", REAL CLUB A",
-      "jornada": "4",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146144": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ARUCAS C.F. \"A\" A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "12-11-2022",
-      "home_score": null,
-      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "jornada": "4",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146146": {
-    "header": {
-      "away_score": 6,
-      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "13-11-2022",
-      "home_score": null,
-      "home_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
-      "jornada": "4",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146149": {
-    "header": {
-      "away_score": 4,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "12-11-2022",
-      "home_score": 1,
-      "home_team": "VETERANOS DEL PILA.\"A\", C.D. A",
-      "jornada": "4",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146150": {
-    "header": {
-      "away_score": null,
-      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "19-11-2022",
-      "home_score": null,
-      "home_team": "VICTORIA \"A\", REAL CLUB A",
-      "jornada": "5",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
   "146151": {
     "header": {
       "away_score": 5,
@@ -450,32 +273,6 @@
       "home_score": 8,
       "home_team": "ACODETTI C.F. \"A\" A",
       "jornada": "5",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146156": {
-    "header": {
-      "away_score": 6,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "19-11-2022",
-      "home_score": 3,
-      "home_team": "TORRES, U.D. LAS",
-      "jornada": "5",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146157": {
-    "header": {
-      "away_score": null,
-      "away_team": "TORRES, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "26-11-2022",
-      "home_score": null,
-      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "jornada": "6",
       "season": "2022/2023"
     },
     "reason": "no candidate match"
@@ -506,19 +303,6 @@
     },
     "reason": "no candidate match"
   },
-  "146161": {
-    "header": {
-      "away_score": null,
-      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "26-11-2022",
-      "home_score": null,
-      "home_team": "SIMUSETTI C. F. \"A\" A",
-      "jornada": "6",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
   "146162": {
     "header": {
       "away_score": null,
@@ -532,32 +316,6 @@
     },
     "reason": "no candidate match"
   },
-  "146163": {
-    "header": {
-      "away_score": 7,
-      "away_team": "PALMAS, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "26-11-2022",
-      "home_score": null,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "6",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146164": {
-    "header": {
-      "away_score": null,
-      "away_team": "TAMARACEITE \"A\", U.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "03-12-2022",
-      "home_score": null,
-      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "jornada": "7",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
   "146167": {
     "header": {
       "away_score": 0,
@@ -567,71 +325,6 @@
       "home_score": null,
       "home_team": "ACODETTI C.F. \"A\" A",
       "jornada": "7",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146168": {
-    "header": {
-      "away_score": null,
-      "away_team": "VETERANOS DEL PILA.\"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "03-12-2022",
-      "home_score": 1,
-      "home_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "jornada": "7",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146169": {
-    "header": {
-      "away_score": 2,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "03-12-2022",
-      "home_score": 2,
-      "home_team": "GAREPA VIERA, C.F.",
-      "jornada": "7",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146170": {
-    "header": {
-      "away_score": null,
-      "away_team": "PALMAS, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "03-12-2022",
-      "home_score": 0,
-      "home_team": "TORRES, U.D. LAS",
-      "jornada": "7",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146171": {
-    "header": {
-      "away_score": 0,
-      "away_team": "TORRES, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "09-12-2022",
-      "home_score": null,
-      "home_team": "TAMARACEITE \"A\", U.D. A",
-      "jornada": "8",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146172": {
-    "header": {
-      "away_score": 3,
-      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "11-12-2022",
-      "home_score": null,
-      "home_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
-      "jornada": "8",
       "season": "2022/2023"
     },
     "reason": "no candidate match"
@@ -657,19 +350,6 @@
       "date": "10-12-2022",
       "home_score": 0,
       "home_team": "VETERANOS DEL PILA.\"A\", C.D. A",
-      "jornada": "8",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146176": {
-    "header": {
-      "away_score": null,
-      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "10-12-2022",
-      "home_score": 4,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
       "jornada": "8",
       "season": "2022/2023"
     },
@@ -714,123 +394,6 @@
     },
     "reason": "no candidate match"
   },
-  "146182": {
-    "header": {
-      "away_score": 0,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "17-12-2022",
-      "home_score": 5,
-      "home_team": "ACODETTI C.F. \"A\" A",
-      "jornada": "9",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146183": {
-    "header": {
-      "away_score": 3,
-      "away_team": "PALMAS, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "17-12-2022",
-      "home_score": 2,
-      "home_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "jornada": "9",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146184": {
-    "header": {
-      "away_score": 6,
-      "away_team": "GAREPA VIERA, C.F.",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "17-12-2022",
-      "home_score": null,
-      "home_team": "TORRES, U.D. LAS",
-      "jornada": "9",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146185": {
-    "header": {
-      "away_score": 4,
-      "away_team": "TORRES, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "15-01-2023",
-      "home_score": 4,
-      "home_team": "LOMO BLANCO S.J.A. \"A\", C.D. A",
-      "jornada": "10",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146187": {
-    "header": {
-      "away_score": 3,
-      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "14-01-2023",
-      "home_score": 7,
-      "home_team": "SIMUSETTI C. F. \"A\" A",
-      "jornada": "10",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146189": {
-    "header": {
-      "away_score": 3,
-      "away_team": "ARUCAS C.F. \"A\" A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "14-01-2023",
-      "home_score": null,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "10",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146191": {
-    "header": {
-      "away_score": null,
-      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "14-01-2023",
-      "home_score": 1,
-      "home_team": "GAREPA VIERA, C.F.",
-      "jornada": "10",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146194": {
-    "header": {
-      "away_score": 3,
-      "away_team": "VETERANOS DEL PILA.\"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "21-01-2023",
-      "home_score": null,
-      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "jornada": "11",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146195": {
-    "header": {
-      "away_score": 4,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "21-01-2023",
-      "home_score": 8,
-      "home_team": "VICTORIA \"A\", REAL CLUB A",
-      "jornada": "11",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
   "146197": {
     "header": {
       "away_score": null,
@@ -839,19 +402,6 @@
       "date": "21-01-2023",
       "home_score": null,
       "home_team": "ACODETTI C.F. \"A\" A",
-      "jornada": "11",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146198": {
-    "header": {
-      "away_score": 3,
-      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "21-01-2023",
-      "home_score": 2,
-      "home_team": "TORRES, U.D. LAS",
       "jornada": "11",
       "season": "2022/2023"
     },
@@ -883,19 +433,6 @@
     },
     "reason": "no candidate match"
   },
-  "146202": {
-    "header": {
-      "away_score": 1,
-      "away_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "28-01-2023",
-      "home_score": 0,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "12",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
   "146204": {
     "header": {
       "away_score": 4,
@@ -905,45 +442,6 @@
       "home_score": null,
       "home_team": "GAREPA VIERA, C.F.",
       "jornada": "12",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146205": {
-    "header": {
-      "away_score": 5,
-      "away_team": "ACODETTI C.F. \"A\" A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "28-01-2023",
-      "home_score": 2,
-      "home_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "jornada": "12",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146208": {
-    "header": {
-      "away_score": 3,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "03-02-2023",
-      "home_score": 3,
-      "home_team": "TAMARACEITE \"A\", U.D. A",
-      "jornada": "13",
-      "season": "2022/2023"
-    },
-    "reason": "no candidate match"
-  },
-  "146209": {
-    "header": {
-      "away_score": null,
-      "away_team": "PALMAS, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "04-02-2023",
-      "home_score": 0,
-      "home_team": "BARRIO DEL ATLANTICO \"A\", C.F. A",
-      "jornada": "13",
       "season": "2022/2023"
     },
     "reason": "no candidate match"
@@ -961,29 +459,51 @@
     },
     "reason": "no candidate match"
   },
-  "146211": {
+  "148893": {
     "header": {
-      "away_score": 4,
-      "away_team": "ATLETICO HURACAN \"A\", A.D. A",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "05-02-2023",
-      "home_score": null,
-      "home_team": "ARUCAS C.F. \"A\" A",
-      "jornada": "13",
-      "season": "2022/2023"
+      "away_score": 3,
+      "away_team": "35600,\"A\" C.D. A",
+      "city": "Puerto Del Rosario",
+      "competition": "FINAL LIGA BENJAMIN FUERTEVENTURA (GRUPO 1)",
+      "date": "06-06-2023",
+      "home_score": 1,
+      "home_team": "EURO DE LAJARES, C.D.",
+      "jornada": "1",
+      "season": "2022/2023",
+      "time": "17:30",
+      "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2 F8(E)"
     },
     "reason": "no candidate match"
   },
-  "146212": {
+  "148894": {
+    "header": {
+      "away_score": 1,
+      "away_team": "PLAYAS DE SOTAVENTO \"A\", U.D. A",
+      "city": "Puerto Del Rosario",
+      "competition": "FINAL LIGA BENJAMIN FUERTEVENTURA (GRUPO 1)",
+      "date": "06-06-2023",
+      "home_score": 0,
+      "home_team": "35600,\"A\" C.D. A",
+      "jornada": "1",
+      "season": "2022/2023",
+      "time": "18:15",
+      "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2 F8(E)"
+    },
+    "reason": "no candidate match"
+  },
+  "148895": {
     "header": {
       "away_score": 0,
-      "away_team": "TORRES, U.D. LAS",
-      "competition": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA (GRUPO 1)",
-      "date": "04-02-2023",
-      "home_score": 2,
-      "home_team": "ACODETTI C.F. \"A\" A",
-      "jornada": "13",
-      "season": "2022/2023"
+      "away_team": "EURO DE LAJARES, C.D.",
+      "city": "Puerto Del Rosario",
+      "competition": "FINAL LIGA BENJAMIN FUERTEVENTURA (GRUPO 1)",
+      "date": "06-06-2023",
+      "home_score": 4,
+      "home_team": "PLAYAS DE SOTAVENTO \"A\", U.D. A",
+      "jornada": "1",
+      "season": "2022/2023",
+      "time": "19:00",
+      "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2 F8(E)"
     },
     "reason": "no candidate match"
   },
@@ -1195,19 +715,6 @@
     },
     "reason": "no candidate match"
   },
-  "167903": {
-    "header": {
-      "away_score": null,
-      "away_team": null,
-      "competition": null,
-      "date": null,
-      "home_score": null,
-      "home_team": null,
-      "jornada": null,
-      "season": null
-    },
-    "reason": "no candidate match"
-  },
   "167904": {
     "header": {
       "away_score": null,
@@ -1273,19 +780,6 @@
     },
     "reason": "no candidate match"
   },
-  "167910": {
-    "header": {
-      "away_score": null,
-      "away_team": null,
-      "competition": null,
-      "date": null,
-      "home_score": null,
-      "home_team": null,
-      "jornada": null,
-      "season": null
-    },
-    "reason": "no candidate match"
-  },
   "167911": {
     "header": {
       "away_score": null,
@@ -1326,19 +820,6 @@
     "reason": "no candidate match"
   },
   "167915": {
-    "header": {
-      "away_score": null,
-      "away_team": null,
-      "competition": null,
-      "date": null,
-      "home_score": null,
-      "home_team": null,
-      "jornada": null,
-      "season": null
-    },
-    "reason": "no candidate match"
-  },
-  "167916": {
     "header": {
       "away_score": null,
       "away_team": null,
@@ -1403,19 +884,6 @@
     },
     "reason": "no candidate match"
   },
-  "167923": {
-    "header": {
-      "away_score": 6,
-      "away_team": "MASPA TRAINING \"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 12)",
-      "date": "10-11-2023",
-      "home_score": 1,
-      "home_team": "ESTRELLA C.F. \"A\" A",
-      "jornada": "4",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "167928": {
     "header": {
       "away_score": null,
@@ -1429,19 +897,6 @@
     },
     "reason": "no candidate match"
   },
-  "167942": {
-    "header": {
-      "away_score": 1,
-      "away_team": "CASTILLO C.F.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 12)",
-      "date": "02-12-2023",
-      "home_score": null,
-      "home_team": "MASPA TRAINING \"B\", C.D. B",
-      "jornada": "7",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "167947": {
     "header": {
       "away_score": 0,
@@ -1451,19 +906,6 @@
       "home_score": 5,
       "home_team": "CERRUDA SANTA LUCIA DE TIRAJANA \"A\", C.D. A",
       "jornada": "8",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "167955": {
-    "header": {
-      "away_score": 0,
-      "away_team": "CASA PASTORES, C.F.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 12)",
-      "date": "16-12-2023",
-      "home_score": 15,
-      "home_team": "MASPA TRAINING \"B\", C.D. B",
-      "jornada": "9",
       "season": "2023/2024"
     },
     "reason": "no candidate match"
@@ -1494,16 +936,51 @@
     },
     "reason": "no candidate match"
   },
-  "170786": {
+  "168429": {
     "header": {
-      "away_score": 2,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "07-01-2024",
-      "home_score": 3,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "1",
-      "season": "2023/2024"
+      "away_score": 0,
+      "away_team": "PILETAS \"A\", A.D. U.D. A",
+      "city": "Las Palmas de Gran Canaria",
+      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA (GRUPO 3)",
+      "date": "19-01-2024",
+      "home_score": 12,
+      "home_team": "ATLETICO HURACAN \"B\", A.D. B",
+      "jornada": "11",
+      "season": "2023/2024",
+      "time": "17:00",
+      "venue": "PEPE GONÇALVEZ (F8-2)"
+    },
+    "reason": "no candidate match"
+  },
+  "169213": {
+    "header": {
+      "away_score": 1,
+      "away_team": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+      "city": "Gáldar",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "01-12-2023",
+      "home_score": 7,
+      "home_team": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+      "jornada": "7",
+      "season": "2023/2024",
+      "time": "18:30",
+      "venue": "ANTONIO CASTILLO"
+    },
+    "reason": "no candidate match"
+  },
+  "169304": {
+    "header": {
+      "away_score": 9,
+      "away_team": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+      "city": "Gáldar",
+      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
+      "date": "22-03-2024",
+      "home_score": 1,
+      "home_team": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+      "jornada": "20",
+      "season": "2023/2024",
+      "time": "18:30",
+      "venue": "ANTONIO CASTILLO"
     },
     "reason": "no candidate match"
   },
@@ -1568,45 +1045,6 @@
       "home_score": 2,
       "home_team": "ESTEFUT, C.D.",
       "jornada": "1",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170792": {
-    "header": {
-      "away_score": null,
-      "away_team": "TINAJO\"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "07-01-2024",
-      "home_score": 3,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "1",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170793": {
-    "header": {
-      "away_score": 2,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "13-01-2024",
-      "home_score": null,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "2",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170794": {
-    "header": {
-      "away_score": 3,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "13-01-2024",
-      "home_score": 1,
-      "home_team": "SPORTING TIAS \"B\", C.F. B",
-      "jornada": "2",
       "season": "2023/2024"
     },
     "reason": "no candidate match"
@@ -1676,32 +1114,6 @@
     },
     "reason": "no candidate match"
   },
-  "170800": {
-    "header": {
-      "away_score": 0,
-      "away_team": "SPORTING TIAS \"B\", C.F. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-01-2024",
-      "home_score": 1,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "3",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170801": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ADASSA, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-01-2024",
-      "home_score": 9,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "3",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170802": {
     "header": {
       "away_score": 7,
@@ -1750,58 +1162,6 @@
       "home_score": 8,
       "home_team": "TEGUISE \"B\", C.D. B",
       "jornada": "3",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170806": {
-    "header": {
-      "away_score": null,
-      "away_team": "ESTEFUT, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-01-2024",
-      "home_score": null,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "3",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170807": {
-    "header": {
-      "away_score": 3,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "27-01-2024",
-      "home_score": null,
-      "home_team": "SPORTING TIAS \"B\", C.F. B",
-      "jornada": "4",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170808": {
-    "header": {
-      "away_score": null,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "27-01-2024",
-      "home_score": null,
-      "home_team": "ADASSA, C.D.",
-      "jornada": "4",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170809": {
-    "header": {
-      "away_score": 3,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "28-01-2024",
-      "home_score": null,
-      "home_team": "LANZAROTE \"B\", U.D. B",
-      "jornada": "4",
       "season": "2023/2024"
     },
     "reason": "no candidate match"
@@ -1871,32 +1231,6 @@
     },
     "reason": "no candidate match"
   },
-  "170815": {
-    "header": {
-      "away_score": 9,
-      "away_team": "LANZAROTE \"B\", U.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "04-02-2024",
-      "home_score": 2,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "5",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170816": {
-    "header": {
-      "away_score": 1,
-      "away_team": "TAHICHE \"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "03-02-2024",
-      "home_score": 8,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "5",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170817": {
     "header": {
       "away_score": 2,
@@ -1936,32 +1270,6 @@
     },
     "reason": "no candidate match"
   },
-  "170820": {
-    "header": {
-      "away_score": null,
-      "away_team": "TEGUISE \"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "04-02-2024",
-      "home_score": null,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "5",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170821": {
-    "header": {
-      "away_score": 5,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "10-02-2024",
-      "home_score": 6,
-      "home_team": "ADASSA, C.D.",
-      "jornada": "6",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170822": {
     "header": {
       "away_score": null,
@@ -1970,32 +1278,6 @@
       "date": "11-02-2024",
       "home_score": null,
       "home_team": "LANZAROTE \"B\", U.D. B",
-      "jornada": "6",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170823": {
-    "header": {
-      "away_score": null,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "10-02-2024",
-      "home_score": null,
-      "home_team": "TAHICHE \"B\", C.D. B",
-      "jornada": "6",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170824": {
-    "header": {
-      "away_score": 5,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "10-02-2024",
-      "home_score": 3,
-      "home_team": "PALMEIROS DE COSTA T \"B\"., U.D. B",
       "jornada": "6",
       "season": "2023/2024"
     },
@@ -2066,32 +1348,6 @@
     },
     "reason": "no candidate match"
   },
-  "170830": {
-    "header": {
-      "away_score": 3,
-      "away_team": "PALMEIROS DE COSTA T \"B\"., U.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-02-2024",
-      "home_score": 4,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "7",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170831": {
-    "header": {
-      "away_score": 1,
-      "away_team": "TINAJO\"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-02-2024",
-      "home_score": null,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "7",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170832": {
     "header": {
       "away_score": 2,
@@ -2118,32 +1374,6 @@
     },
     "reason": "no candidate match"
   },
-  "170834": {
-    "header": {
-      "away_score": 4,
-      "away_team": "FUTBOL P.D.C. 2016, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-02-2024",
-      "home_score": 2,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "7",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170835": {
-    "header": {
-      "away_score": 2,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "25-02-2024",
-      "home_score": null,
-      "home_team": "LANZAROTE \"B\", U.D. B",
-      "jornada": "8",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170836": {
     "header": {
       "away_score": 2,
@@ -2165,32 +1395,6 @@
       "date": "24-02-2024",
       "home_score": 2,
       "home_team": "PALMEIROS DE COSTA T \"B\"., U.D. B",
-      "jornada": "8",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170838": {
-    "header": {
-      "away_score": null,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "24-02-2024",
-      "home_score": 6,
-      "home_team": "TINAJO\"B\", C.D. B",
-      "jornada": "8",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170839": {
-    "header": {
-      "away_score": 3,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "24-02-2024",
-      "home_score": 1,
-      "home_team": "ESTEFUT, C.D.",
       "jornada": "8",
       "season": "2023/2024"
     },
@@ -2261,32 +1465,6 @@
     },
     "reason": "no candidate match"
   },
-  "170845": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ESTEFUT, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "02-03-2024",
-      "home_score": null,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "9",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170846": {
-    "header": {
-      "away_score": 0,
-      "away_team": "TEGUISE \"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "02-03-2024",
-      "home_score": null,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "9",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170847": {
     "header": {
       "away_score": 0,
@@ -2296,32 +1474,6 @@
       "home_score": 8,
       "home_team": "SAN BARTOLOME \"C\", C.F. C",
       "jornada": "9",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170848": {
-    "header": {
-      "away_score": 1,
-      "away_team": "INTERNACIONAL PH \"D\" DB",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "03-03-2024",
-      "home_score": 5,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "9",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170849": {
-    "header": {
-      "away_score": 1,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "09-03-2024",
-      "home_score": null,
-      "home_team": "TAHICHE \"B\", C.D. B",
-      "jornada": "10",
       "season": "2023/2024"
     },
     "reason": "no candidate match"
@@ -2360,32 +1512,6 @@
       "date": "09-03-2024",
       "home_score": 0,
       "home_team": "ESTEFUT, C.D.",
-      "jornada": "10",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170853": {
-    "header": {
-      "away_score": null,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "09-03-2024",
-      "home_score": 1,
-      "home_team": "TEGUISE \"B\", C.D. B",
-      "jornada": "10",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170854": {
-    "header": {
-      "away_score": 1,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "09-03-2024",
-      "home_score": 1,
-      "home_team": "FUTBOL P.D.C. 2016, C.D.",
       "jornada": "10",
       "season": "2023/2024"
     },
@@ -2456,58 +1582,6 @@
     },
     "reason": "no candidate match"
   },
-  "170860": {
-    "header": {
-      "away_score": 1,
-      "away_team": "FUTBOL P.D.C. 2016, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "13-03-2024",
-      "home_score": null,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "11",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170861": {
-    "header": {
-      "away_score": 1,
-      "away_team": "INTERNACIONAL PH \"D\" DB",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "17-03-2024",
-      "home_score": null,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "11",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170862": {
-    "header": {
-      "away_score": 8,
-      "away_team": "SAN BARTOLOME \"C\", C.F. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "17-03-2024",
-      "home_score": 1,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "11",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170863": {
-    "header": {
-      "away_score": 1,
-      "away_team": "PALMEIROS DE COSTA T \"B\"., U.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "20-03-2024",
-      "home_score": 5,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "12",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170864": {
     "header": {
       "away_score": null,
@@ -2555,32 +1629,6 @@
       "date": "20-03-2024",
       "home_score": null,
       "home_team": "FUTBOL P.D.C. 2016, C.D.",
-      "jornada": "12",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170868": {
-    "header": {
-      "away_score": 4,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "20-03-2024",
-      "home_score": null,
-      "home_team": "INTERNACIONAL PH \"D\" DB",
-      "jornada": "12",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170869": {
-    "header": {
-      "away_score": 2,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "20-03-2024",
-      "home_score": 4,
-      "home_team": "SAN BARTOLOME \"C\", C.F. C",
       "jornada": "12",
       "season": "2023/2024"
     },
@@ -2651,45 +1699,6 @@
     },
     "reason": "no candidate match"
   },
-  "170875": {
-    "header": {
-      "away_score": null,
-      "away_team": "SAN BARTOLOME \"C\", C.F. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "24-03-2024",
-      "home_score": 2,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "13",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170876": {
-    "header": {
-      "away_score": null,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "24-03-2024",
-      "home_score": null,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "13",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170877": {
-    "header": {
-      "away_score": null,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "03-04-2024",
-      "home_score": null,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "14",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170878": {
     "header": {
       "away_score": 7,
@@ -2751,45 +1760,6 @@
       "home_score": 4,
       "home_team": "PALMEIROS DE COSTA T \"B\"., U.D. B",
       "jornada": "14",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170883": {
-    "header": {
-      "away_score": 4,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "03-04-2024",
-      "home_score": null,
-      "home_team": "TINAJO\"B\", C.D. B",
-      "jornada": "14",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170884": {
-    "header": {
-      "away_score": null,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "07-04-2024",
-      "home_score": 2,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "15",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170885": {
-    "header": {
-      "away_score": 0,
-      "away_team": "SPORTING TIAS \"B\", C.F. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "07-04-2024",
-      "home_score": 7,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "15",
       "season": "2023/2024"
     },
     "reason": "no candidate match"
@@ -2872,19 +1842,6 @@
     },
     "reason": "no candidate match"
   },
-  "170892": {
-    "header": {
-      "away_score": 4,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "13-04-2024",
-      "home_score": null,
-      "home_team": "ADASSA, C.D.",
-      "jornada": "16",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170893": {
     "header": {
       "away_score": 3,
@@ -2933,58 +1890,6 @@
       "home_score": 3,
       "home_team": "TINAJO\"B\", C.D. B",
       "jornada": "16",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170897": {
-    "header": {
-      "away_score": 2,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "14-04-2024",
-      "home_score": null,
-      "home_team": "ESTEFUT, C.D.",
-      "jornada": "16",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170898": {
-    "header": {
-      "away_score": 1,
-      "away_team": "SPORTING TIAS \"B\", C.F. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-04-2024",
-      "home_score": 4,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "17",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170899": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ADASSA, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-04-2024",
-      "home_score": null,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "17",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170900": {
-    "header": {
-      "away_score": 1,
-      "away_team": "LANZAROTE \"B\", U.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "21-04-2024",
-      "home_score": 2,
-      "home_team": "TITE \"A\", C.D. A",
-      "jornada": "17",
       "season": "2023/2024"
     },
     "reason": "no candidate match"
@@ -3054,32 +1959,6 @@
     },
     "reason": "no candidate match"
   },
-  "170906": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "28-04-2024",
-      "home_score": 9,
-      "home_team": "LANZAROTE \"B\", U.D. B",
-      "jornada": "18",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170907": {
-    "header": {
-      "away_score": null,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "27-04-2024",
-      "home_score": 1,
-      "home_team": "TAHICHE \"B\", C.D. B",
-      "jornada": "18",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170908": {
     "header": {
       "away_score": null,
@@ -3119,32 +1998,6 @@
     },
     "reason": "no candidate match"
   },
-  "170911": {
-    "header": {
-      "away_score": 2,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "27-04-2024",
-      "home_score": 1,
-      "home_team": "TEGUISE \"B\", C.D. B",
-      "jornada": "18",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170912": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ADASSA, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "05-05-2024",
-      "home_score": null,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "19",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170913": {
     "header": {
       "away_score": null,
@@ -3153,32 +2006,6 @@
       "date": "04-05-2024",
       "home_score": null,
       "home_team": "SPORTING TIAS \"B\", C.F. B",
-      "jornada": "19",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170914": {
-    "header": {
-      "away_score": 3,
-      "away_team": "TAHICHE \"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "05-05-2024",
-      "home_score": 3,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "19",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170915": {
-    "header": {
-      "away_score": 1,
-      "away_team": "PALMEIROS DE COSTA T \"B\"., U.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "05-05-2024",
-      "home_score": null,
-      "home_team": "TITE \"A\", C.D. A",
       "jornada": "19",
       "season": "2023/2024"
     },
@@ -3249,32 +2076,6 @@
     },
     "reason": "no candidate match"
   },
-  "170921": {
-    "header": {
-      "away_score": 3,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "08-05-2024",
-      "home_score": 0,
-      "home_team": "PALMEIROS DE COSTA T \"B\"., U.D. B",
-      "jornada": "20",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170922": {
-    "header": {
-      "away_score": null,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "08-05-2024",
-      "home_score": 3,
-      "home_team": "TINAJO\"B\", C.D. B",
-      "jornada": "20",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170923": {
     "header": {
       "away_score": 7,
@@ -3301,32 +2102,6 @@
     },
     "reason": "no candidate match"
   },
-  "170925": {
-    "header": {
-      "away_score": null,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "07-05-2024",
-      "home_score": 2,
-      "home_team": "FUTBOL P.D.C. 2016, C.D.",
-      "jornada": "20",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170926": {
-    "header": {
-      "away_score": 7,
-      "away_team": "LANZAROTE \"B\", U.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "12-05-2024",
-      "home_score": 1,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "21",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170927": {
     "header": {
       "away_score": null,
@@ -3348,32 +2123,6 @@
       "date": "11-05-2024",
       "home_score": 3,
       "home_team": "SPORTING TIAS \"B\", C.F. B",
-      "jornada": "21",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170929": {
-    "header": {
-      "away_score": null,
-      "away_team": "TINAJO\"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "12-05-2024",
-      "home_score": null,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "21",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170930": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ESTEFUT, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "12-05-2024",
-      "home_score": 13,
-      "home_team": "TITE \"A\", C.D. A",
       "jornada": "21",
       "season": "2023/2024"
     },
@@ -3444,32 +2193,6 @@
     },
     "reason": "no candidate match"
   },
-  "170936": {
-    "header": {
-      "away_score": null,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "19-05-2024",
-      "home_score": 3,
-      "home_team": "ESTEFUT, C.D.",
-      "jornada": "22",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170937": {
-    "header": {
-      "away_score": 2,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "17-05-2024",
-      "home_score": null,
-      "home_team": "TEGUISE \"B\", C.D. B",
-      "jornada": "22",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170938": {
     "header": {
       "away_score": null,
@@ -3479,32 +2202,6 @@
       "home_score": 2,
       "home_team": "FUTBOL P.D.C. 2016, C.D.",
       "jornada": "22",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170939": {
-    "header": {
-      "away_score": 3,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "18-05-2024",
-      "home_score": null,
-      "home_team": "INTERNACIONAL PH \"D\" DB",
-      "jornada": "22",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170940": {
-    "header": {
-      "away_score": null,
-      "away_team": "TAHICHE \"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "26-05-2024",
-      "home_score": null,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "23",
       "season": "2023/2024"
     },
     "reason": "no candidate match"
@@ -3543,32 +2240,6 @@
       "date": "25-05-2024",
       "home_score": 3,
       "home_team": "SPORTING TIAS \"B\", C.F. B",
-      "jornada": "23",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170944": {
-    "header": {
-      "away_score": null,
-      "away_team": "TEGUISE \"B\", C.D. B",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "26-05-2024",
-      "home_score": 3,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "23",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170945": {
-    "header": {
-      "away_score": null,
-      "away_team": "FUTBOL P.D.C. 2016, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "26-05-2024",
-      "home_score": null,
-      "home_team": "TITE \"A\", C.D. A",
       "jornada": "23",
       "season": "2023/2024"
     },
@@ -3639,58 +2310,6 @@
     },
     "reason": "no candidate match"
   },
-  "170951": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "01-06-2024",
-      "home_score": 0,
-      "home_team": "FUTBOL P.D.C. 2016, C.D.",
-      "jornada": "24",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170952": {
-    "header": {
-      "away_score": 1,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "01-06-2024",
-      "home_score": 0,
-      "home_team": "INTERNACIONAL PH \"D\" DB",
-      "jornada": "24",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170953": {
-    "header": {
-      "away_score": 0,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "01-06-2024",
-      "home_score": null,
-      "home_team": "SAN BARTOLOME \"C\", C.F. C",
-      "jornada": "24",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170954": {
-    "header": {
-      "away_score": null,
-      "away_team": "LOMO \"C\", C.D. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "08-06-2024",
-      "home_score": 3,
-      "home_team": "PALMEIROS DE COSTA T \"B\"., U.D. B",
-      "jornada": "25",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "170955": {
     "header": {
       "away_score": 8,
@@ -3738,32 +2357,6 @@
       "date": "05-06-2024",
       "home_score": 3,
       "home_team": "SPORTING TIAS \"B\", C.F. B",
-      "jornada": "25",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170959": {
-    "header": {
-      "away_score": null,
-      "away_team": "INTERNACIONAL PH \"D\" DB",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "09-06-2024",
-      "home_score": 8,
-      "home_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "jornada": "25",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170960": {
-    "header": {
-      "away_score": null,
-      "away_team": "SAN BARTOLOME \"C\", C.F. C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "09-06-2024",
-      "home_score": null,
-      "home_team": "TITE \"A\", C.D. A",
       "jornada": "25",
       "season": "2023/2024"
     },
@@ -3834,32 +2427,6 @@
     },
     "reason": "no candidate match"
   },
-  "170966": {
-    "header": {
-      "away_score": 0,
-      "away_team": "ORIENTACION MARITIMA \"C\", C.D C",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "11-06-2024",
-      "home_score": 4,
-      "home_team": "SAN BARTOLOME \"C\", C.F. C",
-      "jornada": "26",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "170967": {
-    "header": {
-      "away_score": null,
-      "away_team": "TITE \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE (GRUPO 1)",
-      "date": "11-06-2024",
-      "home_score": null,
-      "home_team": "LOMO \"C\", C.D. C",
-      "jornada": "26",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171190": {
     "header": {
       "away_score": null,
@@ -3868,19 +2435,6 @@
       "date": "01-02-2024",
       "home_score": 2,
       "home_team": "BARRIAL \"A\", U.D. A",
-      "jornada": "1",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "171191": {
-    "header": {
-      "away_score": 3,
-      "away_team": "GOLETA, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "03-02-2024",
-      "home_score": null,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
       "jornada": "1",
       "season": "2023/2024"
     },
@@ -3951,19 +2505,6 @@
     },
     "reason": "no candidate match"
   },
-  "171197": {
-    "header": {
-      "away_score": 8,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "09-02-2024",
-      "home_score": 1,
-      "home_team": "SAN NICOLAS, U.D.",
-      "jornada": "2",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171198": {
     "header": {
       "away_score": 1,
@@ -3985,19 +2526,6 @@
       "date": "18-02-2024",
       "home_score": 1,
       "home_team": "GAREPA VIERA, C.F.",
-      "jornada": "3",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "171202": {
-    "header": {
-      "away_score": 4,
-      "away_team": "MESAS HURACAN \"A\", U.D. LAS A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "17-02-2024",
-      "home_score": 4,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
       "jornada": "3",
       "season": "2023/2024"
     },
@@ -4042,19 +2570,6 @@
     },
     "reason": "no candidate match"
   },
-  "171208": {
-    "header": {
-      "away_score": null,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "23-02-2024",
-      "home_score": null,
-      "home_team": "BECERRIL, C.D.",
-      "jornada": "4",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171209": {
     "header": {
       "away_score": null,
@@ -4076,19 +2591,6 @@
       "date": "02-03-2024",
       "home_score": 2,
       "home_team": "BARRIAL \"A\", U.D. A",
-      "jornada": "5",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "171213": {
-    "header": {
-      "away_score": 4,
-      "away_team": "ARUCAS C.F. \"A\" A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "02-03-2024",
-      "home_score": null,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
       "jornada": "5",
       "season": "2023/2024"
     },
@@ -4159,19 +2661,6 @@
     },
     "reason": "no candidate match"
   },
-  "171219": {
-    "header": {
-      "away_score": 4,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "09-03-2024",
-      "home_score": null,
-      "home_team": "COSTA AYALA \"A\", UNION JUVENIL A",
-      "jornada": "6",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171220": {
     "header": {
       "away_score": 7,
@@ -4206,19 +2695,6 @@
       "date": "14-03-2024",
       "home_score": null,
       "home_team": "BARRIAL \"A\", U.D. A",
-      "jornada": "7",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "171224": {
-    "header": {
-      "away_score": 2,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "15-03-2024",
-      "home_score": 3,
-      "home_team": "GUAYARMINA, C.D.",
       "jornada": "7",
       "season": "2023/2024"
     },
@@ -4276,19 +2752,6 @@
     },
     "reason": "no candidate match"
   },
-  "171229": {
-    "header": {
-      "away_score": 1,
-      "away_team": "BARRIAL \"A\", U.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "23-03-2024",
-      "home_score": 9,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "8",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171230": {
     "header": {
       "away_score": null,
@@ -4328,19 +2791,6 @@
     },
     "reason": "no candidate match"
   },
-  "171233": {
-    "header": {
-      "away_score": null,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "07-04-2024",
-      "home_score": 7,
-      "home_team": "GAREPA VIERA, C.F.",
-      "jornada": "9",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171234": {
     "header": {
       "away_score": 3,
@@ -4367,19 +2817,6 @@
     },
     "reason": "no candidate match"
   },
-  "171236": {
-    "header": {
-      "away_score": 10,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "13-04-2024",
-      "home_score": 2,
-      "home_team": "GOLETA, C.D.",
-      "jornada": "10",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171240": {
     "header": {
       "away_score": null,
@@ -4388,19 +2825,6 @@
       "date": "19-04-2024",
       "home_score": null,
       "home_team": "GUAYARMINA, C.D.",
-      "jornada": "11",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "171242": {
-    "header": {
-      "away_score": null,
-      "away_team": "SAN NICOLAS, U.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "20-04-2024",
-      "home_score": 6,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
       "jornada": "11",
       "season": "2023/2024"
     },
@@ -4458,19 +2882,6 @@
     },
     "reason": "no candidate match"
   },
-  "171247": {
-    "header": {
-      "away_score": null,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "28-04-2024",
-      "home_score": null,
-      "home_team": "MESAS HURACAN \"A\", U.D. LAS A",
-      "jornada": "12",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171248": {
     "header": {
       "away_score": 2,
@@ -4523,19 +2934,6 @@
     },
     "reason": "no candidate match"
   },
-  "171253": {
-    "header": {
-      "away_score": null,
-      "away_team": "BECERRIL, C.D.",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "01-05-2024",
-      "home_score": null,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "13",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "171255": {
     "header": {
       "away_score": null,
@@ -4557,19 +2955,6 @@
       "date": "12-05-2024",
       "home_score": null,
       "home_team": "MESAS HURACAN \"A\", U.D. LAS A",
-      "jornada": "14",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "171258": {
-    "header": {
-      "away_score": null,
-      "away_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "09-05-2024",
-      "home_score": 12,
-      "home_team": "ARUCAS C.F. \"A\" A",
       "jornada": "14",
       "season": "2023/2024"
     },
@@ -4640,19 +3025,6 @@
     },
     "reason": "no candidate match"
   },
-  "171264": {
-    "header": {
-      "away_score": null,
-      "away_team": "COSTA AYALA \"A\", UNION JUVENIL A",
-      "competition": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA SEGUNDA FASE (GRUPO 1)",
-      "date": "18-05-2024",
-      "home_score": 2,
-      "home_team": "CORAZON DE MARIA \"A\", C.D. A",
-      "jornada": "15",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
   "173515": {
     "header": {
       "away_score": null,
@@ -4661,19 +3033,6 @@
       "date": "17-05-2024",
       "home_score": null,
       "home_team": "VALLESECO, U.D.",
-      "jornada": "1",
-      "season": "2023/2024"
-    },
-    "reason": "no candidate match"
-  },
-  "173516": {
-    "header": {
-      "away_score": 4,
-      "away_team": "TELDE \"C\", U.D. C",
-      "competition": "COPA DE CAMPEONES BENJAMIN GRAN CANARIA (GRUPO 3)",
-      "date": "17-05-2024",
-      "home_score": 3,
-      "home_team": "ATLETICO ISLETA \"A\" A",
       "jornada": "1",
       "season": "2023/2024"
     },
@@ -4728,6 +3087,22 @@
       "home_team": "VALLESECO, U.D.",
       "jornada": "1",
       "season": "2023/2024"
+    },
+    "reason": "no candidate match"
+  },
+  "187882": {
+    "header": {
+      "away_score": 6,
+      "away_team": "STEAUA DE TIRAJANA CLUB DEPORTIVO ?A?",
+      "city": "Oliva (La)",
+      "competition": "LIGA BENJAMIN F-8 DE FUERTEVENTURA PRIMERA FASE (GRUPO 1)",
+      "date": "16-11-2024",
+      "home_score": 0,
+      "home_team": "STEAUA DE TIRAJANA CLUB DEPORTIVO ?A?",
+      "jornada": "4",
+      "season": "2024/2025",
+      "time": "09:00",
+      "venue": "JONATHAN SESMA F8"
     },
     "reason": "no candidate match"
   },
@@ -4936,6 +3311,38 @@
       "home_team": "ROQUE AMAGRO-CLARAVISION, C.D.",
       "jornada": "9",
       "season": "2024/2025"
+    },
+    "reason": "no candidate match"
+  },
+  "191707": {
+    "header": {
+      "away_score": 6,
+      "away_team": "HARIA C.F.",
+      "city": "TEGUISE (CAPITAL MUNICIPAL)",
+      "competition": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8 (GRUPO 1)",
+      "date": "08-11-2024",
+      "home_score": 2,
+      "home_team": "ADASSA, C.D.",
+      "jornada": "1",
+      "season": "2024/2025",
+      "time": "17:00",
+      "venue": "CAMPO MUNICIPAL DE COSTA TEGUISE F-8 (1)"
+    },
+    "reason": "no candidate match"
+  },
+  "191708": {
+    "header": {
+      "away_score": 2,
+      "away_team": "LANZAROTE, U.D. B",
+      "city": "San Bartolomé",
+      "competition": "SEMIFINAL COPA CABILDO DE LANZAROTE PRIMERA BENJAMIN FUTBOL-8 (GRUPO 1)",
+      "date": "09-11-2024",
+      "home_score": 4,
+      "home_team": "INTERNACIONAL PH B",
+      "jornada": "1",
+      "season": "2024/2025",
+      "time": "10:00",
+      "venue": "MUNICIPAL DE PLAYA HONDA F8(1)"
     },
     "reason": "no candidate match"
   },
@@ -5238,515 +3645,67 @@
     },
     "reason": "no candidate match"
   },
-  "236765": {
+  "196013": {
     "header": {
       "away_score": 1,
-      "away_team": "ATLETICO ANGOSTURA",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "12-10-2025",
-      "home_score": 13,
-      "home_team": "ACODETTI C.F. B",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LA MAYORDOMIA 1"
-    },
-    "reason": "no candidate match"
-  },
-  "236766": {
-    "header": {
-      "away_score": 4,
-      "away_team": "COSTA AYALA, UNION JUVENIL",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "11-10-2025",
-      "home_score": 5,
-      "home_team": "CORAZON DE MARIA, C.D. C",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "236768": {
-    "header": {
-      "away_score": 14,
-      "away_team": "MESAS HURACAN, U.D. LAS A",
-      "city": "Santa Brígida",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "18-10-2025",
-      "home_score": 0,
-      "home_team": "ATLETICO ANGOSTURA",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "10:00",
-      "venue": "E.M. GUINIGUADA"
-    },
-    "reason": "no candidate match"
-  },
-  "236770": {
-    "header": {
-      "away_score": 1,
-      "away_team": "CORAZON DE MARIA, C.D. C",
-      "city": "Arucas",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "19-10-2025",
-      "home_score": 21,
-      "home_team": "ARUCAS C.F. A",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "ELIAS RISKALL"
-    },
-    "reason": "no candidate match"
-  },
-  "236771": {
-    "header": {
-      "away_score": 2,
-      "away_team": "COSTA AYALA, UNION JUVENIL",
-      "city": "Santa Brígida",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "25-10-2025",
-      "home_score": 3,
-      "home_team": "ATLETICO ANGOSTURA",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "10:00",
-      "venue": "E.M. GUINIGUADA"
-    },
-    "reason": "no candidate match"
-  },
-  "236773": {
-    "header": {
-      "away_score": 0,
-      "away_team": "CORAZON DE MARIA, C.D. C",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "26-10-2025",
+      "away_team": "CORRALEJO, C.D.",
+      "city": "Antigua",
+      "competition": "LIGA BENJAMIN FUERTEVENTURA 2ª FASE (GRUPO 3)",
+      "date": "12-04-2025",
       "home_score": 11,
-      "home_team": "MESAS HURACAN, U.D. LAS A",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PEPE GONÇALVEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "236775": {
-    "header": {
-      "away_score": 0,
-      "away_team": "ATLETICO ANGOSTURA",
-      "city": "Arucas",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "01-11-2025",
-      "home_score": 14,
-      "home_team": "ARUCAS C.F. A",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "ELIAS RISKALL"
-    },
-    "reason": "no candidate match"
-  },
-  "236776": {
-    "header": {
-      "away_score": 6,
-      "away_team": "ACODETTI C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "01-11-2025",
-      "home_score": 7,
-      "home_team": "CORAZON DE MARIA, C.D. C",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "236778": {
-    "header": {
-      "away_score": 7,
-      "away_team": "CORAZON DE MARIA, C.D. C",
-      "city": "Santa Brígida",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 5)",
-      "date": "07-11-2025",
-      "home_score": 2,
-      "home_team": "ATLETICO ANGOSTURA",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "E.M. GUINIGUADA"
-    },
-    "reason": "no candidate match"
-  },
-  "237067": {
-    "header": {
-      "away_score": 0,
-      "away_team": "ATLETICO G.C., C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 13)",
-      "date": "11-10-2025",
-      "home_score": 21,
-      "home_team": "VETERANOS DEL PILA., C.D. A",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MANUEL NARANJO SOSA 2"
-    },
-    "reason": "no candidate match"
-  },
-  "237070": {
-    "header": {
-      "away_score": 8,
-      "away_team": "PEDRO HIDALGO, U.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 13)",
-      "date": "18-10-2025",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F. B",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "237072": {
-    "header": {
-      "away_score": 0,
-      "away_team": "ATLETICO G.C., C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 13)",
-      "date": "25-10-2025",
-      "home_score": 15,
-      "home_team": "GUINIGUADA APOLINARIO, C.D. A",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "LOMO APOLINARIO F8"
-    },
-    "reason": "no candidate match"
-  },
-  "237075": {
-    "header": {
-      "away_score": 4,
-      "away_team": "MESAS, U.D. LAS B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 13)",
-      "date": "01-11-2025",
-      "home_score": 3,
-      "home_team": "ATLETICO G.C., C.F. B",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "237077": {
-    "header": {
-      "away_score": 3,
-      "away_team": "ATLETICO G.C., C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN FASE PREVIA F-7 GRAN CANARIA (GRUPO 13)",
-      "date": "08-11-2025",
-      "home_score": 7,
-      "home_team": "SAN JOSE, REAL SPORTING A",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "CHANO CRUZ"
-    },
-    "reason": "no candidate match"
-  },
-  "238626": {
-    "header": {
-      "away_score": 6,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Gáldar",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "10-10-2025",
-      "home_score": 6,
-      "home_team": "GALDARCLUBS JACOBEO 21-22, C.D.",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "VENANCIO MONZON F8"
-    },
-    "reason": "no candidate match"
-  },
-  "238634": {
-    "header": {
-      "away_score": 3,
-      "away_team": "ACODETTI C.F B",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "18-10-2025",
-      "home_score": 5,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238641": {
-    "header": {
-      "away_score": 6,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "25-10-2025",
-      "home_score": 3,
-      "home_team": "ATALAYA, U.D.",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238657": {
-    "header": {
-      "away_score": 3,
-      "away_team": "BARRIAL, U.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "14-11-2025",
-      "home_score": 8,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238666": {
-    "header": {
-      "away_score": 10,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Agaete",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "21-11-2025",
-      "home_score": 4,
-      "home_team": "GUAYARMINA, C.D.",
-      "jornada": "6",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "ALCALDE ANDRES RGUEZ.MARTIN"
-    },
-    "reason": "no candidate match"
-  },
-  "238674": {
-    "header": {
-      "away_score": 4,
-      "away_team": "PANADERIA PULIDO SAN MATEO, C.F.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "28-11-2025",
-      "home_score": 6,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "7",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238691": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ROQUE AMAGRO DE GALDAR, C.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "19-12-2025",
-      "home_score": 5,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "9",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238700": {
-    "header": {
-      "away_score": 5,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Arucas",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "11-01-2026",
-      "home_score": 1,
-      "home_team": "ARUCAS C.F. A",
-      "jornada": "10",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "ELIAS RISKALL"
-    },
-    "reason": "no candidate match"
-  },
-  "238708": {
-    "header": {
-      "away_score": 3,
-      "away_team": "FIRGAS, C.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "16-01-2026",
-      "home_score": 4,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
+      "home_team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO",
       "jornada": "11",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
+      "season": "2024/2025",
+      "time": "12:00",
+      "venue": "MUNICIPAL VALLES DE ORTEGA F8"
     },
     "reason": "no candidate match"
   },
-  "238717": {
-    "header": {
-      "away_score": 11,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "24-01-2026",
-      "home_score": 1,
-      "home_team": "COSTA AYALA, UNION JUVENIL",
-      "jornada": "12",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COSTA AYALA"
-    },
-    "reason": "no candidate match"
-  },
-  "238725": {
-    "header": {
-      "away_score": 3,
-      "away_team": "SANTIDAD BANOT, C.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "30-01-2026",
-      "home_score": 10,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "13",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238734": {
-    "header": {
-      "away_score": 2,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Moya",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "06-02-2026",
-      "home_score": 7,
-      "home_team": "MOYA, U.D.",
-      "jornada": "14",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "GARCIA HERNANDEZ \"MOYA\""
-    },
-    "reason": "no candidate match"
-  },
-  "238739": {
-    "header": {
-      "away_score": 1,
-      "away_team": "COSTA AYALA, UNION JUVENIL",
-      "city": "Vega De San Mateo",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "14-02-2026",
-      "home_score": 5,
-      "home_team": "PANADERIA PULIDO SAN MATEO, C.F.",
-      "jornada": "15",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "SAN MATEO"
-    },
-    "reason": "no candidate match"
-  },
-  "238742": {
-    "header": {
-      "away_score": 3,
-      "away_team": "TAMARACEITE, U.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "13-02-2026",
-      "home_score": 4,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "15",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238746": {
-    "header": {
-      "away_score": 2,
-      "away_team": "GALDARCLUBS JACOBEO 21-22, C.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "20-02-2026",
-      "home_score": 5,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "16",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238754": {
+  "196014": {
     "header": {
       "away_score": 5,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "28-02-2026",
-      "home_score": 0,
-      "home_team": "ACODETTI C.F B",
-      "jornada": "17",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LA MAYORDOMIA 1"
-    },
-    "reason": "no candidate match"
-  },
-  "238761": {
-    "header": {
-      "away_score": 3,
-      "away_team": "ATALAYA, U.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "06-03-2026",
+      "away_team": "35600, C.D. C",
+      "city": "Puerto Del Rosario",
+      "competition": "LIGA BENJAMIN FUERTEVENTURA 2ª FASE (GRUPO 3)",
+      "date": "12-04-2025",
       "home_score": 2,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "18",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
+      "home_team": "HERBANIA, C.D. C",
+      "jornada": "11",
+      "season": "2024/2025",
+      "time": "10:30",
+      "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1 F8(S)"
     },
     "reason": "no candidate match"
   },
-  "238762": {
+  "196015": {
     "header": {
-      "away_score": 4,
-      "away_team": "ACODETTI C.F B",
-      "city": "Gáldar",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "10-03-2026",
-      "home_score": 4,
-      "home_team": "BARRIAL, U.D.",
-      "jornada": "18",
-      "season": "2025/2026",
-      "time": "16:15",
-      "venue": "ANTONIO CASTILLO"
+      "away_score": 5,
+      "away_team": "HERBANIA, C.D. B",
+      "city": "Puerto Del Rosario",
+      "competition": "LIGA BENJAMIN FUERTEVENTURA 2ª FASE (GRUPO 3)",
+      "date": "11-04-2025",
+      "home_score": 3,
+      "home_team": "PEÑA DE LA AMISTAD, C.D.",
+      "jornada": "11",
+      "season": "2024/2025",
+      "time": "18:00",
+      "venue": "MUNICIPAL DE FABELO F8"
+    },
+    "reason": "no candidate match"
+  },
+  "196016": {
+    "header": {
+      "away_score": 6,
+      "away_team": "TAMASITE, C.D. A",
+      "city": "Puerto Del Rosario",
+      "competition": "LIGA BENJAMIN FUERTEVENTURA 2ª FASE (GRUPO 3)",
+      "date": "12-04-2025",
+      "home_score": 1,
+      "home_team": "TETIR C.F, UNION B",
+      "jornada": "11",
+      "season": "2024/2025",
+      "time": "10:00",
+      "venue": "MUNICIPAL DE TETIR F8(1)"
     },
     "reason": "no candidate match"
   },
@@ -5766,182 +3725,6 @@
     },
     "reason": "no candidate match"
   },
-  "238786": {
-    "header": {
-      "away_score": 0,
-      "away_team": "GUAYARMINA, C.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "27-03-2026",
-      "home_score": 6,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "21",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238794": {
-    "header": {
-      "away_score": 0,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Vega De San Mateo",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "11-04-2026",
-      "home_score": 9,
-      "home_team": "PANADERIA PULIDO SAN MATEO, C.F.",
-      "jornada": "22",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "SAN MATEO"
-    },
-    "reason": "no candidate match"
-  },
-  "238803": {
-    "header": {
-      "away_score": 6,
-      "away_team": "SAN ISIDRO, C.D.",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "17-04-2026",
-      "home_score": 3,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "23",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "238811": {
-    "header": {
-      "away_score": 3,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Gáldar",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "24-04-2026",
-      "home_score": 2,
-      "home_team": "ROQUE AMAGRO DE GALDAR, C.D.",
-      "jornada": "24",
-      "season": "2025/2026",
-      "time": "18:30",
-      "venue": "ANTONIO CASTILLO"
-    },
-    "reason": "no candidate match"
-  },
-  "238820": {
-    "header": {
-      "away_score": 6,
-      "away_team": "ARUCAS C.F. A",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "29-04-2026",
-      "home_score": 1,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "25",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "GUIA"
-    },
-    "reason": "no candidate match"
-  },
-  "238828": {
-    "header": {
-      "away_score": 1,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Firgas",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "12-05-2026",
-      "home_score": 3,
-      "home_team": "FIRGAS, C.D.",
-      "jornada": "26",
-      "season": "2025/2026",
-      "time": "18:30",
-      "venue": "DOMINGO PONCE"
-    },
-    "reason": "no candidate match"
-  },
-  "238837": {
-    "header": {
-      "away_score": 6,
-      "away_team": "COSTA AYALA, UNION JUVENIL",
-      "city": "Santa María De Guía De Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "15-05-2026",
-      "home_score": 2,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "27",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CMF LA ATALAYA"
-    },
-    "reason": "no candidate match"
-  },
-  "239586": {
-    "header": {
-      "away_score": 0,
-      "away_team": "CALERO, C.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "12-10-2025",
-      "home_score": 8,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239591": {
-    "header": {
-      "away_score": 1,
-      "away_team": "VILLA DE SANTA BRIGIDA, U.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "11-10-2025",
-      "home_score": 6,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "09:05",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239595": {
-    "header": {
-      "away_score": 1,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "19-10-2025",
-      "home_score": 6,
-      "home_team": "HURACAN, A.D.",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "PEPE GONÇALVEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "239600": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "18-10-2025",
-      "home_score": 5,
-      "home_team": "ACODETTI C.F A",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LA MAYORDOMIA 1"
-    },
-    "reason": "no candidate match"
-  },
   "239601": {
     "header": {
       "away_score": 3,
@@ -5955,694 +3738,6 @@
     },
     "reason": "no candidate match"
   },
-  "239603": {
-    "header": {
-      "away_score": 0,
-      "away_team": "JINAMAR, U.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "26-10-2025",
-      "home_score": 8,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239608": {
-    "header": {
-      "away_score": 9,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Arucas",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "26-10-2025",
-      "home_score": 2,
-      "home_team": "ARUCAS C.F. B",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "ELIAS RISKALL"
-    },
-    "reason": "no candidate match"
-  },
-  "239612": {
-    "header": {
-      "away_score": 1,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "08-11-2025",
-      "home_score": 7,
-      "home_team": "UNION VIERA, C.F.",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "ALFONSO SILVA"
-    },
-    "reason": "no candidate match"
-  },
-  "239616": {
-    "header": {
-      "away_score": 1,
-      "away_team": "GARITA, C.F.S. LA",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "08-11-2025",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239620": {
-    "header": {
-      "away_score": 5,
-      "away_team": "VETERANOS DEL PILA, C.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "16-11-2025",
-      "home_score": 2,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239623": {
-    "header": {
-      "away_score": 6,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "14-11-2025",
-      "home_score": 0,
-      "home_team": "HUESAS, U.D. LAS",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "LAS HUESAS"
-    },
-    "reason": "no candidate match"
-  },
-  "239629": {
-    "header": {
-      "away_score": 7,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Santa Brígida",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "22-11-2025",
-      "home_score": 1,
-      "home_team": "VILLA DE SANTA BRIGIDA, U.D. A",
-      "jornada": "6",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "LOS OLIVOS"
-    },
-    "reason": "no candidate match"
-  },
-  "239631": {
-    "header": {
-      "away_score": 1,
-      "away_team": "MESAS HURACAN, U.D. LAS",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "22-11-2025",
-      "home_score": 3,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "6",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239637": {
-    "header": {
-      "away_score": 6,
-      "away_team": "ACODETTI C.F A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "30-11-2025",
-      "home_score": 4,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "7",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239638": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "30-11-2025",
-      "home_score": 1,
-      "home_team": "TELDE, U.D. A",
-      "jornada": "7",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PABLO HERNANDEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "239654": {
-    "header": {
-      "away_score": 3,
-      "away_team": "GARITA, C.F.S. LA",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "21-12-2025",
-      "home_score": 5,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "9",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239663": {
-    "header": {
-      "away_score": 7,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "11-01-2026",
-      "home_score": 2,
-      "home_team": "HUESAS, U.D. LAS",
-      "jornada": "10",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LAS HUESAS"
-    },
-    "reason": "no candidate match"
-  },
-  "239668": {
-    "header": {
-      "away_score": 4,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "15-01-2026",
-      "home_score": 1,
-      "home_team": "CALERO, C.D.",
-      "jornada": "11",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "EL CALERO"
-    },
-    "reason": "no candidate match"
-  },
-  "239671": {
-    "header": {
-      "away_score": 0,
-      "away_team": "MESAS HURACAN, U.D. LAS",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "18-01-2026",
-      "home_score": 3,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "11",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239676": {
-    "header": {
-      "away_score": 6,
-      "away_team": "HURACAN, A.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "24-01-2026",
-      "home_score": 0,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "12",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239680": {
-    "header": {
-      "away_score": 5,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "25-01-2026",
-      "home_score": 4,
-      "home_team": "TELDE, U.D. A",
-      "jornada": "12",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PABLO HERNANDEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "239683": {
-    "header": {
-      "away_score": 5,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "30-01-2026",
-      "home_score": 0,
-      "home_team": "JINAMAR, U.D.",
-      "jornada": "13",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "E.M. JINAMAR"
-    },
-    "reason": "no candidate match"
-  },
-  "239688": {
-    "header": {
-      "away_score": 7,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Arucas",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "01-02-2026",
-      "home_score": 0,
-      "home_team": "ARUCAS C.F. B",
-      "jornada": "13",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "ELIAS RISKALL"
-    },
-    "reason": "no candidate match"
-  },
-  "239691": {
-    "header": {
-      "away_score": 4,
-      "away_team": "UNION VIERA, C.F.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "07-02-2026",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "14",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239698": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "14-02-2026",
-      "home_score": 7,
-      "home_team": "VETERANOS DEL PILA, C.D.",
-      "jornada": "15",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MANUEL NARANJO SOSA 1"
-    },
-    "reason": "no candidate match"
-  },
-  "239706": {
-    "header": {
-      "away_score": 10,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "19-02-2026",
-      "home_score": 2,
-      "home_team": "CALERO, C.D.",
-      "jornada": "16",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "EL CALERO"
-    },
-    "reason": "no candidate match"
-  },
-  "239711": {
-    "header": {
-      "away_score": 7,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Santa Brígida",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "21-02-2026",
-      "home_score": 3,
-      "home_team": "VILLA DE SANTA BRIGIDA, U.D. A",
-      "jornada": "16",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "LOS OLIVOS"
-    },
-    "reason": "no candidate match"
-  },
-  "239715": {
-    "header": {
-      "away_score": 2,
-      "away_team": "HURACAN, A.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "01-03-2026",
-      "home_score": 2,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "17",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239720": {
-    "header": {
-      "away_score": 5,
-      "away_team": "ACODETTI C.F A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "28-02-2026",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "17",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239723": {
-    "header": {
-      "away_score": 5,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "06-03-2026",
-      "home_score": 0,
-      "home_team": "JINAMAR, U.D.",
-      "jornada": "18",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "E.M. JINAMAR"
-    },
-    "reason": "no candidate match"
-  },
-  "239728": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ARUCAS C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "07-03-2026",
-      "home_score": 8,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "18",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239732": {
-    "header": {
-      "away_score": 4,
-      "away_team": "UNION VIERA, C.F.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "15-03-2026",
-      "home_score": 3,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "19",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239736": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "12-03-2026",
-      "home_score": 6,
-      "home_team": "GARITA, C.F.S. LA",
-      "jornada": "19",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "REMUDAS"
-    },
-    "reason": "no candidate match"
-  },
-  "239749": {
-    "header": {
-      "away_score": 1,
-      "away_team": "VILLA DE SANTA BRIGIDA, U.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "29-03-2026",
-      "home_score": 14,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "21",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239751": {
-    "header": {
-      "away_score": 4,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "28-03-2026",
-      "home_score": 6,
-      "home_team": "MESAS HURACAN, U.D. LAS",
-      "jornada": "21",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "C.M. LA SUERTE"
-    },
-    "reason": "no candidate match"
-  },
-  "239757": {
-    "header": {
-      "away_score": 0,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "11-04-2026",
-      "home_score": 7,
-      "home_team": "ACODETTI C.F A",
-      "jornada": "22",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LA MAYORDOMIA 1"
-    },
-    "reason": "no candidate match"
-  },
-  "239758": {
-    "header": {
-      "away_score": 2,
-      "away_team": "TELDE, U.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "11-04-2026",
-      "home_score": 2,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "22",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239766": {
-    "header": {
-      "away_score": 4,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "19-04-2026",
-      "home_score": 7,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "23",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239774": {
-    "header": {
-      "away_score": 3,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Telde",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "25-04-2026",
-      "home_score": 4,
-      "home_team": "GARITA, C.F.S. LA",
-      "jornada": "24",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "REMUDAS"
-    },
-    "reason": "no candidate match"
-  },
-  "239783": {
-    "header": {
-      "away_score": 1,
-      "away_team": "HUESAS, U.D. LAS",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "03-05-2026",
-      "home_score": 2,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "25",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239788": {
-    "header": {
-      "away_score": 1,
-      "away_team": "CALERO, C.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "09-05-2026",
-      "home_score": 8,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "26",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239791": {
-    "header": {
-      "away_score": 8,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "05-05-2026",
-      "home_score": 1,
-      "home_team": "MESAS HURACAN, U.D. LAS",
-      "jornada": "26",
-      "season": "2025/2026",
-      "time": "18:30",
-      "venue": "C.M. LA SUERTE"
-    },
-    "reason": "no candidate match"
-  },
-  "239796": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "16-05-2026",
-      "home_score": 7,
-      "home_team": "HURACAN, A.D.",
-      "jornada": "27",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PEPE GONÇALVEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "239800": {
-    "header": {
-      "away_score": 1,
-      "away_team": "TELDE, U.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "17-05-2026",
-      "home_score": 7,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "27",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239803": {
-    "header": {
-      "away_score": 1,
-      "away_team": "JINAMAR, U.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "23-05-2026",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "28",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "239808": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ARUCAS C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "24-05-2026",
-      "home_score": 12,
-      "home_team": "VICTORIA, REAL CLUB",
-      "jornada": "28",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "239811": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ATLETICO G.C., C.F.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "28-05-2026",
-      "home_score": 6,
-      "home_team": "UNION VIERA, C.F.",
-      "jornada": "29",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "ALFONSO SILVA"
-    },
-    "reason": "no candidate match"
-  },
-  "239818": {
-    "header": {
-      "away_score": 5,
-      "away_team": "VETERANOS DEL PILA, C.D.",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "06-06-2026",
-      "home_score": 5,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "30",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
   "239831": {
     "header": {
       "away_score": 0,
@@ -6652,227 +3747,6 @@
       "home_score": 1,
       "home_team": "ATALAYA, U.D. B",
       "jornada": "3",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "240564": {
-    "header": {
-      "away_score": 7,
-      "away_team": "LA UNION DE VECINDARIO",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "11-10-2025",
-      "home_score": 0,
-      "home_team": "ESTRELLA C.F.",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LAS PALMITAS ANEXO F8"
-    },
-    "reason": "no candidate match"
-  },
-  "240572": {
-    "header": {
-      "away_score": 0,
-      "away_team": "INGENIO, C.D. B",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "18-10-2025",
-      "home_score": 21,
-      "home_team": "LA UNION DE VECINDARIO",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
-    },
-    "reason": "no candidate match"
-  },
-  "240579": {
-    "header": {
-      "away_score": 6,
-      "away_team": "LA UNION DE VECINDARIO",
-      "city": "San Bartolomé De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "25-10-2025",
-      "home_score": 0,
-      "home_team": "MASPALOMAS, C.D.",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "12:00",
-      "venue": "MASPALOMAS 4 (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "240587": {
-    "header": {
-      "away_score": 1,
-      "away_team": "TABLERO, C.D.",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "05-11-2025",
-      "home_score": 8,
-      "home_team": "LA UNION DE VECINDARIO",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "19:00",
-      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
-    },
-    "reason": "no candidate match"
-  },
-  "240594": {
-    "header": {
-      "away_score": 13,
-      "away_team": "LA UNION DE VECINDARIO",
-      "city": "San Bartolomé De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "15-11-2025",
-      "home_score": 1,
-      "home_team": "MASPA TRAINING, C.D. B",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MASPALOMAS 4 (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "240602": {
-    "header": {
-      "away_score": 0,
-      "away_team": "ARGUINEGUIN, C.D. A",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "22-11-2025",
-      "home_score": 8,
-      "home_team": "LA UNION DE VECINDARIO",
-      "jornada": "6",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
-    },
-    "reason": "no candidate match"
-  },
-  "240624": {
-    "header": {
-      "away_score": 6,
-      "away_team": "LA UNION DE VECINDARIO",
-      "city": "Ingenio",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "20-12-2025",
-      "home_score": 1,
-      "home_team": "INGENIO, C.D. A",
-      "jornada": "9",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "CRISTOBAL HERRERA"
-    },
-    "reason": "no candidate match"
-  },
-  "240640": {
-    "header": {
-      "away_score": 1,
-      "away_team": "SAN PEDRO MARTIR, C.D.",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "16-01-2026",
-      "home_score": 2,
-      "home_team": "LA UNION DE VECINDARIO",
-      "jornada": "11",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
-    },
-    "reason": "no candidate match"
-  },
-  "240649": {
-    "header": {
-      "away_score": 4,
-      "away_team": "LA UNION DE VECINDARIO",
-      "city": "San Bartolomé De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "24-01-2026",
-      "home_score": 2,
-      "home_team": "MASPA TRAINING, C.D.",
-      "jornada": "12",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MASPALOMAS 4 (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "240657": {
-    "header": {
-      "away_score": 3,
-      "away_team": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "29-01-2026",
-      "home_score": 8,
-      "home_team": "LA UNION DE VECINDARIO",
-      "jornada": "13",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
-    },
-    "reason": "no candidate match"
-  },
-  "240666": {
-    "header": {
-      "away_score": 9,
-      "away_team": "LA UNION DE VECINDARIO",
-      "city": "Ingenio",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "05-02-2026",
-      "home_score": 2,
-      "home_team": "CARRIZAL, C.F. UNION",
-      "jornada": "14",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "EL TORIL"
-    },
-    "reason": "no candidate match"
-  },
-  "240674": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ARINAGA, C.D.",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "14-02-2026",
-      "home_score": 6,
-      "home_team": "LA UNION DE VECINDARIO",
-      "jornada": "15",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
-    },
-    "reason": "no candidate match"
-  },
-  "240684": {
-    "header": {
-      "away_score": 0,
-      "away_team": "ESTRELLA C.F.",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "21-02-2026",
-      "home_score": 6,
-      "home_team": "LA UNION DE VECINDARIO",
-      "jornada": "16",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
-    },
-    "reason": "no candidate match"
-  },
-  "246970": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ARUCAS C.F. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "28-11-2025",
-      "home_score": null,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "1",
       "season": "2025/2026"
     },
     "reason": "no candidate match"
@@ -6890,32 +3764,6 @@
     },
     "reason": "no candidate match"
   },
-  "246974": {
-    "header": {
-      "away_score": null,
-      "away_team": "VALLESECO, U.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "29-11-2025",
-      "home_score": 0,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "1",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246983": {
-    "header": {
-      "away_score": null,
-      "away_team": "MOYA, U.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "20-12-2025",
-      "home_score": 3,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "3",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
   "246984": {
     "header": {
       "away_score": 1,
@@ -6925,123 +3773,6 @@
       "home_score": 1,
       "home_team": "UNION VIERA, C.F. A",
       "jornada": "3",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246990": {
-    "header": {
-      "away_score": null,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "12-01-2026",
-      "home_score": 2,
-      "home_team": "SANTIDAD BANOT, C.D.",
-      "jornada": "4",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246993": {
-    "header": {
-      "away_score": null,
-      "away_team": "GUAYARMINA, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "10-01-2026",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "4",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246996": {
-    "header": {
-      "away_score": 2,
-      "away_team": "VALLESECO, U.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "17-01-2026",
-      "home_score": 0,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "5",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "246998": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "16-01-2026",
-      "home_score": 3,
-      "home_team": "SAN NICOLAS, U.D.",
-      "jornada": "5",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247003": {
-    "header": {
-      "away_score": null,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "24-01-2026",
-      "home_score": 4,
-      "home_team": "ATALAYA, U.D. A",
-      "jornada": "6",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247004": {
-    "header": {
-      "away_score": 5,
-      "away_team": "UNION VIERA, C.F. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "24-01-2026",
-      "home_score": null,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "6",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247009": {
-    "header": {
-      "away_score": 6,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "31-01-2026",
-      "home_score": 2,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "7",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247015": {
-    "header": {
-      "away_score": 7,
-      "away_team": "ARUCAS C.F. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-02-2026",
-      "home_score": 1,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "8",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247016": {
-    "header": {
-      "away_score": null,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-02-2026",
-      "home_score": 4,
-      "home_team": "GUAYARMINA, C.D.",
-      "jornada": "8",
       "season": "2025/2026"
     },
     "reason": "no candidate match"
@@ -7059,539 +3790,6 @@
     },
     "reason": "no candidate match"
   },
-  "247020": {
-    "header": {
-      "away_score": 8,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "14-02-2026",
-      "home_score": 3,
-      "home_team": "GOLETA, C.D. A",
-      "jornada": "9",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247022": {
-    "header": {
-      "away_score": 4,
-      "away_team": "SAN NICOLAS, U.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "14-02-2026",
-      "home_score": null,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "9",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247026": {
-    "header": {
-      "away_score": 0,
-      "away_team": "MOYA, U.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "21-02-2026",
-      "home_score": 3,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "10",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247029": {
-    "header": {
-      "away_score": 1,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "21-02-2026",
-      "home_score": 11,
-      "home_team": "UNION VIERA, C.F. A",
-      "jornada": "10",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247031": {
-    "header": {
-      "away_score": 3,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "28-02-2026",
-      "home_score": 2,
-      "home_team": "SANTIDAD BANOT, C.D.",
-      "jornada": "11",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247036": {
-    "header": {
-      "away_score": 2,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-03-2026",
-      "home_score": 5,
-      "home_team": "ARUCAS C.F. A",
-      "jornada": "12",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247040": {
-    "header": {
-      "away_score": 0,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-03-2026",
-      "home_score": 0,
-      "home_team": "VALLESECO, U.D.",
-      "jornada": "12",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247043": {
-    "header": {
-      "away_score": 3,
-      "away_team": "GOLETA, C.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "14-03-2026",
-      "home_score": 7,
-      "home_team": "BECERRIL VALKYRIAS, C.D.",
-      "jornada": "13",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247047": {
-    "header": {
-      "away_score": 1,
-      "away_team": "ATALAYA, U.D. A",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "14-03-2026",
-      "home_score": null,
-      "home_team": "ATLETICO G.C., C.F. C",
-      "jornada": "13",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "247234": {
-    "header": {
-      "away_score": 3,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "29-11-2025",
-      "home_score": 6,
-      "home_team": "HEIDELBERG, C.F. A",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MANUEL BETANCOR"
-    },
-    "reason": "no candidate match"
-  },
-  "247239": {
-    "header": {
-      "away_score": 0,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "30-11-2025",
-      "home_score": 9,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "1",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247246": {
-    "header": {
-      "away_score": 4,
-      "away_team": "HURACAN, A.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "20-12-2025",
-      "home_score": 2,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247250": {
-    "header": {
-      "away_score": 2,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "21-12-2025",
-      "home_score": 15,
-      "home_team": "MESAS HURACAN, U.D. LAS A",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "PEPE GONÇALVEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "247251": {
-    "header": {
-      "away_score": 2,
-      "away_team": "GUINIGUADA APOLINARIO, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "21-12-2025",
-      "home_score": 11,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "3",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247252": {
-    "header": {
-      "away_score": 2,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "11-01-2026",
-      "home_score": 2,
-      "home_team": "HURACAN, A.D. A",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "PEPE GONÇALVEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "247253": {
-    "header": {
-      "away_score": 9,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "10-01-2026",
-      "home_score": 1,
-      "home_team": "SIMUSETTI C. F. A",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "LA MAYORDOMIA 1"
-    },
-    "reason": "no candidate match"
-  },
-  "247256": {
-    "header": {
-      "away_score": 24,
-      "away_team": "PALMAS, U.D. LAS",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "09-01-2026",
-      "home_score": 0,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "4",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "247259": {
-    "header": {
-      "away_score": 2,
-      "away_team": "UNION VIERA, C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "17-01-2026",
-      "home_score": 5,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "14:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247261": {
-    "header": {
-      "away_score": 0,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "18-01-2026",
-      "home_score": 9,
-      "home_team": "TAMARACEITE, U.D. A",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "JUAN GUEDES"
-    },
-    "reason": "no candidate match"
-  },
-  "247263": {
-    "header": {
-      "away_score": 4,
-      "away_team": "MESAS HURACAN, U.D. LAS A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "18-01-2026",
-      "home_score": 1,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "5",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247264": {
-    "header": {
-      "away_score": 8,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "24-01-2026",
-      "home_score": 0,
-      "home_team": "SIMUSETTI C. F. A",
-      "jornada": "6",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "LA MAYORDOMIA 1"
-    },
-    "reason": "no candidate match"
-  },
-  "247266": {
-    "header": {
-      "away_score": 6,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "24-01-2026",
-      "home_score": 6,
-      "home_team": "VETERANOS DEL PILA., C.D. A",
-      "jornada": "6",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MANUEL NARANJO SOSA 2"
-    },
-    "reason": "no candidate match"
-  },
-  "247267": {
-    "header": {
-      "away_score": 5,
-      "away_team": "HEIDELBERG, C.F. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "23-01-2026",
-      "home_score": 2,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "6",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "247272": {
-    "header": {
-      "away_score": 3,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "31-01-2026",
-      "home_score": 13,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "7",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247275": {
-    "header": {
-      "away_score": 6,
-      "away_team": "PALMAS, U.D. LAS",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "01-02-2026",
-      "home_score": 2,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "7",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247276": {
-    "header": {
-      "away_score": 5,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "08-02-2026",
-      "home_score": 0,
-      "home_team": "UNION VIERA, C.F. B",
-      "jornada": "8",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "ALFONSO SILVA"
-    },
-    "reason": "no candidate match"
-  },
-  "247278": {
-    "header": {
-      "away_score": 16,
-      "away_team": "HURACAN, A.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "06-02-2026",
-      "home_score": 1,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "8",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "247279": {
-    "header": {
-      "away_score": 13,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "07-02-2026",
-      "home_score": 0,
-      "home_team": "GUINIGUADA APOLINARIO, C.D. A",
-      "jornada": "8",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LOMO APOLINARIO F8"
-    },
-    "reason": "no candidate match"
-  },
-  "247283": {
-    "header": {
-      "away_score": 2,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "14-02-2026",
-      "home_score": 6,
-      "home_team": "SIMUSETTI C. F. A",
-      "jornada": "9",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LA MAYORDOMIA 1"
-    },
-    "reason": "no candidate match"
-  },
-  "247285": {
-    "header": {
-      "away_score": 1,
-      "away_team": "MESAS HURACAN, U.D. LAS A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "14-02-2026",
-      "home_score": 1,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "9",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247287": {
-    "header": {
-      "away_score": 6,
-      "away_team": "TAMARACEITE, U.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "15-02-2026",
-      "home_score": 4,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "9",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247288": {
-    "header": {
-      "away_score": 3,
-      "away_team": "VETERANOS DEL PILA., C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "22-02-2026",
-      "home_score": 2,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "10",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247289": {
-    "header": {
-      "away_score": 6,
-      "away_team": "UNION VIERA, C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "20-02-2026",
-      "home_score": 2,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "10",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "247292": {
-    "header": {
-      "away_score": 1,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "21-02-2026",
-      "home_score": 12,
-      "home_team": "PALMAS, U.D. LAS",
-      "jornada": "10",
-      "season": "2025/2026",
-      "time": "12:30",
-      "venue": "ANEXO GRAN CANARIA F8"
-    },
-    "reason": "no candidate match"
-  },
-  "247294": {
-    "header": {
-      "away_score": 3,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "28-02-2026",
-      "home_score": 8,
-      "home_team": "VETERANOS DEL PILA., C.D. A",
-      "jornada": "11",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MANUEL NARANJO SOSA 1"
-    },
-    "reason": "no candidate match"
-  },
   "247295": {
     "header": {
       "away_score": 2,
@@ -7604,406 +3802,6 @@
       "jornada": "11",
       "season": "2025/2026",
       "time": "10:25",
-      "venue": "ALFONSO SILVA"
-    },
-    "reason": "no candidate match"
-  },
-  "247298": {
-    "header": {
-      "away_score": 5,
-      "away_team": "TAMARACEITE, U.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "28-02-2026",
-      "home_score": 3,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "11",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247299": {
-    "header": {
-      "away_score": 3,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "28-02-2026",
-      "home_score": 1,
-      "home_team": "HEIDELBERG, C.F. A",
-      "jornada": "11",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MANUEL BETANCOR"
-    },
-    "reason": "no candidate match"
-  },
-  "247300": {
-    "header": {
-      "away_score": 3,
-      "away_team": "HEIDELBERG, C.F. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "07-03-2026",
-      "home_score": 5,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "12",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247305": {
-    "header": {
-      "away_score": 9,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "06-03-2026",
-      "home_score": 2,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "12",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "247306": {
-    "header": {
-      "away_score": 4,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "15-03-2026",
-      "home_score": 8,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "13",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247311": {
-    "header": {
-      "away_score": 3,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "14-03-2026",
-      "home_score": 2,
-      "home_team": "GUINIGUADA APOLINARIO, C.D. A",
-      "jornada": "13",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "LOMO APOLINARIO F8"
-    },
-    "reason": "no candidate match"
-  },
-  "247318": {
-    "header": {
-      "away_score": 6,
-      "away_team": "HURACAN, A.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "29-03-2026",
-      "home_score": 0,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "15",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247319": {
-    "header": {
-      "away_score": 2,
-      "away_team": "SIMUSETTI C. F. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "28-03-2026",
-      "home_score": 12,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "15",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247322": {
-    "header": {
-      "away_score": 0,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "28-03-2026",
-      "home_score": 18,
-      "home_team": "PALMAS, U.D. LAS",
-      "jornada": "15",
-      "season": "2025/2026",
-      "time": "13:00",
-      "venue": "ANEXO GRAN CANARIA F8"
-    },
-    "reason": "no candidate match"
-  },
-  "247325": {
-    "header": {
-      "away_score": 6,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "12-04-2026",
-      "home_score": 3,
-      "home_team": "UNION VIERA, C.F. B",
-      "jornada": "16",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "ALFONSO SILVA"
-    },
-    "reason": "no candidate match"
-  },
-  "247327": {
-    "header": {
-      "away_score": 13,
-      "away_team": "TAMARACEITE, U.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "10-04-2026",
-      "home_score": 1,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "16",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "247329": {
-    "header": {
-      "away_score": 3,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "08-04-2026",
-      "home_score": 1,
-      "home_team": "MESAS HURACAN, U.D. LAS A",
-      "jornada": "16",
-      "season": "2025/2026",
-      "time": "18:30",
-      "venue": "C.M. LA SUERTE"
-    },
-    "reason": "no candidate match"
-  },
-  "247330": {
-    "header": {
-      "away_score": 2,
-      "away_team": "SIMUSETTI C. F. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "19-04-2026",
-      "home_score": 6,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "17",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247332": {
-    "header": {
-      "away_score": 1,
-      "away_team": "VETERANOS DEL PILA., C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "18-04-2026",
-      "home_score": 6,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "17",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247333": {
-    "header": {
-      "away_score": 2,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "18-04-2026",
-      "home_score": 11,
-      "home_team": "HEIDELBERG, C.F. A",
-      "jornada": "17",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MANUEL BETANCOR"
-    },
-    "reason": "no candidate match"
-  },
-  "247338": {
-    "header": {
-      "away_score": 9,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "24-04-2026",
-      "home_score": 2,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "18",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "247341": {
-    "header": {
-      "away_score": 0,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "25-04-2026",
-      "home_score": 12,
-      "home_team": "PALMAS, U.D. LAS",
-      "jornada": "18",
-      "season": "2025/2026",
-      "time": "12:30",
-      "venue": "ANEXO GRAN CANARIA F8"
-    },
-    "reason": "no candidate match"
-  },
-  "247342": {
-    "header": {
-      "away_score": 1,
-      "away_team": "UNION VIERA, C.F. B",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "03-05-2026",
-      "home_score": 7,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "19",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "247344": {
-    "header": {
-      "away_score": 2,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "03-05-2026",
-      "home_score": 15,
-      "home_team": "HURACAN, A.D. A",
-      "jornada": "19",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PEPE GONÇALVEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "247345": {
-    "header": {
-      "away_score": 1,
-      "away_team": "GUINIGUADA APOLINARIO, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "02-05-2026",
-      "home_score": 10,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "19",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247349": {
-    "header": {
-      "away_score": 5,
-      "away_team": "SIMUSETTI C. F. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "08-05-2026",
-      "home_score": 3,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "20",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "247351": {
-    "header": {
-      "away_score": 1,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "10-05-2026",
-      "home_score": 3,
-      "home_team": "MESAS HURACAN, U.D. LAS A",
-      "jornada": "20",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "PEPE GONÇALVEZ"
-    },
-    "reason": "no candidate match"
-  },
-  "247353": {
-    "header": {
-      "away_score": 2,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "08-05-2026",
-      "home_score": 6,
-      "home_team": "TAMARACEITE, U.D. A",
-      "jornada": "20",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "JUAN GUEDES"
-    },
-    "reason": "no candidate match"
-  },
-  "247354": {
-    "header": {
-      "away_score": 8,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "16-05-2026",
-      "home_score": 2,
-      "home_team": "VETERANOS DEL PILA., C.D. A",
-      "jornada": "21",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "MANUEL NARANJO SOSA 2"
-    },
-    "reason": "no candidate match"
-  },
-  "247355": {
-    "header": {
-      "away_score": 1,
-      "away_team": "MARZASPORT, ATLETICO",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "16-05-2026",
-      "home_score": 9,
-      "home_team": "UNION VIERA, C.F. B",
-      "jornada": "21",
-      "season": "2025/2026",
-      "time": "10:30",
       "venue": "ALFONSO SILVA"
     },
     "reason": "no candidate match"
@@ -8024,38 +3822,6 @@
     },
     "reason": "no candidate match"
   },
-  "247358": {
-    "header": {
-      "away_score": 12,
-      "away_team": "PALMAS, U.D. LAS",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "16-05-2026",
-      "home_score": 4,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "21",
-      "season": "2025/2026",
-      "time": "10:30",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "247360": {
-    "header": {
-      "away_score": 3,
-      "away_team": "VETERANOS DEL PILA., C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "20-05-2026",
-      "home_score": 2,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "22",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
   "247362": {
     "header": {
       "away_score": 2,
@@ -8072,192 +3838,6 @@
     },
     "reason": "no candidate match"
   },
-  "247364": {
-    "header": {
-      "away_score": 0,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "20-05-2026",
-      "home_score": 10,
-      "home_team": "TAMARACEITE, U.D. A",
-      "jornada": "22",
-      "season": "2025/2026",
-      "time": "19:00",
-      "venue": "JUAN GUEDES"
-    },
-    "reason": "no candidate match"
-  },
-  "247365": {
-    "header": {
-      "away_score": 5,
-      "away_team": "HEIDELBERG, C.F. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "23-05-2026",
-      "home_score": 7,
-      "home_team": "VICTORIA, REAL CLUB A",
-      "jornada": "22",
-      "season": "2025/2026",
-      "time": "09:00",
-      "venue": "PUERTO PI (F8)"
-    },
-    "reason": "no candidate match"
-  },
-  "254065": {
-    "header": {
-      "away_score": 2,
-      "away_team": "ATLETICO G.C., C.F. C",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "22-12-2025",
-      "home_score": null,
-      "home_team": "ATALAYA, U.D. A",
-      "jornada": "2",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "254206": {
-    "header": {
-      "away_score": 1,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "23-12-2025",
-      "home_score": 4,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "8",
-      "season": "2025/2026",
-      "time": "16:30",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
-  "254213": {
-    "header": {
-      "away_score": null,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "16-12-2025",
-      "home_score": 7,
-      "home_team": "GOLETA, C.D. A",
-      "jornada": "2",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "254257": {
-    "header": {
-      "away_score": 5,
-      "away_team": "GUINIGUADA APOLINARIO, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "17-12-2025",
-      "home_score": 1,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "254264": {
-    "header": {
-      "away_score": 3,
-      "away_team": "DORAMAS, C.D.",
-      "city": "Santa Lucía De Tirajana",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 3)",
-      "date": "18-12-2025",
-      "home_score": 8,
-      "home_team": "LA UNION DE VECINDARIO",
-      "jornada": "8",
-      "season": "2025/2026",
-      "time": "16:15",
-      "venue": "CAMPO MUNICIPAL ANEXO DE VECINDARIO"
-    },
-    "reason": "no candidate match"
-  },
-  "254288": {
-    "header": {
-      "away_score": 7,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Gáldar",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "22-12-2025",
-      "home_score": 5,
-      "home_team": "SAN ISIDRO, C.D.",
-      "jornada": "8",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "VENANCIO MONZON F8"
-    },
-    "reason": "no candidate match"
-  },
-  "254355": {
-    "header": {
-      "away_score": 3,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "26-12-2025",
-      "home_score": 6,
-      "home_team": "CORAZON DE MARIA, C.D. A",
-      "jornada": "2",
-      "season": "2025/2026",
-      "time": "20:00",
-      "venue": "COLEGIO CLARET"
-    },
-    "reason": "no candidate match"
-  },
-  "258259": {
-    "header": {
-      "away_score": 7,
-      "away_team": "SANTIDAD BANOT, C.D.",
-      "city": "Firgas",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "23-03-2026",
-      "home_score": 4,
-      "home_team": "FIRGAS, C.D.",
-      "jornada": "20",
-      "season": "2025/2026",
-      "time": "17:30",
-      "venue": "DOMINGO PONCE"
-    },
-    "reason": "no candidate match"
-  },
-  "258293": {
-    "header": {
-      "away_score": 1,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "city": "Gáldar",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 1)",
-      "date": "07-04-2026",
-      "home_score": 2,
-      "home_team": "BARRIAL, U.D.",
-      "jornada": "20",
-      "season": "2025/2026",
-      "time": "18:30",
-      "venue": "ANTONIO CASTILLO"
-    },
-    "reason": "no candidate match"
-  },
-  "258318": {
-    "header": {
-      "away_score": 1,
-      "away_team": "HUESAS, U.D. LAS",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "01-04-2026",
-      "home_score": 5,
-      "home_team": "ATLETICO G.C., C.F.",
-      "jornada": "20",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "MUNDIAL 82 ANEXO"
-    },
-    "reason": "no candidate match"
-  },
   "258319": {
     "header": {
       "away_score": null,
@@ -8268,83 +3848,6 @@
       "home_team": "ATALAYA, U.D. A",
       "jornada": "14",
       "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "258443": {
-    "header": {
-      "away_score": 4,
-      "away_team": "BECERRIL VALKYRIAS, C.D.",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 1)",
-      "date": "07-04-2026",
-      "home_score": null,
-      "home_team": "MOYA, U.D. A",
-      "jornada": "14",
-      "season": "2025/2026"
-    },
-    "reason": "no candidate match"
-  },
-  "258565": {
-    "header": {
-      "away_score": 9,
-      "away_team": "MESAS HURACAN, U.D. LAS A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "31-03-2026",
-      "home_score": 1,
-      "home_team": "MARZASPORT, ATLETICO",
-      "jornada": "14",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "MARZAGAN"
-    },
-    "reason": "no candidate match"
-  },
-  "258603": {
-    "header": {
-      "away_score": 9,
-      "away_team": "VICTORIA, REAL CLUB A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "31-03-2026",
-      "home_score": 1,
-      "home_team": "GUINIGUADA APOLINARIO, C.D. A",
-      "jornada": "14",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "LOMO APOLINARIO F8"
-    },
-    "reason": "no candidate match"
-  },
-  "258607": {
-    "header": {
-      "away_score": 7,
-      "away_team": "VICTORIA, REAL CLUB",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA PREBENJAMIN DE GRAN CANARIA (GRUPO 2)",
-      "date": "31-03-2026",
-      "home_score": 1,
-      "home_team": "VETERANOS DEL PILA, C.D.",
-      "jornada": "20",
-      "season": "2025/2026",
-      "time": "17:00",
-      "venue": "MANUEL NARANJO SOSA 1"
-    },
-    "reason": "no candidate match"
-  },
-  "258724": {
-    "header": {
-      "away_score": 4,
-      "away_team": "CORAZON DE MARIA, C.D. A",
-      "city": "Las Palmas de Gran Canaria",
-      "competition": "LIGA BENJAMIN F7 GRAN CANARIA FASE LIGA A (GRUPO 2)",
-      "date": "07-04-2026",
-      "home_score": 4,
-      "home_team": "HURACAN, A.D. A",
-      "jornada": "14",
-      "season": "2025/2026",
-      "time": "18:00",
-      "venue": "PEPE GONÇALVEZ"
     },
     "reason": "no candidate match"
   }

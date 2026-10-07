@@ -913,6 +913,15 @@ def _has_table(conn, name):
     return conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)).fetchone() is not None
 
 
+def computed_table(conn, group_id, season_name):
+    """¿Es la clasificación del grupo una calculada con sus partidos (import_wayback_portal)?"""
+    if not _has_table(conn, "portal_groups"):
+        return False
+    from import_wayback_portal import COMPUTED_STANDINGS
+    return season_name in COMPUTED_STANDINGS and conn.execute(
+        "SELECT 1 FROM portal_groups WHERE group_id=? AND mode='group'", (group_id,)).fetchone() is not None
+
+
 def standings_detail_map(conn, group_id):
     """{equipo: [Jc, Gc, Ec, Pc, Jf, Gf, Ef, Pf, sanción]} de la clasificación detallada de la
     federación (import_fiflp_detalle.py): partidos jugados, ganados, empatados y perdidos en casa y
@@ -1132,6 +1141,10 @@ def generate_seasons_js(conn):
                     detail = standings_detail_map(conn, gid)
                     if detail:
                         group_obj["detail"] = detail
+                    # La clasificación calculada con los partidos (2014-15 del archivo del portal: la
+                    # archivada era de marzo-abril), para que la web no la llame oficial.
+                    if computed_table(conn, gid, season_name):
+                        group_obj["standingsKind"] = "reconstructed"
                     groups_data.append(group_obj)
                 entry[cat_key] = groups_data
             # Los goleadores de la temporada archivada, si la base los tiene

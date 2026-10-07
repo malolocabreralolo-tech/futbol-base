@@ -1,0 +1,5369 @@
+{
+ "FV11": {
+  "category": "BENJAMIN",
+  "island": "fuerteventura",
+  "jornadas": {
+   "Jornada 1": [
+    {
+     "as": 0,
+     "away": "Tamaragua",
+     "date": "2020-11-28",
+     "home": "Corralejo C",
+     "hs": 9,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "La Oliva",
+     "date": "2020-11-27",
+     "home": "EuroLajares",
+     "hs": null,
+     "time": "",
+     "venue": "Lajares"
+    },
+    {
+     "as": 0,
+     "away": "Unión Tetir",
+     "date": "2020-12-16",
+     "home": "Villaverde",
+     "hs": 6,
+     "time": "17:00",
+     "venue": "Villaverde"
+    },
+    {
+     "as": 1,
+     "away": "Corralejo B",
+     "date": "2020-11-28",
+     "home": "Corralejo",
+     "hs": 9,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    }
+   ],
+   "Jornada 10": [
+    {
+     "as": null,
+     "away": "Tamaragua",
+     "date": "2021-02-13",
+     "home": "La Oliva",
+     "hs": null,
+     "time": "09:30",
+     "venue": "La Oliva"
+    },
+    {
+     "as": null,
+     "away": "Corralejo C",
+     "date": "2021-02-13",
+     "home": "Unión Tetir",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Tetir"
+    },
+    {
+     "as": null,
+     "away": "EuroLajares",
+     "date": "2021-02-13",
+     "home": "Corralejo B",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "Corralejo",
+     "date": "2021-02-12",
+     "home": "Villaverde",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Villaverde"
+    }
+   ],
+   "Jornada 11": [
+    {
+     "as": null,
+     "away": "La Oliva",
+     "date": "2021-02-20",
+     "home": "Corralejo",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "Unión Tetir",
+     "date": "2021-02-20",
+     "home": "Tamaragua",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "Corralejo B",
+     "date": "2021-02-20",
+     "home": "Corralejo C",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "Villaverde",
+     "date": "2021-02-19",
+     "home": "EuroLajares",
+     "hs": null,
+     "time": "17:00",
+     "venue": "Lajares"
+    }
+   ],
+   "Jornada 12": [
+    {
+     "as": null,
+     "away": "La Oliva",
+     "date": "2021-02-27",
+     "home": "Unión Tetir",
+     "hs": null,
+     "time": "",
+     "venue": "Tetir"
+    },
+    {
+     "as": 3,
+     "away": "Tamaragua",
+     "date": "2021-02-27",
+     "home": "Corralejo B",
+     "hs": 0,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": 0,
+     "away": "Corralejo C",
+     "date": "2021-02-27",
+     "home": "Villaverde",
+     "hs": 3,
+     "time": "17:30",
+     "venue": "Villaverde"
+    },
+    {
+     "as": 0,
+     "away": "Corralejo",
+     "date": "2021-02-27",
+     "home": "EuroLajares",
+     "hs": 3,
+     "time": "17:00",
+     "venue": "Lajares"
+    }
+   ],
+   "Jornada 13": [
+    {
+     "as": 9,
+     "away": "Corralejo",
+     "date": "2021-03-06",
+     "home": "Unión Tetir",
+     "hs": 0,
+     "time": "10:00",
+     "venue": "Tetir"
+    },
+    {
+     "as": null,
+     "away": "Corralejo B",
+     "date": "2021-03-06",
+     "home": "La Oliva",
+     "hs": null,
+     "time": "",
+     "venue": "La Oliva"
+    },
+    {
+     "as": 8,
+     "away": "Villaverde",
+     "date": "2021-03-06",
+     "home": "Tamaragua",
+     "hs": 0,
+     "time": "09:30",
+     "venue": "Jonathan Sesma"
+    },
+    {
+     "as": 8,
+     "away": "EuroLajares",
+     "date": "2021-03-06",
+     "home": "Corralejo C",
+     "hs": 1,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    }
+   ],
+   "Jornada 14": [
+    {
+     "as": null,
+     "away": "Unión Tetir",
+     "date": "2021-04-13",
+     "home": "Corralejo B",
+     "hs": null,
+     "time": "13:00",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "La Oliva",
+     "date": "2021-04-13",
+     "home": "Villaverde",
+     "hs": null,
+     "time": "",
+     "venue": "Villaverde"
+    },
+    {
+     "as": null,
+     "away": "Tamaragua",
+     "date": "2021-04-13",
+     "home": "EuroLajares",
+     "hs": null,
+     "time": "13:00",
+     "venue": "Lajares"
+    },
+    {
+     "as": null,
+     "away": "Corralejo C",
+     "date": "2021-04-13",
+     "home": "Corralejo",
+     "hs": null,
+     "time": "13:00",
+     "venue": "Vicente Carreño"
+    }
+   ],
+   "Jornada 2": [
+    {
+     "as": 14,
+     "away": "Corralejo",
+     "date": "2020-12-05",
+     "home": "Tamaragua",
+     "hs": 2,
+     "time": "09:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "Corralejo C",
+     "date": "2020-12-05",
+     "home": "La Oliva",
+     "hs": null,
+     "time": "09:30",
+     "venue": "La Oliva"
+    },
+    {
+     "as": 11,
+     "away": "EuroLajares",
+     "date": "2020-12-05",
+     "home": "Unión Tetir",
+     "hs": 3,
+     "time": "10:00",
+     "venue": "Tetir"
+    },
+    {
+     "as": 12,
+     "away": "Villaverde",
+     "date": "2020-12-05",
+     "home": "Corralejo B",
+     "hs": 1,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    }
+   ],
+   "Jornada 3": [
+    {
+     "as": null,
+     "away": "La Oliva",
+     "date": "2020-12-12",
+     "home": "Tamaragua",
+     "hs": null,
+     "time": "",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": 3,
+     "away": "Unión Tetir",
+     "date": "2020-12-12",
+     "home": "Corralejo C",
+     "hs": 8,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": 2,
+     "away": "Corralejo B",
+     "date": "2020-12-11",
+     "home": "EuroLajares",
+     "hs": 14,
+     "time": "17:00",
+     "venue": "Lajares"
+    },
+    {
+     "as": 7,
+     "away": "Villaverde",
+     "date": "2020-12-12",
+     "home": "Corralejo",
+     "hs": 2,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    }
+   ],
+   "Jornada 4": [
+    {
+     "as": null,
+     "away": "Corralejo",
+     "date": "2020-12-19",
+     "home": "La Oliva",
+     "hs": null,
+     "time": "09:30",
+     "venue": "La Oliva"
+    },
+    {
+     "as": 5,
+     "away": "Tamaragua",
+     "date": "2020-12-14",
+     "home": "Unión Tetir",
+     "hs": 6,
+     "time": "17:00",
+     "venue": "Tetir"
+    },
+    {
+     "as": 6,
+     "away": "Corralejo C",
+     "date": "2020-12-19",
+     "home": "Corralejo B",
+     "hs": 3,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": 4,
+     "away": "EuroLajares",
+     "date": "2020-12-18",
+     "home": "Villaverde",
+     "hs": 2,
+     "time": "17:30",
+     "venue": "Villaverde"
+    }
+   ],
+   "Jornada 5": [
+    {
+     "as": null,
+     "away": "Unión Tetir",
+     "date": "2021-01-09",
+     "home": "La Oliva",
+     "hs": null,
+     "time": "",
+     "venue": "La Oliva"
+    },
+    {
+     "as": 4,
+     "away": "Corralejo B",
+     "date": "2021-03-13",
+     "home": "Tamaragua",
+     "hs": 7,
+     "time": "09:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": 5,
+     "away": "Villaverde",
+     "date": "2021-03-13",
+     "home": "Corralejo C",
+     "hs": 6,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": 5,
+     "away": "EuroLajares",
+     "date": "2021-03-13",
+     "home": "Corralejo",
+     "hs": 6,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    }
+   ],
+   "Jornada 6": [
+    {
+     "as": 2,
+     "away": "Unión Tetir",
+     "date": "2021-04-30",
+     "home": "Corralejo",
+     "hs": 7,
+     "time": "18:00",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "La Oliva",
+     "date": "2021-04-29",
+     "home": "Corralejo B",
+     "hs": null,
+     "time": "",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": 2,
+     "away": "Tamaragua",
+     "date": "2021-04-29",
+     "home": "Villaverde",
+     "hs": 8,
+     "time": "17:30",
+     "venue": "Villaverde"
+    },
+    {
+     "as": 1,
+     "away": "Corralejo C",
+     "date": "2021-04-30",
+     "home": "EuroLajares",
+     "hs": 6,
+     "time": "17:00",
+     "venue": "Lajares"
+    }
+   ],
+   "Jornada 7": [
+    {
+     "as": 3,
+     "away": "Corralejo B",
+     "date": "2021-05-08",
+     "home": "Unión Tetir",
+     "hs": 9,
+     "time": "10:00",
+     "venue": "Tetir"
+    },
+    {
+     "as": null,
+     "away": "Villaverde",
+     "date": "2021-05-08",
+     "home": "La Oliva",
+     "hs": null,
+     "time": "",
+     "venue": "La Oliva"
+    },
+    {
+     "as": 6,
+     "away": "EuroLajares",
+     "date": "2021-05-08",
+     "home": "Tamaragua",
+     "hs": 2,
+     "time": "09:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": 5,
+     "away": "Corralejo",
+     "date": "2021-05-07",
+     "home": "Corralejo C",
+     "hs": 4,
+     "time": "17:00",
+     "venue": "Vicente Carreño"
+    }
+   ],
+   "Jornada 8": [
+    {
+     "as": 5,
+     "away": "Corralejo C",
+     "date": "2021-05-14",
+     "home": "Tamaragua",
+     "hs": 3,
+     "time": "17:00",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "EuroLajares",
+     "date": "2021-05-14",
+     "home": "La Oliva",
+     "hs": null,
+     "time": "",
+     "venue": "La Oliva"
+    },
+    {
+     "as": 10,
+     "away": "Villaverde",
+     "date": "2021-05-15",
+     "home": "Unión Tetir",
+     "hs": 0,
+     "time": "10:30",
+     "venue": "Villaverde"
+    },
+    {
+     "as": 5,
+     "away": "Corralejo",
+     "date": "2021-05-14",
+     "home": "Corralejo B",
+     "hs": 1,
+     "time": "19:00",
+     "venue": "Vicente Carreño"
+    }
+   ],
+   "Jornada 9": [
+    {
+     "as": null,
+     "away": "Tamaragua",
+     "date": "2021-02-06",
+     "home": "Corralejo",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "La Oliva",
+     "date": "2021-02-06",
+     "home": "Corralejo C",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Vicente Carreño"
+    },
+    {
+     "as": null,
+     "away": "Unión Tetir",
+     "date": "2021-02-05",
+     "home": "EuroLajares",
+     "hs": null,
+     "time": "17:00",
+     "venue": "Lajares"
+    },
+    {
+     "as": null,
+     "away": "Corralejo B",
+     "date": "2021-02-05",
+     "home": "Villaverde",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Villaverde"
+    }
+   ]
+  },
+  "name": "Grupo 1",
+  "phase": "Fuerteventura",
+  "results_from": [
+   "20210515204401",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-uno-fuerteventura/"
+  ],
+  "standings": [
+   [
+    1,
+    "Villaverde",
+    21,
+    9,
+    7,
+    0,
+    2,
+    61,
+    15,
+    46
+   ],
+   [
+    2,
+    "EuroLajares",
+    21,
+    8,
+    7,
+    0,
+    1,
+    57,
+    17,
+    40
+   ],
+   [
+    3,
+    "Corralejo*",
+    18,
+    9,
+    7,
+    0,
+    2,
+    57,
+    25,
+    32
+   ],
+   [
+    4,
+    "Corralejo C*",
+    12,
+    9,
+    5,
+    0,
+    4,
+    40,
+    36,
+    4
+   ],
+   [
+    5,
+    "Tamaragua",
+    6,
+    9,
+    2,
+    0,
+    7,
+    24,
+    60,
+    -36
+   ],
+   [
+    6,
+    "Unión Tetir",
+    6,
+    8,
+    2,
+    0,
+    6,
+    23,
+    59,
+    -36
+   ],
+   [
+    7,
+    "La Oliva",
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    8,
+    "Corralejo B*",
+    -3,
+    8,
+    0,
+    0,
+    8,
+    15,
+    65,
+    -50
+   ]
+  ],
+  "standings_from": [
+   "20210515204401",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-uno-fuerteventura/"
+  ],
+  "title": "PRIMERA BENJAMIN FUERTEVENTURA G1"
+ },
+ "FV12": {
+  "category": "BENJAMIN",
+  "island": "fuerteventura",
+  "jornadas": {
+   "Jornada 1": [
+    {
+     "as": 1,
+     "away": "C.D. 35600 B",
+     "date": "2020-11-28",
+     "home": "Henequen",
+     "hs": 11,
+     "time": "10:30",
+     "venue": "Fabelo"
+    },
+    {
+     "as": 2,
+     "away": "C.D. 35600 C",
+     "date": "2020-11-28",
+     "home": "Charco Atco.",
+     "hs": 11,
+     "time": "11:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 0,
+     "away": "Teguinte",
+     "date": "2020-12-09",
+     "home": "C.D. 35600",
+     "hs": 14,
+     "time": "16:45",
+     "venue": "Melián 2"
+    },
+    {
+     "as": 1,
+     "away": "La Peña",
+     "date": "2020-11-28",
+     "home": "Herbania",
+     "hs": 10,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 10": [
+    {
+     "as": null,
+     "away": "Henequen",
+     "date": "2021-02-13",
+     "home": "C.D. 35600 B",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "Charco Atco.",
+     "date": "2021-02-13",
+     "home": "C.D. 35600 C",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600",
+     "date": "2021-02-13",
+     "home": "Teguinte",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": null,
+     "away": "Herbania",
+     "date": "2021-02-13",
+     "home": "La Peña",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Melián 2"
+    }
+   ],
+   "Jornada 11": [
+    {
+     "as": null,
+     "away": "C.D. 35600 C",
+     "date": "2021-02-20",
+     "home": "Henequen",
+     "hs": null,
+     "time": "10:30",
+     "venue": "Fabelo"
+    },
+    {
+     "as": null,
+     "away": "Teguinte",
+     "date": "2021-02-20",
+     "home": "Charco Atco.",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "La Peña",
+     "date": "2021-02-20",
+     "home": "C.D. 35600",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "Unión Puerto",
+     "date": "2021-02-20",
+     "home": "Herbania",
+     "hs": null,
+     "time": "",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 12": [
+    {
+     "as": 2,
+     "away": "C.D. 35600 B",
+     "date": "2021-02-27",
+     "home": "C.D. 35600 C",
+     "hs": 4,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 4,
+     "away": "Henequen",
+     "date": "2021-03-03",
+     "home": "Teguinte",
+     "hs": 2,
+     "time": "16:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": 6,
+     "away": "Charco Atco.",
+     "date": "2021-02-27",
+     "home": "La Peña",
+     "hs": 3,
+     "time": "13:00",
+     "venue": "Melián 2"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600",
+     "date": "2021-02-26",
+     "home": "Unión Puerto",
+     "hs": null,
+     "time": "",
+     "venue": "Fabelo"
+    }
+   ],
+   "Jornada 13": [
+    {
+     "as": 3,
+     "away": "Teguinte",
+     "date": "2021-03-06",
+     "home": "C.D. 35600 B",
+     "hs": 3,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 3,
+     "away": "La Peña",
+     "date": "2021-03-06",
+     "home": "Henequen",
+     "hs": 10,
+     "time": "10:30",
+     "venue": "Fabelo"
+    },
+    {
+     "as": null,
+     "away": "Unión Puerto",
+     "date": "2021-03-06",
+     "home": "Charco Atco.",
+     "hs": null,
+     "time": "",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 1,
+     "away": "Herbania",
+     "date": "2021-03-06",
+     "home": "C.D. 35600",
+     "hs": 1,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 14": [
+    {
+     "as": 2,
+     "away": "C.D. 35600 C",
+     "date": "2021-03-13",
+     "home": "Teguinte",
+     "hs": 2,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": 2,
+     "away": "C.D. 35600 B",
+     "date": "2021-03-13",
+     "home": "La Peña",
+     "hs": 4,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": null,
+     "away": "Henequen",
+     "date": "2021-03-13",
+     "home": "Unión Puerto",
+     "hs": null,
+     "time": "",
+     "venue": "Fabelo"
+    },
+    {
+     "as": 2,
+     "away": "Charco Atco.",
+     "date": "2021-03-13",
+     "home": "Herbania",
+     "hs": 3,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 15": [
+    {
+     "as": null,
+     "away": "La Peña",
+     "date": "2021-03-20",
+     "home": "C.D. 35600 C",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "Unión Puerto",
+     "date": "2021-03-20",
+     "home": "C.D. 35600 B",
+     "hs": null,
+     "time": "",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "Herbania",
+     "date": "2021-03-20",
+     "home": "Henequen",
+     "hs": null,
+     "time": "10:30",
+     "venue": "Fabelo"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600",
+     "date": "2021-03-20",
+     "home": "Charco Atco.",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 16": [
+    {
+     "as": null,
+     "away": "Teguinte",
+     "date": "2021-03-27",
+     "home": "La Peña",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600 C",
+     "date": "2021-03-26",
+     "home": "Unión Puerto",
+     "hs": null,
+     "time": "",
+     "venue": "Fabelo"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600 B",
+     "date": "2021-03-27",
+     "home": "Herbania",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "Henequen",
+     "date": "2021-03-27",
+     "home": "C.D. 35600",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 17": [
+    {
+     "as": null,
+     "away": "Unión Puerto",
+     "date": "2021-04-10",
+     "home": "Teguinte",
+     "hs": null,
+     "time": "",
+     "venue": "Melián 2"
+    },
+    {
+     "as": null,
+     "away": "Herbania",
+     "date": "2021-04-10",
+     "home": "C.D. 35600 C",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600",
+     "date": "2021-04-10",
+     "home": "C.D. 35600 B",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "Charco Atco.",
+     "date": "2021-04-10",
+     "home": "Henequen",
+     "hs": null,
+     "time": "10:30",
+     "venue": "Fabelo"
+    }
+   ],
+   "Jornada 18": [
+    {
+     "as": null,
+     "away": "La Peña",
+     "date": "2021-04-17",
+     "home": "Unión Puerto",
+     "hs": null,
+     "time": "",
+     "venue": "Fabelo"
+    },
+    {
+     "as": null,
+     "away": "Teguinte",
+     "date": "2021-04-17",
+     "home": "Herbania",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600 C",
+     "date": "2021-04-17",
+     "home": "C.D. 35600",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600 B",
+     "date": "2021-04-17",
+     "home": "Charco Atco.",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 2": [
+    {
+     "as": 9,
+     "away": "Henequen",
+     "date": "2020-12-05",
+     "home": "C.D. 35600 C",
+     "hs": 0,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 9,
+     "away": "Charco Atco.",
+     "date": "2020-12-05",
+     "home": "Teguinte",
+     "hs": 2,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": 11,
+     "away": "C.D. 35600",
+     "date": "2020-12-05",
+     "home": "La Peña",
+     "hs": 0,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": 3,
+     "away": "Herbania",
+     "date": "2020-12-04",
+     "home": "Unión Puerto",
+     "hs": 0,
+     "time": "",
+     "venue": "Fabelo"
+    }
+   ],
+   "Jornada 3": [
+    {
+     "as": 2,
+     "away": "C.D. 35600 C",
+     "date": "2020-12-12",
+     "home": "C.D. 35600 B",
+     "hs": 4,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 6,
+     "away": "Teguinte",
+     "date": "2020-12-12",
+     "home": "Henequen",
+     "hs": 11,
+     "time": "10:30",
+     "venue": "Fabelo"
+    },
+    {
+     "as": 2,
+     "away": "La Peña",
+     "date": "2020-12-12",
+     "home": "Charco Atco.",
+     "hs": 3,
+     "time": "11:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 0,
+     "away": "Unión Puerto",
+     "date": "2020-12-12",
+     "home": "C.D. 35600",
+     "hs": 3,
+     "time": "",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 4": [
+    {
+     "as": 4,
+     "away": "C.D. 35600 B",
+     "date": "2020-12-19",
+     "home": "Teguinte",
+     "hs": 3,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": 3,
+     "away": "Henequen",
+     "date": "2020-12-19",
+     "home": "La Peña",
+     "hs": 6,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": 3,
+     "away": "Charco Atco.",
+     "date": "2020-12-18",
+     "home": "Unión Puerto",
+     "hs": 0,
+     "time": "",
+     "venue": "Fabelo"
+    },
+    {
+     "as": 2,
+     "away": "C.D. 35600",
+     "date": "2020-12-19",
+     "home": "Herbania",
+     "hs": 2,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 5": [
+    {
+     "as": 1,
+     "away": "Teguinte",
+     "date": "2021-05-01",
+     "home": "C.D. 35600 C",
+     "hs": 4,
+     "time": "09:30",
+     "venue": "Melián 1.2"
+    },
+    {
+     "as": 0,
+     "away": "La Peña",
+     "date": "2021-05-01",
+     "home": "C.D. 35600 B",
+     "hs": 4,
+     "time": "09:30",
+     "venue": "Melián 1.1"
+    },
+    {
+     "as": 0,
+     "away": "Unión Puerto",
+     "date": "2021-04-30",
+     "home": "Henequen",
+     "hs": 3,
+     "time": "",
+     "venue": "Fabelo"
+    },
+    {
+     "as": 3,
+     "away": "Herbania",
+     "date": "2021-05-01",
+     "home": "Charco Atco.",
+     "hs": 5,
+     "time": "11:30",
+     "venue": "Risco Prieto"
+    }
+   ],
+   "Jornada 6": [
+    {
+     "as": 5,
+     "away": "C.D. 35600 C",
+     "date": "2021-05-08",
+     "home": "La Peña",
+     "hs": 5,
+     "time": "09:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": 3,
+     "away": "C.D. 35600 B",
+     "date": "2021-05-08",
+     "home": "Unión Puerto",
+     "hs": 0,
+     "time": "",
+     "venue": "Fabelo"
+    },
+    {
+     "as": 3,
+     "away": "Henequen",
+     "date": "2021-05-08",
+     "home": "Herbania",
+     "hs": 4,
+     "time": "09:30",
+     "venue": "3-3 / acta 4-3"
+    },
+    {
+     "as": 1,
+     "away": "Charco Atco.",
+     "date": "2021-05-08",
+     "home": "C.D. 35600",
+     "hs": 9,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 7": [
+    {
+     "as": 9,
+     "away": "La Peña",
+     "date": "2021-05-15",
+     "home": "Teguinte",
+     "hs": 4,
+     "time": "11:30",
+     "venue": "Melián 2"
+    },
+    {
+     "as": null,
+     "away": "Unión Puerto",
+     "date": "2021-01-23",
+     "home": "C.D. 35600 C",
+     "hs": null,
+     "time": "",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 5,
+     "away": "Herbania",
+     "date": "2021-05-15",
+     "home": "C.D. 35600 B",
+     "hs": 1,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": 6,
+     "away": "C.D. 35600",
+     "date": "2021-05-14",
+     "home": "Henequen",
+     "hs": 4,
+     "time": "17:00",
+     "venue": "Fabelo"
+    }
+   ],
+   "Jornada 8": [
+    {
+     "as": null,
+     "away": "Teguinte",
+     "date": "2021-01-29",
+     "home": "Unión Puerto",
+     "hs": null,
+     "time": "",
+     "venue": "Fabelo"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600 C",
+     "date": "2021-01-30",
+     "home": "Herbania",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600 B",
+     "date": "2021-01-30",
+     "home": "C.D. 35600",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "Henequen",
+     "date": "2021-01-30",
+     "home": "Charco Atco.",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ],
+   "Jornada 9": [
+    {
+     "as": null,
+     "away": "Unión Puerto",
+     "date": "2021-02-06",
+     "home": "La Peña",
+     "hs": null,
+     "time": "",
+     "venue": "Melián 2"
+    },
+    {
+     "as": null,
+     "away": "Herbania",
+     "date": "2021-02-06",
+     "home": "Teguinte",
+     "hs": null,
+     "time": "13:00",
+     "venue": "Melián 2"
+    },
+    {
+     "as": null,
+     "away": "C.D. 35600",
+     "date": "2021-02-06",
+     "home": "C.D. 35600 C",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    },
+    {
+     "as": null,
+     "away": "Charco Atco.",
+     "date": "2021-02-06",
+     "home": "C.D. 35600 B",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Melián 1"
+    }
+   ]
+  },
+  "name": "Grupo 2",
+  "phase": "Fuerteventura",
+  "results_from": [
+   "20210515203010",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-dos-fuerteventura/"
+  ],
+  "standings": [
+   [
+    1,
+    "Charco Atco.",
+    18,
+    8,
+    6,
+    0,
+    2,
+    40,
+    24,
+    16
+   ],
+   [
+    2,
+    "C.D. 35600",
+    17,
+    7,
+    5,
+    2,
+    0,
+    46,
+    8,
+    38
+   ],
+   [
+    3,
+    "Herbania",
+    17,
+    8,
+    5,
+    2,
+    1,
+    31,
+    15,
+    16
+   ],
+   [
+    4,
+    "Henequen",
+    15,
+    8,
+    5,
+    0,
+    3,
+    54,
+    26,
+    28
+   ],
+   [
+    5,
+    "C.D. 35600 B",
+    13,
+    9,
+    4,
+    1,
+    4,
+    24,
+    32,
+    -8
+   ],
+   [
+    6,
+    "La Peña",
+    10,
+    10,
+    3,
+    1,
+    6,
+    33,
+    58,
+    -25
+   ],
+   [
+    7,
+    "C.D. 35600 C",
+    8,
+    7,
+    2,
+    2,
+    3,
+    19,
+    34,
+    -15
+   ],
+   [
+    8,
+    "Teguinte",
+    2,
+    8,
+    0,
+    2,
+    6,
+    21,
+    56,
+    -35
+   ],
+   [
+    9,
+    "Unión Puerto",
+    -3,
+    5,
+    0,
+    0,
+    5,
+    0,
+    15,
+    -15
+   ]
+  ],
+  "standings_from": [
+   "20210515203010",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-dos-fuerteventura/"
+  ],
+  "title": "PRIMERA BENJAMIN FUERTEVENTURA G2"
+ },
+ "FV13": {
+  "category": "BENJAMIN",
+  "island": "fuerteventura",
+  "jornadas": {
+   "Jornada 1": [
+    {
+     "as": 1,
+     "away": "Playas C",
+     "date": "2020-11-28",
+     "home": "Playas B",
+     "hs": 12,
+     "time": "17:00",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 2,
+     "away": "Balompédica",
+     "date": "2020-11-28",
+     "home": "European",
+     "hs": 1,
+     "time": "10:00",
+     "venue": "Costa Calma"
+    },
+    {
+     "as": 5,
+     "away": "Playas",
+     "date": "2020-11-28",
+     "home": "Tarajalejo",
+     "hs": 4,
+     "time": "09:30",
+     "venue": "Tarajalejo"
+    },
+    {
+     "as": 3,
+     "away": "Las Playitas",
+     "date": "2020-11-28",
+     "home": "Gran Tarajal",
+     "hs": 1,
+     "time": "10:00",
+     "venue": "Gran Tarajal"
+    }
+   ],
+   "Jornada 10": [
+    {
+     "as": null,
+     "away": "Playas C",
+     "date": "2021-02-14",
+     "home": "Balompédica",
+     "hs": null,
+     "time": "12:00",
+     "venue": "Antigua"
+    },
+    {
+     "as": null,
+     "away": "Playas B",
+     "date": "2021-02-14",
+     "home": "Playas",
+     "hs": null,
+     "time": "11:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": null,
+     "away": "European",
+     "date": "2021-02-13",
+     "home": "Las Playitas",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Las Playitas"
+    },
+    {
+     "as": null,
+     "away": "Gran Tarajal",
+     "date": "2021-02-13",
+     "home": "Tarajalejo",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Tarajalejo"
+    }
+   ],
+   "Jornada 11": [
+    {
+     "as": null,
+     "away": "Balompédica",
+     "date": "2021-02-20",
+     "home": "Gran Tarajal",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Gran Tarajal"
+    },
+    {
+     "as": null,
+     "away": "Playas",
+     "date": "2021-02-21",
+     "home": "Playas C",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": null,
+     "away": "Las Playitas",
+     "date": "2021-02-20",
+     "home": "Playas B",
+     "hs": null,
+     "time": "17:00",
+     "venue": "Morro jable"
+    },
+    {
+     "as": null,
+     "away": "Tarajalejo",
+     "date": "2021-02-20",
+     "home": "European",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Costa Calma"
+    }
+   ],
+   "Jornada 12": [
+    {
+     "as": 6,
+     "away": "Balompédica",
+     "date": "2021-02-27",
+     "home": "Playas",
+     "hs": 3,
+     "time": "17:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 1,
+     "away": "Playas C",
+     "date": "2021-02-27",
+     "home": "Las Playitas",
+     "hs": 9,
+     "time": "09:30",
+     "venue": "Las Playitas"
+    },
+    {
+     "as": 3,
+     "away": "Playas B",
+     "date": "2021-02-27",
+     "home": "Tarajalejo",
+     "hs": 2,
+     "time": "09:30",
+     "venue": "Tarajalejo"
+    },
+    {
+     "as": 2,
+     "away": "Gran Tarajal",
+     "date": "2021-02-27",
+     "home": "European",
+     "hs": 4,
+     "time": "10:00",
+     "venue": "Costa Calma"
+    }
+   ],
+   "Jornada 13": [
+    {
+     "as": 1,
+     "away": "Gran Tarajal",
+     "date": "2021-03-07",
+     "home": "Playas",
+     "hs": 1,
+     "time": "11:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 5,
+     "away": "Las Playitas",
+     "date": "2021-03-06",
+     "home": "Balompédica",
+     "hs": 6,
+     "time": "12:00",
+     "venue": "Antigua"
+    },
+    {
+     "as": 5,
+     "away": "Tarajalejo",
+     "date": "2021-03-07",
+     "home": "Playas C",
+     "hs": 1,
+     "time": "09:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 1,
+     "away": "European",
+     "date": "2021-03-11",
+     "home": "Playas B",
+     "hs": 4,
+     "time": "17:00",
+     "venue": "Morro jable"
+    }
+   ],
+   "Jornada 14": [
+    {
+     "as": null,
+     "away": "Playas",
+     "date": "2021-04-13",
+     "home": "Las Playitas",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Las Playitas"
+    },
+    {
+     "as": null,
+     "away": "Balompédica",
+     "date": "2021-04-13",
+     "home": "Tarajalejo",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Tarajalejo"
+    },
+    {
+     "as": null,
+     "away": "Playas C",
+     "date": "2021-04-13",
+     "home": "European",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Costa Calma"
+    },
+    {
+     "as": null,
+     "away": "Playas B",
+     "date": "2021-04-13",
+     "home": "Gran Tarajal",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Gran Tarajal"
+    }
+   ],
+   "Jornada 2": [
+    {
+     "as": 8,
+     "away": "Gran Tarajal",
+     "date": "2020-12-06",
+     "home": "Playas C",
+     "hs": 1,
+     "time": "09:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 4,
+     "away": "Playas B",
+     "date": "2020-12-05",
+     "home": "Balompédica",
+     "hs": 3,
+     "time": "12:00",
+     "venue": "Antigua"
+    },
+    {
+     "as": 3,
+     "away": "European",
+     "date": "2020-12-06",
+     "home": "Playas",
+     "hs": 3,
+     "time": "11:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 3,
+     "away": "Tarajalejo",
+     "date": "2020-12-05",
+     "home": "Las Playitas",
+     "hs": 4,
+     "time": "09:30",
+     "venue": "Las Playitas"
+    }
+   ],
+   "Jornada 3": [
+    {
+     "as": 14,
+     "away": "Balompédica",
+     "date": "2020-12-13",
+     "home": "Playas C",
+     "hs": 0,
+     "time": "09:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 2,
+     "away": "Playas",
+     "date": "2020-12-12",
+     "home": "Playas B",
+     "hs": 7,
+     "time": "17:00",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 3,
+     "away": "Las Playitas",
+     "date": "2020-12-12",
+     "home": "European",
+     "hs": 2,
+     "time": "10:00",
+     "venue": "Costa Calma"
+    },
+    {
+     "as": 0,
+     "away": "Tarajalejo",
+     "date": "2020-12-12",
+     "home": "Gran Tarajal",
+     "hs": 5,
+     "time": "10:00",
+     "venue": "Gran Tarajal"
+    }
+   ],
+   "Jornada 4": [
+    {
+     "as": 4,
+     "away": "Gran Tarajal",
+     "date": "2020-12-19",
+     "home": "Balompédica",
+     "hs": 4,
+     "time": "12:00",
+     "venue": "Antigua"
+    },
+    {
+     "as": 1,
+     "away": "Playas C",
+     "date": "2020-12-20",
+     "home": "Playas",
+     "hs": 8,
+     "time": "11:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 5,
+     "away": "Playas B",
+     "date": "2020-12-19",
+     "home": "Las Playitas",
+     "hs": 3,
+     "time": "09:30",
+     "venue": "Las Playitas"
+    },
+    {
+     "as": 9,
+     "away": "European",
+     "date": "2020-12-19",
+     "home": "Tarajalejo",
+     "hs": 2,
+     "time": "09:30",
+     "venue": "Tarajalejo"
+    }
+   ],
+   "Jornada 5": [
+    {
+     "as": 1,
+     "away": "Playas",
+     "date": "2021-03-13",
+     "home": "Balompédica",
+     "hs": 3,
+     "time": "12:00",
+     "venue": "Antigua"
+    },
+    {
+     "as": 8,
+     "away": "Las Playitas",
+     "date": "2021-03-14",
+     "home": "Playas C",
+     "hs": 0,
+     "time": "09:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 1,
+     "away": "Tarajalejo",
+     "date": "2021-03-13",
+     "home": "Playas B",
+     "hs": 7,
+     "time": "09:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 1,
+     "away": "European",
+     "date": "2021-03-13",
+     "home": "Gran Tarajal",
+     "hs": 1,
+     "time": "10:00",
+     "venue": "Gran Tarajal"
+    }
+   ],
+   "Jornada 6": [
+    {
+     "as": 2,
+     "away": "Playas",
+     "date": "2021-05-01",
+     "home": "Gran Tarajal",
+     "hs": 3,
+     "time": "10:00",
+     "venue": "Gran Tarajal"
+    },
+    {
+     "as": 5,
+     "away": "Balompédica",
+     "date": "2021-04-30",
+     "home": "Las Playitas",
+     "hs": 4,
+     "time": "18:00",
+     "venue": "Las Playitas"
+    },
+    {
+     "as": 1,
+     "away": "Playas C",
+     "date": "2021-05-01",
+     "home": "Tarajalejo",
+     "hs": 10,
+     "time": "09:30",
+     "venue": "Tarajalejo"
+    },
+    {
+     "as": 3,
+     "away": "Playas B",
+     "date": "2021-05-01",
+     "home": "European",
+     "hs": 1,
+     "time": "10:00",
+     "venue": "Costa Calma"
+    }
+   ],
+   "Jornada 7": [
+    {
+     "as": 1,
+     "away": "Las Playitas",
+     "date": "2021-05-05",
+     "home": "Playas",
+     "hs": 4,
+     "time": "17:00",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 3,
+     "away": "Tarajalejo",
+     "date": "2021-05-08",
+     "home": "Balompédica",
+     "hs": 5,
+     "time": "12:00",
+     "venue": "Antigua"
+    },
+    {
+     "as": 10,
+     "away": "European",
+     "date": "2021-05-09",
+     "home": "Playas C",
+     "hs": 2,
+     "time": "09:30",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 1,
+     "away": "Gran Tarajal",
+     "date": "2021-05-08",
+     "home": "Playas B",
+     "hs": 2,
+     "time": "17:00",
+     "venue": "Morro jable"
+    }
+   ],
+   "Jornada 8": [
+    {
+     "as": 6,
+     "away": "Playas B",
+     "date": "2021-05-12",
+     "home": "Playas C",
+     "hs": 0,
+     "time": "16:15",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 1,
+     "away": "European",
+     "date": "2021-05-15",
+     "home": "Balompédica",
+     "hs": 3,
+     "time": "12:00",
+     "venue": "Antigua"
+    },
+    {
+     "as": 2,
+     "away": "Tarajalejo",
+     "date": "2021-05-15",
+     "home": "Playas",
+     "hs": 4,
+     "time": "10:00",
+     "venue": "Morro jable"
+    },
+    {
+     "as": 1,
+     "away": "Gran Tarajal",
+     "date": "2021-05-15",
+     "home": "Las Playitas",
+     "hs": 1,
+     "time": "09:30",
+     "venue": "Las Playitas"
+    }
+   ],
+   "Jornada 9": [
+    {
+     "as": null,
+     "away": "Playas C",
+     "date": "2021-02-06",
+     "home": "Gran Tarajal",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Gran Tarajal"
+    },
+    {
+     "as": null,
+     "away": "Balompédica",
+     "date": "2021-02-06",
+     "home": "Playas B",
+     "hs": null,
+     "time": "17:00",
+     "venue": "Morro jable"
+    },
+    {
+     "as": null,
+     "away": "Playas",
+     "date": "2021-02-06",
+     "home": "European",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Costa Calma"
+    },
+    {
+     "as": null,
+     "away": "Las Playitas",
+     "date": "2021-02-06",
+     "home": "Tarajalejo",
+     "hs": null,
+     "time": "09:30",
+     "venue": "Tarajalejo"
+    }
+   ]
+  },
+  "name": "Grupo 3",
+  "phase": "Fuerteventura",
+  "results_from": [
+   "20210515201825",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-tres-fuerteventura/"
+  ],
+  "standings": [
+   [
+    1,
+    "Playas B",
+    30,
+    10,
+    10,
+    0,
+    0,
+    53,
+    15,
+    38
+   ],
+   [
+    2,
+    "Balompédica",
+    25,
+    10,
+    8,
+    1,
+    1,
+    51,
+    26,
+    25
+   ],
+   [
+    3,
+    "Las Playitas",
+    16,
+    10,
+    5,
+    1,
+    4,
+    41,
+    28,
+    13
+   ],
+   [
+    4,
+    "Playas",
+    14,
+    10,
+    4,
+    2,
+    4,
+    33,
+    31,
+    2
+   ],
+   [
+    5,
+    "Gran Tarajal",
+    13,
+    10,
+    3,
+    4,
+    3,
+    27,
+    19,
+    8
+   ],
+   [
+    6,
+    "European",
+    11,
+    10,
+    3,
+    2,
+    5,
+    33,
+    25,
+    8
+   ],
+   [
+    7,
+    "Tarajalejo",
+    6,
+    10,
+    2,
+    0,
+    8,
+    32,
+    44,
+    -12
+   ],
+   [
+    8,
+    "Playas C",
+    0,
+    10,
+    0,
+    0,
+    10,
+    8,
+    90,
+    -82
+   ]
+  ],
+  "standings_from": [
+   "20210515201825",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-tres-fuerteventura/"
+  ],
+  "title": "PRIMERA BENJAMIN FUERTEVENTURA G3"
+ },
+ "PGC1": {
+  "category": "PREBENJAMIN",
+  "island": "grancanaria",
+  "jornadas": {
+   "Jornada 1": [
+    {
+     "as": 0,
+     "away": "Cardones",
+     "date": "2020-12-06",
+     "home": "Tamaraceite",
+     "hs": 5,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": 10,
+     "away": "Atl. Huracán",
+     "date": "2020-12-04",
+     "home": "Roque Amagro",
+     "hs": 3,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": 3,
+     "away": "Lomo Blanco",
+     "date": "2020-12-04",
+     "home": "Santidad B",
+     "hs": 7,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 0,
+     "away": "Guayarmina",
+     "date": "2020-12-06",
+     "home": "Acodetti",
+     "hs": 18,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": 4,
+     "away": "Barrial",
+     "date": "2020-12-06",
+     "home": "Arucas",
+     "hs": 1,
+     "time": "10:00",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": 6,
+     "away": "Teror",
+     "date": "2020-12-05",
+     "home": "Unión Moral",
+     "hs": 10,
+     "time": "",
+     "venue": "Venancio Monzón"
+    }
+   ],
+   "Jornada 10": [
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-02-19",
+     "home": "Barrial",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-02-20",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-02-20",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-02-21",
+     "home": "Arucas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-02-21",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-02-19",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    }
+   ],
+   "Jornada 11": [
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-02-26",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-02-27",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-02-27",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-02-26",
+     "home": "Cardones",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-02-28",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-02-27",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "12:00",
+     "venue": "Venancio Monzón"
+    }
+   ],
+   "Jornada 12": [
+    {
+     "as": 6,
+     "away": "Barrial",
+     "date": "2021-03-06",
+     "home": "Teror",
+     "hs": 0,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": 0,
+     "away": "Guayarmina",
+     "date": "2021-03-06",
+     "home": "Piletas",
+     "hs": 7,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": 1,
+     "away": "Lomo Blanco",
+     "date": "2021-03-07",
+     "home": "Arucas",
+     "hs": 3,
+     "time": "09:00",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": 2,
+     "away": "Atl. Huracán",
+     "date": "2021-03-07",
+     "home": "Acodetti",
+     "hs": 8,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": 9,
+     "away": "Cardones",
+     "date": "2021-03-05",
+     "home": "Santidad B",
+     "hs": 1,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 6,
+     "away": "Tamaraceite",
+     "date": "2021-03-05",
+     "home": "Roque Amagro",
+     "hs": 1,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    }
+   ],
+   "Jornada 13": [
+    {
+     "as": 7,
+     "away": "Piletas",
+     "date": "2021-03-12",
+     "home": "Barrial",
+     "hs": 0,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": 3,
+     "away": "Arucas",
+     "date": "2021-03-12",
+     "home": "Guayarmina",
+     "hs": 3,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": 12,
+     "away": "Acodetti",
+     "date": "2021-03-13",
+     "home": "Lomo Blanco",
+     "hs": 0,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": 0,
+     "away": "Santidad B",
+     "date": "2021-03-13",
+     "home": "Atl. Huracán",
+     "hs": 12,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": 6,
+     "away": "Roque Amagro",
+     "date": "2021-03-12",
+     "home": "Cardones",
+     "hs": 1,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": 3,
+     "away": "Unión Moral",
+     "date": "2021-03-14",
+     "home": "Tamaraceite",
+     "hs": 5,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    }
+   ],
+   "Jornada 14": [
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-03-19",
+     "home": "Cardones",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-03-20",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-03-20",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-03-19",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-03-19",
+     "home": "Barrial",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-03-20",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    }
+   ],
+   "Jornada 15": [
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-03-27",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-03-28",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-03-26",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-03-26",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-03-28",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-03-27",
+     "home": "Piletas",
+     "hs": null,
+     "time": "",
+     "venue": "Piletas"
+    }
+   ],
+   "Jornada 16": [
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-04-10",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-04-10",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-04-09",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-04-09",
+     "home": "Barrial",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-04-10",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-04-10",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    }
+   ],
+   "Jornada 17": [
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-04-17",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    },
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-04-16",
+     "home": "Cardones",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-04-18",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-04-16",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-04-18",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-04-18",
+     "home": "Arucas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Elías Rizkallal"
+    }
+   ],
+   "Jornada 18": [
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-04-24",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-04-23",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-04-23",
+     "home": "Barrial",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-04-24",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-04-24",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-04-25",
+     "home": "Arucas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Elías Rizkallal"
+    }
+   ],
+   "Jornada 19": [
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-05-08",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    },
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-05-08",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-05-07",
+     "home": "Cardones",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-05-07",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-05-07",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-05-09",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    }
+   ],
+   "Jornada 2": [
+    {
+     "as": 7,
+     "away": "Unión Moral",
+     "date": "2020-12-11",
+     "home": "Cardones",
+     "hs": 4,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": 3,
+     "away": "Tamaraceite",
+     "date": "2020-12-12",
+     "home": "Atl. Huracán",
+     "hs": 3,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": 3,
+     "away": "Roque Amagro",
+     "date": "2020-12-12",
+     "home": "Lomo Blanco",
+     "hs": 1,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": 6,
+     "away": "Santidad B",
+     "date": "2020-12-11",
+     "home": "Guayarmina",
+     "hs": 1,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": 11,
+     "away": "Acodetti",
+     "date": "2020-12-11",
+     "home": "Barrial",
+     "hs": 0,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": 6,
+     "away": "Piletas",
+     "date": "2020-12-12",
+     "home": "Teror",
+     "hs": 3,
+     "time": "",
+     "venue": "El Pino"
+    }
+   ],
+   "Jornada 20": [
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-05-14",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-05-14",
+     "home": "Barrial",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-05-14",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-05-15",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-05-16",
+     "home": "Arucas",
+     "hs": null,
+     "time": "13:00",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-05-16",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    }
+   ],
+   "Jornada 21": [
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-05-22",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    },
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-05-22",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-05-21",
+     "home": "Cardones",
+     "hs": null,
+     "time": "",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-05-23",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-05-21",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-05-22",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Javier Armas"
+    }
+   ],
+   "Jornada 22": [
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-05-28",
+     "home": "Barrial",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-05-29",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-05-29",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-05-30",
+     "home": "Arucas",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-05-30",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-05-28",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    }
+   ],
+   "Jornada 23": [
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-06-05",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    },
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-06-05",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-06-05",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-06-04",
+     "home": "Cardones",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-06-06",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-06-04",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    }
+   ],
+   "Jornada 24": [
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-06-12",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-06-12",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-06-13",
+     "home": "Arucas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-06-13",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-06-11",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-06-11",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    }
+   ],
+   "Jornada 25": [
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-06-18",
+     "home": "Barrial",
+     "hs": null,
+     "time": "",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-06-18",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-06-19",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-06-19",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-06-18",
+     "home": "Cardones",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-06-20",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    }
+   ],
+   "Jornada 26": [
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-06-26",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-06-26",
+     "home": "Arucas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-06-26",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-06-26",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-06-25",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-06-26",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Venancio Monzón"
+    }
+   ],
+   "Jornada 3": [
+    {
+     "as": 11,
+     "away": "Atl. Huracán",
+     "date": "2020-12-18",
+     "home": "Cardones",
+     "hs": 0,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": 0,
+     "away": "Lomo Blanco",
+     "date": "2020-12-20",
+     "home": "Tamaraceite",
+     "hs": 7,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": 0,
+     "away": "Guayarmina",
+     "date": "2020-12-18",
+     "home": "Roque Amagro",
+     "hs": 10,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": 3,
+     "away": "Barrial",
+     "date": "2020-12-18",
+     "home": "Santidad B",
+     "hs": 2,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 3,
+     "away": "Teror",
+     "date": "2020-12-20",
+     "home": "Arucas",
+     "hs": 2,
+     "time": "",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": 3,
+     "away": "Piletas",
+     "date": "2020-12-19",
+     "home": "Unión Moral",
+     "hs": 2,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    }
+   ],
+   "Jornada 4": [
+    {
+     "as": 1,
+     "away": "Unión Moral",
+     "date": "2021-05-15",
+     "home": "Atl. Huracán",
+     "hs": 14,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": 0,
+     "away": "Cardones",
+     "date": "2021-05-15",
+     "home": "Lomo Blanco",
+     "hs": 5,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": 8,
+     "away": "Tamaraceite",
+     "date": "2021-05-14",
+     "home": "Guayarmina",
+     "hs": 1,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": 8,
+     "away": "Roque Amagro",
+     "date": "2021-05-14",
+     "home": "Barrial",
+     "hs": 1,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": 6,
+     "away": "Acodetti",
+     "date": "2021-05-14",
+     "home": "Teror",
+     "hs": 0,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": 1,
+     "away": "Arucas",
+     "date": "2021-05-15",
+     "home": "Piletas",
+     "hs": 6,
+     "time": "09:00",
+     "venue": "Piletas"
+    }
+   ],
+   "Jornada 5": [
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-05-22",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-05-21",
+     "home": "Cardones",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-05-23",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-05-21",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-05-23",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-05-22",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    }
+   ],
+   "Jornada 6": [
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-01-23",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán",
+     "date": "2021-01-22",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-01-22",
+     "home": "Barrial",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-01-23",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-01-23",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-01-24",
+     "home": "Arucas",
+     "hs": null,
+     "time": "13:00",
+     "venue": "Elías Rizkallal"
+    }
+   ],
+   "Jornada 7": [
+    {
+     "as": null,
+     "away": "Guayarmina",
+     "date": "2021-01-30",
+     "home": "Lomo Blanco",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Ruano Tejera"
+    },
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-01-30",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-01-31",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-01-29",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-01-29",
+     "home": "Santidad B",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-01-30",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    }
+   ],
+   "Jornada 8": [
+    {
+     "as": null,
+     "away": "Unión Moral",
+     "date": "2021-02-05",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Lomo Blanco",
+     "date": "2021-02-05",
+     "home": "Barrial",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Cardones",
+     "date": "2021-02-06",
+     "home": "Teror",
+     "hs": null,
+     "time": "",
+     "venue": "El Pino"
+    },
+    {
+     "as": null,
+     "away": "Tamaraceite",
+     "date": "2021-02-06",
+     "home": "Piletas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Piletas"
+    },
+    {
+     "as": null,
+     "away": "Roque Amagro",
+     "date": "2021-02-07",
+     "home": "Arucas",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Elías Rizkallal"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-02-07",
+     "home": "Acodetti",
+     "hs": null,
+     "time": "11:00",
+     "venue": "Mayordomía 1"
+    }
+   ],
+   "Jornada 9": [
+    {
+     "as": null,
+     "away": "Barrial",
+     "date": "2021-02-12",
+     "home": "Guayarmina",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Agaete"
+    },
+    {
+     "as": null,
+     "away": "Teror",
+     "date": "2021-02-13",
+     "home": "Atl. Huracán",
+     "hs": null,
+     "time": "",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Piletas",
+     "date": "2021-02-12",
+     "home": "Cardones",
+     "hs": null,
+     "time": "17:30",
+     "venue": "Dom.Castro"
+    },
+    {
+     "as": null,
+     "away": "Arucas",
+     "date": "2021-02-14",
+     "home": "Tamaraceite",
+     "hs": null,
+     "time": "09:00",
+     "venue": "Juan Guedes"
+    },
+    {
+     "as": null,
+     "away": "Acodetti",
+     "date": "2021-02-12",
+     "home": "Roque Amagro",
+     "hs": null,
+     "time": "18:00",
+     "venue": "Antonio Castillo"
+    },
+    {
+     "as": null,
+     "away": "Santidad B",
+     "date": "2021-02-13",
+     "home": "Unión Moral",
+     "hs": null,
+     "time": "10:00",
+     "venue": "Venancio Monzón"
+    }
+   ]
+  },
+  "name": "Grupo 1",
+  "phase": "Primera Fase GC",
+  "results_from": [
+   "20210515202221",
+   "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html"
+  ],
+  "standings": [
+   [
+    1,
+    "Tamaraceite",
+    16,
+    6,
+    5,
+    1,
+    0,
+    34,
+    8,
+    26
+   ],
+   [
+    2,
+    "Acodetti",
+    15,
+    5,
+    5,
+    0,
+    0,
+    55,
+    2,
+    53
+   ],
+   [
+    3,
+    "Piletas",
+    15,
+    5,
+    5,
+    0,
+    0,
+    29,
+    6,
+    23
+   ],
+   [
+    4,
+    "Atl. Huracán",
+    13,
+    6,
+    4,
+    1,
+    1,
+    52,
+    15,
+    37
+   ],
+   [
+    5,
+    "Roque Amagro",
+    12,
+    6,
+    4,
+    0,
+    2,
+    31,
+    19,
+    12
+   ],
+   [
+    6,
+    "Barrial",
+    9,
+    6,
+    3,
+    0,
+    3,
+    14,
+    29,
+    -15
+   ],
+   [
+    7,
+    "Unión Moral",
+    6,
+    5,
+    2,
+    0,
+    3,
+    23,
+    32,
+    -9
+   ],
+   [
+    8,
+    "Santidad B",
+    6,
+    5,
+    2,
+    0,
+    3,
+    16,
+    28,
+    -12
+   ],
+   [
+    9,
+    "Arucas",
+    4,
+    5,
+    1,
+    1,
+    3,
+    10,
+    17,
+    -7
+   ],
+   [
+    10,
+    "Cardones",
+    3,
+    6,
+    1,
+    0,
+    5,
+    14,
+    35,
+    -21
+   ],
+   [
+    11,
+    "Lomo Blanco",
+    3,
+    6,
+    1,
+    0,
+    5,
+    10,
+    32,
+    -22
+   ],
+   [
+    12,
+    "Guayarmina",
+    1,
+    6,
+    0,
+    1,
+    5,
+    5,
+    52,
+    -47
+   ],
+   [
+    13,
+    "*Teror",
+    0,
+    5,
+    1,
+    0,
+    4,
+    12,
+    30,
+    -18
+   ]
+  ],
+  "standings_from": [
+   "20210515202221",
+   "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html"
+  ],
+  "title": "LIGA PREBENJAMIN GRUPO 1"
+ },
+ "PGC2": {
+  "category": "PREBENJAMIN",
+  "island": "grancanaria",
+  "jornadas": {
+   "Jornada 1": [
+    {
+     "as": 0,
+     "away": "Ingenio",
+     "date": "2020-12-06",
+     "home": "Acodetti B",
+     "hs": 7,
+     "time": "09:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": 2,
+     "away": "San Juan",
+     "date": "2020-12-06",
+     "home": "Unión Viera",
+     "hs": 4,
+     "time": "11:00",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": 4,
+     "away": "Unión Carrizal",
+     "date": "2020-12-06",
+     "home": "Victoria",
+     "hs": 3,
+     "time": "11:00",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": 0,
+     "away": "Santidad",
+     "date": "2020-12-05",
+     "home": "Football Project",
+     "hs": 16,
+     "time": "09:00",
+     "venue": "Maspalomas 2"
+    },
+    {
+     "as": 2,
+     "away": "Cerruda",
+     "date": "2020-12-05",
+     "home": "Atl. Huracán B",
+     "hs": 8,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": 4,
+     "away": "Calero",
+     "date": "2020-12-05",
+     "home": "Barrio Atlan.",
+     "hs": 4,
+     "time": "09:00",
+     "venue": "P. Atlántico"
+    }
+   ],
+   "Jornada 10": [
+    {
+     "as": 7,
+     "away": "Barrio Atlan.",
+     "date": "2021-06-26",
+     "home": "Cerruda",
+     "hs": 3,
+     "time": "09:00",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": 3,
+     "away": "Unión Carrizal",
+     "date": "2021-06-26",
+     "home": "Calero",
+     "hs": 5,
+     "time": "09:00",
+     "venue": "El Calero"
+    },
+    {
+     "as": 2,
+     "away": "San Juan",
+     "date": "2021-06-26",
+     "home": "Arinaga",
+     "hs": 6,
+     "time": "09:00",
+     "venue": "Mun. Arinaga"
+    },
+    {
+     "as": 2,
+     "away": "Ingenio",
+     "date": "2021-06-26",
+     "home": "Atl. Huracán B",
+     "hs": 6,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": 0,
+     "away": "Acodetti B",
+     "date": "2021-06-26",
+     "home": "Football Project",
+     "hs": 5,
+     "time": "09:00",
+     "venue": "Maspalomas 2"
+    },
+    {
+     "as": 7,
+     "away": "Unión Viera",
+     "date": "2021-06-27",
+     "home": "Victoria",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "Puerto Pi"
+    }
+   ],
+   "Jornada 11": [
+    {
+     "as": 7,
+     "away": "Calero",
+     "date": "2021-06-30",
+     "home": "Santidad",
+     "hs": 2,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 4,
+     "away": "Arinaga",
+     "date": "2021-06-30",
+     "home": "Unión Carrizal",
+     "hs": 6,
+     "time": "17:30",
+     "venue": "El Toril"
+    },
+    {
+     "as": 2,
+     "away": "Atl. Huracán B",
+     "date": "2021-06-29",
+     "home": "San Juan",
+     "hs": 2,
+     "time": "17:30",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": 8,
+     "away": "Football Project",
+     "date": "2021-06-30",
+     "home": "Ingenio",
+     "hs": 1,
+     "time": "17:30",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": 2,
+     "away": "Victoria",
+     "date": "2021-06-30",
+     "home": "Acodetti B",
+     "hs": 1,
+     "time": "17:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": 6,
+     "away": "Unión Viera",
+     "date": "2021-06-30",
+     "home": "Barrio Atlan.",
+     "hs": 0,
+     "time": "17:30",
+     "venue": "P. Atlántico"
+    }
+   ],
+   "Jornada 12": [
+    {
+     "as": 3,
+     "away": "Cerruda",
+     "date": "2021-03-06",
+     "home": "Calero",
+     "hs": 11,
+     "time": "09:00",
+     "venue": "El Calero"
+    },
+    {
+     "as": 3,
+     "away": "Santidad",
+     "date": "2021-06-02",
+     "home": "Arinaga",
+     "hs": 10,
+     "time": "18:00",
+     "venue": "CASO COVID19"
+    },
+    {
+     "as": 4,
+     "away": "Unión Carrizal",
+     "date": "2021-03-06",
+     "home": "Atl. Huracán B",
+     "hs": 1,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": 0,
+     "away": "San Juan",
+     "date": "2021-03-06",
+     "home": "Football Project",
+     "hs": 8,
+     "time": "11:00",
+     "venue": "Maspalomas 2"
+    },
+    {
+     "as": 2,
+     "away": "Ingenio",
+     "date": "2021-03-07",
+     "home": "Victoria",
+     "hs": 7,
+     "time": "11:00",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": 0,
+     "away": "Acodetti B",
+     "date": "2021-03-06",
+     "home": "Unión Viera",
+     "hs": 9,
+     "time": "09:00",
+     "venue": "Alfonso Silva"
+    }
+   ],
+   "Jornada 13": [
+    {
+     "as": 12,
+     "away": "Arinaga",
+     "date": "2021-03-13",
+     "home": "Cerruda",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": 5,
+     "away": "Atl. Huracán B",
+     "date": "2021-03-12",
+     "home": "Santidad",
+     "hs": 5,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 7,
+     "away": "Football Project",
+     "date": "2021-03-13",
+     "home": "Unión Carrizal",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "El Toril"
+    },
+    {
+     "as": 0,
+     "away": "Victoria",
+     "date": "2021-03-13",
+     "home": "San Juan",
+     "hs": 1,
+     "time": "09:00",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": 14,
+     "away": "Unión Viera",
+     "date": "2021-03-13",
+     "home": "Ingenio",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": 6,
+     "away": "Barrio Atlan.",
+     "date": "2021-03-14",
+     "home": "Acodetti B",
+     "hs": 7,
+     "time": "09:00",
+     "venue": "Mayordomía 1"
+    }
+   ],
+   "Jornada 14": [
+    {
+     "as": null,
+     "away": "Acodetti B",
+     "date": "2021-03-20",
+     "home": "Ingenio",
+     "hs": null,
+     "time": "",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": null,
+     "away": "Unión Viera",
+     "date": "2021-03-20",
+     "home": "San Juan",
+     "hs": null,
+     "time": "",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": null,
+     "away": "Victoria",
+     "date": "2021-03-20",
+     "home": "Unión Carrizal",
+     "hs": null,
+     "time": "",
+     "venue": "El Toril"
+    },
+    {
+     "as": null,
+     "away": "Football Project",
+     "date": "2021-03-19",
+     "home": "Santidad",
+     "hs": null,
+     "time": "",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán B",
+     "date": "2021-03-20",
+     "home": "Cerruda",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": null,
+     "away": "Barrio Atlan.",
+     "date": "2021-03-20",
+     "home": "Calero",
+     "hs": null,
+     "time": "",
+     "venue": "El Calero"
+    }
+   ],
+   "Jornada 15": [
+    {
+     "as": null,
+     "away": "Ingenio",
+     "date": "2021-03-27",
+     "home": "Barrio Atlan.",
+     "hs": null,
+     "time": "",
+     "venue": "P. Atlántico"
+    },
+    {
+     "as": null,
+     "away": "San Juan",
+     "date": "2021-03-28",
+     "home": "Acodetti B",
+     "hs": null,
+     "time": "",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Unión Carrizal",
+     "date": "2021-03-27",
+     "home": "Unión Viera",
+     "hs": null,
+     "time": "",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": null,
+     "away": "Santidad",
+     "date": "2021-03-28",
+     "home": "Victoria",
+     "hs": null,
+     "time": "",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": null,
+     "away": "Cerruda",
+     "date": "2021-03-27",
+     "home": "Football Project",
+     "hs": null,
+     "time": "",
+     "venue": "Maspalomas 2"
+    },
+    {
+     "as": null,
+     "away": "Calero",
+     "date": "2021-03-27",
+     "home": "Arinaga",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Arinaga"
+    }
+   ],
+   "Jornada 16": [
+    {
+     "as": null,
+     "away": "Ingenio",
+     "date": "2021-04-10",
+     "home": "San Juan",
+     "hs": null,
+     "time": "",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": null,
+     "away": "Acodetti B",
+     "date": "2021-04-10",
+     "home": "Unión Carrizal",
+     "hs": null,
+     "time": "",
+     "venue": "El Toril"
+    },
+    {
+     "as": null,
+     "away": "Unión Viera",
+     "date": "2021-04-09",
+     "home": "Santidad",
+     "hs": null,
+     "time": "",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Victoria",
+     "date": "2021-04-10",
+     "home": "Cerruda",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán B",
+     "date": "2021-04-10",
+     "home": "Calero",
+     "hs": null,
+     "time": "",
+     "venue": "El Calero"
+    },
+    {
+     "as": null,
+     "away": "Barrio Atlan.",
+     "date": "2021-04-10",
+     "home": "Arinaga",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Arinaga"
+    }
+   ],
+   "Jornada 17": [
+    {
+     "as": null,
+     "away": "San Juan",
+     "date": "2021-04-17",
+     "home": "Barrio Atlan.",
+     "hs": null,
+     "time": "",
+     "venue": "P. Atlántico"
+    },
+    {
+     "as": null,
+     "away": "Unión Carrizal",
+     "date": "2021-04-17",
+     "home": "Ingenio",
+     "hs": null,
+     "time": "",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": null,
+     "away": "Santidad",
+     "date": "2021-04-18",
+     "home": "Acodetti B",
+     "hs": null,
+     "time": "",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Cerruda",
+     "date": "2021-04-17",
+     "home": "Unión Viera",
+     "hs": null,
+     "time": "",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": null,
+     "away": "Calero",
+     "date": "2021-04-17",
+     "home": "Football Project",
+     "hs": null,
+     "time": "",
+     "venue": "Maspalomas 2"
+    },
+    {
+     "as": null,
+     "away": "Arinaga",
+     "date": "2021-04-17",
+     "home": "Atl. Huracán B",
+     "hs": null,
+     "time": "",
+     "venue": "Las Mesas"
+    }
+   ],
+   "Jornada 18": [
+    {
+     "as": null,
+     "away": "San Juan",
+     "date": "2021-04-24",
+     "home": "Unión Carrizal",
+     "hs": null,
+     "time": "",
+     "venue": "El Toril"
+    },
+    {
+     "as": null,
+     "away": "Ingenio",
+     "date": "2021-04-23",
+     "home": "Santidad",
+     "hs": null,
+     "time": "",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Acodetti B",
+     "date": "2021-04-24",
+     "home": "Cerruda",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": null,
+     "away": "Victoria",
+     "date": "2021-04-24",
+     "home": "Calero",
+     "hs": null,
+     "time": "",
+     "venue": "El Calero"
+    },
+    {
+     "as": null,
+     "away": "Football Project",
+     "date": "2021-04-24",
+     "home": "Arinaga",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Arinaga"
+    },
+    {
+     "as": null,
+     "away": "Barrio Atlan.",
+     "date": "2021-04-24",
+     "home": "Atl. Huracán B",
+     "hs": null,
+     "time": "",
+     "venue": "Las Mesas"
+    }
+   ],
+   "Jornada 19": [
+    {
+     "as": null,
+     "away": "Unión Carrizal",
+     "date": "2021-05-08",
+     "home": "Barrio Atlan.",
+     "hs": null,
+     "time": "",
+     "venue": "P. Atlántico"
+    },
+    {
+     "as": null,
+     "away": "Santidad",
+     "date": "2021-05-08",
+     "home": "San Juan",
+     "hs": null,
+     "time": "",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": null,
+     "away": "Cerruda",
+     "date": "2021-05-08",
+     "home": "Ingenio",
+     "hs": null,
+     "time": "",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": null,
+     "away": "Calero",
+     "date": "2021-05-08",
+     "home": "Unión Viera",
+     "hs": null,
+     "time": "",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": null,
+     "away": "Arinaga",
+     "date": "2021-05-09",
+     "home": "Victoria",
+     "hs": null,
+     "time": "",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán B",
+     "date": "2021-05-08",
+     "home": "Football Project",
+     "hs": null,
+     "time": "",
+     "venue": "Maspalomas 2"
+    }
+   ],
+   "Jornada 2": [
+    {
+     "as": 6,
+     "away": "Barrio Atlan.",
+     "date": "2020-12-12",
+     "home": "Ingenio",
+     "hs": 0,
+     "time": "09:00",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": 3,
+     "away": "Acodetti B",
+     "date": "2020-12-12",
+     "home": "San Juan",
+     "hs": 4,
+     "time": "09:00",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": 9,
+     "away": "Unión Viera",
+     "date": "2020-12-12",
+     "home": "Unión Carrizal",
+     "hs": 1,
+     "time": "09:00",
+     "venue": "El Toril"
+    },
+    {
+     "as": 3,
+     "away": "Victoria",
+     "date": "2020-12-11",
+     "home": "Santidad",
+     "hs": 1,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 16,
+     "away": "Football Project",
+     "date": "2020-12-12",
+     "home": "Cerruda",
+     "hs": 0,
+     "time": "09:00",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": 2,
+     "away": "Arinaga",
+     "date": "2020-12-12",
+     "home": "Calero",
+     "hs": 6,
+     "time": "09:00",
+     "venue": "El Calero"
+    }
+   ],
+   "Jornada 20": [
+    {
+     "as": null,
+     "away": "Unión Carrizal",
+     "date": "2021-05-14",
+     "home": "Santidad",
+     "hs": null,
+     "time": "",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "San Juan",
+     "date": "2021-05-15",
+     "home": "Cerruda",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": null,
+     "away": "Acodetti B",
+     "date": "2021-05-15",
+     "home": "Calero",
+     "hs": null,
+     "time": "",
+     "venue": "El Calero"
+    },
+    {
+     "as": null,
+     "away": "Unión Viera",
+     "date": "2021-05-15",
+     "home": "Arinaga",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Arinaga"
+    },
+    {
+     "as": null,
+     "away": "Victoria",
+     "date": "2021-05-15",
+     "home": "Atl. Huracán B",
+     "hs": null,
+     "time": "",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Barrio Atlan.",
+     "date": "2021-05-15",
+     "home": "Football Project",
+     "hs": null,
+     "time": "",
+     "venue": "Maspalomas 2"
+    }
+   ],
+   "Jornada 21": [
+    {
+     "as": null,
+     "away": "Santidad",
+     "date": "2021-05-22",
+     "home": "Barrio Atlan.",
+     "hs": null,
+     "time": "",
+     "venue": "P. Atlántico"
+    },
+    {
+     "as": null,
+     "away": "Cerruda",
+     "date": "2021-05-22",
+     "home": "Unión Carrizal",
+     "hs": null,
+     "time": "",
+     "venue": "El Toril"
+    },
+    {
+     "as": null,
+     "away": "Calero",
+     "date": "2021-05-22",
+     "home": "Ingenio",
+     "hs": null,
+     "time": "",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": null,
+     "away": "Arinaga",
+     "date": "2021-05-23",
+     "home": "Acodetti B",
+     "hs": null,
+     "time": "",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán B",
+     "date": "2021-05-22",
+     "home": "Unión Viera",
+     "hs": null,
+     "time": "",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": null,
+     "away": "Football Project",
+     "date": "2021-05-23",
+     "home": "Victoria",
+     "hs": null,
+     "time": "",
+     "venue": "Puerto Pi"
+    }
+   ],
+   "Jornada 22": [
+    {
+     "as": null,
+     "away": "Santidad",
+     "date": "2021-05-29",
+     "home": "Cerruda",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": null,
+     "away": "San Juan",
+     "date": "2021-05-29",
+     "home": "Calero",
+     "hs": null,
+     "time": "",
+     "venue": "El Calero"
+    },
+    {
+     "as": null,
+     "away": "Ingenio",
+     "date": "2021-05-29",
+     "home": "Arinaga",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Arinaga"
+    },
+    {
+     "as": null,
+     "away": "Acodetti B",
+     "date": "2021-05-29",
+     "home": "Atl. Huracán B",
+     "hs": null,
+     "time": "",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Unión Viera",
+     "date": "2021-05-29",
+     "home": "Football Project",
+     "hs": null,
+     "time": "",
+     "venue": "Maspalomas 2"
+    },
+    {
+     "as": null,
+     "away": "Barrio Atlan.",
+     "date": "2021-05-30",
+     "home": "Victoria",
+     "hs": null,
+     "time": "",
+     "venue": "Puerto Pi"
+    }
+   ],
+   "Jornada 23": [
+    {
+     "as": null,
+     "away": "Cerruda",
+     "date": "2021-06-05",
+     "home": "Barrio Atlan.",
+     "hs": null,
+     "time": "",
+     "venue": "P. Atlántico"
+    },
+    {
+     "as": null,
+     "away": "Calero",
+     "date": "2021-06-05",
+     "home": "Unión Carrizal",
+     "hs": null,
+     "time": "",
+     "venue": "El Toril"
+    },
+    {
+     "as": null,
+     "away": "Arinaga",
+     "date": "2021-06-05",
+     "home": "San Juan",
+     "hs": null,
+     "time": "",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán B",
+     "date": "2021-06-05",
+     "home": "Ingenio",
+     "hs": null,
+     "time": "",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": null,
+     "away": "Football Project",
+     "date": "2021-06-06",
+     "home": "Acodetti B",
+     "hs": null,
+     "time": "",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": null,
+     "away": "Victoria",
+     "date": "2021-06-05",
+     "home": "Unión Viera",
+     "hs": null,
+     "time": "",
+     "venue": "Alfonso Silva"
+    }
+   ],
+   "Jornada 24": [
+    {
+     "as": null,
+     "away": "Santidad",
+     "date": "2021-06-12",
+     "home": "Calero",
+     "hs": null,
+     "time": "",
+     "venue": "El Calero"
+    },
+    {
+     "as": null,
+     "away": "Unión Carrizal",
+     "date": "2021-06-12",
+     "home": "Arinaga",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Arinaga"
+    },
+    {
+     "as": null,
+     "away": "San Juan",
+     "date": "2021-06-12",
+     "home": "Atl. Huracán B",
+     "hs": null,
+     "time": "",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Ingenio",
+     "date": "2021-06-12",
+     "home": "Football Project",
+     "hs": null,
+     "time": "",
+     "venue": "Maspalomas 2"
+    },
+    {
+     "as": null,
+     "away": "Acodetti B",
+     "date": "2021-06-13",
+     "home": "Victoria",
+     "hs": null,
+     "time": "",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": null,
+     "away": "Barrio Atlan.",
+     "date": "2021-06-12",
+     "home": "Unión Viera",
+     "hs": null,
+     "time": "",
+     "venue": "Alfonso Silva"
+    }
+   ],
+   "Jornada 25": [
+    {
+     "as": null,
+     "away": "Calero",
+     "date": "2021-06-19",
+     "home": "Cerruda",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": null,
+     "away": "Arinaga",
+     "date": "2021-06-18",
+     "home": "Santidad",
+     "hs": null,
+     "time": "",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": null,
+     "away": "Atl. Huracán B",
+     "date": "2021-06-19",
+     "home": "Unión Carrizal",
+     "hs": null,
+     "time": "",
+     "venue": "El Toril"
+    },
+    {
+     "as": null,
+     "away": "Football Project",
+     "date": "2021-06-19",
+     "home": "San Juan",
+     "hs": null,
+     "time": "",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": null,
+     "away": "Victoria",
+     "date": "2021-06-19",
+     "home": "Ingenio",
+     "hs": null,
+     "time": "",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": null,
+     "away": "Unión Viera",
+     "date": "2021-06-20",
+     "home": "Acodetti B",
+     "hs": null,
+     "time": "",
+     "venue": "Mayordomía 1"
+    }
+   ],
+   "Jornada 26": [
+    {
+     "as": null,
+     "away": "Cerruda",
+     "date": "2021-06-23",
+     "home": "Arinaga",
+     "hs": null,
+     "time": "",
+     "venue": "Mun. Arinaga"
+    },
+    {
+     "as": null,
+     "away": "Santidad",
+     "date": "2021-06-23",
+     "home": "Atl. Huracán B",
+     "hs": null,
+     "time": "",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": null,
+     "away": "Unión Carrizal",
+     "date": "2021-06-23",
+     "home": "Football Project",
+     "hs": null,
+     "time": "",
+     "venue": "Maspalomas 2"
+    },
+    {
+     "as": null,
+     "away": "San Juan",
+     "date": "2021-06-23",
+     "home": "Victoria",
+     "hs": null,
+     "time": "",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": null,
+     "away": "Ingenio",
+     "date": "2021-06-23",
+     "home": "Unión Viera",
+     "hs": null,
+     "time": "",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": null,
+     "away": "Acodetti B",
+     "date": "2021-06-23",
+     "home": "Barrio Atlan.",
+     "hs": null,
+     "time": "",
+     "venue": "P. Atlántico"
+    }
+   ],
+   "Jornada 3": [
+    {
+     "as": 7,
+     "away": "San Juan",
+     "date": "2020-12-19",
+     "home": "Ingenio",
+     "hs": 1,
+     "time": "09:00",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": 5,
+     "away": "Unión Carrizal",
+     "date": "2020-12-20",
+     "home": "Acodetti B",
+     "hs": 4,
+     "time": "09:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": 0,
+     "away": "Santidad",
+     "date": "2020-12-19",
+     "home": "Unión Viera",
+     "hs": 5,
+     "time": "17:00",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": 0,
+     "away": "Cerruda",
+     "date": "2020-12-20",
+     "home": "Victoria",
+     "hs": 11,
+     "time": "11:00",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": 3,
+     "away": "Calero",
+     "date": "2020-12-19",
+     "home": "Atl. Huracán B",
+     "hs": 7,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": 8,
+     "away": "Arinaga",
+     "date": "2020-12-19",
+     "home": "Barrio Atlan.",
+     "hs": 7,
+     "time": "09:00",
+     "venue": "P. Atlántico"
+    }
+   ],
+   "Jornada 4": [
+    {
+     "as": 1,
+     "away": "Barrio Atlan.",
+     "date": "2021-05-15",
+     "home": "San Juan",
+     "hs": 1,
+     "time": "09:00",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": 2,
+     "away": "Ingenio",
+     "date": "2021-06-01",
+     "home": "Unión Carrizal",
+     "hs": 6,
+     "time": "17:30",
+     "venue": "El Toril"
+    },
+    {
+     "as": 4,
+     "away": "Acodetti B",
+     "date": "2021-05-14",
+     "home": "Santidad",
+     "hs": 5,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 9,
+     "away": "Unión Viera",
+     "date": "2021-05-15",
+     "home": "Cerruda",
+     "hs": 0,
+     "time": "09:00",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": 10,
+     "away": "Football Project",
+     "date": "2021-05-15",
+     "home": "Calero",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "El Calero"
+    },
+    {
+     "as": 2,
+     "away": "Atl. Huracán B",
+     "date": "2021-05-15",
+     "home": "Arinaga",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "Mun. Arinaga"
+    }
+   ],
+   "Jornada 5": [
+    {
+     "as": 2,
+     "away": "Unión Carrizal",
+     "date": "2021-05-22",
+     "home": "San Juan",
+     "hs": 6,
+     "time": "09:00",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": 6,
+     "away": "Santidad",
+     "date": "2021-05-22",
+     "home": "Ingenio",
+     "hs": 1,
+     "time": "09:00",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": 3,
+     "away": "Cerruda",
+     "date": "2021-05-23",
+     "home": "Acodetti B",
+     "hs": 9,
+     "time": "09:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": 5,
+     "away": "Calero",
+     "date": "2021-05-23",
+     "home": "Victoria",
+     "hs": 2,
+     "time": "11:00",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": 1,
+     "away": "Arinaga",
+     "date": "2021-05-27",
+     "home": "Football Project",
+     "hs": 9,
+     "time": "18:00",
+     "venue": "Maspalomas 1"
+    },
+    {
+     "as": 2,
+     "away": "Atl. Huracán B",
+     "date": "2021-05-22",
+     "home": "Barrio Atlan.",
+     "hs": 3,
+     "time": "09:00",
+     "venue": null
+    }
+   ],
+   "Jornada 6": [
+    {
+     "as": 9,
+     "away": "Barrio Atlan.",
+     "date": "2021-05-29",
+     "home": "Unión Carrizal",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "El Toril"
+    },
+    {
+     "as": 6,
+     "away": "San Juan",
+     "date": "2021-05-28",
+     "home": "Santidad",
+     "hs": 4,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 8,
+     "away": "Ingenio",
+     "date": "2021-05-29",
+     "home": "Cerruda",
+     "hs": 7,
+     "time": "09:00",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": 6,
+     "away": "Unión Viera",
+     "date": "2021-05-29",
+     "home": "Calero",
+     "hs": 1,
+     "time": "09:00",
+     "venue": "El Calero"
+    },
+    {
+     "as": 3,
+     "away": "Victoria",
+     "date": "2021-05-29",
+     "home": "Arinaga",
+     "hs": 5,
+     "time": "09:00",
+     "venue": "Mun. Arinaga"
+    },
+    {
+     "as": 3,
+     "away": "Football Project",
+     "date": "2021-05-29",
+     "home": "Atl. Huracán B",
+     "hs": 0,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    }
+   ],
+   "Jornada 7": [
+    {
+     "as": 4,
+     "away": "Santidad",
+     "date": "2021-06-05",
+     "home": "Unión Carrizal",
+     "hs": 10,
+     "time": "09:00",
+     "venue": "El Toril"
+    },
+    {
+     "as": 2,
+     "away": "Cerruda",
+     "date": "2021-06-05",
+     "home": "San Juan",
+     "hs": 6,
+     "time": "09:00",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": 3,
+     "away": "Calero",
+     "date": "2021-06-06",
+     "home": "Acodetti B",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": 1,
+     "away": "Arinaga",
+     "date": "2021-06-05",
+     "home": "Unión Viera",
+     "hs": 6,
+     "time": "12:00",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": 2,
+     "away": "Atl. Huracán B",
+     "date": "2021-06-06",
+     "home": "Victoria",
+     "hs": 7,
+     "time": "11:00",
+     "venue": "Puerto Pi"
+    },
+    {
+     "as": 5,
+     "away": "Football Project",
+     "date": "2021-06-05",
+     "home": "Barrio Atlan.",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "P. Atlántico"
+    }
+   ],
+   "Jornada 8": [
+    {
+     "as": 8,
+     "away": "Barrio Atlan.",
+     "date": "2021-06-11",
+     "home": "Santidad",
+     "hs": 10,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 5,
+     "away": "Unión Carrizal",
+     "date": "2021-06-11",
+     "home": "Cerruda",
+     "hs": 0,
+     "time": "19:00",
+     "venue": "Mun. Vecindario"
+    },
+    {
+     "as": 1,
+     "away": "Ingenio",
+     "date": "2021-06-12",
+     "home": "Calero",
+     "hs": 6,
+     "time": "09:00",
+     "venue": "El Calero"
+    },
+    {
+     "as": 2,
+     "away": "Acodetti B",
+     "date": "2021-06-12",
+     "home": "Arinaga",
+     "hs": 5,
+     "time": "09:00",
+     "venue": "Mun. Arinaga"
+    },
+    {
+     "as": 6,
+     "away": "Unión Viera",
+     "date": "2021-06-12",
+     "home": "Atl. Huracán B",
+     "hs": 2,
+     "time": "11:00",
+     "venue": "Las Mesas"
+    },
+    {
+     "as": 0,
+     "away": "Victoria",
+     "date": "2021-06-12",
+     "home": "Football Project",
+     "hs": 7,
+     "time": "13:00",
+     "venue": "Maspalomas 2"
+    }
+   ],
+   "Jornada 9": [
+    {
+     "as": 3,
+     "away": "Cerruda",
+     "date": "2021-06-18",
+     "home": "Santidad",
+     "hs": 7,
+     "time": "17:30",
+     "venue": "Javier Armas"
+    },
+    {
+     "as": 3,
+     "away": "Calero",
+     "date": "2021-06-19",
+     "home": "San Juan",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "Hoya la Plata"
+    },
+    {
+     "as": 6,
+     "away": "Arinaga",
+     "date": "2021-06-19",
+     "home": "Ingenio",
+     "hs": 2,
+     "time": "09:00",
+     "venue": "Cris. Herrera"
+    },
+    {
+     "as": 2,
+     "away": "Atl. Huracán B",
+     "date": "2021-06-20",
+     "home": "Acodetti B",
+     "hs": 5,
+     "time": "09:00",
+     "venue": "Mayordomía 1"
+    },
+    {
+     "as": 2,
+     "away": "Football Project",
+     "date": "2021-06-19",
+     "home": "Unión Viera",
+     "hs": 3,
+     "time": "12:00",
+     "venue": "Alfonso Silva"
+    },
+    {
+     "as": 2,
+     "away": "Victoria",
+     "date": "2021-06-19",
+     "home": "Barrio Atlan.",
+     "hs": 7,
+     "time": "10:30",
+     "venue": "P. Atlántico"
+    }
+   ]
+  },
+  "name": "Grupo 2",
+  "phase": "Primera Fase GC",
+  "results_from": [
+   "20210814191913",
+   "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html"
+  ],
+  "standings": [
+   [
+    1,
+    "Unión Viera",
+    36,
+    12,
+    12,
+    0,
+    0,
+    84,
+    13,
+    71
+   ],
+   [
+    2,
+    "Football Project",
+    33,
+    12,
+    11,
+    0,
+    1,
+    96,
+    11,
+    85
+   ],
+   [
+    3,
+    "Calero",
+    25,
+    12,
+    8,
+    1,
+    3,
+    56,
+    44,
+    12
+   ],
+   [
+    4,
+    "Arinaga",
+    22,
+    12,
+    7,
+    1,
+    4,
+    62,
+    50,
+    12
+   ],
+   [
+    5,
+    "Unión Carrizal",
+    21,
+    12,
+    7,
+    0,
+    5,
+    50,
+    54,
+    -4
+   ],
+   [
+    6,
+    "San Juan",
+    20,
+    12,
+    6,
+    2,
+    4,
+    39,
+    36,
+    3
+   ],
+   [
+    7,
+    "Barrio Atlan.",
+    17,
+    12,
+    5,
+    2,
+    5,
+    60,
+    50,
+    10
+   ],
+   [
+    8,
+    "Victoria",
+    15,
+    12,
+    5,
+    0,
+    7,
+    42,
+    42,
+    0
+   ],
+   [
+    9,
+    "Santidad",
+    13,
+    12,
+    4,
+    1,
+    7,
+    47,
+    78,
+    -31
+   ],
+   [
+    10,
+    "Acodetti B",
+    12,
+    12,
+    4,
+    0,
+    8,
+    44,
+    49,
+    -5
+   ],
+   [
+    11,
+    "Atl. Huracán B",
+    12,
+    12,
+    3,
+    3,
+    6,
+    39,
+    44,
+    -5
+   ],
+   [
+    12,
+    "Ingenio",
+    3,
+    12,
+    1,
+    0,
+    11,
+    22,
+    86,
+    -64
+   ],
+   [
+    13,
+    "Cerruda",
+    0,
+    12,
+    0,
+    0,
+    12,
+    25,
+    109,
+    -84
+   ]
+  ],
+  "standings_from": [
+   "20210814191913",
+   "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html"
+  ],
+  "title": "LIGA PREBENJAMIN GRUPO 2"
+ }
+}

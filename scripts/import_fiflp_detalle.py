@@ -37,7 +37,7 @@ from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 RAW_FILE = re.compile(r"^fiflp_detalle_(\d{4}-\d{4})_raw\.json$")
 CAMPOS_FILE = "fiflp_campos_raw.json"
-DETALLE_VERSION = "1"   # en la huella: subirla reimporta el detalle de todas las temporadas
+DETALLE_VERSION = "2"   # en la huella: subirla reimporta el detalle de todas las temporadas
 # Temporadas cuyo calendario (jornadas del raw) entra en los grupos sin partidos. Solo las que se han
 # revisado en local y tienen su línea base de score_deviation al día: un marcador mal leído en otra
 # dejaría la prueba en rojo y al bot sin publicar.
@@ -62,6 +62,9 @@ SCHEMA = (
         shirt        TEXT, shorts TEXT, socks TEXT,
         venue_code   INTEGER, venue_name TEXT, surface TEXT,
         PRIMARY KEY (team_id, season_id))""",
+    """CREATE TABLE IF NOT EXISTS detalle_groups (
+        group_id  INTEGER PRIMARY KEY REFERENCES groups(id),
+        season_id INTEGER NOT NULL, comp TEXT NOT NULL, grupo TEXT NOT NULL)""",
     """CREATE TABLE IF NOT EXISTS venue_details (
         code         INTEGER PRIMARY KEY,
         name         TEXT, lat REAL, lon REAL,
@@ -245,6 +248,83 @@ def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=
     return detail, cards, new
 
 
+def _season_fed_teams(conn, season_id):
+    """{clave del club (fiflp_names._club_key): {equipo de la base}} de los nombres de la federación
+    de las fichas de la temporada (team_seasons)."""
+    from fiflp_names import _club_key
+    out = {}
+    for team, fed in conn.execute("""SELECT t.name, ts.fiflp_name FROM team_seasons ts JOIN teams t ON t.id=ts.team_id
+                                     WHERE ts.season_id=? AND ts.fiflp_name IS NOT NULL""", (season_id,)):
+        out.setdefault(_club_key(fed), set()).add(team)
+    return out
+
+
+def create_cup_group(conn, season_id, season, det, log=print):
+    """El grupo de una final, una semifinal o una copa de una temporada archivada que la base no
+    tiene (sin clasificación ni actas, así que import_fiflp_grupos no lo crea): su calendario del
+    raw (las jornadas que baja detalle-federacion.yml para 2016-17 a 2018-19), con los equipos de
+    esa temporada. Cada nombre se busca primero por su ficha de la temporada (team_seasons, el mismo
+    club y la misma letra) y si no, por parecido (canonical_names); el que no casa se salta: no se
+    inventan equipos. Código, fase e isla de su competición (meta_by_name: LZ1F, BC, PCC, CFVF…);
+    si el código ya existe, nada. Un grupo con todos los resultados a 0-0 y sin actas no los
+    registró (la Copa de Campeones prebenjamín de 2018-19): sus partidos entran sin resultado.
+    Queda en detalle_groups. Devuelve los partidos que escribe."""
+    from db import get_or_create_category, get_or_create_group
+    from fiflp_names import _club_key, canonical_names, is_bye
+    from import_fiflp_grupos import meta_by_name, group_number
+    from update_fiflp import write_round, current_round
+    rounds = det.get("jornadas") or {}
+    played = [m for ms in rounds.values() for m in ms if m.get("hs") is not None and m.get("as") is not None]
+    meta = meta_by_name(det.get("comp_name"))
+    if not played or not meta:
+        return 0
+    prefix, phase, island = meta
+    code = f"{prefix}{group_number(det.get('grupo_name'))}"
+    category = "PREBENJAMIN" if "PREBENJAMIN" in (det.get("comp_name") or "").upper().replace("Í", "I") else "BENJAMIN"
+    cat_id = get_or_create_category(conn, category)
+    if conn.execute("SELECT 1 FROM groups WHERE season_id=? AND category_id=? AND code=?",
+                    (season_id, cat_id, code)).fetchone():
+        return 0
+    season_teams = sorted({r[0] for r in conn.execute(
+        """SELECT t.name FROM standings st JOIN teams t ON t.id=st.team_id JOIN groups g ON g.id=st.group_id
+           WHERE g.season_id=?""", (season_id,))})
+    names = sorted({clean_team_name(m.get(k)) for ms in rounds.values() for m in ms for k in ("home", "away")} - {""})
+    names = [n for n in names if not is_bye(n)]
+    fed = _season_fed_teams(conn, season_id)
+    guessed = canonical_names(names, [], season_teams)
+
+    def team(name):
+        hits = fed.get(_club_key(name)) or set()
+        return next(iter(hits)) if len(hits) == 1 else guessed.get(name)
+
+    unrecorded = all(m["hs"] == 0 and m["as"] == 0 and not m.get("fiflp_acta") for m in played)
+    clean = []
+    for label, ms in rounds.items():
+        for m in ms:
+            home, away = team(clean_team_name(m.get("home"))), team(clean_team_name(m.get("away")))
+            if home not in season_teams or away not in season_teams or home == away:
+                continue
+            hs, as_ = (None, None) if unrecorded else (m.get("hs"), m.get("as"))
+            clean.append((label, {"home": home, "away": away, "hs": hs, "as": as_,
+                                  "date": m.get("date") or "", "time": m.get("time") or "",
+                                  "venue": m.get("venue") or "", "fiflp_acta": m.get("fiflp_acta")}))
+    if not clean:
+        return 0
+    gid = get_or_create_group(conn, season_id, cat_id, code, name=det.get("grupo_name", "").title() or None,
+                              full_name=det.get("comp_name"), phase=phase, island=island, url=None)
+    new = 0
+    for label in dict.fromkeys(lbl for lbl, _ in clean):
+        new += write_round(conn, gid, label, [m for lbl, m in clean if lbl == label], log)[0]
+    current = current_round(conn, gid)
+    if current:
+        conn.execute("UPDATE groups SET current_jornada=? WHERE id=?", (current, gid))
+    conn.execute("INSERT OR REPLACE INTO detalle_groups(group_id, season_id, comp, grupo) VALUES (?,?,?,?)",
+                 (gid, season_id, str(det["comp"]), str(det["grupo"])))
+    log(f"    {season} {code} ({phase}): grupo nuevo con {new} partidos"
+        + (" (sin resultados registrados)" if unrecorded else ""))
+    return new
+
+
 def import_raw(conn, path, log=print, calendar_seasons=None):
     """Importa un fiflp_detalle_<S>_raw.json. Devuelve el resumen."""
     calendar_seasons = CALENDAR_SEASONS if calendar_seasons is None else calendar_seasons
@@ -263,13 +343,20 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
     if isinstance(index, list):
         index = {str(e["cod_acta"]): e for e in index}
     archived = season in ARCHIVE_SEASONS
-    claimed = set()
+    claimed, cups = set(), []
     for key in sorted(k for k in raw if not k.startswith("_")):
         det = raw[key]
         if not det.get("ok"):
             continue
         entry = matching_entry(det, gol.get(key))
+        owned = conn.execute("SELECT group_id FROM detalle_groups WHERE season_id=? AND comp=? AND grupo=?",
+                             (season_id, str(det["comp"]), str(det["grupo"]))).fetchone()
+        if owned:
+            continue                      # una final o copa que ya creó create_cup_group
         gid = by_url(conn, season_id, det["comp"], det["grupo"]) or match_group(conn, season_id, index, entry)
+        if not gid and archived:
+            cups.append(det)              # después: sus equipos se buscan en las fichas de la temporada
+            continue
         if not gid or gid in claimed:
             report["unmatched"] += 1
             continue
@@ -280,6 +367,10 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
         report["detail"] += detail
         report["cards"] += cards
         report["matches"] += new
+    for det in cups:
+        created = create_cup_group(conn, season_id, season, det, log)
+        report["matches"] += created
+        report["unmatched"] += 0 if created else 1
     conn.commit()
     return report
 

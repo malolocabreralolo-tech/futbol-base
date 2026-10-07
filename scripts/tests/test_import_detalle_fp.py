@@ -118,6 +118,62 @@ def test_un_grupo_con_partidos_no_recibe_el_calendario(tmp_path):
     assert conn.execute("SELECT count(*) FROM matches").fetchone()[0] == 1
 
 
+def _cup(comp, comp_name, matches):
+    return {"comp": comp, "comp_name": comp_name, "grupo": "1" + comp, "grupo_name": "GRUPO 1", "ok": True,
+            "fetched": "2026-10-07", "clasificacion": [], "directorio": [], "jornadas": {"Jornada 26-05-2019 ( Ronda 1 )": [
+                {"home": h, "away": a, "hs": hs, "as": as_, "date": "2019-05-26", "time": "11:00", "venue": "LOS VOLCANES",
+                 "referee": "", "fiflp_acta": None} for h, a, hs, as_ in matches]}}
+
+
+def test_las_finales_y_copas_de_una_archivada_entran_con_sus_equipos(tmp_path):
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    migrate(conn)
+    D.migrate(conn)
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (1, '2018-2019', 2018, 2019, 0);
+      INSERT INTO categories(id, name) VALUES (1, 'BENJAMIN'), (2, 'PREBENJAMIN');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase) VALUES
+        (1, 1, 1, 'LZ1', 'Grupo 1', 'Liga Primera Lanzarote'), (2, 1, 2, 'PGC1', 'Grupo 1', 'Primera Fase GC');
+      INSERT INTO teams(id, name) VALUES (1, 'CD Tinajo'), (2, 'Tite B'), (3, 'Altavista'), (4, 'O. Marítima B'),
+                                         (5, 'San Isidro'), (6, 'Veteranos');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+        (1, 1, 1, 9, 3, 3, 0, 0, 9, 1, 8), (1, 2, 2, 6, 3, 2, 0, 1, 6, 3, 3), (1, 3, 3, 3, 3, 1, 0, 2, 3, 6, -3),
+        (1, 4, 4, 0, 3, 0, 0, 3, 1, 9, -8), (2, 5, 1, 3, 1, 1, 0, 0, 2, 1, 1), (2, 6, 2, 0, 1, 0, 0, 1, 1, 2, -1);
+      INSERT INTO team_seasons(team_id, season_id, fiflp_code, fiflp_name) VALUES
+        (1, 1, 11, 'TINAJO A, U.D. "A"'), (2, 1, 12, 'TITE B, C.D. "B"');
+    """)
+    raw = {"385:70605": _cup("385", "SEMIFINALES LIGA PRIMERA BENJAMIN LANZAROTE", [
+               ('TITE "B", C.D. "B"', 'TINAJO"A", U.D. "A"', 2, 3),
+               ('ORIENTACION MARITIMA "B", C.D. "B"', "ALTAVISTA C.F.", 6, 6),
+               ("EQUIPO QUE NO ESTA, C.D.", "ALTAVISTA C.F.", 1, 0)]),
+           "400:70735": _cup("400", "COPA DE CAMPEONES PREBENJAMIN GRAN CANARIA", [
+               ("SAN ISIDRO, S.D.", 'VETERANOS DEL PILA "A", C.D. "A"', 0, 0)]),
+           "401:70740": _cup("401", "COPA DE CAMPEONES BENJAMIN GRAN CANARIA", [])}
+    (tmp_path / "fiflp_detalle_2018-2019_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    report = D.import_changed_detalle(conn, folder=str(tmp_path), log=lambda *a: None)["fiflp_detalle_2018-2019_raw.json"]
+    # La copa sin partidos jugados no se crea.
+    assert report["matches"] == 3 and report["unmatched"] == 1
+    groups = conn.execute("""SELECT g.code, c.name, g.phase, g.island, count(m.id) FROM groups g JOIN categories c
+                             ON c.id=g.category_id JOIN matches m ON m.group_id=g.id
+                             WHERE g.id IN (SELECT group_id FROM detalle_groups) GROUP BY g.id ORDER BY g.code""").fetchall()
+    assert groups == [("LZ1S1", "BENJAMIN", "Semifinal Liga Primera Lanzarote", "lanzarote", 2),
+                      ("PCC1", "PREBENJAMIN", "Copa de Campeones", "grancanaria", 1)]
+    got = conn.execute("""SELECT g.code, h.name, a.name, m.home_score, m.away_score FROM matches m
+                          JOIN groups g ON g.id=m.group_id JOIN teams h ON h.id=m.home_team_id
+                          JOIN teams a ON a.id=m.away_team_id ORDER BY g.code, h.name""").fetchall()
+    # Tinajo por su ficha (el calendario lo escribe pegado); la copa prebenjamín, todo 0-0 y sin
+    # actas, sin resultado; el equipo que no es de la temporada no entra.
+    assert got == [("LZ1S1", "O. Marítima B", "Altavista", 6, 6), ("LZ1S1", "Tite B", "CD Tinajo", 2, 3),
+                   ("PCC1", "San Isidro", "Veteranos", None, None)]
+    assert conn.execute("SELECT count(*) FROM teams").fetchone()[0] == 6
+    # Otra pasada (con la huella borrada) no duplica nada.
+    conn.execute("DELETE FROM raw_imports")
+    D.import_changed_detalle(conn, folder=str(tmp_path), log=lambda *a: None)
+    assert conn.execute("SELECT count(*) FROM matches").fetchone()[0] == 3
+    assert conn.execute("SELECT count(*) FROM groups").fetchone()[0] == 4
+
+
 # ── App de futbolaspalmas ─────────────────────────────────────────────────────
 
 def test_goleadores_de_la_app():

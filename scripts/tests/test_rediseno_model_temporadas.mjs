@@ -15,8 +15,9 @@ import { fixtureISO } from '../../src/links.js';
 
 const MATCH_KEYS = ['season', 'groupId', 'roundKey', 'dateISO', 'time', 'venue', 'home', 'away', 'hs', 'as', 'advancer', 'shootout'];
 const ROUND_KEYS = ['key', 'label', 'n', 'dateFrom', 'dateTo', 'matches'];
+// official (clasificación detallada de la federación) y zones (qué significa cada puesto), null si no los hay.
 const GROUP_KEYS = ['season', 'id', 'cat', 'name', 'fullName', 'phase', 'island', 'url', 'standingsKind',
-  'kind', 'compKey', 'label', 'standings', 'rounds', 'currentRound'];
+  'kind', 'compKey', 'label', 'standings', 'rounds', 'currentRound', 'official', 'zones'];
 const ROW_KEYS = ['pos', 'team', 'pts', 'pj', 'g', 'e', 'p', 'gf', 'gc', 'dg', 'retired'];
 
 const current = () => {

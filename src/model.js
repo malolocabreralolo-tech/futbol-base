@@ -238,6 +238,10 @@ export function buildGroup(raw, { season, cat, current = false, history = null }
     standings: (raw.standings || []).map(standingRow),
     rounds,
     currentRound: currentRoundKey(raw, rounds),
+    // La clasificación detallada de la federación, {equipo: [Jc, Gc, Ec, Pc, Jf, Gf, Ef, Pf, sanción]}, y
+    // qué significa cada puesto de la tabla, [[desde, hasta, tipo, texto]] (app de futbolaspalmas).
+    official: raw.detail && typeof raw.detail === 'object' && !Array.isArray(raw.detail) ? raw.detail : null,
+    zones: Array.isArray(raw.zones) ? raw.zones : null,
   };
   const retired = retiredTeams(group);
   group.standings.forEach(row => { row.retired = retired.has(row.team); });
@@ -927,6 +931,9 @@ function teamNamesOf(collections) {
 export function createModel(datasets, { portalSeason, buildClubIndex = null } = {}) {
   checkSeason(portalSeason, 'createModel');
   const data = datasets || {};
+  // El data-season-<S>.js ya cargado de una temporada pasada, o null.
+  const seasonRawOf = season => (SEASON_RE.test(String(season)) && data.seasonRaw && Object.hasOwn(data.seasonRaw, season)
+    ? data.seasonRaw[season] || null : null);
   const seasons = new Map();
   let cups = null;
   let index = null;
@@ -969,6 +976,31 @@ export function createModel(datasets, { portalSeason, buildClubIndex = null } = 
         indexKey = key;
       }
       return index;
+    },
+    // Ficha de un equipo en una temporada: { shirt, shorts, socks, venue, surface, kit } (directorio de la
+    // federación y app de futbolaspalmas: EQUIPOS en la del portal, `equipos` de su data-season-<S>.js en
+    // una pasada), o null.
+    teamInfo(season, team) {
+      const map = season === portalSeason ? data.equipos : (seasonRawOf(season) || {}).equipos;
+      const row = map && Object.hasOwn(map, team) ? map[team] : null;
+      if (!Array.isArray(row)) return null;
+      const [shirt, shorts, socks, venue, surface, kit] = row;
+      return { shirt: shirt || null, shorts: shorts || null, socks: socks || null, venue: venue || null,
+        surface: surface || null, kit: kit || null };
+    },
+    // Los campos de una temporada ({campo: [dirección, localidad, superficie, tipo(, lat, lon)]}): CAMPOS
+    // en la del portal y `campos` de su data-season-<S>.js en una pasada; null si no hay.
+    campos(season) {
+      const map = season === portalSeason ? data.campos : (seasonRawOf(season) || {}).campos;
+      return map && typeof map === 'object' ? map : null;
+    },
+    // Lo que la app de futbolaspalmas dice de un partido de la temporada del portal que el marcador no
+    // dice: { state: 'aplazado' | 'suspendido' | 'retirado' | 'anulado' | null, note, start } o null.
+    matchStatus(match) {
+      if (!match || match.season !== portalSeason || !data.estados) return null;
+      const round = (data.estados[match.groupId] || {})[match.roundKey] || {};
+      const row = round[`${match.home}|${match.away}`];
+      return Array.isArray(row) ? { state: row[0] || null, note: row[1] || null, start: row[2] || null } : null;
     },
     // Goleadores (GOL_BENJ o GOL_PREBENJ: [{ id, g, s: [[jugador, equipo, goles, partidos]] }]), los
     // que recibe teamScorers. De una temporada pasada, los de su data-season-<S>.js (`gol`), si los

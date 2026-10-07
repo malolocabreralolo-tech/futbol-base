@@ -189,6 +189,12 @@ export function readGlobals() {
     golPrebenj: typeof GOL_PREBENJ !== 'undefined' ? GOL_PREBENJ : null,
     shields: typeof SHIELDS !== 'undefined' ? SHIELDS : null,
     campos: typeof CAMPOS !== 'undefined' ? CAMPOS : null,
+    // La ficha de cada equipo de la temporada (equipación y campo) y el estado de los partidos que da
+    // la app de futbolaspalmas (aplazado, suspendido…), los dos en data-history.js.
+    equipos: typeof EQUIPOS !== 'undefined' ? EQUIPOS : null,
+    estados: typeof ESTADOS !== 'undefined' ? ESTADOS : null,
+    // Lo que guarda la base (temporadas, partidos, actas…), para «Fuentes» (data-history.js).
+    cobertura: typeof COBERTURA !== 'undefined' ? COBERTURA : null,
     seasons: typeof SEASONS !== 'undefined' ? SEASONS : null,
     cupBenjamin: typeof MASPALOMAS_CUP_BENJAMIN !== 'undefined' ? MASPALOMAS_CUP_BENJAMIN : null,
     cupPrebenjamin: typeof MASPALOMAS_CUP_PREBENJAMIN !== 'undefined' ? MASPALOMAS_CUP_PREBENJAMIN : null,

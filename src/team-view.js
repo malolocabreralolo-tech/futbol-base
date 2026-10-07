@@ -193,6 +193,25 @@ function figuresBlock(ctx, group, name) {
   return html`${box(content, { title: 'La temporada en cifras' })}${note ? notice('Cobertura:', note) : ''}`;
 }
 
+// Equipación y campo del equipo en la temporada (directorio de equipos de la federación,
+// model.teamInfo): los colores de camiseta, pantalón y medias, y su campo con la superficie y el
+// enlace al mapa (con las coordenadas de su ficha si las hay). null sin datos.
+const lower = (text) => String(text || '').toLowerCase();
+export function teamInfoBlock(ctx, group, name) {
+  const model = ctx && ctx.model;
+  const info = model && typeof model.teamInfo === 'function' ? model.teamInfo(group.season, name) : null;
+  if (!info || !(info.shirt || info.shorts || info.socks || info.venue)) return null;
+  const kit = [['Camiseta', info.shirt], ['Pantalón', info.shorts], ['Medias', info.socks]]
+    .filter(([, value]) => value).map(([label, value]) => ({ label, value: lower(value) }));
+  const campos = typeof model.campos === 'function' ? model.campos(group.season) : null;
+  const url = info.venue ? venueUrl(info.venue, group.island, campos) : '';
+  const surface = info.surface ? String(info.surface).replace(/\s*\([A-Z]+\)\s*$/, '') : '';
+  const field = info.venue
+    ? html`<p class="fixture-venue team-field"><span class="cell-label">Campo</span><span class="fixture-place">${info.venue}</span>${surface ? html`<span class="fixture-place-kind">${surface}</span>` : ''}${url ? html` <a class="more" href="${url}" target="_blank" rel="noopener noreferrer">Cómo llegar</a>` : ''}</p>`
+    : '';
+  return box(html`${kit.length ? cells(kit) : ''}${field}`, { title: 'Equipación y campo', context: 'según la federación' });
+}
+
 // «Clasificación oficial de futbolaspalmas.com, comprobada el …» (spec §4.2 y §7): la frase de
 // procedencia de sourcePhrase (ui.js), la misma de la Tabla, con la comprobación del grupo.
 function freshness(ctx, group) {
@@ -232,6 +251,8 @@ function seasonView(v, state) {
     main.push(block(null, empty(notPlayedText(group, name))));
   }
   const rest = [teamCalendar(name, group, { today: ctx.today, shields, ics: true })];
+  const info = teamInfoBlock(ctx, group, name);
+  if (info) aside.push(info);
   aside.push(freshness(ctx, group));
   const head = html`${teamHeader(name, group.label, v)}${state === 'C' ? staleNotice(v.stale) : ''}`;
   return { head, main, aside, rest };
@@ -349,7 +370,8 @@ function endedView(v, nextSeason) {
     ...summerBlocks(ctx, group, name),
   ];
   const rest = [teamCalendar(name, group, { today: ctx.today, shields, ics: true })];
-  return { head: html`${teamHeader(name, subtitle, v)}${staleNotice(v.stale)}`, main, aside: [finalStandings(group, name, v)], rest };
+  const aside = [finalStandings(group, name, v), teamInfoBlock(ctx, group, name)].filter(Boolean);
+  return { head: html`${teamHeader(name, subtitle, v)}${staleNotice(v.stale)}`, main, aside, rest };
 }
 
 // ── La vista ────────────────────────────────────────────────────────────

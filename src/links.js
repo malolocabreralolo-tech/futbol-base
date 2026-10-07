@@ -18,12 +18,16 @@ export function readRoute(hash = '') {
   };
 }
 
-// campos: CAMPOS de data-campos.js ({campo: [dirección, localidad, superficie, tipo]}, el
+// campos: CAMPOS de data-campos.js ({campo: [dirección, localidad, superficie, tipo(, latitud, longitud)]}, el
 // directorio de campos de la federación). Con la dirección, el mapa va al sitio exacto.
 export function venueUrl(venue, island = '', campos = null) {
   if (!venue || !String(venue).trim()) return '';
   const names = { grancanaria: 'Gran Canaria', lanzarote: 'Lanzarote', fuerteventura: 'Fuerteventura' };
   const info = campos && Object.hasOwn(campos, venue) ? campos[venue] : null;
+  // Con las coordenadas de la ficha del campo (federación), el punto exacto.
+  if (info && Number.isFinite(info[4]) && Number.isFinite(info[5])) {
+    return `https://www.google.com/maps/search/?api=1&query=${info[4]},${info[5]}`;
+  }
   const where = info && info[0]
     ? `${venue}, ${info[0]}, ${info[1] || names[island] || 'Canarias'}`
     : `${venue}, ${names[island] || island || 'Canarias'}`;

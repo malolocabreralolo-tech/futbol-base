@@ -101,3 +101,22 @@ def test_refrescar_solo_actas_aplanadas_y_nunca_a_peor():
     assert not keep_old_on_refresh(vieja, {"consistent": True, "staff_v": STAFF_VERSION})
     assert not keep_old_on_refresh({"consistent": False}, {"consistent": False, "staff_v": STAFF_VERSION})
     assert not keep_old_on_refresh(None, {"consistent": True})
+
+
+def test_el_acta_completa_campo_y_hora_pero_no_pisa_los_del_calendario(tmp_path):
+    conn = base()
+    conn.execute("INSERT INTO matches(id, group_id, jornada, date, time, venue, home_team_id, away_team_id, cod_acta) "
+                 "VALUES (2, 1, 'Jornada 2', '2026-10-10', '11:00', 'TIAS', 2, 1, 280002)")
+    conn.execute("UPDATE matches SET cod_acta=280001 WHERE id=1")
+    I.fill_from_header(conn, 1, {"venue": 'PEDRO ESPINOSA DE LEON "COLON"', "time": "9:00", "venue_code": 257})
+    I.fill_from_header(conn, 2, {"venue": "OTRO", "time": "12:00", "venue_code": None})
+    assert conn.execute("SELECT venue, time, venue_code FROM matches WHERE id=1").fetchone() == \
+        ('PEDRO ESPINOSA DE LEON "COLON"', "09:00", 257)
+    assert conn.execute("SELECT venue, time, venue_code FROM matches WHERE id=2").fetchone() == ("TIAS", "11:00", None)
+    # Y desde los raws, por el código del acta.
+    import json
+    (tmp_path / "fiflp_actas_2026-2027_raw.json").write_text(json.dumps({
+        "280001": {"header": {"venue": "X", "time": "10:00", "venue_code": 99}}}), encoding="utf-8")
+    conn.execute("UPDATE matches SET venue=NULL, venue_code=NULL WHERE id=1")
+    assert I.backfill_from_raws(conn, str(tmp_path)) == 1
+    assert conn.execute("SELECT venue, time, venue_code FROM matches WHERE id=1").fetchone() == ("X", "09:00", 99)

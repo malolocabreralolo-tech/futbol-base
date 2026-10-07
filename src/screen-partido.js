@@ -13,7 +13,7 @@ import {
   actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, penaltyWinner, playerName,
   roundOf, seasonLabel, teamShort, timelineFor,
 } from './model.js';
-import { countdownLabel, dayMonth, matchHref, playerHref, shareAndAnnounce, weekdayDate } from './links.js';
+import { countdownLabel, dayMonth, matchHref, playerHref, shareAndAnnounce, venueUrl, weekdayDate } from './links.js';
 import {
   ensureLineups, ensureMatchDetail, ensureSeasonData, lineupsKey, loadSeasons, normalizeTeamName,
 } from './state.js';
@@ -85,14 +85,25 @@ function header({ title, subtitle, back, share }) {
   return html`${screenHead(title, { sub: subtitle, back, action: shareButton })}${shareStatus()}`;
 }
 
-function resultBlock(match, { today, shields }) {
+// Lo que la app de futbolaspalmas dice del partido (model.matchStatus): aplazado, suspendido,
+// retirado o anulado, con su motivo.
+const STATUS_WORD = { aplazado: 'Aplazado', suspendido: 'Suspendido', retirado: 'Retirado', anulado: 'Anulado' };
+
+function resultBlock(match, { today, shields, status = null, campos = null, island = '' }) {
   const state = matchState(match, today);
   const played = state === 'jugado';
-  const context = played ? 'final' : state === 'pendiente' ? countdownLabel(match.dateISO, today) || 'pendiente' : state;
+  const off = status && status.state && STATUS_WORD[status.state] && !played ? STATUS_WORD[status.state] : null;
+  const context = off ? off.toLowerCase()
+    : played ? 'final' : state === 'pendiente' ? countdownLabel(match.dateISO, today) || 'pendiente' : state;
+  // El campo con su enlace al mapa (las coordenadas de su ficha en la federación, si las hay).
+  const url = match.venue ? venueUrl(match.venue, island, campos) : '';
+  const place = match.venue && url
+    ? html`${match.venue} <a class="more" href="${url}" target="_blank" rel="noopener noreferrer">Cómo llegar<span class="vh"> (mapa, en otra pestaña)</span></a>`
+    : match.venue || 'no publicado';
   const facts = cells([
     { label: 'Fecha', value: match.dateISO ? longDate(match.dateISO) : 'sin fecha', muted: !match.dateISO },
-    { label: 'Hora', value: match.time || 'no publicada', muted: !match.time },
-    { label: 'Campo', value: match.venue || 'no publicado', muted: !match.venue },
+    { label: 'Hora', value: match.time ? `${match.time}${status && status.start && status.start !== match.time ? ` (empezó ${status.start})` : ''}` : 'no publicada', muted: !match.time },
+    { label: 'Campo', value: place, muted: !match.venue },
   ]);
   const team = (name, side) => html`<div class="pt-team">${crest(name, { size: 46, shields, lazy: false })}<span class="pt-side">${side}</span><span class="pt-name">${name}</span></div>`;
   const marker = played
@@ -103,7 +114,8 @@ function resultBlock(match, { today, shields }) {
   const penalties = winner
     ? html`<p class="pt-penalties">${winner} pasó por penaltis${match.shootout ? html` <span class="pt-tanda">(${dashed(match.shootout)})</span>` : ''}</p>`
     : '';
-  return box(html`${facts}<div class="pt-teams">${team(match.home, 'Local')}${marker}${team(match.away, 'Visitante')}</div>${penalties}`,
+  const why = off ? notice(`${off}:`, status.note ? `${status.note} (según futbolaspalmas).` : 'según futbolaspalmas.') : '';
+  return box(html`${facts}<div class="pt-teams">${team(match.home, 'Local')}${marker}${team(match.away, 'Visitante')}</div>${penalties}${why}`,
     { title: 'Resultado', context });
 }
 
@@ -182,6 +194,26 @@ function lineupTable(players, team, side) {
 }
 
 const staff = (label, name) => html`<p class="pt-staff"><span class="pt-staff-label">${label}:</span> ${name ? playerName(name) : html`<span class="pt-none">no consta</span>`}</p>`;
+// El cargo como lo escribe el acta, en palabras: «DEL. Campo» → «Delegado/a de campo», «2ºEntrenador»
+// → «2.º entrenador/a», «ENTRENADOR EN PRACTICAS» → «Entrenador/a en prácticas».
+const ROLES = [
+  [/^del\.?\s*campo$/i, 'Delegado/a de campo'], [/^del\.?\s*equipo$/i, 'Delegado/a'],
+  [/^entrenador$/i, 'Entrenador/a'], [/^2\s*[ºo.]*\s*entrenador$/i, '2.º entrenador/a'],
+  [/^entrenador en pr[aá]cticas$/i, 'Entrenador/a en prácticas'], [/^[áa]rbitro\/a principal$/i, 'Árbitro/a'],
+];
+export function roleLabel(role) {
+  const text = String(role || '').replace(/\s+/g, ' ').trim();
+  const hit = ROLES.find(([re]) => re.test(text));
+  if (hit) return hit[1];
+  const lower = text.toLowerCase();
+  return lower ? lower[0].toUpperCase() + lower.slice(1) : 'Cargo';
+}
+// Todo el cuerpo técnico del acta ([[cargo, nombre]]); sin él, el entrenador y los delegados de siempre.
+function teamStaff(lines, coach, dels) {
+  if (!Array.isArray(lines) || !lines.length) return html`${staff('Entrenador/a', coach)}${delegates(dels)}`;
+  const hasCoach = lines.some(([role]) => /^entrenador$/i.test(String(role).trim()));
+  return html`${lines.map(([role, name]) => staff(roleLabel(role), name))}${hasCoach ? '' : staff('Entrenador/a', null)}`;
+}
 // Delegados del acta de la federación (delH/delA = { equipo, campo }): solo si constan, sin «no consta».
 const delegates = (d) => (d && (d.equipo || d.campo))
   ? html`${d.equipo ? staff('Delegado/a', d.equipo) : ''}${d.campo ? staff('Delegado/a de campo', d.campo) : ''}`
@@ -197,12 +229,15 @@ function lineupsBlock(match, group, ctx) {
   const team = (side) => {
     const name = side === 'home' ? match.home : match.away;
     const label = side === 'home' ? 'Local' : 'Visitante';
-    return html`<div class="pt-lu-team"><h3 class="pt-lu-head"><span class="pt-side">${label}</span> ${name}</h3>${lineupTable(acta[side] || [], name, label.toLowerCase())}${staff('Entrenador/a', side === 'home' ? acta.coachH : acta.coachA)}${delegates(side === 'home' ? acta.delH : acta.delA)}</div>`;
+    const home = side === 'home';
+    return html`<div class="pt-lu-team"><h3 class="pt-lu-head"><span class="pt-side">${label}</span> ${name}</h3>${lineupTable(acta[side] || [], name, label.toLowerCase())}${teamStaff(home ? acta.stH : acta.stA, home ? acta.coachH : acta.coachA, home ? acta.delH : acta.delA)}</div>`;
   };
   const link = acta.cod
     ? html`<a class="pt-acta" href="${actaUrl(acta.cod)}" target="_blank" rel="noopener noreferrer">Ver acta oficial<span class="vh"> (web de la federación, en otra pestaña)</span></a>`
     : '';
-  return block('Alineaciones', box(html`<div class="pt-lu-teams">${team('home')}${team('away')}</div><div class="pt-lu-foot">${staff('Árbitro/a', acta.ref)}${link}</div>`),
+  const refs = Array.isArray(acta.refs) && acta.refs.length
+    ? acta.refs.map(([role, name]) => staff(roleLabel(role), name)) : staff('Árbitro/a', acta.ref);
+  return block('Alineaciones', box(html`<div class="pt-lu-teams">${team('home')}${team('away')}</div><div class="pt-lu-foot">${refs}${link}</div>`),
     { context: acta.cod ? `acta nº ${acta.cod}` : null, id: LINEUPS_ID });
 }
 
@@ -359,7 +394,10 @@ export function render(ctx) {
     share,
   });
   // Sin marcador no hay goles ni acta que enseñar.
-  const main = html`${resultBlock(match, { today: ctx.today, shields })}${played ? goalsBlock(match, group, ctx) : ''}${played ? lineupsBlock(match, group, ctx) : ''}`;
+  const model = ctx.model || {};
+  const status = typeof model.matchStatus === 'function' ? model.matchStatus(match) : null;
+  const campos = typeof model.campos === 'function' ? model.campos(match.season) : null;
+  const main = html`${resultBlock(match, { today: ctx.today, shields, status, campos, island: group.island })}${played ? goalsBlock(match, group, ctx) : ''}${played ? lineupsBlock(match, group, ctx) : ''}`;
   const side = html`${h2hBlock(match, group, ctx)}${contextBlock(match, group)}`;
   return screenHtml(html`${head}<div class="pt-cols"><div class="pt-main">${main}</div><div class="pt-aside">${side}</div></div>`);
 }

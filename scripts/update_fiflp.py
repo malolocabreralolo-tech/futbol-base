@@ -269,6 +269,10 @@ def scrape_group(page, F, url, stored, today):
     standings = []
     if F.goto(page, f"{base}&codcompeticion={comp}&codgrupo={code}&codjornada=99"):
         standings = F.parse_standings(page)
+        try:
+            add_detail(standings, page.content())
+        except Exception:           # una página sin HTML que leer (las de prueba): solo los totales
+            pass
     F.delay()
     rounds = {}
     calendar = (f"{F.BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
@@ -301,6 +305,21 @@ def scrape_group(page, F, url, stored, today):
     return standings, rounds
 
 
+def add_detail(standings, html):
+    """Lo que la clasificación de la federación da además de los totales (fiflp_detalle.
+    parse_clasificacion): casa y fuera, puntos de sanción y código de cada equipo, en sus filas."""
+    try:
+        from fiflp_detalle import parse_clasificacion
+        extra = {r["team"]: r for r in parse_clasificacion(html)}
+    except Exception:
+        return standings
+    for row in standings:
+        e = extra.get(row.get("team"))
+        if e and e.get("home"):
+            row.update(home=e["home"], away=e["away"], sanction=e.get("sanction") or 0, codequipo=e.get("codequipo"))
+    return standings
+
+
 def update_group(conn, group_id, code, raw_standings, raw_rounds, log=print):
     """Escribe en la base lo scrapeado de un grupo. Devuelve (estado, mensaje)."""
     group_teams = [r[1] for r in stored_standings(conn, group_id)]
@@ -314,6 +333,12 @@ def update_group(conn, group_id, code, raw_standings, raw_rounds, log=print):
     reason = write_standings(conn, group_id, rows) if played else None
     if reason:
         return "rejected", reason
+    # Casa/fuera y sanciones de la federación (standings_detail), con los nombres de la base.
+    detail = [(names.get(clean_team_name(r["team"]), clean_team_name(r["team"])), r)
+              for r in raw_standings if r.get("home") and clean_team_name(r["team"])]
+    if detail:
+        from import_fiflp_detalle import write_standings_detail
+        write_standings_detail(conn, group_id, detail)
     totals = [0, 0, 0]
     for label, ms in raw_rounds.items():
         clean = []

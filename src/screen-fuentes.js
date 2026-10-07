@@ -72,6 +72,30 @@ function sourcesNote(rows) {
   return notice(null, sources.length === 1 ? `Cada grupo abre su página en ${sources[0]}.` : 'Cada grupo abre su página en la web de su fuente.');
 }
 
+// La base de datos entera (futbolbase.db, SQLite, la misma de la que salen todas las pantallas) y lo
+// que guarda de cada temporada (COBERTURA de data-history.js): grupos, partidos con resultado, actas,
+// jugadores con alineación y goles con autor. null si no hay datos de cobertura.
+export function databaseBlock(cobertura) {
+  const c = cobertura && typeof cobertura === 'object' && Array.isArray(cobertura.temporadas) ? cobertura : null;
+  if (!c) return '';
+  const size = Number.isFinite(c.mb) && c.mb > 0 ? `SQLite, unos ${c.mb} MB` : 'SQLite';
+  const what = html`<p class="box-text">Todo lo que guarda esta web, en un solo archivo: clasificaciones (también en casa y fuera, y las sanciones), calendarios y resultados, actas (alineaciones, goles con su minuto, cuerpo técnico y árbitros), goleadores, la equipación y el campo de cada equipo y la dirección y las coordenadas de cada campo. Se abre con cualquier programa de SQLite. No lleva datos de contacto.</p>`;
+  const link = html`<div class="buttons"><a class="button is-main" href="./futbolbase.db" download="futbolbase.db">Descargar la base de datos<span class="vh"> (${size})</span></a></div>`;
+  const part = (value, one, many) => (value ? countLabel(value, one, many) : null);
+  // Una fila por temporada, como las de la comprobación: lo que hay de ella, en una línea.
+  const rows = c.temporadas.filter((r) => Array.isArray(r) && SEASON_RE.test(String(r[0])))
+    .map(([name, groups, , played, actas, players, goals]) => {
+      const detail = [part(groups, 'grupo', 'grupos'), part(played, 'partido con resultado', 'partidos con resultado'),
+        part(actas, 'acta', 'actas'), part(players, 'jugador', 'jugadores'), part(goals, 'gol con autor', 'goles con autor')]
+        .filter(Boolean).join(' · ') || 'solo la clasificación';
+      return html`<li><div class="fu-row"><span class="fu-name">${seasonLabel(name)}</span><span class="fu-detail">${detail}</span></div></li>`;
+    });
+  const list = rows.length ? html`<ul class="box fu-list">${rows}</ul>` : '';
+  const extras = [part(c.equipos, 'equipo con su equipación y su campo', 'equipos con su equipación y su campo'),
+    part(c.campos, 'campo con sus coordenadas', 'campos con sus coordenadas')].filter(Boolean);
+  return block('La base de datos', html`<div class="box">${what}${link}</div>${list}${extras.length ? notice(null, `Y ${listEs(extras)}.`) : ''}`, { context: size });
+}
+
 function render(ctx) {
   const health = ctx.health;
   const title = routeTitle('fuentes');
@@ -97,7 +121,8 @@ function render(ctx) {
   const next = health.nextSeason;
   const mine = ctx.resolution && ctx.resolution.status === 'ok' ? ctx.resolution.name : (ctx.myTeam && ctx.myTeam.name) || '';
   const upcoming = next && next.status === 'pending' && SEASON_RE.test(String(next.name)) && mine ? nextSeasonBox(ctx, mine, next.name) : '';
-  return html`<section data-screen="fuentes">${screenHead(title, { sub: checkedSeason ? `Temporada ${seasonLabel(checkedSeason)}` : null, back: ctx.backHref })}${state}${block('Comprobación por grupo', list, { context: summary(rows) || null })}${sourcesNote(rows)}${missing}${upcoming}</section>`;
+  const database = databaseBlock(ctx.datasets && ctx.datasets.cobertura);
+  return html`<section data-screen="fuentes">${screenHead(title, { sub: checkedSeason ? `Temporada ${seasonLabel(checkedSeason)}` : null, back: ctx.backHref })}${state}${block('Comprobación por grupo', list, { context: summary(rows) || null })}${sourcesNote(rows)}${missing}${upcoming}${database}</section>`;
 }
 
 export const screen = {

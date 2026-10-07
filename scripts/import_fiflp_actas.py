@@ -306,12 +306,43 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
     for i, (side, role, name) in enumerate(staff_rows(acta)):
         conn.execute("INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (?,?,?,?,?)",
                      (mid, _team_id_by_side(conn, mid, side) if side else None, role, name, i))
-    # El código del campo en la federación (actas leídas desde octubre de 2026).
-    code = (acta.get("header") or {}).get("venue_code")
+    fill_from_header(conn, mid, acta.get("header") or {})
+
+    return True
+
+
+def fill_from_header(conn, mid: int, header: dict) -> None:
+    """El campo y la hora del acta en el partido si el calendario no los traía (los partidos de
+    futbolaspalmas de 2025-26 no tienen campo), y el código del campo en la federación."""
+    venue = (header.get("venue") or "").strip()
+    if venue:
+        conn.execute("UPDATE matches SET venue=? WHERE id=? AND (venue IS NULL OR venue='')", (venue, mid))
+    kickoff = (header.get("time") or "").strip()
+    if re.fullmatch(r"\d{1,2}:\d{2}", kickoff) and kickoff not in ("0:00", "00:00"):
+        conn.execute("UPDATE matches SET time=? WHERE id=? AND (time IS NULL OR time='')", (kickoff.zfill(5), mid))
+    code = header.get("venue_code")
     if code:
         conn.execute("UPDATE matches SET venue_code=? WHERE id=?", (int(code), mid))
 
-    return True
+
+def backfill_from_raws(conn, folder: str = None) -> int:
+    """fill_from_header de todas las actas ya importadas (matches.cod_acta), leyendo los raws:
+    para las importadas antes de que el acta completara campo y hora. Devuelve cuántas mira."""
+    folder = folder or SCRIPTS_DIR
+    seen = 0
+    for name in sorted(os.listdir(folder)):
+        if not RAW_FILE.match(name):
+            continue
+        with open(os.path.join(folder, name), encoding="utf-8") as f:
+            raw = json.load(f)
+        for cod, acta in raw.items():
+            if not isinstance(acta, dict) or not str(cod).isdigit():
+                continue
+            row = conn.execute("SELECT id FROM matches WHERE cod_acta=?", (int(cod),)).fetchone()
+            if row:
+                fill_from_header(conn, row[0], acta.get("header") or {})
+                seen += 1
+    return seen
 
 
 # ---------------------------------------------------------------------------

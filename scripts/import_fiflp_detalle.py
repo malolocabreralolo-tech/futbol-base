@@ -162,6 +162,30 @@ def resolve_names(conn, season_id, gid, entry, fed_names, archived):
     return out
 
 
+def write_standings_detail(conn, gid, rows):
+    """standings_detail de un grupo: [(nombre en la base, fila de parse_clasificacion)]. Solo los
+    equipos que están en el grupo; las filas anteriores del grupo se sustituyen."""
+    migrate(conn)
+    ids = _team_ids(conn)
+    group_teams = set(_group_team_names(conn, gid))
+    conn.execute("DELETE FROM standings_detail WHERE group_id=?", (gid,))
+    n = 0
+    for name, r in rows:
+        tid = ids.get(name)
+        if not tid or name not in group_teams:
+            continue
+        home, away = r.get("home") or {}, r.get("away") or {}
+        conn.execute(
+            """INSERT OR REPLACE INTO standings_detail(group_id, team_id, fiflp_code, home_played, home_won,
+                   home_drawn, home_lost, away_played, away_won, away_drawn, away_lost, sanction, form)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (gid, tid, r.get("codequipo"), home.get("j"), home.get("g"), home.get("e"), home.get("p"),
+             away.get("j"), away.get("g"), away.get("e"), away.get("p"), r.get("sanction") or 0,
+             r.get("form") or None))
+        n += 1
+    return n
+
+
 def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=False):
     """standings_detail, team_seasons y (si el grupo no tiene partidos) su
     calendario. Devuelve (filas de detalle, equipos con ficha, partidos nuevos)."""
@@ -181,21 +205,8 @@ def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=
     ids = _team_ids(conn)
     group_teams = set(_group_team_names(conn, gid))
 
-    detail = 0
-    conn.execute("DELETE FROM standings_detail WHERE group_id=?", (gid,))
-    for r in rows:
-        tid = ids.get(names.get(clean_team_name(r["team"])))
-        if not tid or names.get(clean_team_name(r["team"])) not in group_teams:
-            continue
-        home, away = r.get("home") or {}, r.get("away") or {}
-        conn.execute(
-            """INSERT OR REPLACE INTO standings_detail(group_id, team_id, fiflp_code, home_played, home_won,
-                   home_drawn, home_lost, away_played, away_won, away_drawn, away_lost, sanction, form)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (gid, tid, r.get("codequipo"), home.get("j"), home.get("g"), home.get("e"), home.get("p"),
-             away.get("j"), away.get("g"), away.get("e"), away.get("p"), r.get("sanction") or 0,
-             r.get("form") or None))
-        detail += 1
+    detail = write_standings_detail(conn, gid, [(names.get(clean_team_name(r["team"])), r) for r in rows
+                                                 if r.get("home")])
 
     cards = 0
     for t in directory:

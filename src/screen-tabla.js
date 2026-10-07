@@ -44,6 +44,43 @@ function coverageText(c) {
   return `Con los ${c.calendar} partidos con resultado del calendario; la clasificación oficial cuenta ${c.official}${also}.`;
 }
 
+// Casa y Fuera de la federación (su clasificación detallada, group.official), si cuadra con la
+// clasificación (los partidos de casa y fuera de cada equipo suman los suyos): las filas de la vista,
+// por puntos (3 por victoria y 1 por empate) y victorias; null si no hay o no cuadra (una detallada
+// de otra jornada).
+export function officialHomeAway(group, side) {
+  const official = group && group.official;
+  if (!official || !(group.standings || []).length) return null;
+  const i = side === 'casa' ? 0 : 4;
+  const rows = [];
+  for (const row of group.standings) {
+    const o = official[row.team];
+    if (!Array.isArray(o) || o[0] == null || o[4] == null || o[0] + o[4] !== row.pj) return null;
+    rows.push({ team: row.team, pj: o[i], g: o[i + 1], e: o[i + 2], p: o[i + 3], pts: 3 * o[i + 1] + o[i + 2],
+      gf: null, gc: null, dg: null, retired: row.retired });
+  }
+  rows.sort((a, b) => a.retired - b.retired || b.pts - a.pts || b.g - a.g);
+  return rows.map((row, k) => ({ ...row, pos: k + 1 }));
+}
+
+// Qué significa cada puesto de la tabla (app de futbolaspalmas, group.zones):
+// «1.º–4.º: Eliminatorias determinar FASE · 5.º: FASE “E” · 6.º: FASE “F”», o null.
+const ZONE_WORD = { ascenso: 'Ascenso', playoff: 'Playoff', copa: 'Copa', promocion: 'Promoción', descenso: 'Descenso' };
+export function zonesText(group) {
+  const zones = Array.isArray(group && group.zones) ? group.zones : [];
+  const parts = zones.filter((z) => Array.isArray(z) && Number.isFinite(z[0]) && Number.isFinite(z[1]))
+    .map(([from, to, kind, text]) => `${from === to ? `${from}.º` : `${from}.º–${to}.º`}: ${text || ZONE_WORD[kind] || kind}`);
+  return parts.length ? parts.join(' · ') : null;
+}
+
+// Los puntos de sanción que pone la federación (clasificación detallada): «Las Mesas Hu. (3 puntos)».
+export function sanctionsText(group) {
+  const official = (group && group.official) || {};
+  const list = Object.entries(official).filter(([, row]) => Array.isArray(row) && row[8] > 0)
+    .map(([team, row]) => `${team} (${row[8]} ${row[8] === 1 ? 'punto' : 'puntos'})`);
+  return list.length ? listEs(list) : null;
+}
+
 // «jornada 30, final»: hasta dónde llega la clasificación.
 function standingsContext(group, today, portalSeason) {
   const round = group.currentRound && group.rounds.find(r => r.key === group.currentRound);
@@ -112,15 +149,19 @@ function render(ctx) {
   let table;
   if (side) {
     const where = side === 'casa' ? 'en casa' : 'fuera de casa';
-    const coverage = homeAwayCoverage(group);
-    table = block(`Clasificación ${where}`, html`<div class="box">${standingsTable(homeAwayTable(group, side), { ...common, view: side, caption: `Clasificación ${where} de ${group.label}` })}</div>${coverage ? notice(null, coverageText(coverage)) : ''}`,
-      { context: 'desde el calendario' });
+    const official = officialHomeAway(group, side);
+    const coverage = official ? null : homeAwayCoverage(group);
+    table = block(`Clasificación ${where}`, html`<div class="box">${standingsTable(official || homeAwayTable(group, side), { ...common, view: side, caption: `Clasificación ${where} de ${group.label}` })}</div>${coverage ? notice(null, coverageText(coverage)) : ''}`,
+      { context: official ? 'según la federación' : 'desde el calendario' });
   } else {
     const rows = group.standings.map(row => ({ ...row, form: lastResults(row.team, group).map(x => x.letter) }));
     table = block('Clasificación', html`<div class="box tabla-${v === 'todas' ? 'puntos' : v}">${standingsTable(rows, { ...common, view: 'todas', caption: `Clasificación de ${group.label}` })}</div>`,
       { context: standingsContext(group, today, ctx.portal.season) });
   }
-  return html`<section data-screen="tabla">${head}${views}${table}${scorers}${source}</section>`;
+  const zones = zonesText(group);
+  const sanctions = sanctionsText(group);
+  const extra = html`${zones ? notice('Qué se juega cada puesto:', zones) : ''}${sanctions ? notice('Puntos de sanción:', sanctions) : ''}`;
+  return html`<section data-screen="tabla">${head}${views}${table}${extra}${scorers}${source}</section>`;
 }
 
 export const screen = {

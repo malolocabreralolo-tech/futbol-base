@@ -361,6 +361,14 @@ def generate_category_js(conn, category_name, var_name, stats_var):
             "standingsKind": "source" if standings == get_standings(conn, gid) else (
                 "reconstructed" if sum(r[3] for r in standings) > sum(r[3] for r in get_standings(conn, gid)) else "corrected"),
         }
+        # La clasificación detallada de la federación (casa/fuera y sanciones) y qué significa cada
+        # puesto (app de futbolaspalmas), solo si los hay.
+        detail = standings_detail_map(conn, gid)
+        if detail:
+            group_obj["detail"] = detail
+        zones = zones_of(conn, gid, len(standings))
+        if zones:
+            group_obj["zones"] = zones
         result.append(group_obj)
 
     js = f"const {var_name}=" + js_val(result) + ";\n"
@@ -412,7 +420,47 @@ def generate_history_js(conn):
     # anterior, que no lo tiene y devolvería index.html en su lugar.
     js = "const HISTORY=" + js_val(history) + ";\n" + generate_campos_js(conn) + "\n"
     js += f"const HIST_MATCHES={total_matches};"
+    # Y con ellos, por la misma razón, la ficha de cada equipo de la temporada (equipación y campo,
+    # EQUIPOS) y el estado de los partidos que da la app de futbolaspalmas (ESTADOS).
+    row = conn.execute("SELECT id FROM seasons WHERE is_current = 1").fetchone()
+    js += "\nconst EQUIPOS=" + js_val(team_info_map(conn, row[0]) if row else {}) + ";"
+    js += "\nconst ESTADOS=" + js_val(match_states_map(conn, row[0]) if row else {}) + ";"
+    js += "\nconst COBERTURA=" + js_val(coverage_summary(conn)) + ";"
     return js
+
+
+def coverage_summary(conn):
+    """Lo que guarda la base, para «Fuentes»: por temporada [nombre, grupos, partidos, con
+    resultado, con acta, jugadores con alineación, goles con autor]; equipos con ficha (equipación
+    y campo), campos con coordenadas y el tamaño de la base en MB (de 5 en 5, para que no cambie en
+    cada pasada del bot)."""
+    seasons = []
+    for sid, name in conn.execute("SELECT id, name FROM seasons ORDER BY start_year DESC"):
+        groups, matches, played, actas = conn.execute(
+            """SELECT count(DISTINCT g.id), count(m.id), count(m.home_score), count(m.cod_acta)
+               FROM groups g LEFT JOIN matches m ON m.group_id = g.id WHERE g.season_id = ?""", (sid,)).fetchone()
+        players = conn.execute(
+            """SELECT count(DISTINCT a.player_id) FROM appearances a JOIN matches m ON m.id = a.match_id
+               JOIN groups g ON g.id = m.group_id WHERE g.season_id = ?""", (sid,)).fetchone()[0] \
+            if _has_table(conn, "appearances") else 0
+        # Por partido, la fuente que más goles con autor da (el acta o la cronología del portal): las dos
+        # cuentan los mismos goles.
+        events = ("(SELECT match_id, count(*) AS n FROM match_events WHERE kind = 'goal' GROUP BY match_id)"
+                  if _has_table(conn, "match_events") else "(SELECT NULL AS match_id, 0 AS n)")
+        goals = conn.execute(
+            f"""SELECT coalesce(sum(max(coalesce(e.n, 0), coalesce(x.n, 0))), 0)
+                FROM matches m JOIN groups g ON g.id = m.group_id
+                LEFT JOIN {events} e ON e.match_id = m.id
+                LEFT JOIN (SELECT match_id, count(*) AS n FROM goals GROUP BY match_id) x ON x.match_id = m.id
+                WHERE g.season_id = ?""", (sid,)).fetchone()[0]
+        seasons.append([name, groups, matches, played, actas, players, goals])
+    teams = conn.execute("SELECT count(DISTINCT team_id) FROM team_seasons").fetchone()[0] \
+        if _has_table(conn, "team_seasons") else 0
+    venues = conn.execute("SELECT count(*) FROM venue_details WHERE lat IS NOT NULL").fetchone()[0] \
+        if _has_table(conn, "venue_details") else 0
+    db = os.path.join(PROJECT_ROOT, "futbolbase.db")
+    size = int(5 * round(os.path.getsize(db) / 1024 / 1024 / 5)) if os.path.exists(db) else None
+    return {"temporadas": seasons, "equipos": teams, "campos": venues, "mb": size}
 
 
 def _keyed_or_dup(pairs):
@@ -455,7 +503,72 @@ def _match_details(conn):
         ).fetchall()
         pairs.append((_match_key(home, away, hs, as_),
                       {"s": season, "gr": code, "g": [list(g) for g in goals]}))
-    return _keyed_or_dup(pairs)
+    return _keyed_or_dup(pairs + _fp_goal_entries(conn))
+
+
+def _running(goals):
+    """[[minuto, nombre, marcador parcial, lado, tipo]] con el parcial, si todos los goles tienen
+    minuto (orden estable por minuto); si no, sin parcial."""
+    if any(g[0] is None for g in goals):
+        return [[g[0], g[1], None, g[3], g[4]] for g in goals]
+    h = a = 0
+    out = []
+    for g in sorted(goals, key=lambda g: g[0]):
+        h, a = (h + 1, a) if g[3] == "h" else (h, a + 1)
+        out.append([g[0], g[1], f"{h}-{a}", g[3], g[4]])
+    return out
+
+
+def _fp_goal_entries(conn):
+    """[(clave, entrada)] de MATCH_DETAIL con los goleadores de la app de futbolaspalmas (fp_goals),
+    para los partidos sin cronología de futbolaspalmas del portal antiguo (goals) cuyos goles en la
+    app cuadran con el marcador: sin acta, los de la app; con un acta que tiene goles sin nombre
+    (niños que la federación no publica), la cronología del acta con esos nombres de pila puestos
+    por lado y minuto. Un acta con todos los nombres manda: no sale aquí."""
+    if not (_has_table(conn, "fp_goals") and _has_table(conn, "fp_matches")):
+        return []
+    rows = conn.execute(
+        """SELECT m.id, h.name, a.name, m.home_score, m.away_score, s.name, g.code, f.fp_id, m.cod_acta,
+                  m.home_team_id
+           FROM fp_matches f JOIN matches m ON m.id = f.match_id JOIN groups g ON g.id = m.group_id
+           JOIN seasons s ON s.id = g.season_id
+           JOIN teams h ON h.id = m.home_team_id JOIN teams a ON a.id = m.away_team_id
+           WHERE m.home_score IS NOT NULL AND m.away_score IS NOT NULL
+             AND NOT EXISTS (SELECT 1 FROM goals x WHERE x.match_id = m.id)
+           ORDER BY m.id""").fetchall()
+    pairs = []
+    for mid, home, away, hs, as_, season, code, fp_id, cod, home_id in rows:
+        fp = conn.execute("SELECT side, minute, name FROM fp_goals WHERE fp_id = ? ORDER BY ord", (fp_id,)).fetchall()
+        if not fp or (sum(g[0] == "h" for g in fp), sum(g[0] == "a" for g in fp)) != (hs, as_):
+            continue
+        merged = None
+        if cod:
+            evs = conn.execute(
+                """SELECT e.team_id, e.minute, p.full_name, e.goal_type FROM match_events e
+                   JOIN players p ON p.id = e.player_id
+                   WHERE e.match_id = ? AND e.kind = 'goal' ORDER BY COALESCE(e.minute, 9999), e.id""",
+                (mid,)).fetchall()
+            if all(name for _, _, name, _ in evs):
+                continue                      # el acta trae todos los nombres
+            if len(evs) == hs + as_:
+                free = list(fp)
+                merged = []
+                for team_id, minute, name, gt in evs:
+                    side = "h" if team_id == home_id else "a"
+                    if gt == "own":
+                        side = "a" if side == "h" else "h"
+                    if not name:
+                        pick = next((g for g in free if g[0] == side and g[1] == minute), None) \
+                            or next((g for g in free if g[0] == side), None)
+                        if pick:
+                            free.remove(pick)
+                            name = pick[2]
+                    merged.append([minute, name or None, None, side, "o" if gt == "own" else "r"])
+        if merged is None:
+            merged = [[minute, name, None, side, "r"] for side, minute, name in fp]
+        pairs.append((_match_key(home, away, hs, as_),
+                      {"s": season, "gr": code, "g": _running(merged), "src": "fp"}))
+    return pairs
 
 
 def generate_matchdetail_js(conn):
@@ -492,6 +605,7 @@ def lineups_entries(conn, season_name, code=None):
        WHERE g.season_id=? AND m.cod_acta IS NOT NULL AND (? IS NULL OR g.code=?)
        ORDER BY m.id""", (season_id[0], code, code)).fetchall()
     has_id = any(r[1] == "fiflp_id" for r in conn.execute("PRAGMA table_info(players)"))
+    has_all = _has_table(conn, "match_staff_all")
     pairs = []
     for mid, h, a, hs, asc, code, cod in rows:
         key = _match_key(h, a, hs, asc)
@@ -550,6 +664,16 @@ def lineups_entries(conn, season_name, code=None):
                  "coachH": ch[0] if ch else None,
                  "coachA": ca[0] if ca else None,
                  "ref":    ref[0] if ref else None}
+        # Todo el cuerpo técnico de cada equipo y los árbitros, con el cargo del acta (match_staff_all).
+        if has_all:
+            rows_s = conn.execute("SELECT team_id, role, name FROM match_staff_all WHERE match_id=? ORDER BY ord",
+                                  (mid,)).fetchall()
+            for key_s, test in (("stH", lambda t: t == home_team_id),
+                                ("stA", lambda t: t is not None and t != home_team_id),
+                                ("refs", lambda t: t is None)):
+                found = [[role, name] for t, role, name in rows_s if test(t)]
+                if found:
+                    entry[key_s] = found
         # Delegados (de campo y de equipo) del acta de la federación, si los hay.
         for side_key, cmp in (("delH", "="), ("delA", "!=")):
             rows_d = conn.execute(f"""SELECT kind, name FROM match_staff WHERE match_id=?
@@ -777,27 +901,145 @@ def venue_key(name):
 
 
 def generate_campos_js(conn):
-    """CAMPOS (en data-history.js) = {campo del calendario: [dirección, localidad,
-    superficie, tipo]} para los partidos de la temporada actual (directorio de
-    campos de la federación). Casa por venue_key y, si no, por un único campo
-    del directorio que empiece igual."""
-    has = conn.execute("SELECT 1 FROM sqlite_master WHERE name='venues'").fetchone()
-    directory = conn.execute("SELECT norm, address, city, surface, kind FROM venues").fetchall() if has else []
-    by_key = {r[0]: r[1:] for r in directory}
-    used = [r[0] for r in conn.execute(
-        """SELECT DISTINCT m.venue FROM matches m JOIN groups g ON g.id=m.group_id
-           JOIN seasons s ON s.id=g.season_id
-           WHERE s.is_current=1 AND m.venue IS NOT NULL AND m.venue <> '' ORDER BY m.venue""")]
+    """CAMPOS (en data-history.js) = {campo: [dirección, localidad, superficie, tipo(, latitud,
+    longitud)]} de los partidos y los equipos de la temporada actual (directorio y fichas de campos
+    de la federación, campos_entries)."""
+    row = conn.execute("SELECT id FROM seasons WHERE is_current = 1").fetchone()
+    out = campos_entries(conn, season_venue_names(conn, row[0])) if row else {}
+    return "const CAMPOS=" + js_val(out) + ";"
+
+
+def _has_table(conn, name):
+    return conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)).fetchone() is not None
+
+
+def standings_detail_map(conn, group_id):
+    """{equipo: [Jc, Gc, Ec, Pc, Jf, Gf, Ef, Pf, sanción]} de la clasificación detallada de la
+    federación (import_fiflp_detalle.py): partidos jugados, ganados, empatados y perdidos en casa y
+    fuera, y los puntos de sanción. None si el grupo no la tiene."""
+    if not _has_table(conn, "standings_detail"):
+        return None
+    rows = conn.execute(
+        """SELECT t.name, d.home_played, d.home_won, d.home_drawn, d.home_lost,
+                  d.away_played, d.away_won, d.away_drawn, d.away_lost, d.sanction
+           FROM standings_detail d JOIN teams t ON t.id = d.team_id
+           WHERE d.group_id = ? ORDER BY t.name""", (group_id,)).fetchall()
+    return {r[0]: list(r[1:]) for r in rows} or None
+
+
+def zones_of(conn, group_id, teams):
+    """[[desde, hasta, tipo, texto]]: qué significa cada puesto de la tabla según la app de
+    futbolaspalmas (fp_ligas). Ascenso, playoff, copa y promoción se cuentan desde arriba y el
+    descenso desde abajo. None sin datos."""
+    if not _has_table(conn, "fp_ligas"):
+        return None
+    row = conn.execute(
+        """SELECT plazas_ascenso, texto_ascenso, plazas_playoff, texto_playoff, plazas_copa, texto_copa,
+                  plazas_promocion, texto_promocion, plazas_descenso, texto_descenso
+           FROM fp_ligas WHERE group_id = ? ORDER BY liga_id LIMIT 1""", (group_id,)).fetchone()
+    if not row:
+        return None
+    out, pos = [], 1
+    for kind, n, text in (("ascenso", row[0], row[1]), ("playoff", row[2], row[3]),
+                          ("copa", row[4], row[5]), ("promocion", row[6], row[7])):
+        if n and n > 0:
+            out.append([pos, pos + n - 1, kind, (text or "").strip() or None])
+            pos += n
+    if row[8] and row[8] > 0 and teams:
+        out.append([max(1, teams - row[8] + 1), teams, "descenso", (row[9] or "").strip() or None])
+    return out or None
+
+
+def team_info_map(conn, season_id):
+    """{equipo: [camiseta, pantalón, medias, campo, superficie, equipación de futbolaspalmas]} de la
+    temporada: el directorio de la federación (team_seasons, import_fiflp_detalle.py) y la app de
+    futbolaspalmas (fp_teams: el nombre de su dibujo, «2026-blanca-blanco-blancas.png»)."""
     out = {}
-    for venue in used:
+    if _has_table(conn, "team_seasons"):
+        for name, shirt, shorts, socks, venue, surface in conn.execute(
+                """SELECT t.name, ts.shirt, ts.shorts, ts.socks, ts.venue_name, ts.surface
+                   FROM team_seasons ts JOIN teams t ON t.id = ts.team_id
+                   WHERE ts.season_id = ? ORDER BY t.name""", (season_id,)):
+            out[name] = [shirt, shorts, socks, venue, surface, None]
+    if _has_table(conn, "fp_teams") and _has_table(conn, "fp_ligas"):
+        for name, kit in conn.execute(
+                """SELECT t.name, f.equipacion FROM fp_teams f JOIN fp_ligas l ON l.liga_id = f.liga_id
+                   JOIN teams t ON t.id = f.team_id
+                   WHERE l.season_id = ? AND f.equipacion IS NOT NULL AND f.equipacion <> ''
+                   ORDER BY t.name, f.liga_id""", (season_id,)):
+            out.setdefault(name, [None] * 6)[5] = kit
+    return dict(sorted(out.items()))
+
+
+# Estados de la app de futbolaspalmas que el marcador no dice.
+FP_STATES = ("aplazado", "suspendido", "retirado", "anulado")
+
+
+def match_states_map(conn, season_id):
+    """{código de grupo: {jornada: {"local|visitante": [estado, motivo, hora real de inicio]}}} de
+    los partidos de la temporada que la app de futbolaspalmas da aplazados, suspendidos, retirados
+    o anulados, o con su hora real de inicio (HH:MM)."""
+    if not _has_table(conn, "fp_matches"):
+        return {}
+    out = {}
+    rows = conn.execute(
+        """SELECT g.code, m.jornada, h.name, a.name, f.estado, f.motivo_aplazado, f.hora_inicio
+           FROM fp_matches f JOIN matches m ON m.id = f.match_id JOIN groups g ON g.id = m.group_id
+           JOIN teams h ON h.id = m.home_team_id JOIN teams a ON a.id = m.away_team_id
+           WHERE g.season_id = ? ORDER BY g.code, m.jornada, h.name""", (season_id,)).fetchall()
+    for code, jornada, home, away, estado, motivo, inicio in rows:
+        state = estado if estado in FP_STATES else None
+        start = (inicio or "")[11:16] if re.fullmatch(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?", inicio or "") else None
+        if not state and not start:
+            continue
+        out.setdefault(code, {}).setdefault(jornada, {})[f"{home}|{away}"] = [state, (motivo or "").strip() or None, start]
+    return out
+
+
+def campos_entries(conn, venue_names):
+    """{campo: [dirección, localidad, superficie, tipo(, latitud, longitud)]} de los campos dados,
+    del directorio de la federación (venues) y de sus fichas (venue_details: las coordenadas). Casa
+    por venue_key y, si no, por un único campo del directorio que empiece igual; un campo que solo
+    está en las fichas (el de un equipo), por su nombre."""
+    has = _has_table(conn, "venues")
+    directory = conn.execute("SELECT norm, address, city, surface, kind, code FROM venues").fetchall() if has else []
+    details = {}
+    if _has_table(conn, "venue_details"):
+        details = {r[0]: r[1:] for r in conn.execute(
+            "SELECT code, name, address, city, surface, lat, lon FROM venue_details")}
+    by_key = {r[0]: r[1:] for r in directory}
+    by_detail_name = {venue_key(v[0]): (code, v) for code, v in details.items() if v[0]}
+    out = {}
+    for venue in venue_names:
         key = venue_key(venue)
         info = by_key.get(key)
         if info is None and len(key) >= 6:
             near = [v for k, v in by_key.items() if k.startswith(key) or key.startswith(k)]
             info = near[0] if len(near) == 1 else None
         if info:
-            out[venue] = list(info)
-    return "const CAMPOS=" + js_val(out) + ";"
+            entry, code = list(info[:4]), info[4]
+        elif key in by_detail_name:
+            code, d = by_detail_name[key]
+            entry = [d[1], d[2], d[3], None]
+        else:
+            continue
+        d = details.get(code)
+        if d and d[4] is not None and d[5] is not None:
+            entry += [round(d[4], 6), round(d[5], 6)]
+        out[venue] = entry
+    return out
+
+
+def season_venue_names(conn, season_id):
+    """Los campos de los partidos de la temporada y los de sus equipos (team_seasons)."""
+    names = {r[0] for r in conn.execute(
+        """SELECT DISTINCT m.venue FROM matches m JOIN groups g ON g.id = m.group_id
+           WHERE g.season_id = ? AND m.venue IS NOT NULL AND m.venue <> ''""", (season_id,))}
+    if _has_table(conn, "team_seasons"):
+        names |= {r[0] for r in conn.execute(
+            "SELECT DISTINCT venue_name FROM team_seasons WHERE season_id = ? AND venue_name IS NOT NULL",
+            (season_id,))}
+    return sorted(names)
 
 
 def get_historical_jornadas(conn, group_id, include_details=False):
@@ -877,7 +1119,7 @@ def generate_seasons_js(conn):
                 for gid, code, name, full_name, phase, island, current_jornada in groups:
                     standings = get_standings(conn, gid)
                     hist_jornadas = get_historical_jornadas(conn, gid, include_details=True)
-                    groups_data.append({
+                    group_obj = {
                         "id": code,
                         "name": name,
                         "fullName": full_name,
@@ -886,7 +1128,11 @@ def generate_seasons_js(conn):
                         "current_jornada": current_jornada,
                         "standings": standings,
                         "jornadas": hist_jornadas,
-                    })
+                    }
+                    detail = standings_detail_map(conn, gid)
+                    if detail:
+                        group_obj["detail"] = detail
+                    groups_data.append(group_obj)
                 entry[cat_key] = groups_data
             # Los goleadores de la temporada archivada, si la base los tiene
             # (2025-26: los de futbolaspalmas; desde 2026-27, los de la federación).
@@ -894,6 +1140,14 @@ def generate_seasons_js(conn):
                    for cat_name, cat_key in [("BENJAMIN", "benjamin"), ("PREBENJAMIN", "prebenjamin")]}
             if any(gol.values()):
                 entry["gol"] = gol
+            # La ficha de cada equipo (equipación y campo) y los campos de la temporada, con sus
+            # coordenadas, si la base los tiene.
+            equipos = team_info_map(conn, season_id)
+            if equipos:
+                entry["equipos"] = equipos
+            campos = campos_entries(conn, season_venue_names(conn, season_id))
+            if campos:
+                entry["campos"] = campos
 
         seasons_list.append(entry)
 

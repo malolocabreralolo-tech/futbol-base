@@ -133,15 +133,19 @@ test('todas las peticiones perezosas pasan por fetchData(): la versión de los d
   assert.doesNotMatch(src, /data-matchdetail-keys\.js"\]/, 'la versión ya no sale de data-matchdetail-keys.js');
 });
 
-test('readGlobals: los diez globales inmediatos con typeof, null si falta (CAMPOS va en data-history.js)', () => {
+test('readGlobals: los trece globales inmediatos con typeof, null si falta (CAMPOS, EQUIPOS, ESTADOS y COBERTURA van en data-history.js)', () => {
   const KEYS = { benjamin: 'BENJAMIN', prebenjamin: 'PREBENJAMIN', history: 'HISTORY', golBenj: 'GOL_BENJ',
-    golPrebenj: 'GOL_PREBENJ', shields: 'SHIELDS', campos: 'CAMPOS', seasons: 'SEASONS', cupBenjamin: 'MASPALOMAS_CUP_BENJAMIN',
+    golPrebenj: 'GOL_PREBENJ', shields: 'SHIELDS', campos: 'CAMPOS', equipos: 'EQUIPOS', estados: 'ESTADOS',
+    cobertura: 'COBERTURA', seasons: 'SEASONS', cupBenjamin: 'MASPALOMAS_CUP_BENJAMIN',
     cupPrebenjamin: 'MASPALOMAS_CUP_PREBENJAMIN' };
   assert.deepEqual(state.readGlobals(), Object.fromEntries(Object.keys(KEYS).map((key) => [key, null])));
   const cur = fixture('current-2025-2026');
   const cups = fixture('cups-2025-2026');
   const values = { BENJAMIN: cur.benjamin, PREBENJAMIN: cur.prebenjamin, HISTORY: cur.history, GOL_BENJ: [],
     GOL_PREBENJ: [], SHIELDS: fixture('shields'), CAMPOS: { 'X F-8': ['C. Mosta, 1B', 'Arrecife', 'Hierba Artificial', 'Fútbol 8'] },
+    EQUIPOS: { 'Las Mesas Hu.': ['BLANCA CON FRANJA ROJA', 'BLANCO', 'BLANCAS', 'PEPE GONÇALVEZ', 'Hierba Artificial (HA)', null] },
+    ESTADOS: { PG2: { 'Jornada 1': { 'Las Mesas Hu.|Acodetti': ['aplazado', 'lluvia', null] } } },
+    COBERTURA: { temporadas: [['2025-2026', 63, 3350, 3300, 3175, 4200, 9000]], equipos: 380, campos: 240, mb: 60 },
     SEASONS: [{ name: '2025-2026', current: true }],
     MASPALOMAS_CUP_BENJAMIN: cups.benjamin, MASPALOMAS_CUP_PREBENJAMIN: cups.prebenjamin };
   // Las propiedades del objeto global se ven como identificadores desnudos, igual que los

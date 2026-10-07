@@ -2,7 +2,7 @@
  "dias": {},
  "ligas": {
   "121": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -137,7 +137,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -253,7 +253,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -369,7 +369,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -504,7 +504,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -523,7 +523,7 @@
    "name": "Benjamin Gran Canaria Grupo 5",
    "tabla": [
     {
-     "banderas": "bandera-GranCanaria.jpg",
+     "banderas": "bandera-naranja-blanco.png",
      "dg": "0",
      "equipacion": "2026-naranja-blanco-naranjas.png",
      "escudo": "200x200acodetti.png",
@@ -639,7 +639,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -755,7 +755,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -890,7 +890,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1006,7 +1006,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1025,7 +1025,7 @@
    "name": "Benjamin Gran Canaria Grupo 9",
    "tabla": [
     {
-     "banderas": "bandera-GranCanaria.jpg",
+     "banderas": "bandera-blanca-diagonal-roja.png",
      "dg": "0",
      "equipacion": "2026-blancafraroja-blancos-blancos.png",
      "escudo": "200x200huracan.png",
@@ -1122,7 +1122,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1276,7 +1276,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1392,7 +1392,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1411,7 +1411,7 @@
    "name": "Benjamin Gran Canaria Grupo 12",
    "tabla": [
     {
-     "banderas": "bandera-GranCanaria.jpg",
+     "banderas": "bandera-blanca-diagonal-roja.png",
      "dg": "0",
      "equipacion": "2026-blancafraroja-blancos-blancos.png",
      "escudo": "200x200huracan.png",
@@ -1527,7 +1527,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1643,7 +1643,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1759,7 +1759,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1894,7 +1894,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2029,7 +2029,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2164,7 +2164,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2299,7 +2299,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2415,7 +2415,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2531,7 +2531,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2647,7 +2647,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2782,7 +2782,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2917,7 +2917,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3052,7 +3052,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-07T19:05:42",
+   "fetched": "2026-10-07T19:59:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3312,6 +3312,255 @@
      "pg": 0,
      "pj": 0,
      "posicion_anterior": 13,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    }
+   ]
+  },
+  "147": {
+   "fetched": "2026-10-07T19:59:17",
+   "meta": {
+    "jornada_actual": 1,
+    "plazas_ascenso": 1,
+    "plazas_copa": 0,
+    "plazas_descenso": 0,
+    "plazas_playoff": 1,
+    "plazas_promocion": 0,
+    "texto_ascenso": "Campeón de Liga Grupo 2",
+    "texto_copa": "Competición Europea",
+    "texto_descenso": "Descenso",
+    "texto_playoff": "Subcampeón de Liga Grupo 2",
+    "texto_promocion": "Promoción",
+    "tipo_competicion": "regular",
+    "total_jornadas": 1
+   },
+   "name": "Prebenjamín Gran Canaria Grupo 2",
+   "tabla": [
+    {
+     "banderas": "bandera-naranja-blanco.png",
+     "dg": "0",
+     "equipacion": "2026-naranja-blanco-naranjas.png",
+     "escudo": "200x200acodetti.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1352,
+     "nombre": "Acodetti CF",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 1,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-blanca-diagonal-roja.png",
+     "dg": "0",
+     "equipacion": "2026-blancafraroja-blancos-blancos.png",
+     "escudo": "200x200huracan.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1345,
+     "nombre": "AD Huracán",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 2,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-nrgra-gc.png",
+     "dg": "0",
+     "equipacion": "2026-negrahomblanco-negro-negrasblanca.png",
+     "escudo": "angosturaEscudo.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1346,
+     "nombre": "Atl. Angostura",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 3,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-celeste-negro.png",
+     "dg": "0",
+     "equipacion": "2026-azul-negro-azules.png",
+     "escudo": "esccudoBachicanLasMesas.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1344,
+     "nombre": "Atl. Bachicán Las Mesas",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 4,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-blanca-gran-canaria.png",
+     "dg": "0",
+     "equipacion": "2026-blanca-blanco-blancas.png",
+     "escudo": "batanEscudo.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1342,
+     "nombre": "CD Batán",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 5,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-celeste-azulmarino.png",
+     "dg": "0",
+     "equipacion": "2026-celeste-azul-azul.png",
+     "escudo": "default.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1353,
+     "nombre": "CD Glaucus",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 6,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-blanca-diagonal-roja.png",
+     "dg": "0",
+     "equipacion": "2026-blancafraroja-blancos-blancos.png",
+     "escudo": "lasMesasEscudo.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1349,
+     "nombre": "Las Mesas Huracán",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 7,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-negriblanca-rayas.png",
+     "dg": "0",
+     "equipacion": "2026-blanquinegra-negro-negras.png200x200victoria2019.png",
+     "escudo": "200x200victoria2019.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1347,
+     "nombre": "RC Victoria",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 8,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-naranja-azul.png",
+     "dg": "0",
+     "equipacion": "2026-naranja-azules-blancas.png",
+     "escudo": "100x100sanmateo.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1343,
+     "nombre": "San Mateo",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 9,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-blanca-azul-gran-canaria.png",
+     "dg": "0",
+     "equipacion": "2026-blanca-azul-azules.png",
+     "escudo": "100x100tamaraceite.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1351,
+     "nombre": "UD Tamaraceite",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 10,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-rojinegra-rayas.png",
+     "dg": "0",
+     "equipacion": "2026-rojinegra-negros-negras-roja.png",
+     "escudo": "100x100unionviera.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1348,
+     "nombre": "Unión Viera",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 11,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-blanca-verde-gc.png",
+     "dg": "0",
+     "equipacion": "2026-blancahomverde-verde-blancas.png",
+     "escudo": "100x100villa.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1350,
+     "nombre": "Villa Santa Brígida",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 12,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],

@@ -503,3 +503,17 @@ def test_two_teams_crossed_in_a_closed_table_are_put_back_by_position(monkeypatc
     assert GR.fix_positions(conn, log=lambda *_: None) == 0
     assert conn.execute("""SELECT t.name FROM standings st JOIN teams t ON t.id=st.team_id
                            WHERE st.group_id=2 AND st.position=2""").fetchone() == ("UD Tarajalejo",)
+
+
+def test_in_the_current_season_a_team_is_put_right_by_its_name(monkeypatch):
+    conn = base()
+    conn.execute("INSERT INTO teams(id, name) VALUES (20, 'O. Marítima')")
+    conn.execute("""INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+                    VALUES (1, 20, 5, 0, 0, 0, 0, 0, 0, 0, 0)""")
+    monkeypatch.setattr(GR, "POSITION_FIXES", {("2021-2022", "GC1"): {"O. Marítima": "Juventud Marítima"}})
+    assert GR.fix_positions(conn, log=lambda *_: None) == 1
+    assert conn.execute("""SELECT t.name FROM standings st JOIN teams t ON t.id=st.team_id
+                           WHERE st.position=5""").fetchone() == ("Juventud Marítima",)
+    assert not conn.execute("SELECT 1 FROM teams WHERE name='O. Marítima'").fetchone()
+    assert GR.fix_positions(conn, log=lambda *_: None) == 0
+

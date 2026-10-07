@@ -41,8 +41,9 @@ SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 RAW_FILE = re.compile(r"^fiflp_detalle_(\d{4}-\d{4})_raw\.json$")
 CAMPOS_FILE = "fiflp_campos_raw.json"
 # En la huella: subirla reimporta el detalle de todas las temporadas. 2: finales y copas de las
-# archivadas (create_cup_group), calendarios de 2016-19 y fichas rehechas tras fix_positions.
-DETALLE_VERSION = "2"
+# archivadas (create_cup_group), calendarios de 2016-19 y fichas rehechas tras fix_positions. 3: las
+# fichas de los equipos que fix_positions corrige en 2023-24 a 2026-27.
+DETALLE_VERSION = "3"
 # Temporadas cuyo calendario (jornadas del raw) entra en los grupos sin partidos. Solo las que se han
 # revisado en local y tienen su línea base de score_deviation al día: un marcador mal leído en otra
 # dejaría la prueba en rojo y al bot sin publicar. 2016-19 (revisadas el 7/10/2026): las ligas y

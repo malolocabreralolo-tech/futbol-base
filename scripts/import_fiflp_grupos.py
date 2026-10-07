@@ -135,7 +135,8 @@ ARCHIVE_NAMES = {
 # Equipos que known_names o un import antiguo cruzaron en la clasificación de un grupo cerrado,
 # comprobados con la de la federación (raw de detalle, la misma posición): {(temporada, código):
 # {posición: nombre en la base}}. Van por posición, que en un grupo cerrado ya no se mueve: repetirlo
-# no deshace nada. Los aplica fix_positions, en el bot después de los grupos; con uno nuevo, subir
+# no deshace nada. En la temporada en curso (o un equipo sin fila en la tabla), {nombre que tiene:
+# nombre que debe tener}. Los aplica fix_positions, en el bot después de los grupos; con uno nuevo, subir
 # import_fiflp_detalle.DETALLE_VERSION, que rehace las fichas de la temporada que borra.
 POSITION_FIXES = {
     # 'TARAJALEJO, U.D.' es UD Tarajalejo y 'G. TARAJAL SOC. TAMAS.' (A y B), Gran Tarajal: al revés.
@@ -146,6 +147,45 @@ POSITION_FIXES = {
     ("2019-2020", "FV11"): {10: "Gran Tarajal"},
     # Veteranos C con el nombre del portal (wayback_2324), Veteranos C en el resto de la temporada.
     ("2023-2024", "GC7"): {9: "Veteranos C"},
+    # 2023-24 a 2025-26: la primera fase lleva el nombre del portal y la segunda el de la federación, y
+    # en la segunda fase de 2023-24 varios filiales salieron con el nombre del primer equipo. Comprobado
+    # con la clasificación de la federación (la fila con los mismos puntos, partidos y goles) y con los
+    # jugadores de las actas (los mismos niños en las dos fases).
+    ("2023-2024", "GC2"): {9: "Santa Brígida B"},
+    ("2023-2024", "GC3"): {5: "Atco. Huracán B"},
+    ("2023-2024", "GC5"): {8: "Barrio Atlan. B", 11: "Atl. Isleta B"},
+    ("2023-2024", "GC8"): {1: "Atlético"},
+    ("2023-2024", "BC1"): {3: "Atco. Huracán"},
+    ("2023-2024", "BC2"): {1: "Roque Amagro"},
+    ("2023-2024", "PGC4"): {2: "Mas. Training"},
+    ("2023-2024", "TPC1"): {"Peña de La Amistad": "Peña Amistad"},
+    ("2023-2024", "SF5"): {9: "Carrizal B"},
+    ("2023-2024", "SF6"): {8: "Barrial Atco."},
+    ("2023-2024", "SF7"): {1: "Atco. Huracán B", 10: "Barrio Atlan. B"},
+    ("2023-2024", "SF9"): {3: "Corazón Mª D"},
+    ("2023-2024", "SF10"): {6: "Maspalomas B"},
+    ("2023-2024", "SF11"): {4: "Santa Brígida B"},
+    ("2023-2024", "SF13"): {5: "Atl. Isleta B"},
+    ("2023-2024", "SF14"): {5: "Vecindario B"},
+    ("2024-2025", "P6"): {1: "Las Torres", 9: "Atlético Fomento B"},
+    ("2024-2025", "P8"): {8: "Atlético B"},
+    ("2024-2025", "P9"): {2: "Atlético", 5: "Las Mesas B"},
+    ("2024-2025", "B1"): {3: "Roque Amagro"},
+    ("2024-2025", "E3"): {7: "Futboltec"},
+    ("2025-2026", "B2"): {8: "Santa Brígida B"},
+    ("2025-2026", "FF11"): {2: "Atlético C"},
+    ("2025-2026", "A1"): {7: "Atlético C"},
+    ("2025-2026", "FF13"): {4: "Las Mesas B", 6: "Atlético B"},
+    ("2025-2026", "C2"): {8: "Atlético B"},
+    ("2025-2026", "FF14"): {4: "Valsequillo B"},
+    ("2025-2026", "FF20"): {6: "Los Vélez"},
+    ("2025-2026", "FF21"): {1: "Maspa Training B", 5: "Casa Pastores B"},
+    ("2025-2026", "BCA1"): {7: "Maspa Training"},
+    ("2025-2026", "LZ1"): {6: "Juventud Marítima", 7: "Unión Sur Yaiza", 8: "Puerto del Carmen"},
+    ("2025-2026", "LZ4"): {1: "Unión Sur Yaiza B", 6: "Puerto del Carmen B"},
+    ("2025-2026", "FV12"): {5: "Peña B"},
+    # En la temporada en curso, por nombre (las posiciones se mueven): 'JUVENTUD MARITIMA, C.D. "A"'.
+    ("2026-2027", "LZ1"): {"O. Marítima": "Juventud Marítima"},
 }
 
 
@@ -407,15 +447,19 @@ def fix_positions(conn, log=print):
             continue
         gid, season_id = found[0]
         at = dict(conn.execute("SELECT position, team_id FROM standings WHERE group_id=?", (gid,)))
+        at.update(conn.execute("""SELECT t.name, t.id FROM matches m JOIN teams t
+                                  ON t.id IN (m.home_team_id, m.away_team_id) WHERE m.group_id=?""", (gid,)))
+        at.update(conn.execute("""SELECT t.name, t.id FROM standings st JOIN teams t ON t.id=st.team_id
+                                  WHERE st.group_id=?""", (gid,)))
         mapping = {}
-        for pos, name in fixes.items():
+        for key, name in fixes.items():
             row = conn.execute("SELECT id FROM teams WHERE name=?", (name,)).fetchone()
             new = row[0] if row else get_or_create_team(conn, name)
-            if pos in at and at[pos] != new:
-                mapping[at[pos]] = new
+            if key in at and at[key] != new:
+                mapping[at[key]] = new
         if not mapping:
             continue
-        after = [mapping.get(t, t) for t in at.values()]
+        after = [mapping.get(t, t) for k, t in at.items() if isinstance(k, int)]
         if len(after) != len(set(after)):
             log(f"  ! {season} {code}: el cambio dejaría un equipo dos veces en la clasificación; no se hace")
             continue

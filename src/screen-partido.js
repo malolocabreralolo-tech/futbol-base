@@ -13,7 +13,7 @@ import {
   actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, penaltyWinner, playerName,
   roundOf, seasonLabel, teamShort, timelineFor,
 } from './model.js';
-import { countdownLabel, dayMonth, matchHref, playerHref, shareAndAnnounce, venueUrl, weekdayDate } from './links.js';
+import { countdownLabel, dayMonth, matchHref, playerHref, shareAndAnnounce, venueDetails, venueUrl, weekdayDate } from './links.js';
 import {
   ensureLineups, ensureMatchDetail, ensureSeasonData, lineupsKey, loadSeasons, normalizeTeamName,
 } from './state.js';
@@ -95,16 +95,18 @@ function resultBlock(match, { today, shields, status = null, campos = null, isla
   const off = status && status.state && STATUS_WORD[status.state] && !played ? STATUS_WORD[status.state] : null;
   const context = off ? off.toLowerCase()
     : played ? 'final' : state === 'pendiente' ? countdownLabel(match.dateISO, today) || 'pendiente' : state;
-  // El campo con su enlace al mapa (las coordenadas de su ficha en la federación, si las hay).
-  const url = match.venue ? venueUrl(match.venue, island, campos) : '';
-  const place = match.venue && url
-    ? html`${match.venue} <a class="more" href="${url}" target="_blank" rel="noopener noreferrer">Cómo llegar<span class="vh"> (mapa, en otra pestaña)</span></a>`
-    : match.venue || 'no publicado';
   const facts = cells([
     { label: 'Fecha', value: match.dateISO ? longDate(match.dateISO) : 'sin fecha', muted: !match.dateISO },
     { label: 'Hora', value: match.time ? `${match.time}${status && status.start && status.start !== match.time ? ` (empezó ${status.start})` : ''}` : 'no publicada', muted: !match.time },
-    { label: 'Campo', value: place, muted: !match.venue },
+    { label: 'Campo', value: match.venue || 'no publicado', muted: !match.venue },
   ]);
+  // Debajo, el enlace al mapa del campo (al punto exacto si su ficha de la federación tiene las
+  // coordenadas) y su superficie y tipo, si se conocen.
+  const url = match.venue ? venueUrl(match.venue, island, campos) : '';
+  const details = match.venue ? venueDetails(match.venue, campos) : '';
+  const map = url
+    ? html`<p class="box-text"><a class="more" href="${url}" target="_blank" rel="noopener noreferrer">Cómo llegar<span class="vh"> a ${match.venue} (mapa, en otra pestaña)</span></a>${details ? ` · ${details}` : ''}</p>`
+    : '';
   const team = (name, side) => html`<div class="pt-team">${crest(name, { size: 46, shields, lazy: false })}<span class="pt-side">${side}</span><span class="pt-name">${name}</span></div>`;
   const marker = played
     ? html`<p class="pt-score"><span class="vh">Resultado: </span>${score(match.hs, match.as)}</p>`
@@ -115,7 +117,7 @@ function resultBlock(match, { today, shields, status = null, campos = null, isla
     ? html`<p class="pt-penalties">${winner} pasó por penaltis${match.shootout ? html` <span class="pt-tanda">(${dashed(match.shootout)})</span>` : ''}</p>`
     : '';
   const why = off ? notice(`${off}:`, status.note ? `${status.note} (según futbolaspalmas).` : 'según futbolaspalmas.') : '';
-  return box(html`${facts}<div class="pt-teams">${team(match.home, 'Local')}${marker}${team(match.away, 'Visitante')}</div>${penalties}${why}`,
+  return box(html`${facts}${map}<div class="pt-teams">${team(match.home, 'Local')}${marker}${team(match.away, 'Visitante')}</div>${penalties}${why}`,
     { title: 'Resultado', context });
 }
 

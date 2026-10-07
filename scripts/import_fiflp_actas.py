@@ -104,6 +104,53 @@ def _clear_acta_rows(conn, mid: int) -> None:
     conn.execute("DELETE FROM appearances  WHERE match_id=?", (mid,))
     conn.execute("DELETE FROM match_events WHERE match_id=?", (mid,))
     conn.execute("DELETE FROM match_staff  WHERE match_id=?", (mid,))
+    conn.execute("DELETE FROM match_staff_all WHERE match_id=?", (mid,))
+
+
+# Los cargos que match_staff ya guardaba, con el nombre que les da el acta: para las actas leídas
+# antes de que se guardara el cuerpo técnico entero (staff.all_*) y para el relleno de backfill.
+LEGACY_ROLES = {"referee": "Árbitro/a Principal", "delegate_field": "DEL. Campo",
+                "delegate_team": "DEL. Equipo", "coach": "Entrenador"}
+_REFEREE_ROLE = re.compile(r"^(Árbitro/a Principal|Árbitro/a Asistente\s*\d*|Asistente\s*\d*|"
+                           r"Cuarto/a Árbitro/a|Cuarto Árbitro|Informador/a|Informador)\s+(.+)$")
+
+
+def staff_rows(acta: dict) -> list:
+    """[(lado o None, cargo, nombre)] de todo el cuerpo técnico y los árbitros del acta."""
+    staff = acta.get("staff") or {}
+    rows = []
+    for line in staff.get("referees") or []:
+        m = _REFEREE_ROLE.match(line.strip())
+        if m:
+            rows.append((None, m.group(1), m.group(2).strip()))
+        elif line.strip():
+            rows.append((None, "Árbitro/a", line.strip()))
+    if not rows and staff.get("referee"):
+        rows.append((None, LEGACY_ROLES["referee"], staff["referee"]))
+    for side in ("home", "away"):
+        lines = staff.get(f"all_{side}")
+        if lines is None:          # acta leída antes del cuerpo técnico entero
+            delegates = staff.get(f"delegates_{side}") or {}
+            lines = [[LEGACY_ROLES[k], v] for k, v in (("delegate_field", delegates.get("campo")),
+                                                        ("delegate_team", delegates.get("equipo")),
+                                                        ("coach", staff.get(f"coach_{side}"))) if v]
+        rows += [(side, role, name) for role, name in lines]
+    return rows
+
+
+def backfill_staff_all(conn) -> int:
+    """match_staff_all de los partidos con acta que no lo tienen, desde match_staff
+    (los cuatro cargos de siempre). Devuelve cuántos partidos rellena."""
+    pending = [r[0] for r in conn.execute("""SELECT DISTINCT s.match_id FROM match_staff s WHERE NOT EXISTS
+                                             (SELECT 1 FROM match_staff_all a WHERE a.match_id=s.match_id)""")]
+    order = ("referee", "delegate_field", "delegate_team", "coach")
+    for mid in pending:
+        rows = conn.execute("SELECT team_id, kind, name FROM match_staff WHERE match_id=? ORDER BY id", (mid,)).fetchall()
+        rows.sort(key=lambda r: (r[0] is not None, r[0] or 0, order.index(r[1])))
+        for i, (tid, kind, name) in enumerate(rows):
+            conn.execute("INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (?,?,?,?,?)",
+                         (mid, tid, LEGACY_ROLES[kind], name, i))
+    return len(pending)
 
 
 def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
@@ -254,6 +301,15 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
                     "INSERT OR IGNORE INTO match_staff(match_id, team_id, kind, name) VALUES(?, ?, ?, ?)",
                     (mid, _team_id_by_side(conn, mid, side), kind, delegates[field]),
                 )
+    # Todo el cuerpo técnico y los árbitros, con el cargo que pone el acta.
+    conn.execute("DELETE FROM match_staff_all WHERE match_id=?", (mid,))
+    for i, (side, role, name) in enumerate(staff_rows(acta)):
+        conn.execute("INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (?,?,?,?,?)",
+                     (mid, _team_id_by_side(conn, mid, side) if side else None, role, name, i))
+    # El código del campo en la federación (actas leídas desde octubre de 2026).
+    code = (acta.get("header") or {}).get("venue_code")
+    if code:
+        conn.execute("UPDATE matches SET venue_code=? WHERE id=?", (int(code), mid))
 
     return True
 
@@ -864,6 +920,11 @@ def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
             f"{report['official_tables']} clasificaciones oficiales, {report['gaps_filled']} partidos que faltaban; "
             f"{report['owned']} de grupos creados desde la federación (los importa import_fiflp_grupos)")
         reports[name] = report
+    # match_staff_all de las actas importadas antes de que existiera (desde match_staff).
+    filled = backfill_staff_all(conn)
+    if filled:
+        conn.commit()
+        log(f"  cuerpo técnico completo: {filled} partidos rellenados desde match_staff")
     return reports
 
 

@@ -80,6 +80,26 @@ def status_path(season_code):
     return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_status.json"
 
 
+def needs_refresh(acta):
+    """Un acta aplanada leída antes de que se guardara todo el cuerpo técnico y el
+    código del campo (fiflp_acta.STAFF_VERSION): --refrescar la vuelve a leer. Una
+    cuya relectura salió peor (`staff_refresh_failed`) no se vuelve a pedir."""
+    try:
+        from scripts.fiflp_acta import STAFF_VERSION
+    except ImportError:
+        from fiflp_acta import STAFF_VERSION
+    return (isinstance(acta, dict) and "consistent" in acta and (acta.get("staff_v") or 0) < STAFF_VERSION
+            and not acta.get("staff_refresh_failed"))
+
+
+def keep_old_on_refresh(old, new):
+    """En --refrescar, la relectura solo sustituye al acta si es tan buena como
+    ella: aplanada y, si la vieja cuadraba, cuadrando también."""
+    if not isinstance(old, dict) or "consistent" not in old:
+        return False
+    return "consistent" not in new or (old.get("consistent") and not new.get("consistent"))
+
+
 def needs_rescrape(acta):
     """Las actas leídas antes de octubre de 2026 (acta_parser, sin aplanar)
     traen la cabecera mal descifrada y sin minutos: se vuelven a leer. Una que
@@ -461,6 +481,8 @@ def parse_args():
                     help="Solo estos grupos: 'GRUPO 5', '54422885:GRUPO 13' o el CodGrupo, separados por comas")
     ap.add_argument("--dump-fixture", default="",
                     help="CodActa whose raw HTML to dump to scripts/tests/fixtures/")
+    ap.add_argument("--refrescar", action="store_true",
+                    help="Volver a leer las actas ya descargadas sin todo el cuerpo técnico (needs_refresh)")
     return ap.parse_args()
 
 
@@ -595,7 +617,10 @@ def main():
         all_targets = deduped
 
         # Filter out already scraped (resume support)
-        pending = [t for t in all_targets if t["cod_acta"] not in raw or needs_rescrape(raw[t["cod_acta"]])]
+        def wanted(cod):
+            return (cod not in raw or needs_rescrape(raw[cod])
+                    or (args.refrescar and needs_refresh(raw[cod])))
+        pending = [t for t in all_targets if wanted(t["cod_acta"])]
         print(f"Enumerated {len(all_targets)} actas total, {len(pending)} pending")
 
         # --- Fetch + parse loop ---
@@ -622,6 +647,10 @@ def main():
         if not flat:
             acta["rescrape_failed"] = True     # leída ya con el lector nuevo: no se vuelve a pedir
         with lock:
+            if args.refrescar and keep_old_on_refresh(raw.get(cod), acta):
+                # La relectura salió peor que la que ya había: se queda la vieja y no se vuelve a pedir.
+                raw[cod]["staff_refresh_failed"] = True
+                return
             raw[cod] = acta
             # Solo cuenta como acta nueva la que se dejó aplanar: la cadena sigue mientras avanza.
             fetched += flat
@@ -636,7 +665,7 @@ def main():
         print(f"  time budget reached, stopping cleanly with {len(raw)} actas saved")
 
     save_raw(season, raw)
-    left = sum(1 for t in all_targets if t["cod_acta"] not in raw or needs_rescrape(raw[t["cod_acta"]]))
+    left = sum(1 for t in all_targets if wanted(t["cod_acta"]))
     # Una competición sin enumerar por falta de plazo cuenta como pendiente: la cadena sigue.
     status_path(season).write_text(json.dumps({"season": SEASON_NAME[season], "enumerated": len(all_targets),
                                                "in_raw": len(raw), "pending": left + unenumerated,

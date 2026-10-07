@@ -17,11 +17,19 @@ Forma (compatible con acta_parser.parse_acta, con campos de más):
   lineups {home: [{dorsal, name, role, fiflp_id}], away: [...]}
   events  [{kind:'goal', side, player_name, minute, goal_type, score:[h,a]}]
   staff   {referee, referees:[...], coach_home, coach_away,
-           delegates_home:{campo, equipo}, delegates_away:{...}}
+           delegates_home:{campo, equipo}, delegates_away:{...},
+           all_home:[[cargo, nombre]], all_away:[...]}   todo el cuerpo técnico
   consistent  bool
+  staff_v     STAFF_VERSION: el acta se leyó con todo el cuerpo técnico (2.º
+              entrenador, entrenador en prácticas…) y el código del campo
+              (header.venue_code); las anteriores se pueden volver a leer
+              (fetch_fiflp_actas.py --refrescar).
 """
 import html as _html
 import re
+
+# Versión de lo que se lee del acta además de alineaciones y goles (ver staff_v arriba).
+STAFF_VERSION = 2
 
 def _goal_type(row):
     """Tipo de gol por el título del icono ('Gol normal', 'Gol de penalti',
@@ -81,6 +89,9 @@ def _header(html, blocks):
     city = re.search(r"Ciudad:\s*([^\n]+)", _text(html))
     h["venue"] = venue.group(1).strip() if venue else None
     h["city"] = city.group(1).strip() if city else None
+    # El código del campo en la federación (enlace a su ficha, NFG_VisCampos).
+    code = re.search(r"Codigo_Campo=(\d+)", html)
+    h["venue_code"] = int(code.group(1)) if code else None
     h.setdefault("home_score", None)
     h.setdefault("away_score", None)
     return h
@@ -104,10 +115,34 @@ def _team(block_html):
     subs = re.search(r"Suplentes(.*?)(?:Cuerpo T|$)", block_html, re.S)
     lineup = _players(starters.group(1), "starter") if starters else []
     lineup += _players(subs.group(1), "sub") if subs else []
-    staff_text = _text(block_html[block_html.find("Cuerpo T"):]) if "Cuerpo T" in block_html else ""
+    staff_text = ""
+    if "Cuerpo T" in block_html:
+        # Solo la sección: el bloque del visitante llega hasta el final de la página (estilos del
+        # aviso de cookies incluidos), y tras el cuerpo técnico va una tabla vacía.
+        section = block_html[block_html.find("Cuerpo T"):]
+        end = section.find("<table")
+        section = re.sub(r"(?is)<(style|script)\b.*?</\1>", " ", section[:end] if end > 0 else section)
+        staff_text = _text(section)
     grab = lambda label: (re.search(rf"{label}:\s*([^\n]+)", staff_text) or [None, None])[1]
     staff = {"coach": grab("Entrenador"), "campo": grab(r"DEL\. Campo"), "equipo": grab(r"DEL\. Equipo")}
-    return lineup, {k: _person(v) for k, v in staff.items()}
+    staff = {k: _person(v) for k, v in staff.items()}
+    staff["all"] = staff_lines(staff_text)
+    return lineup, staff
+
+
+def staff_lines(staff_text):
+    """[[cargo, nombre]] de cada línea «Cargo: Nombre» del cuerpo técnico, en el
+    orden del acta: delegados, entrenador, 2.º entrenador, entrenador en
+    prácticas, preparador… Sin las de «No presenta» ni las vacías."""
+    out = []
+    for line in staff_text.split("\n"):
+        m = re.match(r"\s*([^:]{2,60}?)\s*:\s*(.+?)\s*$", line)
+        if not m or m.group(1).startswith("Cuerpo T"):
+            continue
+        name = _person(m.group(2))
+        if name:
+            out.append([re.sub(r"\s+", " ", m.group(1)).strip(), name])
+    return out
 
 
 def clean_scorer(text):
@@ -173,6 +208,8 @@ def parse_flat_acta(html):
         "staff": {"referee": referee, "referees": referees,
                   "coach_home": staff_h.get("coach"), "coach_away": staff_a.get("coach"),
                   "delegates_home": {k: staff_h.get(k) for k in ("campo", "equipo")},
-                  "delegates_away": {k: staff_a.get(k) for k in ("campo", "equipo")}},
+                  "delegates_away": {k: staff_a.get(k) for k in ("campo", "equipo")},
+                  "all_home": staff_h.get("all") or [], "all_away": staff_a.get("all") or []},
         "consistent": consistent,
+        "staff_v": STAFF_VERSION,
     }

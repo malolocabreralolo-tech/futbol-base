@@ -30,6 +30,11 @@ on:
         required: false
         type: boolean
         default: false
+      refrescar:
+        description: 'Volver a leer las actas sin todo el cuerpo técnico ni el código del campo'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -59,11 +64,13 @@ jobs:
           TEMP_INPUT: ${{ inputs.temporada }}
           COMPS_INPUT: ${{ inputs.comps }}
           REINDEX: ${{ inputs.reindex }}
+          REFRESCAR: ${{ inputs.refrescar }}
           PYTHONUNBUFFERED: '1'
         run: |
           ARGS="--temporada $TEMP_INPUT --max-minutes 320"
           if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
           if [ "$REINDEX" = "true" ]; then ARGS="$ARGS --reindex"; fi
+          if [ "$REFRESCAR" = "true" ]; then ARGS="$ARGS --refrescar"; fi
           python3 scripts/fetch_fiflp_actas.py $ARGS
         timeout-minutes: 335
       # if: always(): una tanda cortada sube lo que lleva (el scraper guarda
@@ -110,6 +117,7 @@ jobs:
           COLA: ${{ inputs.cola }}
           TANDAS: ${{ inputs.tandas }}
           COMPS_INPUT: ${{ inputs.comps }}
+          REFRESCAR: ${{ inputs.refrescar }}
         run: |
           LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
           STATUS="scripts/fiflp_actas_${LABEL}_status.json"
@@ -122,13 +130,13 @@ jobs:
             echo "Freno: sin tandas. Pendientes en $LABEL: $PENDING"
           elif [ "$PENDING" -gt 0 ] && [ "$STUCK" = "0" ]; then
             echo "Quedan $PENDING actas de $LABEL: otra tanda."
-            gh workflow run actas-federacion.yml --ref main -f temporada="$TEMP_INPUT" -f cola="$COLA" -f tandas="$LEFT" -f comps="$COMPS_INPUT"
+            gh workflow run actas-federacion.yml --ref main -f temporada="$TEMP_INPUT" -f cola="$COLA" -f tandas="$LEFT" -f comps="$COMPS_INPUT" -f refrescar="${REFRESCAR:-false}"
           elif [ -n "$COLA" ]; then
             NEXT="${COLA%%,*}"
             REST=""
             case "$COLA" in *,*) REST="${COLA#*,}" ;; esac
             echo "Temporada $LABEL terminada: sigue la $NEXT."
-            gh workflow run actas-federacion.yml --ref main -f temporada="$NEXT" -f cola="$REST" -f tandas="$LEFT"
+            gh workflow run actas-federacion.yml --ref main -f temporada="$NEXT" -f cola="$REST" -f tandas="$LEFT" -f refrescar="${REFRESCAR:-false}"
           else
             echo "Cola terminada."
           fi

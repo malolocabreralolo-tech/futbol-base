@@ -1,8 +1,10 @@
 """Idempotent schema migration for SP-1 actas pipeline.
 
 Adds: players, appearances, match_events, match_staff tables; matches.cod_acta column;
-players.fiflp_id (id del jugador en la federación, estable entre temporadas) and
-the delegate kinds of match_staff (delegado de campo y de equipo, 2026-10).
+players.fiflp_id (id del jugador en la federación, estable entre temporadas),
+the delegate kinds of match_staff (delegado de campo y de equipo, 2026-10),
+match_staff_all (todo el cuerpo técnico y los árbitros del acta) and
+matches.venue_code (código del campo en la federación).
 Safe to run multiple times. Run: python3 scripts/migrate_actas_schema.py [--db PATH]
 """
 import sqlite3
@@ -62,6 +64,17 @@ DDL = [
         kind    TEXT,
         code    INTEGER
     )""",
+    # Todo el cuerpo técnico y los árbitros del acta, tal como los escribe la
+    # federación (cargo y nombre, en su orden): 2.º entrenador, entrenador en
+    # prácticas, delegados… match_staff sigue con los cuatro cargos de siempre.
+    """CREATE TABLE IF NOT EXISTS match_staff_all (
+        match_id INTEGER NOT NULL REFERENCES matches(id),
+        team_id  INTEGER,
+        role     TEXT NOT NULL,
+        name     TEXT NOT NULL,
+        ord      INTEGER NOT NULL
+    )""",
+    """CREATE INDEX IF NOT EXISTS idx_match_staff_all_match ON match_staff_all(match_id)""",
 ]
 
 
@@ -87,6 +100,9 @@ def migrate(conn):
         conn.execute("ALTER TABLE matches ADD COLUMN acta_tries INTEGER NOT NULL DEFAULT 0")
     if not column_exists(conn, "matches", "acta_recheck"):
         conn.execute("ALTER TABLE matches ADD COLUMN acta_recheck INTEGER NOT NULL DEFAULT 0")
+    # El código del campo en la federación, del enlace del acta (2026-10).
+    if not column_exists(conn, "matches", "venue_code"):
+        conn.execute("ALTER TABLE matches ADD COLUMN venue_code INTEGER")
     if not column_exists(conn, "players", "fiflp_id"):
         conn.execute("ALTER TABLE players ADD COLUMN fiflp_id INTEGER")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_players_fiflp ON players(fiflp_id)")

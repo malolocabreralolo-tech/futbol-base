@@ -889,13 +889,14 @@ def import_past_seasons(conn, log=print):
     import traceback
     from migrate_actas_schema import migrate
     from import_fiflp_actas import import_changed_raws, prune_players
-    from import_fiflp_grupos import import_changed_grupos
+    from import_fiflp_grupos import import_changed_grupos, fix_positions
     from import_fiflp_goleadores import import_changed_goleadores
     from import_fiflp_detalle import import_changed_detalle
     from import_torneos import import_changed_torneos
     from import_wayback_portal import import_changed_portal
     steps = [("Actas descargadas de la federación (raws nuevos o cambiados)", import_changed_raws),
              ("Grupos de temporadas pasadas que faltaban (federación)", import_changed_grupos),
+             ("Equipos cruzados en clasificaciones cerradas (por posición)", fix_positions),
              ("Goleadores de temporadas pasadas de la federación (raws nuevos o cambiados)", import_changed_goleadores),
              ("Detalle de la federación: casa/fuera, equipos, campos y calendarios (raws nuevos o cambiados)",
               import_changed_detalle),

@@ -92,7 +92,11 @@ ARCHIVE_NAMES = {
     'SIETE PALMAS, A.D. "B"': "Siete Palmas B",
     "APOLINARIO C.F.": "Apolinario",                          # no Guiniguada Apolinario
     "POLIGONO DE ARINAGA, C.F.": "Polígono de Arinaga",       # no CD Arinaga
-    'GRAN TARAJAL SOC. TAMAS., U.D. "A"': "GRAN TARAJAL SOC. TAMAS., U.D.",   # no UD Tarajalejo
+    'GRAN TARAJAL SOC. TAMAS., U.D. "A"': "Gran Tarajal",     # no UD Tarajalejo
+    # En 2016-17, «G. TARAJAL»: known_names lo llevaba a UD Tarajalejo y a este, a Gran Tarajal.
+    'G. TARAJAL SOC. TAMAS., U.D. "A"': "Gran Tarajal",
+    'G. TARAJAL SOC. TAMAS., U.D. "B"': "Gran Tarajal B",
+    "TARAJALEJO, U.D.": "UD Tarajalejo",
     'GRAN TARAJAL SOC. TAMAS., U.D. "B"': "Gran Tarajal B",
     "SPORTING ARBOL BONITO, C.F.": "Sporting Árbol Bonito",   # no Real Sporting (San José)
     "VEG. ARBOL BONITO, C.F.": "Veg. Árbol Bonito",
@@ -121,6 +125,27 @@ ARCHIVE_NAMES = {
     "SAGRADO CORAZON, C.D.": "Sagrado Corazón",
     "ARGUINEGUIN SANTA AGUEDA, C.D.": "Arguineguín Santa Águeda",
     'ORIENTACION MARITIMA, C.D. "A"': "O. Marítima",
+    # Retirados de Lanzarote que solo salen en el calendario (import_fiflp_detalle): pretty_name
+    # partía «VEGA» en «VEG A» y dejaba «Juventud» a secas.
+    "AZULGRANAS DE SANTA MARÍA DE LA VEGA, C.D.": "CD Azulgranas",
+    "AZULGRANAS DE SANTA MARÍA DE LA VEG A, C.D.": "CD Azulgranas",
+    "JUVENTUD P.H., C.D.": "Juventud P.H.",
+}
+
+# Equipos que known_names o un import antiguo cruzaron en la clasificación de un grupo cerrado,
+# comprobados con la de la federación (raw de detalle, la misma posición): {(temporada, código):
+# {posición: nombre en la base}}. Van por posición, que en un grupo cerrado ya no se mueve: repetirlo
+# no deshace nada. Los aplica fix_positions, en el bot después de los grupos; con uno nuevo, subir
+# import_fiflp_detalle.DETALLE_VERSION, que rehace las fichas de la temporada que borra.
+POSITION_FIXES = {
+    # 'TARAJALEJO, U.D.' es UD Tarajalejo y 'G. TARAJAL SOC. TAMAS.' (A y B), Gran Tarajal: al revés.
+    ("2016-2017", "FV13"): {4: "UD Tarajalejo", 9: "Gran Tarajal B", 10: "Gran Tarajal"},
+    ("2016-2017", "CFV1"): {3: "Gran Tarajal"},
+    ("2016-2017", "CFV2"): {1: "UD Tarajalejo", 6: "Gran Tarajal B"},
+    # El nombre de la federación tal cual ('GRAN TARAJAL SOC. TAMAS., U.D.').
+    ("2019-2020", "FV11"): {10: "Gran Tarajal"},
+    # Veteranos C con el nombre del portal (wayback_2324), Veteranos C en el resto de la temporada.
+    ("2023-2024", "GC7"): {9: "Veteranos C"},
 }
 
 
@@ -349,6 +374,74 @@ def _modernized(conn, raw, actas):
                    if isinstance(a, dict) and isinstance(a.get("header"), dict) else a)
              for cod, a in actas.items()}
     return raw, actas
+
+
+def _move_rows(conn, table, where, params, mapping):
+    """Las filas de `table` que cumplen `where` con su team_id cambiado según `mapping` (borrar y
+    volver a meter: un intercambio de dos equipos chocaría con el UNIQUE a mitad de un UPDATE)."""
+    cols = [r[1] for r in conn.execute(f"PRAGMA table_info({table})")]
+    if not cols:                      # una tabla que esta base aún no tiene
+        return
+    marks = ",".join("?" * len(mapping))
+    rows = conn.execute(f"SELECT {', '.join(cols)} FROM {table} WHERE {where} AND team_id IN ({marks})",
+                        (*params, *mapping)).fetchall()
+    conn.execute(f"DELETE FROM {table} WHERE {where} AND team_id IN ({marks})", (*params, *mapping))
+    i = cols.index("team_id")
+    for r in rows:
+        r = list(r)
+        r[i] = mapping[r[i]]
+        conn.execute(f"INSERT INTO {table}({', '.join(cols)}) VALUES ({','.join('?' * len(cols))})", r)
+
+
+def fix_positions(conn, log=print):
+    """POSITION_FIXES: el equipo de cada posición pasa a ser el de la lista en la clasificación del
+    grupo, su detalle y sus goleadores, y en sus partidos con lo que cuelga de ellos (alineaciones,
+    goles, tarjetas, cuerpo técnico). Las fichas de la temporada de esos equipos se borran (las
+    rehace import_fiflp_detalle) y el equipo que se queda sin uso, también. Un cambio que dejaría a
+    un equipo dos veces en la clasificación no se hace. Devuelve cuántos equipos cambió."""
+    changed = 0
+    for (season, code), fixes in sorted(POSITION_FIXES.items()):
+        found = conn.execute("""SELECT g.id, g.season_id FROM groups g JOIN seasons s ON s.id=g.season_id
+                                WHERE s.name=? AND g.code=?""", (season, code)).fetchall()
+        if len(found) != 1:
+            continue
+        gid, season_id = found[0]
+        at = dict(conn.execute("SELECT position, team_id FROM standings WHERE group_id=?", (gid,)))
+        mapping = {}
+        for pos, name in fixes.items():
+            row = conn.execute("SELECT id FROM teams WHERE name=?", (name,)).fetchone()
+            new = row[0] if row else get_or_create_team(conn, name)
+            if pos in at and at[pos] != new:
+                mapping[at[pos]] = new
+        if not mapping:
+            continue
+        after = [mapping.get(t, t) for t in at.values()]
+        if len(after) != len(set(after)):
+            log(f"  ! {season} {code}: el cambio dejaría un equipo dos veces en la clasificación; no se hace")
+            continue
+        for table in ("standings", "standings_detail", "scorers"):
+            _move_rows(conn, table, "group_id=?", (gid,), mapping)
+        in_group = "match_id IN (SELECT id FROM matches WHERE group_id=?)"
+        for table in ("appearances", "match_events", "match_staff", "match_staff_all"):
+            _move_rows(conn, table, in_group, (gid,), mapping)
+        case = "CASE {col} " + " ".join(f"WHEN {a} THEN {b}" for a, b in mapping.items()) + " ELSE {col} END"
+        conn.execute(f"""UPDATE matches SET home_team_id={case.format(col='home_team_id')},
+                         away_team_id={case.format(col='away_team_id')} WHERE group_id=?""", (gid,))
+        teams = set(mapping) | set(mapping.values())
+        marks = ",".join("?" * len(teams))
+        if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='team_seasons'").fetchone():
+            conn.execute(f"DELETE FROM team_seasons WHERE season_id=? AND team_id IN ({marks})", (season_id, *teams))
+        names = dict(conn.execute(f"SELECT id, name FROM teams WHERE id IN ({marks})", tuple(teams)))
+        for old in mapping:
+            if not _referenced(conn, old):
+                for table in ("team_seasons", "standings_detail", "match_staff_all", "fp_teams"):
+                    if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
+                        conn.execute(f"DELETE FROM {table} WHERE team_id=?", (old,))
+                conn.execute("DELETE FROM teams WHERE id=?", (old,))
+        log(f"  {season} {code}: " + ", ".join(f"{names[a]} → {names[b]}" for a, b in mapping.items()))
+        changed += len(mapping)
+    conn.commit()
+    return changed
 
 
 def import_season(conn, folder, season, log=print):

@@ -15,6 +15,9 @@ detalle-federacion.yml (fetch_fiflp_detalle.py), en la base:
                     grupos que no tienen ningún partido: los de las temporadas en
                     las que la federación no publica actas (2016-17 a 2018-19),
                     solo las de CALENDAR_SEASONS.
+  groups            las finales, semifinales y copas de las temporadas archivadas
+                    que no tienen clasificación ni actas, desde su calendario
+                    (create_cup_group; quedan en detalle_groups).
 
 Cada grupo de la federación se casa con el de la base igual que sus goleadores:
 por la URL (los de la temporada en curso), por el grupo que creó
@@ -37,11 +40,15 @@ from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 RAW_FILE = re.compile(r"^fiflp_detalle_(\d{4}-\d{4})_raw\.json$")
 CAMPOS_FILE = "fiflp_campos_raw.json"
-DETALLE_VERSION = "2"   # en la huella: subirla reimporta el detalle de todas las temporadas
+# En la huella: subirla reimporta el detalle de todas las temporadas. 2: finales y copas de las
+# archivadas (create_cup_group), calendarios de 2016-19 y fichas rehechas tras fix_positions.
+DETALLE_VERSION = "2"
 # Temporadas cuyo calendario (jornadas del raw) entra en los grupos sin partidos. Solo las que se han
 # revisado en local y tienen su línea base de score_deviation al día: un marcador mal leído en otra
-# dejaría la prueba en rojo y al bot sin publicar.
-CALENDAR_SEASONS = ()
+# dejaría la prueba en rojo y al bot sin publicar. 2016-19 (revisadas el 7/10/2026): las ligas y
+# copas de Lanzarote y Fuerteventura, sin un partido hasta ahora (2.480 partidos, sin desvío nuevo);
+# los de los retirados entran, como en el resto de temporadas.
+CALENDAR_SEASONS = ("2016-2017", "2017-2018", "2018-2019")
 
 SCHEMA = (
     """CREATE TABLE IF NOT EXISTS standings_detail (

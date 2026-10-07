@@ -469,3 +469,37 @@ def test_the_letter_a_is_the_first_team_when_two_clubs_share_a_name():
     conn = base()
     names = GR.unique_names({'UNION VIERA A, C.F. "A"': "Unión Viera", "UNION VIERA, C.F.": "Unión Viera"}, conn)
     assert names == {'UNION VIERA A, C.F. "A"': "Unión Viera", "UNION VIERA, C.F.": "Unión Viera"}
+
+
+def test_two_teams_crossed_in_a_closed_table_are_put_back_by_position(monkeypatch):
+    conn = base()
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (2, '2016-2017', 2016, 2017, 0);
+      INSERT INTO groups(id, season_id, category_id, code, name, phase, island) VALUES
+        (2, 2, 1, 'FV13', 'Grupo 3', 'Fuerteventura', 'fuerteventura');
+      INSERT INTO teams(id, name) VALUES (10, 'Gran Tarajal'), (11, 'UD Tarajalejo'), (12, 'UD Tarajalejo B'),
+        (13, 'Playa Negra');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+        (2, 13, 1, 6, 2, 2, 0, 0, 5, 1, 4), (2, 10, 2, 3, 2, 1, 0, 1, 4, 3, 1),
+        (2, 12, 3, 3, 2, 1, 0, 1, 2, 2, 0), (2, 11, 4, 0, 2, 0, 0, 2, 1, 6, -5);
+      INSERT INTO matches(id, group_id, jornada, home_team_id, away_team_id, home_score, away_score) VALUES
+        (1, 2, 'Jornada 1', 10, 11, 3, 1);
+      INSERT INTO scorers(group_id, player_name, team_id, goals, games) VALUES (2, 'PEPE', 10, 3, 1);
+    """)
+    monkeypatch.setattr(GR, "POSITION_FIXES", {("2016-2017", "FV13"): {2: "UD Tarajalejo", 3: "Gran Tarajal B",
+                                                                       4: "Gran Tarajal"}})
+    assert GR.fix_positions(conn, log=lambda *_: None) == 3
+    table = conn.execute("""SELECT st.position, t.name FROM standings st JOIN teams t ON t.id=st.team_id
+                            WHERE st.group_id=2 ORDER BY st.position""").fetchall()
+    assert table == [(1, "Playa Negra"), (2, "UD Tarajalejo"), (3, "Gran Tarajal B"), (4, "Gran Tarajal")]
+    match = conn.execute("""SELECT h.name, a.name FROM matches m JOIN teams h ON h.id=m.home_team_id
+                            JOIN teams a ON a.id=m.away_team_id""").fetchone()
+    assert match == ("UD Tarajalejo", "Gran Tarajal")
+    assert conn.execute("SELECT t.name FROM scorers s JOIN teams t ON t.id=s.team_id").fetchone() == ("UD Tarajalejo",)
+    # El B que ya no usa nadie, fuera; la otra temporada, intacta.
+    assert not conn.execute("SELECT 1 FROM teams WHERE name='UD Tarajalejo B'").fetchone()
+    assert conn.execute("SELECT count(*) FROM standings WHERE group_id=1").fetchone()[0] == 4
+    # Por posición: otra pasada no deshace nada.
+    assert GR.fix_positions(conn, log=lambda *_: None) == 0
+    assert conn.execute("""SELECT t.name FROM standings st JOIN teams t ON t.id=st.team_id
+                           WHERE st.group_id=2 AND st.position=2""").fetchone() == ("UD Tarajalejo",)

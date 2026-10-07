@@ -1,4 +1,4 @@
-const CACHE_NAME = 'futbolbase-v20261007h';
+const CACHE_NAME = 'futbolbase-v20261007k';
 const CRESTS_CACHE = 'futbolbase-escudos-21f9b5f8';
 const OFFLINE_URL = './index.html';
 
@@ -93,6 +93,10 @@ const SEASON_FILES = [
   './data-season-2019-2020.js',
   './data-season-2018-2019.js',
   './data-season-2017-2018.js',
+  './data-season-2015-2016.js',
+  './data-season-2014-2015.js',
+  './data-season-2013-2014.js',
+  './data-season-2012-2013.js',
 ];
 
 // Las actas van por grupo (data-lineups-<S>-<grupo>.js): precachearlas todas

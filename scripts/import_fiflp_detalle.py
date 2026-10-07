@@ -234,7 +234,13 @@ def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=
 
     new = 0
     has_matches = conn.execute("SELECT 1 FROM matches WHERE group_id=? LIMIT 1", (gid,)).fetchone()
-    if rounds and not has_matches and calendar:
+    if rounds and has_matches and calendar:
+        added, scores, fixed = complete_group(conn, gid, rounds, names, log)
+        new += added
+        if added or scores or fixed:
+            log(f"    grupo {gid}: del calendario, {added} partidos que faltaban, {scores} resultados y "
+                f"{fixed} marcadores que cuadran mejor con la clasificación")
+    elif rounds and calendar:
         for label, ms in rounds.items():
             clean = []
             for m in ms:
@@ -253,6 +259,90 @@ def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=
         if current:
             conn.execute("UPDATE groups SET current_jornada=? WHERE id=?", (current, gid))
     return detail, cards, new
+
+
+def _label_like(conn, gid, label):
+    """La jornada del calendario ('Jornada 7') como las del grupo: '7' si las suyas son números."""
+    m = re.fullmatch(r"Jornada (\d+)", label or "")
+    labels = [r[0] for r in conn.execute("SELECT DISTINCT jornada FROM matches WHERE group_id=?", (gid,))]
+    if m and labels and all(str(x).isdigit() for x in labels):
+        return m.group(1)
+    return label
+
+
+def complete_group(conn, gid, rounds, names, log=print):
+    """Lo que le falta a un grupo que ya tiene partidos, del calendario de la federación: el resultado
+    de un partido sin acta que no lo tiene (y su fecha, hora o campo si faltan) y el partido que no
+    está, entre dos equipos de su clasificación. Solo los cruces (local, visitante) que salen una vez
+    en el calendario y como mucho una en la base: una liga a más vueltas o un cruce escrito de dos
+    formas no se toca. Un marcador sin acta que el calendario da distinto (los del archivo del portal
+    difieren en un 3-5 %) se cambia solo si con el del calendario los goles cuadran mejor con la
+    clasificación oficial: de uno en uno, el que más baja el desvío, mientras baje. Devuelve
+    (partidos nuevos, resultados puestos, marcadores corregidos)."""
+    from fiflp_names import is_bye
+    from score_deviation import group_deviation
+    ids = _team_ids(conn)
+    table = {r[0] for r in conn.execute("SELECT team_id FROM standings WHERE group_id=?", (gid,))}
+    cal = {}
+    for label, ms in rounds.items():
+        for m in ms:
+            home, away = clean_team_name(m.get("home")), clean_team_name(m.get("away"))
+            if not home or not away or is_bye(home) or is_bye(away):
+                continue
+            h, a = ids.get(names.get(home)), ids.get(names.get(away))
+            if h and a and h != a:
+                cal.setdefault((h, a), []).append((label, m))
+    db = {}
+    for row in conn.execute("""SELECT id, home_team_id, away_team_id, home_score, away_score, date, time, venue,
+                                      cod_acta FROM matches WHERE group_id=?""", (gid,)):
+        db.setdefault((row[1], row[2]), []).append(row)
+    new = scores = 0
+    for pair, found in sorted(cal.items()):
+        if len(found) != 1 or len(db.get(pair, [])) > 1:
+            continue
+        label, m = found[0]
+        hs, as_ = m.get("hs"), m.get("as")
+        played = hs is not None and as_ is not None
+        if pair in db:
+            mid, _, _, old_hs, old_as, date, time, venue, cod_acta = db[pair][0]
+            fields = {}
+            if played and old_hs is None and old_as is None and not cod_acta:
+                fields.update(home_score=hs, away_score=as_)
+            for key, old in (("date", date), ("time", time), ("venue", venue)):
+                if not old and m.get(key):
+                    fields[key] = m[key]
+            if fields:
+                conn.execute(f"UPDATE matches SET {', '.join(f'{k}=?' for k in fields)} WHERE id=?",
+                             (*fields.values(), mid))
+                scores += "home_score" in fields
+        elif pair[0] in table and pair[1] in table:
+            conn.execute("""INSERT INTO matches(group_id, jornada, date, time, home_team_id, away_team_id,
+                                                home_score, away_score, venue, fiflp_acta)
+                            VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                         (gid, _label_like(conn, gid, label), m.get("date") or None, m.get("time") or None,
+                          pair[0], pair[1], hs if played else None, as_ if played else None,
+                          m.get("venue") or None, m.get("fiflp_acta")))
+            new += 1
+    other = {}
+    for pair, found in cal.items():
+        if len(found) != 1 or len(db.get(pair, [])) != 1:
+            continue
+        m = found[0][1]
+        mid, _, _, old_hs, old_as, _, _, _, cod_acta = db[pair][0]
+        if cod_acta or old_hs is None or old_as is None or m.get("hs") is None or m.get("as") is None:
+            continue
+        if (m["hs"], m["as"]) != (old_hs, old_as):
+            other[mid] = (m["hs"], m["as"])
+    fixed = 0
+    while other:
+        before = group_deviation(conn, gid)["dev"]
+        dev, mid = min((group_deviation(conn, gid, {mid: score})["dev"], mid) for mid, score in other.items())
+        if dev >= before:
+            break
+        hs, as_ = other.pop(mid)
+        conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (hs, as_, mid))
+        fixed += 1
+    return new, scores, fixed
 
 
 def _season_fed_teams(conn, season_id):

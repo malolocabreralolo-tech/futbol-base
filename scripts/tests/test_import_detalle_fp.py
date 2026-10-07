@@ -106,16 +106,65 @@ def test_calendario_de_un_grupo_sin_partidos(tmp_path):
     assert conn.execute("SELECT current_jornada FROM groups WHERE id=1").fetchone() == ("Jornada 1",)
 
 
-def test_un_grupo_con_partidos_no_recibe_el_calendario(tmp_path):
+def test_un_grupo_con_partidos_solo_recibe_lo_que_le_falta(tmp_path):
     conn, rows = base_2526()
-    conn.execute("""INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score)
-                    VALUES (1, 'Jornada 1', '2025-11-30', 1, 2, 3, 1)""")
-    jornadas = {"Jornada 1": [{"home": "PALMAS, U.D. LAS", "away": 'SIMUSETTI C. F. "A"', "hs": 5, "as": 0,
-                               "date": "2025-11-29", "time": "", "venue": "", "referee": "", "fiflp_acta": None}]}
+    fed = {v: k for k, v in BASE_NAMES.items()}
+    first, second = (conn.execute("SELECT name FROM teams WHERE id=?", (i,)).fetchone()[0] for i in (1, 2))
+    conn.executescript("""
+      INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score)
+        VALUES (1, 'Jornada 1', '2025-11-30', 1, 2, 3, 1);
+      INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id) VALUES (1, 'Jornada 2', '', 2, 1);
+    """)
+    def m(home, away, hs, as_, date):
+        return {"home": home, "away": away, "hs": hs, "as": as_, "date": date, "time": "10:30", "venue": "X",
+                "referee": "", "fiflp_acta": None}
+    jornadas = {"Jornada 1": [m(fed[first], fed[second], 5, 0, "2025-11-30"),
+                              m("PALMAS, U.D. LAS", 'SIMUSETTI C. F. "A"', 5, 0, "2025-11-29")],
+                "Jornada 2": [m(fed[second], fed[first], 2, 2, "2025-12-06")]}
     (tmp_path / "fiflp_detalle_2025-2026_raw.json").write_text(
         json.dumps(detalle_raw(rows, {"jornadas": jornadas})), encoding="utf-8")
-    D.import_changed_detalle(conn, folder=str(tmp_path), log=lambda *a: None, calendar_seasons=("2025-2026",))
-    assert conn.execute("SELECT count(*) FROM matches").fetchone()[0] == 1
+    report = D.import_changed_detalle(conn, folder=str(tmp_path), log=lambda *a: None,
+                                      calendar_seasons=("2025-2026",))
+    assert report["fiflp_detalle_2025-2026_raw.json"]["matches"] == 1
+    got = conn.execute("""SELECT m.jornada, h.name, a.name, m.home_score, m.away_score, m.date FROM matches m
+                          JOIN teams h ON h.id=m.home_team_id JOIN teams a ON a.id=m.away_team_id
+                          ORDER BY m.jornada, m.date""").fetchall()
+    # El marcador que ya estaba no cambia; el que faltaba y su fecha, del calendario; el partido que
+    # no estaba, entra.
+    assert got == [("Jornada 1", "Las Palmas", "Simusetti", 5, 0, "2025-11-29"),
+                   ("Jornada 1", first, second, 3, 1, "2025-11-30"),
+                   ("Jornada 2", second, first, 2, 2, "2025-12-06")]
+
+
+def test_un_marcador_distinto_del_calendario_solo_entra_si_cuadra_con_la_clasificacion(tmp_path):
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    migrate(conn)
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (1, '2018-2019', 2018, 2019, 0);
+      INSERT INTO categories(id, name) VALUES (1, 'BENJAMIN');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase, url) VALUES
+        (1, 1, 1, 'GC1', 'Grupo 1', 'Primera Fase GC', 'https://www.fiflp.com/x?CodCompeticion=9&CodGrupo=8');
+      INSERT INTO teams(id, name) VALUES (1, 'Moya'), (2, 'Teror');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd) VALUES
+        (1, 1, 1, 4, 2, 1, 1, 0, 5, 2, 3), (1, 2, 2, 1, 2, 0, 1, 1, 2, 5, -3);
+      INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES
+        (1, 'Jornada 1', '2018-10-06', 1, 2, 3, 1), (1, 'Jornada 2', '2018-10-13', 2, 1, 1, 1);
+    """)
+    def m(home, away, hs, as_):
+        return {"home": home, "away": away, "hs": hs, "as": as_, "date": "", "time": "", "venue": "",
+                "referee": "", "fiflp_acta": None}
+    table = [{"pos": 1, "team": "MOYA, U.D.", "pts": 4, "j": 2, "g": 1, "e": 1, "p": 0, "gf": 5, "gc": 2},
+             {"pos": 2, "team": "TEROR, C.F.", "pts": 1, "j": 2, "g": 0, "e": 1, "p": 1, "gf": 2, "gc": 5}]
+    # El calendario da 4-1 en la primera (con él cuadra la tabla) y 2-1 en la segunda (no cuadra).
+    raw = {"9:8": {"comp": "9", "comp_name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA", "grupo": "8",
+                   "grupo_name": "GRUPO 1", "ok": True, "clasificacion": table, "directorio": [],
+                   "jornadas": {"Jornada 1": [m("MOYA, U.D.", "TEROR, C.F.", 4, 1)],
+                                "Jornada 2": [m("TEROR, C.F.", "MOYA, U.D.", 2, 1)]}}}
+    (tmp_path / "fiflp_detalle_2018-2019_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    D.import_changed_detalle(conn, folder=str(tmp_path), log=lambda *a: None, calendar_seasons=("2018-2019",))
+    got = conn.execute("SELECT jornada, home_score, away_score FROM matches ORDER BY jornada").fetchall()
+    assert got == [("Jornada 1", 4, 1), ("Jornada 2", 1, 1)]
 
 
 def _cup(comp, comp_name, matches):

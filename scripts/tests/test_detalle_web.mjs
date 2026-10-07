@@ -3,11 +3,10 @@
 // partido, el mapa con las coordenadas del campo y la base de datos en Fuentes.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { createModel } from '../../src/model.js';
+import { createModel, roleLabel, teamStaff } from '../../src/model.js';
 import { venueUrl } from '../../src/links.js';
 import { officialHomeAway, sanctionsText, zonesText } from '../../src/screen-tabla.js';
 import { teamInfoBlock } from '../../src/team-view.js';
-import { roleLabel } from '../../src/screen-partido.js';
 import { databaseBlock } from '../../src/screen-fuentes.js';
 
 const text = (h) => String(h).replace(/<[^>]*>/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
@@ -107,4 +106,25 @@ test('Fuentes: la base de datos para descargar y lo que guarda de cada temporada
   assert.match(t, /2017\/18 22 grupos/);
   assert.match(t, /Y 380 equipos con su equipación y su campo y 1 campo con sus coordenadas\./);
   assert.equal(databaseBlock(null), '');
+});
+
+
+test('cuerpo técnico habitual del equipo: el nombre más repetido de cada cargo, entrenador primero', () => {
+  const m = (r, h, a, hs, as) => ({ season: '2025-2026', groupId: 'G', roundKey: r, dateISO: null, home: h, away: a, hs, as });
+  const group = { season: '2025-2026', id: 'G', rounds: [
+    { key: 'Jornada 1', matches: [m('Jornada 1', 'A', 'B', 1, 0)] },
+    { key: 'Jornada 2', matches: [m('Jornada 2', 'C', 'A', 0, 2)] },
+    { key: 'Jornada 3', matches: [m('Jornada 3', 'A', 'D', 3, 3)] }] };
+  const p = [{ n: 'X', r: 'starter' }];
+  const acta = (stA, stB, extra = {}) => ({ s: '2025-2026', gr: 'G', home: p, away: p, stH: stA, stA: stB, ...extra });
+  const lineups = {
+    'A|B|1-0': acta([['DEL. Equipo', 'D1'], ['Entrenador', 'E1'], ['2ºEntrenador', 'S1']], []),
+    'C|A|0-2': acta([], [['Entrenador', 'E2'], ['DEL. Equipo', 'D1']]),
+    // Un acta sin cuerpo técnico entero: su entrenador y sus delegados.
+    'A|D|3-3': { s: '2025-2026', gr: 'G', home: p, away: p, coachH: 'E1', delH: { equipo: 'D2' } },
+  };
+  const staff = teamStaff(lineups, { group, team: 'A' });
+  assert.deepEqual(staff, [{ role: 'Entrenador', name: 'E1', n: 2 }, { role: '2ºEntrenador', name: 'S1', n: 1 },
+    { role: 'DEL. Equipo', name: 'D1', n: 2 }]);
+  assert.deepEqual(teamStaff({}, { group, team: 'A' }), []);
 });

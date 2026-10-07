@@ -4,7 +4,8 @@
 import { html, join } from './html.js';
 import { block, box, cells, countLabel, empty, listEs, notice, pointsChart, score } from './ui.js';
 import {
-  anyCards, coverageNote, playerMatches, playerName, pointsProgression, seasonLabel, teamFixtures, teamShort, teamSquad,
+  anyCards, coverageNote, playerMatches, playerName, pointsProgression, roleLabel, seasonLabel, teamFixtures, teamShort,
+  teamSquad, teamStaff,
 } from './model.js';
 import { teamTrajectory } from './myteam.js';
 import { matchHref, playerHref, routeHref, weekdayDate } from './links.js';
@@ -107,7 +108,12 @@ export function squadBlock(ctx, group, name) {
   const cards = anyCards(lineups);
   const head = html`<tr><th scope="col" class="sq-dorsal"><abbr title="Dorsal">N.º</abbr></th><th scope="col" class="sq-name">Jugador</th><th scope="col" class="sq-num"><abbr title="Partidos jugados">PJ</abbr></th><th scope="col" class="sq-num"><abbr title="Partidos de titular">Tit.</abbr></th><th scope="col" class="sq-goals">Goles</th>${cards ? html`<th scope="col" class="sq-num"><abbr title="Tarjetas amarillas">TA</abbr></th><th scope="col" class="sq-num"><abbr title="Tarjetas rojas">TR</abbr></th>` : ''}</tr>`;
   const body = rows.map((r, i) => html`<tr><td class="sq-dorsal">${r.dorsal ?? ''}</td><th scope="row" class="sq-name"><button type="button" class="squad-player" data-action="jugador" data-index="${i}" aria-expanded="false">${playerName(r.name)}</button></th><td class="sq-num">${r.ap}</td><td class="sq-num">${r.st}</td><td class="sq-goals">${r.g}</td>${cards ? html`<td class="sq-num">${r.y}</td><td class="sq-num">${r.rd}</td>` : ''}</tr>`);
-  return block('Plantilla', html`${box(html`<table class="squad"><caption class="vh">Plantilla de ${name}: toca un jugador para ver sus partidos</caption><thead>${head}</thead><tbody>${body}</tbody></table>`)}${notice(null, squadNote(actas, skipped, played))}`,
+  // Su cuerpo técnico habitual, de las mismas actas (teamStaff): el nombre más repetido de cada cargo.
+  const staff = teamStaff(lineups, { group, team: name });
+  const staffBox = staff.length
+    ? box(html`<div class="box-text">${staff.map((s) => html`<p class="pt-staff"><span class="pt-staff-label">${roleLabel(s.role)}:</span> ${playerName(s.name)}</p>`)}</div>`)
+    : '';
+  return block('Plantilla', html`${box(html`<table class="squad"><caption class="vh">Plantilla de ${name}: toca un jugador para ver sus partidos</caption><thead>${head}</thead><tbody>${body}</tbody></table>`)}${staffBox}${notice(null, squadNote(actas, skipped, played))}`,
     { context: 'según las actas', id: SQUAD_ID });
 }
 

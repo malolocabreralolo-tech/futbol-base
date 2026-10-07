@@ -22,13 +22,13 @@ import unicodedata
 
 try:
     from scripts.acta_reconciler import reconcile_acta, _contradicts, same_round_and_score
-    from scripts.fiflp_acta import clean_scorer
+    from scripts.fiflp_acta import clean_scorer, scorer_minute
 except ImportError:
     # Direct CLI run (`python3 scripts/import_fiflp_actas.py`): sys.path[0] is
     # scripts/, so the `scripts.` package is not importable. Add the repo root.
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from scripts.acta_reconciler import reconcile_acta, _contradicts, same_round_and_score
-    from scripts.fiflp_acta import clean_scorer
+    from scripts.fiflp_acta import clean_scorer, scorer_minute
 
 UNMATCHED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_actas_unmatched.json")
 
@@ -201,8 +201,10 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
 
     for ev in acta.get("events") or []:
         side = ev["side"]
-        # Los raws leídos antes de que el lector quitara la marca «(')» la traen pegada al nombre.
-        ev = {**ev, "player_name": clean_scorer(ev.get("player_name")) or None}
+        # Los raws leídos antes de que el lector quitara la marca «(')» o «(60'+1)» la traen pegada al
+        # nombre: fuera, y el minuto de la marca si el evento no lo tenía.
+        minute = ev.get("minute") if ev.get("minute") is not None else scorer_minute(ev.get("player_name"))
+        ev = {**ev, "player_name": clean_scorer(ev.get("player_name")) or None, "minute": minute}
         if not ev.get("player_name"):
             # Gol de un niño cuyo nombre la federación no publica: queda en la
             # cronología con un jugador «sin nombre» (sin aparición ni ficha).
@@ -323,6 +325,34 @@ def fill_from_header(conn, mid: int, header: dict) -> None:
     code = header.get("venue_code")
     if code:
         conn.execute("UPDATE matches SET venue_code=? WHERE id=?", (int(code), mid))
+
+
+def repair_added_time(conn, folder: str = None) -> int:
+    """Reimporta (_import_one) las actas ya importadas cuyos goles traen el minuto del descuento
+    pegado al nombre («(60'+1) PEREZ, ANA»: un jugador falso en la plantilla), si la base tiene
+    alguno de esos jugadores; al final borra los que se quedan sin uso. Devuelve cuántas actas."""
+    if not conn.execute("SELECT 1 FROM players WHERE full_name LIKE '(%''+%' LIMIT 1").fetchone():
+        return 0
+    folder = folder or SCRIPTS_DIR
+    fixed = 0
+    for name in sorted(os.listdir(folder)):
+        if not RAW_FILE.match(name):
+            continue
+        with open(os.path.join(folder, name), encoding="utf-8") as f:
+            raw = json.load(f)
+        for cod, acta in raw.items():
+            if not isinstance(acta, dict) or not str(cod).isdigit():
+                continue
+            if not any("'" in (e.get("player_name") or "") and "+" in (e.get("player_name") or "")
+                       for e in acta.get("events") or []):
+                continue
+            row = conn.execute("SELECT id FROM matches WHERE cod_acta=?", (int(cod),)).fetchone()
+            if row and _import_one(conn, int(cod), acta, row[0]):
+                fixed += 1
+    if fixed:
+        prune_players(conn)
+        conn.commit()
+    return fixed
 
 
 def backfill_from_raws(conn, folder: str = None) -> int:
@@ -951,6 +981,10 @@ def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
             f"{report['official_tables']} clasificaciones oficiales, {report['gaps_filled']} partidos que faltaban; "
             f"{report['owned']} de grupos creados desde la federación (los importa import_fiflp_grupos)")
         reports[name] = report
+    # Las actas importadas con la marca del descuento pegada al nombre («(60'+1) PEREZ, ANA»), otra vez.
+    fixed = repair_added_time(conn, folder)
+    if fixed:
+        log(f"  {fixed} actas con el minuto del descuento pegado al goleador, reimportadas")
     # match_staff_all de las actas importadas antes de que existiera (desde match_staff).
     filled = backfill_staff_all(conn)
     if filled:

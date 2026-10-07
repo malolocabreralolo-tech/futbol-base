@@ -145,9 +145,19 @@ def staff_lines(staff_text):
     return out
 
 
+# La marca del minuto: «(12')», «(')» cuando falta y «(60'+1)» en el descuento.
+_MINUTE_MARK = re.compile(r"\(\s*(\d*)\s*'\s*(?:\+\s*(\d+)\s*)?\)")
+
+
 def clean_scorer(text):
-    """El nombre del goleador sin la marca del minuto, «(12')» o «(')» cuando falta."""
-    return re.sub(r"\(\s*\d*\s*'\s*\)", "", text or "").strip()
+    """El nombre del goleador sin la marca del minuto, «(12')», «(60'+1)» o «(')» cuando falta."""
+    return _MINUTE_MARK.sub("", text or "").strip()
+
+
+def scorer_minute(text):
+    """El minuto de la marca, con el descuento sumado («(60'+1)» → 61); None sin cifras."""
+    m = _MINUTE_MARK.search(text or "")
+    return int(m.group(1)) + int(m.group(2) or 0) if m and m.group(1) else None
 
 
 def _goals(block_html):
@@ -158,7 +168,7 @@ def _goals(block_html):
             continue
         score = re.search(r"(\d+)\s*-\s*(\d+)", _text(cells[0]))
         rest = _text(cells[1])
-        minute = re.search(r"\((\d+)'\)", rest)
+        minute = scorer_minute(rest)
         # «(')» sin cifras: la federación no siempre publica el minuto.
         name = clean_scorer(rest)
         if not score:
@@ -166,7 +176,7 @@ def _goals(block_html):
         # Sin nombre: un niño cuyo nombre la federación no publica. El gol
         # cuenta igual (si no, el marcador parcial «salta» y el acta no cuadra).
         goals.append({"score": [int(score.group(1)), int(score.group(2))],
-                      "minute": int(minute.group(1)) if minute else None, "player_name": name or None,
+                      "minute": minute, "player_name": name or None,
                       "goal_type": _goal_type(row)})
     return goals
 

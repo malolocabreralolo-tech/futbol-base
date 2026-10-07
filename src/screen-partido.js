@@ -11,7 +11,7 @@ import { html, join } from './html.js';
 import { block, box, cells, crest, empty, formChips, notice, score, screenHead, shareStatus } from './ui.js';
 import {
   actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, penaltyWinner, playerName,
-  roundOf, seasonLabel, teamShort, timelineFor,
+  roleLabel, roundOf, seasonLabel, teamShort, timelineFor,
 } from './model.js';
 import { countdownLabel, dayMonth, matchHref, playerHref, shareAndAnnounce, venueDetails, venueUrl, weekdayDate } from './links.js';
 import {
@@ -196,20 +196,6 @@ function lineupTable(players, team, side) {
 }
 
 const staff = (label, name) => html`<p class="pt-staff"><span class="pt-staff-label">${label}:</span> ${name ? playerName(name) : html`<span class="pt-none">no consta</span>`}</p>`;
-// El cargo como lo escribe el acta, en palabras: «DEL. Campo» → «Delegado/a de campo», «2ºEntrenador»
-// → «2.º entrenador/a», «ENTRENADOR EN PRACTICAS» → «Entrenador/a en prácticas».
-const ROLES = [
-  [/^del\.?\s*campo$/i, 'Delegado/a de campo'], [/^del\.?\s*equipo$/i, 'Delegado/a'],
-  [/^entrenador$/i, 'Entrenador/a'], [/^2\s*[ºo.]*\s*entrenador$/i, '2.º entrenador/a'],
-  [/^entrenador en pr[aá]cticas$/i, 'Entrenador/a en prácticas'], [/^[áa]rbitro\/a principal$/i, 'Árbitro/a'],
-];
-export function roleLabel(role) {
-  const text = String(role || '').replace(/\s+/g, ' ').trim();
-  const hit = ROLES.find(([re]) => re.test(text));
-  if (hit) return hit[1];
-  const lower = text.toLowerCase();
-  return lower ? lower[0].toUpperCase() + lower.slice(1) : 'Cargo';
-}
 // Todo el cuerpo técnico del acta ([[cargo, nombre]]); sin él, el entrenador y los delegados de siempre.
 function teamStaff(lines, coach, dels) {
   if (!Array.isArray(lines) || !lines.length) return html`${staff('Entrenador/a', coach)}${delegates(dels)}`;

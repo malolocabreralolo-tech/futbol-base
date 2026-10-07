@@ -401,7 +401,8 @@ test('la plantilla en la ficha: N.º, jugador (un botón con aria-expanded), PJ,
   assert.equal((squad.match(/class="squad-player"/g) || []).length, 10);
   assert.doesNotMatch(squad, /squad-detail|Tarjetas/, 'el detalle lo pinta mount; sin tarjetas en la temporada, sin su columna');
   // La nota va dentro de su bloque (B5, decisión 3: una sola sección, que su «Reintentar» pinta en su sitio).
-  assert.match(squad, /<\/table><\/div><p class="notice">Actas de 9 de 20 partidos jugados; 1 acta más llega incompleta \(sin uno de los dos equipos\) y no cuenta\.<\/p><\/section>$/);
+  // Entre la tabla y la nota, su cuerpo técnico habitual (teamStaff), de las mismas actas.
+  assert.match(squad, /<\/table><\/div><div class="box"><div class="box-text"><p class="pt-staff"><span class="pt-staff-label">Entrenador\/a:<\/span> David Tauro Medina Santana<\/p><\/div><\/div><p class="notice">Actas de 9 de 20 partidos jugados; 1 acta más llega incompleta \(sin uno de los dos equipos\) y no cuenta\.<\/p><\/section>$/);
   assert.match(squad, /^<section class="block" id="plantilla">/);
   // Con una tarjeta en el grupo (de otro equipo), las columnas de tarjetas; en otro grupo, no.
   const ff1 = structuredClone(ACTAS['2025-2026/FF1']);

@@ -120,3 +120,25 @@ def test_el_acta_completa_campo_y_hora_pero_no_pisa_los_del_calendario(tmp_path)
     conn.execute("UPDATE matches SET venue=NULL, venue_code=NULL WHERE id=1")
     assert I.backfill_from_raws(conn, str(tmp_path)) == 1
     assert conn.execute("SELECT venue, time, venue_code FROM matches WHERE id=1").fetchone() == ("X", "09:00", 99)
+
+
+def test_el_minuto_del_descuento_no_se_pega_al_nombre():
+    from fiflp_acta import clean_scorer, scorer_minute
+    assert clean_scorer("(60'+1) LASSO CABRERA, GABRIEL") == "LASSO CABRERA, GABRIEL"
+    assert clean_scorer("(30'+5)") == "" and clean_scorer("(') PEREZ, ANA") == "PEREZ, ANA"
+    assert scorer_minute("(60'+1) LASSO CABRERA, GABRIEL") == 61
+    assert scorer_minute("(12') X") == 12 and scorer_minute("(') X") is None
+    # Un acta vieja con la marca pegada: el gol va a su jugador y con el minuto del descuento.
+    conn = base()
+    acta = {"header": {"home_team": "SAN BARTOLOME, C.F D", "away_team": "PUERTO DEL CARMEN, F.C. A",
+                       "home_score": 1, "away_score": 0},
+            "lineups": {"home": [{"dorsal": 9, "name": "LASSO CABRERA, GABRIEL", "role": "starter", "fiflp_id": 7}],
+                        "away": []},
+            "events": [{"kind": "goal", "side": "home", "player_name": "(60'+1) LASSO CABRERA, GABRIEL",
+                        "minute": None, "goal_type": "normal", "score": [1, 0]}],
+            "staff": {}}
+    assert I._import_one(conn, 290001, acta, mid=1)
+    rows = conn.execute("""SELECT p.full_name, e.minute FROM match_events e JOIN players p ON p.id=e.player_id
+                           WHERE e.match_id=1""").fetchall()
+    assert rows == [("LASSO CABRERA, GABRIEL", 61)]
+    assert conn.execute("SELECT count(*) FROM players WHERE full_name LIKE '(%'").fetchone()[0] == 0

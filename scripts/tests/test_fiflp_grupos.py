@@ -342,11 +342,11 @@ def test_an_archived_season_waits_for_its_actas_and_leaves_no_fingerprint(tmp_pa
         assert not conn.execute("SELECT 1 FROM seasons WHERE name=?", (ARCHIVED,)).fetchone()
         assert not conn.execute("SELECT 1 FROM raw_imports WHERE path LIKE 'grupos:%'").fetchone()
     assert any("esperando a que acabe la descarga de sus actas" in line for line in lines)
-    # Un raw suelto de una temporada que no está en la lista (2016-17) no da de alta nada.
-    write_archive(tmp_path, archive_raw(), archive_actas(), season="2016-2017")
+    # Un raw suelto de una temporada que no está en la lista (2015-16) no da de alta nada.
+    write_archive(tmp_path, archive_raw(), archive_actas(), season="2015-2016")
     GR.import_changed_grupos(conn, str(tmp_path), log=lines.append)
-    assert not conn.execute("SELECT 1 FROM seasons WHERE name='2016-2017'").fetchone()
-    assert not conn.execute("SELECT 1 FROM raw_imports WHERE path='grupos:2016-2017'").fetchone()
+    assert not conn.execute("SELECT 1 FROM seasons WHERE name='2015-2016'").fetchone()
+    assert not conn.execute("SELECT 1 FROM raw_imports WHERE path='grupos:2015-2016'").fetchone()
 
 
 def test_an_old_fingerprint_of_a_missing_archived_season_does_not_block_it(tmp_path):

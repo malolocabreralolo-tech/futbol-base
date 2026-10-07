@@ -19,7 +19,7 @@ los que ya usa la base en esa temporada o en las de al lado (known_names).
 Los grupos creados aquí quedan en fiflp_groups y se rehacen cuando cambian sus
 fuentes. El bot llama a import_changed_grupos (sha1 de las fuentes en raw_imports).
 
-Las temporadas archivadas (ARCHIVE_SEASONS, 2017-18 a 2020-21) no están en la
+Las temporadas archivadas (ARCHIVE_SEASONS, 2016-17 a 2020-21) no están en la
 base hasta que llegan sus fuentes: import_season da de alta cada una junto con
 su primer grupo, y solo cuando ha terminado la descarga de sus actas
 (actas_complete, la regla de actas-federacion.yml para pasar a la temporada
@@ -78,10 +78,10 @@ EXTRA_META = {
 ISLAND_OF_PREFIX = (("LZ", "lanzarote"), ("CLZ", "lanzarote"), ("PLZ", "lanzarote"),
                     ("FV", "fuerteventura"), ("CFV", "fuerteventura"), ("PFV", "fuerteventura"))
 
-# Las temporadas archivadas de la federación (CodTemporada 13 a 16): import_season da de alta cada una
+# Las temporadas archivadas de la federación (CodTemporada 12 a 16): import_season da de alta cada una
 # con su primer grupo, cuando ha terminado la descarga de sus actas. La lista es cerrada: un raw suelto
-# de 2015-16 o de 2016-17 no da de alta nada.
-ARCHIVE_SEASONS = ("2017-2018", "2018-2019", "2019-2020", "2020-2021")
+# de otra temporada no da de alta nada. 2015-16 no tiene benjamín ni prebenjamín en la federación.
+ARCHIVE_SEASONS = ("2016-2017", "2017-2018", "2018-2019", "2019-2020", "2020-2021")
 ARCHIVE_YEARS = {int(s[:4]) for s in ARCHIVE_SEASONS}
 # Nombre de la federación ya modernizado (fiflp_names.modern_fed_name) → nombre de la base: lo que
 # known_names no acierta en las archivadas, tras revisar la lista de sus equipos nuevos (también los

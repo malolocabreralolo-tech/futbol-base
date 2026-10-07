@@ -859,23 +859,44 @@ def process_file(conn, js_path, var_name, stats_var, season_id, category_id):
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────
 
+def update_fp_app(conn, season_name, log=print):
+    """La app nueva de futbolaspalmas (fetch_fp_app.py, desde 2026/27): estado de
+    cada partido, goleadores, equipación, enlaces a los mapas y zonas de la tabla,
+    después de la federación (completa lo que falta, nunca cambia un marcador). Un
+    fallo se apunta y no para la actualización."""
+    import traceback
+    from fetch_fp_app import run as fetch_fp_app
+    from import_fp_app import import_changed_fp_app
+    log("\nApp de futbolaspalmas (ligas de benjamín y prebenjamín)")
+    try:
+        fetch_fp_app(season_name, log=log)
+        import_changed_fp_app(conn, log=log)
+    except Exception:
+        conn.rollback()
+        log("  ! ERROR (no para la actualización):\n" + traceback.format_exc())
+
+
 def import_past_seasons(conn, log=print):
-    """Lo que descargan de temporadas pasadas actas-federacion.yml y
-    goleadores-federacion.yml (solo los raws nuevos o cambiados): actas, grupos
-    que faltaban (finales, torneos, ligas insulares sin archivar) y goleadores,
-    en ese orden (los goleadores casan sus grupos por las actas). Los grupos dan
-    de alta también las temporadas archivadas (import_fiflp_grupos.
-    ARCHIVE_SEASONS, 2017-18 a 2020-21) en cuanto termina la descarga de sus
-    actas. Un fallo aquí se apunta y no para la actualización de la temporada en
+    """Lo que descargan de temporadas pasadas actas-federacion.yml,
+    goleadores-federacion.yml y detalle-federacion.yml (solo los raws nuevos o
+    cambiados): actas, grupos que faltaban (finales, torneos, ligas insulares sin
+    archivar), goleadores y el detalle (casa/fuera, equipos, campos y
+    calendarios), en ese orden (los goleadores y el detalle casan sus grupos por
+    las actas). Los grupos dan de alta también las temporadas archivadas
+    (import_fiflp_grupos.ARCHIVE_SEASONS, 2016-17 a 2020-21) en cuanto termina
+    la descarga de sus actas. Un fallo aquí se apunta y no para la actualización de la temporada en
     curso. Al final se borran los jugadores que se han quedado sin uso."""
     import traceback
     from migrate_actas_schema import migrate
     from import_fiflp_actas import import_changed_raws, prune_players
     from import_fiflp_grupos import import_changed_grupos
     from import_fiflp_goleadores import import_changed_goleadores
+    from import_fiflp_detalle import import_changed_detalle
     steps = [("Actas descargadas de la federación (raws nuevos o cambiados)", import_changed_raws),
              ("Grupos de temporadas pasadas que faltaban (federación)", import_changed_grupos),
              ("Goleadores de temporadas pasadas de la federación (raws nuevos o cambiados)", import_changed_goleadores),
+             ("Detalle de la federación: casa/fuera, equipos, campos y calendarios (raws nuevos o cambiados)",
+              import_changed_detalle),
              ("Jugadores que ya no salen en ninguna acta", prune_players)]
     migrate(conn)
     for title, step in steps:
@@ -905,6 +926,7 @@ def main():
         if os.environ.get("FIFLP_UPDATE") == "1":
             from update_fiflp import update_groups
             update_groups(conn, season_id)
+        update_fp_app(conn, season_name)
         import_past_seasons(conn)
         from generate_js import main as generate_main
         generate_main()

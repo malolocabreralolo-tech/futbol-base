@@ -21,6 +21,7 @@ Reglas (las mismas que protegen al resto de importadores):
 - Nunca se borra un partido: si la federación lo mueve de jornada, se avisa.
 """
 from datetime import date, timedelta
+import json
 import os
 import re
 import sys
@@ -656,6 +657,83 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
             results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
     if time.monotonic() > deadline:
         print("  (plazo agotado: el resto de actas y goleadores, en la próxima pasada)")
+    # La ficha (equipación y campo) de los equipos que aún no la tienen y la de sus campos.
+    try:
+        if time.monotonic() <= deadline:
+            cards, fields = update_directorio(page, F, conn, season_id, groups, deadline)
+            if cards or fields:
+                print(f"\n  Directorio: {cards} fichas de equipo y {fields} de campo")
+    except Exception as e:
+        conn.rollback()
+        print(f"  ! directorio: {e}")
     for group_id, code, url in groups:
         source_health.record(code, url, *results[code])
         pending.pop(code, None)
+
+
+def update_directorio(page, F, conn, season_id, groups, deadline=None):
+    """team_seasons de los equipos de la temporada en curso que no la tienen (el directorio de su
+    grupo, fiflp_detalle.parse_directorio, con el nombre de la base) y venue_details de sus campos
+    que no la tienen (parse_campo). Es lo que baja detalle-federacion.yml de las temporadas
+    pasadas, para los grupos que van apareciendo (la Segunda Fase). Devuelve (fichas, campos)."""
+    import time
+    from datetime import date as _date
+    from fetch_fiflp_detalle import CAMPO_URL, DIRECTORIO_URL
+    from fiflp_detalle import parse_campo, parse_directorio
+    from import_fiflp_detalle import migrate as migrate_detalle
+    migrate_detalle(conn)
+    cards = fields = 0
+    for group_id, code, url in groups:
+        if deadline is not None and time.monotonic() > deadline:
+            break
+        teams = [r[1] for r in stored_standings(conn, group_id)]
+        have = {r[0] for r in conn.execute(
+            """SELECT t.name FROM team_seasons ts JOIN teams t ON t.id=ts.team_id WHERE ts.season_id=?""",
+            (season_id,))}
+        if not teams or all(t in have for t in teams):
+            continue
+        ids = fiflp_ids(url)
+        season = re.search(r"CodTemporada=(\d+)", url)
+        if not ids or not season:
+            continue
+        if not F.goto(page, F.BASE + DIRECTORIO_URL.format(season=season.group(1), comp=ids[0], grupo=ids[1])):
+            continue
+        rows = parse_directorio(page.content())
+        F.delay()
+        names = name_map([r["team"] for r in rows], teams)
+        for r in rows:
+            name = names.get(clean_team_name(r["team"]))
+            if name not in teams or name in have:
+                continue
+            tid = get_or_create_team(conn, name)
+            conn.execute(
+                """INSERT OR REPLACE INTO team_seasons(team_id, season_id, fiflp_code, fiflp_name, crest_url, shirt,
+                       shorts, socks, venue_code, venue_name, surface) VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+                (tid, season_id, r.get("codequipo"), r.get("team"), r.get("crest"), r.get("shirt"), r.get("shorts"),
+                 r.get("socks"), r.get("venue_code"), r.get("venue"), r.get("surface")))
+            cards += 1
+        conn.commit()
+    codes = [c for (c,) in conn.execute(
+        """SELECT DISTINCT ts.venue_code FROM team_seasons ts WHERE ts.season_id=? AND ts.venue_code IS NOT NULL
+           AND ts.venue_code NOT IN (SELECT code FROM venue_details)""", (season_id,))]
+    for c in codes:
+        if deadline is not None and time.monotonic() > deadline:
+            break
+        if not F.goto(page, F.BASE + CAMPO_URL.format(code=c)):
+            continue
+        f = parse_campo(page.content())
+        F.delay()
+        if not f:
+            continue
+        conn.execute(
+            """INSERT OR REPLACE INTO venue_details(code, name, lat, lon, address, city, province, postal_code,
+                   surface, photo, fenced, doping_room, referee_room, internet, teams, training, fetched)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (f["code"], f["name"], f["lat"], f["lon"], f["address"], f["city"], f["province"], f["postal_code"],
+             f["surface"], f["photo"], *[None if f[k] is None else int(f[k]) for k in
+                                         ("fenced", "doping_room", "referee_room", "internet")],
+             json.dumps(f["teams"], ensure_ascii=False), json.dumps(f["training"], ensure_ascii=False),
+             _date.today().isoformat()))
+        fields += 1
+    conn.commit()
+    return cards, fields

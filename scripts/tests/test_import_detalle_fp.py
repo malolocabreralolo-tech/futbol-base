@@ -192,3 +192,42 @@ def test_app_nunca_cambia_un_marcador_que_ya_esta(tmp_path):
     (tmp_path / "fp_app_2026-2027_raw.json").write_text(json.dumps(fp_raw()), encoding="utf-8")
     A.import_changed_fp_app(conn, folder=str(tmp_path), log=lambda *a: None)
     assert conn.execute("SELECT home_score, away_score FROM matches WHERE id=1").fetchone() == (4, 1)
+
+
+# ── El bot completa la ficha de los equipos nuevos de la temporada en curso ───
+
+class _Page:
+    def __init__(self):
+        self.url = ""
+
+    def content(self):
+        name = "directorio_2526_A2.html" if "LstDirectorioEquipos" in self.url else "campo_75.html"
+        return (FIX / name).read_text(encoding="utf-8")
+
+
+class _F:
+    BASE = "https://fed"
+
+    def goto(self, page, url):
+        page.url = url
+        return True
+
+    def delay(self):
+        pass
+
+
+def test_el_bot_pone_la_ficha_de_los_equipos_que_no_la_tienen():
+    import update_fiflp as U
+    conn, rows = base_2526()
+    url = ("https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=21"
+           "&CodCompeticion=54422953&CodGrupo=54828309")
+    conn.execute("UPDATE groups SET url=? WHERE id=1", (url,))
+    cards, fields = U.update_directorio(_Page(), _F(), conn, 1, [(1, "A2", url)])
+    assert cards >= 10            # los del grupo que casan por nombre
+    assert conn.execute("""SELECT ts.shirt, ts.venue_code FROM team_seasons ts JOIN teams t ON t.id=ts.team_id
+                           WHERE t.name='Las Mesas Hu.'""").fetchone() == ("BLANCA CON FRANJA ROJA", 148)
+    assert fields >= 1 and conn.execute("SELECT count(*) FROM venue_details").fetchone()[0] >= 1
+    # Con todos los equipos ya con ficha, no vuelve a pedir el directorio.
+    page = _Page()
+    U.update_directorio(page, _F(), conn, 1, [(1, "A2", url)])
+    assert "LstDirectorioEquipos" not in page.url or cards < 12

@@ -1,0 +1,9177 @@
+{
+ "1014:148896": {
+  "clasificacion": [],
+  "comp": "1014",
+  "comp_name": "FINAL COPA BENJAMIN FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60001,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "HERBANIA A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61663,
+    "crest": "/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NARANJA",
+    "surface": null,
+    "team": "BREÑAMEN A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60035,
+    "crest": null,
+    "shirt": "BLANCA / VERDE RAYAS",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "VILLAVERDE NORTE, S.D.",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "148896",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1092:146122": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 12,
+     "j": 12,
+     "p": 0
+    },
+    "codequipo": 46105,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 24,
+    "gc": 15,
+    "gf": 163,
+    "home": {
+     "e": 0,
+     "g": 12,
+     "j": 12,
+     "p": 0
+    },
+    "j": 24,
+    "p": 0,
+    "pos": 1,
+    "pts": 72,
+    "sanction": 0,
+    "team": "ACODETTI C.F. A \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 11,
+     "j": 12,
+     "p": 1
+    },
+    "codequipo": 45590,
+    "e": 0,
+    "form": "GPGGG",
+    "g": 22,
+    "gc": 26,
+    "gf": 211,
+    "home": {
+     "e": 0,
+     "g": 11,
+     "j": 12,
+     "p": 1
+    },
+    "j": 24,
+    "p": 2,
+    "pos": 2,
+    "pts": 66,
+    "sanction": 0,
+    "team": "PALMAS, U.D. LAS"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 10,
+     "j": 12,
+     "p": 2
+    },
+    "codequipo": 60693,
+    "e": 2,
+    "form": "GGGGG",
+    "g": 18,
+    "gc": 55,
+    "gf": 106,
+    "home": {
+     "e": 2,
+     "g": 8,
+     "j": 12,
+     "p": 2
+    },
+    "j": 24,
+    "p": 4,
+    "pos": 3,
+    "pts": 56,
+    "sanction": 0,
+    "team": "TAMARACEITE A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 8,
+     "j": 12,
+     "p": 2
+    },
+    "codequipo": 46010,
+    "e": 3,
+    "form": "PGGPG",
+    "g": 16,
+    "gc": 52,
+    "gf": 101,
+    "home": {
+     "e": 1,
+     "g": 8,
+     "j": 12,
+     "p": 3
+    },
+    "j": 24,
+    "p": 5,
+    "pos": 4,
+    "pts": 51,
+    "sanction": 0,
+    "team": "ATLETICO HURACAN A, A.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 6,
+     "j": 12,
+     "p": 4
+    },
+    "codequipo": 56603,
+    "e": 2,
+    "form": "PGGGP",
+    "g": 13,
+    "gc": 92,
+    "gf": 93,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 12,
+     "p": 5
+    },
+    "j": 24,
+    "p": 9,
+    "pos": 5,
+    "pts": 41,
+    "sanction": 0,
+    "team": "CORAZON DE MARIA A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 12,
+     "p": 6
+    },
+    "codequipo": 50793,
+    "e": 3,
+    "form": "GPPPP",
+    "g": 9,
+    "gc": 94,
+    "gf": 78,
+    "home": {
+     "e": 1,
+     "g": 5,
+     "j": 12,
+     "p": 6
+    },
+    "j": 24,
+    "p": 12,
+    "pos": 6,
+    "pts": 30,
+    "sanction": 0,
+    "team": "VICTORIA A, REAL CLUB \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 12,
+     "p": 6
+    },
+    "codequipo": 59837,
+    "e": 8,
+    "form": "EPPPG",
+    "g": 6,
+    "gc": 87,
+    "gf": 63,
+    "home": {
+     "e": 6,
+     "g": 2,
+     "j": 12,
+     "p": 4
+    },
+    "j": 24,
+    "p": 10,
+    "pos": 7,
+    "pts": 26,
+    "sanction": 0,
+    "team": "GAREPA VIERA, C.F."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 12,
+     "p": 8
+    },
+    "codequipo": 46421,
+    "e": 2,
+    "form": "GGGPE",
+    "g": 8,
+    "gc": 62,
+    "gf": 39,
+    "home": {
+     "e": 1,
+     "g": 5,
+     "j": 12,
+     "p": 6
+    },
+    "j": 24,
+    "p": 14,
+    "pos": 8,
+    "pts": 26,
+    "sanction": 0,
+    "team": "VETERANOS DEL PILA.A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 12,
+     "p": 7
+    },
+    "codequipo": 59834,
+    "e": 2,
+    "form": "GPGPG",
+    "g": 8,
+    "gc": 118,
+    "gf": 54,
+    "home": {
+     "e": 1,
+     "g": 4,
+     "j": 12,
+     "p": 7
+    },
+    "j": 24,
+    "p": 14,
+    "pos": 9,
+    "pts": 26,
+    "sanction": 0,
+    "team": "SIMUSETTI C. F. A \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 12,
+     "p": 9
+    },
+    "codequipo": 45545,
+    "e": 3,
+    "form": "PPPGP",
+    "g": 7,
+    "gc": 90,
+    "gf": 79,
+    "home": {
+     "e": 2,
+     "g": 5,
+     "j": 12,
+     "p": 5
+    },
+    "j": 24,
+    "p": 14,
+    "pos": 10,
+    "pts": 24,
+    "sanction": 0,
+    "team": "ARUCAS C.F. A \"A\""
+   },
+   {
+    "away": {
+     "e": 4,
+     "g": 0,
+     "j": 12,
+     "p": 8
+    },
+    "codequipo": 60676,
+    "e": 4,
+    "form": "PEGPP",
+    "g": 4,
+    "gc": 106,
+    "gf": 50,
+    "home": {
+     "e": 0,
+     "g": 4,
+     "j": 12,
+     "p": 8
+    },
+    "j": 24,
+    "p": 16,
+    "pos": 11,
+    "pts": 16,
+    "sanction": 0,
+    "team": "TORRES, U.D. LAS"
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 0,
+     "j": 12,
+     "p": 11
+    },
+    "codequipo": 46073,
+    "e": 3,
+    "form": "PPPPE",
+    "g": 3,
+    "gc": 123,
+    "gf": 36,
+    "home": {
+     "e": 2,
+     "g": 3,
+     "j": 12,
+     "p": 7
+    },
+    "j": 24,
+    "p": 18,
+    "pos": 12,
+    "pts": 12,
+    "sanction": 0,
+    "team": "LOMO BLANCO S.J.A. A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 0,
+     "j": 12,
+     "p": 11
+    },
+    "codequipo": 47886,
+    "e": 2,
+    "form": "GPPPP",
+    "g": 1,
+    "gc": 182,
+    "gf": 29,
+    "home": {
+     "e": 1,
+     "g": 1,
+     "j": 12,
+     "p": 10
+    },
+    "j": 24,
+    "p": 21,
+    "pos": 13,
+    "pts": 5,
+    "sanction": 0,
+    "team": "BARRIO DEL ATLANTICO A, C.F. \"A\""
+   }
+  ],
+  "comp": "1092",
+  "comp_name": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 45545,
+    "crest": "/pnfg/pimg/Clubes/00100_0000160419_nuevo_escudo.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "ARUCAS C.F. A \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60676,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "BLANCO",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TORRES, U.D. LAS",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 50793,
+    "crest": null,
+    "shirt": "BLANCA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "VICTORIA A, REAL CLUB \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46073,
+    "crest": "/pnfg/pimg/Clubes/00100_0000122389_145891.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "LOMO BLANCO S.J.A. A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47886,
+    "crest": "/pnfg/pimg/Clubes/00100_0000001483_Escudo_Barrio.jpg",
+    "shirt": "AMARILLA/VERDE",
+    "shorts": "VERDE",
+    "socks": "AMARILLAS/VERDES",
+    "surface": null,
+    "team": "BARRIO DEL ATLANTICO A, C.F. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 56603,
+    "crest": null,
+    "shirt": "AZUL ROYAL",
+    "shorts": "AZUL ROYAL",
+    "socks": "AZUL ROYAL",
+    "surface": null,
+    "team": "CORAZON DE MARIA A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 59837,
+    "crest": null,
+    "shirt": "ROJA Y NEGRA A RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "GAREPA VIERA, C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 45590,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015561_ESCUDO_UDLP.png",
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "PALMAS, U.D. LAS",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60693,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TAMARACEITE A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46010,
+    "crest": null,
+    "shirt": "BLANQUIRROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "ATLETICO HURACAN A, A.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46105,
+    "crest": "/pnfg/pimg/Clubes/00100_0000169100_ESCUDOS_ACF_Y_SCF_PX400.png",
+    "shirt": "NARANJA",
+    "shorts": "BLANCO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "ACODETTI C.F. A \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46421,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "VETERANOS DEL PILA.A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 59834,
+    "crest": "/pnfg/pimg/Clubes/00100_0000048169_simusetti.jpg",
+    "shirt": "NARANJA",
+    "shorts": "BLANCO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "SIMUSETTI C. F. A \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "146122",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1092:146304": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 1,
+     "g": 10,
+     "j": 11,
+     "p": 0
+    },
+    "codequipo": 59784,
+    "e": 2,
+    "form": "GGGGG",
+    "g": 20,
+    "gc": 27,
+    "gf": 135,
+    "home": {
+     "e": 1,
+     "g": 10,
+     "j": 11,
+     "p": 0
+    },
+    "j": 22,
+    "p": 0,
+    "pos": 1,
+    "pts": 62,
+    "sanction": 0,
+    "team": "MASPA TRAINING A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 10,
+     "j": 11,
+     "p": 1
+    },
+    "codequipo": 45985,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 20,
+    "gc": 34,
+    "gf": 176,
+    "home": {
+     "e": 0,
+     "g": 10,
+     "j": 11,
+     "p": 1
+    },
+    "j": 22,
+    "p": 2,
+    "pos": 2,
+    "pts": 60,
+    "sanction": 0,
+    "team": "UNION VIERA A, C.F. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 6,
+     "j": 11,
+     "p": 5
+    },
+    "codequipo": 52609,
+    "e": 1,
+    "form": "GGGPP",
+    "g": 13,
+    "gc": 63,
+    "gf": 79,
+    "home": {
+     "e": 1,
+     "g": 7,
+     "j": 11,
+     "p": 3
+    },
+    "j": 22,
+    "p": 8,
+    "pos": 3,
+    "pts": 40,
+    "sanction": 0,
+    "team": "CALERO A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 7,
+     "j": 11,
+     "p": 3
+    },
+    "codequipo": 50510,
+    "e": 2,
+    "form": "PPEGP",
+    "g": 12,
+    "gc": 59,
+    "gf": 96,
+    "home": {
+     "e": 1,
+     "g": 5,
+     "j": 11,
+     "p": 5
+    },
+    "j": 22,
+    "p": 8,
+    "pos": 4,
+    "pts": 38,
+    "sanction": 0,
+    "team": "CARRIZAL A, C.F. UNION \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 6,
+     "j": 11,
+     "p": 4
+    },
+    "codequipo": 52904,
+    "e": 2,
+    "form": "EPPPG",
+    "g": 12,
+    "gc": 57,
+    "gf": 83,
+    "home": {
+     "e": 1,
+     "g": 6,
+     "j": 11,
+     "p": 4
+    },
+    "j": 22,
+    "p": 8,
+    "pos": 5,
+    "pts": 38,
+    "sanction": 0,
+    "team": "MESAS HURACAN, U.D. LAS"
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 6,
+     "j": 11,
+     "p": 4
+    },
+    "codequipo": 51459,
+    "e": 1,
+    "form": "GPPGG",
+    "g": 12,
+    "gc": 63,
+    "gf": 74,
+    "home": {
+     "e": 0,
+     "g": 6,
+     "j": 11,
+     "p": 5
+    },
+    "j": 22,
+    "p": 9,
+    "pos": 6,
+    "pts": 37,
+    "sanction": 0,
+    "team": "PASEO COMERCIAL DE VECINDARIO A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 11,
+     "p": 5
+    },
+    "codequipo": 54018,
+    "e": 3,
+    "form": "GGEPG",
+    "g": 11,
+    "gc": 56,
+    "gf": 74,
+    "home": {
+     "e": 1,
+     "g": 7,
+     "j": 11,
+     "p": 3
+    },
+    "j": 22,
+    "p": 8,
+    "pos": 7,
+    "pts": 36,
+    "sanction": 0,
+    "team": "MASPALOMAS,A C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 5,
+     "j": 11,
+     "p": 6
+    },
+    "codequipo": 45888,
+    "e": 2,
+    "form": "PGPPG",
+    "g": 9,
+    "gc": 83,
+    "gf": 90,
+    "home": {
+     "e": 2,
+     "g": 4,
+     "j": 11,
+     "p": 5
+    },
+    "j": 22,
+    "p": 11,
+    "pos": 8,
+    "pts": 29,
+    "sanction": 0,
+    "team": "DORAMAS A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 3,
+     "j": 11,
+     "p": 6
+    },
+    "codequipo": 46576,
+    "e": 3,
+    "form": "EPGGP",
+    "g": 8,
+    "gc": 91,
+    "gf": 62,
+    "home": {
+     "e": 1,
+     "g": 5,
+     "j": 11,
+     "p": 5
+    },
+    "j": 22,
+    "p": 11,
+    "pos": 9,
+    "pts": 27,
+    "sanction": 0,
+    "team": "ATLETICO G.C. A, C.F. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 3,
+     "j": 11,
+     "p": 8
+    },
+    "codequipo": 54072,
+    "e": 0,
+    "form": "PGPGP",
+    "g": 5,
+    "gc": 110,
+    "gf": 49,
+    "home": {
+     "e": 0,
+     "g": 2,
+     "j": 11,
+     "p": 9
+    },
+    "j": 22,
+    "p": 17,
+    "pos": 10,
+    "pts": 15,
+    "sanction": 0,
+    "team": "ARGUINEGUIN A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 11,
+     "p": 10
+    },
+    "codequipo": 57981,
+    "e": 0,
+    "form": "PPGPP",
+    "g": 2,
+    "gc": 156,
+    "gf": 46,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 11,
+     "p": 10
+    },
+    "j": 22,
+    "p": 20,
+    "pos": 11,
+    "pts": 6,
+    "sanction": 0,
+    "team": "PUERTOS DE L.P., C.E.F."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 11,
+     "p": 11
+    },
+    "codequipo": 47609,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 0,
+    "gc": 192,
+    "gf": 27,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 11,
+     "p": 11
+    },
+    "j": 22,
+    "p": 22,
+    "pos": 12,
+    "pts": 0,
+    "sanction": 0,
+    "team": "CERRUDA SANTA LUCIA DE TIRAJANA A, C.D. \"A\""
+   }
+  ],
+  "comp": "1092",
+  "comp_name": "LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 50510,
+    "crest": "/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png",
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "CARRIZAL A, C.F. UNION \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 54072,
+    "crest": "/pnfg/pimg/Clubes/00100_0000037533_ESCUDO_NUEVO__CD_ARGUINEGUIN_2.png",
+    "shirt": "VERDE",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "ARGUINEGUIN A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 45888,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000523_ESCUDO_DORAMAS.jpg",
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "DORAMAS A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52609,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "AZUL ROYAL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "CALERO A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52904,
+    "crest": null,
+    "shirt": "AZUL ROYAL",
+    "shorts": "AZUL ROYAL",
+    "socks": "AZUL ROYAL",
+    "surface": null,
+    "team": "MESAS HURACAN, U.D. LAS",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 51459,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000652_escudo.png",
+    "shirt": "BLANCA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "PASEO COMERCIAL DE VECINDARIO A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 54018,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "MASPALOMAS,A C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47609,
+    "crest": null,
+    "shirt": "BLANCA/NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "CERRUDA SANTA LUCIA DE TIRAJANA A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 45985,
+    "crest": "/pnfg/pimg/Clubes/00100_0000001356_UNION_VIERA_1162_CalidadVectorial.png",
+    "shirt": "ROJA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "UNION VIERA A, C.F. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 57981,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "PUERTOS DE L.P., C.E.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46576,
+    "crest": "/pnfg/pimg/Clubes/00100_0000063327_IMG_4418.png",
+    "shirt": "ROJA / BLANCA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "ATLETICO G.C. A, C.F. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 59784,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "MASPA TRAINING A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "146304",
+  "grupo_name": "GRUPO 2",
+  "ok": true
+ },
+ "1093:138333": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 11,
+     "j": 12,
+     "p": 1
+    },
+    "codequipo": 46734,
+    "e": 2,
+    "form": "GGGEG",
+    "g": 20,
+    "gc": 39,
+    "gf": 126,
+    "home": {
+     "e": 2,
+     "g": 9,
+     "j": 12,
+     "p": 1
+    },
+    "j": 24,
+    "p": 2,
+    "pos": 1,
+    "pts": 62,
+    "sanction": 0,
+    "team": "SAN BARTOLOME A, C.F. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 10,
+     "j": 12,
+     "p": 2
+    },
+    "codequipo": 61514,
+    "e": 1,
+    "form": "GGGGG",
+    "g": 18,
+    "gc": 71,
+    "gf": 121,
+    "home": {
+     "e": 1,
+     "g": 8,
+     "j": 12,
+     "p": 3
+    },
+    "j": 24,
+    "p": 5,
+    "pos": 2,
+    "pts": 55,
+    "sanction": 0,
+    "team": "PALMEIROS DE COSTA T A., U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 9,
+     "j": 12,
+     "p": 3
+    },
+    "codequipo": 46712,
+    "e": 1,
+    "form": "GGGGP",
+    "g": 16,
+    "gc": 73,
+    "gf": 136,
+    "home": {
+     "e": 1,
+     "g": 7,
+     "j": 12,
+     "p": 4
+    },
+    "j": 24,
+    "p": 7,
+    "pos": 3,
+    "pts": 49,
+    "sanction": 0,
+    "team": "SPORTING TIAS A, C.F. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 9,
+     "j": 12,
+     "p": 3
+    },
+    "codequipo": 46701,
+    "e": 1,
+    "form": "GGGPG",
+    "g": 16,
+    "gc": 65,
+    "gf": 92,
+    "home": {
+     "e": 1,
+     "g": 7,
+     "j": 12,
+     "p": 4
+    },
+    "j": 24,
+    "p": 7,
+    "pos": 4,
+    "pts": 49,
+    "sanction": 0,
+    "team": "TAHICHE A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 6,
+     "j": 12,
+     "p": 4
+    },
+    "codequipo": 46678,
+    "e": 2,
+    "form": "PPPPG",
+    "g": 13,
+    "gc": 85,
+    "gf": 94,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 12,
+     "p": 5
+    },
+    "j": 24,
+    "p": 9,
+    "pos": 5,
+    "pts": 41,
+    "sanction": 0,
+    "team": "TEGUISE A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 6,
+     "j": 12,
+     "p": 4
+    },
+    "codequipo": 54873,
+    "e": 4,
+    "form": "GPPPG",
+    "g": 12,
+    "gc": 65,
+    "gf": 80,
+    "home": {
+     "e": 2,
+     "g": 6,
+     "j": 12,
+     "p": 4
+    },
+    "j": 24,
+    "p": 8,
+    "pos": 6,
+    "pts": 40,
+    "sanction": 0,
+    "team": "ARRECIFE, C.D."
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 5,
+     "j": 12,
+     "p": 4
+    },
+    "codequipo": 52074,
+    "e": 5,
+    "form": "GGPPP",
+    "g": 10,
+    "gc": 60,
+    "gf": 76,
+    "home": {
+     "e": 2,
+     "g": 5,
+     "j": 12,
+     "p": 5
+    },
+    "j": 24,
+    "p": 9,
+    "pos": 7,
+    "pts": 35,
+    "sanction": 0,
+    "team": "LOMO A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 6,
+     "j": 12,
+     "p": 3
+    },
+    "codequipo": 46690,
+    "e": 4,
+    "form": "PPGPP",
+    "g": 10,
+    "gc": 75,
+    "gf": 82,
+    "home": {
+     "e": 1,
+     "g": 4,
+     "j": 12,
+     "p": 7
+    },
+    "j": 24,
+    "p": 10,
+    "pos": 8,
+    "pts": 34,
+    "sanction": 0,
+    "team": "LANZAROTE A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 12,
+     "p": 6
+    },
+    "codequipo": 46771,
+    "e": 4,
+    "form": "PEGGP",
+    "g": 10,
+    "gc": 68,
+    "gf": 82,
+    "home": {
+     "e": 2,
+     "g": 6,
+     "j": 12,
+     "p": 4
+    },
+    "j": 24,
+    "p": 10,
+    "pos": 9,
+    "pts": 34,
+    "sanction": 0,
+    "team": "UNION SUR YAIZA, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 12,
+     "p": 9
+    },
+    "codequipo": 56693,
+    "e": 3,
+    "form": "PPPGP",
+    "g": 4,
+    "gc": 149,
+    "gf": 55,
+    "home": {
+     "e": 2,
+     "g": 2,
+     "j": 12,
+     "p": 8
+    },
+    "j": 24,
+    "p": 17,
+    "pos": 10,
+    "pts": 15,
+    "sanction": 0,
+    "team": "ALTAVISTA C.F."
+   },
+   {
+    "away": {
+     "e": 4,
+     "g": 1,
+     "j": 12,
+     "p": 7
+    },
+    "codequipo": 46745,
+    "e": 4,
+    "form": "PPPEG",
+    "g": 3,
+    "gc": 113,
+    "gf": 61,
+    "home": {
+     "e": 0,
+     "g": 2,
+     "j": 12,
+     "p": 10
+    },
+    "j": 24,
+    "p": 17,
+    "pos": 11,
+    "pts": 13,
+    "sanction": 0,
+    "team": "TINAJOA, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 12,
+     "p": 9
+    },
+    "codequipo": 48498,
+    "e": 3,
+    "form": "GPEPP",
+    "g": 3,
+    "gc": 155,
+    "gf": 77,
+    "home": {
+     "e": 2,
+     "g": 1,
+     "j": 12,
+     "p": 9
+    },
+    "j": 24,
+    "p": 18,
+    "pos": 12,
+    "pts": 12,
+    "sanction": 0,
+    "team": "HARIA C.F."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 3,
+     "j": 12,
+     "p": 9
+    },
+    "codequipo": 53334,
+    "e": 2,
+    "form": "GPPPG",
+    "g": 3,
+    "gc": 131,
+    "gf": 67,
+    "home": {
+     "e": 2,
+     "g": 0,
+     "j": 12,
+     "p": 10
+    },
+    "j": 24,
+    "p": 19,
+    "pos": 13,
+    "pts": 11,
+    "sanction": 0,
+    "team": "TITE A, C.D. \"A\""
+   }
+  ],
+  "comp": "1093",
+  "comp_name": "LIGA PREFERENTE BENJAMIN F-8 DE LANZAROTE",
+  "directorio": [
+   {
+    "codequipo": 54873,
+    "crest": "/pnfg/pimg/Clubes/00100_0000002764_LOGO_C.D._ARRECIFE.jpg",
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES Y BLANCAS A RAYAS",
+    "surface": null,
+    "team": "ARRECIFE, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46690,
+    "crest": "/pnfg/pimg/Clubes/00100_0000045245_5120_imgbank_1704726253.png",
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "LANZAROTE A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46712,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "SPORTING TIAS A, C.F. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46734,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015950_escudo.jpg",
+    "shirt": "ROJA Y BLANCA",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "SAN BARTOLOME A, C.F. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 48498,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "VERDE",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "HARIA C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 53334,
+    "crest": "/pnfg/pimg/Clubes/00100_0000009658_200x200Tite.png",
+    "shirt": "BLANCA /AZUL",
+    "shorts": "AZUL",
+    "socks": "BLANCAS / AZULES",
+    "surface": null,
+    "team": "TITE A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52074,
+    "crest": "/pnfg/pimg/Clubes/00100_0000018275_escudo_lomo_VEC_01.jpg",
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "LOMO A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46678,
+    "crest": "/pnfg/pimg/Clubes/00100_0000017528_31c1899b7280c90b4ada30703d89cce4.jpg",
+    "shirt": "VERDE / BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "TEGUISE A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46701,
+    "crest": "/pnfg/pimg/Clubes/00100_0000068077_ESCUDO.png",
+    "shirt": "AZUL/BLANCA RAYAS",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TAHICHE A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 56693,
+    "crest": null,
+    "shirt": "BLANCA/ROJA",
+    "shorts": "ROJO/BLANCO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "ALTAVISTA C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46745,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TINAJOA, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 46771,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "NEGRO",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "UNION SUR YAIZA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61514,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015562_logoUDP.png",
+    "shirt": "AMARILLA Y NEGRA",
+    "shorts": "NEGRO Y AMARILLO",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "PALMEIROS DE COSTA T A., U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "138333",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1094:144682": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 1,
+     "g": 12,
+     "j": 13,
+     "p": 0
+    },
+    "codequipo": 61992,
+    "e": 1,
+    "form": "GGGG",
+    "g": 25,
+    "gc": 18,
+    "gf": 289,
+    "home": {
+     "e": 0,
+     "g": 13,
+     "j": 13,
+     "p": 0
+    },
+    "j": 26,
+    "p": 0,
+    "pos": 1,
+    "pts": 76,
+    "sanction": 0,
+    "team": "MUELLE GRANDE, U.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 10,
+     "j": 13,
+     "p": 3
+    },
+    "codequipo": 39612,
+    "e": 1,
+    "form": "GGGG",
+    "g": 22,
+    "gc": 34,
+    "gf": 137,
+    "home": {
+     "e": 1,
+     "g": 12,
+     "j": 13,
+     "p": 0
+    },
+    "j": 26,
+    "p": 3,
+    "pos": 2,
+    "pts": 67,
+    "sanction": 0,
+    "team": "SAN JUAN TRES PALMAS A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 10,
+     "j": 13,
+     "p": 2
+    },
+    "codequipo": 51474,
+    "e": 1,
+    "form": "GGGG",
+    "g": 22,
+    "gc": 63,
+    "gf": 157,
+    "home": {
+     "e": 0,
+     "g": 12,
+     "j": 13,
+     "p": 1
+    },
+    "j": 26,
+    "p": 3,
+    "pos": 3,
+    "pts": 67,
+    "sanction": 0,
+    "team": "ATLETICO FOMENTO, CLUB"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 9,
+     "j": 13,
+     "p": 4
+    },
+    "codequipo": 26178,
+    "e": 0,
+    "form": "GGGPP",
+    "g": 19,
+    "gc": 74,
+    "gf": 141,
+    "home": {
+     "e": 0,
+     "g": 10,
+     "j": 13,
+     "p": 3
+    },
+    "j": 26,
+    "p": 7,
+    "pos": 4,
+    "pts": 57,
+    "sanction": 0,
+    "team": "VALLINAMAR, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 10,
+     "j": 13,
+     "p": 3
+    },
+    "codequipo": 305,
+    "e": 0,
+    "form": "PGGGG",
+    "g": 18,
+    "gc": 79,
+    "gf": 163,
+    "home": {
+     "e": 0,
+     "g": 8,
+     "j": 13,
+     "p": 5
+    },
+    "j": 26,
+    "p": 8,
+    "pos": 5,
+    "pts": 54,
+    "sanction": 0,
+    "team": "ATLETICO HURACAN B, A.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 8,
+     "j": 13,
+     "p": 5
+    },
+    "codequipo": 24934,
+    "e": 0,
+    "form": "PPGGG",
+    "g": 16,
+    "gc": 71,
+    "gf": 148,
+    "home": {
+     "e": 0,
+     "g": 8,
+     "j": 13,
+     "p": 5
+    },
+    "j": 26,
+    "p": 10,
+    "pos": 6,
+    "pts": 48,
+    "sanction": 0,
+    "team": "TELDE A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 13,
+     "p": 7
+    },
+    "codequipo": 37805,
+    "e": 5,
+    "form": "PGPPP",
+    "g": 10,
+    "gc": 85,
+    "gf": 107,
+    "home": {
+     "e": 3,
+     "g": 6,
+     "j": 13,
+     "p": 4
+    },
+    "j": 26,
+    "p": 11,
+    "pos": 7,
+    "pts": 35,
+    "sanction": 0,
+    "team": "PEDRO HIDALGO A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 6,
+     "j": 13,
+     "p": 7
+    },
+    "codequipo": 151,
+    "e": 0,
+    "form": "PPGGP",
+    "g": 10,
+    "gc": 129,
+    "gf": 95,
+    "home": {
+     "e": 0,
+     "g": 4,
+     "j": 13,
+     "p": 9
+    },
+    "j": 26,
+    "p": 16,
+    "pos": 8,
+    "pts": 30,
+    "sanction": 0,
+    "team": "DANIEL CARNEVALI, C.D."
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 4,
+     "j": 13,
+     "p": 6
+    },
+    "codequipo": 141,
+    "e": 5,
+    "form": "GGPGP",
+    "g": 8,
+    "gc": 105,
+    "gf": 95,
+    "home": {
+     "e": 2,
+     "g": 4,
+     "j": 13,
+     "p": 7
+    },
+    "j": 26,
+    "p": 13,
+    "pos": 9,
+    "pts": 29,
+    "sanction": 0,
+    "team": "ACODETTI C.F. B \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 13,
+     "p": 9
+    },
+    "codequipo": 55399,
+    "e": 3,
+    "form": "PPPPE",
+    "g": 8,
+    "gc": 166,
+    "gf": 100,
+    "home": {
+     "e": 2,
+     "g": 5,
+     "j": 13,
+     "p": 6
+    },
+    "j": 26,
+    "p": 15,
+    "pos": 10,
+    "pts": 27,
+    "sanction": 0,
+    "team": "CORAZON DE MARIA C, C.D. \"C\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 13,
+     "p": 9
+    },
+    "codequipo": 1045,
+    "e": 1,
+    "form": "GPPGP",
+    "g": 7,
+    "gc": 122,
+    "gf": 80,
+    "home": {
+     "e": 0,
+     "g": 4,
+     "j": 13,
+     "p": 9
+    },
+    "j": 26,
+    "p": 18,
+    "pos": 11,
+    "pts": 22,
+    "sanction": 0,
+    "team": "PLAYA DEL HOMBRE, C.D."
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 2,
+     "j": 13,
+     "p": 9
+    },
+    "codequipo": 37941,
+    "e": 5,
+    "form": "PPPGE",
+    "g": 4,
+    "gc": 126,
+    "gf": 52,
+    "home": {
+     "e": 3,
+     "g": 2,
+     "j": 13,
+     "p": 8
+    },
+    "j": 26,
+    "p": 17,
+    "pos": 12,
+    "pts": 17,
+    "sanction": 0,
+    "team": "LONGUERAS A, C.D. LAS \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 13,
+     "p": 12
+    },
+    "codequipo": 26298,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 2,
+    "gc": 263,
+    "gf": 21,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 13,
+     "p": 12
+    },
+    "j": 26,
+    "p": 24,
+    "pos": 13,
+    "pts": 6,
+    "sanction": 0,
+    "team": "UNION MARINA, C.F."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 13,
+     "p": 13
+    },
+    "codequipo": 61830,
+    "e": 0,
+    "form": "PPPP",
+    "g": 0,
+    "gc": 265,
+    "gf": 15,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 13,
+     "p": 13
+    },
+    "j": 26,
+    "p": 26,
+    "pos": 14,
+    "pts": 0,
+    "sanction": 0,
+    "team": "SAN JOSE, REAL SPORTING"
+   }
+  ],
+  "comp": "1094",
+  "comp_name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 61830,
+    "crest": "/pnfg/pimg/Clubes/00100_0000005197_ESCUDO_ALBERO_1.jpg",
+    "shirt": "AZUL / BLANCA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "SAN JOSE, REAL SPORTING",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 37805,
+    "crest": null,
+    "shirt": "VERDE / BLANCA",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "PEDRO HIDALGO A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 53689,
+    "crest": null,
+    "shirt": "ROJA Y NEGRA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "INTER DEL PILAR C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 39612,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "SAN JUAN TRES PALMAS A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 151,
+    "crest": "/pnfg/pimg/Clubes/00100_0000175564_Screenshot_2026_09_22_12_51_54_33_3a637037d35f95c5dbcdcc75e697ce91.jpg",
+    "shirt": "CELESTE",
+    "shorts": "AZUL",
+    "socks": "CELESTES",
+    "surface": null,
+    "team": "DANIEL CARNEVALI, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26178,
+    "crest": "/pnfg/pimg/Clubes/00100_0000069441_100x100vallinamar__2_.png",
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "VALLINAMAR, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61992,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "MUELLE GRANDE, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 55399,
+    "crest": null,
+    "shirt": "AZUL ROYAL",
+    "shorts": "AZUL ROYAL",
+    "socks": "AZUL ROYAL",
+    "surface": null,
+    "team": "CORAZON DE MARIA C, C.D. \"C\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26298,
+    "crest": null,
+    "shirt": "ROJA/BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "UNION MARINA, C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24934,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "ROJO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "TELDE A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 37941,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "LONGUERAS A, C.D. LAS \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 305,
+    "crest": null,
+    "shirt": "BLANQUIRROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "ATLETICO HURACAN B, A.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 141,
+    "crest": "/pnfg/pimg/Clubes/00100_0000169100_ESCUDOS_ACF_Y_SCF_PX400.png",
+    "shirt": "NARANJA",
+    "shorts": "BLANCO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "ACODETTI C.F. B \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 1045,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "PLAYA DEL HOMBRE, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 51474,
+    "crest": null,
+    "shirt": "BLANCA/ NEGRA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS / NEGRAS",
+    "surface": null,
+    "team": "ATLETICO FOMENTO, CLUB",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "144682",
+  "grupo_name": "GRUPO 3",
+  "ok": true
+ },
+ "1094:144922": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 11,
+     "j": 13,
+     "p": 2
+    },
+    "codequipo": 38231,
+    "e": 2,
+    "form": "GGGGP",
+    "g": 21,
+    "gc": 45,
+    "gf": 173,
+    "home": {
+     "e": 2,
+     "g": 10,
+     "j": 13,
+     "p": 1
+    },
+    "j": 26,
+    "p": 3,
+    "pos": 1,
+    "pts": 65,
+    "sanction": 0,
+    "team": "GUINIGUADA APOLINARIO A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 11,
+     "j": 13,
+     "p": 1
+    },
+    "codequipo": 836,
+    "e": 1,
+    "form": "GGGGP",
+    "g": 21,
+    "gc": 59,
+    "gf": 170,
+    "home": {
+     "e": 0,
+     "g": 10,
+     "j": 13,
+     "p": 3
+    },
+    "j": 26,
+    "p": 4,
+    "pos": 2,
+    "pts": 64,
+    "sanction": 0,
+    "team": "SANTIDAD BANOT, C.D."
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 9,
+     "j": 13,
+     "p": 2
+    },
+    "codequipo": 47218,
+    "e": 2,
+    "form": "GGGGG",
+    "g": 20,
+    "gc": 45,
+    "gf": 127,
+    "home": {
+     "e": 0,
+     "g": 11,
+     "j": 13,
+     "p": 2
+    },
+    "j": 26,
+    "p": 4,
+    "pos": 3,
+    "pts": 62,
+    "sanction": 0,
+    "team": "VILLA DE SANTA BRIGIDA, U.D."
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 10,
+     "j": 13,
+     "p": 0
+    },
+    "codequipo": 45544,
+    "e": 4,
+    "form": "GPGGG",
+    "g": 19,
+    "gc": 27,
+    "gf": 130,
+    "home": {
+     "e": 1,
+     "g": 9,
+     "j": 13,
+     "p": 3
+    },
+    "j": 26,
+    "p": 3,
+    "pos": 4,
+    "pts": 61,
+    "sanction": 0,
+    "team": "ARUCAS C.F. B \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 11,
+     "j": 13,
+     "p": 2
+    },
+    "codequipo": 39098,
+    "e": 1,
+    "form": "PGGP",
+    "g": 20,
+    "gc": 54,
+    "gf": 153,
+    "home": {
+     "e": 1,
+     "g": 9,
+     "j": 13,
+     "p": 3
+    },
+    "j": 26,
+    "p": 5,
+    "pos": 5,
+    "pts": 61,
+    "sanction": 0,
+    "team": "AREGRANCA, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 6,
+     "j": 13,
+     "p": 6
+    },
+    "codequipo": 26,
+    "e": 4,
+    "form": "GPGE",
+    "g": 13,
+    "gc": 107,
+    "gf": 145,
+    "home": {
+     "e": 3,
+     "g": 7,
+     "j": 13,
+     "p": 3
+    },
+    "j": 26,
+    "p": 9,
+    "pos": 6,
+    "pts": 43,
+    "sanction": 0,
+    "team": "PANADERIA PULIDO SAN MATEO, C.F."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 7,
+     "j": 13,
+     "p": 5
+    },
+    "codequipo": 98,
+    "e": 3,
+    "form": "PPGPG",
+    "g": 13,
+    "gc": 72,
+    "gf": 144,
+    "home": {
+     "e": 2,
+     "g": 6,
+     "j": 13,
+     "p": 5
+    },
+    "j": 26,
+    "p": 10,
+    "pos": 7,
+    "pts": 42,
+    "sanction": 0,
+    "team": "HEIDELBERG A, C.F. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 6,
+     "j": 13,
+     "p": 6
+    },
+    "codequipo": 55398,
+    "e": 2,
+    "form": "GGPGG",
+    "g": 13,
+    "gc": 73,
+    "gf": 103,
+    "home": {
+     "e": 1,
+     "g": 7,
+     "j": 13,
+     "p": 5
+    },
+    "j": 26,
+    "p": 11,
+    "pos": 8,
+    "pts": 41,
+    "sanction": 0,
+    "team": "CORAZON DE MARIA B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 13,
+     "p": 7
+    },
+    "codequipo": 87,
+    "e": 2,
+    "form": "GGPE",
+    "g": 9,
+    "gc": 81,
+    "gf": 78,
+    "home": {
+     "e": 0,
+     "g": 5,
+     "j": 13,
+     "p": 8
+    },
+    "j": 26,
+    "p": 15,
+    "pos": 9,
+    "pts": 29,
+    "sanction": 0,
+    "team": "ALCOTAN CANARIAS, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 13,
+     "p": 8
+    },
+    "codequipo": 55377,
+    "e": 1,
+    "form": "PPGPP",
+    "g": 9,
+    "gc": 132,
+    "gf": 101,
+    "home": {
+     "e": 0,
+     "g": 5,
+     "j": 13,
+     "p": 8
+    },
+    "j": 26,
+    "p": 16,
+    "pos": 10,
+    "pts": 28,
+    "sanction": 0,
+    "team": "ISLECLUB, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 13,
+     "p": 11
+    },
+    "codequipo": 26612,
+    "e": 2,
+    "form": "GPPPP",
+    "g": 5,
+    "gc": 160,
+    "gf": 57,
+    "home": {
+     "e": 2,
+     "g": 3,
+     "j": 13,
+     "p": 8
+    },
+    "j": 26,
+    "p": 19,
+    "pos": 11,
+    "pts": 17,
+    "sanction": 0,
+    "team": "SAN ANTONIO A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 13,
+     "p": 11
+    },
+    "codequipo": 29643,
+    "e": 0,
+    "form": "PPPPG",
+    "g": 4,
+    "gc": 131,
+    "gf": 37,
+    "home": {
+     "e": 0,
+     "g": 2,
+     "j": 13,
+     "p": 11
+    },
+    "j": 26,
+    "p": 22,
+    "pos": 12,
+    "pts": 12,
+    "sanction": 0,
+    "team": "COSTA AYALA, UNION JUVENIL"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 13,
+     "p": 12
+    },
+    "codequipo": 479,
+    "e": 1,
+    "form": "PPPPP",
+    "g": 2,
+    "gc": 189,
+    "gf": 34,
+    "home": {
+     "e": 1,
+     "g": 1,
+     "j": 13,
+     "p": 11
+    },
+    "j": 26,
+    "p": 23,
+    "pos": 13,
+    "pts": 7,
+    "sanction": 0,
+    "team": "SAN LAZARO, U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 0,
+     "j": 13,
+     "p": 12
+    },
+    "codequipo": 24822,
+    "e": 1,
+    "form": "PPPP",
+    "g": 0,
+    "gc": 309,
+    "gf": 32,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 13,
+     "p": 13
+    },
+    "j": 26,
+    "p": 25,
+    "pos": 14,
+    "pts": 1,
+    "sanction": 0,
+    "team": "COLORADAS, U.D. LAS"
+   }
+  ],
+  "comp": "1094",
+  "comp_name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 45544,
+    "crest": "/pnfg/pimg/Clubes/00100_0000160419_nuevo_escudo.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "ARUCAS C.F. B \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47218,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000352_Logo_TRANSPARENTE_y_TEXTO_EN_NEGRO.png",
+    "shirt": "BLANCA",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "VILLA DE SANTA BRIGIDA, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 479,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000278_ESCUDO_SAN_LAZARO.jpg",
+    "shirt": "VERDE / BLANCA",
+    "shorts": "BLANCO",
+    "socks": "VERDES / BLANCAS",
+    "surface": null,
+    "team": "SAN LAZARO, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24822,
+    "crest": "/pnfg/pimg/Clubes/00100_0000018807_ESCUDOS.png",
+    "shirt": "ROJA Y BLANCA",
+    "shorts": "ROJO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "COLORADAS, U.D. LAS",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 87,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "ALCOTAN CANARIAS, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 836,
+    "crest": null,
+    "shirt": "BLANCA Y NEGRA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "SANTIDAD BANOT, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 39098,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "ROJO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "AREGRANCA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 55398,
+    "crest": null,
+    "shirt": "AZUL ROYAL",
+    "shorts": "AZUL ROYAL",
+    "socks": "AZUL ROYAL",
+    "surface": null,
+    "team": "CORAZON DE MARIA B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26612,
+    "crest": "/pnfg/pimg/Clubes/00100_0000036304_FIFLP.png",
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "SAN ANTONIO A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 29643,
+    "crest": "/pnfg/pimg/Clubes/00100_0000126937_logo_l__nea_1.jpg",
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "COSTA AYALA, UNION JUVENIL",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 276,
+    "crest": "/pnfg/pimg/Clubes/00100_0000033206_ESCUDO_NUEVO_PILE.jpg",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "PILETAS A, A.D. U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 98,
+    "crest": "/pnfg/pimg/Clubes/00100_0000002698_photo.jpg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "HEIDELBERG A, C.F. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "PANADERIA PULIDO SAN MATEO, C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 38231,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "GUINIGUADA APOLINARIO A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 55377,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000488_COLOR.png",
+    "shirt": "NEGRA / AMARILLA",
+    "shorts": "AMARILLO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "ISLECLUB, C.D.",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "144922",
+  "grupo_name": "GRUPO 2",
+  "ok": true
+ },
+ "1094:145162": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 1,
+     "g": 11,
+     "j": 13,
+     "p": 1
+    },
+    "codequipo": 40830,
+    "e": 2,
+    "form": "GGGGG",
+    "g": 23,
+    "gc": 15,
+    "gf": 202,
+    "home": {
+     "e": 1,
+     "g": 12,
+     "j": 13,
+     "p": 0
+    },
+    "j": 26,
+    "p": 1,
+    "pos": 1,
+    "pts": 71,
+    "sanction": 0,
+    "team": "GARITA A, C.F.S. LA \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 11,
+     "j": 13,
+     "p": 1
+    },
+    "codequipo": 24914,
+    "e": 2,
+    "form": "GGGGP",
+    "g": 21,
+    "gc": 25,
+    "gf": 137,
+    "home": {
+     "e": 1,
+     "g": 10,
+     "j": 13,
+     "p": 2
+    },
+    "j": 26,
+    "p": 3,
+    "pos": 2,
+    "pts": 65,
+    "sanction": 0,
+    "team": "BALOS A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 10,
+     "j": 13,
+     "p": 1
+    },
+    "codequipo": 24933,
+    "e": 2,
+    "form": "GPEEG",
+    "g": 21,
+    "gc": 37,
+    "gf": 161,
+    "home": {
+     "e": 0,
+     "g": 11,
+     "j": 13,
+     "p": 2
+    },
+    "j": 26,
+    "p": 3,
+    "pos": 3,
+    "pts": 65,
+    "sanction": 0,
+    "team": "ESTRELLA C.F. A \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 9,
+     "j": 13,
+     "p": 2
+    },
+    "codequipo": 24855,
+    "e": 3,
+    "form": "PGGGG",
+    "g": 18,
+    "gc": 40,
+    "gf": 151,
+    "home": {
+     "e": 1,
+     "g": 9,
+     "j": 13,
+     "p": 3
+    },
+    "j": 26,
+    "p": 5,
+    "pos": 4,
+    "pts": 57,
+    "sanction": 0,
+    "team": "CASA PASTORES A, C.F. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 10,
+     "j": 13,
+     "p": 3
+    },
+    "codequipo": 257,
+    "e": 3,
+    "form": "GPPEG",
+    "g": 17,
+    "gc": 59,
+    "gf": 163,
+    "home": {
+     "e": 3,
+     "g": 7,
+     "j": 13,
+     "p": 3
+    },
+    "j": 26,
+    "p": 6,
+    "pos": 5,
+    "pts": 54,
+    "sanction": 0,
+    "team": "JOVERO-LAS ROSAS, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 9,
+     "j": 13,
+     "p": 3
+    },
+    "codequipo": 31947,
+    "e": 1,
+    "form": "GGPG",
+    "g": 16,
+    "gc": 61,
+    "gf": 122,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 13,
+     "p": 6
+    },
+    "j": 26,
+    "p": 9,
+    "pos": 6,
+    "pts": 49,
+    "sanction": 0,
+    "team": "HUESAS A, U.D. LAS \"A\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 5,
+     "j": 13,
+     "p": 5
+    },
+    "codequipo": 39472,
+    "e": 5,
+    "form": "PGEEE",
+    "g": 11,
+    "gc": 72,
+    "gf": 63,
+    "home": {
+     "e": 2,
+     "g": 6,
+     "j": 13,
+     "p": 5
+    },
+    "j": 26,
+    "p": 10,
+    "pos": 7,
+    "pts": 38,
+    "sanction": 0,
+    "team": "INGENIO A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 5,
+     "j": 13,
+     "p": 7
+    },
+    "codequipo": 666,
+    "e": 3,
+    "form": "PGPP",
+    "g": 9,
+    "gc": 117,
+    "gf": 80,
+    "home": {
+     "e": 2,
+     "g": 4,
+     "j": 13,
+     "p": 7
+    },
+    "j": 26,
+    "p": 14,
+    "pos": 8,
+    "pts": 30,
+    "sanction": 0,
+    "team": "VALSEQUILLO A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 3,
+     "j": 13,
+     "p": 7
+    },
+    "codequipo": 23034,
+    "e": 4,
+    "form": "GPEGG",
+    "g": 8,
+    "gc": 114,
+    "gf": 60,
+    "home": {
+     "e": 1,
+     "g": 5,
+     "j": 13,
+     "p": 7
+    },
+    "j": 26,
+    "p": 14,
+    "pos": 9,
+    "pts": 28,
+    "sanction": 0,
+    "team": "MOGAN, C.F."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 5,
+     "j": 13,
+     "p": 8
+    },
+    "codequipo": 29648,
+    "e": 0,
+    "form": "GPGPP",
+    "g": 9,
+    "gc": 139,
+    "gf": 59,
+    "home": {
+     "e": 0,
+     "g": 4,
+     "j": 13,
+     "p": 9
+    },
+    "j": 26,
+    "p": 17,
+    "pos": 10,
+    "pts": 27,
+    "sanction": 0,
+    "team": "VELEZ, U.D. LOS"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 13,
+     "p": 11
+    },
+    "codequipo": 554,
+    "e": 2,
+    "form": "PEPEP",
+    "g": 5,
+    "gc": 115,
+    "gf": 37,
+    "home": {
+     "e": 2,
+     "g": 3,
+     "j": 13,
+     "p": 8
+    },
+    "j": 26,
+    "p": 19,
+    "pos": 11,
+    "pts": 17,
+    "sanction": 0,
+    "team": "SAN PEDRO MARTIR, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 13,
+     "p": 10
+    },
+    "codequipo": 27,
+    "e": 2,
+    "form": "PPEPG",
+    "g": 4,
+    "gc": 144,
+    "gf": 40,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 13,
+     "p": 10
+    },
+    "j": 26,
+    "p": 20,
+    "pos": 12,
+    "pts": 14,
+    "sanction": 0,
+    "team": "MAJORERAS-GUAYADEQUE, C.F. LAS"
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 13,
+     "p": 10
+    },
+    "codequipo": 783,
+    "e": 3,
+    "form": "PPPP",
+    "g": 3,
+    "gc": 171,
+    "gf": 28,
+    "home": {
+     "e": 2,
+     "g": 1,
+     "j": 13,
+     "p": 10
+    },
+    "j": 26,
+    "p": 20,
+    "pos": 13,
+    "pts": 12,
+    "sanction": 0,
+    "team": "CASTILLO C.F."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 13,
+     "p": 13
+    },
+    "codequipo": 751,
+    "e": 0,
+    "form": "PPPP",
+    "g": 1,
+    "gc": 218,
+    "gf": 24,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 13,
+     "p": 12
+    },
+    "j": 26,
+    "p": 25,
+    "pos": 14,
+    "pts": 3,
+    "sanction": 0,
+    "team": "AGUIMES C.F."
+   }
+  ],
+  "comp": "1094",
+  "comp_name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 783,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "CASTILLO C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 666,
+    "crest": null,
+    "shirt": "CELESTE",
+    "shorts": "AZUL MARINO",
+    "socks": "CELESTES",
+    "surface": null,
+    "team": "VALSEQUILLO A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 39472,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000785_ESCUDO.png",
+    "shirt": "AZUL Y GRANA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "INGENIO A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 23034,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "MOGAN, C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24914,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "BALOS A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 40830,
+    "crest": null,
+    "shirt": "FUCSIA/NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "GARITA A, C.F.S. LA \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 27,
+    "crest": null,
+    "shirt": "VERDE/BLANCA FRANJAS",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "MAJORERAS-GUAYADEQUE, C.F. LAS",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 29648,
+    "crest": null,
+    "shirt": "AMARILLA/AZUL",
+    "shorts": "AZUL/AMARILLO",
+    "socks": "AZULES/AMARILLAS",
+    "surface": null,
+    "team": "VELEZ, U.D. LOS",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 751,
+    "crest": null,
+    "shirt": "AMARILLO",
+    "shorts": "AZUL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "AGUIMES C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24933,
+    "crest": null,
+    "shirt": "VERDE CON RAYAS BLANCAS",
+    "shorts": "BLANCO",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "ESTRELLA C.F. A \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 554,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "SAN PEDRO MARTIR, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 542,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TABLERO, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 257,
+    "crest": "/pnfg/pimg/Clubes/00100_0000128802_ESCUDO_DEL_CLUB.jpg",
+    "shirt": "AMARILLA / ROJA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "JOVERO-LAS ROSAS, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24855,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "CASA PASTORES A, C.F. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 31947,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "HUESAS A, U.D. LAS \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "145162",
+  "grupo_name": "GRUPO 4",
+  "ok": true
+ },
+ "1094:145402": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 1,
+     "g": 12,
+     "j": 14,
+     "p": 1
+    },
+    "codequipo": 60307,
+    "e": 1,
+    "form": "GGGGG",
+    "g": 26,
+    "gc": 53,
+    "gf": 205,
+    "home": {
+     "e": 0,
+     "g": 14,
+     "j": 14,
+     "p": 0
+    },
+    "j": 28,
+    "p": 1,
+    "pos": 1,
+    "pts": 79,
+    "sanction": 0,
+    "team": "SIMUSETTI C. F. B \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 10,
+     "j": 14,
+     "p": 3
+    },
+    "codequipo": 40786,
+    "e": 1,
+    "form": "GEGPG",
+    "g": 22,
+    "gc": 65,
+    "gf": 187,
+    "home": {
+     "e": 0,
+     "g": 12,
+     "j": 14,
+     "p": 2
+    },
+    "j": 28,
+    "p": 5,
+    "pos": 2,
+    "pts": 67,
+    "sanction": 0,
+    "team": "ARUCAS C.F. C \"C\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 11,
+     "j": 14,
+     "p": 3
+    },
+    "codequipo": 37086,
+    "e": 1,
+    "form": "PGGGG",
+    "g": 21,
+    "gc": 47,
+    "gf": 151,
+    "home": {
+     "e": 1,
+     "g": 10,
+     "j": 14,
+     "p": 3
+    },
+    "j": 28,
+    "p": 6,
+    "pos": 3,
+    "pts": 64,
+    "sanction": 0,
+    "team": "UNION VIERA B, C.F. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 11,
+     "j": 14,
+     "p": 3
+    },
+    "codequipo": 55338,
+    "e": 0,
+    "form": "GGPGG",
+    "g": 21,
+    "gc": 53,
+    "gf": 165,
+    "home": {
+     "e": 0,
+     "g": 10,
+     "j": 14,
+     "p": 4
+    },
+    "j": 28,
+    "p": 7,
+    "pos": 4,
+    "pts": 63,
+    "sanction": 0,
+    "team": "MESAS B, U.D. LAS \"B\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 7,
+     "j": 14,
+     "p": 4
+    },
+    "codequipo": 55400,
+    "e": 4,
+    "form": "PGPGG",
+    "g": 15,
+    "gc": 98,
+    "gf": 132,
+    "home": {
+     "e": 1,
+     "g": 8,
+     "j": 14,
+     "p": 5
+    },
+    "j": 28,
+    "p": 9,
+    "pos": 5,
+    "pts": 49,
+    "sanction": 0,
+    "team": "CORAZON DE MARIA D, C.D. \"DB\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 7,
+     "j": 14,
+     "p": 6
+    },
+    "codequipo": 47140,
+    "e": 2,
+    "form": "PPGPP",
+    "g": 15,
+    "gc": 88,
+    "gf": 104,
+    "home": {
+     "e": 1,
+     "g": 8,
+     "j": 14,
+     "p": 5
+    },
+    "j": 28,
+    "p": 11,
+    "pos": 6,
+    "pts": 47,
+    "sanction": 0,
+    "team": "TAMARACEITE B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 7,
+     "j": 14,
+     "p": 4
+    },
+    "codequipo": 42441,
+    "e": 8,
+    "form": "GEGGG",
+    "g": 13,
+    "gc": 76,
+    "gf": 120,
+    "home": {
+     "e": 5,
+     "g": 6,
+     "j": 14,
+     "p": 3
+    },
+    "j": 28,
+    "p": 7,
+    "pos": 7,
+    "pts": 47,
+    "sanction": 0,
+    "team": "LOMO BLANCO S.J.A. B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 3,
+     "j": 14,
+     "p": 8
+    },
+    "codequipo": 29644,
+    "e": 4,
+    "form": "PPGPP",
+    "g": 13,
+    "gc": 75,
+    "gf": 86,
+    "home": {
+     "e": 1,
+     "g": 10,
+     "j": 14,
+     "p": 3
+    },
+    "j": 28,
+    "p": 11,
+    "pos": 8,
+    "pts": 43,
+    "sanction": 0,
+    "team": "BARRIO DEL ATLANTICO B, C.F. \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 7,
+     "j": 14,
+     "p": 6
+    },
+    "codequipo": 42440,
+    "e": 4,
+    "form": "GPPGG",
+    "g": 11,
+    "gc": 100,
+    "gf": 105,
+    "home": {
+     "e": 3,
+     "g": 4,
+     "j": 14,
+     "p": 7
+    },
+    "j": 28,
+    "p": 13,
+    "pos": 9,
+    "pts": 37,
+    "sanction": 0,
+    "team": "VICTORIA B, REAL CLUB \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 14,
+     "p": 10
+    },
+    "codequipo": 698,
+    "e": 2,
+    "form": "PGPPP",
+    "g": 11,
+    "gc": 165,
+    "gf": 108,
+    "home": {
+     "e": 1,
+     "g": 8,
+     "j": 14,
+     "p": 5
+    },
+    "j": 28,
+    "p": 15,
+    "pos": 10,
+    "pts": 35,
+    "sanction": 0,
+    "team": "BARRIAL ATLETICO, U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 14,
+     "p": 9
+    },
+    "codequipo": 39095,
+    "e": 3,
+    "form": "PGGPP",
+    "g": 9,
+    "gc": 144,
+    "gf": 128,
+    "home": {
+     "e": 2,
+     "g": 5,
+     "j": 14,
+     "p": 7
+    },
+    "j": 28,
+    "p": 16,
+    "pos": 11,
+    "pts": 30,
+    "sanction": 0,
+    "team": "GUINIGUADA APOLINARIO B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 3,
+     "j": 14,
+     "p": 9
+    },
+    "codequipo": 61842,
+    "e": 4,
+    "form": "PPPGP",
+    "g": 8,
+    "gc": 85,
+    "gf": 75,
+    "home": {
+     "e": 2,
+     "g": 5,
+     "j": 14,
+     "p": 7
+    },
+    "j": 28,
+    "p": 16,
+    "pos": 12,
+    "pts": 28,
+    "sanction": 0,
+    "team": "MASPA TRAINING C, C.D. \"C\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 14,
+     "p": 12
+    },
+    "codequipo": 23050,
+    "e": 0,
+    "form": "PPGGG",
+    "g": 6,
+    "gc": 144,
+    "gf": 67,
+    "home": {
+     "e": 0,
+     "g": 4,
+     "j": 14,
+     "p": 10
+    },
+    "j": 28,
+    "p": 22,
+    "pos": 13,
+    "pts": 18,
+    "sanction": 0,
+    "team": "VETERANOS DEL PILA B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 14,
+     "p": 13
+    },
+    "codequipo": 364,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 2,
+    "gc": 221,
+    "gf": 49,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 14,
+     "p": 13
+    },
+    "j": 28,
+    "p": 26,
+    "pos": 14,
+    "pts": 6,
+    "sanction": 0,
+    "team": "SAN JUAN TRES PALMAS ATLETICO, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 14,
+     "p": 14
+    },
+    "codequipo": 39100,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 0,
+    "gc": 285,
+    "gf": 17,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 14,
+     "p": 14
+    },
+    "j": 28,
+    "p": 28,
+    "pos": 15,
+    "pts": 0,
+    "sanction": 0,
+    "team": "PEDRO HIDALGO B, U.D. \"B\""
+   }
+  ],
+  "comp": "1094",
+  "comp_name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 40786,
+    "crest": "/pnfg/pimg/Clubes/00100_0000160419_nuevo_escudo.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "ARUCAS C.F. C \"C\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 698,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "BARRIAL ATLETICO, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 42440,
+    "crest": null,
+    "shirt": "BLANCA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "VICTORIA B, REAL CLUB \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 37086,
+    "crest": "/pnfg/pimg/Clubes/00100_0000001356_UNION_VIERA_1162_CalidadVectorial.png",
+    "shirt": "ROJA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "UNION VIERA B, C.F. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 29644,
+    "crest": "/pnfg/pimg/Clubes/00100_0000001483_Escudo_Barrio.jpg",
+    "shirt": "AMARILLA/VERDE",
+    "shorts": "VERDE",
+    "socks": "AMARILLAS/VERDES",
+    "surface": null,
+    "team": "BARRIO DEL ATLANTICO B, C.F. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 55338,
+    "crest": null,
+    "shirt": "AZUL ROYAL",
+    "shorts": "AZUL ROYAL",
+    "socks": "AZUL ROYAL",
+    "surface": null,
+    "team": "MESAS B, U.D. LAS \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61842,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "MASPA TRAINING C, C.D. \"C\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60307,
+    "crest": "/pnfg/pimg/Clubes/00100_0000048169_simusetti.jpg",
+    "shirt": "NARANJA",
+    "shorts": "BLANCO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "SIMUSETTI C. F. B \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 39100,
+    "crest": null,
+    "shirt": "VERDE / BLANCA",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "PEDRO HIDALGO B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47140,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TAMARACEITE B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 364,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "SAN JUAN TRES PALMAS ATLETICO, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 42441,
+    "crest": "/pnfg/pimg/Clubes/00100_0000122389_145891.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "LOMO BLANCO S.J.A. B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 39095,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "GUINIGUADA APOLINARIO B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 23050,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "VETERANOS DEL PILA B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 55400,
+    "crest": null,
+    "shirt": "AZUL ROYAL",
+    "shorts": "AZUL ROYAL",
+    "socks": "AZUL ROYAL",
+    "surface": null,
+    "team": "CORAZON DE MARIA D, C.D. \"DB\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "145402",
+  "grupo_name": "GRUPO 5",
+  "ok": true
+ },
+ "1094:145642": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 14,
+     "j": 14,
+     "p": 0
+    },
+    "codequipo": 60296,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 28,
+    "gc": 24,
+    "gf": 276,
+    "home": {
+     "e": 0,
+     "g": 14,
+     "j": 14,
+     "p": 0
+    },
+    "j": 28,
+    "p": 0,
+    "pos": 1,
+    "pts": 84,
+    "sanction": 0,
+    "team": "MASPA TRAINING B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 12,
+     "j": 14,
+     "p": 2
+    },
+    "codequipo": 51982,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 25,
+    "gc": 51,
+    "gf": 156,
+    "home": {
+     "e": 0,
+     "g": 13,
+     "j": 14,
+     "p": 1
+    },
+    "j": 28,
+    "p": 3,
+    "pos": 2,
+    "pts": 75,
+    "sanction": 0,
+    "team": "CARRIZAL B, C.F. UNION \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 9,
+     "j": 14,
+     "p": 3
+    },
+    "codequipo": 31382,
+    "e": 4,
+    "form": "GEGGE",
+    "g": 20,
+    "gc": 51,
+    "gf": 122,
+    "home": {
+     "e": 2,
+     "g": 11,
+     "j": 14,
+     "p": 1
+    },
+    "j": 28,
+    "p": 4,
+    "pos": 3,
+    "pts": 64,
+    "sanction": 0,
+    "team": "CALERO B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 10,
+     "j": 14,
+     "p": 4
+    },
+    "codequipo": 40831,
+    "e": 1,
+    "form": "GPPGG",
+    "g": 19,
+    "gc": 51,
+    "gf": 101,
+    "home": {
+     "e": 1,
+     "g": 9,
+     "j": 14,
+     "p": 4
+    },
+    "j": 28,
+    "p": 8,
+    "pos": 4,
+    "pts": 58,
+    "sanction": 0,
+    "team": "GARITA B, C.F.S. LA \"B\""
+   },
+   {
+    "away": {
+     "e": 4,
+     "g": 6,
+     "j": 14,
+     "p": 4
+    },
+    "codequipo": 27905,
+    "e": 5,
+    "form": "GGEGE",
+    "g": 14,
+    "gc": 90,
+    "gf": 98,
+    "home": {
+     "e": 1,
+     "g": 8,
+     "j": 14,
+     "p": 5
+    },
+    "j": 28,
+    "p": 9,
+    "pos": 5,
+    "pts": 47,
+    "sanction": 0,
+    "team": "DORAMAS B, CD \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 6,
+     "j": 14,
+     "p": 6
+    },
+    "codequipo": 24661,
+    "e": 5,
+    "form": "GGGGG",
+    "g": 12,
+    "gc": 93,
+    "gf": 86,
+    "home": {
+     "e": 3,
+     "g": 6,
+     "j": 14,
+     "p": 5
+    },
+    "j": 28,
+    "p": 11,
+    "pos": 6,
+    "pts": 41,
+    "sanction": 0,
+    "team": "TELDE B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 5,
+     "j": 14,
+     "p": 6
+    },
+    "codequipo": 23037,
+    "e": 3,
+    "form": "GGGPG",
+    "g": 12,
+    "gc": 110,
+    "gf": 101,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 14,
+     "p": 7
+    },
+    "j": 28,
+    "p": 13,
+    "pos": 7,
+    "pts": 39,
+    "sanction": 0,
+    "team": "MASPALOMASB, CD \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 6,
+     "j": 14,
+     "p": 8
+    },
+    "codequipo": 29639,
+    "e": 5,
+    "form": "PEPGP",
+    "g": 11,
+    "gc": 123,
+    "gf": 91,
+    "home": {
+     "e": 5,
+     "g": 5,
+     "j": 14,
+     "p": 4
+    },
+    "j": 28,
+    "p": 12,
+    "pos": 8,
+    "pts": 38,
+    "sanction": 0,
+    "team": "CERRUDA SANTA LUCIA DE TIRAJANA B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 3,
+     "j": 14,
+     "p": 8
+    },
+    "codequipo": 42446,
+    "e": 7,
+    "form": "EGEPG",
+    "g": 9,
+    "gc": 88,
+    "gf": 83,
+    "home": {
+     "e": 4,
+     "g": 6,
+     "j": 14,
+     "p": 4
+    },
+    "j": 28,
+    "p": 12,
+    "pos": 9,
+    "pts": 34,
+    "sanction": 0,
+    "team": "PASEO COMERCIAL DE VECINDARIO B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 14,
+     "p": 8
+    },
+    "codequipo": 31380,
+    "e": 7,
+    "form": "PPPEP",
+    "g": 7,
+    "gc": 111,
+    "gf": 57,
+    "home": {
+     "e": 5,
+     "g": 3,
+     "j": 14,
+     "p": 6
+    },
+    "j": 28,
+    "p": 14,
+    "pos": 10,
+    "pts": 28,
+    "sanction": 0,
+    "team": "HUESAS B, U.D. LAS \"B\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 2,
+     "j": 14,
+     "p": 9
+    },
+    "codequipo": 24664,
+    "e": 5,
+    "form": "PPEPP",
+    "g": 6,
+    "gc": 128,
+    "gf": 59,
+    "home": {
+     "e": 2,
+     "g": 4,
+     "j": 14,
+     "p": 8
+    },
+    "j": 28,
+    "p": 17,
+    "pos": 11,
+    "pts": 23,
+    "sanction": 0,
+    "team": "ESTRELLA C.F. B \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 14,
+     "p": 8
+    },
+    "codequipo": 24639,
+    "e": 4,
+    "form": "PPPPP",
+    "g": 6,
+    "gc": 116,
+    "gf": 46,
+    "home": {
+     "e": 2,
+     "g": 2,
+     "j": 14,
+     "p": 10
+    },
+    "j": 28,
+    "p": 18,
+    "pos": 12,
+    "pts": 22,
+    "sanction": 0,
+    "team": "BALOS B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 2,
+     "j": 14,
+     "p": 9
+    },
+    "codequipo": 665,
+    "e": 4,
+    "form": "PEPPP",
+    "g": 5,
+    "gc": 111,
+    "gf": 52,
+    "home": {
+     "e": 1,
+     "g": 3,
+     "j": 14,
+     "p": 10
+    },
+    "j": 28,
+    "p": 19,
+    "pos": 13,
+    "pts": 19,
+    "sanction": 0,
+    "team": "VALSEQUILLO B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 3,
+     "j": 14,
+     "p": 8
+    },
+    "codequipo": 40803,
+    "e": 4,
+    "form": "GPPPP",
+    "g": 5,
+    "gc": 117,
+    "gf": 51,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 14,
+     "p": 11
+    },
+    "j": 28,
+    "p": 19,
+    "pos": 14,
+    "pts": 19,
+    "sanction": 0,
+    "team": "INGENIO B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 14,
+     "p": 12
+    },
+    "codequipo": 26289,
+    "e": 0,
+    "form": "PGPPP",
+    "g": 4,
+    "gc": 159,
+    "gf": 44,
+    "home": {
+     "e": 0,
+     "g": 2,
+     "j": 14,
+     "p": 12
+    },
+    "j": 28,
+    "p": 24,
+    "pos": 15,
+    "pts": 12,
+    "sanction": 0,
+    "team": "ARGUINEGUIN B, C.D. \"B\""
+   }
+  ],
+  "comp": "1094",
+  "comp_name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 51982,
+    "crest": "/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png",
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "CARRIZAL B, C.F. UNION \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24664,
+    "crest": null,
+    "shirt": "VERDE CON RAYAS BLANCAS",
+    "shorts": "BLANCO",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "ESTRELLA C.F. B \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 40803,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000785_ESCUDO.png",
+    "shirt": "AZUL Y GRANA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "INGENIO B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26289,
+    "crest": "/pnfg/pimg/Clubes/00100_0000037533_ESCUDO_NUEVO__CD_ARGUINEGUIN_2.png",
+    "shirt": "VERDE",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "ARGUINEGUIN B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 27905,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000523_ESCUDO_DORAMAS.jpg",
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "DORAMAS B, CD \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 31382,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "AZUL ROYAL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "CALERO B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 31380,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "HUESAS B, U.D. LAS \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60296,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "MASPA TRAINING B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 665,
+    "crest": null,
+    "shirt": "CELESTE",
+    "shorts": "AZUL MARINO",
+    "socks": "CELESTES",
+    "surface": null,
+    "team": "VALSEQUILLO B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24661,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "ROJO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "TELDE B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 23037,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "MASPALOMASB, CD \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 29639,
+    "crest": null,
+    "shirt": "BLANCA/NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "CERRUDA SANTA LUCIA DE TIRAJANA B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24639,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "BALOS B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 40831,
+    "crest": null,
+    "shirt": "FUCSIA/NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "GARITA B, C.F.S. LA \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 42446,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000652_escudo.png",
+    "shirt": "BLANCA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "PASEO COMERCIAL DE VECINDARIO B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "145642",
+  "grupo_name": "GRUPO 6",
+  "ok": true
+ },
+ "1094:145882": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 13,
+     "j": 14,
+     "p": 1
+    },
+    "codequipo": 24540,
+    "e": 2,
+    "form": "GGPGG",
+    "g": 25,
+    "gc": 61,
+    "gf": 197,
+    "home": {
+     "e": 2,
+     "g": 12,
+     "j": 14,
+     "p": 0
+    },
+    "j": 28,
+    "p": 1,
+    "pos": 1,
+    "pts": 77,
+    "sanction": 0,
+    "team": "BECERRIL, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 11,
+     "j": 14,
+     "p": 2
+    },
+    "codequipo": 561,
+    "e": 1,
+    "form": "GGGGG",
+    "g": 24,
+    "gc": 62,
+    "gf": 200,
+    "home": {
+     "e": 0,
+     "g": 13,
+     "j": 14,
+     "p": 1
+    },
+    "j": 28,
+    "p": 3,
+    "pos": 2,
+    "pts": 73,
+    "sanction": 0,
+    "team": "ROQUE AMAGRO-CLARAVISION, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 10,
+     "j": 14,
+     "p": 3
+    },
+    "codequipo": 340,
+    "e": 2,
+    "form": "PGGGG",
+    "g": 20,
+    "gc": 80,
+    "gf": 129,
+    "home": {
+     "e": 1,
+     "g": 10,
+     "j": 14,
+     "p": 3
+    },
+    "j": 28,
+    "p": 6,
+    "pos": 3,
+    "pts": 62,
+    "sanction": 0,
+    "team": "VALLESECO, U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 10,
+     "j": 14,
+     "p": 3
+    },
+    "codequipo": 61779,
+    "e": 2,
+    "form": "GGPGG",
+    "g": 20,
+    "gc": 79,
+    "gf": 143,
+    "home": {
+     "e": 1,
+     "g": 10,
+     "j": 14,
+     "p": 3
+    },
+    "j": 28,
+    "p": 6,
+    "pos": 4,
+    "pts": 62,
+    "sanction": 0,
+    "team": "GALDARCLUBS JACOBEO 21-22, C.D."
+   },
+   {
+    "away": {
+     "e": 4,
+     "g": 8,
+     "j": 14,
+     "p": 2
+    },
+    "codequipo": 26305,
+    "e": 4,
+    "form": "GGPPG",
+    "g": 18,
+    "gc": 86,
+    "gf": 142,
+    "home": {
+     "e": 0,
+     "g": 10,
+     "j": 14,
+     "p": 4
+    },
+    "j": 28,
+    "p": 6,
+    "pos": 5,
+    "pts": 58,
+    "sanction": 0,
+    "team": "CARDONES, C.D."
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 7,
+     "j": 14,
+     "p": 4
+    },
+    "codequipo": 30213,
+    "e": 5,
+    "form": "GGGEG",
+    "g": 16,
+    "gc": 61,
+    "gf": 118,
+    "home": {
+     "e": 2,
+     "g": 9,
+     "j": 14,
+     "p": 3
+    },
+    "j": 28,
+    "p": 7,
+    "pos": 6,
+    "pts": 53,
+    "sanction": 0,
+    "team": "BAÑADEROS A, C.D. UNION COSTA \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 7,
+     "j": 14,
+     "p": 5
+    },
+    "codequipo": 726,
+    "e": 3,
+    "form": "GGPGE",
+    "g": 16,
+    "gc": 96,
+    "gf": 142,
+    "home": {
+     "e": 1,
+     "g": 9,
+     "j": 14,
+     "p": 4
+    },
+    "j": 28,
+    "p": 9,
+    "pos": 7,
+    "pts": 51,
+    "sanction": 0,
+    "team": "GOLETA, C.D."
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 14,
+     "p": 8
+    },
+    "codequipo": 26297,
+    "e": 4,
+    "form": "GPGGE",
+    "g": 11,
+    "gc": 89,
+    "gf": 85,
+    "home": {
+     "e": 2,
+     "g": 7,
+     "j": 14,
+     "p": 5
+    },
+    "j": 28,
+    "p": 13,
+    "pos": 8,
+    "pts": 37,
+    "sanction": 0,
+    "team": "SAN NICOLAS, U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 14,
+     "p": 9
+    },
+    "codequipo": 740,
+    "e": 4,
+    "form": "PPEPP",
+    "g": 9,
+    "gc": 99,
+    "gf": 103,
+    "home": {
+     "e": 3,
+     "g": 5,
+     "j": 14,
+     "p": 6
+    },
+    "j": 28,
+    "p": 15,
+    "pos": 9,
+    "pts": 31,
+    "sanction": 0,
+    "team": "MOYA, U.D."
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 3,
+     "j": 14,
+     "p": 9
+    },
+    "codequipo": 16,
+    "e": 4,
+    "form": "PGEEP",
+    "g": 7,
+    "gc": 124,
+    "gf": 50,
+    "home": {
+     "e": 2,
+     "g": 4,
+     "j": 14,
+     "p": 8
+    },
+    "j": 28,
+    "p": 17,
+    "pos": 10,
+    "pts": 25,
+    "sanction": 0,
+    "team": "GUAYARMINA, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 4,
+     "j": 14,
+     "p": 10
+    },
+    "codequipo": 26620,
+    "e": 3,
+    "form": "PGPPG",
+    "g": 7,
+    "gc": 119,
+    "gf": 76,
+    "home": {
+     "e": 3,
+     "g": 3,
+     "j": 14,
+     "p": 8
+    },
+    "j": 28,
+    "p": 18,
+    "pos": 11,
+    "pts": 24,
+    "sanction": 0,
+    "team": "BARRIAL A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 14,
+     "p": 10
+    },
+    "codequipo": 30188,
+    "e": 2,
+    "form": "PPEPP",
+    "g": 7,
+    "gc": 163,
+    "gf": 82,
+    "home": {
+     "e": 1,
+     "g": 4,
+     "j": 14,
+     "p": 9
+    },
+    "j": 28,
+    "p": 19,
+    "pos": 12,
+    "pts": 23,
+    "sanction": 0,
+    "team": "FIRGAS A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 14,
+     "p": 9
+    },
+    "codequipo": 756,
+    "e": 2,
+    "form": "PPPPP",
+    "g": 6,
+    "gc": 148,
+    "gf": 73,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 14,
+     "p": 11
+    },
+    "j": 28,
+    "p": 20,
+    "pos": 13,
+    "pts": 20,
+    "sanction": 0,
+    "team": "TEROR BALOMPIE, U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 14,
+     "p": 11
+    },
+    "codequipo": 716,
+    "e": 2,
+    "form": "PPEPP",
+    "g": 3,
+    "gc": 156,
+    "gf": 37,
+    "home": {
+     "e": 1,
+     "g": 1,
+     "j": 14,
+     "p": 12
+    },
+    "j": 28,
+    "p": 23,
+    "pos": 14,
+    "pts": 11,
+    "sanction": 0,
+    "team": "GUIA, U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 0,
+     "j": 14,
+     "p": 13
+    },
+    "codequipo": 590,
+    "e": 2,
+    "form": "PPEEP",
+    "g": 0,
+    "gc": 191,
+    "gf": 37,
+    "home": {
+     "e": 1,
+     "g": 0,
+     "j": 14,
+     "p": 13
+    },
+    "j": 28,
+    "p": 26,
+    "pos": 15,
+    "pts": 2,
+    "sanction": 0,
+    "team": "ATALAYA, U.D."
+   }
+  ],
+  "comp": "1094",
+  "comp_name": "LIGA PRIMERA BENJAMIN F-8 GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 30188,
+    "crest": "/pnfg/pimg/Clubes/00100_0000169900_ESCUDO_FIRGAS_100924.jpg",
+    "shirt": "ROJA",
+    "shorts": "BLANCO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "FIRGAS A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 756,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "TEROR BALOMPIE, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 726,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "GOLETA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26297,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000705_UD_SAN_NICOLAS__2_.jpg",
+    "shirt": "AMARILLA",
+    "shorts": "NEGRO",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "SAN NICOLAS, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 30213,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "BLANCO",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "BAÑADEROS A, C.D. UNION COSTA \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 340,
+    "crest": "/pnfg/pimg/Clubes/00100_0000013868_IMG_20250804_WA0022.jpg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "VALLESECO, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 561,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000149_Logo_Arreglado.png",
+    "shirt": "AMARILLA",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "ROQUE AMAGRO-CLARAVISION, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61779,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "AMARILLO",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26305,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "CARDONES, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 740,
+    "crest": null,
+    "shirt": "VERDE / BLANCA RAYAS",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "MOYA, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 716,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "GUIA, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26620,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "BARRIAL A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 590,
+    "crest": "/pnfg/pimg/Clubes/00100_0000028507_IMG_20230903_WA0149_5_.jpg",
+    "shirt": "AZUL/AMARILLO",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "ATALAYA, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 16,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "GUAYARMINA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 24540,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000409_Escudo_original_C.D._Valkyrias.jpg",
+    "shirt": "VERDE / BLANCA",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "BECERRIL, C.D.",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "145882",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1095:138515": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 8,
+     "j": 8,
+     "p": 0
+    },
+    "codequipo": 30038,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 16,
+    "gc": 17,
+    "gf": 148,
+    "home": {
+     "e": 0,
+     "g": 8,
+     "j": 8,
+     "p": 0
+    },
+    "j": 16,
+    "p": 0,
+    "pos": 1,
+    "pts": 48,
+    "sanction": 0,
+    "team": "INTERNACIONAL PH A \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 7,
+     "j": 8,
+     "p": 1
+    },
+    "codequipo": 36044,
+    "e": 0,
+    "form": "PGGGG",
+    "g": 14,
+    "gc": 20,
+    "gf": 82,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 8,
+     "p": 1
+    },
+    "j": 16,
+    "p": 2,
+    "pos": 2,
+    "pts": 42,
+    "sanction": 0,
+    "team": "SAN BARTOLOME C, C.F. \"C\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 6,
+     "j": 8,
+     "p": 2
+    },
+    "codequipo": 26562,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 12,
+    "gc": 31,
+    "gf": 82,
+    "home": {
+     "e": 0,
+     "g": 6,
+     "j": 8,
+     "p": 2
+    },
+    "j": 16,
+    "p": 4,
+    "pos": 3,
+    "pts": 36,
+    "sanction": 0,
+    "team": "PUERTO DEL CARMEN A, F.C. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 4,
+     "j": 8,
+     "p": 4
+    },
+    "codequipo": 464,
+    "e": 0,
+    "form": "GPPGG",
+    "g": 9,
+    "gc": 50,
+    "gf": 51,
+    "home": {
+     "e": 0,
+     "g": 5,
+     "j": 8,
+     "p": 3
+    },
+    "j": 16,
+    "p": 7,
+    "pos": 4,
+    "pts": 27,
+    "sanction": 0,
+    "team": "LANZAROTE B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 8,
+     "p": 4
+    },
+    "codequipo": 502,
+    "e": 2,
+    "form": "GGPPG",
+    "g": 6,
+    "gc": 60,
+    "gf": 31,
+    "home": {
+     "e": 1,
+     "g": 3,
+     "j": 8,
+     "p": 4
+    },
+    "j": 16,
+    "p": 8,
+    "pos": 5,
+    "pts": 20,
+    "sanction": 0,
+    "team": "ORIENTACION MARITIMA B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 3,
+     "j": 8,
+     "p": 5
+    },
+    "codequipo": 36040,
+    "e": 1,
+    "form": "PPPEG",
+    "g": 5,
+    "gc": 88,
+    "gf": 48,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 8,
+     "p": 5
+    },
+    "j": 16,
+    "p": 10,
+    "pos": 6,
+    "pts": 16,
+    "sanction": 0,
+    "team": "INTERNACIONAL PH C \"C\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 8,
+     "p": 7
+    },
+    "codequipo": 428,
+    "e": 0,
+    "form": "GPGPP",
+    "g": 4,
+    "gc": 80,
+    "gf": 35,
+    "home": {
+     "e": 0,
+     "g": 3,
+     "j": 8,
+     "p": 5
+    },
+    "j": 16,
+    "p": 12,
+    "pos": 7,
+    "pts": 12,
+    "sanction": 0,
+    "team": "SPORTING TIAS B, C.F. \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 1,
+     "j": 8,
+     "p": 5
+    },
+    "codequipo": 446,
+    "e": 3,
+    "form": "GGPEP",
+    "g": 3,
+    "gc": 92,
+    "gf": 36,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 8,
+     "p": 5
+    },
+    "j": 16,
+    "p": 10,
+    "pos": 8,
+    "pts": 12,
+    "sanction": 0,
+    "team": "TAHICHE B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 8,
+     "p": 8
+    },
+    "codequipo": 52075,
+    "e": 0,
+    "form": "PPGPP",
+    "g": 0,
+    "gc": 86,
+    "gf": 11,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 8,
+     "p": 8
+    },
+    "j": 16,
+    "p": 16,
+    "pos": 9,
+    "pts": 0,
+    "sanction": 0,
+    "team": "LOMO B, C.D. \"B\""
+   }
+  ],
+  "comp": "1095",
+  "comp_name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE",
+  "directorio": [
+   {
+    "codequipo": 502,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "ORIENTACION MARITIMA B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 446,
+    "crest": "/pnfg/pimg/Clubes/00100_0000068077_ESCUDO.png",
+    "shirt": "AZUL/BLANCA RAYAS",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TAHICHE B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 36044,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015950_escudo.jpg",
+    "shirt": "ROJA Y BLANCA",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "SAN BARTOLOME C, C.F. \"C\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 30038,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000570_Escudo_Inter_Playa_Honda.jpg",
+    "shirt": "AZUL / NEGRO",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "INTERNACIONAL PH A \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 37592,
+    "crest": null,
+    "shirt": "CELESTE",
+    "shorts": "AZUL MARINO",
+    "socks": "CELESTES",
+    "surface": null,
+    "team": "ESTEFUT, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52075,
+    "crest": "/pnfg/pimg/Clubes/00100_0000018275_escudo_lomo_VEC_01.jpg",
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "LOMO B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 464,
+    "crest": "/pnfg/pimg/Clubes/00100_0000045245_5120_imgbank_1704726253.png",
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "LANZAROTE B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 428,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "SPORTING TIAS B, C.F. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26562,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000454_Logo__PDC.jpg",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "PUERTO DEL CARMEN A, F.C. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 36040,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000570_Escudo_Inter_Playa_Honda.jpg",
+    "shirt": "AZUL / NEGRO",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "INTERNACIONAL PH C \"C\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52052,
+    "crest": "/pnfg/pimg/Clubes/00100_0000009658_200x200Tite.png",
+    "shirt": "BLANCA /AZUL",
+    "shorts": "AZUL",
+    "socks": "BLANCAS / AZULES",
+    "surface": null,
+    "team": "TITE B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "138515",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1095:138647": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 10,
+     "j": 10,
+     "p": 0
+    },
+    "codequipo": 506,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 20,
+    "gc": 21,
+    "gf": 226,
+    "home": {
+     "e": 0,
+     "g": 10,
+     "j": 10,
+     "p": 0
+    },
+    "j": 20,
+    "p": 0,
+    "pos": 1,
+    "pts": 60,
+    "sanction": 0,
+    "team": "JUVENTUD MARITIMA A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 9,
+     "j": 10,
+     "p": 1
+    },
+    "codequipo": 40814,
+    "e": 0,
+    "form": "GGGPG",
+    "g": 18,
+    "gc": 43,
+    "gf": 141,
+    "home": {
+     "e": 0,
+     "g": 9,
+     "j": 10,
+     "p": 1
+    },
+    "j": 20,
+    "p": 2,
+    "pos": 2,
+    "pts": 54,
+    "sanction": 0,
+    "team": "TAHICHE C, C.D. \"C\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 8,
+     "j": 10,
+     "p": 2
+    },
+    "codequipo": 29588,
+    "e": 0,
+    "form": "PPGGG",
+    "g": 16,
+    "gc": 56,
+    "gf": 130,
+    "home": {
+     "e": 0,
+     "g": 8,
+     "j": 10,
+     "p": 2
+    },
+    "j": 20,
+    "p": 4,
+    "pos": 3,
+    "pts": 48,
+    "sanction": 0,
+    "team": "MACIOT SPORT, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 6,
+     "j": 10,
+     "p": 4
+    },
+    "codequipo": 26264,
+    "e": 0,
+    "form": "PGGGP",
+    "g": 13,
+    "gc": 47,
+    "gf": 84,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 10,
+     "p": 3
+    },
+    "j": 20,
+    "p": 7,
+    "pos": 4,
+    "pts": 39,
+    "sanction": 0,
+    "team": "TINAJOB, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 10,
+     "p": 5
+    },
+    "codequipo": 26268,
+    "e": 1,
+    "form": "PPPEG",
+    "g": 9,
+    "gc": 77,
+    "gf": 65,
+    "home": {
+     "e": 0,
+     "g": 5,
+     "j": 10,
+     "p": 5
+    },
+    "j": 20,
+    "p": 10,
+    "pos": 5,
+    "pts": 28,
+    "sanction": 0,
+    "team": "SPORTING TIAS C, C.F. \"C\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 10,
+     "p": 5
+    },
+    "codequipo": 57152,
+    "e": 2,
+    "form": "GGPEP",
+    "g": 8,
+    "gc": 90,
+    "gf": 57,
+    "home": {
+     "e": 1,
+     "g": 4,
+     "j": 10,
+     "p": 5
+    },
+    "j": 20,
+    "p": 10,
+    "pos": 6,
+    "pts": 26,
+    "sanction": 0,
+    "team": "PALMEIROS DE COSTA T B., U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 10,
+     "p": 6
+    },
+    "codequipo": 29739,
+    "e": 2,
+    "form": "PEPPG",
+    "g": 7,
+    "gc": 66,
+    "gf": 58,
+    "home": {
+     "e": 1,
+     "g": 4,
+     "j": 10,
+     "p": 5
+    },
+    "j": 20,
+    "p": 11,
+    "pos": 7,
+    "pts": 23,
+    "sanction": 0,
+    "team": "INTERNACIONAL PH B \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 3,
+     "j": 10,
+     "p": 7
+    },
+    "codequipo": 402,
+    "e": 1,
+    "form": "GGGGG",
+    "g": 7,
+    "gc": 97,
+    "gf": 48,
+    "home": {
+     "e": 1,
+     "g": 4,
+     "j": 10,
+     "p": 5
+    },
+    "j": 20,
+    "p": 12,
+    "pos": 8,
+    "pts": 22,
+    "sanction": 0,
+    "team": "SAN BARTOLOME B, C.F. \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 10,
+     "p": 7
+    },
+    "codequipo": 36047,
+    "e": 2,
+    "form": "PPGPP",
+    "g": 4,
+    "gc": 109,
+    "gf": 39,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 10,
+     "p": 7
+    },
+    "j": 20,
+    "p": 14,
+    "pos": 9,
+    "pts": 14,
+    "sanction": 0,
+    "team": "TEGUISE B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 0,
+     "j": 10,
+     "p": 8
+    },
+    "codequipo": 52076,
+    "e": 3,
+    "form": "EEPPP",
+    "g": 2,
+    "gc": 89,
+    "gf": 23,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 10,
+     "p": 7
+    },
+    "j": 20,
+    "p": 15,
+    "pos": 10,
+    "pts": 9,
+    "sanction": 0,
+    "team": "LOMO C, C.D. \"C\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 10,
+     "p": 10
+    },
+    "codequipo": 62022,
+    "e": 1,
+    "form": "PEPPP",
+    "g": 0,
+    "gc": 196,
+    "gf": 20,
+    "home": {
+     "e": 1,
+     "g": 0,
+     "j": 10,
+     "p": 9
+    },
+    "j": 20,
+    "p": 19,
+    "pos": 11,
+    "pts": 1,
+    "sanction": 0,
+    "team": "FUTBOL P.D.C. 2016 A, C.D. \"A\""
+   }
+  ],
+  "comp": "1095",
+  "comp_name": "LIGA PRIMERA BENJAMIN F-8 DE LANZAROTE",
+  "directorio": [
+   {
+    "codequipo": 506,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "JUVENTUD MARITIMA A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 40814,
+    "crest": "/pnfg/pimg/Clubes/00100_0000068077_ESCUDO.png",
+    "shirt": "AZUL/BLANCA RAYAS",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TAHICHE C, C.D. \"C\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 402,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015950_escudo.jpg",
+    "shirt": "ROJA Y BLANCA",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "SAN BARTOLOME B, C.F. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 29739,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000570_Escudo_Inter_Playa_Honda.jpg",
+    "shirt": "AZUL / NEGRO",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "INTERNACIONAL PH B \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 57152,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015562_logoUDP.png",
+    "shirt": "AMARILLA Y NEGRA",
+    "shorts": "NEGRO Y AMARILLO",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "PALMEIROS DE COSTA T B., U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62022,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "FUTBOL P.D.C. 2016 A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 36047,
+    "crest": "/pnfg/pimg/Clubes/00100_0000017528_31c1899b7280c90b4ada30703d89cce4.jpg",
+    "shirt": "VERDE / BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "TEGUISE B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26268,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "SPORTING TIAS C, C.F. \"C\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 26264,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TINAJOB, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 29588,
+    "crest": null,
+    "shirt": "BLANCA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "MACIOT SPORT, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52076,
+    "crest": "/pnfg/pimg/Clubes/00100_0000018275_escudo_lomo_VEC_01.jpg",
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "LOMO C, C.D. \"C\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "138647",
+  "grupo_name": "GRUPO 2",
+  "ok": true
+ },
+ "1096:144153": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 6,
+     "j": 7,
+     "p": 1
+    },
+    "codequipo": 60077,
+    "e": 2,
+    "form": "EGGGG",
+    "g": 12,
+    "gc": 12,
+    "gf": 68,
+    "home": {
+     "e": 2,
+     "g": 6,
+     "j": 8,
+     "p": 0
+    },
+    "j": 15,
+    "p": 1,
+    "pos": 1,
+    "pts": 38,
+    "sanction": 0,
+    "team": "EURO DE LAJARES, C.D."
+   },
+   {
+    "away": {
+     "e": 4,
+     "g": 4,
+     "j": 8,
+     "p": 0
+    },
+    "codequipo": 60099,
+    "e": 4,
+    "form": "GEGEG",
+    "g": 11,
+    "gc": 11,
+    "gf": 58,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 7,
+     "p": 0
+    },
+    "j": 15,
+    "p": 0,
+    "pos": 2,
+    "pts": 37,
+    "sanction": 0,
+    "team": "TAMARAGUA, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 7,
+     "p": 2
+    },
+    "codequipo": 60070,
+    "e": 3,
+    "form": "GGEPG",
+    "g": 8,
+    "gc": 27,
+    "gf": 42,
+    "home": {
+     "e": 2,
+     "g": 4,
+     "j": 7,
+     "p": 1
+    },
+    "j": 14,
+    "p": 3,
+    "pos": 3,
+    "pts": 27,
+    "sanction": 0,
+    "team": "CORRALEJO A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 7,
+     "p": 2
+    },
+    "codequipo": 60035,
+    "e": 3,
+    "form": "GEGEP",
+    "g": 6,
+    "gc": 41,
+    "gf": 44,
+    "home": {
+     "e": 2,
+     "g": 2,
+     "j": 7,
+     "p": 3
+    },
+    "j": 14,
+    "p": 5,
+    "pos": 4,
+    "pts": 21,
+    "sanction": 0,
+    "team": "VILLAVERDE NORTE, S.D."
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 1,
+     "j": 7,
+     "p": 4
+    },
+    "codequipo": 60417,
+    "e": 3,
+    "form": "PGEGG",
+    "g": 4,
+    "gc": 43,
+    "gf": 32,
+    "home": {
+     "e": 1,
+     "g": 3,
+     "j": 7,
+     "p": 3
+    },
+    "j": 14,
+    "p": 7,
+    "pos": 5,
+    "pts": 15,
+    "sanction": 0,
+    "team": "LA CUADRA-UNION PUERTO DEL ROSARIO, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 1,
+     "j": 7,
+     "p": 5
+    },
+    "codequipo": 60069,
+    "e": 1,
+    "form": "PGPPP",
+    "g": 4,
+    "gc": 49,
+    "gf": 32,
+    "home": {
+     "e": 0,
+     "g": 3,
+     "j": 7,
+     "p": 4
+    },
+    "j": 14,
+    "p": 9,
+    "pos": 6,
+    "pts": 13,
+    "sanction": 0,
+    "team": "CORRALEJO B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 0,
+     "j": 7,
+     "p": 6
+    },
+    "codequipo": 60454,
+    "e": 2,
+    "form": "GPPPG",
+    "g": 1,
+    "gc": 65,
+    "gf": 15,
+    "home": {
+     "e": 1,
+     "g": 1,
+     "j": 7,
+     "p": 5
+    },
+    "j": 14,
+    "p": 11,
+    "pos": 7,
+    "pts": 5,
+    "sanction": 0,
+    "team": "COTILLO, C.D. EL"
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 0,
+     "j": 7,
+     "p": 6
+    },
+    "codequipo": 60420,
+    "e": 4,
+    "form": "PPPGP",
+    "g": 0,
+    "gc": 60,
+    "gf": 17,
+    "home": {
+     "e": 3,
+     "g": 0,
+     "j": 7,
+     "p": 4
+    },
+    "j": 14,
+    "p": 10,
+    "pos": 8,
+    "pts": 4,
+    "sanction": 0,
+    "team": "OLIVA, C.D. LA"
+   }
+  ],
+  "comp": "1096",
+  "comp_name": "LIGA BENJAMIN F-8 FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60420,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015742_ESCUDO_CD_LA_OLIVA.png",
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "OLIVA, C.D. LA",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60417,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "LA CUADRA-UNION PUERTO DEL ROSARIO, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60069,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "CORRALEJO B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60071,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "CORRALEJO C, C.D. \"C\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60099,
+    "crest": null,
+    "shirt": "ROJO Y BLANCO RAYADO",
+    "shorts": "NEGRO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "TAMARAGUA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60035,
+    "crest": null,
+    "shirt": "BLANCA / VERDE RAYAS",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "VILLAVERDE NORTE, S.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60454,
+    "crest": "/pnfg/pimg/Clubes/00100_0000087575_ESCUDO_1.png",
+    "shirt": "CELESTE",
+    "shorts": "BLANCO",
+    "socks": "CELESTES",
+    "surface": null,
+    "team": "COTILLO, C.D. EL",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60070,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "CORRALEJO A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60077,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000432_ESCUDO.jpg",
+    "shirt": "BLANCA Y AZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "EURO DE LAJARES, C.D.",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "144153",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1096:144243": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 9,
+     "j": 9,
+     "p": 0
+    },
+    "codequipo": 60113,
+    "e": 0,
+    "form": "GGGPG",
+    "g": 17,
+    "gc": 36,
+    "gf": 111,
+    "home": {
+     "e": 0,
+     "g": 8,
+     "j": 9,
+     "p": 1
+    },
+    "j": 18,
+    "p": 1,
+    "pos": 1,
+    "pts": 51,
+    "sanction": 0,
+    "team": "35600,A C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 8,
+     "j": 9,
+     "p": 1
+    },
+    "codequipo": 60368,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 16,
+    "gc": 60,
+    "gf": 113,
+    "home": {
+     "e": 0,
+     "g": 8,
+     "j": 9,
+     "p": 1
+    },
+    "j": 18,
+    "p": 2,
+    "pos": 2,
+    "pts": 48,
+    "sanction": 0,
+    "team": "HERBANIA B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 7,
+     "j": 9,
+     "p": 2
+    },
+    "codequipo": 61548,
+    "e": 1,
+    "form": "GGEGP",
+    "g": 13,
+    "gc": 38,
+    "gf": 117,
+    "home": {
+     "e": 1,
+     "g": 6,
+     "j": 9,
+     "p": 2
+    },
+    "j": 18,
+    "p": 4,
+    "pos": 3,
+    "pts": 40,
+    "sanction": 0,
+    "team": "PEÑA DE LA AMISTAD A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 5,
+     "j": 9,
+     "p": 2
+    },
+    "codequipo": 60001,
+    "e": 2,
+    "form": "GGEGE",
+    "g": 11,
+    "gc": 47,
+    "gf": 92,
+    "home": {
+     "e": 0,
+     "g": 6,
+     "j": 9,
+     "p": 3
+    },
+    "j": 18,
+    "p": 5,
+    "pos": 4,
+    "pts": 35,
+    "sanction": 0,
+    "team": "HERBANIA A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 5,
+     "j": 9,
+     "p": 4
+    },
+    "codequipo": 60105,
+    "e": 1,
+    "form": "PGGGE",
+    "g": 11,
+    "gc": 38,
+    "gf": 86,
+    "home": {
+     "e": 1,
+     "g": 6,
+     "j": 9,
+     "p": 2
+    },
+    "j": 18,
+    "p": 6,
+    "pos": 5,
+    "pts": 34,
+    "sanction": 0,
+    "team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 9,
+     "p": 7
+    },
+    "codequipo": 60114,
+    "e": 1,
+    "form": "GPPPG",
+    "g": 5,
+    "gc": 108,
+    "gf": 54,
+    "home": {
+     "e": 1,
+     "g": 3,
+     "j": 9,
+     "p": 5
+    },
+    "j": 18,
+    "p": 12,
+    "pos": 6,
+    "pts": 16,
+    "sanction": 0,
+    "team": "35600 B, CD \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 9,
+     "p": 5
+    },
+    "codequipo": 60097,
+    "e": 1,
+    "form": "PPGPG",
+    "g": 5,
+    "gc": 69,
+    "gf": 39,
+    "home": {
+     "e": 0,
+     "g": 2,
+     "j": 9,
+     "p": 7
+    },
+    "j": 18,
+    "p": 12,
+    "pos": 7,
+    "pts": 16,
+    "sanction": 0,
+    "team": "HENEQUEN FUE. F.C., C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 9,
+     "p": 7
+    },
+    "codequipo": 60049,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 5,
+    "gc": 78,
+    "gf": 52,
+    "home": {
+     "e": 0,
+     "g": 3,
+     "j": 9,
+     "p": 6
+    },
+    "j": 18,
+    "p": 13,
+    "pos": 8,
+    "pts": 15,
+    "sanction": 0,
+    "team": "TETIR C.F., UNION"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 9,
+     "p": 8
+    },
+    "codequipo": 62018,
+    "e": 0,
+    "form": "PPPGP",
+    "g": 4,
+    "gc": 115,
+    "gf": 39,
+    "home": {
+     "e": 0,
+     "g": 3,
+     "j": 9,
+     "p": 6
+    },
+    "j": 18,
+    "p": 14,
+    "pos": 9,
+    "pts": 12,
+    "sanction": 0,
+    "team": "CHARCO ATLETICO, C.D. EL"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 9,
+     "p": 9
+    },
+    "codequipo": 61875,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 0,
+    "gc": 157,
+    "gf": 43,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 9,
+     "p": 9
+    },
+    "j": 18,
+    "p": 18,
+    "pos": 10,
+    "pts": 0,
+    "sanction": 0,
+    "team": "PEÑA DE LA AMISTAD B, C.D. \"B\""
+   }
+  ],
+  "comp": "1096",
+  "comp_name": "LIGA BENJAMIN F-8 FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60001,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "HERBANIA A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61548,
+    "crest": null,
+    "shirt": "NEGRA/BLANCA RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "PEÑA DE LA AMISTAD A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60049,
+    "crest": "/pnfg/pimg/Clubes/00100_0000077663_Escudo___copia.jpg",
+    "shirt": "AZUL",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "TETIR C.F., UNION",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60097,
+    "crest": null,
+    "shirt": "NEGRO",
+    "shorts": "NEGRO",
+    "socks": "NEGRA /AMARILLA RAYAS",
+    "surface": null,
+    "team": "HENEQUEN FUE. F.C., C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60113,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+    "shirt": "VIOLETA",
+    "shorts": "VIOLETA",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "35600,A C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60368,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "HERBANIA B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61875,
+    "crest": null,
+    "shirt": "NEGRA/BLANCA RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "PEÑA DE LA AMISTAD B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62018,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010776_charco.png",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "CHARCO ATLETICO, C.D. EL",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60105,
+    "crest": null,
+    "shirt": "BLANCA/AZUL RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60114,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+    "shirt": "VIOLETA",
+    "shorts": "VIOLETA",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "35600 B, CD \"B\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "144243",
+  "grupo_name": "GRUPO 2",
+  "ok": true
+ },
+ "1096:144450": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 8,
+     "j": 8,
+     "p": 0
+    },
+    "codequipo": 60085,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 15,
+    "gc": 22,
+    "gf": 126,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 8,
+     "p": 1
+    },
+    "j": 16,
+    "p": 1,
+    "pos": 1,
+    "pts": 45,
+    "sanction": 0,
+    "team": "PLAYAS DE SOTAVENTO A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 8,
+     "j": 8,
+     "p": 0
+    },
+    "codequipo": 60092,
+    "e": 0,
+    "form": "GPGGG",
+    "g": 15,
+    "gc": 15,
+    "gf": 96,
+    "home": {
+     "e": 0,
+     "g": 7,
+     "j": 8,
+     "p": 1
+    },
+    "j": 16,
+    "p": 1,
+    "pos": 2,
+    "pts": 45,
+    "sanction": 0,
+    "team": "EUROPEAN F.U., CD"
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 5,
+     "j": 8,
+     "p": 2
+    },
+    "codequipo": 62080,
+    "e": 2,
+    "form": "GPGGP",
+    "g": 10,
+    "gc": 28,
+    "gf": 105,
+    "home": {
+     "e": 1,
+     "g": 5,
+     "j": 8,
+     "p": 2
+    },
+    "j": 16,
+    "p": 4,
+    "pos": 3,
+    "pts": 32,
+    "sanction": 0,
+    "team": "BREÑAMEN B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 4,
+     "j": 8,
+     "p": 3
+    },
+    "codequipo": 61663,
+    "e": 3,
+    "form": "PPGGG",
+    "g": 8,
+    "gc": 40,
+    "gf": 79,
+    "home": {
+     "e": 2,
+     "g": 4,
+     "j": 8,
+     "p": 2
+    },
+    "j": 16,
+    "p": 5,
+    "pos": 4,
+    "pts": 27,
+    "sanction": 0,
+    "team": "BREÑAMEN A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 8,
+     "p": 2
+    },
+    "codequipo": 61572,
+    "e": 2,
+    "form": "GGPPG",
+    "g": 8,
+    "gc": 62,
+    "gf": 94,
+    "home": {
+     "e": 0,
+     "g": 4,
+     "j": 8,
+     "p": 4
+    },
+    "j": 16,
+    "p": 6,
+    "pos": 5,
+    "pts": 26,
+    "sanction": 0,
+    "team": "TARAJALEJO A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 3,
+     "j": 8,
+     "p": 5
+    },
+    "codequipo": 60086,
+    "e": 0,
+    "form": "GPPGG",
+    "g": 6,
+    "gc": 68,
+    "gf": 47,
+    "home": {
+     "e": 0,
+     "g": 3,
+     "j": 8,
+     "p": 5
+    },
+    "j": 16,
+    "p": 10,
+    "pos": 6,
+    "pts": 18,
+    "sanction": 0,
+    "team": "PLAYAS DE SOTAVENTO B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 8,
+     "p": 6
+    },
+    "codequipo": 60018,
+    "e": 2,
+    "form": "GPPPP",
+    "g": 3,
+    "gc": 99,
+    "gf": 44,
+    "home": {
+     "e": 2,
+     "g": 1,
+     "j": 8,
+     "p": 5
+    },
+    "j": 16,
+    "p": 11,
+    "pos": 7,
+    "pts": 11,
+    "sanction": 0,
+    "team": "GRAN TARAJAL SOC. TAMAS., U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 0,
+     "j": 8,
+     "p": 7
+    },
+    "codequipo": 62091,
+    "e": 1,
+    "form": "PPPPP",
+    "g": 1,
+    "gc": 133,
+    "gf": 28,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 8,
+     "p": 7
+    },
+    "j": 16,
+    "p": 14,
+    "pos": 8,
+    "pts": 4,
+    "sanction": 0,
+    "team": "TARAJALEJO B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 8,
+     "p": 8
+    },
+    "codequipo": 62040,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 1,
+    "gc": 164,
+    "gf": 12,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 8,
+     "p": 7
+    },
+    "j": 16,
+    "p": 15,
+    "pos": 9,
+    "pts": 3,
+    "sanction": 0,
+    "team": "TAMASITE, C.D."
+   }
+  ],
+  "comp": "1096",
+  "comp_name": "LIGA BENJAMIN F-8 FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60018,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "NEGRO",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "GRAN TARAJAL SOC. TAMAS., U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62091,
+    "crest": null,
+    "shirt": "AZUL / BLANCA",
+    "shorts": "AZUL",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "TARAJALEJO B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60086,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "",
+    "surface": null,
+    "team": "PLAYAS DE SOTAVENTO B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60092,
+    "crest": "/pnfg/pimg/Clubes/00100_0000097954_foto_escudo_1.jpg",
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "EUROPEAN F.U., CD",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62080,
+    "crest": "/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NARANJA",
+    "surface": null,
+    "team": "BREÑAMEN B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61572,
+    "crest": null,
+    "shirt": "AZUL / BLANCA",
+    "shorts": "AZUL",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "TARAJALEJO A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60085,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "",
+    "surface": null,
+    "team": "PLAYAS DE SOTAVENTO A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62040,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "TAMASITE, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61663,
+    "crest": "/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NARANJA",
+    "surface": null,
+    "team": "BREÑAMEN A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "144450",
+  "grupo_name": "GRUPO 3",
+  "ok": true
+ },
+ "1097:148701": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 1,
+     "g": 1,
+     "j": 2,
+     "p": 0
+    },
+    "codequipo": 60035,
+    "e": 1,
+    "form": "GGGEG",
+    "g": 4,
+    "gc": 10,
+    "gf": 26,
+    "home": {
+     "e": 0,
+     "g": 3,
+     "j": 3,
+     "p": 0
+    },
+    "j": 5,
+    "p": 0,
+    "pos": 1,
+    "pts": 13,
+    "sanction": 0,
+    "team": "VILLAVERDE NORTE, S.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 3,
+     "p": 1
+    },
+    "codequipo": 60097,
+    "e": 1,
+    "form": "GGPEG",
+    "g": 3,
+    "gc": 13,
+    "gf": 18,
+    "home": {
+     "e": 1,
+     "g": 1,
+     "j": 2,
+     "p": 0
+    },
+    "j": 5,
+    "p": 1,
+    "pos": 2,
+    "pts": 10,
+    "sanction": 0,
+    "team": "HENEQUEN FUE. F.C., C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 2,
+     "p": 2
+    },
+    "codequipo": 60114,
+    "e": 0,
+    "form": "PPGPG",
+    "g": 2,
+    "gc": 16,
+    "gf": 18,
+    "home": {
+     "e": 0,
+     "g": 2,
+     "j": 3,
+     "p": 1
+    },
+    "j": 5,
+    "p": 3,
+    "pos": 3,
+    "pts": 6,
+    "sanction": 0,
+    "team": "35600 B, CD \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 3,
+     "p": 2
+    },
+    "codequipo": 60420,
+    "e": 0,
+    "form": "GGPPP",
+    "g": 2,
+    "gc": 18,
+    "gf": 14,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 2,
+     "p": 1
+    },
+    "j": 5,
+    "p": 3,
+    "pos": 4,
+    "pts": 6,
+    "sanction": 0,
+    "team": "OLIVA, C.D. LA"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 2,
+     "p": 2
+    },
+    "codequipo": 60454,
+    "e": 0,
+    "form": "PPGGP",
+    "g": 2,
+    "gc": 21,
+    "gf": 14,
+    "home": {
+     "e": 0,
+     "g": 2,
+     "j": 3,
+     "p": 1
+    },
+    "j": 5,
+    "p": 3,
+    "pos": 5,
+    "pts": 6,
+    "sanction": 0,
+    "team": "COTILLO, C.D. EL"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 3,
+     "p": 3
+    },
+    "codequipo": 60069,
+    "e": 0,
+    "form": "PPPGP",
+    "g": 1,
+    "gc": 21,
+    "gf": 9,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 2,
+     "p": 1
+    },
+    "j": 5,
+    "p": 4,
+    "pos": 6,
+    "pts": 3,
+    "sanction": 0,
+    "team": "CORRALEJO B, C.D. \"B\""
+   }
+  ],
+  "comp": "1097",
+  "comp_name": "COPA BENJAMIN F-8 FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60420,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015742_ESCUDO_CD_LA_OLIVA.png",
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "OLIVA, C.D. LA",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60454,
+    "crest": "/pnfg/pimg/Clubes/00100_0000087575_ESCUDO_1.png",
+    "shirt": "CELESTE",
+    "shorts": "BLANCO",
+    "socks": "CELESTES",
+    "surface": null,
+    "team": "COTILLO, C.D. EL",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60097,
+    "crest": null,
+    "shirt": "NEGRO",
+    "shorts": "NEGRO",
+    "socks": "NEGRA /AMARILLA RAYAS",
+    "surface": null,
+    "team": "HENEQUEN FUE. F.C., C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60035,
+    "crest": null,
+    "shirt": "BLANCA / VERDE RAYAS",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "VILLAVERDE NORTE, S.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60069,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "CORRALEJO B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60114,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+    "shirt": "VIOLETA",
+    "shorts": "VIOLETA",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "35600 B, CD \"B\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "148701",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1097:148716": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 3,
+     "j": 3,
+     "p": 0
+    },
+    "codequipo": 60001,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 5,
+    "gc": 5,
+    "gf": 34,
+    "home": {
+     "e": 0,
+     "g": 2,
+     "j": 2,
+     "p": 0
+    },
+    "j": 5,
+    "p": 0,
+    "pos": 1,
+    "pts": 15,
+    "sanction": 0,
+    "team": "HERBANIA A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 2,
+     "p": 1
+    },
+    "codequipo": 60105,
+    "e": 1,
+    "form": "GGEPG",
+    "g": 3,
+    "gc": 9,
+    "gf": 25,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 3,
+     "p": 0
+    },
+    "j": 5,
+    "p": 1,
+    "pos": 2,
+    "pts": 10,
+    "sanction": 0,
+    "team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO"
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 3,
+     "p": 0
+    },
+    "codequipo": 60049,
+    "e": 1,
+    "form": "GPEGP",
+    "g": 2,
+    "gc": 10,
+    "gf": 10,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 2,
+     "p": 2
+    },
+    "j": 5,
+    "p": 2,
+    "pos": 3,
+    "pts": 7,
+    "sanction": 0,
+    "team": "TETIR C.F., UNION"
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 1,
+     "j": 2,
+     "p": 0
+    },
+    "codequipo": 60417,
+    "e": 1,
+    "form": "PGPEG",
+    "g": 2,
+    "gc": 16,
+    "gf": 13,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 3,
+     "p": 2
+    },
+    "j": 5,
+    "p": 2,
+    "pos": 4,
+    "pts": 7,
+    "sanction": 0,
+    "team": "LA CUADRA-UNION PUERTO DEL ROSARIO, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 2,
+     "p": 2
+    },
+    "codequipo": 61875,
+    "e": 0,
+    "form": "PPGPP",
+    "g": 1,
+    "gc": 37,
+    "gf": 10,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 3,
+     "p": 2
+    },
+    "j": 5,
+    "p": 4,
+    "pos": 5,
+    "pts": 3,
+    "sanction": 0,
+    "team": "PEÑA DE LA AMISTAD B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 3,
+     "p": 3
+    },
+    "codequipo": 62018,
+    "e": 1,
+    "form": "PPPEP",
+    "g": 0,
+    "gc": 20,
+    "gf": 5,
+    "home": {
+     "e": 1,
+     "g": 0,
+     "j": 2,
+     "p": 1
+    },
+    "j": 5,
+    "p": 4,
+    "pos": 6,
+    "pts": 1,
+    "sanction": 0,
+    "team": "CHARCO ATLETICO, C.D. EL"
+   }
+  ],
+  "comp": "1097",
+  "comp_name": "COPA BENJAMIN F-8 FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60001,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "HERBANIA A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60417,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "LA CUADRA-UNION PUERTO DEL ROSARIO, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62018,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010776_charco.png",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "CHARCO ATLETICO, C.D. EL",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61875,
+    "crest": null,
+    "shirt": "NEGRA/BLANCA RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "PEÑA DE LA AMISTAD B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60049,
+    "crest": "/pnfg/pimg/Clubes/00100_0000077663_Escudo___copia.jpg",
+    "shirt": "AZUL",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": null,
+    "team": "TETIR C.F., UNION",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60105,
+    "crest": null,
+    "shirt": "BLANCA/AZUL RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "148716",
+  "grupo_name": "GRUPO 2",
+  "ok": true
+ },
+ "1097:148731": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 2,
+     "p": 0
+    },
+    "codequipo": 61663,
+    "e": 1,
+    "form": "GGEGG",
+    "g": 4,
+    "gc": 8,
+    "gf": 49,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 3,
+     "p": 0
+    },
+    "j": 5,
+    "p": 0,
+    "pos": 1,
+    "pts": 13,
+    "sanction": 0,
+    "team": "BREÑAMEN A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 3,
+     "p": 0
+    },
+    "codequipo": 61572,
+    "e": 2,
+    "form": "GEEGG",
+    "g": 3,
+    "gc": 11,
+    "gf": 36,
+    "home": {
+     "e": 1,
+     "g": 1,
+     "j": 2,
+     "p": 0
+    },
+    "j": 5,
+    "p": 0,
+    "pos": 2,
+    "pts": 11,
+    "sanction": 0,
+    "team": "TARAJALEJO A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 3,
+     "p": 0
+    },
+    "codequipo": 60086,
+    "e": 1,
+    "form": "GEGPG",
+    "g": 3,
+    "gc": 11,
+    "gf": 20,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 2,
+     "p": 1
+    },
+    "j": 5,
+    "p": 1,
+    "pos": 3,
+    "pts": 10,
+    "sanction": 0,
+    "team": "PLAYAS DE SOTAVENTO B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 3,
+     "p": 1
+    },
+    "codequipo": 60018,
+    "e": 0,
+    "form": "PPGGP",
+    "g": 2,
+    "gc": 20,
+    "gf": 24,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 2,
+     "p": 2
+    },
+    "j": 5,
+    "p": 3,
+    "pos": 4,
+    "pts": 6,
+    "sanction": 0,
+    "team": "GRAN TARAJAL SOC. TAMAS., U.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 2,
+     "p": 2
+    },
+    "codequipo": 62091,
+    "e": 0,
+    "form": "PGPPP",
+    "g": 1,
+    "gc": 42,
+    "gf": 8,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 3,
+     "p": 2
+    },
+    "j": 5,
+    "p": 4,
+    "pos": 5,
+    "pts": 3,
+    "sanction": 0,
+    "team": "TARAJALEJO B, U.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 2,
+     "p": 2
+    },
+    "codequipo": 62040,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 0,
+    "gc": 48,
+    "gf": 3,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 3,
+     "p": 3
+    },
+    "j": 5,
+    "p": 5,
+    "pos": 6,
+    "pts": 0,
+    "sanction": 0,
+    "team": "TAMASITE, C.D."
+   }
+  ],
+  "comp": "1097",
+  "comp_name": "COPA BENJAMIN F-8 FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60018,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "NEGRO",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "GRAN TARAJAL SOC. TAMAS., U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62091,
+    "crest": null,
+    "shirt": "AZUL / BLANCA",
+    "shorts": "AZUL",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "TARAJALEJO B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62040,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "TAMASITE, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61572,
+    "crest": null,
+    "shirt": "AZUL / BLANCA",
+    "shorts": "AZUL",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "TARAJALEJO A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60086,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "",
+    "surface": null,
+    "team": "PLAYAS DE SOTAVENTO B, U.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61663,
+    "crest": "/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NARANJA",
+    "surface": null,
+    "team": "BREÑAMEN A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "148731",
+  "grupo_name": "GRUPO 3",
+  "ok": true
+ },
+ "1098:146436": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 16,
+     "j": 16,
+     "p": 0
+    },
+    "codequipo": 48959,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 32,
+    "gc": 31,
+    "gf": 174,
+    "home": {
+     "e": 0,
+     "g": 16,
+     "j": 16,
+     "p": 0
+    },
+    "j": 32,
+    "p": 0,
+    "pos": 1,
+    "pts": 96,
+    "sanction": 0,
+    "team": "TAMARACEITE, U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 10,
+     "j": 16,
+     "p": 5
+    },
+    "codequipo": 53708,
+    "e": 2,
+    "form": "GGGGP",
+    "g": 24,
+    "gc": 50,
+    "gf": 122,
+    "home": {
+     "e": 1,
+     "g": 14,
+     "j": 16,
+     "p": 1
+    },
+    "j": 32,
+    "p": 6,
+    "pos": 2,
+    "pts": 74,
+    "sanction": 0,
+    "team": "VALLESECO, U.D."
+   },
+   {
+    "away": {
+     "e": 4,
+     "g": 10,
+     "j": 16,
+     "p": 2
+    },
+    "codequipo": 42599,
+    "e": 6,
+    "form": "EGPGG",
+    "g": 22,
+    "gc": 64,
+    "gf": 154,
+    "home": {
+     "e": 2,
+     "g": 12,
+     "j": 16,
+     "p": 2
+    },
+    "j": 32,
+    "p": 4,
+    "pos": 3,
+    "pts": 72,
+    "sanction": 0,
+    "team": "ROQUE AMAGRO-ALUVIDRIO, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 10,
+     "j": 16,
+     "p": 5
+    },
+    "codequipo": 42609,
+    "e": 4,
+    "form": "PEPGG",
+    "g": 21,
+    "gc": 73,
+    "gf": 144,
+    "home": {
+     "e": 3,
+     "g": 11,
+     "j": 16,
+     "p": 2
+    },
+    "j": 32,
+    "p": 7,
+    "pos": 4,
+    "pts": 67,
+    "sanction": 0,
+    "team": "BARRIAL A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 8,
+     "j": 16,
+     "p": 6
+    },
+    "codequipo": 61997,
+    "e": 4,
+    "form": "EPPGG",
+    "g": 18,
+    "gc": 63,
+    "gf": 106,
+    "home": {
+     "e": 2,
+     "g": 10,
+     "j": 16,
+     "p": 4
+    },
+    "j": 32,
+    "p": 10,
+    "pos": 5,
+    "pts": 58,
+    "sanction": 0,
+    "team": "PANADERIA PULIDO SAN MATEO, C.F."
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 6,
+     "j": 16,
+     "p": 8
+    },
+    "codequipo": 61780,
+    "e": 3,
+    "form": "GGGPG",
+    "g": 17,
+    "gc": 78,
+    "gf": 94,
+    "home": {
+     "e": 1,
+     "g": 11,
+     "j": 16,
+     "p": 4
+    },
+    "j": 32,
+    "p": 12,
+    "pos": 6,
+    "pts": 54,
+    "sanction": 0,
+    "team": "GALDARCLUBS JACOBEO 21-22, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 9,
+     "j": 16,
+     "p": 6
+    },
+    "codequipo": 47292,
+    "e": 4,
+    "form": "GEGGG",
+    "g": 16,
+    "gc": 91,
+    "gf": 103,
+    "home": {
+     "e": 3,
+     "g": 7,
+     "j": 16,
+     "p": 6
+    },
+    "j": 32,
+    "p": 12,
+    "pos": 7,
+    "pts": 52,
+    "sanction": 0,
+    "team": "ARUCAS C.F. A \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 7,
+     "j": 16,
+     "p": 7
+    },
+    "codequipo": 51996,
+    "e": 3,
+    "form": "PGGPG",
+    "g": 16,
+    "gc": 74,
+    "gf": 103,
+    "home": {
+     "e": 1,
+     "g": 9,
+     "j": 16,
+     "p": 6
+    },
+    "j": 32,
+    "p": 13,
+    "pos": 8,
+    "pts": 51,
+    "sanction": 0,
+    "team": "GUAYARMINA, C.D."
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 5,
+     "j": 16,
+     "p": 8
+    },
+    "codequipo": 47150,
+    "e": 4,
+    "form": "GGPPP",
+    "g": 14,
+    "gc": 90,
+    "gf": 90,
+    "home": {
+     "e": 1,
+     "g": 9,
+     "j": 16,
+     "p": 6
+    },
+    "j": 32,
+    "p": 14,
+    "pos": 9,
+    "pts": 46,
+    "sanction": 0,
+    "team": "MOYA, U.D."
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 7,
+     "j": 16,
+     "p": 7
+    },
+    "codequipo": 48874,
+    "e": 6,
+    "form": "PEPGP",
+    "g": 13,
+    "gc": 96,
+    "gf": 88,
+    "home": {
+     "e": 4,
+     "g": 6,
+     "j": 16,
+     "p": 6
+    },
+    "j": 32,
+    "p": 13,
+    "pos": 10,
+    "pts": 45,
+    "sanction": 0,
+    "team": "ACODETTI C.F B \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 6,
+     "j": 16,
+     "p": 9
+    },
+    "codequipo": 48876,
+    "e": 5,
+    "form": "PGPPG",
+    "g": 12,
+    "gc": 97,
+    "gf": 96,
+    "home": {
+     "e": 4,
+     "g": 6,
+     "j": 16,
+     "p": 6
+    },
+    "j": 32,
+    "p": 15,
+    "pos": 11,
+    "pts": 41,
+    "sanction": 0,
+    "team": "ARUCAS C.F. B \"B\""
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 6,
+     "j": 16,
+     "p": 9
+    },
+    "codequipo": 51995,
+    "e": 3,
+    "form": "PPPPP",
+    "g": 11,
+    "gc": 93,
+    "gf": 84,
+    "home": {
+     "e": 2,
+     "g": 5,
+     "j": 16,
+     "p": 9
+    },
+    "j": 32,
+    "p": 18,
+    "pos": 12,
+    "pts": 36,
+    "sanction": 0,
+    "team": "COSTA AYALA, UNION JUVENIL"
+   },
+   {
+    "away": {
+     "e": 6,
+     "g": 2,
+     "j": 16,
+     "p": 8
+    },
+    "codequipo": 47776,
+    "e": 6,
+    "form": "PEGPP",
+    "g": 10,
+    "gc": 93,
+    "gf": 80,
+    "home": {
+     "e": 0,
+     "g": 8,
+     "j": 16,
+     "p": 8
+    },
+    "j": 32,
+    "p": 16,
+    "pos": 13,
+    "pts": 36,
+    "sanction": 0,
+    "team": "PILETAS, A.D. U.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 16,
+     "p": 13
+    },
+    "codequipo": 52083,
+    "e": 2,
+    "form": "PEGPG",
+    "g": 10,
+    "gc": 134,
+    "gf": 79,
+    "home": {
+     "e": 1,
+     "g": 8,
+     "j": 16,
+     "p": 7
+    },
+    "j": 32,
+    "p": 20,
+    "pos": 14,
+    "pts": 32,
+    "sanction": 0,
+    "team": "CARDONES, C.D."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 2,
+     "j": 16,
+     "p": 13
+    },
+    "codequipo": 47231,
+    "e": 3,
+    "form": "GEPGP",
+    "g": 5,
+    "gc": 99,
+    "gf": 36,
+    "home": {
+     "e": 2,
+     "g": 3,
+     "j": 16,
+     "p": 11
+    },
+    "j": 32,
+    "p": 24,
+    "pos": 15,
+    "pts": 18,
+    "sanction": 0,
+    "team": "BARRIO DEL ATLANTICO, C.F."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 16,
+     "p": 15
+    },
+    "codequipo": 52085,
+    "e": 1,
+    "form": "PGPPP",
+    "g": 3,
+    "gc": 144,
+    "gf": 66,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 16,
+     "p": 13
+    },
+    "j": 32,
+    "p": 28,
+    "pos": 16,
+    "pts": 10,
+    "sanction": 0,
+    "team": "SANTIDAD BANOT, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 16,
+     "p": 16
+    },
+    "codequipo": 55507,
+    "e": 0,
+    "form": "PPPPP",
+    "g": 0,
+    "gc": 263,
+    "gf": 14,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 16,
+     "p": 16
+    },
+    "j": 32,
+    "p": 32,
+    "pos": 17,
+    "pts": 0,
+    "sanction": 0,
+    "team": "BARRIAL ATLETICO, U.D."
+   }
+  ],
+  "comp": "1098",
+  "comp_name": "LIGA PREBENJAMIN DE GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 47292,
+    "crest": "/pnfg/pimg/Clubes/00100_0000160419_nuevo_escudo.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "ARUCAS C.F. A \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52083,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "CARDONES, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 42609,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "BARRIAL A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 48959,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TAMARACEITE, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 53708,
+    "crest": "/pnfg/pimg/Clubes/00100_0000013868_IMG_20250804_WA0022.jpg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "VALLESECO, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 48874,
+    "crest": "/pnfg/pimg/Clubes/00100_0000169100_ESCUDOS_ACF_Y_SCF_PX400.png",
+    "shirt": "NARANJA",
+    "shorts": "BLANCO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "ACODETTI C.F B \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61997,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "PANADERIA PULIDO SAN MATEO, C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52085,
+    "crest": null,
+    "shirt": "BLANCA Y NEGRA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "SANTIDAD BANOT, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61780,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "AMARILLO",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "GALDARCLUBS JACOBEO 21-22, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 48876,
+    "crest": "/pnfg/pimg/Clubes/00100_0000160419_nuevo_escudo.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "ARUCAS C.F. B \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47150,
+    "crest": null,
+    "shirt": "VERDE / BLANCA RAYAS",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "MOYA, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 55507,
+    "crest": null,
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "BARRIAL ATLETICO, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 51995,
+    "crest": "/pnfg/pimg/Clubes/00100_0000126937_logo_l__nea_1.jpg",
+    "shirt": "AMARILLA",
+    "shorts": "AZUL",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "COSTA AYALA, UNION JUVENIL",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47776,
+    "crest": "/pnfg/pimg/Clubes/00100_0000033206_ESCUDO_NUEVO_PILE.jpg",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "PILETAS, A.D. U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47231,
+    "crest": "/pnfg/pimg/Clubes/00100_0000001483_Escudo_Barrio.jpg",
+    "shirt": "AMARILLA/VERDE",
+    "shorts": "VERDE",
+    "socks": "AMARILLAS/VERDES",
+    "surface": null,
+    "team": "BARRIO DEL ATLANTICO, C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 51996,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "GUAYARMINA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 42599,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000149_Logo_Arreglado.png",
+    "shirt": "AMARILLA",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "ROQUE AMAGRO-ALUVIDRIO, C.D.",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "146436",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1098:146742": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 0,
+     "g": 16,
+     "j": 16,
+     "p": 0
+    },
+    "codequipo": 47847,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 32,
+    "gc": 35,
+    "gf": 206,
+    "home": {
+     "e": 0,
+     "g": 16,
+     "j": 16,
+     "p": 0
+    },
+    "j": 32,
+    "p": 0,
+    "pos": 1,
+    "pts": 96,
+    "sanction": 0,
+    "team": "ACODETTI C.F A \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 14,
+     "j": 16,
+     "p": 2
+    },
+    "codequipo": 55378,
+    "e": 0,
+    "form": "GGGGG",
+    "g": 29,
+    "gc": 42,
+    "gf": 192,
+    "home": {
+     "e": 0,
+     "g": 15,
+     "j": 16,
+     "p": 1
+    },
+    "j": 32,
+    "p": 3,
+    "pos": 2,
+    "pts": 87,
+    "sanction": 0,
+    "team": "MASPA TRAINING, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 12,
+     "j": 16,
+     "p": 4
+    },
+    "codequipo": 47225,
+    "e": 0,
+    "form": "GPGGP",
+    "g": 26,
+    "gc": 64,
+    "gf": 168,
+    "home": {
+     "e": 0,
+     "g": 14,
+     "j": 16,
+     "p": 2
+    },
+    "j": 32,
+    "p": 6,
+    "pos": 3,
+    "pts": 78,
+    "sanction": 0,
+    "team": "ATLETICO HURACAN A, A.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 13,
+     "j": 16,
+     "p": 3
+    },
+    "codequipo": 56374,
+    "e": 1,
+    "form": "GEGGG",
+    "g": 25,
+    "gc": 103,
+    "gf": 208,
+    "home": {
+     "e": 1,
+     "g": 12,
+     "j": 16,
+     "p": 3
+    },
+    "j": 32,
+    "p": 6,
+    "pos": 4,
+    "pts": 76,
+    "sanction": 0,
+    "team": "VETERANOS DEL PILA, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 13,
+     "j": 16,
+     "p": 3
+    },
+    "codequipo": 47167,
+    "e": 5,
+    "form": "GGPGG",
+    "g": 22,
+    "gc": 54,
+    "gf": 150,
+    "home": {
+     "e": 5,
+     "g": 9,
+     "j": 16,
+     "p": 2
+    },
+    "j": 32,
+    "p": 5,
+    "pos": 5,
+    "pts": 71,
+    "sanction": 0,
+    "team": "UNION VIERA, C.F."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 10,
+     "j": 16,
+     "p": 5
+    },
+    "codequipo": 61996,
+    "e": 4,
+    "form": "GGGPG",
+    "g": 17,
+    "gc": 95,
+    "gf": 106,
+    "home": {
+     "e": 3,
+     "g": 7,
+     "j": 16,
+     "p": 6
+    },
+    "j": 32,
+    "p": 11,
+    "pos": 6,
+    "pts": 55,
+    "sanction": 0,
+    "team": "BALOS, U.D."
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 8,
+     "j": 16,
+     "p": 5
+    },
+    "codequipo": 48875,
+    "e": 3,
+    "form": "GGGGP",
+    "g": 17,
+    "gc": 98,
+    "gf": 101,
+    "home": {
+     "e": 0,
+     "g": 9,
+     "j": 16,
+     "p": 7
+    },
+    "j": 32,
+    "p": 12,
+    "pos": 7,
+    "pts": 54,
+    "sanction": 0,
+    "team": "VICTORIA, REAL CLUB"
+   },
+   {
+    "away": {
+     "e": 4,
+     "g": 6,
+     "j": 16,
+     "p": 6
+    },
+    "codequipo": 51998,
+    "e": 5,
+    "form": "EGGPG",
+    "g": 16,
+    "gc": 109,
+    "gf": 124,
+    "home": {
+     "e": 1,
+     "g": 10,
+     "j": 16,
+     "p": 5
+    },
+    "j": 32,
+    "p": 11,
+    "pos": 8,
+    "pts": 53,
+    "sanction": 0,
+    "team": "LOMO BLANCO, C.D."
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 7,
+     "j": 16,
+     "p": 6
+    },
+    "codequipo": 48880,
+    "e": 3,
+    "form": "GEPPP",
+    "g": 16,
+    "gc": 88,
+    "gf": 103,
+    "home": {
+     "e": 0,
+     "g": 9,
+     "j": 16,
+     "p": 7
+    },
+    "j": 32,
+    "p": 13,
+    "pos": 9,
+    "pts": 51,
+    "sanction": 0,
+    "team": "CARRIZAL, C.F. UNION"
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 7,
+     "j": 16,
+     "p": 9
+    },
+    "codequipo": 60826,
+    "e": 1,
+    "form": "PGPPP",
+    "g": 13,
+    "gc": 139,
+    "gf": 114,
+    "home": {
+     "e": 1,
+     "g": 6,
+     "j": 16,
+     "p": 9
+    },
+    "j": 32,
+    "p": 18,
+    "pos": 10,
+    "pts": 40,
+    "sanction": 0,
+    "team": "DORAMAS A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 3,
+     "g": 4,
+     "j": 16,
+     "p": 9
+    },
+    "codequipo": 61955,
+    "e": 4,
+    "form": "EPPGG",
+    "g": 8,
+    "gc": 111,
+    "gf": 66,
+    "home": {
+     "e": 1,
+     "g": 4,
+     "j": 16,
+     "p": 11
+    },
+    "j": 32,
+    "p": 20,
+    "pos": 11,
+    "pts": 28,
+    "sanction": 0,
+    "team": "SAN PEDRO MARTIR, C.D."
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 3,
+     "j": 16,
+     "p": 11
+    },
+    "codequipo": 51997,
+    "e": 3,
+    "form": "PPPGP",
+    "g": 8,
+    "gc": 102,
+    "gf": 62,
+    "home": {
+     "e": 1,
+     "g": 5,
+     "j": 16,
+     "p": 10
+    },
+    "j": 32,
+    "p": 21,
+    "pos": 12,
+    "pts": 27,
+    "sanction": 0,
+    "team": "HUESAS, U.D. LAS"
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 4,
+     "j": 16,
+     "p": 10
+    },
+    "codequipo": 58923,
+    "e": 4,
+    "form": "PGPPG",
+    "g": 7,
+    "gc": 114,
+    "gf": 68,
+    "home": {
+     "e": 2,
+     "g": 3,
+     "j": 16,
+     "p": 11
+    },
+    "j": 32,
+    "p": 21,
+    "pos": 13,
+    "pts": 25,
+    "sanction": 0,
+    "team": "TABLERO, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 4,
+     "j": 16,
+     "p": 12
+    },
+    "codequipo": 52112,
+    "e": 2,
+    "form": "PPGPG",
+    "g": 6,
+    "gc": 176,
+    "gf": 68,
+    "home": {
+     "e": 2,
+     "g": 2,
+     "j": 16,
+     "p": 12
+    },
+    "j": 32,
+    "p": 24,
+    "pos": 14,
+    "pts": 20,
+    "sanction": 0,
+    "team": "INGENIO, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 4,
+     "j": 16,
+     "p": 12
+    },
+    "codequipo": 55357,
+    "e": 1,
+    "form": "PPGGP",
+    "g": 6,
+    "gc": 145,
+    "gf": 48,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 16,
+     "p": 13
+    },
+    "j": 32,
+    "p": 25,
+    "pos": 15,
+    "pts": 19,
+    "sanction": 0,
+    "team": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 3,
+     "j": 16,
+     "p": 13
+    },
+    "codequipo": 60319,
+    "e": 1,
+    "form": "PPPPP",
+    "g": 5,
+    "gc": 163,
+    "gf": 47,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 16,
+     "p": 13
+    },
+    "j": 32,
+    "p": 26,
+    "pos": 16,
+    "pts": 16,
+    "sanction": 0,
+    "team": "SIMUSETTI C. F."
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 0,
+     "j": 16,
+     "p": 15
+    },
+    "codequipo": 48869,
+    "e": 1,
+    "form": "PPPPP",
+    "g": 0,
+    "gc": 216,
+    "gf": 23,
+    "home": {
+     "e": 0,
+     "g": 0,
+     "j": 16,
+     "p": 16
+    },
+    "j": 32,
+    "p": 31,
+    "pos": 17,
+    "pts": 1,
+    "sanction": 0,
+    "team": "ARENA FUTBOLTEC, C.D."
+   }
+  ],
+  "comp": "1098",
+  "comp_name": "LIGA PREBENJAMIN DE GRAN CANARIA",
+  "directorio": [
+   {
+    "codequipo": 48880,
+    "crest": "/pnfg/pimg/Clubes/00100_0000017927_InShot_20240702_201510201.png",
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "CARRIZAL, C.F. UNION",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61955,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "SAN PEDRO MARTIR, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 55357,
+    "crest": null,
+    "shirt": "BLANCA/NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "CERRUDA SANTA LUCIA DE TIRAJANA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 48875,
+    "crest": null,
+    "shirt": "BLANCA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "VICTORIA, REAL CLUB",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47167,
+    "crest": "/pnfg/pimg/Clubes/00100_0000001356_UNION_VIERA_1162_CalidadVectorial.png",
+    "shirt": "ROJA / NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "UNION VIERA, C.F.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 51998,
+    "crest": "/pnfg/pimg/Clubes/00100_0000122389_145891.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "LOMO BLANCO, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47148,
+    "crest": null,
+    "shirt": "VERDE/BLANCA FRANJAS",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "MAJORERAS-GUAYADEQUE, C.F. LAS",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 56374,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "VETERANOS DEL PILA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 55378,
+    "crest": null,
+    "shirt": "BLANCA",
+    "shorts": "BLANCO",
+    "socks": "BLANCAS",
+    "surface": null,
+    "team": "MASPA TRAINING, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 52112,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000785_ESCUDO.png",
+    "shirt": "AZUL Y GRANA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "INGENIO, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 58923,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "TABLERO, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60826,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000523_ESCUDO_DORAMAS.jpg",
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "DORAMAS A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61996,
+    "crest": null,
+    "shirt": "VERDE",
+    "shorts": "VERDE",
+    "socks": "VERDES",
+    "surface": null,
+    "team": "BALOS, U.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47225,
+    "crest": null,
+    "shirt": "BLANQUIRROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "ATLETICO HURACAN A, A.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 47847,
+    "crest": "/pnfg/pimg/Clubes/00100_0000169100_ESCUDOS_ACF_Y_SCF_PX400.png",
+    "shirt": "NARANJA",
+    "shorts": "BLANCO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "ACODETTI C.F A \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 51997,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "HUESAS, U.D. LAS",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 48869,
+    "crest": "/pnfg/pimg/Clubes/00100_0000191739_WhatsApp_Image_2026_10_02_at_16.04.46.jpeg",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "ARENA FUTBOLTEC, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60319,
+    "crest": "/pnfg/pimg/Clubes/00100_0000048169_simusetti.jpg",
+    "shirt": "NARANJA",
+    "shorts": "BLANCO",
+    "socks": "NARANJAS",
+    "surface": null,
+    "team": "SIMUSETTI C. F.",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "146742",
+  "grupo_name": "GRUPO 2",
+  "ok": true
+ },
+ "1128:148613": {
+  "clasificacion": [
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 4,
+     "p": 0
+    },
+    "codequipo": 60092,
+    "e": 1,
+    "form": "EGGGG",
+    "g": 7,
+    "gc": 9,
+    "gf": 30,
+    "home": {
+     "e": 0,
+     "g": 4,
+     "j": 4,
+     "p": 0
+    },
+    "j": 8,
+    "p": 0,
+    "pos": 1,
+    "pts": 22,
+    "sanction": 0,
+    "team": "EUROPEAN F.U., CD"
+   },
+   {
+    "away": {
+     "e": 1,
+     "g": 3,
+     "j": 4,
+     "p": 0
+    },
+    "codequipo": 60085,
+    "e": 2,
+    "form": "GEGGE",
+    "g": 5,
+    "gc": 11,
+    "gf": 34,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 4,
+     "p": 1
+    },
+    "j": 8,
+    "p": 1,
+    "pos": 2,
+    "pts": 17,
+    "sanction": 0,
+    "team": "PLAYAS DE SOTAVENTO A, U.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 3,
+     "j": 4,
+     "p": 1
+    },
+    "codequipo": 60113,
+    "e": 1,
+    "form": "PGGPG",
+    "g": 5,
+    "gc": 14,
+    "gf": 20,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 4,
+     "p": 1
+    },
+    "j": 8,
+    "p": 2,
+    "pos": 3,
+    "pts": 16,
+    "sanction": 0,
+    "team": "35600,A C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 2,
+     "j": 4,
+     "p": 2
+    },
+    "codequipo": 62080,
+    "e": 0,
+    "form": "PPGGG",
+    "g": 5,
+    "gc": 19,
+    "gf": 20,
+    "home": {
+     "e": 0,
+     "g": 3,
+     "j": 4,
+     "p": 1
+    },
+    "j": 8,
+    "p": 3,
+    "pos": 4,
+    "pts": 15,
+    "sanction": 0,
+    "team": "BREÑAMEN B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 0,
+     "j": 4,
+     "p": 2
+    },
+    "codequipo": 60368,
+    "e": 3,
+    "form": "PGEEP",
+    "g": 3,
+    "gc": 20,
+    "gf": 24,
+    "home": {
+     "e": 1,
+     "g": 3,
+     "j": 4,
+     "p": 0
+    },
+    "j": 8,
+    "p": 2,
+    "pos": 5,
+    "pts": 12,
+    "sanction": 0,
+    "team": "HERBANIA B, C.D. \"B\""
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 0,
+     "j": 4,
+     "p": 4
+    },
+    "codequipo": 60077,
+    "e": 1,
+    "form": "PPPGP",
+    "g": 2,
+    "gc": 16,
+    "gf": 9,
+    "home": {
+     "e": 1,
+     "g": 2,
+     "j": 4,
+     "p": 1
+    },
+    "j": 8,
+    "p": 5,
+    "pos": 6,
+    "pts": 7,
+    "sanction": 0,
+    "team": "EURO DE LAJARES, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 4,
+     "p": 3
+    },
+    "codequipo": 60099,
+    "e": 0,
+    "form": "PGPPG",
+    "g": 2,
+    "gc": 28,
+    "gf": 17,
+    "home": {
+     "e": 0,
+     "g": 1,
+     "j": 4,
+     "p": 3
+    },
+    "j": 8,
+    "p": 6,
+    "pos": 7,
+    "pts": 6,
+    "sanction": 0,
+    "team": "TAMARAGUA, C.D."
+   },
+   {
+    "away": {
+     "e": 0,
+     "g": 1,
+     "j": 4,
+     "p": 3
+    },
+    "codequipo": 61548,
+    "e": 1,
+    "form": "PGPPP",
+    "g": 1,
+    "gc": 32,
+    "gf": 12,
+    "home": {
+     "e": 1,
+     "g": 0,
+     "j": 4,
+     "p": 3
+    },
+    "j": 8,
+    "p": 6,
+    "pos": 8,
+    "pts": 4,
+    "sanction": 0,
+    "team": "PEÑA DE LA AMISTAD A, C.D. \"A\""
+   },
+   {
+    "away": {
+     "e": 2,
+     "g": 0,
+     "j": 4,
+     "p": 2
+    },
+    "codequipo": 60070,
+    "e": 3,
+    "form": "EEPPP",
+    "g": 0,
+    "gc": 29,
+    "gf": 12,
+    "home": {
+     "e": 1,
+     "g": 0,
+     "j": 4,
+     "p": 3
+    },
+    "j": 8,
+    "p": 5,
+    "pos": 9,
+    "pts": 3,
+    "sanction": 0,
+    "team": "CORRALEJO A, C.D. \"A\""
+   }
+  ],
+  "comp": "1128",
+  "comp_name": "COPA DELEGACION BENJAMIN FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60368,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "HERBANIA B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60070,
+    "crest": null,
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "CORRALEJO A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60085,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "",
+    "surface": null,
+    "team": "PLAYAS DE SOTAVENTO A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60099,
+    "crest": null,
+    "shirt": "ROJO Y BLANCO RAYADO",
+    "shorts": "NEGRO",
+    "socks": "ROJAS",
+    "surface": null,
+    "team": "TAMARAGUA, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 62080,
+    "crest": "/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NARANJA",
+    "surface": null,
+    "team": "BREÑAMEN B, C.D. \"B\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 61548,
+    "crest": null,
+    "shirt": "NEGRA/BLANCA RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "PEÑA DE LA AMISTAD A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60077,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000432_ESCUDO.jpg",
+    "shirt": "BLANCA Y AZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "EURO DE LAJARES, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60092,
+    "crest": "/pnfg/pimg/Clubes/00100_0000097954_foto_escudo_1.jpg",
+    "shirt": "AZUL",
+    "shorts": "AZUL",
+    "socks": "",
+    "surface": null,
+    "team": "EUROPEAN F.U., CD",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60113,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+    "shirt": "VIOLETA",
+    "shorts": "VIOLETA",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "35600,A C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "148613",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1157:148811": {
+  "clasificacion": [],
+  "comp": "1157",
+  "comp_name": "FINAL LIGA PRIMERA BENJAMIN LANZAROTE",
+  "directorio": [
+   {
+    "codequipo": 506,
+    "crest": null,
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": null,
+    "team": "JUVENTUD MARITIMA A, C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 30038,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000570_Escudo_Inter_Playa_Honda.jpg",
+    "shirt": "AZUL / NEGRO",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": null,
+    "team": "INTERNACIONAL PH A \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "148811",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "1165:148893": {
+  "clasificacion": [],
+  "comp": "1165",
+  "comp_name": "FINAL LIGA BENJAMIN FUERTEVENTURA",
+  "directorio": [
+   {
+    "codequipo": 60077,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000432_ESCUDO.jpg",
+    "shirt": "BLANCA Y AZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": null,
+    "team": "EURO DE LAJARES, C.D.",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60113,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+    "shirt": "VIOLETA",
+    "shorts": "VIOLETA",
+    "socks": "AMARILLAS",
+    "surface": null,
+    "team": "35600,A C.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   },
+   {
+    "codequipo": 60085,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015631_IMG_3760.JPG",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "",
+    "surface": null,
+    "team": "PLAYAS DE SOTAVENTO A, U.D. \"A\"",
+    "venue": null,
+    "venue_code": null
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "148893",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "_grupos": {
+  "1014": [
+   [
+    "148896",
+    "GRUPO 1"
+   ]
+  ],
+  "1092": [
+   [
+    "146122",
+    "GRUPO 1"
+   ],
+   [
+    "146304",
+    "GRUPO 2"
+   ]
+  ],
+  "1093": [
+   [
+    "138333",
+    "GRUPO 1"
+   ]
+  ],
+  "1094": [
+   [
+    "144682",
+    "GRUPO 3"
+   ],
+   [
+    "144922",
+    "GRUPO 2"
+   ],
+   [
+    "145162",
+    "GRUPO 4"
+   ],
+   [
+    "145402",
+    "GRUPO 5"
+   ],
+   [
+    "145642",
+    "GRUPO 6"
+   ],
+   [
+    "145882",
+    "GRUPO 1"
+   ]
+  ],
+  "1095": [
+   [
+    "138515",
+    "GRUPO 1"
+   ],
+   [
+    "138647",
+    "GRUPO 2"
+   ]
+  ],
+  "1096": [
+   [
+    "144153",
+    "GRUPO 1"
+   ],
+   [
+    "144243",
+    "GRUPO 2"
+   ],
+   [
+    "144450",
+    "GRUPO 3"
+   ]
+  ],
+  "1097": [
+   [
+    "148701",
+    "GRUPO 1"
+   ],
+   [
+    "148716",
+    "GRUPO 2"
+   ],
+   [
+    "148731",
+    "GRUPO 3"
+   ]
+  ],
+  "1098": [
+   [
+    "146436",
+    "GRUPO 1"
+   ],
+   [
+    "146742",
+    "GRUPO 2"
+   ]
+  ],
+  "1128": [
+   [
+    "148613",
+    "GRUPO 1"
+   ]
+  ],
+  "1157": [
+   [
+    "148811",
+    "GRUPO 1"
+   ]
+  ],
+  "1165": [
+   [
+    "148893",
+    "GRUPO 1"
+   ]
+  ]
+ }
+}

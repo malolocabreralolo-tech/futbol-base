@@ -194,6 +194,11 @@ test('temporada sin cargar, grupo que no existe o sin calendario: nunca una pant
   current.history.PG2 = {};
   const out = render({ g: 'PG2' }, { datasets: datasetsFor({ current }) });
   assert.match(out, /<p class="empty">La fuente todavía no ha publicado el calendario de este grupo\.<\/p>/);
+  // En una temporada cerrada ya no lo publicará (2012-13: el archivo solo guardó las tablas).
+  const past = pastSeasonRaw();
+  past.benjamin.find(g => g.id === 'P1').jornadas = {};
+  const closed = render({ s: '2024-2025', g: 'P1' }, { datasets: datasetsFor({ seasonRaw: { '2024-2025': past } }) });
+  assert.match(closed, /<p class="empty">La fuente no publicó el calendario de este grupo\.<\/p>/);
 });
 
 test('sin g: «Elige un grupo en «Otro grupo».» sin lanzar', () => {

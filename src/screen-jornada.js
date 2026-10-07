@@ -114,7 +114,10 @@ function render(ctx) {
   const head = screenHead('Jornada', { sub, action: otherGroup(s, group) });
   const round = pickRound(group, params.r, today);
   if (!round) {
-    return html`<section data-screen="jornada">${head}${empty('La fuente todavía no ha publicado el calendario de este grupo.')}</section>`;
+    // En una temporada cerrada ya no lo publicará (2012-13: el archivo del portal solo guardó las tablas).
+    const why = s === ctx.portal.season ? 'La fuente todavía no ha publicado el calendario de este grupo.'
+      : 'La fuente no publicó el calendario de este grupo.';
+    return html`<section data-screen="jornada">${head}${empty(why)}</section>`;
   }
   const mine = myTeamIn(group, ctx.myTeam, ctx.resolution);
   const at = group.rounds.indexOf(round);

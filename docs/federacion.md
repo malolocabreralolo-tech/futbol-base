@@ -1,6 +1,6 @@
 # Datos de la federación (FIFLP)
 
-Desde 2026/27 la temporada, las actas, los goleadores y el directorio de campos salen de la web de la Real Federación Interinsular de Fútbol de Las Palmas (www.fiflp.com, plataforma NFG). futbolaspalmas.com se nutre de ella, y en octubre de 2026 no publicaba benjamín ni prebenjamín (ver [temporada-nueva.md](temporada-nueva.md)).
+Desde 2026/27 la temporada, las actas, los goleadores, los directorios de equipos y de campos y el detalle de las clasificaciones salen de la web de la Real Federación Interinsular de Fútbol de Las Palmas (www.fiflp.com, plataforma NFG). futbolaspalmas.com se nutre de ella, y en octubre de 2026 no publicaba benjamín ni prebenjamín (ver [temporada-nueva.md](temporada-nueva.md)).
 
 FIFLP contesta vacío a las IPs domésticas: todo lo que lee la federación corre en GitHub Actions. Lo que se escribe en la base se prueba en local con fixtures reales (`scripts/tests/fixtures/acta_*`, `goleadores_2526_A2.html`, `campos_fiflp_p1.html`).
 
@@ -13,6 +13,8 @@ FIFLP contesta vacío a las IPs domésticas: todo lo que lee la federación corr
 | `NFG_CmpPartido?cod_primaria=1000120&CodActa=N` | Acta: alineaciones (dorsal, titular/suplente, id del jugador), cada gol con marcador parcial, minuto y tipo, árbitro, entrenadores, delegados de campo y de equipo, estadio. |
 | `NFG_CMP_Goleadores?…&codgrupo=G&CodJornada=` | Goleadores del grupo: jugador, equipo, partidos y goles (`38 (1 P)` = 1 de penalti). |
 | `NFG_LstCampos?cod_primaria=1000122&NPcd_Page=N&NPcd_PageLines=100` | Directorio de campos: dirección, localidad, superficie, tipo. |
+| `NFG_LstDirectorioEquipos?cod_primaria=1000117&search=1&Buscar=1&Sch_Cod_Temporada=S&Sch_Codigo_Delegacion=&Sch_Tipo_Juego=&Sch_CodCompeticion=C&Sch_CodGrupo=G` | Directorio de equipos de un grupo (por GET, desde 2015-16): código de cada equipo, escudo, colores de la equipación y su campo (código, nombre y superficie). También trae el contacto del club (persona, dirección y teléfono), que **no se lee**: son datos personales y la base y los raws van a un repositorio público. |
+| `NFG_VisCampos?cod_primaria=1000122&Codigo_Campo=N` | Ficha de un campo: coordenadas (`q=loc:LAT+LON` en `VerMapa()`), dirección, código postal, superficie, instalaciones (vallado, sala antidopaje, despacho arbitral, internet) y equipos que juegan o entrenan allí. |
 
 `probe-fiflp.yml` vuelca cualquier página como artefacto (`gh run download <id> -n probe-fiflp`) y `debug-fiflp-copa.yml -f scores=1` imprime en el log los estilos de cada dígito de un marcador.
 
@@ -60,9 +62,32 @@ Grupos que la base no tiene (`import_fiflp_grupos.py`, también en el bot): un g
 
 Las actas de temporadas pasadas se emparejan con su partido por nombres, fecha y marcador (`acta_reconciler.py`); las que no casan quedan en `scripts/fiflp_actas_unmatched.json`. Una competición completa de benjamín son ~2.500 actas: mejor por grupos, para no cargar la web de la federación.
 
-## Temporadas archivadas (2017-18 a 2020-21)
+## El detalle (desde octubre de 2026)
 
-Las temporadas anteriores a la web (CodTemporada 13 a 16, `ARCHIVE_SEASONS` en `import_fiflp_grupos.py`; la lista es cerrada) entran solas con el bot, sin filas de `seasons` a mano:
+Lo que no traen las actas ni los goleadores, de todas las temporadas (2016-17 a 2026-27), con `detalle-federacion.yml` (`fetch_fiflp_detalle.py`, tandas que se relanzan solas) en `scripts/fiflp_detalle_<S>_raw.json` y `scripts/fiflp_campos_raw.json`. Los lectores son puros (`fiflp_detalle.py`, probados con `scripts/tests/fixtures/detalle/`). El bot los importa (`import_fiflp_detalle.py`), casando cada grupo como los goleadores (URL, grupo creado, actas o equipos) y cada equipo con `team_bridge`:
+
+- `standings_detail`: casa y fuera, últimos resultados, puntos de sanción y código del equipo, de la clasificación. El bot lo pone al día en cada pasada para la temporada en curso (`update_fiflp.add_detail`).
+- `team_seasons`: equipación (camiseta, pantalón, medias), campo y escudo de cada equipo por temporada. Los equipos nuevos de la temporada en curso (una fase nueva) los completa el bot (`update_directorio`).
+- `venue_details`: la ficha de cada campo, con sus coordenadas.
+- El calendario completo de las temporadas sin actas (2016-17 a 2018-19) entra en los grupos sin partidos solo si la temporada está en `CALENDAR_SEASONS`, tras revisarlo en local y poner al día la línea base de `score_deviation.py`.
+
+```bash
+gh workflow run detalle-federacion.yml -f temporadas=22,21,20,19,18,17,16,15,14,13,12 -f jornadas=12,13,14
+```
+
+Actas: además de lo de siempre, el lector guarda todo el cuerpo técnico (`staff.all_home`/`all_away`: «2ºEntrenador», «ENTRENADOR EN PRACTICAS»…) y el código del campo (`header.venue_code`), en `match_staff_all` y `matches.venue_code`; el acta completa el campo y la hora del partido si el calendario no los traía. Un gol del descuento llega como «(60'+1) PEREZ, ANA»: `clean_scorer` quita la marca y `scorer_minute` da 61. Las actas leídas antes se pueden volver a leer sin perder nada (`actas-federacion.yml -f refrescar=true`: la relectura solo sustituye si es igual de buena).
+
+## La app de futbolaspalmas (desde 2026/27)
+
+`fetch_fp_app.py` (en el bot, tras la federación; futbolaspalmas sí contesta desde casa) lee la API de `directo.php`: `get_full_calendar&liga_id=N`, `get_live_data&liga_id=N` (tabla con la equipación de cada equipo, sanciones y qué significa cada puesto) y `get_live_data&liga_id=HOY&fecha_ver=AAAA-MM-DD` (todos los partidos de un día: estado, goleadores con minuto y nombre de pila, hora real, árbitros, técnicos y mapa). `import_fp_app.py` lo guarda en `fp_ligas`, `fp_teams`, `fp_matches` y `fp_goals`, y en las tablas de siempre solo completa: el resultado de un partido finalizado que no lo tiene y la hora que falte; nunca cambia un marcador. Los goles de la app ponen nombre en la cronología a los niños que la federación no publica.
+
+## Torneos
+
+La Maspalomas Cup (no es de la federación) se guarda entera en `tournaments`, `tournament_matches` y `tournament_standings` (`import_torneos.py`, también alevín), además de su `data-maspalomas-cup-<año>.js`.
+
+## Temporadas archivadas (2016-17 a 2020-21)
+
+Las temporadas anteriores a la web (CodTemporada 12 a 16, `ARCHIVE_SEASONS` en `import_fiflp_grupos.py`; la lista es cerrada) entran solas con el bot, sin filas de `seasons` a mano:
 
 - **Alta perezosa.** `import_season` da de alta la temporada (`is_current` 0) junto con su primer grupo, y solo cuando ha terminado la descarga de sus actas (`actas_complete`: raw, índice y `_status.json` con `pending` 0, o una última tanda que no trajo ninguna sin dejar competiciones por enumerar; la regla de `actas-federacion.yml` para pasar a la temporada siguiente). Hasta entonces el bot dice «esperando a que acabe la descarga de sus actas». Si al final no crea ningún grupo, borra la fila. Así nunca hay una temporada vacía (pondría en rojo `test_seasons_have_groups`) ni una que entre mientras se descargan sus actas. Lo que sí puede haber son tablas sin partidos: la federación no publicó las actas de 2018-19 (ninguna) ni las de 2017-18 (cinco, sin aplanar), ni las de Fuerteventura y del prebenjamín de 2020-21, y esa última tanda vacía también cumple `actas_complete`. Esos grupos entran con su clasificación oficial y sin partidos, y la web lo dice: Récords, en una temporada cerrada, «La fuente no publicó los partidos de liga…» con el ataque y la defensa de las tablas (no «aún no se ha jugado»), y una copa con la tabla jugada y sin partidos (la Copa Fuerteventura de 2017-18 y 2018-19, la Copa Gran Canaria prebenjamín) es una liguilla (`groupKind`), con su tabla, y no un cuadro vacío.
 - **Huellas.** Ninguna de las tres `import_changed_*` graba la huella de una temporada que no está en `seasons`, y una archivada que falta se evalúa siempre, sin mirar su huella (las viejas `grupos:2017-2018`… no bloquean). La huella de grupos lleva el nombre de los ficheros, no su ruta, y `IMPORT_VERSION`; la de goleadores, la de `grupos:<S>` (un grupo rehecho que cambia el nombre de un equipo reimporta sus goleadores).
@@ -72,4 +97,4 @@ Las temporadas anteriores a la web (CodTemporada 13 a 16, `ARCHIVE_SEASONS` en `
 - **Goleadores.** La federación no publicó los de 2017-18 ni 2018-19. Los de un equipo retirado (en los goleadores, no en la clasificación) toman el nombre de un equipo de esa temporada con la misma letra o, si no, uno con forma de portal.
 - **Web.** `generate_js.sync_season_files` añade el `data-season-<S>.js` nuevo a `SEASON_FILES` de `sw.js` en la misma pasada que lo publica (sin precachearlo, sin conexión se rompen la Trayectoria y «Ver temporadas anteriores»). La lista de temporadas, el menú de temporada y Explorar («archivo desde …») salen solos.
 
-Para añadir 2015-16 y 2016-17 (CodTemporada 11 y 12): sus nombres en `SEASON_NAME` (`fetch_fiflp_actas.py`) y sus competiciones en `fiflp_comps_catalog.json`; descargar goleadores y actas (`goleadores-federacion.yml -f temporadas=11,12`; `actas-federacion.yml -f temporada=12 -f cola=11`); comprobar en una copia que `meta_by_name` da código a todas sus competiciones (el log no dice «sin código») y revisar los nombres nuevos; y añadirlas a `ARCHIVE_SEASONS`, con sus fases en `phases-archivo.json`.
+2016-17 (CodTemporada 12) se añadió así en octubre de 2026: su nombre en `SEASON_NAME` (`fetch_fiflp_actas.py`) y sus competiciones en `fiflp_comps_catalog.json` (`discover_fiflp_comps.py`); goleadores y actas (`goleadores-federacion.yml -f temporadas=12`; `actas-federacion.yml -f temporada=12`); `meta_by_name` da código a sus 11 competiciones (las mismas que en 2017-18); y `ARCHIVE_SEASONS`, con sus fases en `phases-archivo.json`. 2015-16 (11) no tiene benjamín ni prebenjamín en la federación.

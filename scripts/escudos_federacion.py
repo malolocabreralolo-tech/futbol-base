@@ -11,6 +11,11 @@ de la app) recibe el de la federación: se descarga de laspalmas.filesnovanet.es
 trim_shields.py y se guarda en escudos/fed_<nombre>.png; después, las
 miniaturas y el sello de la caché (build_crests.py).
 
+Desde octubre de 2026, además: el escudo de la ficha de cada equipo (team_seasons.crest_url, del
+directorio de equipos que baja detalle-federacion.yml), solo si su nombre oficial casa con el de la
+base (team_score), y un filial sin escudo toma el de su primer equipo ('Victoria B' el de 'Victoria'),
+como los que ya están en data-shields.js, sin bajar nada.
+
 A mano, como trim_shields.py (el bot no toca escudos/):
     python3 scripts/escudos_federacion.py            # informe
     python3 scripts/escudos_federacion.py --write
@@ -70,6 +75,43 @@ def candidates(conn, folder=ROOT / "scripts"):
                 name = G.scorer_team(fed_name, bridge)
                 if name in group_teams and not has_crest(name, shields, normalized) and name not in out:
                     out[name] = url
+    out.update({name: url for name, url in ficha_candidates(conn, shields, normalized).items() if name not in out})
+    return out
+
+
+FILES_HOST = "https://laspalmas.filesnovanet.es"
+
+
+def ficha_candidates(conn, shields, normalized):
+    """{equipo de la base sin escudo: URL del escudo de su ficha de la federación}: la más reciente, y
+    solo si el nombre oficial de la ficha es el del equipo (team_score ≥ 0,6 o la tabla revisada)."""
+    from fiflp_names import fed_alias, team_key, team_score
+    if not conn.execute("SELECT 1 FROM sqlite_master WHERE name='team_seasons'").fetchone():
+        return {}
+    out = {}
+    for name, fed, url in conn.execute("""SELECT t.name, ts.fiflp_name, ts.crest_url FROM team_seasons ts
+            JOIN teams t ON t.id=ts.team_id JOIN seasons s ON s.id=ts.season_id
+            WHERE ts.crest_url LIKE '/pnfg/pimg/%' ORDER BY s.start_year DESC"""):
+        if name in out or has_crest(name, shields, normalized):
+            continue
+        if fed_alias(fed) == name or team_score(team_key(fed), team_key(name)) >= 0.6:
+            out[name] = FILES_HOST + url
+    return out
+
+
+def filial_crests(conn, shields=None):
+    """{filial sin escudo: el fichero del escudo de su primer equipo} de los equipos con clasificación."""
+    shields = shields if shields is not None else load_shields()
+    normalized = {}
+    for key, file in shields.items():
+        normalized.setdefault(normalize(key), file)
+    out = {}
+    for (name,) in conn.execute("SELECT DISTINCT t.name FROM teams t JOIN standings st ON st.team_id=t.id"):
+        if has_crest(name, shields, normalized):
+            continue
+        m = re.match(r"^(.*\S)\s+[B-F]$", name)
+        if m and has_crest(m.group(1), shields, normalized):
+            out[name] = shields.get(m.group(1)) or normalized[normalize(m.group(1))]
     return out
 
 
@@ -113,6 +155,15 @@ def main(argv=None):
     args = ap.parse_args(argv)
     from db import get_connection
     conn = get_connection()
+    filiales = filial_crests(conn)
+    print(f"{len(filiales)} filiales sin escudo con el de su primer equipo:")
+    for name, file in sorted(filiales.items()):
+        print(f"  {name}: {file}")
+    if args.write and filiales:
+        shields = load_shields()
+        shields.update(filiales)
+        SHIELDS_PATH.write_text("const SHIELDS=" + json.dumps(shields, ensure_ascii=False, separators=(",", ":"))
+                                + ";\n", encoding="utf-8")
     found = candidates(conn)
     print(f"{len(found)} equipos sin escudo con escudo de la federación:")
     for name, url in sorted(found.items()):

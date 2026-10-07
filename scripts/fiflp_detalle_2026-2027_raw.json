@@ -3192,6 +3192,457 @@
   "grupo_name": "GRUPO 24",
   "ok": true
  },
+ "54977017:55194132": {
+  "clasificacion": [],
+  "comp": "54977017",
+  "comp_name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+  "directorio": [
+   {
+    "codequipo": 225,
+    "crest": "/pnfg/pimg/Clubes/00100_0000015742_ESCUDO_CD_LA_OLIVA.png",
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": "Hierba Artificial (HA)",
+    "team": "OLIVA, C.D. LA",
+    "venue": "MUNICIPAL LA OLIVA",
+    "venue_code": 318
+   },
+   {
+    "codequipo": 54470942,
+    "crest": null,
+    "shirt": "BLANCA / VERDE RAYAS",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": "Hierba Artificial (HA)",
+    "team": "VILLAVERDE NORTE, S.D. \"B\"",
+    "venue": "MUNICIPAL VILLAVERDE",
+    "venue_code": 325
+   },
+   {
+    "codequipo": 67557,
+    "crest": "/pnfg/pimg/Clubes/00100_0000083619_CD_Corralejo__2005_.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": "Hierba Artificial (HA)",
+    "team": "CORRALEJO, C.D. \"A\"",
+    "venue": "JONATHAN SESMA F8",
+    "venue_code": 275
+   },
+   {
+    "codequipo": 29557,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000432_ESCUDO.jpg",
+    "shirt": "BLANCA Y AZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "EURO DE LAJARES, C.D.",
+    "venue": "MUNICIPAL LAJARES",
+    "venue_code": 321
+   },
+   {
+    "codequipo": 54567001,
+    "crest": "/pnfg/pimg/Clubes/00100_0000134026_Dise__o_sin_t__tulo__15_.png",
+    "shirt": "ROSA",
+    "shorts": "NEGRO",
+    "socks": "ROSAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "INTER FUERTEVENTURA, C.D.",
+    "venue": "VICENTE CARREÑO",
+    "venue_code": 406
+   },
+   {
+    "codequipo": 27826,
+    "crest": null,
+    "shirt": "BLANCA / VERDE RAYAS",
+    "shorts": "BLANCO",
+    "socks": "",
+    "surface": "Hierba Artificial (HA)",
+    "team": "VILLAVERDE NORTE, S.D. \"A\"",
+    "venue": "MUNICIPAL VILLAVERDE",
+    "venue_code": 325
+   },
+   {
+    "codequipo": 55004294,
+    "crest": "/pnfg/pimg/Clubes/00100_0000087575_ESCUDO_1.png",
+    "shirt": "CELESTE",
+    "shorts": "BLANCO",
+    "socks": "CELESTES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "COTILLO, C.D. EL",
+    "venue": "MUNICIPAL COTILLO",
+    "venue_code": 269
+   },
+   {
+    "codequipo": 55018340,
+    "crest": "/pnfg/pimg/Clubes/00100_0000083619_CD_Corralejo__2005_.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "",
+    "surface": "Hierba Artificial (HA)",
+    "team": "CORRALEJO, C.D. \"B\"",
+    "venue": "JONATHAN SESMA F8",
+    "venue_code": 275
+   },
+   {
+    "codequipo": 54558788,
+    "crest": "/pnfg/pimg/Clubes/00100_0000086578_Logo_peque__o_removebg_preview.png",
+    "shirt": "NEGRA/NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "35660 CORRALEJO, C.D.",
+    "venue": "JONATHAN SESMA F8",
+    "venue_code": 275
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "55194132",
+  "grupo_name": "GRUPO 1",
+  "ok": true
+ },
+ "54977017:55194142": {
+  "clasificacion": [],
+  "comp": "54977017",
+  "comp_name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+  "directorio": [
+   {
+    "codequipo": 12506,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "HERBANIA, C.D. \"A\"",
+    "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+    "venue_code": 263
+   },
+   {
+    "codequipo": 48964,
+    "crest": "/pnfg/pimg/Clubes/00100_0000077663_Escudo___copia.jpg",
+    "shirt": "BLANQUIAZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "TETIR C.F, UNION \"B\"",
+    "venue": "MUNICIPAL DE TETIR",
+    "venue_code": 309
+   },
+   {
+    "codequipo": 54662428,
+    "crest": null,
+    "shirt": "BLANCA/AZUL RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+    "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+    "venue_code": 324
+   },
+   {
+    "codequipo": 52049,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+    "shirt": "VIOLETA",
+    "shorts": "VIOLETA",
+    "socks": "AMARILLAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "35600, C.D. \"C\"",
+    "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+    "venue_code": 263
+   },
+   {
+    "codequipo": 54429287,
+    "crest": null,
+    "shirt": "A RAYAS HORIZONTALES BLANCA Y VERDE",
+    "shorts": "NEGRO",
+    "socks": "BLANCAS Y VERDES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+    "venue": "MUNICIPAL DE FABELO F8",
+    "venue_code": 281
+   },
+   {
+    "codequipo": 36043,
+    "crest": "/pnfg/pimg/Clubes/00100_0000160574_LOGO_LA_PE__A.jpg",
+    "shirt": "NEGRA/BLANCA RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+    "venue": "MUNICIPAL DE FABELO F8",
+    "venue_code": 281
+   },
+   {
+    "codequipo": 63247,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010776_charco.png",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "CHARCO ATLETICO, C.D. EL \"A\"",
+    "venue": "CAMPO MUNICIPAL EL MATORRAL (F8)",
+    "venue_code": 497
+   },
+   {
+    "codequipo": 48838,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+    "shirt": "VIOLETA",
+    "shorts": "VIOLETA",
+    "socks": "AMARILLAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "35600, C D \"B\"",
+    "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+    "venue_code": 263
+   },
+   {
+    "codequipo": 66145,
+    "crest": "/pnfg/pimg/Clubes/00100_0000027183_IMG_0553.png",
+    "shirt": "VERDE",
+    "shorts": "BLANCO",
+    "socks": "VERDES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "FUERTEKLUB, C.D.",
+    "venue": "MUNICIPAL DE FABELO F8",
+    "venue_code": 281
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "55194142",
+  "grupo_name": "GRUPO 2",
+  "ok": true
+ },
+ "54977017:55194151": {
+  "clasificacion": [],
+  "comp": "54977017",
+  "comp_name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+  "directorio": [
+   {
+    "codequipo": 54994417,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010773_images__1_.jpeg",
+    "shirt": "BLANCA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "HERBANIA, C.D. \"B\"",
+    "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+    "venue_code": 263
+   },
+   {
+    "codequipo": 48652,
+    "crest": "/pnfg/pimg/Clubes/00100_0000077663_Escudo___copia.jpg",
+    "shirt": "BLANQUIAZUL",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "TETIR C.F. UNION \"A\"",
+    "venue": "MUNICIPAL DE TETIR",
+    "venue_code": 309
+   },
+   {
+    "codequipo": 40816,
+    "crest": "/pnfg/pimg/Clubes/00100_0000058696_ESCUDO_C.D._TEGUINTE.jpg",
+    "shirt": "ROJA",
+    "shorts": "NEGRO",
+    "socks": "ROJAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "TEGUINTE, C.D",
+    "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2",
+    "venue_code": 266
+   },
+   {
+    "codequipo": 48721,
+    "crest": "/pnfg/pimg/Clubes/00100_0000000915_35600.png",
+    "shirt": "VIOLETA",
+    "shorts": "VIOLETA",
+    "socks": "AMARILLAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "35600, C.D. \"A\"",
+    "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+    "venue_code": 263
+   },
+   {
+    "codequipo": 54429289,
+    "crest": null,
+    "shirt": "A RAYAS HORIZONTALES BLANCA Y VERDE",
+    "shorts": "NEGRO",
+    "socks": "BLANCAS Y VERDES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+    "venue": "MUNICIPAL DE FABELO F8",
+    "venue_code": 281
+   },
+   {
+    "codequipo": 54453198,
+    "crest": "/pnfg/pimg/Clubes/00100_0000160574_LOGO_LA_PE__A.jpg",
+    "shirt": "NEGRA/BLANCA RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+    "venue": "MUNICIPAL DE FABELO F8",
+    "venue_code": 281
+   },
+   {
+    "codequipo": 67582,
+    "crest": "/pnfg/pimg/Clubes/00100_0000027913_escudo_en_color_del_Tamasite_page_0001.jpg",
+    "shirt": "ROJA Y NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "TAMASITE, C.D. \"A\"",
+    "venue": "MUNICIPAL DE GRAN TARAJAL",
+    "venue_code": 282
+   },
+   {
+    "codequipo": 58705,
+    "crest": null,
+    "shirt": "BLANCA/AZUL RAYAS",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+    "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+    "venue_code": 324
+   },
+   {
+    "codequipo": 54486208,
+    "crest": "/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "BREÑAMEN ,C.D. \"B\"",
+    "venue": "MUNICIPAL DE LAS PLAYITAS",
+    "venue_code": 291
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "55194151",
+  "grupo_name": "GRUPO 3",
+  "ok": true
+ },
+ "54977017:55194156": {
+  "clasificacion": [],
+  "comp": "54977017",
+  "comp_name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+  "directorio": [
+   {
+    "codequipo": 230,
+    "crest": "/pnfg/pimg/Clubes/00100_0000123767_U.D._JANDIA_ESCUDO_.jpg",
+    "shirt": "ROJA",
+    "shorts": "AZUL",
+    "socks": "ROJAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "JANDIA, U.D.",
+    "venue": "MUNICIPAL DE MORROJABLE",
+    "venue_code": 297
+   },
+   {
+    "codequipo": 55004094,
+    "crest": "/pnfg/pimg/Clubes/00100_0000051447_IMG_20250905_WA0012.jpg",
+    "shirt": "AZUL Y BLANCA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "TARAJALEJO, U.D. \"B\"",
+    "venue": "MUNICIPAL DE TUINEJE",
+    "venue_code": 315
+   },
+   {
+    "codequipo": 55150354,
+    "crest": null,
+    "shirt": "AZUL",
+    "shorts": "BLANCO",
+    "socks": "AZULES/BLANCAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "COSTA CALMA PLAYAS PARAISO, U.D.",
+    "venue": "MUNICIPAL DE COSTA CALMA",
+    "venue_code": 278
+   },
+   {
+    "codequipo": 36118,
+    "crest": "/pnfg/pimg/Clubes/00100_0000026048_ESCUDO_SOTA_SIN_FONDO.png",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "",
+    "surface": "Hierba Artificial (HA)",
+    "team": "PLAYAS DE SOTAVENTO, U.D. \"B\"",
+    "venue": "MUNICIPAL DE MORROJABLE",
+    "venue_code": 297
+   },
+   {
+    "codequipo": 57228,
+    "crest": "/pnfg/pimg/Clubes/00100_0000128505_Las_Playitas.png",
+    "shirt": "NARANJA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "BREÑAMEN, C.D. \"A\"",
+    "venue": "MUNICIPAL DE LAS PLAYITAS",
+    "venue_code": 291
+   },
+   {
+    "codequipo": 54440932,
+    "crest": "/pnfg/pimg/Clubes/00100_0000051447_IMG_20250905_WA0012.jpg",
+    "shirt": "AZUL Y BLANCA",
+    "shorts": "AZUL",
+    "socks": "AZULES",
+    "surface": "Hierba Artificial (HA)",
+    "team": "TARAJALEJO, U.D.",
+    "venue": "MUNICIPAL DE TUINEJE",
+    "venue_code": 315
+   },
+   {
+    "codequipo": 55218589,
+    "crest": "/pnfg/pimg/Clubes/00100_0000058104_ESCUDO_C.D._LA_LAJITA.png",
+    "shirt": "MORADA",
+    "shorts": "MORADO",
+    "socks": "MORADAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "LAJITA, C.D. LA",
+    "venue": "MUNICIPAL DE COSTA CALMA",
+    "venue_code": 278
+   },
+   {
+    "codequipo": 36117,
+    "crest": "/pnfg/pimg/Clubes/00100_0000026048_ESCUDO_SOTA_SIN_FONDO.png",
+    "shirt": "ROJA",
+    "shorts": "ROJO",
+    "socks": "",
+    "surface": "Hierba Artificial (HA)",
+    "team": "PLAYAS DE SOTAVENTO, U.D. \"A\"",
+    "venue": "MUNICIPAL DE MORROJABLE",
+    "venue_code": 297
+   },
+   {
+    "codequipo": 55240664,
+    "crest": "/pnfg/pimg/Clubes/00100_0000027913_escudo_en_color_del_Tamasite_page_0001.jpg",
+    "shirt": "ROJA Y NEGRA",
+    "shorts": "NEGRO",
+    "socks": "NEGRAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "TAMASITE, C.D \"B\"",
+    "venue": "MUNICIPAL DE GRAN TARAJAL",
+    "venue_code": 282
+   },
+   {
+    "codequipo": 55077837,
+    "crest": "/pnfg/pimg/Clubes/00100_0000010533_Hubara_Logo_JPG.jpeg",
+    "shirt": "NEGRA/DORADA",
+    "shorts": "NEGRO/DORADO",
+    "socks": "BLANCAS",
+    "surface": "Hierba Artificial (HA)",
+    "team": "HUBARA, CD.",
+    "venue": "MUNICIPAL DE COSTA CALMA",
+    "venue_code": 278
+   }
+  ],
+  "fetched": "2026-10-07",
+  "grupo": "55194156",
+  "grupo_name": "GRUPO 4",
+  "ok": true
+ },
  "54977022:55247183": {
   "clasificacion": [],
   "comp": "54977022",
@@ -3927,6 +4378,24 @@
    [
     "55234556",
     "GRUPO 24"
+   ]
+  ],
+  "54977017": [
+   [
+    "55194132",
+    "GRUPO 1"
+   ],
+   [
+    "55194142",
+    "GRUPO 2"
+   ],
+   [
+    "55194151",
+    "GRUPO 3"
+   ],
+   [
+    "55194156",
+    "GRUPO 4"
    ]
   ],
   "54977022": [

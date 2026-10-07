@@ -167,6 +167,52 @@ def test_un_marcador_distinto_del_calendario_solo_entra_si_cuadra_con_la_clasifi
     assert got == [("Jornada 1", 4, 1), ("Jornada 2", 1, 1)]
 
 
+def _fv23(tmp_path, peña, corralejo):
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    migrate(conn)
+    conn.executescript("""
+      INSERT INTO seasons(id, name, start_year, end_year, is_current) VALUES (1, '2024-2025', 2024, 2025, 0);
+      INSERT INTO categories(id, name) VALUES (1, 'BENJAMIN');
+      INSERT INTO groups(id, season_id, category_id, code, name, phase, url) VALUES
+        (1, 1, 1, 'FV23', 'Grupo 3', 'Fuerteventura', 'https://www.fiflp.com/x?CodCompeticion=9&CodGrupo=8');
+      INSERT INTO teams(id, name) VALUES (1, 'Peña Amistad'), (2, 'CD 35600 C'), (3, 'Corralejo');
+      INSERT INTO matches(group_id, jornada, home_team_id, away_team_id, home_score, away_score, cod_acta) VALUES
+        (1, '1', 1, 2, 1, 1, 501), (1, '2', 3, 1, 0, 3, 502);
+    """)
+    for tid, pos, (pj, gf, gc) in ((1, 1, peña), (2, 2, (1, 4, 5)), (3, 3, corralejo)):
+        conn.execute("""INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+                        VALUES (1, ?, ?, 0, ?, 0, 0, 0, ?, ?, ?)""", (tid, pos, pj, gf, gc, gf - gc))
+    def m(home, away, hs, as_):
+        return {"home": home, "away": away, "hs": hs, "as": as_, "date": "", "time": "", "venue": "",
+                "referee": "", "fiflp_acta": None}
+    table = [{"pos": 1, "team": "PEÑA DE LA AMISTAD, C.D.", "j": peña[0], "gf": peña[1], "gc": peña[2]},
+             {"pos": 2, "team": '35600, C.D. "C"', "j": 1, "gf": 4, "gc": 5},
+             {"pos": 3, "team": "CORRALEJO, C.D.", "j": corralejo[0], "gf": corralejo[1], "gc": corralejo[2]}]
+    # La 1: calendario 5-4 y acta 5-4 (la base, 1-1). La 2: calendario 0-2 y acta 0-3. La 3, sin jugar.
+    raw = {"9:8": {"comp": "9", "comp_name": "LIGA BENJAMIN FUERTEVENTURA 2ª FASE", "grupo": "8",
+                   "grupo_name": "GRUPO 3", "ok": True, "clasificacion": table, "directorio": [],
+                   "jornadas": {"Jornada 1": [m("PEÑA DE LA AMISTAD, C.D.", '35600, C.D. "C"', 5, 4)],
+                                "Jornada 2": [m("CORRALEJO, C.D.", "PEÑA DE LA AMISTAD, C.D.", 0, 2)],
+                                "Jornada 3": [m('35600, C.D. "C"', "CORRALEJO, C.D.", None, None)]}}}
+    (tmp_path / "fiflp_detalle_2024-2025_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    (tmp_path / "fiflp_actas_2024-2025_raw.json").write_text(json.dumps({
+        "501": {"header": {"home_score": 5, "away_score": 4}}, "502": {"header": {"home_score": 0, "away_score": 3}}}),
+        encoding="utf-8")
+    D.import_changed_detalle(conn, folder=str(tmp_path), log=lambda *a: None, calendar_seasons=("2024-2025",))
+    return conn.execute("SELECT jornada, home_score, away_score FROM matches ORDER BY jornada").fetchall()
+
+
+def test_con_acta_cambia_si_acta_y_calendario_coinciden_y_cuadra_mejor(tmp_path):
+    # La clasificación es la de las actas (Corralejo 0-3): la 1 cambia (acta y calendario, y cuadra);
+    # la 2 no (acta y calendario no coinciden); el partido sin jugar de una cerrada no entra.
+    assert _fv23(tmp_path, (2, 8, 4), (1, 0, 3)) == [("1", 5, 4), ("2", 0, 3)]
+
+
+def test_si_el_calendario_es_la_clasificacion_gol_a_gol_manda_en_todo_el_grupo(tmp_path):
+    assert _fv23(tmp_path, (2, 7, 4), (1, 0, 2)) == [("1", 5, 4), ("2", 0, 2)]
+
+
 def _cup(comp, comp_name, matches):
     return {"comp": comp, "comp_name": comp_name, "grupo": "1" + comp, "grupo_name": "GRUPO 1", "ok": True,
             "fetched": "2026-10-07", "clasificacion": [], "directorio": [], "jornadas": {"Jornada 26-05-2019 ( Ronda 1 )": [

@@ -42,14 +42,18 @@ RAW_FILE = re.compile(r"^fiflp_detalle_(\d{4}-\d{4})_raw\.json$")
 CAMPOS_FILE = "fiflp_campos_raw.json"
 # En la huella: subirla reimporta el detalle de todas las temporadas. 2: finales y copas de las
 # archivadas (create_cup_group), calendarios de 2016-19 y fichas rehechas tras fix_positions. 3: las
-# fichas de los equipos que fix_positions corrige en 2023-24 a 2026-27.
-DETALLE_VERSION = "3"
+# fichas de los equipos que fix_positions corrige en 2023-24 a 2026-27. 4: complete_group con las
+# actas y la regla del calendario que es la clasificación, y los calendarios de 2019-26.
+DETALLE_VERSION = "4"
 # Temporadas cuyo calendario (jornadas del raw) entra en los grupos sin partidos. Solo las que se han
 # revisado en local y tienen su línea base de score_deviation al día: un marcador mal leído en otra
 # dejaría la prueba en rojo y al bot sin publicar. 2016-19 (revisadas el 7/10/2026): las ligas y
 # copas de Lanzarote y Fuerteventura, sin un partido hasta ahora (2.480 partidos, sin desvío nuevo);
-# los de los retirados entran, como en el resto de temporadas.
-CALENDAR_SEASONS = ("2016-2017", "2017-2018", "2018-2019")
+# los de los retirados entran, como en el resto de temporadas. 2019-20, 2020-21, 2021-22, 2024-25 y
+# 2025-26 (revisadas el 8/10/2026): solo lo que falta y lo que cuadra mejor (complete_group); el
+# desvío de las cerradas, de 295 a 175 goles, sin ningún grupo peor.
+CALENDAR_SEASONS = ("2016-2017", "2017-2018", "2018-2019", "2019-2020", "2020-2021", "2021-2022",
+                    "2024-2025", "2025-2026")
 
 SCHEMA = (
     """CREATE TABLE IF NOT EXISTS standings_detail (
@@ -197,7 +201,7 @@ def write_standings_detail(conn, gid, rows):
     return n
 
 
-def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=False):
+def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=False, acta_scores=None):
     """standings_detail, team_seasons y (si el grupo no tiene partidos) su
     calendario. Devuelve (filas de detalle, equipos con ficha, partidos nuevos)."""
     from update_fiflp import write_round, reconcile_with_table, current_round
@@ -236,7 +240,7 @@ def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=
     new = 0
     has_matches = conn.execute("SELECT 1 FROM matches WHERE group_id=? LIMIT 1", (gid,)).fetchone()
     if rounds and has_matches and calendar:
-        added, scores, fixed = complete_group(conn, gid, rounds, names, log)
+        added, scores, fixed = complete_group(conn, gid, rounds, names, log, acta_scores)
         new += added
         if added or scores or fixed:
             log(f"    grupo {gid}: del calendario, {added} partidos que faltaban, {scores} resultados y "
@@ -262,6 +266,16 @@ def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=
     return detail, cards, new
 
 
+def _acta_scores(path):
+    """{cod_acta: (goles local, goles visitante)} de la cabecera de cada acta del raw."""
+    out = {}
+    for cod, acta in _load(path, {}).items():
+        h = acta.get("header") if isinstance(acta, dict) else None
+        if isinstance(h, dict) and h.get("home_score") is not None and h.get("away_score") is not None:
+            out[int(cod)] = (h["home_score"], h["away_score"])
+    return out
+
+
 def _label_like(conn, gid, label):
     """La jornada del calendario ('Jornada 7') como las del grupo: '7' si las suyas son números."""
     m = re.fullmatch(r"Jornada (\d+)", label or "")
@@ -271,15 +285,21 @@ def _label_like(conn, gid, label):
     return label
 
 
-def complete_group(conn, gid, rounds, names, log=print):
+def complete_group(conn, gid, rounds, names, log=print, acta_scores=None):
     """Lo que le falta a un grupo que ya tiene partidos, del calendario de la federación: el resultado
     de un partido sin acta que no lo tiene (y su fecha, hora o campo si faltan) y el partido que no
     está, entre dos equipos de su clasificación. Solo los cruces (local, visitante) que salen una vez
     en el calendario y como mucho una en la base: una liga a más vueltas o un cruce escrito de dos
-    formas no se toca. Un marcador sin acta que el calendario da distinto (los del archivo del portal
-    difieren en un 3-5 %) se cambia solo si con el del calendario los goles cuadran mejor con la
-    clasificación oficial: de uno en uno, el que más baja el desvío, mientras baje. Devuelve
-    (partidos nuevos, resultados puestos, marcadores corregidos)."""
+    formas no se toca. En una temporada cerrada, del partido que no está solo entra el que se jugó
+    (los que la COVID dejó sin jugar en 2019-20 y 2020-21 no). Un marcador sin acta que el calendario
+    da distinto (los del archivo del portal difieren en un 3-5 %) se cambia solo si con el del
+    calendario los goles cuadran mejor con la clasificación oficial: de uno en uno, el que más baja
+    el desvío, mientras baje. Uno con acta entra en esa misma cuenta solo si el calendario y el acta
+    (`acta_scores`, la cabecera) dicen lo mismo (en la segunda fase de Fuerteventura de 2024-25 la
+    base tenía otro marcador en 60 de 68 partidos; en las Copas de Campeones, acta y calendario
+    coinciden en marcadores que la clasificación desmiente), y un partido con acta sin marcador lo
+    recibe si los dos coinciden. Devuelve (partidos nuevos, resultados puestos, marcadores
+    corregidos)."""
     from fiflp_names import is_bye
     from score_deviation import group_deviation
     ids = _team_ids(conn)
@@ -297,7 +317,10 @@ def complete_group(conn, gid, rounds, names, log=print):
     for row in conn.execute("""SELECT id, home_team_id, away_team_id, home_score, away_score, date, time, venue,
                                       cod_acta FROM matches WHERE group_id=?""", (gid,)):
         db.setdefault((row[1], row[2]), []).append(row)
-    new = scores = 0
+    closed = not conn.execute("""SELECT s.is_current FROM groups g JOIN seasons s ON s.id=g.season_id
+                                 WHERE g.id=?""", (gid,)).fetchone()[0]
+    acta_scores = acta_scores or {}
+    new = scores = fixed = 0
     for pair, found in sorted(cal.items()):
         if len(found) != 1 or len(db.get(pair, [])) > 1:
             continue
@@ -307,7 +330,7 @@ def complete_group(conn, gid, rounds, names, log=print):
         if pair in db:
             mid, _, _, old_hs, old_as, date, time, venue, cod_acta = db[pair][0]
             fields = {}
-            if played and old_hs is None and old_as is None and not cod_acta:
+            if played and old_hs is None and old_as is None and (not cod_acta or acta_scores.get(cod_acta) == (hs, as_)):
                 fields.update(home_score=hs, away_score=as_)
             for key, old in (("date", date), ("time", time), ("venue", venue)):
                 if not old and m.get(key):
@@ -316,7 +339,7 @@ def complete_group(conn, gid, rounds, names, log=print):
                 conn.execute(f"UPDATE matches SET {', '.join(f'{k}=?' for k in fields)} WHERE id=?",
                              (*fields.values(), mid))
                 scores += "home_score" in fields
-        elif pair[0] in table and pair[1] in table:
+        elif pair[0] in table and pair[1] in table and (played or not closed):
             conn.execute("""INSERT INTO matches(group_id, jornada, date, time, home_team_id, away_team_id,
                                                 home_score, away_score, venue, fiflp_acta)
                             VALUES (?,?,?,?,?,?,?,?,?,?)""",
@@ -324,17 +347,32 @@ def complete_group(conn, gid, rounds, names, log=print):
                           pair[0], pair[1], hs if played else None, as_ if played else None,
                           m.get("venue") or None, m.get("fiflp_acta")))
             new += 1
+    # Si el calendario reproduce la clasificación oficial gol a gol y la base no, el calendario
+    # manda en todo el grupo (la segunda fase de Fuerteventura de 2024-25).
+    if _calendar_is_the_table(conn, gid, cal, table) and group_deviation(conn, gid)["dev"]:
+        for pair, found in cal.items():
+            hs, as_ = found[0][1].get("hs"), found[0][1].get("as")
+            if len(found) == 1 and len(db.get(pair, [])) == 1 and hs is not None and as_ is not None:
+                row = db[pair][0]
+                if (row[3], row[4]) != (hs, as_):
+                    conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (hs, as_, row[0]))
+                    fixed += 1
+        db = {}
+        for row in conn.execute("""SELECT id, home_team_id, away_team_id, home_score, away_score, date, time,
+                                          venue, cod_acta FROM matches WHERE group_id=?""", (gid,)):
+            db.setdefault((row[1], row[2]), []).append(row)
     other = {}
     for pair, found in cal.items():
         if len(found) != 1 or len(db.get(pair, [])) != 1:
             continue
         m = found[0][1]
         mid, _, _, old_hs, old_as, _, _, _, cod_acta = db[pair][0]
-        if cod_acta or old_hs is None or old_as is None or m.get("hs") is None or m.get("as") is None:
+        if old_hs is None or old_as is None or m.get("hs") is None or m.get("as") is None:
+            continue
+        if cod_acta and acta_scores.get(cod_acta) != (m["hs"], m["as"]):
             continue
         if (m["hs"], m["as"]) != (old_hs, old_as):
             other[mid] = (m["hs"], m["as"])
-    fixed = 0
     while other:
         before = group_deviation(conn, gid)["dev"]
         dev, mid = min((group_deviation(conn, gid, {mid: score})["dev"], mid) for mid, score in other.items())
@@ -344,6 +382,27 @@ def complete_group(conn, gid, rounds, names, log=print):
         conn.execute("UPDATE matches SET home_score=?, away_score=? WHERE id=?", (hs, as_, mid))
         fixed += 1
     return new, scores, fixed
+
+
+def _calendar_is_the_table(conn, gid, cal, table):
+    """True si los partidos jugados del calendario entre equipos de la clasificación dan a cada
+    equipo exactamente sus partidos, goles a favor y en contra de la clasificación oficial."""
+    official = {t: (pj, gf, gc) for t, pj, gf, gc in conn.execute(
+        "SELECT team_id, played, gf, gc FROM standings WHERE group_id=?", (gid,))}
+    if not official or any(v[1] is None for v in official.values()):
+        return False
+    got = {t: [0, 0, 0] for t in official}
+    for (h, a), found in cal.items():
+        if h not in table or a not in table:
+            continue
+        for _, m in found:
+            if m.get("hs") is None or m.get("as") is None:
+                continue
+            for team, favor, contra in ((h, m["hs"], m["as"]), (a, m["as"], m["hs"])):
+                got[team][0] += 1
+                got[team][1] += favor
+                got[team][2] += contra
+    return all(tuple(got[t]) == official[t] for t in official)
 
 
 def _season_fed_teams(conn, season_id):
@@ -442,6 +501,8 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
         index = {str(e["cod_acta"]): e for e in index}
     archived = season in ARCHIVE_SEASONS
     claimed, cups = set(), []
+    acta_scores = _acta_scores(os.path.join(folder, f"fiflp_actas_{season}_raw.json")) \
+        if season in calendar_seasons else {}
     for key in sorted(k for k in raw if not k.startswith("_")):
         det = raw[key]
         if not det.get("ok"):
@@ -460,7 +521,7 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
             continue
         claimed.add(gid)
         detail, cards, new = write_group(conn, season_id, gid, det, entry, archived, log,
-                                         calendar=season in calendar_seasons)
+                                         calendar=season in calendar_seasons, acta_scores=acta_scores)
         report["groups"] += 1
         report["detail"] += detail
         report["cards"] += cards

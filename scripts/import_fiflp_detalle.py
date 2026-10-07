@@ -472,6 +472,26 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
     return report
 
 
+def _digest(conn, folder, name, season, calendars):
+    """La huella del detalle de una temporada: el raw, el de goleadores, la de sus grupos de la
+    federación y la del archivo del portal (que reescribe los partidos de sus grupos: hay que volver
+    a pasar el calendario), y sus grupos con los equipos de la clasificación (uno nuevo, uno
+    renombrado)."""
+    h = hashlib.sha1(DETALLE_VERSION.encode() + repr(season in calendars).encode())
+    for part in (name, f"fiflp_goleadores_{season}_raw.json"):
+        p = os.path.join(folder, part)
+        if os.path.exists(p):
+            with open(p, "rb") as f:
+                h.update(f.read())
+    for key in (f"grupos:{season}", f"wayback_portal_{season}_raw.json"):
+        stored = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (key,)).fetchone()
+        h.update(stored[0].encode() if stored else b"")
+    h.update(repr(conn.execute("""SELECT g.id, group_concat(t.name) FROM groups g JOIN seasons s ON s.id=g.season_id
+                                   LEFT JOIN standings st ON st.group_id=g.id LEFT JOIN teams t ON t.id=st.team_id
+                                   WHERE s.name=? GROUP BY g.id ORDER BY g.id""", (season,)).fetchall()).encode())
+    return h.hexdigest()
+
+
 def import_changed_detalle(conn, folder=SCRIPTS_DIR, log=print, calendar_seasons=None):
     """import_raw de cada fiflp_detalle_<S>_raw.json cuya huella haya cambiado, y
     las fichas de los campos. La de una temporada que no está en la base (una
@@ -501,26 +521,13 @@ def import_changed_detalle(conn, folder=SCRIPTS_DIR, log=print, calendar_seasons
         if not conn.execute("SELECT 1 FROM seasons WHERE name=?", (season,)).fetchone():
             continue
         calendars = CALENDAR_SEASONS if calendar_seasons is None else calendar_seasons
-        h = hashlib.sha1(DETALLE_VERSION.encode() + repr(season in calendars).encode())
-        for part in (name, f"fiflp_goleadores_{season}_raw.json"):
-            p = os.path.join(folder, part)
-            if os.path.exists(p):
-                with open(p, "rb") as f:
-                    h.update(f.read())
-        grupos = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (f"grupos:{season}",)).fetchone()
-        h.update(grupos[0].encode() if grupos else b"")
-        # Los grupos de la temporada (uno nuevo, un equipo renombrado) también cambian el resultado.
-        h.update(repr(conn.execute("""SELECT g.id, group_concat(t.name) FROM groups g JOIN seasons s ON s.id=g.season_id
-                                       LEFT JOIN standings st ON st.group_id=g.id LEFT JOIN teams t ON t.id=st.team_id
-                                       WHERE s.name=? GROUP BY g.id ORDER BY g.id""", (season,)).fetchall()).encode())
-        digest = h.hexdigest()
         row = conn.execute("SELECT sha1 FROM raw_imports WHERE path=?", (name,)).fetchone()
-        if row and row[0] == digest:
+        if row and row[0] == _digest(conn, folder, name, season, calendars):
             continue
         report = import_raw(conn, os.path.join(folder, name), log=log, calendar_seasons=calendars)
-        # La huella, con lo que ha quedado tras importar (los partidos nuevos no cambian equipos).
+        # La huella, con lo que ha quedado tras importar (las finales y copas que acaba de crear).
         conn.execute("INSERT OR REPLACE INTO raw_imports(path, sha1, imported_at) VALUES (?, ?, datetime('now'))",
-                     (name, digest))
+                     (name, _digest(conn, folder, name, season, calendars)))
         conn.commit()
         log(f"  {name}: {report['groups']} grupos ({report['unmatched']} sin pareja), {report['detail']} filas "
             f"de casa/fuera, {report['cards']} fichas de equipo, {report['matches']} partidos del calendario")

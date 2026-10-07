@@ -880,9 +880,10 @@ def import_past_seasons(conn, log=print):
     """Lo que descargan de temporadas pasadas actas-federacion.yml,
     goleadores-federacion.yml y detalle-federacion.yml (solo los raws nuevos o
     cambiados): actas, grupos que faltaban (finales, torneos, ligas insulares sin
-    archivar), goleadores y el detalle (casa/fuera, equipos, campos y
-    calendarios), en ese orden (los goleadores y el detalle casan sus grupos por
-    las actas). Los grupos dan de alta también las temporadas archivadas
+    archivar), goleadores, torneos, el archivo del portal y el detalle (casa/fuera,
+    equipos, campos y calendarios), en ese orden (los goleadores y el detalle casan
+    sus grupos por las actas; el detalle, al final, completa y corrige con el
+    calendario de la federación los partidos que ha dejado el portal). Los grupos dan de alta también las temporadas archivadas
     (import_fiflp_grupos.ARCHIVE_SEASONS, 2016-17 a 2020-21) en cuanto termina
     la descarga de sus actas. Un fallo aquí se apunta y no para la actualización de la temporada en
     curso. Al final se borran los jugadores que se han quedado sin uso."""
@@ -898,11 +899,12 @@ def import_past_seasons(conn, log=print):
              ("Grupos de temporadas pasadas que faltaban (federación)", import_changed_grupos),
              ("Equipos cruzados en clasificaciones cerradas (por posición)", fix_positions),
              ("Goleadores de temporadas pasadas de la federación (raws nuevos o cambiados)", import_changed_goleadores),
-             ("Detalle de la federación: casa/fuera, equipos, campos y calendarios (raws nuevos o cambiados)",
-              import_changed_detalle),
              ("Torneos que no son de la federación: Maspalomas Cup (raws nuevos o cambiados)", import_changed_torneos),
              ("Temporadas antiguas de futbolaspalmas (Wayback, 2012-13 a 2018-19; raws nuevos o cambiados)",
               import_changed_portal),
+             # Después del portal: el calendario de la federación completa y corrige sus partidos.
+             ("Detalle de la federación: casa/fuera, equipos, campos y calendarios (raws nuevos o cambiados)",
+              import_changed_detalle),
              ("Jugadores que ya no salen en ninguna acta", prune_players)]
     migrate(conn)
     for title, step in steps:

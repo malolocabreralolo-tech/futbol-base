@@ -231,3 +231,35 @@ def test_el_bot_pone_la_ficha_de_los_equipos_que_no_la_tienen():
     page = _Page()
     U.update_directorio(page, _F(), conn, 1, [(1, "A2", url)])
     assert "LstDirectorioEquipos" not in page.url or cards < 12
+
+
+# ── Goles de la app en la cronología (generate_js._fp_goal_entries) ───────────
+
+def test_los_goles_de_la_app_ponen_nombre_a_los_que_el_acta_no_publica(tmp_path):
+    import generate_js as G
+    conn = base_2627()
+    (tmp_path / "fp_app_2026-2027_raw.json").write_text(json.dumps(fp_raw()), encoding="utf-8")
+    A.import_changed_fp_app(conn, folder=str(tmp_path), log=lambda *a: None)
+    # Sin acta: la cronología de la app, con el marcador parcial.
+    pairs = G._fp_goal_entries(conn)
+    assert len(pairs) == 1
+    key, entry = pairs[0]
+    assert key == "Las Mesas Hu.|Acodetti B|3-1"
+    assert entry["src"] == "fp" and entry["gr"] == "FF5" and entry["s"] == "2026-2027"
+    assert entry["g"] == [[5, "Dylan", "1-0", "h", "r"], [12, "Hugo", "1-1", "a", "r"],
+                          [20, "Leo", "2-1", "h", "r"], [31, "Dylan", "3-1", "h", "r"]]
+    # Con acta: si trae todos los nombres, manda el acta (no sale aquí)…
+    from import_fiflp_actas import _anonymous_player
+    conn.execute("UPDATE matches SET cod_acta=1 WHERE id=1")
+    conn.executescript("""INSERT INTO players(id, full_name, norm_name) VALUES (50, 'GIL, DYLAN', 'gil dylan'),
+        (51, 'RUIZ, LEO', 'ruiz leo'), (52, 'PEREZ, HUGO', 'perez hugo');""")
+    for pid, team, minute in ((50, 1, 5), (52, 2, 12), (51, 1, 20), (50, 1, 31)):
+        conn.execute("INSERT INTO match_events(match_id, team_id, player_id, kind, minute, goal_type) VALUES (1,?,?,'goal',?,'normal')",
+                     (team, pid, minute))
+    assert G._fp_goal_entries(conn) == []
+    # …y si alguno va sin nombre (un niño que la federación no publica), se le pone el de la app.
+    anon = _anonymous_player(conn)
+    conn.execute("UPDATE match_events SET player_id=? WHERE minute IN (5, 31)", (anon,))
+    (_, entry), = G._fp_goal_entries(conn)
+    assert [g[1] for g in entry["g"]] == ["Dylan", "PEREZ, HUGO", "RUIZ, LEO", "Dylan"]
+    assert [g[2] for g in entry["g"]] == ["1-0", "1-1", "2-1", "3-1"]

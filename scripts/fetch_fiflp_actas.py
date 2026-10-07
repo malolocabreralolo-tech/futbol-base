@@ -27,7 +27,9 @@ UA   = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/120 Safari/537")
 
 SEASON_NAME = {
-    # 13-16: temporadas anteriores a la web (2017-18 a 2020-21), solo para descargar sus datos.
+    # 12-16: temporadas anteriores a la web (2016-17 a 2020-21), solo para descargar sus datos.
+    # 2015-16 (11) no tiene benjamín ni prebenjamín en la federación (sonda del 7/10/2026).
+    "12": "2016-2017",
     "13": "2017-2018",
     "14": "2018-2019",
     "15": "2019-2020",

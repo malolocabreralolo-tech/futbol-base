@@ -1,0 +1,102 @@
+name: Detalle de la federación (clasificaciones, equipos, campos y calendarios)
+
+# Descarga de la web de la federación lo que no traen las actas ni los goleadores
+# (scripts/fetch_fiflp_detalle.py): la clasificación detallada (casa/fuera,
+# sanciones, código de cada equipo), el directorio de cada grupo (equipación,
+# campo y escudo de cada equipo), el calendario completo de las temporadas sin
+# actas y la ficha de cada campo (coordenadas, dirección, instalaciones).
+# Solo sube los raw (scripts/fiflp_detalle_<S>_raw.json, scripts/fiflp_campos_raw.json):
+# la base y los data-*.js los pone al día el bot (update.yml) al importarlos
+# (import_fiflp_detalle.py), así dos workflows nunca chocan en futbolbase.db.
+# Reanudable: si una tanda no acaba, lanza la siguiente (hasta `tandas`).
+on:
+  workflow_dispatch:
+    inputs:
+      temporadas:
+        description: 'CodTemporada separadas por comas (12=2016-17 … 22=2026-27)'
+        required: false
+        default: '12,13,14,15,16,17,18,19,20,21,22'
+      jornadas:
+        description: 'Temporadas de las que bajar también el calendario completo'
+        required: false
+        default: '12,13,14'
+      tandas:
+        description: 'Tandas que quedan (freno de la cadena)'
+        required: false
+        default: '4'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: detalle-federacion
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Instalar Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+      - name: Descargar el detalle
+        env:
+          TEMPORADAS: ${{ inputs.temporadas }}
+          JORNADAS: ${{ inputs.jornadas }}
+          PYTHONUNBUFFERED: '1'
+        run: |
+          python3 scripts/fetch_fiflp_detalle.py --temporadas "$TEMPORADAS" --jornadas "$JORNADAS" --max-minutes 320 | tee detalle.log
+        timeout-minutes: 335
+      # if: always(): una descarga cortada sube lo que lleva (guarda cada grupo y cada campo).
+      - name: Subir los raw
+        if: always()
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          shopt -s nullglob
+          for f in scripts/fiflp_detalle_*_raw.json scripts/fiflp_campos_raw.json; do git add "$f"; done
+          if git diff --cached --quiet; then
+            echo "Nada nuevo que subir."
+            exit 0
+          fi
+          git commit -m "detalle: clasificaciones, equipos, campos y calendarios de la federación"
+          # Solo toca sus propios ficheros: rebasar sobre lo que haya subido el
+          # bot entretanto no choca nunca.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && exit 0
+            echo "push fallido (intento $i), reintento..."
+            sleep $((i * 15))
+          done
+          exit 1
+      - name: Importar y publicar (bot)
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run update.yml --ref main || echo "no se pudo lanzar el bot; lo hará su cron"
+      # !cancelled(): también si la descarga se pasó de tiempo (lo que llevaba ya está subido).
+      - name: Siguiente tanda
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEMPORADAS: ${{ inputs.temporadas }}
+          JORNADAS: ${{ inputs.jornadas }}
+          TANDAS: ${{ inputs.tandas }}
+        run: |
+          LEFT=$((TANDAS - 1))
+          if grep -q '^Completo\.' detalle.log 2>/dev/null; then
+            echo "Detalle completo."
+          elif [ "$LEFT" -le 0 ]; then
+            echo "Freno: sin tandas."
+          else
+            echo "Incompleto: otra tanda (quedan $LEFT)."
+            gh workflow run detalle-federacion.yml --ref main -f temporadas="$TEMPORADAS" -f jornadas="$JORNADAS" -f tandas="$LEFT"
+          fi

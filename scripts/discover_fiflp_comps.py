@@ -4,7 +4,7 @@ discover_fiflp_comps.py — Lists ALL benjamin/prebenjamin competitions for each
 FIFLP season, looking specifically for Copa de Campeones / Tercera Fase / Fase
 Final / Final variants we haven't configured yet.
 
-Loops temporadas 17→22 (2021-22 → 2026-27) and MERGES them into the catalog
+Loops temporadas 12→22 (2016-17 → 2026-27) and MERGES them into the catalog
 (keeps any season already there that this run does not visit).
 
 Output: scripts/fiflp_comps_catalog.json
@@ -21,7 +21,9 @@ OUTPUT = os.path.join(SCRIPT_DIR, "fiflp_comps_catalog.json")
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 
 SEASONS = [
-    # Anteriores a la web (2017-18 a 2020-21): su catálogo, para descargar sus datos.
+    # Anteriores a la web (2016-17 a 2020-21): su catálogo, para descargar sus datos.
+    # 2015-16 (11) no tiene benjamín ni prebenjamín en la federación.
+    ("12", "2016-2017"),
     ("13", "2017-2018"),
     ("14", "2018-2019"),
     ("15", "2019-2020"),

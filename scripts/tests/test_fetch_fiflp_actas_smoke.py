@@ -45,9 +45,10 @@ def test_season_name_map():
     from scripts.fetch_fiflp_actas import SEASON_NAME
     assert SEASON_NAME["17"] == "2021-2022"
     assert SEASON_NAME["21"] == "2025-2026"
-    # CodTemporada = año de inicio − 2004, también para las anteriores a la web (13 = 2017-18).
+    # CodTemporada = año de inicio − 2004, también para las anteriores a la web (12 = 2016-17;
+    # 2015-16, la 11, no tiene benjamín ni prebenjamín en la federación).
     assert all(name == f"{int(code) + 2004}-{int(code) + 2005}" for code, name in SEASON_NAME.items())
-    assert set(SEASON_NAME) == {str(c) for c in range(13, 22)}
+    assert set(SEASON_NAME) == {str(c) for c in range(12, 22)}
 
 
 def test_raw_path_naming():

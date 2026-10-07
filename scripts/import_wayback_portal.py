@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 RAW_FILE = re.compile(r"^wayback_portal_(\d{4}-\d{4})_raw\.json$")
-PORTAL_VERSION = "1"
+PORTAL_VERSION = "3"
 # Temporadas que solo tiene el portal: se dan de alta con sus grupos. Las demás (2016-17 a 2018-19)
 # son de la federación y solo reciben partidos, cuando ya están en la base.
 NEW_SEASONS = ("2012-2013", "2013-2014", "2014-2015", "2015-2016")
@@ -120,6 +120,9 @@ PORTAL_NAMES = {
     # la Arenas San Fernando y el Flor de Lis Norte.
     "Villa": "Santa Brígida", "Villa B": "Santa Brígida B", "ArenaSanfer": "San Fernando B",
     "FDL Norte C": "Flor de Lis Norte C",
+    # Fuerteventura, 2020-21: la UD Playas de Sotavento y el CD Breñamen Las Playitas.
+    "Playas": "UD Sotavento", "Playas B": "Sotavento B", "Playas C": "UD Sotavento C",
+    "Las Playitas": "CD Breñamen", "European": "European FU",
 }
 
 
@@ -323,7 +326,8 @@ def import_existing_season(conn, season_id, season, raw, log=print):
         if not jornadas:
             continue
         names = _group_names(entry)
-        candidates = sorted(((group_overlap(names, teams), gid) for gid, teams in
+        resolved = [portal_alias(portal_name(n)) or portal_name(n) for n in names]
+        candidates = sorted(((group_overlap(resolved, teams), gid) for gid, teams in
                              _db_groups(conn, season_id, entry["category"]).items()), reverse=True)
         if not candidates or candidates[0][0] < MIN_OVERLAP or \
                 (len(candidates) > 1 and candidates[1][0] == candidates[0][0]):

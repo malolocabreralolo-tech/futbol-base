@@ -1608,5 +1608,90 @@
    "20190329155639",
    "https://futbolaspalmas.com/1prebenjamin3/primera-benjamin-grupo-3-prebenjamin-primera3.html"
   ]
+ },
+ {
+  "season": "2020-2021",
+  "code": "FV11",
+  "category": "BENJAMIN",
+  "phase": "Fuerteventura",
+  "island": "fuerteventura",
+  "name": "Grupo 1",
+  "title": "PRIMERA BENJAMIN FUERTEVENTURA G1",
+  "standings": [
+   "20210515204401",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-uno-fuerteventura/"
+  ],
+  "results": [
+   "20210515204401",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-uno-fuerteventura/"
+  ]
+ },
+ {
+  "season": "2020-2021",
+  "code": "FV12",
+  "category": "BENJAMIN",
+  "phase": "Fuerteventura",
+  "island": "fuerteventura",
+  "name": "Grupo 2",
+  "title": "PRIMERA BENJAMIN FUERTEVENTURA G2",
+  "standings": [
+   "20210515203010",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-dos-fuerteventura/"
+  ],
+  "results": [
+   "20210515203010",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-dos-fuerteventura/"
+  ]
+ },
+ {
+  "season": "2020-2021",
+  "code": "FV13",
+  "category": "BENJAMIN",
+  "phase": "Fuerteventura",
+  "island": "fuerteventura",
+  "name": "Grupo 3",
+  "title": "PRIMERA BENJAMIN FUERTEVENTURA G3",
+  "standings": [
+   "20210515201825",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-tres-fuerteventura/"
+  ],
+  "results": [
+   "20210515201825",
+   "https://futbolaspalmas.com/benjamin-primera-grupo-tres-fuerteventura/"
+  ]
+ },
+ {
+  "season": "2020-2021",
+  "code": "PGC1",
+  "category": "PREBENJAMIN",
+  "phase": "Primera Fase GC",
+  "island": "grancanaria",
+  "name": "Grupo 1",
+  "title": "LIGA PREBENJAMIN GRUPO 1",
+  "standings": [
+   "20210515202221",
+   "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html"
+  ],
+  "results": [
+   "20210515202221",
+   "https://futbolaspalmas.com/1prebenjamin1/primera-benjamin-grupo-1-prebenjamin-primera1.html"
+  ]
+ },
+ {
+  "season": "2020-2021",
+  "code": "PGC2",
+  "category": "PREBENJAMIN",
+  "phase": "Primera Fase GC",
+  "island": "grancanaria",
+  "name": "Grupo 2",
+  "title": "LIGA PREBENJAMIN GRUPO 2",
+  "standings": [
+   "20210814191913",
+   "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html"
+  ],
+  "results": [
+   "20210814191913",
+   "https://futbolaspalmas.com/1prebenjamin2/primera-benjamin-grupo-2-prebenjamin-primera2.html"
+  ]
  }
 ]

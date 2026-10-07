@@ -19,6 +19,7 @@ import {
   routeHref, shareAndAnnounce, teamCalendarEvents, teamHref, venueDetails, venueUrl, weekdayDate,
 } from './links.js';
 import { teamScorers } from './state.js';
+import { zonesText } from './screen-tabla.js';
 
 // Fechas y horas siempre en Canarias (spec §8). Las fechas de partido son días de calendario
 // ('AAAA-MM-DD') y se escriben con los nombres de links.js, sin los datos de idioma del motor (B9);
@@ -121,10 +122,13 @@ function lastFiveBlock(results, calendarHref) {
 function standingsBlock(group, name, { shields, mine }) {
   if (!group.standings.length) return block('Clasificación', empty('Clasificación sin publicar'));
   const after = lastPlayedRound(group);
-  return box(standingsTable(group.standings, {
+  const table = box(standingsTable(group.standings, {
     view: 'puntos', mine: name, mineText: mine ? 'mi equipo' : 'este equipo', shields,
     hrefFor: row => teamHref(group.season, group.id, row.team), caption: `Clasificación: ${group.label}`,
   }), { title: 'Clasificación', context: after ? `tras la ${after.label.toLowerCase()}` : null });
+  // Qué se juega cada puesto (app de futbolaspalmas), como en la Tabla.
+  const zones = zonesText(group);
+  return zones ? html`${table}${notice('Qué se juega cada puesto:', zones)}` : table;
 }
 
 // Goleadores del equipo en su grupo: [{ name, goals, games }], por goles.

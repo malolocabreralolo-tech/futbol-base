@@ -81,6 +81,16 @@ Actas: además de lo de siempre, el lector guarda todo el cuerpo técnico (`staf
 
 `fetch_fp_app.py` (en el bot, tras la federación; futbolaspalmas sí contesta desde casa) lee la API de `directo.php`: `get_full_calendar&liga_id=N`, `get_live_data&liga_id=N` (tabla con la equipación de cada equipo, sanciones y qué significa cada puesto) y `get_live_data&liga_id=HOY&fecha_ver=AAAA-MM-DD` (todos los partidos de un día: estado, goleadores con minuto y nombre de pila, hora real, árbitros, técnicos y mapa). `import_fp_app.py` lo guarda en `fp_ligas`, `fp_teams`, `fp_matches` y `fp_goals`, y en las tablas de siempre solo completa: el resultado de un partido finalizado que no lo tiene y la hora que falte; nunca cambia un marcador. Los goles de la app ponen nombre en la cronología a los niños que la federación no publica.
 
+## Temporadas antiguas del portal (Wayback)
+
+futbolaspalmas.com guardaba de 2012-13 a 2020-21 una página por grupo con su calendario y su clasificación, y el Wayback Machine la archivó. `fetch_wayback_portal.py` baja la mejor captura de cada grupo (la lista revisada, con su temporada, código y captura, está en `scripts/wayback_portal_sources.json`; las páginas quedan en una caché fuera del repositorio, `~/.cache/futbol-base/wayback`) y la lee con `wayback_portal.py` (tres formatos: la página de grupo de 2015-16 a 2018-19, con la clasificación en tabla o en divs; `calendarioN.php` de 2013-14 y 2014-15, donde un campo «R» marca un resultado administrativo; y la tabla «CLASIFICACION» de 2012-13 a 2014-15). Deja `scripts/wayback_portal_<S>_raw.json`. La temporada se deduce de las fechas de los partidos, nunca de la captura. No hay goleadores: se cargaban por AJAX y no se archivaron.
+
+`import_wayback_portal.py` (en el bot, después de la federación):
+
+- 2012-13 a 2015-16 (solo están en el portal) se dan de alta con sus grupos (GC, BPGC y PGC de Gran Canaria; FV y LZ en 2012-13), su clasificación y sus partidos. 2012-13 no tiene partidos (no se archivaron los calendarios). La clasificación de 2014-15 se calcula con los partidos, que llegan hasta el 10 de mayo de 2015 (la archivada es de marzo-abril). Las plazas vacías («EXCLUIDO»), un retirado antes de empezar y un excluido (0 puntos con victorias) no entran en la tabla.
+- 2016-17 a 2018-19 son de la federación: solo los partidos, en sus grupos sin partidos, y solo entre equipos del grupo de la base. El portal mete a los retirados con 0 puntos y les da sus partidos como resultados administrativos; la federación los quita de la tabla y anula esos partidos, así que el calendario queda como su clasificación oficial. 2016-17 espera a que la federación la dé de alta.
+- Nombres: el de la base si es el mismo equipo (tabla `PORTAL_NAMES`, revisada a mano sobre una importación de prueba, o la misma clave y letra con team_score ≥ 0,9); si no, el del portal limpio (clubes que ya no existen: Labrantes, Almenara, Quintogal…).
+
 ## Torneos
 
 La Maspalomas Cup (no es de la federación) se guarda entera en `tournaments`, `tournament_matches` y `tournament_standings` (`import_torneos.py`, también alevín), además de su `data-maspalomas-cup-<año>.js`.

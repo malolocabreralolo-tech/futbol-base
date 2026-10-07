@@ -893,12 +893,15 @@ def import_past_seasons(conn, log=print):
     from import_fiflp_goleadores import import_changed_goleadores
     from import_fiflp_detalle import import_changed_detalle
     from import_torneos import import_changed_torneos
+    from import_wayback_portal import import_changed_portal
     steps = [("Actas descargadas de la federación (raws nuevos o cambiados)", import_changed_raws),
              ("Grupos de temporadas pasadas que faltaban (federación)", import_changed_grupos),
              ("Goleadores de temporadas pasadas de la federación (raws nuevos o cambiados)", import_changed_goleadores),
              ("Detalle de la federación: casa/fuera, equipos, campos y calendarios (raws nuevos o cambiados)",
               import_changed_detalle),
              ("Torneos que no son de la federación: Maspalomas Cup (raws nuevos o cambiados)", import_changed_torneos),
+             ("Temporadas antiguas de futbolaspalmas (Wayback, 2012-13 a 2018-19; raws nuevos o cambiados)",
+              import_changed_portal),
              ("Jugadores que ya no salen en ninguna acta", prune_players)]
     migrate(conn)
     for title, step in steps:

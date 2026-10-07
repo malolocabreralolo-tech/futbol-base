@@ -397,7 +397,7 @@ def generate_history_js(conn):
                JOIN teams h ON m.home_team_id = h.id
                JOIN teams a ON m.away_team_id = a.id
                WHERE m.group_id = ?
-               ORDER BY m.jornada, m.date, h.name""",
+               ORDER BY m.jornada, m.date, m.time, h.name""",
             (gid,),
         ).fetchall()
 
@@ -1065,7 +1065,7 @@ def get_historical_jornadas(conn, group_id, include_details=False):
            JOIN teams h ON m.home_team_id = h.id
            JOIN teams a ON m.away_team_id = a.id
            WHERE m.group_id = ?
-           ORDER BY m.jornada, m.date, h.name""",
+           ORDER BY m.jornada, m.date, m.time, h.name""",
         (group_id,),
     ).fetchall()
 

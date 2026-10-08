@@ -51,10 +51,9 @@ DETALLE_VERSION = "4"
 # copas de Lanzarote y Fuerteventura, sin un partido hasta ahora (2.480 partidos, sin desvío nuevo);
 # los de los retirados entran, como en el resto de temporadas. 2019-20, 2020-21, 2021-22, 2024-25 y
 # 2025-26 (revisadas el 8/10/2026): solo lo que falta y lo que cuadra mejor (complete_group); el
-# desvío de las cerradas, de 295 a 175 goles, sin ningún grupo peor. 2025-26 sale hasta que llegue
-# el calendario de sus 65 grupos y se revise (la primera tanda trajo 37; lo aplicado se queda).
+# desvío de las cerradas, de 295 a 175 goles, sin ningún grupo peor (2025-26, con sus 65 grupos).
 CALENDAR_SEASONS = ("2016-2017", "2017-2018", "2018-2019", "2019-2020", "2020-2021", "2021-2022",
-                    "2024-2025")
+                    "2024-2025", "2025-2026")
 
 SCHEMA = (
     """CREATE TABLE IF NOT EXISTS standings_detail (

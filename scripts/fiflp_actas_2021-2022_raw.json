@@ -137230,7 +137230,8 @@
       "home_team": "HARIA C.F.",
       "away_team": "LOMO \"A\", C.D. A",
       "venue": "LADISLAO RODRIGUEZ BONILLA F8(1)",
-      "city": "HARIA (CAPITAL MUNICIPAL)"
+      "city": "HARIA (CAPITAL MUNICIPAL)",
+      "venue_code": 228
     },
     "lineups": {
       "home": [
@@ -137362,7 +137363,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MIGLIORATI, CARLO",
+        "player_name": "MIGLIORATI, CARLO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137373,7 +137374,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MIGLIORATI, CARLO",
+        "player_name": "MIGLIORATI, CARLO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137384,7 +137385,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MIGLIORATI, CARLO",
+        "player_name": "MIGLIORATI, CARLO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137395,7 +137396,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MIGLIORATI, CARLO",
+        "player_name": "MIGLIORATI, CARLO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137406,7 +137407,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MIGLIORATI, CARLO",
+        "player_name": "MIGLIORATI, CARLO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137417,7 +137418,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MIGLIORATI, CARLO",
+        "player_name": "MIGLIORATI, CARLO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137428,7 +137429,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') PAJARO YUSTE, OMAR",
+        "player_name": "PAJARO YUSTE, OMAR",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137439,7 +137440,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MACHADO BETANCORT, MIKEL",
+        "player_name": "MACHADO BETANCORT, MIKEL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137450,7 +137451,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') VEGA VIERA, LIONEL",
+        "player_name": "VEGA VIERA, LIONEL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137461,7 +137462,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') HERNANDEZ SANCHEZ, VICENTE JOSE",
+        "player_name": "HERNANDEZ SANCHEZ, VICENTE JOSE",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137472,7 +137473,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') PERALTA GIL, ROMEO JAVIER",
+        "player_name": "PERALTA GIL, ROMEO JAVIER",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137483,7 +137484,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') PERALTA GIL, ROMEO JAVIER",
+        "player_name": "PERALTA GIL, ROMEO JAVIER",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137494,7 +137495,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') PERALTA GIL, ROMEO JAVIER",
+        "player_name": "PERALTA GIL, ROMEO JAVIER",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137505,7 +137506,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') PERALTA GIL, ROMEO JAVIER",
+        "player_name": "PERALTA GIL, ROMEO JAVIER",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137516,7 +137517,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') PERALTA GIL, ROMEO JAVIER",
+        "player_name": "PERALTA GIL, ROMEO JAVIER",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137539,9 +137540,21 @@
       "delegates_away": {
         "campo": null,
         "equipo": null
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Campo",
+          "FUENTES GONZALEZ, GABRIEL"
+        ],
+        [
+          "DEL. Equipo",
+          "FUENTES GONZALEZ, GABRIEL"
+        ]
+      ],
+      "all_away": []
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118372,
     "enumeration": {
       "comp_id": "892",
@@ -137561,7 +137574,8 @@
       "home_team": "LANZAROTE \"A\", U.D. A",
       "away_team": "TINAJO\"A\", U.D. A",
       "venue": "PUERTO ARRECIFE F8(1)",
-      "city": "Arrecife"
+      "city": "Arrecife",
+      "venue_code": 261
     },
     "lineups": {
       "home": [
@@ -137687,7 +137701,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') CORONAS DORESTE, CARLOS",
+        "player_name": "CORONAS DORESTE, CARLOS",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137698,7 +137712,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MORENO BETANCORT, GUAYRE",
+        "player_name": "MORENO BETANCORT, GUAYRE",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137709,7 +137723,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MORENO BETANCORT, GUAYRE",
+        "player_name": "MORENO BETANCORT, GUAYRE",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137720,7 +137734,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') FERNANDEZ ARROCHA, RAUL",
+        "player_name": "FERNANDEZ ARROCHA, RAUL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137731,7 +137745,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') FERNANDEZ ARROCHA, RAUL",
+        "player_name": "FERNANDEZ ARROCHA, RAUL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137742,7 +137756,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') GUTIERREZ MANTAS, ENZO",
+        "player_name": "GUTIERREZ MANTAS, ENZO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137753,7 +137767,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') GUTIERREZ MANTAS, ENZO",
+        "player_name": "GUTIERREZ MANTAS, ENZO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137776,9 +137790,17 @@
       "delegates_away": {
         "campo": null,
         "equipo": "MARTIN SOSA, YERAY ALEXANDER"
-      }
+      },
+      "all_home": [],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "MARTIN SOSA, YERAY ALEXANDER"
+        ]
+      ]
     },
     "consistent": false,
+    "staff_v": 2,
     "cod_acta": 118369,
     "enumeration": {
       "comp_id": "892",
@@ -137798,7 +137820,8 @@
       "home_team": "SPORTING TIAS \"A\", C.F. A",
       "away_team": "ALTAVISTA C.F.",
       "venue": "MUNICIPAL FCO BERMUDEZ HERNANDEZ PANCHO F8(1)",
-      "city": "TIAS (CAPITAL MUNICIPAL)"
+      "city": "TIAS (CAPITAL MUNICIPAL)",
+      "venue_code": 252
     },
     "lineups": {
       "home": [
@@ -137966,7 +137989,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') ROBLES TORIBIO, HUGO",
+        "player_name": "ROBLES TORIBIO, HUGO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137977,7 +138000,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') ROBLES TORIBIO, HUGO",
+        "player_name": "ROBLES TORIBIO, HUGO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137988,7 +138011,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') ROBLES TORIBIO, HUGO",
+        "player_name": "ROBLES TORIBIO, HUGO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -137999,7 +138022,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') SOCORRO ALVAREZ, ALVARO",
+        "player_name": "SOCORRO ALVAREZ, ALVARO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138010,7 +138033,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') ROGER HERNANDEZ, HECTOR",
+        "player_name": "ROGER HERNANDEZ, HECTOR",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138021,7 +138044,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') DELLA MONICA CASAIS, ENZO",
+        "player_name": "DELLA MONICA CASAIS, ENZO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138032,7 +138055,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') DE LEON MORALES, EMMANUEL",
+        "player_name": "DE LEON MORALES, EMMANUEL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138043,7 +138066,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') SPINELLI, BAUTISTA",
+        "player_name": "SPINELLI, BAUTISTA",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138066,9 +138089,22 @@
       "delegates_away": {
         "campo": null,
         "equipo": "GOMEZ JIMENEZ, MARIA RAQUEL"
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Equipo",
+          "DE LEON MARTIN, ARMANDO JESUS"
+        ]
+      ],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "GOMEZ JIMENEZ, MARIA RAQUEL"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118370,
     "enumeration": {
       "comp_id": "892",
@@ -138088,7 +138124,8 @@
       "home_team": "MACIOT SPORT, C.D.",
       "away_team": "HARIA C.F.",
       "venue": "MCPAL.S.F. JAVIER F8 (1)",
-      "city": "Arrecife"
+      "city": "Arrecife",
+      "venue_code": 444
     },
     "lineups": {
       "home": [
@@ -138250,7 +138287,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') AUDENAERDE RODRIGUEZ, THEO",
+        "player_name": "AUDENAERDE RODRIGUEZ, THEO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138261,7 +138298,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') MIGLIORATI, CARLO",
+        "player_name": "MIGLIORATI, CARLO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138272,7 +138309,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') MIGLIORATI, CARLO",
+        "player_name": "MIGLIORATI, CARLO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138283,7 +138320,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') BARANE EL ASRAOUI, YAHYA",
+        "player_name": "BARANE EL ASRAOUI, YAHYA",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138294,7 +138331,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') VEGA CRUZ, CRISTOBAL",
+        "player_name": "VEGA CRUZ, CRISTOBAL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138305,7 +138342,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') ZERPA NIZ, SAUL",
+        "player_name": "ZERPA NIZ, SAUL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138328,9 +138365,17 @@
       "delegates_away": {
         "campo": null,
         "equipo": "FUENTES GONZALEZ, GABRIEL"
-      }
+      },
+      "all_home": [],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "FUENTES GONZALEZ, GABRIEL"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118379,
     "enumeration": {
       "comp_id": "892",
@@ -138350,7 +138395,8 @@
       "home_team": "TINAJO\"A\", U.D. A",
       "away_team": "TAHICHE \"A\", C.D. A",
       "venue": "LOS VOLCANES F8(1)",
-      "city": "Tinajo"
+      "city": "Tinajo",
+      "venue_code": 231
     },
     "lineups": {
       "home": [
@@ -138500,7 +138546,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') DE GANZO CASTIÑEIRAS, ALEJANDRO",
+        "player_name": "DE GANZO CASTIÑEIRAS, ALEJANDRO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138511,7 +138557,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') NAVARRO RODRIGUEZ, DIEGO",
+        "player_name": "NAVARRO RODRIGUEZ, DIEGO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138522,7 +138568,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') NAVARRO RODRIGUEZ, DIEGO",
+        "player_name": "NAVARRO RODRIGUEZ, DIEGO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138533,7 +138579,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') POPESCU CARABASEL, NICOLAS ANDREI",
+        "player_name": "POPESCU CARABASEL, NICOLAS ANDREI",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138544,7 +138590,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') POPESCU CARABASEL, NICOLAS ANDREI",
+        "player_name": "POPESCU CARABASEL, NICOLAS ANDREI",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138555,7 +138601,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') PEREZ ROBAINA, ALVARO",
+        "player_name": "PEREZ ROBAINA, ALVARO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138566,7 +138612,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') ARBELO MARTIN, OLIVER",
+        "player_name": "ARBELO MARTIN, OLIVER",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138577,7 +138623,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') OLIVERO CRUZ, UNAY",
+        "player_name": "OLIVERO CRUZ, UNAY",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138600,9 +138646,22 @@
       "delegates_away": {
         "campo": null,
         "equipo": "FIGUEROA HERNANDEZ, OMAR"
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Equipo",
+          "MARTIN SOSA, YERAY ALEXANDER"
+        ]
+      ],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "FIGUEROA HERNANDEZ, OMAR"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118375,
     "enumeration": {
       "comp_id": "892",
@@ -138622,7 +138681,8 @@
       "home_team": "ALTAVISTA C.F.",
       "away_team": "LANZAROTE \"A\", U.D. A",
       "venue": "AGAPITO REYES VIERA F8(1)",
-      "city": "Arrecife"
+      "city": "Arrecife",
+      "venue_code": 223
     },
     "lineups": {
       "home": [
@@ -138748,7 +138808,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') FERNANDEZ ARROCHA, RAUL",
+        "player_name": "FERNANDEZ ARROCHA, RAUL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138759,7 +138819,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') GUTIERREZ MANTAS, ENZO",
+        "player_name": "GUTIERREZ MANTAS, ENZO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138770,7 +138830,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') GUTIERREZ MANTAS, ENZO",
+        "player_name": "GUTIERREZ MANTAS, ENZO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -138793,9 +138853,26 @@
       "delegates_away": {
         "campo": null,
         "equipo": "CANILLAS RAMOS, BEATRIZ"
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Campo",
+          "ESPINAL REYES, ANGEL"
+        ],
+        [
+          "DEL. Equipo",
+          "GOMEZ JIMENEZ, MARIA RAQUEL"
+        ]
+      ],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "CANILLAS RAMOS, BEATRIZ"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118376,
     "enumeration": {
       "comp_id": "892",
@@ -138815,7 +138892,8 @@
       "home_team": "SAN BARTOLOME \"A\", C.F. A",
       "away_team": "SPORTING TIAS \"A\", C.F. A",
       "venue": "PEDRO ESPINOSA DE LEON \"COLON\" F8(1)",
-      "city": "San Bartolomé"
+      "city": "San Bartolomé",
+      "venue_code": 258
     },
     "lineups": {
       "home": [
@@ -138989,7 +139067,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') SOCORRO ALVAREZ, ALVARO",
+        "player_name": "SOCORRO ALVAREZ, ALVARO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139000,7 +139078,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') NODA SANCHEZ, CARLOTA",
+        "player_name": "NODA SANCHEZ, CARLOTA",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139011,7 +139089,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') RODRIGUEZ GARCIA, UNAI",
+        "player_name": "RODRIGUEZ GARCIA, UNAI",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139022,7 +139100,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') PEREZ MACHIN, GADIEL JESUS",
+        "player_name": "PEREZ MACHIN, GADIEL JESUS",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139033,7 +139111,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') PEREZ MACHIN, GADIEL JESUS",
+        "player_name": "PEREZ MACHIN, GADIEL JESUS",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139056,9 +139134,26 @@
       "delegates_away": {
         "campo": null,
         "equipo": "DE LEON MARTIN, ARMANDO JESUS"
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Campo",
+          "HERNANDEZ GONZALEZ, YERAY CARMELO"
+        ],
+        [
+          "DEL. Equipo",
+          "HERNANDEZ GONZALEZ, YERAY CARMELO"
+        ]
+      ],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "DE LEON MARTIN, ARMANDO JESUS"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118377,
     "enumeration": {
       "comp_id": "892",
@@ -139078,7 +139173,8 @@
       "home_team": "UNION SUR YAIZA \"A\", C.D. A",
       "away_team": "TEGUISE, C.D.",
       "venue": "MUNICIPAL DE YAIZA F8(1)",
-      "city": "Yaiza"
+      "city": "Yaiza",
+      "venue_code": 255
     },
     "lineups": {
       "home": [
@@ -139222,7 +139318,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') MEJIAS DE LEON, ERIAN",
+        "player_name": "MEJIAS DE LEON, ERIAN",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139233,7 +139329,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MENGUI, ANTONIO DANIEL",
+        "player_name": "MENGUI, ANTONIO DANIEL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139244,7 +139340,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') PERAZA CRESPO, LEONEL",
+        "player_name": "PERAZA CRESPO, LEONEL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139255,7 +139351,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') HURTADO LUCUMI, LUCAS ABRAHAM",
+        "player_name": "HURTADO LUCUMI, LUCAS ABRAHAM",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139266,7 +139362,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') HURTADO LUCUMI, LUCAS ABRAHAM",
+        "player_name": "HURTADO LUCUMI, LUCAS ABRAHAM",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139277,7 +139373,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') HURTADO LUCUMI, LUCAS ABRAHAM",
+        "player_name": "HURTADO LUCUMI, LUCAS ABRAHAM",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139288,7 +139384,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') HURTADO LUCUMI, LUCAS ABRAHAM",
+        "player_name": "HURTADO LUCUMI, LUCAS ABRAHAM",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139299,7 +139395,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') GORRIN REGALADO, ALEX",
+        "player_name": "GORRIN REGALADO, ALEX",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139322,9 +139418,22 @@
       "delegates_away": {
         "campo": null,
         "equipo": "CEDRES BARRETO, OMAR FRANCISCO"
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Equipo",
+          "TAVIO MORALES, ANTONIO JOSE"
+        ]
+      ],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "CEDRES BARRETO, OMAR FRANCISCO"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118374,
     "enumeration": {
       "comp_id": "892",
@@ -139344,7 +139453,8 @@
       "home_team": "LOMO \"A\", C.D. A",
       "away_team": "PUERTO DEL CARMEN, F.C.",
       "venue": "PUERTO ARRECIFE F8(1)",
-      "city": "Arrecife"
+      "city": "Arrecife",
+      "venue_code": 261
     },
     "lineups": {
       "home": [
@@ -139470,7 +139580,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') CAI ZHENG, LIXU",
+        "player_name": "CAI ZHENG, LIXU",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139481,7 +139591,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') ESPINO GARCIA DE ALBENIZ, JOEL",
+        "player_name": "ESPINO GARCIA DE ALBENIZ, JOEL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139492,7 +139602,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') VALENZUELA CLEVEL, GILEN",
+        "player_name": "VALENZUELA CLEVEL, GILEN",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139503,7 +139613,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') MARTIN PEREZ, MENCEY",
+        "player_name": "MARTIN PEREZ, MENCEY",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139514,7 +139624,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') VEGA VIERA, LIONEL",
+        "player_name": "VEGA VIERA, LIONEL",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139525,7 +139635,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') PERALTA GIL, ROMEO JAVIER",
+        "player_name": "PERALTA GIL, ROMEO JAVIER",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139536,7 +139646,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') STONIER, THEO JAMES",
+        "player_name": "STONIER, THEO JAMES",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139559,9 +139669,26 @@
       "delegates_away": {
         "campo": null,
         "equipo": "TRIGG, JAMIE REGINALD"
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Campo",
+          "DOMINGUEZ DELGADO, ABIAN"
+        ],
+        [
+          "DEL. Equipo",
+          "SANTANA DIAZ, AYTHAMI ISRAEL"
+        ]
+      ],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "TRIGG, JAMIE REGINALD"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118378,
     "enumeration": {
       "comp_id": "892",
@@ -139581,7 +139708,8 @@
       "home_team": "PUERTO DEL CARMEN, F.C.",
       "away_team": "MACIOT SPORT, C.D.",
       "venue": "MUNICIPAL MANUEL ARROCHA GARCIA F8(1)",
-      "city": "PUERTO DEL CARMEN"
+      "city": "PUERTO DEL CARMEN",
+      "venue_code": 243
     },
     "lineups": {
       "home": [
@@ -139707,7 +139835,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') CAI ZHENG, LIXU",
+        "player_name": "CAI ZHENG, LIXU",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139718,7 +139846,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') BARANE EL ASRAOUI, YAHYA",
+        "player_name": "BARANE EL ASRAOUI, YAHYA",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139729,7 +139857,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') STONIER, THEO JAMES",
+        "player_name": "STONIER, THEO JAMES",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139752,9 +139880,22 @@
       "delegates_away": {
         "campo": null,
         "equipo": "BENITEZ RODRIGUEZ, MARIO JESUS"
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Equipo",
+          "TRIGG, JAMIE REGINALD"
+        ]
+      ],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "BENITEZ RODRIGUEZ, MARIO JESUS"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118386,
     "enumeration": {
       "comp_id": "892",
@@ -139774,7 +139915,8 @@
       "home_team": "TEGUISE, C.D.",
       "away_team": "TINAJO\"A\", U.D. A",
       "venue": "MUNICIPAL DE TEGUISE F8(1)",
-      "city": "TEGUISE (CAPITAL MUNICIPAL)"
+      "city": "TEGUISE (CAPITAL MUNICIPAL)",
+      "venue_code": 249
     },
     "lineups": {
       "home": [
@@ -139942,7 +140084,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') SAAVEDRA PEREZ, ARIDAY",
+        "player_name": "SAAVEDRA PEREZ, ARIDAY",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139953,7 +140095,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') OLIVERO CRUZ, UNAY",
+        "player_name": "OLIVERO CRUZ, UNAY",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -139976,9 +140118,17 @@
       "delegates_away": {
         "campo": null,
         "equipo": "MARTIN SOSA, YERAY ALEXANDER"
-      }
+      },
+      "all_home": [],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "MARTIN SOSA, YERAY ALEXANDER"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118382,
     "enumeration": {
       "comp_id": "892",
@@ -139998,7 +140148,8 @@
       "home_team": "TAHICHE \"A\", C.D. A",
       "away_team": "ALTAVISTA C.F.",
       "venue": "MUNICIPAL DE TAHICHE F8(1)",
-      "city": "TEGUISE (CAPITAL MUNICIPAL)"
+      "city": "TEGUISE (CAPITAL MUNICIPAL)",
+      "venue_code": 246
     },
     "lineups": {
       "home": [
@@ -140142,7 +140293,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') ROCIO MORALES, ALVARO",
+        "player_name": "ROCIO MORALES, ALVARO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -140153,7 +140304,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') POPESCU CARABASEL, NICOLAS ANDREI",
+        "player_name": "POPESCU CARABASEL, NICOLAS ANDREI",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -140164,7 +140315,7 @@
       {
         "kind": "goal",
         "side": "away",
-        "player_name": "(') ROBAYNA ABREUT, UNAI",
+        "player_name": "ROBAYNA ABREUT, UNAI",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -140175,7 +140326,7 @@
       {
         "kind": "goal",
         "side": "home",
-        "player_name": "(') GARCIA HURTADO, HUGO",
+        "player_name": "GARCIA HURTADO, HUGO",
         "minute": null,
         "goal_type": "normal",
         "score": [
@@ -140198,9 +140349,26 @@
       "delegates_away": {
         "campo": null,
         "equipo": "GOMEZ JIMENEZ, MARIA RAQUEL"
-      }
+      },
+      "all_home": [
+        [
+          "DEL. Campo",
+          "UQUILLAS CURICHO, JUAN DANIEL"
+        ],
+        [
+          "DEL. Equipo",
+          "FIGUEROA HERNANDEZ, OMAR"
+        ]
+      ],
+      "all_away": [
+        [
+          "DEL. Equipo",
+          "GOMEZ JIMENEZ, MARIA RAQUEL"
+        ]
+      ]
     },
     "consistent": true,
+    "staff_v": 2,
     "cod_acta": 118383,
     "enumeration": {
       "comp_id": "892",

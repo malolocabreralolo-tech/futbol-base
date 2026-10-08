@@ -1,10 +1,10 @@
 {
  "dias": {
-  "2026-10-08": "2026-10-08T06:33:08"
+  "2026-10-08": "2026-10-08T23:15:02"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -139,7 +139,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -255,7 +255,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -371,7 +371,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -506,7 +506,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -641,7 +641,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -757,7 +757,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -892,7 +892,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1008,7 +1008,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1124,7 +1124,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1143,25 +1143,6 @@
    "name": "Benjamin Gran Canaria Grupo 10",
    "tabla": [
     {
-     "banderas": "bandera-celeste-negro.png",
-     "dg": "0",
-     "equipacion": "2026-azul-negro-azules.png",
-     "escudo": "esccudoBachicanLasMesas.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1250,
-     "nombre": "Athl. Bachicán Las Mesas B",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-amarilla-gran-canaria.png",
      "dg": "0",
      "equipacion": "2026-amarilla-amarillo-amarillas.png",
@@ -1174,7 +1155,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 2,
+     "posicion_anterior": 1,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -1189,6 +1170,25 @@
      "gf": "0",
      "id": 1242,
      "nombre": "CD Batán B",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 0,
+     "posicion_anterior": 2,
+     "pp": 0,
+     "puntos": 0,
+     "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-azul-gran-canaria.png",
+     "dg": "0",
+     "equipacion": "2026-azul-blanco-azules.png",
+     "escudo": "100x100lastorres.png",
+     "gc": "0",
+     "gf": "0",
+     "id": 1244,
+     "nombre": "L.Torres/EUDLP",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -1219,25 +1219,6 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-azul-gran-canaria.png",
-     "dg": "0",
-     "equipacion": "2026-azul-blanco-azules.png",
-     "escudo": "100x100lastorres.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1244,
-     "nombre": "UD Las Torres",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 5,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-blanca-azul-gran-canaria.png",
      "dg": "0",
      "equipacion": "2026-blanca-azul-azules.png",
@@ -1250,7 +1231,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 6,
+     "posicion_anterior": 5,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -1269,7 +1250,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 7,
+     "posicion_anterior": 6,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -1278,7 +1259,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1394,7 +1375,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1529,7 +1510,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1645,7 +1626,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1761,7 +1742,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1896,7 +1877,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2031,7 +2012,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2166,7 +2147,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2185,41 +2166,24 @@
    "name": "Benjamin Gran Canaria Grupo 18",
    "tabla": [
     {
-     "banderas": "bandera-amarilloClaro-azul.png",
-     "dg": "0",
-     "equipacion": "2026-amarilla-azul-amarillasazul.png",
-     "escudo": "100x100arinaga.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1290,
-     "nombre": "CD Arinaga B",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-violeta-blanca.png",
-     "dg": "0",
+     "dg": "1",
      "equipacion": "2026-violeta-blanco-blancas.png",
      "escudo": "escudoFutboltec.png",
-     "gc": "0",
-     "gf": "0",
+     "gc": "1",
+     "gf": "2",
      "id": 1293,
      "nombre": "CD Futboltec",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 2,
+     "pg": 1,
+     "pj": 1,
+     "posicion_anterior": 1,
      "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
+     "puntos": 3,
+     "racha_ultimos_5": [
+      "V"
+     ],
      "sanciones": 0
     },
     {
@@ -2235,7 +2199,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 3,
+     "posicion_anterior": 2,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -2254,7 +2218,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 4,
+     "posicion_anterior": 3,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -2273,7 +2237,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 5,
+     "posicion_anterior": 4,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -2292,16 +2256,37 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 6,
+     "posicion_anterior": 5,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-amarilloClaro-azul.png",
+     "dg": "-1",
+     "equipacion": "2026-amarilla-azul-amarillasazul.png",
+     "escudo": "100x100arinaga.png",
+     "gc": "2",
+     "gf": "1",
+     "id": 1290,
+     "nombre": "CD Arinaga B",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 1,
+     "posicion_anterior": 6,
+     "pp": 1,
+     "puntos": 0,
+     "racha_ultimos_5": [
+      "D"
+     ],
      "sanciones": 0
     }
    ]
   },
   "140": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2417,7 +2402,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2533,7 +2518,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2649,7 +2634,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2784,7 +2769,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2919,7 +2904,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3054,7 +3039,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3322,7 +3307,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3590,7 +3575,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3858,7 +3843,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-08T06:33:08",
+   "fetched": "2026-10-08T23:15:02",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3877,6 +3862,27 @@
    "name": "Prebenjamín Gran Canaria Grupo 4",
    "tabla": [
     {
+     "banderas": "bandera-blanca-gran-canaria.png",
+     "dg": "2",
+     "equipacion": "2026-blanca-blanco-blancas.png",
+     "escudo": "100x100carrizal.png",
+     "gc": "0",
+     "gf": "2",
+     "id": 1374,
+     "nombre": "Unión Carrizal",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 1,
+     "pj": 1,
+     "posicion_anterior": 1,
+     "pp": 0,
+     "puntos": 3,
+     "racha_ultimos_5": [
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-verde-blanca.png",
      "dg": "0",
      "equipacion": "2026-verde-blanco-blancas.png",
@@ -3889,7 +3895,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 1,
+     "posicion_anterior": 2,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -3908,7 +3914,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 2,
+     "posicion_anterior": 3,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -3927,7 +3933,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 3,
+     "posicion_anterior": 4,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -3946,7 +3952,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 4,
+     "posicion_anterior": 5,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -3965,7 +3971,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 5,
+     "posicion_anterior": 6,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -3984,7 +3990,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 6,
+     "posicion_anterior": 7,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -4003,7 +4009,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 7,
+     "posicion_anterior": 8,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -4022,7 +4028,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 8,
+     "posicion_anterior": 9,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -4037,25 +4043,6 @@
      "gf": "0",
      "id": 1378,
      "nombre": "San Fernando",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 9,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-roja-azul.png",
-     "dg": "0",
-     "equipacion": "2026-roja-azules-azules.png",
-     "escudo": "100x100sanpedromartir.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1368,
-     "nombre": "San Pedro Mártir",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -4105,22 +4092,24 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-blanca-gran-canaria.png",
-     "dg": "0",
-     "equipacion": "2026-blanca-blanco-blancas.png",
-     "escudo": "100x100carrizal.png",
-     "gc": "0",
+     "banderas": "bandera-roja-azul.png",
+     "dg": "-2",
+     "equipacion": "2026-roja-azules-azules.png",
+     "escudo": "100x100sanpedromartir.png",
+     "gc": "2",
      "gf": "0",
-     "id": 1374,
-     "nombre": "Unión Carrizal",
+     "id": 1368,
+     "nombre": "San Pedro Mártir",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 0,
+     "pj": 1,
      "posicion_anterior": 13,
-     "pp": 0,
+     "pp": 1,
      "puntos": 0,
-     "racha_ultimos_5": [],
+     "racha_ultimos_5": [
+      "D"
+     ],
      "sanciones": 0
     }
    ]
@@ -6520,7 +6509,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Las Torres"
+   "visitante": "L.Torres/EUDLP"
   },
   "18836": {
    "arbitro_principal_nombre": null,
@@ -6652,7 +6641,7 @@
    "id": 18840,
    "jornada": 2,
    "liga_id": 131,
-   "local": "UD Las Torres",
+   "local": "L.Torres/EUDLP",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
    "permitir_comentarios_liga": 1,
@@ -6704,7 +6693,7 @@
    "local": "Unión Viera",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
-   "visitante": "UD Las Torres"
+   "visitante": "L.Torres/EUDLP"
   },
   "18844": {
    "escudo_local": "100x100tamaraceite.png",
@@ -6736,7 +6725,7 @@
    "local": "Real Sportin San José B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
-   "visitante": "UD Las Torres"
+   "visitante": "L.Torres/EUDLP"
   },
   "18846": {
    "escudo_local": "isletaEscudo.png",
@@ -6765,7 +6754,7 @@
    "id": 18847,
    "jornada": 5,
    "liga_id": 131,
-   "local": "UD Las Torres",
+   "local": "L.Torres/EUDLP",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
    "visitante": "Atl. Isleta B"
@@ -8740,15 +8729,15 @@
    "escudo_local": "100x100arinaga.png",
    "escudo_visitante": "escudoFutboltec.png",
    "estadio": "Mun. Arinaga",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-08 17:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 1,
+   "goles_visitante": 2,
    "hora_inicio": null,
    "id": 18940,
    "id_local": 1290,
@@ -8756,7 +8745,7 @@
    "jornada": 1,
    "liga_id": 139,
    "local": "CD Arinaga B",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 18",
    "pen_local": "",
@@ -8765,8 +8754,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
@@ -10690,7 +10683,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -10731,7 +10724,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -10772,7 +10765,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -10813,7 +10806,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -10854,7 +10847,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -10895,7 +10888,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -10918,7 +10911,7 @@
    "local": "San Isidro",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Moya"
   },
   "19037": {
@@ -10936,7 +10929,7 @@
    "local": "CD Guayarmina",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "Santidad Banot"
   },
   "19038": {
@@ -10954,7 +10947,7 @@
    "local": "UD Guía",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "Roque Amagro"
   },
   "19039": {
@@ -10972,7 +10965,7 @@
    "local": "UD Atalaya",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "Gáldar jacobeo27"
   },
   "19040": {
@@ -10990,7 +10983,7 @@
    "local": "CD Cardones",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "CD Firgas"
   },
   "19041": {
@@ -11008,7 +11001,7 @@
    "local": "Arucas CF",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Barrial"
   },
   "19042": {
@@ -13348,7 +13341,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -13389,7 +13382,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -13430,7 +13423,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -13471,7 +13464,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -13512,7 +13505,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -13553,7 +13546,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -13576,7 +13569,7 @@
    "local": "CD Glaucus",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 2",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "Arucas CF B"
   },
   "19193": {
@@ -13594,7 +13587,7 @@
    "local": "Acodetti CF",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 2",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "Atl. Bachicán Las Mesas"
   },
   "19194": {
@@ -13612,7 +13605,7 @@
    "local": "UD Tamaraceite",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 2",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "San Mateo"
   },
   "19195": {
@@ -13630,7 +13623,7 @@
    "local": "Villa Santa Brígida",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 2",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "CD Batán"
   },
   "19196": {
@@ -13648,7 +13641,7 @@
    "local": "Las Mesas Huracán",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 2",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "RC Victoria"
   },
   "19197": {
@@ -13666,7 +13659,7 @@
    "local": "Unión Viera",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 2",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "AD Huracán"
   },
   "19198": {
@@ -16006,7 +15999,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -16047,7 +16040,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -16088,7 +16081,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -16129,7 +16122,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -16170,7 +16163,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -16211,7 +16204,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -16234,7 +16227,7 @@
    "local": "CD Doramas B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 3",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "Maspa Training B"
   },
   "19349": {
@@ -16252,7 +16245,7 @@
    "local": "CF Heidelberg",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 3",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Valsequillo"
   },
   "19350": {
@@ -16270,7 +16263,7 @@
    "local": "CD Ingenio B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 3",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Tamaraceite B"
   },
   "19351": {
@@ -16288,7 +16281,7 @@
    "local": "UD Telde",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 3",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "Las Huesas"
   },
   "19352": {
@@ -16306,7 +16299,7 @@
    "local": "Acodetti CF B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 3",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "Gran Canaria"
   },
   "19353": {
@@ -16324,7 +16317,7 @@
    "local": "CD Calero",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 3",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "La Garita"
   },
   "19354": {
@@ -18643,7 +18636,7 @@
    "escudo_local": "100x100sanpedromartir.png",
    "escudo_visitante": "100x100carrizal.png",
    "estadio": "Doctoral",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-08 18:00:00",
    "goleadores_local": null,
@@ -18651,7 +18644,7 @@
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
    "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_visitante": 2,
    "hora_inicio": null,
    "id": 19498,
    "id_local": 1368,
@@ -18659,17 +18652,21 @@
    "jornada": 1,
    "liga_id": 149,
    "local": "San Pedro Mártir",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
    "pen_local": "",
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios": 1,
-   "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
+   "permitir_comentarios": 0,
+   "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
@@ -18708,7 +18705,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -18749,7 +18746,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -18790,7 +18787,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -18831,7 +18828,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -18872,7 +18869,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
    "tecnico_local": null,
@@ -18895,7 +18892,7 @@
    "local": "CD Arguineguín",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Balos"
   },
   "19505": {
@@ -18913,7 +18910,7 @@
    "local": "CD Tablero",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "CD Cerruda"
   },
   "19506": {
@@ -18931,7 +18928,7 @@
    "local": "Unión Carrizal",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "CD Futboltec"
   },
   "19507": {
@@ -18949,7 +18946,7 @@
    "local": "CD Ingenio",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Vecindario"
   },
   "19508": {
@@ -18967,7 +18964,7 @@
    "local": "San Fernando",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "San Pedro Mártir"
   },
   "19509": {
@@ -18985,7 +18982,7 @@
    "local": "Maspa Training",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
-   "permitir_comentarios_liga": 1,
+   "permitir_comentarios_liga": 0,
    "visitante": "CD Doramas"
   },
   "19510": {

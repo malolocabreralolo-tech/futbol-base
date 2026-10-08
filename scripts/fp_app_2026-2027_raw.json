@@ -1,8 +1,10 @@
 {
- "dias": {},
+ "dias": {
+  "2026-10-08": "2026-10-08T00:14:39"
+ },
  "ligas": {
   "121": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -137,7 +139,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -253,7 +255,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -369,7 +371,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -504,7 +506,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -639,7 +641,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -755,7 +757,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -890,7 +892,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1006,7 +1008,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1122,7 +1124,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1276,7 +1278,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1392,7 +1394,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1527,7 +1529,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1643,7 +1645,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1759,7 +1761,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1894,7 +1896,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2029,7 +2031,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2164,7 +2166,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2299,7 +2301,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2415,7 +2417,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2531,7 +2533,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2647,7 +2649,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2782,7 +2784,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2917,7 +2919,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3052,7 +3054,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3320,7 +3322,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3588,7 +3590,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3856,7 +3858,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-07T23:53:11",
+   "fetched": "2026-10-08T00:14:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -8733,6 +8735,8 @@
    "campo_gps": "https://goo.gl/maps/Ks8x6ZHjpiZpBhZ29",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100arinaga.png",
    "escudo_visitante": "escudoFutboltec.png",
    "estadio": "Mun. Arinaga",
@@ -8759,6 +8763,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -18633,6 +18638,8 @@
    "campo_gps": "https://goo.gl/maps/VFAWSiAdnVp",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100sanpedromartir.png",
    "escudo_visitante": "100x100carrizal.png",
    "estadio": "Doctoral",
@@ -18659,6 +18666,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],

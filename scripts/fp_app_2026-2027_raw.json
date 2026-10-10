@@ -2,11 +2,11 @@
  "dias": {
   "2026-10-08": "2026-10-09T12:57:17",
   "2026-10-09": "2026-10-10T04:53:20",
-  "2026-10-10": "2026-10-10T17:38:50"
+  "2026-10-10": "2026-10-10T21:32:21"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -153,7 +153,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -277,7 +277,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -397,7 +397,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -540,7 +540,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -679,7 +679,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -799,7 +799,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -942,7 +942,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1062,7 +1062,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1178,7 +1178,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1321,7 +1321,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1437,7 +1437,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1580,7 +1580,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1704,7 +1704,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1723,6 +1723,48 @@
    "name": "Benjamin Gran Canaria Grupo 14",
    "tabla": [
     {
+     "banderas": "bandera-celeste-azulmarino.png",
+     "dg": "15",
+     "equipacion": "2026-celeste-azul-azul.png",
+     "escudo": "default.png",
+     "gc": "0",
+     "gf": "15",
+     "id": 1270,
+     "nombre": "CD Glaucus",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "1",
+     "pj": 1,
+     "posicion_anterior": 1,
+     "pp": "0",
+     "puntos": "3",
+     "racha_ultimos_5": [
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-roja-azulmarina.png",
+     "dg": "10",
+     "equipacion": "2026-roja-azulmarinos-rojas.png",
+     "escudo": "100x100veteranos.png",
+     "gc": "0",
+     "gf": "10",
+     "id": 1269,
+     "nombre": "CD Veteranos",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "1",
+     "pj": 1,
+     "posicion_anterior": 2,
+     "pp": "0",
+     "puntos": "3",
+     "racha_ultimos_5": [
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-blanca-diagonal-roja.png",
      "dg": "0",
      "equipacion": "2026-blancafraroja-blancos-blancos.png",
@@ -1732,95 +1774,61 @@
      "id": 1271,
      "nombre": "AD Huracán C",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 0,
-     "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 0,
+     "posicion_anterior": 3,
+     "pp": "0",
+     "puntos": "0",
      "racha_ultimos_5": [],
      "sanciones": 0
     },
     {
      "banderas": "bandera-celeste-negro.png",
-     "dg": "0",
+     "dg": "-10",
      "equipacion": "2026-azul-negro-azules.png",
      "escudo": "esccudoBachicanLasMesas.png",
-     "gc": "0",
+     "gc": "10",
      "gf": "0",
      "id": 1267,
      "nombre": "Atl. Bachicán Las Mesas",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-celeste-azulmarino.png",
-     "dg": "0",
-     "equipacion": "2026-celeste-azul-azul.png",
-     "escudo": "default.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1270,
-     "nombre": "CD Glaucus",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 3,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-roja-azulmarina.png",
-     "dg": "0",
-     "equipacion": "2026-roja-azulmarinos-rojas.png",
-     "escudo": "100x100veteranos.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1269,
-     "nombre": "CD Veteranos",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
+     "pe": "0",
+     "pg": "0",
+     "pj": 1,
      "posicion_anterior": 4,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
+     "pp": "1",
+     "puntos": "0",
+     "racha_ultimos_5": [
+      "D"
+     ],
      "sanciones": 0
     },
     {
      "banderas": "bandera-celeste-azulmarino.png",
-     "dg": "0",
+     "dg": "-15",
      "equipacion": "2026-azulturquesa-azulmarino-azules.png",
      "escudo": "escudoCarnevali-26-27.png",
-     "gc": "0",
+     "gc": "15",
      "gf": "0",
      "id": 1268,
      "nombre": "Daniel Carnevali B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
+     "pe": "0",
+     "pg": "0",
+     "pj": 1,
      "posicion_anterior": 5,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
+     "pp": "1",
+     "puntos": "0",
+     "racha_ultimos_5": [
+      "D"
+     ],
      "sanciones": 0
     }
    ]
   },
   "136": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1967,7 +1975,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2110,7 +2118,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2257,7 +2265,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2404,7 +2412,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2524,7 +2532,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2648,7 +2656,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2772,7 +2780,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2915,7 +2923,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3062,7 +3070,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3209,7 +3217,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3501,7 +3509,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3520,6 +3528,48 @@
    "name": "Prebenjamín Gran Canaria Grupo 2",
    "tabla": [
     {
+     "banderas": "bandera-blanca-verde-gc.png",
+     "dg": "11",
+     "equipacion": "2026-blancahomverde-verde-blancas.png",
+     "escudo": "100x100villa.png",
+     "gc": "1",
+     "gf": "12",
+     "id": 1350,
+     "nombre": "Villa Santa Brígida",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 1,
+     "pj": 1,
+     "posicion_anterior": 1,
+     "pp": 0,
+     "puntos": 3,
+     "racha_ultimos_5": [
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-blanca-diagonal-roja.png",
+     "dg": "6",
+     "equipacion": "2026-blancafraroja-blancos-blancos.png",
+     "escudo": "200x200huracan.png",
+     "gc": "1",
+     "gf": "7",
+     "id": 1345,
+     "nombre": "AD Huracán",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 1,
+     "pj": 1,
+     "posicion_anterior": 2,
+     "pp": 0,
+     "puntos": 3,
+     "racha_ultimos_5": [
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-blanca-diagonal-roja.png",
      "dg": "6",
      "equipacion": "2026-blancafraroja-blancos-blancos.png",
@@ -3532,7 +3582,7 @@
      "pe": 0,
      "pg": 1,
      "pj": 1,
-     "posicion_anterior": 1,
+     "posicion_anterior": 3,
      "pp": 0,
      "puntos": 3,
      "racha_ultimos_5": [
@@ -3553,26 +3603,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-blanca-diagonal-roja.png",
-     "dg": "0",
-     "equipacion": "2026-blancafraroja-blancos-blancos.png",
-     "escudo": "200x200huracan.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1345,
-     "nombre": "AD Huracán",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 3,
+     "posicion_anterior": 4,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -3591,7 +3622,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 4,
+     "posicion_anterior": 5,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -3606,25 +3637,6 @@
      "gf": "0",
      "id": 1346,
      "nombre": "Atl. Angostura",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 5,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-celeste-negro.png",
-     "dg": "0",
-     "equipacion": "2026-azul-negro-azules.png",
-     "escudo": "esccudoBachicanLasMesas.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1344,
-     "nombre": "Atl. Bachicán Las Mesas",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -3693,25 +3705,6 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-blanca-azul-gran-canaria.png",
-     "dg": "0",
-     "equipacion": "2026-blanca-azul-azules.png",
-     "escudo": "100x100tamaraceite.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1351,
-     "nombre": "UD Tamaraceite",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 10,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-rojinegra-rayas.png",
      "dg": "0",
      "equipacion": "2026-rojinegra-negros-negras-roja.png",
@@ -3724,26 +3717,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 0,
-     "posicion_anterior": 11,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-blanca-verde-gc.png",
-     "dg": "0",
-     "equipacion": "2026-blancahomverde-verde-blancas.png",
-     "escudo": "100x100villa.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1350,
-     "nombre": "Villa Santa Brígida",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 12,
+     "posicion_anterior": 10,
      "pp": 0,
      "puntos": 0,
      "racha_ultimos_5": [],
@@ -3762,6 +3736,48 @@
      "pe": 0,
      "pg": 0,
      "pj": 1,
+     "posicion_anterior": 11,
+     "pp": 1,
+     "puntos": 0,
+     "racha_ultimos_5": [
+      "D"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-blanca-azul-gran-canaria.png",
+     "dg": "-6",
+     "equipacion": "2026-blanca-azul-azules.png",
+     "escudo": "100x100tamaraceite.png",
+     "gc": "7",
+     "gf": "1",
+     "id": 1351,
+     "nombre": "UD Tamaraceite",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 1,
+     "posicion_anterior": 12,
+     "pp": 1,
+     "puntos": 0,
+     "racha_ultimos_5": [
+      "D"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-celeste-negro.png",
+     "dg": "-11",
+     "equipacion": "2026-azul-negro-azules.png",
+     "escudo": "esccudoBachicanLasMesas.png",
+     "gc": "12",
+     "gf": "1",
+     "id": 1344,
+     "nombre": "Atl. Bachicán Las Mesas",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 1,
      "posicion_anterior": 13,
      "pp": 1,
      "puntos": 0,
@@ -3773,7 +3789,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -4057,7 +4073,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-10T17:38:50",
+   "fetched": "2026-10-10T21:32:21",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7914,7 +7930,7 @@
    "escudo_local": "esccudoBachicanLasMesas.png",
    "escudo_visitante": "100x100veteranos.png",
    "estadio": "CM La Suerte",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-10 16:00:00",
    "goleadores_local": null,
@@ -7922,7 +7938,7 @@
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
    "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_visitante": 10,
    "hora_inicio": null,
    "id": 18885,
    "id_local": 1267,
@@ -7930,7 +7946,7 @@
    "jornada": 1,
    "liga_id": 135,
    "local": "Atl. Bachicán Las Mesas",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
    "pen_local": "",
@@ -7939,8 +7955,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
@@ -7958,7 +7978,7 @@
    "escudo_local": "escudoCarnevali-26-27.png",
    "escudo_visitante": "default.png",
    "estadio": "Mayordomía 2",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-10 17:00:00",
    "goleadores_local": null,
@@ -7966,7 +7986,7 @@
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
    "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_visitante": 15,
    "hora_inicio": null,
    "id": 18886,
    "id_local": 1268,
@@ -7974,7 +7994,7 @@
    "jornada": 1,
    "liga_id": 135,
    "local": "Daniel Carnevali B",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
    "pen_local": "",
@@ -7983,8 +8003,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
@@ -13983,15 +14007,15 @@
    "escudo_local": "esccudoBachicanLasMesas.png",
    "escudo_visitante": "100x100villa.png",
    "estadio": "CM La Suerte",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-10 16:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 1,
+   "goles_visitante": 12,
    "hora_inicio": null,
    "id": 19188,
    "id_local": 1344,
@@ -13999,7 +14023,7 @@
    "jornada": 1,
    "liga_id": 147,
    "local": "Atl. Bachicán Las Mesas",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 2",
    "pen_local": "",
@@ -14008,8 +14032,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
@@ -14027,15 +14055,15 @@
    "escudo_local": "200x200huracan.png",
    "escudo_visitante": "100x100tamaraceite.png",
    "estadio": "Pepe Gonçalvez",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-10 18:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 7,
+   "goles_visitante": 1,
    "hora_inicio": null,
    "id": 19189,
    "id_local": 1345,
@@ -14043,7 +14071,7 @@
    "jornada": 1,
    "liga_id": 147,
    "local": "AD Huracán",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 2",
    "pen_local": "",
@@ -14052,8 +14080,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "V"
+   ],
+   "racha_visitante": [
+    "D"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,

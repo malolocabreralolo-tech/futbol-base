@@ -2,11 +2,12 @@
  "dias": {
   "2026-10-08": "2026-10-09T12:57:17",
   "2026-10-09": "2026-10-10T04:53:20",
-  "2026-10-10": "2026-10-10T21:32:21"
+  "2026-10-10": "2026-10-11T04:43:17",
+  "2026-10-11": "2026-10-11T04:43:17"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -153,7 +154,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -277,7 +278,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -397,7 +398,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -540,7 +541,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -679,7 +680,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -799,7 +800,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -942,7 +943,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1062,7 +1063,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1178,7 +1179,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1321,7 +1322,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1437,7 +1438,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1580,7 +1581,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1704,7 +1705,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1828,7 +1829,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1975,7 +1976,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2118,7 +2119,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2265,7 +2266,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2412,7 +2413,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2532,7 +2533,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2656,7 +2657,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2780,7 +2781,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2923,7 +2924,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3070,7 +3071,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3217,7 +3218,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3509,7 +3510,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3789,7 +3790,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -4073,7 +4074,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-10T21:32:21",
+   "fetched": "2026-10-11T04:43:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -5252,6 +5253,8 @@
    "campo_gps": "https://maps.app.goo.gl/ijbNHkoXCC91cZuq5",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "angosturaEscudo.png",
    "escudo_visitante": "100x100goleta.png",
    "estadio": "La Angostura",
@@ -5278,6 +5281,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -5539,6 +5543,8 @@
    "campo_gps": "https://maps.app.goo.gl/eeMWR61QAYWEVFDX8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200acodetti.png",
    "escudo_visitante": "angosturaEscudo.png",
    "estadio": "Mayordomía 1",
@@ -5565,6 +5571,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -5580,6 +5587,8 @@
    "campo_gps": "https://goo.gl/maps/B3eT3G14W8CsQLnn8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "Arucas CF",
    "escudo_local": "lasMesasEscudo.png",
    "escudo_visitante": "100x100arucas.png",
    "estadio": "Pepe Gonçalvez",
@@ -5606,6 +5615,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -6136,6 +6146,8 @@
    "campo_gps": "López Socahttps://goo.gl/maps/CkZR99XbZrTCs3yy6s",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100sanantonio2016.png",
    "escudo_visitante": "100x100unionviera.png",
    "estadio": "López Socas",
@@ -6162,6 +6174,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -6423,6 +6436,8 @@
    "campo_gps": "https://goo.gl/maps/SKhQngkPbvSGWmqq5",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100unionviera.png",
    "escudo_visitante": "200x200victoria2019.png",
    "estadio": "Alfonso Silva",
@@ -6449,6 +6464,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -6596,6 +6612,8 @@
    "campo_gps": "https://goo.gl/maps/sJwUSMfFe6Anj7ob6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200victoria2019.png",
    "escudo_visitante": "100x100villa.png",
    "estadio": "Puerto Pi",
@@ -6622,6 +6640,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -6637,6 +6656,8 @@
    "campo_gps": "https://goo.gl/maps/ZjKpiRpJTu3h6kYdA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100veteranos.png",
    "escudo_visitante": "100x100sanlazaro.png",
    "estadio": "MN Sosa 2",
@@ -6663,6 +6684,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -7148,6 +7170,8 @@
    "campo_gps": "https://maps.app.goo.gl/eeMWR61QAYWEVFDX8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200Simusetti.png",
    "escudo_visitante": "200x200claret.png",
    "estadio": "Mayordomía 1",
@@ -7174,6 +7198,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -7189,6 +7214,8 @@
    "campo_gps": "https://goo.gl/maps/ZjKpiRpJTu3h6kYdA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100puertoslaspalmas.png",
    "escudo_visitante": "esccudoBachicanLasMesas.png",
    "estadio": "MN Sosa 1",
@@ -7215,6 +7242,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -7458,6 +7486,8 @@
    "campo_gps": "https://goo.gl/maps/Y3FqGgucwufXVT1FA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200huracan.png",
    "escudo_visitante": "100x100sietepalmas.png",
    "estadio": "Pepe Gonçalvez",
@@ -7484,6 +7514,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -8591,6 +8622,8 @@
    "campo_gps": "https://goo.gl/maps/TYvYP3scTESyi677A",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "udTeldeEscudo.png",
    "escudo_visitante": "100x100unionmarina.png",
    "estadio": "Pablo Hdez.",
@@ -8617,6 +8650,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -14098,6 +14132,8 @@
    "campo_gps": "https://maps.app.goo.gl/ijbNHkoXCC91cZuq5",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "angosturaEscudo.png",
    "escudo_visitante": "200x200acodetti.png",
    "estadio": "La Angostura",
@@ -14124,6 +14160,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
@@ -14139,6 +14176,8 @@
    "campo_gps": "https://goo.gl/maps/sJwUSMfFe6Anj7ob6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200victoria2019.png",
    "escudo_visitante": "default.png",
    "estadio": "Puerto Pi",
@@ -14165,6 +14204,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
@@ -16784,6 +16824,8 @@
    "campo_gps": "https://goo.gl/maps/vJqqrw1kwP4tNWsB6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100lashuesas2017.png",
    "escudo_visitante": "100x100ingenio.png",
    "estadio": "Las Huesas",
@@ -16810,6 +16852,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],
@@ -19514,6 +19557,8 @@
    "campo_gps": "https://maps.app.goo.gl/BH7oKLzexQDsjSPL7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100cerruda.png",
    "escudo_visitante": "maspaTrainingEscudo.png",
    "estadio": "Axo. Vecindario",
@@ -19540,6 +19585,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [],

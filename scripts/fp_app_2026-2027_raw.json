@@ -3,11 +3,11 @@
   "2026-10-08": "2026-10-09T12:57:17",
   "2026-10-09": "2026-10-10T04:53:20",
   "2026-10-10": "2026-10-11T04:43:17",
-  "2026-10-11": "2026-10-11T04:43:17"
+  "2026-10-11": "2026-10-11T12:38:04"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -154,7 +154,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -278,7 +278,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -398,7 +398,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -541,7 +541,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -680,7 +680,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -800,7 +800,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -943,7 +943,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1063,7 +1063,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1179,7 +1179,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1322,7 +1322,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1341,6 +1341,27 @@
    "name": "Benjamin Gran Canaria Grupo 11",
    "tabla": [
     {
+     "banderas": "bandera-naranja-blanco.png",
+     "dg": "3",
+     "equipacion": "2026-naranja-blanco-naranjas.png",
+     "escudo": "200x200Simusetti.png",
+     "gc": "1",
+     "gf": "4",
+     "id": 1247,
+     "nombre": "Simusetti CF",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 1,
+     "pj": 1,
+     "posicion_anterior": 1,
+     "pp": 0,
+     "puntos": 3,
+     "racha_ultimos_5": [
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-celeste-negro.png",
      "dg": "0",
      "equipacion": "2026-azul-negro-azules.png",
@@ -1349,25 +1370,6 @@
      "gf": "0",
      "id": 1252,
      "nombre": "Athl. Bachicán Las Mesas B",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-azul-gran-canaria.png",
-     "dg": "0",
-     "equipacion": "2026-azul-azul-azul.png",
-     "escudo": "200x200claret.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1249,
-     "nombre": "Corazón de María B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -1417,28 +1419,30 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-naranja-blanco.png",
-     "dg": "0",
-     "equipacion": "2026-naranja-blanco-naranjas.png",
-     "escudo": "200x200Simusetti.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1247,
-     "nombre": "Simusetti CF",
+     "banderas": "bandera-azul-gran-canaria.png",
+     "dg": "-3",
+     "equipacion": "2026-azul-azul-azul.png",
+     "escudo": "200x200claret.png",
+     "gc": "4",
+     "gf": "1",
+     "id": 1249,
+     "nombre": "Corazón de María B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 0,
+     "pj": 1,
      "posicion_anterior": 5,
-     "pp": 0,
+     "pp": 1,
      "puntos": 0,
-     "racha_ultimos_5": [],
+     "racha_ultimos_5": [
+      "D"
+     ],
      "sanciones": 0
     }
    ]
   },
   "133": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1581,7 +1585,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1705,7 +1709,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1829,7 +1833,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -1976,7 +1980,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2119,7 +2123,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2266,7 +2270,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2413,7 +2417,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2533,7 +2537,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2657,7 +2661,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2781,7 +2785,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2924,7 +2928,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3071,7 +3075,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -3218,7 +3222,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3510,7 +3514,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -3790,7 +3794,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -4074,7 +4078,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-11T04:43:17",
+   "fetched": "2026-10-11T12:38:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7175,15 +7179,15 @@
    "escudo_local": "200x200Simusetti.png",
    "escudo_visitante": "200x200claret.png",
    "estadio": "Mayordomía 1",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-11 09:01:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 4,
+   "goles_visitante": 1,
    "hora_inicio": null,
    "id": 18850,
    "id_local": 1247,
@@ -7191,7 +7195,7 @@
    "jornada": 1,
    "liga_id": 132,
    "local": "Simusetti CF",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 11",
    "pen_local": "",
@@ -7200,8 +7204,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "V"
+   ],
+   "racha_visitante": [
+    "D"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,

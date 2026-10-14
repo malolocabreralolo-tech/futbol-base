@@ -525,9 +525,11 @@ def known_names(raw, conn, years=None, keep_existing=False, season=None):
     prebenjamín son Roque Amagro). Y un filial va con su club: si su primer equipo es Las Mesas Hu., 'MESAS
     HURACAN, U.D. LAS "B"' no es 'Huracán B' (el B de AD Huracán), sino 'Las Mesas Hu. B'.
 
-    `season`: al añadir una fase a la temporada en curso, su nombre. El club que ya juega en ella en otra
-    categoría con el mismo nombre de la federación (su ficha, team_seasons) es esa fila, la de benjamín y
-    prebenjamín: 'VICTORIA, REAL CLUB "A"' es 'RC Victoria' como en benjamín, no 'Victoria' (2014-25)."""
+    `season`: la temporada cuyas fichas (team_seasons) mandan; la activación pasa la que está en curso
+    (raw_team_names): al añadir una fase, la misma; al activar la siguiente, la que se cierra. El club que
+    juega en ella con el mismo nombre de la federación es esa fila: 'VICTORIA, REAL CLUB "A"' es 'RC
+    Victoria', como en benjamín y prebenjamín de 2025-27, no 'Victoria' (2014-25, la de la tabla
+    revisada). Sin `season` (import_fiflp_grupos, que rehace temporadas pasadas), la tabla y las palabras."""
     from import_fiflp_cups_2324 import clean_team_name
     from fiflp_names import _club_key as club, canonical_names, fed_alias, is_bye, team_key, team_score, MIN_TEAM_SCORE
 
@@ -702,6 +704,24 @@ def known_names(raw, conn, years=None, keep_existing=False, season=None):
     return names
 
 
+def raw_team_names(raw, conn, current):
+    """{nombre de la federación: nombre de la base} de los equipos del raw, para activar la temporada
+    siguiente o añadir una fase a la que está en curso (`current`, la de src/config.js: la que se cierra
+    o la misma). Las fichas de la federación de `current` (team_seasons) mandan sobre la tabla revisada y
+    sobre el emparejamiento: son la última palabra de qué fila es cada club. Sin ellas, al activar
+    2027-28 la tabla volvía a llevar 'VICTORIA, REAL CLUB "A"' a 'Victoria' (la fila de 2014-25; desde
+    2025-26 es 'RC Victoria') y su B a 'RC Victoria B', partiendo el club, y 'ATCO MARZASPORT, C.D.' a
+    'Atco. Marzasport' en vez de 'Atl. Marzasport'. Aborta si dos equipos distintos acabarían con el mismo
+    nombre: dentro de un grupo lo comprueba fiflp_evidence; entre grupos, aquí (dos clubes en la misma fila
+    de teams, que comparten todas las categorías, mezclan sus fichas)."""
+    names = known_names(raw, conn, season=current)
+    clashes = name_clashes(names, raw_categories(raw))
+    if clashes:
+        raise ValueError("Dos equipos distintos acabarían con el mismo nombre: " +
+                         "; ".join(f"{name} ← {', '.join(raws)}" for name, raws in clashes))
+    return names
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", type=Path)
@@ -711,22 +731,17 @@ def main():
                         help="añadir los grupos del manifiesto a la temporada EN CURSO (fase nueva); con --apply escribe")
     args = parser.parse_args()
     manifest = json.loads(args.manifest.read_text())
-    validate_manifest(manifest, load_config()["season"], adding=args.add)
+    current = load_config()["season"]
+    validate_manifest(manifest, current, adding=args.add)
     raw = names = None
     if args.fiflp_raw:
         raw = json.loads(args.fiflp_raw.read_text())
         conn = get_connection()
         try:
-            # Una fase nueva de la temporada en curso: los clubes que ya juegan en ella, con su fila.
-            names = known_names(raw, conn, season=manifest["season"] if args.add else None)
+            # Con --add y sin él: las fichas de la temporada en curso (la misma, o la que se cierra).
+            names = raw_team_names(raw, conn, current)
         finally:
             conn.close()
-        # Dentro de un grupo lo comprueba fiflp_evidence; entre grupos, aquí: dos clubes en la misma fila
-        # de teams (que comparten todas las categorías) mezclan sus fichas.
-        clashes = name_clashes(names, raw_categories(raw))
-        if clashes:
-            raise ValueError("Dos equipos distintos acabarían con el mismo nombre: " +
-                             "; ".join(f"{name} ← {', '.join(raws)}" for name, raws in clashes))
     evidence = verify_sources(manifest, fiflp_raw=raw, names=names)
     print(f'{manifest["season"]}: {len(evidence)} grupos verificados con calendarios fechados.')
     if args.add and args.apply:

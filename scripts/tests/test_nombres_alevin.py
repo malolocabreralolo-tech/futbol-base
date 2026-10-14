@@ -209,6 +209,41 @@ def test_a_spaced_abbreviation_is_not_a_filial_of_its_own_club():
             "TEGUINTE, C.D": "CD Teguinte"}, season
 
 
+def test_activating_the_next_season_takes_the_rows_of_the_closing_season_cards(table, tmp_path, monkeypatch):
+    """Sin --add (la temporada siguiente) también mandan las fichas, las de la temporada que se cierra: con
+    la base corregida, la tabla volvía a llevar 'VICTORIA, REAL CLUB "A"' a 'Victoria' (la fila de 2014-25)
+    y su B a 'RC Victoria B', y el club quedaba partido. Por activate_season.main, como se activa."""
+    import activate_season as A
+    table({"VICTORIA, REAL CLUB": "Victoria", "MARZASPORT, ATLETICO": "Atco. Marzasport"})
+    conn = base()
+    put(conn, 2, 1, "B2", "grancanaria", ["Victoria", "Atco. Marzasport"])
+    put(conn, 3, 1, "FF9", "grancanaria", ["RC Victoria", "RC Victoria B", "Atl. Marzasport"],
+        fed={"RC Victoria": "VICTORIA, REAL CLUB", "RC Victoria B": 'VICTORIA, REAL CLUB "B"',
+             "Atl. Marzasport": "ATCO MARZASPORT, C.D."})
+    db = tmp_path / "fb.db"
+    conn.commit()
+    copy = sqlite3.connect(db)
+    conn.backup(copy)
+    copy.close()
+    crudos = raw(['VICTORIA, REAL CLUB "A"', 'VICTORIA, REAL CLUB "B"', "ATCO MARZASPORT, C.D."], cat="benjamin")
+    (tmp_path / "raw.json").write_text(json.dumps(crudos), encoding="utf-8")
+    url = "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?CodTemporada=23&CodCompeticion=1&CodGrupo=2"
+    (tmp_path / "m.json").write_text(json.dumps({
+        "season": "2027-2028", "defaultTeam": {"cat": "benjamin", "groupId": "FF9", "name": "RC Victoria"},
+        "groups": [{"id": "FF9", "cat": "benjamin", "name": "Grupo 9", "phase": "Primera Fase", "island": "grancanaria",
+                    "url": url}]}), encoding="utf-8")
+    seen = {}
+    monkeypatch.setattr(A, "load_config", lambda: {"season": "2026-2027"})
+    monkeypatch.setattr(A, "get_connection", lambda: sqlite3.connect(db))
+    monkeypatch.setattr(A, "verify_sources", lambda manifest, fiflp_raw=None, names=None: seen.update(names) or [])
+    monkeypatch.setattr(sys, "argv", ["activate_season.py", str(tmp_path / "m.json"), "--fiflp-raw", str(tmp_path / "raw.json")])
+    A.main()
+    assert seen == {'VICTORIA, REAL CLUB "A"': "RC Victoria", 'VICTORIA, REAL CLUB "B"': "RC Victoria B",
+                    "ATCO MARZASPORT, C.D.": "Atl. Marzasport"}
+    # Sin fichas (import_fiflp_grupos, que rehace temporadas pasadas), la tabla, como siempre.
+    assert known_names(crudos, conn)['VICTORIA, REAL CLUB "A"'] == "Victoria"
+
+
 def test_the_card_of_the_season_is_ignored_when_two_rows_share_it():
     conn = base()
     put(conn, 3, 1, "FF12", "grancanaria", ["Atlético Fomento", "Otro Fomento"],

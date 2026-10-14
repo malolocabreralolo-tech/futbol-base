@@ -54,6 +54,18 @@ test('updateTabbar: "page" en el destino de la pantalla, "true" en las secundari
   assert.throws(() => updateTabbar('tabla', 'location', doc), RangeError);
 });
 
+test('updateTabbar con hrefs: Jornada y Tabla al grupo que se mira, la pestaña marcada por su destino y, sin ellos, las de siempre', () => {
+  const doc = fakeDoc();
+  const pg3 = { jornada: '#/jornada?s=2025-2026&g=PG3', tabla: '#/tabla?s=2025-2026&g=PG3' };
+  updateTabbar('tabla', 'page', doc, pg3);
+  assert.deepEqual(marks(doc), [['#/', null], ['#/jornada?s=2025-2026&g=PG3', null], ['#/tabla?s=2025-2026&g=PG3', 'page'], ['#/explorar', null]]);
+  // Con los enlaces ya cambiados, cada pestaña se sigue reconociendo por su destino.
+  updateTabbar('jornada', 'true', doc, pg3);
+  assert.deepEqual(marks(doc).map(([, value]) => value), [null, 'true', null, null]);
+  updateTabbar('miequipo', 'page', doc);
+  assert.deepEqual(marks(doc), [['#/', 'page'], ['#/jornada', null], ['#/tabla', null], ['#/explorar', null]]);
+});
+
 test('offlineNotice: «Sin conexión. Datos del …» con lastDataChange o, si falta, «Última actualización»', () => {
   assert.equal(s(offlineNotice({ lastDataChange: '2026-09-23' }, '20/09/2026')),
     '<p class="notice"><b>Sin conexión.</b> Datos del 23/09/2026</p>');

@@ -315,6 +315,20 @@ export function myTeamIn(group, myTeam, resolution) {
   return listed ? name : null;
 }
 
+// El grupo de liga de mi equipo en una temporada (`season`, el Season del modelo, o null sin cargar):
+// «Mi grupo» de Jornada y Tabla y la barra en «Todos los grupos». Primero, uno de `first` en que juega
+// (los de la competición que se mira); si no, el resuelto, si es de esa temporada; si no, el primero de
+// liga de esa temporada en que aparece (myTeamIn: la regla del router para una temporada pasada sin
+// `g`). null sin mi equipo o si no juega esa temporada.
+export function myGroupIn(season, myTeam, resolution, first = []) {
+  const inFirst = first.find(group => myTeamIn(group, myTeam, resolution));
+  if (inFirst) return inFirst;
+  if (!season) return null;
+  const ok = resolution && resolution.status === 'ok' && resolution.group ? resolution : null;
+  if (ok && ok.group.season === season.name) return ok.group;
+  return (season.groups || []).find(group => group.kind === 'league' && myTeamIn(group, myTeam, resolution)) || null;
+}
+
 // ¿Es de mi equipo este partido o esta ficha? Mismo grupo y temporada que el resuelto, y su nombre. La
 // usan la barra (router.js) y la ficha de Equipo; vivía en router.js (B5, decisión 6).
 export function routeIsMine(route, resolution) {

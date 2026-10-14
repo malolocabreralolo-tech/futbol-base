@@ -12,7 +12,7 @@
 import { Html } from './html.js';
 import { parseRoute, routeHref, translateLegacy } from './links.js';
 import { competitions, findGroup, findMatch, findRound, seasonLabel } from './model.js';
-import { routeIsMine, sameClub } from './myteam.js';
+import { myTeamIn, routeIsMine, sameClub } from './myteam.js';
 import { skeleton, errorScreen, routeNotice, routeTitle, updateTabbar } from './shell.js';
 import { normalizeTeamName, seasonNeeds } from './state.js';
 
@@ -20,13 +20,14 @@ import { normalizeTeamName, seasonNeeds } from './state.js';
 const PRIMARY = { '': 'miequipo', jornada: 'jornada', tabla: 'tabla', explorar: 'explorar' };
 const TABS = new Set(Object.values(PRIMARY));
 const NO_PARAMS = new Set(['', 'temporadas', 'fuentes', 'ajustes']);
-// Las vistas de Tabla: las de la clasificación y las dos de la Evolución del grupo.
-const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas', 'evolucion', 'posiciones'];
+// Las vistas de Tabla. Las de la antigua Evolución del grupo (evolucion y posiciones) se quitan, sin
+// aviso, como cualquier otra que no existe: los enlaces viejos abren la vista por defecto.
+const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas'];
 // Lo que se cambia sin crear entrada en el historial (§4.1): jornada, vista de Tabla y búsqueda; y el
-// grupo en Jornada y en Tabla («‹ Grupo 5 de 24 ›» y su tira de números), que se recorre como las
-// jornadas: Atrás no repasa cada grupo visto, sino que vuelve a donde se estaba antes de recorrerlos, y
-// el foco se queda en el control pulsado (mismo id).
-const REPLACE_ONLY = { jornada: ['r', 'g'], tabla: ['v', 'g'], explorar: ['q'], goleadores: ['q'] };
+// grupo en Jornada y en Tabla (la tira de grupos y «Mi grupo»), también de un grupo a «Todos» y de
+// vuelta (c y f), que se recorre como las jornadas: Atrás no repasa cada grupo visto, sino que vuelve a
+// donde se estaba antes de recorrerlos, y el foco se queda en la ficha pulsada (mismo id).
+const REPLACE_ONLY = { jornada: ['r', 'g', 'c', 'f'], tabla: ['v', 'g'], explorar: ['q'], goleadores: ['q'] };
 // Pantallas que se abren desde Explorar: su «‹» sin historial lleva a #/explorar.
 const UNDER_EXPLORE = new Set(['equipo', 'copa', 'goleadores', 'ligas', 'temporadas', 'records', 'fuentes', 'ajustes', 'jugador']);
 const MAX_REDIRECTS = 5;
@@ -255,6 +256,32 @@ export function activeTab(route, lastPrimary, isMine) {
   return { active: 'explorar', current: 'true' };
 }
 
+// Adónde llevan las pestañas Jornada y Tabla de la barra (updateTabbar de shell.js): en Jornada, Tabla y
+// Partido de un grupo de liga, a ese grupo y su temporada; en «Todos los grupos» (Jornada con c y f),
+// Jornada a esa misma vista y Tabla a la de mi grupo, si está en esa competición, o a la del primero.
+// Si el grupo es el resuelto de mi equipo, o en cualquier otra pantalla, {}: sus enlaces de siempre
+// (#/jornada y #/tabla, el grupo de mi equipo). route: la ruta ya resuelta; ctx: { model, portal,
+// myTeam, resolution }. Con su temporada sin cargar, {}.
+export function tabTargets(route, ctx) {
+  const params = route?.params || {};
+  const screen = route?.screen;
+  if (!['jornada', 'tabla', 'partido'].includes(screen) || !ctx?.model) return {};
+  const season = params.s || ctx.portal.season;
+  const r = ctx.resolution;
+  const own = (group) => r?.status === 'ok' && r.group && r.group.season === group.season && r.group.id === group.id;
+  const tabla = (group) => (own(group) ? '#/tabla' : routeHref('tabla', { s: group.season, g: group.id }));
+  if (screen === 'jornada' && !params.g && params.f) {
+    const entry = competitions(ctx.model, season, { cat: params.c || null }).find((e) => e.key === params.f);
+    const groups = entry ? entry.groups.filter((g) => g.kind === 'league') : [];
+    if (!groups.length) return {};
+    const mine = groups.find((g) => myTeamIn(g, ctx.myTeam, r)) || groups[0];
+    return { jornada: routeHref('jornada', { s: season, c: entry.cat, f: entry.key }), tabla: tabla(mine) };
+  }
+  const group = params.g ? findGroup(ctx.model, season, params.g) : null;
+  if (!group || group.kind !== 'league' || own(group)) return {};
+  return { jornada: routeHref('jornada', { s: group.season, g: group.id }), tabla: tabla(group) };
+}
+
 // ── startRouter ──────────────────────────────────────────────────────────
 
 // Qué no se pudo cargar, para «No se pudieron cargar los datos de <qué>»: el `what` del error o
@@ -426,7 +453,7 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
       current = route;
       seen = { key: st?.fbKey ?? null, hash: win.location.hash, idx: st?.fbIdx ?? 0 };
       const tab = activeTab(route, lastPrimary, routeIsMine(route, base.resolution));
-      updateTabbar(tab.active, tab.current, doc);
+      updateTabbar(tab.active, tab.current, doc, tabTargets(route, base));
       doc.title = route.screen === '' ? baseTitle : `${routeTitle(route.screen)} · ${baseTitle}`;
       // La temporada del portal llega a needs desde el contexto, nunca de config.js (R2-1).
       const portalSeason = base.portal.season;
@@ -452,6 +479,8 @@ export function startRouter({ screens, root, getContext, window: win, actions = 
           return run(mode, notice || again.notice, depth + 1, target, focusId);
         }
       }
+      // Con la temporada ya cargada, las pestañas Jornada y Tabla, al grupo que se mira.
+      if (needs.length || first.pending) updateTabbar(tab.active, tab.current, doc, tabTargets(route, base));
       const ctx = { ...base, route, params: route.params, lastPrimary, backHref: backHref(route, base.model) };
       // Solo se pinta Html de html``, que escapa cada interpolación (spec §5.1).
       const view = screen.render(ctx);

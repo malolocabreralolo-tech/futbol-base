@@ -169,7 +169,7 @@ test('historyMode: cambiar de pantalla es push; jornada, vista de Tabla, grupo o
   assert.equal(historyMode(R('#/'), R('#/jornada')), 'push');
   assert.equal(historyMode(R('#/jornada?g=PG2&r=Jornada%201'), R('#/jornada?g=PG2&r=Jornada%202')), 'replace');
   assert.equal(historyMode(R('#/jornada?g=PG2'), R('#/jornada?g=PG2&r=Jornada%202')), 'replace');
-  // Cambiar de grupo en Jornada o en Tabla («‹ Grupo 2 de 4 ›» y la tira de números) se recorre como
+  // Cambiar de grupo en Jornada o en Tabla (la tira de grupos y «Mi grupo») se recorre como
   // las jornadas: replace, y Atrás vuelve a donde se estaba antes de recorrerlos.
   assert.equal(historyMode(R('#/jornada?g=PG2&r=Jornada%201'), R('#/jornada?g=PG3&r=Jornada%201')), 'replace');
   assert.equal(historyMode(R('#/tabla?g=PG2&v=forma'), R('#/tabla?g=PG3&v=forma')), 'replace');
@@ -205,7 +205,7 @@ test('activeTab: el destino marcado de cada fila de §4.1, "page" en los princip
   // Equipo: Mi equipo si (s, g, t) es mi equipo; si no, Explorar.
   assert.deepEqual(tab('#/equipo?g=PG2&t=Las%20Mesas%20Hu.', 'tabla', true), { active: 'miequipo', current: 'true' });
   assert.deepEqual(tab('#/equipo?g=PG2&t=Acodetti', 'tabla', false), { active: 'explorar', current: 'true' });
-  // Ligas: Explorar, o el de `to` si viene de «Otro grupo».
+  // Ligas: Explorar, o el de `to` si viene de «Otras ligas».
   assert.deepEqual(tab('#/ligas?c=prebenjamin'), { active: 'explorar', current: 'true' });
   assert.deepEqual(tab('#/ligas?to=tabla'), { active: 'tabla', current: 'true' });
   assert.deepEqual(tab('#/ligas?to=jornada'), { active: 'jornada', current: 'true' });

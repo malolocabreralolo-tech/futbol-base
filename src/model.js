@@ -1214,55 +1214,6 @@ export function pointsProgression(team, group) {
   });
 }
 
-/* Evolución de un grupo (Tabla, vista Evolución): los puntos y el puesto de cada equipo tras cada
- * jornada, calculados con el calendario y el criterio de pointsProgression (sin los partidos contra
- * retirados; un partido cuenta en su jornada aunque se jugara más tarde), en una sola pasada por las
- * rondas. El puesto, por puntos, diferencia de goles, goles a favor y nombre: sin los desempates ni
- * las sanciones de la federación (la pantalla lo dice).
- *   → { rounds: [{ key, label, n }], played, rows: [{ team, retired, pts: [], pos: [] }] }
- * - rows: en el orden de la clasificación oficial y, detrás, los del calendario que no están en ella;
- *   sin clasificación, por el último puesto calculado. Los retirados, con pts y pos a null.
- * - pts y pos: uno por ronda, null en las posteriores a la última con algún resultado del grupo.
- * - played: las rondas hasta esa última (0 si no se ha jugado nada). */
-export function groupProgression(group) {
-  const rounds = group.rounds || [];
-  const retired = retiredTeams(group);
-  const teams = (group.standings || []).map(row => row.team);
-  const listed = new Set(teams);
-  for (const m of groupMatches(group)) {
-    for (const team of [m.home, m.away]) {
-      if (team && !listed.has(team)) { listed.add(team); teams.push(team); }
-    }
-  }
-  const tally = new Map(teams.filter(team => !retired.has(team)).map(team => [team, { pts: 0, gf: 0, gc: 0 }]));
-  const rows = teams.map(team => ({ team, retired: retired.has(team), pts: [], pos: [] }));
-  let played = 0;
-  rounds.forEach((round, i) => { if (round.matches.some(playedMatch)) played = i + 1; });
-  rounds.forEach((round, i) => {
-    for (const m of round.matches) {
-      const home = tally.get(m.home);
-      const away = tally.get(m.away);
-      if (!playedMatch(m) || !home || !away) continue;
-      home.gf += m.hs; home.gc += m.as; away.gf += m.as; away.gc += m.hs;
-      if (m.hs > m.as) home.pts += 3;
-      else if (m.hs < m.as) away.pts += 3;
-      else { home.pts += 1; away.pts += 1; }
-    }
-    const order = i < played ? [...tally].sort(([a, x], [b, y]) => y.pts - x.pts
-      || (y.gf - y.gc) - (x.gf - x.gc) || y.gf - x.gf || byName(a, b)).map(([team]) => team) : [];
-    for (const row of rows) {
-      const at = order.indexOf(row.team);
-      row.pts.push(at < 0 ? null : tally.get(row.team).pts);
-      row.pos.push(at < 0 ? null : at + 1);
-    }
-  });
-  if (!(group.standings || []).length) {
-    const last = row => (played && row.pos[played - 1]) || Infinity;
-    rows.sort((a, b) => last(a) - last(b));
-  }
-  return { rounds: rounds.map(({ key, label, n }) => ({ key, label, n })), played, rows };
-}
-
 // Las actas de los partidos del equipo en el grupo, en orden de fecha: la entrada de su (s, gr)
 // (actaFor, también dentro de las {dup}). Un acta con un lado vacío no cuenta para nadie: las 10
 // de Goleta en A1 traen al rival en `home` y `away` vacío. `side` es el lado del equipo.
@@ -1573,7 +1524,7 @@ export function groupSummary(group) {
   };
 }
 
-/* Los grupos hermanos de un grupo de liga (Tabla y Jornada: «‹ Grupo 5 de 24 ›»): los de liga de su
+/* Los grupos hermanos de un grupo de liga (la tira de grupos de Tabla y Jornada): los de liga de su
  * misma competición (compKey) y categoría en su temporada, en el orden de Ligas (competitions: orden
  * natural, «Grupo 2» antes que «Grupo 10»). Sirve para cualquier categoría de CATEGORIES.
  *   → { entry: { cat, key, label }, list: Group[], index, prev, next } (prev y next, null en los

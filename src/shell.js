@@ -31,13 +31,24 @@ export function renderHeader({ active = 'miequipo', current = 'page' } = {}) {
   return html`<div class="shell-bar"><a class="brand" href="#/">Fútbol base <span class="brand-place">Las Palmas</span></a>${tabbar(active, { current })}</div><div class="shell-offline" role="status"></div>`;
 }
 
+// El destino de una pestaña de la barra por su enlace, sea el de siempre («#/tabla») o uno con su grupo
+// («#/tabla?s=2026-2027&g=FF6»): la pantalla de la ruta, antes de `?`.
+const TAB_OF = { '': 'miequipo', jornada: 'jornada', tabla: 'tabla', explorar: 'explorar' };
+const tabOf = (href) => TAB_OF[(String(href ?? '').match(/^#\/([a-z]*)(?:[?#]|$)/) || [])[1]] ?? null;
+
 // aria-current en la barra ya pintada (spec §4.1): "page" en el destino de la pantalla y "true"
-// en las secundarias (Partido, Equipo, Ligas…); con active null, en ninguno.
-export function updateTabbar(active, current, doc) {
+// en las secundarias (Partido, Equipo, Ligas…); con active null, en ninguno. hrefs: el enlace de las
+// pestañas que no van a su destino de siempre ({ jornada, tabla }: las del grupo que se mira, de
+// tabTargets en router.js); las demás vuelven al suyo (#/jornada: el grupo de mi equipo).
+export function updateTabbar(active, current, doc, hrefs = {}) {
   if (active != null && !Object.hasOwn(TAB_HREFS, active)) throw new RangeError(`Destino de la barra no válido: ${active}`);
   if (current !== 'page' && current !== 'true') throw new RangeError(`aria-current no válido: ${current}`);
   for (const tab of doc.querySelectorAll('.tabbar a.tab')) {
-    if (active != null && tab.getAttribute('href') === TAB_HREFS[active]) tab.setAttribute('aria-current', current);
+    const id = tabOf(tab.getAttribute('href'));
+    if (!id) continue;
+    const href = hrefs[id] || TAB_HREFS[id];
+    if (tab.getAttribute('href') !== href) tab.setAttribute('href', href);
+    if (id === active) tab.setAttribute('aria-current', current);
     else tab.removeAttribute('aria-current');
   }
 }

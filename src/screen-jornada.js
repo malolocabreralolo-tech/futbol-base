@@ -1,14 +1,11 @@
 // Pantalla Jornada (spec §4.3 y §4.8; maqueta 5-1). render(ctx) es pura: «‹ Jornada N de M ›»
 // con sus fechas, los partidos por día con el propio primero y resaltado, el aviso de la
-// jornada, la botonera y «Otro grupo»; bajo la cabecera, los otros grupos de la competición
-// («‹ Grupo 5 de 24 ›»), el atajo a Tabla y Evolución y «Este grupo | Todos (N)». Sin `g` y con `c` y
-// `f`, «Todos los grupos»: la misma jornada en todos los de la competición. mount() añade compartir y
-// el .ics del grupo.
+// jornada y la botonera. Bajo la cabecera, la tira de los grupos de su competición (groupStrip), con
+// «Todos» delante, y a su derecha, «Mi grupo» u «Otras ligas». Sin `g` y con `c` y `f`, «Todos los
+// grupos»: la misma jornada en todos los de la competición, un bloque por grupo. mount() añade
+// compartir y el .ics del grupo.
 import { html } from './html.js';
-import {
-  screenHead, matchRow, notice, empty, listEs, shareStatus, block, countLabel, segmented, groupChip, groupNav, groupViews,
-  scrollToCurrent,
-} from './ui.js';
+import { screenHead, matchRow, notice, empty, listEs, shareStatus, block, groupStrip, scrollToCurrent } from './ui.js';
 import { errorBox } from './shell.js';
 import {
   CAT_NAMES, competitionRound, competitions, defaultRound, findRound, groupSummary, roundNotice, retiredTeams, matchState,
@@ -17,7 +14,7 @@ import {
 // Los días y los meses, escritos en links.js (Tarea 7): sin los datos de idioma del motor.
 import { MONTHS, WEEKDAYS, routeHref, matchHref, downloadCalendar, shareAndAnnounce } from './links.js';
 import { jornadaNumber, seasonNeeds } from './state.js';
-import { myTeamIn } from './myteam.js';
+import { myGroupIn, myTeamIn } from './myteam.js';
 
 function dayParts(iso) {
   const [y, m, d] = iso.split('-').map(Number);
@@ -101,24 +98,25 @@ export function groupCalendar(group, today) {
     .map(m => ({ date: m.dateISO, time: m.time || '', home: m.home, away: m.away, venue: m.venue || '', jornada: round.label })));
 }
 
-// «Otro grupo»: con grupos hermanos, directo a la lista de los de su competición (f); si no, a las
-// ligas de su categoría y su isla.
-const otherGroup = (s, group, siblings = null) => ({
-  href: routeHref('ligas', { s, c: group && group.cat, i: group && group.island, f: siblings ? group.compKey : '', to: 'jornada' }),
-  label: 'Otro grupo',
+// La clave de la jornada de número `n` en `group` (las claves cambian de un grupo a otro: «Jornada 4» y
+// «4»), o '' si no la tiene: el enlace va entonces a su jornada por defecto.
+const roundKey = (group, n) => (n == null ? '' : (findRound(group, String(n)) || {}).key || '');
+
+// «Otras ligas»: las ligas de la temporada, de la categoría y la isla del grupo si lo hay (to: la
+// pantalla a la que llevan sus grupos).
+const otherLeagues = (s, group = null) => ({
+  href: routeHref('ligas', { s, c: group && group.cat, i: group && group.island, to: 'jornada' }),
+  label: 'Otras ligas',
 });
 
-// Los otros grupos de su competición, «‹ Grupo 5 de 24 ›», y el atajo a la Tabla y a la Evolución del
-// grupo, debajo de la cabecera. Cada grupo abre la jornada del mismo número (las claves cambian de un
-// grupo a otro: «Jornada 4» y «4»); si no la tiene, la suya por defecto.
-function groupBar(ctx, group, siblings, round) {
-  const s = group.season;
-  const mineId = siblings && (siblings.list.find(g => myTeamIn(g, ctx.myTeam, ctx.resolution)) || {}).id;
-  const same = target => (round && round.n !== null ? (findRound(target, String(round.n)) || {}).key : '');
-  return html`${siblings ? groupNav(siblings, {
-    hrefFor: target => routeHref('jornada', { s, g: target.id, r: same(target) }),
-    listHref: routeHref('ligas', { s, c: group.cat, f: group.compKey, to: 'jornada' }), mineId,
-  }) : ''}${groupViews(group, 'jornada')}`;
+// La acción de la cabecera: «Mi grupo», la jornada del grupo de mi equipo en esa temporada (el de su
+// misma competición si juega en ella, `first`, con el mismo número de jornada; si no, su jornada por
+// defecto), cuando lo que se mira no es suyo (mine); si lo es, o mi equipo no juega esa temporada,
+// «Otras ligas».
+function headAction(ctx, s, { mine, first, n, group }) {
+  const target = mine ? null : myGroupIn(ctx.model.season(s), ctx.myTeam, ctx.resolution, first);
+  if (!target) return otherLeagues(s, group);
+  return { href: routeHref('jornada', { s, g: target.id, r: first.includes(target) ? roundKey(target, n) : '' }), label: 'Mi grupo' };
 }
 
 // «‹» y «›» de la jornada, con id estable: al cambiar de jornada (replaceState), el router devuelve el
@@ -130,70 +128,63 @@ function roundStep(href, what, glyph, label, id) {
     : html`<span class="round-step is-off" id="${id}" role="link" aria-disabled="true" tabindex="-1" aria-label="${label}: no hay">${glyph}</span>`;
 }
 
-// «Este grupo | Todos (N)», encima de la jornada: un grupo o todos los de su competición, con la jornada
-// del mismo número. one: { label, href } del grupo; all: el enlace a «Todos los grupos». Ids estables:
-// alcance-grupo y alcance-todos.
-function scopeNav(one, all, count, active) {
-  const options = [{ value: 'grupo', label: one.label }, { value: 'todos', label: `Todos (${count})` }];
-  return html`<nav class="round-scope" aria-label="Grupos de la jornada">${segmented(options, active, value => (value === 'todos' ? all : one.href), { idPrefix: 'alcance' })}</nav>`;
-}
-
 // ── «Todos los grupos» de una competición (#/jornada?s&c&f&r, sin g) ─────
 
 // La jornada del mismo número en todos los grupos de liga de la competición, uno debajo de otro (en
-// escritorio, en dos columnas): el de mi equipo primero y resaltado, y cada uno con sus partidos por día
-// (como en un grupo: el propio primero y sin los de retirados), el enlace a su tabla con el líder y el
-// aviso del que descansa.
-// Arriba, «Mi grupo | Todos (N)», «‹ Jornada N de M ›» (por número: las claves cambian de un grupo a
-// otro) con las fechas de todos, y un índice de anclas para saltar a cada grupo. Por defecto, la
-// jornada de mi grupo o la más repetida (competitionRound).
+// escritorio, en dos columnas), el de mi equipo primero: cada uno, un bloque con su nombre, el enlace
+// discreto a su tabla y sus partidos en una sola caja, por día (como en un grupo: el propio primero y
+// resaltado, y sin los de retirados), con el aviso del que descansa. Arriba, la tira con «Todos»
+// marcada y «‹ Jornada N de M ›» (por número: las claves cambian de un grupo a otro) con las fechas de
+// todos. Por defecto, la jornada de mi grupo o la más repetida (competitionRound).
 function competitionView(ctx, s) {
   const { params, model, today } = ctx;
   const shields = (ctx.datasets && ctx.datasets.shields) || {};
   const entry = competitions(model, s, { cat: params.c || null }).find(e => e.key === params.f);
   const groups = entry ? entry.groups.filter(g => g.kind === 'league') : [];
   const sub = entry ? `${CAT_NAMES[entry.cat]}, ${entry.label}${s === ctx.portal.season ? '' : ` · ${seasonLabel(s)}`}` : null;
-  const head = screenHead('Jornada', { sub, action: { href: routeHref('ligas', { s, c: entry ? entry.cat : params.c, f: params.f, to: 'jornada' }), label: 'Elegir grupo' } });
-  if (!groups.length) return html`<section data-screen="jornada">${head}${empty(`No encontramos la competición ${params.f} en la temporada ${seasonLabel(s)}.`)}</section>`;
+  if (!groups.length) {
+    const head = screenHead('Jornada', { sub, action: otherLeagues(s) });
+    return html`<section data-screen="jornada">${head}${empty(`No encontramos la competición ${params.f} en la temporada ${seasonLabel(s)}.`)}</section>`;
+  }
   const mineOf = new Map(groups.map(g => [g.id, myTeamIn(g, ctx.myTeam, ctx.resolution)]));
   const mineGroup = groups.find(g => mineOf.get(g.id)) || null;
   const numbers = [...new Set(groups.flatMap(g => g.rounds.map(r => r.n)).filter(n => n !== null))].sort((a, b) => a - b);
   const asked = params.r ? jornadaNumber(params.r) : null;
   const n = numbers.includes(asked) ? asked : competitionRound(groups, today, mineGroup && mineGroup.id);
+  const at = { s, c: entry.cat, f: entry.key };
+  const head = screenHead('Jornada', { sub, action: headAction(ctx, s, { mine: Boolean(mineGroup), first: groups, n, group: groups[0] }) });
+  const strip = groupStrip({
+    label: entry.label, groups, mineId: mineGroup && mineGroup.id,
+    hrefFor: g => routeHref('jornada', { s, g: g.id, r: roundKey(g, n) }),
+    all: { href: routeHref('jornada', { ...at, r: n === null ? '' : String(n) }), current: true },
+  });
   if (n === null) {
     const why = s === ctx.portal.season ? 'La fuente todavía no ha publicado el calendario de esta competición.'
       : 'La fuente no publicó el calendario de esta competición.';
-    return html`<section data-screen="jornada">${head}${empty(why)}</section>`;
+    return html`<section data-screen="jornada">${head}${strip}${empty(why)}</section>`;
   }
-  const at = { s, c: entry.cat, f: entry.key };
-  const home = mineGroup || groups[0];
-  const homeRound = findRound(home, String(n));
-  const scope = scopeNav({ label: mineGroup ? 'Mi grupo' : groupSummary(home).label, href: routeHref('jornada', { s, g: home.id, r: homeRound ? homeRound.key : '' }) },
-    routeHref('jornada', { ...at, r: String(n) }), groups.length, 'todos');
   const rounds = groups.map(g => ({ group: g, round: findRound(g, String(n)), mine: mineOf.get(g.id) || null }));
   const dates = rounds.flatMap(({ round }) => (round ? round.matches.map(m => m.dateISO).filter(Boolean) : [])).sort();
   const k = numbers.indexOf(n);
   const near = m => (m == null ? null : routeHref('jornada', { ...at, r: String(m) }));
-  const nav = html`<nav class="round-nav" aria-label="Jornadas">${roundStep(near(numbers[k - 1]), `Jornada ${numbers[k - 1]}`, '‹', 'Jornada anterior', 'round-prev')}<div class="round-now"><h2 class="round-title">Jornada ${n} de ${numbers[numbers.length - 1]}</h2><p class="round-dates">${dateRange(dates[0], dates[dates.length - 1])} · ${countLabel(groups.length, 'grupo', 'grupos')}</p></div>${roundStep(near(numbers[k + 1]), `Jornada ${numbers[k + 1]}`, '›', 'Jornada siguiente', 'round-next')}</nav>`;
-  // El índice: una casilla por grupo, en su orden, que salta a su bloque (un ancla de la página).
-  const index = html`<nav class="group-index" aria-label="Ir a un grupo"><div class="group-strip">${groups.map(g => groupChip(g, `#jornada-${g.id}`, { mine: Boolean(mineOf.get(g.id)) }))}</div></nav>`;
+  const nav = html`<nav class="round-nav" aria-label="Jornadas">${roundStep(near(numbers[k - 1]), `Jornada ${numbers[k - 1]}`, '‹', 'Jornada anterior', 'round-prev')}<div class="round-now"><h2 class="round-title">Jornada ${n} de ${numbers[numbers.length - 1]}</h2><p class="round-dates">${dateRange(dates[0], dates[dates.length - 1])}</p></div>${roundStep(near(numbers[k + 1]), `Jornada ${numbers[k + 1]}`, '›', 'Jornada siguiente', 'round-next')}</nav>`;
   const ordered = [...rounds.filter(x => x.mine), ...rounds.filter(x => !x.mine)];
   const sections = ordered.map(({ group, round, mine }) => {
-    const summary = groupSummary(group);
-    const title = mine ? html`${summary.label}<span class="block-mine"> · mi grupo</span>` : summary.label;
-    const table = html`<a class="block-link" href="${routeHref('tabla', { s, g: group.id })}">${summary.leader ? `tabla · líder: ${summary.leader}` : 'tabla'}</a>`;
+    const { label } = groupSummary(group);
+    const title = mine ? html`${label}<span class="block-mine"> · mi grupo</span>` : label;
+    const table = html`<a class="block-link" href="${routeHref('tabla', { s, g: group.id })}" aria-label="${label}: tabla">tabla ›</a>`;
     const id = `jornada-${group.id}`;
     if (!round) return block(title, empty(`Este grupo no tiene jornada ${n}.`), { context: table, id });
-    // Sus partidos por día, como en un grupo: matchRow solo dice la hora.
+    // Sus partidos en una caja, con el día encima de los de cada día: matchRow solo dice la hora.
     const isMine = isMineOf(mine);
     const days = roundDays(group, round, mine);
     const warn = noticeText(roundNotice(group, round));
     const body = days.length
-      ? days.map(day => html`<h3 class="group-day">${dayLabel(day.date)}</h3><div class="box">${day.matches.map(m => matchRow(m, { mine: isMine(m), today, shields, href: matchHref(m) }))}</div>`)
+      ? html`<div class="box">${days.map(day => html`<h3 class="match-day">${dayLabel(day.date)}</h3>${day.matches.map(m => matchRow(m, { mine: isMine(m), today, shields, href: matchHref(m) }))}`)}</div>`
       : empty('La fuente no trae partidos de esta jornada.');
     return block(title, html`${body}${warn ? notice(warn.term, warn.text) : ''}`, { context: table, id });
   });
-  return html`<section data-screen="jornada">${head}${scope}${nav}${index}<div class="round-groups">${sections}</div></section>`;
+  return html`<section data-screen="jornada">${head}${strip}${nav}<div class="round-groups">${sections}</div></section>`;
 }
 
 function render(ctx) {
@@ -202,31 +193,38 @@ function render(ctx) {
   const s = params.s || ctx.portal.season;
   // Sin la temporada (needs no la trajo): la caja de error, nunca otra temporada (§7).
   if (!model.season(s)) {
-    return html`<section data-screen="jornada">${screenHead('Jornada', { action: otherGroup(s) })}${errorBox(`la temporada ${seasonLabel(s)}`)}</section>`;
+    return html`<section data-screen="jornada">${screenHead('Jornada', { action: otherLeagues(s) })}${errorBox(`la temporada ${seasonLabel(s)}`)}</section>`;
   }
   if (!params.g && params.f) return competitionView(ctx, s);
   const group = model.group(s, params.g);
   if (!group) {
-    const why = params.g ? `No hay ningún grupo ${params.g} en la temporada ${seasonLabel(s)}.` : 'Elige un grupo en «Otro grupo».';
-    return html`<section data-screen="jornada">${screenHead('Jornada', { action: otherGroup(s) })}${empty(why)}</section>`;
+    const why = params.g ? `No hay ningún grupo ${params.g} en la temporada ${seasonLabel(s)}.` : 'Elige un grupo en «Otras ligas».';
+    return html`<section data-screen="jornada">${screenHead('Jornada', { action: otherLeagues(s) })}${empty(why)}</section>`;
   }
   const sub = s === ctx.portal.season ? group.label : `${group.label} · ${seasonLabel(s)}`;
   const siblings = siblingGroups(model, group);
   const round = pickRound(group, params.r, today);
-  const head = html`${screenHead('Jornada', { sub, action: otherGroup(s, group, siblings) })}${groupBar(ctx, group, siblings, round)}`;
+  const n = round ? round.n : null;
+  // La tira de los grupos de su competición, con «Todos» delante: cada grupo abre la jornada del mismo
+  // número (si no la tiene, la suya por defecto), y «Todos», esa jornada en todos.
+  const mine = myTeamIn(group, ctx.myTeam, ctx.resolution);
+  const first = siblings ? siblings.list : [];
+  const strip = siblings ? groupStrip({
+    label: siblings.entry.label, groups: siblings.list, currentId: group.id,
+    mineId: (first.find(g => myTeamIn(g, ctx.myTeam, ctx.resolution)) || {}).id,
+    hrefFor: target => routeHref('jornada', { s, g: target.id, r: roundKey(target, n) }),
+    all: { href: routeHref('jornada', { s, c: group.cat, f: group.compKey, r: n === null ? '' : String(n) }) },
+  }) : '';
+  const head = html`${screenHead('Jornada', { sub, action: headAction(ctx, s, { mine: Boolean(mine), first, n, group }) })}${strip}`;
   if (!round) {
     // En una temporada cerrada ya no lo publicará (2012-13: el archivo del portal solo guardó las tablas).
     const why = s === ctx.portal.season ? 'La fuente todavía no ha publicado el calendario de este grupo.'
       : 'La fuente no publicó el calendario de este grupo.';
     return html`<section data-screen="jornada">${head}${empty(why)}</section>`;
   }
-  const mine = myTeamIn(group, ctx.myTeam, ctx.resolution);
   const at = group.rounds.indexOf(round);
   const step = (target, glyph, label, id) => roundStep(target ? routeHref('jornada', { s, g: group.id, r: target.key }) : null,
     target && target.label, glyph, label, id);
-  // Con grupos hermanos, «Este grupo | Todos (N)»: la misma jornada en todos los de su competición.
-  const scope = siblings ? scopeNav({ label: 'Este grupo', href: routeHref('jornada', { s, g: group.id, r: round.key }) },
-    routeHref('jornada', { s, c: group.cat, f: group.compKey, r: round.n === null ? '' : String(round.n) }), siblings.list.length, 'grupo') : '';
   const days = roundDays(group, round, mine);
   const dates = days.map(day => day.date).filter(Boolean).sort();
   const nav = html`<nav class="round-nav" aria-label="Jornadas">${step(group.rounds[at - 1], '‹', 'Jornada anterior', 'round-prev')}<div class="round-now"><h2 class="round-title">${roundTitle(group, round)}</h2><p class="round-dates">${dateRange(dates[0], dates[dates.length - 1])}</p></div>${step(group.rounds[at + 1], '›', 'Jornada siguiente', 'round-next')}</nav>`;
@@ -239,12 +237,12 @@ function render(ctx) {
     ? html`<button class="button" type="button" data-action="group-calendar">Calendario del grupo</button>` : '';
   // Bajo la botonera, la región de estado de «Compartir jornada» (shareStatus, la de todas las pantallas).
   const actions = html`<div class="box round-actions"><div class="buttons"><button class="button" type="button" data-action="share-round">Compartir jornada</button>${calendar}</div></div>${shareStatus()}`;
-  return html`<section data-screen="jornada">${head}${scope}${nav}${list}${warn ? notice(warn.term, warn.text) : ''}${actions}</section>`;
+  return html`<section data-screen="jornada">${head}${nav}${list}${warn ? notice(warn.term, warn.text) : ''}${actions}</section>`;
 }
 
 function mount(root, ctx) {
   // La tira de grupos, hasta el actual, dentro de su caja: la página no se mueve.
-  scrollToCurrent(root.querySelector('.group-strip'));
+  scrollToCurrent(root.querySelector('.group-scroll'));
   const el = root.querySelector('[data-screen="jornada"]') || root;
   const group = ctx.model.group(ctx.params.s || ctx.portal.season, ctx.params.g);
   const round = group && pickRound(group, ctx.params.r, ctx.today);

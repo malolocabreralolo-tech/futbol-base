@@ -8,7 +8,7 @@ Resultados y seguimiento de Benjamín y Prebenjamín de Gran Canaria, Lanzarote 
 
 - Un equipo, el tuyo: la portada sigue a «mi equipo» (próximo partido con fecha, hora canaria y campo cuando la fuente los publica; último resultado, clasificación y goleadores) y cambia con el momento de la temporada. Los equipos que se miran sin cambiarlo quedan en «Vistos hace poco» (hasta 8).
 - Jornada, Tabla (puntos, goles, forma, casa y fuera) y Partido (goles, alineaciones del acta y cara a cara).
-- Los otros grupos de la categoría sin salir de Jornada y Tabla: «‹ Grupo 5 de 24 ›» y, con más de seis, una tira para saltar a cualquiera; la jornada de todos los grupos de una competición a la vez; y la evolución de un grupo, con la línea de puntos de cada equipo y su puesto tras cada jornada (calculados con el calendario).
+- Los otros grupos de la categoría sin salir de Jornada y Tabla: una tira con el número de cada grupo (el tuyo, marcado) y «Mi grupo» para volver; la barra de abajo se queda en el grupo que miras; y «Todos», la misma jornada en todos los grupos de la competición.
 - Explorar: buscador de equipos, ligas y copas de las tres islas, goleadores completos, récords y archivo desde 2017/18.
 - Enlaces directos a cada pantalla (también los antiguos, de WhatsApp) y botón de compartir.
 - Calendario `.ics` y enlace al mapa para campos conocidos.

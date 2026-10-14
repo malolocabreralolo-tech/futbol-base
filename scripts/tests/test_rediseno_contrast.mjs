@@ -61,12 +61,13 @@ const ratio = (a, b) => {
   return (hi + 0.05) / (lo + 0.05);
 };
 
-// Spec §3.1 (texto/fondo), más dos pares que usan los componentes: el
-// monograma (--mute sobre --line) y las etiquetas dentro de la fila propia
-// (--mute sobre --mark).
+// Spec §3.1 (texto/fondo), más los pares que usan los componentes: el
+// monograma (--mute sobre --line), las etiquetas dentro de la fila propia
+// (--mute sobre --mark) y las fichas de la tira de grupos (--text y, la de mi
+// grupo, --ink sobre --line).
 const PAIRS = [['text', 'paper'], ['mute', 'paper'], ['ink', 'paper'], ['on-ink', 'ink'],
   ['ink', 'mark'], ['text', 'mark'], ['on-win', 'win'], ['on-draw', 'draw'], ['on-loss', 'loss'],
-  ['mute', 'line'], ['mute', 'mark']];
+  ['mute', 'line'], ['mute', 'mark'], ['text', 'line'], ['ink', 'line']];
 
 test('la fórmula de contraste da los valores de referencia', () => {
   assert.equal(ratio('#000000', '#FFFFFF').toFixed(2), '21.00');

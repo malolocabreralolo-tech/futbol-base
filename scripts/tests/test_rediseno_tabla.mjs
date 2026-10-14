@@ -39,8 +39,8 @@ test('PG2 por defecto: cinco vistas en móvil (Puntos), Todas, Casa y Fuera en e
   assert.match(out, /^<section data-screen="tabla">/);
   assert.equal((out.match(/<h1[ >]/g) || []).length, 1);
   assert.match(out, /<h1>Tabla<\/h1><p class="screen-sub">Prebenjamín, Grupo 2 de Gran Canaria<\/p>/);
-  // Con grupos hermanos (PG3), «Otro grupo» va directo a la lista de grupos de su competición (f).
-  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;f=grancanaria&amp;to=tabla">Otro grupo<\/a>/);
+  // El grupo de mi equipo: a la derecha, «Otras ligas», las de su categoría y su isla.
+  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;to=tabla">Otras ligas<\/a>/);
   assert.deepEqual(labels(nav(out, 'narrow')), ['Puntos', 'Goles', 'Forma', 'Casa', 'Fuera']);
   assert.deepEqual(active(nav(out, 'narrow')), ['Puntos']);
   assert.deepEqual(labels(nav(out, 'wide')), ['Todas', 'Casa', 'Fuera']);
@@ -162,7 +162,8 @@ test('temporada pasada (P1 2024-25): la temporada en la etiqueta, forma del arch
   assert.match(rows[0].text, /^1 .*Moya 9 7 1 1 41 17 \+24 G ganado, G ganado, G ganado, G ganado, G ganado 22$/);
   assert.match(rows[0].html, /href="#\/equipo\?s=2024-2025&amp;g=P1&amp;t=Moya"/);
   assert.match(out, /<p class="notice source-line">Clasificación oficial\. Archivo de la temporada 2024\/25\.<\/p>/);
-  assert.match(out, /href="#\/ligas\?s=2024-2025&amp;c=benjamin&amp;i=grancanaria&amp;to=tabla"/);
+  // Mi equipo jugó esa temporada en otro grupo (PGC2, prebenjamín): «Mi grupo», con la misma vista.
+  assert.match(out, /<a class="screen-action" href="#\/tabla\?s=2024-2025&amp;g=PGC2&amp;v=forma">Mi grupo<\/a>/);
 });
 
 test('temporada sin cargar, sin clasificación, grupo que no existe o vista desconocida: nunca en blanco', () => {

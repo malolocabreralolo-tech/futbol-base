@@ -4,7 +4,6 @@
 import { html, Html } from './html.js';
 import { groupSummary, matchState, penaltyWinner, seasonLabel } from './model.js';
 import { shieldFile } from './state.js';
-import { routeHref } from './links.js';
 
 // ── Escudo y monograma ──────────────────────────────────────────────────
 
@@ -271,7 +270,7 @@ export function backLink(href) {
 }
 
 // Maquetas 4, 5-1, 5-2 y 5-3: el único h1 de la pantalla con su etiqueta debajo, «‹» y escudo
-// opcionales a la izquierda y una acción a la derecha («Cambiar», «Otro grupo», «Compartir»).
+// opcionales a la izquierda y una acción a la derecha («Cambiar», «Mi grupo», «Compartir»).
 // title: texto o Html; action: { href, label } para un enlace, o un Html ya hecho (un botón);
 // crest: Html de crest(); back: href del padre.
 export function screenHead(title, { sub = null, action = null, crest: badge = null, back = null } = {}) {
@@ -286,67 +285,44 @@ export function listEs(items, conj = 'y') {
   return items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} ${conj} ${items[items.length - 1]}`;
 }
 
-// ── Navegación entre grupos (Tabla y Jornada) ───────────────────────────
+// ── Tira de grupos (Tabla y Jornada) ────────────────────────────────────
 
-// Con más de seis grupos, además de «‹ ›», la tira de números (de un toque a cualquiera).
-const STRIP_MIN = 7;
-
-// Un paso «‹» o «›»: enlace con id estable o, en un extremo, apagado con el mismo id (y el foco), como
-// los de la jornada: al cambiar de grupo con replaceState, el router devuelve el foco al pulsado.
-function groupStep(target, glyph, label, id, hrefFor) {
-  return target
-    ? html`<a class="group-step" id="${id}" href="${hrefFor(target)}" aria-label="${label}: ${groupSummary(target).label}">${glyph}</a>`
-    : html`<span class="group-step is-off" id="${id}" role="link" aria-disabled="true" tabindex="-1" aria-label="${label}: no hay">${glyph}</span>`;
-}
-
-// «‹ Grupo 5 de 24 ›» entre los grupos hermanos de un grupo de liga (siblingGroups de model.js), para
-// ver los otros grupos de su competición sin pasar por Ligas. El centro, con la competición y el líder
-// debajo, lleva a la lista de sus grupos (listHref: #/ligas?s&c&f&to); con más de seis grupos, debajo,
-// la tira de números, que se desliza dentro de su caja (scrollToCurrent la lleva al actual), con
-// aria-current en el actual y la marca del de mi equipo (mineId). hrefFor(group) → el enlace de cada
-// uno, en la pantalla de la que se sale. Ids estables: grupo-prev, grupo-next, grupo-lista y
-// grupo-<código>. «Grupo 5 de 24» si el nombre es su número; si no, «Grupo 3 · 2 de 4».
-export function groupNav(nav, { hrefFor, listHref, mineId = null }) {
-  const { list, index, entry } = nav;
-  const own = groupSummary(list[index]);
-  const title = own.label === `Grupo ${index + 1}` ? `${own.label} de ${list.length}` : `${own.label} · ${index + 1} de ${list.length}`;
-  const sub = `${entry.label} · ${own.leader ? `líder: ${own.leader}` : countLabel(own.teams, 'equipo', 'equipos')}`;
-  const center = html`<a class="group-now" id="grupo-lista" href="${listHref}"><span class="group-title">${title}</span><span class="group-sub">${sub}</span><span class="vh">. Ver los ${list.length} grupos</span></a>`;
-  const steps = html`<div class="group-steps">${groupStep(nav.prev, '‹', 'Grupo anterior', 'grupo-prev', hrefFor)}${center}${groupStep(nav.next, '›', 'Grupo siguiente', 'grupo-next', hrefFor)}</div>`;
-  const strip = list.length >= STRIP_MIN ? html`<div class="group-strip">${list.map((group, i) => groupChip(group, hrefFor(group), {
-    id: `grupo-${group.id}`, current: i === index, mine: group.id === mineId,
-  }))}</div>` : '';
-  return html`<nav class="group-nav" aria-label="Grupos de ${entry.label}">${steps}${strip}</nav>`;
-}
-
-// Una casilla de la tira de grupos (groupNav) o del índice de «Todos los grupos» (Jornada): el número
-// del grupo («5»; si su nombre no es «Grupo N», el nombre entero), con «Grupo» y «(grupo de mi equipo)»
-// para el lector de pantalla. current: aria-current; mine: el resalte propio; id: el suyo, si lleva.
-export function groupChip(group, href, { id = null, current = false, mine = false } = {}) {
-  const label = groupSummary(group).label;
-  const short = label.replace(/^Grupo\s+/, '');
-  const cls = mine ? 'group-chip is-mine' : 'group-chip';
-  const idAttr = id ? html` id="${id}"` : '';
-  const inner = html`<span class="vh">${label.slice(0, label.length - short.length)}</span>${short}${mine ? html`<span class="vh"> (grupo de mi equipo)</span>` : ''}`;
+// Una ficha de la tira: enlace con id estable (al cambiar de grupo con replaceState, el router devuelve
+// el foco a la pulsada) y su nombre completo para el lector de pantalla, que empieza por lo que se ve.
+function stripChip({ id, href, text, name, current = false, mine = false, all = false }) {
+  const cls = `group-chip${all ? ' is-all' : ''}${mine ? ' is-mine' : ''}`;
   return current
-    ? html`<a class="${cls}"${idAttr} href="${href}" aria-current="true">${inner}</a>`
-    : html`<a class="${cls}"${idAttr} href="${href}">${inner}</a>`;
+    ? html`<a class="${cls}" id="${id}" href="${href}" aria-label="${name}" aria-current="true">${text}</a>`
+    : html`<a class="${cls}" id="${id}" href="${href}" aria-label="${name}">${text}</a>`;
 }
 
-// El atajo dentro del grupo, «Jornada | Tabla | Evolución», en Tabla y en Jornada: la barra lleva al
-// grupo de mi equipo, y esto, a las otras pantallas del grupo que se mira. active: 'jornada', 'tabla' o
-// 'evolucion'. Ids estables: ver-jornada, ver-tabla y ver-evolucion.
-const GROUP_VIEWS = [['jornada', 'Jornada'], ['tabla', 'Tabla'], ['evolucion', 'Evolución']].map(([value, label]) => ({ value, label }));
-export function groupViews(group, active) {
-  const at = { s: group.season, g: group.id };
-  const href = (value) => (value === 'jornada' ? routeHref('jornada', at) : routeHref('tabla', { ...at, v: value === 'evolucion' ? value : '' }));
-  return html`<nav class="group-views" aria-label="Ver el grupo">${segmented(GROUP_VIEWS, active, href, { idPrefix: 'ver' })}</nav>`;
+// La tira de grupos de una competición, bajo la cabecera de Tabla y de Jornada: una ficha por grupo de
+// liga (los de siblingGroups de model.js, o los de «Todos los grupos»), con su número («5»; si su
+// nombre no es «Grupo N», el nombre entero) y, para el lector de pantalla, su nombre, su líder y si es
+// el de mi equipo («Grupo 6, líder Arucas, mi grupo»). La actual (currentId), rellena y con
+// aria-current; la de mi equipo (mineId), con su marca. Las de los grupos van en .group-scroll, que se
+// desliza dentro de su caja (scrollToCurrent la lleva a la actual al montar); en escritorio, en filas.
+// En Jornada, `all` ({ href, current }) pone delante, fuera de lo que se desliza y siempre a la vista,
+// la ficha «Todos»: la jornada de todos los grupos. label: el nombre de la competición; hrefFor(group)
+// → el enlace de cada ficha. Ids estables: grupo-<código> y grupo-todos.
+export function groupStrip({ label, groups, currentId = null, mineId = null, hrefFor, all = null }) {
+  const chips = groups.map((group) => {
+    const { label: name, leader } = groupSummary(group);
+    const mine = group.id === mineId;
+    return stripChip({
+      id: `grupo-${group.id}`, href: hrefFor(group), text: name.replace(/^Grupo\s+/, ''),
+      name: `${name}${leader ? `, líder ${leader}` : ''}${mine ? ', mi grupo' : ''}`, current: group.id === currentId, mine,
+    });
+  });
+  const first = all ? stripChip({ id: 'grupo-todos', href: all.href, text: 'Todos', name: 'Todos los grupos', current: Boolean(all.current), all: true }) : '';
+  return html`<nav class="group-strip" aria-label="Grupos de ${label}">${first}<div class="group-scroll">${chips}</div></nav>`;
 }
 
-// Para el mount de Tabla y Jornada: desliza una tira (la de groupNav) hasta su casilla con aria-current,
-// en medio si cabe, con scrollLeft: la página nunca se mueve (scrollIntoView la movería).
+// Para el mount de Tabla y Jornada: desliza la tira (.group-scroll) hasta su ficha con aria-current o,
+// sin ella («Todos»), hasta la de mi grupo; en medio si cabe y con scrollLeft: la página nunca se mueve
+// (scrollIntoView la movería).
 export function scrollToCurrent(strip) {
-  const current = strip && strip.querySelector('[aria-current]');
+  const current = strip && (strip.querySelector('[aria-current]') || strip.querySelector('.is-mine'));
   if (!current) return;
   const most = Math.max(0, strip.scrollWidth - strip.clientWidth);
   strip.scrollLeft = Math.min(most, Math.max(0, current.offsetLeft - (strip.clientWidth - current.offsetWidth) / 2));

@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { currentAt } from './fixtures/rediseno/simulate.mjs';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { ctxFor, datasetsFor, pastSeasonRaw, cssRules, PORTAL_SEASON } from './fixtures/rediseno/screens.mjs';
-import { screen, homeAwayCoverage } from '../../src/screen-tabla.js';
+import { screen, homeAwayCoverage, coverageText } from '../../src/screen-tabla.js';
 import { groupScorers } from '../../src/state.js';
 import { buildGroup, lastResults, homeAwayTable, sourceInfo } from '../../src/model.js';
 import { standingsTable } from '../../src/ui.js';
@@ -135,6 +135,22 @@ test('cobertura: un retirado que la tabla ya no lista, con sus 0-1 en el calenda
   // Si no los cuenta (los anula), el calendario sin el retirado cuadra con la tabla.
   const annulled = build([row(1, 'Alfa', 2, 1, 1, 4, 2), row(2, 'Beta', 1, 1, 0, 2, 0), row(3, 'Gamma', 1, 0, 1, 0, 4)]);
   assert.equal(homeAwayCoverage(annulled), null);
+});
+
+test('cobertura: un solo partido contra el retirado concuerda en número («el partido», no «los 1 partidos»)', () => {
+  const row = (pos, team, pj, g, p, gf, gc) => [pos, team, 3 * g, pj, g, 0, p, gf, gc, gf - gc];
+  const m = (home, away, hs, as) => ['05-10-2024', home, away, hs, as, null, '10:00', 'X'];
+  const group = buildGroup({ id: 'X1', name: 'Grupo 1', phase: 'Primera Fase GC', island: 'grancanaria',
+    standings: [row(1, 'Alfa', 2, 2, 0, 3, 0), row(2, 'Beta', 1, 0, 1, 0, 2)],
+    jornadas: { 1: [m('Alfa', 'Beta', 2, 0)], 2: [m('Retirado B', 'Alfa', 0, 1)] } }, { season: '2024-2025', cat: 'benjamin' });
+  const c = homeAwayCoverage(group);
+  assert.deepEqual(c, { calendar: 1, official: 2, vsRetired: 1, retired: ['Retirado B'], exact: true, absent: false });
+  assert.equal(coverageText(c), 'No cuenta el partido contra Retirado B (retirado).');
+  assert.equal(coverageText({ ...c, absent: true }), 'No cuenta el partido contra Retirado B (retirado), que no está en el calendario.');
+  assert.equal(coverageText({ ...c, official: 3, exact: false }),
+    'Con el partido con resultado del calendario; la clasificación oficial cuenta 3, uno de ellos contra Retirado B (retirado).');
+  assert.equal(coverageText({ calendar: 101, official: 210, vsRetired: 28, retired: ['CD Batán'], exact: false, absent: false }),
+    'Con los 101 partidos con resultado del calendario; la clasificación oficial cuenta 210, 28 de ellos contra CD Batán (retirado).');
 });
 
 test('goleadores del grupo: los 10 primeros con escudo, goles y PJ, y «ver todos»', () => {

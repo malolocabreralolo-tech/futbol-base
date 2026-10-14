@@ -67,11 +67,18 @@ export function homeAwayCoverage(group) {
     absent: names.every(team => !inCalendar.has(team)) };
 }
 
-function coverageText(c) {
+// La nota de cobertura de homeAwayCoverage, en número con sus cifras: un solo partido contra el
+// retirado (2017-18 GC4, 2023-24 PFV3) es «el partido», no «los 1 partidos».
+export function coverageText(c) {
   const whom = `${listEs(c.retired)} (${c.retired.length > 1 ? 'retirados' : 'retirado'})`;
-  if (c.exact) return `No cuenta los ${c.vsRetired} partidos contra ${whom}${c.absent ? ', que no están en el calendario' : ''}.`;
-  const also = c.vsRetired ? `, ${c.vsRetired} de ellos contra ${whom}` : '';
-  return `Con los ${c.calendar} partidos con resultado del calendario; la clasificación oficial cuenta ${c.official}${also}.`;
+  if (c.exact) {
+    const one = c.vsRetired === 1;
+    return `No cuenta ${one ? 'el partido' : `los ${c.vsRetired} partidos`} contra ${whom}${
+      c.absent ? `, que no ${one ? 'está' : 'están'} en el calendario` : ''}.`;
+  }
+  const also = c.vsRetired ? `, ${c.vsRetired === 1 ? 'uno' : c.vsRetired} de ellos contra ${whom}` : '';
+  const calendar = c.calendar === 1 ? 'el partido' : `los ${c.calendar} partidos`;
+  return `Con ${calendar} con resultado del calendario; la clasificación oficial cuenta ${c.official}${also}.`;
 }
 
 // Casa y Fuera de la federación (su clasificación detallada, group.official), si cuadra con la

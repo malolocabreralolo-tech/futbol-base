@@ -394,16 +394,22 @@ def test_a_calendar_without_rounds_costs_no_fixed_waits(monkeypatch):
     page = CalendarPage()
     assert U.scrape_group(page, Fed(Clock()), url(1), {}, TODAY) == ([], {})
     assert page.reads == 1 and page.waits == []
-    # Un grupo con jornadas cuyo desplegable tarda («0J»): una espera más, al desplegable y con tope.
-    page = CalendarPage(ready_on=2)
+    # Un grupo con jornadas cuyo desplegable tarda («0J»): hasta dos esperas más, al desplegable y con
+    # tope (antes de octubre eran 4 × 3 s fijos; con una sola espera, 14/10, fallaban grupos sanos).
+    page = CalendarPage(ready_on=3)
     assert list(U.scrape_group(page, Fed(Clock()), url(1), stored, TODAY)[1]) == ["Jornada 1"]
-    (selector, cap), = page.waits
-    assert selector.startswith('select[name="jornada"]') and 0 < cap <= 5000
-    # Si tampoco llega, el grupo falla como antes, sin más esperas.
+    assert len(page.waits) == 2
+    assert all(sel.startswith('select[name="jornada"]') and 0 < cap <= 5000 for sel, cap in page.waits)
+    # Y si aún no llega, se recarga el calendario una vez: la federación a veces lo sirve a medias.
+    page = CalendarPage(ready_on=4)
+    fed = Fed(Clock())
+    assert list(U.scrape_group(page, fed, url(1), stored, TODAY)[1]) == ["Jornada 1"]
+    assert len(page.waits) == 2
+    # Si tampoco, el grupo falla como antes.
     page = CalendarPage()
     with pytest.raises(RuntimeError, match="jornadas"):
         U.scrape_group(page, Fed(Clock()), url(1), stored, TODAY)
-    assert page.reads == 2 and len(page.waits) == 1
+    assert page.reads == 4 and len(page.waits) == 2
 
 
 @pytest.fixture

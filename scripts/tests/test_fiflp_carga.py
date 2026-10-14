@@ -68,9 +68,17 @@ class Response:
 
 class FakePage:
     """goto que falla `fails` veces (o responde con los estados de `statuses`); registra lo que espera."""
-    def __init__(self, fails=0, ready=True, statuses=()):
+    def __init__(self, fails=0, ready=True, statuses=(), empties=0):
         self.fails, self.ready, self.gotos, self.waits = fails, ready, [], []
         self.statuses = list(statuses)
+        self.empties = empties          # cargas seguidas que la federación sirve vacías
+
+    def evaluate(self, js, *a):
+        if js == C.EMPTY_JS:
+            empty = self.empties > 0
+            self.empties -= empty
+            return empty
+        return None
 
     def goto(self, url, wait_until=None, timeout=None):
         self.gotos.append((url, wait_until))
@@ -134,12 +142,58 @@ def test_an_error_status_is_a_page_that_did_not_load():
         assert C.goto(FakePage(statuses=statuses), GROUP, sleep=slept.append, log=lambda *_: None)
 
 
+def test_an_empty_page_is_the_federation_braking_and_not_a_loaded_page():
+    """14/10/2026 (ejecución 38581710573): tras unas 20 páginas seguidas a buen ritmo, la federación
+    sirve un 200 con «<html><head></head><body></body></html>». El bot lo tomó por página cargada y
+    63 de 69 grupos dieron «no sirvió las jornadas». Una página vacía no carga: se reintenta UNA vez,
+    tras una espera larga (el freno dura), y si sigue vacía se deja para la próxima pasada."""
+    slept, said = [], []
+    page = FakePage(empties=1)
+    assert C.goto(page, GROUP, sleep=slept.append, log=said.append)
+    assert slept == [C.EMPTY_WAIT] and len(page.gotos) == 2 and "vacía" in said[0]
+    slept.clear()
+    page = FakePage(empties=5)
+    assert not C.goto(page, GROUP, sleep=slept.append, log=lambda *_: None)
+    assert slept == [C.EMPTY_WAIT] and len(page.gotos) == 2 and page.waits == []
+    # Sin plazo para esa espera, se rinde sin esperar.
+    slept.clear()
+    page = FakePage(empties=5)
+    assert not C.goto(page, GROUP, deadline=time.monotonic() + 10, sleep=slept.append, log=lambda *_: None)
+    assert slept == [] and len(page.gotos) == 1
+
+
+def test_the_bot_adapter_keeps_a_minimum_interval_between_requests():
+    """El ritmo que la federación tolera: el de antes de octubre (~6,8 s por página, unas 9 por
+    minuto), no el de las esperas recortadas (~5,2 s, 11-12 por minuto), que la hizo frenar."""
+    import fetch_fiflp_2425 as F
+    now, slept = [100.0], []
+    clock = lambda: now[0]
+    def sleep(s):
+        slept.append(round(s, 2))
+        now[0] += s
+    fed = C.Federacion(F, interval=7.0, clock=clock, sleep=sleep)
+    page = FakePage()
+    fed.goto(page, GROUP)                 # la primera, sin esperar
+    now[0] += 2.0                         # el lector y la pausa gastan 2 s
+    fed.goto(page, GROUP)
+    now[0] += 9.0                         # más que el intervalo: sin esperar
+    fed.goto(page, GROUP)
+    assert slept == [5.0] and fed.pages == 3
+
+
+def test_the_minimum_interval_is_set_by_environment():
+    assert C.min_interval({}) == C.DEFAULT_INTERVAL >= 6.5
+    assert C.min_interval({"FIFLP_MIN_INTERVAL": "8,5"}) == 8.5
+    for bad in ("", "x", "-1"):
+        assert C.min_interval({"FIFLP_MIN_INTERVAL": bad}) == C.DEFAULT_INTERVAL
+
+
 def test_the_bot_adapter_knows_when_the_federation_stops_serving(monkeypatch):
     """Federacion cuenta las páginas seguidas que no cargan (cada una tras sus reintentos): con
     BLOCKED_AFTER, blocked; una que carga lo deshace."""
     import fetch_fiflp_2425 as F
     monkeypatch.setattr(C, "goto", lambda page, url, deadline=None: page.statuses.pop(0) == 200)
-    fed = C.Federacion(F)
+    fed = C.Federacion(F, interval=0)
     page = FakePage(statuses=[503, 503, 200] + [503] * C.BLOCKED_AFTER)
     for _ in range(3):
         fed.goto(page, GROUP)
@@ -152,7 +206,7 @@ def test_the_bot_adapter_knows_when_the_federation_stops_serving(monkeypatch):
 def test_the_bot_adapter_keeps_the_readers_and_counts_pages(monkeypatch):
     import fetch_fiflp_2425 as F
     monkeypatch.setattr(C, "pause", lambda extra=0: None)
-    fed = C.Federacion(F, deadline=time.monotonic() + 60)
+    fed = C.Federacion(F, deadline=time.monotonic() + 60, interval=0)
     assert fed.BASE == F.BASE
     assert fed.parse_standings is F.parse_standings and fed.parse_matches is F.parse_matches
     page = FakePage()
@@ -234,6 +288,34 @@ def test_the_page_is_flattened_only_after_the_federation_stylesheets(sync_api, s
     # Las cifras salen de la hoja que tardaba; la que no es de la federación no se espera.
     assert score.replace(" ", "") == "7-2"
     assert 1.0 < took < 5.0
+
+
+def test_the_exact_braking_page_in_a_real_browser_is_empty(sync_api):
+    """La respuesta del freno, tal cual la guardó la sonda (probe-fiflp, 14/10/2026): 39 bytes."""
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            body = b"<html><head></head><body></body></html>" if self.path == "/vacia" else b"<html><body><p>x</p></body></html>"
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html")
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):
+            pass
+    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{httpd.server_address[1]}"
+    try:
+        with sync_api.sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = browser.new_page()
+            page.goto(base + "/vacia")
+            assert C._empty(page)
+            page.goto(base + "/llena")
+            assert not C._empty(page)
+            browser.close()
+    finally:
+        httpd.shutdown()
 
 
 def test_a_503_in_a_real_browser_is_not_a_loaded_page(sync_api):

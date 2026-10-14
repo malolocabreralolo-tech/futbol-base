@@ -135,3 +135,15 @@ Las temporadas anteriores a la web (CodTemporada 12 a 16, `ARCHIVE_SEASONS` en `
 - **Web.** `generate_js.sync_season_files` añade el `data-season-<S>.js` nuevo a `SEASON_FILES` de `sw.js` en la misma pasada que lo publica (sin precachearlo, sin conexión se rompen la Trayectoria y «Ver temporadas anteriores»). La lista de temporadas, el menú de temporada y Explorar («archivo desde …») salen solos.
 
 2016-17 (CodTemporada 12) se añadió así en octubre de 2026: su nombre en `SEASON_NAME` (`fetch_fiflp_actas.py`) y sus competiciones en `fiflp_comps_catalog.json` (`discover_fiflp_comps.py`); goleadores y actas (`goleadores-federacion.yml -f temporadas=12`; `actas-federacion.yml -f temporada=12`); `meta_by_name` da código a sus 11 competiciones (las mismas que en 2017-18); y `ARCHIVE_SEASONS`, con sus fases en `phases-archivo.json`. 2015-16 (11) no tiene benjamín ni prebenjamín en la federación.
+
+## El freno de la federación (14/10/2026)
+
+Tras unas 20 páginas seguidas a ~5 s cada una, fiflp.com deja de servir: responde 200 con una página
+vacía (`<html><head></head><body></body></html>`, 39 bytes; lo guardó la sonda probe-fiflp, run
+38584760192). La primera pasada con las esperas recortadas (run 38581710573) lo tomó por página
+cargada y 63 de 69 grupos dieron «no sirvió las jornadas». Desde entonces (fiflp_carga):
+- entre el inicio de dos peticiones pasan al menos `FIFLP_MIN_INTERVAL` s (7 por defecto: el ritmo de
+  antes de octubre, ~6,8 s por página, que nunca frenó);
+- una página vacía no carga: se reintenta una vez tras 60 s y, si sigue, cuenta para `blocked`
+  (3 seguidas: el bot deja de pedir en esa pasada y lo que falta va en la siguiente, por turnos);
+- el desplegable de jornadas se espera hasta dos veces más y, si no, se recarga el calendario una vez.

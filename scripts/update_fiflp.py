@@ -604,6 +604,7 @@ def current_round(conn, group_id):
     return played[-1] if played else (rows[0][0] if rows else None)
 
 
+JORNADAS_TRIES = 3       # dos esperas al desplegable de jornadas y una recarga (scrape_group)
 JORNADAS_JS = """() => {
     const sel = document.querySelector('select[name="jornada"]');
     return sel ? Array.from(sel.options).filter(o => o.value && o.value !== '0')
@@ -631,11 +632,17 @@ def scrape_group(page, F, url, stored, today, full=False):
     if not F.goto(page, calendar):
         raise RuntimeError("no carga el calendario de la federación")
     # La carga ya esperó, con tope, al desplegable (fiflp_carga.ready_selector). Si no llegó y el grupo
-    # tiene jornadas, FIFLP tarda en servirlo («0J»): una espera más, al desplegable y con tope. Sin
-    # jornadas (un calendario aún sin publicar), nada que esperar: antes eran 4 × 3 s en cada pasada.
+    # tiene jornadas, FIFLP tarda en servirlo («0J»): hasta dos esperas más, al desplegable y con tope,
+    # y si aún no, se recarga el calendario una vez (antes de octubre eran 4 × 3 s fijos; con una
+    # sola espera fallaban grupos sanos). Sin jornadas (un calendario aún sin publicar), nada que esperar.
     options = page.evaluate(JORNADAS_JS)
-    if not options and stored:
-        wait_ready(page, ready_selector(calendar), ready_timeout_ms())
+    for attempt in range(JORNADAS_TRIES if stored else 0):
+        if options:
+            break
+        if attempt < JORNADAS_TRIES - 1:
+            wait_ready(page, ready_selector(calendar), ready_timeout_ms())
+        elif not F.goto(page, calendar):
+            break
         options = page.evaluate(JORNADAS_JS)
     if not options and stored:
         raise RuntimeError("la federación no sirvió las jornadas del grupo")

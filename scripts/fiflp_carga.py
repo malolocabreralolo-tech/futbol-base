@@ -13,7 +13,12 @@ grupos, 19 min de primera pasada; con la Segunda Fase y alevín no cabría en el
     jitter; «2-3.5» era la de antes);
   - una página de error de la federación (un 5xx, como el 503 de Apache cuando bloquea, o un 429) no
     es una página cargada: se reintenta como una que no carga y, con BLOCKED_AFTER seguidas, el bot
-    deja de pedirle más en esa pasada (Federacion.blocked).
+    deja de pedirle más en esa pasada (Federacion.blocked);
+  - una página VACÍA (un 200 con «<html><head></head><body></body></html>») es su freno: tras unas
+    20 páginas seguidas a ~5 s cada una deja de servir (14/10/2026, ejecución 38581710573: 63 de 69
+    grupos). Se reintenta una vez tras EMPTY_WAIT y, si sigue, no carga (cuenta para blocked);
+  - el RITMO: entre dos peticiones, al menos FIFLP_MIN_INTERVAL segundos (DEFAULT_INTERVAL, el de
+    antes de octubre, ~6,8 s por página, que nunca frenó), por rápido que cargue cada página.
 No cambia cómo se aplana ni cómo se lee el HTML: solo cuándo. Lo usa el bot (update_fiflp,
 Federacion); las tandas de temporadas pasadas (fetch_fiflp_actas, _goleadores, _detalle, _islas)
 siguen con el paso de fetch_fiflp_2425, sin prisa.
@@ -27,6 +32,9 @@ from fiflp_render import FIFLP_HOSTS
 
 DEFAULT_DELAY = (1.0, 1.5)
 DEFAULT_READY_MS = 5000
+DEFAULT_INTERVAL = 7.0    # segundos entre el inicio de dos peticiones (FIFLP_MIN_INTERVAL)
+EMPTY_WAIT = 60           # tras una página vacía (el freno de la federación), antes de reintentarla
+EMPTY_JS = "() => !document.body || document.body.innerHTML.trim() === ''"
 RETRY_WAITS = (15, 30)    # entre intentos de una página que no carga (tres intentos)
 # Páginas seguidas que no cargan (cada una tras sus intentos): la federación bloquea o se ha caído, y
 # el bot deja de pedirle más en esa pasada (Federacion.blocked).
@@ -69,6 +77,22 @@ def ready_timeout_ms(env=None):
     para Playwright, 0 es esperar sin tope."""
     text = (os.environ if env is None else env).get("FIFLP_READY_MS", "").strip()
     return int(text) if text.isdigit() and int(text) > 0 else DEFAULT_READY_MS
+
+
+def min_interval(env=None):
+    """Los segundos mínimos entre el inicio de dos peticiones a la federación (FIFLP_MIN_INTERVAL). Un
+    valor que no se entiende o negativo deja el de por defecto: nunca el bot sin freno."""
+    text = (os.environ if env is None else env).get("FIFLP_MIN_INTERVAL", "")
+    m = re.fullmatch(r"\s*([0-9]+(?:[.,][0-9]+)?)\s*", text or "")
+    return _env_number(m.group(1)) if m else DEFAULT_INTERVAL
+
+
+def _empty(page):
+    """¿La federación sirvió la página vacía (su freno)? Sin poder mirarla (las páginas de prueba), no."""
+    try:
+        return page.evaluate(EMPTY_JS) is True
+    except Exception:
+        return False
 
 
 def pause(extra=0, rng=random.uniform, sleep=time.sleep, env=None):
@@ -114,14 +138,18 @@ def goto(page, url, deadline=None, retries=3, ready_ms=None, hosts=FIFLP_HOSTS, 
         try:
             response = page.goto(url, wait_until="domcontentloaded", timeout=30000)
             failure = f"responde {response.status}" if _refused(response) else None
+            if failure is None and _empty(page):
+                failure = "página vacía (la federación frena)"
         except Exception:
             failure = "no carga"
         if failure is None:
             wait_ready(page, ready_selector(url), timeout_ms, hosts)
             return True
-        if attempt + 1 >= retries:
+        braking = failure.startswith("página vacía")
+        # El freno dura: una sola espera larga; si sigue, la página queda para la próxima pasada.
+        if attempt + 1 >= retries or (braking and attempt >= 1):
             return False
-        wait = RETRY_WAITS[min(attempt, len(RETRY_WAITS) - 1)]
+        wait = EMPTY_WAIT if braking else RETRY_WAITS[min(attempt, len(RETRY_WAITS) - 1)]
         if deadline is not None and time.monotonic() + wait > deadline:
             return False
         log(f"      {failure} ({attempt + 1}/{retries}), se reintenta en {wait} s")
@@ -133,20 +161,28 @@ class Federacion:
     """Lo que el bot usa del raspador de la federación (fetch_fiflp_2425: BASE y los lectores de
     clasificación y de jornada) con la carga y la pausa de aquí. `deadline` (time.monotonic()) corta
     los reintentos de una página; `pages` cuenta las cargas (el log del bot da el coste por página) y
-    `failures`, las seguidas que no cargan (con BLOCKED_AFTER, `blocked`: no pedirle más)."""
+    `failures`, las seguidas que no cargan (con BLOCKED_AFTER, `blocked`: no pedirle más). Entre el
+    inicio de dos peticiones pasan al menos `interval` segundos (min_interval)."""
 
-    def __init__(self, scraper, deadline=None):
+    def __init__(self, scraper, deadline=None, interval=None, clock=time.monotonic, sleep=time.sleep):
         self._scraper = scraper
         self.BASE = scraper.BASE
         self.deadline = deadline
         self.pages = 0
         self.failures = 0
+        self.interval = min_interval() if interval is None else interval
+        self._clock, self._sleep, self._last = clock, sleep, None
 
     @property
     def blocked(self):
         return self.failures >= BLOCKED_AFTER
 
     def goto(self, page, url):
+        if self._last is not None:
+            wait = self._last + self.interval - self._clock()
+            if wait > 0:
+                self._sleep(wait)
+        self._last = self._clock()
         self.pages += 1
         loaded = goto(page, url, deadline=self.deadline)
         self.failures = 0 if loaded else self.failures + 1

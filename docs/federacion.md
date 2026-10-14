@@ -31,7 +31,7 @@ La federación no publica el nombre de algunos niños (en 2025/26, por ejemplo, 
 `fetch_futbolaspalmas.py` salta los grupos con URL de la federación y, con `FIFLP_UPDATE=1` (lo pone `update.yml`, que instala Playwright), llama a `update_fiflp.update_groups` → `run_passes`:
 
 1. Clasificación y jornadas recientes, próximas, pendientes o nuevas de cada grupo.
-2. Con el plazo que quede: actas de los partidos jugados (`matches.fiflp_acta` → `cod_acta` al importarla; hasta 60 por pasada; 4 intentos por acta; se relee si la jornada contradice el marcador sin ser una cifra de más), goleadores de cada grupo con algo jugado, directorio de campos (si falta alguno de la temporada) y fichas de los equipos nuevos.
+2. Con el plazo que quede: actas de los partidos jugados (`matches.fiflp_acta` → `cod_acta` al importarla; hasta 60 por pasada; 4 intentos por acta; se relee si la jornada contradice el marcador sin ser una cifra de más) y goleadores de cada grupo con algo jugado. Entre los grupos prioritarios y los demás, el directorio de campos (si falta alguno de la temporada) y las fichas de los equipos nuevos: si el plazo corta la segunda pasada, se leen igual.
 
 Para que quepa siempre en el job (45 min; desde octubre de 2026 la Segunda Fase y alevín pueden pasar de 80 grupos):
 

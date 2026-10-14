@@ -400,6 +400,24 @@ def test_the_second_pass_rotates_too(health):
         assert set(first) | set(second) == set(ALL)
 
 
+def test_venues_and_team_cards_are_read_even_when_the_second_pass_runs_out(health):
+    """El directorio de campos (si falta uno de la temporada) y las fichas de los equipos que no la
+    tienen van tras las actas y los goleadores de los prioritarios y antes de los demás: si el plazo
+    corta la segunda pasada en todas (lo previsto con alevín), se leen igual."""
+    conn = season()
+    conn.execute("UPDATE matches SET venue='CAMPO NUEVO' WHERE group_id=8")                 # AL1
+    for position, name in enumerate(["Arucas", "Tablero"], 1):                               # FF1, sin fichas
+        conn.execute("INSERT INTO standings(group_id, team_id, position) SELECT 1, id, ? FROM teams WHERE name=?",
+                     (position, name))
+    conn.commit()
+    data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=112)
+    assert data["run"]["extrasDeferred"]                                                     # el plazo la cortó
+    pages = [u.split("NPcd/")[1].split("?")[0] for u in fed.urls]
+    scorers = [i for i, name in enumerate(pages) if name == "NFG_CMP_Goleadores"]
+    assert "NFG_LstCampos" in pages and "NFG_LstDirectorioEquipos" in pages
+    assert scorers[2] < pages.index("NFG_LstCampos") < pages.index("NFG_LstDirectorioEquipos")   # tras PG2, FF5 y AL3
+
+
 def test_a_closed_group_refreshed_after_a_day_is_published_to_keep_the_rotation(health):
     conn = season(played="2026-09-19")
     previous = report({**{code: checked(6) for code in ALL}, "FF1": checked(25)}, at=NOW - timedelta(hours=1))

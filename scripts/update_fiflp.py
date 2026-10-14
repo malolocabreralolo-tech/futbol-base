@@ -885,10 +885,11 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
        (reserve_seconds) para la segunda; lo que no cabe queda para la pasada
        siguiente (rotación: su comprobación es la más vieja de su nivel y, a las
        STALE_AFTER, pasa delante de los niveles);
-    2. con lo que quede: las actas y los goleadores (los prioritarios primero;
-       después, el que lleva más tiempo sin ellos: extrasAt de data-health.json,
-       así que lo que el plazo corta va primero en la pasada siguiente), el
-       directorio de campos y las fichas de los equipos.
+    2. con lo que quede: las actas y los goleadores de los prioritarios; el
+       directorio de campos y las fichas de los equipos que faltan; y las actas
+       y los goleadores de los demás, el que lleva más tiempo sin ellos primero
+       (extrasAt de data-health.json: lo que el plazo corta va primero en la
+       pasada siguiente).
     Los grupos cerrados que descansan y los que no caben conservan su última
     comprobación en data-health.json (source_health.carry): no son un error."""
     start = clock()
@@ -933,7 +934,6 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # Los prioritarios primero; después, el que lleva más tiempo sin ella (extrasAt; sin ella, el
     # primero). Sin esa hora, el plazo cortaba siempre a los mismos: la de cada grupo es la de su
     # lectura, así que el primero en leerse volvía a ir el primero.
-    budget = MAX_ACTAS_PER_RUN
     print("\n  Actas y goleadores", flush=True)
     refreshed = [g for g in plan.order if g[1] in results]
     oldest = datetime.min.replace(tzinfo=timezone.utc)
@@ -941,10 +941,15 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
                     key=lambda g: (0, oldest) if g[1] in plan.priority
                     else (1, _checked_at(checks.get(g[1]), "extrasAt") or oldest))
     extras, cut = {}, []
-    for group_id, code, url in second:
+    budget = MAX_ACTAS_PER_RUN
+
+    def actas_and_scorers(group_id, code, url):
+        """Las actas (MAX_ACTAS_PER_RUN en toda la pasada) y los goleadores de un grupo. extras: la hora
+        de su segunda pasada, si acabó; cut: los que el plazo no dejó acabar."""
+        nonlocal budget
         if clock() > deadline:
             cut.append(code)
-            continue
+            return
         at = stamp()
         notes = []
         try:
@@ -969,17 +974,19 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         if notes:
             print(f"  [{code}] " + ", ".join(notes))
             results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
-    if cut:
-        print(f"  (plazo agotado: las actas y los goleadores de {len(cut)} grupos, primero en la próxima pasada: "
-              f"{', '.join(cut[:12])}{' y más' if len(cut) > 12 else ''})")
-    # El directorio de campos, solo si falta alguno de los de la temporada (un grupo nuevo).
+
+    for group in second:
+        if group[1] in plan.priority:
+            actas_and_scorers(*group)
+    # Entre los prioritarios y los demás (si el plazo corta la segunda pasada en todas, se leen igual;
+    # solo hay algo que leer con grupos o equipos nuevos): el directorio de campos, si falta alguno de
+    # los de la temporada, y la ficha (equipación y campo) de los equipos que aún no la tienen.
     try:
         if clock() <= deadline and missing_venues(conn, season_id):
             print(f"\n  Campos: {update_campos(page, F, conn, deadline)} en el directorio de la federación")
     except Exception as e:
         conn.rollback()
         print(f"  ! campos: {e}")
-    # La ficha (equipación y campo) de los equipos que aún no la tienen y la de sus campos.
     try:
         if clock() <= deadline:
             cards, fields = update_directorio(page, F, conn, season_id, refreshed, deadline)
@@ -988,6 +995,12 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     except Exception as e:
         conn.rollback()
         print(f"  ! directorio: {e}")
+    for group in second:
+        if group[1] not in plan.priority:
+            actas_and_scorers(*group)
+    if cut:
+        print(f"  (plazo agotado: las actas y los goleadores de {len(cut)} grupos, primero en la próxima pasada: "
+              f"{', '.join(cut[:12])}{' y más' if len(cut) > 12 else ''})")
     for group_id, code, url in groups:
         if code in results:
             source_health.record(code, url, *results[code], now=stamps[code], extras_at=extras.get(code))

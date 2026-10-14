@@ -10,6 +10,7 @@
     actas de las jornadas de más de tres semanas (BACK_DAYS) no se leían nunca.
 """
 from datetime import date
+import os
 import sqlite3
 import sys
 from pathlib import Path
@@ -25,6 +26,15 @@ from db import SCHEMA  # noqa: E402
 
 URL = ("https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120"
        "&CodTemporada=22&CodCompeticion={comp}&CodGrupo={grupo}")
+
+
+@pytest.fixture(autouse=True)
+def _run_number(monkeypatch, tmp_path):
+    """El turno de alevín sale del número de la pasada (GITHUB_RUN_NUMBER): uno fijo, para que las
+    pruebas den lo mismo en local y dentro de update.yml (donde Actions pone el suyo). Y la marca
+    de «subir la base» (FIFLP_DB_MARK), en una carpeta de la prueba."""
+    monkeypatch.setenv("GITHUB_RUN_NUMBER", "3000")
+    monkeypatch.setenv("FIFLP_DB_MARK", str(tmp_path / "base-cambiada"))
 
 
 @pytest.mark.parametrize("name, meta", [
@@ -215,9 +225,15 @@ def test_the_first_pass_reads_all_rounds_and_then_clears_the_mark():
     assert any("CodJornada=1" in u for u in seen), "la primera pasada lee la jornada vieja"
     assert conn.execute("SELECT fiflp_acta FROM matches").fetchone() == (281234,)
     assert U.full_read_pending(conn) == set()
+    # update.yml solo sube futbolbase.db si cambia algo publicado: la marca le dice que la suba
+    # también ahora, o la pasada siguiente (desde la base de main) repetiría la lectura completa.
+    mark = Path(os.environ["FIFLP_DB_MARK"])
+    assert mark.exists()
+    mark.unlink()
     seen.clear()
     U.run_passes(Page(), Fed(), conn, 1, [(gid, code, url)], today, {code: url}, deadline_seconds=0)
     assert not any("CodJornada=1" in u for u in seen), "después, la ventana de siempre"
+    assert not mark.exists(), "sin primera pasada que quitar, la base no se sube por esto"
 
 
 def test_alevin_groups_go_last_in_the_bot_and_the_family_group_first():
@@ -304,13 +320,42 @@ def test_alevin_goes_after_benjamin_actas_and_takes_turns(monkeypatch):
     monkeypatch.setattr(U, "import_actas", spy)
     conn = _bot_base()
     today = date(2026, 10, 5)
-    for expected in (["FF1", "PG2", "AL1", "AL2"], ["FF1", "PG2", "AL3", "AL4"], ["FF1", "PG2", "AL5", "AL1"]):
+    for number, expected in ((3000, ["FF1", "PG2", "AL1", "AL2"]), (3001, ["FF1", "PG2", "AL3", "AL4"]),
+                             (3002, ["FF1", "PG2", "AL5", "AL1"])):
+        monkeypatch.setenv("GITHUB_RUN_NUMBER", str(number))
         fed, groups = _Fed(), U.fiflp_groups(conn, 1)
         U.run_passes(_Page(), fed, conn, 1, groups, today, {g[1]: g[2] for g in groups})
         assert _read(fed) == expected
     # Las actas de benjamín y prebenjamín van antes que las de cualquier grupo alevín.
     ids = dict(conn.execute("SELECT code, id FROM groups"))
     assert calls[:2] == [ids["FF1"], ids["PG2"]] and calls[2:4] == [ids["AL1"], ids["AL2"]]
+
+
+def test_the_turn_moves_on_even_when_the_run_does_not_commit_the_base(monkeypatch):
+    """update.yml solo sube futbolbase.db si cambia algún data-*.js: un turno guardado en la base
+    (fiflp_reads) no avanzaba en las pasadas sin cambios publicados, y cada una, desde la base de
+    main, volvía a leer los mismos grupos. El turno sale del número de la pasada."""
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    monkeypatch.setattr(U, "ALEVIN_PER_RUN", 2)
+    committed = _bot_base()
+    turns = []
+    for number in (3000, 3001, 3002):
+        monkeypatch.setenv("GITHUB_RUN_NUMBER", str(number))
+        conn = sqlite3.connect(":memory:")
+        committed.backup(conn)           # cada pasada arranca de la base subida, que no cambia
+        fed, groups = _Fed(), U.fiflp_groups(conn, 1)
+        U.run_passes(_Page(), fed, conn, 1, groups, date(2026, 10, 5), {g[1]: g[2] for g in groups})
+        turns.append(_read(fed)[2:])
+    assert turns == [["AL1", "AL2"], ["AL3", "AL4"], ["AL5", "AL1"]]
+
+
+def test_without_a_run_number_the_turn_comes_from_the_clock():
+    """Fuera de GitHub (una pasada a mano), la franja de 6 h: cambia de turno de una franja a otra."""
+    from datetime import datetime, timezone
+    a = U.run_number({}, datetime(2026, 10, 14, 1, tzinfo=timezone.utc))
+    assert U.run_number({}, datetime(2026, 10, 14, 5, 59, tzinfo=timezone.utc)) == a
+    assert U.run_number({}, datetime(2026, 10, 14, 6, tzinfo=timezone.utc)) == a + 1
+    assert U.run_number({"GITHUB_RUN_NUMBER": "812"}) == 812
 
 
 def test_an_alevin_group_out_of_its_turn_keeps_its_last_health_entry(monkeypatch):

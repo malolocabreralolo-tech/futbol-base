@@ -44,11 +44,10 @@ MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~6 s cada una); el resto, e
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
 DEADLINE_SECONDS = 25 * 60   # actas y goleadores solo hasta aquí: el job tiene 45 min
 # Alevín (32 grupos en la Fase Previa de 2026-27, ~34-48 s cada uno) no cabe entero en una pasada: va
-# después de benjamín y prebenjamín, por turnos de ALEVIN_PER_RUN grupos (los que llevan más tiempo
-# sin leerse, fiflp_reads) y hasta ALEVIN_STOP_SECONDS, con lo que el job sigue por debajo de 45 min.
+# después de benjamín y prebenjamín, por turnos de ALEVIN_PER_RUN grupos (cada pasada, el siguiente:
+# run_number) y hasta ALEVIN_STOP_SECONDS, con lo que el job sigue por debajo de 45 min.
 ALEVIN_PER_RUN = 8
 ALEVIN_STOP_SECONDS = 31 * 60
-READS_TABLE = "CREATE TABLE IF NOT EXISTS fiflp_reads (group_id INTEGER PRIMARY KEY, read_at TEXT)"
 ACTA_URL = "/NFG_CmpPartido?cod_primaria=1000120&CodActa={code}"
 GOLEADORES_URL = ("/NFG_CMP_Goleadores?cod_primaria=1000120&CodJornada="
                   "&codcompeticion={comp}&codtemporada={season}&codgrupo={group}")
@@ -641,21 +640,46 @@ def _with_browser(work):
             browser.close()
 
 
-def _alevin_turn(conn, lot):
-    """Los ALEVIN_PER_RUN grupos alevín de esta pasada: los que llevan más tiempo sin leerse
-    (fiflp_reads; los nunca leídos, primero), en el orden de fiflp_groups si empatan."""
-    conn.execute(READS_TABLE)
-    last = dict(conn.execute("SELECT group_id, read_at FROM fiflp_reads"))
-    order = sorted(range(len(lot)), key=lambda i: (last.get(lot[i][0]) or "", i))
-    return [lot[i] for i in order[:ALEVIN_PER_RUN]]
+def run_number(env=None, now=None):
+    """El número de esta pasada del bot, que elige el turno de alevín: GITHUB_RUN_NUMBER, que sube en
+    cada ejecución de update.yml haga o no commit (un turno guardado en la base no avanzaba en las
+    pasadas que no la suben, y cada una, desde la base de main, leía otra vez los mismos grupos);
+    fuera de GitHub, la franja de 6 h del reloj (UTC)."""
+    from datetime import datetime, timezone
+    env = os.environ if env is None else env
+    try:
+        return int(env["GITHUB_RUN_NUMBER"])
+    except (KeyError, ValueError):
+        return int((now or datetime.now(timezone.utc)).timestamp()) // (6 * 3600)
+
+
+def _alevin_turn(lot, number):
+    """Los ALEVIN_PER_RUN grupos alevín de la pasada `number` (run_number), en el orden de
+    fiflp_groups: la pasada n toma el turno n (módulo el número de turnos) y el último se completa con
+    los primeros. Con 32 grupos y 8 por pasada, los cuatro turnos en cuatro pasadas seguidas."""
+    if not lot:
+        return []
+    turns = -(-len(lot) // ALEVIN_PER_RUN)
+    start = (number % turns) * ALEVIN_PER_RUN
+    return [lot[(start + i) % len(lot)] for i in range(min(ALEVIN_PER_RUN, len(lot)))]
+
+
+def _mark_db():
+    """update.yml solo sube futbolbase.db si cambia algún data-*.js. Lo que el bot guarda para sí en la
+    base sin publicarlo (que un grupo recién activado ya tuvo su primera pasada completa) se perdería en
+    una pasada sin cambios, y la siguiente, desde la base de main, repetiría la lectura completa: el
+    fichero FIFLP_DB_MARK (lo pone update.yml, fuera del repositorio) le dice que la suba también
+    entonces. Sin la variable (en local, en las pruebas), nada."""
+    path = os.environ.get("FIFLP_DB_MARK")
+    if path:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("update_fiflp: fiflp_full_pending\n")
 
 
 def _first_pass(page, F, conn, lot, today, results, stop=None):
     """Clasificación y jornadas de cada grupo del lote (hasta `stop`, en time.monotonic())."""
     import time
-    from datetime import datetime, timezone
     full = full_read_pending(conn)
-    conn.execute(READS_TABLE)
     for group_id, code, url in lot:
         if stop is not None and time.monotonic() > stop:
             break
@@ -667,13 +691,11 @@ def _first_pass(page, F, conn, lot, today, results, stop=None):
             if status == "ok" and group_id in full:
                 conn.execute("DELETE FROM fiflp_full_pending WHERE group_id=?", (group_id,))
                 conn.commit()
+                _mark_db()
         except Exception as e:          # un grupo que falla no tumba a los demás
             conn.rollback()
             status, msg = "error", e
             print(f"    ! error: {e}")
-        conn.execute("INSERT OR REPLACE INTO fiflp_reads(group_id, read_at) VALUES (?, ?)",
-                     (group_id, datetime.now(timezone.utc).isoformat()))
-        conn.commit()
         results[code] = [status, msg]
 
 
@@ -717,7 +739,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     Primero benjamín y prebenjamín, las dos pasadas, como siempre; después, un
     turno de alevín: sus 32 grupos de la Fase Previa no caben en el job (45 min)
     y, delante, dejaban sin actas a los demás. En cada pasada, ALEVIN_PER_RUN
-    grupos alevín (los que llevan más tiempo sin leerse) y sus actas y
+    grupos alevín (el turno de la pasada: run_number, _alevin_turn) y sus actas y
     goleadores, hasta ALEVIN_STOP_SECONDS; los demás conservan su último estado
     en data-health.json (source_health.keep)."""
     import time
@@ -727,7 +749,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     alevin_ids = {r[0] for r in conn.execute(
         """SELECT g.id FROM groups g JOIN categories c ON c.id=g.category_id WHERE upper(c.name)='ALEVIN'""")}
     lot = [g for g in groups if g[0] not in alevin_ids]
-    turn = _alevin_turn(conn, [g for g in groups if g[0] in alevin_ids])
+    turn = _alevin_turn([g for g in groups if g[0] in alevin_ids], run_number())
     results = {}
     _first_pass(page, F, conn, lot, today, results)
     # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo

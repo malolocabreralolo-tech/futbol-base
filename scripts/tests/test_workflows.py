@@ -127,6 +127,21 @@ def test_update_gates_db_commit_on_published_changes():
     )
 
 
+def test_update_also_commits_the_db_when_the_bot_marks_it():
+    """La base guarda estado del bot que no se publica (update_fiflp: la primera pasada completa de
+    un grupo recién activado, fiflp_full_pending). Con la puerta de arriba se perdía en una pasada sin
+    cambios publicados y la siguiente repetía la lectura completa: el bot deja FIFLP_DB_MARK (fuera
+    del repositorio) y update.yml sube la base también entonces."""
+    data = _load("update.yml")
+    scrape = next(s for s in _steps(data, "update") if s.get("id") == "scrape")
+    mark = scrape["env"]["FIFLP_DB_MARK"]
+    assert mark.startswith("${{ runner.temp }}/"), "la marca, fuera del repositorio (nunca se comitea)"
+    name = mark.split("/")[-1]
+    commit_run = next(r for r in _runs(data, "update") if "git commit" in r)
+    gate = next(l for l in commit_run.splitlines() if "git diff --cached --quiet" in l)
+    assert f'[ -f "$RUNNER_TEMP/{name}" ]' in gate, gate
+
+
 # ---------------------------------------------------------------- tests.yml
 
 def test_tests_yml_is_named_tests():

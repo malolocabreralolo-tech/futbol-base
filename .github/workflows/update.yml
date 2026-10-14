@@ -48,6 +48,9 @@ jobs:
         continue-on-error: true
         env:
           FIFLP_UPDATE: '1'
+          # update_fiflp deja aquí una marca cuando cambia en la base estado suyo que no se publica
+          # (la primera pasada completa de un grupo recién activado): el commit sube la base también entonces.
+          FIFLP_DB_MARK: ${{ runner.temp }}/base-cambiada
         run: python3 scripts/fetch_futbolaspalmas.py
 
       # Los push del bot (GITHUB_TOKEN) NO disparan tests.yml (anti-recursión
@@ -71,9 +74,10 @@ jobs:
           # data-season-*.js), bumpea ?v= en index.html y CACHE_NAME en sw.js.
           # futbolbase.db cambia de bytes (cabecera SQLite) en CADA run aunque
           # no cambie ningún dato publicado: se gatea su commit a que cambie
-          # algún artefacto publicado (evita ~13/14 commits de ruido).
+          # algún artefacto publicado (evita ~13/14 commits de ruido), o a la
+          # marca de update_fiflp (FIFLP_DB_MARK, en el paso scrape).
           git add 'data-*.js' index.html sw.js
-          if ! git diff --cached --quiet; then
+          if ! git diff --cached --quiet || [ -f "$RUNNER_TEMP/base-cambiada" ]; then
             git add futbolbase.db
             # El raw de la app de futbolaspalmas (qué días ya están leídos) va con los datos que ha dado.
             git add 'scripts/fp_app_*_raw.json' 2>/dev/null || true

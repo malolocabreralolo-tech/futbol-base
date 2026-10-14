@@ -7,7 +7,9 @@ Fuentes (las suben goleadores-federacion.yml y actas-federacion.yml):
   - fiflp_goleadores_<S>_raw.json: los grupos de cada competición del catálogo,
     con su nombre y su clasificación oficial;
   - fiflp_actas_<S>_index.json y _raw.json: los partidos jugados de cada grupo,
-    de la cabecera de su acta aplanada (fecha, hora, equipos, marcador, campo).
+    de la cabecera de su acta aplanada (fecha, hora, equipos, marcador, campo);
+    los de alevín van aparte (fiflp_actas_<S>_alevin_index.json y _raw.json,
+    actas_lotes) y se leen juntos con los de siempre.
 
 Un grupo de la federación que casa con uno de la base (import_fiflp_goleadores.
 match_group: por sus actas o por sus equipos) ya está y no se toca. Uno que no
@@ -45,6 +47,7 @@ from import_fiflp_goleadores import match_group, _category  # noqa: E402
 from categorias import category_of  # noqa: E402
 from import_fiflp_islas import COMP_META  # noqa: E402
 import import_fiflp_actas  # noqa: E402
+import actas_lotes  # noqa: E402
 
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -340,15 +343,24 @@ def actas_complete(folder, season):
     """¿Ha terminado la descarga de las actas de `season`? Hay raw e índice y su
     _status.json dice que no queda ninguna (pending 0) o que la última tanda no
     trajo ninguna sin dejar competiciones por enumerar: la regla de
-    actas-federacion.yml para pasar a la temporada siguiente. Sin estado, no."""
-    paths = [os.path.join(folder, f"fiflp_actas_{season}_{suffix}.json") for suffix in ("raw", "index", "status")]
-    if not all(os.path.exists(p) for p in paths):
-        return False
-    try:
-        status = _load(paths[2], {})
-    except ValueError:
-        return False
-    return status.get("pending") == 0 or (status.get("fetched", 1) == 0 and not status.get("unenumerated_comps"))
+    actas-federacion.yml para pasar a la temporada siguiente. Sin estado, no.
+    Las de benjamín y prebenjamín (el lote de siempre) siempre; las de alevín
+    (actas_lotes, aparte), solo si se han empezado a descargar: entonces también
+    tienen que haber terminado."""
+    for lote in actas_lotes.LOTES:
+        paths = [actas_lotes.path(folder, season, kind, lote) for kind in ("raw", "index", "status")]
+        if lote and not any(os.path.exists(p) for p in paths):
+            continue
+        if not all(os.path.exists(p) for p in paths):
+            return False
+        try:
+            status = _load(paths[2], {})
+        except ValueError:
+            return False
+        if not (status.get("pending") == 0
+                or (status.get("fetched", 1) == 0 and not status.get("unenumerated_comps"))):
+            return False
+    return True
 
 
 def group_matches(index, actas, comp, grupo):
@@ -567,8 +579,9 @@ def import_season(conn, folder, season, log=print):
     # Una archivada que falta: sin fila todavía (se da de alta con su primer grupo, más abajo).
     season_id, start = row if row else (None, int(season[:4]))
     raw = _load(os.path.join(folder, f"fiflp_goleadores_{season}_raw.json"), {})
-    index = _load(os.path.join(folder, f"fiflp_actas_{season}_index.json"), {})
-    actas = _load(os.path.join(folder, f"fiflp_actas_{season}_raw.json"), {})
+    # Índices y raws de actas de todos los lotes (las de alevín van aparte: actas_lotes).
+    index = actas_lotes.load_merged(folder, season, "index")
+    actas = actas_lotes.load_merged(folder, season, "raw")
     if archived:
         raw, actas = _modernized(conn, raw, actas)
     conn.execute("""CREATE TABLE IF NOT EXISTS fiflp_groups (
@@ -715,12 +728,22 @@ GRUPOS_VERSION = "5"
 
 
 def sources_digest(folder, season):
+    """La huella de las fuentes de los grupos de `season`: el raw de goleadores y el índice y el raw
+    de actas. Los de alevín (actas_lotes, aparte) entran solo si existen: sin ellos, la huella es la
+    de siempre y el bot no rehace nada."""
     h = hashlib.sha1((GRUPOS_VERSION + import_fiflp_actas.IMPORT_VERSION).encode())
     for kind in ("goleadores", "actas"):
         for suffix in (("raw",) if kind == "goleadores" else ("index", "raw")):
             path = os.path.join(folder, f"fiflp_{kind}_{season}_{suffix}.json")
             h.update(os.path.basename(path).encode())
             if os.path.exists(path):
+                with open(path, "rb") as f:
+                    h.update(f.read())
+    for lote in actas_lotes.LOTES[1:]:
+        for kind in ("index", "raw"):
+            path = actas_lotes.path(folder, season, kind, lote)
+            if os.path.exists(path):
+                h.update(os.path.basename(path).encode())
                 with open(path, "rb") as f:
                     h.update(f.read())
     return h.hexdigest()

@@ -70,12 +70,18 @@ jobs:
         run: |
           python3 scripts/migrate_actas_schema.py
           SEASON_LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME[\"$TEMP_INPUT\"])")
-          RAW="scripts/fiflp_actas_${SEASON_LABEL}_raw.json"
-          if [ -f "$RAW" ]; then
-            python3 scripts/import_fiflp_actas.py "$RAW"
+          # El raw de siempre y, si la tanda trajo actas de alevín, el suyo (aparte: scripts/actas_lotes.py).
+          IMPORTED=0
+          for RAW in "scripts/fiflp_actas_${SEASON_LABEL}_raw.json" "scripts/fiflp_actas_${SEASON_LABEL}_alevin_raw.json"; do
+            if [ -f "$RAW" ]; then
+              python3 scripts/import_fiflp_actas.py "$RAW"
+              IMPORTED=1
+            fi
+          done
+          if [ "$IMPORTED" = 1 ]; then
             python3 scripts/generate_js.py
           else
-            echo "  ! no raw file at $RAW (scraper produced nothing); skipping import"
+            echo "  ! no raw file for $SEASON_LABEL (scraper produced nothing); skipping import"
           fi
       - name: Tests (bloquean el commit si fallan)
         run: |
@@ -96,10 +102,13 @@ jobs:
           # We may need to re-apply them on top of a fresh origin/main when
           # other parallel runs race us on the binary futbolbase.db.
           SEASON_LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME[\"$TEMP_INPUT\"])")
-          RAW="scripts/fiflp_actas_${SEASON_LABEL}_raw.json"
+          # El raw de siempre y el de alevín (aparte: scripts/actas_lotes.py).
+          RAWS="scripts/fiflp_actas_${SEASON_LABEL}_raw.json scripts/fiflp_actas_${SEASON_LABEL}_alevin_raw.json"
           SNAPSHOT=/tmp/sp1-snap
           mkdir -p "$SNAPSHOT"
-          [ -f "$RAW" ] && cp "$RAW" "$SNAPSHOT/" && echo "  snapshotted $RAW"
+          for RAW in $RAWS; do
+            if [ -f "$RAW" ]; then cp "$RAW" "$SNAPSHOT/" && echo "  snapshotted $RAW"; fi
+          done
           [ -f scripts/fiflp_actas_unmatched.json ] && cp scripts/fiflp_actas_unmatched.json "$SNAPSHOT/"
 
           add_if_exists() {
@@ -142,8 +151,14 @@ jobs:
             # Restore our raw_json + unmatched on top of fresh origin
             cp "$SNAPSHOT"/*.json scripts/ 2>/dev/null || true
             python3 scripts/migrate_actas_schema.py
-            if [ -f "$RAW" ]; then
-              python3 scripts/import_fiflp_actas.py "$RAW"
+            IMPORTED=0
+            for RAW in $RAWS; do
+              if [ -f "$RAW" ]; then
+                python3 scripts/import_fiflp_actas.py "$RAW"
+                IMPORTED=1
+              fi
+            done
+            if [ "$IMPORTED" = 1 ]; then
               python3 scripts/generate_js.py
             fi
             # Lo reimportado sobre el main nuevo se vuelve a probar antes de

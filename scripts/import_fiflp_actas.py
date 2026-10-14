@@ -6,9 +6,11 @@ actas are appended to scripts/fiflp_actas_unmatched.json (deduplicated by
 cod_acta key).
 
 El bot (fetch_futbolaspalmas.py) llama a import_changed_raws: importa cada
-scripts/fiflp_actas_<S>_raw.json que haya cambiado desde la última vez (sha1 en
-la tabla raw_imports), con solo las actas leídas aplanadas (las descarga
-actas-federacion.yml).
+scripts/fiflp_actas_<S>_raw.json (benjamín y prebenjamín) y cada
+scripts/fiflp_actas_<S>_alevin_raw.json (alevín, aparte: actas_lotes.py) que haya
+cambiado desde la última vez (sha1 por fichero en la tabla raw_imports), por
+temporada y el de siempre antes que el de alevín, con solo las actas leídas
+aplanadas (las descarga actas-federacion.yml).
 
 CLI: python3 scripts/import_fiflp_actas.py path/to/raw.json [--db futbolbase.db]
 """
@@ -23,12 +25,14 @@ import unicodedata
 try:
     from scripts.acta_reconciler import reconcile_acta, _contradicts, same_round_and_score
     from scripts.fiflp_acta import clean_scorer, scorer_minute
+    from scripts import actas_lotes
 except ImportError:
     # Direct CLI run (`python3 scripts/import_fiflp_actas.py`): sys.path[0] is
     # scripts/, so the `scripts.` package is not importable. Add the repo root.
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from scripts.acta_reconciler import reconcile_acta, _contradicts, same_round_and_score
     from scripts.fiflp_acta import clean_scorer, scorer_minute
+    from scripts import actas_lotes
 
 UNMATCHED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_actas_unmatched.json")
 
@@ -335,9 +339,7 @@ def repair_added_time(conn, folder: str = None) -> int:
         return 0
     folder = folder or SCRIPTS_DIR
     fixed = 0
-    for name in sorted(os.listdir(folder)):
-        if not RAW_FILE.match(name):
-            continue
+    for name, _season, _lote in actas_lotes.raw_files(folder):
         with open(os.path.join(folder, name), encoding="utf-8") as f:
             raw = json.load(f)
         for cod, acta in raw.items():
@@ -360,9 +362,7 @@ def backfill_from_raws(conn, folder: str = None) -> int:
     para las importadas antes de que el acta completara campo y hora. Devuelve cuántas mira."""
     folder = folder or SCRIPTS_DIR
     seen = 0
-    for name in sorted(os.listdir(folder)):
-        if not RAW_FILE.match(name):
-            continue
+    for name, _season, _lote in actas_lotes.raw_files(folder):
         with open(os.path.join(folder, name), encoding="utf-8") as f:
             raw = json.load(f)
         for cod, acta in raw.items():
@@ -395,9 +395,11 @@ def _save_unmatched(d: dict) -> None:
 # Public API
 # ---------------------------------------------------------------------------
 
-def _purge_orphan_cod_actas(conn, raw: dict) -> int:
+def _purge_orphan_cod_actas(conn, raw: dict, also_known=()) -> int:
     """NULL out matches.cod_acta (and drop their stale acta rows) when the
-    acta no longer exists in the raw being imported.
+    acta no longer exists in the raw being imported (ni en `also_known`: las
+    claves de los raws del otro lote de la misma temporada, actas_lotes; las de
+    alevín van aparte y un raw de benjamín no las deja huérfanas, ni al revés).
 
     Scoped to the seasons covered by the raw's headers, so importing one
     season's raw never touches other seasons' assignments. Assumes the raw is
@@ -431,7 +433,7 @@ def _purge_orphan_cod_actas(conn, raw: dict) -> int:
     if not season_ids:
         return 0
     known = set()
-    for k in raw.keys():
+    for k in list(raw.keys()) + list(also_known):
         try:
             known.add(int(k))
         except (TypeError, ValueError):
@@ -496,7 +498,7 @@ def import_raw(conn, raw_path: str, only=None, owned=None) -> dict:
     um = _load_unmatched()
     claimed = {}  # match_id -> cod_acta that claimed it in this run
 
-    orphans_cleared = _purge_orphan_cod_actas(conn, raw)
+    orphans_cleared = _purge_orphan_cod_actas(conn, raw, also_known=actas_lotes.sibling_raw_keys(raw_path))
 
     owned = owned or {}
     owned_groups = set(owned.values())
@@ -892,11 +894,8 @@ def reconcile_in_groups(conn, raw_path, pending, votes, exclude=frozenset()):
     if os.path.exists(gol_path):
         with open(gol_path, encoding="utf-8") as f:
             gol = {(str(e["comp"]), str(e["grupo"])): e for e in json.load(f).values()}
-    index_path = os.path.join(folder, f"fiflp_actas_{season}_index.json")
-    index = {}
-    if os.path.exists(index_path):
-        with open(index_path, encoding="utf-8") as f:
-            index = json.load(f)
+    # Los índices de todos los lotes (el de alevín va aparte): match_group casa por las actas importadas.
+    index = actas_lotes.load_merged(folder, season, "index")
 
     groups, bridges, out, official = {}, {}, {}, {}
     for cod, acta in pending:
@@ -949,7 +948,8 @@ def reconcile_in_groups(conn, raw_path, pending, votes, exclude=frozenset()):
     return out, official
 
 
-RAW_FILE = re.compile(r"^fiflp_actas_(\d{4}-\d{4})_raw\.json$")
+# fiflp_actas_<S>_raw.json y fiflp_actas_<S>_alevin_raw.json (grupo 1, la temporada; actas_lotes).
+RAW_FILE = actas_lotes.RAW_FILE
 # Entra en la huella de cada raw: al cambiar la lógica de importación, subirla
 # hace que el bot reimporte una vez todos los raws (7: huecos del calendario, también otro enfrentamiento del mismo cruce).
 # También entra en la huella de grupos (import_fiflp_grupos.sources_digest): subirla los rehace.
@@ -969,9 +969,11 @@ def owned_groups(conn, season) -> dict:
 
 
 def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
-    """Importa cada fiflp_actas_<S>_raw.json de `folder` que haya cambiado desde
-    la última importación (su sha1, en la tabla raw_imports), con solo las actas
-    aplanadas (`flattened`). Las tandas de actas-federacion.yml solo descargan
+    """Importa cada fiflp_actas_<S>_raw.json y fiflp_actas_<S>_alevin_raw.json de
+    `folder` que haya cambiado desde la última importación (su sha1, por fichero,
+    en la tabla raw_imports), con solo las actas aplanadas (`flattened`): por
+    temporada y, en cada una, el de siempre antes que el de alevín
+    (actas_lotes.raw_files). Las tandas de actas-federacion.yml solo descargan
     y comitean el raw; el bot lo importa en su pasada siguiente. El raw de una
     temporada que no está en la base (una archivada, hasta que la da de alta
     import_fiflp_grupos) se salta sin grabar su huella; las actas de los grupos
@@ -980,11 +982,7 @@ def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
     conn.execute("""CREATE TABLE IF NOT EXISTS raw_imports (
         path TEXT PRIMARY KEY, sha1 TEXT NOT NULL, imported_at TEXT NOT NULL)""")
     reports = {}
-    for name in sorted(os.listdir(folder)):
-        m = RAW_FILE.match(name)
-        if not m:
-            continue
-        season = m.group(1)
+    for name, season, _lote in actas_lotes.raw_files(folder):
         path = os.path.join(folder, name)
         with open(path, "rb") as f:
             digest = hashlib.sha1(IMPORT_VERSION.encode() + f.read()).hexdigest()

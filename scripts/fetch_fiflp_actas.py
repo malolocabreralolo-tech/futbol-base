@@ -2,7 +2,12 @@
 """Scrape FIFLP actas (lineups + events + staff) for benjamin/prebenjamin
 across all 5 seasons, incrementally and resumably.
 
-Saves to scripts/fiflp_actas_<season>_raw.json keyed by CodActa.
+Saves to scripts/fiflp_actas_<season>_raw.json keyed by CodActa (benjamín y
+prebenjamín) y las de alevín APARTE, en scripts/fiflp_actas_<season>_alevin_raw.json,
+cada lote con su índice y su estado (actas_lotes.py): el histórico alevín en el
+mismo raw lo duplicaría y lo acercaría a los límites de GitHub. Cada competición va
+al lote de su categoría (la del catálogo) y cada acta, al de la categoría de su
+cabecera si la dice: nunca se mezclan, tampoco al refrescar ni con varios navegadores.
 
 CLI:
   --temporada NN      (required) CodTemporada: 12..22
@@ -11,12 +16,15 @@ CLI:
                       Gran Canaria, sin sala): las competiciones del catálogo que se recorren
   --max-actas N       (optional) cap for spike runs
   --dump-fixture COD  (optional) dump acta HTML to scripts/tests/fixtures/
+  --estado            (optional) sin navegador: imprime {"pending", "stuck", "lotes"} de los
+                      lotes de la tanda (lo lee actas-federacion.yml para encadenar)
 
 Designed to run only in GitHub Actions (FIFLP blocks the local IP).
 """
 import os, sys, re, json, time, random, argparse, threading
 from pathlib import Path
 from scripts.acta_parser import parse_acta
+from scripts import actas_lotes
 
 # Playwright is only needed at runtime (inside main()). Importing it at module
 # level made the Tests CI pytest job red because the runner doesn't install
@@ -24,6 +32,7 @@ from scripts.acta_parser import parse_acta
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
+HERE = Path(__file__).parent   # donde van los raws, índices y estados (las pruebas lo cambian)
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 UA   = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/120 Safari/537")
@@ -76,21 +85,80 @@ def catalog_comps(season_code, categories=None):
     no la tiene."""
     C = _categorias()
     categories = categories or C.DEFAULT_CATEGORIES
-    path = Path(__file__).parent / "fiflp_comps_catalog.json"
-    if season_code not in SEASON_NAME or not path.exists():
-        return []
-    entry = json.loads(path.read_text(encoding="utf-8")).get(SEASON_NAME[season_code]) or {}
+    entry = _catalog_entry(season_code)
     return [c["id"] for c in entry.get("all", []) if C.category_of(c["name"]) in categories]
 
 
-def index_path(season_code):
+def _catalog_entry(season_code):
+    path = Path(__file__).parent / "fiflp_comps_catalog.json"
+    if season_code not in SEASON_NAME or not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8")).get(SEASON_NAME[season_code]) or {}
+
+
+def catalog_names(season_code):
+    """{id: nombre} de las competiciones de la temporada en el catálogo ({} si no la tiene)."""
+    return {str(c["id"]): c["name"] for c in _catalog_entry(season_code).get("all", [])}
+
+
+def comp_lotes(season_code, comps, categories=None, names=None):
+    """{competición: lote} (actas_lotes: '' benjamín y prebenjamín, 'alevin' alevín), por el nombre
+    de la competición en el catálogo o en `names` (el desplegable que lee discover_comps). Una que
+    no está en ninguno va al lote de las categorías pedidas si son de uno solo; si son de los dos,
+    no se sabe dónde guardarla y se para (ValueError): mejor no bajar que mezclar."""
+    categories = categories or _categorias().DEFAULT_CATEGORIES
+    known = {**catalog_names(season_code), **{str(k): v for k, v in (names or {}).items()}}
+    asked = actas_lotes.lotes_of(categories)
+    out = {}
+    for comp in comps:
+        lote = actas_lotes.lote_of_name(known.get(str(comp)))
+        if lote is None:
+            if len(asked) != 1:
+                raise ValueError(f"competición {comp}: no está en el catálogo y las categorías "
+                                 f"({', '.join(categories)}) son de los dos lotes; "
+                                 "pide --categorias alevin o benjamin,prebenjamin")
+            lote = asked[0]
+        out[str(comp)] = lote
+    return out
+
+
+def run_lotes(season_code, categories=None, comps=None):
+    """Los lotes de una tanda, en el orden de actas_lotes.LOTES: los de sus competiciones si se
+    dan (--comps) y, si no, los de sus categorías. main escribe el estado de cada uno y --estado
+    (actas-federacion.yml, para encadenar) los lee."""
+    categories = categories or _categorias().DEFAULT_CATEGORIES
+    wanted = (set(comp_lotes(season_code, comps, categories).values()) if comps
+              else set(actas_lotes.lotes_of(categories)))
+    return tuple(lote for lote in actas_lotes.LOTES if lote in wanted)
+
+
+def index_path(season_code, lote=""):
     """Índice de actas enumeradas (cod_acta → comp, grupo, jornada): una tanda
-    encadenada no vuelve a recorrer todas las jornadas de la temporada."""
-    return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_index.json"
+    encadenada no vuelve a recorrer todas las jornadas de la temporada. Uno por lote."""
+    return HERE / actas_lotes.file_name(SEASON_NAME[season_code], "index", lote)
 
 
-def status_path(season_code):
-    return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_status.json"
+def status_path(season_code, lote=""):
+    return HERE / actas_lotes.file_name(SEASON_NAME[season_code], "status", lote)
+
+
+def chain_state(season_code, lotes):
+    """{"pending", "stuck", "lotes"} de la tanda por los estados de sus lotes: lo que quedan (un
+    lote sin estado cuenta 1: que siga) y si está atascada (ningún lote trajo ningún acta ni dejó
+    competiciones sin enumerar: lo que queda no se deja leer). La regla de actas-federacion.yml
+    para lanzar otra tanda o pasar a la temporada siguiente."""
+    pending, fetched, unenumerated, missing = 0, 0, 0, False
+    for lote in lotes:
+        try:
+            status = json.loads(status_path(season_code, lote).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            pending, missing = pending + 1, True
+            continue
+        pending += int(status.get("pending", 1))
+        fetched += int(status.get("fetched", 1))
+        unenumerated += int(status.get("unenumerated_comps") or 0)
+    stuck = not missing and fetched == 0 and not unenumerated
+    return {"pending": pending, "stuck": int(stuck), "lotes": list(lotes)}
 
 
 def needs_refresh(acta):
@@ -140,8 +208,10 @@ def goto(page, url, retries=3):
     return False
 
 
-def raw_path(season_code):
-    return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_raw.json"
+def raw_path(season_code, lote=""):
+    """scripts/fiflp_actas_<S>_raw.json (benjamín y prebenjamín) o, la del lote 'alevin',
+    scripts/fiflp_actas_<S>_alevin_raw.json."""
+    return HERE / actas_lotes.file_name(SEASON_NAME[season_code], "raw", lote)
 
 
 def is_empty_acta(acta):
@@ -162,8 +232,8 @@ def is_empty_acta(acta):
     )
 
 
-def load_raw(season_code):
-    p = raw_path(season_code)
+def load_raw(season_code, lote=""):
+    p = raw_path(season_code, lote)
     if not p.exists():
         return {}
     data = json.loads(p.read_text(encoding="utf-8"))
@@ -177,17 +247,116 @@ def load_raw(season_code):
     return data
 
 
-def save_raw(season_code, data):
-    raw_path(season_code).write_text(
+def save_raw(season_code, data, lote=""):
+    raw_path(season_code, lote).write_text(
         json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
     )
 
 
+def acta_lote(acta, default):
+    """El lote de un acta leída: el de la categoría de su cabecera si la dice (un acta de alevín
+    nunca va al raw de benjamín aunque su competición se tomara por otra) y, si no, `default`
+    (el de su competición)."""
+    competition = ((acta or {}).get("header") or {}).get("competition")
+    lote = actas_lotes.lote_of_name(competition) if competition else None
+    return default if lote is None else lote
+
+
+class RawStore:
+    """Las actas ya descargadas de una temporada, cada una en el raw de su lote. find la busca en
+    todos; put la guarda en el de su lote (y la saca del otro si estaba allí); save reescribe solo
+    los raws que han cambiado y los que se le piden (los de la tanda)."""
+
+    def __init__(self, season_code):
+        self.season = season_code
+        self.raws = {}
+        self.dirty = set()
+
+    def raw(self, lote=""):
+        if lote not in self.raws:
+            self.raws[lote] = load_raw(self.season, lote)
+        return self.raws[lote]
+
+    def find(self, cod):
+        """(lote, acta) del acta en el raw de cualquier lote, o (None, None)."""
+        for lote in actas_lotes.LOTES:
+            raw = self.raw(lote)
+            if cod in raw:
+                return lote, raw[cod]
+        return None, None
+
+    def put(self, lote, cod, acta):
+        for other in actas_lotes.LOTES:
+            if other != lote and cod in self.raw(other):
+                del self.raws[other][cod]
+                self.dirty.add(other)
+        self.raw(lote)[cod] = acta
+        self.dirty.add(lote)
+
+    def save(self, lotes=()):
+        for lote in actas_lotes.LOTES:
+            if lote in self.dirty or lote in lotes:
+                save_raw(self.season, self.raw(lote), lote)
+        self.dirty.clear()
+
+
+class Collector:
+    """on_result de fetch_parallel (lo llaman los hilos de los navegadores, de uno en uno con su
+    cerrojo): cada acta leída va al raw de su lote (acta_lote), nunca al del otro. Con --refrescar,
+    la relectura que sale peor se descarta y la vieja queda marcada donde esté. Cuenta las actas
+    aplanadas nuevas de cada lote (la de su competición: el avance de la cadena) y guarda cada
+    `save_every`."""
+
+    def __init__(self, store, refrescar=False, save_every=25, total=0, log=print):
+        self.store, self.refrescar, self.save_every, self.total, self.log = store, refrescar, save_every, total, log
+        self.lock = threading.Lock()
+        self.fetched = 0
+        self.by_lote = {}
+        self.started = time.time()
+
+    def __call__(self, t, acta):
+        cod = t["cod_acta"]
+        if acta is None:
+            return
+        if is_empty_acta(acta):
+            # Anti-scrape blank survived all retries: do NOT persist it as
+            # done, so the next incremental run retries this acta.
+            self.log(f"  ! acta {cod} empty after retries — not persisted (will retry next run)")
+            return
+        acta["cod_acta"] = int(cod)
+        acta["enumeration"] = {"comp_id": t["comp_id"], "grupo": t["grupo"], "jornada": t["jornada"]}
+        flat = "consistent" in acta
+        if not flat:
+            acta["rescrape_failed"] = True     # leída ya con el lector nuevo: no se vuelve a pedir
+        mine = t.get("lote", "")
+        lote = acta_lote(acta, mine)
+        with self.lock:
+            old_lote, old = self.store.find(cod)
+            if self.refrescar and keep_old_on_refresh(old, acta):
+                # La relectura salió peor que la que ya había: se queda la vieja y no se vuelve a pedir.
+                old["staff_refresh_failed"] = True
+                self.store.dirty.add(old_lote)
+                return
+            if lote != mine:
+                self.log(f"  ! acta {cod}: su cabecera es del lote '{lote or 'benjamín/prebenjamín'}' y su "
+                         f"competición ({t['comp_id']}) del '{mine or 'benjamín/prebenjamín'}': va al raw de su cabecera")
+            self.store.put(lote, cod, acta)
+            # Solo cuenta como acta nueva la que se dejó aplanar: la cadena sigue mientras avanza.
+            self.fetched += flat
+            self.by_lote[mine] = self.by_lote.get(mine, 0) + flat
+            # save every 25 actas to survive crashes
+            if flat and self.fetched % self.save_every == 0:
+                self.store.save()
+                rate = (time.time() - self.started) / self.fetched
+                self.log(f"    progress: {self.fetched}/{self.total} (saved; {rate:.1f} s por acta)")
+
+
 # ── Comp discovery ────────────────────────────────────────────────────────────
 
-def discover_comps(page, season_code, categories=None):
+def discover_comps(page, season_code, categories=None, names=None):
     """Read the comp dropdown from NFG_CmpJornada and keep those of `categories`
-    (benjamín/prebenjamín by default; categorias.category_of)."""
+    (benjamín/prebenjamín by default; categorias.category_of). `names`, si se da,
+    recibe {id: nombre} de las que se quedan (comp_lotes las reparte por lote)."""
     url = f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season_code}"
     if not goto(page, url):
         return []
@@ -202,6 +371,8 @@ def discover_comps(page, season_code, categories=None):
     C = _categorias()
     categories = categories or C.DEFAULT_CATEGORIES
     keep = [o["value"] for o in opts if C.category_of(o["text"]) in categories]
+    if names is not None:
+        names.update({o["value"]: o["text"] for o in opts if o["value"] in keep})
     print(f"  discovered {len(keep)} comps ({', '.join(categories)}) for season {season_code}")
     return keep
 
@@ -501,6 +672,8 @@ def parse_args():
                     help="CodActa whose raw HTML to dump to scripts/tests/fixtures/")
     ap.add_argument("--refrescar", action="store_true",
                     help="Volver a leer las actas ya descargadas sin todo el cuerpo técnico (needs_refresh)")
+    ap.add_argument("--estado", action="store_true",
+                    help="Sin navegador: imprime en JSON lo que queda de los lotes de la tanda (chain_state)")
     return ap.parse_args()
 
 
@@ -559,17 +732,27 @@ def fetch_parallel(pending, workers, over, on_result, dump_fixture="", open_page
 def main():
     # Lazy import — keeps the module importable in environments without playwright
     # (the Tests CI pytest job doesn't install it).
-    global sync_playwright
-    from playwright.sync_api import sync_playwright  # noqa: F401
-
     args = parse_args()
     GROUP_FILTER[:] = [g.strip() for g in args.grupos.split(",") if g.strip()]
     season = args.temporada
+    categories = _categorias().parse_categories(args.categorias)
+    comps_arg = [c.strip() for c in args.comps.split(",") if c.strip()]
+    if args.estado:
+        # Sin navegador ni red: lo que queda de los lotes de la tanda (actas-federacion.yml).
+        try:
+            state = chain_state(season, run_lotes(season, categories, comps_arg))
+        except ValueError as ex:          # no se sabe de qué lote es: la cadena para
+            state = {"pending": 0, "stuck": 1, "lotes": [], "error": str(ex)}
+        print(json.dumps(state, ensure_ascii=False))
+        return
+
+    global sync_playwright
+    from playwright.sync_api import sync_playwright  # noqa: F401
 
     # Resolve comp list
-    categories = _categorias().parse_categories(args.categorias)
-    if args.comps:
-        comps = [c.strip() for c in args.comps.split(",") if c.strip()]
+    names = {}
+    if comps_arg:
+        comps = comps_arg
     elif catalog_comps(season, categories):
         # Las competiciones de fútbol 7/8 de esas categorías de esa temporada (sin sala ni alevín
         # de otra isla) del catálogo de la federación (discover_fiflp_comps.py).
@@ -581,50 +764,61 @@ def main():
         with sync_playwright() as p:
             br = p.chromium.launch(headless=True)
             page = _fiflp_only(br.new_context(user_agent=UA).new_page())
-            comps = discover_comps(page, season, categories)
+            comps = discover_comps(page, season, categories, names)
             br.close()
 
-    print(f"Season {SEASON_NAME[season]} ({season}): {len(comps)} comps to walk")
+    # Cada competición, a su lote (sus actas van a su raw, su índice y su estado): alevín aparte.
+    lotes = comp_lotes(season, comps, categories, names)
+    run = set(run_lotes(season, categories, comps_arg)) | set(lotes.values())
+    run = tuple(lote for lote in actas_lotes.LOTES if lote in run)
+    print(f"Season {SEASON_NAME[season]} ({season}): {len(comps)} comps to walk"
+          + "".join(f"; lote {lote or 'benjamín/prebenjamín'}: {sum(1 for v in lotes.values() if v == lote)}"
+                    for lote in run))
 
-    raw = load_raw(season)
-    print(f"Resume state: {len(raw)} actas already scraped")
-    fetched = 0
+    store = RawStore(season)
+    for lote in run:
+        print(f"Resume state ({raw_path(season, lote).name}): {len(store.raw(lote))} actas already scraped")
     # El plazo cuenta desde el arranque: enumerar también lleva su tiempo.
     BUDGET = (args.max_minutes or 330) * 60   # bajo el timeout del job, para guardar y subir
     run_start = time.time()
     over = lambda: time.time() - run_start > BUDGET
-    unenumerated = 0
+    unenumerated = {lote: 0 for lote in run}
 
     with sync_playwright() as p:
         br = p.chromium.launch(headless=True)
         page = _fiflp_only(br.new_context(user_agent=UA).new_page())
 
-        # --- Enumerate targets (o el índice de una tanda anterior) ---
-        index = {}
-        if index_path(season).exists() and not args.reindex:
-            index = json.loads(index_path(season).read_text(encoding="utf-8"))
+        # --- Enumerate targets (o el índice de una tanda anterior), cada lote en su índice ---
+        indexes = {}
+        for lote in run:
+            path = index_path(season, lote)
+            indexes[lote] = json.loads(path.read_text(encoding="utf-8")) if path.exists() and not args.reindex else {}
         all_targets = []
         for comp_id in comps:
-            cached = [dict(v, cod_acta=k) for k, v in index.items()
+            lote = lotes[str(comp_id)]
+            index = indexes[lote]
+            cached = [dict(v, cod_acta=k, lote=lote) for k, v in index.items()
                       if str(v.get("comp_id")) == str(comp_id) and _wanted(comp_id, v.get("grupo"), v.get("grupo_name"))]
             if cached and not GROUP_FILTER:
                 print(f"  comp {comp_id}: {len(cached)} actas del índice")
                 all_targets += cached
                 continue
             if over():
-                unenumerated += 1         # la tanda siguiente la enumera
+                unenumerated[lote] += 1   # la tanda siguiente la enumera
                 continue
             started = time.time()
             print(f"  enumerating comp {comp_id}...")
             actas, strategy = enumerate_actas_cascade(page, season, comp_id)
-            all_targets += actas
+            all_targets += [dict(t, lote=lote) for t in actas]
             for t in actas:
                 index[t["cod_acta"]] = {k: v for k, v in t.items() if k != "cod_acta"}
             # Tras cada competición: una tanda cortada no pierde lo enumerado.
-            index_path(season).write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
+            index_path(season, lote).write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
             print(f"    ({time.time() - started:.0f} s)")
             delay()
-        index_path(season).write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
+        for lote in run:
+            index_path(season, lote).write_text(json.dumps(indexes[lote], ensure_ascii=False, indent=1),
+                                                encoding="utf-8")
 
         # Dedupe all_targets by cod_acta (multiple comps may reference same acta)
         seen_t: set = set()
@@ -635,10 +829,11 @@ def main():
                 deduped.append(t)
         all_targets = deduped
 
-        # Filter out already scraped (resume support)
+        # Filter out already scraped (resume support), esté en el raw del lote que esté.
         def wanted(cod):
-            return (cod not in raw or needs_rescrape(raw[cod])
-                    or (args.refrescar and needs_refresh(raw[cod])))
+            acta = store.find(cod)[1]
+            return (acta is None or needs_rescrape(acta)
+                    or (args.refrescar and needs_refresh(acta)))
         pending = [t for t in all_targets if wanted(t["cod_acta"])]
         print(f"Enumerated {len(all_targets)} actas total, {len(pending)} pending")
 
@@ -647,50 +842,23 @@ def main():
 
     if args.max_actas:
         pending = pending[:args.max_actas]
-    lock = threading.Lock()
-    started = time.time()
-
-    def on_result(t, acta):
-        nonlocal fetched
-        cod = t["cod_acta"]
-        if acta is None:
-            return
-        if is_empty_acta(acta):
-            # Anti-scrape blank survived all retries: do NOT persist it as
-            # done, so the next incremental run retries this acta.
-            print(f"  ! acta {cod} empty after retries — not persisted (will retry next run)")
-            return
-        acta["cod_acta"] = int(cod)
-        acta["enumeration"] = {"comp_id": t["comp_id"], "grupo": t["grupo"], "jornada": t["jornada"]}
-        flat = "consistent" in acta
-        if not flat:
-            acta["rescrape_failed"] = True     # leída ya con el lector nuevo: no se vuelve a pedir
-        with lock:
-            if args.refrescar and keep_old_on_refresh(raw.get(cod), acta):
-                # La relectura salió peor que la que ya había: se queda la vieja y no se vuelve a pedir.
-                raw[cod]["staff_refresh_failed"] = True
-                return
-            raw[cod] = acta
-            # Solo cuenta como acta nueva la que se dejó aplanar: la cadena sigue mientras avanza.
-            fetched += flat
-            # save every 25 actas to survive crashes
-            if fetched % 25 == 0:
-                save_raw(season, raw)
-                rate = (time.time() - started) / fetched
-                print(f"    progress: {fetched}/{len(pending)} (saved; {rate:.1f} s por acta)")
-
-    fetch_parallel(pending, args.workers, over, on_result, dump_fixture=args.dump_fixture)
+    collector = Collector(store, refrescar=args.refrescar, total=len(pending))
+    fetch_parallel(pending, args.workers, over, collector, dump_fixture=args.dump_fixture)
     if over():
-        print(f"  time budget reached, stopping cleanly with {len(raw)} actas saved")
+        print(f"  time budget reached, stopping cleanly with "
+              f"{sum(len(store.raw(lote)) for lote in run)} actas saved")
 
-    save_raw(season, raw)
-    left = sum(1 for t in all_targets if wanted(t["cod_acta"]))
-    # Una competición sin enumerar por falta de plazo cuenta como pendiente: la cadena sigue.
-    status_path(season).write_text(json.dumps({"season": SEASON_NAME[season], "enumerated": len(all_targets),
-                                               "in_raw": len(raw), "pending": left + unenumerated,
-                                               "unenumerated_comps": unenumerated, "fetched": fetched},
-                                              indent=1) + "\n", encoding="utf-8")
-    print(f"Done season {season}: total {len(raw)} actas in raw, {left} pending")
+    store.save(run)
+    for lote in run:
+        mine = [t for t in all_targets if t["lote"] == lote]
+        left = sum(1 for t in mine if wanted(t["cod_acta"]))
+        in_raw = len(store.raw(lote))
+        # Una competición sin enumerar por falta de plazo cuenta como pendiente: la cadena sigue.
+        status_path(season, lote).write_text(json.dumps(
+            {"season": SEASON_NAME[season], "enumerated": len(mine), "in_raw": in_raw,
+             "pending": left + unenumerated[lote], "unenumerated_comps": unenumerated[lote],
+             "fetched": collector.by_lote.get(lote, 0)}, indent=1) + "\n", encoding="utf-8")
+        print(f"Done season {season} ({raw_path(season, lote).name}): total {in_raw} actas in raw, {left} pending")
 
 
 if __name__ == "__main__":

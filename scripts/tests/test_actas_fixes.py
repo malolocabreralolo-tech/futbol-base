@@ -234,7 +234,7 @@ def test_load_raw_purges_empty_entries(tmp_path, monkeypatch):
     raw_file = tmp_path / "fiflp_actas_2025-2026_raw.json"
     raw_file.write_text(json.dumps({"125781": _EMPTY_ACTA, "240000": _GOOD_ACTA}),
                         encoding="utf-8")
-    monkeypatch.setattr(ffa, "raw_path", lambda sc: raw_file)
+    monkeypatch.setattr(ffa, "raw_path", lambda sc, lote="": raw_file)
     raw = ffa.load_raw("21")
     assert "240000" in raw
     assert "125781" not in raw, "empty acta must be purged from resume state"

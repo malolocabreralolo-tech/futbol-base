@@ -2,9 +2,11 @@ name: Actas de la federación (relleno encadenado)
 
 # Descarga las actas de una temporada en tandas de ~5,5 h y se relanza sola
 # hasta acabarla; después pasa a la siguiente de la cola. Solo sube el raw
-# (scripts/fiflp_actas_<S>_raw.json, su índice y su estado): la base y los
-# data-*.js los pone al día el bot (update.yml) al importar los raw nuevos,
-# así dos workflows nunca chocan en futbolbase.db. Ver docs/federacion.md.
+# (scripts/fiflp_actas_<S>_raw.json, su índice y su estado; las de alevín van
+# aparte, en scripts/fiflp_actas_<S>_alevin_raw.json, _alevin_index.json y
+# _alevin_status.json: scripts/actas_lotes.py): la base y los data-*.js los pone
+# al día el bot (update.yml) al importar los raw nuevos, así dos workflows nunca
+# chocan en futbolbase.db. Ver docs/federacion.md.
 on:
   workflow_dispatch:
     inputs:
@@ -26,7 +28,7 @@ on:
         required: false
         default: ''
       categorias:
-        description: 'Categorías del catálogo: benjamin,prebenjamin o alevin (solo Gran Canaria); pasa a las tandas y a la cola'
+        description: 'Categorías del catálogo: benjamin,prebenjamin o alevin (solo Gran Canaria, a su raw aparte); pasa a las tandas y a la cola'
         required: false
         default: 'benjamin,prebenjamin'
       reindex:
@@ -44,9 +46,10 @@ permissions:
   contents: write
   actions: write
 
-# Una cadena por temporada (pueden correr varias a la vez, cada una sube solo sus ficheros).
+# Una cadena por temporada y lote (pueden correr varias a la vez, cada una sube solo sus ficheros):
+# la de alevín de una temporada escribe su raw aparte y no espera a la de benjamín y prebenjamín.
 concurrency:
-  group: actas-federacion-${{ inputs.temporada }}
+  group: actas-federacion-${{ inputs.temporada }}${{ contains(inputs.categorias, 'alevin') && '-alevin' || '' }}
   cancel-in-progress: false
 
 jobs:
@@ -89,8 +92,11 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
-          for f in raw index status; do
-            [ -e "scripts/fiflp_actas_${LABEL}_${f}.json" ] && git add "scripts/fiflp_actas_${LABEL}_${f}.json"
+          # Los de los dos lotes (scripts/actas_lotes.py): benjamín y prebenjamín, y alevín aparte.
+          for lote in "" "_alevin"; do
+            for f in raw index status; do
+              [ -e "scripts/fiflp_actas_${LABEL}${lote}_${f}.json" ] && git add "scripts/fiflp_actas_${LABEL}${lote}_${f}.json"
+            done
           done
           if git diff --cached --quiet; then
             echo "Nada nuevo que subir."
@@ -126,11 +132,17 @@ jobs:
           REFRESCAR: ${{ inputs.refrescar }}
         run: |
           LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
-          STATUS="scripts/fiflp_actas_${LABEL}_status.json"
-          PENDING=$(python3 -c "import json; print(json.load(open('$STATUS'))['pending'])" 2>/dev/null || echo 1)
-          # Una tanda que no trajo ninguna acta ni dejó competiciones sin enumerar no avanza: las
-          # que quedan no se dejan leer (se reintentan cuando se vuelva a lanzar la temporada).
-          STUCK=$(python3 -c "import json; d=json.load(open('$STATUS')); print(int(d.get('fetched', 1) == 0 and not d.get('unenumerated_comps')))" 2>/dev/null || echo 0)
+          # El estado de los lotes de la tanda (los de sus competiciones o sus categorías: el de
+          # alevín es aparte), sin navegador: {"pending", "stuck", "lotes"} (chain_state). Una tanda
+          # que no trajo ninguna acta (fetched 0) ni dejó competiciones sin enumerar
+          # (unenumerated_comps) no avanza: las que quedan no se dejan leer (se reintentan cuando se
+          # vuelva a lanzar la temporada). Sin estado, otra tanda.
+          ARGS="--temporada $TEMP_INPUT --categorias ${CATS_INPUT:-benjamin,prebenjamin} --estado"
+          if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
+          STATE=$(python3 scripts/fetch_fiflp_actas.py $ARGS 2>/dev/null || echo '{"pending": 1, "stuck": 0}')
+          echo "Estado de la tanda: $STATE"
+          PENDING=$(python3 -c "import json, sys; print(json.loads(sys.argv[1])['pending'])" "$STATE" 2>/dev/null || echo 1)
+          STUCK=$(python3 -c "import json, sys; print(json.loads(sys.argv[1])['stuck'])" "$STATE" 2>/dev/null || echo 0)
           LEFT=$((TANDAS - 1))
           if [ "$LEFT" -le 0 ]; then
             echo "Freno: sin tandas. Pendientes en $LABEL: $PENDING"

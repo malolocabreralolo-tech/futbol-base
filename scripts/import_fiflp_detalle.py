@@ -36,6 +36,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
+from actas_lotes import LOTES, load_merged, path as actas_path  # noqa: E402
 
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 RAW_FILE = re.compile(r"^fiflp_detalle_(\d{4}-\d{4})_raw\.json$")
@@ -528,9 +529,8 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
     folder = os.path.dirname(path)
     raw = _load(path, {})
     gol = _load(os.path.join(folder, f"fiflp_goleadores_{season}_raw.json"), {})
-    index = _load(os.path.join(folder, f"fiflp_actas_{season}_index.json"), {})
-    if isinstance(index, list):
-        index = {str(e["cod_acta"]): e for e in index}
+    # Los índices de actas de todos los lotes (los de alevín van aparte: actas_lotes).
+    index = load_merged(folder, season, "index")
     archived = season in ARCHIVE_SEASONS
     from categorias import category_of
     current = bool(conn.execute("SELECT is_current FROM seasons WHERE id=?", (season_id,)).fetchone()[0])
@@ -538,9 +538,14 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
     cache = []
 
     def scores():
-        """Los marcadores de las actas, la primera vez que un grupo usa su calendario (el raw es grande)."""
+        """Los marcadores de las actas, la primera vez que un grupo usa su calendario (los raws son
+        grandes): los de todos los lotes (el calendario de alevín usa los del raw de alevín)."""
         if not cache:
-            cache.append(_acta_scores(os.path.join(folder, f"fiflp_actas_{season}_raw.json")))
+            merged = {}
+            for lote in LOTES:
+                for cod, score in _acta_scores(actas_path(folder, season, "raw", lote)).items():
+                    merged.setdefault(cod, score)
+            cache.append(merged)
         return cache[0]
 
     for key in sorted(k for k in raw if not k.startswith("_")):

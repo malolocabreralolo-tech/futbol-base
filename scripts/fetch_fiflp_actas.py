@@ -57,8 +57,6 @@ KNOWN_COMPS = {
            __import__("scripts.fetch_fiflp_2324", fromlist=["ALL_COMPETITIONS"]).ALL_COMPETITIONS],
 }
 
-KEYWORDS_BENJ = ("BENJAMIN", "BENJAMÍN", "PREBENJAMIN", "PREBENJAMÍN")
-
 # Regex to find CodActa anchors in page HTML
 ACTA_HREF = re.compile(r"NFG_CmpPartido[^\"'\s]*CodActa=(\d+)", re.IGNORECASE)
 

@@ -43,6 +43,12 @@ PENDING_DAYS = 120      # resultados pendientes (aplazados) que se siguen buscan
 MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~6 s cada una); el resto, en la siguiente
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
 DEADLINE_SECONDS = 25 * 60   # actas y goleadores solo hasta aquí: el job tiene 45 min
+# Alevín (32 grupos en la Fase Previa de 2026-27, ~34-48 s cada uno) no cabe entero en una pasada: va
+# después de benjamín y prebenjamín, por turnos de ALEVIN_PER_RUN grupos (los que llevan más tiempo
+# sin leerse, fiflp_reads) y hasta ALEVIN_STOP_SECONDS, con lo que el job sigue por debajo de 45 min.
+ALEVIN_PER_RUN = 8
+ALEVIN_STOP_SECONDS = 31 * 60
+READS_TABLE = "CREATE TABLE IF NOT EXISTS fiflp_reads (group_id INTEGER PRIMARY KEY, read_at TEXT)"
 ACTA_URL = "/NFG_CmpPartido?cod_primaria=1000120&CodActa={code}"
 GOLEADORES_URL = ("/NFG_CMP_Goleadores?cod_primaria=1000120&CodJornada="
                   "&codcompeticion={comp}&codtemporada={season}&codgrupo={group}")
@@ -635,15 +641,24 @@ def _with_browser(work):
             browser.close()
 
 
-def run_passes(page, F, conn, season_id, groups, today, pending, deadline_seconds=None):
-    """Las dos pasadas del bot sobre una página ya abierta (inyectable en las
-    pruebas): clasificación y jornadas de cada grupo; después, con lo que quede
-    de plazo, el directorio de campos, las actas y los goleadores."""
+def _alevin_turn(conn, lot):
+    """Los ALEVIN_PER_RUN grupos alevín de esta pasada: los que llevan más tiempo sin leerse
+    (fiflp_reads; los nunca leídos, primero), en el orden de fiflp_groups si empatan."""
+    conn.execute(READS_TABLE)
+    last = dict(conn.execute("SELECT group_id, read_at FROM fiflp_reads"))
+    order = sorted(range(len(lot)), key=lambda i: (last.get(lot[i][0]) or "", i))
+    return [lot[i] for i in order[:ALEVIN_PER_RUN]]
+
+
+def _first_pass(page, F, conn, lot, today, results, stop=None):
+    """Clasificación y jornadas de cada grupo del lote (hasta `stop`, en time.monotonic())."""
     import time
-    deadline = time.monotonic() + (DEADLINE_SECONDS if deadline_seconds is None else deadline_seconds)
-    results = {}
+    from datetime import datetime, timezone
     full = full_read_pending(conn)
-    for group_id, code, url in groups:
+    conn.execute(READS_TABLE)
+    for group_id, code, url in lot:
+        if stop is not None and time.monotonic() > stop:
+            break
         print(f"  [{code}]" + (" (primera pasada: todas las jornadas)" if group_id in full else ""), flush=True)
         try:
             raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today,
@@ -656,20 +671,18 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
             conn.rollback()
             status, msg = "error", e
             print(f"    ! error: {e}")
+        conn.execute("INSERT OR REPLACE INTO fiflp_reads(group_id, read_at) VALUES (?, ?)",
+                     (group_id, datetime.now(timezone.utc).isoformat()))
+        conn.commit()
         results[code] = [status, msg]
-    # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
-    # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
-    # El directorio de campos, solo si falta alguno de los de la temporada.
-    try:
-        if missing_venues(conn, season_id):
-            print(f"\n  Campos: {update_campos(page, F, conn)} en el directorio de la federación")
-    except Exception as e:
-        conn.rollback()
-        print(f"  ! campos: {e}")
-    budget = MAX_ACTAS_PER_RUN
-    print("\n  Actas y goleadores")
-    for group_id, code, url in groups:
-        if results[code][0] != "ok" or time.monotonic() > deadline:
+
+
+def _second_pass(page, F, conn, lot, results, deadline, budget):
+    """Actas y goleadores de los grupos del lote leídos bien, hasta `deadline`. Devuelve las actas que
+    quedan del cupo de la pasada (MAX_ACTAS_PER_RUN)."""
+    import time
+    for group_id, code, url in lot:
+        if code not in results or results[code][0] != "ok" or time.monotonic() > deadline:
             continue
         notes = []
         try:
@@ -693,6 +706,45 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
             results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
     if time.monotonic() > deadline:
         print("  (plazo agotado: el resto de actas y goleadores, en la próxima pasada)")
+    return budget
+
+
+def run_passes(page, F, conn, season_id, groups, today, pending, deadline_seconds=None, stop_seconds=None):
+    """Las dos pasadas del bot sobre una página ya abierta (inyectable en las
+    pruebas): clasificación y jornadas de cada grupo; después, con lo que quede
+    de plazo, el directorio de campos, las actas y los goleadores.
+
+    Primero benjamín y prebenjamín, las dos pasadas, como siempre; después, un
+    turno de alevín: sus 32 grupos de la Fase Previa no caben en el job (45 min)
+    y, delante, dejaban sin actas a los demás. En cada pasada, ALEVIN_PER_RUN
+    grupos alevín (los que llevan más tiempo sin leerse) y sus actas y
+    goleadores, hasta ALEVIN_STOP_SECONDS; los demás conservan su último estado
+    en data-health.json (source_health.keep)."""
+    import time
+    begin = time.monotonic()
+    deadline = begin + (DEADLINE_SECONDS if deadline_seconds is None else deadline_seconds)
+    stop = begin + (ALEVIN_STOP_SECONDS if stop_seconds is None else stop_seconds)
+    alevin_ids = {r[0] for r in conn.execute(
+        """SELECT g.id FROM groups g JOIN categories c ON c.id=g.category_id WHERE upper(c.name)='ALEVIN'""")}
+    lot = [g for g in groups if g[0] not in alevin_ids]
+    turn = _alevin_turn(conn, [g for g in groups if g[0] in alevin_ids])
+    results = {}
+    _first_pass(page, F, conn, lot, today, results)
+    # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
+    # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
+    # El directorio de campos, solo si falta alguno de los de la temporada.
+    try:
+        if missing_venues(conn, season_id):
+            print(f"\n  Campos: {update_campos(page, F, conn)} en el directorio de la federación")
+    except Exception as e:
+        conn.rollback()
+        print(f"  ! campos: {e}")
+    print("\n  Actas y goleadores")
+    budget = _second_pass(page, F, conn, lot, results, deadline, MAX_ACTAS_PER_RUN)
+    if turn:
+        print(f"\n  Alevín, turno de {len(turn)} grupos")
+        _first_pass(page, F, conn, turn, today, results, stop)
+        _second_pass(page, F, conn, turn, results, stop, budget)
     # La ficha (equipación y campo) de los equipos que aún no la tienen y la de sus campos.
     try:
         if time.monotonic() <= deadline:
@@ -703,7 +755,10 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         conn.rollback()
         print(f"  ! directorio: {e}")
     for group_id, code, url in groups:
-        source_health.record(code, url, *results[code])
+        if code in results:
+            source_health.record(code, url, *results[code])
+        else:                       # alevín fuera de su turno: lo de su última lectura
+            source_health.keep(code, url)
         pending.pop(code, None)
 
 

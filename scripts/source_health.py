@@ -42,6 +42,16 @@ def record(code, url, status, message="", now=None):
     }
 
 
+def keep(code, url):
+    """Un grupo que esta pasada no ha leído (alevín fuera de su turno, update_fiflp.run_passes):
+    se queda con lo de su última lectura. Uno que no se ha leído nunca, todavía no sale."""
+    if _report is None:
+        return
+    previous = ((_previous or {}).get("groups") or {}).get(code)
+    if previous and previous.get("url") == url:
+        _report["groups"][code] = previous
+
+
 def meaningful(report):
     """The report without its check timestamps: what a visitor would see change."""
     view = {k: v for k, v in report.items() if k != "checkedAt"}

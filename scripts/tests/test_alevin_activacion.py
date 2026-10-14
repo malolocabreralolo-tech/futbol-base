@@ -233,3 +233,110 @@ def test_alevin_groups_go_last_in_the_bot_and_the_family_group_first():
                      (cats[cat], code, URL.format(comp=1, grupo=code)))
     assert [g[1] for g in U.fiflp_groups(conn, 1)] == ["FF1", "FF2", "PG1", "PG2", "AL1"]
     assert [g[1] for g in U.fiflp_groups(conn, 1, first="PG2")] == ["PG2", "FF1", "FF2", "PG1", "AL1"]
+
+
+# ── Alevín no cabe entero en una pasada del bot ─────────────────────────────
+
+class _Page:
+    url = ""
+
+    def evaluate(self, script):
+        return [{"value": "1", "text": "1 - 03-10-2026"}]
+
+    def wait_for_timeout(self, ms):
+        pass
+
+    def content(self):
+        return "<html></html>"
+
+
+class _Fed:
+    BASE = "https://www.fiflp.com/pnfg/NPcd"
+
+    def __init__(self):
+        self.seen = []
+
+    def goto(self, page, url):
+        self.seen.append(url)
+        return True
+
+    def delay(self):
+        pass
+
+    def parse_standings(self, page):
+        return []
+
+    def parse_matches(self, page):
+        return []
+
+
+def _bot_base():
+    conn = db()
+    conn.execute("INSERT INTO categories(name) VALUES('ALEVIN')")
+    cats = dict(conn.execute("SELECT name, id FROM categories"))
+    for code, cat in (("FF1", "BENJAMIN"), ("PG2", "PREBENJAMIN"), ("AL1", "ALEVIN"), ("AL2", "ALEVIN"),
+                      ("AL3", "ALEVIN"), ("AL4", "ALEVIN"), ("AL5", "ALEVIN")):
+        conn.execute("INSERT INTO groups(season_id,category_id,code,url) VALUES (1,?,?,?)",
+                     (cats[cat], code, URL.format(comp=1, grupo=code)))
+    conn.commit()
+    return conn
+
+
+def _read(fed):
+    """Los grupos cuyo calendario leyó la pasada, en orden."""
+    import re
+    return [re.search(r"CodGrupo=(\w+)", u).group(1) for u in fed.seen
+            if "NFG_CmpJornada" in u and "CodJornada" not in u]
+
+
+def test_alevin_goes_after_benjamin_actas_and_takes_turns(monkeypatch):
+    """Con los 32 grupos alevín, la pasada del bot pasaría de 45 min y GitHub la cortaría sin publicar
+    nada. Primero benjamín y prebenjamín con sus actas y goleadores, como siempre; después, solo
+    ALEVIN_PER_RUN grupos alevín, por turno: los que llevan más tiempo sin leerse."""
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    monkeypatch.setattr(U, "ALEVIN_PER_RUN", 2)
+    calls = []
+    real_actas = U.import_actas
+
+    def spy(page, F, conn, gid, *a, **k):
+        calls.append(gid)
+        return real_actas(page, F, conn, gid, *a, **k)
+    monkeypatch.setattr(U, "import_actas", spy)
+    conn = _bot_base()
+    today = date(2026, 10, 5)
+    for expected in (["FF1", "PG2", "AL1", "AL2"], ["FF1", "PG2", "AL3", "AL4"], ["FF1", "PG2", "AL5", "AL1"]):
+        fed, groups = _Fed(), U.fiflp_groups(conn, 1)
+        U.run_passes(_Page(), fed, conn, 1, groups, today, {g[1]: g[2] for g in groups})
+        assert _read(fed) == expected
+    # Las actas de benjamín y prebenjamín van antes que las de cualquier grupo alevín.
+    ids = dict(conn.execute("SELECT code, id FROM groups"))
+    assert calls[:2] == [ids["FF1"], ids["PG2"]] and calls[2:4] == [ids["AL1"], ids["AL2"]]
+
+
+def test_an_alevin_group_out_of_its_turn_keeps_its_last_health_entry(monkeypatch):
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    monkeypatch.setattr(U, "ALEVIN_PER_RUN", 1)
+    recorded, kept = [], []
+    monkeypatch.setattr(U.source_health, "record", lambda code, *a: recorded.append(code))
+    monkeypatch.setattr(U.source_health, "keep", lambda code, url: kept.append(code))
+    conn = _bot_base()
+    groups = U.fiflp_groups(conn, 1)
+    pending = {g[1]: g[2] for g in groups}
+    U.run_passes(_Page(), _Fed(), conn, 1, groups, date(2026, 10, 5), pending)
+    assert recorded == ["FF1", "PG2", "AL1"] and kept == ["AL2", "AL3", "AL4", "AL5"]
+    assert pending == {}
+
+
+def test_source_health_keep_carries_the_previous_entry(tmp_path, monkeypatch):
+    import json
+    import source_health as H
+    monkeypatch.setattr(H, "REPORT_PATH", tmp_path / "data-health.json")
+    previous = {"groups": {"AL2": {"url": "u", "status": "ok", "message": "m",
+                                   "checkedAt": "2026-10-05T00:00:00+00:00"}}}
+    (tmp_path / "data-health.json").write_text(json.dumps(previous))
+    monkeypatch.setattr(H, "load_config", lambda: {"nextSeason": "2027-2028"})
+    H.begin("2026-2027")
+    H.keep("AL2", "u")
+    H.keep("AL9", "u9")                   # nunca leído: no sale todavía
+    assert H._report["groups"] == previous["groups"]
+    monkeypatch.setattr(H, "_report", None)

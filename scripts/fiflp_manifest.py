@@ -9,11 +9,22 @@ histórico entre temporadas y el cambio de fase de Mi equipo los traten igual:
     LIGA BENJAMIN ... FASE LIGA A|B|C        -> A1.. B1.. C1..  «Segunda Fase A|B|C»
     LIGA BENJAMIN DE LANZAROTE FASE 1|2      -> LZ1.. / LZS1..  «Lanzarote Fase 1|2»
     LIGA BENJAMIN ... FUERTEVENTURA 1ª|2ª    -> FV11.. / FV21.. «Fuerteventura Fase 1|2»
+    LIGA BENJAMIN ... FASE LIGA X / SEGUNDA FASE X (cualquier letra) -> X1.. «Segunda Fase X»
     LIGA PREBENJAMIN DE GRAN CANARIA         -> PG1..   «Gran Canaria»
     LIGA PREBENJAMIN LANZAROTE|FUERTEVENTURA -> PLZ1.. / PFV1..
+    ... ELIMINATORIAS                        -> EL1.. (benjamín), PEL1.. (prebenjamín),
+                                                ALEL1.. (alevín)  «Eliminatorias» (copa en la web)
+
+Alevín, solo de Gran Canaria (docs/alevin.md; todos los códigos empiezan por AL):
+
+    LIGA ALEVIN GRAN CANARIA FASE PREVIA     -> AL1..   «Primera Fase GC»
+    LIGA ALEVIN ... FASE LIGA X / SEGUNDA FASE X -> ALX1.. «Segunda Fase X»
+    COPA CAMPEONES ALEVÍN (… FASE X)         -> ALCC1.. (ALCCX1..) «Copa de Campeones (X)»
+    CLAUSURA ALEVÍN                          -> ALCL1   «Clausura Alevín»
 
 Una competición que no encaje aborta: mejor parar que inventar una fase que la
-web clasificaría como «otra-…».
+web clasificaría como «otra-…». También alevín de Lanzarote o Fuerteventura y
+fútbol sala (categorias.category_of), que no se publican.
 
     python3 scripts/fiflp_manifest.py scripts/fiflp_islas_22_raw.json 2026-2027 \\
         --team "Las Mesas" --cat prebenjamin > temporada-2026-2027.json
@@ -33,12 +44,47 @@ def fold(text):
                    if unicodedata.category(ch) != "Mn").upper()
 
 
+ELIMINATORIAS = {"benjamin": "EL", "prebenjamin": "PEL", "alevin": "ALEL"}
+# 'FASE LIGA C' (2025-26) o 'SEGUNDA FASE F': la letra de la Segunda Fase, cualquiera (2026-27 tendrá F).
+SEGUNDA_FASE = re.compile(r"\b(?:FASE LIGA|SEGUNDA FASE|2. FASE)\s+([A-Z])\b")
+
+
+def category(name):
+    """'benjamin', 'prebenjamin' o 'alevin' de una competición; ValueError si no se publica."""
+    from categorias import category_of
+    cat = category_of(name)
+    if not cat:
+        raise ValueError(f"no se publica (fútbol sala, alevín de otra isla o sin categoría): {name}")
+    return cat.lower()
+
+
+def _alevin_meta(name, n):
+    if "ELIMINATORIA" in n:
+        return ELIMINATORIAS["alevin"], "Eliminatorias"
+    if "CAMPEONES" in n:
+        m = re.search(r"\bFASE ([A-Z])$", n)
+        return ("ALCC" + m.group(1), f"Copa de Campeones {m.group(1)}") if m else ("ALCC", "Copa de Campeones")
+    if "CLAUSURA" in n:
+        return "ALCL", "Clausura Alevín"
+    m = SEGUNDA_FASE.search(n)
+    if m:
+        return "AL" + m.group(1), f"Segunda Fase {m.group(1)}"
+    if "FASE PREVIA" in n or "PRIMERA FASE" in n:
+        return "AL", "Primera Fase GC"
+    raise ValueError(f"competición sin convenio de código: {name}")
+
+
 def comp_meta(name):
     """(prefijo de código, fase publicada) de una competición de FIFLP."""
     n = fold(name)
     if "SALA" in n:
         raise ValueError(f"fútbol sala no se publica: {name}")
-    pre = "PREBENJAMIN" in n
+    cat = category(name)
+    if cat == "alevin":
+        return _alevin_meta(name, n)
+    pre = cat == "prebenjamin"
+    if "ELIMINATORIA" in n:
+        return ELIMINATORIAS[cat], "Eliminatorias"
     if "LANZAROTE" in n:
         if pre:
             return "PLZ", "Lanzarote"
@@ -48,8 +94,12 @@ def comp_meta(name):
             return "PFV", "Fuerteventura"
         return ("FV2", "Fuerteventura Fase 2") if re.search(r"FASE 2|2. FASE", n) else ("FV1", "Fuerteventura Fase 1")
     if pre:
+        # Solo la liga: la copa y el torneo de clausura no tienen convenio aquí (antes salían PG y
+        # chocaban con PG1-4).
+        if re.search(r"\b(COPA|CAMPEONES|CLAUSURA|CIERRE|TORNEO)\b", n):
+            raise ValueError(f"competición sin convenio de código: {name}")
         return "PG", "Gran Canaria"
-    m = re.search(r"FASE LIGA ([A-E])\b", n)
+    m = SEGUNDA_FASE.search(n)
     if m:
         return m.group(1), f"Segunda Fase {m.group(1)}"
     if "FASE PREVIA" in n or "PRIMERA FASE" in n:
@@ -74,7 +124,7 @@ def build(raw, season, season_code, names=None):
         if code in seen:
             raise ValueError(f"código repetido: {code}")
         seen.add(code)
-        cat = "prebenjamin" if "PREBENJAMIN" in fold(g["competition_name"]) else "benjamin"
+        cat = category(g["competition_name"])
         island = ("lanzarote" if prefix in ("LZ", "LZS", "PLZ") else
                   "fuerteventura" if prefix in ("FV1", "FV2", "PFV") else "grancanaria")
         groups.append({
@@ -116,7 +166,7 @@ def main():
     ap.add_argument("season")
     ap.add_argument("--team", help="parte del nombre del equipo inicial (al activar una temporada)")
     ap.add_argument("--comps", default="", help="solo estas competiciones (ids separados por coma): fase nueva con --add")
-    ap.add_argument("--cat", default="prebenjamin", choices=["benjamin", "prebenjamin"])
+    ap.add_argument("--cat", default="prebenjamin", choices=["benjamin", "prebenjamin", "alevin"])
     args = ap.parse_args()
     raw = json.load(open(args.raw, encoding="utf-8"))
     if args.comps:

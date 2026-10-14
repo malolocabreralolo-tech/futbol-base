@@ -48,11 +48,28 @@ GOLEADORES_URL = ("/NFG_CMP_Goleadores?cod_primaria=1000120&CodJornada="
                   "&codcompeticion={comp}&codtemporada={season}&codgrupo={group}")
 
 
-def fiflp_groups(conn, season_id):
-    return conn.execute(
-        """SELECT id, code, url FROM groups
-           WHERE season_id=? AND url LIKE '%fiflp.com%' ORDER BY code""",
-        (season_id,)).fetchall()
+def fiflp_groups(conn, season_id, first=None, categories=None):
+    """[(id, código, url)] de los grupos de la federación de la temporada, en el orden en que los
+    recorre el bot, que importa: la segunda pasada (actas, goleadores) tiene plazo. Primero el grupo
+    `first` (el del equipo de la portada), después benjamín y prebenjamín por código y alevín al
+    final («AL…» iba delante de FF y PG por orden alfabético). `categories` ('BENJAMIN',
+    'ALEVIN'…): solo esas (FIFLP_CATS en update_groups); por defecto, todas."""
+    rows = conn.execute(
+        """SELECT g.id, g.code, g.url, upper(coalesce(c.name, '')) FROM groups g
+           LEFT JOIN categories c ON c.id=g.category_id
+           WHERE g.season_id=? AND g.url LIKE '%fiflp.com%'
+           ORDER BY g.code=? DESC, upper(coalesce(c.name, ''))='ALEVIN', g.code""",
+        (season_id, first or "")).fetchall()
+    return [r[:3] for r in rows if not categories or r[3] in categories]
+
+
+def full_read_pending(conn):
+    """Los grupos recién dados de alta (activate_season.insert_groups) cuya primera pasada aún no
+    ha leído todas sus jornadas."""
+    try:
+        return {r[0] for r in conn.execute("SELECT group_id FROM fiflp_full_pending")}
+    except Exception:            # una base sin la tabla: nada pendiente
+        return set()
 
 
 def option_round(text):
@@ -74,12 +91,16 @@ def stored_rounds(conn, group_id):
     return out
 
 
-def rounds_to_refresh(options, stored, today):
-    """Qué jornadas (las opciones del desplegable de FIFLP) hay que volver a leer."""
+def rounds_to_refresh(options, stored, today, full=False):
+    """Qué jornadas (las opciones del desplegable de FIFLP) hay que volver a leer. Con `full` (la
+    primera pasada sobre un grupo recién activado: full_read_pending), también todas las ya
+    jugadas, por viejas que sean: así se guarda el código de sus actas."""
     picked = []
     for opt in options:
         label, when = option_round(opt.get("text"))
         recent = when is not None and today - timedelta(days=BACK_DAYS) <= when <= today + timedelta(days=AHEAD_DAYS)
+        if full and (when is None or when <= today + timedelta(days=AHEAD_DAYS)):
+            recent = True
         new = label not in stored
         day, pending = stored.get(label, ("", False))
         overdue = (pending and when is not None and
@@ -262,8 +283,9 @@ def current_round(conn, group_id):
     return played[-1] if played else (rows[0][0] if rows else None)
 
 
-def scrape_group(page, F, url, stored, today):
-    """(standings crudas, {jornada: [partidos crudos]}) de un grupo de FIFLP."""
+def scrape_group(page, F, url, stored, today, full=False):
+    """(standings crudas, {jornada: [partidos crudos]}) de un grupo de FIFLP; `full`: todas las
+    jornadas ya jugadas (rounds_to_refresh)."""
     comp, code = fiflp_ids(url)
     season = re.search(r"CodTemporada=(\d+)", url).group(1)
     base = f"{F.BASE}/NFG_VisClasificacion?cod_primaria=1000120&CodTemporada={season}"
@@ -292,7 +314,7 @@ def scrape_group(page, F, url, stored, today):
         page.wait_for_timeout(3000)
     if not options and stored:
         raise RuntimeError("la federación no sirvió las jornadas del grupo")
-    for opt in rounds_to_refresh(options, stored, today):
+    for opt in rounds_to_refresh(options, stored, today, full):
         label, when = option_round(opt["text"])
         # Cada jornada por su URL, no con BuscarPartidos: esa función no es
         # AJAX, navega leyendo un formulario OCULTO de la página, y flatten()
@@ -570,8 +592,17 @@ def update_campos(page, F, conn):
 
 
 def update_groups(conn, season_id, today=None):
-    """Recorre los grupos de la federación de la temporada en curso."""
-    groups = fiflp_groups(conn, season_id)
+    """Recorre los grupos de la federación de la temporada en curso: primero el del equipo de la
+    portada, alevín al final (fiflp_groups) y, con FIFLP_CATS ('benjamin,prebenjamin'), solo esas
+    categorías (para repartir la temporada entre dos workflows si un día no cabe en uno)."""
+    from categorias import parse_categories
+    try:
+        from portal_config import load_config
+        first = (load_config().get("defaultTeam") or {}).get("groupId")
+    except Exception:
+        first = None
+    cats = parse_categories(os.environ["FIFLP_CATS"]) if os.environ.get("FIFLP_CATS") else None
+    groups = fiflp_groups(conn, season_id, first=first, categories=cats)
     if not groups:
         return
     from migrate_actas_schema import migrate
@@ -611,11 +642,16 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     import time
     deadline = time.monotonic() + (DEADLINE_SECONDS if deadline_seconds is None else deadline_seconds)
     results = {}
+    full = full_read_pending(conn)
     for group_id, code, url in groups:
-        print(f"  [{code}]", flush=True)
+        print(f"  [{code}]" + (" (primera pasada: todas las jornadas)" if group_id in full else ""), flush=True)
         try:
-            raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today)
+            raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today,
+                                                     full=group_id in full)
             status, msg = update_group(conn, group_id, code, raw_standings, raw_rounds)
+            if status == "ok" and group_id in full:
+                conn.execute("DELETE FROM fiflp_full_pending WHERE group_id=?", (group_id,))
+                conn.commit()
         except Exception as e:          # un grupo que falla no tumba a los demás
             conn.rollback()
             status, msg = "error", e

@@ -372,6 +372,40 @@ def test_an_alevin_group_out_of_its_turn_keeps_its_last_health_entry(monkeypatch
     assert pending == {}
 
 
+@pytest.mark.parametrize("number, expected", [(3000, ["AL1", "AL2", "AL3", "AL4", "AL5"]),
+                                              (3001, ["AL3", "AL4", "AL5", "AL1", "AL2"])])
+def test_a_run_with_only_alevin_reads_every_alevin_group(monkeypatch, number, expected):
+    """FIFLP_CATS=alevin (un workflow solo de alevín, docs/alevin.md): sin benjamín delante, el turno no
+    tiene tope de grupos, solo el de tiempo (ALEVIN_STOP_SECONDS); cada pasada empieza por un turno
+    distinto, para que un corte por tiempo no deje siempre sin leer los mismos."""
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    monkeypatch.setattr(U, "ALEVIN_PER_RUN", 2)
+    monkeypatch.setenv("GITHUB_RUN_NUMBER", str(number))
+    conn = _bot_base()
+    groups = U.fiflp_groups(conn, 1, categories=("ALEVIN",))
+    fed = _Fed()
+    U.run_passes(_Page(), fed, conn, 1, groups, date(2026, 10, 5), {g[1]: g[2] for g in groups})
+    assert _read(fed) == expected
+
+
+@pytest.mark.parametrize("cats, recorded, kept", [
+    ("alevin", ["AL1", "AL2", "AL3", "AL4", "AL5"], ["FF1", "PG2"]),
+    ("benjamin,prebenjamin", ["FF1", "PG2"], ["AL1", "AL2", "AL3", "AL4", "AL5"]),
+])
+def test_fiflp_cats_keeps_the_health_of_the_categories_left_out(monkeypatch, cats, recorded, kept):
+    """Con FIFLP_CATS cada workflow reescribe data-health.json: los grupos de las categorías que no lee
+    se quedan con lo de su última lectura (source_health.keep), no desaparecen hasta la pasada del otro."""
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    monkeypatch.setattr(U, "ALEVIN_PER_RUN", 2)
+    monkeypatch.setenv("FIFLP_CATS", cats)
+    seen_record, seen_keep = [], []
+    monkeypatch.setattr(U.source_health, "record", lambda code, *a: seen_record.append(code))
+    monkeypatch.setattr(U.source_health, "keep", lambda code, url: seen_keep.append(code))
+    monkeypatch.setattr(U, "_with_browser", lambda work: work(_Page(), _Fed()))
+    U.update_groups(_bot_base(), 1, today=date(2026, 10, 5))
+    assert sorted(seen_record) == recorded and sorted(seen_keep) == kept
+
+
 def test_source_health_keep_carries_the_previous_entry(tmp_path, monkeypatch):
     import json
     import source_health as H

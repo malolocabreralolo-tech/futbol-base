@@ -599,7 +599,8 @@ def update_campos(page, F, conn):
 def update_groups(conn, season_id, today=None):
     """Recorre los grupos de la federación de la temporada en curso: primero el del equipo de la
     portada, alevín al final (fiflp_groups) y, con FIFLP_CATS ('benjamin,prebenjamin'), solo esas
-    categorías (para repartir la temporada entre dos workflows si un día no cabe en uno)."""
+    categorías (para repartir la temporada entre dos workflows si un día no cabe en uno). Los de
+    las demás conservan su entrada de data-health.json (cada workflow lo reescribe entero)."""
     from categorias import parse_categories
     try:
         from portal_config import load_config
@@ -608,6 +609,9 @@ def update_groups(conn, season_id, today=None):
         first = None
     cats = parse_categories(os.environ["FIFLP_CATS"]) if os.environ.get("FIFLP_CATS") else None
     groups = fiflp_groups(conn, season_id, first=first, categories=cats)
+    for group in fiflp_groups(conn, season_id, first=first):
+        if group not in groups:
+            source_health.keep(group[1], group[2])
     if not groups:
         return
     from migrate_actas_schema import migrate
@@ -653,15 +657,16 @@ def run_number(env=None, now=None):
         return int((now or datetime.now(timezone.utc)).timestamp()) // (6 * 3600)
 
 
-def _alevin_turn(lot, number):
-    """Los ALEVIN_PER_RUN grupos alevín de la pasada `number` (run_number), en el orden de
-    fiflp_groups: la pasada n toma el turno n (módulo el número de turnos) y el último se completa con
-    los primeros. Con 32 grupos y 8 por pasada, los cuatro turnos en cuatro pasadas seguidas."""
+def _alevin_turn(lot, number, size=None):
+    """Los ALEVIN_PER_RUN grupos alevín (o `size`) de la pasada `number` (run_number), en el orden de
+    fiflp_groups: la pasada n empieza por el turno n (módulo el número de turnos) y el último se
+    completa con los primeros. Con 32 grupos y 8 por pasada, los cuatro turnos en cuatro pasadas
+    seguidas."""
     if not lot:
         return []
     turns = -(-len(lot) // ALEVIN_PER_RUN)
     start = (number % turns) * ALEVIN_PER_RUN
-    return [lot[(start + i) % len(lot)] for i in range(min(ALEVIN_PER_RUN, len(lot)))]
+    return [lot[(start + i) % len(lot)] for i in range(min(size or ALEVIN_PER_RUN, len(lot)))]
 
 
 def _mark_db():
@@ -741,7 +746,8 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     y, delante, dejaban sin actas a los demás. En cada pasada, ALEVIN_PER_RUN
     grupos alevín (el turno de la pasada: run_number, _alevin_turn) y sus actas y
     goleadores, hasta ALEVIN_STOP_SECONDS; los demás conservan su último estado
-    en data-health.json (source_health.keep)."""
+    en data-health.json (source_health.keep). Si la pasada no trae benjamín ni
+    prebenjamín (FIFLP_CATS=alevin), todos los grupos alevín, hasta el mismo tope."""
     import time
     begin = time.monotonic()
     deadline = begin + (DEADLINE_SECONDS if deadline_seconds is None else deadline_seconds)
@@ -749,7 +755,10 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     alevin_ids = {r[0] for r in conn.execute(
         """SELECT g.id FROM groups g JOIN categories c ON c.id=g.category_id WHERE upper(c.name)='ALEVIN'""")}
     lot = [g for g in groups if g[0] not in alevin_ids]
-    turn = _alevin_turn([g for g in groups if g[0] in alevin_ids], run_number())
+    alevin = [g for g in groups if g[0] in alevin_ids]
+    # Una pasada solo de alevín (FIFLP_CATS=alevin, su propio workflow): sin tope de grupos, solo el de
+    # tiempo, empezando cada vez por un turno distinto.
+    turn = _alevin_turn(alevin, run_number(), size=None if lot else len(alevin))
     results = {}
     _first_pass(page, F, conn, lot, today, results)
     # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo

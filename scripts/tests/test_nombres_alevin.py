@@ -289,6 +289,52 @@ def test_the_bot_step_moves_only_the_rows_of_the_group_and_is_idempotent():
     assert migrate(conn, FIXES, log=lambda *_: None) == []
 
 
+def test_the_card_of_the_season_goes_with_the_team_that_moves_even_if_the_old_row_stays():
+    """Si el bot de main lee el directorio de AL3 antes de la corrección, escribe la ficha de NATURALEZA
+    VERDE-VALLESECO en 'UD Valleseco' (que no tenía la de 2026-27). La fila vieja sigue en uso en otras
+    temporadas, pero en 2026-27 ya no juega: la ficha es del equipo que se mueve. Si la buena ya tiene la
+    suya (RC Victoria, la de benjamín), la de la vieja se borra. Y la de una fila que sigue jugando en la
+    temporada en otro grupo ('Huracán B', FF12) no se toca."""
+    from migrate_team_names import migrate
+    conn = base()
+    put(conn, 2, 1, "FF3", "grancanaria", ["UD Valleseco", "Victoria"],
+        fed={"UD Valleseco": "VALLESECO, U.D.", "Victoria": 'VICTORIA, REAL CLUB "A"'})
+    put(conn, 3, 1, "FF9", "grancanaria", ["RC Victoria"], fed={"RC Victoria": "VICTORIA, REAL CLUB"})
+    put(conn, 3, 1, "FF12", "grancanaria", ["Huracán B"], fed={"Huracán B": 'HURACAN, A.D. "B"'})
+    put(conn, 3, 4, "AL3", "grancanaria", ["UD Valleseco", "Atl. Angostura"],
+        fed={"UD Valleseco": "NATURALEZA VERDE-VALLESECO DE G.C., C.D."})
+    put(conn, 3, 4, "AL12", "grancanaria", ["Victoria", "Atl. Isleta"], fed={"Victoria": 'VICTORIA, REAL CLUB "A"'})
+    put(conn, 3, 4, "AL20", "grancanaria", ["Huracán B", "Puertos LP"])
+    fixes = {("2026-2027", "ALEVIN", "AL3"): {"UD Valleseco": "Naturaleza Verde-Valleseco"},
+             ("2026-2027", "ALEVIN", "AL12"): {"Victoria": "RC Victoria"},
+             ("2026-2027", "ALEVIN", "AL20"): {"Huracán B": "Las Mesas Hu. B"}}
+    cards = lambda name: dict(conn.execute("""SELECT s.name, ts.fiflp_name FROM team_seasons ts JOIN seasons s
+                                              ON s.id=ts.season_id WHERE ts.team_id=?""", (tid(conn, name),)))
+    assert len(migrate(conn, fixes, log=lambda *_: None)) == 3
+    assert cards("Naturaleza Verde-Valleseco") == {"2026-2027": "NATURALEZA VERDE-VALLESECO DE G.C., C.D."}
+    assert cards("UD Valleseco") == {"2025-2026": "VALLESECO, U.D."}                # la fila sigue, con la suya
+    assert cards("RC Victoria") == {"2026-2027": "VICTORIA, REAL CLUB"}
+    assert cards("Victoria") == {"2025-2026": 'VICTORIA, REAL CLUB "A"'}
+    assert cards("Huracán B") == {"2026-2027": 'HURACAN, A.D. "B"'}
+    assert migrate(conn, fixes, log=lambda *_: None) == []
+
+
+def test_the_bot_step_moves_a_card_left_behind_in_a_base_already_fixed():
+    """Una base corregida por una versión anterior del paso, con la ficha de 2026-27 aún en 'UD Valleseco':
+    el paso la pasa a la buena aunque el nombre malo ya no esté en el grupo, y después no hace nada."""
+    from migrate_team_names import migrate
+    conn = base()
+    put(conn, 2, 1, "FF3", "grancanaria", ["UD Valleseco"], fed={"UD Valleseco": "VALLESECO, U.D."})
+    put(conn, 3, 4, "AL3", "grancanaria", ["Naturaleza Verde-Valleseco"])
+    conn.execute("INSERT INTO team_seasons(team_id, season_id, fiflp_name) VALUES (?, 3, ?)",
+                 (tid(conn, "UD Valleseco"), "NATURALEZA VERDE-VALLESECO DE G.C., C.D."))
+    fixes = {("2026-2027", "ALEVIN", "AL3"): {"UD Valleseco": "Naturaleza Verde-Valleseco"}}
+    assert migrate(conn, fixes, log=lambda *_: None) == [("2026-2027", "AL3", "UD Valleseco", "Naturaleza Verde-Valleseco")]
+    assert conn.execute("SELECT team_id, season_id FROM team_seasons ORDER BY season_id").fetchall() == [
+        (tid(conn, "UD Valleseco"), 2), (tid(conn, "Naturaleza Verde-Valleseco"), 3)]
+    assert migrate(conn, fixes, log=lambda *_: None) == []
+
+
 def test_the_bot_step_never_puts_a_team_twice_in_a_group():
     from migrate_team_names import migrate
     conn, al20, _ = mixed_base()

@@ -25,9 +25,13 @@ fiflp_team_names.json):
 TEAM_FIXES: {(temporada, categoría, código del grupo): {nombre que tiene en el grupo: nombre que debe
 tener}}. Solo en ese grupo: clasificación y su detalle, goleadores, partidos con todo lo que cuelga de
 ellos (alineaciones, eventos, cuerpo técnico) y los equipos de la app de futbolaspalmas de su liga. La
-fila que sigue en uso en otro grupo (de otra categoría o temporada) se queda como está, con su ficha;
-la que se queda sin uso se borra, y su ficha de la temporada pasa a la buena si esta no tiene. Un
-nombre que ya no está en el grupo no hace nada: en una base ya corregida, nada.
+fila que sigue en uso en otro grupo (de otra categoría o temporada) se queda, con sus fichas; la que se
+queda sin uso se borra. La ficha de la temporada (team_seasons, del directorio del grupo) va con el
+equipo que se mueve si la fila vieja ya no juega en ningún grupo de esa temporada, aunque siga en otras:
+el bot la escribe en la fila del grupo, y si leía el directorio de AL3 antes de esta corrección, 'UD
+Valleseco' (2014-26) se quedaba con la de NATURALEZA VERDE-VALLESECO para siempre (update_directorio
+solo rellena a quien no la tiene). Pasa a la buena si esta no tiene; si tiene, fuera. Un nombre que ya
+no está en el grupo no hace nada (en una base ya corregida, nada), salvo esa ficha si se quedó atrás.
 
 La ejecuta el bot en cada pasada (fetch_futbolaspalmas.main), antes de leer la federación: el bot casa
 los nombres de la federación con los de la clasificación del grupo, que así ya son los buenos.
@@ -72,6 +76,27 @@ def _in_use(conn, team_id, tables):
                for t, c in _USES if t in tables)
 
 
+def _in_season(conn, team_id, season_id):
+    """¿Juega el equipo en algún grupo de la temporada (clasificación o calendario), de cualquier categoría?"""
+    return conn.execute(
+        """SELECT 1 FROM standings st JOIN groups g ON g.id=st.group_id WHERE g.season_id=:s AND st.team_id=:t
+           UNION ALL SELECT 1 FROM matches m JOIN groups g ON g.id=m.group_id
+           WHERE g.season_id=:s AND :t IN (m.home_team_id, m.away_team_id) LIMIT 1""",
+        {"s": season_id, "t": team_id}).fetchone() is not None
+
+
+def _settle_card(conn, old, new, season_id):
+    """La ficha de `season_id` de la fila vieja, si esta ya no juega en ningún grupo de la temporada: es la
+    del equipo que se ha movido. A la fila buena si no tiene; si tiene, fuera. ¿Ha cambiado algo?"""
+    card = "SELECT 1 FROM team_seasons WHERE team_id=? AND season_id=?"
+    if not conn.execute(card, (old, season_id)).fetchone() or _in_season(conn, old, season_id):
+        return False
+    if not conn.execute(card, (new, season_id)).fetchone():
+        conn.execute("UPDATE team_seasons SET team_id=? WHERE team_id=? AND season_id=?", (new, old, season_id))
+    conn.execute("DELETE FROM team_seasons WHERE team_id=? AND season_id=?", (old, season_id))
+    return True
+
+
 def _group_teams(conn, gid):
     """{nombre: id} de los equipos de la clasificación y del calendario del grupo (un retirado solo
     está en el calendario)."""
@@ -99,7 +124,15 @@ def migrate(conn, fixes=None, log=print):
         for wrong, right in sorted(renames.items()):
             old = present.get(wrong)
             if old is None:
-                continue                                   # ya corregido (o nunca estuvo)
+                # Ya corregido (o nunca estuvo). La ficha que se quedó en la fila vieja, si la hay.
+                stale = conn.execute("SELECT id FROM teams WHERE name=?", (wrong,)).fetchone()
+                if stale and right in present and "team_seasons" in tables:
+                    with conn:
+                        moved = _settle_card(conn, stale[0], present[right], season_id)
+                    if moved:
+                        done.append((season, code, wrong, right))
+                        log(f"  {season} {code}: la ficha de {wrong} → {right}")
+                continue
             row = conn.execute("SELECT id FROM teams WHERE name=?", (right,)).fetchone()
             if row and row[0] in present.values():
                 log(f"  ! {season} {code}: {right} ya está en el grupo; {wrong} se queda")
@@ -111,14 +144,11 @@ def migrate(conn, fixes=None, log=print):
                         conn.execute(f"UPDATE {table} SET team_id=? WHERE team_id=? AND {where}", (new, old, gid))
                 for side in ("home_team_id", "away_team_id"):
                     conn.execute(f"UPDATE matches SET {side}=? WHERE {side}=? AND group_id=?", (new, old, gid))
+                if "team_seasons" in tables:
+                    _settle_card(conn, old, new, season_id)
                 if not _in_use(conn, old, tables):
-                    # Solo jugaba en este grupo: su ficha de la temporada (si la leyó el bot del directorio
-                    # del grupo) es la del equipo bueno, si este no tiene; y la fila, fuera.
+                    # Solo jugaba en este grupo: la fila, fuera, con sus fichas de otras temporadas.
                     if "team_seasons" in tables:
-                        if not conn.execute("SELECT 1 FROM team_seasons WHERE team_id=? AND season_id=?",
-                                            (new, season_id)).fetchone():
-                            conn.execute("UPDATE team_seasons SET team_id=? WHERE team_id=? AND season_id=?",
-                                         (new, old, season_id))
                         conn.execute("DELETE FROM team_seasons WHERE team_id=?", (old,))
                     conn.execute("DELETE FROM teams WHERE id=?", (old,))
             present = _group_teams(conn, gid)

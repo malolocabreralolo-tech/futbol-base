@@ -319,13 +319,33 @@ export function groupStrip({ label, groups, currentId = null, mineId = null, hre
 }
 
 // Para el mount de Tabla y Jornada: desliza la tira (.group-scroll) hasta su ficha con aria-current o,
-// sin ella («Todos»), hasta la de mi grupo; en medio si cabe y con scrollLeft: la página nunca se mueve
-// (scrollIntoView la movería).
+// sin ella («Todos»), hasta la de mi grupo, con scrollLeft: la página nunca se mueve (scrollIntoView la
+// movería). Lo más cerca del medio que se pueda, pero siempre con una ficha entera a la izquierda, donde
+// empieza la primera (su relleno): el corte, la pista de que se desliza, solo a la derecha; una ficha
+// cortada por la izquierda, tras la raya de «Todos», parecía otro grupo (el «3» de 13). Son las paradas
+// del ajuste de acta.css (scroll-snap-align: start). Si la actual es de las últimas y ninguna parada la
+// enseña entera, alarga el final de la tira lo justo (--strip-tail) para llegar a la siguiente.
 export function scrollToCurrent(strip) {
   const current = strip && (strip.querySelector('[aria-current]') || strip.querySelector('.is-mine'));
   if (!current) return;
-  const most = Math.max(0, strip.scrollWidth - strip.clientWidth);
-  strip.scrollLeft = Math.min(most, Math.max(0, current.offsetLeft - (strip.clientWidth - current.offsetWidth) / 2));
+  const width = strip.clientWidth;
+  const most = Math.max(0, strip.scrollWidth - width);
+  const middle = current.offsetLeft - (width - current.offsetWidth) / 2;
+  const chips = [...strip.querySelectorAll('.group-chip')];
+  const pad = chips.length ? chips[0].offsetLeft : 0;
+  const shows = (x) => x >= 0 && current.offsetLeft >= x && current.offsetLeft + current.offsetWidth <= x + width;
+  const stops = most > 0 ? chips.map((chip) => chip.offsetLeft - pad).filter(shows) : [];
+  const inside = stops.filter((x) => x <= most);
+  const nearest = (list) => list.reduce((best, x) => (Math.abs(x - middle) < Math.abs(best - middle) ? x : best));
+  if (inside.length) {
+    strip.scrollLeft = nearest(inside);
+  } else if (stops.length) {
+    const x = Math.min(...stops);
+    if (strip.style) strip.style.setProperty('--strip-tail', `${x - most}px`);
+    strip.scrollLeft = x;
+  } else {
+    strip.scrollLeft = Math.min(most, Math.max(0, middle));
+  }
 }
 
 // ── Evolución de puntos (spec §4.6; decisión 12 de B3) ──────────────────

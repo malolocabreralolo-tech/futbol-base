@@ -66,14 +66,12 @@ function withGroups(count, { from = 'FF15', current = fixture('current-2025-2026
 test('siblingGroups: los grupos de liga de la misma competición y categoría, en el orden natural de Ligas', () => {
   const m = modelOf();
   const nav = siblingGroups(m, m.group(PORTAL_SEASON, 'FF9'));
+  // Solo la competición y su lista: sin la caja «‹ Grupo N de M ›», ni index, ni prev, ni next.
+  assert.deepEqual(Object.keys(nav), ['entry', 'list']);
   assert.deepEqual(ids(nav.list), ['FF5', 'FF9', 'FF13', 'FF15'], 'Grupo 9 antes que Grupo 13');
-  assert.equal(nav.index, 1);
-  assert.deepEqual([nav.prev.id, nav.next.id], ['FF5', 'FF13']);
-  assert.deepEqual([nav.entry.cat, nav.entry.key, nav.entry.label], ['benjamin', 'primera-fase', 'Primera Fase']);
-  const first = siblingGroups(m, m.group(PORTAL_SEASON, 'FF5'));
-  assert.deepEqual([first.index, first.prev, first.next.id], [0, null, 'FF9']);
-  const last = siblingGroups(m, m.group(PORTAL_SEASON, 'FF15'));
-  assert.deepEqual([last.index, last.prev.id, last.next], [3, 'FF13', null]);
+  assert.deepEqual(nav.entry, { cat: 'benjamin', key: 'primera-fase', label: 'Primera Fase' });
+  // La misma lista desde cualquiera de sus grupos, del primero al último.
+  for (const id of ['FF5', 'FF15']) assert.deepEqual(ids(siblingGroups(m, m.group(PORTAL_SEASON, id)).list), ids(nav.list), id);
   // Cada fase, la suya: la Segunda Fase A no se mezcla con la B, ni benjamín con prebenjamín.
   assert.deepEqual(ids(siblingGroups(m, m.group(PORTAL_SEASON, 'A2')).list), ['A1', 'A2']);
   assert.deepEqual(ids(siblingGroups(m, m.group(PORTAL_SEASON, 'PG2')).list), ['PG2', 'PG3']);
@@ -97,7 +95,6 @@ test('siblingGroups: con 24 grupos, del 1 al 24 en orden natural', () => {
   assert.equal(nav.list.length, 24);
   assert.deepEqual(ids(nav.list).slice(0, 3), ['FF1', 'FF2', 'FF3']);
   assert.equal(nav.list[23].id, 'FF24');
-  assert.equal(nav.index, 4);
 });
 
 test('la Evolución del grupo ya no existe: ni groupProgression en el modelo ni sus vistas', () => {
@@ -228,6 +225,18 @@ test('Jornada de un grupo: cabecera → tira con «Todos» delante → «‹ Jor
   assert.doesNotMatch(renderJornada({ g: 'PFV2' }), /group-strip/);
 });
 
+test('Jornada de otro grupo sin r: «Mi grupo» abre la jornada por defecto del mío, no el número de la que abre el ajeno', () => {
+  // El 1 de febrero, PG3 abre la jornada 14 y PG2 (el mío) la 13 (defaultRound, por fecha).
+  const opts = { today: '2026-02-01', datasets: datasetsFor({ current: currentAt('2026-02-01') }) };
+  const pg3 = renderJornada({ g: 'PG3' }, opts);
+  assert.match(pg3, /<h2 class="round-title">Jornada 14 de 30<\/h2>/);
+  assert.deepEqual(action(pg3), ['Mi grupo', '#/jornada?s=2025-2026&g=PG2']);
+  assert.match(renderJornada({ g: 'PG2' }, opts), /<h2 class="round-title">Jornada 13 de 30<\/h2>/, 'adonde lleva: la del próximo partido de mi equipo');
+  // Con la jornada elegida (r), la misma en el mío; la tira conserva siempre el número que se ve.
+  assert.deepEqual(action(renderJornada({ g: 'PG3', r: 'Jornada 14' }, opts)), ['Mi grupo', '#/jornada?s=2025-2026&g=PG2&r=Jornada%2014']);
+  assert.equal(chips(pg3).find((c) => c.id === 'grupo-PG2').href, '#/jornada?s=2025-2026&g=PG2&r=Jornada%2014');
+});
+
 test('historial: cambiar de grupo con la tira o con «Mi grupo», y de un grupo a «Todos» y vuelta, es replace; de pantalla, push', () => {
   const R = parseRoute;
   assert.equal(historyMode(R('#/tabla?s=2025-2026&g=PG2'), R('#/tabla?s=2025-2026&g=PG3')), 'replace');
@@ -246,24 +255,70 @@ test('enlaces viejos de la Evolución (v=evolucion y v=posiciones): la vista por
   }
 });
 
-test('mount: la tira se desliza hasta la ficha actual (o, en «Todos», hasta la mía), dentro de su caja y sin mover la página', () => {
-  const chip = { offsetLeft: 900, offsetWidth: 44 };
-  const strip = { scrollLeft: 0, scrollWidth: 1300, clientWidth: 360, querySelector: (sel) => (sel === '[aria-current]' ? chip : null) };
+// Una tira falsa con su geometría: `count` fichas de 44 px cada 52 (8 de hueco), la primera a `pad` (el
+// relleno izquierdo de .group-scroll), `right` de relleno derecho y `width` de caja; la actual (o, sin
+// ella, la mía), la de índice `at`. `tail`, lo que scrollToCurrent alargue el final (--strip-tail).
+function fakeStrip({ count = 24, at, pad = 16, width = 360, right = 16, mineOnly = false }) {
+  const chips = Array.from({ length: count }, (_, k) => ({ offsetLeft: pad + k * 52, offsetWidth: 44 }));
+  const pick = (sel) => (sel === (mineOnly ? '.is-mine' : '[aria-current]') ? chips[at] : null);
+  const strip = { scrollLeft: 0, scrollWidth: pad + (count - 1) * 52 + 44 + right, clientWidth: width, chips, tail: 0,
+    querySelector: pick, querySelectorAll: (sel) => (sel === '.group-chip' ? chips : []),
+    style: { setProperty: (name, value) => { assert.equal(name, '--strip-tail'); strip.tail = parseFloat(value); strip.scrollWidth += strip.tail; } } };
+  return strip;
+}
+// Cómo queda el borde izquierdo de la caja: `at`, a qué distancia queda la primera ficha entera (su
+// relleno: la misma que al principio de la tira), y `peek`, lo que asoma de la anterior (en px).
+const leftEdge = (strip) => {
+  const k = strip.chips.findIndex((c) => c.offsetLeft >= strip.scrollLeft);
+  const prev = strip.chips[k - 1];
+  return { at: strip.chips[k].offsetLeft - strip.scrollLeft, peek: prev ? Math.max(0, prev.offsetLeft + prev.offsetWidth - strip.scrollLeft) : 0 };
+};
+const showsAt = (strip, k) => strip.chips[k].offsetLeft >= strip.scrollLeft
+  && strip.chips[k].offsetLeft + 44 <= strip.scrollLeft + strip.clientWidth;
+
+test('mount: la tira se desliza hasta la actual (o, en «Todos», la mía), cerca del medio, con una ficha entera a la izquierda y sin mover la página', () => {
+  const middle = { at: 17, width: 360 };
+  const strip = fakeStrip(middle);
   scrollToCurrent(strip);
-  assert.equal(strip.scrollLeft, 900 - (360 - 44) / 2, 'la actual, en medio');
-  const first = { offsetLeft: 0, offsetWidth: 44 };
-  const start = { scrollLeft: 50, scrollWidth: 1300, clientWidth: 360, querySelector: () => first };
+  // El medio exacto (16 + 17·52 − (360 − 44)/2 = 742) cortaría la ficha 14 por la mitad; la parada más
+  // cercana, 728, deja la 15 entera a 16 px (el relleno) y de la 14, solo 8 px de borde, sin su número.
+  assert.equal(strip.scrollLeft, 14 * 52);
+  assert.deepEqual([leftEdge(strip), showsAt(strip, 17)], [{ at: 16, peek: 8 }, true]);
+  const start = fakeStrip({ at: 0 });
+  start.scrollLeft = 50;
   scrollToCurrent(start);
-  assert.equal(start.scrollLeft, 0, 'nunca negativo');
-  const mine = { scrollLeft: 0, scrollWidth: 1300, clientWidth: 360, querySelector: (sel) => (sel === '.is-mine' ? chip : null) };
+  assert.equal(start.scrollLeft, 0, 'al principio, nunca negativo');
+  const mine = fakeStrip({ ...middle, mineOnly: true });
   scrollToCurrent(mine);
-  assert.equal(mine.scrollLeft, 900 - (360 - 44) / 2, 'sin actual en la tira («Todos»), la mía');
+  assert.equal(mine.scrollLeft, 14 * 52, 'sin actual en la tira («Todos»), la mía');
+  // A 320, 360, 390 y 414 px, Jornada (la caja empieza tras la raya de «Todos», con 8 px de relleno) y
+  // Tabla (de borde a borde de la pantalla, con 16), con 24 grupos: a la izquierda, una ficha entera donde
+  // empieza la tira y, de la anterior, nada tras la raya de «Todos» y, en el margen de la Tabla, 8 px de
+  // borde como mucho (sin número: era un «3» de 13 que parecía otro grupo); la actual, entera. También
+  // en las últimas: el final se alarga lo justo (menos de una ficha) y solo cuando hace falta.
+  for (const [pad, width] of [[8, 222], [16, 320], [8, 262], [16, 360], [8, 292], [16, 390], [8, 316], [16, 414]]) {
+    for (let at = 0; at < 24; at++) {
+      const s = fakeStrip({ at, pad, width });
+      const before = s.scrollWidth - s.clientWidth;
+      scrollToCurrent(s);
+      const label = `${width} px y ${pad} de relleno, ficha ${at + 1}`;
+      assert.ok(showsAt(s, at), `${label}: la actual, a la vista`);
+      assert.ok(s.scrollLeft >= 0 && s.scrollLeft <= s.scrollWidth - s.clientWidth, label);
+      assert.deepEqual(leftEdge(s), { at: pad, peek: s.scrollLeft > 0 ? Math.max(0, pad - 8) : 0 }, label);
+      assert.ok(s.tail < 52, `${label}: el final, lo justo`);
+      if (s.tail) assert.ok(s.scrollLeft > before && at >= 20, `${label}: solo si no cabe sin alargar`);
+    }
+  }
+  // Sin nada que deslizar (en escritorio, en filas), ni se mueve ni se alarga.
+  const desk = fakeStrip({ count: 4, at: 3, width: 800 });
+  scrollToCurrent(desk);
+  assert.deepEqual([desk.scrollLeft, desk.tail], [0, 0]);
   for (const [screen, params] of [[tabla, { g: 'FF9' }], [jornada, { g: 'FF9' }]]) {
-    const own = { scrollLeft: 0, scrollWidth: 1300, clientWidth: 360, querySelector: () => chip };
+    const own = fakeStrip({ at: 17 });
     const el = { addEventListener: () => {}, querySelector: () => null };
     const root = { querySelector: (sel) => (sel === '.group-scroll' ? own : sel === '[data-screen="jornada"]' ? el : null) };
     screen.mount(root, ctxFor(screen.id, { s: PORTAL_SEASON, ...params }, { myTeam: BENJ_FF5, datasets: datasetsFor({ current: withGroups(24) }) }));
-    assert.equal(own.scrollLeft, 900 - (360 - 44) / 2, screen.id);
+    assert.equal(own.scrollLeft, 14 * 52, screen.id);
   }
 });
 
@@ -280,7 +335,16 @@ test('CSS de la tira: se desliza dentro de su caja con ajuste, fichas de 44 px s
   const chip = body('.group-chip');
   assert.match(chip, /min-height:\s*44px/);
   assert.match(chip, /min-width:\s*44px/);
-  assert.match(chip, /scroll-snap-align/);
+  // Ajuste al principio de cada ficha, a la altura del relleno izquierdo de su caja (scrollToCurrent).
+  assert.match(chip, /scroll-snap-align:\s*start/);
+  assert.match(body('.group-scroll:first-child'), /padding-left:\s*var\(--gutter\)/);
+  assert.match(body('.group-scroll:first-child'), /scroll-padding-inline:\s*var\(--gutter\)/);
+  assert.match(body('.group-chip.is-all + .group-scroll'), /padding-left:\s*8px/);
+  assert.match(body('.group-chip.is-all + .group-scroll'), /scroll-padding-left:\s*8px/);
+  // El final, alargable por scrollToCurrent (--strip-tail, 0 si no).
+  assert.match(body('.group-scroll'), /padding:\s*3px calc\(var\(--gutter\) \+ var\(--strip-tail, 0px\)\)/);
+  // «tabla ›» de «Todos los grupos», 44 px también de ancho.
+  assert.match(body('.block-link'), /min-width:\s*44px/);
   assert.match(chip, /background:\s*var\(--line\)/, 'fondo suave');
   assert.doesNotMatch(chip, /border:/, 'sin borde');
   assert.match(body('.group-chip[aria-current]'), /background:\s*var\(--ink\)/);

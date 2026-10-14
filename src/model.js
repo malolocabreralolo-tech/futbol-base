@@ -1527,18 +1527,14 @@ export function groupSummary(group) {
 /* Los grupos hermanos de un grupo de liga (la tira de grupos de Tabla y Jornada): los de liga de su
  * misma competición (compKey) y categoría en su temporada, en el orden de Ligas (competitions: orden
  * natural, «Grupo 2» antes que «Grupo 10»). Sirve para cualquier categoría de CATEGORIES.
- *   → { entry: { cat, key, label }, list: Group[], index, prev, next } (prev y next, null en los
- *     extremos), o null si el grupo no es de liga o su competición no tiene al menos dos. */
+ *   → { entry: { cat, key, label }, list: Group[] } (el grupo, dentro de list), o null si el grupo no es
+ *     de liga o su competición no tiene al menos dos. */
 export function siblingGroups(model, group) {
   if (!group || group.kind !== 'league') return null;
   const entry = competitions(model, group.season, { cat: group.cat }).find(e => e.key === group.compKey);
   const list = entry ? entry.groups.filter(g => g.kind === 'league') : [];
-  const index = list.findIndex(g => g.id === group.id);
-  if (list.length < 2 || index < 0) return null;
-  return {
-    entry: { cat: entry.cat, key: entry.key, label: entry.label },
-    list, index, prev: list[index - 1] || null, next: list[index + 1] || null,
-  };
+  if (list.length < 2 || !list.some(g => g.id === group.id)) return null;
+  return { entry: { cat: entry.cat, key: entry.key, label: entry.label }, list };
 }
 
 /* La jornada que enseña «Todos los grupos» de una competición (Jornada sin `g`): el número de la de

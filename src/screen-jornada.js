@@ -110,9 +110,10 @@ const otherLeagues = (s, group = null) => ({
 });
 
 // La acción de la cabecera: «Mi grupo», la jornada del grupo de mi equipo en esa temporada (el de su
-// misma competición si juega en ella, `first`, con el mismo número de jornada; si no, su jornada por
-// defecto), cuando lo que se mira no es suyo (mine); si lo es, o mi equipo no juega esa temporada,
-// «Otras ligas».
+// misma competición si juega en ella, `first`, con el número de jornada `n`; si no, o sin `n`, su jornada
+// por defecto), cuando lo que se mira no es suyo (mine); si lo es, o mi equipo no juega esa temporada,
+// «Otras ligas». En un grupo, `n` solo si la jornada se eligió (r): la que abre por defecto un grupo
+// ajeno (un aplazado de la 1) no es la del próximo partido de mi equipo.
 function headAction(ctx, s, { mine, first, n, group }) {
   const target = mine ? null : myGroupIn(ctx.model.season(s), ctx.myTeam, ctx.resolution, first);
   if (!target) return otherLeagues(s, group);
@@ -215,7 +216,8 @@ function render(ctx) {
     hrefFor: target => routeHref('jornada', { s, g: target.id, r: roundKey(target, n) }),
     all: { href: routeHref('jornada', { s, c: group.cat, f: group.compKey, r: n === null ? '' : String(n) }) },
   }) : '';
-  const head = html`${screenHead('Jornada', { sub, action: headAction(ctx, s, { mine: Boolean(mine), first, n, group }) })}${strip}`;
+  const chosen = params.r ? n : null;
+  const head = html`${screenHead('Jornada', { sub, action: headAction(ctx, s, { mine: Boolean(mine), first, n: chosen, group }) })}${strip}`;
   if (!round) {
     // En una temporada cerrada ya no lo publicará (2012-13: el archivo del portal solo guardó las tablas).
     const why = s === ctx.portal.season ? 'La fuente todavía no ha publicado el calendario de este grupo.'

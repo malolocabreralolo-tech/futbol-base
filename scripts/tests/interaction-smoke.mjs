@@ -314,6 +314,12 @@ async function scenarios(viewport, colorScheme) {
     await click(page, '#contenido #grupo-todos', label);
     s = await paintedAs(page, 'jornada', { hash: todos, label: `${label}, todos los grupos` });
     assert.deepEqual(await page.$$eval('#contenido .round-groups > section.block', (els) => els.map((el) => el.id)), ['jornada-PG2', 'jornada-PG3'], `${label}: el mío primero`);
+    // «tabla ›» de cada grupo, un enlace corto: 44 px también de ancho.
+    const tableLinks = await page.$$eval('#contenido .round-groups .block-link', (els) => els.map((a) => {
+      const box = a.getBoundingClientRect();
+      return [Math.round(box.width) >= 44, Math.round(box.height) >= 44];
+    }));
+    assert.deepEqual(tableLinks, [[true, true], [true, true]], `${label}: «tabla ›», de 44 × 44 px o más`);
     assert.deepEqual([s.focus, s.length, s.tabs], ['grupo-todos', groupEntries + 1, ['#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria page']], `${label}: «Todos» usa replaceState`);
     const round = Number(s.round.match(/^Jornada (\d+) /)[1]);
     await click(page, '#contenido #round-next', label);

@@ -407,7 +407,7 @@ abbr[title] { text-decoration: none; }
 /* Nombre completo, con elipsis si no cabe a 320 px (spec §3.5). */
 .screen-head h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .screen-sub { margin-top: 2px; font-size: 12.5px; color: var(--mute); }
-/* Enlace o botón («Cambiar», «Otro grupo», «Compartir»): los dos en tinta y subrayados. */
+/* Enlace o botón («Cambiar», «Mi grupo», «Otras ligas», «Compartir»): los dos en tinta y subrayados. */
 .screen-action {
   display: inline-flex;
   flex: none;
@@ -727,8 +727,11 @@ abbr[title] { text-decoration: none; }
 
 /* Una ficha por grupo de la competición, sin borde y con fondo suave: la actual, rellena de tinta, y la
  * de mi equipo, en tinta y con una raya corta bajo el número (la barra de 3 px del resalte propio). Las de los grupos (.group-scroll) se deslizan
- * dentro de su caja hasta el borde derecho de la pantalla (la página nunca, §8), con ajuste a cada
- * ficha; «Todos» (Jornada) se queda fija a su izquierda, tras una raya fina. En escritorio, en filas.
+ * dentro de su caja hasta el borde derecho de la pantalla (la página nunca, §8), con ajuste al
+ * principio de cada ficha (scroll-padding = su relleno izquierdo): a la izquierda, siempre una entera, y
+ * el corte, a la derecha; scrollToCurrent usa las mismas paradas y, si hace falta, alarga el final de la
+ * tira (--strip-tail) para que también al final quede una entera a la izquierda. «Todos» (Jornada) se
+ * queda fija a su izquierda, tras una raya fina. En escritorio, en filas.
  * position: relative hace de la caja la referencia de offsetLeft (scrollToCurrent) y contiene lo
  * absoluto de sus fichas. El padding vertical deja sitio al contorno de foco, que la caja recortaría. */
 .group-strip {
@@ -744,7 +747,7 @@ abbr[title] { text-decoration: none; }
   gap: 8px;
   min-width: 0;
   margin-right: calc(-1 * var(--gutter));
-  padding: 3px var(--gutter) 3px 3px;
+  padding: 3px calc(var(--gutter) + var(--strip-tail, 0px)) 3px 3px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
@@ -757,7 +760,7 @@ abbr[title] { text-decoration: none; }
   padding-left: var(--gutter);
   scroll-padding-inline: var(--gutter);
 }
-.group-chip.is-all + .group-scroll { padding-left: 8px; border-left: 1px solid var(--line); }
+.group-chip.is-all + .group-scroll { padding-left: 8px; border-left: 1px solid var(--line); scroll-padding-left: 8px; }
 .group-chip {
   position: relative;
   display: flex;
@@ -773,7 +776,7 @@ abbr[title] { text-decoration: none; }
   font-weight: 700;
   color: var(--text);
   text-decoration: none;
-  scroll-snap-align: center;
+  scroll-snap-align: start;
 }
 .group-chip.is-all { padding: 0 16px; }
 .group-chip.is-mine { color: var(--ink); }
@@ -831,6 +834,8 @@ abbr[title] { text-decoration: none; }
   min-height: 44px;
   font-weight: 700;
 }
+/* «tabla ›» de «Todos los grupos» es más corto que el dedo: 44 px de ancho, con el texto a la derecha. */
+.block-link { min-width: 44px; justify-content: flex-end; }
 /* Goleadores del grupo: la tabla de la clasificación con sus propias columnas (la de la portada es .scorers). */
 .group-scorers .sc-goals { width: 52px; }
 .group-scorers .sc-pj { width: 36px; }

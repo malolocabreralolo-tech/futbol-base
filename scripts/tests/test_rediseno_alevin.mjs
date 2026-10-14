@@ -277,8 +277,8 @@ test('needsAlevin: lo que la pantalla pinta con alevín (c=alevin, Explorar, Lig
   assert.equal(need('#/fuentes'), null);
   assert.deepEqual(need('#/', { myTeam: MESAS_AL1 }), { season: PORTAL_SEASON, soft: false });
   assert.deepEqual(need('#/records', { myTeam: MESAS_AL1 }), { season: PORTAL_SEASON, soft: false }, 'la categoría por defecto es la de mi equipo');
-  assert.deepEqual(need('#/', { myTeam: { ...DEFAULT_TEAM, season: '2024-2025' } }), { season: PORTAL_SEASON, soft: false },
-    'cambio de temporada: el paso 1 busca en las tres categorías (opción a de la crítica)');
+  assert.deepEqual(need('#/', { myTeam: { ...DEFAULT_TEAM, season: '2024-2025' } }), { season: PORTAL_SEASON, soft: true },
+    'cambio de temporada: el paso 1 busca en las tres categorías (opción a de la crítica); si no llega, sin él');
   assert.equal(need('#/explorar', { datasets: withAlevin() }), null, 'ya cargado');
   // Una temporada pasada: su data-season-<S>-alevin.js.
   assert.deepEqual(need('#/explorar?s=2024-2025'), { season: '2024-2025', soft: true });
@@ -536,4 +536,47 @@ test('Récords de alevín: el detalle de cada fila sin la categoría, que ya dic
   assert.ok(details.length > 0);
   assert.ok(details.every((d) => !d.includes('Alevín')), details.join(' | '));
   assert.ok(details.some((d) => d.startsWith('Primera Fase, Grupo 1')), details.join(' | '));
+});
+
+test('«Todos los grupos» de alevín en frío (#/jornada?c=alevin&f=primera-fase): espera al alevín, nunca el falso «No encontramos la competición»', async () => {
+  const hash = '#/jornada?c=alevin&f=primera-fase';
+  const { b, router, log } = routerWith(hash);
+  await router.idle();
+  assert.deepEqual(log, [PORTAL_SEASON]);
+  assert.equal(b.hash(), hash);
+  assert.match(b.root.innerHTML, /^<section data-screen="jornada"/);
+  assert.doesNotMatch(b.root.innerHTML, /No encontramos|route-notice/);
+  // Si falla, la caja de error de alevín.
+  const failed = routerWith(hash, { fails: 1 });
+  await failed.router.idle();
+  assert.equal(failed.b.hash(), hash);
+  assert.match(failed.b.root.innerHTML, /No se pudieron cargar los datos de alevín\./);
+  // Una de benjamín que no existe no espera al alevín: a Ligas, con su aviso.
+  const lost = routerWith('#/jornada?c=benjamin&f=no-existe');
+  await lost.router.idle();
+  assert.deepEqual(lost.log, []);
+  assert.match(lost.b.root.innerHTML, /No encontramos la competición no-existe/);
+});
+
+test('la barra, con el alevín ya cargado: la ficha y un partido de mi equipo alevín, abiertos en frío, marcan Mi equipo', async () => {
+  for (const hash of ['#/equipo?g=AL1&t=Las%20Mesas%20Hu.', '#/partido?g=AL1&r=Jornada%201&h=Las%20Mesas%20Hu.&a=Maspalomas']) {
+    const { b, router } = routerWith(hash, { myTeam: MESAS_AL1 });
+    await router.idle();
+    assert.deepEqual(b.marks(), [['#/', 'true']], hash);
+  }
+});
+
+test('mi equipo de otra temporada que no es de alevín: espera al alevín, pero si no llega se pinta sin él (nunca la caja de error)', async () => {
+  const lastYear = { name: 'UD Valleseco', season: '2024-2025', cat: 'benjamin', groupId: 'P1' };
+  const ctx = ctxFor('', {}, { datasets: pending(), myTeam: lastYear });
+  assert.deepEqual(needsAlevin({ screen: '', params: {} }, ctx), { season: PORTAL_SEASON, soft: true });
+  assert.deepEqual(resolve('#/tabla', { datasets: pending(), myTeam: lastYear }), { params: { s: PORTAL_SEASON }, alevin: PORTAL_SEASON, soft: true });
+  for (const hash of ['#/', '#/jornada', '#/tabla']) {
+    const { b, router, log } = routerWith(hash, { fails: 1, myTeam: lastYear });
+    await router.idle();
+    assert.deepEqual(log, [PORTAL_SEASON], hash);
+    assert.doesNotMatch(b.root.innerHTML, /data-state="error"|No se pudieron/, hash);
+    assert.match(b.root.innerHTML, hash === '#/' ? /<h1>UD Valleseco<\/h1>/ : /<p class="screen-sub">Benjamín, /, hash);
+  }
+  // Mi equipo alevín sí da la caja de error (sin alevín, X por error): la prueba de arriba.
 });

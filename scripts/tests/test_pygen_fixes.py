@@ -909,8 +909,9 @@ class TestGeneratorOutputs:
         generate_js.main()
         written = sorted(p.name for p in site.glob("data-*"))
         assert [name for name in written if _RETIRED.match(name)] == [], "el generador escribe datos retirados"
+        # data-alevin.js, siempre, aunque la base no tenga alevín (docs/alevin.md §4).
         assert written == [
-            "data-benjamin.js", "data-goleadores.js", "data-history.js",
+            "data-alevin.js", "data-benjamin.js", "data-goleadores.js", "data-history.js",
             "data-lineups-2024-2025-PG2.js", "data-lineups-2025-2026-A1.js", "data-matchdetail.js",
             "data-prebenjamin.js", "data-season-2024-2025.js", "data-seasons.js",
         ]

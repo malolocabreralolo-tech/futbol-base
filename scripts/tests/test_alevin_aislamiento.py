@@ -326,3 +326,20 @@ def test_groups_of_the_current_season_only_come_from_the_activation(tmp_path):
     report = GR.import_season(conn, str(tmp_path), "2026-2027", log=lambda *a: None)
     assert report["created"] == 0
     assert conn.execute("SELECT count(*) FROM groups").fetchone()[0] == 1
+
+
+def test_crests_of_an_alevin_group_never_go_to_the_benjamin_group(tmp_path, monkeypatch):
+    """escudos_federacion: los escudos de un grupo del raw de goleadores se casan con su grupo por
+    match_group, de su categoría; sin grupo alevín en la base, un grupo alevín no da candidatos."""
+    import escudos_federacion as E
+    monkeypatch.setattr(E, "SHIELDS_PATH", tmp_path / "data-shields.js")
+    (tmp_path / "data-shields.js").write_text("const SHIELDS={};\n", encoding="utf-8")
+    conn = base(season="2025-2026", current=0)
+    crests = {t: f"https://laspalmas.filesnovanet.es/pnfg/pimg/Clubes/{i}.png" for i, t in enumerate(FED)}
+    raw = {"54422881:1": {**entry(ALEVIN_COMP, comp="54422881"), "crests": crests}}
+    (tmp_path / "fiflp_goleadores_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    assert E.candidates(conn, folder=tmp_path) == {}
+    # El mismo grupo, de benjamín: sus escudos sí van a los equipos de FF1.
+    raw = {"54422885:1": {**entry(BENJAMIN_COMP, comp="54422885"), "crests": crests}}
+    (tmp_path / "fiflp_goleadores_2025-2026_raw.json").write_text(json.dumps(raw), encoding="utf-8")
+    assert sorted(E.candidates(conn, folder=tmp_path)) == sorted(TEAMS)

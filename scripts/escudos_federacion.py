@@ -16,6 +16,10 @@ directorio de equipos que baja detalle-federacion.yml), solo si su nombre oficia
 base (team_score), y un filial sin escudo toma el de su primer equipo ('Victoria B' el de 'Victoria'),
 como los que ya están en data-shields.js, sin bajar nada.
 
+Alevín entra igual (docs/alevin.md): los raws de goleadores bajados con --categorias alevin traen sus
+grupos, y match_group solo los casa con grupos alevín de la base (nunca con el de benjamín de los mismos
+clubes); los equipos alevín son los mismos clubes, así que la mayoría ya tienen escudo.
+
 A mano, como trim_shields.py (el bot no toca escudos/):
     python3 scripts/escudos_federacion.py            # informe
     python3 scripts/escudos_federacion.py --write

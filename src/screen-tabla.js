@@ -2,10 +2,19 @@
 // (cinco en móvil; Todas, Casa y Fuera en escritorio), la clasificación con la fila propia,
 // la forma, casa y fuera con su cobertura, los goleadores del grupo, la procedencia y
 // «Otro grupo». Una sola tabla: por debajo de 1024 px el CSS deja las columnas de la vista.
+// La Evolución del grupo (v=evolucion y v=posiciones) va en la misma pantalla: la línea de puntos de
+// cada equipo o la rejilla de su puesto tras cada jornada, calculadas con el calendario. Bajo la
+// cabecera, los otros grupos de la competición («‹ Grupo 5 de 24 ›») y el atajo a Jornada y Evolución.
 import { html } from './html.js';
-import { block, screenHead, standingsTable, segmented, crest, notice, empty, listEs, sourcePhrase } from './ui.js';
+import {
+  block, screenHead, standingsTable, segmented, crest, notice, empty, listEs, sourcePhrase, pointsChart, groupNav, groupViews,
+  scrollToCurrent,
+} from './ui.js';
 import { errorBox } from './shell.js';
-import { lastResults, homeAwayTable, retiredTeams, groupFinished, playerName, sourceInfo, seasonLabel } from './model.js';
+import {
+  lastResults, homeAwayTable, retiredTeams, groupFinished, groupProgression, playerName, sourceInfo, seasonLabel,
+  siblingGroups,
+} from './model.js';
 import { routeHref, teamHref } from './links.js';
 import { groupScorers, seasonNeeds } from './state.js';
 import { myTeamIn } from './myteam.js';
@@ -14,7 +23,10 @@ const NARROW = [['puntos', 'Puntos'], ['goles', 'Goles'], ['forma', 'Forma'], ['
   .map(([value, label]) => ({ value, label }));
 // Escritorio: todas las columnas y, además, Casa y Fuera (decisión 15 de B1).
 const WIDE = [['todas', 'Todas'], ['casa', 'Casa'], ['fuera', 'Fuera']].map(([value, label]) => ({ value, label }));
-const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas'];
+// La Evolución del grupo: la línea de puntos de cada equipo (v=evolucion) o su puesto tras cada
+// jornada (v=posiciones); los ids, evo-puntos y evo-posiciones.
+const EVOLUTION = [['puntos', 'Puntos'], ['posiciones', 'Posiciones']].map(([value, label]) => ({ value, label }));
+const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas', 'evolucion', 'posiciones'];
 
 // Cobertura de Casa y Fuera (spec §7), que salen del calendario: los partidos con resultado
 // entre equipos activos frente a los que cuenta la clasificación oficial (la suma de J entre
@@ -118,11 +130,75 @@ function sourceLine(group, historical) {
   return html`<p class="notice source-line">${say}${archive}${info.url ? html` <a class="source-link" href="${info.url}" target="_blank" rel="noopener noreferrer">Ver fuente</a>` : ''}</p>`;
 }
 
+// ── Evolución del grupo (groupProgression de model.js) ──────────────────
+
+const CALCULATED = 'Calculada desde el calendario: sin desempates ni sanciones de la federación.';
+
+// Lo que la evolución, que sale del calendario, no cuadra con la clasificación oficial: la cobertura
+// de Casa y Fuera (los partidos que no están en el calendario) o, si cuentan los mismos, los equipos a
+// los que la oficial da otros puntos, sin inventar la causa (decisión 163 de B3). null si cuadra.
+function evolutionNote(group, evo) {
+  const coverage = homeAwayCoverage(group);
+  if (coverage) return notice(null, coverageText(coverage));
+  const official = new Map((group.standings || []).map(row => [row.team, row.pts]));
+  const off = evo.rows.filter(row => !row.retired && official.has(row.team) && official.get(row.team) != null
+    && row.pts[evo.played - 1] !== official.get(row.team)).map(row => row.team);
+  return off.length ? notice('Nota:', `la clasificación oficial da otros puntos a ${listEs(off)}.`) : null;
+}
+
+// Puntos: una fila por equipo en el orden de la clasificación (#, escudo y nombre), su línea de puntos
+// jornada a jornada con el mismo tope para todos (pointsChart: sólida, en tinta, decorativa) y los Pts
+// de la clasificación en texto. El retirado, con la palabra y sin línea.
+function evolutionPoints(group, evo, { mine, shields, s }) {
+  const official = new Map((group.standings || []).map(row => [row.team, row]));
+  const max = Math.max(0, ...evo.rows.map(row => row.pts[evo.played - 1] ?? 0));
+  const body = evo.rows.map((row, i) => {
+    const own = official.get(row.team);
+    const isMine = mine != null && row.team === mine;
+    const line = row.retired ? html`<span class="st-retired">retirado</span>` : pointsChart(row.pts.map(pts => ({ pts })), { max });
+    return html`<tr${isMine ? html` class="is-mine"` : ''}><td class="st-pos">${own && own.pos != null ? own.pos : i + 1}</td><th scope="row" class="st-team"><a class="st-link" href="${teamHref(s, group.id, row.team)}">${crest(row.team, { shields })}<span class="st-name">${row.team}</span></a>${isMine ? html`<span class="vh"> (mi equipo)</span>` : ''}</th><td class="evo-line">${line}</td><td class="st-pts">${own ? own.pts : row.pts[evo.played - 1]}</td></tr>`;
+  });
+  return html`<div class="box"><table class="standings evo-table"><caption class="vh">Evolución de puntos de ${group.label}</caption><thead><tr><th scope="col" class="st-pos"><abbr title="Posición">#</abbr></th><th scope="col" class="st-team">Equipo</th><th scope="col" class="evo-line">Jornada a jornada</th><th scope="col" class="st-pts"><abbr title="Puntos">Pts</abbr></th></tr></thead><tbody>${body}</tbody></table></div>`;
+}
+
+// Posiciones: la rejilla de su puesto tras cada jornada jugada, una columna por jornada, con el equipo
+// en la primera columna, fija, y el resto deslizándose dentro de la caja (mount la lleva al final); el
+// líder de cada jornada, en tinta, y mi fila con el resalte propio. Una tabla de verdad.
+function evolutionGrid(group, evo, { mine, shields, s }) {
+  const rounds = evo.rounds.slice(0, evo.played);
+  const head = rounds.map(r => html`<th scope="col"><abbr title="${r.label}">${r.n ?? r.label}</abbr></th>`);
+  const body = evo.rows.map((row) => {
+    const isMine = mine != null && row.team === mine;
+    const cells = row.retired
+      ? html`<td class="evo-retired" colspan="${rounds.length}"><span class="st-retired">retirado</span></td>`
+      : rounds.map((r, i) => (row.pos[i] === 1 ? html`<td class="is-leader">1</td>` : html`<td>${row.pos[i]}</td>`));
+    return html`<tr${isMine ? html` class="is-mine"` : ''}><th scope="row" class="evo-team"><a class="st-link" href="${teamHref(s, group.id, row.team)}">${crest(row.team, { shields })}<span class="st-name">${row.team}</span></a>${isMine ? html`<span class="vh"> (mi equipo)</span>` : ''}</th>${cells}</tr>`;
+  });
+  return html`<div class="box evo-scroll" role="region" aria-label="Puesto tras cada jornada; se desliza en horizontal" tabindex="0"><table class="evo-grid"><caption class="vh">Puesto de cada equipo tras cada jornada en ${group.label}</caption><thead><tr><th scope="col" class="evo-team">Equipo</th>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+}
+
+// La vista Evolución: «Puntos | Posiciones», el bloque y sus avisos; con menos de dos jornadas
+// jugadas, el vacío.
+function evolutionView(group, v, opts) {
+  const href = value => routeHref('tabla', { s: opts.s, g: group.id, v: value === 'puntos' ? 'evolucion' : value });
+  const views = html`<nav class="evo-views" aria-label="Evolución del grupo">${segmented(EVOLUTION, v === 'posiciones' ? v : 'puntos', href, { idPrefix: 'evo' })}</nav>`;
+  const title = v === 'posiciones' ? 'Puesto tras cada jornada' : 'Evolución de puntos';
+  const evo = groupProgression(group);
+  if (evo.played < 2) {
+    return html`${views}${block(title, empty('Todavía no hay evolución: se ve a partir de la segunda jornada jugada.'))}`;
+  }
+  const content = v === 'posiciones' ? evolutionGrid(group, evo, opts) : evolutionPoints(group, evo, opts);
+  const note = evolutionNote(group, evo);
+  return html`${views}${block(title, content, { context: 'desde el calendario' })}${notice(null, CALCULATED)}${note || ''}`;
+}
+
 function render(ctx) {
   const { params, model, today } = ctx;
   const shields = (ctx.datasets && ctx.datasets.shields) || {};
   const s = params.s || ctx.portal.season;
-  const other = g => ({ href: routeHref('ligas', { s, c: g && g.cat, i: g && g.island, to: 'tabla' }), label: 'Otro grupo' });
+  // «Otro grupo»: con grupos hermanos, directo a la lista de los de su competición (f); si no, a las
+  // ligas de su categoría y su isla.
+  const other = (g, nav = null) => ({ href: routeHref('ligas', { s, c: g && g.cat, i: g && g.island, f: nav ? g.compKey : '', to: 'tabla' }), label: 'Otro grupo' });
   // Sin la temporada (needs no la trajo): la caja de error, nunca otra temporada (§7).
   if (!model.season(s)) {
     return html`<section data-screen="tabla">${screenHead('Tabla', { action: other(null) })}${errorBox(`la temporada ${seasonLabel(s)}`)}</section>`;
@@ -133,13 +209,27 @@ function render(ctx) {
     return html`<section data-screen="tabla">${screenHead('Tabla', { action: other(null) })}${empty(why)}</section>`;
   }
   const historical = s !== ctx.portal.season;
-  const head = screenHead('Tabla', { sub: historical ? `${group.label} · ${seasonLabel(s)}` : group.label, action: other(group) });
+  const v = VIEWS.includes(params.v) ? params.v : 'puntos';
+  const evolution = v === 'evolucion' || v === 'posiciones';
+  // Los otros grupos de su competición, «‹ Grupo 5 de 24 ›» (conservan la vista), y el atajo a la
+  // Jornada y a la Evolución del grupo, debajo de la cabecera.
+  const siblings = siblingGroups(model, group);
+  const mineId = siblings && (siblings.list.find(g => myTeamIn(g, ctx.myTeam, ctx.resolution)) || {}).id;
+  const keep = v === 'puntos' || v === 'todas' ? '' : v;
+  const groupBar = html`${siblings ? groupNav(siblings, {
+    hrefFor: g => routeHref('tabla', { s, g: g.id, v: keep }),
+    listHref: routeHref('ligas', { s, c: group.cat, f: group.compKey, to: 'tabla' }), mineId,
+  }) : ''}${groupViews(group, evolution ? 'evolucion' : 'tabla')}`;
+  const head = html`${screenHead('Tabla', { sub: historical ? `${group.label} · ${seasonLabel(s)}` : group.label, action: other(group, siblings) })}${groupBar}`;
+  if (evolution) {
+    const mine = myTeamIn(group, ctx.myTeam, ctx.resolution);
+    return html`<section data-screen="tabla">${head}${evolutionView(group, v, { mine, shields, s })}</section>`;
+  }
   const scorers = scorersBlock(group, groupScorers(model.scorers(s, group.cat), group.id), historical, shields);
   const source = sourceLine(group, historical);
   if (!group.standings.length) {
     return html`<section data-screen="tabla">${head}${block('Clasificación', empty('Clasificación sin publicar.'))}${scorers}${source}</section>`;
   }
-  const v = VIEWS.includes(params.v) ? params.v : 'puntos';
   const side = v === 'casa' || v === 'fuera' ? v : null;
   // Puntos (móvil) y Todas (escritorio) son la vista por defecto: sin `v` en el enlace.
   const href = value => routeHref('tabla', { s, g: group.id, v: value === 'puntos' || value === 'todas' ? '' : value });
@@ -164,8 +254,17 @@ function render(ctx) {
   return html`<section data-screen="tabla">${head}${views}${table}${extra}${scorers}${source}</section>`;
 }
 
+// Al montar, la tira de grupos se desliza hasta el actual y la rejilla de posiciones, hasta las últimas
+// jornadas, cada una dentro de su caja: la página no se mueve (scrollLeft, nunca scrollIntoView).
+function mount(root) {
+  scrollToCurrent(root.querySelector('.group-strip'));
+  const grid = root.querySelector('.evo-scroll');
+  if (grid) grid.scrollLeft = Math.max(0, grid.scrollWidth - grid.clientWidth);
+}
+
 export const screen = {
   id: 'tabla',
   needs: (params, datasets, { portalSeason } = {}) => seasonNeeds(params.s, datasets, portalSeason),
   render,
+  mount,
 };

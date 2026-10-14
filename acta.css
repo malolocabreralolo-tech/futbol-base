@@ -689,7 +689,7 @@ abbr[title] { text-decoration: none; }
   margin-top: 14px;
   border: 1.5px solid var(--ink);
 }
-.round-step {
+.round-step, .group-step {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -699,7 +699,7 @@ abbr[title] { text-decoration: none; }
   color: var(--ink);
   text-decoration: none;
 }
-.round-step.is-off { color: var(--rule); }
+.round-step.is-off, .group-step.is-off { color: var(--rule); }
 .round-now {
   min-width: 0;
   padding: 8px 6px;
@@ -721,6 +721,107 @@ abbr[title] { text-decoration: none; }
     column-gap: 24px;
     align-items: start;
   }
+}
+
+/* ── Navegación entre grupos (Tabla y Jornada): «‹ Grupo 5 de 24 ›», la tira y el atajo ── */
+
+/* Como «‹ Jornada N de M ›»: los pasos son los de la jornada y el centro, un enlace a la lista de los
+ * grupos de la competición, con la competición y el líder debajo. */
+.group-nav { margin-top: 14px; }
+.group-steps {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 52px;
+  border: 1.5px solid var(--ink);
+}
+.group-now {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 56px;
+  padding: 6px;
+  border-right: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+  color: var(--text);
+  text-align: center;
+  text-decoration: none;
+}
+.group-title {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+.group-sub { overflow: hidden; font-size: 12.5px; font-weight: 600; color: var(--mute); text-overflow: ellipsis; white-space: nowrap; }
+/* La tira de números, con más de seis grupos: se desliza dentro de su caja (la página nunca, §8) y
+ * cada casilla ajusta al borde; el actual, relleno de tinta, y el de mi equipo, con el resalte propio. */
+/* position: relative contiene el texto oculto (.vh, absoluto) de cada casilla: sin ella, escapa del
+ * recorte de la tira y la página entera se desplaza en horizontal. */
+.group-strip {
+  position: relative;
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+.group-chip {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 1.5px solid var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  scroll-snap-align: center;
+}
+.group-chip[aria-current] { background: var(--ink); color: var(--on-ink); }
+.group-chip.is-mine { background: var(--mark); box-shadow: inset 0 -3px 0 var(--ink); }
+.group-chip.is-mine[aria-current] { background: var(--ink); color: var(--on-ink); box-shadow: inset 0 -3px 0 var(--on-ink); }
+/* El contorno de foco, dentro de la casilla: la tira recorta lo que sale de ella. */
+.group-strip .group-chip:focus-visible { outline-offset: -5px; }
+.group-strip .group-chip[aria-current]:focus-visible { outline-color: var(--on-ink); }
+.group-views { margin-top: 10px; }
+/* «Este grupo | Todos (N)», encima de «‹ Jornada N de M ›». */
+.round-scope { margin-top: 10px; }
+/* «Todos los grupos»: el índice para saltar a cada grupo (casillas como las de la tira, con anclas),
+ * los días de cada grupo y «mi grupo» junto a su título; en escritorio, los grupos en dos columnas. */
+.group-index .group-strip { margin-top: 10px; }
+.group-day { margin: 0 0 6px; font-size: 12.5px; font-weight: 700; color: var(--mute); }
+.box + .group-day { margin-top: 10px; }
+.block-mine { font-weight: 600; color: var(--mute); }
+@media (min-width: 1024px) {
+  .round-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    column-gap: 24px;
+    align-items: start;
+  }
+}
+
+/* Escritorio: caben todas a la vista, en filas, sin deslizar. */
+@media (min-width: 1024px) {
+  .group-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    overflow: visible;
+  }
+}
+
+@media (hover: hover) {
+  a.group-now:hover .group-title { text-decoration-color: currentColor; }
+  a.group-chip:not([aria-current]):hover { text-decoration: underline; }
 }
 
 /* ── Tabla: vistas, goleadores y procedencia (spec §4.4) ──────────────── */
@@ -758,6 +859,62 @@ abbr[title] { text-decoration: none; }
   [data-screen="tabla"] .standings .st-dg { width: 56px; }
   [data-screen="tabla"] .standings .st-form { width: 124px; padding-left: 14px; }
   [data-screen="tabla"] .standings .st-pts { width: 48px; }
+}
+
+/* ── Tabla: Evolución del grupo (v=evolucion y v=posiciones) ─────────────── */
+
+.evo-views { margin-top: 14px; }
+/* Puntos: la línea de cada equipo (pointsChart de ui.js, la de la ficha), pequeña y con el mismo tope
+ * en todas las filas; el dato va en texto, en Pts. */
+.evo-table .evo-line { width: 40%; padding: 0 8px; }
+.evo-table td.evo-line { text-align: left; }
+.evo-line .points-chart { height: 28px; }
+/* Posiciones: la rejilla se desliza dentro de su caja, nunca la página (la excepción de §8, como el
+ * cuadro de copa); la columna del equipo se queda fija, con fondo propio para tapar lo que pasa por
+ * debajo, y su nombre se recorta. */
+.evo-scroll { position: relative; overflow-x: auto; overscroll-behavior-x: contain; }
+.evo-grid { min-width: 100%; border-collapse: separate; border-spacing: 0; }
+.evo-grid th, .evo-grid td {
+  min-width: 30px;
+  height: 44px;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  white-space: nowrap;
+}
+.evo-grid thead th {
+  height: auto;
+  padding: 6px 4px;
+  border-bottom: 1.5px solid var(--ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--mute);
+}
+.evo-grid tbody tr:last-child > * { border-bottom: 0; }
+.evo-grid .evo-team {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  padding: 0 8px 0 6px;
+  border-right: 1px solid var(--rule);
+  background: var(--paper);
+  font-weight: 400;
+  text-align: left;
+}
+.evo-grid .evo-team .st-link { max-width: 9.5rem; }
+.evo-grid .is-leader { color: var(--ink); font-weight: 800; }
+/* «retirado» ocupa toda la fila: pegado al borde derecho de lo que se ve, se lee en cualquier punto
+ * del desplazamiento (mount la abre al final). */
+.evo-grid .evo-retired { text-align: right; }
+.evo-retired .st-retired { position: sticky; right: 8px; }
+.evo-grid tr.is-mine > * { background: var(--mark); color: var(--ink); font-weight: 800; }
+.evo-grid tr.is-mine > :first-child { box-shadow: inset 3px 0 0 var(--ink); }
+/* El contorno de foco del nombre cae dentro de la columna fija, que recorta por la izquierda. */
+.evo-grid .st-link:focus-visible { outline-offset: -3px; }
+
+@media (min-width: 1024px) {
+  .evo-views { max-width: 480px; }
+  .evo-grid .evo-team .st-link { max-width: 16rem; }
 }
 
 /* ── Partido (spec §4.5) ──────────────────────────────────────────────── */

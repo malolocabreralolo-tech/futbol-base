@@ -39,7 +39,8 @@ test('PG2 por defecto: cinco vistas en móvil (Puntos), Todas, Casa y Fuera en e
   assert.match(out, /^<section data-screen="tabla">/);
   assert.equal((out.match(/<h1[ >]/g) || []).length, 1);
   assert.match(out, /<h1>Tabla<\/h1><p class="screen-sub">Prebenjamín, Grupo 2 de Gran Canaria<\/p>/);
-  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;to=tabla">Otro grupo<\/a>/);
+  // Con grupos hermanos (PG3), «Otro grupo» va directo a la lista de grupos de su competición (f).
+  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;f=grancanaria&amp;to=tabla">Otro grupo<\/a>/);
   assert.deepEqual(labels(nav(out, 'narrow')), ['Puntos', 'Goles', 'Forma', 'Casa', 'Fuera']);
   assert.deepEqual(active(nav(out, 'narrow')), ['Puntos']);
   assert.deepEqual(labels(nav(out, 'wide')), ['Todas', 'Casa', 'Fuera']);

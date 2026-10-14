@@ -163,13 +163,16 @@ test('Equipo: g es obligatorio; sin él, el equipo se busca en Explorar', () => 
 
 // ── historyMode, parentOf, activeTab y routeIsMine ───────────────────────
 
-test('historyMode: cambiar de pantalla es push; jornada, vista de Tabla o búsqueda, replace', () => {
+test('historyMode: cambiar de pantalla es push; jornada, vista de Tabla, grupo o búsqueda, replace', () => {
   const R = parseRoute;
   assert.equal(historyMode(null, R('#/tabla')), 'push');
   assert.equal(historyMode(R('#/'), R('#/jornada')), 'push');
   assert.equal(historyMode(R('#/jornada?g=PG2&r=Jornada%201'), R('#/jornada?g=PG2&r=Jornada%202')), 'replace');
   assert.equal(historyMode(R('#/jornada?g=PG2'), R('#/jornada?g=PG2&r=Jornada%202')), 'replace');
-  assert.equal(historyMode(R('#/jornada?g=PG2&r=Jornada%201'), R('#/jornada?g=PG3&r=Jornada%201')), 'push');
+  // Cambiar de grupo en Jornada o en Tabla («‹ Grupo 2 de 4 ›» y la tira de números) se recorre como
+  // las jornadas: replace, y Atrás vuelve a donde se estaba antes de recorrerlos.
+  assert.equal(historyMode(R('#/jornada?g=PG2&r=Jornada%201'), R('#/jornada?g=PG3&r=Jornada%201')), 'replace');
+  assert.equal(historyMode(R('#/tabla?g=PG2&v=forma'), R('#/tabla?g=PG3&v=forma')), 'replace');
   assert.equal(historyMode(R('#/tabla?g=PG2&v=puntos'), R('#/tabla?g=PG2&v=forma')), 'replace');
   assert.equal(historyMode(R('#/tabla?g=PG2'), R('#/tabla?s=2024-2025&g=PG2')), 'push');
   assert.equal(historyMode(R('#/explorar?q=Mes'), R('#/explorar?q=Mesas')), 'replace');

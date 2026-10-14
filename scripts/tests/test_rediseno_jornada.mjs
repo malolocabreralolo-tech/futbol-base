@@ -28,7 +28,8 @@ test('PG2, jornada 30: cabecera, «Jornada 30 de 30», del 2 al 6 de junio y el 
   assert.match(out, /^<section data-screen="jornada">/);
   assert.equal((out.match(/<h1[ >]/g) || []).length, 1);
   assert.match(out, /<h1>Jornada<\/h1><p class="screen-sub">Prebenjamín, Grupo 2 de Gran Canaria<\/p>/);
-  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;to=jornada">Otro grupo<\/a>/);
+  // Con grupos hermanos (PG3), «Otro grupo» va directo a la lista de grupos de su competición (f).
+  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;f=grancanaria&amp;to=jornada">Otro grupo<\/a>/);
   assert.equal(title(out), 'Jornada 30 de 30');
   assert.match(out, /<p class="round-dates">del 2 al 6 de junio<\/p>/);
   assert.equal(noticeOf(out), 'Sin partido en esta jornada: RC Victoria y Arucas B (descansa o le tocaba contra CD Batán)');
@@ -280,7 +281,8 @@ test('la pantalla es pura y usa solo clases que existen en acta.css', () => {
 
 test('CSS: acción y flechas de 44 px o más, y los días en dos columnas solo desde 1024 px', () => {
   const rules = cssRules();
-  const body = (selector, media = null) => rules.filter(r => r.media === media && r.selector === selector).map(r => r.body).join(';');
+  // Una regla vale para cada selector de su lista: «‹ ›» de la jornada comparten la suya con los del grupo.
+  const body = (selector, media = null) => rules.filter(r => r.media === media && r.selector.split(',').map(x => x.trim()).includes(selector)).map(r => r.body).join(';');
   assert.match(body('.screen-action'), /min-height:\s*44px/);
   assert.match(body('.round-step'), /min-height:\s*56px/);
   assert.match(body('.screen-head'), /border-bottom:\s*2px solid var\(--ink\)/);

@@ -1,7 +1,7 @@
 // Identidad de club y «mi equipo» a través de temporadas y fases (spec §6).
 // Módulo puro: recibe los datos por parámetro y no lee ningún global de datos.
 import { normalizeForTeamsMapping, shieldFile } from './state.js';
-import { matchState, retiredTeams, groupFinished, teamFixtures, phaseLevel, topPhase } from './model.js';
+import { CATEGORIES, matchState, retiredTeams, groupFinished, teamFixtures, phaseLevel, topPhase } from './model.js';
 
 // Nombres de torneos y de la federación que no se pueden unir por escudo ni por clave base.
 // Además del de la Maspalomas, los de 2025-26 que cambian de la Primera Fase a la siguiente
@@ -99,8 +99,6 @@ export function sameClub(index, a, b) {
 }
 
 // ---- Resolución de mi equipo (spec §6.3) ----
-
-const CATS = ['benjamin', 'prebenjamin'];
 
 const allMatches = group => group.rounds.flatMap(round => round.matches);
 
@@ -214,8 +212,9 @@ export function resolveMyTeam(myTeam, season, index, todayISO) {
     // Paso 2: el grupo guardado ya no sirve; se busca solo en su categoría.
     return choose(clubCandidates(season, [myTeam.cat], myTeam.name, index, todayISO), myTeam);
   }
-  // Paso 1: cambio de temporada; se busca en ambas categorías, primero en la suya.
-  const cats = [myTeam.cat, ...CATS.filter(cat => cat !== myTeam.cat)];
+  // Paso 1: cambio de temporada; se busca en las tres categorías, primero en la suya (el paso natural de
+  // benjamín a alevín, critic.md: por eso el router espera al alevín en un cambio de temporada).
+  const cats = [myTeam.cat, ...CATEGORIES.filter(cat => cat !== myTeam.cat)];
   return choose(clubCandidates(season, cats, myTeam.name, index, todayISO), myTeam);
 }
 
@@ -338,7 +337,7 @@ export function teamTrajectory(model, name, index, seasons) {
   for (const seasonName of seasons) {
     const season = model.season(seasonName);
     if (!season) continue;
-    for (const cat of CATS) {
+    for (const cat of CATEGORIES) {
       const byName = new Map();
       for (const entry of clubTeams(leagueGroups(season, cat), name, index)) {
         if (!byName.has(entry.name)) byName.set(entry.name, []);
@@ -358,8 +357,9 @@ export function teamTrajectory(model, name, index, seasons) {
 // ---- Categoría por defecto de Goleadores y Récords (decisiones 25 y 26 de B3) ----
 
 // La de mi equipo resuelto o, sin él (E o X), la del equipo por defecto (PORTAL.defaultTeam); si
-// tampoco es una categoría de la app, benjamín. Una sola regla para las dos pantallas.
+// tampoco es una categoría de la app (CATEGORIES, alevín incluido), benjamín. Una sola regla para las
+// dos pantallas.
 export function defaultCategory(resolution, defaultTeam) {
-  if (resolution && resolution.status === 'ok' && CATS.includes(resolution.cat)) return resolution.cat;
-  return defaultTeam && CATS.includes(defaultTeam.cat) ? defaultTeam.cat : CATS[0];
+  if (resolution && resolution.status === 'ok' && CATEGORIES.includes(resolution.cat)) return resolution.cat;
+  return defaultTeam && CATEGORIES.includes(defaultTeam.cat) ? defaultTeam.cat : CATEGORIES[0];
 }

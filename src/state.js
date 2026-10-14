@@ -87,14 +87,16 @@ export function sortJornadaKeys(keys) {
 
 /* A cup / knockout group (vs a regular league group). By code prefix
  * (PCC or BC) or phase ("Copa"/"Campeón", y las finales, semifinales y torneos
- * de cierre o clausura de la federación, que se juegan aparte de su liga). */
+ * de cierre o clausura de la federación, que se juegan aparte de su liga, y
+ * las «Eliminatorias» de benjamín, prebenjamín y alevín: contrato común de
+ * alevín, punto 3). */
 export function isCupGroup(g) {
   const id = ((g && g.id) || '').toUpperCase();
   if (id.startsWith('PCC') || id.startsWith('BC')) return true;
   if (id.startsWith('MCP') || id.startsWith('MCB')) return true;
   const phase = ((g && g.phase) || '').toLowerCase();
   return phase.includes('copa') || phase.includes('campeon') || phase.includes('maspalomas')
-    || /^(?:semi)?final\b|^torneo\b|^clausura\b/.test(phase);
+    || /^(?:semi)?final\b|^torneo\b|^clausura\b|^eliminatorias\b/.test(phase);
 }
 
 /* Friendly label for a knockout round. Prefers the explicit round name in the
@@ -395,6 +397,118 @@ export async function ensureJugadores(shard) {
     }
   })();
   return _jugadoresPromise[shard];
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+ * Alevín (contrato común de alevín, puntos 4 y 5; r3.md §6). Nunca va en la
+ * carga inicial (presupuesto de 3 s, r3.md §2): data-alevin.js, la temporada
+ * del portal, y data-season-<S>-alevin.js, cada temporada pasada que tenga
+ * alevín, se piden cuando una pantalla los necesita (needsAlevin de
+ * router.js). Como ensureLineups: un vuelo por fichero, el texto leído por
+ * expresión regular (nunca el global), un 404 es «sin alevín» (y se
+ * memoriza) y un fallo da null sin memorizarse, para reintentar.
+ * ────────────────────────────────────────────────────────────────────── */
+
+// Las constantes de nivel superior de un data-*.js, { NOMBRE: valor }: una por línea, «const
+// NOMBRE=<json>;», como las escribe generate_js.py (el JSON nunca lleva un salto de línea crudo).
+function readConsts(text) {
+  const out = {};
+  for (const chunk of String(text).split(/^const /m).slice(1)) {
+    const m = chunk.match(/^([A-Z][A-Z0-9_]*)\s*=\s*([\s\S]*?);\s*$/);
+    if (m) out[m[1]] = JSON.parse(m[2]);
+  }
+  return out;
+}
+
+const objectOr = (value, fallback) => (value && typeof value === 'object' && !Array.isArray(value) ? value : fallback);
+
+/* El alevín de la temporada del portal con los nombres del registro de datos (datasets.alevin) a
+ * partir de las seis constantes de data-alevin.js: { groups: ALEVIN, stats: ALEV_STATS, history:
+ * HISTORY_ALEV, gol: GOL_ALEV, estados: ESTADOS_ALEV, equipos: EQUIPOS_ALEV }. Sin ellas (un 404,
+ * o el fichero vacío de una temporada sin alevín), todo vacío. */
+export function alevinData(consts = {}) {
+  return {
+    groups: Array.isArray(consts.ALEVIN) ? consts.ALEVIN : [],
+    stats: objectOr(consts.ALEV_STATS, null),
+    history: objectOr(consts.HISTORY_ALEV, {}),
+    gol: Array.isArray(consts.GOL_ALEV) ? consts.GOL_ALEV : [],
+    estados: objectOr(consts.ESTADOS_ALEV, {}),
+    equipos: objectOr(consts.EQUIPOS_ALEV, {}),
+  };
+}
+
+let _alevin = null;
+let _alevinPromise = null;
+export async function ensureAlevin() {
+  if (_alevin) return _alevin;
+  if (_alevinPromise) return _alevinPromise;
+  _alevinPromise = (async () => {
+    try {
+      const r = await fetchData('data-alevin.js');
+      // Sin fichero (la web de antes de alevín), sin alevín: nunca un error de carga.
+      if (r.status === 404) { _alevin = alevinData({}); return _alevin; }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      // Sin conexión y sin su copia, el SW responde con index.html: sin ALEVIN, es un fallo.
+      const consts = readConsts(await r.text());
+      if (!Array.isArray(consts.ALEVIN)) throw new Error('ALEVIN not parseable');
+      _alevin = alevinData(consts);
+      return _alevin;
+    } catch (e) {
+      console.warn('[state] ensureAlevin failed:', e.message);
+      return null;                 // error sentinel (never cached)
+    } finally {
+      _alevinPromise = null;       // allow retry after failure
+    }
+  })();
+  return _alevinPromise;
+}
+
+const _seasonAlevin = {};
+const _seasonAlevinPromise = {};
+export async function ensureSeasonAlevin(season) {
+  if (!season) return null;
+  if (_seasonAlevin[season] !== undefined) return _seasonAlevin[season];
+  if (_seasonAlevinPromise[season]) return _seasonAlevinPromise[season];
+  _seasonAlevinPromise[season] = (async () => {
+    const name = 'SEASON_' + _seasonSuffix(season) + '_ALEVIN';
+    try {
+      const r = await fetchData(`data-season-${season}-alevin.js`);
+      // Solo existe si la temporada tuvo alevín: un 404 es esa temporada sin alevín.
+      if (r.status === 404) { _seasonAlevin[season] = {}; return _seasonAlevin[season]; }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const value = readConsts(await r.text())[name];
+      if (!value || typeof value !== 'object') throw new Error(name + ' not parseable');
+      _seasonAlevin[season] = value;
+      return value;
+    } catch (e) {
+      console.warn('[state] ensureSeasonAlevin failed:', season, e.message);
+      return null;
+    } finally {
+      delete _seasonAlevinPromise[season];
+    }
+  })();
+  return _seasonAlevinPromise[season];
+}
+
+/* La carga del alevín de la temporada `name` que pide el router (loadAlevin de startRouter), como
+ * seasonNeeds: [] si ya se pidió (datasets.alevin en la del portal, datasets.seasonAlevin[name] en una
+ * pasada); si no, una promesa que lo guarda allí, o que rechaza con Error('alevín…') para la caja «No
+ * se pudieron cargar los datos de alevín» (o para el aviso de Explorar y Ligas). `ensure` y
+ * `ensureSeason`, los cargadores (las pruebas pasan otros). */
+export function alevinNeeds(name, datasets, portalSeason, { ensure = ensureAlevin, ensureSeason = ensureSeasonAlevin } = {}) {
+  if (!portalSeason) throw new TypeError('alevinNeeds: falta la temporada del portal');
+  if (name === portalSeason) {
+    if (datasets.alevin !== undefined) return [];
+    return [ensure().then((data) => {
+      if (!data) throw new Error('alevín');
+      datasets.alevin = data;
+    })];
+  }
+  if (!name || (datasets.seasonAlevin && Object.hasOwn(datasets.seasonAlevin, name))) return [];
+  return [ensureSeason(name).then((raw) => {
+    if (!raw) throw new Error(`alevín de la temporada ${String(name).replace(/^(\d{4})-\d{2}(\d{2})$/, '$1/$2')}`);
+    (datasets.seasonAlevin ||= {})[name] = raw;
+  })];
 }
 
 // data-health.json (spec §4.10 y §7): la comprobación de las fuentes, parseada, o null si no

@@ -10,6 +10,7 @@
 // migración no toca futbol-base:favorites:v1 ni las claves antiguas `season`,
 // `cat` y `theme`, que tampoco se leen.
 import { normalizeTeamName } from './state.js';
+import { CATEGORIES } from './model.js';
 
 export const STORE_KEY = 'futbol-base:v2';
 export const LEGACY_KEY = 'futbol-base:favorites:v1';
@@ -17,7 +18,10 @@ export const MAX_RECENT = 8;
 // Los jugadores seguidos (followed.js) van en su propia clave: «Borrar datos» también la borra.
 export const FOLLOWED_KEY = 'futbol-base:jugadores';
 
-const CATS = ['benjamin', 'prebenjamin'];
+// Las categorías de la app anterior (favorites.js, v1), que nunca tuvo alevín; las de la v2 son las de
+// la app (CATEGORIES de model.js, alevín incluido: si no, un equipo alevín guardado se descartaba en
+// silencio y volvía el equipo por defecto en cada carga, r3.md §3).
+const V1_CATS = ['benjamin', 'prebenjamin'];
 const isText = value => typeof value === 'string' && value !== '';
 const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 
@@ -64,10 +68,11 @@ function readJSON(store, key) {
   }
 }
 
-// Equipo de favorites.js (v1) y su clave `selected` (favoriteKey).
-const isV1Team = team => isObject(team) && isText(team.name) && CATS.includes(team.cat) && isText(team.groupId);
+// Equipo de favorites.js (v1) y su clave `selected` (favoriteKey); mi equipo de la v2.
+const isV1Team = team => isObject(team) && isText(team.name) && V1_CATS.includes(team.cat) && isText(team.groupId);
 const v1Key = team => `${team.cat}|${team.groupId}|${normalizeTeamName(team.name)}`;
-const isMyTeam = team => isV1Team(team) && isText(team.season);
+const isMyTeam = team => isObject(team) && isText(team.name) && CATEGORIES.includes(team.cat) && isText(team.groupId)
+  && isText(team.season);
 const isRecent = entry => isObject(entry) && isText(entry.s) && isText(entry.g) && isText(entry.t);
 
 // Conserva el orden de `list`: descarta inválidos y repetidos, y corta en MAX_RECENT.

@@ -5,7 +5,8 @@
 // pantalla. La cabecera de cada pantalla es screenHead (ui.js).
 // No toca el navegador al importarse.
 import { html } from './html.js';
-import { tabbar, notice, screenHead } from './ui.js';
+import { tabbar, notice, screenHead, listEs } from './ui.js';
+import { CATEGORIES, CAT_WORDS } from './model.js';
 
 const TAB_HREFS = { miequipo: '#/', jornada: '#/jornada', tabla: '#/tabla', explorar: '#/explorar' };
 
@@ -126,6 +127,15 @@ export async function retryBlock(section, id, button, load, paint) {
     title.focus({ preventScroll: true });
   }
   return fresh;
+}
+
+// El aviso de Explorar y de Ligas sin categoría cuando no llegaron los datos de alevín (ctx.alevinFailed
+// del router; contrato común de alevín): la pantalla se pinta con las otras categorías y lo dice, sin la
+// alerta de la caja de error, que es para lo que no se puede pintar. «Reintentar» lo atiende el router
+// (data-action="retry") y vuelve a pedirlo.
+export function alevinFailedBox() {
+  const others = listEs(CATEGORIES.filter((cat) => cat !== 'alevin').map((cat) => CAT_WORDS[cat]));
+  return html`<div class="block"><div class="box partial-box" role="status"><p class="partial-text">No se pudieron cargar los datos de alevín: se ven ${others}.</p><div class="buttons"><button class="button" type="button" data-action="retry">Reintentar</button></div></div></div>`;
 }
 
 // La pantalla entera cuando falla una carga o el pintado: su h1 y la caja de error.

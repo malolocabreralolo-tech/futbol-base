@@ -11,7 +11,7 @@
 // los quita (decisión 3); la barra marca el destino de `to` (activeTab).
 import { html } from './html.js';
 import { screenHead, block, countLabel, crest, decimal, empty, notice, linkRow, listEs, signed } from './ui.js';
-import { errorBox } from './shell.js';
+import { alevinFailedBox, errorBox } from './shell.js';
 import {
   CATEGORIES, CAT_NAMES, CAT_WORDS, competitions, compareGroups, groupSummary, seasonLabel,
 } from './model.js';
@@ -23,12 +23,16 @@ const shieldsOf = ctx => (ctx.datasets && ctx.datasets.shields) || {};
 const seasonOf = ctx => (ctx.params && ctx.params.s) || ctx.portal.season;
 
 /* Lo que enseña la ruta, para render y mount: la temporada, las competiciones (ya filtradas por `c`,
- * `i` y, sin `f`, por `to`) y las de la clave `f`. */
+ * `i` y, sin `f`, por `to`), las de la clave `f` y las categorías de las que habla: la `c` o, sin ella,
+ * las que tienen competiciones en la temporada (una temporada sin alevín no lo nombra), o todas si no
+ * hay ninguna. */
 export function ligasView(ctx) {
   const s = seasonOf(ctx);
   const { c = null, i = null, f = null, to = null } = ctx.params || {};
   const all = competitions(ctx.model, s, { cat: c, island: i });
-  return { s, c, i, f, to, list: f ? [] : all.filter(e => !to || e.kind === 'liga'), chosen: f ? all.filter(e => e.key === f) : [] };
+  const list = f ? [] : all.filter(e => !to || e.kind === 'liga');
+  const present = CATEGORIES.filter(cat => list.some(e => e.cat === cat));
+  return { s, c, i, f, to, list, chosen: f ? all.filter(e => e.key === f) : [], cats: c ? [c] : present.length ? present : CATEGORIES };
 }
 
 // Las competiciones con «Comparar grupos»: 2 grupos de liga o más (decisión 21).
@@ -43,10 +47,9 @@ function scopeText(cats, island) {
 // ── Sin `f`: las competiciones ───────────────────────────────────────────
 
 function competitionsBlocks(ctx, view) {
-  const { s, c, i, to, list } = view;
+  const { s, i, to, list, cats } = view;
   if (!list.length) {
     const what = to ? 'ligas' : 'competiciones';
-    const cats = c ? [c] : CATEGORIES;
     return empty(`No hay ${what} de ${listEs(cats.map(cat => CAT_WORDS[cat]))}${i ? ` en ${ISLAND_NAMES[i]}` : ''} en la temporada ${seasonLabel(s)}.`);
   }
   return CATEGORIES.map(cat => list.filter(e => e.cat === cat)).filter(entries => entries.length).map((entries) => {
@@ -110,20 +113,22 @@ function groupsBlocks(ctx, view) {
 
 function render(ctx) {
   const view = ligasView(ctx);
-  const { s, c, i, f, chosen } = view;
+  const { s, i, f, chosen } = view;
   const back = ctx.backHref;
   // La temporada de la ruta la carga el router (decisión 2 de B3); si aun así no está, la caja de
   // error con «Reintentar», nunca otra temporada (§7).
   if (!ctx.model.season(s)) {
     return html`<section data-screen="ligas">${screenHead('Ligas', { back })}${errorBox(`la temporada ${seasonLabel(s)}`)}</section>`;
   }
+  // Sin `c`, sin los datos de alevín (el router no los pudo cargar): las otras categorías, con su aviso.
+  const partial = ctx.alevinFailed ? alevinFailedBox() : '';
   if (f && chosen.length) {
     const cats = [...new Set(chosen.map(e => e.cat))];
     const head = screenHead(chosen[0].label, { sub: `${scopeText(cats, null)} · ${seasonLabel(s)}`, back });
-    return html`<section data-screen="ligas">${head}${groupsBlocks(ctx, view)}</section>`;
+    return html`<section data-screen="ligas">${head}${partial}${groupsBlocks(ctx, view)}</section>`;
   }
-  const head = screenHead('Ligas', { sub: `${scopeText(c ? [c] : CATEGORIES, i)} · ${seasonLabel(s)}`, back });
-  return html`<section data-screen="ligas">${head}${f ? groupsBlocks(ctx, view) : competitionsBlocks(ctx, view)}</section>`;
+  const head = screenHead('Ligas', { sub: `${scopeText(view.cats, i)} · ${seasonLabel(s)}`, back });
+  return html`<section data-screen="ligas">${head}${partial}${f ? groupsBlocks(ctx, view) : competitionsBlocks(ctx, view)}</section>`;
 }
 
 /* «Comparar grupos»: cada botón despliega su tabla (compareView), que se pinta la primera vez que se

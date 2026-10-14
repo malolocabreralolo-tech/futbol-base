@@ -33,6 +33,13 @@ def test_the_delay_is_shorter_by_default_and_set_by_environment():
         assert C.delay_range({"FIFLP_DELAY": wrong}) == (1.0, 1.5), wrong
 
 
+def test_the_ready_cap_is_set_by_environment_and_never_unbounded():
+    assert C.ready_timeout_ms({}) == 5000
+    assert C.ready_timeout_ms({"FIFLP_READY_MS": "3000"}) == 3000
+    for wrong in ("0", "-5", "rápido", ""):                 # 0, para Playwright, es esperar sin tope
+        assert C.ready_timeout_ms({"FIFLP_READY_MS": wrong}) == 5000, wrong
+
+
 def test_pause_sleeps_a_jittered_time_within_the_range():
     slept = []
     C.pause(rng=lambda a, b: (a + b) / 2, sleep=slept.append, env={"FIFLP_DELAY": "1-2"})

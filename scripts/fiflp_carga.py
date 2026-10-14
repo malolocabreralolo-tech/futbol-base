@@ -59,9 +59,10 @@ def delay_range(env=None):
 
 
 def ready_timeout_ms(env=None):
-    """El tope de la espera a que la página esté lista (FIFLP_READY_MS, en milisegundos)."""
-    text = (os.environ if env is None else env).get("FIFLP_READY_MS", "")
-    return int(text) if text.strip().isdigit() else DEFAULT_READY_MS
+    """El tope de la espera a que la página esté lista (FIFLP_READY_MS, en milisegundos). Nunca 0:
+    para Playwright, 0 es esperar sin tope."""
+    text = (os.environ if env is None else env).get("FIFLP_READY_MS", "").strip()
+    return int(text) if text.isdigit() and int(text) > 0 else DEFAULT_READY_MS
 
 
 def pause(extra=0, rng=random.uniform, sleep=time.sleep, env=None):

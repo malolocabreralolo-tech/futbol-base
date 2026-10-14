@@ -33,6 +33,14 @@ Valleseco' (2014-26) se quedaba con la de NATURALEZA VERDE-VALLESECO para siempr
 solo rellena a quien no la tiene). Pasa a la buena si esta no tiene; si tiene, fuera. Un nombre que ya
 no está en el grupo no hace nada (en una base ya corregida, nada), salvo esa ficha si se quedó atrás.
 
+Filas aparte no es lo mismo que clubes aparte en la web, que une los clubes por el escudo. 'Fundación
+Guini.' es otro club de la federación que GUINIGUADA APOLINARIO, con otro código y, en alevín 2026-27,
+su propio equipo A (AL15; el de Guiniguada, AL8): dos filas. Pero es de la misma familia: juegan en Lomo
+Apolinario y futbolaspalmas.com le ponía el escudo de Guiniguada (de ahí sale su entrada en
+data-shields.js), así que la web los trata como un club con dos equipos. 'Fundación UD Las Palmas' y
+'Naturaleza Verde-Valleseco' no tienen escudo: clubes aparte hasta que tengan el suyo (el de su ficha,
+escudos_federacion.py).
+
 La ejecuta el bot en cada pasada (fetch_futbolaspalmas.main), antes de leer la federación: el bot casa
 los nombres de la federación con los de la clasificación del grupo, que así ya son los buenos.
 

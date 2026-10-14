@@ -536,3 +536,6 @@ def test_the_new_filials_have_their_club_shield():
     assert shields["Atlético D"] == shields["Atlético"] and shields["Guiniguada E"] == shields["Guiniguada"]
     # Los dos clubes que no son filiales de nadie no toman escudo de otro.
     assert "Fundación UD Las Palmas" not in shields and "Naturaleza Verde-Valleseco" not in shields
+    # La Fundación Guiniguada es otra fila (su equipo A, en AL15) pero de la familia de Guiniguada: su escudo,
+    # el que le ponía futbolaspalmas.com; la web los une como un club con dos equipos (migrate_team_names).
+    assert shields["Fundación Guini."] == shields["Guiniguada"]

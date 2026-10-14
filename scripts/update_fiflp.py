@@ -20,11 +20,14 @@ Reglas (las mismas que protegen al resto de importadores):
   nuevo cuadra mejor con los goles a favor/en contra de la clasificación.
 - Nunca se borra un partido: si la federación lo mueve de jornada, se avisa.
 """
-from datetime import date, timedelta
+from collections import namedtuple
+from datetime import date, datetime, timedelta, timezone
 import json
 import os
 import re
 import sys
+import time
+import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from db import get_or_create_team
@@ -40,12 +43,25 @@ import source_health
 BACK_DAYS = 21          # jornadas ya jugadas que se vuelven a mirar
 AHEAD_DAYS = 14         # jornadas próximas (horarios y campos se publican tarde)
 PENDING_DAYS = 120      # resultados pendientes (aplazados) que se siguen buscando
-MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~6 s cada una); el resto, en la siguiente
+MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~3-6 s cada una); el resto, en la siguiente
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
-DEADLINE_SECONDS = 25 * 60   # actas y goleadores solo hasta aquí: el job tiene 45 min
+# Plazo GLOBAL de las dos pasadas, desde que arranca update_groups (FIFLP_BUDGET_MIN). Con ~1 min de
+# preparación, ~2-5 de app, importaciones y generate_js, ~2 de pruebas y el commit, el job queda en
+# unos 35 min en el peor caso: 10 de margen sobre los 45 de update.yml.
+DEADLINE_SECONDS = 25 * 60
+# Lo que la primera pasada deja siempre para la segunda (FIFLP_RESERVE_MIN): las actas y los
+# goleadores de los grupos prioritarios, que van los primeros, y lo que quepa de los demás.
+RESERVE_SECONDS = 4 * 60
+CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada más vieja: cerrado…
+CLOSED_EVERY = timedelta(hours=24)   # …y solo se refresca una vez al día
+# Un grupo sin comprobar desde hace dos pasadas (o nunca) se adelanta a los niveles: si el plazo no
+# da para todos, la rotación no deja a alevín (el último nivel) sin refrescar nunca.
+STALE_AFTER = timedelta(hours=12)
 ACTA_URL = "/NFG_CmpPartido?cod_primaria=1000120&CodActa={code}"
 GOLEADORES_URL = ("/NFG_CMP_Goleadores?cod_primaria=1000120&CodJornada="
                   "&codcompeticion={comp}&codtemporada={season}&codgrupo={group}")
+
+clock = time.monotonic          # el reloj de los plazos (las pruebas ponen uno falso)
 
 
 def fiflp_groups(conn, season_id):
@@ -53,6 +69,144 @@ def fiflp_groups(conn, season_id):
         """SELECT id, code, url FROM groups
            WHERE season_id=? AND url LIKE '%fiflp.com%' ORDER BY code""",
         (season_id,)).fetchall()
+
+
+def _minutes_env(name, default_seconds, env=None):
+    text = (os.environ if env is None else env).get(name, "").strip().replace(",", ".")
+    try:
+        value = float(text)
+    except ValueError:
+        return default_seconds
+    return value * 60 if value > 0 else default_seconds
+
+
+def budget_seconds(env=None):
+    """El plazo global de la federación en el bot (FIFLP_BUDGET_MIN minutos; 25 por defecto)."""
+    return _minutes_env("FIFLP_BUDGET_MIN", DEADLINE_SECONDS, env)
+
+
+def reserve_seconds(env=None):
+    """La reserva de la segunda pasada (FIFLP_RESERVE_MIN minutos; 4 por defecto)."""
+    return _minutes_env("FIFLP_RESERVE_MIN", RESERVE_SECONDS, env)
+
+
+# ── El orden de la pasada ────────────────────────────────────────────────────
+
+def _fold(text):
+    text = "".join(ch for ch in unicodedata.normalize("NFD", text or "") if unicodedata.category(ch) != "Mn")
+    return re.sub(r"\s+", " ", text.lower()).strip()
+
+
+def priority_teams(env=None):
+    """Los equipos cuyos grupos van los primeros: FIFLP_PRIORITY_TEAMS (separados por comas; vacía,
+    ninguno) o, si no está, el equipo inicial del portal (defaultTeam de src/config.js)."""
+    env = os.environ if env is None else env
+    if "FIFLP_PRIORITY_TEAMS" in env:
+        return [t.strip() for t in env["FIFLP_PRIORITY_TEAMS"].split(",") if t.strip()]
+    from portal_config import load_config
+    name = (load_config().get("defaultTeam") or {}).get("name")
+    return [name] if name else []
+
+
+def pinned_groups():
+    """El grupo del equipo inicial del portal: prioritario aunque aún no tenga equipos."""
+    from portal_config import load_config
+    group = (load_config().get("defaultTeam") or {}).get("groupId")
+    return {group} if group else set()
+
+
+def priority_keys(teams):
+    """Las claves de club: «Las Mesas Hu.» → «las mesas hu»."""
+    return [k for k in (_fold(t).rstrip(". ") for t in teams) if k]
+
+
+def is_priority(name, keys):
+    """¿Es del club de alguno de los equipos prioritarios? La clave, al principio de una palabra:
+    «Las Mesas Hu.» incluye «Las Mesas Hu. B», «Las Mesas Huracán C» o «UD Las Mesas Huracán», y no
+    «Atlético Bachicán Las Mesas», que es otro club."""
+    folded = _fold(name)
+    return any(re.search(r"(?:^|\s)" + re.escape(k), folded) for k in keys)
+
+
+# Niveles: los grupos de los equipos prioritarios, prebenjamín, benjamín (y lo que no sea alevín) y
+# alevín (categoría ALEVIN, códigos AL…), lo último.
+LEVELS = {"PREBENJAMIN": 1, "ALEVIN": 3}
+Plan = namedtuple("Plan", "order resting due_closed priority")
+
+
+def _level(category, code):
+    return 3 if code.upper().startswith("AL") else LEVELS.get((category or "").upper(), 2)
+
+
+def _natural(code):
+    """FF2 antes que FF10."""
+    return [(1, int(p)) if p.isdigit() else (0, p) for p in re.findall(r"\d+|\D+", code)]
+
+
+def _checked_at(entry):
+    try:
+        moment = datetime.fromisoformat((entry or {}).get("checkedAt") or "")
+    except (TypeError, ValueError):
+        return None
+    return moment if moment.tzinfo else moment.replace(tzinfo=timezone.utc)
+
+
+def is_closed(conn, group_id, today):
+    """¿Todo jugado y la última jornada hace más de CLOSED_DAYS días? (Las jornadas de ese grupo ya
+    no entran en rounds_to_refresh: solo se leerían la clasificación y el calendario.)"""
+    n, missing, last = conn.execute(
+        """SELECT count(*), sum(home_score IS NULL OR away_score IS NULL), max(date)
+           FROM matches WHERE group_id=?""", (group_id,)).fetchone()
+    return bool(n) and not missing and bool(last) and last < (today - timedelta(days=CLOSED_DAYS)).isoformat()
+
+
+def plan_groups(conn, groups, checks, now, today, priority=None, pinned=None):
+    """El orden de la pasada. Plan(order, resting, due_closed, priority):
+    - order: los grupos que tocan: primero los de los equipos prioritarios; después los que llevan
+      STALE_AFTER sin comprobar (o nunca); después el resto por nivel (prebenjamín, benjamín,
+      alevín). Dentro, el comprobado hace más tiempo primero (checks: las entradas de
+      data-health.json; sin comprobación, el primero) y después por categoría y código;
+    - resting: los cerrados (is_closed) comprobados bien hace menos de CLOSED_EVERY y sin actas
+      pendientes: descansan esta pasada;
+    - due_closed: los cerrados que se refrescan por haber pasado el día (o sin comprobación): su
+      nueva hora se publica aunque no cambie nada más (source_health.publish_checks);
+    - priority: los códigos de los grupos prioritarios."""
+    if not groups:
+        return Plan([], [], set(), set())
+    keys = priority_keys(priority_teams() if priority is None else priority)
+    pinned = pinned_groups() if pinned is None else set(pinned)
+    ids = [g[0] for g in groups]
+    marks = ",".join("?" * len(ids))
+    categories = dict(conn.execute(
+        f"SELECT g.id, c.name FROM groups g JOIN categories c ON c.id=g.category_id WHERE g.id IN ({marks})", ids))
+    teams = {}
+    for gid, name in conn.execute(
+            f"""SELECT s.group_id, t.name FROM standings s JOIN teams t ON t.id=s.team_id WHERE s.group_id IN ({marks})
+                UNION SELECT m.group_id, t.name FROM matches m JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
+                WHERE m.group_id IN ({marks})""", ids + ids):
+        teams.setdefault(gid, []).append(name)
+    oldest = datetime.min.replace(tzinfo=timezone.utc)
+    order, resting, due, mine = [], [], set(), set()
+    for group in groups:
+        gid, code, _ = group
+        entry = checks.get(code) or {}
+        when = _checked_at(entry)
+        if is_closed(conn, gid, today):
+            if (entry.get("status") == "ok" and when and now - when < CLOSED_EVERY
+                    and not pending_actas(conn, gid)):
+                resting.append(group)
+                continue
+            if not when or now - when >= CLOSED_EVERY:
+                due.add(code)
+        level = _level(categories.get(gid), code)
+        if code in pinned or any(is_priority(t, keys) for t in teams.get(gid, [])):
+            mine.add(code)
+            tier = 0
+        else:
+            tier = 1 if not when or now - when >= STALE_AFTER else 2
+        order.append((tier, level if tier == 2 else 0, when or oldest, level, _natural(code), group))
+    order.sort(key=lambda item: item[:5])
+    return Plan([item[-1] for item in order], resting, due, mine)
 
 
 def option_round(text):
@@ -420,14 +574,13 @@ def pending_actas(conn, group_id):
 
 def import_actas(page, F, conn, group_id, budget, deadline=None, log=print):
     """Lee e importa las actas pendientes del grupo (hasta `budget` y hasta
-    `deadline`, en time.monotonic()). Devuelve cuántas importó y cuántas leyó.
+    `deadline`, en clock()). Devuelve cuántas importó y cuántas leyó.
     Una lectura fallida suma un intento; una página que no carga, no (es la
     red, no el acta), pero tres seguidas cortan la pasada."""
-    import time
     from fiflp_acta import parse_flat_acta
     done = read = failed_loads = 0
     for mid, code in pending_actas(conn, group_id)[:budget]:
-        if deadline and time.monotonic() > deadline:
+        if deadline and clock() > deadline:
             break
         read += 1
         ok = False
@@ -550,12 +703,14 @@ def missing_venues(conn, season_id):
     return sorted(v for v in used if venue_key(v) not in known)
 
 
-def update_campos(page, F, conn):
-    """Refresca el directorio de campos (3 páginas de 100). Devuelve cuántos."""
+def update_campos(page, F, conn, deadline=None):
+    """Refresca el directorio de campos (páginas de 100, hasta `deadline`). Devuelve cuántos."""
     from generate_js import venue_key
     rows, pages = [], 1
     for n in range(1, 30):
-        if n > pages or not F.goto(page, F.BASE + CAMPOS_URL.format(page=n)):
+        if n > pages or (deadline is not None and clock() > deadline):
+            break
+        if not F.goto(page, F.BASE + CAMPOS_URL.format(page=n)):
             break
         got, pages = parse_campos(page.content())
         rows += got
@@ -570,17 +725,20 @@ def update_campos(page, F, conn):
 
 
 def update_groups(conn, season_id, today=None):
-    """Recorre los grupos de la federación de la temporada en curso."""
+    """Recorre los grupos de la federación de la temporada en curso, con el plazo global
+    (budget_seconds) contado desde aquí, antes de abrir el navegador."""
     groups = fiflp_groups(conn, season_id)
     if not groups:
         return
+    deadline = clock() + budget_seconds()
     from migrate_actas_schema import migrate
     migrate(conn)                 # fiflp_acta, players.fiflp_id, delegados
     today = today or date.today()
-    print(f"\nFederación (FIFLP): {len(groups)} grupos")
+    print(f"\nFederación (FIFLP): {len(groups)} grupos, plazo de {budget_seconds() / 60:g} min", flush=True)
     pending = {code: url for _, code, url in groups}
     try:
-        _with_browser(lambda page, F: run_passes(page, F, conn, season_id, groups, today, pending))
+        _with_browser(lambda page, F: run_passes(page, F, conn, season_id, groups, today, pending, deadline=deadline),
+                      deadline=deadline)
     except Exception as e:      # sin navegador o FIFLP caída: se informa, no se tumba el run
         print(f"  ! la federación no se pudo consultar: {e}")
         for code, url in pending.items():
@@ -608,15 +766,41 @@ def _with_browser(work, deadline=None):
             browser.close()
 
 
-def run_passes(page, F, conn, season_id, groups, today, pending, deadline_seconds=None):
+def _codes(rows, limit=12):
+    names = [code for _, code, _ in rows]
+    return ", ".join(names[:limit]) + (f" y {len(names) - limit} más" if len(names) > limit else "")
+
+
+def run_passes(page, F, conn, season_id, groups, today, pending, deadline_seconds=None, deadline=None,
+               checks=None, now=None):
     """Las dos pasadas del bot sobre una página ya abierta (inyectable en las
-    pruebas): clasificación y jornadas de cada grupo; después, con lo que quede
-    de plazo, el directorio de campos, las actas y los goleadores."""
-    import time
-    deadline = time.monotonic() + (DEADLINE_SECONDS if deadline_seconds is None else deadline_seconds)
-    results = {}
-    for group_id, code, url in groups:
+    pruebas), en el orden de plan_groups y con un plazo GLOBAL (`deadline`, en
+    clock(); o `deadline_seconds` desde ahora; por defecto, budget_seconds()):
+    1. clasificación y jornadas de cada grupo, mientras quede plazo y la reserva
+       (reserve_seconds) para la segunda; lo que no cabe queda para la pasada
+       siguiente (rotación: su comprobación es la más vieja de su nivel y, a las
+       STALE_AFTER, pasa delante de los niveles);
+    2. con lo que quede: las actas y los goleadores, en el mismo orden (los
+       prioritarios primero), el directorio de campos y las fichas de los equipos.
+    Los grupos cerrados que descansan y los que no caben conservan su última
+    comprobación en data-health.json (source_health.carry): no son un error."""
+    start = clock()
+    if deadline is None:
+        deadline = start + (budget_seconds() if deadline_seconds is None else deadline_seconds)
+    first_deadline = deadline - min(reserve_seconds(), max(0.0, deadline - start) / 4)
+    checks = source_health.previous_groups() if checks is None else checks
+    now = now or datetime.now(timezone.utc)
+    plan = plan_groups(conn, groups, checks, now, today)
+    print(f"  Orden: {len(plan.priority)} de equipos prioritarios primero ({', '.join(sorted(plan.priority)) or '—'}); "
+          f"{len(plan.order)} por refrescar, {len(plan.resting)} cerrados descansan", flush=True)
+    stamp = lambda: now + timedelta(seconds=clock() - start)     # la hora de cada comprobación
+    results, stamps, deferred = {}, {}, []
+    for group_id, code, url in plan.order:
+        if clock() > first_deadline:
+            deferred.append((group_id, code, url))
+            continue
         print(f"  [{code}]", flush=True)
+        stamps[code] = stamp()
         try:
             raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today)
             status, msg = update_group(conn, group_id, code, raw_standings, raw_rounds)
@@ -625,19 +809,19 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
             status, msg = "error", e
             print(f"    ! error: {e}")
         results[code] = [status, msg]
+    first_pass = clock() - start
+    pages = getattr(F, "pages", None)
+    print(f"  Primera pasada: {len(results)} grupos en {first_pass / 60:.1f} min"
+          + (f" ({pages} páginas, {first_pass / pages:.1f} s cada una)" if pages else ""), flush=True)
+    if deferred:
+        print(f"  Rotación: {len(deferred)} grupos, a la próxima pasada ({_codes(deferred)})", flush=True)
     # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
     # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
-    # El directorio de campos, solo si falta alguno de los de la temporada.
-    try:
-        if missing_venues(conn, season_id):
-            print(f"\n  Campos: {update_campos(page, F, conn)} en el directorio de la federación")
-    except Exception as e:
-        conn.rollback()
-        print(f"  ! campos: {e}")
     budget = MAX_ACTAS_PER_RUN
-    print("\n  Actas y goleadores")
-    for group_id, code, url in groups:
-        if results[code][0] != "ok" or time.monotonic() > deadline:
+    print("\n  Actas y goleadores", flush=True)
+    refreshed = [g for g in plan.order if g[1] in results]
+    for group_id, code, url in refreshed:
+        if results[code][0] != "ok" or clock() > deadline:
             continue
         notes = []
         try:
@@ -649,7 +833,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
             conn.rollback()
             notes.append(f"actas: {e}")
         try:
-            if time.monotonic() <= deadline:
+            if clock() <= deadline:
                 scorers = update_goleadores(page, F, conn, group_id, url)
                 if scorers:
                     notes.append(f"{scorers} goleadores")
@@ -659,20 +843,39 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         if notes:
             print(f"  [{code}] " + ", ".join(notes))
             results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
-    if time.monotonic() > deadline:
+    if clock() > deadline:
         print("  (plazo agotado: el resto de actas y goleadores, en la próxima pasada)")
+    # El directorio de campos, solo si falta alguno de los de la temporada (un grupo nuevo).
+    try:
+        if clock() <= deadline and missing_venues(conn, season_id):
+            print(f"\n  Campos: {update_campos(page, F, conn, deadline)} en el directorio de la federación")
+    except Exception as e:
+        conn.rollback()
+        print(f"  ! campos: {e}")
     # La ficha (equipación y campo) de los equipos que aún no la tienen y la de sus campos.
     try:
-        if time.monotonic() <= deadline:
-            cards, fields = update_directorio(page, F, conn, season_id, groups, deadline)
+        if clock() <= deadline:
+            cards, fields = update_directorio(page, F, conn, season_id, refreshed, deadline)
             if cards or fields:
                 print(f"\n  Directorio: {cards} fichas de equipo y {fields} de campo")
     except Exception as e:
         conn.rollback()
         print(f"  ! directorio: {e}")
     for group_id, code, url in groups:
-        source_health.record(code, url, *results[code])
+        if code in results:
+            source_health.record(code, url, *results[code], now=stamps[code])
+        else:
+            source_health.carry(code)          # descansa o no cupo: su última comprobación
         pending.pop(code, None)
+    source_health.note_run({
+        "groups": len(groups), "refreshed": len(results), "resting": [c for _, c, _ in plan.resting],
+        "deferred": [c for _, c, _ in deferred], "firstPassSeconds": round(first_pass),
+        "seconds": round(clock() - start), **({"firstPassPages": pages} if pages else {})})
+    # La rotación y los cerrados se ordenan por la hora de su última comprobación: sin publicarla,
+    # la pasada siguiente volvería a empezar por los mismos.
+    if deferred or (plan.due_closed & set(results)):
+        source_health.publish_checks()
+    print(f"  Federación: {round((clock() - start) / 60, 1)} min de {round((deadline - start) / 60, 1)}", flush=True)
 
 
 def update_directorio(page, F, conn, season_id, groups, deadline=None):
@@ -680,7 +883,6 @@ def update_directorio(page, F, conn, season_id, groups, deadline=None):
     grupo, fiflp_detalle.parse_directorio, con el nombre de la base) y venue_details de sus campos
     que no la tienen (parse_campo). Es lo que baja detalle-federacion.yml de las temporadas
     pasadas, para los grupos que van apareciendo (la Segunda Fase). Devuelve (fichas, campos)."""
-    import time
     from datetime import date as _date
     from fetch_fiflp_detalle import CAMPO_URL, DIRECTORIO_URL
     from fiflp_detalle import parse_campo, parse_directorio
@@ -688,7 +890,7 @@ def update_directorio(page, F, conn, season_id, groups, deadline=None):
     migrate_detalle(conn)
     cards = fields = 0
     for group_id, code, url in groups:
-        if deadline is not None and time.monotonic() > deadline:
+        if deadline is not None and clock() > deadline:
             break
         teams = [r[1] for r in stored_standings(conn, group_id)]
         have = {r[0] for r in conn.execute(
@@ -721,7 +923,7 @@ def update_directorio(page, F, conn, season_id, groups, deadline=None):
         """SELECT DISTINCT ts.venue_code FROM team_seasons ts WHERE ts.season_id=? AND ts.venue_code IS NOT NULL
            AND ts.venue_code NOT IN (SELECT code FROM venue_details)""", (season_id,))]
     for c in codes:
-        if deadline is not None and time.monotonic() > deadline:
+        if deadline is not None and clock() > deadline:
             break
         if not F.goto(page, F.BASE + CAMPO_URL.format(code=c)):
             continue

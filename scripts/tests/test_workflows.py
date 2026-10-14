@@ -94,6 +94,15 @@ def test_update_has_concurrency_and_timeout():
     assert data["jobs"]["update"].get("timeout-minutes") == 45
 
 
+def test_update_logs_the_federation_pass_as_it_goes():
+    """El tiempo de cada grupo se mide en el log (plazo global y rotación de update_fiflp.py): sin
+    búfer, cada línea sale con su hora y un corte por tiempo no se lleva el final del log."""
+    steps = _steps(_load("update.yml"), "update")
+    scrape = next(s for s in steps if "fetch_futbolaspalmas" in (s.get("run") or ""))
+    assert scrape["env"].get("PYTHONUNBUFFERED") == "1"
+    assert scrape["env"].get("FIFLP_UPDATE") == "1"
+
+
 def test_update_stages_all_generate_js_outputs():
     """generate_js.py (via fetch_futbolaspalmas.py) writes data-*.js,
     index.html (?v= bump) and sw.js (CACHE_NAME bump, C3/C4). The old

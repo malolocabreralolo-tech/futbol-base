@@ -85,6 +85,55 @@ def test_unreadable_previous_report_is_replaced(portal):
     assert report["groups"]["A1"]["status"] == "ok"
 
 
+def test_previous_checks_are_only_those_of_the_same_season(portal):
+    run(OK, T0)
+    source_health.begin("2025-2026")
+    assert source_health.previous_groups()["A1"]["checkedAt"] == T0.isoformat(timespec="seconds")
+    source_health.begin("2026-2027")
+    assert source_health.previous_groups() == {}
+
+
+def test_a_group_left_for_the_next_pass_keeps_its_last_check(portal):
+    """Rotación del bot de la federación y grupos cerrados que descansan (update_fiflp.run_passes):
+    sin comprobarse en esta pasada, su entrada sigue como estaba, sin marcarla como error."""
+    first = json.loads(run(OK, T0))
+    source_health.begin("2025-2026")
+    source_health.record("PG2", "https://example.test/PG2", "ok", "16 equipos", now=T0 + timedelta(hours=5))
+    source_health.carry("A1")
+    source_health.carry("NUEVO")                     # sin comprobación anterior: no aparece
+    source_health.finish(now=T0 + timedelta(hours=5))
+    report = json.loads(source_health.REPORT_PATH.read_text())
+    assert report["groups"]["A1"] == first["groups"]["A1"]
+    assert report["groups"]["PG2"]["message"] == "16 equipos"
+    assert "NUEVO" not in report["groups"] and report["summary"]["error"] == 0
+
+
+def test_run_notes_alone_do_not_rewrite_the_report(portal):
+    first = run(OK, T0)
+    source_health.begin("2025-2026")
+    for code, status, message in OK:
+        source_health.record(code, f"https://example.test/{code}", status, message, now=T0 + timedelta(hours=5))
+    source_health.note_run({"deferred": ["A1"], "seconds": 1200})
+    source_health.finish(now=T0 + timedelta(hours=5))
+    assert source_health.REPORT_PATH.read_text() == first
+
+
+def test_checks_needed_by_the_next_pass_are_published(portal):
+    """La rotación y los grupos cerrados se ordenan por la hora de su última comprobación: si
+    no se publica, la pasada siguiente volvería a empezar por los mismos."""
+    run(OK, T0)
+    later = T0 + timedelta(hours=5)
+    source_health.begin("2025-2026")
+    for code, status, message in OK:
+        source_health.record(code, f"https://example.test/{code}", status, message, now=later)
+    source_health.note_run({"deferred": ["PG2"]})
+    source_health.publish_checks()
+    source_health.finish(now=later)
+    report = json.loads(source_health.REPORT_PATH.read_text())
+    assert report["groups"]["A1"]["checkedAt"] == later.isoformat(timespec="seconds")
+    assert report["run"] == {"deferred": ["PG2"]}
+
+
 def test_meaningful_view_ignores_only_timestamps():
     a = {"season": "x", "checkedAt": "1", "groups": {"A1": {"status": "ok", "checkedAt": "1"}}}
     b = {"season": "x", "checkedAt": "2", "groups": {"A1": {"status": "ok", "checkedAt": "2"}}}

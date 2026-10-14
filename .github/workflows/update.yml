@@ -16,7 +16,9 @@ jobs:
   update:
     # La imagen fijada y las acciones en Node 24, como tests.yml (plan B4, decisión 55; test_workflows.py).
     runs-on: ubuntu-24.04
-    # 45: los grupos de la federación se leen con navegador (~2-3 s por página).
+    # 45: los grupos de la federación se leen con navegador (~3 s por página, fiflp_carga.py). Su
+    # parte tiene un plazo global de 25 min (update_fiflp.DEADLINE_SECONDS, con rotación de lo que no
+    # cabe): con preparación, app, generate_js, pruebas y commit, ~35 min en el peor caso.
     timeout-minutes: 45
 
     steps:
@@ -48,6 +50,8 @@ jobs:
         continue-on-error: true
         env:
           FIFLP_UPDATE: '1'
+          # Sin búfer: cada línea del log con su hora (el coste de cada grupo de la federación).
+          PYTHONUNBUFFERED: '1'
         run: python3 scripts/fetch_futbolaspalmas.py
 
       # Los push del bot (GITHUB_TOKEN) NO disparan tests.yml (anti-recursión

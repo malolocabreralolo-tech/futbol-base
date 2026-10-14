@@ -14,10 +14,11 @@ import json
 import re
 import subprocess
 import sys
-import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from categorias import category_of  # noqa: E402
 
 
 def title(comp):
@@ -37,9 +38,10 @@ def _watch(workflow):
 
 
 def body(comp, season):
-    cid, code = comp["id"], season_code(season)
+    # Alevín de Gran Canaria va con su propia tanda y su propio raw (22al: docs/alevin.md).
+    alevin = category_of(comp["name"]) == "ALEVIN"
+    cid, code = comp["id"], season_code(season) + ("al" if alevin else "")
     raw = f"scripts/fiflp_islas_{code}_raw.json"
-    alevin = "ALEVIN" in unicodedata.normalize("NFD", comp["name"]).encode("ascii", "ignore").decode().upper()
     return "\n".join([
         f"La federación (FIFLP) publica en la temporada {season} una competición que la web todavía no tiene:",
         "",
@@ -58,8 +60,8 @@ def body(comp, season):
         f"python3 scripts/activate_season.py fase.json --fiflp-raw {raw} --add --apply  # escribe",
         "```",
         "",
-        *(["Es de alevín: antes, comprobar que la descarga, el manifiesto y la activación ya admiten esa "
-           "categoría (códigos AL…).", ""] if alevin else []),
+        *(["Es de alevín de Gran Canaria: va con la tanda alevín y sus códigos AL… (docs/alevin.md).", ""]
+          if alevin else []),
         "Si no hay que añadirla, basta con cerrar esta issue: el bot no vuelve a abrirla. Para que deje de "
         "salir en Datos y fuentes, su código va en `IGNORED_COMPETITIONS` de scripts/update_fiflp.py.",
         "",

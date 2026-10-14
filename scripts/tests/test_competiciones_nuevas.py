@@ -234,6 +234,15 @@ def test_the_issue_steps_refresh_the_catalog_first_and_pull_before_the_manifest(
         assert "gh run watch" in lines[launched + 1] and workflow in lines[launched + 1]   # a que acabe
 
 
+def test_an_alevin_competition_goes_with_the_alevin_batch():
+    """Alevín de Gran Canaria tiene su propia tanda y su propio raw (22al, docs/alevin.md); la categoría,
+    con el category_of de todos (categorias.py)."""
+    body = A.body(AL, "2026-2027")
+    assert "-f temporada=22al -f ids=54976940" in body and "fiflp_islas_22al_raw.json" in body
+    assert "docs/alevin.md" in body
+    assert "22al" not in A.body(FV, "2026-2027")
+
+
 def test_the_issue_only_carries_the_competition(tmp_path):
     """El repositorio es público: ni equipos ni personas; solo el nombre y el código de la competición."""
     path = write(tmp_path / "data-health.json", [FV])

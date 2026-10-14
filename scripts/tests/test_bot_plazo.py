@@ -263,6 +263,49 @@ class Fed:
         return []
 
 
+class CalendarPage:
+    """El calendario de un grupo: el desplegable de jornadas sale a la lectura `ready_on` (None: nunca)."""
+    url = ""
+
+    def __init__(self, ready_on=None):
+        self.ready_on, self.reads, self.waits = ready_on, 0, []
+
+    def evaluate(self, js, *a):
+        if 'select[name="jornada"]' not in js:
+            return []
+        self.reads += 1
+        return [{"value": "1", "text": "1 - 10-10-2026"}] if self.ready_on and self.reads >= self.ready_on else []
+
+    def wait_for_function(self, js, arg=None, timeout=None, polling=None):
+        self.waits.append((arg[0], timeout))
+
+    def wait_for_timeout(self, ms):
+        raise AssertionError("nada de esperas fijas")
+
+    def content(self):
+        return "<html></html>"
+
+
+def test_a_calendar_without_rounds_costs_no_fixed_waits(monkeypatch):
+    """La carga (fiflp_carga.goto) ya espera, con tope, al desplegable de jornadas: un grupo cuyo
+    calendario aún no tiene jornadas (una fase recién dada de alta) no paga además 4 × 3 s fijos."""
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    stored = {"Jornada 1": ("2026-10-10", False)}
+    page = CalendarPage()
+    assert U.scrape_group(page, Fed(Clock()), url(1), {}, TODAY) == ([], {})
+    assert page.reads == 1 and page.waits == []
+    # Un grupo con jornadas cuyo desplegable tarda («0J»): una espera más, al desplegable y con tope.
+    page = CalendarPage(ready_on=2)
+    assert list(U.scrape_group(page, Fed(Clock()), url(1), stored, TODAY)[1]) == ["Jornada 1"]
+    (selector, cap), = page.waits
+    assert selector.startswith('select[name="jornada"]') and 0 < cap <= 5000
+    # Si tampoco llega, el grupo falla como antes, sin más esperas.
+    page = CalendarPage()
+    with pytest.raises(RuntimeError, match="jornadas"):
+        U.scrape_group(page, Fed(Clock()), url(1), stored, TODAY)
+    assert page.reads == 2 and len(page.waits) == 1
+
+
 @pytest.fixture
 def health(tmp_path, monkeypatch):
     """data-health.json de verdad (source_health) en un directorio de prueba."""

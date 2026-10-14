@@ -35,6 +35,7 @@ from fiflp_names import canonical_names, is_bye
 from import_fiflp_cups_2324 import clean_team_name
 from activate_season import fiflp_ids, _iso
 from fiflp_render import flatten, fiflp_only
+from fiflp_carga import ready_selector, ready_timeout_ms, wait_ready
 from fetch_futbolaspalmas import standings_regression, stored_standings
 from generate_js import _repair_incoherent_points
 from fiflp_names import team_key, team_score
@@ -514,6 +515,13 @@ def current_round(conn, group_id):
     return played[-1] if played else (rows[0][0] if rows else None)
 
 
+JORNADAS_JS = """() => {
+    const sel = document.querySelector('select[name="jornada"]');
+    return sel ? Array.from(sel.options).filter(o => o.value && o.value !== '0')
+                   .map(o => ({value: o.value, text: o.text.trim()})) : [];
+}"""
+
+
 def scrape_group(page, F, url, stored, today):
     """(standings crudas, {jornada: [partidos crudos]}) de un grupo de FIFLP."""
     comp, code = fiflp_ids(url)
@@ -532,16 +540,13 @@ def scrape_group(page, F, url, stored, today):
                 f"&CodCompeticion={comp}&CodGrupo={code}")
     if not F.goto(page, calendar):
         raise RuntimeError("no carga el calendario de la federación")
-    options = []
-    for _ in range(4):        # FIFLP a veces tarda en servir el desplegable («0J»)
-        options = page.evaluate("""() => {
-            const sel = document.querySelector('select[name="jornada"]');
-            return sel ? Array.from(sel.options).filter(o => o.value && o.value !== '0')
-                           .map(o => ({value: o.value, text: o.text.trim()})) : [];
-        }""")
-        if options:
-            break
-        page.wait_for_timeout(3000)
+    # La carga ya esperó, con tope, al desplegable (fiflp_carga.ready_selector). Si no llegó y el grupo
+    # tiene jornadas, FIFLP tarda en servirlo («0J»): una espera más, al desplegable y con tope. Sin
+    # jornadas (un calendario aún sin publicar), nada que esperar: antes eran 4 × 3 s en cada pasada.
+    options = page.evaluate(JORNADAS_JS)
+    if not options and stored:
+        wait_ready(page, ready_selector(calendar), ready_timeout_ms())
+        options = page.evaluate(JORNADAS_JS)
     if not options and stored:
         raise RuntimeError("la federación no sirvió las jornadas del grupo")
     for opt in rounds_to_refresh(options, stored, today):

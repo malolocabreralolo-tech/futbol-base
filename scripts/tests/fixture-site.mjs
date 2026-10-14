@@ -8,7 +8,7 @@
 // Campeones en los mundos del 23/09/2026, las cuatro copas de la Maspalomas y las actas de A1 y FF1.
 import { fixture } from './fixtures/rediseno/load.mjs';
 import {
-  archive, cupsRaw, currentAt, goleadores, groupLineups, lineupGroups, nextSeasonRaw, withChampions,
+  alevinRaw, archive, cupsRaw, currentAt, dataFile, goleadores, groupLineups, lineupGroups, nextSeasonRaw, pastAlevinRaw, withChampions,
 } from './fixtures/rediseno/simulate.mjs';
 
 export const STORE_KEY = 'futbol-base:v2';
@@ -112,7 +112,8 @@ function scorersAt(raw) {
 
 // Los mundos con nombre. today: el día en Canarias; current(): la temporada del portal en crudo;
 // myTeam: lo que hay guardado (null: almacén vacío, el equipo por defecto); fail: ficheros que
-// responden 503.
+// responden 503; alevin: sirve data-alevin.js (contrato común de alevín). Sin él, como en la web de
+// antes de alevín, data-alevin.js da 404: «sin alevín», y todo lo demás igual.
 export const WORLDS = {
   // 01/03/2026: a mitad de temporada, Las Mesas en A (próximo partido en la jornada 18).
   A: { today: '2026-03-01', portalSeason: '2025-2026', current: () => seasonAt('2026-03-01') },
@@ -130,6 +131,11 @@ export const WORLDS = {
   // 2026/27 sin Las Mesas: X.
   X: { today: '2026-10-01', portalSeason: '2026-2027', current: () => nextSeasonRaw({ benjamin: ['A1'], prebenjamin: ['PG3'] }),
     myTeam: LAS_MESAS_2526, gol: false },
+  // 14/10/2026, 2026/27 con alevín: data-alevin.js con AL1 y AL2 (tres jornadas jugadas; Las Mesas Hu.
+  // en AL1, el homónimo de PG2) y, de 2025-26, data-season-2025-2026-alevin.js con la Segunda Fase A y
+  // F y unas Eliminatorias (alevinRaw y pastAlevinRaw de simulate.mjs). 2024-25, sin alevín (un 404).
+  L: { today: '2026-10-14', portalSeason: '2026-2027',
+    current: () => nextSeasonRaw({ benjamin: ['A1', 'B2', 'FF15'], prebenjamin: ['PG2', 'PG3'] }), gol: false, alevin: true },
 };
 
 // 2025-26 terminada, con la forma de data-season-<S>.js, para los mundos de 2026/27 (B y X): la fixture
@@ -166,6 +172,11 @@ function files(w) {
     'data-maspalomas-cup-2026.js': js([['MASPALOMAS_CUP_BENJAMIN', cups.benjamin], ['MASPALOMAS_CUP_PREBENJAMIN', cups.prebenjamin]]),
     ...archived,
     'data-matchdetail.js': js([['MATCH_DETAIL', fixture('matchdetail')]]),
+    // El alevín, perezoso: el de la temporada del portal y el de 2025-26 (contrato común, puntos 4 y 5).
+    ...(w.alevin ? {
+      'data-alevin.js': { type: 'text/javascript', body: dataFile(alevinRaw({ season: w.portalSeason, today: w.today })) },
+      'data-season-2025-2026-alevin.js': js([['SEASON_2025_2026_ALEVIN', pastAlevinRaw('2025-2026')]]),
+    } : {}),
     // Las actas, por grupo: los que tienen (A1 y FF1); el de cualquier otro, un 404 (sin actas).
     ...Object.fromEntries(lineupGroups('2025-2026').map((g) => [`data-lineups-2025-2026-${g}.js`,
       js([[`LINEUPS_2025_2026_${g}`, groupLineups('2025-2026', g)]])])),

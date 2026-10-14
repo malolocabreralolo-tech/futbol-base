@@ -26,6 +26,7 @@ import { fileURLToPath } from 'node:url';
 import { startServer, findChrome } from './render-smoke.mjs';
 import { waitForAsync } from './browser-wait.mjs';
 import { fixture } from './fixtures/rediseno/load.mjs';
+import { alevinRaw, dataFile } from './fixtures/rediseno/simulate.mjs';
 import { STORE_KEY } from '../../src/store.js';
 
 const { chromium } = createRequire(import.meta.url)('playwright');
@@ -73,6 +74,9 @@ const FROZEN = (() => {
     'data-lineups-2025-2026.js': js([['LINEUPS_2025_2026', fixture('lineups-2025-2026')]]),
     'data-lineups-2025-2026-A1.js': js([['LINEUPS_2025_2026_A1', fixture('lineups-2025-2026')]]),
     'data-health.json': { type: 'application/json', body: JSON.stringify(fixture('health')) },
+    // El alevín (contrato común de alevín, punto 4): perezoso, fuera de index.html; el SW nuevo lo guarda
+    // al instalarse (LAZY_FILES) y Explorar lo enseña sin conexión. La app anterior nunca lo pide.
+    'data-alevin.js': { type: 'text/javascript', body: dataFile(alevinRaw({ season: '2025-2026', today: '2026-09-23' })) },
     // Solo para la app anterior: su index.html los nombra y su SW los precachea (B4 los retiró).
     'data-matchdetail-keys.js': js([['MATCH_DETAIL_KEYS', {}]]),
     'data-stats.js': js([['STATS', {}]]),
@@ -682,7 +686,7 @@ try {
   }
   assert.deepEqual(errors, [], 'la portada sin conexión: sin errores de JavaScript');
   const precached = await page.evaluate(async (name) => (await (await caches.open(name)).keys()).map((r) => new URL(r.url).pathname), expected);
-  for (const path of ['/fonts/PublicSans-latin.woff2', '/icons/icon-192.png', '/src/screen-home.js', '/src/screen-jornada.js', '/src/screen-explorar.js', '/acta.css']) {
+  for (const path of ['/fonts/PublicSans-latin.woff2', '/icons/icon-192.png', '/src/screen-home.js', '/src/screen-jornada.js', '/src/screen-explorar.js', '/acta.css', '/data-alevin.js']) {
     assert.ok(precached.includes(path), `${path} is not precached`);
   }
   // La cabecera avisa de que no hay conexión (spec §4.10).
@@ -699,6 +703,10 @@ try {
   await page.locator('#buscar').fill('hurac');
   await page.locator('#resultados a.search-result[href="#/equipo?s=2025-2026&g=PG2&t=AD%20Hurac%C3%A1n"]').waitFor();
   assert.equal(await page.locator('#contenido .error-box').count(), 0, 'Explorar sin conexión: sin cajas de error');
+  // Y alevín, con data-alevin.js de la instalación (LAZY_FILES): sus ligas y su AD Huracán, sin el aviso.
+  await page.locator('#resultados a.search-result[href="#/equipo?s=2025-2026&g=AL1&t=AD%20Hurac%C3%A1n"]').waitFor();
+  assert.deepEqual(await page.locator('#contenido h3.link-head').allTextContents(), ['Benjamín', 'Prebenjamín', 'Alevín'], 'Explorar sin conexión, con alevín');
+  assert.equal(await page.locator('#contenido .partial-box').count(), 0, 'Explorar sin conexión: alevín, sin aviso');
   assert.deepEqual(errors, []);
   // Los datos retirados (decisión 3 de B4): la app anterior los pide y el mundo se los da; ni el SW
   // nuevo ni la app nueva con él al mando piden ninguno (llevarían la versión publicada).

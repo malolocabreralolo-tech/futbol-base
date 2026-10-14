@@ -793,6 +793,120 @@ async function skeletonShift() {
   }
 }
 
+// Alevín (contrato común de alevín; r3.md §6 y critic.md), en el mundo L (14/10/2026), a 390 px en claro:
+// - la Tabla de AL1 en frío: el router pide data-alevin.js una sola vez y la pinta, sin aviso;
+// - Explorar por la barra, con su bloque de alevín y sin volver a pedirlo; el buscador encuentra Las
+//   Mesas Hu. de alevín, y su «Hacer mi equipo» se guarda con su categoría: al recargar, la portada es
+//   la de alevín (AL1), no la de su homónimo de prebenjamín (PG2), y sigue guardado igual;
+// - 2025/26: las Ligas de alevín (la Segunda Fase A antes que la F, y las Eliminatorias), y unas
+//   Eliminatorias abren su Copa;
+// - con data-alevin.js caído (503): Explorar, con benjamín y prebenjamín, su aviso y «Reintentar», sin
+//   caja de error; la Tabla de AL1, la caja de error de alevín, nunca «No encontramos el grupo».
+async function alevinWorld() {
+  const label = '390px en claro, alevín';
+  const MESAS_AL1 = '#/equipo?s=2026-2027&g=AL1&t=Las%20Mesas%20Hu.';
+  let context = await newContext({ width: 390, height: 844 }, 'light');
+  const errors = [];
+  const watch = (page) => {
+    page.setDefaultTimeout(8000);
+    page.on('pageerror', (error) => errors.push(error.message));
+    return page;
+  };
+  try {
+    await useWorld(context, 'L');
+    const asked = [];
+    context.on('request', (request) => { if (new URL(request.url()).pathname.endsWith('/data-alevin.js')) asked.push(request.url()); });
+    const page = watch(await context.newPage());
+    await page.goto(`${base}#/tabla?g=AL1`);
+    let s = await paintedAs(page, 'tabla', { hash: '#/tabla?g=AL1', label: `${label}, Tabla de AL1 en frío` });
+    assert.equal(s.h1, 'Tabla');
+    assert.equal(await page.locator('#contenido .screen-sub').textContent(), 'Alevín, Primera Fase, Grupo 1');
+    assert.equal(await page.locator('#contenido .route-notice').count(), 0, `${label}: sin aviso`);
+    assert.equal(asked.length, 1, `${label}: data-alevin.js, una vez (${asked.join(', ')})`);
+    await click(page, '.tabbar a.tab[href="#/explorar"]', label);
+    await paintedAs(page, 'explorar', { label: `${label}, Explorar` });
+    assert.deepEqual(await page.locator('#contenido h3.link-head').allTextContents(), ['Benjamín', 'Prebenjamín', 'Alevín']);
+    assert.equal(asked.length, 1, `${label}: Explorar no lo vuelve a pedir`);
+    await page.locator('#buscar').fill('mesas');
+    await click(page, `#resultados a.search-result[href="${MESAS_AL1}"]`, label);
+    await paintedAs(page, 'equipo', { hash: MESAS_AL1, label: `${label}, la ficha de Las Mesas Hu. en AL1` });
+    await click(page, '#contenido [data-action="hacer-mi-equipo"]', label);
+    const mine = { name: 'Las Mesas Hu.', season: '2026-2027', cat: 'alevin', groupId: 'AL1' };
+    await waitForAsync(page, ([key, want]) => localStorage.getItem(key) && JSON.stringify(JSON.parse(localStorage.getItem(key)).myTeam) === want,
+      [STORE_KEY, JSON.stringify(mine)], { label: `${label}: «Hacer mi equipo» se guarda` });
+    await page.goto(`${base}#/`);
+    await labeled(`${label}: recargar`, () => page.reload());
+    s = await paintedAs(page, 'home', { label: `${label}, la portada tras recargar` });
+    assert.equal(s.h1, 'Las Mesas Hu.');
+    assert.equal(s.state, 'A', `${label}: AL1 sigue (jornada 4 el 17/10)`);
+    assert.match(await page.locator('#contenido').textContent(), /Alevín, Primera Fase, Grupo 1/);
+    assert.deepEqual(await page.evaluate((key) => JSON.parse(localStorage.getItem(key)).myTeam, STORE_KEY), mine, `${label}: sigue guardado igual`);
+    // 2025/26: la Segunda Fase F después de la A, y las Eliminatorias, una copa.
+    await page.goto(`${base}#/ligas?s=2025-2026&c=alevin`);
+    await paintedAs(page, 'ligas', { label: `${label}, Ligas de alevín de 2025/26` });
+    assert.deepEqual(await page.locator('#contenido .link-row-title').allTextContents(), ['Segunda Fase A', 'Segunda Fase F', 'Eliminatorias']);
+    await page.goto(`${base}#/tabla?s=2025-2026&g=ALEL1`);
+    s = await paintedAs(page, 'copa', { hash: '#/copa?s=2025-2026&g=ALEL1', label: `${label}, las Eliminatorias en Copa` });
+    assert.match(await page.locator('#contenido').textContent(), /Final/);
+    await checkLayout(page, 390, `${label}, Copa`);
+    await context.close();
+    // Con data-alevin.js caído.
+    context = await newContext({ width: 390, height: 844 }, 'light');
+    await useWorld(context, 'L', { fail: ['data-alevin.js'] });
+    const down = watch(await context.newPage());
+    await down.goto(`${base}#/explorar`);
+    await paintedAs(down, 'explorar', { label: `${label}, Explorar sin data-alevin.js` });
+    await labeled(`${label}: el aviso de Explorar`, () => down.locator('#contenido .partial-box button[data-action="retry"]').waitFor());
+    assert.equal(await down.locator('#contenido .error-box').count(), 0, `${label}: Explorar sin caja de error`);
+    assert.deepEqual(await down.locator('#contenido h3.link-head').allTextContents(), ['Benjamín', 'Prebenjamín']);
+    assert.ok((await down.locator('#contenido .partial-box button').boundingBox()).height >= 44, `${label}: «Reintentar» mide al menos 44 px`);
+    await checkLayout(down, 390, `${label}, Explorar sin data-alevin.js`);
+    await down.goto(`${base}#/tabla?g=AL1`);
+    await waitForAsync(down, () => document.querySelector('#contenido section[data-state="error"]') !== null, null, { label: `${label}: la caja de error de la Tabla` });
+    const text = await down.locator('#contenido').textContent();
+    assert.match(text, /No se pudieron cargar los datos de alevín\./);
+    assert.doesNotMatch(text, /No encontramos/);
+    assert.equal(await down.evaluate(() => location.hash), '#/tabla?g=AL1', `${label}: la ruta se queda, para «Reintentar»`);
+    assert.deepEqual(errors, [], `${label}: sin errores de JavaScript`);
+  } finally {
+    await context.close();
+  }
+}
+
+// El selector de categoría de tres opciones (Goleadores y Récords) y las tres categorías de Ligas y
+// Explorar en el mundo L, a 320 y 390 px, en claro y en oscuro: sin desplazamiento horizontal y cada
+// segmento con su nombre entero («Prebenjamín» en negrita es el más largo): su contenido cabe en él.
+async function alevinWidths() {
+  for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }]) {
+    for (const colorScheme of ['light', 'dark']) {
+      const label = `${nameOf(viewport, colorScheme)}, alevín`;
+      const context = await newContext(viewport, colorScheme);
+      try {
+        await useWorld(context, 'L');
+        const page = await context.newPage();
+        page.setDefaultTimeout(8000);
+        for (const [hash, screen, picker] of [['#/goleadores?c=alevin', 'goleadores', '.gol-cats'], ['#/records?c=alevin', 'records', '.rc-cats'],
+          ['#/ligas', 'ligas', null], ['#/explorar', 'explorar', null]]) {
+          await page.goto(`${base}${hash}`);
+          await paintedAs(page, screen, { label: `${label}, ${hash}` });
+          const m = await checkLayout(page, viewport.width, `${label}, ${hash}`);
+          assert.equal(m.paper, PAPER[colorScheme], `${label}, ${hash}: fondo del tema`);
+          if (!picker) continue;
+          const segments = await page.locator(`#contenido ${picker} .segment`).evaluateAll((els) => els.map((el) => ({
+            text: el.textContent, fits: el.scrollWidth <= el.clientWidth, height: el.getBoundingClientRect().height, current: el.getAttribute('aria-current'),
+          })));
+          assert.deepEqual(segments.map((x) => x.text), ['Benjamín', 'Prebenjamín', 'Alevín'], `${label}, ${hash}`);
+          assert.deepEqual(segments.filter((x) => !x.fits).map((x) => x.text), [], `${label}, ${hash}: segmentos recortados`);
+          assert.ok(segments.every((x) => x.height >= 44), `${label}, ${hash}: segmentos de 44 px`);
+          assert.deepEqual(segments.map((x) => x.current), [null, null, 'true'], `${label}, ${hash}: alevín marcado`);
+        }
+      } finally {
+        await context.close();
+      }
+    }
+  }
+}
+
 // Mundo E (§11, caso 3): «Las Mesas Hu. B» guardado en FF13 pregunta; la respuesta se guarda en el
 // almacén y, al recargar, la portada es la de ese equipo, sin preguntar (M6 de la revisión).
 async function answerE() {
@@ -848,6 +962,10 @@ try {
   console.log('PASS: 390px en claro, la plantilla de la portada: no la bloquea (con las actas retenidas, ya pintada con su hueco), un 503 en su sitio sin mover el foco, su «Reintentar» sin volver arriba, el jugador y la trayectoria (su «Reintentar» con el teclado deja el foco en su título), de vuelta en Mi equipo ya pintada y, sin conexión, un vacío tranquilo que se rellena al volver la conexión');
   await squadShift();
   console.log('PASS: 390px en claro, el hueco de la plantilla de la portada: con el calendario a la vista, ni la plantilla que llega (Guayarmina) ni el hueco que se quita (Las Mesas, sin actas) lo mueven, con el anclaje del navegador y sin él');
+  await alevinWorld();
+  console.log('PASS: 390px en claro, alevín (mundo L): la Tabla de AL1 en frío con un solo data-alevin.js, Explorar con alevín sin volver a pedirlo, «Hacer mi equipo» de alevín guardado y respetado al recargar, la Segunda Fase F y las Eliminatorias de 2025/26 en Ligas y en Copa, y sin data-alevin.js, Explorar con su aviso y la Tabla de AL1 con la caja de error de alevín');
+  await alevinWidths();
+  console.log('PASS: 320 y 390px, en claro y en oscuro, alevín (mundo L): el selector de tres categorías de Goleadores y Récords, entero y de 44 px, y Ligas y Explorar sin desplazamiento horizontal');
 } finally {
   if (browser) await browser.close();
   server.closeAllConnections();

@@ -587,10 +587,14 @@ def update_groups(conn, season_id, today=None):
             source_health.record(code, url, "error", e)
 
 
-def _with_browser(work):
-    """Abre Chromium y llama a work(page, F) con el scraper de la federación."""
-    import fetch_fiflp_2425 as F
+def _with_browser(work, deadline=None):
+    """Abre Chromium y llama a work(page, F) con el scraper de la federación: los lectores de
+    fetch_fiflp_2425 con la carga de fiflp_carga (espera a lo que el lector necesita, sin los 2,5 s
+    fijos, y pausa FIFLP_DELAY) y los reintentos cortados en `deadline` (time.monotonic())."""
+    import fetch_fiflp_2425
+    from fiflp_carga import Federacion
     from playwright.sync_api import sync_playwright
+    F = Federacion(fetch_fiflp_2425, deadline)
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(user_agent=(

@@ -12,7 +12,7 @@ histórico entre temporadas y el cambio de fase de Mi equipo los traten igual:
     LIGA BENJAMIN ... FASE LIGA X / SEGUNDA FASE X (cualquier letra) -> X1.. «Segunda Fase X»
     LIGA PREBENJAMIN DE GRAN CANARIA         -> PG1..   «Gran Canaria»
     LIGA PREBENJAMIN LANZAROTE|FUERTEVENTURA -> PLZ1.. / PFV1..
-    ... ELIMINATORIAS                        -> EL1.. (benjamín), PEL1.. (prebenjamín),
+    ... ELIMINATORIAS (de Gran Canaria)      -> EL1.. (benjamín), PEL1.. (prebenjamín),
                                                 ALEL1.. (alevín)  «Eliminatorias» (copa en la web)
 
 Alevín, solo de Gran Canaria (docs/alevin.md; todos los códigos empiezan por AL):
@@ -84,6 +84,10 @@ def comp_meta(name):
         return _alevin_meta(name, n)
     pre = cat == "prebenjamin"
     if "ELIMINATORIA" in n:
+        # EL/PEL son las de Gran Canaria (docs/alevin.md §2): las de otra isla saldrían con la isla de
+        # Gran Canaria y el mismo código que las suyas.
+        if "LANZAROTE" in n or "FUERTEVENTURA" in n:
+            raise ValueError(f"competición sin convenio de código: {name}")
         return ELIMINATORIAS[cat], "Eliminatorias"
     if "LANZAROTE" in n:
         if pre:

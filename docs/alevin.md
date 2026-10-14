@@ -23,7 +23,7 @@ El canal federación → base → JS está preparado para alevín de Gran Canari
    | Clausura | `ALCL1` | `Clausura Alevín` |
    | Eliminatorias | `ALEL1`… | `Eliminatorias` |
 
-   Benjamín y prebenjamín: las eliminatorias son `EL1`… y `PEL1`…, con la fase `Eliminatorias`; la Segunda Fase de benjamín admite cualquier letra (`A1`…, `F1`…). Las finales y semifinales de alevín no tienen convenio (`ALF` es la Segunda Fase F): no se crean.
+   Benjamín y prebenjamín: las eliminatorias de Gran Canaria son `EL1`… y `PEL1`…, con la fase `Eliminatorias` (las de Lanzarote y Fuerteventura no tienen convenio: tendrían el mismo código, así que `fiflp_manifest` aborta y `meta_by_name` no les da ninguno); la Segunda Fase de benjamín admite cualquier letra (`A1`…, `F1`…). Las finales y semifinales de alevín no tienen convenio (`ALF` es la Segunda Fase F): no se crean.
 3. **Eliminatorias** (de cualquier categoría): fase que empieza por `Eliminatorias`. La web las trata como copa (pantalla Copa, `isCupGroup`), y `generate_js` nunca recalcula su clasificación como una liga.
 4. **`data-alevin.js`** (temporada en curso): se genera **siempre**, aunque esté vacío; **no** va en `index.html` ni en `STATIC_ASSETS` de `sw.js` (se carga de forma perezosa). Lleva exactamente estas constantes, en este orden:
 

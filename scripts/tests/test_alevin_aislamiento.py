@@ -238,6 +238,9 @@ def test_a_cup_of_an_archived_season_is_created_in_its_category_with_its_code():
     ("LIGA ALEVIN F-8 FUERTEVENTURA", None),
     ("LIGA ALEVIN FUTBOL SALA GRAN CANARIA", None),
     ("FINAL LIGA PRIMERA ALEVIN GRAN CANARIA", None),
+    # Eliminatorias de otras islas: EL/PEL son las de Gran Canaria (docs/alevin.md §2); sin convenio.
+    ("ELIMINATORIAS LIGA BENJAMIN DE LANZAROTE", None),
+    ("ELIMINATORIAS PREBENJAMIN FUERTEVENTURA", None),
 ])
 def test_meta_by_name_alevin_codes_never_collide(name, meta):
     import import_fiflp_grupos as GR

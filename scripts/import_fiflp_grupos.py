@@ -259,7 +259,8 @@ def meta_by_name(comp_name):
     pre = "PREBENJAMIN" in n.replace(" ", "")
     island = _island(n)
     if "ELIMINATORIA" in n:
-        return ELIMINATORIAS[category], "Eliminatorias", island
+        # Las de Gran Canaria (docs/alevin.md §2); las de otra isla, sin convenio (mismo código).
+        return (ELIMINATORIAS[category], "Eliminatorias", island) if island == "grancanaria" else None
     if category == "ALEVIN":
         return _alevin_meta(n)
     m = re.match(r"^(SEMI)?FINAL(?:ES)? (.+)$", n)

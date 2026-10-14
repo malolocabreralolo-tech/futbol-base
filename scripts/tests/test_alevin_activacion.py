@@ -66,6 +66,11 @@ def test_comp_meta_codes(name, meta):
     "COPA CAMPEONES PREBENJAMIN",                # antes: PG (chocaba con PG1-4)
     "TORNEO CLAUSURA TEMPORADA PREBENJAMIN",
     "COPA CAMPEONES BENJAMÍN",
+    # Las eliminatorias de Lanzarote y Fuerteventura (el catálogo de 2026-27 ya las tiene en sénior)
+    # salían EL/PEL de Gran Canaria: isla equivocada y «código repetido: EL1» junto a las de GC.
+    "ELIMINATORIAS LIGA BENJAMIN DE LANZAROTE",
+    "ELIMINATORIAS PREBENJAMIN FUERTEVENTURA",
+    "ELIMINATORIAS DE ASCENSO BENJAMIN (LANZAROTE-FUERTEVENTURA)",
 ])
 def test_comp_meta_refuses_what_has_no_convention_or_is_out_of_scope(name):
     with pytest.raises(ValueError):

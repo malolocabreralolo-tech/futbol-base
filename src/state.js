@@ -511,6 +511,17 @@ export function alevinNeeds(name, datasets, portalSeason, { ensure = ensureAlevi
   })];
 }
 
+// Carga el alevín que falte de las temporadas `names` (alevinNeeds: data-alevin.js en la del portal y
+// data-season-<S>-alevin.js en una pasada, donde un 404 es «sin alevín» y cuenta como cargado) y
+// devuelve las que no llegaron, en el orden de `names` ([] si están todas): un fallo no se memoriza y
+// la llamada siguiente las vuelve a pedir. Como loadSeasons, para el cara a cara de un partido de
+// alevín y la Trayectoria, que sin él dirían de menos. `loaders`, los de alevinNeeds.
+export async function loadAlevinSeasons(datasets, names, portalSeason, loaders = {}) {
+  const done = await Promise.all(names.map((name) => Promise.all(alevinNeeds(name, datasets, portalSeason, loaders))
+    .then(() => true, () => false)));
+  return names.filter((_, i) => !done[i]);
+}
+
 // data-health.json (spec §4.10 y §7): la comprobación de las fuentes, parseada, o null si no
 // llega (sin conexión, por ejemplo). Un único vuelo: las llamadas simultáneas comparten la
 // petición; un fallo no se memoriza y la siguiente llamada reintenta.

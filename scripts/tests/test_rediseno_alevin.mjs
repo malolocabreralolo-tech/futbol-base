@@ -28,6 +28,8 @@ import { loadStore, migrateV1, STORE_KEY } from '../../src/store.js';
 import { parseRoute, routeHref } from '../../src/links.js';
 import { resolveParams, needsAlevin, startRouter } from '../../src/router.js';
 import { SCREEN_MAP } from '../../src/screens.js';
+import { previousPanelContent } from '../../src/screen-partido.js';
+import { trajectoryContent } from '../../src/team-extras.js';
 import { start, startContext } from '../../src/app.js';
 
 // El alevín de la temporada del portal de las fixtures (2025-26, el 24/09/2026: terminado).
@@ -461,4 +463,56 @@ test('start(): Tabla de AL1 en frío, Explorar con alevín y mi equipo alevín q
 test('startContext: el registro de las pruebas, con el alevín ya cargado (vacío) salvo que se pida otra cosa', () => {
   const ctx = startContext({ storage: memoryStorage(), portal: { season: PORTAL_SEASON, defaultTeam: DEFAULT_TEAM }, datasets: datasetsFor(), today: '2026-09-24' });
   assert.deepEqual(ctx.datasets.alevin, alevinData({}));
+});
+
+// ── Revisión adversarial de la web de alevín ─────────────────────────────
+
+const plain = (out) => String(out).replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+const MESAS_MATCH = (group) => group.rounds[0].matches.find((m) => m.home === 'Las Mesas Hu.' || m.away === 'Las Mesas Hu.');
+
+test('Cara a cara de un partido de alevín: «Ver temporadas anteriores» pide el alevín de cada una (un 404, sin alevín); si no llega, la caja de error', async () => {
+  const panel = async (serve, cat = 'alevin') => {
+    const asked = [];
+    const datasets = withAlevin({ seasonRaw: { '2024-2025': archive('2024-2025') }, seasonAlevin: {} });
+    const ctx = ctxFor('partido', {}, { datasets });
+    const group = ctx.model.group(PORTAL_SEASON, cat === 'alevin' ? 'AL1' : 'PG2');
+    const out = await previousPanelContent(ctx, MESAS_MATCH(group), group, { ensureSeason: async (name) => { asked.push(name); return serve(name); } });
+    return { out: plain(out), asked };
+  };
+  const found = await panel(() => pastAlevinRaw('2024-2025'));
+  assert.deepEqual(found.asked, ['2024-2025']);
+  assert.match(found.out, /^2024\/25 · Alevín, Segunda Fase A, Grupo 1 J1, 11 abr Las Mesas Hu\. – Maspalomas/);
+  // Sin alevín esa temporada (un 404): ahora sí es verdad que no se enfrentaron.
+  assert.equal((await panel(() => ({}))).out, 'No encontramos partidos entre estos dos equipos en la temporada 2024/25.');
+  // Si no llega (sin conexión, un 503), la caja de error con «Reintentar»: nunca el falso «No encontramos».
+  const failed = await panel(() => null);
+  assert.match(failed.out, /^No se pudieron cargar los datos de las temporadas anteriores\. Reintentar$/);
+  // Uno de prebenjamín no pide alevín.
+  assert.deepEqual((await panel(() => pastAlevinRaw('2024-2025'), 'prebenjamin')).asked, []);
+});
+
+test('Trayectoria: el alevín de la temporada del portal y el de cada pasada; sin el del portal, la caja de error; sin el de una pasada, sin él y con un aviso', async () => {
+  const content = async ({ portal = () => loaded(), past = () => pastAlevinRaw('2024-2025') } = {}) => {
+    const asked = [];
+    const datasets = pending({ seasonRaw: { '2024-2025': archive('2024-2025') } });
+    const ctx = ctxFor('equipo', {}, { datasets });
+    const out = await trajectoryContent(ctx, 'Las Mesas Hu.', async () => null, {
+      ensure: async () => { asked.push(PORTAL_SEASON); return portal(); },
+      ensureSeason: async (name) => { asked.push(name); return past(name); },
+    });
+    return { out: String(out), asked };
+  };
+  const full = await content();
+  assert.deepEqual(full.asked.sort(), ['2024-2025', PORTAL_SEASON]);
+  assert.match(full.out, /<span class="traj-team">Las Mesas Hu\.<\/span><span class="traj-group">Alevín, Primera Fase, Grupo 1<\/span>/, 'la del portal');
+  assert.match(full.out, /<span class="traj-team">Las Mesas Hu\.<\/span><span class="traj-group">Alevín, Segunda Fase A, Grupo 1<\/span>/, 'la pasada');
+  assert.doesNotMatch(full.out, /partial-box|error-box/);
+  // Sin data-alevin.js, la caja de error del panel (con su «Reintentar»), como sin una temporada.
+  assert.match(plain((await content({ portal: () => null })).out), /^No se pudieron cargar los datos de la trayectoria\. Reintentar$/);
+  // Sin el alevín de una pasada (sin conexión: esos ficheros solo se guardan al usarse), la trayectoria sin
+  // él, con un aviso y «Reintentar» (el del panel).
+  const partial = await content({ past: () => null });
+  assert.match(partial.out, /^<div class="box partial-box" role="status"><p class="partial-text">No se pudieron cargar los datos de alevín de la temporada 2024\/25: la trayectoria sale sin ellos\.<\/p><div class="buttons"><button class="button" type="button" data-action="retry">Reintentar<\/button><\/div><\/div>/);
+  assert.match(partial.out, /Alevín, Primera Fase, Grupo 1/);
+  assert.doesNotMatch(partial.out, /Alevín, Segunda Fase A/);
 });

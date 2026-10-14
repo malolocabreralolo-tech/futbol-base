@@ -15,7 +15,7 @@ import {
 } from './model.js';
 import { countdownLabel, dayMonth, matchHref, playerHref, shareAndAnnounce, venueDetails, venueUrl, weekdayDate } from './links.js';
 import {
-  ensureLineups, ensureMatchDetail, ensureSeasonData, lineupsKey, loadSeasons, normalizeTeamName,
+  ensureLineups, ensureMatchDetail, ensureSeasonData, lineupsKey, loadAlevinSeasons, loadSeasons, normalizeTeamName,
 } from './state.js';
 import { errorBox, retryBlock } from './shell.js';
 
@@ -324,9 +324,14 @@ export function previousMeetings(model, names, match, cat) {
 }
 
 // Lo que se pinta al desplegar «Ver temporadas anteriores», ya cargadas (o no) en datasets.seasonRaw.
+// En un partido de alevín, también su alevín (datasets.seasonAlevin, contrato común de alevín): sin él,
+// «No encontramos partidos» sería falso, así que es la caja de error, como una temporada sin cargar.
 export function previousBlock(ctx, match, group) {
   const names = pastSeasons(ctx.datasets.seasons, match.season);
-  if (names.some((name) => !ctx.model.season(name))) return errorBox('las temporadas anteriores');
+  const alevin = ctx.datasets.seasonAlevin || {};
+  if (names.some((name) => !ctx.model.season(name) || (group.cat === 'alevin' && !Object.hasOwn(alevin, name)))) {
+    return errorBox('las temporadas anteriores');
+  }
   const found = previousMeetings(ctx.model, names, match, group.cat);
   if (!found.length) {
     const span = names.length === 1 ? `la temporada ${seasonLabel(names[0])}` : `las temporadas ${seasonLabel(names[names.length - 1])} a ${seasonLabel(names[0])}`;
@@ -418,10 +423,14 @@ export function partidoNeeds(params, datasets, loaders = LOADERS) {
 // o de un dato mal formado que llegue después (por ejemplo, el RangeError de rowToMatch con una
 // temporada con una fila mal formada) se convierte en la caja de error del propio panel, con su
 // «Reintentar», en vez de dejar la promesa rechazada sin nadie que la atienda. Pura (no toca el
-// DOM): se prueba sin navegador.
-export async function previousPanelContent(ctx, match, group) {
+// DOM): se prueba sin navegador. En un partido de alevín, también el alevín de cada temporada
+// anterior (su data-season-<S>-alevin.js; un 404 es esa temporada sin alevín): el data-season-<S>.js
+// no lo trae. `alevinLoaders`, los cargadores de alevinNeeds (las pruebas pasan otros).
+export async function previousPanelContent(ctx, match, group, alevinLoaders = {}) {
   try {
-    await loadSeasons(ctx.datasets, pastSeasons(ctx.datasets.seasons, match.season));
+    const names = pastSeasons(ctx.datasets.seasons, match.season);
+    await loadSeasons(ctx.datasets, names);
+    if (group.cat === 'alevin') await loadAlevinSeasons(ctx.datasets, names, ctx.portal.season, alevinLoaders);
     return previousBlock(ctx, match, group);
   } catch (err) {
     console.error('[partido] temporadas anteriores', err);

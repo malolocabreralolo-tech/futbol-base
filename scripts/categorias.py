@@ -46,6 +46,15 @@ def category_of(name):
     return None
 
 
+def excluded(name):
+    """¿Es una competición que la web no publica a propósito? Fútbol sala (o la liga «LPFS») y
+    alevín de Lanzarote o Fuerteventura. Un nombre que no dice su categoría no lo es: no se sabe."""
+    n = _fold(name)
+    if re.search(r"\bSALA\b|\bLPFS\b", n):
+        return True
+    return "ALEVIN" in re.sub(r"[\s\-_.]", "", n) and "BENJAMIN" not in n and any(i in n for i in ALEVIN_FUERA)
+
+
 def parse_categories(text):
     """'benjamin,prebenjamin' (la entrada de un workflow o de --categorias) → ('BENJAMIN',
     'PREBENJAMIN'), en ese orden y sin repetir; vacío, las de siempre (DEFAULT_CATEGORIES). Una

@@ -41,6 +41,7 @@ from db import (get_or_create_category, get_or_create_group, get_or_create_seaso
                 delete_group_matches)
 from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
 from import_fiflp_goleadores import match_group, _category  # noqa: E402
+from categorias import category_of  # noqa: E402
 from import_fiflp_islas import COMP_META  # noqa: E402
 import import_fiflp_actas  # noqa: E402
 
@@ -214,18 +215,53 @@ def _island(name):
     return next((island for word, island in ISLANDS if word in name), "grancanaria")
 
 
+# Eliminatorias (2026-27: la fase entre la previa y la segunda fase): un código por categoría y la
+# fase «Eliminatorias», que la web trata como copa.
+ELIMINATORIAS = {"BENJAMIN": "EL", "PREBENJAMIN": "PEL", "ALEVIN": "ALEL"}
+
+
+def _alevin_meta(n):
+    """(prefijo, fase, isla) de una competición alevín de Gran Canaria (`n`, ya pasada por _fold),
+    con el convenio de docs/alevin.md: todos los códigos empiezan por AL y ninguno es el de un grupo
+    de benjamín (GC, BPGC, BC, FF, A-E…). Las finales y semifinales no tienen convenio (ALF es la
+    Segunda Fase F): sin código."""
+    gc = "grancanaria"
+    if re.match(r"^(SEMI)?FINAL", n):
+        return None
+    if "CAMPEONES" in n:
+        # 2024-25: una copa por fase ('… CATEGORIA ALEVIN FASE C') → ALCCC1.
+        m = re.search(r"\bFASE ([A-Z])$", n)
+        return ("ALCC" + m.group(1), f"Copa de Campeones {m.group(1)}", gc) if m else ("ALCC", "Copa de Campeones", gc)
+    if "CLAUSURA" in n:
+        return "ALCL", "Clausura Alevín", gc
+    m = re.search(r"\b(?:SEGUNDA FASE|FASE LIGA)\s+([A-Z])\b", n)
+    if m:
+        return "AL" + m.group(1), f"Segunda Fase {m.group(1)}", gc
+    if "PREFERENTE" in n:
+        return "ALP", "Preferente GC", gc
+    if "FASE PREVIA" in n or re.search(r"\bPRIMERA\b", n):
+        return "AL", "Primera Fase GC", gc
+    return None
+
+
 def meta_by_name(comp_name):
-    """(prefijo de código, fase, isla) de una competición de fútbol 7/8 de benjamín o
-    prebenjamín por su nombre en el catálogo, con los convenios de 2021-22 ('LIGA
-    PREFERENTE BENJAMIN F-8 GRAN CANARIA' → BPGC, 'Preferente GC'); None si no es de
-    las conocidas (fútbol sala, o un formato nuevo). Las finales y semifinales, las de
-    su competición base con F o S detrás. Solo para las temporadas archivadas
-    (comp_meta con by_name)."""
+    """(prefijo de código, fase, isla) de una competición de fútbol 7/8 de benjamín,
+    prebenjamín o alevín de Gran Canaria por su nombre en el catálogo, con los convenios
+    de 2021-22 ('LIGA PREFERENTE BENJAMIN F-8 GRAN CANARIA' → BPGC, 'Preferente GC') y,
+    en alevín, los de docs/alevin.md (prefijo AL: _alevin_meta); None si no es de las
+    conocidas (fútbol sala, alevín de otra isla, o un formato nuevo). Las finales y
+    semifinales, las de su competición base con F o S detrás. Para las temporadas
+    archivadas y para alevín (comp_meta)."""
     n = _fold(comp_name)
-    if "SALA" in n:
+    category = category_of(comp_name)
+    if "SALA" in n or not category:
         return None
     pre = "PREBENJAMIN" in n.replace(" ", "")
     island = _island(n)
+    if "ELIMINATORIA" in n:
+        return ELIMINATORIAS[category], "Eliminatorias", island
+    if category == "ALEVIN":
+        return _alevin_meta(n)
     m = re.match(r"^(SEMI)?FINAL(?:ES)? (.+)$", n)
     if m:
         base = meta_by_name(m.group(2))
@@ -277,8 +313,8 @@ def meta_by_name(comp_name):
 def comp_meta(conn, comp, siblings, comp_name="", by_name=False):
     """(prefijo, fase, isla) de una competición: la de un grupo hermano ya en la
     base (su código menos el número de su grupo), la de EXTRA_META o la de
-    COMP_META y, con `by_name` (las temporadas archivadas), la de su nombre
-    (meta_by_name); None si no se sabe."""
+    COMP_META y, con `by_name` (las temporadas archivadas) o si es de alevín, la de
+    su nombre (meta_by_name); None si no se sabe."""
     for entry, gid in siblings:
         row = conn.execute("SELECT code, phase, island FROM groups WHERE id=?", (gid,)).fetchone()
         n = str(group_number(entry.get("grupo_name")))
@@ -289,7 +325,8 @@ def comp_meta(conn, comp, siblings, comp_name="", by_name=False):
     if comp in COMP_META:
         prefix, phase = COMP_META[comp]
         return prefix, phase, _iso_island(prefix)
-    return meta_by_name(comp_name) if by_name else None
+    # Alevín, en cualquier temporada: no tiene hermanos de futbolaspalmas ni EXTRA_META.
+    return meta_by_name(comp_name) if by_name or category_of(comp_name) == "ALEVIN" else None
 
 
 def actas_complete(folder, season):
@@ -535,7 +572,9 @@ def import_season(conn, folder, season, log=print):
         if season_id else {}
     for entry in missing:
         ident = (str(entry["comp"]), str(entry["grupo"]))
-        meta = comp_meta(conn, ident[0], mapped.get(ident[0], []), entry.get("comp_name") or "", by_name=archived)
+        # Una competición que no se publica (categorias.category_of) no tiene código.
+        meta = comp_meta(conn, ident[0], mapped.get(ident[0], []), entry.get("comp_name") or "",
+                         by_name=archived) if _category(entry.get("comp_name")) else None
         if not meta:
             report["no_meta"] += 1
             log(f"  ! {season} {entry.get('comp_name')} {entry.get('grupo_name')}: competición sin código")

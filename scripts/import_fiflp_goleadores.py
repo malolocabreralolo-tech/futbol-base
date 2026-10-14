@@ -12,6 +12,9 @@ temporada (match_group):
      categoría; el que más comparte, si son al menos 3, dos tercios de los de
      los dos lados, y ningún otro grupo empata. Sin clasificación (una copa),
      los equipos de sus goleadores, que deben estar en el grupo.
+Nunca un grupo de otra categoría (categorias.category_of de su competición): los
+clubes de alevín son los de benjamín, y un grupo alevín casaba con el de benjamín
+de los mismos equipos. Una competición que no se publica no casa con nada.
 
 Solo se escriben los goleadores de un grupo de la base que no tenga ninguno o
 cuyos goleadores vengan de aquí (tabla fiflp_scorer_groups): los que ya trae
@@ -30,6 +33,7 @@ from fiflp_names import fed_alias, match_teams, team_key, team_score  # noqa: E4
 from import_fiflp_cups_2324 import clean_team_name  # noqa: E402
 from update_fiflp import write_scorers  # noqa: E402
 from fiflp_tables import official_rows, settle  # noqa: E402
+from categorias import category_of  # noqa: E402
 
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 RAW_FILE = re.compile(r"^fiflp_goleadores_(\d{4}-\d{4})_raw\.json$")
@@ -37,21 +41,29 @@ GOLEADORES_VERSION = "3"   # en la huella: subirla reimporta los goleadores de t
 
 
 def _category(comp_name):
-    fold = (comp_name or "").upper().replace("-", "").replace(" ", "")
-    return "PREBENJAMIN" if "PREBENJAMIN" in fold else "BENJAMIN"
+    """La categoría de la base de una competición (categorias.category_of): 'ALEVIN',
+    'PREBENJAMIN', 'BENJAMIN' o None si no se publica."""
+    return category_of(comp_name)
+
+
+def group_category(conn, group_id):
+    """'BENJAMIN', 'PREBENJAMIN' o 'ALEVIN' de un grupo de la base."""
+    row = conn.execute("""SELECT upper(c.name) FROM groups g JOIN categories c ON c.id=g.category_id
+                          WHERE g.id=?""", (group_id,)).fetchone()
+    return row[0] if row else None
 
 
 def _db_groups(conn, season_id, category):
-    """{group_id: [nombres de sus equipos]} (clasificación y calendario)."""
+    """{group_id: [nombres de sus equipos]} (clasificación y calendario) de la categoría."""
     out = {}
     for gid, name in conn.execute("""
         SELECT g.id, t.name FROM groups g JOIN categories c ON c.id=g.category_id
           JOIN standings s ON s.group_id=g.id JOIN teams t ON t.id=s.team_id
-         WHERE g.season_id=? AND c.name=?
+         WHERE g.season_id=? AND upper(c.name)=upper(?)
         UNION
         SELECT g.id, t.name FROM groups g JOIN categories c ON c.id=g.category_id
           JOIN matches m ON m.group_id=g.id JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
-         WHERE g.season_id=? AND c.name=?""", (season_id, category, season_id, category)):
+         WHERE g.season_id=? AND upper(c.name)=upper(?)""", (season_id, category, season_id, category)):
         out.setdefault(gid, []).append(name)
     return out
 
@@ -92,7 +104,7 @@ def by_actas(conn, index, comp, grupo):
 
 def _is_cup(text):
     t = (text or "").upper()
-    return any(w in t for w in ("COPA", "CAMPEON", "FINAL", "TORNEO", "CLAUSURA"))
+    return any(w in t for w in ("COPA", "CAMPEON", "FINAL", "TORNEO", "CLAUSURA", "ELIMINATORIA"))
 
 
 def by_teams(conn, season_id, entry):
@@ -101,14 +113,15 @@ def by_teams(conn, season_id, entry):
     todos), basta con que los de los goleadores estén en el grupo."""
     standings = [r["team"] for r in entry.get("standings") or []]
     teams = standings or sorted({r[1] for r in entry.get("scorers") or []})
-    if len(teams) < 3:
+    category = _category(entry.get("comp_name"))
+    if len(teams) < 3 or not category:
         return None
     # Desempates (una copa insular con los mismos equipos que un grupo de su liga): el mismo tipo
     # de competición (copa o liga), el tamaño más parecido y la puntuación de los nombres.
     cup = _is_cup(entry.get("comp_name"))
     phases = dict(conn.execute("SELECT id, phase FROM groups WHERE season_id=?", (season_id,)).fetchall())
     scored = []
-    for gid, db_teams in _db_groups(conn, season_id, _category(entry.get("comp_name"))).items():
+    for gid, db_teams in _db_groups(conn, season_id, category).items():
         n, quality = _overlap(teams, db_teams)
         if n >= 3 and n * 3 >= len(teams) * 2 and (not standings or n * 3 >= len(db_teams) * 2):
             same_kind = _is_cup(phases.get(gid)) == cup
@@ -130,8 +143,20 @@ def by_owner(conn, season_id, entry):
 
 
 def match_group(conn, season_id, index, entry):
-    return (by_owner(conn, season_id, entry) or by_actas(conn, index, entry["comp"], entry["grupo"])
-            or by_teams(conn, season_id, entry))
+    """El grupo de la base de un grupo de la federación: el que creó import_fiflp_grupos, el de sus
+    actas o el de sus equipos, en ese orden, y siempre de la categoría de su competición. Un voto
+    de otra categoría (un acta alevín que cayó en un partido de benjamín antes de que el
+    reconciliador mirara la categoría) no vale: se sigue con el siguiente."""
+    category = _category(entry.get("comp_name"))
+    if not category:
+        return None
+    for find in (lambda: by_owner(conn, season_id, entry),
+                 lambda: by_actas(conn, index, entry["comp"], entry["grupo"]),
+                 lambda: by_teams(conn, season_id, entry)):
+        gid = find()
+        if gid and group_category(conn, gid) == category:
+            return gid
+    return None
 
 
 def team_bridge(conn, group_id, entry):

@@ -178,3 +178,19 @@ def test_the_bot_runs_the_category_migration_at_start():
     text = (ROOT / "scripts" / "fetch_futbolaspalmas.py").read_text(encoding="utf-8")
     main = text[text.index("def main():"):]
     assert "migrate_categories" in main and main.index("init_db(conn)") < main.index("migrate_categories")
+
+
+@pytest.mark.parametrize("name, expected", [
+    ("LIGA ALEVIN FUTBOL SALA GRAN CANARIA", True),
+    ("LIGA PREBENJAMIN FUTBOL SALA GRAN CANARIA (LPFS)", True),
+    ("LIGA ALEVIN LANZAROTE FASE 1", True),
+    ("COPA CABILDO DE LANZAROTE PRIMERA ALEVIN FUTBOL-8", True),
+    ("LIGA BENJAMIN DE LANZAROTE FASE 1", False),
+    ("LIGA ALEVIN GRAN CANARIA FASE PREVIA", False),
+    ("MINI COPA JOSÉ ANTONIO RUIZ CABALLERO", False),      # no dice la categoría: no se sabe
+    ("test", False),
+    (None, False),
+])
+def test_excluded(name, expected):
+    from categorias import excluded
+    assert excluded(name) is expected

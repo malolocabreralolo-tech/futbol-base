@@ -18,8 +18,8 @@ finalizado que la base aún no tiene (la federación lo publica días después) 
 hora de los que no la tienen. Nunca cambia un marcador que ya está.
 
 Cada liga se casa con un grupo de la temporada en curso de la misma categoría
-por sus equipos (group_overlap, al menos 0,6 y sin empate); los equipos, con
-canonical_names contra los del grupo.
+(categorias.category_of de su nombre) por sus equipos (group_overlap, al menos
+0,6 y sin empate); los equipos, con canonical_names contra los del grupo.
 """
 import hashlib
 import json
@@ -99,8 +99,9 @@ def parse_goleadores(text):
 
 
 def _category(name):
-    fold = (name or "").upper().replace("Í", "I").replace(" ", "")
-    return "PREBENJAMIN" if "PREBENJAMIN" in fold else "BENJAMIN"
+    """La categoría de la base de una liga de la app (categorias.category_of), o None."""
+    from categorias import category_of
+    return category_of(name)
 
 
 def _season_groups(conn, season_id, category):
@@ -110,14 +111,17 @@ def _season_groups(conn, season_id, category):
 
 
 def match_liga(conn, season_id, liga):
-    """El grupo de la base de una liga de la app: el que más equipos comparte
-    (al menos MIN_OVERLAP de la más pequeña), sin empate."""
+    """El grupo de la base de una liga de la app: el de su categoría que más equipos comparte
+    (al menos MIN_OVERLAP de la más pequeña), sin empate. Solo de su categoría: una liga alevín
+    tiene los clubes de un grupo de benjamín (10 de las 32 de 2026-27 casaban con un FF) y le
+    escribiría estados, horas y goles. Una liga de una categoría que no se publica, con ninguno."""
     from fiflp_names import group_overlap
     teams = [t.get("nombre") for t in liga.get("tabla") or [] if t.get("nombre")]
-    if len(teams) < 3:
+    category = _category(liga.get("name"))
+    if len(teams) < 3 or not category:
         return None
     scored = sorted(((group_overlap(teams, names), gid)
-                     for gid, names in _season_groups(conn, season_id, _category(liga.get("name"))).items()),
+                     for gid, names in _season_groups(conn, season_id, category).items()),
                     reverse=True)
     if not scored or scored[0][0] < MIN_OVERLAP or (len(scored) > 1 and scored[1][0] == scored[0][0]):
         return None

@@ -1,0 +1,41 @@
+{
+  "season": "2026-2027",
+  "groups": [
+    {
+      "id": "FV11",
+      "cat": "benjamin",
+      "name": "Grupo 1",
+      "phase": "Fuerteventura Fase 1",
+      "island": "fuerteventura",
+      "fullName": "BENJAMIN FUERTEVENTURA FASE 1 - GRUPO 1",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977017&CodGrupo=55194132"
+    },
+    {
+      "id": "FV12",
+      "cat": "benjamin",
+      "name": "Grupo 2",
+      "phase": "Fuerteventura Fase 1",
+      "island": "fuerteventura",
+      "fullName": "BENJAMIN FUERTEVENTURA FASE 1 - GRUPO 2",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977017&CodGrupo=55194142"
+    },
+    {
+      "id": "FV13",
+      "cat": "benjamin",
+      "name": "Grupo 3",
+      "phase": "Fuerteventura Fase 1",
+      "island": "fuerteventura",
+      "fullName": "BENJAMIN FUERTEVENTURA FASE 1 - GRUPO 3",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977017&CodGrupo=55194151"
+    },
+    {
+      "id": "FV14",
+      "cat": "benjamin",
+      "name": "Grupo 4",
+      "phase": "Fuerteventura Fase 1",
+      "island": "fuerteventura",
+      "fullName": "BENJAMIN FUERTEVENTURA FASE 1 - GRUPO 4",
+      "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977017&CodGrupo=55194156"
+    }
+  ]
+}

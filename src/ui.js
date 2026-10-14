@@ -313,16 +313,24 @@ export function groupNav(nav, { hrefFor, listHref, mineId = null }) {
   const sub = `${entry.label} · ${own.leader ? `líder: ${own.leader}` : countLabel(own.teams, 'equipo', 'equipos')}`;
   const center = html`<a class="group-now" id="grupo-lista" href="${listHref}"><span class="group-title">${title}</span><span class="group-sub">${sub}</span><span class="vh">. Ver los ${list.length} grupos</span></a>`;
   const steps = html`<div class="group-steps">${groupStep(nav.prev, '‹', 'Grupo anterior', 'grupo-prev', hrefFor)}${center}${groupStep(nav.next, '›', 'Grupo siguiente', 'grupo-next', hrefFor)}</div>`;
-  const strip = list.length >= STRIP_MIN ? html`<div class="group-strip">${list.map((group, i) => {
-    const label = groupSummary(group).label;
-    const short = label.replace(/^Grupo\s+/, '');
-    const cls = group.id === mineId ? 'group-chip is-mine' : 'group-chip';
-    const inner = html`<span class="vh">${label.slice(0, label.length - short.length)}</span>${short}${group.id === mineId ? html`<span class="vh"> (grupo de mi equipo)</span>` : ''}`;
-    return i === index
-      ? html`<a class="${cls}" id="grupo-${group.id}" href="${hrefFor(group)}" aria-current="true">${inner}</a>`
-      : html`<a class="${cls}" id="grupo-${group.id}" href="${hrefFor(group)}">${inner}</a>`;
-  })}</div>` : '';
+  const strip = list.length >= STRIP_MIN ? html`<div class="group-strip">${list.map((group, i) => groupChip(group, hrefFor(group), {
+    id: `grupo-${group.id}`, current: i === index, mine: group.id === mineId,
+  }))}</div>` : '';
   return html`<nav class="group-nav" aria-label="Grupos de ${entry.label}">${steps}${strip}</nav>`;
+}
+
+// Una casilla de la tira de grupos (groupNav) o del índice de «Todos los grupos» (Jornada): el número
+// del grupo («5»; si su nombre no es «Grupo N», el nombre entero), con «Grupo» y «(grupo de mi equipo)»
+// para el lector de pantalla. current: aria-current; mine: el resalte propio; id: el suyo, si lleva.
+export function groupChip(group, href, { id = null, current = false, mine = false } = {}) {
+  const label = groupSummary(group).label;
+  const short = label.replace(/^Grupo\s+/, '');
+  const cls = mine ? 'group-chip is-mine' : 'group-chip';
+  const idAttr = id ? html` id="${id}"` : '';
+  const inner = html`<span class="vh">${label.slice(0, label.length - short.length)}</span>${short}${mine ? html`<span class="vh"> (grupo de mi equipo)</span>` : ''}`;
+  return current
+    ? html`<a class="${cls}"${idAttr} href="${href}" aria-current="true">${inner}</a>`
+    : html`<a class="${cls}"${idAttr} href="${href}">${inner}</a>`;
 }
 
 // El atajo dentro del grupo, «Jornada | Tabla | Evolución», en Tabla y en Jornada: la barra lleva al

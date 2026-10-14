@@ -6,7 +6,8 @@
 // el .ics del grupo.
 import { html } from './html.js';
 import {
-  screenHead, matchRow, notice, empty, listEs, shareStatus, block, countLabel, segmented, groupNav, groupViews, scrollToCurrent,
+  screenHead, matchRow, notice, empty, listEs, shareStatus, block, countLabel, segmented, groupChip, groupNav, groupViews,
+  scrollToCurrent,
 } from './ui.js';
 import { errorBox } from './shell.js';
 import {
@@ -175,12 +176,7 @@ function competitionView(ctx, s) {
   const near = m => (m == null ? null : routeHref('jornada', { ...at, r: String(m) }));
   const nav = html`<nav class="round-nav" aria-label="Jornadas">${roundStep(near(numbers[k - 1]), `Jornada ${numbers[k - 1]}`, '‹', 'Jornada anterior', 'round-prev')}<div class="round-now"><h2 class="round-title">Jornada ${n} de ${numbers[numbers.length - 1]}</h2><p class="round-dates">${dateRange(dates[0], dates[dates.length - 1])} · ${countLabel(groups.length, 'grupo', 'grupos')}</p></div>${roundStep(near(numbers[k + 1]), `Jornada ${numbers[k + 1]}`, '›', 'Jornada siguiente', 'round-next')}</nav>`;
   // El índice: una casilla por grupo, en su orden, que salta a su bloque (un ancla de la página).
-  const index = html`<nav class="group-index" aria-label="Ir a un grupo"><div class="group-strip">${groups.map((g) => {
-    const label = groupSummary(g).label;
-    const short = label.replace(/^Grupo\s+/, '');
-    const own = Boolean(mineOf.get(g.id));
-    return html`<a class="${own ? 'group-chip is-mine' : 'group-chip'}" href="#jornada-${g.id}"><span class="vh">${label.slice(0, label.length - short.length)}</span>${short}${own ? html`<span class="vh"> (grupo de mi equipo)</span>` : ''}</a>`;
-  })}</div></nav>`;
+  const index = html`<nav class="group-index" aria-label="Ir a un grupo"><div class="group-strip">${groups.map(g => groupChip(g, `#jornada-${g.id}`, { mine: Boolean(mineOf.get(g.id)) }))}</div></nav>`;
   const ordered = [...rounds.filter(x => x.mine), ...rounds.filter(x => !x.mine)];
   const sections = ordered.map(({ group, round, mine }) => {
     const summary = groupSummary(group);

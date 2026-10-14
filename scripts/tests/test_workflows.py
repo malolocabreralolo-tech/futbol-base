@@ -94,6 +94,33 @@ def test_update_has_concurrency_and_timeout():
     assert data["jobs"]["update"].get("timeout-minutes") == 45
 
 
+def test_update_logs_the_federation_pass_as_it_goes():
+    """El tiempo de cada grupo se mide en el log (plazo global y rotación de update_fiflp.py): sin
+    búfer, cada línea sale con su hora y un corte por tiempo no se lleva el final del log."""
+    steps = _steps(_load("update.yml"), "update")
+    scrape = next(s for s in steps if "fetch_futbolaspalmas" in (s.get("run") or ""))
+    assert scrape["env"].get("PYTHONUNBUFFERED") == "1"
+    assert scrape["env"].get("FIFLP_UPDATE") == "1"
+
+
+def test_update_opens_one_issue_per_new_competition_without_stopping_the_bot():
+    """Las competiciones nuevas de la federación (newCompetitions de data-health.json, que escribe
+    update_fiflp.check_competitions) abren una issue cada una (avisar_competiciones.py, que no las
+    repite). Corre aunque falle el paso del bot y un fallo suyo no tumba el job ni el commit."""
+    data = _load("update.yml")
+    assert data["permissions"].get("issues") == "write"
+    assert data["permissions"].get("contents") == "write"
+    steps = _steps(data, "update")
+    runs = [(s.get("run") or "") for s in steps]
+    fetch_idx = next(i for i, r in enumerate(runs) if "fetch_futbolaspalmas" in r)
+    idx = next(i for i, r in enumerate(runs) if "avisar_competiciones.py" in r)
+    step = steps[idx]
+    assert idx > fetch_idx
+    assert step.get("continue-on-error") is True and step.get("if") == "${{ !cancelled() }}"
+    assert step["env"].get("GH_TOKEN") == "${{ github.token }}"
+    assert "${{" not in step["run"], "nada interpolado en el guion"
+
+
 def test_update_stages_all_generate_js_outputs():
     """generate_js.py (via fetch_futbolaspalmas.py) writes data-*.js,
     index.html (?v= bump) and sw.js (CACHE_NAME bump, C3/C4). The old
@@ -125,6 +152,21 @@ def test_update_gates_db_commit_on_published_changes():
         "futbolbase.db must be staged only inside the else branch, after the "
         "published-artifact gate"
     )
+
+
+def test_update_also_commits_the_db_when_the_bot_marks_it():
+    """La base guarda estado del bot que no se publica (update_fiflp: la primera pasada completa de
+    un grupo recién activado, fiflp_full_pending). Con la puerta de arriba se perdía en una pasada sin
+    cambios publicados y la siguiente repetía la lectura completa: el bot deja FIFLP_DB_MARK (fuera
+    del repositorio) y update.yml sube la base también entonces."""
+    data = _load("update.yml")
+    scrape = next(s for s in _steps(data, "update") if s.get("id") == "scrape")
+    mark = scrape["env"]["FIFLP_DB_MARK"]
+    assert mark.startswith("${{ runner.temp }}/"), "la marca, fuera del repositorio (nunca se comitea)"
+    name = mark.split("/")[-1]
+    commit_run = next(r for r in _runs(data, "update") if "git commit" in r)
+    gate = next(l for l in commit_run.splitlines() if "git diff --cached --quiet" in l)
+    assert f'[ -f "$RUNNER_TEMP/{name}" ]' in gate, gate
 
 
 # ---------------------------------------------------------------- tests.yml
@@ -174,6 +216,17 @@ def test_tests_yml_pytest_installs_pyyaml():
     assert re.search(r"pip install[^\n]*\bpyyaml\b", runs), (
         "pytest job must install pyyaml (test_workflows.py imports yaml)"
     )
+
+
+def test_python_tests_run_without_playwright():
+    """El job pytest de tests.yml no instala Playwright (update.yml sí): una prueba que lo importa
+    tal cual tumba el job (14/10/2026, test_bot_plazo). Las que necesitan navegador lo piden con
+    pytest.importorskip, mejor dentro de la prueba o de un fixture, para no saltarse las demás."""
+    runs = " ".join(_runs(_load("tests.yml"), "pytest"))
+    assert "playwright" not in runs
+    for path in sorted((ROOT / "scripts" / "tests").glob("test_*.py")):
+        for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            assert not re.match(r"\s*(?:import|from)\s+playwright\b", line), f"{path.name}:{n}: {line.strip()}"
 
 
 def test_tests_yml_paths_cover_fonts_icons_and_crests():

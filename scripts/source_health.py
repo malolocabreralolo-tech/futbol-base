@@ -11,6 +11,11 @@ REPORT_PATH = ROOT / "data-health.json"
 # reescribirlo en cada ejecución (cada ~5 h) generaba un commit y un despliegue
 # de Pages solo para mover la hora de comprobación.
 HEARTBEAT = timedelta(hours=24)
+# Lo que cambia en cada pasada sin que un visitante vea nada distinto: la hora de la comprobación y
+# las notas de la pasada del bot de la federación (rotación, grupos que descansan, tiempos).
+VOLATILE = ("checkedAt", "run")
+# Y en cada grupo: la hora de su comprobación.
+GROUP_VOLATILE = ("checkedAt",)
 _report = None
 _previous = None
 
@@ -31,6 +36,42 @@ def begin(season):
     _previous = _read_previous()
     _report = {"version": 1, "season": season, "groups": {},
                "nextSeason": _previous.get("nextSeason", {"name": load_config()["nextSeason"], "status": "pending"})}
+    _carry_new_competitions()
+
+
+def _same_season():
+    return bool(_report and _previous and _previous.get("season") == _report["season"])
+
+
+def _carry_new_competitions():
+    """Las competiciones nuevas siguen hasta que el bot vuelva a leer el desplegable (sin
+    federación en esta pasada o si falla la lectura, se quedan); con otra temporada, fuera."""
+    items = _previous.get("newCompetitions") if _same_season() else None
+    if isinstance(items, list) and items:
+        _report["newCompetitions"] = items
+
+
+def new_competitions():
+    """[{id, name, firstSeen}]: las competiciones de la federación que la temporada no tiene."""
+    return list((_report or {}).get("newCompetitions") or [])
+
+
+def set_new_competitions(items):
+    """Las que acaba de ver update_fiflp.check_competitions (vacía: ninguna)."""
+    if _report is None:
+        return
+    if items:
+        _report["newCompetitions"] = list(items)
+    else:
+        _report.pop("newCompetitions", None)
+
+
+def previous_groups():
+    """Las comprobaciones publicadas de la temporada en curso ({código: entrada}): el bot de la
+    federación vuelve a mirar un grupo cerrado cuya última comprobación falló o que no tiene ninguna
+    (update_fiflp.plan_groups). Su orden no depende de ellas: no siempre se suben."""
+    groups = (_previous or {}).get("groups") if _same_season() else None
+    return dict(groups) if isinstance(groups, dict) else {}
 
 
 def record(code, url, status, message="", now=None):
@@ -42,10 +83,28 @@ def record(code, url, status, message="", now=None):
     }
 
 
+def carry(code, url=None):
+    """El grupo no se comprobó en esta pasada (rotación del bot de la federación, un cerrado que
+    descansa, o de una categoría que este workflow no lee: FIFLP_CATS): su última comprobación sigue
+    como estaba, sin marcarlo como error. Sin comprobación anterior en la temporada (o, con `url`,
+    con otra URL: otro grupo con el mismo código), nada: todavía no sale."""
+    if _report is None:
+        return
+    entry = previous_groups().get(code)
+    if isinstance(entry, dict) and (url is None or entry.get("url") == url):
+        _report["groups"][code] = dict(entry)
+
+
+def note_run(info):
+    """Las notas de la pasada del bot (VOLATILE: no reescriben el informe por sí solas)."""
+    if _report is not None:
+        _report["run"] = info
+
+
 def meaningful(report):
     """The report without its check timestamps: what a visitor would see change."""
-    view = {k: v for k, v in report.items() if k != "checkedAt"}
-    view["groups"] = {code: {k: v for k, v in (group or {}).items() if k != "checkedAt"}
+    view = {k: v for k, v in report.items() if k not in VOLATILE}
+    view["groups"] = {code: {k: v for k, v in (group or {}).items() if k not in GROUP_VOLATILE}
                       for code, group in (report.get("groups") or {}).items()}
     return view
 

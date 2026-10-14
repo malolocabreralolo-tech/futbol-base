@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       temporada:
-        description: 'Tanda: 17/18/19 (islas), 17gc/18gc/19gc (Gran Canaria), 20 (copas Cabildo LZ)'
+        description: 'Tanda: 17/18/19 (islas), 17gc/18gc/19gc (Gran Canaria), 20 (copas Cabildo LZ), 22 (2026-27 benjamín y prebenjamín), 22al (2026-27 alevín de Gran Canaria)'
         required: true
         default: '19'
       ids:
@@ -21,8 +21,8 @@ jobs:
     timeout-minutes: 180
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install Playwright

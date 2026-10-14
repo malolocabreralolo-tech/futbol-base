@@ -20,6 +20,7 @@ import tempfile
 from urllib.parse import parse_qs, urlparse
 
 from db import get_connection, PROJECT_ROOT
+from categorias import DB_NAME
 from fetch_futbolaspalmas import fetch, parse_all_matches, parse_standings
 from portal_config import load_config
 
@@ -47,7 +48,7 @@ def validate_manifest(manifest, current, adding=False):
         if not re.fullmatch(r"[A-Z][A-Z0-9_-]{0,19}", code) or code in codes:
             raise ValueError("Los códigos deben ser válidos y únicos entre categorías")
         codes.add(code)
-        if group.get("cat") not in ["benjamin", "prebenjamin"]:
+        if group.get("cat") not in DB_NAME:          # benjamin, prebenjamin, alevin
             raise ValueError("Categoría no admitida")
         if group.get("island") not in ["grancanaria", "lanzarote", "fuerteventura"]:
             raise ValueError("Isla no admitida")
@@ -82,7 +83,9 @@ def fiflp_evidence(group, raw, names=None):
     """(rounds, standings) de un grupo de la federación, sacados del raw de
     fetch_fiflp_islas.py con la misma forma que dan los parsers de futbolaspalmas:
     rounds {'Jornada N': [[fecha ISO, local, visitante, gl, gv, hora, campo]]} y
-    standings [[pos, equipo, pts, J, G, E, P, GF, GC, DF]]. `names` traduce el
+    standings [[pos, equipo, pts, J, G, E, P, GF, GC, DF]]. Si el raw trae el código
+    del acta del partido (fiflp_acta, desde octubre de 2026), va como octava columna
+    (insert_groups lo guarda: así el bot lee su acta). `names` traduce el
     nombre de FIFLP al que ya usa la base (escudo, histórico, ficha). Antes de la
     primera jornada FIFLP no publica clasificación: sale de los equipos del
     calendario, todo a cero y por orden alfabético."""
@@ -105,7 +108,8 @@ def fiflp_evidence(group, raw, names=None):
             rounds.setdefault(label, []).append([
                 _iso(m.get("date") or jornada.get("date")), name(home), name(away),
                 m.get("hs") if both else None, m.get("as") if both else None,
-                (m.get("time") or "") or None, (m.get("venue") or "") or None])
+                (m.get("time") or "") or None, (m.get("venue") or "") or None]
+                + ([m["fiflp_acta"]] if m.get("fiflp_acta") else []))
     from fiflp_names import team_key
     crudos = {clean_team_name(t) for t in [r.get("team") for r in entry.get("standings") or []] +
               [m.get(s) for j in entry.get("jornadas") or [] for m in j.get("matches") or [] for s in ("home", "away")]}
@@ -216,15 +220,35 @@ def add_groups(conn, manifest, evidence):
         insert_groups(conn, sid, evidence)
 
 
+def category_id(conn, key):
+    """El id de la categoría de la web ('alevin') en la tabla categories: sin distinguir mayúsculas,
+    la fila en mayúsculas si hay dos (la 'prebenjamin' duplicada) y, si falta, se crea en
+    mayúsculas ('ALEVIN'). Como db.get_or_create_category, sin su commit: la activación entera
+    es una sola transacción."""
+    row = conn.execute("SELECT id FROM categories WHERE upper(name)=upper(?) ORDER BY name<>upper(name), id LIMIT 1",
+                       (key,)).fetchone()
+    if row:
+        return row[0]
+    if key.lower() not in DB_NAME:
+        raise ValueError("Falta la categoría en la base")
+    return conn.execute("INSERT INTO categories(name) VALUES(?)", (DB_NAME[key.lower()],)).lastrowid
+
+
+# Los grupos de la federación recién dados de alta: la primera pasada del bot lee TODAS sus jornadas
+# ya jugadas (update_fiflp.full_read_pending), no solo las de las últimas tres semanas, para tener el
+# código del acta de cada partido; sin eso, las actas de las primeras jornadas no se leían nunca.
+FULL_READ_TABLE = "CREATE TABLE IF NOT EXISTS fiflp_full_pending (group_id INTEGER PRIMARY KEY, since TEXT)"
+
+
 def insert_groups(conn, sid, evidence):
-    """Grupos con su clasificación y su calendario, ya verificados (verify_sources)."""
+    """Grupos con su clasificación y su calendario, ya verificados (verify_sources). Los de la
+    federación quedan marcados para la lectura completa de la primera pasada del bot."""
+    conn.execute(FULL_READ_TABLE)
     for item in evidence:
         g = item["group"]
-        cat = conn.execute("SELECT id FROM categories WHERE lower(name)=?", (g["cat"],)).fetchone()
-        if not cat:
-            raise ValueError("Falta la categoría en la base")
+        cat = category_id(conn, g["cat"])
         gid = conn.execute("""INSERT INTO groups(season_id,category_id,code,name,full_name,phase,island,url,current_jornada)
-            VALUES(?,?,?,?,?,?,?,?,?)""", (sid, cat[0], g["id"], g["name"], g.get("fullName", g["name"]),
+            VALUES(?,?,?,?,?,?,?,?,?)""", (sid, cat, g["id"], g["name"], g.get("fullName", g["name"]),
             g["phase"], g["island"], g["url"], item.get("current") or next(reversed(item["rounds"])))).lastrowid
         team_ids = {}
         for row in item["standings"]:
@@ -232,9 +256,14 @@ def insert_groups(conn, sid, evidence):
             conn.execute("""INSERT INTO standings(group_id,team_id,position,points,played,won,drawn,lost,gf,gc,gd)
                 VALUES(?,?,?,?,?,?,?,?,?,?,?)""", (gid, team_ids[row[1]], row[0], *row[2:]))
         for round_name, matches in item["rounds"].items():
-            for dt, home, away, hs, away_score, kickoff, venue in matches:
-                conn.execute("""INSERT INTO matches(group_id,jornada,date,time,home_team_id,away_team_id,home_score,away_score,venue)
-                    VALUES(?,?,?,?,?,?,?,?,?)""", (gid, round_name, dt, kickoff, team_ids[home], team_ids[away], hs, away_score, venue))
+            for dt, home, away, hs, away_score, kickoff, venue, *acta in matches:
+                # El código del acta, si el raw de la federación lo trae (octava columna de fiflp_evidence).
+                extra = ",fiflp_acta" if acta else ""
+                conn.execute(f"""INSERT INTO matches(group_id,jornada,date,time,home_team_id,away_team_id,home_score,away_score,
+                                                     venue{extra}) VALUES(?,?,?,?,?,?,?,?,?{",?" if acta else ""})""",
+                             (gid, round_name, dt, kickoff, team_ids[home], team_ids[away], hs, away_score, venue, *acta[:1]))
+        if urlparse(g["url"]).hostname == "www.fiflp.com":
+            conn.execute("INSERT OR REPLACE INTO fiflp_full_pending(group_id, since) VALUES (?, date('now'))", (gid,))
 
 
 # Las plantillas de temporada entera (data-lineups-<S>.js) que precacheaba el SW antes de partir las

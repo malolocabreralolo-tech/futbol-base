@@ -72,6 +72,16 @@ function sourcesNote(rows) {
   return notice(null, sources.length === 1 ? `Cada grupo abre su página en ${sources[0]}.` : 'Cada grupo abre su página en la web de su fuente.');
 }
 
+// Las competiciones que la federación publica y esta web aún no tiene (newCompetitions de data-health,
+// que apunta el bot: update_fiflp.check_competitions), en una línea; nada si no hay ninguna.
+function newCompetitionsNote(items) {
+  const names = (Array.isArray(items) ? items : [])
+    .map((item) => (item && typeof item === 'object' && typeof item.name === 'string' ? item.name.trim() : ''))
+    .filter(Boolean);
+  if (!names.length) return '';
+  return notice(null, `La federación ha publicado ${countLabel(names.length, 'competición', 'competiciones')} que esta web aún no tiene: ${names.join('; ')}.`);
+}
+
 // La base de datos entera (futbolbase.db, SQLite, la misma de la que salen todas las pantallas) y lo
 // que guarda de cada temporada (COBERTURA de data-history.js): grupos, partidos con resultado, actas,
 // jugadores con alineación y goles con autor. null si no hay datos de cobertura.
@@ -122,7 +132,7 @@ function render(ctx) {
   const mine = ctx.resolution && ctx.resolution.status === 'ok' ? ctx.resolution.name : (ctx.myTeam && ctx.myTeam.name) || '';
   const upcoming = next && next.status === 'pending' && SEASON_RE.test(String(next.name)) && mine ? nextSeasonBox(ctx, mine, next.name) : '';
   const database = databaseBlock(ctx.datasets && ctx.datasets.cobertura);
-  return html`<section data-screen="fuentes">${screenHead(title, { sub: checkedSeason ? `Temporada ${seasonLabel(checkedSeason)}` : null, back: ctx.backHref })}${state}${block('Comprobación por grupo', list, { context: summary(rows) || null })}${sourcesNote(rows)}${missing}${upcoming}${database}</section>`;
+  return html`<section data-screen="fuentes">${screenHead(title, { sub: checkedSeason ? `Temporada ${seasonLabel(checkedSeason)}` : null, back: ctx.backHref })}${state}${block('Comprobación por grupo', list, { context: summary(rows) || null })}${sourcesNote(rows)}${missing}${newCompetitionsNote(health.newCompetitions)}${upcoming}${database}</section>`;
 }
 
 export const screen = {

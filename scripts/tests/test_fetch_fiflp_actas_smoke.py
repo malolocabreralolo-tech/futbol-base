@@ -48,7 +48,8 @@ def test_season_name_map():
     # CodTemporada = año de inicio − 2004, también para las anteriores a la web (12 = 2016-17;
     # 2015-16, la 11, no tiene benjamín ni prebenjamín en la federación).
     assert all(name == f"{int(code) + 2004}-{int(code) + 2005}" for code, name in SEASON_NAME.items())
-    assert set(SEASON_NAME) == {str(c) for c in range(12, 22)}
+    # Y la temporada en curso (22 = 2026-27), para las actas que el bot ya no relee (docs/alevin.md).
+    assert set(SEASON_NAME) == {str(c) for c in range(12, 23)}
 
 
 def test_raw_path_naming():

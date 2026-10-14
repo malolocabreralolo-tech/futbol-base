@@ -112,15 +112,29 @@ def test_no_duplicate_round_when_the_database_uses_numeric_labels():
     conn.close()
 
 
-def test_seed_rolls_back_if_a_category_is_missing():
-    conn = sqlite3.connect(':memory:')
-    conn.executescript(SCHEMA)
-    conn.execute("INSERT INTO seasons(name,start_year,end_year,is_current) VALUES('2025-2026',2025,2026,1)")
-    conn.commit()
-    with pytest.raises(ValueError, match='categoría'):
-        seed_season(conn, MANIFEST, evidence())
+def test_seed_creates_a_missing_category_and_rolls_back_if_something_fails():
+    """Sin la categoría en la base, la activación la crea, en mayúsculas (así entra alevín la primera
+    vez: docs/alevin.md); antes abortaba. Y si algo falla a medias, se deshace todo, la categoría
+    nueva también."""
+    def empty():
+        conn = sqlite3.connect(':memory:')
+        conn.executescript(SCHEMA)
+        conn.execute("INSERT INTO seasons(name,start_year,end_year,is_current) VALUES('2025-2026',2025,2026,1)")
+        conn.commit()
+        return conn
+    conn = empty()
+    seed_season(conn, MANIFEST, evidence())
+    assert conn.execute("""SELECT g.code, c.name FROM groups g JOIN categories c ON c.id=g.category_id""").fetchall() \
+        == [('NEW1', 'PREBENJAMIN')]
+    conn.close()
+    conn = empty()
+    broken = evidence()
+    broken[0]['standings'] = []          # un equipo del calendario sin fila: falla al meter sus partidos
+    with pytest.raises(KeyError):
+        seed_season(conn, MANIFEST, broken)
     assert conn.execute('SELECT name,is_current FROM seasons').fetchall() == [('2025-2026', 1)]
     assert conn.execute('SELECT count(*) FROM groups').fetchone()[0] == 0
+    assert conn.execute('SELECT count(*) FROM categories').fetchone()[0] == 0
     conn.close()
 
 

@@ -75,13 +75,13 @@ test('nada espera para siempre: cada petición perezosa se corta a los 15 s y la
   console.warn = () => {};
   try {
     const loads = [state.ensureMatchDetail(), state.ensureSeasonData('2022-2023'), state.ensureLineups('2023-2024', 'A1'),
-      state.ensureHealth()];
-    assert.equal(hung.length, 4, hung.join(', '));
+      state.ensureHealth(), state.ensureAlevin(), state.ensureSeasonAlevin('2022-2023')];
+    assert.equal(hung.length, 6, hung.join(', '));
     t.mock.timers.tick(state.LAZY_TIMEOUT_MS - 1);
     await new Promise((resolve) => setImmediate(resolve));
-    assert.equal(hung.length, 4, 'todavía en vuelo');
+    assert.equal(hung.length, 6, 'todavía en vuelo');
     t.mock.timers.tick(1);
-    assert.deepEqual(await Promise.all(loads), [null, null, null, null]);
+    assert.deepEqual(await Promise.all(loads), [null, null, null, null, null, null]);
   } finally {
     globalThis.fetch = saved;
     console.error = quiet.error;
@@ -112,6 +112,18 @@ test('cada petición perezosa lleva la versión de data-seasons.js, nunca la de 
   for (const url of requests) assert.match(url, /\?v=20260923j$/, url);
 });
 
+// Alevín (contrato común, punto 4): data-alevin.js se genera siempre, pero hasta que llegue a la web (o
+// sin conexión y sin la copia del SW) puede dar 404, que es «sin alevín», nunca un error. La petición
+// lleva la versión de los datos, como todas las perezosas.
+test('ensureAlevin: sin data-alevin.js (un 404), alevín vacío y memorizado; con la versión de los datos', async () => {
+  requests.length = 0;
+  const empty = await state.ensureAlevin();
+  assert.deepEqual(empty, state.alevinData({}));
+  assert.deepEqual(empty, { groups: [], stats: null, history: {}, gol: [], estados: {}, equipos: {} });
+  assert.equal(await state.ensureAlevin(), empty, 'no se vuelve a pedir');
+  assert.deepEqual(requests, ['./data-alevin.js?v=20260923j']);
+});
+
 test('sin el <script> de data-seasons.js, las peticiones van sin ?v=', async () => {
   const saved = scripts['data-seasons.js'];
   delete scripts['data-seasons.js'];
@@ -129,7 +141,7 @@ test('todas las peticiones perezosas pasan por fetchData(): la versión de los d
   assert.equal((src.match(/\bfetch\(/g) || []).length, 1, 'un solo fetch en state.js, el de fetchData');
   assert.match(src, /await fetch\(`\.\/\$\{file\}\$\{dataQuery\(\)\}`, \{ signal: controller\.signal \}\)/);
   const loaders = src.match(/await fetchData\(/g) || [];
-  assert.equal(loaders.length, 5, 'matchdetail, temporadas, actas, fichas de jugador y data-health');
+  assert.equal(loaders.length, 7, 'matchdetail, temporadas, actas, fichas de jugador, data-health y el alevín (data-alevin.js y data-season-<S>-alevin.js)');
   assert.doesNotMatch(src, /data-matchdetail-keys\.js"\]/, 'la versión ya no sale de data-matchdetail-keys.js');
 });
 

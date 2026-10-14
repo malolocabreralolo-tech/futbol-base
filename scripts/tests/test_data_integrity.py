@@ -47,6 +47,31 @@ def _load_per_season_js(name):
     return json.loads(m.group(1))
 
 
+# Las categorías de cada fichero de temporada: benjamín y prebenjamín en data-season-<S>.js y alevín,
+# si la temporada lo tiene, en data-season-<S>-alevin.js (docs/alevin.md §5).
+SEASON_CATS = ("benjamin", "prebenjamin")
+
+
+def _load_alevin_season_js(name):
+    """SEASON_<S>_ALEVIN de data-season-<S>-alevin.js, o None si la temporada no tiene alevín."""
+    p = os.path.join(ROOT, f"data-season-{name}-alevin.js")
+    if not os.path.exists(p):
+        return None
+    with open(p) as f:
+        text = f.read()
+    m = re.match(r"const SEASON_\d{4}_\d{4}_ALEVIN=(.+);", text)
+    assert m, f"data-season-{name}-alevin.js doesn't match expected pattern"
+    return json.loads(m.group(1))
+
+
+def _season_groups(name):
+    """[(categoría, grupo)] de una temporada pasada, de sus dos ficheros."""
+    per_season = _load_per_season_js(name) or {}
+    alevin = _load_alevin_season_js(name) or {}
+    return ([(cat, g) for cat in SEASON_CATS for g in per_season.get(cat, [])]
+            + [("alevin", g) for g in alevin.get("alevin", [])])
+
+
 # ─── DB consistency ──────────────────────────────────────────────────────────
 
 class TestDBIntegrity:
@@ -188,14 +213,13 @@ class TestGeneratedFiles:
                     "SELECT code FROM groups WHERE season_id=?", (season_row[0],)
                 )
             )
-            js_codes = sorted(
-                g["id"]
-                for cat in ("benjamin", "prebenjamin")
-                for g in per_season.get(cat, [])
-            )
+            # Alevín, del data-season-<S>-alevin.js: si no, el verano en que 2026-27 pase al archivo con
+            # sus grupos alevín, esta prueba fallaría y el bot dejaría de publicar.
+            js_codes = sorted(g["id"] for _cat, g in _season_groups(name))
             assert db_codes == js_codes, (
                 f"{name}: DB={db_codes} != per-season-js={js_codes}"
             )
+            assert "alevin" not in per_season, f"data-season-{name}.js no puede llevar alevín"
 
     def test_standings_canonical_format(self):
         """All standings rows must be lists of length 10 in canonical order
@@ -208,8 +232,9 @@ class TestGeneratedFiles:
             per_season = _load_per_season_js(entry["name"])
             if per_season is None:
                 continue
-            for cat in ("benjamin", "prebenjamin"):
-                for g in per_season.get(cat, []):
+            groups = _season_groups(entry["name"])
+            for cat in SEASON_CATS + ("alevin",):
+                for g in [g for c, g in groups if c == cat]:
                     for row in g.get("standings", []):
                         assert isinstance(row, list), (
                             f"{entry['name']}/{g['id']}: standings row not a list: {row}"
@@ -244,11 +269,10 @@ def _historical_match_rows():
         per_season = _load_per_season_js(entry["name"])
         if per_season is None:
             pytest.fail(f"data-season-{entry['name']}.js missing")
-        for cat in ("benjamin", "prebenjamin"):
-            for g in per_season.get(cat, []):
-                for jornada, rows in (g.get("jornadas") or {}).items():
-                    for row in rows:
-                        yield entry["name"], g["id"], jornada, row
+        for _cat, g in _season_groups(entry["name"]):
+            for jornada, rows in (g.get("jornadas") or {}).items():
+                for row in rows:
+                    yield entry["name"], g["id"], jornada, row
 
 
 class TestHistoricalMatchRows:
@@ -293,7 +317,7 @@ class TestHistoricalMatchRows:
                    JOIN teams h ON h.id = m.home_team_id
                    JOIN teams a ON a.id = m.away_team_id
                    WHERE se.name = ?
-                     AND UPPER(c.name) IN ('BENJAMIN', 'PREBENJAMIN')""",
+                     AND UPPER(c.name) IN ('BENJAMIN', 'PREBENJAMIN', 'ALEVIN')""",
                 (season,)).fetchone()
             assert got == tuple(expected), (
                 f"{season}: publicado (hora, campo)={got}, en la base={tuple(expected)}")

@@ -42,7 +42,7 @@ function loadSw(globals = {}) {
   };
   const ctx = { self: selfStub, console, URL, ...globals };
   vm.createContext(ctx);
-  const probes = ['CACHE_NAME', 'CRESTS_CACHE', 'STATIC_ASSETS', 'SEASON_FILES', 'LINEUPS_KEEP', 'lineupsToCarry', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
+  const probes = ['CACHE_NAME', 'CRESTS_CACHE', 'STATIC_ASSETS', 'SEASON_FILES', 'LAZY_FILES', 'LINEUPS_KEEP', 'lineupsToCarry', 'classifyRequest', 'staleKeysFor', 'matchIgnoringVersion', 'versionedAssetURL'];
   const probe = probes
     .map(n => `${n}:typeof ${n}!=='undefined'?${n}:undefined`)
     .join(',');
@@ -129,6 +129,32 @@ test('invariant: SEASON_FILES = las temporadas no actuales de data-seasons.js, e
   vm.runInContext(`${readFileSync(join(ROOT, 'data-seasons.js'), 'utf8')}\nthis.__s = SEASONS;`, ctx);
   const past = Array.from(ctx.__s).filter((s) => !s.current).map((s) => `./data-season-${s.name}.js`);
   assert.deepEqual([...sw.SEASON_FILES], past);
+});
+
+// LAZY_FILES (alevín, contrato común punto 4; r3.md §6.6): data-alevin.js es perezoso (la app lo pide
+// cuando una pantalla lo necesita, nunca en la carga inicial ni tras pintar la portada), pero se guarda
+// en la instalación, que ocurre después de `load` y no toca el pintado, para que alevín abra sin conexión.
+// Nunca en STATIC_ASSETS (que son los inmediatos de index.html). Los data-season-<S>-alevin.js, ni ahí
+// ni en SEASON_FILES: se guardan según se usan (stale-while-revalidate, como cualquier data-*.js).
+test('LAZY_FILES: data-alevin.js se guarda al instalar, fuera de STATIC_ASSETS; los data-season-<S>-alevin.js, bajo demanda', async () => {
+  assert.deepEqual([...(sw.LAZY_FILES || [])], ['./data-alevin.js']);
+  assert.ok(!sw.STATIC_ASSETS.includes('./data-alevin.js'));
+  assert.doesNotMatch(idxSrc, /data-alevin\.js/, 'index.html no lo carga');
+  assert.ok(existsSync(join(ROOT, 'data-alevin.js')), 'data-alevin.js existe siempre (vacío sin grupos de alevín)');
+  assert.ok(![...sw.SEASON_FILES].some((url) => /alevin/.test(url)));
+  assert.equal(sw.classifyRequest('/futbol-base/data-alevin.js'), 'swr');
+  assert.equal(sw.classifyRequest('/futbol-base/data-season-2025-2026-alevin.js'), 'swr');
+  // La instalación de verdad, con unas cachés y una red falsas: pide LAZY_FILES con la versión y lo guarda.
+  const put = [];
+  const worker = loadSw({
+    caches: { keys: async () => [], open: async () => ({ put: async (url) => { put.push(url); } }) },
+    fetch: async (url) => ({ ok: true, status: 200, url }),
+  });
+  let done;
+  worker.listeners.install({ waitUntil: (promise) => { done = promise; } });
+  await done;
+  assert.ok(put.includes('./data-alevin.js'), put.join(', '));
+  assert.ok(!put.some((url) => /data-season-.*-alevin/.test(url)));
 });
 
 // Las actas de grupo ya usadas pasan a la versión nueva (decisión 2 de B5: la ficha de mi equipo, ya

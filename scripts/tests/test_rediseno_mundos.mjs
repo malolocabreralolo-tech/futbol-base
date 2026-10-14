@@ -77,3 +77,19 @@ test('los datos de B3: goleadores congelados, la Copa de Campeones el 23/09, las
   }
   assert.equal(Object.keys(groupLineups('2025-2026', 'A1')).length + Object.keys(groupLineups('2025-2026', 'FF1')).length, Object.keys(lineupsFor('2025-2026')).length);
 });
+
+// Alevín (contrato común de alevín, puntos 4 y 5): el mundo L sirve data-alevin.js, con las seis
+// constantes en su orden y los grupos AL1 y AL2, y el alevín de 2025-26; los demás, no (un 404, «sin
+// alevín», que no notan: los smoke de siempre).
+test('el mundo L sirve data-alevin.js (AL1 y AL2) y data-season-2025-2026-alevin.js; los demás, ninguno', () => {
+  const l = worldFiles('L');
+  const alevin = globalsOf(l['data-alevin.js']);
+  assert.deepEqual(Object.keys(alevin), ['ALEVIN', 'ALEV_STATS', 'HISTORY_ALEV', 'GOL_ALEV', 'ESTADOS_ALEV', 'EQUIPOS_ALEV']);
+  assert.deepEqual(alevin.ALEVIN.map((g) => g.id), ['AL1', 'AL2']);
+  assert.deepEqual(Object.keys(alevin.HISTORY_ALEV), ['AL1', 'AL2']);
+  const past = globalsOf(l['data-season-2025-2026-alevin.js']).SEASON_2025_2026_ALEVIN;
+  assert.deepEqual(past.alevin.map((g) => `${g.id} ${g.phase}`), ['ALA1 Segunda Fase A', 'ALF1 Segunda Fase F', 'ALEL1 Eliminatorias']);
+  for (const name of Object.keys(WORLDS).filter((w) => w !== 'L')) {
+    assert.deepEqual(Object.keys(worldFiles(name)).filter((f) => /alevin/.test(f)), [], name);
+  }
+});

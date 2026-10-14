@@ -45,8 +45,10 @@ export function start(doc, win, config = PORTAL, { now = () => new Date() } = {}
   const portal = { season: config.season, defaultTeam: config.defaultTeam };
   // Registro de datos: los globales inmediatos y lo que traen los cargadores perezosos. health es
   // undefined mientras data-health.json no se ha pedido y null si falló: se pide una vez por sesión
-  // (M4 de la revisión final de B2).
-  const datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: undefined };
+  // (M4 de la revisión final de B2). El alevín, también perezoso y nunca en REQUIRED (contrato común de
+  // alevín): alevin, undefined hasta que el router lo pide (data-alevin.js), y seasonAlevin, el de
+  // cada temporada pasada (data-season-<S>-alevin.js).
+  const datasets = { ...readGlobals(), seasonRaw: {}, matchDetail: null, lineups: {}, health: undefined, alevin: undefined, seasonAlevin: {} };
   // La fecha del literal oculto «Última actualización» de index.html, por si falta data-health.
   const legacyDate = doc.getElementById('legacyUpdated')?.textContent.match(/\d{2}\/\d{2}\/\d{4}/)?.[0] || null;
 

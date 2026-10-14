@@ -18,6 +18,10 @@ on:
         required: false
         type: boolean
         default: false
+      categorias:
+        description: 'Categorías del catálogo: benjamin,prebenjamin o alevin (solo Gran Canaria)'
+        required: false
+        default: 'benjamin,prebenjamin'
 
 permissions:
   contents: write
@@ -44,9 +48,10 @@ jobs:
         env:
           TEMPORADAS: ${{ inputs.temporadas }}
           ESCUDOS: ${{ inputs.escudos }}
+          CATEGORIAS: ${{ inputs.categorias }}
           PYTHONUNBUFFERED: '1'
         run: |
-          ARGS="--temporadas $TEMPORADAS --max-minutes 320"
+          ARGS="--temporadas $TEMPORADAS --max-minutes 320 --categorias ${CATEGORIAS:-benjamin,prebenjamin}"
           if [ "$ESCUDOS" = "true" ]; then ARGS="$ARGS --escudos"; fi
           python3 scripts/fetch_fiflp_goleadores.py $ARGS
         timeout-minutes: 335

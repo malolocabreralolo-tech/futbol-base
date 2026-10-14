@@ -213,7 +213,7 @@ test('loadStore: en v2 cada campo inválido se sanea por separado', () => {
     ...Array.from({ length: 10 }, (_, i) => ({ s: '2025-2026', g: `FF${i}`, t: `Equipo ${i}`, extra: i })),
   ];
   const storage = new MemoryStorage({ [STORE_KEY]: JSON.stringify({
-    myTeam: { name: 'Las Mesas Hu.', season: '2025-2026', cat: 'alevin', groupId: 'A1' }, recent,
+    myTeam: { name: 'Las Mesas Hu.', season: '2025-2026', cat: 'cadete', groupId: 'A1' }, recent,
   }) });
   const out = loadStore(storage, OPTIONS);
   assert.deepEqual(out.myTeam, DEFAULT_TEAM);

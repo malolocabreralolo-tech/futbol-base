@@ -26,6 +26,13 @@ function recordRow({ href, what = null, main, figure, detail }) {
   return html`<li><a class="rc-row" href="${href}">${what ? html`<span class="rc-what">${what}</span>` : ''}<span class="rc-subject">${main}</span><span class="rc-figure">${figure}</span><span class="rc-detail">${detail}</span></a></li>`;
 }
 
+// La etiqueta de un grupo (groupLabel) sin su categoría `c`, que ya dice el selector: «Alevín, Primera
+// Fase, Grupo 1» → «Primera Fase, Grupo 1».
+function withoutCat(label, c) {
+  const prefix = `${CAT_NAMES[c]}, `;
+  return label.startsWith(prefix) ? label.slice(prefix.length) : label;
+}
+
 // env = { s, shields, group(id), where(id) }: el grupo de la temporada y su etiqueta sin la categoría,
 // que ya dice el selector («Grupo 3 de Gran Canaria»).
 const teamMain = (team, env) => html`${crest(team, { shields: env.shields })}<span class="rc-name">${team}</span>`;
@@ -88,7 +95,7 @@ function render(ctx) {
   const env = {
     s, group,
     shields: (ctx.datasets && ctx.datasets.shields) || {},
-    where: (id) => (group(id) ? group(id).label.replace(/^(?:Benjamín|Prebenjamín), /, '') : id),
+    where: (id) => (group(id) ? withoutCat(group(id).label, c) : id),
   };
   if (!records.totals.matches) {
     const leagues = season.groups.some((g) => g.cat === c && g.kind === 'league');

@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write     # una issue por competición nueva de la federación (avisar_competiciones.py)
 
 concurrency:
   group: update-data
@@ -16,7 +17,10 @@ jobs:
   update:
     # La imagen fijada y las acciones en Node 24, como tests.yml (plan B4, decisión 55; test_workflows.py).
     runs-on: ubuntu-24.04
-    # 45: los grupos de la federación se leen con navegador (~2-3 s por página).
+    # 45: los grupos de la federación se leen con navegador (~3 s por página, fiflp_carga.py). Su
+    # parte tiene un plazo global de 25 min (update_fiflp.DEADLINE_SECONDS, con rotación sin estado de
+    # lo que no cabe): con preparación, app, importaciones, generate_js, pruebas y commit (4-8 min),
+    # 29-33 min, ~35 en el peor caso.
     timeout-minutes: 45
 
     steps:
@@ -48,7 +52,22 @@ jobs:
         continue-on-error: true
         env:
           FIFLP_UPDATE: '1'
+          # Sin búfer: cada línea del log con su hora (el coste de cada grupo de la federación).
+          PYTHONUNBUFFERED: '1'
+          # update_fiflp deja aquí una marca cuando cambia en la base estado suyo que no se publica
+          # (la primera pasada completa de un grupo recién activado): el commit sube la base también entonces.
+          FIFLP_DB_MARK: ${{ runner.temp }}/base-cambiada
         run: python3 scripts/fetch_futbolaspalmas.py
+
+      # Competiciones de la federación que la web no tiene (newCompetitions de data-health.json, que
+      # escribe update_fiflp.check_competitions): una issue por cada una, sin repetirla (busca su
+      # código también en las cerradas). Solo el nombre y el código de la competición. Nunca para el bot.
+      - name: Avisar de competiciones nuevas
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/avisar_competiciones.py
 
       # Los push del bot (GITHUB_TOKEN) NO disparan tests.yml (anti-recursión
       # de GitHub), así que las suites tienen que correr AQUÍ, sobre los datos
@@ -71,9 +90,10 @@ jobs:
           # data-season-*.js), bumpea ?v= en index.html y CACHE_NAME en sw.js.
           # futbolbase.db cambia de bytes (cabecera SQLite) en CADA run aunque
           # no cambie ningún dato publicado: se gatea su commit a que cambie
-          # algún artefacto publicado (evita ~13/14 commits de ruido).
+          # algún artefacto publicado (evita ~13/14 commits de ruido), o a la
+          # marca de update_fiflp (FIFLP_DB_MARK, en el paso scrape).
           git add 'data-*.js' index.html sw.js
-          if ! git diff --cached --quiet; then
+          if ! git diff --cached --quiet || [ -f "$RUNNER_TEMP/base-cambiada" ]; then
             git add futbolbase.db
             # El raw de la app de futbolaspalmas (qué días ya están leídos) va con los datos que ha dado.
             git add 'scripts/fp_app_*_raw.json' 2>/dev/null || true

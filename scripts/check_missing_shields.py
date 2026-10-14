@@ -10,6 +10,9 @@ SHIELDS_PATH = os.path.join(ROOT, 'data-shields.js')
 SEASONS_PATH = os.path.join(ROOT, 'data-seasons.js')
 BENJAMIN_PATH = os.path.join(ROOT, 'data-benjamin.js')
 PREBENJAMIN_PATH = os.path.join(ROOT, 'data-prebenjamin.js')
+# Alevín (docs/alevin.md): la temporada en curso en data-alevin.js y las pasadas en
+# data-season-<S>-alevin.js, solo si la temporada tiene alevín.
+ALEVIN_PATH = os.path.join(ROOT, 'data-alevin.js')
 
 STRIP = re.compile(r'\b(CF|UD|CD|AD|SD|AFC|SC|CP|CE|CEF|SSD|ATLETICO|ATL)\b', re.IGNORECASE)
 
@@ -28,6 +31,18 @@ def normalize(name):
     name = re.sub(r"['\",.‘’“”]", '', name)
     name = STRIP.sub('', name)
     return re.sub(r'\s+', ' ', name.lower()).strip()
+
+def alevin_of_season(sname):
+    """Los grupos alevín de una temporada pasada (data-season-<S>-alevin.js), o []."""
+    path = os.path.join(ROOT, f'data-season-{sname}-alevin.js')
+    if not os.path.exists(path):
+        return []
+    try:
+        return load_json_var(path, f"SEASON_{sname.replace('-', '_')}_ALEVIN").get('alevin', [])
+    except Exception as e:
+        print(f"[{sname}] WARNING: parse error in {path}: {e}")
+        return []
+
 
 def load_json_var(path, varname):
     with open(path, encoding='utf-8') as f:
@@ -84,7 +99,8 @@ def main():
             try:
                 ben = load_json_var(BENJAMIN_PATH, 'BENJAMIN')
                 pre = load_json_var(PREBENJAMIN_PATH, 'PREBENJAMIN')
-                season_groups[sname] = {'benjamin': ben, 'prebenjamin': pre}
+                ale = load_json_var(ALEVIN_PATH, 'ALEVIN') if os.path.exists(ALEVIN_PATH) else []
+                season_groups[sname] = {'benjamin': ben, 'prebenjamin': pre, 'alevin': ale}
             except Exception as e:
                 print(f"[{sname}] WARNING: can't load current data: {e}")
                 season_groups[sname] = {'benjamin': s.get('benjamin', []), 'prebenjamin': s.get('prebenjamin', [])}
@@ -102,7 +118,7 @@ def main():
                         pre = d.get('prebenjamin', [])
                     except Exception as e:
                         print(f"[{sname}] WARNING: parse error in {path}: {e}")
-            season_groups[sname] = {'benjamin': ben, 'prebenjamin': pre}
+            season_groups[sname] = {'benjamin': ben, 'prebenjamin': pre, 'alevin': alevin_of_season(sname)}
 
     grand_missing = set()
     for sname, cats in season_groups.items():

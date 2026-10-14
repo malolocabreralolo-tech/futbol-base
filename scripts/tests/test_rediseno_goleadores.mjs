@@ -69,7 +69,7 @@ test('defaultCategory (myteam.js): la de mi equipo resuelto; sin él (E o X), la
   assert.equal(defaultCategory(ok('benjamin'), { cat: 'prebenjamin' }), 'benjamin');
   assert.equal(defaultCategory({ status: 'absent' }, { cat: 'prebenjamin' }), 'prebenjamin');
   assert.equal(defaultCategory({ status: 'ask', candidates: [] }, null), 'benjamin');
-  assert.equal(defaultCategory(ok('alevin'), { cat: 'cadete' }), 'benjamin', 'una categoría que no existe no vale');
+  assert.equal(defaultCategory(ok('cadete'), { cat: 'cadete' }), 'benjamin', 'una categoría que no existe no vale');
 });
 
 test('la global de mi categoría (prebenjamín): cabecera, categoría, buscador y la primera página, las 200 primeras de 299', () => {
@@ -77,7 +77,7 @@ test('la global de mi categoría (prebenjamín): cabecera, categoría, buscador 
   assert.match(out, /^<section data-screen="goleadores"><header class="screen-head"><a class="back" href="#\/explorar" data-action="back" aria-label="Volver">‹<\/a>/);
   assert.equal((out.match(/<h1[ >]/g) || []).length, 1);
   assert.match(out, /<h1>Goleadores<\/h1><p class="screen-sub">Prebenjamín, todos los grupos<\/p><\/div><\/header>/);
-  assert.match(out, /<nav class="gol-cats" aria-label="Categoría"><div class="segmented"><a class="segment" id="categoria-benjamin" href="#\/goleadores\?s=2025-2026&amp;c=benjamin">Benjamín<\/a><a class="segment" id="categoria-prebenjamin" href="#\/goleadores\?s=2025-2026&amp;c=prebenjamin" aria-current="true">Prebenjamín<\/a><\/div><\/nav>/);
+  assert.match(out, /<nav class="gol-cats" aria-label="Categoría"><div class="segmented"><a class="segment" id="categoria-benjamin" href="#\/goleadores\?s=2025-2026&amp;c=benjamin">Benjamín<\/a><a class="segment" id="categoria-prebenjamin" href="#\/goleadores\?s=2025-2026&amp;c=prebenjamin" aria-current="true">Prebenjamín<\/a><a class="segment" id="categoria-alevin" href="#\/goleadores\?s=2025-2026&amp;c=alevin">Alevín<\/a><\/div><\/nav>/);
   // El buscador de Explorar (searchBox, ui.js), con su id estable.
   assert.match(out, /<form\b[^>]*\brole="search"[^>]*>.*<input\b[^>]*\bid="buscar-goleador"[^>]*>.*<\/form>/);
   assert.match(input(out), /\btype="search"/);

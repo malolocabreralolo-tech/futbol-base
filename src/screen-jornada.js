@@ -1,10 +1,11 @@
 // Pantalla Jornada (spec §4.3 y §4.8; maqueta 5-1). render(ctx) es pura: «‹ Jornada N de M ›»
 // con sus fechas, los partidos por día con el propio primero y resaltado, el aviso de la
-// jornada, la botonera y «Otro grupo». mount() añade compartir y el .ics del grupo.
+// jornada, la botonera y «Otro grupo»; bajo la cabecera, los otros grupos de la competición
+// («‹ Grupo 5 de 24 ›») y el atajo a Tabla y Evolución. mount() añade compartir y el .ics del grupo.
 import { html } from './html.js';
-import { screenHead, matchRow, notice, empty, listEs, shareStatus } from './ui.js';
+import { screenHead, matchRow, notice, empty, listEs, shareStatus, groupNav, groupViews, scrollToCurrent } from './ui.js';
 import { errorBox } from './shell.js';
-import { defaultRound, findRound, roundNotice, retiredTeams, matchState, seasonLabel } from './model.js';
+import { defaultRound, findRound, roundNotice, retiredTeams, matchState, seasonLabel, siblingGroups } from './model.js';
 // Los días y los meses, escritos en links.js (Tarea 7): sin los datos de idioma del motor.
 import { MONTHS, WEEKDAYS, routeHref, matchHref, downloadCalendar, shareAndAnnounce } from './links.js';
 import { seasonNeeds } from './state.js';
@@ -92,10 +93,25 @@ export function groupCalendar(group, today) {
     .map(m => ({ date: m.dateISO, time: m.time || '', home: m.home, away: m.away, venue: m.venue || '', jornada: round.label })));
 }
 
-const otherGroup = (s, group) => ({
-  href: routeHref('ligas', { s, c: group && group.cat, i: group && group.island, to: 'jornada' }),
+// «Otro grupo»: con grupos hermanos, directo a la lista de los de su competición (f); si no, a las
+// ligas de su categoría y su isla.
+const otherGroup = (s, group, siblings = null) => ({
+  href: routeHref('ligas', { s, c: group && group.cat, i: group && group.island, f: siblings ? group.compKey : '', to: 'jornada' }),
   label: 'Otro grupo',
 });
+
+// Los otros grupos de su competición, «‹ Grupo 5 de 24 ›», y el atajo a la Tabla y a la Evolución del
+// grupo, debajo de la cabecera. Cada grupo abre la jornada del mismo número (las claves cambian de un
+// grupo a otro: «Jornada 4» y «4»); si no la tiene, la suya por defecto.
+function groupBar(ctx, group, siblings, round) {
+  const s = group.season;
+  const mineId = siblings && (siblings.list.find(g => myTeamIn(g, ctx.myTeam, ctx.resolution)) || {}).id;
+  const same = target => (round && round.n !== null ? (findRound(target, String(round.n)) || {}).key : '');
+  return html`${siblings ? groupNav(siblings, {
+    hrefFor: target => routeHref('jornada', { s, g: target.id, r: same(target) }),
+    listHref: routeHref('ligas', { s, c: group.cat, f: group.compKey, to: 'jornada' }), mineId,
+  }) : ''}${groupViews(group, 'jornada')}`;
+}
 
 function render(ctx) {
   const { params, model, today } = ctx;
@@ -111,8 +127,9 @@ function render(ctx) {
     return html`<section data-screen="jornada">${screenHead('Jornada', { action: otherGroup(s) })}${empty(why)}</section>`;
   }
   const sub = s === ctx.portal.season ? group.label : `${group.label} · ${seasonLabel(s)}`;
-  const head = screenHead('Jornada', { sub, action: otherGroup(s, group) });
+  const siblings = siblingGroups(model, group);
   const round = pickRound(group, params.r, today);
+  const head = html`${screenHead('Jornada', { sub, action: otherGroup(s, group, siblings) })}${groupBar(ctx, group, siblings, round)}`;
   if (!round) {
     // En una temporada cerrada ya no lo publicará (2012-13: el archivo del portal solo guardó las tablas).
     const why = s === ctx.portal.season ? 'La fuente todavía no ha publicado el calendario de este grupo.'
@@ -143,6 +160,8 @@ function render(ctx) {
 }
 
 function mount(root, ctx) {
+  // La tira de grupos, hasta el actual, dentro de su caja: la página no se mueve.
+  scrollToCurrent(root.querySelector('.group-strip'));
   const el = root.querySelector('[data-screen="jornada"]') || root;
   const group = ctx.model.group(ctx.params.s || ctx.portal.season, ctx.params.g);
   const round = group && pickRound(group, ctx.params.r, ctx.today);

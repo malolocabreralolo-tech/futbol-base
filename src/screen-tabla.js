@@ -3,12 +3,17 @@
 // la forma, casa y fuera con su cobertura, los goleadores del grupo, la procedencia y
 // «Otro grupo». Una sola tabla: por debajo de 1024 px el CSS deja las columnas de la vista.
 // La Evolución del grupo (v=evolucion y v=posiciones) va en la misma pantalla: la línea de puntos de
-// cada equipo o la rejilla de su puesto tras cada jornada, calculadas con el calendario.
+// cada equipo o la rejilla de su puesto tras cada jornada, calculadas con el calendario. Bajo la
+// cabecera, los otros grupos de la competición («‹ Grupo 5 de 24 ›») y el atajo a Jornada y Evolución.
 import { html } from './html.js';
-import { block, screenHead, standingsTable, segmented, crest, notice, empty, listEs, sourcePhrase, pointsChart } from './ui.js';
+import {
+  block, screenHead, standingsTable, segmented, crest, notice, empty, listEs, sourcePhrase, pointsChart, groupNav, groupViews,
+  scrollToCurrent,
+} from './ui.js';
 import { errorBox } from './shell.js';
 import {
   lastResults, homeAwayTable, retiredTeams, groupFinished, groupProgression, playerName, sourceInfo, seasonLabel,
+  siblingGroups,
 } from './model.js';
 import { routeHref, teamHref } from './links.js';
 import { groupScorers, seasonNeeds } from './state.js';
@@ -191,7 +196,9 @@ function render(ctx) {
   const { params, model, today } = ctx;
   const shields = (ctx.datasets && ctx.datasets.shields) || {};
   const s = params.s || ctx.portal.season;
-  const other = g => ({ href: routeHref('ligas', { s, c: g && g.cat, i: g && g.island, to: 'tabla' }), label: 'Otro grupo' });
+  // «Otro grupo»: con grupos hermanos, directo a la lista de los de su competición (f); si no, a las
+  // ligas de su categoría y su isla.
+  const other = (g, nav = null) => ({ href: routeHref('ligas', { s, c: g && g.cat, i: g && g.island, f: nav ? g.compKey : '', to: 'tabla' }), label: 'Otro grupo' });
   // Sin la temporada (needs no la trajo): la caja de error, nunca otra temporada (§7).
   if (!model.season(s)) {
     return html`<section data-screen="tabla">${screenHead('Tabla', { action: other(null) })}${errorBox(`la temporada ${seasonLabel(s)}`)}</section>`;
@@ -202,9 +209,19 @@ function render(ctx) {
     return html`<section data-screen="tabla">${screenHead('Tabla', { action: other(null) })}${empty(why)}</section>`;
   }
   const historical = s !== ctx.portal.season;
-  const head = screenHead('Tabla', { sub: historical ? `${group.label} · ${seasonLabel(s)}` : group.label, action: other(group) });
   const v = VIEWS.includes(params.v) ? params.v : 'puntos';
-  if (v === 'evolucion' || v === 'posiciones') {
+  const evolution = v === 'evolucion' || v === 'posiciones';
+  // Los otros grupos de su competición, «‹ Grupo 5 de 24 ›» (conservan la vista), y el atajo a la
+  // Jornada y a la Evolución del grupo, debajo de la cabecera.
+  const siblings = siblingGroups(model, group);
+  const mineId = siblings && (siblings.list.find(g => myTeamIn(g, ctx.myTeam, ctx.resolution)) || {}).id;
+  const keep = v === 'puntos' || v === 'todas' ? '' : v;
+  const groupBar = html`${siblings ? groupNav(siblings, {
+    hrefFor: g => routeHref('tabla', { s, g: g.id, v: keep }),
+    listHref: routeHref('ligas', { s, c: group.cat, f: group.compKey, to: 'tabla' }), mineId,
+  }) : ''}${groupViews(group, evolution ? 'evolucion' : 'tabla')}`;
+  const head = html`${screenHead('Tabla', { sub: historical ? `${group.label} · ${seasonLabel(s)}` : group.label, action: other(group, siblings) })}${groupBar}`;
+  if (evolution) {
     const mine = myTeamIn(group, ctx.myTeam, ctx.resolution);
     return html`<section data-screen="tabla">${head}${evolutionView(group, v, { mine, shields, s })}</section>`;
   }
@@ -237,9 +254,10 @@ function render(ctx) {
   return html`<section data-screen="tabla">${head}${views}${table}${extra}${scorers}${source}</section>`;
 }
 
-// Al montar, la rejilla de posiciones se desliza hasta las últimas jornadas, dentro de su caja: la
-// página no se mueve (scrollLeft, nunca scrollIntoView).
+// Al montar, la tira de grupos se desliza hasta el actual y la rejilla de posiciones, hasta las últimas
+// jornadas, cada una dentro de su caja: la página no se mueve (scrollLeft, nunca scrollIntoView).
 function mount(root) {
+  scrollToCurrent(root.querySelector('.group-strip'));
   const grid = root.querySelector('.evo-scroll');
   if (grid) grid.scrollLeft = Math.max(0, grid.scrollWidth - grid.clientWidth);
 }

@@ -9,7 +9,9 @@ import { fixture } from './fixtures/rediseno/load.mjs';
 import { currentAt } from './fixtures/rediseno/simulate.mjs';
 import { ctxFor, cssRules, datasetsFor, pastSeasonRaw, PORTAL_SEASON } from './fixtures/rediseno/screens.mjs';
 import { screen as tabla } from '../../src/screen-tabla.js';
-import { resolveParams } from '../../src/router.js';
+import { screen as jornada } from '../../src/screen-jornada.js';
+import { groupNav, scrollToCurrent } from '../../src/ui.js';
+import { historyMode, resolveParams } from '../../src/router.js';
 import { parseRoute } from '../../src/links.js';
 import { competitionRound, defaultRound, groupProgression, pointsProgression, siblingGroups } from '../../src/model.js';
 
@@ -21,6 +23,7 @@ const str = (h) => String(h);
 const text = (h) => str(h).replace(/<[^>]*>/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
   .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 const renderTabla = (params, opts) => str(tabla.render(ctxFor('tabla', { s: PORTAL_SEASON, ...params }, opts)));
+const renderJornada = (params, opts) => str(jornada.render(ctxFor('jornada', { s: PORTAL_SEASON, ...params }, opts)));
 const segments = (out, label) => [...((out.match(new RegExp(`<nav class="[^"]*" aria-label="${label}">(.*?)</nav>`)) || ['', ''])[1])
   .matchAll(/<a class="segment" id="([^"]+)" href="([^"]*)"( aria-current="true")?>([^<]*)<\/a>/g)]
   .map((m) => ({ id: m[1], href: m[2].replace(/&amp;/g, '&'), current: !!m[3], label: m[4] }));
@@ -257,6 +260,142 @@ test('Evolución: el CSS de la línea pequeña y de la rejilla con la primera co
   assert.match(body('.evo-grid tr.is-mine > *'), /background:\s*var\(--mark\)/);
   assert.doesNotMatch(rules.filter((r) => /evo-/.test(r.selector)).map((r) => r.body).join(';'), /dashed|dasharray/);
   const out = ['evolucion', 'posiciones'].map((v) => renderTabla({ g: 'PG2', v })).join('');
+  const used = new Set(out.match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));
+  assert.deepEqual([...used].filter((c) => !rules.classes.has(c)), [], 'clases que existen en acta.css');
+});
+
+// ── Navegador de grupos: «‹ Grupo 5 de 24 ›», la tira de números y el atajo ──
+
+const BENJ_FF5 = { name: 'Las Mesas Hu.', season: PORTAL_SEASON, cat: 'benjamin', groupId: 'FF5' };
+const groupNavOf = (out) => (out.match(/<nav class="group-nav"[^>]*>.*?<\/div><\/nav>/) || [''])[0];
+const step = (out, id) => {
+  const m = out.match(new RegExp(`<(a|span) class="group-step[^"]*" id="${id}"([^>]*)>`));
+  if (!m) return null;
+  return m[1] === 'span' ? 'off' : (m[2].match(/href="([^"]*)"/) || [])[1].replace(/&amp;/g, '&');
+};
+const chips = (out) => [...out.matchAll(/<a class="group-chip( is-mine)?" id="([^"]+)" href="([^"]*)"( aria-current="true")?>(.*?)<\/a>/g)]
+  .map((m) => ({ id: m[2], href: m[3].replace(/&amp;/g, '&'), mine: !!m[1], current: !!m[4], text: text(m[5]) }));
+
+test('groupNav: «‹ Grupo 2 de 2 ›» con el enlace a la lista de grupos, la competición y el líder; ids estables', () => {
+  const model = modelOf();
+  const nav = siblingGroups(model, model.group(PORTAL_SEASON, 'PG3'));
+  const out = str(groupNav(nav, { hrefFor: (g) => `#/tabla?g=${g.id}`, listHref: '#/ligas?f=grancanaria' }));
+  assert.match(out, /^<nav class="group-nav" aria-label="Grupos de Gran Canaria"><div class="group-steps">/);
+  assert.match(out, /<a class="group-step" id="grupo-prev" href="#\/tabla\?g=PG2" aria-label="Grupo anterior: Grupo 2">‹<\/a>/);
+  assert.match(out, /<span class="group-step is-off" id="grupo-next" role="link" aria-disabled="true" tabindex="-1" aria-label="Grupo siguiente: no hay">›<\/span>/);
+  // «Grupo 5 de 24» cuando el nombre es su número; si no (la fixture solo trae PG2 y PG3), el puesto aparte.
+  assert.match(out, /<a class="group-now" id="grupo-lista" href="#\/ligas\?f=grancanaria"><span class="group-title">Grupo 3 · 2 de 2<\/span><span class="group-sub">Gran Canaria · líder: UD Vecindario<\/span><span class="vh">\. Ver los 2 grupos<\/span><\/a>/);
+  assert.doesNotMatch(out, /group-strip/, 'con seis grupos o menos, sin la tira de números');
+});
+
+test('Tabla (PG2): el navegador bajo la cabecera, el atajo «Jornada | Tabla | Evolución» y «Otro grupo» directo a la lista de grupos', () => {
+  const out = renderTabla({ g: 'PG2', v: 'forma' });
+  assert.match(out, /<\/header><nav class="group-nav" aria-label="Grupos de Gran Canaria">/, 'debajo de la cabecera');
+  assert.equal(step(out, 'grupo-prev'), 'off');
+  assert.equal(step(out, 'grupo-next'), '#/tabla?s=2025-2026&g=PG3&v=forma', 'conserva la vista');
+  assert.equal(text(out.match(/<a class="group-now".*?<\/a>/)[0]), 'Grupo 2 · 1 de 2 Gran Canaria · líder: Unión Viera . Ver los 2 grupos');
+  assert.match(out, /<a class="group-now" id="grupo-lista" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;f=grancanaria&amp;to=tabla">/);
+  assert.deepEqual(segments(out, 'Ver el grupo').map(({ id, label, current, href }) => [id, label, current, href]), [
+    ['ver-jornada', 'Jornada', false, '#/jornada?s=2025-2026&g=PG2'],
+    ['ver-tabla', 'Tabla', true, '#/tabla?s=2025-2026&g=PG2'],
+    ['ver-evolucion', 'Evolución', false, '#/tabla?s=2025-2026&g=PG2&v=evolucion'],
+  ]);
+  assert.ok(out.indexOf('class="group-nav"') < out.indexOf('aria-label="Ver el grupo"') && out.indexOf('aria-label="Ver el grupo"') < out.indexOf('class="tabla-views'));
+  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;f=grancanaria&amp;to=tabla">Otro grupo<\/a>/);
+  // En la Evolución, el atajo marca Evolución y «‹ ›» siguen en la evolución del otro grupo.
+  const evo = renderTabla({ g: 'PG3', v: 'posiciones' });
+  assert.deepEqual(segments(evo, 'Ver el grupo').filter((x) => x.current).map((x) => x.label), ['Evolución']);
+  assert.equal(step(evo, 'grupo-prev'), '#/tabla?s=2025-2026&g=PG2&v=posiciones');
+});
+
+test('Tabla con un solo grupo en su competición (PFV2): sin navegador; el atajo sí, y «Otro grupo» como antes', () => {
+  const out = renderTabla({ g: 'PFV2' });
+  assert.doesNotMatch(out, /group-nav/);
+  assert.deepEqual(segments(out, 'Ver el grupo').map((x) => x.label), ['Jornada', 'Tabla', 'Evolución']);
+  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=fuerteventura&amp;to=tabla">Otro grupo<\/a>/);
+});
+
+test('con más de seis grupos, la tira de números: cada grupo de un toque, el actual con aria-current y el de mi equipo marcado', () => {
+  const opts = { myTeam: BENJ_FF5, datasets: datasetsFor({ current: withGroups(24) }) };
+  const out = renderTabla({ g: 'FF9' }, opts);
+  assert.match(groupNavOf(out), /<div class="group-strip">/);
+  const list = chips(out);
+  assert.equal(list.length, 24);
+  assert.deepEqual(list.slice(0, 3).map((c) => [c.id, c.text, c.href]), [
+    ['grupo-FF1', 'Grupo 1', '#/tabla?s=2025-2026&g=FF1'], ['grupo-FF2', 'Grupo 2', '#/tabla?s=2025-2026&g=FF2'], ['grupo-FF3', 'Grupo 3', '#/tabla?s=2025-2026&g=FF3']]);
+  assert.match(out, /<a class="group-chip" id="grupo-FF9" href="[^"]*" aria-current="true"><span class="vh">Grupo <\/span>9<\/a>/);
+  assert.deepEqual(list.filter((c) => c.current).map((c) => c.id), ['FF9'].map((id) => `grupo-${id}`));
+  assert.deepEqual(list.filter((c) => c.mine).map((c) => [c.id, c.text]), [['grupo-FF5', 'Grupo 5 (grupo de mi equipo)']]);
+  assert.equal(text(out.match(/<a class="group-now".*?<\/a>/)[0]), 'Grupo 9 de 24 Primera Fase · líder: AD Huracán . Ver los 24 grupos');
+});
+
+test('Jornada: el navegador conserva el número de jornada (por número: las claves cambian entre grupos) y, si no existe, va sin r', () => {
+  const current = fixture('current-2025-2026');
+  // FF13 con las claves de la fuente sin «Jornada» («1»…«5»); FF15 sin la jornada 3.
+  current.history.FF13 = Object.fromEntries(Object.entries(current.history.FF13).map(([key, rows]) => [key.replace('Jornada ', ''), rows]));
+  delete current.history.FF15['Jornada 3'];
+  const opts = { myTeam: BENJ_FF5, datasets: datasetsFor({ current }) };
+  const out = renderJornada({ g: 'FF9', r: 'Jornada 3' }, opts);
+  assert.match(out, /<\/header><nav class="group-nav" aria-label="Grupos de Primera Fase">/);
+  assert.equal(step(out, 'grupo-prev'), '#/jornada?s=2025-2026&g=FF5&r=Jornada%203');
+  assert.equal(step(out, 'grupo-next'), '#/jornada?s=2025-2026&g=FF13&r=3');
+  assert.equal(step(renderJornada({ g: 'FF13', r: '3' }, opts), 'grupo-next'), '#/jornada?s=2025-2026&g=FF15', 'FF15 no tiene la 3');
+  assert.match(out, /<a class="group-now" id="grupo-lista" href="#\/ligas\?s=2025-2026&amp;c=benjamin&amp;f=primera-fase&amp;to=jornada">/);
+  assert.deepEqual(segments(out, 'Ver el grupo').map(({ label, current, href }) => [label, current, href]), [
+    ['Jornada', true, '#/jornada?s=2025-2026&g=FF9'],
+    ['Tabla', false, '#/tabla?s=2025-2026&g=FF9'],
+    ['Evolución', false, '#/tabla?s=2025-2026&g=FF9&v=evolucion'],
+  ]);
+  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=benjamin&amp;i=grancanaria&amp;f=primera-fase&amp;to=jornada">Otro grupo<\/a>/);
+  assert.ok(out.indexOf('aria-label="Ver el grupo"') < out.indexOf('<nav class="round-nav"'), 'el atajo, antes de la jornada');
+});
+
+test('historial: cambiar de grupo con el navegador es replace (como cambiar de jornada o de vista); de pantalla, push', () => {
+  const R = parseRoute;
+  assert.equal(historyMode(R('#/tabla?s=2025-2026&g=PG2'), R('#/tabla?s=2025-2026&g=PG3')), 'replace');
+  assert.equal(historyMode(R('#/tabla?s=2025-2026&g=PG2&v=evolucion'), R('#/tabla?s=2025-2026&g=PG3&v=evolucion')), 'replace');
+  assert.equal(historyMode(R('#/jornada?s=2025-2026&g=FF9&r=Jornada%203'), R('#/jornada?s=2025-2026&g=FF13&r=3')), 'replace');
+  assert.equal(historyMode(R('#/tabla?s=2025-2026&g=PG2'), R('#/jornada?s=2025-2026&g=PG2')), 'push', 'el atajo cambia de pantalla');
+  assert.equal(historyMode(R('#/tabla?s=2025-2026&g=PG2'), R('#/tabla?s=2024-2025&g=PG2')), 'push', 'otra temporada');
+});
+
+test('mount: la tira se desliza hasta el grupo actual, dentro de su caja y sin mover la página', () => {
+  const chip = { offsetLeft: 900, offsetWidth: 44 };
+  const strip = { scrollLeft: 0, scrollWidth: 1300, clientWidth: 360, querySelector: (sel) => (sel === '[aria-current]' ? chip : null) };
+  scrollToCurrent(strip);
+  assert.equal(strip.scrollLeft, 900 - (360 - 44) / 2, 'el actual, en medio');
+  const first = { offsetLeft: 0, offsetWidth: 44 };
+  const start = { scrollLeft: 50, scrollWidth: 1300, clientWidth: 360, querySelector: () => first };
+  scrollToCurrent(start);
+  assert.equal(start.scrollLeft, 0, 'nunca negativo');
+  for (const [screen, params] of [[tabla, { g: 'FF9' }], [jornada, { g: 'FF9' }]]) {
+    const own = { scrollLeft: 0, scrollWidth: 1300, clientWidth: 360, querySelector: () => chip };
+    const el = { addEventListener: () => {}, querySelector: () => null };
+    const root = { querySelector: (sel) => (sel === '.group-strip' ? own : sel === '[data-screen="jornada"]' ? el : null) };
+    screen.mount(root, ctxFor(screen.id, { s: PORTAL_SEASON, ...params }, { myTeam: BENJ_FF5, datasets: datasetsFor({ current: withGroups(24) }) }));
+    assert.equal(own.scrollLeft, 900 - (360 - 44) / 2, screen.id);
+  }
+});
+
+test('navegador: el CSS de la tira (desliza en horizontal con ajuste) y casillas de 44 px', () => {
+  const rules = cssRules();
+  const body = (sel) => rules.filter((r) => r.media === null && r.selector.split(',').map((x) => x.trim()).includes(sel)).map((r) => r.body).join(';');
+  assert.match(body('.group-strip'), /overflow-x:\s*auto/);
+  assert.match(body('.group-strip'), /scroll-snap-type:\s*x/);
+  // El texto oculto de las casillas (.vh, absoluto) se queda dentro de la tira: si no, la página
+  // entera se desplazaba en horizontal (867 px a 320 de ancho con 24 grupos).
+  assert.match(body('.group-strip'), /position:\s*relative/);
+  assert.match(body('.evo-scroll'), /position:\s*relative/);
+  const desk = rules.filter((r) => r.media && /min-width:\s*1024px/.test(r.media) && r.selector === '.group-strip').map((r) => r.body).join(';');
+  assert.match(desk, /overflow:\s*visible/, 'en escritorio, todas a la vista');
+  assert.match(body('.group-chip'), /min-height:\s*44px/);
+  assert.match(body('.group-chip'), /min-width:\s*44px/);
+  assert.match(body('.group-chip'), /scroll-snap-align/);
+  assert.match(body('.group-chip[aria-current]'), /background:\s*var\(--ink\)/);
+  assert.match(body('.group-chip.is-mine'), /background:\s*var\(--mark\)/);
+  assert.match(body('.group-now'), /min-height:\s*(44|56)px/);
+  for (const sel of ['.group-step', '.round-step']) assert.match(body(sel), /min-height:\s*56px/, sel);
+  const out = [renderTabla({ g: 'FF9' }, { myTeam: BENJ_FF5, datasets: datasetsFor({ current: withGroups(24) }) }), renderJornada({ g: 'PG2' })].join('');
   const used = new Set(out.match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));
   assert.deepEqual([...used].filter((c) => !rules.classes.has(c)), [], 'clases que existen en acta.css');
 });

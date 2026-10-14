@@ -2,8 +2,9 @@
 // devuelven Html: no leen globales ni tocan el DOM al importarse. Las clases
 // que emiten están definidas en acta.css.
 import { html, Html } from './html.js';
-import { matchState, penaltyWinner, seasonLabel } from './model.js';
+import { groupSummary, matchState, penaltyWinner, seasonLabel } from './model.js';
 import { shieldFile } from './state.js';
+import { routeHref } from './links.js';
 
 // ── Escudo y monograma ──────────────────────────────────────────────────
 
@@ -283,6 +284,64 @@ export function screenHead(title, { sub = null, action = null, crest: badge = nu
 // Lista en castellano: '' sin elementos, el elemento con uno, «A ${conj} B» con dos y «A, B ${conj} C» con tres o más.
 export function listEs(items, conj = 'y') {
   return items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} ${conj} ${items[items.length - 1]}`;
+}
+
+// ── Navegación entre grupos (Tabla y Jornada) ───────────────────────────
+
+// Con más de seis grupos, además de «‹ ›», la tira de números (de un toque a cualquiera).
+const STRIP_MIN = 7;
+
+// Un paso «‹» o «›»: enlace con id estable o, en un extremo, apagado con el mismo id (y el foco), como
+// los de la jornada: al cambiar de grupo con replaceState, el router devuelve el foco al pulsado.
+function groupStep(target, glyph, label, id, hrefFor) {
+  return target
+    ? html`<a class="group-step" id="${id}" href="${hrefFor(target)}" aria-label="${label}: ${groupSummary(target).label}">${glyph}</a>`
+    : html`<span class="group-step is-off" id="${id}" role="link" aria-disabled="true" tabindex="-1" aria-label="${label}: no hay">${glyph}</span>`;
+}
+
+// «‹ Grupo 5 de 24 ›» entre los grupos hermanos de un grupo de liga (siblingGroups de model.js), para
+// ver los otros grupos de su competición sin pasar por Ligas. El centro, con la competición y el líder
+// debajo, lleva a la lista de sus grupos (listHref: #/ligas?s&c&f&to); con más de seis grupos, debajo,
+// la tira de números, que se desliza dentro de su caja (scrollToCurrent la lleva al actual), con
+// aria-current en el actual y la marca del de mi equipo (mineId). hrefFor(group) → el enlace de cada
+// uno, en la pantalla de la que se sale. Ids estables: grupo-prev, grupo-next, grupo-lista y
+// grupo-<código>. «Grupo 5 de 24» si el nombre es su número; si no, «Grupo 3 · 2 de 4».
+export function groupNav(nav, { hrefFor, listHref, mineId = null }) {
+  const { list, index, entry } = nav;
+  const own = groupSummary(list[index]);
+  const title = own.label === `Grupo ${index + 1}` ? `${own.label} de ${list.length}` : `${own.label} · ${index + 1} de ${list.length}`;
+  const sub = `${entry.label} · ${own.leader ? `líder: ${own.leader}` : countLabel(own.teams, 'equipo', 'equipos')}`;
+  const center = html`<a class="group-now" id="grupo-lista" href="${listHref}"><span class="group-title">${title}</span><span class="group-sub">${sub}</span><span class="vh">. Ver los ${list.length} grupos</span></a>`;
+  const steps = html`<div class="group-steps">${groupStep(nav.prev, '‹', 'Grupo anterior', 'grupo-prev', hrefFor)}${center}${groupStep(nav.next, '›', 'Grupo siguiente', 'grupo-next', hrefFor)}</div>`;
+  const strip = list.length >= STRIP_MIN ? html`<div class="group-strip">${list.map((group, i) => {
+    const label = groupSummary(group).label;
+    const short = label.replace(/^Grupo\s+/, '');
+    const cls = group.id === mineId ? 'group-chip is-mine' : 'group-chip';
+    const inner = html`<span class="vh">${label.slice(0, label.length - short.length)}</span>${short}${group.id === mineId ? html`<span class="vh"> (grupo de mi equipo)</span>` : ''}`;
+    return i === index
+      ? html`<a class="${cls}" id="grupo-${group.id}" href="${hrefFor(group)}" aria-current="true">${inner}</a>`
+      : html`<a class="${cls}" id="grupo-${group.id}" href="${hrefFor(group)}">${inner}</a>`;
+  })}</div>` : '';
+  return html`<nav class="group-nav" aria-label="Grupos de ${entry.label}">${steps}${strip}</nav>`;
+}
+
+// El atajo dentro del grupo, «Jornada | Tabla | Evolución», en Tabla y en Jornada: la barra lleva al
+// grupo de mi equipo, y esto, a las otras pantallas del grupo que se mira. active: 'jornada', 'tabla' o
+// 'evolucion'. Ids estables: ver-jornada, ver-tabla y ver-evolucion.
+const GROUP_VIEWS = [['jornada', 'Jornada'], ['tabla', 'Tabla'], ['evolucion', 'Evolución']].map(([value, label]) => ({ value, label }));
+export function groupViews(group, active) {
+  const at = { s: group.season, g: group.id };
+  const href = (value) => (value === 'jornada' ? routeHref('jornada', at) : routeHref('tabla', { ...at, v: value === 'evolucion' ? value : '' }));
+  return html`<nav class="group-views" aria-label="Ver el grupo">${segmented(GROUP_VIEWS, active, href, { idPrefix: 'ver' })}</nav>`;
+}
+
+// Para el mount de Tabla y Jornada: desliza una tira (la de groupNav) hasta su casilla con aria-current,
+// en medio si cabe, con scrollLeft: la página nunca se mueve (scrollIntoView la movería).
+export function scrollToCurrent(strip) {
+  const current = strip && strip.querySelector('[aria-current]');
+  if (!current) return;
+  const most = Math.max(0, strip.scrollWidth - strip.clientWidth);
+  strip.scrollLeft = Math.min(most, Math.max(0, current.offsetLeft - (strip.clientWidth - current.offsetWidth) / 2));
 }
 
 // ── Evolución de puntos (spec §4.6; decisión 12 de B3) ──────────────────

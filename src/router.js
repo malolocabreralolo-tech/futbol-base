@@ -22,8 +22,11 @@ const TABS = new Set(Object.values(PRIMARY));
 const NO_PARAMS = new Set(['', 'temporadas', 'fuentes', 'ajustes']);
 // Las vistas de Tabla: las de la clasificación y las dos de la Evolución del grupo.
 const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas', 'evolucion', 'posiciones'];
-// Lo que se cambia sin crear entrada en el historial (§4.1): jornada, vista de Tabla y búsqueda.
-const REPLACE_ONLY = { jornada: ['r'], tabla: ['v'], explorar: ['q'], goleadores: ['q'] };
+// Lo que se cambia sin crear entrada en el historial (§4.1): jornada, vista de Tabla y búsqueda; y el
+// grupo en Jornada y en Tabla («‹ Grupo 5 de 24 ›» y su tira de números), que se recorre como las
+// jornadas: Atrás no repasa cada grupo visto, sino que vuelve a donde se estaba antes de recorrerlos, y
+// el foco se queda en el control pulsado (mismo id).
+const REPLACE_ONLY = { jornada: ['r', 'g'], tabla: ['v', 'g'], explorar: ['q'], goleadores: ['q'] };
 // Pantallas que se abren desde Explorar: su «‹» sin historial lleva a #/explorar.
 const UNDER_EXPLORE = new Set(['equipo', 'copa', 'goleadores', 'ligas', 'temporadas', 'records', 'fuentes', 'ajustes', 'jugador']);
 const MAX_REDIRECTS = 5;

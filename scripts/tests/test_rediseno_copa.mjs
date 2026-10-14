@@ -390,10 +390,10 @@ test('CSS: el único desplazamiento horizontal es el del cuadro, con ajuste; en 
   const rules = cssRules();
   const wide = (m) => m !== null && /min-width:\s*1024px/.test(m);
   const bodyOf = (sel, media = (m) => m === null) => rules.filter((r) => media(r.media) && r.selector === sel).map((r) => r.body).join(';');
-  // La página no se desplaza en horizontal (spec §8): solo lo hacen, dentro de su caja, el cuadro y la
-  // rejilla de posiciones de la Evolución del grupo (Tabla, v=posiciones).
-  assert.deepEqual(rules.filter((r) => /overflow(-x)?:\s*(auto|scroll)/.test(r.body)).map((r) => r.selector), ['.evo-scroll', '.bracket'],
-    'la página no se desplaza en horizontal: solo el cuadro y la rejilla de la evolución (spec §8)');
+  // La página no se desplaza en horizontal (spec §8): solo lo hacen, dentro de su caja, el cuadro, la
+  // tira de números de los grupos (Tabla y Jornada) y la rejilla de posiciones de la Evolución del grupo.
+  assert.deepEqual(rules.filter((r) => /overflow(-x)?:\s*(auto|scroll)/.test(r.body)).map((r) => r.selector), ['.group-strip', '.evo-scroll', '.bracket'],
+    'la página no se desplaza en horizontal: solo el cuadro, la tira de grupos y la rejilla de la evolución (spec §8)');
   assert.match(bodyOf('.bracket'), /scroll-snap-type:\s*x mandatory/);
   assert.match(bodyOf('.bracket-round'), /flex:\s*0 0 100%/);
   assert.match(bodyOf('.bracket-round'), /scroll-snap-align:\s*start/);

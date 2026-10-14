@@ -382,6 +382,24 @@ def test_the_rotation_reaches_every_group(health):
         assert set().union(*window) == set(ALL)
 
 
+def test_the_second_pass_rotates_too(health):
+    """Con la primera pasada entera y plazo para 7 de 10 segundas (actas y goleadores), la siguiente
+    empieza, tras los prioritarios, por los grupos que se quedaron sin ellas (extrasAt de
+    data-health.json): en dos pasadas seguidas todos tienen sus goleadores, alevín también."""
+    conn = season()
+    previous = report({code: checked(6) for code in ALL})
+    numbers = {str(i): code for i, (code, _, _) in enumerate(GROUPS, 1)}
+    read = []
+    for n in range(4):
+        previous, fed = health(previous, conn, budget=112, checks_now=NOW + timedelta(hours=6 * n))
+        assert previous["run"]["deferred"] == []
+        read.append([numbers[u.rsplit("=", 1)[1]] for u in fed.urls if "NFG_CMP_Goleadores" in u])
+    assert all(got[:3] == ["PG2", "FF5", "AL3"] for got in read)
+    assert all(len(got) < len(ALL) for got in read)                       # el plazo la corta siempre
+    for first, second in zip(read, read[1:]):
+        assert set(first) | set(second) == set(ALL)
+
+
 def test_a_closed_group_refreshed_after_a_day_is_published_to_keep_the_rotation(health):
     conn = season(played="2026-09-19")
     previous = report({**{code: checked(6) for code in ALL}, "FF1": checked(25)}, at=NOW - timedelta(hours=1))

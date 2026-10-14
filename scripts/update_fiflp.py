@@ -149,9 +149,11 @@ def _natural(code):
     return [(1, int(p)) if p.isdigit() else (0, p) for p in re.findall(r"\d+|\D+", code)]
 
 
-def _checked_at(entry):
+def _checked_at(entry, key="checkedAt"):
+    """La hora `key` de una entrada de data-health.json (checkedAt, o extrasAt: la de su última
+    segunda pasada), o None."""
     try:
-        moment = datetime.fromisoformat((entry or {}).get("checkedAt") or "")
+        moment = datetime.fromisoformat((entry if isinstance(entry, dict) else {}).get(key) or "")
     except (TypeError, ValueError):
         return None
     return moment if moment.tzinfo else moment.replace(tzinfo=timezone.utc)
@@ -883,8 +885,10 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
        (reserve_seconds) para la segunda; lo que no cabe queda para la pasada
        siguiente (rotación: su comprobación es la más vieja de su nivel y, a las
        STALE_AFTER, pasa delante de los niveles);
-    2. con lo que quede: las actas y los goleadores, en el mismo orden (los
-       prioritarios primero), el directorio de campos y las fichas de los equipos.
+    2. con lo que quede: las actas y los goleadores (los prioritarios primero;
+       después, el que lleva más tiempo sin ellos: extrasAt de data-health.json,
+       así que lo que el plazo corta va primero en la pasada siguiente), el
+       directorio de campos y las fichas de los equipos.
     Los grupos cerrados que descansan y los que no caben conservan su última
     comprobación en data-health.json (source_health.carry): no son un error."""
     start = clock()
@@ -926,12 +930,22 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         print(f"  ! competiciones: {e}")
     # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
     # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
+    # Los prioritarios primero; después, el que lleva más tiempo sin ella (extrasAt; sin ella, el
+    # primero). Sin esa hora, el plazo cortaba siempre a los mismos: la de cada grupo es la de su
+    # lectura, así que el primero en leerse volvía a ir el primero.
     budget = MAX_ACTAS_PER_RUN
     print("\n  Actas y goleadores", flush=True)
     refreshed = [g for g in plan.order if g[1] in results]
-    for group_id, code, url in refreshed:
-        if results[code][0] != "ok" or clock() > deadline:
+    oldest = datetime.min.replace(tzinfo=timezone.utc)
+    second = sorted((g for g in refreshed if results[g[1]][0] == "ok"),
+                    key=lambda g: (0, oldest) if g[1] in plan.priority
+                    else (1, _checked_at(checks.get(g[1]), "extrasAt") or oldest))
+    extras, cut = {}, []
+    for group_id, code, url in second:
+        if clock() > deadline:
+            cut.append(code)
             continue
+        at = stamp()
         notes = []
         try:
             done, read = import_actas(page, F, conn, group_id, budget, deadline)
@@ -941,19 +955,23 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         except Exception as e:
             conn.rollback()
             notes.append(f"actas: {e}")
-        try:
-            if clock() <= deadline:
+        if clock() > deadline:                 # el plazo la cortó en las actas: va primero la próxima vez
+            cut.append(code)
+        else:
+            extras[code] = at
+            try:
                 scorers = update_goleadores(page, F, conn, group_id, url)
                 if scorers:
                     notes.append(f"{scorers} goleadores")
-        except Exception as e:
-            conn.rollback()
-            notes.append(f"goleadores: {e}")
+            except Exception as e:
+                conn.rollback()
+                notes.append(f"goleadores: {e}")
         if notes:
             print(f"  [{code}] " + ", ".join(notes))
             results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
-    if clock() > deadline:
-        print("  (plazo agotado: el resto de actas y goleadores, en la próxima pasada)")
+    if cut:
+        print(f"  (plazo agotado: las actas y los goleadores de {len(cut)} grupos, primero en la próxima pasada: "
+              f"{', '.join(cut[:12])}{' y más' if len(cut) > 12 else ''})")
     # El directorio de campos, solo si falta alguno de los de la temporada (un grupo nuevo).
     try:
         if clock() <= deadline and missing_venues(conn, season_id):
@@ -972,17 +990,17 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         print(f"  ! directorio: {e}")
     for group_id, code, url in groups:
         if code in results:
-            source_health.record(code, url, *results[code], now=stamps[code])
+            source_health.record(code, url, *results[code], now=stamps[code], extras_at=extras.get(code))
         else:
             source_health.carry(code)          # descansa o no cupo: su última comprobación
         pending.pop(code, None)
     source_health.note_run({
         "groups": len(groups), "refreshed": len(results), "resting": [c for _, c, _ in plan.resting],
-        "deferred": [c for _, c, _ in deferred], "firstPassSeconds": round(first_pass),
+        "deferred": [c for _, c, _ in deferred], "extrasDeferred": cut, "firstPassSeconds": round(first_pass),
         "seconds": round(clock() - start), **({"firstPassPages": pages} if pages else {})})
-    # La rotación y los cerrados se ordenan por la hora de su última comprobación: sin publicarla,
-    # la pasada siguiente volvería a empezar por los mismos.
-    if deferred or (plan.due_closed & set(results)):
+    # La rotación (de las dos pasadas) y los cerrados se ordenan por la hora de su última comprobación
+    # o segunda pasada: sin publicarla, la pasada siguiente volvería a empezar por los mismos.
+    if deferred or cut or (plan.due_closed & set(results)):
         source_health.publish_checks()
     print(f"  Federación: {round((clock() - start) / 60, 1)} min de {round((deadline - start) / 60, 1)}", flush=True)
 

@@ -14,6 +14,8 @@ HEARTBEAT = timedelta(hours=24)
 # Lo que cambia en cada pasada sin que un visitante vea nada distinto: la hora de la comprobación y
 # las notas de la pasada del bot de la federación (rotación, grupos que descansan, tiempos).
 VOLATILE = ("checkedAt", "run")
+# Y en cada grupo: la hora de su comprobación y la de su última segunda pasada del bot (extrasAt).
+GROUP_VOLATILE = ("checkedAt", "extrasAt")
 _report = None
 _previous = None
 _force = False
@@ -73,13 +75,17 @@ def previous_groups():
     return dict(groups) if isinstance(groups, dict) else {}
 
 
-def record(code, url, status, message="", now=None):
+def record(code, url, status, message="", now=None, extras_at=None):
+    """La comprobación de un grupo. extras_at: la hora a la que el bot de la federación leyó sus actas y
+    goleadores (update_fiflp ordena por ella su segunda pasada); si esta pasada no llegó, la de antes."""
     if _report is None:
         return
-    _report["groups"][code] = {
-        "url": url, "status": status, "message": str(message)[:350],
-        "checkedAt": _stamp(now),
-    }
+    entry = {"url": url, "status": status, "message": str(message)[:350], "checkedAt": _stamp(now)}
+    before = previous_groups().get(code)
+    extras = _stamp(extras_at) if extras_at else before.get("extrasAt") if isinstance(before, dict) else None
+    if extras:
+        entry["extrasAt"] = extras
+    _report["groups"][code] = entry
 
 
 def carry(code):
@@ -108,7 +114,7 @@ def publish_checks():
 def meaningful(report):
     """The report without its check timestamps: what a visitor would see change."""
     view = {k: v for k, v in report.items() if k not in VOLATILE}
-    view["groups"] = {code: {k: v for k, v in (group or {}).items() if k != "checkedAt"}
+    view["groups"] = {code: {k: v for k, v in (group or {}).items() if k not in GROUP_VOLATILE}
                       for code, group in (report.get("groups") or {}).items()}
     return view
 

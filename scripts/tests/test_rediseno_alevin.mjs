@@ -516,3 +516,24 @@ test('Trayectoria: el alevín de la temporada del portal y el de cada pasada; si
   assert.match(partial.out, /Alevín, Primera Fase, Grupo 1/);
   assert.doesNotMatch(partial.out, /Alevín, Segunda Fase A/);
 });
+
+test('Goleadores de una temporada pasada sin alevín: el selector de categoría sigue y dice que de alevín no hay; sin ninguna, el aviso de la temporada', () => {
+  const gol = { benjamin: [{ id: 'A1', g: 'BENJAMIN - GRUPO 1', s: [['Uno, Jugador', 'Guayarmina', 5, 3]] }] };
+  const render = (raw, c) => String(SCREEN_MAP.goleadores.render(ctxFor('goleadores', { s: '2024-2025', c },
+    { datasets: datasetsFor({ seasonRaw: { '2024-2025': raw } }) })));
+  const out = render({ ...archive('2024-2025'), gol }, 'alevin');
+  assert.match(out, /<nav class="gol-cats" aria-label="Categoría">/);
+  assert.match(out, /<p class="empty">No hay goleadores de alevín de la temporada 2024\/25 en esta web\.<\/p>/);
+  assert.match(render({ ...archive('2024-2025'), gol }, 'benjamin'), /1 jugador de 1 grupo/);
+  const none = render(archive('2024-2025'), 'alevin');
+  assert.doesNotMatch(none, /gol-cats/);
+  assert.match(none, /<p class="empty">No hay goleadores de la temporada 2024\/25 en esta web\.<\/p>/);
+});
+
+test('Récords de alevín: el detalle de cada fila sin la categoría, que ya dice el selector', () => {
+  const out = String(SCREEN_MAP.records.render(ctxFor('records', { c: 'alevin' }, { datasets: withAlevin() })));
+  const details = [...out.matchAll(/<span class="rc-detail">([^<]*)<\/span>/g)].map((m) => m[1]);
+  assert.ok(details.length > 0);
+  assert.ok(details.every((d) => !d.includes('Alevín')), details.join(' | '));
+  assert.ok(details.some((d) => d.startsWith('Primera Fase, Grupo 1')), details.join(' | '));
+});

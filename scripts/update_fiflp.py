@@ -448,7 +448,8 @@ def group_team_names(conn, group_id):
 
 
 # Lo que cuelga del acta de un partido (con cod_acta) y lo que lo enlaza con la app de futbolaspalmas:
-# al juntar dos partidos gemelos, pasa al que se queda si él no lo tiene.
+# al juntar dos partidos gemelos, pasa al que se queda si él no lo tiene. match_staff es una vista de
+# match_staff_all desde migrate_compactar: _tables (solo tablas) la salta y sus filas van con match_staff_all.
 ACTA_CHILDREN = ("goals", "appearances", "match_events", "match_staff", "match_staff_all")
 OTHER_CHILDREN = ("fp_matches",)
 # Lo que un partido gemelo puede traer y el que se queda no tiene.

@@ -63,6 +63,7 @@ TEAM_FIXES = {
 }
 
 # Lo que apunta a un equipo dentro de un grupo: (tabla, filtro por grupo). Los partidos, aparte (dos columnas).
+# match_staff es una vista de match_staff_all desde migrate_compactar: _tables (solo tablas) la salta.
 _IN_GROUP = "match_id IN (SELECT id FROM matches WHERE group_id=?)"
 _GROUP_ROWS = (("standings", "group_id=?"), ("standings_detail", "group_id=?"), ("scorers", "group_id=?"),
                ("appearances", _IN_GROUP), ("match_events", _IN_GROUP), ("match_staff", _IN_GROUP),

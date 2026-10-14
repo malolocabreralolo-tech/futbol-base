@@ -331,10 +331,10 @@ def mixed_base():
       INSERT INTO matches(id, group_id, jornada, home_team_id, away_team_id, home_score, away_score)
         VALUES (1, {al20}, 'Jornada 1', {hb}, {pd}, 2, 1), (2, {al20}, 'Jornada 2', {uv}, {hb}, NULL, NULL);
       INSERT INTO players(id, full_name, norm_name) VALUES (1, 'Jugador Uno', 'jugador uno'), (2, 'Jugador Dos', 'jugador dos');
-      INSERT INTO appearances(match_id, team_id, player_id, role) VALUES (1, {hb}, 1, 'starter'), (1, {pd}, 2, 'starter');
+      INSERT INTO appearances(match_id, team_id, player_id, role, ord) VALUES (1, {hb}, 1, 'starter', 0), (1, {pd}, 2, 'starter', 1);
       INSERT INTO match_events(match_id, team_id, player_id, kind, minute) VALUES (1, {hb}, 1, 'goal', 10);
-      INSERT INTO match_staff(match_id, team_id, kind, name) VALUES (1, {hb}, 'coach', 'Entrenador');
-      INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (1, {pd}, 'Delegado', 'Delegado', 1);
+      INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (1, {hb}, 'Entrenador', 'Entrenador', 0),
+        (1, {pd}, 'Delegado', 'Delegado', 1);
       INSERT INTO scorers(group_id, player_name, team_id, goals, games) VALUES ({al20}, 'Jugador Uno', {hb}, 1, 1);
       INSERT INTO standings_detail(group_id, team_id, fiflp_code) VALUES ({al20}, {hb}, 1), ({al20}, {pd}, 2);
     """)
@@ -365,7 +365,8 @@ def test_the_bot_step_moves_only_the_rows_of_the_group_and_is_idempotent():
     assert sorted(conn.execute("SELECT team_id FROM appearances")) == sorted([(mesas,), (puertos,)])
     for table in ("match_events", "match_staff", "scorers"):
         assert conn.execute(f"SELECT DISTINCT team_id FROM {table}").fetchall() == [(mesas,)], table
-    assert conn.execute("SELECT team_id FROM match_staff_all").fetchall() == [(puertos,)]
+    assert sorted(conn.execute("SELECT team_id, role FROM match_staff_all")) == sorted(
+        [(mesas, "Entrenador"), (puertos, "Delegado")])
     assert sorted(conn.execute("SELECT team_id FROM standings_detail WHERE group_id=?", (al20,))) == sorted(
         [(mesas,), (puertos,)])
     # 'Huracán B' sigue en AL16, en benjamín y en 2022-23, con su ficha; el resto de grupos, igual.

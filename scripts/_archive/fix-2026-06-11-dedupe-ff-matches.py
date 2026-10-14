@@ -17,7 +17,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DB = os.path.join(ROOT, "futbolbase.db")
 
-CHILD_TABLES = ("goals", "appearances", "match_events", "match_staff")
+CHILD_TABLES = ("goals", "appearances", "match_events", "match_staff_all")  # match_staff: vista de match_staff_all (10/2026)
 
 con = sqlite3.connect(DB)
 con.execute("PRAGMA foreign_keys=ON")

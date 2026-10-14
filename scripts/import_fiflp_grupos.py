@@ -462,10 +462,11 @@ def _modernized(conn, raw, actas):
 
 def _move_rows(conn, table, where, params, mapping):
     """Las filas de `table` que cumplen `where` con su team_id cambiado según `mapping` (borrar y
-    volver a meter: un intercambio de dos equipos chocaría con el UNIQUE a mitad de un UPDATE)."""
+    volver a meter: un intercambio de dos equipos chocaría con el UNIQUE a mitad de un UPDATE). Con todas
+    sus columnas (el orden del acta de appearances, ord, incluido)."""
+    if not conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
+        return                        # una tabla que esta base aún no tiene, o una vista (match_staff)
     cols = [r[1] for r in conn.execute(f"PRAGMA table_info({table})")]
-    if not cols:                      # una tabla que esta base aún no tiene
-        return
     marks = ",".join("?" * len(mapping))
     rows = conn.execute(f"SELECT {', '.join(cols)} FROM {table} WHERE {where} AND team_id IN ({marks})",
                         (*params, *mapping)).fetchall()
@@ -530,6 +531,7 @@ def _move_teams(conn, gid, season_id, mapping):
     for table in ("standings", "standings_detail", "scorers"):
         _move_rows(conn, table, "group_id=?", (gid,), mapping)
     in_group = "match_id IN (SELECT id FROM matches WHERE group_id=?)"
+    # match_staff: una vista de match_staff_all desde migrate_compactar (_move_rows la salta).
     for table in ("appearances", "match_events", "match_staff", "match_staff_all"):
         _move_rows(conn, table, in_group, (gid,), mapping)
     case = "CASE {col} " + " ".join(f"WHEN {a} THEN {b}" for a, b in mapping.items()) + " ELSE {col} END"

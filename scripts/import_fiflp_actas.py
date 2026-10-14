@@ -1,7 +1,8 @@
 """Import a fiflp_actas_<season>_raw.json into the DB.
 
 Idempotent: for each acta whose match is reconciled, DELETE the prior rows from
-appearances/match_events/match_staff for that match and re-insert. Unmatched
+appearances/match_events/match_staff_all for that match and re-insert (match_staff
+es una vista de match_staff_all: migrate_compactar.py). Unmatched
 actas are appended to scripts/fiflp_actas_unmatched.json (deduplicated by
 cod_acta key).
 
@@ -23,12 +24,14 @@ import unicodedata
 try:
     from scripts.acta_reconciler import reconcile_acta, _contradicts, same_round_and_score
     from scripts.fiflp_acta import clean_scorer, scorer_minute
+    from scripts.migrate_actas_schema import STAFF_KINDS
 except ImportError:
     # Direct CLI run (`python3 scripts/import_fiflp_actas.py`): sys.path[0] is
     # scripts/, so the `scripts.` package is not importable. Add the repo root.
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from scripts.acta_reconciler import reconcile_acta, _contradicts, same_round_and_score
     from scripts.fiflp_acta import clean_scorer, scorer_minute
+    from scripts.migrate_actas_schema import STAFF_KINDS
 
 UNMATCHED_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fiflp_actas_unmatched.json")
 
@@ -100,17 +103,15 @@ def _team_id_by_side(conn, mid: int, side: str) -> int:
 # ---------------------------------------------------------------------------
 
 def _clear_acta_rows(conn, mid: int) -> None:
-    """Delete every acta-derived row of a match (appearances/events/staff)."""
+    """Delete every acta-derived row of a match (appearances/events/staff; match_staff es su vista)."""
     conn.execute("DELETE FROM appearances  WHERE match_id=?", (mid,))
     conn.execute("DELETE FROM match_events WHERE match_id=?", (mid,))
-    conn.execute("DELETE FROM match_staff  WHERE match_id=?", (mid,))
     conn.execute("DELETE FROM match_staff_all WHERE match_id=?", (mid,))
 
 
-# Los cargos que match_staff ya guardaba, con el nombre que les da el acta: para las actas leídas
-# antes de que se guardara el cuerpo técnico entero (staff.all_*) y para el relleno de backfill.
-LEGACY_ROLES = {"referee": "Árbitro/a Principal", "delegate_field": "DEL. Campo",
-                "delegate_team": "DEL. Equipo", "coach": "Entrenador"}
+# Los cuatro cargos de match_staff, con el nombre que les da el acta: para las actas leídas antes de
+# que se guardara el cuerpo técnico entero (staff.all_*).
+LEGACY_ROLES = STAFF_KINDS
 _REFEREE_ROLE = re.compile(r"^(Árbitro/a Principal|Árbitro/a Asistente\s*\d*|Asistente\s*\d*|"
                            r"Cuarto/a Árbitro/a|Cuarto Árbitro|Informador/a|Informador)\s+(.+)$")
 
@@ -136,21 +137,6 @@ def staff_rows(acta: dict) -> list:
                                                         ("coach", staff.get(f"coach_{side}"))) if v]
         rows += [(side, role, name) for role, name in lines]
     return rows
-
-
-def backfill_staff_all(conn) -> int:
-    """match_staff_all de los partidos con acta que no lo tienen, desde match_staff
-    (los cuatro cargos de siempre). Devuelve cuántos partidos rellena."""
-    pending = [r[0] for r in conn.execute("""SELECT DISTINCT s.match_id FROM match_staff s WHERE NOT EXISTS
-                                             (SELECT 1 FROM match_staff_all a WHERE a.match_id=s.match_id)""")]
-    order = ("referee", "delegate_field", "delegate_team", "coach")
-    for mid in pending:
-        rows = conn.execute("SELECT team_id, kind, name FROM match_staff WHERE match_id=? ORDER BY id", (mid,)).fetchall()
-        rows.sort(key=lambda r: (r[0] is not None, r[0] or 0, order.index(r[1])))
-        for i, (tid, kind, name) in enumerate(rows):
-            conn.execute("INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (?,?,?,?,?)",
-                         (mid, tid, LEGACY_ROLES[kind], name, i))
-    return len(pending)
 
 
 def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
@@ -181,8 +167,10 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
     # Idempotency: wipe prior rows for this match before re-inserting
     _clear_acta_rows(conn, mid)
 
-    # Insert appearances and build name -> (player_id, team_id) map
+    # Insert appearances and build name -> (player_id, team_id) map. ord: el orden del acta (local,
+    # visitante y los que solo salen en los sucesos), que desempata la alineación publicada.
     name_to_pid: dict = {}
+    order = 0
     for side in ("home", "away"):
         team_id = _team_id_by_side(conn, mid, side)
         for p in (acta.get("lineups") or {}).get(side, []):
@@ -190,10 +178,11 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
             name_to_pid[(side, p["name"])] = (pid, team_id)
             conn.execute(
                 """INSERT INTO appearances
-                       (match_id, team_id, player_id, dorsal, role, goals, yellow, red)
-                   VALUES (?, ?, ?, ?, ?, 0, 0, 0)""",
-                (mid, team_id, pid, p.get("dorsal"), p["role"]),
+                       (match_id, team_id, player_id, dorsal, role, goals, yellow, red, ord)
+                   VALUES (?, ?, ?, ?, ?, 0, 0, 0, ?)""",
+                (mid, team_id, pid, p.get("dorsal"), p["role"], order),
             )
+            order += 1
 
     # Insert events and bump appearance counters
     # pair_idx -> first event id (for sub_in/sub_out linking)
@@ -221,12 +210,12 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
         if key not in name_to_pid:
             pid = _get_or_create_player(conn, ev["player_name"])
             team_id = _team_id_by_side(conn, mid, side)
-            conn.execute(
+            order += conn.execute(
                 """INSERT OR IGNORE INTO appearances
-                       (match_id, team_id, player_id, dorsal, role, goals, yellow, red)
-                   VALUES (?, ?, ?, NULL, 'sub', 0, 0, 0)""",
-                (mid, team_id, pid),
-            )
+                       (match_id, team_id, player_id, dorsal, role, goals, yellow, red, ord)
+                   VALUES (?, ?, ?, NULL, 'sub', 0, 0, 0, ?)""",
+                (mid, team_id, pid, order),
+            ).rowcount
             name_to_pid[key] = (pid, team_id)
 
         pid, team_id = name_to_pid[key]
@@ -280,30 +269,8 @@ def _import_one(conn, cod_acta: int, acta: dict, mid: int = None) -> bool:
                 (mid, pid),
             )
 
-    # Insert staff rows (referee + coaches)
-    staff = acta.get("staff") or {}
-    if staff.get("referee"):
-        conn.execute(
-            "INSERT OR IGNORE INTO match_staff(match_id, team_id, kind, name) VALUES(?, ?, ?, ?)",
-            (mid, None, "referee", staff["referee"]),
-        )
-    for side, key in (("home", "coach_home"), ("away", "coach_away")):
-        if staff.get(key):
-            tid = _team_id_by_side(conn, mid, side)
-            conn.execute(
-                "INSERT OR IGNORE INTO match_staff(match_id, team_id, kind, name) VALUES(?, ?, ?, ?)",
-                (mid, tid, "coach", staff[key]),
-            )
-    # Delegados de campo y de equipo (acta de la federación, 2026-10).
-    for side in ("home", "away"):
-        delegates = staff.get(f"delegates_{side}") or {}
-        for field, kind in (("campo", "delegate_field"), ("equipo", "delegate_team")):
-            if delegates.get(field):
-                conn.execute(
-                    "INSERT OR IGNORE INTO match_staff(match_id, team_id, kind, name) VALUES(?, ?, ?, ?)",
-                    (mid, _team_id_by_side(conn, mid, side), kind, delegates[field]),
-                )
-    # Todo el cuerpo técnico y los árbitros, con el cargo que pone el acta.
+    # Todo el cuerpo técnico y los árbitros, con el cargo que pone el acta. El árbitro principal, los
+    # entrenadores y los delegados salen de aquí también en match_staff (su vista).
     conn.execute("DELETE FROM match_staff_all WHERE match_id=?", (mid,))
     for i, (side, role, name) in enumerate(staff_rows(acta)):
         conn.execute("INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (?,?,?,?,?)",
@@ -1008,11 +975,6 @@ def import_changed_raws(conn, folder: str = SCRIPTS_DIR, log=print) -> dict:
     fixed = repair_added_time(conn, folder)
     if fixed:
         log(f"  {fixed} actas con el minuto del descuento pegado al goleador, reimportadas")
-    # match_staff_all de las actas importadas antes de que existiera (desde match_staff).
-    filled = backfill_staff_all(conn)
-    if filled:
-        conn.commit()
-        log(f"  cuerpo técnico completo: {filled} partidos rellenados desde match_staff")
     return reports
 
 
@@ -1044,6 +1006,9 @@ def main() -> None:
             sys.exit("--db requires a path argument")
         db_path = sys.argv[idx + 1]
     conn = sqlite3.connect(db_path)
+    # El esquema de las actas (el compacto: migrate_compactar), antes de escribir en él.
+    from scripts.migrate_actas_schema import migrate
+    migrate(conn)
     m = RAW_FILE.match(os.path.basename(raw_path))
     rpt = import_raw(conn, raw_path, owned=owned_groups(conn, m.group(1)) if m else None)
     print(f"Imported {raw_path}: matched={rpt['matched']} unmatched={rpt['unmatched']} "

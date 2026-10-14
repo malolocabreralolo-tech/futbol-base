@@ -43,7 +43,7 @@ scripts/fetch_futbolaspalmas.py Importación con protección de temporada (grupo
 scripts/update_fiflp.py      Grupos de la federación (FIFLP): tabla, jornadas, actas, goleadores y campos (docs/federacion.md)
 scripts/generate_js.py        Generador de archivos publicados
 data-*.js                    Datos actuales e históricos
-futbolbase.db                 Base de datos
+futbolbase.db                 Base de datos (las tablas de las actas y su esquema compacto: docs/SP-1-actas.md)
 data-health.json             Estado y fecha de comprobación de las fuentes
 sw.js                        Caché y actualización de la PWA
 ```

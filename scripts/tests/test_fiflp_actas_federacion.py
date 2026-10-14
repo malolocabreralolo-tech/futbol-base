@@ -431,7 +431,9 @@ def test_parser_fields_minutes_penalty_referees_and_away_delegates():
     assert parse_flat_acta(penalty)["events"][0]["goal_type"] == "penalty"
 
 
-def test_migration_rebuilds_an_old_match_staff_without_losing_rows():
+def test_migration_turns_an_old_match_staff_into_its_view_without_losing_rows():
+    """Una match_staff de antes de los delegados (el CHECK sin ellos) y sin match_staff_all: sus filas
+    pasan a match_staff_all, de la que sale la vista, y los delegados se escriben allí."""
     conn = sqlite3.connect(":memory:")
     conn.executescript(SCHEMA)
     conn.executescript("""
@@ -441,10 +443,14 @@ def test_migration_rebuilds_an_old_match_staff_without_losing_rows():
         UNIQUE(match_id, team_id, kind, name));
       INSERT INTO match_staff(id, match_id, team_id, kind, name) VALUES (7, 1, NULL, 'referee', 'X'), (8, 1, 2, 'coach', 'Y');
     """)
-    migrate(conn)
-    migrate(conn)                                           # idempotente
-    assert conn.execute("SELECT id, kind, name FROM match_staff ORDER BY id").fetchall() == [(7, "referee", "X"), (8, "coach", "Y")]
-    conn.execute("INSERT INTO match_staff(match_id, team_id, kind, name) VALUES (1, 2, 'delegate_team', 'Z')")
+    migrate(conn, log=lambda *_: None)
+    migrate(conn, log=lambda *_: None)                      # idempotente
+    assert conn.execute("SELECT type FROM sqlite_master WHERE name='match_staff'").fetchone() == ("view",)
+    assert sorted(conn.execute("SELECT kind, name FROM match_staff")) == [("coach", "Y"), ("referee", "X")]
+    with pytest.raises(sqlite3.OperationalError):           # una vista no se escribe
+        conn.execute("INSERT INTO match_staff(match_id, team_id, kind, name) VALUES (1, 2, 'delegate_team', 'Z')")
+    conn.execute("INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (1, 2, 'DEL. Equipo', 'Z', 2)")
+    assert ("delegate_team", "Z") in conn.execute("SELECT kind, name FROM match_staff").fetchall()
     assert "fiflp_id" in [r[1] for r in conn.execute("PRAGMA table_info(players)")]
 
 

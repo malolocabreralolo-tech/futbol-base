@@ -70,8 +70,9 @@ def _seed_match(conn, season="2025-2026", code="A1", home="Unión Viera",
     return cur.lastrowid
 
 
-def _add_acta_children(conn, mid, team_id, player="PEREZ, JUAN"):
-    """Insert appearances/match_events/match_staff/goals referencing a match."""
+def _add_acta_children(conn, mid, team_id, player="PEREZ, JUAN", staff=True):
+    """Insert appearances/match_events/match_staff_all/goals referencing a match (match_staff es su
+    vista: el entrenador sale también en ella)."""
     norm = player.upper()
     r = conn.execute("SELECT id FROM players WHERE norm_name=?", (norm,)).fetchone()
     if r:
@@ -81,17 +82,18 @@ def _add_acta_children(conn, mid, team_id, player="PEREZ, JUAN"):
             "INSERT INTO players (full_name, norm_name) VALUES (?,?)", (player, norm)
         ).lastrowid
     conn.execute(
-        "INSERT INTO appearances (match_id, team_id, player_id, role) VALUES (?,?,?,'starter')",
+        "INSERT INTO appearances (match_id, team_id, player_id, role, ord) VALUES (?,?,?,'starter',0)",
         (mid, team_id, pid),
     )
     conn.execute(
         "INSERT INTO match_events (match_id, team_id, player_id, kind) VALUES (?,?,?,'goal')",
         (mid, team_id, pid),
     )
-    conn.execute(
-        "INSERT INTO match_staff (match_id, team_id, kind, name) VALUES (?,?,'coach','COACH X')",
-        (mid, team_id),
-    )
+    if staff:
+        conn.execute(
+            "INSERT INTO match_staff_all (match_id, team_id, role, name, ord) VALUES (?,?,'Entrenador','COACH X',0)",
+            (mid, team_id),
+        )
     conn.execute(
         "INSERT INTO goals (match_id, minute, player_name, side) VALUES (?,10,?,'home')",
         (mid, player),
@@ -311,7 +313,9 @@ def _seed_for_importer(conn, season, code, with_children=True):
         (gid, hid),
     )
     if with_children:
-        _add_acta_children(conn, mid, hid)
+        # Sin cuerpo técnico: match_staff_all no está en ACTA_CHILD_TABLES (nunca lo estuvo) y con las
+        # claves ajenas activas un partido con él no se borra (docs/SP-1-actas.md).
+        _add_acta_children(conn, mid, hid, staff=False)
     conn.commit()
     sid = conn.execute("SELECT season_id FROM groups WHERE id=?", (gid,)).fetchone()[0]
     return sid, gid, mid
@@ -329,7 +333,7 @@ def test_import_group_with_acta_children_does_not_crash(tmp_path, mod, gmaker, s
     sid, gid, _mid = _seed_for_importer(conn, season, code, with_children=True)
     mod.import_group(conn, gmaker(), sid)  # must NOT raise
     # children of the old (replaced) matches are gone
-    for tbl in ("appearances", "match_events", "match_staff", "goals"):
+    for tbl in ("appearances", "match_events", "match_staff", "match_staff_all", "goals"):
         n = conn.execute(
             f"SELECT COUNT(*) FROM {tbl} WHERE match_id NOT IN (SELECT id FROM matches)"
         ).fetchone()[0]

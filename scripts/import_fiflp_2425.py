@@ -80,7 +80,8 @@ def group_num(group_name):
 
 
 # Tables whose rows reference matches(id) and must be deleted BEFORE the
-# matches themselves (FK ON via db.get_connection would otherwise crash).
+# matches themselves (FK ON via db.get_connection would otherwise crash). match_staff,
+# vista de match_staff_all desde migrate_compactar: _table_exists la salta.
 ACTA_CHILD_TABLES = ("appearances", "match_events", "match_staff", "goals")
 
 

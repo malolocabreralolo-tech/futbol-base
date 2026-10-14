@@ -42,7 +42,8 @@ REFERENCIAS = [                       # (tabla, columna)
     ("scorers", "team_id"),
     ("appearances", "team_id"),
     ("match_events", "team_id"),
-    ("match_staff", "team_id"),
+    ("match_staff", "team_id"),         # vista de match_staff_all desde 10/2026: tabla_existe la salta
+    ("match_staff_all", "team_id"),
 ]
 
 

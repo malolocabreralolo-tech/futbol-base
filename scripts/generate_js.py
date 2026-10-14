@@ -714,6 +714,9 @@ def lineups_entries(conn, season_name, code=None):
        ORDER BY m.id""", (season_id[0], code, code)).fetchall()
     has_id = any(r[1] == "fiflp_id" for r in conn.execute("PRAGMA table_info(players)"))
     has_all = _has_table(conn, "match_staff_all")
+    # Los empatados en rol y dorsal, en el orden del acta: appearances.ord (el id de la fila en una
+    # base de antes de migrate_compactar).
+    tiebreak = "a.ord" if any(r[1] == "ord" for r in conn.execute("PRAGMA table_info(appearances)")) else "a.id"
     pairs = []
     for mid, h, a, hs, asc, code, cod in rows:
         key = _match_key(h, a, hs, asc)
@@ -721,7 +724,7 @@ def lineups_entries(conn, season_name, code=None):
           SELECT a.team_id, p.full_name, a.dorsal, a.role, a.goals, a.yellow, a.red,
                  {"p.fiflp_id" if has_id else "NULL"}
             FROM appearances a JOIN players p ON p.id=a.player_id
-           WHERE a.match_id=? ORDER BY a.role DESC, a.dorsal""", (mid,)).fetchall()
+           WHERE a.match_id=? ORDER BY a.role DESC, a.dorsal, {tiebreak}""", (mid,)).fetchall()
         home_team_id = conn.execute("SELECT home_team_id FROM matches WHERE id=?", (mid,)).fetchone()[0]
 
         def player(r):
@@ -772,10 +775,11 @@ def lineups_entries(conn, season_name, code=None):
                  "coachH": ch[0] if ch else None,
                  "coachA": ca[0] if ca else None,
                  "ref":    ref[0] if ref else None}
-        # Todo el cuerpo técnico de cada equipo y los árbitros, con el cargo del acta (match_staff_all).
+        # Todo el cuerpo técnico de cada equipo y los árbitros, con el cargo del acta (match_staff_all; las
+        # filas de ord negativo no son del acta: solo constaban en la antigua tabla match_staff).
         if has_all:
-            rows_s = conn.execute("SELECT team_id, role, name FROM match_staff_all WHERE match_id=? ORDER BY ord",
-                                  (mid,)).fetchall()
+            rows_s = conn.execute("""SELECT team_id, role, name FROM match_staff_all WHERE match_id=? AND ord >= 0
+                                     ORDER BY ord""", (mid,)).fetchall()
             for key_s, test in (("stH", lambda t: t == home_team_id),
                                 ("stA", lambda t: t is not None and t != home_team_id),
                                 ("refs", lambda t: t is None)):

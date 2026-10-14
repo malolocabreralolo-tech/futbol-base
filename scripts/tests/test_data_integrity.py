@@ -341,12 +341,14 @@ def test_actas_migration_idempotent(tmp_path):
     shutil.copy(DB_PATH, db)
     conn = sqlite3.connect(db)
     migrate(conn)
-    schema1 = sorted(r[0] for r in conn.execute("SELECT sql FROM sqlite_master WHERE type IN ('table','index') AND sql IS NOT NULL"))
+    schema1 = sorted(r[0] for r in conn.execute("SELECT sql FROM sqlite_master WHERE type IN ('table','index','view') AND sql IS NOT NULL"))
     migrate(conn)  # second run must be a no-op
-    schema2 = sorted(r[0] for r in conn.execute("SELECT sql FROM sqlite_master WHERE type IN ('table','index') AND sql IS NOT NULL"))
+    schema2 = sorted(r[0] for r in conn.execute("SELECT sql FROM sqlite_master WHERE type IN ('table','index','view') AND sql IS NOT NULL"))
     assert schema1 == schema2
     tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    assert {'players', 'appearances', 'match_events', 'match_staff'} <= tables
+    assert {'players', 'appearances', 'match_events', 'match_staff_all'} <= tables
+    # El esquema compacto (migrate_compactar): match_staff es una vista de match_staff_all.
+    assert conn.execute("SELECT type FROM sqlite_master WHERE name='match_staff'").fetchone() == ('view',)
     cols = {r[1] for r in conn.execute("PRAGMA table_info(matches)")}
     assert 'cod_acta' in cols
 

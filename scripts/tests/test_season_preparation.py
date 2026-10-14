@@ -233,7 +233,7 @@ def test_activation_on_a_synthetic_tree_archives_the_closing_season(tmp_path):
       INSERT INTO matches(id, group_id, jornada, date, home_team_id, away_team_id, home_score, away_score, cod_acta)
         VALUES (1, 1, 'Jornada 1', '2028-10-05', 1, 2, 1, 0, 90001);
       INSERT INTO players(id, full_name, norm_name) VALUES (1, 'PEREZ, JUAN', 'perez juan');
-      INSERT INTO appearances(match_id, team_id, player_id, dorsal, role, goals) VALUES (1, 1, 1, 7, 'starter', 1);
+      INSERT INTO appearances(match_id, team_id, player_id, dorsal, role, goals, ord) VALUES (1, 1, 1, 7, 'starter', 1, 0);
     """)
     conn.commit()
     conn.close()

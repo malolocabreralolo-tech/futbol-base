@@ -54,7 +54,7 @@ MISRECONCILED = [
     (30143, 167962),  # Tablero vs Maspa Training, db 14/03 vs acta 13-01-2024
 ]
 
-CHILD_TABLES = ("appearances", "match_events", "match_staff")
+CHILD_TABLES = ("appearances", "match_events", "match_staff_all")  # match_staff: vista de match_staff_all (10/2026)
 
 con = sqlite3.connect(DB)
 con.execute("PRAGMA foreign_keys=ON")

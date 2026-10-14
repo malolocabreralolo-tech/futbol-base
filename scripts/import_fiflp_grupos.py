@@ -530,13 +530,16 @@ def import_season(conn, folder, season, log=print):
     tiene. Una temporada archivada que no está en la base se da de alta con su
     primer grupo (y se borra si al final no crea ninguno). Devuelve {creados,
     rehechos, ya_estaban, sin_código, choques, vacíos} y, si la ha dado de
-    alta, season_created."""
+    alta, season_created. La temporada en curso, nunca: sus grupos los da de alta
+    activate_season con la URL de la federación, que es lo que pone al día el bot
+    (un raw de goleadores de 2026-27 crearía grupos sin URL que nadie actualiza)."""
     from activate_season import known_names
     report = {"created": 0, "redone": 0, "existing": 0, "no_meta": 0, "clash": 0, "empty": 0}
     archived = season in ARCHIVE_SEASONS
-    row = conn.execute("SELECT id, start_year FROM seasons WHERE name=?", (season,)).fetchone()
-    if not row and not archived:
+    row = conn.execute("SELECT id, start_year, is_current FROM seasons WHERE name=?", (season,)).fetchone()
+    if (not row and not archived) or (row and row[2]):
         return report
+    row = row[:2] if row else None
     # Una archivada que falta: sin fila todavía (se da de alta con su primer grupo, más abajo).
     season_id, start = row if row else (None, int(season[:4]))
     raw = _load(os.path.join(folder, f"fiflp_goleadores_{season}_raw.json"), {})

@@ -3,8 +3,8 @@
 de benjamín y prebenjamín de temporadas pasadas, de la web de la federación.
 
 Recorre las competiciones del catálogo (fiflp_comps_catalog.json, las mismas
-que las actas: benjamín y prebenjamín de fútbol 7/8, sin sala) y, de cada
-grupo, guarda:
+que las actas: benjamín y prebenjamín de fútbol 7/8, sin sala; con --categorias
+alevin, las de alevín de Gran Canaria) y, de cada grupo, guarda:
   - la clasificación (NFG_VisClasificacion, no ofuscada): para casar el grupo
     con el de la base aunque no tenga actas importadas;
   - los goleadores (NFG_CMP_Goleadores, aplanados con fiflp_render): jugador,
@@ -17,7 +17,7 @@ leído no se vuelve a pedir). Lo importa el bot (import_fiflp_goleadores.py).
 Solo funciona desde GitHub Actions (goleadores-federacion.yml): FIFLP contesta
 vacío a las IPs domésticas.
 
-  python3 scripts/fetch_fiflp_goleadores.py --temporadas 17,18,19,20,21 [--max-minutes 320]
+  python3 scripts/fetch_fiflp_goleadores.py --temporadas 17,18,19,20,21 [--max-minutes 320] [--categorias alevin]
 """
 import argparse
 import json
@@ -106,12 +106,14 @@ def scrape_group(page, F, season, comp, grupo):
     return standings, scorers, True
 
 
-def run(page, F, seasons, deadline, log=print, crests_only=False):
+def run(page, F, seasons, deadline, log=print, crests_only=False, categories=None):
+    """`categories`: las del catálogo que se recorren ('ALEVIN'…); por defecto, benjamín y
+    prebenjamín. Todas van al mismo raw de la temporada (claves comp:grupo)."""
     for season in seasons:
         path = raw_path(season)
         data = load(path)
         names = comp_names(season)
-        comps = catalog_comps(season)
+        comps = catalog_comps(season, categories) if categories else catalog_comps(season)
         log(f"Temporada {SEASON_NAME[season]}: {len(comps)} competiciones")
         for comp in comps:
             if time.monotonic() > deadline:
@@ -156,7 +158,10 @@ def main(argv=None):
     ap.add_argument("--temporadas", default="17,18,19,20,21")
     ap.add_argument("--max-minutes", type=float, default=320)
     ap.add_argument("--escudos", action="store_true", help="solo los escudos de los grupos ya leídos")
+    ap.add_argument("--categorias", default="", help="'benjamin,prebenjamin' (por defecto) o 'alevin'")
     args = ap.parse_args(argv)
+    from categorias import parse_categories
+    categories = parse_categories(args.categorias)
     seasons = [s.strip() for s in args.temporadas.split(",") if s.strip()]
     for s in seasons:
         if s not in SEASON_NAME:
@@ -172,7 +177,7 @@ def main(argv=None):
         fiflp_only(page)   # sin la publicidad de la federación, que colgaba las cargas
         page.set_default_timeout(30000)
         try:
-            complete = run(page, F, seasons, deadline, crests_only=args.escudos)
+            complete = run(page, F, seasons, deadline, crests_only=args.escudos, categories=categories)
         finally:
             browser.close()
     print("Completo." if complete else "Incompleto: relanzar para seguir.")

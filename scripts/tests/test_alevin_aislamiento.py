@@ -272,3 +272,57 @@ def test_import_season_creates_the_alevin_group_in_its_category_beside_benjamin(
     assert conn.execute("""SELECT g.code, c.name, g.phase FROM groups g JOIN categories c ON c.id=g.category_id
                            WHERE g.id<>1""").fetchall() == [("AL1", "ALEVIN", "Primera Fase GC")]
     assert conn.execute("SELECT count(*) FROM standings WHERE group_id=1").fetchone()[0] == ff1
+
+
+# ── Las actas huérfanas (import_fiflp_actas._purge_orphan_cod_actas) ─────────
+
+@pytest.mark.parametrize("season, current", [("2026-2027", 1), ("2025-2026", 0)])
+def test_an_alevin_raw_never_clears_the_actas_of_benjamin(tmp_path, monkeypatch, season, current):
+    """import_raw quitaba el cod_acta de todo partido de la temporada cuya acta no estuviera en el raw
+    (el raw era «la cosecha completa»). Un raw de actas de alevín (actas-federacion.yml con
+    categorias=alevin) habría borrado las de benjamín; y en la temporada en curso el bot importa actas
+    cada pasada, así que el raw nunca está completo."""
+    import import_fiflp_actas as A
+    monkeypatch.setattr(A, "UNMATCHED_PATH", str(tmp_path / "unmatched.json"))
+    conn = base(season=season, current=current)
+    ff1 = match_of(conn, "FF1")
+    conn.execute("UPDATE matches SET cod_acta=500 WHERE id=?", (ff1,))
+    conn.commit()
+    h = {**header(ALEVIN_COMP, season.replace("-", "/")), "date": f"03-10-{season[:4]}"}
+    acta = {"header": h, "lineups": {"home": [], "away": []}, "events": [], "staff": {}, "consistent": True,
+            "cod_acta": 777, "enumeration": {"comp_id": "54976940", "grupo": "1", "jornada": "1"}}
+    raw = tmp_path / f"fiflp_actas_{season}_raw.json"
+    raw.write_text(json.dumps({"777": acta}), encoding="utf-8")
+    A.import_raw(conn, str(raw))
+    assert conn.execute("SELECT cod_acta FROM matches WHERE id=?", (ff1,)).fetchone() == (500,)
+
+
+def test_a_complete_raw_of_a_closed_season_still_clears_its_orphans(tmp_path, monkeypatch):
+    """Lo de siempre: en una temporada cerrada, un acta de benjamín que ya no está en el raw (de
+    benjamín) se quita de su partido."""
+    import import_fiflp_actas as A
+    monkeypatch.setattr(A, "UNMATCHED_PATH", str(tmp_path / "unmatched.json"))
+    conn = base(season="2025-2026", current=0)
+    ff1 = match_of(conn, "FF1")
+    conn.execute("UPDATE matches SET cod_acta=500 WHERE id=?", (ff1,))
+    conn.commit()
+    h = {**header(BENJAMIN_COMP, "2025/2026"), "date": "03-10-2025", "home_team": "GALDAR, C.F.",
+         "away_team": 'TABLERO, C.D. "A"', "home_score": 0, "away_score": 2}
+    acta = {"header": h, "lineups": {"home": [], "away": []}, "events": [], "staff": {}, "consistent": True,
+            "cod_acta": 778, "enumeration": {"comp_id": "54422885", "grupo": "1", "jornada": "1"}}
+    raw = tmp_path / "fiflp_actas_2025-2026_raw.json"
+    raw.write_text(json.dumps({"778": acta}), encoding="utf-8")
+    A.import_raw(conn, str(raw))
+    assert conn.execute("SELECT cod_acta FROM matches WHERE id=?", (ff1,)).fetchone() == (None,)
+
+
+def test_groups_of_the_current_season_only_come_from_the_activation(tmp_path):
+    """Con SEASON_NAME['22'] un raw de goleadores de 2026-27 es posible: sus grupos alevín no se crean
+    por aquí (sin URL de la federación, el bot no los pondría al día); se activan con activate_season."""
+    import import_fiflp_grupos as GR
+    conn = base()                                            # 2026-2027, en curso
+    (tmp_path / "fiflp_goleadores_2026-2027_raw.json").write_text(
+        json.dumps({"54976940:1": entry(ALEVIN_COMP)}), encoding="utf-8")
+    report = GR.import_season(conn, str(tmp_path), "2026-2027", log=lambda *a: None)
+    assert report["created"] == 0
+    assert conn.execute("SELECT count(*) FROM groups").fetchone()[0] == 1

@@ -14,7 +14,10 @@ El portal pasó en 2026/27 a una app (directo.php) con una API JSON:
                                         nombre de pila), hora real de inicio,
                                         árbitros, técnicos y campo con enlace al mapa.
 Las ligas salen del desplegable <select id="selector-liga"> de cualquier página
-de la app (discover_temporada.app_ligas): solo benjamín y prebenjamín.
+de la app (discover_temporada.app_ligas): benjamín y prebenjamín. Alevín (que la
+app publica) solo con FP_APP_CATS=benjamin,prebenjamin,alevin: completa con el
+nombre de pila de la app a niños cuyo nombre no publica la federación, y eso lo
+decide el dueño de la web (docs/alevin.md).
 
 Lo que da que la federación no: el nombre de los goleadores de los clubes cuyos
 niños la federación no publica (Las Mesas, AD Huracán…), los colores de la
@@ -139,8 +142,10 @@ def run(season, today=None, log=print):
     data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
     for k in ("ligas", "partidos", "dias"):
         data.setdefault(k, {})
-    ligas = app_ligas(get(APP_URL))
-    log(f"futbolaspalmas (app): {len(ligas)} ligas de benjamín y prebenjamín")
+    from categorias import parse_categories
+    cats = parse_categories(os.environ.get("FP_APP_CATS"))
+    ligas = app_ligas(get(APP_URL), cats)
+    log(f"futbolaspalmas (app): {len(ligas)} ligas ({', '.join(c.lower() for c in cats)})")
     for liga_id, name in ligas:
         try:
             fetch_liga(liga_id, name, data, now, log)

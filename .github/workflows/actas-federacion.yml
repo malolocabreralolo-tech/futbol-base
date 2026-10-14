@@ -9,10 +9,10 @@ on:
   workflow_dispatch:
     inputs:
       temporada:
-        description: 'CodTemporada (12=2016-17 … 21=2025-26)'
+        description: 'CodTemporada (12=2016-17 … 21=2025-26, 22=2026-27)'
         required: true
         type: choice
-        options: ['12', '13', '14', '15', '16', '17', '18', '19', '20', '21']
+        options: ['12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22']
       cola:
         description: 'Temporadas que siguen al acabar esta, separadas por comas (p. ej. 19,18,17)'
         required: false
@@ -22,9 +22,13 @@ on:
         required: false
         default: '40'
       comps:
-        description: 'Competiciones (vacío = las benjamín/prebenjamín del catálogo, sin sala)'
+        description: 'Competiciones (vacío = las de las categorías del catálogo, sin sala)'
         required: false
         default: ''
+      categorias:
+        description: 'Categorías del catálogo: benjamin,prebenjamin o alevin (solo Gran Canaria); pasa a las tandas y a la cola'
+        required: false
+        default: 'benjamin,prebenjamin'
       reindex:
         description: 'Volver a enumerar aunque haya índice'
         required: false
@@ -63,11 +67,12 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
           TEMP_INPUT: ${{ inputs.temporada }}
           COMPS_INPUT: ${{ inputs.comps }}
+          CATS_INPUT: ${{ inputs.categorias }}
           REINDEX: ${{ inputs.reindex }}
           REFRESCAR: ${{ inputs.refrescar }}
           PYTHONUNBUFFERED: '1'
         run: |
-          ARGS="--temporada $TEMP_INPUT --max-minutes 320"
+          ARGS="--temporada $TEMP_INPUT --max-minutes 320 --categorias ${CATS_INPUT:-benjamin,prebenjamin}"
           if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
           if [ "$REINDEX" = "true" ]; then ARGS="$ARGS --reindex"; fi
           if [ "$REFRESCAR" = "true" ]; then ARGS="$ARGS --refrescar"; fi
@@ -117,6 +122,7 @@ jobs:
           COLA: ${{ inputs.cola }}
           TANDAS: ${{ inputs.tandas }}
           COMPS_INPUT: ${{ inputs.comps }}
+          CATS_INPUT: ${{ inputs.categorias }}
           REFRESCAR: ${{ inputs.refrescar }}
         run: |
           LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
@@ -130,13 +136,14 @@ jobs:
             echo "Freno: sin tandas. Pendientes en $LABEL: $PENDING"
           elif [ "$PENDING" -gt 0 ] && [ "$STUCK" = "0" ]; then
             echo "Quedan $PENDING actas de $LABEL: otra tanda."
-            gh workflow run actas-federacion.yml --ref main -f temporada="$TEMP_INPUT" -f cola="$COLA" -f tandas="$LEFT" -f comps="$COMPS_INPUT" -f refrescar="${REFRESCAR:-false}"
+            gh workflow run actas-federacion.yml --ref main -f temporada="$TEMP_INPUT" -f cola="$COLA" -f tandas="$LEFT" -f comps="$COMPS_INPUT" -f refrescar="${REFRESCAR:-false}" -f categorias="$CATS_INPUT"
           elif [ -n "$COLA" ]; then
             NEXT="${COLA%%,*}"
             REST=""
             case "$COLA" in *,*) REST="${COLA#*,}" ;; esac
             echo "Temporada $LABEL terminada: sigue la $NEXT."
-            gh workflow run actas-federacion.yml --ref main -f temporada="$NEXT" -f cola="$REST" -f tandas="$LEFT" -f refrescar="${REFRESCAR:-false}"
+            # Las categorías pasan a la temporada siguiente (las competiciones no: son de esta).
+            gh workflow run actas-federacion.yml --ref main -f temporada="$NEXT" -f cola="$REST" -f tandas="$LEFT" -f refrescar="${REFRESCAR:-false}" -f categorias="$CATS_INPUT"
           else
             echo "Cola terminada."
           fi

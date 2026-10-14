@@ -5,8 +5,10 @@ across all 5 seasons, incrementally and resumably.
 Saves to scripts/fiflp_actas_<season>_raw.json keyed by CodActa.
 
 CLI:
-  --temporada NN      (required) CodTemporada: 17..21
+  --temporada NN      (required) CodTemporada: 12..22
   --comps "id,id"     (optional) override comp list; otherwise auto-discover
+  --categorias LISTA  (optional) 'benjamin,prebenjamin' (por defecto) o 'alevin' (solo
+                      Gran Canaria, sin sala): las competiciones del catálogo que se recorren
   --max-actas N       (optional) cap for spike runs
   --dump-fixture COD  (optional) dump acta HTML to scripts/tests/fixtures/
 
@@ -39,6 +41,9 @@ SEASON_NAME = {
     "19": "2023-2024",
     "20": "2024-2025",
     "21": "2025-2026",
+    # La temporada en curso: las actas que el bot (update_fiflp) ya no relee, p. ej. las de una fase
+    # dada de alta tarde (alevín, Fuerteventura).
+    "22": "2026-2027",
 }
 
 # Pre-shipped comp lists reused from existing scrapers.
@@ -58,16 +63,26 @@ KEYWORDS_BENJ = ("BENJAMIN", "BENJAMÍN", "PREBENJAMIN", "PREBENJAMÍN")
 ACTA_HREF = re.compile(r"NFG_CmpPartido[^\"'\s]*CodActa=(\d+)", re.IGNORECASE)
 
 
-def catalog_comps(season_code):
-    """Ids de las competiciones benjamín/prebenjamín de fútbol 7/8 (sin sala)
-    de la temporada, del catálogo; [] si el catálogo no la tiene."""
+def _categorias():
+    try:
+        from scripts import categorias
+    except ImportError:
+        import categorias
+    return categorias
+
+
+def catalog_comps(season_code, categories=None):
+    """Ids de las competiciones de fútbol 7/8 de la temporada de las categorías dadas ('ALEVIN',
+    'BENJAMIN'…; por defecto benjamín y prebenjamín), del catálogo y según
+    categorias.category_of (sin sala ni alevín de Lanzarote o Fuerteventura); [] si el catálogo
+    no la tiene."""
+    C = _categorias()
+    categories = categories or C.DEFAULT_CATEGORIES
     path = Path(__file__).parent / "fiflp_comps_catalog.json"
     if season_code not in SEASON_NAME or not path.exists():
         return []
     entry = json.loads(path.read_text(encoding="utf-8")).get(SEASON_NAME[season_code]) or {}
-    fold = lambda t: t.upper().replace("Í", "I").replace("É", "E")
-    return [c["id"] for c in entry.get("all", [])
-            if "BENJAMIN" in fold(c["name"]) and "SALA" not in fold(c["name"]) and "LPFS" not in fold(c["name"])]
+    return [c["id"] for c in entry.get("all", []) if C.category_of(c["name"]) in categories]
 
 
 def index_path(season_code):
@@ -172,8 +187,9 @@ def save_raw(season_code, data):
 
 # ── Comp discovery ────────────────────────────────────────────────────────────
 
-def discover_comps(page, season_code):
-    """Read the comp dropdown from NFG_CmpJornada and keep benjamín/prebenjamín."""
+def discover_comps(page, season_code, categories=None):
+    """Read the comp dropdown from NFG_CmpJornada and keep those of `categories`
+    (benjamín/prebenjamín by default; categorias.category_of)."""
     url = f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season_code}"
     if not goto(page, url):
         return []
@@ -185,8 +201,10 @@ def discover_comps(page, season_code):
                 .filter(o => o.value && o.value !== '0')
                 .map(o => ({value: o.value, text: o.text.trim().toUpperCase()}));
         }""")
-    keep = [o["value"] for o in opts if any(k in o["text"] for k in KEYWORDS_BENJ)]
-    print(f"  discovered {len(keep)} benjamin/preben comps for season {season_code}")
+    C = _categorias()
+    categories = categories or C.DEFAULT_CATEGORIES
+    keep = [o["value"] for o in opts if C.category_of(o["text"]) in categories]
+    print(f"  discovered {len(keep)} comps ({', '.join(categories)}) for season {season_code}")
     return keep
 
 
@@ -466,9 +484,11 @@ def parse_args():
         description="Scrape FIFLP actas for benjamín/prebenjamín."
     )
     ap.add_argument("--temporada", required=True, choices=list(SEASON_NAME),
-                    help="CodTemporada: 17..21")
+                    help="CodTemporada: 12..22")
     ap.add_argument("--comps", default="",
                     help="Optional comma-separated comp IDs (override auto-discovery)")
+    ap.add_argument("--categorias", default="",
+                    help="Categorías del catálogo: 'benjamin,prebenjamin' (por defecto) o 'alevin'")
     ap.add_argument("--workers", type=int, default=2,
                     help="navegadores a la vez leyendo actas (por defecto 2)")
     ap.add_argument("--max-actas", type=int, default=0,
@@ -549,20 +569,21 @@ def main():
     season = args.temporada
 
     # Resolve comp list
+    categories = _categorias().parse_categories(args.categorias)
     if args.comps:
         comps = [c.strip() for c in args.comps.split(",") if c.strip()]
-    elif catalog_comps(season):
-        # Las competiciones benjamín/prebenjamín de fútbol 7/8 de esa temporada
-        # (sin sala) del catálogo de la federación (discover_fiflp_comps.py).
-        comps = catalog_comps(season)
-    elif season in KNOWN_COMPS:
+    elif catalog_comps(season, categories):
+        # Las competiciones de fútbol 7/8 de esas categorías de esa temporada (sin sala ni alevín
+        # de otra isla) del catálogo de la federación (discover_fiflp_comps.py).
+        comps = catalog_comps(season, categories)
+    elif season in KNOWN_COMPS and categories == _categorias().DEFAULT_CATEGORIES:
         comps = KNOWN_COMPS[season]
     else:
         # auto-discover (used for seasons 17 and 18)
         with sync_playwright() as p:
             br = p.chromium.launch(headless=True)
             page = _fiflp_only(br.new_context(user_agent=UA).new_page())
-            comps = discover_comps(page, season)
+            comps = discover_comps(page, season, categories)
             br.close()
 
     print(f"Season {SEASON_NAME[season]} ({season}): {len(comps)} comps to walk")

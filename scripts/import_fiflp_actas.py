@@ -402,15 +402,27 @@ def _purge_orphan_cod_actas(conn, raw: dict) -> int:
     Scoped to the seasons covered by the raw's headers, so importing one
     season's raw never touches other seasons' assignments. Assumes the raw is
     the COMPLETE harvest for its season(s).
+
+    Y solo en lo que el raw cubre de verdad: las temporadas cerradas (en la que
+    está en curso el bot importa actas en cada pasada, update_fiflp, y un raw de
+    actas-federacion.yml nunca las tiene todas) y las categorías de sus actas
+    (categorias.category_of de la competición): un raw con solo las de alevín no
+    deja sin acta a los partidos de benjamín.
     """
-    season_ids = set()
+    try:
+        from scripts.categorias import category_of
+    except ImportError:
+        from categorias import category_of
+    season_ids, categories = set(), set()
     for acta in raw.values():
-        s = ((acta.get("header") or {}).get("season") or "").replace("/", "-")
+        header = acta.get("header") or {}
+        s = (header.get("season") or "").replace("/", "-")
         if not s:
             continue
-        r = conn.execute("SELECT id FROM seasons WHERE name=?", (s,)).fetchone()
+        r = conn.execute("SELECT id FROM seasons WHERE name=? AND is_current=0", (s,)).fetchone()
         if r:
             season_ids.add(r[0])
+            categories.add(category_of(header.get("competition")))
     if not season_ids:
         return 0
     known = set()
@@ -420,12 +432,16 @@ def _purge_orphan_cod_actas(conn, raw: dict) -> int:
         except (TypeError, ValueError):
             pass
     qmarks = ",".join("?" * len(season_ids))
+    # Un acta sin categoría reconocible (cabeceras antiguas) deja la purga como estaba, sin filtro.
+    by_category = "" if None in categories else \
+        f" AND upper(c.name) IN ({','.join('?' * len(categories))})"
     rows = conn.execute(
         f"""SELECT m.id, m.cod_acta
               FROM matches m
               JOIN groups g ON g.id=m.group_id
-             WHERE g.season_id IN ({qmarks}) AND m.cod_acta IS NOT NULL""",
-        tuple(season_ids),
+              JOIN categories c ON c.id=g.category_id
+             WHERE g.season_id IN ({qmarks}) AND m.cod_acta IS NOT NULL{by_category}""",
+        tuple(season_ids) + (() if None in categories else tuple(sorted(categories))),
     ).fetchall()
     cleared = 0
     for mid, cod in rows:

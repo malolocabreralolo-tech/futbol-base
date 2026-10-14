@@ -20,7 +20,8 @@ sube nada porque no ha cambiado ningún dato publicado). En 24 pasadas (seis dí
   - un grupo cerrado, una vez en cada época de cuatro pasadas, en una que salta dos puestos de una
     época a otra: al menos una vez en cada seis seguidas, y en cada ocho (lo pedido) aunque se pierda
     una pasada al día;
-  - ninguna página se pide pasado el plazo.
+  - ninguna página se pide pasado el plazo, tampoco con las actas de los prioritarios delante de los
+    demás grupos aunque pasen de la reserva (y la página de competiciones se lee igual).
 """
 from datetime import date, datetime, timedelta, timezone
 import json
@@ -172,12 +173,12 @@ def read_scorers(fed, codes):
     return {codes[int(u.rsplit("=", 1)[1])] for u in fed.urls if "NFG_CMP_Goleadores" in u}
 
 
-def simulate(tmp_path, monkeypatch, commits, closed=(), numbers=None, page=PAGE, extra=0, lost=()):
+def simulate(tmp_path, monkeypatch, commits, closed=(), numbers=None, page=PAGE, extra=0, lost=(), actas=0):
     """`numbers` pasadas (por defecto 24 seguidas); con `commits`, cada una arranca de la base y del
     data-health.json que dejó la anterior; sin ellos, de los de partida. `extra`: jornadas de más en
     cada calendario (páginas por grupo); `lost`: las pasadas (su índice) en que la federación no sirve
-    nada. Devuelve, por pasada, los grupos leídos, los que tuvieron su segunda pasada (goleadores), las
-    notas y el tiempo."""
+    nada; `actas`: actas de más por leer en cada grupo prioritario (un fin de semana). Devuelve, por
+    pasada, los grupos leídos, los que tuvieron su segunda pasada (goleadores), las notas y el tiempo."""
     import source_health
     (tmp_path / "index.html").write_text('<script src="./data-seasons.js?v=20261014a"></script>')
     monkeypatch.setattr(source_health, "ROOT", tmp_path)
@@ -191,6 +192,15 @@ def simulate(tmp_path, monkeypatch, commits, closed=(), numbers=None, page=PAGE,
         monkeypatch.delenv(name, raising=False)
     base = base_db(closed)
     codes = dict((gid, code) for gid, code, _ in U.fiflp_groups(base, 1))
+    for gid, code in codes.items():
+        if code in MINE:
+            home, away = base.execute("SELECT home_team_id, away_team_id FROM matches WHERE group_id=?",
+                                      (gid,)).fetchone()
+            for k in range(actas):
+                base.execute("""INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score,
+                                away_score, fiflp_acta) VALUES (?, ?, '2026-10-10', ?, ?, 0, 0, ?)""",
+                             (gid, f"Jornada {20 + k}", away, home, gid * 1000 + k))
+    base.commit()
     closed_ids = {gid for gid, code in codes.items() if code in closed}
     start_report = base_report(base)
     conn, report = base, start_report
@@ -214,7 +224,7 @@ def simulate(tmp_path, monkeypatch, commits, closed=(), numbers=None, page=PAGE,
         report = json.loads(source_health.REPORT_PATH.read_text())
         passes.append({"first": read_first(fed, codes) if i not in lost else set(),
                        "scorers": read_scorers(fed, codes), "run": report["run"], "lost": i in lost,
-                       "last_start": max(fed.starts), "end": clock.t, "report": report})
+                       "last_start": max(fed.starts), "end": clock.t, "report": report, "urls": list(fed.urls)})
         if commits:          # entre pasada y pasada se juega: actas nuevas en un cuarto de los grupos abiertos
             for gid, code in codes.items():
                 if gid not in closed_ids and gid % 4 == i % 4:
@@ -355,3 +365,31 @@ def test_a_pass_lost_every_day_does_not_starve_the_closed_groups_of_its_hour(tmp
     passes, everyone = simulate(tmp_path, monkeypatch, commits=False, closed=closed, numbers=range(1000, 1028),
                                 lost=lost)
     check(passes, everyone, closed=closed, most=3, most_closed=7)
+
+
+@pytest.mark.parametrize("page", [PAGE, 7.0], ids=["3s", "7s"])
+def test_the_priority_actas_go_ahead_without_costing_the_others_the_deadline_or_the_competitions(
+        tmp_path, monkeypatch, page):
+    """Las actas y los goleadores de los prioritarios van en cuanto acaban sus calendarios, antes que los
+    demás grupos (la federación frena tras unas decenas de páginas). Con la temporada llena, a 3 s y a
+    7 s por página (FIFLP_MIN_INTERVAL desde octubre de 2026) y un fin de semana con 8 actas de más en
+    cada uno de los siete prioritarios (70 actas: a 7 s, más que la reserva entera), no le quitan nada a
+    nadie: la primera pasada lee los mismos grupos que sin ellas, la página de competiciones se lee y
+    ninguna página empieza pasado el plazo. (Gastando hasta la reserva entera, la primera pasada de los
+    demás llegaba al plazo global, a 7 s empezaba un calendario a los 1533 s de 1500 y las competiciones
+    no se leían.)"""
+    runs = {}
+    for actas in (0, 8):
+        (passes, everyone), = [simulate(tmp_path, monkeypatch, commits=False, numbers=[1000], page=page,
+                                        actas=actas)]
+        runs[actas] = p = passes[0]
+        assert p["last_start"] <= U.DEADLINE_SECONDS and p["end"] <= U.DEADLINE_SECONDS + page, actas
+        assert any("NFG_CmpJornada" in u and "CodGrupo=" not in u for u in p["urls"]), actas    # competiciones
+        assert set(MINE) <= p["first"], actas
+        # Delante: la primera acta va antes que el primer calendario que no es de un prioritario.
+        mine = {gid for gid, (code, _) in enumerate(season_groups(), 1) if code in MINE}
+        others = [i for i, u in enumerate(p["urls"]) if "CodJornada" not in u
+                  for m in [re.search(r"CodGrupo=(\d+)$", u)] if m and int(m.group(1)) not in mine]
+        assert any("CodActa=" in u for u in p["urls"][:others[0]]), actas
+    assert runs[8]["first"] == runs[0]["first"]
+    assert runs[8]["run"]["deferred"] == runs[0]["run"]["deferred"]

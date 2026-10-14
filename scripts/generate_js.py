@@ -357,18 +357,23 @@ def get_effective_standings(conn, group_id, code=None, phase=None):
     column), only that field is repaired (see _repair_incoherent_points).
 
     A team the official table no longer lists because it retired (retired_outside_table: in the
-    calendar with only administrative 0-1/0-3 losses, or no results) is not a sign of a stale table:
-    its matches don't count as played J in the comparison (the federation drops its row and, as in
-    AL15 of 2026-27, counts the administrative wins of the others or not), and a recomputed table
-    never brings it back."""
+    calendar with only administrative 0-1/0-3 losses, or no results) has no row: each of its results
+    is ONE played J, the rival's, as the federation counts them (AL15, AL20 and AL32 of 2026-27: J 11 =
+    2 × 3 real + 5 administrative). Only when the stored table shows that it annuls them all (stored J
+    == 2 × real) do they not count. So a table one round behind is still caught (AL15 with its J3 played
+    and the table of J2: 15 > 11), and a federation that counts only part of them reads as stale and is
+    recomputed (the web says so: standingsKind «reconstructed»), never the other way round. A
+    recomputed table never brings the retired row back."""
     stored = get_standings(conn, group_id)
     if not stored or not _is_league_group(code, phase):
         return stored
     results = _group_results(conn, group_id)
     retired = retired_outside_table(stored, results)
     stored_j = sum((r[3] or 0) for r in stored)
-    computed_j = 2 * sum(1 for home, away, hs, as_ in results
-                         if hs is not None and as_ is not None and home not in retired and away not in retired)
+    played = [(home, away) for home, away, hs, as_ in results if hs is not None and as_ is not None]
+    real = sum(1 for home, away in played if home not in retired and away not in retired)
+    administrative = len(played) - real
+    computed_j = 2 * real if stored_j == 2 * real else 2 * real + administrative
     if computed_j > stored_j:
         print(
             f"  WARNING: standings desfasados en grupo {code or group_id} "

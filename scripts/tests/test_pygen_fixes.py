@@ -412,7 +412,27 @@ class TestRetiredOutsideTable:
             [2, "Gamma", 4, 2, 1, 1, 0, 3, 2, 1],
             [3, "Beta", 3, 2, 1, 0, 1, 1, 5, -4],
         ]
-        assert "standings desfasados en grupo AL15 (J almacenada 2 < J jugada 4)" in capsys.readouterr().err
+        # Los tres resultados administrativos son J de los rivales: 2 × 2 reales + 3.
+        assert "standings desfasados en grupo AL15 (J almacenada 2 < J jugada 7)" in capsys.readouterr().err
+
+    def test_a_table_one_round_behind_is_stale_although_the_retired_has_no_row(self, capsys):
+        """La oficial de antes de la jornada 3 (cuenta los tres resultados administrativos: J 7 = 2 × 2
+        reales + 3) con la jornada 3 ya jugada entre Beta y Gamma: le falta un partido, 2 J. Sin contar
+        los administrativos (2 × 3 = 6 ≤ 7) no se veía; como J de los rivales, 9 > 7. Es la desincronía
+        de update_fiflp.scrape_group cuando la página de la clasificación no carga y la del calendario sí."""
+        from scripts.generate_js import get_effective_standings, get_standings
+        conn = _synth_conn()
+        self._seed(conn)
+        self._official(conn, [(1, 1, 7, 3, 2, 1, 0, 8, 2, 6), (2, 2, 3, 2, 1, 0, 1, 1, 5, -4),
+                              (3, 3, 1, 2, 1, 1, 0, 3, 2, 1)])
+        assert get_effective_standings(conn, 1, "AL15", "Primera Fase GC") == get_standings(conn, 1)
+        conn.execute("UPDATE matches SET home_score=3, away_score=1 WHERE jornada='Jornada 3' AND home_team_id=2")
+        assert get_effective_standings(conn, 1, "AL15", "Primera Fase GC") == [
+            [1, "Alfa", 7, 3, 2, 1, 0, 8, 2, 6],
+            [2, "Beta", 6, 3, 2, 0, 1, 4, 6, -2],
+            [3, "Gamma", 4, 3, 1, 1, 1, 4, 5, -1],
+        ]
+        assert "standings desfasados en grupo AL15 (J almacenada 7 < J jugada 9)" in capsys.readouterr().err
 
     def test_retired_outside_table_rule(self):
         """Solo el que no está en la tabla y nunca ha competido: sin resultados o con todas sus derrotas

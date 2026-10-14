@@ -92,6 +92,19 @@ test('los grupos de la temporada sin página web comprobada, en una línea con s
   assert.deepEqual(bare.unchecked, []);
 });
 
+test('las competiciones que la federación publica y la web no tiene (newCompetitions del bot), en una línea', () => {
+  const fv = { id: '54977017', name: 'LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE', firstSeen: '2026-10-07' };
+  const al = { id: '54976940', name: 'LIGA ALEVIN GRAN CANARIA FASE PREVIA', firstSeen: '2026-10-14' };
+  const one = render(edited((h) => { h.newCompetitions = [fv]; }));
+  assert.match(one, /<p class="notice">La federación ha publicado 1 competición que esta web aún no tiene: LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE\.<\/p>/);
+  assert.match(render(edited((h) => { h.newCompetitions = [fv, al]; })),
+    /<p class="notice">La federación ha publicado 2 competiciones que esta web aún no tiene: LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE; LIGA ALEVIN GRAN CANARIA FASE PREVIA\.<\/p>/);
+  // Sin ninguna, o con algo que no es una lista de competiciones, nada.
+  for (const value of [undefined, [], 'x', [{ id: '1' }], [null]]) {
+    assert.doesNotMatch(render(edited((h) => { h.newCompetitions = value; })), /aún no tiene/);
+  }
+});
+
 test('la temporada siguiente, con el texto de la portada en D; sin «pendiente», sin caja', () => {
   const out = render();
   assert.match(out, /<h2 class="block-title">Temporada 2026\/27<\/h2><\/div><div class="box"><dl class="cells cells-2"><div class="cell"><dt class="cell-label">Grupos<\/dt><dd class="cell-value">pendientes en esta web<\/dd><\/div><div class="cell"><dt class="cell-label">Última comprobación<\/dt><dd class="cell-value">23 sept, 22:11<\/dd><\/div><\/dl><p class="box-text">La temporada 2026\/27 aparecerá aquí cuando la federación publique los grupos y se activen en esta web\. Si hay más de un equipo de Las Mesas Hu\., te preguntaremos cuál es el tuyo\.<\/p><\/div><\/section><\/section>$/);

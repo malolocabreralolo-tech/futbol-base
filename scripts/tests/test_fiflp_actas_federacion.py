@@ -475,7 +475,7 @@ def test_both_passes_end_to_end_with_a_simulated_federation(monkeypatch):
     from datetime import date
     monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
     recorded = []
-    monkeypatch.setattr(U.source_health, "record", lambda *a: recorded.append(a))
+    monkeypatch.setattr(U.source_health, "record", lambda *a, **k: recorded.append(a))   # now=: la hora de la comprobación
     conn = base()
     _table(conn, (0, 0, 0), (0, 0, 0))
 

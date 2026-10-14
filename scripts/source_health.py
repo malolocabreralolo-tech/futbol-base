@@ -14,11 +14,10 @@ HEARTBEAT = timedelta(hours=24)
 # Lo que cambia en cada pasada sin que un visitante vea nada distinto: la hora de la comprobación y
 # las notas de la pasada del bot de la federación (rotación, grupos que descansan, tiempos).
 VOLATILE = ("checkedAt", "run")
-# Y en cada grupo: la hora de su comprobación y la de su última segunda pasada del bot (extrasAt).
-GROUP_VOLATILE = ("checkedAt", "extrasAt")
+# Y en cada grupo: la hora de su comprobación.
+GROUP_VOLATILE = ("checkedAt",)
 _report = None
 _previous = None
-_force = False
 
 
 def _stamp(now=None):
@@ -33,9 +32,8 @@ def _read_previous():
 
 
 def begin(season):
-    global _report, _previous, _force
+    global _report, _previous
     _previous = _read_previous()
-    _force = False
     _report = {"version": 1, "season": season, "groups": {},
                "nextSeason": _previous.get("nextSeason", {"name": load_config()["nextSeason"], "status": "pending"})}
     _carry_new_competitions()
@@ -70,31 +68,30 @@ def set_new_competitions(items):
 
 def previous_groups():
     """Las comprobaciones publicadas de la temporada en curso ({código: entrada}): el bot de la
-    federación ordena su pasada por su checkedAt (update_fiflp.plan_groups)."""
+    federación vuelve a mirar un grupo cerrado cuya última comprobación falló o que no tiene ninguna
+    (update_fiflp.plan_groups). Su orden no depende de ellas: no siempre se suben."""
     groups = (_previous or {}).get("groups") if _same_season() else None
     return dict(groups) if isinstance(groups, dict) else {}
 
 
-def record(code, url, status, message="", now=None, extras_at=None):
-    """La comprobación de un grupo. extras_at: la hora a la que el bot de la federación leyó sus actas y
-    goleadores (update_fiflp ordena por ella su segunda pasada); si esta pasada no llegó, la de antes."""
+def record(code, url, status, message="", now=None):
     if _report is None:
         return
-    entry = {"url": url, "status": status, "message": str(message)[:350], "checkedAt": _stamp(now)}
-    before = previous_groups().get(code)
-    extras = _stamp(extras_at) if extras_at else before.get("extrasAt") if isinstance(before, dict) else None
-    if extras:
-        entry["extrasAt"] = extras
-    _report["groups"][code] = entry
+    _report["groups"][code] = {
+        "url": url, "status": status, "message": str(message)[:350],
+        "checkedAt": _stamp(now),
+    }
 
 
-def carry(code):
-    """El grupo no se comprobó en esta pasada (rotación o cerrado que descansa): su última
-    comprobación sigue como estaba, sin marcarlo como error. Sin comprobación anterior, nada."""
+def carry(code, url=None):
+    """El grupo no se comprobó en esta pasada (rotación del bot de la federación, un cerrado que
+    descansa, o de una categoría que este workflow no lee: FIFLP_CATS): su última comprobación sigue
+    como estaba, sin marcarlo como error. Sin comprobación anterior en la temporada (o, con `url`,
+    con otra URL: otro grupo con el mismo código), nada: todavía no sale."""
     if _report is None:
         return
     entry = previous_groups().get(code)
-    if isinstance(entry, dict):
+    if isinstance(entry, dict) and (url is None or entry.get("url") == url):
         _report["groups"][code] = dict(entry)
 
 
@@ -102,13 +99,6 @@ def note_run(info):
     """Las notas de la pasada del bot (VOLATILE: no reescriben el informe por sí solas)."""
     if _report is not None:
         _report["run"] = info
-
-
-def publish_checks():
-    """Las horas de comprobación de esta pasada le hacen falta a la siguiente (la rotación y los
-    grupos cerrados se ordenan por ellas): el informe se escribe aunque no cambie nada más."""
-    global _force
-    _force = True
 
 
 def meaningful(report):
@@ -144,6 +134,6 @@ def finish(now=None):
         _report["dataVersion"] = version.group(1)
     _report["summary"] = {status: sum(g["status"] == status for g in _report["groups"].values())
                           for status in ["ok", "rejected", "error"]}
-    if not _force and meaningful(_report) == meaningful(_previous or {}) and _is_recent(_previous, now):
+    if meaningful(_report) == meaningful(_previous or {}) and _is_recent(_previous, now):
         return
     REPORT_PATH.write_text(json.dumps(_report, ensure_ascii=False, indent=2) + "\n")

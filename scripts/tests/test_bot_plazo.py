@@ -4,11 +4,15 @@ Con 33 grupos la primera pasada eran 19 min sin plazo, la segunda tenía lo que 
 grupos iban por orden alfabético: PG2, el de la familia, el último. Con la Segunda Fase (+12-16
 grupos) y alevín (+32, códigos AL…) no cabría en los 45 min del job. Ahora:
   - cada página cuesta menos (fiflp_carga: sin esperas fijas; test_fiflp_carga.py);
-  - el orden es por prioridad: los grupos de los equipos prioritarios, prebenjamín, benjamín y al
-    final alevín; dentro, el comprobado hace más tiempo primero (checkedAt de data-health.json);
-  - un plazo GLOBAL cubre las dos pasadas y reserva tiempo para las actas y los goleadores de los
-    prioritarios; lo que no cabe queda para la pasada siguiente (rotación), sin marcarlo como error;
-  - un grupo cerrado (todo jugado, última jornada hace más de 21 días) solo se refresca una vez al día.
+  - el orden es por prioridad: los grupos de los equipos prioritarios, los cerrados que tocan, una
+    cuota de alevín y después prebenjamín, benjamín y el resto de alevín;
+  - la rotación NO tiene estado: cada nivel empieza en cada pasada más allá que en la anterior según
+    el número de la pasada (run_number), no según nada guardado (update.yml no sube la base ni
+    data-health.json en una pasada sin cambios publicados);
+  - un plazo GLOBAL cubre las dos pasadas y reserva tiempo para las actas y los goleadores; lo que no
+    cabe queda para otra pasada, sin marcarlo como error;
+  - un grupo cerrado (todo jugado, última jornada hace más de 21 días) solo se refresca una de cada
+    cuatro pasadas. La simulación de muchas pasadas con 81 grupos está en test_bot_rotacion.py.
 Sin red: páginas y raspador falsos.
 """
 from datetime import date, datetime, timedelta, timezone
@@ -109,10 +113,11 @@ def checked(hours_ago, status="ok"):
     return {"status": status, "message": "3 jornadas leídas", "checkedAt": (NOW - timedelta(hours=hours_ago)).isoformat()}
 
 
-def plan(conn, checks=None, **kw):
+def plan(conn, checks=None, number=0, **kw):
     kw.setdefault("priority", ["Las Mesas Hu."])
     kw.setdefault("pinned", ())
-    return U.plan_groups(conn, U.fiflp_groups(conn, 1), checks or {}, NOW, TODAY, **kw)
+    kw.setdefault("env", {})
+    return U.plan_groups(conn, U.fiflp_groups(conn, 1), checks or {}, TODAY, number, **kw)
 
 
 def codes(rows):
@@ -139,10 +144,17 @@ def test_a_priority_team_includes_its_club_filials_and_not_a_namesake_club():
         assert not U.is_priority(other, keys), other
 
 
-def test_order_is_priority_then_prebenjamin_benjamin_and_alevin_last():
-    order = codes(plan(season()).order)
+def test_order_is_priority_then_the_turns_then_the_rest_by_level():
+    """Los prioritarios; el turno de cada nivel (la cuota de alevín, prebenjamín, benjamín: ceil(N/4)
+    de cada uno); el turno siguiente de cada nivel (el margen); y el resto: prebenjamín, benjamín y
+    alevín, por este orden."""
+    order = codes(plan(season(), env={"FIFLP_ALEVIN_MIN": "1"}).order)
     assert order[:3] == ["PG2", "FF5", "AL3"]                         # los de Las Mesas, por categoría
-    assert order[3:] == ["PG1", "FF1", "FF2", "FF10", "LZ1", "AL1", "ALX1"]
+    assert order[3:] == ["AL1", "PG1", "FF1",                         # los turnos
+                         "ALX1", "FF2",                               # los siguientes
+                         "FF10", "LZ1"]                               # el resto
+    # Por defecto la cuota es de 8: aquí, todo alevín va delante de prebenjamín y benjamín.
+    assert codes(plan(season()).order)[3:] == ["AL1", "ALX1", "PG1", "FF1", "FF2", "FF10", "LZ1"]
 
 
 def test_the_portal_group_is_a_priority_even_before_it_has_teams():
@@ -153,59 +165,89 @@ def test_the_portal_group_is_a_priority_even_before_it_has_teams():
     assert codes(plan(conn, priority=[], pinned={"FF7"}).order) == ["FF7", "FF1"]
 
 
-def test_within_a_level_the_longest_unchecked_goes_first():
-    checks = {code: checked(1) for code in ALL}
-    checks.update(FF1=checked(3), LZ1=checked(5), AL1=checked(2), ALX1=checked(4, "error"), PG2=checked(2))
-    order = codes(plan(season(), checks).order)
-    assert order == ["PG2", "FF5", "AL3", "PG1", "LZ1", "FF1", "FF2", "FF10", "ALX1", "AL1"]
+def test_each_level_starts_further_on_in_each_pass():
+    """La rotación sale del número de la pasada: cada nivel empieza ceil(N/4) grupos más allá que en la
+    anterior y en cuatro pasadas seguidas vuelve al principio; los prioritarios, siempre delante."""
+    conn = season()
+    env = {"FIFLP_ALEVIN_MIN": "1"}
+    orders = [codes(plan(conn, number=n, env=env).order) for n in range(812, 817)]
+    assert all(o[:3] == ["PG2", "FF5", "AL3"] for o in orders)
+    benjamin = [[c for c in o if c in ("FF1", "FF2", "FF10", "LZ1")] for o in orders]
+    assert [b[0] for b in benjamin] == ["FF1", "FF2", "FF10", "LZ1", "FF1"]
+    assert benjamin[1] == ["FF2", "FF10", "LZ1", "FF1"]                # sigue el orden, desde su turno
+    assert [o[3] for o in orders] == ["AL1", "ALX1", "AL1", "ALX1", "AL1"]      # la cuota de alevín
+    assert U.rotate(list("abcdefgh"), 1) == list("cdefghab") and U.rotate([], 5) == []
 
 
-def test_a_group_left_out_twice_jumps_ahead_of_the_levels():
-    """Si el plazo no da para todos, alevín (el último nivel) no se queda sin refrescar nunca: un grupo
-    sin comprobar desde hace dos pasadas (o nunca) pasa delante de los niveles, el más viejo primero."""
-    checks = {code: checked(1) for code in ALL}
-    checks.update(AL1=checked(13), FF2=checked(30), PG1=None)
-    order = codes(plan(season(), checks).order)
-    assert order == ["PG2", "FF5", "AL3", "PG1", "FF2", "AL1", "FF1", "FF10", "LZ1", "ALX1"]
+def test_the_order_depends_on_the_pass_number_and_not_on_what_was_published():
+    """Sin estado: dos pasadas con el mismo número dan el mismo orden aunque data-health.json diga otra
+    cosa (una pasada sin cambios publicados no lo sube), y dos números seguidos, órdenes distintos."""
+    conn = season()
+    fresh = {code: checked(1) for code in ALL}
+    stale = {code: checked(30) for code in ALL}
+    assert plan(conn, fresh, number=7).order == plan(conn, stale, number=7).order == plan(conn, {}, number=7).order
+    assert plan(conn, fresh, number=7).order != plan(conn, fresh, number=8).order
+
+
+def test_the_pass_number_is_the_run_number_or_the_6_hour_slot():
+    assert U.run_number({"GITHUB_RUN_NUMBER": "812"}) == 812
+    a = U.run_number({}, NOW)
+    assert U.run_number({"GITHUB_RUN_NUMBER": "x"}, NOW) == a
+    assert U.run_number({}, NOW + timedelta(hours=1)) == a and U.run_number({}, NOW + timedelta(hours=2)) == a + 1
+
+
+def test_alevin_keeps_its_quota_even_when_benjamin_would_fill_the_pass():
+    """Alevín, el último nivel, no se queda sin leer aunque benjamín y prebenjamín llenen el plazo: su
+    cuota (FIFLP_ALEVIN_MIN, 8 por defecto, y nunca menos que su turno) va delante de ellos. Los
+    prioritarios, delante de todo, también de la cuota."""
+    groups = ([("PG2", "PREBENJAMIN", ["Las Mesas Hu.", "Moya"])]
+              + [(f"FF{i}", "BENJAMIN", [f"Local {i}", f"Visitante {i}"]) for i in range(1, 31)]
+              + [(f"AL{i}", "ALEVIN", [f"Alevín {i}", f"Alevín R{i}"]) for i in range(1, 33)])
+    conn = season(groups)
+    for number in range(4):
+        order = codes(plan(conn, number=number).order)
+        assert order[0] == "PG2"
+        assert all(code.startswith("AL") for code in order[1:9]), order[:10]       # 8, antes que benjamín
+        assert all(code.startswith("FF") for code in order[9:17])                  # su turno, 8 de 30
+        assert all(code.startswith("AL") for code in order[17:25])                 # el turno siguiente…
+        assert all(code.startswith("FF") for code in order[25:47])                 # …y benjamín, entero
+        assert all(code.startswith("AL") for code in order[47:])
+    seen = {c for n in range(4) for c in codes(plan(conn, number=n).order)[1:9]}
+    assert seen == {f"AL{i}" for i in range(1, 33)}                     # en cuatro pasadas, los 32
+    assert U.alevin_quota(list(range(32)), {"FIFLP_ALEVIN_MIN": "12"}) == 12
+    assert U.alevin_quota(list(range(48)), {"FIFLP_ALEVIN_MIN": "0"}) == 12  # nunca menos que su turno
+    assert U.alevin_quota(list(range(5)), {}) == 5 and U.alevin_quota([], {}) == 0
 
 
 # ── Grupos cerrados ────────────────────────────────────────────────────────────
 
-def test_a_closed_group_is_refreshed_once_a_day():
+def turn_of(code):
+    """Un número de pasada en la que le toca a ese grupo cerrado."""
+    return next(n for n in range(4) if U.closed_turn(code, n))
+
+
+def test_a_closed_group_is_refreshed_once_every_four_passes():
     conn = season(played="2026-09-19")                 # todo jugado hace 25 días
     all_ok = {code: checked(6) for code in ALL}
-    assert sorted(codes(plan(conn, all_ok).resting)) == sorted(ALL) and codes(plan(conn, all_ok).order) == []
-    p = plan(conn, {**all_ok, "FF1": checked(25)})
-    assert codes(p.order) == ["FF1"] and p.due_closed == {"FF1"}        # pasó un día: se refresca
-    assert "FF1" not in codes(p.resting)
+    for number in range(8):
+        p = plan(conn, all_ok, number=number)
+        assert set(codes(p.order)) == {c for c in ALL if U.closed_turn(c, number)}, number
+        assert set(codes(p.order)) | set(codes(p.resting)) == set(ALL)
+    n = turn_of("FF1")
+    assert "FF1" in codes(plan(conn, all_ok, number=n).order) and "FF1" in codes(plan(conn, all_ok, number=n + 4).order)
+    assert all("FF1" in codes(plan(conn, all_ok, number=m).resting) for m in range(n + 1, n + 4))
 
 
 def test_a_closed_group_with_something_to_do_is_not_left_resting():
     conn = season(played="2026-09-19")
     all_ok = {code: checked(6) for code in ALL}
-    # La última comprobación falló o no está: se vuelve a mirar (y eso no fuerza nada más).
-    p = plan(conn, {**all_ok, "FF1": checked(6, "error"), "FF2": None})
-    assert set(codes(p.order)) == {"FF1", "FF2"} and p.due_closed == {"FF2"}
+    number = next(n for n in range(100) if not any(U.closed_turn(c, n) for c in ("FF1", "FF2", "LZ1")))
+    # La última comprobación falló o no está: se vuelve a mirar.
+    p = plan(conn, {**all_ok, "FF1": checked(6, "error"), "FF2": None}, number=number)
+    assert {"FF1", "FF2"} <= set(codes(p.order))
     # Un acta pendiente (o que hay que releer) también es algo que cambia.
     conn.execute("UPDATE matches SET fiflp_acta=280300 WHERE group_id=5")        # LZ1
-    assert codes(plan(conn, all_ok).order) == ["LZ1"]
-
-
-def test_a_check_stamped_minutes_into_its_pass_counts_for_that_pass():
-    """La hora de cada comprobación es la de su grupo, minutos después de que empiece su pasada (y el
-    cron se retrasa sin regla). Con el cron cada 6 h, la pasada que toca no se la salta por unos
-    minutos: un cerrado comprobado hace 24 h menos 5 min se refresca ya (no a las 30 h) y un grupo
-    sin comprobar desde hace dos pasadas (12 h menos 10 min) se adelanta ya (no a la tercera)."""
-    conn = season(played="2026-09-19")
-    all_ok = {code: checked(6) for code in ALL}
-    p = plan(conn, {**all_ok, "FF1": checked(24 - 5 / 60)})
-    assert codes(p.order) == ["FF1"] and p.due_closed == {"FF1"}
-    assert codes(plan(conn, {**all_ok, "FF1": checked(18 + 20 / 60)}).order) == []     # la pasada anterior, aún no
-    checks = {code: checked(1) for code in ALL}
-    order = codes(plan(season(), {**checks, "AL1": checked(12 - 10 / 60)}).order)
-    assert order[:4] == ["PG2", "FF5", "AL3", "AL1"]                                    # tras los prioritarios
-    order = codes(plan(season(), {**checks, "AL1": checked(6 + 20 / 60)}).order)
-    assert order[-2:] == ["AL1", "ALX1"]                                                # una pasada: en su nivel
+    assert "LZ1" in codes(plan(conn, all_ok, number=number).order)
 
 
 def test_a_group_is_not_closed_with_a_result_missing_or_a_recent_round():
@@ -213,7 +255,7 @@ def test_a_group_is_not_closed_with_a_result_missing_or_a_recent_round():
     assert codes(plan(season(played="2026-09-24"), all_ok).resting) == []      # hace 20 días
     conn = season(played="2026-09-19")
     conn.execute("UPDATE matches SET home_score=NULL WHERE group_id=1")         # FF1, sin un resultado
-    assert codes(plan(conn, all_ok).order) == ["FF1"]
+    assert all("FF1" in codes(plan(conn, all_ok, number=n).order) for n in range(4))     # en todas las pasadas
 
 
 # ── El plazo global y la rotación, con un reloj falso ──────────────────────────
@@ -315,7 +357,7 @@ def health(tmp_path, monkeypatch):
     monkeypatch.setattr(source_health, "REPORT_PATH", tmp_path / "data-health.json")
     monkeypatch.setattr(source_health, "_report", None)
 
-    def run(previous, conn, budget, checks_now=NOW, make_fed=Fed):
+    def run(previous, conn, budget, checks_now=NOW, make_fed=Fed, number=0):
         import json
         source_health.REPORT_PATH.write_text(json.dumps(previous))
         source_health.begin("2026-2027")
@@ -325,7 +367,8 @@ def health(tmp_path, monkeypatch):
         fed = make_fed(clock)
         groups = U.fiflp_groups(conn, 1)
         pending = {code: u for _, code, u in groups}
-        U.run_passes(Page(), fed, conn, 1, groups, TODAY, pending, deadline_seconds=budget, now=checks_now)
+        U.run_passes(Page(), fed, conn, 1, groups, TODAY, pending, deadline_seconds=budget, now=checks_now,
+                     number=number)
         source_health.finish(now=checks_now + timedelta(minutes=30))
         assert pending == {}, "ningún grupo queda como error si la pasada termina"
         return json.loads(source_health.REPORT_PATH.read_text()), fed
@@ -342,62 +385,78 @@ def report(checks, at=NOW - timedelta(hours=1)):
             "summary": {s: sum(g["status"] == s for g in groups.values()) for s in ("ok", "rejected", "error")}}
 
 
+def read_groups(fed):
+    """Los códigos de los grupos cuya clasificación y jornadas leyó la pasada, en orden."""
+    numbers = {str(i): code for i, (code, _, _) in enumerate(GROUPS, 1)}
+    return [numbers[u.rsplit("CodGrupo=", 1)[1]] for u in fed.urls if "CodGrupo=" in u and "CodJornada" not in u]
+
+
+def scorers_read(fed):
+    numbers = {str(i): code for i, (code, _, _) in enumerate(GROUPS, 1)}
+    return [numbers[u.rsplit("=", 1)[1]] for u in fed.urls if "NFG_CMP_Goleadores" in u]
+
+
 def test_what_does_not_fit_waits_for_the_next_pass_without_an_error(health):
     previous = report({code: checked(6) for code in ALL})
     data, fed = health(previous, season(), budget=80)
     groups = data["groups"]
     deferred = data["run"]["deferred"]
-    assert deferred and set(deferred) <= {"AL1", "ALX1", "FF1", "FF2", "FF10", "LZ1"}
-    assert "AL1" in deferred and "ALX1" in deferred                       # alevín, lo último
-    for code in ("PG2", "FF5", "AL3", "PG1"):                             # lo prioritario, dentro
+    assert deferred and set(deferred) <= {"FF1", "FF2", "FF10", "LZ1"}  # benjamín, tras la cuota de alevín
+    for code in ("PG2", "FF5", "AL3", "AL1", "ALX1", "PG1"):               # prioritarios y cuota, dentro
         assert groups[code]["checkedAt"] > previous["groups"][code]["checkedAt"], code
     for code in deferred:                                                 # lo demás, como estaba
         assert groups[code] == previous["groups"][code], code
     assert data["summary"] == {"ok": len(ALL), "rejected": 0, "error": 0}
+    assert data["run"]["pass"] == 0
     # Las actas y los goleadores de los prioritarios caben en la reserva (tras una página de
     # competiciones nuevas); los demás, si queda.
     scorers = [u for u in fed.urls if "NFG_CMP_Goleadores" in u]
-    assert [u.rsplit("=", 1)[1] for u in scorers[:3]] == ["7", "4", "9"]  # PG2, FF5, AL3
+    assert scorers_read(fed)[:3] == ["PG2", "FF5", "AL3"]
     # Las competiciones nuevas, una página entre las dos pasadas.
     catalog = [i for i, u in enumerate(fed.urls) if u.endswith("NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22")]
     last_group = max(i for i, u in enumerate(fed.urls) if "CodGrupo=" in u)
     assert len(catalog) == 1 and last_group < catalog[0] < fed.urls.index(scorers[0])
 
 
-def test_the_rotation_reaches_every_group(health):
-    """Con plazo para 6 de 10 grupos (3 prioritarios), la pasada siguiente empieza por los que se
-    quedaron fuera y en tres pasadas seguidas (18 h) todos se refrescan, alevín también."""
+@pytest.mark.parametrize("commits", [True, False])
+def test_the_rotation_reaches_every_group_without_any_saved_state(health, commits, monkeypatch):
+    """Con plazo para 6 de 10 grupos (3 prioritarios), la pasada siguiente empieza más allá y en cuatro
+    pasadas seguidas (24 h) todos se refrescan, alevín también. Igual si ninguna pasada sube nada
+    (commits=False: cada una arranca del mismo data-health.json): el orden sale del número de la pasada.
+    (Con la cuota de alevín por defecto, 8, los dos grupos alevín irían siempre y no quedaría sitio
+    para benjamín: aquí, la cuota es su turno, 1 de 2.)"""
+    monkeypatch.setenv("FIFLP_ALEVIN_MIN", "0")
     conn = season()
-    reports = [report({code: checked(6) for code in ALL})]
-    for n in range(4):
-        data, _ = health(reports[-1], conn, budget=60, checks_now=NOW + timedelta(hours=6 * n))
-        reports.append(data)
-    runs = [r["run"] for r in reports[1:]]
-    refreshed = [set(ALL) - set(r["deferred"]) for r in runs]
+    base = report({code: checked(6) for code in ALL})
+    previous, refreshed = base, []
+    for n in range(8):
+        data, fed = health(previous, conn, budget=60, checks_now=NOW + timedelta(hours=6 * n), number=500 + n)
+        refreshed.append(set(read_groups(fed)))
+        previous = data if commits else base
     mine = {"PG2", "FF5", "AL3"}
     assert all(mine <= done for done in refreshed)
-    left_out = set(runs[0]["deferred"])
-    assert left_out and refreshed[1] - mine == left_out - set(runs[1]["deferred"])
-    for window in (refreshed[0:3], refreshed[1:4]):
-        assert set().union(*window) == set(ALL)
+    assert all(len(done) < len(ALL) for done in refreshed)               # el plazo corta siempre
+    for i in range(len(refreshed) - 3):
+        assert set().union(*refreshed[i:i + 4]) == set(ALL), i
 
 
-def test_the_second_pass_rotates_too(health):
-    """Con la primera pasada entera y plazo para 7 de 10 segundas (actas y goleadores), la siguiente
-    empieza, tras los prioritarios, por los grupos que se quedaron sin ellas (extrasAt de
-    data-health.json): en dos pasadas seguidas todos tienen sus goleadores, alevín también."""
+@pytest.mark.parametrize("commits", [True, False])
+def test_the_second_pass_rotates_too(health, commits):
+    """Con la primera pasada entera y plazo para unas pocas segundas (actas y goleadores), la siguiente
+    empieza, tras los prioritarios, más allá (en el orden de la primera, que rota): en cuatro pasadas
+    seguidas todos tienen sus goleadores, alevín también, se suba algo o no."""
     conn = season()
-    previous = report({code: checked(6) for code in ALL})
-    numbers = {str(i): code for i, (code, _, _) in enumerate(GROUPS, 1)}
-    read = []
-    for n in range(4):
-        previous, fed = health(previous, conn, budget=112, checks_now=NOW + timedelta(hours=6 * n))
-        assert previous["run"]["deferred"] == []
-        read.append([numbers[u.rsplit("=", 1)[1]] for u in fed.urls if "NFG_CMP_Goleadores" in u])
+    base = report({code: checked(6) for code in ALL})
+    previous, read = base, []
+    for n in range(8):
+        data, fed = health(previous, conn, budget=112, checks_now=NOW + timedelta(hours=6 * n), number=900 + n)
+        assert data["run"]["deferred"] == []
+        read.append(scorers_read(fed))
+        previous = data if commits else base
     assert all(got[:3] == ["PG2", "FF5", "AL3"] for got in read)
     assert all(len(got) < len(ALL) for got in read)                       # el plazo la corta siempre
-    for first, second in zip(read, read[1:]):
-        assert set(first) | set(second) == set(ALL)
+    for i in range(len(read) - 3):
+        assert set().union(*map(set, read[i:i + 4])) == set(ALL), i
 
 
 class BlockedFed(Fed):
@@ -421,16 +480,16 @@ class BlockedFed(Fed):
 
 def test_a_federation_that_stops_serving_cuts_the_pass(health):
     """Tres páginas seguidas sin cargar: la federación bloquea o se ha caído. No se le piden más (el
-    resto de grupos, a la pasada siguiente, sin marcarlos como error), y lo que se leyó, se queda."""
+    resto de grupos, a otra pasada, sin marcarlos como error), y lo que se leyó, se queda."""
     previous = report({code: checked(6) for code in ALL})
     data, fed = health(previous, season(), budget=600, make_fed=lambda clock: BlockedFed(clock, serve=9))
-    assert len(fed.urls) == 9 + 4                                         # PG2, FF5 y AL3; PG1 y FF1 fallan
+    assert len(fed.urls) == 9 + 4                                         # PG2, FF5 y AL3; AL1 y ALX1 fallan
     groups = data["groups"]
-    assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3", "PG1", "FF1")] == ["ok", "ok", "ok", "error", "error"]
-    assert data["run"]["deferred"] == ["FF2", "FF10", "LZ1", "AL1", "ALX1"] and data["run"]["blocked"]
+    assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3", "AL1", "ALX1")] == ["ok", "ok", "ok", "error", "error"]
+    assert data["run"]["deferred"] == ["PG1", "FF1", "FF2", "FF10", "LZ1"] and data["run"]["blocked"]
     for code in data["run"]["deferred"]:
         assert groups[code] == previous["groups"][code], code
-    assert data["run"]["extrasDeferred"] == ["PG2", "FF5", "AL3"]         # sus actas, primero la próxima vez
+    assert data["run"]["extrasDeferred"] == ["PG2", "FF5", "AL3"]         # sus actas, en otra pasada
 
 
 def test_venues_and_team_cards_are_read_even_when_the_second_pass_runs_out(health):
@@ -451,32 +510,30 @@ def test_venues_and_team_cards_are_read_even_when_the_second_pass_runs_out(healt
     assert scorers[2] < pages.index("NFG_LstCampos") < pages.index("NFG_LstDirectorioEquipos")   # tras PG2, FF5 y AL3
 
 
-def test_a_closed_group_refreshed_after_a_day_is_published_to_keep_the_rotation(health):
+def test_a_closed_group_is_refreshed_once_every_four_passes_and_the_rest_carry_their_check(health):
+    """Todo cerrado: cada pasada lee solo los cerrados a los que les toca (closed_turn); los demás
+    descansan con su última comprobación. En cuatro pasadas seguidas, todos una vez, sin estado: igual
+    si ninguna pasada sube data-health.json."""
     conn = season(played="2026-09-19")
-    previous = report({**{code: checked(6) for code in ALL}, "FF1": checked(25)}, at=NOW - timedelta(hours=1))
-    data, fed = health(previous, conn, budget=600)
-    assert {u.split("CodGrupo=")[1].split("&")[0] for u in fed.urls if "CodGrupo=" in u} == {"1"}     # solo FF1
-    assert data["groups"]["FF1"]["checkedAt"] > previous["groups"]["FF1"]["checkedAt"]
-    assert sorted(data["run"]["resting"]) == sorted(set(ALL) - {"FF1"})
-    for code in set(ALL) - {"FF1"}:
-        assert data["groups"][code] == previous["groups"][code]
-
-
-def test_a_closed_group_is_refreshed_every_fourth_pass(health):
-    """Cinco pasadas cada 6 h con todo cerrado: se refresca en la primera y en la quinta (24 h), aunque
-    su hora sea la de su grupo, segundos después de que empezara aquella pasada."""
-    conn = season(played="2026-09-19")
-    previous = report({code: checked(24) for code in ALL})
+    base = report({code: checked(24) for code in ALL})
     visited = []
-    for n in range(5):
-        previous, fed = health(previous, conn, budget=600, checks_now=NOW + timedelta(hours=6 * n))
-        visited.append({u.split("CodGrupo=")[1].split("&")[0] for u in fed.urls if "CodGrupo=" in u})
-    assert [len(v) for v in visited] == [len(ALL), 0, 0, 0, len(ALL)]
+    for n in range(8):
+        data, fed = health(base, conn, budget=600, checks_now=NOW + timedelta(hours=6 * n), number=40 + n)
+        visited.append(set(read_groups(fed)))
+        assert visited[-1] == {c for c in ALL if U.closed_turn(c, 40 + n)}
+        assert sorted(data["run"]["resting"]) == sorted(set(ALL) - visited[-1])
+        for code in set(ALL) - visited[-1]:
+            assert data["groups"][code] == base["groups"][code]
+    assert all(sum(code in v for v in visited) == 2 for code in ALL)     # en 8 pasadas, dos veces cada uno
+    for i in range(len(visited) - 3):
+        assert set().union(*visited[i:i + 4]) == set(ALL)
 
 
-def test_nothing_new_and_nothing_left_out_does_not_rewrite_the_report(health):
+def test_a_pass_with_nothing_new_does_not_rewrite_the_report(health):
+    """Sin nada nuevo, ni la hora de cada grupo ni las notas de la pasada reescriben data-health.json:
+    no hay commit solo por la hora (la rotación no la necesita)."""
     conn = season(played="2026-09-19")
-    previous = report({code: checked(6) for code in ALL}, at=NOW - timedelta(hours=1))
-    data, fed = health(previous, conn, budget=600)
-    assert data == previous                                               # todos descansan
-    assert [u.split("NPcd/")[1] for u in fed.urls] == ["NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22"]
+    first, _ = health(report({code: checked(24) for code in ALL}, at=NOW - timedelta(hours=1)), conn, budget=600,
+                      number=7)
+    data, fed = health(first, conn, budget=600, checks_now=NOW + timedelta(hours=6), number=7)
+    assert data == first and read_groups(fed)                             # leyó, pero no cambió nada

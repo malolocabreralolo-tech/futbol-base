@@ -2,8 +2,11 @@
 
 Strategy (strong -> weak):
   1. season_id by acta header "YYYY/YYYY" -> "YYYY-YYYY" lookup in seasons.
-  2. candidate matches in that season with matching home/away teams by
-     normalized name; if multiple, narrow by date (+-1 day) and/or score.
+  2. candidate matches in that season AND in the category of the acta's
+     competition (categorias.category_of of header["competition"]: the same
+     clubs play alevín, benjamín and prebenjamín the same weekend) with
+     matching home/away teams by normalized name; if multiple, narrow by
+     date (+-1 day) and/or score.
   3. Return matches.id if unique, else None.
 
 Public API:
@@ -14,6 +17,11 @@ import re
 import unicodedata
 from datetime import datetime, timedelta
 from functools import lru_cache
+
+try:
+    from scripts.categorias import category_of, excluded
+except ImportError:          # scripts/ en sys.path (CLI o pruebas)
+    from categorias import category_of, excluded
 
 
 _CLUB_SUFFIX = re.compile(
@@ -207,16 +215,25 @@ def reconcile_acta(conn, header: dict):
     if not nh or not na:
         return None
 
+    # Solo los partidos de la categoría de su competición: el acta alevín de Arucas–Moya no es la
+    # del partido de benjamín de los mismos clubes el mismo fin de semana. Un acta de una competición
+    # que no se publica (sala, alevín de Lanzarote o Fuerteventura) no casa con nada; una cuya
+    # competición no dice la categoría (o sin competición), como siempre, con toda la temporada.
+    competition = header.get("competition")
+    if competition and excluded(competition):
+        return None
+    category = category_of(competition)
     rows = conn.execute(
         """
         SELECT m.id, t1.name, t2.name, m.date, m.home_score, m.away_score, m.jornada
           FROM matches m
           JOIN groups g ON g.id=m.group_id
+          JOIN categories c ON c.id=g.category_id
           JOIN teams t1 ON t1.id=m.home_team_id
           JOIN teams t2 ON t2.id=m.away_team_id
-         WHERE g.season_id=?
+         WHERE g.season_id=? AND (? IS NULL OR upper(c.name)=?)
         """,
-        (sid,),
+        (sid, category, category),
     ).fetchall()
 
     # Filter by normalized team names (with prefix-rescue for abbreviated DB grafías)

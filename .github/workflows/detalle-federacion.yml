@@ -24,6 +24,10 @@ on:
         description: 'Tandas que quedan (freno de la cadena)'
         required: false
         default: '4'
+      categorias:
+        description: 'Categorías del catálogo: benjamin,prebenjamin o alevin (solo Gran Canaria); pasa a las tandas'
+        required: false
+        default: 'benjamin,prebenjamin'
 
 permissions:
   contents: write
@@ -52,9 +56,10 @@ jobs:
         env:
           TEMPORADAS: ${{ inputs.temporadas }}
           JORNADAS: ${{ inputs.jornadas }}
+          CATEGORIAS: ${{ inputs.categorias }}
           PYTHONUNBUFFERED: '1'
         run: |
-          python3 scripts/fetch_fiflp_detalle.py --temporadas "$TEMPORADAS" --jornadas "$JORNADAS" --max-minutes 320 | tee detalle.log
+          python3 scripts/fetch_fiflp_detalle.py --temporadas "$TEMPORADAS" --jornadas "$JORNADAS" --categorias "${CATEGORIAS:-benjamin,prebenjamin}" --max-minutes 320 | tee detalle.log
         timeout-minutes: 335
       # if: always(): una descarga cortada sube lo que lleva (guarda cada grupo y cada campo).
       - name: Subir los raw
@@ -90,6 +95,7 @@ jobs:
           TEMPORADAS: ${{ inputs.temporadas }}
           JORNADAS: ${{ inputs.jornadas }}
           TANDAS: ${{ inputs.tandas }}
+          CATEGORIAS: ${{ inputs.categorias }}
         run: |
           LEFT=$((TANDAS - 1))
           if grep -q '^Completo\.' detalle.log 2>/dev/null; then
@@ -98,5 +104,5 @@ jobs:
             echo "Freno: sin tandas."
           else
             echo "Incompleto: otra tanda (quedan $LEFT)."
-            gh workflow run detalle-federacion.yml --ref main -f temporadas="$TEMPORADAS" -f jornadas="$JORNADAS" -f tandas="$LEFT"
+            gh workflow run detalle-federacion.yml --ref main -f temporadas="$TEMPORADAS" -f jornadas="$JORNADAS" -f tandas="$LEFT" -f categorias="$CATEGORIAS"
           fi

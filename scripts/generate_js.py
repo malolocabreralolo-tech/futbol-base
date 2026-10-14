@@ -5,10 +5,12 @@ Generate all data-*.js files from the SQLite database.
 Reads futbolbase.db and produces:
   - data-benjamin.js
   - data-prebenjamin.js
-  - data-history.js
+  - data-alevin.js (alevín de la temporada en curso, carga perezosa; siempre, aunque vacío)
+  - data-history.js (solo benjamín y prebenjamín: es carga inicial)
   - data-matchdetail.js
   - data-goleadores.js
-  - data-seasons.js and data-season-<S>.js (the past seasons)
+  - data-seasons.js and data-season-<S>.js (the past seasons; su alevín, aparte, en
+    data-season-<S>-alevin.js: docs/alevin.md)
   - data-lineups-<S>-<grupo>.js (one per group with actas)
 data-shields.js is maintained by hand. Plan B4 (decisión 1) retired
 data-matchdetail-keys.js, data-stats.js and data-players-<S>.js: nobody read
@@ -120,6 +122,37 @@ def get_groups_for_category(conn, category_name):
         (category_name,),
     ).fetchall()
     return rows
+
+
+# Las categorías de la carga inicial (data-benjamin.js, data-prebenjamin.js y data-history.js). Alevín
+# va aparte, en ficheros que la web pide cuando los necesita (data-alevin.js y data-season-<S>-alevin.js,
+# docs/alevin.md): sus 32 grupos harían crecer la carga inicial sin avisar.
+EAGER_CATEGORIES = ("BENJAMIN", "PREBENJAMIN")
+ALEVIN = "ALEVIN"
+
+
+def teams_by_category(conn, season_id):
+    """{equipo: {categorías en las que juega la temporada}} (clasificación y calendario)."""
+    out = {}
+    for name, cat in conn.execute(
+            """SELECT t.name, upper(c.name) FROM standings st JOIN teams t ON t.id=st.team_id
+                 JOIN groups g ON g.id=st.group_id JOIN categories c ON c.id=g.category_id WHERE g.season_id=?
+               UNION
+               SELECT t.name, upper(c.name) FROM matches m JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
+                 JOIN groups g ON g.id=m.group_id JOIN categories c ON c.id=g.category_id WHERE g.season_id=?""",
+            (season_id, season_id)):
+        out.setdefault(name, set()).add(cat)
+    return out
+
+
+def _alevin_only(conn, season_id):
+    """Los equipos que esa temporada solo juegan en alevín: fuera de lo de benjamín y prebenjamín."""
+    return {t for t, cats in teams_by_category(conn, season_id).items() if cats == {ALEVIN}}
+
+
+def _in_alevin(conn, season_id):
+    """Los equipos que esa temporada juegan en alevín (también en otra categoría)."""
+    return {t for t, cats in teams_by_category(conn, season_id).items() if ALEVIN in cats}
 
 
 def _match_key(home, away, hs, as_):
@@ -236,9 +269,9 @@ def _is_league_group(code, phase):
     semantics) must never be recomputed as a league table."""
     if "copa" in (phase or "").lower():
         return False
-    # Finales, semifinales («Semifinal Liga Primera Lanzarote») y torneos de cierre o clausura
-    # (isCupGroup de src/state.js).
-    if re.match(r"(semi)?final\b|torneo\b|clausura\b", (phase or "").lower()):
+    # Finales, semifinales («Semifinal Liga Primera Lanzarote»), torneos de cierre o clausura y
+    # eliminatorias (EL, PEL, ALEL: docs/alevin.md) (isCupGroup de src/state.js).
+    if re.match(r"(semi)?final\b|torneo\b|clausura\b|eliminatoria", (phase or "").lower()):
         return False
     if (code or "").upper().startswith(("PCC", "BC")):
         return False
@@ -338,7 +371,7 @@ def get_current_jornada_matches(conn, group_id, current_jornada):
 
 
 def generate_category_js(conn, category_name, var_name, stats_var):
-    """Generate the JS content for a category (BENJAMIN or PREBENJAMIN)."""
+    """Generate the JS content for a category (BENJAMIN, PREBENJAMIN or ALEVIN)."""
     groups = get_groups_for_category(conn, category_name)
     result = []
     total_teams = 0
@@ -376,14 +409,16 @@ def generate_category_js(conn, category_name, var_name, stats_var):
     return js
 
 
-def generate_history_js(conn):
-    """Generate data-history.js with ALL matches grouped by group code and jornada."""
-    # Get all groups for current season
+def history_map(conn, categories):
+    """({código de grupo: {jornada: [[fecha, local, visitante, gl, gv, null, hora, campo]]}}, partidos)
+    de los grupos de la temporada actual de esas categorías."""
+    marks = ",".join("?" * len(categories))
     groups = conn.execute(
-        """SELECT g.id, g.code FROM groups g
+        f"""SELECT g.id, g.code FROM groups g
            JOIN seasons s ON g.season_id = s.id
-           WHERE s.is_current = 1
-           ORDER BY g.code""",
+           JOIN categories c ON c.id = g.category_id
+           WHERE s.is_current = 1 AND upper(c.name) IN ({marks})
+           ORDER BY g.code""", tuple(categories),
     ).fetchall()
 
     history = {}
@@ -414,18 +449,43 @@ def generate_history_js(conn):
         # Sort jornadas by progression (knockout rounds) or number (leagues)
         sorted_jornadas = dict(sorted(jornadas.items(), key=lambda x: _jornada_sort_key(x[0])))
         history[code] = sorted_jornadas
+    return history, total_matches
 
+
+def generate_history_js(conn):
+    """Generate data-history.js with ALL matches of benjamín and prebenjamín (EAGER_CATEGORIES)
+    grouped by group code and jornada; alevín va en data-alevin.js (HISTORY_ALEV)."""
+    history, total_matches = history_map(conn, EAGER_CATEGORIES)
     # El directorio de campos va con el calendario (CAMPOS, para «Cómo llegar»):
     # un fichero inmediato nuevo rompería la primera apertura sin red con el SW
-    # anterior, que no lo tiene y devolvería index.html en su lugar.
+    # anterior, que no lo tiene y devolvería index.html en su lugar. De toda la
+    # temporada, alevín incluido (data-alevin.js no lleva campos).
     js = "const HISTORY=" + js_val(history) + ";\n" + generate_campos_js(conn) + "\n"
     js += f"const HIST_MATCHES={total_matches};"
     # Y con ellos, por la misma razón, la ficha de cada equipo de la temporada (equipación y campo,
-    # EQUIPOS) y el estado de los partidos que da la app de futbolaspalmas (ESTADOS).
+    # EQUIPOS) y el estado de los partidos que da la app de futbolaspalmas (ESTADOS). Sin los
+    # equipos que solo juegan en alevín ni los partidos de alevín (EQUIPOS_ALEV, ESTADOS_ALEV).
     row = conn.execute("SELECT id FROM seasons WHERE is_current = 1").fetchone()
-    js += "\nconst EQUIPOS=" + js_val(team_info_map(conn, row[0]) if row else {}) + ";"
-    js += "\nconst ESTADOS=" + js_val(match_states_map(conn, row[0]) if row else {}) + ";"
+    only = _alevin_only(conn, row[0]) if row else set()
+    js += "\nconst EQUIPOS=" + js_val(team_info_map(conn, row[0], keep=lambda t: t not in only) if row else {}) + ";"
+    js += "\nconst ESTADOS=" + js_val(match_states_map(conn, row[0], EAGER_CATEGORIES) if row else {}) + ";"
     js += "\nconst COBERTURA=" + js_val(coverage_summary(conn)) + ";"
+    return js
+
+
+def generate_alevin_js(conn):
+    """data-alevin.js: el alevín de la temporada en curso, con la forma de lo de benjamín y en este
+    orden (contrato de docs/alevin.md §4): ALEVIN y ALEV_STATS (como BENJAMIN y BENJ_STATS),
+    HISTORY_ALEV (HISTORY), GOL_ALEV (GOL_BENJ), ESTADOS_ALEV (ESTADOS) y EQUIPOS_ALEV (EQUIPOS, de
+    los equipos que juegan en alevín). Siempre, aunque esté vacío: la web lo pide sin saber si hay."""
+    js = generate_category_js(conn, ALEVIN, "ALEVIN", "ALEV_STATS")
+    history, _ = history_map(conn, (ALEVIN,))
+    row = conn.execute("SELECT id FROM seasons WHERE is_current = 1").fetchone()
+    teams = _in_alevin(conn, row[0]) if row else set()
+    js += "const HISTORY_ALEV=" + js_val(history) + ";\n"
+    js += "const GOL_ALEV=" + js_val(goleadores_entries(conn, ALEVIN)) + ";\n"
+    js += "const ESTADOS_ALEV=" + js_val(match_states_map(conn, row[0], (ALEVIN,)) if row else {}) + ";\n"
+    js += "const EQUIPOS_ALEV=" + js_val(team_info_map(conn, row[0], keep=lambda t: t in teams) if row else {}) + ";\n"
     return js
 
 
@@ -825,6 +885,11 @@ def _goleadores_group_name(code, full_name, category_name):
     """
     upper = full_name.upper()
 
+    if category_name == ALEVIN:
+        # 'ALEVIN PRIMERA FASE GC - GRUPO 1' -> 'ALEVIN PRIMERA FASE GC - GRUPO 1'
+        cleaned = re.sub(r"\bALEVIN\b\s*", "", upper).strip()
+        return f"ALEVIN {cleaned}".strip()
+
     if category_name == "PREBENJAMIN":
         # 'PREBENJAMIN PRIMERA GRAN CANARIA G-N' -> 'PREBENJAMIN GC GRUPO N'
         m = re.search(r"G-?(\d+)", upper)
@@ -959,10 +1024,11 @@ def zones_of(conn, group_id, teams):
     return out or None
 
 
-def team_info_map(conn, season_id):
+def team_info_map(conn, season_id, keep=None):
     """{equipo: [camiseta, pantalón, medias, campo, superficie, equipación de futbolaspalmas]} de la
     temporada: el directorio de la federación (team_seasons, import_fiflp_detalle.py) y la app de
-    futbolaspalmas (fp_teams: el nombre de su dibujo, «2026-blanca-blanco-blancas.png»)."""
+    futbolaspalmas (fp_teams: el nombre de su dibujo, «2026-blanca-blanco-blancas.png»). `keep(equipo)`:
+    solo los que cumplen (los de alevín, o todos menos los que solo juegan en alevín)."""
     out = {}
     if _has_table(conn, "team_seasons"):
         for name, shirt, shorts, socks, venue, surface in conn.execute(
@@ -977,25 +1043,28 @@ def team_info_map(conn, season_id):
                    WHERE l.season_id = ? AND f.equipacion IS NOT NULL AND f.equipacion <> ''
                    ORDER BY t.name, f.liga_id""", (season_id,)):
             out.setdefault(name, [None] * 6)[5] = kit
-    return dict(sorted(out.items()))
+    return dict(sorted((k, v) for k, v in out.items() if keep is None or keep(k)))
 
 
 # Estados de la app de futbolaspalmas que el marcador no dice.
 FP_STATES = ("aplazado", "suspendido", "retirado", "anulado")
 
 
-def match_states_map(conn, season_id):
+def match_states_map(conn, season_id, categories=None):
     """{código de grupo: {jornada: {"local|visitante": [estado, motivo, hora real de inicio]}}} de
-    los partidos de la temporada que la app de futbolaspalmas da aplazados, suspendidos, retirados
-    o anulados, o con su hora real de inicio (HH:MM)."""
+    los partidos de la temporada (de esas categorías, si se dan) que la app de futbolaspalmas da
+    aplazados, suspendidos, retirados o anulados, o con su hora real de inicio (HH:MM)."""
     if not _has_table(conn, "fp_matches"):
         return {}
     out = {}
+    cats = tuple(categories or ())
+    only = f" AND upper(c.name) IN ({','.join('?' * len(cats))})" if cats else ""
     rows = conn.execute(
-        """SELECT g.code, m.jornada, h.name, a.name, f.estado, f.motivo_aplazado, f.hora_inicio
+        f"""SELECT g.code, m.jornada, h.name, a.name, f.estado, f.motivo_aplazado, f.hora_inicio
            FROM fp_matches f JOIN matches m ON m.id = f.match_id JOIN groups g ON g.id = m.group_id
+           JOIN categories c ON c.id = g.category_id
            JOIN teams h ON h.id = m.home_team_id JOIN teams a ON a.id = m.away_team_id
-           WHERE g.season_id = ? ORDER BY g.code, m.jornada, h.name""", (season_id,)).fetchall()
+           WHERE g.season_id = ?{only} ORDER BY g.code, m.jornada, h.name""", (season_id, *cats)).fetchall()
     for code, jornada, home, away, estado, motivo, inicio in rows:
         state = estado if estado in FP_STATES else None
         start = (inicio or "")[11:16] if re.fullmatch(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?", inicio or "") else None
@@ -1039,15 +1108,20 @@ def campos_entries(conn, venue_names):
     return out
 
 
-def season_venue_names(conn, season_id):
-    """Los campos de los partidos de la temporada y los de sus equipos (team_seasons)."""
+def season_venue_names(conn, season_id, categories=None, keep=None):
+    """Los campos de los partidos de la temporada y los de sus equipos (team_seasons). Con
+    `categories`, solo los partidos de esas categorías; con `keep(equipo)`, solo los de esos equipos."""
+    cats = tuple(categories or ())
+    only = f" AND upper(c.name) IN ({','.join('?' * len(cats))})" if cats else ""
     names = {r[0] for r in conn.execute(
-        """SELECT DISTINCT m.venue FROM matches m JOIN groups g ON g.id = m.group_id
-           WHERE g.season_id = ? AND m.venue IS NOT NULL AND m.venue <> ''""", (season_id,))}
+        f"""SELECT DISTINCT m.venue FROM matches m JOIN groups g ON g.id = m.group_id
+           JOIN categories c ON c.id = g.category_id
+           WHERE g.season_id = ? AND m.venue IS NOT NULL AND m.venue <> ''{only}""", (season_id, *cats))}
     if _has_table(conn, "team_seasons"):
-        names |= {r[0] for r in conn.execute(
-            "SELECT DISTINCT venue_name FROM team_seasons WHERE season_id = ? AND venue_name IS NOT NULL",
-            (season_id,))}
+        names |= {venue for team, venue in conn.execute(
+            """SELECT DISTINCT t.name, ts.venue_name FROM team_seasons ts LEFT JOIN teams t ON t.id = ts.team_id
+               WHERE ts.season_id = ? AND ts.venue_name IS NOT NULL""", (season_id,))
+                  if keep is None or keep(team)}
     return sorted(names)
 
 
@@ -1107,46 +1181,7 @@ def generate_seasons_js(conn):
         if not is_current:
             # Include historical standings data inline (for per-season files)
             for cat_name, cat_key in [("BENJAMIN", "benjamin"), ("PREBENJAMIN", "prebenjamin")]:
-                # Match category by case-insensitive name (import may use lowercase)
-                cat_ids = [r[0] for r in conn.execute(
-                    "SELECT id FROM categories WHERE UPPER(name) = ?", (cat_name,)
-                ).fetchall()]
-                if not cat_ids:
-                    entry[cat_key] = []
-                    continue
-
-                placeholders = ",".join("?" * len(cat_ids))
-                groups = conn.execute(
-                    f"""SELECT g.id, g.code, g.name, g.full_name, g.phase, g.island, g.current_jornada
-                       FROM groups g
-                       WHERE g.season_id = ? AND g.category_id IN ({placeholders})
-                       ORDER BY g.code""",
-                    [season_id] + cat_ids,
-                ).fetchall()
-
-                groups_data = []
-                for gid, code, name, full_name, phase, island, current_jornada in groups:
-                    standings = get_standings(conn, gid)
-                    hist_jornadas = get_historical_jornadas(conn, gid, include_details=True)
-                    group_obj = {
-                        "id": code,
-                        "name": name,
-                        "fullName": full_name,
-                        "phase": phase or island or "Gran Canaria",
-                        "island": island,
-                        "current_jornada": current_jornada,
-                        "standings": standings,
-                        "jornadas": hist_jornadas,
-                    }
-                    detail = standings_detail_map(conn, gid)
-                    if detail:
-                        group_obj["detail"] = detail
-                    # La clasificación calculada con los partidos (2014-15 del archivo del portal: la
-                    # archivada era de marzo-abril), para que la web no la llame oficial.
-                    if computed_table(conn, gid, season_name):
-                        group_obj["standingsKind"] = "reconstructed"
-                    groups_data.append(group_obj)
-                entry[cat_key] = groups_data
+                entry[cat_key] = archive_groups(conn, season_id, season_name, cat_name)
             # Los goleadores de la temporada archivada, si la base los tiene
             # (2025-26: los de futbolaspalmas; desde 2026-27, los de la federación).
             gol = {cat_key: goleadores_entries(conn, cat_name, season_name)
@@ -1154,17 +1189,79 @@ def generate_seasons_js(conn):
             if any(gol.values()):
                 entry["gol"] = gol
             # La ficha de cada equipo (equipación y campo) y los campos de la temporada, con sus
-            # coordenadas, si la base los tiene.
-            equipos = team_info_map(conn, season_id)
+            # coordenadas, si la base los tiene. Sin lo que solo es de alevín, que va en su fichero.
+            only = _alevin_only(conn, season_id)
+            equipos = team_info_map(conn, season_id, keep=lambda t: t not in only)
             if equipos:
                 entry["equipos"] = equipos
-            campos = campos_entries(conn, season_venue_names(conn, season_id))
+            campos = campos_entries(conn, season_venue_names(conn, season_id, EAGER_CATEGORIES,
+                                                             keep=lambda t: t not in only))
             if campos:
                 entry["campos"] = campos
+            # El alevín de la temporada, aparte (data-season-<S>-alevin.js), si lo tiene.
+            alevin = archive_alevin(conn, season_id, season_name)
+            if alevin:
+                entry["_alevin"] = alevin
 
         seasons_list.append(entry)
 
     return "const SEASONS=" + js_val(lean_list) + ";\n", seasons_list
+
+
+def archive_groups(conn, season_id, season_name, cat_name):
+    """Los grupos de una categoría de una temporada pasada, con la forma de data-season-<S>.js."""
+    groups = conn.execute(
+        """SELECT g.id, g.code, g.name, g.full_name, g.phase, g.island, g.current_jornada
+           FROM groups g JOIN categories c ON c.id = g.category_id
+           WHERE g.season_id = ? AND UPPER(c.name) = ?
+           ORDER BY g.code""",
+        (season_id, cat_name),
+    ).fetchall()
+
+    groups_data = []
+    for gid, code, name, full_name, phase, island, current_jornada in groups:
+        standings = get_standings(conn, gid)
+        hist_jornadas = get_historical_jornadas(conn, gid, include_details=True)
+        group_obj = {
+            "id": code,
+            "name": name,
+            "fullName": full_name,
+            "phase": phase or island or "Gran Canaria",
+            "island": island,
+            "current_jornada": current_jornada,
+            "standings": standings,
+            "jornadas": hist_jornadas,
+        }
+        detail = standings_detail_map(conn, gid)
+        if detail:
+            group_obj["detail"] = detail
+        # La clasificación calculada con los partidos (2014-15 del archivo del portal: la
+        # archivada era de marzo-abril), para que la web no la llame oficial.
+        if computed_table(conn, gid, season_name):
+            group_obj["standingsKind"] = "reconstructed"
+        groups_data.append(group_obj)
+    return groups_data
+
+
+def archive_alevin(conn, season_id, season_name):
+    """{name, alevin, gol?, equipos?, campos?} del alevín de una temporada pasada (contrato de
+    docs/alevin.md §5: la clave alevin con la forma de la clave benjamin de data-season-<S>.js), o
+    None si esa temporada no tiene grupos de alevín."""
+    groups = archive_groups(conn, season_id, season_name, ALEVIN)
+    if not groups:
+        return None
+    out = {"name": season_name, "alevin": groups}
+    gol = goleadores_entries(conn, ALEVIN, season_name)
+    if gol:
+        out["gol"] = {"alevin": gol}
+    teams = _in_alevin(conn, season_id)
+    equipos = team_info_map(conn, season_id, keep=lambda t: t in teams)
+    if equipos:
+        out["equipos"] = equipos
+    campos = campos_entries(conn, season_venue_names(conn, season_id, (ALEVIN,), keep=lambda t: t in teams))
+    if campos:
+        out["campos"] = campos
+    return out
 
 
 def generate_per_season_files(seasons_list):
@@ -1181,10 +1278,22 @@ def generate_per_season_files(seasons_list):
         name = s["name"]  # "2021-2022"
         var_name = "SEASON_" + name.replace("-", "_")
         out_path = os.path.join(PROJECT_ROOT, f"data-season-{name}.js")
+        alevin = s.get("_alevin")
+        s = {k: v for k, v in s.items() if k != "_alevin"}
         content = f"const {var_name}=" + js_val(s) + ";\n"
         with open(out_path, "w", encoding="utf-8") as f:
             f.write(content)
         written.append((name, len(content)))
+        # El alevín, en su fichero (perezoso, fuera de SEASON_FILES del SW: docs/alevin.md §5); el de una
+        # temporada que ya no tiene alevín, fuera (la web trata su 404 como «sin alevín»).
+        alevin_path = os.path.join(PROJECT_ROOT, f"data-season-{name}-alevin.js")
+        if alevin:
+            with open(alevin_path, "w", encoding="utf-8") as f:
+                f.write(f"const {var_name}_ALEVIN=" + js_val(alevin) + ";\n")
+            print(f"  data-season-{name}-alevin.js: {os.path.getsize(alevin_path):,} bytes")
+        elif os.path.exists(alevin_path):
+            os.remove(alevin_path)
+            print(f"  data-season-{name}-alevin.js: borrado (la temporada no tiene alevín)")
     return written
 
 
@@ -1332,6 +1441,10 @@ def main():
 
     print("2. data-prebenjamin.js")
     write_file("data-prebenjamin.js", generate_category_js(conn, "PREBENJAMIN", "PREBENJAMIN", "PREBENJ_STATS"))
+
+    # Alevín, perezoso y siempre (vacío si no hay): no va en index.html ni en STATIC_ASSETS del SW.
+    print("2b. data-alevin.js")
+    write_file("data-alevin.js", generate_alevin_js(conn))
 
     print("3. data-history.js")
     write_file("data-history.js", generate_history_js(conn))

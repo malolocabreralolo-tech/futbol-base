@@ -180,12 +180,18 @@ def get_or_create_season(conn, name, start_year, end_year, is_current=False):
 
 
 def get_or_create_category(conn, name):
-    """Return the category id, creating it if needed."""
-    cur = conn.execute("SELECT id FROM categories WHERE name=?", (name,))
-    row = cur.fetchone()
+    """Return the category id, creating it if needed.
+
+    Sin distinguir mayúsculas y, si hay dos filas que solo se diferencian en eso (la 'prebenjamin'
+    que dejó import_history.py hasta octubre de 2026), la del nombre canónico en mayúsculas, que es
+    la que leen generate_js y los importadores. Una categoría nueva se crea en mayúsculas
+    ('alevin' → 'ALEVIN')."""
+    row = conn.execute(
+        "SELECT id FROM categories WHERE upper(name)=upper(?) ORDER BY name<>upper(name), id LIMIT 1",
+        (name,)).fetchone()
     if row:
         return row[0]
-    cur = conn.execute("INSERT INTO categories (name) VALUES (?)", (name,))
+    cur = conn.execute("INSERT INTO categories (name) VALUES (?)", (name.upper(),))
     conn.commit()
     return cur.lastrowid
 

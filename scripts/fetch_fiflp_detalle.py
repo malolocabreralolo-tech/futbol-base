@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """fetch_fiflp_detalle.py — El detalle de la federación (FIFLP) que no traen las
 actas ni los goleadores, de cada grupo de benjamín y prebenjamín (fútbol 7/8, sin
-sala) de las temporadas pedidas:
+sala; con --categorias alevin, de alevín de Gran Canaria) de las temporadas pedidas:
 
   - la clasificación detallada (NFG_VisClasificacion): código del equipo en la
     federación, partidos en casa y fuera, últimos resultados y puntos de sanción;
@@ -58,22 +58,22 @@ def raw_path(code):
     return HERE / f"fiflp_detalle_{season_name(code)}_raw.json"
 
 
-def benjamin_comps(comps):
-    """[(id, nombre)] de benjamín y prebenjamín de fútbol 7/8 (sin sala)."""
-    fold = lambda t: t.upper().replace("Í", "I").replace("É", "E")
-    return [(c["id"], c["name"].strip()) for c in comps
-            if "BENJAMIN" in fold(c["name"]) and "SALA" not in fold(c["name"])
-            and "LPFS" not in fold(c["name"])]
+def benjamin_comps(comps, categories=None):
+    """[(id, nombre)] de fútbol 7/8 de las categorías dadas (categorias.category_of: sin sala ni
+    alevín de Lanzarote o Fuerteventura); por defecto, benjamín y prebenjamín."""
+    from categorias import DEFAULT_CATEGORIES, category_of
+    categories = categories or DEFAULT_CATEGORIES
+    return [(c["id"], c["name"].strip()) for c in comps if category_of(c["name"]) in categories]
 
 
-def catalog_comps(code):
+def catalog_comps(code, categories=None):
     """Las de la temporada en el catálogo de discover_fiflp_comps.py."""
     path = HERE / "fiflp_comps_catalog.json"
     catalog = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    return benjamin_comps((catalog.get(season_name(code)) or {}).get("all", []))
+    return benjamin_comps((catalog.get(season_name(code)) or {}).get("all", []), categories)
 
 
-def live_comps(page, F, code):
+def live_comps(page, F, code, categories=None):
     """Las de la temporada leídas de la web, para una que el catálogo aún no tiene."""
     if not F.goto(page, F.BASE + f"/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={code}"):
         return []
@@ -83,7 +83,7 @@ def live_comps(page, F, code):
                        .map(o => ({id: o.value, name: o.text.trim()})) : [];
     }""") or []
     F.delay()
-    return benjamin_comps(comps)
+    return benjamin_comps(comps, categories)
 
 
 def load(path):
@@ -166,14 +166,21 @@ def scrape_group(page, F, season, comp, grupo, jornadas, log=print):
     return clasificacion, directorio, rounds, ok
 
 
-def run_groups(page, F, seasons, jornadas_seasons, deadline, log=print):
+def run_groups(page, F, seasons, jornadas_seasons, deadline, log=print, categories=None):
+    """`categories`: las del catálogo que se recorren ('ALEVIN'…); por defecto, benjamín y
+    prebenjamín. Todas van al mismo raw de la temporada (claves comp:grupo)."""
     for season in seasons:
         path = raw_path(season)
         data = load(path)
-        comps = catalog_comps(season)
+        comps = catalog_comps(season, categories)
         if not comps:
-            comps = [tuple(c) for c in data.get("_comps") or []] or live_comps(page, F, season)
-            data["_comps"] = comps
+            # Las leídas de la web (una temporada que el catálogo aún no tiene), guardadas por
+            # categorías: _comps las de siempre, _comps_alevin las de alevín.
+            from categorias import DEFAULT_CATEGORIES, web_key
+            key = "_comps" if tuple(categories or DEFAULT_CATEGORIES) == DEFAULT_CATEGORIES else \
+                "_comps_" + "_".join(web_key(c) for c in categories)
+            comps = [tuple(c) for c in data.get(key) or []] or live_comps(page, F, season, categories)
+            data[key] = comps
             save(path, data)
         log(f"Temporada {season_name(season)}: {len(comps)} competiciones")
         want_rounds = season in jornadas_seasons
@@ -256,7 +263,10 @@ def main(argv=None):
                     help="temporadas de las que bajar también el calendario completo")
     ap.add_argument("--sin-campos", action="store_true", help="no leer las fichas de los campos")
     ap.add_argument("--max-minutes", type=float, default=320)
+    ap.add_argument("--categorias", default="", help="'benjamin,prebenjamin' (por defecto) o 'alevin'")
     args = ap.parse_args(argv)
+    from categorias import parse_categories
+    categories = parse_categories(args.categorias)
     seasons = [s.strip() for s in args.temporadas.split(",") if s.strip()]
     jornadas = {s.strip() for s in args.jornadas.split(",") if s.strip()}
     deadline = time.monotonic() + args.max_minutes * 60
@@ -271,7 +281,7 @@ def main(argv=None):
         fiflp_only(page)   # sin la publicidad de la federación, que colgaba las cargas
         page.set_default_timeout(30000)
         try:
-            complete = run_groups(page, F, seasons, jornadas, deadline)
+            complete = run_groups(page, F, seasons, jornadas, deadline, categories=categories)
             if complete and not args.sin_campos:
                 complete = run_campos(page, F, deadline)
         finally:

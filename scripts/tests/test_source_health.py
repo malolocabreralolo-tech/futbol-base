@@ -94,8 +94,9 @@ def test_previous_checks_are_only_those_of_the_same_season(portal):
 
 
 def test_a_group_left_for_the_next_pass_keeps_its_last_check(portal):
-    """Rotación del bot de la federación y grupos cerrados que descansan (update_fiflp.run_passes):
-    sin comprobarse en esta pasada, su entrada sigue como estaba, sin marcarla como error."""
+    """Rotación del bot de la federación, grupos cerrados que descansan y categorías que este workflow
+    no lee (update_fiflp.run_passes, FIFLP_CATS): sin comprobarse en esta pasada, su entrada sigue
+    como estaba, sin marcarla como error."""
     first = json.loads(run(OK, T0))
     source_health.begin("2025-2026")
     source_health.record("PG2", "https://example.test/PG2", "ok", "16 equipos", now=T0 + timedelta(hours=5))
@@ -118,51 +119,9 @@ def test_run_notes_alone_do_not_rewrite_the_report(portal):
     assert source_health.REPORT_PATH.read_text() == first
 
 
-def test_checks_needed_by_the_next_pass_are_published(portal):
-    """La rotación y los grupos cerrados se ordenan por la hora de su última comprobación: si
-    no se publica, la pasada siguiente volvería a empezar por los mismos."""
-    run(OK, T0)
-    later = T0 + timedelta(hours=5)
-    source_health.begin("2025-2026")
-    for code, status, message in OK:
-        source_health.record(code, f"https://example.test/{code}", status, message, now=later)
-    source_health.note_run({"deferred": ["PG2"]})
-    source_health.publish_checks()
-    source_health.finish(now=later)
-    report = json.loads(source_health.REPORT_PATH.read_text())
-    assert report["groups"]["A1"]["checkedAt"] == later.isoformat(timespec="seconds")
-    assert report["run"] == {"deferred": ["PG2"]}
-
-
 def test_meaningful_view_ignores_only_timestamps():
     a = {"season": "x", "checkedAt": "1", "groups": {"A1": {"status": "ok", "checkedAt": "1"}}}
     b = {"season": "x", "checkedAt": "2", "groups": {"A1": {"status": "ok", "checkedAt": "2"}}}
     c = {"season": "x", "checkedAt": "2", "groups": {"A1": {"status": "error", "checkedAt": "2"}}}
     assert source_health.meaningful(a) == source_health.meaningful(b)
     assert source_health.meaningful(a) != source_health.meaningful(c)
-
-
-def test_the_last_read_of_actas_and_scorers_is_kept_and_alone_does_not_rewrite(portal):
-    """extrasAt: la hora de la última segunda pasada de un grupo (actas y goleadores del bot de la
-    federación, que la ordena por ella para rotar). No reescribe el informe por sí sola y, si la
-    pasada no llega al grupo, se queda la que había."""
-    first = run(OK, T0)
-    later = T0 + timedelta(hours=5)
-
-    def again(extras, force=False):
-        source_health.begin("2025-2026")
-        for code, status, message in OK:
-            source_health.record(code, f"https://example.test/{code}", status, message, now=later,
-                                 extras_at=extras.get(code))
-        if force:
-            source_health.publish_checks()
-        source_health.finish(now=later)
-        return source_health.REPORT_PATH.read_text()
-
-    assert again({"A1": later}) == first
-    report = json.loads(again({"A1": later}, force=True))
-    assert report["groups"]["A1"]["extrasAt"] == later.isoformat(timespec="seconds")
-    assert "extrasAt" not in report["groups"]["PG2"]
-    report = json.loads(again({"PG2": later + timedelta(hours=1)}, force=True))
-    assert report["groups"]["A1"]["extrasAt"] == later.isoformat(timespec="seconds")     # no llegó: la de antes
-    assert report["groups"]["PG2"]["extrasAt"] == (later + timedelta(hours=1)).isoformat(timespec="seconds")

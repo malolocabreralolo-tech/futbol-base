@@ -56,17 +56,21 @@ def benjamin_links(html):
 APP_URL = "https://futbolaspalmas.com/benjamin/"
 
 
-def app_ligas(html):
-    """[(liga_id, nombre)] de benjamín/prebenjamín en el desplegable de la app
-    nueva del portal (<select id="selector-liga">)."""
+def app_ligas(html, categories=None):
+    """[(liga_id, nombre)] de las categorías dadas ('BENJAMIN', 'ALEVIN'…; por defecto
+    benjamín y prebenjamín) en el desplegable de la app nueva del portal
+    (<select id="selector-liga">), según categorias.category_of: sin sala ni alevín de
+    Lanzarote o Fuerteventura."""
     from html import unescape
+    from categorias import DEFAULT_CATEGORIES, category_of
+    categories = categories or DEFAULT_CATEGORIES
     m = re.search(r'(?s)<select[^>]*id="selector-liga"[^>]*>(.*?)</select>', html or "")
     if not m:
         return []
     out = []
     for value, text in re.findall(r'(?s)<option[^>]*value="(\d+)"[^>]*>(.*?)</option>', m.group(1)):
         name = re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", "", text))).strip()
-        if "benjam" in name.lower().replace("í", "i"):
+        if category_of(name) in categories:
             out.append((value, name))
     return out
 

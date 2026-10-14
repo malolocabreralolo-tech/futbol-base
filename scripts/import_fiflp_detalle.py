@@ -52,6 +52,8 @@ DETALLE_VERSION = "4"
 # los de los retirados entran, como en el resto de temporadas. 2019-20, 2020-21, 2021-22, 2024-25 y
 # 2025-26 (revisadas el 8/10/2026): solo lo que falta y lo que cuadra mejor (complete_group); el
 # desvío de las cerradas, de 295 a 175 goles, sin ningún grupo peor (2025-26, con sus 65 grupos).
+# Alevín (sin portal: el calendario de la federación es el único que hay) entra en todas las temporadas
+# pasadas; sus grupos son claves nuevas de score_deviation, que no pueden empeorar la línea base.
 CALENDAR_SEASONS = ("2016-2017", "2017-2018", "2018-2019", "2019-2020", "2020-2021", "2021-2022",
                     "2024-2025", "2025-2026")
 
@@ -437,11 +439,12 @@ def create_cup_group(conn, season_id, season, det, log=print):
         return 0
     prefix, phase, island = meta
     code = f"{prefix}{group_number(det.get('grupo_name'))}"
-    category = "PREBENJAMIN" if "PREBENJAMIN" in (det.get("comp_name") or "").upper().replace("Í", "I") else "BENJAMIN"
-    cat_id = get_or_create_category(conn, category)
-    if conn.execute("SELECT 1 FROM groups WHERE season_id=? AND category_id=? AND code=?",
-                    (season_id, cat_id, code)).fetchone():
+    from categorias import category_of
+    category = category_of(det.get("comp_name"))
+    # El código es único en la temporada, entre categorías (HISTORY, las actas y la web van por código).
+    if not category or conn.execute("SELECT 1 FROM groups WHERE season_id=? AND code=?", (season_id, code)).fetchone():
         return 0
+    cat_id = get_or_create_category(conn, category)
     season_teams = sorted({r[0] for r in conn.execute(
         """SELECT t.name FROM standings st JOIN teams t ON t.id=st.team_id JOIN groups g ON g.id=st.group_id
            WHERE g.season_id=?""", (season_id,))})
@@ -500,9 +503,17 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
     if isinstance(index, list):
         index = {str(e["cod_acta"]): e for e in index}
     archived = season in ARCHIVE_SEASONS
+    from categorias import category_of
+    current = bool(conn.execute("SELECT is_current FROM seasons WHERE id=?", (season_id,)).fetchone()[0])
     claimed, cups = set(), []
-    acta_scores = _acta_scores(os.path.join(folder, f"fiflp_actas_{season}_raw.json")) \
-        if season in calendar_seasons else {}
+    cache = []
+
+    def scores():
+        """Los marcadores de las actas, la primera vez que un grupo usa su calendario (el raw es grande)."""
+        if not cache:
+            cache.append(_acta_scores(os.path.join(folder, f"fiflp_actas_{season}_raw.json")))
+        return cache[0]
+
     for key in sorted(k for k in raw if not k.startswith("_")):
         det = raw[key]
         if not det.get("ok"):
@@ -520,8 +531,10 @@ def import_raw(conn, path, log=print, calendar_seasons=None):
             report["unmatched"] += 1
             continue
         claimed.add(gid)
+        # Alevín no tiene portal: su calendario es el de la federación en todas las temporadas pasadas.
+        calendar = season in calendar_seasons or (not current and category_of(det.get("comp_name")) == "ALEVIN")
         detail, cards, new = write_group(conn, season_id, gid, det, entry, archived, log,
-                                         calendar=season in calendar_seasons, acta_scores=acta_scores)
+                                         calendar=calendar, acta_scores=scores() if calendar else {})
         report["groups"] += 1
         report["detail"] += detail
         report["cards"] += cards

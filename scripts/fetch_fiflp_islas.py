@@ -20,6 +20,13 @@ Uso:
     ISLAS_SEASON=19 python3 scripts/fetch_fiflp_islas.py
     ISLAS_SEASON=19 SCRAPE_IDS=1328,1330 python3 scripts/fetch_fiflp_islas.py
     ISLAS_SEASON=22 python3 scripts/fetch_fiflp_islas.py   # 2026-27, IDs del catálogo
+    ISLAS_SEASON=22 SCRAPE_IDS=54977017 python3 …          # solo esa (se añade al raw de la tanda)
+    ISLAS_SEASON=22al python3 scripts/fetch_fiflp_islas.py # alevín de Gran Canaria de 2026-27
+
+En las temporadas del catálogo (CATALOG_SEASONS), la tanda elige la categoría
+(categorias.category_of): '22' es benjamín y prebenjamín y '22al' (sufijo «al»),
+alevín de Gran Canaria, en su propio raw (fiflp_islas_22al_raw.json), sin sala ni
+alevín de Lanzarote o Fuerteventura. FIFLP_CATS ('alevin,benjamin') la cambia.
 """
 import os
 import re
@@ -27,6 +34,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import fetch_fiflp_2425 as F
+from categorias import DEFAULT_CATEGORIES, category_of, parse_categories, web_key
 
 # CodTemporada -> competiciones insulares de benjamín/prebenjamín (fútbol 7/8,
 # nada de sala). Tomadas del catálogo FIFLP por season_code.
@@ -117,10 +125,11 @@ def _fold(text):
                    if unicodedata.category(ch) != "Mn").upper()
 
 
-def comps_from_catalog(season_name, catalog=None):
-    """Competiciones benjamín/prebenjamín de fútbol 7/8 (nada de sala) de una
-    temporada del catálogo FIFLP. La fase provisional es el nombre de FIFLP;
-    el import decide la fase que ve la web."""
+def comps_from_catalog(season_name, catalog=None, categories=DEFAULT_CATEGORIES):
+    """Competiciones de fútbol 7/8 de las categorías dadas ('BENJAMIN', 'ALEVIN'…; por
+    defecto benjamín y prebenjamín) de una temporada del catálogo FIFLP, según
+    categorias.category_of: nada de sala ni de alevín de Lanzarote o Fuerteventura. La
+    fase provisional es el nombre de FIFLP; el import decide la fase que ve la web."""
     if catalog is None:
         import json
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -129,20 +138,30 @@ def comps_from_catalog(season_name, catalog=None):
             catalog = json.load(f)
     comps = []
     for c in (catalog.get(season_name) or {}).get("all", []):
-        name = _fold(c["name"])
-        if "BENJAMIN" not in name or "SALA" in name or "LPFS" in name:
+        cat = category_of(c["name"])
+        if cat not in categories:
             continue
+        name = _fold(c["name"])
         island = ("lanzarote" if "LANZAROTE" in name else
                   "fuerteventura" if "FUERTEVENTURA" in name else "grancanaria")
-        comps.append({"id": c["id"], "name": c["name"],
-                      "cat": "prebenjamin" if "PREBENJAMIN" in name else "benjamin",
+        comps.append({"id": c["id"], "name": c["name"], "cat": web_key(cat),
                       "island": island, "phase": c["name"]})
     return comps
 
 
+def tanda_categories(key, env=None):
+    """Las categorías de una tanda del catálogo: '22al' alevín; '22', benjamín y prebenjamín;
+    FIFLP_CATS manda sobre las dos."""
+    env = os.environ if env is None else env
+    if env.get("FIFLP_CATS"):
+        return parse_categories(env["FIFLP_CATS"])
+    return ("ALEVIN",) if key.endswith("al") else DEFAULT_CATEGORIES
+
+
 SEASON = os.environ.get("ISLAS_SEASON", "19")
-if SEASON in CATALOG_SEASONS and SEASON not in COMPS_BY_SEASON:
-    COMPS_BY_SEASON[SEASON] = comps_from_catalog(CATALOG_SEASONS[SEASON])
+_code = re.sub(r"\D", "", SEASON)
+if SEASON not in COMPS_BY_SEASON and _code in CATALOG_SEASONS and SEASON in (_code, _code + "al"):
+    COMPS_BY_SEASON[SEASON] = comps_from_catalog(CATALOG_SEASONS[_code], categories=tanda_categories(SEASON))
 if SEASON not in COMPS_BY_SEASON:
     sys.exit(f"ISLAS_SEASON={SEASON!r} no soportada. Opciones: "
              f"{', '.join(sorted(COMPS_BY_SEASON))}")

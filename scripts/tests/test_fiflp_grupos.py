@@ -519,6 +519,28 @@ def test_in_the_current_season_a_team_is_put_right_by_its_name(monkeypatch):
 
 
 
+
+def test_a_fix_that_would_repeat_a_match_leaves_its_group_and_does_the_rest(monkeypatch):
+    """Un cambio que dejaría un partido repetido (UNIQUE de matches: el gemelo de un equipo con sus mismos
+    partidos) no se hace en su grupo, y los de los demás grupos sí: antes el IntegrityError tumbaba el paso."""
+    conn = base()
+    conn.executescript("""
+      INSERT INTO groups(id, season_id, category_id, code, name, phase, island) VALUES (2, 1, 1, 'GC2', 'Grupo 2', 'Primera Fase GC', 'grancanaria');
+      INSERT INTO teams(id, name) VALUES (20, 'O. Marítima'), (21, 'MORA, C.D.');
+      INSERT INTO standings(group_id, team_id, position, points, played, won, drawn, lost, gf, gc, gd)
+        VALUES (2, 20, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+      INSERT INTO matches(group_id, jornada, home_team_id, away_team_id) VALUES (1, '1', 3, 4), (1, '1', 21, 4);
+    """)
+    monkeypatch.setattr(GR, "POSITION_FIXES", {("2021-2022", "GC1"): {"MORA, C.D.": "Moya"},
+                                               ("2021-2022", "GC2"): {"O. Marítima": "Juventud Marítima"}})
+    logs = []
+    assert GR.fix_positions(conn, log=logs.append) == 1
+    assert any("GC1" in line and "UNIQUE" in line for line in logs)
+    assert conn.execute("SELECT count(*) FROM matches WHERE home_team_id=21").fetchone()[0] == 1, "GC1, como estaba"
+    assert conn.execute("""SELECT t.name FROM standings st JOIN teams t ON t.id=st.team_id
+                           WHERE st.group_id=2""").fetchone() == ("Juventud Marítima",)
+
+
 def test_the_retired_atletico_fomento_of_pg2_2025_26_keeps_its_name_and_its_calendar(tmp_path):
     """«CD Batán» en la tabla del portal de PG2 de 2025-26 es el Atlético Fomento que se retiró ('ATLETICO
     FOMENTO, CLUB' en la federación, con sus 28 derrotas 0-3 y fuera de su clasificación). Las pasadas del

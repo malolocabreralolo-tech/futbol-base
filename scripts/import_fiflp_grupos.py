@@ -33,6 +33,7 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import sys
 import unicodedata
 
@@ -481,7 +482,9 @@ def fix_positions(conn, log=print):
     grupo, su detalle y sus goleadores, y en sus partidos con lo que cuelga de ellos (alineaciones,
     goles, tarjetas, cuerpo técnico). Las fichas de la temporada de esos equipos se borran (las
     rehace import_fiflp_detalle) y el equipo que se queda sin uso, también. Un cambio que dejaría a
-    un equipo dos veces en la clasificación no se hace. Devuelve cuántos equipos cambió."""
+    un equipo dos veces en la clasificación no se hace, y uno que dejaría un partido repetido (el UNIQUE
+    de matches) deja su grupo como estaba y se avisa: los demás grupos se cambian igual (antes el error
+    tumbaba el paso entero). Devuelve cuántos equipos cambió."""
     changed = 0
     for (season, code), fixes in sorted(POSITION_FIXES.items()):
         found = conn.execute("""SELECT g.id, g.season_id FROM groups g JOIN seasons s ON s.id=g.season_id
@@ -497,7 +500,7 @@ def fix_positions(conn, log=print):
         mapping = {}
         for key, name in fixes.items():
             row = conn.execute("SELECT id FROM teams WHERE name=?", (name,)).fetchone()
-            new = row[0] if row else get_or_create_team(conn, name)
+            new = row[0] if row else get_or_create_team(conn, name)     # hace commit: fuera del SAVEPOINT
             if key in at and at[key] != new:
                 mapping[at[key]] = new
         if not mapping:
@@ -506,29 +509,44 @@ def fix_positions(conn, log=print):
         if len(after) != len(set(after)):
             log(f"  ! {season} {code}: el cambio dejaría un equipo dos veces en la clasificación; no se hace")
             continue
-        for table in ("standings", "standings_detail", "scorers"):
-            _move_rows(conn, table, "group_id=?", (gid,), mapping)
-        in_group = "match_id IN (SELECT id FROM matches WHERE group_id=?)"
-        for table in ("appearances", "match_events", "match_staff", "match_staff_all"):
-            _move_rows(conn, table, in_group, (gid,), mapping)
-        case = "CASE {col} " + " ".join(f"WHEN {a} THEN {b}" for a, b in mapping.items()) + " ELSE {col} END"
-        conn.execute(f"""UPDATE matches SET home_team_id={case.format(col='home_team_id')},
-                         away_team_id={case.format(col='away_team_id')} WHERE group_id=?""", (gid,))
-        teams = set(mapping) | set(mapping.values())
-        marks = ",".join("?" * len(teams))
-        if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='team_seasons'").fetchone():
-            conn.execute(f"DELETE FROM team_seasons WHERE season_id=? AND team_id IN ({marks})", (season_id, *teams))
-        names = dict(conn.execute(f"SELECT id, name FROM teams WHERE id IN ({marks})", tuple(teams)))
-        for old in mapping:
-            if not _referenced(conn, old):
-                for table in ("team_seasons", "standings_detail", "match_staff_all", "fp_teams"):
-                    if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
-                        conn.execute(f"DELETE FROM {table} WHERE team_id=?", (old,))
-                conn.execute("DELETE FROM teams WHERE id=?", (old,))
+        conn.execute("SAVEPOINT posiciones")
+        try:
+            names = _move_teams(conn, gid, season_id, mapping)
+        except sqlite3.IntegrityError as e:
+            conn.execute("ROLLBACK TO posiciones")
+            conn.execute("RELEASE posiciones")
+            log(f"  ! {season} {code}: {e}; no se hace")
+            continue
+        conn.execute("RELEASE posiciones")
         log(f"  {season} {code}: " + ", ".join(f"{names[a]} → {names[b]}" for a, b in mapping.items()))
         changed += len(mapping)
     conn.commit()
     return changed
+
+
+def _move_teams(conn, gid, season_id, mapping):
+    """Los cambios de fix_positions en un grupo ({equipo que estaba: el que va}); devuelve {id: nombre}
+    de los equipos que toca."""
+    for table in ("standings", "standings_detail", "scorers"):
+        _move_rows(conn, table, "group_id=?", (gid,), mapping)
+    in_group = "match_id IN (SELECT id FROM matches WHERE group_id=?)"
+    for table in ("appearances", "match_events", "match_staff", "match_staff_all"):
+        _move_rows(conn, table, in_group, (gid,), mapping)
+    case = "CASE {col} " + " ".join(f"WHEN {a} THEN {b}" for a, b in mapping.items()) + " ELSE {col} END"
+    conn.execute(f"""UPDATE matches SET home_team_id={case.format(col='home_team_id')},
+                     away_team_id={case.format(col='away_team_id')} WHERE group_id=?""", (gid,))
+    teams = set(mapping) | set(mapping.values())
+    marks = ",".join("?" * len(teams))
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='team_seasons'").fetchone():
+        conn.execute(f"DELETE FROM team_seasons WHERE season_id=? AND team_id IN ({marks})", (season_id, *teams))
+    names = dict(conn.execute(f"SELECT id, name FROM teams WHERE id IN ({marks})", tuple(teams)))
+    for old in mapping:
+        if not _referenced(conn, old):
+            for table in ("team_seasons", "standings_detail", "match_staff_all", "fp_teams"):
+                if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
+                    conn.execute(f"DELETE FROM {table} WHERE team_id=?", (old,))
+            conn.execute("DELETE FROM teams WHERE id=?", (old,))
+    return names
 
 
 def import_season(conn, folder, season, log=print):

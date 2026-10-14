@@ -203,7 +203,7 @@ function figuresBlock(ctx, group, name) {
 const lower = (text) => String(text || '').toLowerCase();
 export function teamInfoBlock(ctx, group, name) {
   const model = ctx && ctx.model;
-  const info = model && typeof model.teamInfo === 'function' ? model.teamInfo(group.season, name) : null;
+  const info = model && typeof model.teamInfo === 'function' ? model.teamInfo(group.season, name, group.cat) : null;
   if (!info || !(info.shirt || info.shorts || info.socks || info.venue)) return null;
   const kit = [['Camiseta', info.shirt], ['Pantalón', info.shorts], ['Medias', info.socks]]
     .filter(([, value]) => value).map(([label, value]) => ({ label, value: lower(value) }));

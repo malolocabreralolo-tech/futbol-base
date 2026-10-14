@@ -100,6 +100,15 @@ const SEASON_FILES = [
   './data-season-2012-2013.js',
 ];
 
+// Datos perezosos que se guardan al instalar (contrato común de alevín, punto 4): la app los pide cuando
+// una pantalla los necesita, nunca en la carga inicial ni tras pintar la portada (presupuesto de 3 s),
+// pero la instalación ocurre después de `load` y no toca el pintado, y así alevín abre sin conexión.
+// Fuera de STATIC_ASSETS, que son los inmediatos de index.html (test_sw_fixes.mjs). Los
+// data-season-<S>-alevin.js no van ni aquí ni en SEASON_FILES: se guardan según se usan.
+const LAZY_FILES = [
+  './data-alevin.js',
+];
+
 // Las actas van por grupo (data-lineups-<S>-<grupo>.js): precachearlas todas
 // serían ~10 MB por temporada en cada subida de datos. Se guardan según se
 // usan (stale-while-revalidate) y cada versión nueva vuelve a bajar, al
@@ -207,7 +216,7 @@ self.addEventListener('install', e => {
     caches.open(CACHE_NAME).then(async c => {
       // One unavailable asset must not discard all the successful downloads.
       const carried = await usedLineups().catch(() => []);
-      const results = await Promise.allSettled([...STATIC_ASSETS, ...SEASON_FILES, ...carried].map(async url => {
+      const results = await Promise.allSettled([...STATIC_ASSETS, ...SEASON_FILES, ...LAZY_FILES, ...carried].map(async url => {
         const response = await fetchFresh(url, 'reload');
         if (!response.ok) throw new Error(url + ': HTTP ' + response.status);
         await c.put(url, response);

@@ -14,6 +14,7 @@ import { SCREENS, parseRoute, routeHref } from '../../src/links.js';
 import * as routerModule from '../../src/router.js';
 import { resolveParams, historyMode, parentOf, activeTab, startRouter } from '../../src/router.js';
 import { SCREEN_MAP } from '../../src/screens.js';
+import { alevinData } from '../../src/state.js';
 
 const PORTAL = '2025-2026';
 const raw = fixture('current-2025-2026');
@@ -47,7 +48,9 @@ function context({ resolution = OK, loaded = [] } = {}) {
   return () => ({
     portal: { season: PORTAL, defaultTeam: { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mesas Hu.' } },
     model: model(loaded), resolution, myTeam: MY_TEAM, today: '2026-09-23', health: null,
-    datasets: { seasons: SEASONS, seasonRaw: {} },
+    // El alevín ya pedido y vacío (contrato común de alevín): estas pruebas no lo esperan; las de
+    // alevín están en test_rediseno_alevin.mjs.
+    datasets: { seasons: SEASONS, seasonRaw: {}, alevin: alevinData({}), seasonAlevin: { '2024-2025': {} } },
   });
 }
 const resolve = (hash, options) => resolveParams(parseRoute(hash), context(options)());
@@ -860,13 +863,13 @@ test('esa temporada la carga el router y la ruta se pinta, o se redirige ya carg
   }
 });
 
-test('un `c` que no es benjamín ni prebenjamín se quita, sin aviso; en Ligas, también una isla o un `to` que no existen (decisión 3 de B3)', async () => {
-  assert.deepEqual(target(resolve('#/records?c=alevin')), ['#/records', null]);
+test('un `c` que no es una categoría de la app (benjamín, prebenjamín o alevín) se quita, sin aviso; en Ligas, también una isla o un `to` que no existen (decisión 3 de B3)', async () => {
+  assert.deepEqual(target(resolve('#/records?c=cadete')), ['#/records', null]);
   assert.deepEqual(target(resolve('#/goleadores?c=Benjamin&g=PG2&q=ana')), ['#/goleadores?g=PG2&q=ana', null]);
   // Todos a la vez, antes de cargar la temporada (no la necesitan).
-  assert.deepEqual(target(resolve('#/ligas?s=2024-2025&c=alevin&i=tenerife&to=partido')), ['#/ligas?s=2024-2025', null]);
+  assert.deepEqual(target(resolve('#/ligas?s=2024-2025&c=cadete&i=tenerife&to=partido')), ['#/ligas?s=2024-2025', null]);
   assert.deepEqual(resolve('#/ligas?c=prebenjamin&i=lanzarote&to=jornada'), { params: { c: 'prebenjamin', i: 'lanzarote', to: 'jornada', s: PORTAL } });
-  const b = fakeBrowser('#/records?c=alevin');
+  const b = fakeBrowser('#/records?c=cadete');
   const router = startRouter({ screens: allScreens(), root: b.root, getContext: context(), window: b.win });
   await router.idle();
   assert.deepEqual(b.entries(), ['#/records']);

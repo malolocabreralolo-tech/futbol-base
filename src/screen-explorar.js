@@ -7,7 +7,7 @@
 // (decisión 2); el foco del ancla #buscar lo pone el router, nunca mount.
 import { html } from './html.js';
 import { screenHead, block, countLabel, crest, empty, notice, searchBox, seasonPicker, linkRow, listEs } from './ui.js';
-import { errorBox } from './shell.js';
+import { alevinFailedBox, errorBox } from './shell.js';
 import {
   CATEGORIES, CAT_NAMES, CAT_SHORT, competitionKey, competitions, findGroup, groupSummary, searchKey, searchTeams, seasonLabel,
 } from './model.js';
@@ -159,7 +159,9 @@ function render(ctx) {
   // error con «Reintentar», nunca otra temporada (§7).
   if (!ctx.model.season(s)) return html`<section data-screen="explorar">${head}${errorBox(`la temporada ${seasonLabel(s)}`)}</section>`;
   const { list, status } = searchView(ctx, ctx.params.q);
-  return html`<section data-screen="explorar">${head}${searchBox({ id: 'buscar', value: ctx.params.q || '', label: 'Buscar un equipo' })}<p class="vh" role="status" id="buscar-estado">${status}</p><div class="search-results" id="resultados" data-results>${list}</div>${recentBlock(ctx)}${leaguesBlock(ctx, s)}${cupsBlock(ctx, s)}${moreBlock(ctx, s)}</section>`;
+  // Sin los datos de alevín (el router no los pudo cargar): lo demás, con su aviso y «Reintentar».
+  const partial = ctx.alevinFailed ? alevinFailedBox() : '';
+  return html`<section data-screen="explorar">${head}${partial}${searchBox({ id: 'buscar', value: ctx.params.q || '', label: 'Buscar un equipo' })}<p class="vh" role="status" id="buscar-estado">${status}</p><div class="search-results" id="resultados" data-results>${list}</div>${recentBlock(ctx)}${leaguesBlock(ctx, s)}${cupsBlock(ctx, s)}${moreBlock(ctx, s)}</section>`;
 }
 
 /* Al escribir: la lista (Html de html``, que escapa cada dato) y la región de estado con searchView, y

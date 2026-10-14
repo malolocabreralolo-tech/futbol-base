@@ -139,10 +139,10 @@ test('ningún módulo formatea con los datos de idioma del motor: ni toLocale*St
 // ui.js. Ningún otro módulo vuelve a escribirlos.
 test('los nombres de categoría, en model.js; countLabel, score, signed y decimal, en ui.js; ningún otro módulo los repite', async () => {
   const model = await import('../../src/model.js');
-  assert.deepEqual(model.CATEGORIES, ['benjamin', 'prebenjamin']);
-  assert.deepEqual(model.CAT_NAMES, { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín' });
-  assert.deepEqual(model.CAT_WORDS, { benjamin: 'benjamín', prebenjamin: 'prebenjamín' });
-  assert.deepEqual(model.CAT_SHORT, { benjamin: 'benj.', prebenjamin: 'preb.' });
+  assert.deepEqual(model.CATEGORIES, ['benjamin', 'prebenjamin', 'alevin']);
+  assert.deepEqual(model.CAT_NAMES, { benjamin: 'Benjamín', prebenjamin: 'Prebenjamín', alevin: 'Alevín' });
+  assert.deepEqual(model.CAT_WORDS, { benjamin: 'benjamín', prebenjamin: 'prebenjamín', alevin: 'alevín' });
+  assert.deepEqual(model.CAT_SHORT, { benjamin: 'benj.', prebenjamin: 'preb.', alevin: 'alev.' });
   const HOME_OF = { 'nombres de categoría': 'model.js', plural: 'ui.js', decimales: 'ui.js', 'un ayudante con nombre': 'ui.js' };
   const PATTERNS = {
     'nombres de categoría': /\{\s*benjamin:\s*'/,

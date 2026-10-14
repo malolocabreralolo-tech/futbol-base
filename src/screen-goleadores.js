@@ -125,9 +125,13 @@ function render(ctx) {
   const head = screenHead('Goleadores', { sub: past ? `${where} · ${seasonLabel(s)}` : where, back: ctx.backHref, action });
   const screenHtml = (content) => html`<section data-screen="goleadores">${head}${content}</section>`;
   // Una temporada pasada sin goleadores archivados (las archivadas los traen desde 2019/20; la
-  // federación no publicó los de 2017/18 ni 2018/19).
-  if (past && !ctx.model.scorers(s, cat).length) return screenHtml(empty(`No hay goleadores de la temporada ${seasonLabel(s)} en esta web.`));
+  // federación no publicó los de 2017/18 ni 2018/19): sin ninguna categoría, el aviso de la temporada; si
+  // solo le falta la elegida (alevín, que no estaba en la web), el selector sigue para volver a las otras.
   const cats = group ? '' : html`<nav class="gol-cats" aria-label="Categoría">${segmented(CATS, cat, (value) => routeHref('goleadores', { s, c: value }), { idPrefix: 'categoria' })}</nav>`;
+  if (past && !ctx.model.scorers(s, cat).length) {
+    if (!CATEGORIES.some((c) => ctx.model.scorers(s, c).length)) return screenHtml(empty(`No hay goleadores de la temporada ${seasonLabel(s)} en esta web.`));
+    return screenHtml(html`${cats}${empty(`No hay goleadores de ${CAT_WORDS[cat]} de la temporada ${seasonLabel(s)} en esta web.`)}`);
+  }
   if (!list.rows) return screenHtml(html`${cats}${empty('La fuente de este grupo no publica goleadores.')}`);
   if (!list.rows.length) {
     return screenHtml(html`${cats}${empty(group ? 'Todavía no hay goles registrados en este grupo.' : `Todavía no hay goleadores de ${CAT_WORDS[cat]} en la temporada ${seasonLabel(s)}.`)}`);

@@ -171,3 +171,114 @@ export function seasonLineups(season, groups = null, lineups = lineupsFor(season
     .map((g) => g.id).concat(lineupGroups(season, lineups)))];
   return Object.fromEntries(ids.map((g) => [`${season}/${g}`, groupLineups(season, g, lineups)]));
 }
+
+// ─── Alevín (contrato común de alevín, puntos 4 y 5) ────────────────────────────────────────────
+// Fixtures sintéticas, sin datos de la fuente: los equipos son clubes con escudo en las fixtures y los
+// goleadores, nombres inventados («Uno, Jugador 1»). Nunca nombres de niños de verdad (el repo es público).
+
+// Una liga a una vuelta (método del círculo), con un número par de equipos: una jornada por fila, con
+// sus partidos [local, visitante].
+function roundRobin(teams) {
+  const rest = teams.slice(1);
+  return Array.from({ length: teams.length - 1 }, (_, r) => {
+    const ring = [teams[0], ...rest.slice(r), ...rest.slice(0, r)];
+    return Array.from({ length: teams.length / 2 }, (_, i) => (r % 2
+      ? [ring[ring.length - 1 - i], ring[i]] : [ring[i], ring[ring.length - 1 - i]]));
+  });
+}
+
+// La clasificación de unas filas de 8 columnas: 3 puntos la victoria y 1 el empate; por puntos,
+// diferencia, goles a favor y nombre. [[pos, equipo, pts, J, G, E, P, GF, GC, DG]].
+function standingsOf(teams, rows) {
+  const table = new Map(teams.map((team) => [team, { team, pts: 0, pj: 0, g: 0, e: 0, p: 0, gf: 0, gc: 0 }]));
+  const add = (team, gf, gc) => {
+    const r = table.get(team);
+    r.pj += 1;
+    r.gf += gf;
+    r.gc += gc;
+    if (gf > gc) { r.g += 1; r.pts += 3; } else if (gf === gc) { r.e += 1; r.pts += 1; } else r.p += 1;
+  };
+  for (const row of rows) if (row[3] != null && row[4] != null) { add(row[1], row[3], row[4]); add(row[2], row[4], row[3]); }
+  return [...table.values()]
+    .sort((a, b) => b.pts - a.pts || (b.gf - b.gc) - (a.gf - a.gc) || b.gf - a.gf || (a.team < b.team ? -1 : 1))
+    .map((r, i) => [i + 1, r.team, r.pts, r.pj, r.g, r.e, r.p, r.gf, r.gc, r.gf - r.gc]);
+}
+
+// Los dos grupos de alevín de las fixtures, AL1 y AL2: Las Mesas Hu. juega en AL1 con el mismo nombre
+// que en PG2 de prebenjamín (el homónimo de la familia, diseño B1), y Las Mesas B en AL2.
+export const ALEVIN_TEAMS = {
+  AL1: ['Las Mesas Hu.', 'AD Huracán', 'Acodetti CF', 'Guayarmina', 'Arucas CF', 'Maspalomas'],
+  AL2: ['Las Mesas B', 'CD Cerruda', 'Heidelberg', 'La Garita', 'Gran Canaria', 'CD Ingenio'],
+};
+
+/* data-alevin.js de las fixtures (contrato, punto 4) para la temporada del portal `season`: las seis
+ * constantes, en su orden y con la forma de las de benjamín. AL1 y AL2, «Primera Fase GC», con sus
+ * jornadas los días 26/09, 3, 10, 17 y 24/10 del primer año de la temporada; las del día `today` en
+ * adelante, sin marcador (pendientes), y la clasificación, la de lo jugado. ESTADOS_ALEV aplaza el primer
+ * partido de la jornada 4 de AL1, y EQUIPOS_ALEV trae la equipación de alevín de Las Mesas Hu. */
+export function alevinRaw({ season = '2026-2027', today = '2026-10-14' } = {}) {
+  const year = Number(season.slice(0, 4));
+  const days = [`${year}-09-26`, `${year}-10-03`, `${year}-10-10`, `${year}-10-17`, `${year}-10-24`];
+  const groups = [];
+  const history = {};
+  const gol = [];
+  Object.entries(ALEVIN_TEAMS).forEach(([id, teams], k) => {
+    const n = k + 1;
+    history[id] = Object.fromEntries(roundRobin(teams).map((pairs, r) => [`Jornada ${r + 1}`, pairs.map(([home, away], i) => {
+      const played = days[r] < today;
+      return [days[r], home, away, played ? (r + 2 * i + k) % 6 : null, played ? (2 * r + i + 1) % 4 : null, null, `${String(9 + i).padStart(2, '0')}:00`, `CAMPO ALEVÍN ${n}`];
+    })]));
+    const rows = Object.values(history[id]).flat();
+    const last = Object.keys(history[id]).filter((key) => history[id][key].some((row) => row[3] != null)).pop() || 'Jornada 1';
+    groups.push({ id, name: `Grupo ${n}`, fullName: `ALEVIN PRIMERA FASE GC - GRUPO ${n}`, phase: 'Primera Fase GC',
+      island: 'grancanaria', url: '', jornada: last, standings: standingsOf(teams, rows), matches: [] });
+    gol.push({ id, g: `ALEVIN PRIMERA FASE GC - GRUPO ${n}`,
+      s: [[`Uno, Jugador ${n}`, teams[0], 6 - k, 3], [`Dos, Jugador ${n}`, teams[1], 4, 3], [`Tres, Jugador ${n}`, teams[2], 2, 2]] });
+  });
+  const [home, away] = roundRobin(ALEVIN_TEAMS.AL1)[3][0];
+  return {
+    ALEVIN: groups,
+    ALEV_STATS: { groups: groups.length, teams: Object.values(ALEVIN_TEAMS).flat().length },
+    HISTORY_ALEV: history,
+    GOL_ALEV: gol,
+    ESTADOS_ALEV: { AL1: { 'Jornada 4': { [`${home}|${away}`]: ['aplazado', 'por lluvia', null] } } },
+    EQUIPOS_ALEV: { 'Las Mesas Hu.': ['AZUL CELESTE', 'BLANCO', 'AZULES', 'CAMPO ALEVÍN 1', 'Hierba Artificial (HA)', null] },
+  };
+}
+
+// El texto de un data-*.js con esas constantes, en su orden: «const NOMBRE=<json>;», una por línea, como
+// las escribe generate_js.py.
+export function dataFile(consts) {
+  return Object.entries(consts).map(([name, value]) => `const ${name}=${JSON.stringify(value)};`).join('\n') + '\n';
+}
+
+/* data-season-<S>-alevin.js de las fixtures (contrato, punto 5): { name, alevin, gol: { alevin } }, con la
+ * forma de la clave benjamin de data-season-<S>.js. La temporada `name` terminada, con su Segunda Fase:
+ * - ALA1, «Segunda Fase A», y ALF1, «Segunda Fase F» (la letra F que la federación publica desde
+ *   2026-27, punto 7 de la crítica), con los equipos de AL1 y de AL2, a una vuelta en abril y mayo;
+ * - ALEL1, «Eliminatorias»: semifinales y final de los cuatro primeros de ALA1, un cuadro (pantalla
+ *   Copa), con un empate que pasa el visitante (la columna pen). */
+export function pastAlevinRaw(name = '2025-2026') {
+  const end = Number(name.slice(5));
+  const days = [`${end}-04-11`, `${end}-04-18`, `${end}-04-25`, `${end}-05-02`, `${end}-05-09`];
+  const league = (id, phase, teams, n) => {
+    const jornadas = Object.fromEntries(roundRobin(teams).map((pairs, r) => [String(r + 1), pairs.map(([home, away], i) =>
+      [days[r], home, away, (r + i + n) % 5, (r * 2 + i) % 3, null, '10:00', `CAMPO ALEVÍN ${n}`])]));
+    return { id, name: 'Grupo 1', fullName: `ALEVIN ${phase.toUpperCase()} - GRUPO 1`, phase, island: 'grancanaria',
+      current_jornada: '5', standings: standingsOf(teams, Object.values(jornadas).flat()), jornadas };
+  };
+  const a = league('ALA1', 'Segunda Fase A', ALEVIN_TEAMS.AL1, 1);
+  const f = league('ALF1', 'Segunda Fase F', ALEVIN_TEAMS.AL2, 2);
+  const [w1, w2, w3, w4] = a.standings.map((row) => row[1]);
+  const semis = `16-05-${end} ( Semifinales )`;
+  const final = `23-05-${end} ( Final )`;
+  const el = {
+    id: 'ALEL1', name: 'Grupo 1', fullName: 'ALEVIN ELIMINATORIAS - GRUPO 1', phase: 'Eliminatorias', island: 'grancanaria',
+    current_jornada: final, standings: [],
+    jornadas: {
+      [semis]: [['', w1, w4, 3, 1, null, '10:00', 'CAMPO ALEVÍN 1'], ['', w2, w3, 2, 2, 'away', '12:00', 'CAMPO ALEVÍN 1']],
+      [final]: [['', w1, w3, 4, 2, null, '11:00', 'CAMPO ALEVÍN 1']],
+    },
+  };
+  return { name, alevin: [a, f, el], gol: { alevin: [{ id: 'ALA1', g: 'ALEVIN SEGUNDA FASE A - GRUPO 1', s: [['Cuatro, Jugador', w1, 9, 5]] }] } };
+}

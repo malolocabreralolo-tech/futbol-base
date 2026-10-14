@@ -10,6 +10,7 @@ import { startContext } from '../../../../src/app.js';
 import { routeHref } from '../../../../src/links.js';
 import { activeTab, parentOf } from '../../../../src/router.js';
 import { STORE_KEY } from '../../../../src/store.js';
+import { alevinData } from '../../../../src/state.js';
 
 export const PORTAL_SEASON = '2025-2026';
 export const MY_TEAM = { name: 'Las Mesas Hu.', season: PORTAL_SEASON, cat: 'prebenjamin', groupId: 'PG2' };
@@ -25,17 +26,23 @@ export const DEFAULT_TEAM = { cat: 'prebenjamin', groupId: 'PG2', name: 'Las Mes
 // - cupsExtra: los torneos con la Copa Plata de benjamín y la Copa Oro de prebenjamín (cupsRaw);
 // - lineups: las actas ya cargadas, { [season]: lineupsFor(season) };
 // - seasons: SEASONS. Por defecto, 2025-26 (actual), 2024-25 y las de seasonRaw, de la más reciente
-//   a la más antigua: se anuncian las temporadas que se sirven.
+//   a la más antigua: se anuncian las temporadas que se sirven;
+// - alevin y seasonAlevin: el alevín ya pedido (contrato común de alevín). Por defecto, el de la
+//   temporada actual y el de cada temporada anunciada, vacíos (data-alevin.js sin grupos y un 404 en
+//   cada data-season-<S>-alevin.js): las pruebas que no son de alevín no lo esperan. Las de alevín pasan
+//   `alevin: undefined` (sin pedir, lo de app.js) o los datos de alevinData.
 export function datasetsFor({
   current = fixture('current-2025-2026'), golBenj = [], golPrebenj = [], seasonRaw = {},
-  champions = false, cupsExtra = false, lineups = {}, seasons = null,
+  champions = false, cupsExtra = false, lineups = {}, seasons = null, alevin = alevinData({}), seasonAlevin = null,
 } = {}) {
   const cups = cupsRaw({ extra: cupsExtra });
   const names = [...new Set([PORTAL_SEASON, '2024-2025', ...Object.keys(seasonRaw)])].sort().reverse();
+  const announced = seasons || names.map(name => ({ name, current: name === PORTAL_SEASON }));
   return datasetsFrom(champions ? withChampions(current) : current, {
     golBenj, golPrebenj, seasonRaw, lineups, health: fixture('health'),
     cupBenjamin: cups.benjamin, cupPrebenjamin: cups.prebenjamin,
-    seasons: seasons || names.map(name => ({ name, current: name === PORTAL_SEASON })),
+    seasons: announced, alevin,
+    seasonAlevin: seasonAlevin || Object.fromEntries(announced.filter(s => !s.current).map(s => [s.name, {}])),
   });
 }
 

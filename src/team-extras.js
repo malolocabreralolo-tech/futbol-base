@@ -10,7 +10,7 @@ import {
 import { teamTrajectory } from './myteam.js';
 import { matchHref, playerHref, routeHref, weekdayDate } from './links.js';
 import { errorBox, retryBlock } from './shell.js';
-import { ensureLineups, ensureSeasonData, lineupsKey, loadSeasons } from './state.js';
+import { ensureLineups, ensureSeasonData, lineupsKey, loadAlevinSeasons, loadSeasons } from './state.js';
 import { coverageText, missingResults } from './team-view.js';
 
 const TRAJECTORY_ID = 'trayectoria';
@@ -158,17 +158,34 @@ export function trajectoryList(rows) {
   return join(seasons.map(season => html`<h3 class="traj-season">${seasonLabel(season)}</h3><div class="box">${rows.filter(r => r.season === season).map(r => html`<a class="traj-row" href="${routeHref('tabla', { s: r.season, g: r.group.id })}"><span class="traj-team">${r.name}</span><span class="traj-group">${r.group.label}</span><span class="traj-pos">${r.pos != null ? `${r.pos}.º de ${r.group.standings.length}` : '—'}</span><span class="traj-pts">${r.pts != null ? countLabel(r.pts, 'punto', 'puntos') : ''}</span></a>`)}</div>`));
 }
 
+// El aviso de una trayectoria sin el alevín de alguna temporada pasada (`failed`), con el «Reintentar»
+// del panel: sin la alerta de la caja de error, porque lo demás sí se pinta.
+function alevinMissingBox(failed) {
+  const what = failed.length === 1 ? `de la temporada ${seasonLabel(failed[0])}` : `de ${failed.length} temporadas`;
+  return html`<div class="box partial-box" role="status"><p class="partial-text">No se pudieron cargar los datos de alevín ${what}: la trayectoria sale sin ellos.</p><div class="buttons"><button class="button" type="button" data-action="retry">Reintentar</button></div></div>`;
+}
+
 // Carga el archivo que falte (loadSeasons, de state.js) y arma el panel; nunca lanza. Un fallo de la
 // carga o de un dato mal formado es la caja de error del propio panel, con su «Reintentar» (decisión
 // 103 de B2), como las temporadas anteriores de Partido. Pura salvo la carga: se prueba sin navegador.
-export async function trajectoryContent(ctx, name, load = ensureSeasonData) {
+// El alevín de todas (contrato común de alevín), para que lo que sale no dependa de lo que se visitó
+// antes: el de la temporada del portal (data-alevin.js, que el SW guarda al instalarse), como una
+// temporada más; y el de cada pasada (data-season-<S>-alevin.js, que solo existe si la tuvo: un 404 es
+// «sin alevín» y se memoriza). Esos no se guardan hasta usarse, así que sin conexión no llegan: la
+// trayectoria sale sin ellos, con un aviso y «Reintentar». `alevinLoaders`, los de alevinNeeds.
+export async function trajectoryContent(ctx, name, load = ensureSeasonData, alevinLoaders = {}) {
   try {
     // Las de SEASONS y la del portal, que siempre está: de la más reciente a la más antigua.
     const names = [...new Set([ctx.portal.season, ...(ctx.datasets.seasons || []).map(s => s.name)])]
       .filter(n => /^\d{4}-\d{4}$/.test(n)).sort().reverse();
     const past = names.filter(n => n !== ctx.portal.season);
-    if (!await loadSeasons(ctx.datasets, past, load)) return errorBox('la trayectoria');
-    return trajectoryList(teamTrajectory(ctx.model, name, ctx.model.clubIndex(), names));
+    const [loaded, failed] = await Promise.all([
+      loadSeasons(ctx.datasets, past, load),
+      loadAlevinSeasons(ctx.datasets, names, ctx.portal.season, alevinLoaders),
+    ]);
+    if (!loaded || failed.includes(ctx.portal.season)) return errorBox('la trayectoria');
+    const list = trajectoryList(teamTrajectory(ctx.model, name, ctx.model.clubIndex(), names));
+    return failed.length ? html`${alevinMissingBox(failed)}${list}` : list;
   } catch (err) {
     console.error('[equipo] trayectoria', err);
     return errorBox('la trayectoria');

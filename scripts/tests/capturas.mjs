@@ -3,7 +3,7 @@
 // en A y en D con su plantilla y su trayectoria abiertas, Explorar con resultados, Ligas con
 // «Comparar grupos» abierto, el cuadro y la liguilla de Copa, Goleadores, Récords, Temporadas, Fuentes
 // y Ajustes), y la portada con la plantilla y la trayectoria abiertas (Guayarmina en A1, desde el
-// 04/10/2026), a 390 px en claro y en oscuro y a 1440 px en claro. Salen de los mundos de fixtures de
+// 04/10/2026), y las de alevín (mundo L), a 390 px en claro y en oscuro y a 1440 px en claro. Salen de los mundos de fixtures de
 // fixture-site.mjs (datos congelados y reloj fijado), así que no dependen del día. Cada captura es la
 // pantalla entera: la ventana crece hasta el alto de la página, con la barra en su sitio.
 // Uso, desde la raíz del repo: OUT=<directorio> node scripts/tests/capturas.mjs
@@ -72,6 +72,15 @@ const SHOTS = [
   ['temporadas', 'D', '#/temporadas', ['temporadas', null]],
   ['fuentes', 'D', '#/fuentes', ['fuentes', null]],
   ['ajustes', 'D', '#/ajustes', ['ajustes', null]],
+  // Alevín (contrato común de alevín), en el mundo L (14/10/2026): la Tabla de AL1, los Goleadores con el
+  // selector de tres categorías, la portada de Las Mesas Hu. de alevín, las Eliminatorias de 2025/26 y,
+  // sin data-alevin.js, Explorar con su aviso y la Tabla de AL1 con la caja de error de alevín.
+  ['alevin-tabla', 'L', '#/tabla?g=AL1', ['tabla', null]],
+  ['alevin-goleadores', 'L', '#/goleadores?c=alevin', ['goleadores', null]],
+  ['alevin-portada', 'L', '#/', ['home', 'A'], { myTeam: { name: 'Las Mesas Hu.', season: '2026-2027', cat: 'alevin', groupId: 'AL1' } }],
+  ['alevin-eliminatorias', 'L', '#/copa?s=2025-2026&g=ALEL1', ['copa', null]],
+  ['alevin-explorar-sin-datos', 'L', '#/explorar', ['explorar', null], { fail: ['data-alevin.js'] }],
+  ['alevin-tabla-sin-datos', 'L', '#/tabla?g=AL1', ['tabla', 'error'], { fail: ['data-alevin.js'] }],
 ];
 const VARIANTS = [[390, 844, 'light', 'claro'], [390, 844, 'dark', 'oscuro'], [1440, 900, 'light', 'claro']];
 

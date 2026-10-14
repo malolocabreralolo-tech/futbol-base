@@ -13822,5 +13822,1949 @@
         ]
       }
     ]
+  },
+  {
+    "competition_id": "54977017",
+    "competition_name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+    "cat": "benjamin",
+    "island": "fuerteventura",
+    "phase": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+    "group_id": "55194132",
+    "group_name": "GRUPO 1",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "25-10-2026",
+        "matches": [
+          {
+            "home": "COTILLO, C.D. EL",
+            "away": "VILLAVERDE NORTE, S.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "22-10-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL COTILLO",
+            "referee": ""
+          },
+          {
+            "home": "VILLAVERDE NORTE, S.D. \"A\"",
+            "away": "EURO DE LAJARES, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL VILLAVERDE",
+            "referee": ""
+          },
+          {
+            "home": "INTER FUERTEVENTURA, C.D.",
+            "away": "OLIVA, C.D. LA",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "10:00",
+            "venue": "VICENTE CARREÑO",
+            "referee": ""
+          },
+          {
+            "home": "35660 CORRALEJO, C.D.",
+            "away": "CORRALEJO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "11:30",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "CORRALEJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "01-11-2026",
+        "matches": [
+          {
+            "home": "EURO DE LAJARES, C.D.",
+            "away": "35660 CORRALEJO, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "29-10-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL LAJARES",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "OLIVA, C.D. LA",
+            "away": "VILLAVERDE NORTE, S.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL LA OLIVA",
+            "referee": ""
+          },
+          {
+            "home": "VILLAVERDE NORTE, S.D. \"B\"",
+            "away": "INTER FUERTEVENTURA, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL VILLAVERDE",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"A\"",
+            "away": "COTILLO, C.D. EL",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "01-11-2026",
+            "time": "10:00",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "08-11-2026",
+        "matches": [
+          {
+            "home": "VILLAVERDE NORTE, S.D. \"A\"",
+            "away": "VILLAVERDE NORTE, S.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL VILLAVERDE",
+            "referee": ""
+          },
+          {
+            "home": "INTER FUERTEVENTURA, C.D.",
+            "away": "CORRALEJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "10:00",
+            "venue": "VICENTE CARREÑO",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"B\"",
+            "away": "EURO DE LAJARES, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "11:30",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          },
+          {
+            "home": "35660 CORRALEJO, C.D.",
+            "away": "OLIVA, C.D. LA",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "17:00",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "COTILLO, C.D. EL",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "15-11-2026",
+        "matches": [
+          {
+            "home": "EURO DE LAJARES, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "COTILLO, C.D. EL",
+            "away": "INTER FUERTEVENTURA, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-11-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL COTILLO",
+            "referee": ""
+          },
+          {
+            "home": "OLIVA, C.D. LA",
+            "away": "CORRALEJO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL LA OLIVA",
+            "referee": ""
+          },
+          {
+            "home": "VILLAVERDE NORTE, S.D. \"B\"",
+            "away": "35660 CORRALEJO, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL VILLAVERDE",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"A\"",
+            "away": "VILLAVERDE NORTE, S.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "15-11-2026",
+            "time": "10:00",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "22-11-2026",
+        "matches": [
+          {
+            "home": "EURO DE LAJARES, C.D.",
+            "away": "OLIVA, C.D. LA",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-11-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL LAJARES",
+            "referee": ""
+          },
+          {
+            "home": "VILLAVERDE NORTE, S.D. \"A\"",
+            "away": "COTILLO, C.D. EL",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "21-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL VILLAVERDE",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"B\"",
+            "away": "VILLAVERDE NORTE, S.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "21-11-2026",
+            "time": "11:30",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          },
+          {
+            "home": "35660 CORRALEJO, C.D.",
+            "away": "CORRALEJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "21-11-2026",
+            "time": "17:00",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "INTER FUERTEVENTURA, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "29-11-2026",
+        "matches": [
+          {
+            "home": "COTILLO, C.D. EL",
+            "away": "35660 CORRALEJO, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "26-11-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL COTILLO",
+            "referee": ""
+          },
+          {
+            "home": "OLIVA, C.D. LA",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "VILLAVERDE NORTE, S.D. \"B\"",
+            "away": "EURO DE LAJARES, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "28-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL VILLAVERDE",
+            "referee": ""
+          },
+          {
+            "home": "INTER FUERTEVENTURA, C.D.",
+            "away": "VILLAVERDE NORTE, S.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "28-11-2026",
+            "time": "10:00",
+            "venue": "VICENTE CARREÑO",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"A\"",
+            "away": "CORRALEJO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "29-11-2026",
+            "time": "10:00",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "06-12-2026",
+        "matches": [
+          {
+            "home": "EURO DE LAJARES, C.D.",
+            "away": "CORRALEJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "03-12-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL LAJARES",
+            "referee": ""
+          },
+          {
+            "home": "OLIVA, C.D. LA",
+            "away": "VILLAVERDE NORTE, S.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL LA OLIVA",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"B\"",
+            "away": "COTILLO, C.D. EL",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "10:00",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          },
+          {
+            "home": "35660 CORRALEJO, C.D.",
+            "away": "INTER FUERTEVENTURA, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "11:30",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "VILLAVERDE NORTE, S.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "13-12-2026",
+        "matches": [
+          {
+            "home": "COTILLO, C.D. EL",
+            "away": "EURO DE LAJARES, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "10-12-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL COTILLO",
+            "referee": ""
+          },
+          {
+            "home": "INTER FUERTEVENTURA, C.D.",
+            "away": "CORRALEJO, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "10:00",
+            "venue": "VICENTE CARREÑO",
+            "referee": ""
+          },
+          {
+            "home": "VILLAVERDE NORTE, S.D. \"A\"",
+            "away": "35660 CORRALEJO, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL VILLAVERDE",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "VILLAVERDE NORTE, S.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"A\"",
+            "away": "OLIVA, C.D. LA",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "13-12-2026",
+            "time": "10:00",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "20-12-2026",
+        "matches": [
+          {
+            "home": "EURO DE LAJARES, C.D.",
+            "away": "INTER FUERTEVENTURA, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "17-12-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL LAJARES",
+            "referee": ""
+          },
+          {
+            "home": "35660 CORRALEJO, C.D.",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "OLIVA, C.D. LA",
+            "away": "COTILLO, C.D. EL",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-12-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL LA OLIVA",
+            "referee": ""
+          },
+          {
+            "home": "VILLAVERDE NORTE, S.D. \"B\"",
+            "away": "CORRALEJO, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-12-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL VILLAVERDE",
+            "referee": ""
+          },
+          {
+            "home": "CORRALEJO, C.D. \"B\"",
+            "away": "VILLAVERDE NORTE, S.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-12-2026",
+            "time": "10:00",
+            "venue": "JONATHAN SESMA F8",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "54977017",
+    "competition_name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+    "cat": "benjamin",
+    "island": "fuerteventura",
+    "phase": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+    "group_id": "55194142",
+    "group_name": "GRUPO 2",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "25-10-2026",
+        "matches": [
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "away": "TETIR C.F, UNION \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+            "referee": ""
+          },
+          {
+            "home": "35600, C D \"B\"",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "away": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "10:30",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "FUERTEKLUB, C.D.",
+            "away": "HERBANIA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "12:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "35600, C.D. \"C\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "01-11-2026",
+        "matches": [
+          {
+            "home": "TETIR C.F, UNION \"B\"",
+            "away": "FUERTEKLUB, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "30-10-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE TETIR",
+            "referee": ""
+          },
+          {
+            "home": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "away": "35600, C D \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "30-10-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL EL MATORRAL (F8)",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"A\"",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "35600, C.D. \"C\"",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "08-11-2026",
+        "matches": [
+          {
+            "home": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "away": "TETIR C.F, UNION \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "06-11-2026",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "away": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "35600, C D \"B\"",
+            "away": "HERBANIA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "09:00",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "FUERTEKLUB, C.D.",
+            "away": "35600, C.D. \"C\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "12:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "15-11-2026",
+        "matches": [
+          {
+            "home": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TETIR C.F, UNION \"B\"",
+            "away": "35600, C D \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "13-11-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE TETIR",
+            "referee": ""
+          },
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "away": "FUERTEKLUB, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"A\"",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "35600, C.D. \"C\"",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "22-11-2026",
+        "matches": [
+          {
+            "home": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "20-11-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "away": "HERBANIA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "20-11-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL EL MATORRAL (F8)",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "away": "TETIR C.F, UNION \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "21-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "35600, C D \"B\"",
+            "away": "35600, C.D. \"C\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "21-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "FUERTEKLUB, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "29-11-2026",
+        "matches": [
+          {
+            "home": "TETIR C.F, UNION \"B\"",
+            "away": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "27-11-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE TETIR",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "FUERTEKLUB, C.D.",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "28-11-2026",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "away": "35600, C D \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "28-11-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+            "referee": ""
+          },
+          {
+            "home": "35600, C.D. \"C\"",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "28-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "06-12-2026",
+        "matches": [
+          {
+            "home": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "away": "35600, C.D. \"C\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "04-12-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL EL MATORRAL (F8)",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"A\"",
+            "away": "TETIR C.F, UNION \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "09:00",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "35600, C D \"B\"",
+            "away": "FUERTEKLUB, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "13-12-2026",
+        "matches": [
+          {
+            "home": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "away": "35600, C D \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "11-12-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "away": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+            "referee": ""
+          },
+          {
+            "home": "35600, C.D. \"C\"",
+            "away": "HERBANIA, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "FUERTEKLUB, C.D.",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "10:30",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "TETIR C.F, UNION \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "20-12-2026",
+        "matches": [
+          {
+            "home": "TETIR C.F, UNION \"B\"",
+            "away": "35600, C.D. \"C\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "18-12-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE TETIR",
+            "referee": ""
+          },
+          {
+            "home": "CHARCO ATLETICO, C.D. EL \"A\"",
+            "away": "FUERTEKLUB, C.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "18-12-2026",
+            "time": "18:00",
+            "venue": "CAMPO MUNICIPAL EL MATORRAL (F8)",
+            "referee": ""
+          },
+          {
+            "home": "35600, C D \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"A\"",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-12-2026",
+            "time": "09:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"A\"",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-12-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "54977017",
+    "competition_name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+    "cat": "benjamin",
+    "island": "fuerteventura",
+    "phase": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+    "group_id": "55194151",
+    "group_name": "GRUPO 3",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "25-10-2026",
+        "matches": [
+          {
+            "home": "35600, C.D. \"A\"",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "09:00",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "away": "TAMASITE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "BREÑAMEN ,C.D. \"B\"",
+            "away": "TEGUINTE, C.D",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE LAS PLAYITAS",
+            "referee": ""
+          },
+          {
+            "home": "TETIR C.F. UNION \"A\"",
+            "away": "HERBANIA, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE TETIR",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "01-11-2026",
+        "matches": [
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"B\"",
+            "away": "35600, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "09:00",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2",
+            "referee": ""
+          },
+          {
+            "home": "TEGUINTE, C.D",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "away": "BREÑAMEN ,C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "11:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "TAMASITE, C.D. \"A\"",
+            "away": "TETIR C.F. UNION \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "01-11-2026",
+            "time": "09:45",
+            "venue": "MUNICIPAL DE GRAN TARAJAL",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "08-11-2026",
+        "matches": [
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "away": "HERBANIA, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "06-11-2026",
+            "time": "18:00",
+            "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+            "referee": ""
+          },
+          {
+            "home": "TETIR C.F. UNION \"A\"",
+            "away": "TEGUINTE, C.D",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE TETIR",
+            "referee": ""
+          },
+          {
+            "home": "35600, C.D. \"A\"",
+            "away": "TAMASITE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "10:30",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "BREÑAMEN ,C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "15-11-2026",
+        "matches": [
+          {
+            "home": "HERBANIA, C.D. \"B\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "BREÑAMEN ,C.D. \"B\"",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE LAS PLAYITAS",
+            "referee": ""
+          },
+          {
+            "home": "TAMASITE, C.D. \"A\"",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "09:45",
+            "venue": "MUNICIPAL DE GRAN TARAJAL",
+            "referee": ""
+          },
+          {
+            "home": "TEGUINTE, C.D",
+            "away": "35600, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "away": "TETIR C.F. UNION \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "11:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "22-11-2026",
+        "matches": [
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "away": "TEGUINTE, C.D",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "20-11-2026",
+            "time": "18:00",
+            "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+            "referee": ""
+          },
+          {
+            "home": "TETIR C.F. UNION \"A\"",
+            "away": "BREÑAMEN ,C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "21-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE TETIR",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"B\"",
+            "away": "TAMASITE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "21-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2",
+            "referee": ""
+          },
+          {
+            "home": "35600, C.D. \"A\"",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "21-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "6",
+        "date": "29-11-2026",
+        "matches": [
+          {
+            "home": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "away": "TETIR C.F. UNION \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "27-11-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "BREÑAMEN ,C.D. \"B\"",
+            "away": "35600, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "28-11-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE LAS PLAYITAS",
+            "referee": ""
+          },
+          {
+            "home": "TAMASITE, C.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "TEGUINTE, C.D",
+            "away": "HERBANIA, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "28-11-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "28-11-2026",
+            "time": "10:30",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "7",
+        "date": "06-12-2026",
+        "matches": [
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "away": "BREÑAMEN ,C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "04-12-2026",
+            "time": "18:00",
+            "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+            "referee": ""
+          },
+          {
+            "home": "TAMASITE, C.D. \"A\"",
+            "away": "TEGUINTE, C.D",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "09:45",
+            "venue": "MUNICIPAL DE GRAN TARAJAL",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"B\"",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2",
+            "referee": ""
+          },
+          {
+            "home": "35600, C.D. \"A\"",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "05-12-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "TETIR C.F. UNION \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "8",
+        "date": "13-12-2026",
+        "matches": [
+          {
+            "home": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "away": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "09:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "BREÑAMEN ,C.D. \"B\"",
+            "away": "HERBANIA, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE LAS PLAYITAS",
+            "referee": ""
+          },
+          {
+            "home": "TETIR C.F. UNION \"A\"",
+            "away": "35600, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE TETIR",
+            "referee": ""
+          },
+          {
+            "home": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "away": "TAMASITE, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "12-12-2026",
+            "time": "12:00",
+            "venue": "MUNICIPAL DE FABELO F8",
+            "referee": ""
+          },
+          {
+            "home": "Descansa",
+            "away": "TEGUINTE, C.D",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "9",
+        "date": "20-12-2026",
+        "matches": [
+          {
+            "home": "BALOMPEDICA ISLA TRANQUILA, C.D. ATLETICO \"A\"",
+            "away": "TETIR C.F. UNION \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "18-12-2026",
+            "time": "18:00",
+            "venue": "MUNICIPAL VALLES DE ORTEGA F8",
+            "referee": ""
+          },
+          {
+            "home": "35600, C.D. \"A\"",
+            "away": "Descansa",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "",
+            "time": "",
+            "venue": "",
+            "referee": ""
+          },
+          {
+            "home": "HERBANIA, C.D. \"B\"",
+            "away": "PEÑA DE LA AMISTAD, C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-12-2026",
+            "time": "09:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 1",
+            "referee": ""
+          },
+          {
+            "home": "TAMASITE, C.D. \"A\"",
+            "away": "BREÑAMEN ,C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-12-2026",
+            "time": "09:45",
+            "venue": "MUNICIPAL DE GRAN TARAJAL",
+            "referee": ""
+          },
+          {
+            "home": "TEGUINTE, C.D",
+            "away": "ATISACHI DE FUERTEVENTURA C.F., C.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "19-12-2026",
+            "time": "10:30",
+            "venue": "CENTRO DEPORTIVO INSULAR FRANCISCO MELIÁN 2",
+            "referee": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "competition_id": "54977017",
+    "competition_name": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+    "cat": "benjamin",
+    "island": "fuerteventura",
+    "phase": "LIGA BENJAMIN F-7 DE FUERTEVENTURA 1ª FASE",
+    "group_id": "55194156",
+    "group_name": "GRUPO 4",
+    "standings": [],
+    "jornadas": [
+      {
+        "num": "1",
+        "date": "25-10-2026",
+        "matches": [
+          {
+            "home": "PLAYAS DE SOTAVENTO, U.D. \"B\"",
+            "away": "HUBARA, CD.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "23-10-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE MORROJABLE",
+            "referee": ""
+          },
+          {
+            "home": "COSTA CALMA PLAYAS PARAISO, U.D.",
+            "away": "TARAJALEJO, U.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "23-10-2026",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE COSTA CALMA",
+            "referee": ""
+          },
+          {
+            "home": "JANDIA, U.D.",
+            "away": "PLAYAS DE SOTAVENTO, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE MORROJABLE",
+            "referee": ""
+          },
+          {
+            "home": "TARAJALEJO, U.D. \"B\"",
+            "away": "TAMASITE, C.D \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE TUINEJE",
+            "referee": ""
+          },
+          {
+            "home": "LAJITA, C.D. LA",
+            "away": "BREÑAMEN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "24-10-2026",
+            "time": "16:30",
+            "venue": "MUNICIPAL DE COSTA CALMA",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "2",
+        "date": "01-11-2026",
+        "matches": [
+          {
+            "home": "BREÑAMEN, C.D. \"A\"",
+            "away": "TARAJALEJO, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE LAS PLAYITAS",
+            "referee": ""
+          },
+          {
+            "home": "PLAYAS DE SOTAVENTO, U.D. \"A\"",
+            "away": "PLAYAS DE SOTAVENTO, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE MORROJABLE",
+            "referee": ""
+          },
+          {
+            "home": "TAMASITE, C.D \"B\"",
+            "away": "COSTA CALMA PLAYAS PARAISO, U.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE GRAN TARAJAL",
+            "referee": ""
+          },
+          {
+            "home": "HUBARA, CD.",
+            "away": "LAJITA, C.D. LA",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE COSTA CALMA",
+            "referee": ""
+          },
+          {
+            "home": "TARAJALEJO, U.D.",
+            "away": "JANDIA, U.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "31-10-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE TUINEJE",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "3",
+        "date": "08-11-2026",
+        "matches": [
+          {
+            "home": "BREÑAMEN, C.D. \"A\"",
+            "away": "HUBARA, CD.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "06-11-2026",
+            "time": "17:00",
+            "venue": "MUNICIPAL DE LAS PLAYITAS",
+            "referee": ""
+          },
+          {
+            "home": "PLAYAS DE SOTAVENTO, U.D. \"B\"",
+            "away": "TARAJALEJO, U.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE MORROJABLE",
+            "referee": ""
+          },
+          {
+            "home": "TARAJALEJO, U.D. \"B\"",
+            "away": "COSTA CALMA PLAYAS PARAISO, U.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE TUINEJE",
+            "referee": ""
+          },
+          {
+            "home": "LAJITA, C.D. LA",
+            "away": "PLAYAS DE SOTAVENTO, U.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "07-11-2026",
+            "time": "16:30",
+            "venue": "MUNICIPAL DE COSTA CALMA",
+            "referee": ""
+          },
+          {
+            "home": "JANDIA, U.D.",
+            "away": "TAMASITE, C.D \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "08-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE MORROJABLE",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "4",
+        "date": "15-11-2026",
+        "matches": [
+          {
+            "home": "PLAYAS DE SOTAVENTO, U.D. \"A\"",
+            "away": "BREÑAMEN, C.D. \"A\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "13-11-2026",
+            "time": "17:30",
+            "venue": "MUNICIPAL DE MORROJABLE",
+            "referee": ""
+          },
+          {
+            "home": "COSTA CALMA PLAYAS PARAISO, U.D.",
+            "away": "JANDIA, U.D.",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "13-11-2026",
+            "time": "18:00",
+            "venue": "MUNICIPAL DE COSTA CALMA",
+            "referee": ""
+          },
+          {
+            "home": "TAMASITE, C.D \"B\"",
+            "away": "PLAYAS DE SOTAVENTO, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "09:30",
+            "venue": "MUNICIPAL DE GRAN TARAJAL",
+            "referee": ""
+          },
+          {
+            "home": "HUBARA, CD.",
+            "away": "TARAJALEJO, U.D. \"B\"",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE COSTA CALMA",
+            "referee": ""
+          },
+          {
+            "home": "TARAJALEJO, U.D.",
+            "away": "LAJITA, C.D. LA",
+            "hs": null,
+            "as": null,
+            "fiflp_acta": null,
+            "date": "14-11-2026",
+            "time": "10:00",
+            "venue": "MUNICIPAL DE TUINEJE",
+            "referee": ""
+          }
+        ]
+      },
+      {
+        "num": "5",
+        "date": "22-11-2026",
+        "matches": []
+      }
+    ]
   }
 ]

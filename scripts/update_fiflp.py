@@ -53,7 +53,8 @@ MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se pue
 # paso del bot queda en ≤ ~32 min y el job en 29-33, ~35 en el peor caso, sobre los 45 de update.yml.
 DEADLINE_SECONDS = 25 * 60
 # Lo que la primera pasada deja siempre para la segunda (FIFLP_RESERVE_MIN): las actas y los
-# goleadores de los grupos prioritarios, que van los primeros, y los goleadores del turno y del margen.
+# goleadores de los grupos prioritarios, que se leen justo tras su calendario (lo que gastan corre el
+# plazo de la primera pasada de los demás: run_passes), y los goleadores del turno y del margen.
 RESERVE_SECONDS = 6 * 60
 CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada más vieja: cerrado
 # Rotación SIN ESTADO (plan_groups): el orden de cada pasada sale solo de su número (run_number), no
@@ -1160,18 +1161,27 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     1. clasificación y jornadas de cada grupo (todas las jugadas en la primera
        pasada de un grupo recién activado, fiflp_full_pending), mientras quede
        plazo y la reserva (reserve_seconds) para la segunda; lo que no cabe queda
-       para otra pasada, que lee primero otro turno (rotación sin estado);
-    2. con lo que quede: las actas y los goleadores de los prioritarios; el
-       directorio de campos y las fichas de los equipos que faltan; los goleadores
-       del turno y del margen (plan.turn); y las actas y los goleadores de los
-       demás, en el orden de la primera pasada (que rota: el turno de cada nivel,
-       primero).
-    Los grupos cerrados que descansan y los que no caben conservan su última
-    comprobación en data-health.json (source_health.carry): no son un error."""
+       para otra pasada, que lee primero otro turno (rotación sin estado). Los
+       prioritarios van los primeros y cada uno, si se lee bien, con sus actas y
+       sus goleadores justo después de su calendario: la federación frena tras
+       unas decenas de páginas y, en la segunda pasada, ya no servía los suyos.
+       Van a cuenta de la reserva (como mucho, toda): lo que gastan corre el
+       plazo de la primera pasada de los demás, que tienen el mismo tiempo que si
+       fueran en la segunda;
+    2. con lo que quede: las actas y los goleadores de los prioritarios que el
+       fin de la reserva cortó en la 1; el directorio de campos y las fichas de
+       los equipos que faltan; los goleadores del turno y del margen (plan.turn);
+       y las actas y los goleadores de los demás, en el orden de la primera
+       pasada (que rota: el turno de cada nivel, primero).
+    Si la federación deja de servir páginas (F.blocked), no se le pide nada más,
+    esté donde esté (también en las actas de los prioritarios). Los grupos
+    cerrados que descansan y los que no caben conservan su última comprobación en
+    data-health.json (source_health.carry): no son un error."""
     start = clock()
     if deadline is None:
         deadline = start + (budget_seconds() if deadline_seconds is None else deadline_seconds)
-    first_deadline = deadline - min(reserve_seconds(), max(0.0, deadline - start) / 4)
+    reserve = min(reserve_seconds(), max(0.0, deadline - start) / 4)
+    first_deadline = deadline - reserve
     checks = source_health.previous_groups() if checks is None else checks
     number = run_number() if number is None else number
     now = now or datetime.now(timezone.utc)
@@ -1186,8 +1196,53 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     blocked = lambda: bool(getattr(F, "blocked", False))
     full = full_read_pending(conn)
     results, stamps, deferred = {}, {}, []
+    # Actas y goleadores: MAX_ACTAS_PER_RUN actas en toda la pasada (las de los prioritarios, las primeras);
+    # cut, los grupos que el plazo o la federación no dejaron acabar.
+    cut, scored, budget = [], set(), MAX_ACTAS_PER_RUN
+
+    def note(code, notes):
+        if notes:
+            print(f"  [{code}] " + ", ".join(notes))
+            results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
+
+    def scorers(group_id, code, url, notes):
+        try:
+            n = update_goleadores(page, F, conn, group_id, url)
+            if n:
+                notes.append(f"{n} goleadores")
+        except Exception as e:
+            conn.rollback()
+            notes.append(f"goleadores: {e}")
+        scored.add(code)
+
+    def actas_and_scorers(group_id, code, url, until=None):
+        """Las actas y los goleadores de un grupo (si no se leyeron ya) hasta `until` (por defecto, el
+        plazo); cut: los que el plazo o la federación no dejaron acabar."""
+        nonlocal budget
+        until = deadline if until is None else until
+        if clock() > until or blocked():
+            cut.append(code)
+            return
+        notes = []
+        try:
+            done, read = import_actas(page, F, conn, group_id, budget, until)
+            budget -= read
+            if read:
+                notes.append(f"{done}/{read} actas")
+        except Exception as e:
+            conn.rollback()
+            notes.append(f"actas: {e}")
+        if clock() > until or blocked():    # cortada en las actas
+            cut.append(code)
+        elif code not in scored:
+            scorers(group_id, code, url, notes)
+        note(code, notes)
+
+    # Lo que llevan las actas y los goleadores de los prioritarios (segundos y páginas), a cuenta de la
+    # reserva: corre el plazo de la primera pasada, que sigue teniendo el mismo tiempo para los demás.
+    spent, spent_pages = 0.0, 0
     for group_id, code, url in plan.order:
-        if clock() > first_deadline or blocked():
+        if clock() > min(deadline, first_deadline + spent) or blocked():
             deferred.append((group_id, code, url))
             continue
         print(f"  [{code}]" + (" (primera pasada: todas las jornadas)" if group_id in full else ""), flush=True)
@@ -1205,10 +1260,23 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
             status, msg = "error", e
             print(f"    ! error: {e}")
         results[code] = [status, msg]
-    first_pass = clock() - start
+        # Las actas y los goleadores de un prioritario, justo después de su calendario y antes que los demás
+        # grupos: la federación frena tras unas decenas de páginas (octubre de 2026) y en la segunda pasada
+        # ya no los servía. Con lo que quede de la reserva; si se acaba, siguen en la segunda (again).
+        if code in plan.priority and status == "ok":
+            began, pages_before = clock(), getattr(F, "pages", 0)
+            actas_and_scorers(group_id, code, url, until=min(deadline, began + reserve - spent))
+            spent += clock() - began
+            spent_pages += getattr(F, "pages", 0) - pages_before
+    again = [g for g in plan.order if g[1] in cut]     # prioritarios sin acabar: en la segunda, los primeros
+    cut.clear()
+    first_pass = clock() - start - spent               # sin las actas ni los goleadores de los prioritarios
     pages = getattr(F, "pages", None)
+    pages = pages - spent_pages if pages else pages
     print(f"  Primera pasada: {len(results)} grupos en {first_pass / 60:.1f} min"
-          + (f" ({pages} páginas, {first_pass / pages:.1f} s cada una)" if pages else ""), flush=True)
+          + (f" ({pages} páginas, {first_pass / pages:.1f} s cada una)" if pages else "")
+          + (f", más {spent / 60:.1f} de actas y goleadores de los prioritarios" if round(spent / 60, 1) else ""),
+          flush=True)
     if blocked():
         print("  ! la federación no sirve páginas: nada más en esta pasada", flush=True)
     if deferred:
@@ -1221,56 +1289,13 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         print(f"  ! competiciones: {e}")
     # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
     # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
-    # En el orden de la primera (los prioritarios, después el turno de cada nivel): rota con ella, sin
-    # estado. Las actas pendientes salen de la base (pending_actas), que se sube cuando se importa una.
-    print("\n  Actas y goleadores", flush=True)
+    # En el orden de la primera (los prioritarios que no acabaron, después el turno de cada nivel): rota con
+    # ella, sin estado. Las actas pendientes salen de la base (pending_actas), que se sube cuando se importa una.
+    print("\n  Actas y goleadores" + (" de los demás" if plan.priority and not again else ""), flush=True)
     refreshed = [g for g in plan.order if g[1] in results]
     second = [g for g in refreshed if results[g[1]][0] == "ok"]
-    cut = []
-    budget = MAX_ACTAS_PER_RUN
-
-    scored = set()
-
-    def note(code, notes):
-        if notes:
-            print(f"  [{code}] " + ", ".join(notes))
-            results[code][1] = f"{results[code][1]}; " + ", ".join(notes)
-
-    def scorers(group_id, code, url, notes):
-        try:
-            n = update_goleadores(page, F, conn, group_id, url)
-            if n:
-                notes.append(f"{n} goleadores")
-        except Exception as e:
-            conn.rollback()
-            notes.append(f"goleadores: {e}")
-        scored.add(code)
-
-    def actas_and_scorers(group_id, code, url):
-        """Las actas (MAX_ACTAS_PER_RUN en toda la pasada) y los goleadores de un grupo (si no se leyeron
-        ya); cut: los que el plazo no dejó acabar."""
-        nonlocal budget
-        if clock() > deadline or blocked():
-            cut.append(code)
-            return
-        notes = []
-        try:
-            done, read = import_actas(page, F, conn, group_id, budget, deadline)
-            budget -= read
-            if read:
-                notes.append(f"{done}/{read} actas")
-        except Exception as e:
-            conn.rollback()
-            notes.append(f"actas: {e}")
-        if clock() > deadline or blocked():    # cortada en las actas
-            cut.append(code)
-        elif code not in scored:
-            scorers(group_id, code, url, notes)
-        note(code, notes)
-
-    for group in second:
-        if group[1] in plan.priority:
-            actas_and_scorers(*group)
+    for group in again:
+        actas_and_scorers(*group)
     # Entre los prioritarios y los demás (si el plazo corta la segunda pasada en todas, se leen igual;
     # solo hay algo que leer con grupos o equipos nuevos): el directorio de campos, si falta alguno de
     # los de la temporada, y la ficha (equipación y campo) de los equipos que aún no la tienen.

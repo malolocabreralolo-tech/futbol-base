@@ -224,6 +224,7 @@ def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=
 
     detail = write_standings_detail(conn, gid, [(names.get(clean_team_name(r["team"])), r) for r in rows
                                                  if r.get("home")])
+    official_goals_for(conn, gid, [(names.get(clean_team_name(r["team"])), r) for r in rows if r.get("team")], log)
 
     cards = 0
     for t in directory:
@@ -266,6 +267,34 @@ def write_group(conn, season_id, gid, det, entry, archived, log=print, calendar=
         if current:
             conn.execute("UPDATE groups SET current_jornada=? WHERE id=?", (current, gid))
     return detail, cards, new
+
+
+def official_goals_for(conn, gid, rows, log=print):
+    """Los goles a favor de la clasificación guardada que no cuadran consigo misma (la suma de GF de un
+    grupo no es la de GC), con los de la federación (`rows`: [(nombre de la base, fila de su clasificación)])
+    en las filas en las que coinciden partidos, puntos y goles en contra: la tabla del portal de PG2 de
+    2025-26 daba 10 goles de más a Santa Brígida (78; el calendario y la federación, 68) y a Las Huesas
+    (74 por 64). Solo si el grupo queda más cerca de cuadrar; GF y DF, nada más. Idempotente: con la tabla
+    ya cuadrada, o con los GF de la federación, no cambia nada. Devuelve cuántas filas cambió."""
+    stored = conn.execute("""SELECT st.team_id, t.name, st.played, st.points, st.gf, st.gc FROM standings st
+                             JOIN teams t ON t.id=st.team_id WHERE st.group_id=?""", (gid,)).fetchall()
+    if not stored or any(r[4] is None or r[5] is None for r in stored):
+        return 0
+    gap = sum(r[4] for r in stored) - sum(r[5] for r in stored)
+    if not gap:
+        return 0
+    fed = {name: r for name, r in rows if name}
+    fixes = []
+    for tid, name, played, points, gf, gc in stored:
+        r = fed.get(name)
+        if r and r.get("gf") is not None and r["gf"] != gf and (r.get("j"), r.get("pts"), r.get("gc")) == (played, points, gc):
+            fixes.append((tid, name, gf, r["gf"], gc))
+    if not fixes or abs(gap + sum(new - old for _, _, old, new, _ in fixes)) >= abs(gap):
+        return 0
+    for tid, name, old, new, gc in fixes:
+        conn.execute("UPDATE standings SET gf=?, gd=? WHERE group_id=? AND team_id=?", (new, new - gc, gid, tid))
+        log(f"    grupo {gid}: {name} con {new} goles a favor, como la federación (la tabla guardada decía {old})")
+    return len(fixes)
 
 
 def _acta_scores(path):

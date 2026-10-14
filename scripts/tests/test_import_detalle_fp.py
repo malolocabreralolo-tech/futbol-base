@@ -81,6 +81,33 @@ def test_detalle_casa_fuera_y_ficha_de_cada_equipo(tmp_path):
     assert D.import_changed_detalle(conn, folder=str(tmp_path), log=lambda *a: None) == {}
 
 
+def test_los_goles_a_favor_que_la_tabla_guardada_no_cuadra_son_los_de_la_federacion(tmp_path):
+    """PG2 de 2025-26: la tabla del portal daba 10 goles a favor de más a Santa Brígida y a Las Huesas (la
+    suma de GF del grupo no era la de GC). Con el detalle, sus GF y DF son los de la federación en las filas
+    con los mismos partidos, puntos y goles en contra; una tabla que cuadra no se toca, ni una fila que no
+    coincide con la de la federación."""
+    conn, rows = base_2526()
+    gf = lambda name: conn.execute("""SELECT gf, gd FROM standings st JOIN teams t ON t.id=st.team_id
+                                      WHERE t.name=?""", (name,)).fetchone()  # noqa: E731
+    official = {BASE_NAMES[r["team"]]: (r["gf"], r["gf"] - r["gc"]) for r in rows}
+    conn.execute("UPDATE standings SET gf=gf+10, gd=gd+10 WHERE team_id IN (SELECT id FROM teams WHERE name IN ('Heidelberg', 'Simusetti'))")
+    # Corazón Mª: GF y GC de más (la fila no coincide con la de la federación): se queda como está.
+    conn.execute("UPDATE standings SET gf=gf+3, gc=gc+1, gd=gd+2 WHERE team_id=(SELECT id FROM teams WHERE name='Corazón Mª')")
+    corazon = gf("Corazón Mª")
+    (tmp_path / "fiflp_detalle_2025-2026_raw.json").write_text(json.dumps(detalle_raw(rows)), encoding="utf-8")
+    logs = []
+    D.import_changed_detalle(conn, folder=str(tmp_path), log=logs.append)
+    assert gf("Heidelberg") == official["Heidelberg"] and gf("Simusetti") == official["Simusetti"]
+    assert gf("Corazón Mª") == corazon
+    assert sum("como la federación" in line for line in logs) == 2
+    assert D.official_goals_for(conn, 1, [(BASE_NAMES[r["team"]], r) for r in rows], log=logs.append) == 0
+    # Una tabla que cuadra (la suma de GF es la de GC) no se toca aunque un GF no sea el de la federación.
+    conn, rows = base_2526()
+    conn.execute("UPDATE standings SET gf=gf+4, gd=gd+4 WHERE team_id=(SELECT id FROM teams WHERE name='Heidelberg')")
+    conn.execute("UPDATE standings SET gc=gc+4, gd=gd-4 WHERE team_id=(SELECT id FROM teams WHERE name='Simusetti')")
+    assert D.official_goals_for(conn, 1, [(BASE_NAMES[r["team"]], r) for r in rows], log=logs.append) == 0
+
+
 def test_calendario_de_un_grupo_sin_partidos(tmp_path):
     conn, rows = base_2526()
     jornadas = {"Jornada 1": [

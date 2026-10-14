@@ -545,7 +545,7 @@ def test_the_retired_atletico_fomento_of_pg2_2025_26_keeps_its_name_and_its_cale
     """«CD Batán» en la tabla del portal de PG2 de 2025-26 es el Atlético Fomento que se retiró ('ATLETICO
     FOMENTO, CLUB' en la federación, con sus 28 derrotas 0-3 y fuera de su clasificación). Las pasadas del
     bot (fix_positions y, como cambia la tabla, el detalle de 2025-26) lo dejan con su nombre, con sus
-    partidos del calendario de la federación y sin pasar la línea base del desvío; otra pasada no cambia
+    partidos del calendario de la federación y con el grupo cuadrado (desvío 0); otra pasada no cambia
     nada. Sobre una copia de la base del repo."""
     import shutil
     import pytest
@@ -575,4 +575,9 @@ def test_the_retired_atletico_fomento_of_pg2_2025_26_keeps_its_name_and_its_cale
         assert not conn.execute("""SELECT 1 FROM standings st JOIN teams t ON t.id=st.team_id
                                    WHERE st.group_id=? AND t.name='CD Batán'""", (gid,)).fetchone()
     assert GR.fix_positions(conn, log=quiet) == 0
-    assert group_deviation(conn, gid)["dev"] <= load_baseline()["2025-2026|PREBENJAMIN|PG2"]
+    # La tabla del portal daba 10 goles a favor de más a Santa Brígida y a Las Huesas: el detalle les pone
+    # los de la federación (68 y 64, los del calendario) y el grupo cuadra, sin subir la línea base.
+    assert conn.execute("""SELECT t.name, st.gf, st.gd FROM standings st JOIN teams t ON t.id=st.team_id
+                           WHERE st.group_id=? AND t.name IN ('Santa Brígida', 'Las Huesas') ORDER BY t.name""",
+                        (gid,)).fetchall() == [("Las Huesas", 64, -78), ("Santa Brígida", 68, -98)]
+    assert group_deviation(conn, gid)["dev"] == 0 == load_baseline()["2025-2026|PREBENJAMIN|PG2"]

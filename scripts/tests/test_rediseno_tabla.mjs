@@ -8,7 +8,7 @@ import { fixture } from './fixtures/rediseno/load.mjs';
 import { ctxFor, datasetsFor, pastSeasonRaw, cssRules, PORTAL_SEASON } from './fixtures/rediseno/screens.mjs';
 import { screen, homeAwayCoverage } from '../../src/screen-tabla.js';
 import { groupScorers } from '../../src/state.js';
-import { lastResults, homeAwayTable, sourceInfo } from '../../src/model.js';
+import { buildGroup, lastResults, homeAwayTable, sourceInfo } from '../../src/model.js';
 import { standingsTable } from '../../src/ui.js';
 
 // PG2, goleadores: los 12 primeros de GOL_PREBENJ (data-goleadores.js, 23/09/2026), copia literal.
@@ -103,11 +103,38 @@ test('Casa y Fuera: homeAwayTable, la fila propia y la nota de cobertura de Bat�
 test('cobertura: nada en PFV2; con resultados que faltan, las dos cifras y los retirados', () => {
   assert.equal(homeAwayCoverage(ctxFor('tabla', {}).model.group(PORTAL_SEASON, 'PFV2')), null);
   assert.doesNotMatch(render({ g: 'PFV2', v: 'casa' }), /class="notice"/);
-  assert.deepEqual(homeAwayCoverage(pg2()), { calendar: 182, official: 210, vsRetired: 28, retired: ['CD Batán'], exact: true });
+  assert.deepEqual(homeAwayCoverage(pg2()), { calendar: 182, official: 210, vsRetired: 28, retired: ['CD Batán'], exact: true, absent: true });
   // Clasificación final y calendario del 1 de marzo (currentAt): faltan resultados.
   const out = render({ g: 'PG2', v: 'fuera' }, { today: '2026-03-01', datasets: datasetsFor({ current: currentAt('2026-03-01') }) });
   assert.equal(text(out.match(/<p class="notice">.*?<\/p>/)[0]),
     'Con los 101 partidos con resultado del calendario; la clasificación oficial cuenta 210, 28 de ellos contra CD Batán (retirado).');
+});
+
+test('cobertura: CD Batán con sus 28 derrotas 0-3 en el calendario (PG2 tras completarlo con el de la federación)', () => {
+  const current = structuredClone(fixture('current-2025-2026'));
+  const teams = current.prebenjamin.find(g => g.id === 'PG2').standings.map(r => r[1]).filter(t => t !== 'CD Batán');
+  current.history.PG2['Jornada 31'] = teams.flatMap(t => [['2026-06-14', 'CD Batán', t, 0, 3, null, '10:00', null],
+    ['2026-06-14', t, 'CD Batán', 3, 0, null, '10:00', null]]);
+  const o = { datasets: datasetsFor({ golPrebenj: GOL_PG2, current }) };
+  const group = ctxFor('tabla', {}, o).model.group(PORTAL_SEASON, 'PG2');
+  assert.deepEqual(homeAwayCoverage(group), { calendar: 182, official: 210, vsRetired: 28, retired: ['CD Batán'], exact: true, absent: false });
+  assert.equal(text(render({ g: 'PG2', v: 'casa' }, o).match(/<p class="notice">.*?<\/p>/)[0]),
+    'No cuenta los 28 partidos contra CD Batán (retirado).');
+});
+
+test('cobertura: un retirado que la tabla ya no lista, con sus 0-1 en el calendario (AL15 de 2026-27)', () => {
+  const row = (pos, team, pj, g, p, gf, gc) => [pos, team, 3 * g, pj, g, 0, p, gf, gc, gf - gc];
+  const m = (home, away, hs, as) => ['05-10-2024', home, away, hs, as, null, '10:00', 'X'];
+  const jornadas = { 1: [m('Alfa', 'Gamma', 4, 0), m('Retirado B', 'Beta', 0, 1)],
+    2: [m('Beta', 'Alfa', 2, 0), m('Gamma', 'Retirado B', 1, 0)], 3: [m('Retirado B', 'Alfa', 0, 1)] };
+  const build = standings => buildGroup({ id: 'X1', name: 'Grupo 1', phase: 'Primera Fase GC', island: 'grancanaria',
+    standings, jornadas }, { season: '2024-2025', cat: 'benjamin' });
+  // La tabla cuenta la victoria administrativa de cada rival (J y goles) y no tiene fila del retirado.
+  const counted = build([row(1, 'Alfa', 3, 2, 1, 5, 2), row(2, 'Beta', 2, 2, 0, 3, 0), row(3, 'Gamma', 2, 1, 1, 1, 4)]);
+  assert.deepEqual(homeAwayCoverage(counted), { calendar: 2, official: 5, vsRetired: 3, retired: ['Retirado B'], exact: true, absent: false });
+  // Si no los cuenta (los anula), el calendario sin el retirado cuadra con la tabla.
+  const annulled = build([row(1, 'Alfa', 2, 1, 1, 4, 2), row(2, 'Beta', 1, 1, 0, 2, 0), row(3, 'Gamma', 1, 0, 1, 0, 4)]);
+  assert.equal(homeAwayCoverage(annulled), null);
 });
 
 test('goleadores del grupo: los 10 primeros con escudo, goles y PJ, y «ver todos»', () => {

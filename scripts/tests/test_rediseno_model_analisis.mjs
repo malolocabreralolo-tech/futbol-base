@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { currentAt } from './fixtures/rediseno/simulate.mjs';
 import {
-  buildCups, buildSeason, matchState, retiredTeams, groupFinished, defaultRound,
+  buildCups, buildGroup, buildSeason, matchState, retiredTeams, groupFinished, defaultRound,
   roundNotice, coverageNote, homeAwayTable, seasonSummary, lastResults, bestStreaks, teamFixtures, headToHead,
 } from '../../src/model.js';
 
@@ -70,6 +70,69 @@ test('retiredTeams: con la clasificación vacía o sin resultados no hay retirad
   assert.deepEqual([...retiredTeams({ ...pg2, standings: [] })], []);
   const blank = withMatches(group('PFV2'), m => ({ ...m, hs: null, as: null }));
   assert.deepEqual([...retiredTeams(blank)], []);
+});
+
+// Un grupo de una temporada pasada con partidos en línea: [fecha, local, visitante, gl, gv, null, hora, campo].
+function inlineGroup(standings, jornadas, extra = {}) {
+  const row = (pos, team, pj, g, e, p, gf, gc) => [pos, team, 3 * g + e, pj, g, e, p, gf, gc, gf - gc];
+  return buildGroup({ id: 'X1', name: 'Grupo 1', phase: 'Primera Fase GC', island: 'grancanaria',
+    standings: standings.map((r, i) => row(i + 1, ...r)), jornadas, ...extra }, { season: '2024-2025', cat: 'benjamin' });
+}
+const match = (home, away, hs, as) => ['05-10-2024', home, away, hs, as, null, '10:00', 'X'];
+
+test('retiredTeams: del calendario y fuera de la tabla, sin haber marcado nunca (AL15 de 2026-27)', () => {
+  // La federación quita al retirado de su tabla y deja en el calendario sus 0-1 administrativos; la
+  // tabla oficial cuenta la victoria de cada rival.
+  const table = [['Alfa', 2, 2, 0, 0, 5, 0], ['Beta', 2, 1, 0, 1, 3, 4], ['Gamma', 1, 0, 0, 1, 0, 4]];
+  const jornadas = { 1: [match('Alfa', 'Gamma', 4, 0), match('Retirado B', 'Beta', 0, 1)],
+    2: [match('Beta', 'Alfa', 2, 0), match('Gamma', 'Retirado B', null, null)],
+    3: [match('Retirado B', 'Alfa', 0, 1), match('Gamma', 'Beta', null, null)] };
+  assert.deepEqual([...retiredTeams(inlineGroup(table, jornadas))], ['Retirado B']);
+  // Con un 0-3 también; el que marcó un gol o ganó un partido no es un retirado: está fuera de la
+  // tabla por otra cosa (un nombre distinto) y la web lo sigue enseñando.
+  const with3 = { ...jornadas, 1: [jornadas[1][0], match('Retirado B', 'Beta', 0, 3)] };
+  assert.deepEqual([...retiredTeams(inlineGroup(table, with3))], ['Retirado B']);
+  const scored = { ...jornadas, 1: [jornadas[1][0], match('Retirado B', 'Beta', 1, 3)] };
+  assert.deepEqual([...retiredTeams(inlineGroup(table, scored))], []);
+  const won = { ...jornadas, 3: [match('Retirado B', 'Alfa', 1, 0), jornadas[3][1]] };
+  assert.deepEqual([...retiredTeams(inlineGroup(table, won))], []);
+  const drew = { ...jornadas, 3: [match('Retirado B', 'Alfa', 0, 0), jornadas[3][1]] };
+  assert.deepEqual([...retiredTeams(inlineGroup(table, drew))], []);
+  // Sin tabla no hay con qué comparar.
+  assert.deepEqual([...retiredTeams(inlineGroup([], jornadas))], []);
+  // buildGroup no tiene fila que marcar.
+  assert.ok(inlineGroup(table, jornadas).standings.every(r => r.retired === false));
+});
+
+test('retiredTeams: de la tabla y del calendario, con cinco derrotas 0-1 o 0-3 y ninguna otra cosa', () => {
+  // La tabla del portal aún lo lista y el calendario de la federación trae sus resultados
+  // administrativos (Atlético Fomento en PG2 de 2025-26, tras corregir su nombre).
+  const rivals = ['Alfa', 'Beta', 'Gamma', 'Delta', 'Épsilon'];
+  const losses = (scores) => Object.fromEntries(scores.map(([gf, gc], i) => [i + 1, [i % 2
+    ? match(rivals[i], 'Retirado', gc, gf) : match('Retirado', rivals[i], gf, gc)]]));
+  const table = (pj, gf, gc, g = 0) => [...rivals.map(t => [t, 1, 1, 0, 0, 3, 0]), ['Retirado', pj, g, 0, pj - g, gf, gc]];
+  const admin = [[0, 3], [0, 3], [0, 1], [0, 3], [0, 3]];
+  const g = inlineGroup(table(5, 0, 13), losses(admin));
+  assert.deepEqual([...retiredTeams(g)], ['Retirado']);
+  assert.deepEqual(g.standings.filter(r => r.retired).map(r => r.team), ['Retirado']);
+  // Cuatro no bastan (una derrota 0-1 suelta es un resultado de verdad: la final de una copa).
+  assert.deepEqual([...retiredTeams(inlineGroup(table(4, 0, 10), losses(admin.slice(0, 4))))], []);
+  // Una derrota que no es administrativa (0-5), un gol a favor o una victoria en la tabla, tampoco.
+  assert.deepEqual([...retiredTeams(inlineGroup(table(5, 0, 15), losses([...admin.slice(0, 4), [0, 5]])))], []);
+  assert.deepEqual([...retiredTeams(inlineGroup(table(5, 1, 13), losses([...admin.slice(0, 4), [1, 3]])))], []);
+  assert.deepEqual([...retiredTeams(inlineGroup(table(5, 0, 13, 1), losses(admin)))], []);
+});
+
+test('retiredTeams: CD Batán sigue retirado en PG2 con sus 28 derrotas 0-3 en el calendario', () => {
+  // Como queda PG2 de 2025-26 cuando el detalle de la federación completa el calendario con los
+  // partidos del retirado (import_fiflp_detalle.complete_group): todos 0-3.
+  const pg2 = group('PG2');
+  const teams = pg2.standings.map(r => r.team).filter(t => t !== 'CD Batán');
+  const template = pg2.rounds[0].matches[0];
+  const extra = teams.flatMap((t, i) => [{ ...template, home: 'CD Batán', away: t, hs: 0, as: 3 },
+    { ...template, home: t, away: 'CD Batán', hs: 3, as: 0 }]);
+  const full = { ...pg2, rounds: pg2.rounds.map((r, i) => (i === 0 ? { ...r, matches: [...r.matches, ...extra] } : r)) };
+  assert.deepEqual([...retiredTeams(full)], ['CD Batán']);
 });
 
 test('buildGroup marca retired en la fila de la clasificación de cada retirado', () => {

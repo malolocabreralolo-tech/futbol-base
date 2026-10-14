@@ -498,36 +498,57 @@ function recordOf(results) {
   return rec;
 }
 
-/* Única definición de retirado (spec §5.3). «Grupo terminado» en la regla de
- * pj = 0 no puede depender de hoy (la firma no lo recibe): cuenta como
+/* Partidos con resultado que hacen falta para tomar por retirado a un equipo de la tabla que también
+ * está en el calendario (regla 3 de retiredTeams): una derrota 0-1 o 0-3 suelta es un resultado de
+ * verdad (la final de una Copa de Campeones); cinco seguidas sin marcar, no. */
+const ADMIN_LOSSES = 5;
+
+/* Única definición de retirado (spec §5.3). Es retirado:
+ * 1. el de la tabla que no está en el calendario, con J > 0 y sin ganar ni empatar (CD Batán en PG2 de
+ *    2025-26, de la tabla del portal), o con J = 0 en un grupo terminado;
+ * 2. el del calendario que no está en la tabla (la federación lo quita de su clasificación) y que no ha
+ *    competido: sin resultados o con todos sus partidos con resultado perdidos sin marcar, los 0-1 y
+ *    0-3 administrativos (AL15, AL20 y AL32 de 2026-27);
+ * 3. el de la tabla y el calendario sin ganar ni empatar y con al menos ADMIN_LOSSES partidos con
+ *    resultado, todos derrotas 0-1 o 0-3 (la tabla del portal lo lista y el calendario trae sus
+ *    resultados administrativos: Atlético Fomento en PG2 de 2025-26, los de 2013-14 y 2014-15).
+ * «Grupo terminado» en la regla de pj = 0 no puede depender de hoy (la firma no lo recibe): cuenta como
  * terminado el grupo cuya última jornada ya tiene algún resultado. */
 export function retiredTeams(group) {
   const rounds = group.rounds || [];
   const standings = group.standings || [];
   const inCalendar = new Set();
-  const withResult = new Set();
+  const results = new Map();     // partidos con resultado de cada equipo
+  const competed = new Set();    // con algún resultado que no es una derrota sin marcar
+  const notAdmin = new Set();    // con algún resultado que no es una derrota 0-1 o 0-3
   rounds.forEach(round => round.matches.forEach(m => {
     inCalendar.add(m.home);
     inCalendar.add(m.away);
-    if (playedMatch(m)) {
-      withResult.add(m.home);
-      withResult.add(m.away);
+    if (!playedMatch(m)) return;
+    for (const [team, gf, gc] of [[m.home, m.hs, m.as], [m.away, m.as, m.hs]]) {
+      results.set(team, (results.get(team) || 0) + 1);
+      if (gf > 0 || gc === 0) competed.add(team);
+      if (gf !== 0 || (gc !== 1 && gc !== 3)) notAdmin.add(team);
     }
   }));
   const lastRound = rounds[rounds.length - 1];
   const finished = Boolean(lastRound && lastRound.matches.some(playedMatch));
   const retired = new Set();
   for (const row of standings) {
-    if (withResult.has(row.team)) continue;
+    const n = results.get(row.team) || 0;
+    if (n > 0) {
+      if (n >= ADMIN_LOSSES && !notAdmin.has(row.team) && (row.g || 0) + (row.e || 0) === 0) retired.add(row.team);
+      continue;
+    }
     // Sin calendario (los grupos archivados de los que la federación no publicó las actas), no estar en
     // él no dice nada: el que perdió todos sus partidos no es un retirado.
     const gone = inCalendar.size > 0 && !inCalendar.has(row.team) && row.pj > 0 && row.g + row.e === 0;
     if (gone || (row.pj === 0 && finished)) retired.add(row.team);
   }
-  if (standings.length && withResult.size) {
+  if (standings.length && results.size) {
     const listed = new Set(standings.map(row => row.team));
     for (const team of inCalendar) {
-      if (!listed.has(team) && !withResult.has(team)) retired.add(team);
+      if (!listed.has(team) && !competed.has(team)) retired.add(team);
     }
   }
   return retired;

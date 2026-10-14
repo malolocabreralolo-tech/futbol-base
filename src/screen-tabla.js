@@ -20,29 +20,56 @@ const WIDE = [['todas', 'Todas'], ['casa', 'Casa'], ['fuera', 'Fuera']].map(([va
 const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas'];
 
 // Cobertura de Casa y Fuera (spec §7), que salen del calendario: los partidos con resultado
-// entre equipos activos frente a los que cuenta la clasificación oficial (la suma de J entre
-// dos). null si cuadran. `exact`: la única diferencia son los partidos de los retirados.
+// entre equipos activos frente a los que cuenta la clasificación oficial. null si cuadran.
+// `exact`: la única diferencia son los partidos de los retirados. Un retirado de la tabla cuenta
+// cada partido en su fila y en la del rival (la suma de J entre dos); uno que la tabla ya no lista
+// (AL15 de 2026-27), solo en la del rival, y solo si la federación da por buenos sus resultados
+// administrativos: lo dice el J de cada rival frente a sus partidos con resultado. `absent`: ninguno
+// de esos retirados está en el calendario.
 export function homeAwayCoverage(group) {
   const retired = retiredTeams(group);
   const rows = group.standings || [];
+  const listed = new Set(rows.map(row => row.team));
   const played = rows.reduce((n, row) => n + (row.pj || 0), 0);
   const gone = rows.filter(row => retired.has(row.team) && row.pj > 0);
-  const vsRetired = gone.reduce((n, row) => n + row.pj, 0);
+  const names = gone.map(row => row.team);
+  const inCalendar = new Set();
+  const withResult = new Map();   // partidos con resultado de cada equipo activo de la tabla
+  const vsOutside = new Map();    // de ellos, contra un retirado que la tabla no lista
+  const outside = new Set();
   let calendar = 0;
   for (const round of group.rounds || []) {
     for (const m of round.matches) {
-      if (m.hs != null && m.as != null && !retired.has(m.home) && !retired.has(m.away)) calendar += 1;
+      inCalendar.add(m.home);
+      inCalendar.add(m.away);
+      if (m.hs == null || m.as == null) continue;
+      if (!retired.has(m.home) && !retired.has(m.away)) calendar += 1;
+      for (const [team, rival] of [[m.home, m.away], [m.away, m.home]]) {
+        if (retired.has(team) || !listed.has(team)) continue;
+        withResult.set(team, (withResult.get(team) || 0) + 1);
+        if (retired.has(rival) && !listed.has(rival)) {
+          vsOutside.set(team, (vsOutside.get(team) || 0) + 1);
+          outside.add(rival);
+        }
+      }
     }
   }
-  const official = Math.round(played / 2);
+  let counted = 0;
+  for (const row of rows) {
+    const out = vsOutside.get(row.team) || 0;
+    if (out) counted += Math.min(out, Math.max(0, (row.pj || 0) - ((withResult.get(row.team) || 0) - out)));
+  }
+  if (counted) names.push(...outside);
+  const official = Math.round((played + counted) / 2);
   if (calendar === official) return null;
-  return { calendar, official, vsRetired, retired: gone.map(row => row.team), exact: calendar === official - vsRetired };
+  const vsRetired = gone.reduce((n, row) => n + row.pj, 0) + counted;
+  return { calendar, official, vsRetired, retired: names, exact: calendar === official - vsRetired,
+    absent: names.every(team => !inCalendar.has(team)) };
 }
 
-// Los retirados con J > 0 nunca están en el calendario (regla 1 de retiredTeams).
 function coverageText(c) {
   const whom = `${listEs(c.retired)} (${c.retired.length > 1 ? 'retirados' : 'retirado'})`;
-  if (c.exact) return `No cuenta los ${c.vsRetired} partidos contra ${whom}, que no están en el calendario.`;
+  if (c.exact) return `No cuenta los ${c.vsRetired} partidos contra ${whom}${c.absent ? ', que no están en el calendario' : ''}.`;
   const also = c.vsRetired ? `, ${c.vsRetired} de ellos contra ${whom}` : '';
   return `Con los ${c.calendar} partidos con resultado del calendario; la clasificación oficial cuenta ${c.official}${also}.`;
 }

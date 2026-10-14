@@ -484,7 +484,8 @@ Cups    { season, cat, groups: Group[] }                   // torneos (Maspaloma
   - `label` es la etiqueta legible de grupo: «Prebenjamín, Grupo 2 de Gran Canaria», «Benjamín, Segunda Fase A, Grupo 2».
 - **`retiredTeams(group)`**, la única definición de retirado:
   1. equipo de la clasificación que no aparece en ningún partido del calendario, con `pj > 0` y `g + e = 0` (Batán en PG2: 0-0-28 y 0 partidos en `HISTORY`), o con `pj = 0` en un grupo terminado;
-  2. o equipo que aparece en el calendario, no tiene fila en la clasificación y no tiene ningún resultado: «CD Teguinte» en PFV2, «COTILLO, C.D. EL» y 'CORRALEJO, C.D. "B"' en FV11.
+  2. o equipo que aparece en el calendario, no tiene fila en la clasificación y no ha competido: ningún resultado («CD Teguinte» en PFV2, «COTILLO, C.D. EL» y 'CORRALEJO, C.D. "B"' en FV11) o solo derrotas sin marcar, los 0-1 y 0-3 administrativos que la federación deja en el calendario cuando lo quita de su tabla (AL15, AL20 y AL32 de 2026-27; añadida el 14/10/2026);
+  3. o equipo de la clasificación y del calendario sin ganar ni empatar, con al menos cinco partidos con resultado y todos derrotas 0-1 o 0-3: la tabla del portal aún lo lista y el calendario trae sus resultados administrativos (Atlético Fomento en PG2 de 2025-26, los de 2013-14 y 2014-15; añadida el 14/10/2026).
 
   Los partidos contra retirados se excluyen del próximo partido, de `defaultRound`, de `groupFinished` y de la cobertura.
 - **`state` de partido:**

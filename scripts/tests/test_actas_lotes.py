@@ -4,12 +4,16 @@ Un raw de actas de benjamín y prebenjamín pesa unos 20 MB por temporada; el hi
 (2019-26) en el mismo raw lo duplicaría, cerca del aviso de GitHub (50 MB por fichero; tope,
 100 MB). Las de alevín van a scripts/fiflp_actas_<S>_alevin_raw.json, con su índice y su estado:
 
-- fetch_fiflp_actas.py escribe cada acta en el raw de su lote y nunca en el del otro: con varios
-  navegadores (fetch_parallel), en las tandas encadenadas (índice y estado por lote) y al refrescar;
+- fetch_fiflp_actas.py baja en cada tanda las de UN lote y solo escribe los ficheros de ese lote
+  (los de su cadena: dos cadenas nunca escriben el mismo fichero): con varios navegadores
+  (fetch_parallel), en las tandas encadenadas (índice y estado por lote) y al refrescar; un acta
+  que una tanda antigua dejó en el raw que no es el suyo pasa sola al suyo (la adopta la tanda de
+  su lote y la suelta la del otro);
 - import_fiflp_actas.py importa los dos (su huella por fichero; el de siempre, primero) sin que la
   purga de huérfanas de uno deje sin acta a los partidos del otro;
 - grupos, goleadores, detalle y escudos leen los índices y raws de los dos lotes juntos;
-- actas-federacion.yml sube los ficheros de los dos lotes y encadena por los estados de los suyos.
+- actas-federacion.yml tiene una cadena por temporada y lote, sube solo los ficheros del suyo y
+  encadena por su estado (para si las categorías no existen, mezclan lotes o no son del suyo).
 
 Todo con datos sintéticos (clubes de prueba y jugadores «JUGADOR PRUEBA»), sin red.
 """
@@ -104,10 +108,16 @@ def test_the_competitions_of_a_tanda_go_to_the_lote_of_their_category():
     assert A.comp_lotes("21", ["1"], ("BENJAMIN", "ALEVIN"), names={"1": f"{ALEVIN_COMP}"}) == {"1": "alevin"}
     with pytest.raises(ValueError):
         A.comp_lotes("21", ["1"], ("BENJAMIN", "ALEVIN"))
-    assert A.run_lotes("21") == ("",)
-    assert A.run_lotes("21", ("ALEVIN",)) == ("alevin",)
-    assert A.run_lotes("21", ("ALEVIN", "BENJAMIN")) == ("", "alevin")
-    assert A.run_lotes("21", None, ["54422881"]) == ("alevin",)
+    # Una tanda, un lote: el de sus categorías; las que mezclan los dos, o una competición del otro, paran.
+    assert A.tanda_lote("21") == ""
+    assert A.tanda_lote("21", ("ALEVIN",)) == "alevin"
+    assert A.tanda_lote("21", ("ALEVIN",), ["54422881", "1"]) == "alevin"
+    assert A.tanda_lote("21", None, ["54422885"], expected="") == ""
+    for bad in (dict(categories=("ALEVIN", "BENJAMIN")), dict(comps=["54422881"]),
+                dict(categories=("ALEVIN",), comps=["54422885"]),
+                dict(categories=("ALEVIN",), expected=""), dict(expected="alevin")):
+        with pytest.raises(ValueError):
+            A.tanda_lote("21", **bad)
 
 
 # ── La descarga (main con un navegador de mentira) ───────────────────────────
@@ -196,43 +206,48 @@ def files(folder):
     return {p.name: json.loads(p.read_text(encoding="utf-8")) for p in sorted(folder.glob("fiflp_actas_*.json"))}
 
 
-def test_alevin_and_benjamin_never_share_a_raw_with_several_browsers_and_chained_tandas(fed, capsys):
-    fed["run"]("--categorias", "benjamin,prebenjamin,alevin", "--workers", "3")
+def test_each_tanda_writes_only_the_files_of_its_lote_with_several_browsers_and_chained_tandas(fed, capsys):
+    raw, raw_al = "fiflp_actas_2025-2026_raw.json", "fiflp_actas_2025-2026_alevin_raw.json"
+    fed["run"]("--categorias", "alevin", "--lote", "alevin", "--workers", "3")
     got = files(fed["dir"])
-    assert set(got) == {f"fiflp_actas_2025-2026{lote}_{kind}.json"
-                        for lote in ("", "_alevin") for kind in ("raw", "index", "status")}
-    usual, alevin = got["fiflp_actas_2025-2026_raw.json"], got["fiflp_actas_2025-2026_alevin_raw.json"]
-    assert usual and alevin and not set(usual) & set(alevin)
-    assert all(L.lote_of_name(a["header"]["competition"]) == "" for a in usual.values())
+    assert set(got) == {f"fiflp_actas_2025-2026_alevin_{kind}.json" for kind in ("raw", "index", "status")}
+    alevin = got[raw_al]
+    assert {a["enumeration"]["comp_id"] for a in alevin.values()} == ALEVIN_2526
     assert all(L.lote_of_name(a["header"]["competition"]) == "alevin" for a in alevin.values())
-    assert {a["enumeration"]["comp_id"] for a in alevin.values()} == ALEVIN_2526 | {"54422885"}
-    # El acta de cabecera alevín de una competición de benjamín va al raw de alevín…
-    assert "544228852" in alevin and "544228852" not in usual
-    # …pero su enumeración, al índice de su competición.
-    assert "544228852" in got["fiflp_actas_2025-2026_index.json"]
-    assert {e["comp_id"] for e in got["fiflp_actas_2025-2026_alevin_index.json"].values()} == ALEVIN_2526
-    assert "lote" not in next(iter(got["fiflp_actas_2025-2026_index.json"].values()))
-    status, status_al = got["fiflp_actas_2025-2026_status.json"], got["fiflp_actas_2025-2026_alevin_status.json"]
-    assert status_al == {"season": "2025-2026", "enumerated": 12, "in_raw": 13, "pending": 0,
-                         "unenumerated_comps": 0, "fetched": 12}
-    assert status["enumerated"] == len(usual) + 1 and status["in_raw"] == len(usual) and status["pending"] == 0
-    assert sorted(fed["read"]) == sorted(set(fed["read"]))                   # cada acta, una vez
-    capsys.readouterr()
-    fed["run"]("--categorias", "benjamin,prebenjamin,alevin", "--estado")
-    assert json.loads(capsys.readouterr().out) == {"pending": 0, "stuck": 0, "lotes": ["", "alevin"]}
+    assert got["fiflp_actas_2025-2026_alevin_status.json"] == {
+        "season": "2025-2026", "enumerated": 12, "in_raw": 12, "pending": 0, "unenumerated_comps": 0, "fetched": 12}
+    alevin_bytes = {p.name: p.read_bytes() for p in fed["dir"].glob("fiflp_actas_*alevin*.json")}
 
-    # Tanda encadenada: todo del índice de cada lote y nada pendiente (tampoco el acta del otro raw).
+    # Benjamín y prebenjamín (con varios navegadores): el acta de una competición de benjamín cuya
+    # cabecera dice alevín se queda en el raw de la tanda, con un aviso (el de alevín es de otra cadena).
+    capsys.readouterr()
+    fed["run"]("--lote", "siempre", "--workers", "3")
+    assert "acta 544228852: su cabecera es del lote alevin" in capsys.readouterr().out
+    assert {p.name: p.read_bytes() for p in fed["dir"].glob("fiflp_actas_*alevin*.json")} == alevin_bytes
+    got = files(fed["dir"])
+    usual = got[raw]
+    assert len(usual) == 30 and "544228852" in usual and not set(usual) & set(alevin)
+    assert {a["enumeration"]["comp_id"] for a in usual.values()}.isdisjoint(ALEVIN_2526)
+    status = got["fiflp_actas_2025-2026_status.json"]
+    assert (status["enumerated"], status["in_raw"], status["pending"], status["fetched"]) == (30, 30, 0, 30)
+    assert sorted(fed["read"]) == sorted(set(fed["read"]))                   # cada acta, una vez
+    for argv, lote in ((("--categorias", "alevin"), "alevin"), ((), "")):
+        fed["run"](*argv, "--estado")
+        assert json.loads(capsys.readouterr().out) == {"pending": 0, "stuck": 0, "lote": lote}
+
+    # Tandas encadenadas: todo del índice de su lote y nada pendiente.
     fed["read"].clear()
-    before = {n: (fed["dir"] / n).read_bytes() for n in got if "_raw" in n}
-    fed["run"]("--categorias", "benjamin,prebenjamin,alevin", "--workers", "2")
+    before = {n: (fed["dir"] / n).read_bytes() for n in (raw, raw_al)}
+    fed["run"]("--categorias", "alevin", "--workers", "2")
+    fed["run"]("--workers", "2")
     assert fed["read"] == []
     assert {n: (fed["dir"] / n).read_bytes() for n in before} == before
     capsys.readouterr()
-    fed["run"]("--categorias", "benjamin,prebenjamin,alevin", "--estado")
-    assert json.loads(capsys.readouterr().out) == {"pending": 0, "stuck": 1, "lotes": ["", "alevin"]}
+    fed["run"]("--categorias", "alevin", "--estado")
+    assert json.loads(capsys.readouterr().out) == {"pending": 0, "stuck": 1, "lote": "alevin"}
 
     # Refrescar: las de benjamín salen mejor y se sustituyen; las de alevín salen peor y se quedan las
-    # viejas, marcadas en SU raw. Ninguna cambia de raw.
+    # viejas, marcadas en SU raw. Ninguna cambia de raw y cada tanda solo escribe el suyo.
     from scripts.fiflp_acta import STAFF_VERSION
 
     def answer(cod, competition):
@@ -240,16 +255,20 @@ def test_alevin_and_benjamin_never_share_a_raw_with_several_browsers_and_chained
             return synthetic_acta(competition, consistent=False, staff_v=STAFF_VERSION)
         return synthetic_acta(competition, staff_v=STAFF_VERSION)
     fed["answer"] = answer
-    fed["run"]("--categorias", "benjamin,prebenjamin,alevin", "--refrescar", "--workers", "3")
+    fed["run"]("--refrescar", "--workers", "3")
+    assert (fed["dir"] / raw_al).read_bytes() == before[raw_al]
+    fed["run"]("--categorias", "alevin", "--refrescar", "--workers", "3")
     after = files(fed["dir"])
-    usual2, alevin2 = after["fiflp_actas_2025-2026_raw.json"], after["fiflp_actas_2025-2026_alevin_raw.json"]
+    usual2, alevin2 = after[raw], after[raw_al]
     assert set(usual2) == set(usual) and set(alevin2) == set(alevin)
-    assert all(a.get("staff_v") == STAFF_VERSION and a["consistent"] for a in usual2.values())
+    assert all(a.get("staff_v") == STAFF_VERSION for cod, a in usual2.items() if cod != "544228852")
+    assert usual2["544228852"].get("staff_refresh_failed")                     # cabecera alevín: salió peor
     assert all(a.get("staff_refresh_failed") and a["consistent"] and "staff_v" not in a for a in alevin2.values())
 
 
 def test_an_alevin_tanda_never_touches_the_usual_files_and_viceversa(fed):
-    fed["mislabel"] = False
+    """También con un acta de cabecera alevín en una competición de benjamín (antes, la tanda de
+    benjamín la escribía en el raw de alevín y la subía: chocaba con la cadena de alevín)."""
     fed["run"]("--categorias", "alevin")
     assert set(files(fed["dir"])) == {"fiflp_actas_2025-2026_alevin_raw.json", "fiflp_actas_2025-2026_alevin_index.json",
                                       "fiflp_actas_2025-2026_alevin_status.json"}
@@ -258,7 +277,7 @@ def test_an_alevin_tanda_never_touches_the_usual_files_and_viceversa(fed):
     assert {p.name: p.read_bytes() for p in fed["dir"].glob("fiflp_actas_*alevin*.json")} == alevin
     got = files(fed["dir"])
     usual = got["fiflp_actas_2025-2026_raw.json"]
-    assert len(usual) == 30 and all(L.lote_of_name(a["header"]["competition"]) == "" for a in usual.values())
+    assert len(usual) == 30 and sum(L.lote_of_name(a["header"]["competition"]) == "alevin" for a in usual.values()) == 1
     assert got["fiflp_actas_2025-2026_status.json"]["fetched"] == 30
     # Otra tanda de alevín no toca los de siempre.
     usual_bytes = {p.name: p.read_bytes() for p in fed["dir"].glob("fiflp_actas_2025-2026_*.json") if "alevin" not in p.name}
@@ -266,44 +285,88 @@ def test_an_alevin_tanda_never_touches_the_usual_files_and_viceversa(fed):
     assert {n: (fed["dir"] / n).read_bytes() for n in usual_bytes} == usual_bytes
 
 
-def test_a_competition_out_of_the_catalog_with_both_lotes_asked_stops_the_chain(fed, capsys):
+@pytest.mark.parametrize("argv", [
+    ("--categorias", "benjamin,prebenjamin,alevin"),          # mezcla los dos lotes
+    ("--categorias", "alevin", "--lote", "siempre"),          # no es el lote de la cadena
+    ("--lote", "alevin"),
+    ("--comps", "54422881"),                                  # competición de alevín en una tanda de siempre
+    ("--comps", "54422881,54422885", "--categorias", "alevin"),
+    ("--comps", "1", "--categorias", "benjamin,alevin"),
+    ("--categorias", "alevines"),                             # no existe
+])
+def test_a_tanda_outside_one_lote_stops_before_writing_and_its_chain_stops(fed, capsys, argv):
     with pytest.raises(ValueError):
-        fed["run"]("--comps", "1", "--categorias", "benjamin,alevin")
-    assert not list(fed["dir"].glob("fiflp_actas_*"))
-    fed["run"]("--comps", "1", "--categorias", "benjamin,alevin", "--estado")
+        fed["run"](*argv)
+    assert not list(fed["dir"].glob("fiflp_actas_*")) and fed["read"] == []
+    fed["run"](*argv, "--estado")
     state = json.loads(capsys.readouterr().out)
-    assert (state["pending"], state["stuck"]) == (0, 1) and "catálogo" in state["error"]
+    assert (state["pending"], state["stuck"]) == (0, 1) and state["error"]
+
+
+def test_an_acta_left_in_the_other_raw_by_an_older_tanda_moves_to_its_own(fed, capsys):
+    """Un acta de alevín en el raw de siempre (la de una tanda de antes de partir los raws, con
+    -f categorias=alevin): la tanda de alevín la adopta (la copia a su raw sin volver a leerla y sin
+    tocar el de siempre) y la de benjamín la suelta (la quita del suyo sin tocar el de alevín)."""
+    fed["mislabel"] = False
+    fed["run"]("--categorias", "alevin")
+    alevin_raw = A.raw_path("21", "alevin")
+    old = json.loads(alevin_raw.read_text(encoding="utf-8"))
+    moved = sorted(old)[:3]
+    A.save_raw("21", {cod: old[cod] for cod in moved})                          # el raw de siempre, de antes
+    A.save_raw("21", {cod: a for cod, a in old.items() if cod not in moved}, "alevin")
+    usual_before = A.raw_path("21").read_bytes()
+    fed["read"].clear()
+    fed["run"]("--categorias", "alevin")
+    assert fed["read"] == []                                                    # adoptadas, no releídas
+    assert A.raw_path("21").read_bytes() == usual_before
+    assert json.loads(alevin_raw.read_text(encoding="utf-8")) == old
+    assert "3 acta(s) adoptadas" in capsys.readouterr().out
+    alevin_bytes = alevin_raw.read_bytes()
+    fed["run"]()
+    assert alevin_raw.read_bytes() == alevin_bytes
+    usual = json.loads(A.raw_path("21").read_text(encoding="utf-8"))
+    assert len(usual) == 30 and not set(usual) & set(moved)
+    assert "3 acta(s) de otro lote ya en su raw" in capsys.readouterr().out
+    # Ya en su sitio: otra vuelta no cambia nada.
+    snapshot = {p.name: p.read_bytes() for p in fed["dir"].glob("fiflp_actas_*_raw.json")}
+    fed["run"]()
+    fed["run"]("--categorias", "alevin")
+    assert {p.name: p.read_bytes() for p in fed["dir"].glob("fiflp_actas_*_raw.json")} == snapshot
 
 
 def test_the_chain_state_of_each_lote(tmp_path, monkeypatch):
-    """La regla de actas-federacion.yml, ahora en chain_state: otra tanda mientras quede alguna en
-    algún lote (sin estado, también); atascada si ningún lote trajo ninguna ni dejó competiciones
-    por enumerar."""
+    """La regla de actas-federacion.yml, en chain_state: otra tanda mientras quede alguna en el lote
+    (sin estado, también); atascada si no trajo ninguna ni dejó competiciones por enumerar."""
     monkeypatch.setattr(A, "HERE", tmp_path)
-    assert A.chain_state("21", ("", "alevin")) == {"pending": 2, "stuck": 0, "lotes": ["", "alevin"]}
+    assert A.chain_state("21", "alevin") == {"pending": 1, "stuck": 0, "lote": "alevin"}
 
     def write(lote, **status):
         A.status_path("21", lote).write_text(json.dumps(status), encoding="utf-8")
     write("", pending=0, fetched=0, unenumerated_comps=0)
-    assert A.chain_state("21", ("",)) == {"pending": 0, "stuck": 1, "lotes": [""]}
+    assert A.chain_state("21") == {"pending": 0, "stuck": 1, "lote": ""}
+    assert A.chain_state("21", "alevin") == {"pending": 1, "stuck": 0, "lote": "alevin"}
     write("alevin", pending=5, fetched=3, unenumerated_comps=0)
-    assert A.chain_state("21", ("", "alevin")) == {"pending": 5, "stuck": 0, "lotes": ["", "alevin"]}
+    assert A.chain_state("21", "alevin") == {"pending": 5, "stuck": 0, "lote": "alevin"}
     write("alevin", pending=5, fetched=0, unenumerated_comps=1)
-    assert A.chain_state("21", ("alevin",))["stuck"] == 0
+    assert A.chain_state("21", "alevin")["stuck"] == 0
     write("alevin", pending=5, fetched=0, unenumerated_comps=0)
-    assert A.chain_state("21", ("", "alevin")) == {"pending": 5, "stuck": 1, "lotes": ["", "alevin"]}
+    assert A.chain_state("21", "alevin") == {"pending": 5, "stuck": 1, "lote": "alevin"}
 
 
-def test_the_store_moves_an_acta_misplaced_by_an_older_run(tmp_path, monkeypatch):
+def test_the_store_only_writes_the_raw_of_its_lote(tmp_path, monkeypatch):
     monkeypatch.setattr(A, "HERE", tmp_path)
-    acta = synthetic_acta(f"{ALEVIN_COMP} (GRUPO 1)")
-    A.save_raw("21", {"9": acta, "8": synthetic_acta(f"{BENJAMIN_COMP} (GRUPO 1)")})
-    store = A.RawStore("21")
-    assert store.find("9") == ("", acta) and store.find("7") == (None, None)
-    store.put(A.acta_lote(acta, ""), "9", acta)
+    al, ben = synthetic_acta(f"{ALEVIN_COMP} (GRUPO 1)"), synthetic_acta(f"{BENJAMIN_COMP} (GRUPO 1)")
+    A.save_raw("21", {"9": al, "8": ben})
+    store = A.RawStore("21", "alevin", log=lambda *a: None)
+    assert store.get("9") == ("alevin", al)                         # adoptada: la copia a su raw
+    assert store.get("8") == ("", ben)                               # de su lote, donde está: no es suya
+    assert store.get("7") == (None, None)
+    usual = A.raw_path("21").read_bytes()
     store.save()
-    assert set(json.loads(A.raw_path("21").read_text(encoding="utf-8"))) == {"8"}
+    assert A.raw_path("21").read_bytes() == usual
     assert set(json.loads(A.raw_path("21", "alevin").read_text(encoding="utf-8"))) == {"9"}
+    store = A.RawStore("21", "", log=lambda *a: None)                # la suelta la tanda de siempre
+    assert store.released == 1 and set(store.data) == {"8"}
     assert A.acta_lote({"header": {}}, "alevin") == "alevin"            # sin competición: la de la tanda
 
 
@@ -394,6 +457,48 @@ def test_both_raws_are_imported_each_with_its_own_fingerprint(tmp_path, importer
     again = I.import_changed_raws(conn, str(tmp_path), log=lambda *a: None)
     assert list(again) == ["fiflp_actas_2025-2026_alevin_raw.json"]
     assert cod_of(conn, "FF1", 3) == 778
+
+
+def test_an_acta_in_both_raws_while_it_moves_imports_like_in_one(tmp_path, importer):
+    """Mientras un acta de alevín pasa del raw de siempre (una tanda antigua) al suyo, está en los dos
+    (la adopta la tanda de alevín antes de que la suelte la de siempre): la base sale igual que con el
+    acta en un solo raw, en cada paso, y al soltarla nadie la deja huérfana."""
+    I = importer
+    al = acta(777, f"{ALEVIN_COMP} (GRUPO 1)", "ARUCAS, C.F.", "MOYA, U.D.", 3, 1, "54422881")
+    # Otros jugadores (otros fiflp_id y otros nombres): sin homónimos, cuyo «#id» depende del orden.
+    ben = acta(780, f"{BENJAMIN_COMP} (GRUPO 1)", "GALDAR, C.F.", 'TABLERO, C.D. "A"', 0, 2, "54422885")
+    for side, name in (("home", "JUGADOR PRUEBA, TRES"), ("away", "JUGADOR PRUEBA, CUATRO")):
+        ben["lineups"][side][0]["name"] = name
+    usual_raw, alevin_raw = tmp_path / "fiflp_actas_2025-2026_raw.json", tmp_path / "fiflp_actas_2025-2026_alevin_raw.json"
+
+    def dump(conn):
+        """La base sin ids (el orden de inserción cambia con el raw donde está cada acta)."""
+        return [sorted(conn.execute("""SELECT group_id, jornada, date, time, home_team_id, away_team_id, home_score,
+                                              away_score, venue, cod_acta, fiflp_acta FROM matches""")),
+                sorted(conn.execute("""SELECT m.cod_acta, a.team_id, p.full_name, p.fiflp_id, a.dorsal, a.role, a.goals,
+                                              a.yellow, a.red FROM appearances a JOIN matches m ON m.id=a.match_id
+                                       JOIN players p ON p.id=a.player_id""")),
+                sorted(conn.execute("SELECT full_name, norm_name, fiflp_id FROM players")),
+                sorted(conn.execute("""SELECT m.cod_acta, e.team_id, e.kind, e.minute, e.goal_type FROM match_events e
+                                       JOIN matches m ON m.id=e.match_id""")),
+                sorted(conn.execute("""SELECT m.cod_acta, s.team_id, s.kind, s.name FROM match_staff s
+                                       JOIN matches m ON m.id=s.match_id"""))]
+
+    def run(conn, usual, alevin):
+        usual_raw.write_text(json.dumps(usual), encoding="utf-8")
+        if alevin is None:
+            alevin_raw.unlink(missing_ok=True)
+        else:
+            alevin_raw.write_text(json.dumps(alevin), encoding="utf-8")
+        I.import_changed_raws(conn, str(tmp_path), log=lambda *a: None)
+        return dump(conn)
+
+    clean = run(base(), {"780": ben}, {"777": al})
+    conn = base()
+    assert run(conn, {"777": al, "780": ben}, None) == clean               # la tanda antigua: en el de siempre
+    assert run(conn, {"777": al, "780": ben}, {"777": al}) == clean        # la adopta la de alevín
+    assert run(conn, {"780": ben}, {"777": al}) == clean                   # la suelta la de siempre
+    assert cod_of(conn, "AL1", 1) == 777
 
 
 def test_an_acta_really_gone_from_its_raw_is_still_cleared(tmp_path, importer):
@@ -554,32 +659,118 @@ def steps(name, job):
     return yaml.safe_load((WF / name).read_text(encoding="utf-8"))["jobs"][job]["steps"]
 
 
-def test_the_actas_workflow_uploads_the_files_of_both_lotes(tmp_path):
+def gh_contains(search, item):
+    """contains() de las expresiones de GitHub Actions con cadenas: sin distinguir mayúsculas, pero
+    sin quitar tildes («alevín» no contiene «alevin»)."""
+    return item.lower() in (search or "").lower()
+
+
+def chain_lote(workflow, categorias):
+    """(sufijo del grupo de concurrencia, LOTE_CADENA de cada paso) de actas-federacion.yml para un
+    valor de la entrada categorias, evaluando sus expresiones como GitHub."""
+    import re
+    expr = re.compile(r"\$\{\{ contains\(inputs\.categorias, '([^']+)'\) && '([^']*)' \|\| '([^']*)' \}\}")
+
+    def evaluate(text):
+        m = expr.fullmatch(text.strip())
+        assert m, f"expresión inesperada: {text}"
+        return m.group(2) if gh_contains(categorias, m.group(1)) else m.group(3)
+    group = workflow["concurrency"]["group"]
+    prefix = "actas-federacion-${{ inputs.temporada }}"
+    assert group.startswith(prefix)
+    lotes = {s["name"]: evaluate(s["env"]["LOTE_CADENA"]) for s in workflow["jobs"]["scrape"]["steps"]
+             if "LOTE_CADENA" in (s.get("env") or {})}
+    return evaluate(group[len(prefix):]), lotes
+
+
+def test_the_chain_of_each_lote_has_its_concurrency_group_and_tells_it_to_the_script():
+    """El grupo de concurrencia y el --lote de la cadena salen de la misma expresión, y para todo valor
+    de categorias que el script acepta, el del lote de sus categorías: también con tilde («alevín»,
+    que parse_categories acepta y contains(…, 'alevin') no reconocía: la cadena de alevín caía en el
+    grupo de benjamín)."""
+    from scripts import categorias as C
+    data = yaml.safe_load((WF / "actas-federacion.yml").read_text(encoding="utf-8"))
+    for value in ("alevin", "alevín", "Alevín", "ALEVÍN", "ALEVIN", " alevin ", "", "benjamin,prebenjamin",
+                  "benjamin", "Prebenjamín", "BENJAMÍN,prebenjamin"):
+        lote = L.lotes_of(C.parse_categories(value))
+        assert len(lote) == 1, value
+        suffix, steps_lote = chain_lote(data, value)
+        assert set(steps_lote) == {"Descargar actas (tanda)", "Subir el raw", "Siguiente tanda"}
+        expected = {"alevin": "alevin", "": "siempre"}[lote[0]]
+        assert suffix == ("-alevin" if expected == "alevin" else ""), value
+        assert set(steps_lote.values()) == {expected}, value
+        assert A.LOTE_ARG[expected] == lote[0]
+    # Y lo que mezcla lotes o no existe cae en un grupo, pero el script para (--lote no casa).
+    for value in ("benjamin,alevin", "alevines"):
+        suffix, steps_lote = chain_lote(data, value)
+        assert suffix == "-alevin" and set(steps_lote.values()) == {"alevin"}
+    download = next(s for s in data["jobs"]["scrape"]["steps"] if s.get("name") == "Descargar actas (tanda)")
+    assert "--lote $LOTE_CADENA" in download["run"]
+
+
+def test_the_actas_workflow_uploads_only_the_files_of_its_lote(tmp_path):
     """El git add explícito de «Subir el raw», ejecutado con un git de mentira: sube raw, índice y
-    estado de los dos lotes de la temporada que existan, y nada más."""
+    estado del lote de la cadena (los que existan), nunca los del otro lote (son de la cadena de su
+    grupo de concurrencia, que puede estar subiendo a la vez)."""
     upload = next(s for s in steps("actas-federacion.yml", "scrape") if s.get("name") == "Subir el raw")
     script = upload["run"]
-    loop = script[script.index("for lote in"):script.index("if git diff --cached --quiet")]
+    loop = script[script.index('LOTE=""'):script.index("if git diff --cached --quiet")]
     (tmp_path / "scripts").mkdir()
     present = ["fiflp_actas_2025-2026_raw.json", "fiflp_actas_2025-2026_status.json",
                "fiflp_actas_2025-2026_alevin_raw.json", "fiflp_actas_2025-2026_alevin_index.json",
                "fiflp_actas_2025-2026_alevin_status.json", "fiflp_actas_2024-2025_alevin_raw.json"]
     for name in present:
         (tmp_path / "scripts" / name).write_text("{}", encoding="utf-8")
-    bash = f'git() {{ echo "$2" >> added.txt; }}\nLABEL=2025-2026\n{loop}'
-    subprocess.run(["bash", "-c", bash], cwd=tmp_path, check=True)
-    added = (tmp_path / "added.txt").read_text(encoding="utf-8").split()
-    assert sorted(added) == sorted(f"scripts/{n}" for n in present if "2025-2026" in n)
+    for lote, mine in (("siempre", lambda n: "alevin" not in n), ("alevin", lambda n: "alevin" in n)):
+        (tmp_path / "added.txt").write_text("", encoding="utf-8")
+        bash = f'git() {{ echo "$2" >> added.txt; }}\nLABEL=2025-2026\nLOTE_CADENA={lote}\n{loop}'
+        subprocess.run(["bash", "-c", bash], cwd=tmp_path, check=True)
+        added = (tmp_path / "added.txt").read_text(encoding="utf-8").split()
+        assert sorted(added) == sorted(f"scripts/{n}" for n in present if "2025-2026" in n and mine(n)), lote
 
 
-def test_the_actas_workflow_chains_by_the_state_of_its_lotes():
+def run_next_tanda(tmp_path, categorias, temporada="21", cola="20,19", tandas="4", statuses=()):
+    """El paso «Siguiente tanda» de actas-federacion.yml con un gh de mentira (apunta sus llamadas) y
+    una copia de fetch_fiflp_actas.py cuyos estados son los de `statuses` ({fichero: estado})."""
     data = yaml.safe_load((WF / "actas-federacion.yml").read_text(encoding="utf-8"))
-    group = data["concurrency"]["group"]
-    assert "${{ inputs.temporada }}" in group and "contains(inputs.categorias, 'alevin')" in group
-    nxt = next(s for s in data["jobs"]["scrape"]["steps"] if s.get("name") == "Siguiente tanda")
-    assert "--estado" in nxt["run"] and "--comps $COMPS_INPUT" in nxt["run"] and "--categorias" in nxt["run"]
-    assert "${{" not in nxt["run"], "las entradas van por env"
-    assert nxt["env"].get("PYTHONPATH")
+    step = next(s for s in data["jobs"]["scrape"]["steps"] if s.get("name") == "Siguiente tanda")
+    work = tmp_path / "work"
+    (work / "scripts").mkdir(parents=True)
+    for name in ("fetch_fiflp_actas.py", "fiflp_comps_catalog.json"):
+        (work / "scripts" / name).write_bytes((ROOT / "scripts" / name).read_bytes())
+    for name, status in dict(statuses).items():
+        (work / "scripts" / name).write_text(json.dumps(status), encoding="utf-8")
+    (tmp_path / "bin").mkdir()
+    gh = tmp_path / "bin" / "gh"
+    gh.write_text(f'#!/bin/sh\necho "$@" >> {tmp_path / "gh.txt"}\n', encoding="utf-8")
+    gh.chmod(0o755)
+    _suffix, lotes = chain_lote(data, categorias)
+    env = {**os.environ, "PATH": f"{tmp_path / 'bin'}:{os.environ['PATH']}", "PYTHONPATH": str(ROOT),
+           "TEMP_INPUT": temporada, "COLA": cola, "TANDAS": tandas, "COMPS_INPUT": "", "CATS_INPUT": categorias,
+           "LOTE_CADENA": lotes["Siguiente tanda"], "REFRESCAR": "false", "GH_TOKEN": "x"}
+    out = subprocess.run(["bash", "-e", "-c", step["run"]], cwd=work, env=env, capture_output=True, text=True, check=True)
+    calls = (tmp_path / "gh.txt").read_text(encoding="utf-8").splitlines() if (tmp_path / "gh.txt").exists() else []
+    return out.stdout, calls
+
+
+@pytest.mark.parametrize("categorias", ["alevines", "benjamin,alevin", "benjamin,prebenjamin,alevín"])
+def test_a_chain_with_categories_it_cannot_download_stops_and_skips_the_queue(tmp_path, categorias):
+    """Antes, unas categorías que no existen tiraban --estado y la cadena tomaba la reserva
+    {"pending": 1}: se relanzaba hasta gastar las tandas (40), fallando en cada una."""
+    out, calls = run_next_tanda(tmp_path, categorias)
+    assert calls == [] and "La cadena para:" in out, out
+
+
+def test_the_next_tanda_follows_the_state_of_the_lote_of_the_chain(tmp_path):
+    done = {"pending": 0, "fetched": 4, "unenumerated_comps": 0}
+    out, calls = run_next_tanda(tmp_path / "a", "alevín", statuses={
+        "fiflp_actas_2025-2026_status.json": done,
+        "fiflp_actas_2025-2026_alevin_status.json": {"pending": 7, "fetched": 3}})
+    assert len(calls) == 1 and "-f temporada=21" in calls[0] and "-f categorias=alevín" in calls[0], out
+    out, calls = run_next_tanda(tmp_path / "b", "benjamin,prebenjamin", statuses={
+        "fiflp_actas_2025-2026_status.json": done,
+        "fiflp_actas_2025-2026_alevin_status.json": {"pending": 7, "fetched": 3}})
+    assert len(calls) == 1 and "-f temporada=20" in calls[0] and "-f cola=19" in calls[0], out
 
 
 def test_the_other_workflows_need_no_new_files():
@@ -595,12 +786,22 @@ def test_the_other_workflows_need_no_new_files():
     assert legacy.count("_alevin_raw.json") >= 2 and "add_if_exists scripts/fiflp_actas_*_raw.json" in legacy
 
 
+def test_misplaced_finds_the_actas_in_the_raw_of_another_lote(tmp_path):
+    (tmp_path / "fiflp_actas_2025-2026_raw.json").write_text(json.dumps({
+        "1": {"header": {"competition": f"{ALEVIN_COMP} (GRUPO 1)"}},
+        "2": {"header": {"competition": f"{BENJAMIN_COMP} (GRUPO 1)"}}, "3": {"header": {}}}), encoding="utf-8")
+    (tmp_path / "fiflp_actas_2025-2026_alevin_raw.json").write_text(json.dumps({
+        "4": {"header": {"competition": f"{ALEVIN_COMP} (GRUPO 2)"}}}), encoding="utf-8")
+    assert L.misplaced(tmp_path) == {"fiflp_actas_2025-2026_raw.json": ["1"]}
+
+
 def test_the_raws_in_the_repo_have_no_alevin_actas_in_the_usual_raw():
-    """Los raws de siempre del repositorio no tienen ninguna acta de alevín (si no, habría que pasarlas
-    a su raw): la separación empieza limpia."""
-    for path in sorted((ROOT / "scripts").glob("fiflp_actas_*_raw.json")):
-        lote = L.lote_of_file(path.name)
-        raw = json.loads(path.read_text(encoding="utf-8"))
-        wrong = [cod for cod, a in raw.items()
-                 if isinstance(a, dict) and L.lote_of_name((a.get("header") or {}).get("competition")) not in (None, lote)]
-        assert not wrong, f"{path.name}: {len(wrong)} actas de otro lote"
+    """Los raws de siempre del repositorio no deberían tener actas de alevín. Si una tanda de antes de
+    partir los raws (-f categorias=alevin) las dejó allí, las tandas las mueven solas (adopta la de
+    alevín, suelta la de siempre): es un AVISO, no un fallo. Esta prueba corre en update.yml antes de
+    subir la base y no puede parar al bot por el contenido de un raw."""
+    import warnings
+    wrong = L.misplaced(ROOT / "scripts")
+    if wrong:
+        warnings.warn("actas en el raw de otro lote (las moverán las tandas): "
+                      + "; ".join(f"{name}: {len(cods)}" for name, cods in wrong.items()))

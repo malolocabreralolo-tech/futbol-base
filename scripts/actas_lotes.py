@@ -12,8 +12,9 @@ estado:
                    scripts/fiflp_actas_<S>_alevin_index.json
                    scripts/fiflp_actas_<S>_alevin_status.json
 
-Los escribe fetch_fiflp_actas.py (cada acta en el de su lote, nunca mezcladas) y los leen
-los importadores: import_fiflp_actas importa cada raw por separado (su huella, por
+Los escribe fetch_fiflp_actas.py, cada tanda los de UN lote (los de su cadena de
+actas-federacion.yml, una por temporada y lote: dos cadenas nunca escriben el mismo fichero), y
+los leen los importadores: import_fiflp_actas importa cada raw por separado (su huella, por
 fichero); los que buscan una acta o un grupo de la federación en el índice o en el raw
 de la temporada (grupos, goleadores, detalle, escudos) leen los de todos los lotes
 juntos (load_merged). Sin ficheros de alevín, todo es exactamente lo de antes.
@@ -135,3 +136,17 @@ def sibling_raw_keys(raw_path):
         if lote != mine and os.path.exists(p):
             keys.update(_load(p).keys())
     return keys
+
+
+def misplaced(folder):
+    """{raw: [cod_acta]} de las actas de `folder` cuya cabecera dice otro lote que el de su raw (las
+    que dejó una tanda de antes de partir los raws; las tandas las pasan solas al suyo:
+    fetch_fiflp_actas.RawStore). Vacío si todo está en su sitio."""
+    out = {}
+    for name, _season, lote in raw_files(folder):
+        raw = _load(os.path.join(str(folder), name))
+        wrong = [cod for cod, acta in raw.items() if isinstance(acta, dict)
+                 and lote_of_name((acta.get("header") or {}).get("competition")) not in (None, lote)]
+        if wrong:
+            out[name] = wrong
+    return out

@@ -316,6 +316,35 @@ def test_a_complete_raw_of_a_closed_season_still_clears_its_orphans(tmp_path, mo
     assert conn.execute("SELECT cod_acta FROM matches WHERE id=?", (ff1,)).fetchone() == (None,)
 
 
+def test_the_actas_read_by_the_bot_survive_a_partial_raw_once_the_season_is_archived(tmp_path, monkeypatch):
+    """Desde 2026-27 el bot lee cada acta por el código que da la federación en la jornada (update_fiflp:
+    cod_acta = fiflp_acta), sin raw. Cuando la temporada se archive (verano de 2027), un raw parcial de
+    actas-federacion.yml (temporada=22, una tanda o una sola competición) que se reimporte (otro raw, o
+    IMPORT_VERSION nueva) ya no es «la cosecha completa»: no deja sin acta a esos partidos."""
+    import import_fiflp_actas as A
+    monkeypatch.setattr(A, "UNMATCHED_PATH", str(tmp_path / "unmatched.json"))
+    conn = base(season="2026-2027", current=0)               # 2026-27 ya archivada
+    ff1 = match_of(conn, "FF1")
+    conn.execute("UPDATE matches SET cod_acta=500, fiflp_acta=500 WHERE id=?", (ff1,))
+    conn.execute("INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (?, 1, 'Entrenador', 'X', 0)",
+                 (ff1,))
+    conn.commit()
+    h = {**header(BENJAMIN_COMP), "home_team": "GALDAR, C.F.", "away_team": 'TABLERO, C.D. "A"',
+         "home_score": 0, "away_score": 2}
+    acta = {"header": h, "lineups": {"home": [], "away": []}, "events": [], "staff": {}, "consistent": True,
+            "cod_acta": 778, "enumeration": {"comp_id": "54977017", "grupo": "1", "jornada": "1"}}
+    raw = tmp_path / "fiflp_actas_2026-2027_raw.json"
+    raw.write_text(json.dumps({"778": acta}), encoding="utf-8")
+    report = A.import_raw(conn, str(raw))
+    assert report["orphans_cleared"] == 0
+    assert conn.execute("SELECT cod_acta FROM matches WHERE id=?", (ff1,)).fetchone() == (500,)
+    assert conn.execute("SELECT count(*) FROM match_staff_all WHERE match_id=?", (ff1,)).fetchone() == (1,)
+    # Un acta que vino de un raw (sin fiflp_acta, o con otro código) sigue purgándose como siempre.
+    conn.execute("UPDATE matches SET fiflp_acta=501 WHERE id=?", (ff1,))
+    conn.commit()
+    assert A._purge_orphan_cod_actas(conn, {"778": acta}) == 1
+
+
 def test_groups_of_the_current_season_only_come_from_the_activation(tmp_path):
     """Con SEASON_NAME['22'] un raw de goleadores de 2026-27 es posible: sus grupos alevín no se crean
     por aquí (sin URL de la federación, el bot no los pondría al día); se activan con activate_season."""

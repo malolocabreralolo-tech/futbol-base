@@ -407,12 +407,17 @@ def _purge_orphan_cod_actas(conn, raw: dict) -> int:
     está en curso el bot importa actas en cada pasada, update_fiflp, y un raw de
     actas-federacion.yml nunca las tiene todas) y las categorías de sus actas
     (categorias.category_of de la competición): un raw con solo las de alevín no
-    deja sin acta a los partidos de benjamín.
+    deja sin acta a los partidos de benjamín. Nunca las que leyó el bot por el
+    código que da la federación en la jornada (cod_acta = fiflp_acta, desde
+    2026-27): no salen de ningún raw, y cuando su temporada se archive un raw
+    parcial (una tanda, una competición) que se reimporte las borraría.
     """
     try:
         from scripts.categorias import category_of
+        from scripts.migrate_actas_schema import column_exists
     except ImportError:
         from categorias import category_of
+        from migrate_actas_schema import column_exists
     season_ids, categories = set(), set()
     for acta in raw.values():
         header = acta.get("header") or {}
@@ -435,12 +440,14 @@ def _purge_orphan_cod_actas(conn, raw: dict) -> int:
     # Un acta sin categoría reconocible (cabeceras antiguas) deja la purga como estaba, sin filtro.
     by_category = "" if None in categories else \
         f" AND upper(c.name) IN ({','.join('?' * len(categories))})"
+    by_bot = " AND (m.fiflp_acta IS NULL OR m.cod_acta <> m.fiflp_acta)" \
+        if column_exists(conn, "matches", "fiflp_acta") else ""
     rows = conn.execute(
         f"""SELECT m.id, m.cod_acta
               FROM matches m
               JOIN groups g ON g.id=m.group_id
               JOIN categories c ON c.id=g.category_id
-             WHERE g.season_id IN ({qmarks}) AND m.cod_acta IS NOT NULL{by_category}""",
+             WHERE g.season_id IN ({qmarks}) AND m.cod_acta IS NOT NULL{by_category}{by_bot}""",
         tuple(season_ids) + (() if None in categories else tuple(sorted(categories))),
     ).fetchall()
     cleared = 0

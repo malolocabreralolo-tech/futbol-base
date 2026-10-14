@@ -58,7 +58,7 @@ Un solo sitio: `scripts/categorias.py`, `category_of(nombre)` → `'ALEVIN' | 'P
 - un acta solo se casa con partidos de la categoría de su competición; una de sala o de alevín de otra isla, con ninguno;
 - una liga de la app solo con grupos de su categoría (en 2026-27, 10 de las 32 ligas alevín casaban con un grupo FF);
 - goleadores, clasificaciones, detalle y escudos de un grupo de la federación, nunca en un grupo de otra categoría (ni por sus actas ni por `fiflp_groups`);
-- la purga de `cod_acta` huérfanos (`import_fiflp_actas`) solo en temporadas cerradas y en las categorías que trae el raw: un raw con solo actas alevín no deja sin acta a los partidos de benjamín;
+- la purga de `cod_acta` huérfanos (`import_fiflp_actas`) solo en temporadas cerradas y en las categorías que trae el raw: un raw con solo actas alevín no deja sin acta a los partidos de benjamín. Y nunca las actas que leyó el bot por el código de la jornada (`cod_acta = fiflp_acta`, desde 2026-27): no vienen de ningún raw;
 - `import_fiflp_grupos` no crea grupos de la temporada en curso: solo los da de alta `activate_season`, con la URL de la federación que actualiza el bot.
 
 ## Activar alevín de Gran Canaria 2026-27
@@ -87,7 +87,7 @@ Lo que pasa después, solo:
 
 - `activate_season` guarda el código del acta de cada partido si el raw lo trae (`fiflp_acta`) y marca los grupos nuevos en `fiflp_full_pending`: en su **primera pasada** el bot lee **todas** sus jornadas ya jugadas (no solo las de las últimas tres semanas) y así tiene el código de las actas de la jornada 1. Las actas se leen después, al ritmo del bot.
 - El bot (`update_fiflp.run_passes`) hace primero benjamín y prebenjamín, con sus actas y goleadores, y después un **turno de alevín**: `ALEVIN_PER_RUN` (8) grupos, los que llevan más tiempo sin leerse (`fiflp_reads`), hasta `ALEVIN_STOP_SECONDS` (31 min). Con los 32 grupos de la Fase Previa, cada grupo se pone al día una vez al día; los demás conservan su última entrada en `data-health.json`. Si no basta, `FIFLP_CATS` (`benjamin,prebenjamin` / `alevin`) permite repartir las categorías en dos workflows con la misma `concurrency: update-data`.
-- Para traer de una vez las actas antiguas de alevín, en lugar de esperar al bot: `gh workflow run actas-federacion.yml -f temporada=22 -f categorias=alevin -f tandas=3` (el raw de 2026-27 nunca borra actas de la temporada en curso).
+- Para traer de una vez las actas antiguas de alevín, en lugar de esperar al bot: `gh workflow run actas-federacion.yml -f temporada=22 -f categorias=alevin -f tandas=3` (el raw de 2026-27 no borra las actas que ha leído el bot, ni ahora ni cuando la temporada se archive: la purga de huérfanas no toca las de `cod_acta = fiflp_acta`).
 
 Cuando la federación publique la Segunda Fase alevín (o sus eliminatorias), lo mismo con sus ids: `gh workflow run discover-fiflp.yml` (la tanda `22al` toma las competiciones alevín del catálogo), `gh workflow run fetch-fiflp-islas.yml -f temporada=22al -f ids=<ids>` (se añaden al mismo raw), `fiflp_manifest … --comps <ids>` (códigos `ALA1`…, `ALEL1`…), `activate_season … --add` y `--add --apply`.
 

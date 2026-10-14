@@ -36,10 +36,34 @@ def begin(season):
     _force = False
     _report = {"version": 1, "season": season, "groups": {},
                "nextSeason": _previous.get("nextSeason", {"name": load_config()["nextSeason"], "status": "pending"})}
+    _carry_new_competitions()
 
 
 def _same_season():
     return bool(_report and _previous and _previous.get("season") == _report["season"])
+
+
+def _carry_new_competitions():
+    """Las competiciones nuevas siguen hasta que el bot vuelva a leer el desplegable (sin
+    federación en esta pasada o si falla la lectura, se quedan); con otra temporada, fuera."""
+    items = _previous.get("newCompetitions") if _same_season() else None
+    if isinstance(items, list) and items:
+        _report["newCompetitions"] = items
+
+
+def new_competitions():
+    """[{id, name, firstSeen}]: las competiciones de la federación que la temporada no tiene."""
+    return list((_report or {}).get("newCompetitions") or [])
+
+
+def set_new_competitions(items):
+    """Las que acaba de ver update_fiflp.check_competitions (vacía: ninguna)."""
+    if _report is None:
+        return
+    if items:
+        _report["newCompetitions"] = list(items)
+    else:
+        _report.pop("newCompetitions", None)
 
 
 def previous_groups():

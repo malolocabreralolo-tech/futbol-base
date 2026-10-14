@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write     # una issue por competición nueva de la federación (avisar_competiciones.py)
 
 concurrency:
   group: update-data
@@ -53,6 +54,16 @@ jobs:
           # Sin búfer: cada línea del log con su hora (el coste de cada grupo de la federación).
           PYTHONUNBUFFERED: '1'
         run: python3 scripts/fetch_futbolaspalmas.py
+
+      # Competiciones de la federación que la web no tiene (newCompetitions de data-health.json, que
+      # escribe update_fiflp.check_competitions): una issue por cada una, sin repetirla (busca su
+      # código también en las cerradas). Solo el nombre y el código de la competición. Nunca para el bot.
+      - name: Avisar de competiciones nuevas
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/avisar_competiciones.py
 
       # Los push del bot (GITHUB_TOKEN) NO disparan tests.yml (anti-recursión
       # de GitHub), así que las suites tienen que correr AQUÍ, sobre los datos

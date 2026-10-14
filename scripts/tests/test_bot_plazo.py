@@ -281,7 +281,7 @@ def report(checks, at=NOW - timedelta(hours=1)):
 
 def test_what_does_not_fit_waits_for_the_next_pass_without_an_error(health):
     previous = report({code: checked(6) for code in ALL})
-    data, fed = health(previous, season(), budget=60)
+    data, fed = health(previous, season(), budget=80)
     groups = data["groups"]
     deferred = data["run"]["deferred"]
     assert deferred and set(deferred) <= {"AL1", "ALX1", "FF1", "FF2", "FF10", "LZ1"}
@@ -291,9 +291,14 @@ def test_what_does_not_fit_waits_for_the_next_pass_without_an_error(health):
     for code in deferred:                                                 # lo demás, como estaba
         assert groups[code] == previous["groups"][code], code
     assert data["summary"] == {"ok": len(ALL), "rejected": 0, "error": 0}
-    # Las actas y los goleadores de los prioritarios caben en la reserva; los demás, si queda.
+    # Las actas y los goleadores de los prioritarios caben en la reserva (tras una página de
+    # competiciones nuevas); los demás, si queda.
     scorers = [u for u in fed.urls if "NFG_CMP_Goleadores" in u]
     assert [u.rsplit("=", 1)[1] for u in scorers[:3]] == ["7", "4", "9"]  # PG2, FF5, AL3
+    # Las competiciones nuevas, una página entre las dos pasadas.
+    catalog = [i for i, u in enumerate(fed.urls) if u.endswith("NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22")]
+    last_group = max(i for i, u in enumerate(fed.urls) if "CodGrupo=" in u)
+    assert len(catalog) == 1 and last_group < catalog[0] < fed.urls.index(scorers[0])
 
 
 def test_the_rotation_reaches_every_group(health):
@@ -329,4 +334,5 @@ def test_nothing_new_and_nothing_left_out_does_not_rewrite_the_report(health):
     conn = season(played="2026-09-19")
     previous = report({code: checked(6) for code in ALL}, at=NOW - timedelta(hours=1))
     data, fed = health(previous, conn, budget=600)
-    assert data == previous and fed.urls == []                            # todos descansan
+    assert data == previous                                               # todos descansan
+    assert [u.split("NPcd/")[1] for u in fed.urls] == ["NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22"]

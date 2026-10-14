@@ -103,6 +103,24 @@ def test_update_logs_the_federation_pass_as_it_goes():
     assert scrape["env"].get("FIFLP_UPDATE") == "1"
 
 
+def test_update_opens_one_issue_per_new_competition_without_stopping_the_bot():
+    """Las competiciones nuevas de la federación (newCompetitions de data-health.json, que escribe
+    update_fiflp.check_competitions) abren una issue cada una (avisar_competiciones.py, que no las
+    repite). Corre aunque falle el paso del bot y un fallo suyo no tumba el job ni el commit."""
+    data = _load("update.yml")
+    assert data["permissions"].get("issues") == "write"
+    assert data["permissions"].get("contents") == "write"
+    steps = _steps(data, "update")
+    runs = [(s.get("run") or "") for s in steps]
+    fetch_idx = next(i for i, r in enumerate(runs) if "fetch_futbolaspalmas" in r)
+    idx = next(i for i, r in enumerate(runs) if "avisar_competiciones.py" in r)
+    step = steps[idx]
+    assert idx > fetch_idx
+    assert step.get("continue-on-error") is True and step.get("if") == "${{ !cancelled() }}"
+    assert step["env"].get("GH_TOKEN") == "${{ github.token }}"
+    assert "${{" not in step["run"], "nada interpolado en el guion"
+
+
 def test_update_stages_all_generate_js_outputs():
     """generate_js.py (via fetch_futbolaspalmas.py) writes data-*.js,
     index.html (?v= bump) and sw.js (CACHE_NAME bump, C3/C4). The old

@@ -209,6 +209,94 @@ def plan_groups(conn, groups, checks, now, today, priority=None, pinned=None):
     return Plan([item[-1] for item in order], resting, due, mine)
 
 
+# ── Competiciones nuevas en la federación ─────────────────────────────────────
+
+CATALOG_URL = "/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
+# El desplegable de competiciones de la temporada (el mismo JS que discover_fiflp_comps.py).
+COMPETITIONS_JS = """() => {
+    const sel = document.querySelector('select[name="competicion"]');
+    if (!sel) return [];
+    return Array.from(sel.options).filter(o => o.value && o.value !== '0')
+        .map(o => ({id: o.value, name: o.text.trim()}));
+}"""
+# Competiciones de las categorías de la web que no se van a añadir ({id: motivo}): dejan de salir en
+# newCompetitions (Datos y fuentes). Para que no vuelva a abrirse su issue basta con cerrarla.
+IGNORED_COMPETITIONS = {}
+
+
+def category_of(name):
+    """'ALEVIN', 'BENJAMIN', 'PREBENJAMIN' o None de una competición de la federación: nunca fútbol
+    sala (SALA, LPFS) y alevín solo de Gran Canaria (el de Lanzarote y Fuerteventura queda fuera).
+    El criterio del contrato de alevín; si la rama de datos trae su propio category_of (fiflp_manifest
+    o un módulo común), fusionar los dos en uno."""
+    n = _fold(name).upper()
+    if not n or "SALA" in n or "LPFS" in n:
+        return None
+    if "PREBENJAMIN" in n:
+        return "PREBENJAMIN"
+    if "BENJAMIN" in n:
+        return "BENJAMIN"
+    if "ALEVIN" in n:
+        return None if "LANZAROTE" in n or "FUERTEVENTURA" in n else "ALEVIN"
+    return None
+
+
+def _season_urls(conn, season_id):
+    return [u for (u,) in conn.execute(
+        "SELECT url FROM groups WHERE season_id=? AND url LIKE '%fiflp.com%'", (season_id,))]
+
+
+def season_competitions(conn, season_id):
+    """Los CodCompeticion de los grupos de la temporada."""
+    return {m.group(1) for u in _season_urls(conn, season_id) for m in [re.search(r"CodCompeticion=(\d+)", u)] if m}
+
+
+def season_code(conn, season_id):
+    """El CodTemporada de la federación de la temporada (el de sus grupos), o None."""
+    codes = [m.group(1) for u in _season_urls(conn, season_id) for m in [re.search(r"CodTemporada=(\d+)", u)] if m]
+    return max(set(codes), key=codes.count) if codes else None
+
+
+def new_competitions(options, known, previous=(), today=None, ignored=None):
+    """[{id, name, firstSeen}] de las opciones del desplegable ([{id, name}]) de las categorías de la
+    web (category_of) que no están en `known` ni en `ignored`; firstSeen, el de `previous` si ya se
+    había visto (así el informe no cambia de una pasada a otra)."""
+    ignored = IGNORED_COMPETITIONS if ignored is None else ignored
+    seen = {str(c.get("id")): c.get("firstSeen") for c in previous or [] if isinstance(c, dict)}
+    out, ids = [], set()
+    for c in options or []:
+        if not isinstance(c, dict):
+            continue
+        cid, name = str(c.get("id") or "").strip(), re.sub(r"\s+", " ", str(c.get("name") or "")).strip()
+        if (not cid.isdigit() or not name or cid in ids or cid in known or cid in ignored
+                or not category_of(name)):
+            continue
+        ids.add(cid)
+        out.append({"id": cid, "name": name, "firstSeen": seen.get(cid) or (today or date.today()).isoformat()})
+    return out
+
+
+def check_competitions(page, F, conn, season_id, today, log=print):
+    """Lee el desplegable de competiciones de la temporada en curso y apunta en data-health.json las
+    nuevas (newCompetitions; update.yml abre una issue por cada una con avisar_competiciones.py). Si
+    la página no carga o sale vacía, se queda lo que había. Devuelve las nuevas, o None si no leyó."""
+    season = season_code(conn, season_id)
+    if not season:
+        return None
+    if not F.goto(page, F.BASE + CATALOG_URL.format(season=season)):
+        log("  ! competiciones: la federación no sirvió su desplegable")
+        return None
+    options = page.evaluate(COMPETITIONS_JS) or []
+    F.delay()
+    if not options:
+        return None
+    fresh = new_competitions(options, season_competitions(conn, season_id), source_health.new_competitions(), today)
+    source_health.set_new_competitions(fresh)
+    if fresh:
+        log("\n  Competiciones nuevas en la federación: " + "; ".join(f"{c['name']} ({c['id']})" for c in fresh))
+    return fresh
+
+
 def option_round(text):
     """'3 - 17-10-2026' (así lo escribe FIFLP; también con barras) ->
     ('Jornada 3', date(2026, 10, 17)); sin fecha, None."""
@@ -815,6 +903,12 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
           + (f" ({pages} páginas, {first_pass / pages:.1f} s cada una)" if pages else ""), flush=True)
     if deferred:
         print(f"  Rotación: {len(deferred)} grupos, a la próxima pasada ({_codes(deferred)})", flush=True)
+    # Una página: las competiciones que la federación publica y la web no tiene (la Segunda Fase).
+    try:
+        if clock() <= deadline:
+            check_competitions(page, F, conn, season_id, today)
+    except Exception as e:
+        print(f"  ! competiciones: {e}")
     # Segunda pasada, con lo que quede de plazo: actas y goleadores. Son lo
     # más lento y lo menos urgente; un fallo aquí no cambia el estado del grupo.
     budget = MAX_ACTAS_PER_RUN

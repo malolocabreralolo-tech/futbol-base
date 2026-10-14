@@ -55,6 +55,15 @@ class TestTeamKey:
         assert team_key('MOGAN, C.F.')[1] == ''
         assert team_key('ARUCAS C.F. "B"')[1] == 'B'
 
+    def test_a_spaced_or_unfinished_abbreviation_is_not_a_filial_letter_either(self):
+        # 'C. F.' con espacio y 'C.D' sin el último punto (raws de 2026-27) eran el filial F y el D.
+        assert team_key('SIMUSETTI C. F.') == team_key('SIMUSETTI C. F. "A"')[:1] + ('',)
+        assert team_key('TEGUINTE, C.D') == team_key('CD Teguinte')
+        assert team_key('VALSEQUILLO, U.D')[1] == '' and team_key('Arucas C.F')[1] == ''
+        # La letra suelta que va detrás sí es la del filial.
+        assert team_key('SIMUSETTI C. F. "B"')[1] == 'B' and team_key('ESTRELLA, C.D. B')[1] == 'B'
+        assert team_key('PEÑA DE LA AMISTAD "A", C.D. A')[1] == 'A'
+
 
 class TestTeamScore:
     def test_short_name_is_subset_of_the_long_one(self):

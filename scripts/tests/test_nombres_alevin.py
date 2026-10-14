@@ -193,6 +193,22 @@ def test_a_filial_with_its_row_keeps_it_even_if_it_is_called_like_its_pretty_nam
                      "NUEVO HORIZONTE, U.D.": "Nuevo Horizonte", 'NUEVO HORIZONTE, U.D. "B"': "Nuevo Horizonte B"}
 
 
+def test_a_spaced_abbreviation_is_not_a_filial_of_its_own_club():
+    """Con el raw de benjamín y el de alevín juntos, 'SIMUSETTI C. F.' (benjamín) era el filial F de
+    'SIMUSETTI C. F. "A"' (alevín): 'Simusetti F', una fila nueva que club_id no salvaba. Y 'TEGUINTE, C.D',
+    el filial D: no casaba con su ficha ('CD Teguinte') y salía 'Teguinte'."""
+    conn = base()
+    put(conn, 3, 1, "FF11", "grancanaria", ["Simusetti"], fed={"Simusetti": "SIMUSETTI C. F."})
+    put(conn, 3, 4, "AL13", "grancanaria", ["Simusetti B"])
+    put(conn, 3, 1, "LZ2", "lanzarote", ["CD Teguinte"], fed={"CD Teguinte": "TEGUINTE, C.D"})
+    crudos = (raw(["SIMUSETTI C. F."], cat="benjamin") + raw(['SIMUSETTI C. F. "A"', 'SIMUSETTI C. F. "B"'])
+              + raw(["TEGUINTE, C.D"], island="lanzarote", cat="benjamin"))
+    for season in ("2026-2027", None):
+        assert known_names(crudos, conn, season=season) == {
+            "SIMUSETTI C. F.": "Simusetti", 'SIMUSETTI C. F. "A"': "Simusetti", 'SIMUSETTI C. F. "B"': "Simusetti B",
+            "TEGUINTE, C.D": "CD Teguinte"}, season
+
+
 def test_the_card_of_the_season_is_ignored_when_two_rows_share_it():
     conn = base()
     put(conn, 3, 1, "FF12", "grancanaria", ["Atlético Fomento", "Otro Fomento"],

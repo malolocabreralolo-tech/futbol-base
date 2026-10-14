@@ -53,8 +53,10 @@ def fold(name):
 
 # 'C.F.', 'U.D.', 'C.F.S.'… Hay que quitarlas ENTERAS antes de trocear: si no,
 # la última letra ('D' de U.D., 'F' de C.F.) se cuela como letra de filial y
-# entonces 'SAN PEDRO ATALAYA, U.D.' parece un filial D que no existe.
-_ABREVIATURA = re.compile(r'\b(?:[A-Za-zÁÉÍÓÚÑ]\.){2,}')
+# entonces 'SAN PEDRO ATALAYA, U.D.' parece un filial D que no existe. También con un espacio entre
+# las letras ('SIMUSETTI C. F.') o sin el último punto ('TEGUINTE, C.D', 'VALSEQUILLO, U.D'): eran el
+# filial F y el D. La letra suelta sin punto que va detrás sí es la del filial ('C.D. B').
+_ABREVIATURA = re.compile(r'\b(?:[A-Za-zÁÉÍÓÚÑ]\.\s?){2,}|\b[A-Za-zÁÉÍÓÚÑ]\.[A-Za-zÁÉÍÓÚÑ](?![\w.])')
 
 
 # Nombres de la federación revisados a mano ({nombre de la federación: nombre en la base}), los que

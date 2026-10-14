@@ -922,6 +922,16 @@ def main():
     # Las categorías con su nombre canónico (sin la 'prebenjamin' duplicada, con ALEVIN).
     from migrate_categories import migrate as migrate_categories
     migrate_categories(conn)
+    # Los equipos que se llevaron la fila de otro club al activar sus grupos (la Fase Previa alevín de
+    # 2026-27), antes de leer la federación: el bot casa sus nombres con los de la clasificación del grupo.
+    # Idempotente; un fallo se apunta y no para la actualización.
+    from migrate_team_names import migrate as migrate_team_names
+    try:
+        migrate_team_names(conn)
+    except Exception:
+        import traceback
+        conn.rollback()
+        print("  ! ERROR al corregir los nombres de equipo (no para la actualización):\n" + traceback.format_exc())
     season_id, season_name = active_season(conn)
     print(f"Temporada verificada: {season_name}")
 

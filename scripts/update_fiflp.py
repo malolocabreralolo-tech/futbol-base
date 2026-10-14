@@ -433,11 +433,33 @@ def rounds_to_refresh(options, stored, today, full=False):
 
 def name_map(scraped_names, group_teams):
     """{nombre FIFLP limpio: nombre de la base}. Primero contra la plantilla del
-    grupo; lo que no casa, con el nombre limpio de FIFLP."""
+    grupo; lo que no casa, con el nombre limpio de FIFLP. Un nombre de la federación
+    revisado a mano (fiflp_team_names.json) cuyo equipo ya está en el grupo va con él:
+    'FUNDACION GUINIGUADA, C.D. DE LA "A"' es 'Fundación Guini.', que las palabras no
+    casan (y, sin él, el bot abría un equipo nuevo con sus partidos repetidos)."""
+    from fiflp_names import fed_alias
     crudos = sorted({clean_team_name(n) for n in scraped_names} - {""})
     crudos = [n for n in crudos if not is_bye(n)]
-    mapa = canonical_names(crudos, group_teams, []) if group_teams else {}
+    teams = set(group_teams or ())
+    fixed = {n: fed_alias(n) for n in crudos if fed_alias(n) in teams}
+    rest = [t for t in group_teams or () if t not in set(fixed.values())]
+    mapa = canonical_names([n for n in crudos if n not in fixed], rest, []) if rest else {}
+    mapa.update(fixed)
     return {n: mapa.get(n, n) for n in crudos}
+
+
+def group_team_names(conn, group_id):
+    """Los equipos del grupo: los de su clasificación y, detrás, los que solo están en su calendario.
+    Un retirado (la federación lo quita de la tabla y deja sus partidos, AL20 de 2026-27) casaba con
+    nada y el bot abría un equipo con el nombre de la federación ('SAN JOSE, REAL SPORTING "B"') y le
+    repetía los partidos."""
+    names = [r[1] for r in stored_standings(conn, group_id)]
+    for (name,) in conn.execute(
+            """SELECT DISTINCT t.name FROM matches m JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
+               WHERE m.group_id=? ORDER BY t.name""", (group_id,)):
+        if name not in names:
+            names.append(name)
+    return names
 
 
 def deviation(conn, group_id, override=None):
@@ -677,7 +699,7 @@ def add_detail(standings, html):
 
 def update_group(conn, group_id, code, raw_standings, raw_rounds, log=print):
     """Escribe en la base lo scrapeado de un grupo. Devuelve (estado, mensaje)."""
-    group_teams = [r[1] for r in stored_standings(conn, group_id)]
+    group_teams = group_team_names(conn, group_id)
     names = name_map([r["team"] for r in raw_standings] +
                      [m[s] for ms in raw_rounds.values() for m in ms for s in ("home", "away")],
                      group_teams)
@@ -829,11 +851,11 @@ def parse_goleadores(html):
 def write_scorers(conn, group_id, rows, group_teams=None):
     """Sustituye los goleadores del grupo con los de la federación, con los
     nombres de equipo que ya usa la base (`group_teams`; por defecto, los de su
-    clasificación)."""
+    clasificación y su calendario)."""
     if not rows:
         return 0
     if group_teams is None:
-        group_teams = [r[1] for r in stored_standings(conn, group_id)]
+        group_teams = group_team_names(conn, group_id)
     names = name_map([team for _, team, *_ in rows], group_teams)
     ids = {}
     for _, team, *_ in rows:

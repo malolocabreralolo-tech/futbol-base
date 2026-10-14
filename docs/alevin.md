@@ -61,6 +61,16 @@ Un solo sitio: `scripts/categorias.py`, `category_of(nombre)` → `'ALEVIN' | 'P
 - la purga de `cod_acta` huérfanos (`import_fiflp_actas`) solo en temporadas cerradas y en las categorías que trae el raw: un raw con solo actas alevín no deja sin acta a los partidos de benjamín. Y nunca las actas que leyó el bot por el código de la jornada (`cod_acta = fiflp_acta`, desde 2026-27): no vienen de ningún raw;
 - `import_fiflp_grupos` no crea grupos de la temporada en curso: solo los da de alta `activate_season`, con la URL de la federación que actualiza el bot.
 
+**Nombres de equipo** (`teams.name` es único y lo comparten las tres categorías: un mal casamiento mezcla dos clubes en la misma ficha; ver `scripts/tests/test_nombres_alevin.py`). `activate_season.known_names`:
+
+- con `--add`, el club que ya juega en la temporada en otra categoría con el mismo nombre de la federación (su ficha, `team_seasons`) es esa fila: `VICTORIA, REAL CLUB "A"` es `RC Victoria`, como en benjamín;
+- cada nombre de la base, de un solo club (el de la ficha, el de `fiflp_team_names.json` o el que se lo llevó en una pasada anterior): `FUNDACION GUINIGUADA` no es `Guiniguada` (GUINIGUADA APOLINARIO), ni `FUNDACION CANARIA U.D. LAS PALMAS` es `Las Palmas`;
+- un filial va con su club: el de su familia si la base lo tiene (`Las Mesas Hu.` → `Las Mesas Hu. B`) y nunca el filial de otro club que comparta una palabra (`Huracán B` y `AD Huracán C` son de AD Huracán);
+- los candidatos de otra isla no compiten (Puerto del Carmen dejaba a `PUERTOS DE L.P.` sin `Puertos LP`);
+- y `activate_season` aborta si dos equipos distintos acabarían con el mismo nombre en grupos distintos (`name_clashes`).
+
+Lo que la activación de la Fase Previa dejó mal en la base lo corrige el bot en cada pasada, antes de leer la federación: `scripts/migrate_team_names.py` (`TEAM_FIXES`, solo en esos grupos alevín de 2026-27; en una base corregida no hace nada). Y el bot casa sus nombres con los de la clasificación **y el calendario** del grupo (un retirado ya no abre un equipo con la grafía de la federación ni repite sus partidos) y con `fiflp_team_names.json` (`FUNDACION GUINIGUADA` es `Fundación Guini.`).
+
 ## Activar alevín de Gran Canaria 2026-27
 
 Sin ningún workflow en marcha (`gh run list --limit 5`) antes de empujar nada: `futbolbase.db` es binario y un conflicto obliga a repetirlo todo. Mejor con la rama de la web ya en `main` (si no, los datos se publican pero la web no los enseña).

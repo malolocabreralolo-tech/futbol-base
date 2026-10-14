@@ -3,7 +3,8 @@
 teams.name es único y lo comparten todas las categorías: la activación (activate_season.known_names)
 casó mal varios clubes y mezcló sus fichas ('MESAS HURACAN, U.D. LAS "B"' en 'Huracán B', el B de AD
 Huracán; 'FUNDACION GUINIGUADA' en Guiniguada; dos equipos de Las Palmas en una fila…). Aquí: la lógica
-que ya no lo hace.
+que ya no lo hace, el paso del bot que corrige la base (migrate_team_names) y el bot, que al leer de
+nuevo los grupos no recrea los nombres malos ni repite partidos.
 """
 import json
 import re
@@ -209,3 +210,188 @@ def test_the_real_reviewed_table_keeps_the_four_clubs_apart(monkeypatch):
     assert alias("ALCOTAN CANARIAS, C.D.") == "Alcotán Can."
     assert alias('GUINIGUADA APOLINARIO, C.D. "A"') == "Guiniguada"
     assert alias("PALMAS, U.D. LAS") is None and alias("VALLESECO, U.D.") is None
+
+
+# ── El paso del bot: migrate_team_names ─────────────────────────────────────
+
+FIXES = {("2026-2027", "ALEVIN", "AL20"): {"Huracán B": "Las Mesas Hu. B", "Puertos de": "Puertos LP"},
+         ("2026-2027", "ALEVIN", "AL19"): {"Alcotan Canarias": "Alcotán Can."}}
+
+
+def mixed_base():
+    """AL16 y AL20 con la misma fila 'Huracán B' (la de benjamín FF12, con su ficha), AL20 con 'Puertos
+    de' (solo alevín, con la ficha que leyó el bot del directorio del grupo) y un partido con acta."""
+    conn = base()
+    put(conn, 1, 1, "GC6", "grancanaria", ["Huracán B"])                                     # 2022-23
+    put(conn, 3, 1, "FF12", "grancanaria", ["Huracán B"], fed={"Huracán B": 'HURACAN, A.D. "B"'})
+    put(conn, 3, 1, "FF11", "grancanaria", ["Puertos LP"], fed={"Puertos LP": 'PUERTOS DE L.P., C.E.F. "A"'})
+    put(conn, 2, 1, "B2", "grancanaria", ["Alcotán Can."])
+    put(conn, 3, 4, "AL16", "grancanaria", ["Huracán B", "Las Torres B"])
+    al20 = put(conn, 3, 4, "AL20", "grancanaria", ["Unión Viera C", "Puertos de", "Huracán B"],
+               fed={"Puertos de": 'PUERTOS DE L.P., C.E.F. "A"'})
+    al19 = put(conn, 3, 4, "AL19", "grancanaria", ["Atl. Angostura", "Alcotan Canarias"],
+               fed={"Alcotan Canarias": "ALCOTAN CANARIAS, C.D."})
+    hb, pd, uv = tid(conn, "Huracán B"), tid(conn, "Puertos de"), tid(conn, "Unión Viera C")
+    conn.executescript(f"""
+      INSERT INTO matches(id, group_id, jornada, home_team_id, away_team_id, home_score, away_score)
+        VALUES (1, {al20}, 'Jornada 1', {hb}, {pd}, 2, 1), (2, {al20}, 'Jornada 2', {uv}, {hb}, NULL, NULL);
+      INSERT INTO players(id, full_name, norm_name) VALUES (1, 'Jugador Uno', 'jugador uno'), (2, 'Jugador Dos', 'jugador dos');
+      INSERT INTO appearances(match_id, team_id, player_id, role) VALUES (1, {hb}, 1, 'starter'), (1, {pd}, 2, 'starter');
+      INSERT INTO match_events(match_id, team_id, player_id, kind, minute) VALUES (1, {hb}, 1, 'goal', 10);
+      INSERT INTO match_staff(match_id, team_id, kind, name) VALUES (1, {hb}, 'coach', 'Entrenador');
+      INSERT INTO match_staff_all(match_id, team_id, role, name, ord) VALUES (1, {pd}, 'Delegado', 'Delegado', 1);
+      INSERT INTO scorers(group_id, player_name, team_id, goals, games) VALUES ({al20}, 'Jugador Uno', {hb}, 1, 1);
+      INSERT INTO standings_detail(group_id, team_id, fiflp_code) VALUES ({al20}, {hb}, 1), ({al20}, {pd}, 2);
+    """)
+    return conn, al20, al19
+
+
+def in_group(conn, gid):
+    return {r[0] for r in conn.execute(
+        """SELECT t.name FROM teams t WHERE t.id IN (SELECT team_id FROM standings WHERE group_id=?
+           UNION SELECT home_team_id FROM matches WHERE group_id=? UNION SELECT away_team_id FROM matches WHERE group_id=?)""",
+        (gid, gid, gid))}
+
+
+def test_the_bot_step_moves_only_the_rows_of_the_group_and_is_idempotent():
+    from migrate_team_names import migrate
+    conn, al20, al19 = mixed_base()
+    hb = tid(conn, "Huracán B")
+    others = conn.execute("SELECT group_id, team_id, position FROM standings WHERE group_id NOT IN (?, ?) ORDER BY 1, 2",
+                          (al20, al19)).fetchall()
+    done = migrate(conn, FIXES, log=lambda *_: None)
+    assert sorted(d[2:] for d in done) == [("Alcotan Canarias", "Alcotán Can."), ("Huracán B", "Las Mesas Hu. B"),
+                                           ("Puertos de", "Puertos LP")]
+    assert in_group(conn, al20) == {"Unión Viera C", "Las Mesas Hu. B", "Puertos LP"}
+    assert in_group(conn, al19) == {"Atl. Angostura", "Alcotán Can."}
+    # Todo lo del grupo, con el equipo bueno: partidos, alineaciones, eventos, cuerpo técnico, goleadores, detalle.
+    mesas, puertos = tid(conn, "Las Mesas Hu. B"), tid(conn, "Puertos LP")
+    assert conn.execute("SELECT home_team_id, away_team_id FROM matches WHERE id=1").fetchone() == (mesas, puertos)
+    assert sorted(conn.execute("SELECT team_id FROM appearances")) == sorted([(mesas,), (puertos,)])
+    for table in ("match_events", "match_staff", "scorers"):
+        assert conn.execute(f"SELECT DISTINCT team_id FROM {table}").fetchall() == [(mesas,)], table
+    assert conn.execute("SELECT team_id FROM match_staff_all").fetchall() == [(puertos,)]
+    assert sorted(conn.execute("SELECT team_id FROM standings_detail WHERE group_id=?", (al20,))) == sorted(
+        [(mesas,), (puertos,)])
+    # 'Huracán B' sigue en AL16, en benjamín y en 2022-23, con su ficha; el resto de grupos, igual.
+    assert conn.execute("SELECT fiflp_name FROM team_seasons WHERE team_id=?", (hb,)).fetchall() == [('HURACAN, A.D. "B"',)]
+    assert conn.execute("SELECT group_id, team_id, position FROM standings WHERE group_id NOT IN (?, ?) ORDER BY 1, 2",
+                        (al20, al19)).fetchall() == others
+    # La fila que se queda sin uso, fuera; su ficha pasa a la buena si esta no tiene (Alcotán Can.), y si
+    # tiene, se queda la suya (Puertos LP, la de benjamín).
+    assert tid(conn, "Puertos de") is None and tid(conn, "Alcotan Canarias") is None
+    assert conn.execute("SELECT fiflp_name FROM team_seasons WHERE team_id=?", (puertos,)).fetchall() == [
+        ('PUERTOS DE L.P., C.E.F. "A"',)]
+    assert conn.execute("SELECT fiflp_name FROM team_seasons WHERE team_id=? AND season_id=3",
+                        (tid(conn, "Alcotán Can."),)).fetchall() == [("ALCOTAN CANARIAS, C.D.",)]
+    assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+    # Otra pasada, en la base ya corregida: nada.
+    assert migrate(conn, FIXES, log=lambda *_: None) == []
+
+
+def test_the_bot_step_never_puts_a_team_twice_in_a_group():
+    from migrate_team_names import migrate
+    conn, al20, _ = mixed_base()
+    lines = []
+    assert migrate(conn, {("2026-2027", "ALEVIN", "AL20"): {"Huracán B": "Unión Viera C"}}, log=lines.append) == []
+    assert "Huracán B" in in_group(conn, al20) and any("ya está en el grupo" in line for line in lines)
+    # Ni en otra categoría ni en otra temporada con el mismo código.
+    assert migrate(conn, {("2026-2027", "BENJAMIN", "AL20"): {"Huracán B": "X"},
+                          ("2025-2026", "ALEVIN", "AL20"): {"Huracán B": "X"}}, log=lambda *_: None) == []
+
+
+def test_the_real_table_on_a_copy_of_the_base(tmp_path):
+    """Sobre una copia de la base del repositorio (antes o después de que el bot la corrija): ningún
+    equipo en dos grupos de la Fase Previa, los cuatro de Las Mesas Huracán prioritarios, ningún nombre
+    malo en su grupo y una segunda pasada que no hace nada."""
+    from migrate_team_names import TEAM_FIXES, migrate
+    from update_fiflp import is_priority, priority_keys
+    db = ROOT / "futbolbase.db"
+    if not db.exists():
+        pytest.skip("sin futbolbase.db")
+    copy = tmp_path / "fb.db"
+    src = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    conn = sqlite3.connect(copy)
+    src.backup(conn)
+    src.close()
+    conn.execute("PRAGMA foreign_keys=ON")
+    fixed = {code for (_, _, code) in TEAM_FIXES}
+    count = lambda: conn.execute("""SELECT g.code, (SELECT count(*) FROM standings WHERE group_id=g.id),
+                                    (SELECT count(*) FROM matches WHERE group_id=g.id) FROM groups g ORDER BY g.id""").fetchall()
+    before = count()
+    migrate(conn, log=lambda *_: None)
+    assert migrate(conn, log=lambda *_: None) == []
+    assert count() == before
+    groups = conn.execute("""SELECT g.id, g.code FROM groups g JOIN seasons s ON s.id=g.season_id
+                             JOIN categories c ON c.id=g.category_id WHERE s.name='2026-2027' AND c.name='ALEVIN'""").fetchall()
+    previa = {code: in_group(conn, gid) for gid, code in groups if re.fullmatch(r"AL\d+", code)}
+    seen = {}
+    for code, names in previa.items():
+        for name in names:
+            seen.setdefault(name, []).append(code)
+    assert {n: c for n, c in seen.items() if len(c) > 1} == {}
+    for (_, _, code), renames in TEAM_FIXES.items():
+        assert not set(renames) & previa[code] and set(renames.values()) <= previa[code], code
+    keys = priority_keys(["Las Mesas Hu."])
+    assert sorted(code for code, names in previa.items() if any(is_priority(n, keys) for n in names)) == [
+        "AL18", "AL20", "AL4", "AL9"]
+    assert fixed <= set(previa)
+    conn.close()
+
+
+# ── El bot, al leer otra vez los grupos (update_fiflp) ──────────────────────
+
+def test_the_bot_reads_the_group_again_with_the_good_names_and_no_repeated_matches(table):
+    """Con los nombres buenos en la base, el bot casa los de la federación con ellos: 'FUNDACION
+    GUINIGUADA' es 'Fundación Guini.' por la tabla revisada (las palabras no la casan), y el retirado que
+    solo está en el calendario ('SAN JOSE, REAL SPORTING "B"') va con su fila: antes abría un equipo con el
+    nombre de la federación y le repetía los partidos."""
+    import update_fiflp as U
+    table({"FUNDACION GUINIGUADA, C.D. DE LA": "Fundación Guini."})
+    conn = base()
+    gid = put(conn, 3, 4, "AL15", "grancanaria", ["Fundación Guini.", "Siete Palmas B", "Las Mesas Hu. B"])
+    put(conn, 3, 1, "FF10", "grancanaria", ["Real Sporting B"])
+    ids = {n: tid(conn, n) for n in ("Fundación Guini.", "Siete Palmas B", "Las Mesas Hu. B", "Real Sporting B")}
+    conn.executescript(f"""
+      INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score) VALUES
+        ({gid}, 'Jornada 1', '2026-10-03', {ids["Fundación Guini."]}, {ids["Siete Palmas B"]}, 3, 1),
+        ({gid}, 'Jornada 1', '2026-10-03', {ids["Las Mesas Hu. B"]}, {ids["Real Sporting B"]}, NULL, NULL);
+    """)
+    teams = conn.execute("SELECT count(*) FROM teams").fetchone()[0]
+    standings = [{"pos": 1, "team": 'FUNDACION GUINIGUADA, C.D. DE LA "A"', "pts": 3, "j": 1, "g": 1, "e": 0, "p": 0,
+                  "gf": 3, "gc": 1, "df": 2},
+                 {"pos": 2, "team": 'MESAS HURACAN, U.D. LAS "B"', "pts": 0, "j": 0, "g": 0, "e": 0, "p": 0,
+                  "gf": 0, "gc": 0, "df": 0},
+                 {"pos": 3, "team": 'SIETE PALMAS, A.D. "B"', "pts": 0, "j": 1, "g": 0, "e": 0, "p": 1,
+                  "gf": 1, "gc": 3, "df": -2}]
+    rounds = {"Jornada 1": [
+        {"home": 'FUNDACION GUINIGUADA, C.D. DE LA "A"', "away": 'SIETE PALMAS, A.D. "B"', "hs": 3, "as": 1,
+         "date": "2026-10-03", "time": "", "venue": ""},
+        {"home": 'MESAS HURACAN, U.D. LAS "B"', "away": 'SAN JOSE, REAL SPORTING "B"', "hs": 0, "as": 3,
+         "date": "2026-10-03", "time": "", "venue": ""}]}
+    assert U.update_group(conn, gid, "AL15", standings, rounds, log=lambda *_: None)[0] == "ok"
+    assert conn.execute("SELECT count(*) FROM teams").fetchone()[0] == teams
+    assert conn.execute("SELECT count(*) FROM matches WHERE group_id=?", (gid,)).fetchone()[0] == 2
+    assert conn.execute("""SELECT home_score, away_score FROM matches WHERE group_id=? AND away_team_id=?""",
+                        (gid, ids["Real Sporting B"])).fetchone() == (0, 3)
+    assert in_group(conn, gid) == set(ids)
+    names = U.name_map(['FUNDACION GUINIGUADA, C.D. DE LA "A"', 'SAN JOSE, REAL SPORTING "B"'],
+                       U.group_team_names(conn, gid))
+    assert names == {'FUNDACION GUINIGUADA, C.D. DE LA "A"': "Fundación Guini.",
+                     'SAN JOSE, REAL SPORTING "B"': "Real Sporting B"}
+
+
+def test_the_bot_fixes_the_names_before_reading_the_federation():
+    text = (ROOT / "scripts" / "fetch_futbolaspalmas.py").read_text(encoding="utf-8")
+    main = text[text.index("def main():"):]
+    assert main.index("migrate_categories(conn)") < main.index("migrate_team_names(conn)") < main.index("update_groups(")
+
+
+def test_the_new_filials_have_their_club_shield():
+    text = (ROOT / "data-shields.js").read_text(encoding="utf-8")
+    shields = json.loads(re.search(r"const SHIELDS=(\{.*?\});", text, re.S).group(1))
+    for name in ("Las Mesas Hu. B", "Las Mesas Hu. C", "Las Mesas Hu. D"):
+        assert shields[name] == shields["Las Mesas Hu."], name
+    assert shields["Atlético D"] == shields["Atlético"] and shields["Guiniguada E"] == shields["Guiniguada"]
+    # Los dos clubes que no son filiales de nadie no toman escudo de otro.
+    assert "Fundación UD Las Palmas" not in shields and "Naturaleza Verde-Valleseco" not in shields

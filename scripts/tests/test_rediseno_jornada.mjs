@@ -28,8 +28,8 @@ test('PG2, jornada 30: cabecera, «Jornada 30 de 30», del 2 al 6 de junio y el 
   assert.match(out, /^<section data-screen="jornada">/);
   assert.equal((out.match(/<h1[ >]/g) || []).length, 1);
   assert.match(out, /<h1>Jornada<\/h1><p class="screen-sub">Prebenjamín, Grupo 2 de Gran Canaria<\/p>/);
-  // Con grupos hermanos (PG3), «Otro grupo» va directo a la lista de grupos de su competición (f).
-  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;f=grancanaria&amp;to=jornada">Otro grupo<\/a>/);
+  // El grupo de mi equipo: a la derecha, «Otras ligas», las de su categoría y su isla.
+  assert.match(out, /<a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=prebenjamin&amp;i=grancanaria&amp;to=jornada">Otras ligas<\/a>/);
   assert.equal(title(out), 'Jornada 30 de 30');
   assert.match(out, /<p class="round-dates">del 2 al 6 de junio<\/p>/);
   assert.equal(noticeOf(out), 'Sin partido en esta jornada: RC Victoria y Arucas B (descansa o le tocaba contra CD Batán)');
@@ -178,7 +178,8 @@ test('temporada pasada (P1 2024-25): la temporada en la etiqueta, fechas DD/MM, 
   assert.equal(rows(out).length, 5);
   assert.ok(rows(out).every(r => !r.mine && r.href.startsWith('#/partido?s=2024-2025&g=P1&r=9&')));
   assert.doesNotMatch(out, /group-calendar/);
-  assert.match(out, /href="#\/ligas\?s=2024-2025&amp;c=benjamin&amp;i=grancanaria&amp;to=jornada"/);
+  // Mi equipo jugó esa temporada en otro grupo (PGC2, prebenjamín): «Mi grupo», su jornada en 2024/25.
+  assert.match(out, /<a class="screen-action" href="#\/jornada\?s=2024-2025&amp;g=PGC2">Mi grupo<\/a>/);
 });
 
 test('temporada sin cargar, grupo que no existe o sin calendario: nunca una pantalla en blanco', () => {
@@ -190,7 +191,7 @@ test('temporada sin cargar, grupo que no existe o sin calendario: nunca una pant
   const none = render({ g: 'ZZ9' });
   assert.match(none, /<h1>Jornada<\/h1>/);
   assert.match(none, /<p class="empty">No hay ningún grupo ZZ9 en la temporada 2025\/26\.<\/p>/);
-  assert.match(none, /href="#\/ligas\?s=2025-2026&amp;to=jornada">Otro grupo/);
+  assert.match(none, /href="#\/ligas\?s=2025-2026&amp;to=jornada">Otras ligas/);
   const current = fixture('current-2025-2026');
   current.history.PG2 = {};
   const out = render({ g: 'PG2' }, { datasets: datasetsFor({ current }) });
@@ -202,12 +203,12 @@ test('temporada sin cargar, grupo que no existe o sin calendario: nunca una pant
   assert.match(closed, /<p class="empty">La fuente no publicó el calendario de este grupo\.<\/p>/);
 });
 
-test('sin g: «Elige un grupo en «Otro grupo».» sin lanzar', () => {
+test('sin g: «Elige un grupo en «Otras ligas».» sin lanzar', () => {
   let out;
   assert.doesNotThrow(() => { out = render({}); });
   assert.match(out, /<h1>Jornada<\/h1>/);
-  assert.match(out, /<p class="empty">Elige un grupo en «Otro grupo»\.<\/p>/);
-  assert.match(out, /href="#\/ligas\?s=2025-2026&amp;to=jornada">Otro grupo/);
+  assert.match(out, /<p class="empty">Elige un grupo en «Otras ligas»\.<\/p>/);
+  assert.match(out, /href="#\/ligas\?s=2025-2026&amp;to=jornada">Otras ligas/);
 });
 
 test('fechas: días de la semana, intervalos entre meses y años, y un solo día', () => {

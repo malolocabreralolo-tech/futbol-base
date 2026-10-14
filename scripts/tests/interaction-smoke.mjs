@@ -20,10 +20,11 @@ import { useWorld, STORE_KEY } from './fixture-site.mjs';
 //   en el segmento pulsado;
 // - abrir un partido y volver con Atrás; entrar por enlace directo (el 8–1) y volver con «‹»;
 // - traducir un enlace antiguo de WhatsApp, con su temporada y sin entrada nueva;
-// - «Otro grupo» → Ligas → Tabla (B3, Tarea 7): los grupos de su liga y la Tabla del grupo elegido, con
-//   Tabla marcada en la barra.
-// De la navegación entre grupos: «‹» al grupo de al lado sin entrada nueva y con el foco en «‹», el atajo a
-// la Evolución (Puntos y Posiciones, que se desliza dentro de su caja) y a la Jornada (push).
+// - «Otras ligas» → Ligas → Tabla (B3, Tarea 7): las ligas de su categoría y su isla, los grupos de la
+//   elegida y la Tabla del grupo, con Tabla marcada en la barra.
+// De la navegación entre grupos (simplificada el 14/10/2026): la tira de grupos sin entrada nueva y con el
+// foco en la ficha, la barra que conserva el grupo que se mira (y vuelve a la de siempre en el mío),
+// «Todos» y «Mi grupo» sin entradas nuevas, y Atrás, a donde se estaba antes de recorrer grupos.
 // De B3 (Tarea 12):
 // - buscar un equipo desde «Cambiar», sin una entrada por letra, abrir su ficha y comprobar que mi
 //   equipo no cambia: la portada sigue siendo la de Las Mesas Hu.;
@@ -268,59 +269,72 @@ async function scenarios(viewport, colorScheme) {
     assert.equal(s.length, tabEntries, `${label}: cambiar de vista usa replaceState`);
     await checkLayout(page, viewport.width, `${label}, tabla`);
 
-    // 5. «Otro grupo» → Ligas → Tabla (§11): con grupos hermanos, directo a los grupos de su liga
-    // (prebenjamín de Gran Canaria), con Tabla como destino (la barra no cambia); el grupo, su Tabla.
+    // 5. «Otras ligas» → Ligas → Tabla (§11): en mi grupo, la acción de la cabecera lleva a las ligas de
+    // su categoría y su isla, con Tabla como destino (la barra no cambia); la liga, sus grupos; el grupo,
+    // su Tabla, y la barra se queda en ese grupo.
     await click(page, '#contenido a.screen-action', label);
-    s = await paintedAs(page, 'ligas', { hash: '#/ligas?s=2025-2026&c=prebenjamin&i=grancanaria&f=grancanaria&to=tabla', label: `${label}, «Otro grupo»` });
-    assert.equal(s.h1, 'Gran Canaria', label);
+    s = await paintedAs(page, 'ligas', { hash: '#/ligas?s=2025-2026&c=prebenjamin&i=grancanaria&to=tabla', label: `${label}, «Otras ligas»` });
+    assert.equal(s.h1, 'Ligas', label);
     assert.deepEqual(s.tabs, ['#/tabla true'], label);
+    await checkLayout(page, viewport.width, `${label}, otras ligas`);
+    await click(page, '#contenido a.link-row[href="#/ligas?s=2025-2026&c=prebenjamin&f=grancanaria&to=tabla"]', label);
+    s = await paintedAs(page, 'ligas', { hash: '#/ligas?s=2025-2026&c=prebenjamin&f=grancanaria&to=tabla', label: `${label}, grupos de la liga` });
+    assert.equal(s.h1, 'Gran Canaria', label);
     await checkLayout(page, viewport.width, `${label}, grupos de la liga`);
     await click(page, '#contenido a.group-row[href="#/tabla?s=2025-2026&g=PG3"]', label);
     s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG3', label: `${label}, Tabla del grupo elegido` });
-    assert.deepEqual(s.tabs, ['#/tabla page'], label);
+    assert.deepEqual(s.tabs, ['#/tabla?s=2025-2026&g=PG3 page'], `${label}: la barra se queda en el grupo que se mira`);
+    assert.equal(await page.textContent('#contenido a.screen-action'), 'Mi grupo', `${label}: en otro grupo, «Mi grupo»`);
 
-    // 5b. Navegación entre grupos: «‹» vuelve a PG2 sin entrada nueva y con el foco en «‹»; el atajo
-    // abre su Evolución (Puntos y Posiciones, que se desliza dentro de su caja) y su Jornada, que sí
-    // es otra pantalla.
+    // 5b. La tira de grupos y la barra: cada ficha cambia de grupo sin entrada nueva y con el foco en
+    // ella; la pestaña Jornada abre la del grupo que se mira (push); «Todos», la misma jornada en los dos
+    // grupos (replace), con «›» sin entrada nueva; «Mi grupo» vuelve al mío y Atrás, a la Tabla de PG3.
     const groupEntries = s.length;
-    await click(page, '#contenido #grupo-prev', label);
-    s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG2', label: `${label}, grupo anterior` });
-    assert.equal(s.focus, 'grupo-prev', `${label}: al cambiar de grupo, el foco se queda en «‹»`);
-    assert.equal(s.length, groupEntries, `${label}: cambiar de grupo usa replaceState`);
-    await checkLayout(page, viewport.width, `${label}, navegador de grupos`);
-    await click(page, '#contenido #ver-evolucion', label);
-    s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG2&v=evolucion', label: `${label}, evolución del grupo` });
-    assert.equal(s.focus, 'ver-evolucion', `${label}: el foco se queda en «Evolución»`);
-    assert.equal(await page.locator('#contenido table.evo-table tbody tr').count(), 15, `${label}: una fila por equipo`);
-    await checkLayout(page, viewport.width, `${label}, evolución de puntos`);
-    await click(page, '#contenido #evo-posiciones', label);
-    s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG2&v=posiciones', label: `${label}, posiciones del grupo` });
-    const grid = await page.evaluate(() => {
-      const box = document.querySelector('#contenido .evo-scroll');
-      return { slides: box.scrollWidth > box.clientWidth + 1, atEnd: box.scrollLeft + box.clientWidth >= box.scrollWidth - 1, x: scrollX };
+    await click(page, '#contenido #grupo-PG2', label);
+    s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG2', label: `${label}, ficha de mi grupo` });
+    assert.deepEqual([s.focus, s.length], ['grupo-PG2', groupEntries], `${label}: cambiar de grupo usa replaceState y deja el foco en la ficha`);
+    assert.deepEqual(s.tabs, ['#/tabla page'], `${label}: en mi grupo, la barra de siempre`);
+    const strip = await page.evaluate(() => {
+      const box = document.querySelector('#contenido .group-scroll');
+      const chip = box.querySelector('[aria-current]').getBoundingClientRect();
+      const rect = box.getBoundingClientRect();
+      return { inside: chip.left >= rect.left - 1 && chip.right <= rect.right + 1, height: Math.round(chip.height), x: scrollX };
     });
-    assert.ok(!grid.slides || grid.atEnd, `${label}: la rejilla abre en las últimas jornadas (${JSON.stringify(grid)})`);
-    assert.equal(grid.x, 0, `${label}: la página no se desplaza en horizontal`);
-    await checkLayout(page, viewport.width, `${label}, posiciones del grupo`);
-    assert.equal(s.length, groupEntries, `${label}: las vistas de la Evolución usan replaceState`);
-    await click(page, '#contenido #ver-jornada', label);
-    s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&g=PG2', round: 'Jornada 17 de 30', label: `${label}, Jornada desde el atajo` });
-    assert.deepEqual(s.tabs, ['#/jornada page'], label);
-    assert.equal(s.length, groupEntries + 1, `${label}: el atajo cambia de pantalla (push)`);
-    // «Todos (2)»: la jornada 17 de PG2 y PG3, el mío primero; «›» sin entrada nueva y el índice salta
-    // al bloque de PG3, con el foco y sin cambiar la ruta.
-    await click(page, '#contenido #alcance-todos', label);
-    s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria&r=17', round: 'Jornada 17 de 30', label: `${label}, todos los grupos` });
-    assert.deepEqual(await page.$$eval('#contenido .round-groups > section.block', (els) => els.map((el) => el.id)), ['jornada-PG2', 'jornada-PG3'], label);
-    const allEntries = s.length;
+    assert.deepEqual(strip, { inside: true, height: 44, x: 0 }, `${label}: la ficha actual, a la vista y de 44 px, sin mover la página`);
+    await checkLayout(page, viewport.width, `${label}, tira de grupos`);
+    await click(page, '#contenido #grupo-PG3', label);
+    s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG3', label: `${label}, ficha de otro grupo` });
+    assert.deepEqual([s.focus, s.length, s.tabs], ['grupo-PG3', groupEntries, ['#/tabla?s=2025-2026&g=PG3 page']], label);
+    await click(page, '.tabbar a.tab[href="#/jornada?s=2025-2026&g=PG3"]', label);
+    s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&g=PG3', label: `${label}, Jornada del grupo desde la barra` });
+    assert.equal(await page.textContent('#contenido .screen-sub'), 'Prebenjamín, Grupo 3 de Gran Canaria', label);
+    assert.deepEqual([s.tabs, s.length, s.focus], [['#/jornada?s=2025-2026&g=PG3 page'], groupEntries + 1, 'H1'], `${label}: la barra cambia de pantalla (push) y sigue en PG3`);
+    await checkLayout(page, viewport.width, `${label}, jornada de otro grupo`);
+    const todos = await page.getAttribute('#contenido #grupo-todos', 'href');
+    await click(page, '#contenido #grupo-todos', label);
+    s = await paintedAs(page, 'jornada', { hash: todos, label: `${label}, todos los grupos` });
+    assert.deepEqual(await page.$$eval('#contenido .round-groups > section.block', (els) => els.map((el) => el.id)), ['jornada-PG2', 'jornada-PG3'], `${label}: el mío primero`);
+    // «tabla ›» de cada grupo, un enlace corto: 44 px también de ancho.
+    const tableLinks = await page.$$eval('#contenido .round-groups .block-link', (els) => els.map((a) => {
+      const box = a.getBoundingClientRect();
+      return [Math.round(box.width) >= 44, Math.round(box.height) >= 44];
+    }));
+    assert.deepEqual(tableLinks, [[true, true], [true, true]], `${label}: «tabla ›», de 44 × 44 px o más`);
+    assert.deepEqual([s.focus, s.length, s.tabs], ['grupo-todos', groupEntries + 1, ['#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria page']], `${label}: «Todos» usa replaceState`);
+    const round = Number(s.round.match(/^Jornada (\d+) /)[1]);
     await click(page, '#contenido #round-next', label);
-    s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria&r=18', round: 'Jornada 18 de 30', label: `${label}, todos los grupos, jornada siguiente` });
-    assert.deepEqual([s.focus, s.length], ['round-next', allEntries], `${label}: en «Todos», cambiar de jornada usa replaceState y deja el foco en «›»`);
+    s = await paintedAs(page, 'jornada', { hash: todos.replace(/r=\d+$/, `r=${round + 1}`), round: `Jornada ${round + 1} de 30`, label: `${label}, todos los grupos, jornada siguiente` });
+    assert.deepEqual([s.focus, s.length], ['round-next', groupEntries + 1], `${label}: en «Todos», cambiar de jornada usa replaceState y deja el foco en «›»`);
     await checkLayout(page, viewport.width, `${label}, todos los grupos`);
-    await click(page, '#contenido .group-index a[href="#jornada-PG3"]', label);
-    const leap = await page.evaluate(() => ({ focus: document.activeElement?.id, hash: location.hash, top: Math.round(document.getElementById('jornada-PG3').getBoundingClientRect().top) }));
-    assert.deepEqual([leap.focus, leap.hash], ['jornada-PG3', '#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria&r=18'], `${label}: el índice salta al grupo sin cambiar la ruta`);
-    assert.ok(leap.top >= -1 && leap.top < viewport.height, `${label}: el grupo, a la vista (${leap.top})`);
+    await click(page, '#contenido #grupo-PG3', label);
+    s = await paintedAs(page, 'jornada', { hash: `#/jornada?s=2025-2026&g=PG3&r=Jornada%20${round + 1}`, label: `${label}, de «Todos» a un grupo` });
+    assert.equal(await page.textContent('#contenido .screen-sub'), 'Prebenjamín, Grupo 3 de Gran Canaria', `${label}: la misma jornada en PG3`);
+    await click(page, '#contenido a.screen-action', label);
+    s = await paintedAs(page, 'jornada', { hash: `#/jornada?s=2025-2026&g=PG2&r=Jornada%20${round + 1}`, label: `${label}, «Mi grupo»` });
+    assert.deepEqual([s.tabs, s.length], [['#/jornada page'], groupEntries + 1], `${label}: «Mi grupo», sin entrada nueva y con la barra de siempre`);
+    await labeled(`${label}: Atrás desde la jornada`, () => page.goBack());
+    s = await paintedAs(page, 'tabla', { hash: '#/tabla?s=2025-2026&g=PG3', label: `${label}, Atrás tras recorrer grupos` });
+    assert.deepEqual(s.tabs, ['#/tabla?s=2025-2026&g=PG3 page'], label);
     await page.close();
 
     // 6. Enlace directo a un partido de mi equipo (el 8–1): Mi equipo marcado, sin desplazamiento
@@ -831,7 +845,7 @@ try {
     for (const colorScheme of ['light', 'dark']) {
       const label = nameOf(viewport, colorScheme);
       await scenarios(viewport, colorScheme);
-      console.log(`PASS: ${label}: barra, calendario completo de la portada a todos los anchos (al final en móvil, a la izquierda en escritorio), jornadas, vistas de Tabla, partido con Atrás y con «‹», el 8–1 enlazado, enlace antiguo, «Otro grupo» → Ligas → Tabla, «‹ ›» entre grupos con su atajo a la Evolución y a la Jornada, el foco en su sitio y sin desplazamiento horizontal`);
+      console.log(`PASS: ${label}: barra, calendario completo de la portada a todos los anchos (al final en móvil, a la izquierda en escritorio), jornadas, vistas de Tabla, partido con Atrás y con «‹», el 8–1 enlazado, enlace antiguo, «Otras ligas» → Ligas → Tabla, la tira de grupos, la barra que conserva el grupo, «Todos» y «Mi grupo», el foco en su sitio y sin desplazamiento horizontal`);
       await scenariosB3(viewport, colorScheme);
       console.log(`PASS: ${label}: buscar «hurac» sin una entrada por letra y abrir su ficha sin cambiar mi equipo, Intro sin recargar en los dos buscadores, las pantallas de B3 sin desplazamiento horizontal (el cuadro de copa, dentro de su caja) y «Hacer mi equipo», guardado y respetado al recargar`);
     }

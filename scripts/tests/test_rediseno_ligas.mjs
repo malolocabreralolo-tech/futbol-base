@@ -57,7 +57,7 @@ test('compareGroups: por puntos por partido, después puntos, diferencia de gole
 
 // ── Sin `f`: las competiciones ───────────────────────────────────────────
 
-test('«Otro grupo» de la Tabla de PG2 (c, i y to): las ligas de prebenjamín de Gran Canaria, cada una a sus grupos con `to`', () => {
+test('«Otras ligas» de la Tabla de PG2 (c, i y to): las ligas de prebenjamín de Gran Canaria, cada una a sus grupos con `to`', () => {
   const out = render({ c: 'prebenjamin', i: 'grancanaria', to: 'tabla' }, {}, { champions: true, cupsExtra: true });
   assert.match(out, /^<section data-screen="ligas"><header class="screen-head"><a class="back" href="#\/explorar" data-action="back" aria-label="Volver">‹<\/a>/);
   assert.equal((out.match(/<h1[ >]/g) || []).length, 1);
@@ -106,7 +106,7 @@ test('con `f`: los grupos de la competición, con equipos, líder y ronda; cada 
   // El grupo de mi equipo (Las Mesas Hu., PG2), con el resalte propio.
   assert.match(out, /<a class="link-row group-row is-mine" href="#\/tabla\?s=2025-2026&amp;g=PG2">/);
   assert.doesNotMatch(out, /group-row is-mine" href="#\/tabla\?s=2025-2026&amp;g=PG3"/);
-  // Con `to` (de «Otro grupo» de Jornada), a su Jornada.
+  // Con `to` (de «Otras ligas» de Jornada), a su Jornada.
   assert.deepEqual(rows(render({ c: 'prebenjamin', f: 'grancanaria', to: 'jornada' }), 'link-row group-row').map(([href]) => href),
     ['#/jornada?s=2025-2026&g=PG2', '#/jornada?s=2025-2026&g=PG3']);
   // Primera Fase: «Grupo 5» antes que «Grupo 13».
@@ -190,7 +190,7 @@ test('mount con el router: «Comparar grupos» pinta la tabla al abrirla y la es
   const b = fakeBrowser('#/ligas?s=2025-2026&c=prebenjamin&f=grancanaria&to=tabla');
   const router = startRouter({ screens: { ...SCREEN_MAP }, root: b.root, getContext: () => ctxFor('', {}, { datasets }), window: b.win });
   await router.idle();
-  assert.deepEqual(b.marks(), [['#/tabla', 'true']], '«Otro grupo» de la Tabla: la barra sigue en Tabla');
+  assert.deepEqual(b.marks(), [['#/tabla', 'true']], 'Ligas desde la Tabla: la barra sigue en Tabla');
   const button = b.root.querySelector('#comparar-prebenjamin');
   const box = b.root.querySelector('#comparar-prebenjamin-tabla');
   const click = () => { for (const fn of button.listeners.click || []) fn({ target: button }); };
@@ -203,11 +203,11 @@ test('mount con el router: «Comparar grupos» pinta la tabla al abrirla y la es
   assert.deepEqual([button.getAttribute('aria-expanded'), box.hidden, button.textContent], ['false', true, 'Comparar grupos']);
   click();
   assert.equal(box.innerHTML, painted, 'la segunda vez no se vuelve a pintar');
-  // Un grupo de la lista abre la Tabla (push), con la barra en Tabla.
+  // Un grupo de la lista abre la Tabla (push), con la barra en Tabla: la pestaña, la de ese grupo.
   b.click({ href: '#/tabla?s=2025-2026&g=PG3' });
   await router.idle();
   assert.deepEqual(b.entries(), ['#/ligas?s=2025-2026&c=prebenjamin&f=grancanaria&to=tabla', '#/tabla?s=2025-2026&g=PG3']);
-  assert.deepEqual(b.marks(), [['#/tabla', 'page']]);
+  assert.deepEqual(b.marks(), [['#/tabla?s=2025-2026&g=PG3', 'page']]);
   // Sin `to`, Ligas cuelga de Explorar.
   const plain = fakeBrowser('#/ligas?c=benjamin&f=segunda-a');
   const r2 = startRouter({ screens: { ...SCREEN_MAP }, root: plain.root, getContext: () => ctxFor('', {}, { datasets }), window: plain.win });

@@ -1,6 +1,6 @@
 // Pantalla Ligas (spec §4.7, §4.1 y §4.11; decisiones 19, 20 y 21 de B3). render(ctx) es pura:
 // - sin `f`, las competiciones de la categoría `c` (o de las dos), filtradas por isla si llega `i`, que
-//   abren su lista de grupos (#/ligas?s&c&f); con `to` (de «Otro grupo», o de Jornada y Tabla sin mi
+//   abren su lista de grupos (#/ligas?s&c&f); con `to` (de «Otras ligas», o de Jornada y Tabla sin mi
 //   equipo), solo las ligas;
 // - con `f`, los grupos de esa competición (de las dos categorías si no llega `c`: la clave se repite,
 //   decisión 19), con su nombre, sus equipos, su ronda y su líder o su campeón. Cada grupo abre la

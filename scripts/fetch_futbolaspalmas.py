@@ -922,6 +922,11 @@ def main():
     # Las categorías con su nombre canónico (sin la 'prebenjamin' duplicada, con ALEVIN).
     from migrate_categories import migrate as migrate_categories
     migrate_categories(conn)
+    # Las tablas de las actas en su esquema compacto (la base, por debajo de los 100 MB que admite git en
+    # GitHub), antes de leer ni importar nada: una vez, con su VACUUM; en una base ya compacta no hace nada.
+    # Un fallo para la pasada: lo que escribe actas solo sabe hacerlo en el esquema compacto.
+    from migrate_compactar import migrate as migrate_compactar
+    migrate_compactar(conn)
     # Los equipos que se llevaron la fila de otro club al activar sus grupos (la Fase Previa alevín de
     # 2026-27), antes de leer la federación: el bot casa sus nombres con los de la clasificación del grupo.
     # Idempotente; un fallo se apunta y no para la actualización.

@@ -63,7 +63,8 @@ def group_num(group_name):
 
 
 # Tablas cuyas filas referencian matches(id): hay que borrarlas ANTES que los
-# propios matches (con FK ON via db.get_connection el DELETE crashearía).
+# propios matches (con FK ON via db.get_connection el DELETE crashearía). match_staff,
+# vista de match_staff_all desde migrate_compactar: _table_exists la salta.
 ACTA_CHILD_TABLES = ("appearances", "match_events", "match_staff", "goals")
 
 

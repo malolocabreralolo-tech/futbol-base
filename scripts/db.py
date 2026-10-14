@@ -114,7 +114,10 @@ def init_db(conn):
 
 # Child tables whose rows reference matches(id). With foreign_keys=ON (see
 # get_connection) they must be cleared BEFORE the matches themselves or the
-# DELETE raises an IntegrityError.
+# DELETE raises an IntegrityError. match_staff es una vista de match_staff_all
+# desde migrate_compactar (_table_exists la salta); tabla en una base de antes.
+# match_staff_all no está (tampoco antes de la compactación): un grupo con actas
+# no se borra con las claves ajenas activas (docs/SP-1-actas.md).
 MATCH_CHILD_TABLES = ("appearances", "match_events", "match_staff", "goals")
 
 

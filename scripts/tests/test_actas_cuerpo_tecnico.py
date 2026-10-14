@@ -78,16 +78,23 @@ def test_importar_guarda_todo_el_cuerpo_tecnico_y_el_campo():
     assert conn.execute("SELECT count(*) FROM match_staff_all").fetchone()[0] == len(rows)
 
 
-def test_relleno_desde_match_staff():
+def test_match_staff_es_la_vista_de_los_cuatro_cargos_de_siempre():
+    """Importar el acta solo escribe match_staff_all; match_staff (su vista) da el árbitro principal, los
+    entrenadores y los delegados, los mismos que daban los campos de siempre del acta (el relleno de una
+    base de antes, en test_migrate_compactar)."""
     conn = base()
-    conn.executescript("""
-      INSERT INTO match_staff(match_id, team_id, kind, name) VALUES
-        (1, 1, 'coach', 'GIL, LUIS'), (1, NULL, 'referee', 'PEREZ, ANA'), (1, 2, 'delegate_team', 'RUIZ, EVA');
-    """)
-    assert I.backfill_staff_all(conn) == 1
-    assert conn.execute("SELECT team_id, role, name FROM match_staff_all ORDER BY ord").fetchall() == [
-        (None, "Árbitro/a Principal", "PEREZ, ANA"), (1, "Entrenador", "GIL, LUIS"), (2, "DEL. Equipo", "RUIZ, EVA")]
-    assert I.backfill_staff_all(conn) == 0
+    a = parse_flat_acta((FIX / SBD).read_text(encoding="utf-8"))
+    assert I._import_one(conn, 280001, a, mid=1)
+    staff = sorted(conn.execute("SELECT team_id, kind, name FROM match_staff"), key=repr)
+    assert {k for _, k, _ in staff} == {"referee", "coach", "delegate_field", "delegate_team"}
+    assert (None, "referee", a["staff"]["referee"]) in staff
+    assert (1, "coach", a["staff"]["coach_home"]) in staff and (2, "coach", a["staff"]["coach_away"]) in staff
+    for side, tid in (("home", 1), ("away", 2)):
+        for field, kind in (("campo", "delegate_field"), ("equipo", "delegate_team")):
+            name = a["staff"][f"delegates_{side}"].get(field)
+            assert ((tid, kind, name) in staff) == bool(name)
+    assert len(staff) == conn.execute(
+        "SELECT count(*) FROM match_staff_all WHERE role IN (?, ?, ?, ?)", tuple(I.LEGACY_ROLES.values())).fetchone()[0]
 
 
 def test_refrescar_solo_actas_aplanadas_y_nunca_a_peor():

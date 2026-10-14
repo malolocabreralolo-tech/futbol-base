@@ -307,6 +307,20 @@ async function scenarios(viewport, colorScheme) {
     s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&g=PG2', round: 'Jornada 17 de 30', label: `${label}, Jornada desde el atajo` });
     assert.deepEqual(s.tabs, ['#/jornada page'], label);
     assert.equal(s.length, groupEntries + 1, `${label}: el atajo cambia de pantalla (push)`);
+    // «Todos (2)»: la jornada 17 de PG2 y PG3, el mío primero; «›» sin entrada nueva y el índice salta
+    // al bloque de PG3, con el foco y sin cambiar la ruta.
+    await click(page, '#contenido #alcance-todos', label);
+    s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria&r=17', round: 'Jornada 17 de 30', label: `${label}, todos los grupos` });
+    assert.deepEqual(await page.$$eval('#contenido .round-groups > section.block', (els) => els.map((el) => el.id)), ['jornada-PG2', 'jornada-PG3'], label);
+    const allEntries = s.length;
+    await click(page, '#contenido #round-next', label);
+    s = await paintedAs(page, 'jornada', { hash: '#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria&r=18', round: 'Jornada 18 de 30', label: `${label}, todos los grupos, jornada siguiente` });
+    assert.deepEqual([s.focus, s.length], ['round-next', allEntries], `${label}: en «Todos», cambiar de jornada usa replaceState y deja el foco en «›»`);
+    await checkLayout(page, viewport.width, `${label}, todos los grupos`);
+    await click(page, '#contenido .group-index a[href="#jornada-PG3"]', label);
+    const leap = await page.evaluate(() => ({ focus: document.activeElement?.id, hash: location.hash, top: Math.round(document.getElementById('jornada-PG3').getBoundingClientRect().top) }));
+    assert.deepEqual([leap.focus, leap.hash], ['jornada-PG3', '#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria&r=18'], `${label}: el índice salta al grupo sin cambiar la ruta`);
+    assert.ok(leap.top >= -1 && leap.top < viewport.height, `${label}: el grupo, a la vista (${leap.top})`);
     await page.close();
 
     // 6. Enlace directo a un partido de mi equipo (el 8–1): Mi equipo marcado, sin desplazamiento

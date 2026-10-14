@@ -12,7 +12,7 @@ import { screen as tabla } from '../../src/screen-tabla.js';
 import { screen as jornada } from '../../src/screen-jornada.js';
 import { groupNav, scrollToCurrent } from '../../src/ui.js';
 import { historyMode, resolveParams } from '../../src/router.js';
-import { parseRoute } from '../../src/links.js';
+import { parseRoute, routeHref } from '../../src/links.js';
 import { competitionRound, defaultRound, groupProgression, pointsProgression, siblingGroups } from '../../src/model.js';
 
 const ids = (groups) => groups.map((g) => g.id);
@@ -398,4 +398,91 @@ test('navegador: el CSS de la tira (desliza en horizontal con ajuste) y casillas
   const out = [renderTabla({ g: 'FF9' }, { myTeam: BENJ_FF5, datasets: datasetsFor({ current: withGroups(24) }) }), renderJornada({ g: 'PG2' })].join('');
   const used = new Set(out.match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));
   assert.deepEqual([...used].filter((c) => !rules.classes.has(c)), [], 'clases que existen en acta.css');
+});
+
+// ── Jornada: «Todos los grupos» de una competición (#/jornada?s&c&f&r, sin g) ──
+
+const resolveAt = (hash, opts) => resolveParams(parseRoute(hash), ctxFor('jornada', {}, opts));
+const redirectOf = (res) => (res.redirect ? [routeHref(res.redirect.screen, res.redirect.params), res.redirect.notice] : res);
+const blocks = (out) => [...out.matchAll(/<section class="block" id="jornada-([^"]+)"><div class="block-head"><h2 class="block-title">(.*?)<\/h2>(?:<p class="block-context">(.*?)<\/p>)?<\/div>(.*?)<\/section>/g)]
+  .map((m) => ({ id: m[1], title: text(m[2]), context: m[3] || '', body: m[4] }));
+const matchTexts = (html) => [...html.matchAll(/<a class="match-row[^"]*" href="[^"]*">(.*?)<\/a>/g)].map((m) => text(m[1]));
+// El 20 de octubre de 2025, los cuatro grupos de la Primera Fase van por la jornada 3.
+const OCT = (extra = {}) => ({ today: '2025-10-20', myTeam: BENJ_FF5, datasets: datasetsFor({ current: currentAt('2025-10-20') }), ...extra });
+
+test('router: «Todos los grupos» se elige con c y f, sin g; sin c, la de la competición; una que no existe, a Ligas con aviso', () => {
+  assert.deepEqual(resolveAt('#/jornada?c=benjamin&f=primera-fase'), { params: { c: 'benjamin', f: 'primera-fase', s: PORTAL_SEASON } });
+  assert.deepEqual(resolveAt('#/jornada?c=benjamin&f=primera-fase&r=3'), { params: { c: 'benjamin', f: 'primera-fase', r: '3', s: PORTAL_SEASON } });
+  assert.deepEqual(redirectOf(resolveAt('#/jornada?f=grancanaria')), ['#/jornada?c=prebenjamin&f=grancanaria', null]);
+  assert.deepEqual(redirectOf(resolveAt('#/jornada?c=benjamin&f=primera-fase&r=9')), ['#/jornada?c=benjamin&f=primera-fase', null], 'ningún grupo tiene la 9');
+  assert.deepEqual(redirectOf(resolveAt('#/jornada?c=benjamin&f=nada')),
+    ['#/ligas?c=benjamin&to=jornada', 'No encontramos la competición nada en la temporada 2025/26']);
+  assert.deepEqual(redirectOf(resolveAt('#/jornada?g=PG2&c=prebenjamin&f=grancanaria')), ['#/jornada?g=PG2', null], 'con g, manda el grupo');
+  // Cambiar de jornada en «Todos» es replace; pasar de un grupo a todos (o al revés), push.
+  const R = parseRoute;
+  assert.equal(historyMode(R('#/jornada?s=2025-2026&c=benjamin&f=primera-fase&r=3'), R('#/jornada?s=2025-2026&c=benjamin&f=primera-fase&r=4')), 'replace');
+  assert.equal(historyMode(R('#/jornada?s=2025-2026&g=FF5&r=Jornada%203'), R('#/jornada?s=2025-2026&c=benjamin&f=primera-fase&r=3')), 'push');
+});
+
+test('Todos los grupos: «Mi grupo | Todos (4)», «‹ Jornada 3 de 5 ›» con las fechas de todos y un bloque por grupo, el mío primero', () => {
+  const out = renderJornada({ c: 'benjamin', f: 'primera-fase' }, OCT());
+  assert.match(out, /^<section data-screen="jornada">/);
+  assert.equal((out.match(/<h1[ >]/g) || []).length, 1);
+  assert.match(out, /<h1>Jornada<\/h1><p class="screen-sub">Benjamín, Primera Fase<\/p><\/div><a class="screen-action" href="#\/ligas\?s=2025-2026&amp;c=benjamin&amp;f=primera-fase&amp;to=jornada">Elegir grupo<\/a>/);
+  assert.deepEqual(segments(out, 'Grupos de la jornada').map(({ id, label, current, href }) => [id, label, current, href]), [
+    ['alcance-grupo', 'Mi grupo', false, '#/jornada?s=2025-2026&g=FF5&r=Jornada%203'],
+    ['alcance-todos', 'Todos (4)', true, '#/jornada?s=2025-2026&c=benjamin&f=primera-fase&r=3'],
+  ]);
+  assert.match(out, /<nav class="round-nav" aria-label="Jornadas"><a class="round-step" id="round-prev" href="#\/jornada\?s=2025-2026&amp;c=benjamin&amp;f=primera-fase&amp;r=2" aria-label="Jornada anterior: Jornada 2">‹<\/a><div class="round-now"><h2 class="round-title">Jornada 3 de 5<\/h2><p class="round-dates">del 24 al 26 de octubre · 4 grupos<\/p><\/div><a class="round-step" id="round-next" href="#\/jornada\?s=2025-2026&amp;c=benjamin&amp;f=primera-fase&amp;r=4"/);
+  const list = blocks(out);
+  assert.deepEqual(list.map((b) => [b.id, b.title]), [['FF5', 'Grupo 5 · mi grupo'], ['FF9', 'Grupo 9'], ['FF13', 'Grupo 13'], ['FF15', 'Grupo 15']]);
+  assert.match(list[0].context, /^<a class="block-link" href="#\/tabla\?s=2025-2026&amp;g=FF5">tabla · líder: /);
+  // Cada bloque, sus partidos por día (matchRow, el de mi equipo primero y resaltado).
+  assert.equal(matchTexts(list[0].body).length, 3);
+  assert.match(list[0].body, /^<h3 class="group-day">Domingo 26 de octubre<\/h3><div class="box"><a class="match-row is-mine"/);
+  assert.deepEqual([...list[3].body.matchAll(/<h3 class="group-day">(.*?)<\/h3>/g)].map((m) => m[1]),
+    ['Viernes 24 de octubre', 'Sábado 25 de octubre', 'Domingo 26 de octubre'], 'FF15 juega la 3 en tres días');
+  assert.match(out, /<div class="round-groups"><section class="block" id="jornada-FF5">/);
+  assert.equal((out.match(/class="match-row is-mine"/g) || []).length, 1);
+  assert.ok(list.slice(1).every((b) => matchTexts(b.body).length === 3));
+  // El índice para saltar a cada grupo, en su orden, con el mío marcado.
+  assert.deepEqual([...out.matchAll(/<a class="group-chip( is-mine)?" href="#jornada-([^"]+)">(.*?)<\/a>/g)].map((m) => [m[2], !!m[1], text(m[3])]),
+    [['FF5', true, 'Grupo 5 (grupo de mi equipo)'], ['FF9', false, 'Grupo 9'], ['FF13', false, 'Grupo 13'], ['FF15', false, 'Grupo 15']]);
+  assert.ok(out.indexOf('Grupos de la jornada') < out.indexOf('class="round-nav"') && out.indexOf('class="round-nav"') < out.indexOf('Ir a un grupo'));
+  assert.doesNotMatch(out, /group-nav|share-round|aria-label="Ver el grupo"/, 'sin el navegador de un grupo ni su botonera');
+});
+
+test('Todos los grupos: alineada por número (claves distintas entre grupos), el grupo sin esa jornada y la jornada por defecto sin mi grupo', () => {
+  const current = currentAt('2025-10-20');
+  current.history.FF13 = Object.fromEntries(Object.entries(current.history.FF13).map(([key, rows]) => [key.replace('Jornada ', ''), rows]));
+  delete current.history.FF15['Jornada 3'];
+  const out = renderJornada({ c: 'benjamin', f: 'primera-fase', r: '3' }, OCT({ datasets: datasetsFor({ current }) }));
+  const list = blocks(out);
+  assert.equal(matchTexts(list.find((b) => b.id === 'FF13').body).length, 3, 'FF13 con la clave «3»');
+  assert.match(list.find((b) => b.id === 'FF15').body, /<p class="empty">Este grupo no tiene jornada 3\.<\/p>/);
+  // Sin mi equipo en la competición (el de siempre, PG2): la jornada más repetida, y el primero, «Grupo 5».
+  const other = renderJornada({ c: 'benjamin', f: 'primera-fase' }, OCT({ myTeam: undefined }));
+  assert.match(other, /<h2 class="round-title">Jornada 3 de 5<\/h2>/);
+  assert.deepEqual(segments(other, 'Grupos de la jornada').map((x) => x.label), ['Grupo 5', 'Todos (4)']);
+  assert.deepEqual(blocks(other).map((b) => b.title), ['Grupo 5', 'Grupo 9', 'Grupo 13', 'Grupo 15']);
+});
+
+test('Todos los grupos: el aviso del que descansa en cada grupo (PG2 y PG3, jornada 30)', () => {
+  const out = renderJornada({ c: 'prebenjamin', f: 'grancanaria', r: '30' });
+  const pg2 = blocks(out).find((b) => b.id === 'PG2');
+  assert.equal(pg2.title, 'Grupo 2 · mi grupo');
+  assert.deepEqual(notices(pg2.body), ['Sin partido en esta jornada: RC Victoria y Arucas B (descansa o le tocaba contra CD Batán)']);
+  assert.equal(notices(blocks(out).find((b) => b.id === 'PG3').body).length, 1);
+});
+
+test('Jornada de un grupo: «Este grupo | Todos (N)» encima de la jornada, a «Todos» con su número; sin grupos hermanos, nada', () => {
+  const out = renderJornada({ g: 'PG2', r: 'Jornada 30' });
+  assert.deepEqual(segments(out, 'Grupos de la jornada').map(({ id, label, current, href }) => [id, label, current, href]), [
+    ['alcance-grupo', 'Este grupo', true, '#/jornada?s=2025-2026&g=PG2&r=Jornada%2030'],
+    ['alcance-todos', 'Todos (2)', false, '#/jornada?s=2025-2026&c=prebenjamin&f=grancanaria&r=30'],
+  ]);
+  assert.ok(out.indexOf('aria-label="Ver el grupo"') < out.indexOf('Grupos de la jornada') && out.indexOf('Grupos de la jornada') < out.indexOf('class="round-nav"'));
+  assert.doesNotMatch(renderJornada({ g: 'PFV2' }), /Grupos de la jornada/);
+  const used = new Set([out, renderJornada({ c: 'benjamin', f: 'primera-fase' }, OCT())].join('').match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));
+  assert.deepEqual([...used].filter((c) => !cssRules().classes.has(c)), [], 'clases que existen en acta.css');
 });

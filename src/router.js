@@ -11,7 +11,7 @@
 // No toca el navegador al importarse: startRouter recibe `window`.
 import { Html } from './html.js';
 import { parseRoute, routeHref, translateLegacy } from './links.js';
-import { findGroup, findMatch, findRound, seasonLabel } from './model.js';
+import { competitions, findGroup, findMatch, findRound, seasonLabel } from './model.js';
 import { routeIsMine, sameClub } from './myteam.js';
 import { skeleton, errorScreen, routeNotice, routeTitle, updateTabbar } from './shell.js';
 import { normalizeTeamName, seasonNeeds } from './state.js';
@@ -96,6 +96,9 @@ function leagueParams(screen, raw, params, ctx) {
   if (!season) return { params, pending: true };
   const portal = ctx.portal.season;
   const s = params.s === portal ? '' : params.s;
+  if (screen === 'jornada' && !params.g && raw.f) return competitionParams(raw, params, ctx);
+  // Con un grupo, `c` y `f` (los de «Todos los grupos») no dicen nada: se quitan, sin aviso.
+  if (screen === 'jornada' && params.g && (raw.c || raw.f)) return redirect(screen, omit(omit(raw, 'c'), 'f'));
   const mine = identity(ctx);
   let group;
   if (params.g) {
@@ -119,6 +122,22 @@ function leagueParams(screen, raw, params, ctx) {
   // La jornada vale por su clave o por su número (la pantalla lee las dos); si no, se quita.
   if (screen === 'jornada' && raw.r && !findRound(group, raw.r)) return redirect(screen, omit(raw, 'r'));
   return { params: { ...params, g: group.id } };
+}
+
+// Jornada de todos los grupos de una competición («Todos los grupos», #/jornada?s&c&f&r, sin `g`): `c` y
+// `f` la eligen entre las de competitions() con algún grupo de liga (sin `c`, la de la categoría que la
+// tiene). Una que no existe, a Ligas de su categoría, con aviso. La jornada vale por su número (o su
+// clave) en cualquiera de sus grupos, porque las claves cambian de un grupo a otro; si no, se quita.
+function competitionParams(raw, params, ctx) {
+  const s = params.s === ctx.portal.season ? '' : params.s;
+  const entry = competitions(ctx.model, params.s, { cat: raw.c || null })
+    .find((e) => e.key === raw.f && e.groups.some((g) => g.kind === 'league'));
+  if (!entry) {
+    return redirect('ligas', { s, c: raw.c, to: 'jornada' }, `No encontramos la competición ${raw.f} en la temporada ${seasonLabel(params.s)}`);
+  }
+  if (raw.c !== entry.cat) return redirect('jornada', { ...raw, c: entry.cat });
+  if (raw.r && !entry.groups.some((g) => g.kind === 'league' && findRound(g, raw.r))) return redirect('jornada', omit(raw, 'r'));
+  return { params };
 }
 
 // Partido: vale si findMatch lo encuentra, igual que la pantalla (en su ronda o, si ahí no está, el

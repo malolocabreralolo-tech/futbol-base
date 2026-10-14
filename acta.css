@@ -793,6 +793,22 @@ abbr[title] { text-decoration: none; }
 .group-strip .group-chip:focus-visible { outline-offset: -5px; }
 .group-strip .group-chip[aria-current]:focus-visible { outline-color: var(--on-ink); }
 .group-views { margin-top: 10px; }
+/* «Este grupo | Todos (N)», encima de «‹ Jornada N de M ›». */
+.round-scope { margin-top: 10px; }
+/* «Todos los grupos»: el índice para saltar a cada grupo (casillas como las de la tira, con anclas),
+ * los días de cada grupo y «mi grupo» junto a su título; en escritorio, los grupos en dos columnas. */
+.group-index .group-strip { margin-top: 10px; }
+.group-day { margin: 0 0 6px; font-size: 12.5px; font-weight: 700; color: var(--mute); }
+.box + .group-day { margin-top: 10px; }
+.block-mine { font-weight: 600; color: var(--mute); }
+@media (min-width: 1024px) {
+  .round-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    column-gap: 24px;
+    align-items: start;
+  }
+}
 
 /* Escritorio: caben todas a la vista, en filas, sin deslizar. */
 @media (min-width: 1024px) {

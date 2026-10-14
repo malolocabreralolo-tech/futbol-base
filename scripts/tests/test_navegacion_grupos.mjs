@@ -1,21 +1,34 @@
 // Navegación entre grupos (petición de las familias: «poder navegar en la web entre los distintos
 // grupos para ir viendo los resultados y la evolución de los otros grupos dentro de cada categoría»).
-// El modelo (siblingGroups, groupProgression y competitionRound), sobre las fixtures congeladas y
-// nunca sobre los data-*.js vivos.
+// El modelo (siblingGroups, groupProgression y competitionRound) y las pantallas (Tabla con su
+// Evolución, Jornada con «Todos los grupos» y el navegador de grupos de las dos), sobre las fixtures
+// congeladas y nunca sobre los data-*.js vivos: render(ctx) es pura y se prueba sobre su HTML.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';
 import { currentAt } from './fixtures/rediseno/simulate.mjs';
-import { ctxFor, datasetsFor, pastSeasonRaw, PORTAL_SEASON } from './fixtures/rediseno/screens.mjs';
+import { ctxFor, cssRules, datasetsFor, pastSeasonRaw, PORTAL_SEASON } from './fixtures/rediseno/screens.mjs';
+import { screen as tabla } from '../../src/screen-tabla.js';
+import { resolveParams } from '../../src/router.js';
+import { parseRoute } from '../../src/links.js';
 import { competitionRound, defaultRound, groupProgression, pointsProgression, siblingGroups } from '../../src/model.js';
 
 const ids = (groups) => groups.map((g) => g.id);
 const modelOf = (datasets = datasetsFor()) => ctxFor('tabla', {}, { datasets }).model;
 const groupOf = (id, datasets) => modelOf(datasets).group(PORTAL_SEASON, id);
+const str = (h) => String(h);
+// Texto visible: sin etiquetas, con las entidades básicas resueltas y los espacios juntos.
+const text = (h) => str(h).replace(/<[^>]*>/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+  .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+const renderTabla = (params, opts) => str(tabla.render(ctxFor('tabla', { s: PORTAL_SEASON, ...params }, opts)));
+const segments = (out, label) => [...((out.match(new RegExp(`<nav class="[^"]*" aria-label="${label}">(.*?)</nav>`)) || ['', ''])[1])
+  .matchAll(/<a class="segment" id="([^"]+)" href="([^"]*)"( aria-current="true")?>([^<]*)<\/a>/g)]
+  .map((m) => ({ id: m[1], href: m[2].replace(/&amp;/g, '&'), current: !!m[3], label: m[4] }));
+const notices = (out) => [...out.matchAll(/<p class="notice">(.*?)<\/p>/g)].map((m) => text(m[1]));
 
 // La Primera Fase de benjamín con 24 grupos (los cuatro de la fixture más copias de FF15 con su código
 // y su nombre), como la de 2026-27: la tira de números solo sale con más de seis.
-export function withGroups(count, { from = 'FF15', current = fixture('current-2025-2026') } = {}) {
+function withGroups(count, { from = 'FF15', current = fixture('current-2025-2026') } = {}) {
   const base = current.benjamin.find((g) => g.id === from);
   for (let n = 1; n <= count; n++) {
     const id = `FF${n}`;
@@ -136,4 +149,114 @@ test('competitionRound: el número de la jornada por defecto del grupo de mi equ
   const apr = at('2026-04-15');
   assert.equal(competitionRound([apr('A2'), apr('A1'), apr('B1')], '2026-04-15', null), 17);
   assert.equal(competitionRound([], '2026-04-15', null), null);
+});
+
+// ── Tabla: Evolución del grupo (v=evolucion y v=posiciones) ──────────────
+
+const evoRows = (out) => [...(out.match(/<table class="standings evo-table">.*?<tbody>(.*?)<\/tbody>/) || ['', ''])[1]
+  .matchAll(/<tr( class="is-mine")?>(.*?)<\/tr>/g)].map((m) => ({ mine: !!m[1], html: m[2], text: text(m[2]) }));
+const gridRows = (out) => [...(out.match(/<table class="evo-grid">.*?<tbody>(.*?)<\/tbody>/) || ['', ''])[1]
+  .matchAll(/<tr( class="is-mine")?>(.*?)<\/tr>/g)].map((m) => ({ mine: !!m[1], html: m[2], text: text(m[2]) }));
+
+test('Evolución, Puntos (PG2): una fila por equipo en el orden de la clasificación, su línea con el mismo tope y los Pts en texto', () => {
+  const out = renderTabla({ g: 'PG2', v: 'evolucion' });
+  assert.match(out, /^<section data-screen="tabla">/);
+  assert.equal((out.match(/<h1[ >]/g) || []).length, 1);
+  assert.deepEqual(segments(out, 'Evolución del grupo').map(({ id, label, current, href }) => [id, label, current, href]), [
+    ['evo-puntos', 'Puntos', true, '#/tabla?s=2025-2026&g=PG2&v=evolucion'],
+    ['evo-posiciones', 'Posiciones', false, '#/tabla?s=2025-2026&g=PG2&v=posiciones'],
+  ]);
+  assert.doesNotMatch(out, /class="tabla-views/, 'sin el selector de vistas de la clasificación');
+  assert.match(out, /<h2 class="block-title">Evolución de puntos<\/h2><p class="block-context">desde el calendario<\/p>/);
+  const rows = evoRows(out);
+  assert.equal(rows.length, 15);
+  assert.deepEqual(rows.map((r) => r.text.split(' ')[0]), Array.from({ length: 15 }, (_, k) => String(k + 1)));
+  assert.equal(rows[0].text, '1 Unión Viera 79');
+  assert.equal(rows[8].mine, true);
+  assert.equal(rows[8].text, '9 Las Mesas Hu. (mi equipo) 37', 'los Pts de la clasificación oficial');
+  assert.match(rows[8].html, /<a class="st-link" href="#\/equipo\?s=2025-2026&amp;g=PG2&amp;t=Las%20Mesas%20Hu\.">/);
+  // El mismo tope (el mayor de los calculados) en todas las líneas, sólidas: pointsChart de ui.js.
+  const boxes = rows.slice(0, 14).map((r) => (r.html.match(/viewBox="0 0 (\d+) (\d+)"/) || []).slice(1).join('x'));
+  assert.equal(new Set(boxes).size, 1, boxes.join(' '));
+  assert.match(boxes[0], /^29x\d+$/);
+  assert.doesNotMatch(out, /dasharray/);
+  // El retirado, con la palabra y sin línea.
+  assert.match(rows[14].html, /<td class="evo-line"><span class="st-retired">retirado<\/span><\/td>/);
+  assert.doesNotMatch(rows[14].html, /<svg/);
+  assert.deepEqual(notices(out), [
+    'Calculada desde el calendario: sin desempates ni sanciones de la federación.',
+    'No cuenta los 28 partidos contra CD Batán (retirado), que no están en el calendario.',
+  ]);
+  assert.doesNotMatch(out, /Goleadores del grupo/, 'la evolución va sola');
+});
+
+test('Evolución, Posiciones (PG2): la rejilla J1…J30 con la primera columna fija, el líder de cada jornada y mi fila', () => {
+  const out = renderTabla({ g: 'PG2', v: 'posiciones' });
+  assert.deepEqual(segments(out, 'Evolución del grupo').map((x) => [x.label, x.current]), [['Puntos', false], ['Posiciones', true]]);
+  assert.match(out, /<h2 class="block-title">Puesto tras cada jornada<\/h2><p class="block-context">desde el calendario<\/p>/);
+  // Una tabla de verdad, que se desliza dentro de su caja (región con foco para el teclado).
+  assert.match(out, /<div class="box evo-scroll" role="region" aria-label="Puesto tras cada jornada; se desliza en horizontal" tabindex="0"><table class="evo-grid"><caption class="vh">Puesto de cada equipo tras cada jornada en Prebenjamín, Grupo 2 de Gran Canaria<\/caption>/);
+  const heads = [...out.match(/<table class="evo-grid">.*?<thead>(.*?)<\/thead>/)[1].matchAll(/<th scope="col"[^>]*>(.*?)<\/th>/g)].map((m) => text(m[1]));
+  assert.deepEqual(heads, ['Equipo', ...Array.from({ length: 30 }, (_, k) => String(k + 1))]);
+  assert.match(out, /<th scope="col"><abbr title="Jornada 1">1<\/abbr><\/th>/);
+  const rows = gridRows(out);
+  assert.equal(rows.length, 15);
+  assert.match(rows[0].html, /^<th scope="row" class="evo-team"><a class="st-link" href="#\/equipo\?s=2025-2026&amp;g=PG2&amp;t=Uni%C3%B3n%20Viera">/);
+  assert.equal(rows[0].text.split(' ').slice(2, 9).join(' '), '3 1 1 1 2 5 5');
+  assert.match(rows[0].html, /<td>3<\/td><td class="is-leader">1<\/td>/, 'el líder de cada jornada, marcado');
+  assert.equal(rows.filter((r) => r.mine).length, 1);
+  assert.match(rows[8].text, /^Las Mesas Hu\. \(mi equipo\) 5 8 8 8 8 8 8/);
+  assert.equal((out.match(/class="is-leader"/g) || []).length, 30, 'un líder por jornada');
+  assert.match(rows[14].html, /<td class="evo-retired" colspan="30"><span class="st-retired">retirado<\/span><\/td>/);
+});
+
+test('Evolución: a mitad de temporada, la rejilla hasta la última jornada jugada; con menos de dos, «Todavía no hay evolución»', () => {
+  const march = { today: '2026-03-01', datasets: datasetsFor({ current: currentAt('2026-03-01') }) };
+  const grid = renderTabla({ g: 'PG2', v: 'posiciones' }, march);
+  assert.equal((grid.match(/<th scope="col"><abbr title="Jornada \d+">/g) || []).length, 17);
+  const one = { today: '2025-10-15', datasets: datasetsFor({ current: currentAt('2025-10-15') }) };
+  for (const v of ['evolucion', 'posiciones']) {
+    const out = renderTabla({ g: 'PG2', v }, one);
+    assert.match(out, /<p class="empty">Todavía no hay evolución: se ve a partir de la segunda jornada jugada\.<\/p>/, v);
+    assert.doesNotMatch(out, /<svg|evo-grid/, v);
+    assert.deepEqual(notices(out), [], v);
+  }
+});
+
+test('Evolución: si cuadra con la clasificación oficial, solo el aviso de «calculada»; si no, la nota sin inventar la causa', () => {
+  const calculated = 'Calculada desde el calendario: sin desempates ni sanciones de la federación.';
+  assert.deepEqual(notices(renderTabla({ g: 'A1', v: 'evolucion' })), [calculated]);
+  // PG3: la federación le da 10 puntos a CD Tablero y el calendario, 13 (con los mismos partidos).
+  assert.deepEqual(notices(renderTabla({ g: 'PG3', v: 'posiciones' })), [calculated, 'Nota: la clasificación oficial da otros puntos a CD Tablero.']);
+  const current = fixture('current-2025-2026');
+  for (const team of ['Arucas', 'Moya']) current.benjamin.find((g) => g.id === 'A1').standings.find((r) => r[1] === team)[2] -= 3;
+  assert.deepEqual(notices(renderTabla({ g: 'A1', v: 'evolucion' }, { datasets: datasetsFor({ current }) })),
+    [calculated, 'Nota: la clasificación oficial da otros puntos a Arucas y Moya.']);
+});
+
+test('Evolución: el router acepta sus dos vistas; mount lleva la rejilla a las últimas jornadas sin mover la página', () => {
+  for (const v of ['evolucion', 'posiciones']) {
+    const ctx = ctxFor('tabla', {});
+    assert.deepEqual(resolveParams(parseRoute(`#/tabla?g=PG2&v=${v}`), ctx), { params: { g: 'PG2', v, s: PORTAL_SEASON } }, v);
+  }
+  const grid = { scrollLeft: 0, scrollWidth: 1400, clientWidth: 360 };
+  const root = { querySelector: (sel) => (sel === '.evo-scroll' ? grid : null), querySelectorAll: () => [] };
+  tabla.mount(root, ctxFor('tabla', { s: PORTAL_SEASON, g: 'PG2', v: 'posiciones' }));
+  assert.equal(grid.scrollLeft, 1400 - 360);
+});
+
+test('Evolución: el CSS de la línea pequeña y de la rejilla con la primera columna fija, sin trazos discontinuos', () => {
+  const rules = cssRules();
+  const body = (sel) => rules.filter((r) => r.media === null && r.selector.split(',').map((x) => x.trim()).includes(sel)).map((r) => r.body).join(';');
+  assert.match(body('.evo-line .points-chart'), /height:\s*28px/);
+  assert.match(body('.evo-scroll'), /overflow-x:\s*auto/);
+  assert.match(body('.evo-grid .evo-team'), /position:\s*sticky/);
+  assert.match(body('.evo-grid .evo-team'), /left:\s*0/);
+  assert.match(body('.evo-grid .evo-team'), /background:\s*var\(--paper\)/);
+  assert.match(body('.evo-grid .is-leader'), /color:\s*var\(--ink\)/);
+  assert.match(body('.evo-grid tr.is-mine > *'), /background:\s*var\(--mark\)/);
+  assert.doesNotMatch(rules.filter((r) => /evo-/.test(r.selector)).map((r) => r.body).join(';'), /dashed|dasharray/);
+  const out = ['evolucion', 'posiciones'].map((v) => renderTabla({ g: 'PG2', v })).join('');
+  const used = new Set(out.match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));
+  assert.deepEqual([...used].filter((c) => !rules.classes.has(c)), [], 'clases que existen en acta.css');
 });

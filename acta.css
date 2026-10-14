@@ -760,6 +760,62 @@ abbr[title] { text-decoration: none; }
   [data-screen="tabla"] .standings .st-pts { width: 48px; }
 }
 
+/* ── Tabla: Evolución del grupo (v=evolucion y v=posiciones) ─────────────── */
+
+.evo-views { margin-top: 14px; }
+/* Puntos: la línea de cada equipo (pointsChart de ui.js, la de la ficha), pequeña y con el mismo tope
+ * en todas las filas; el dato va en texto, en Pts. */
+.evo-table .evo-line { width: 40%; padding: 0 8px; }
+.evo-table td.evo-line { text-align: left; }
+.evo-line .points-chart { height: 28px; }
+/* Posiciones: la rejilla se desliza dentro de su caja, nunca la página (la excepción de §8, como el
+ * cuadro de copa); la columna del equipo se queda fija, con fondo propio para tapar lo que pasa por
+ * debajo, y su nombre se recorta. */
+.evo-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+.evo-grid { min-width: 100%; border-collapse: separate; border-spacing: 0; }
+.evo-grid th, .evo-grid td {
+  min-width: 30px;
+  height: 44px;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  white-space: nowrap;
+}
+.evo-grid thead th {
+  height: auto;
+  padding: 6px 4px;
+  border-bottom: 1.5px solid var(--ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--mute);
+}
+.evo-grid tbody tr:last-child > * { border-bottom: 0; }
+.evo-grid .evo-team {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  padding: 0 8px 0 6px;
+  border-right: 1px solid var(--rule);
+  background: var(--paper);
+  font-weight: 400;
+  text-align: left;
+}
+.evo-grid .evo-team .st-link { max-width: 9.5rem; }
+.evo-grid .is-leader { color: var(--ink); font-weight: 800; }
+/* «retirado» ocupa toda la fila: pegado al borde derecho de lo que se ve, se lee en cualquier punto
+ * del desplazamiento (mount la abre al final). */
+.evo-grid .evo-retired { text-align: right; }
+.evo-retired .st-retired { position: sticky; right: 8px; }
+.evo-grid tr.is-mine > * { background: var(--mark); color: var(--ink); font-weight: 800; }
+.evo-grid tr.is-mine > :first-child { box-shadow: inset 3px 0 0 var(--ink); }
+/* El contorno de foco del nombre cae dentro de la columna fija, que recorta por la izquierda. */
+.evo-grid .st-link:focus-visible { outline-offset: -3px; }
+
+@media (min-width: 1024px) {
+  .evo-views { max-width: 480px; }
+  .evo-grid .evo-team .st-link { max-width: 16rem; }
+}
+
 /* ── Partido (spec §4.5) ──────────────────────────────────────────────── */
 
 /* La cabecera es la de screenHead (Tarea 4); bajo ella, la región de Compartir (.share-status). */

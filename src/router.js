@@ -20,7 +20,8 @@ import { normalizeTeamName, seasonNeeds } from './state.js';
 const PRIMARY = { '': 'miequipo', jornada: 'jornada', tabla: 'tabla', explorar: 'explorar' };
 const TABS = new Set(Object.values(PRIMARY));
 const NO_PARAMS = new Set(['', 'temporadas', 'fuentes', 'ajustes']);
-const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas'];
+// Las vistas de Tabla: las de la clasificación y las dos de la Evolución del grupo.
+const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas', 'evolucion', 'posiciones'];
 // Lo que se cambia sin crear entrada en el historial (§4.1): jornada, vista de Tabla y búsqueda.
 const REPLACE_ONLY = { jornada: ['r'], tabla: ['v'], explorar: ['q'], goleadores: ['q'] };
 // Pantallas que se abren desde Explorar: su «‹» sin historial lleva a #/explorar.

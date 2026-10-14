@@ -172,6 +172,27 @@ def test_a_phase_added_to_the_season_takes_the_row_of_the_other_categories(table
     assert names == {'VICTORIA, REAL CLUB "A"': "RC Victoria", 'VICTORIA, REAL CLUB "B"': "RC Victoria B"}
 
 
+def test_a_filial_with_its_row_keeps_it_even_if_it_is_called_like_its_pretty_name():
+    """El último paso de known_names nombra el filial de un club nuevo como su primer equipo más la letra
+    cuando su nombre es el de pretty_name. 'Atalaya B' (la ficha de 2026-27 de 'ATALAYA, U.D. "B"', o la
+    fila que casa por palabras) se llama como su pretty_name, y lo reescribía a 'UD Atalaya B', una fila
+    que no existe: con --add, la ficha de la temporada no mandaba; sin ella, lo mismo con 'Arinaga B'."""
+    conn = base()
+    put(conn, 3, 1, "FF1", "grancanaria", ["UD Atalaya", "Atalaya B", "CD Arinaga", "Arinaga B"],
+        fed={"UD Atalaya": "ATALAYA, U.D.", "Atalaya B": 'ATALAYA, U.D. "B"'})
+    crudos = raw(['ATALAYA, U.D. "A"', 'ATALAYA, U.D. "B"', "ARINAGA, C.D.", 'ARINAGA, C.D. "B"'])
+    for season in ("2026-2027", None):
+        names = known_names(crudos, conn, season=season)
+        assert names == {'ATALAYA, U.D. "A"': "UD Atalaya", 'ATALAYA, U.D. "B"': "Atalaya B",
+                         "ARINAGA, C.D.": "CD Arinaga", 'ARINAGA, C.D. "B"': "Arinaga B"}, season
+    # El filial que la base no tiene, como antes: su primer equipo más la letra (el de la base, o el nuevo).
+    put(conn, 3, 1, "FF2", "grancanaria", ["CD Tinajo"])
+    names = known_names(raw(["TINAJO, C.D.", 'TINAJO, C.D. "B"', "NUEVO HORIZONTE, U.D.",
+                             'NUEVO HORIZONTE, U.D. "B"']), conn)
+    assert names == {"TINAJO, C.D.": "CD Tinajo", 'TINAJO, C.D. "B"': "CD Tinajo B",
+                     "NUEVO HORIZONTE, U.D.": "Nuevo Horizonte", 'NUEVO HORIZONTE, U.D. "B"': "Nuevo Horizonte B"}
+
+
 def test_the_card_of_the_season_is_ignored_when_two_rows_share_it():
     conn = base()
     put(conn, 3, 1, "FF12", "grancanaria", ["Atlético Fomento", "Otro Fomento"],

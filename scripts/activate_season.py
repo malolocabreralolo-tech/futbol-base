@@ -683,12 +683,16 @@ def known_names(raw, conn, years=None, keep_existing=False, season=None):
               and _portal_style(next(iter(same)))):
             names[n] = f"{next(iter(same))} {letter}"
     # Lo que no casa con la base va con forma de portal; el filial de un club
-    # nuevo, como su primer equipo más la letra.
+    # nuevo, como su primer equipo más la letra. Solo el que ha salido de pretty_name: el que ya tiene
+    # su fila (por la ficha, la tabla revisada o el emparejamiento) se queda con ella aunque se llame
+    # como su pretty_name ('ATALAYA, U.D. "B"' es 'Atalaya B', no 'UD Atalaya B', una fila que no existe).
     existing = {r[0] for r in conn.execute("SELECT name FROM teams")} if keep_existing else set()
+    pretty = set()
     for n in crudos:
-        if not _portal_style(names[n]) and names[n] not in existing:
+        if n not in fixed and not _portal_style(names[n]) and names[n] not in existing:
             names[n] = pretty_name(names[n])
-    for n in crudos:
+            pretty.add(n)
+    for n in pretty:
         letter = _filial(n)
         core = team_key(n)[0]
         near = [f for f in firsts if team_score((core, ""), (team_key(f)[0], "")) >= MIN_TEAM_SCORE]

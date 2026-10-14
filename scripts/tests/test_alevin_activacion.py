@@ -313,9 +313,9 @@ def _read(fed):
 
 def test_the_alevin_quota_takes_turns_by_the_pass_number_even_without_commits(monkeypatch):
     """La cuota de alevín (FIFLP_ALEVIN_MIN) va tras los prioritarios y antes que benjamín, y empieza en
-    cada pasada más allá: el número de la pasada (GITHUB_RUN_NUMBER), no nada guardado en la base, que
-    update.yml solo sube si cambia algún data-*.js (con un turno guardado en ella, fiflp_reads, cada
-    pasada sin cambios volvía a leer los mismos grupos)."""
+    cada pasada por otro turno: el número de la pasada (GITHUB_RUN_NUMBER), no nada guardado en la
+    base, que update.yml solo sube si cambia algún data-*.js (con un turno guardado en ella,
+    fiflp_reads, cada pasada sin cambios volvía a leer los mismos grupos)."""
     monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
     monkeypatch.setenv("FIFLP_ALEVIN_MIN", "2")
     committed = _bot_base()
@@ -328,10 +328,12 @@ def test_the_alevin_quota_takes_turns_by_the_pass_number_even_without_commits(mo
         U.run_passes(_Page(), fed, conn, 1, groups, date(2026, 10, 5), {g[1]: g[2] for g in groups})
         reads.append(_read(fed))
     # PG2, el grupo del equipo de la portada (src/config.js), siempre el primero; la cuota, 2 alevín
-    # desde su turno (5 grupos: cada pasada, 2 más allá); después benjamín y el resto de alevín.
-    assert reads == [["PG2", "AL1", "AL2", "FF1", "AL3", "AL4", "AL5"],
-                     ["PG2", "AL3", "AL4", "FF1", "AL5", "AL1", "AL2"],
-                     ["PG2", "AL5", "AL1", "FF1", "AL2", "AL3", "AL4"]]
+    # desde su turno (5 grupos: turnos [AL1, AL2], [AL3, AL4], [AL5] y []; dentro del turno, el inicio
+    # de su época, update_fiflp.spin: 3000-3003 son la época 750, que empieza por el segundo); FF1, el
+    # único de benjamín, en su turno (la pasada 3000) va tras la cuota y en las demás, entre el resto.
+    assert reads == [["PG2", "AL2", "AL1", "FF1", "AL4", "AL3", "AL5"],
+                     ["PG2", "AL4", "AL3", "AL5", "AL1", "FF1", "AL2"],
+                     ["PG2", "AL5", "AL1", "AL2", "FF1", "AL3", "AL4"]]
 
 
 def test_a_base_with_the_old_turn_table_still_works_and_it_is_not_used(monkeypatch):
@@ -357,8 +359,8 @@ def test_without_a_run_number_the_turn_comes_from_the_clock():
     assert U.run_number({"GITHUB_RUN_NUMBER": "812"}) == 812
 
 
-@pytest.mark.parametrize("number, expected", [(3000, ["AL1", "AL2", "AL3", "AL4", "AL5"]),
-                                              (3001, ["AL3", "AL4", "AL5", "AL1", "AL2"])])
+@pytest.mark.parametrize("number, expected", [(3000, ["AL2", "AL1", "AL4", "AL3", "AL5"]),
+                                              (3001, ["AL4", "AL3", "AL5", "AL1", "AL2"])])
 def test_a_run_with_only_alevin_reads_every_alevin_group(monkeypatch, number, expected):
     """FIFLP_CATS=alevin (un workflow solo de alevín, docs/alevin.md): sin benjamín delante, todos los
     grupos alevín que quepan en el plazo, no un turno fijo; cada pasada empieza por un turno distinto,

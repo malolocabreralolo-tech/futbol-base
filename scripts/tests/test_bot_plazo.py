@@ -5,14 +5,16 @@ grupos iban por orden alfabético: PG2, el de la familia, el último. Con la Seg
 grupos) y alevín (+32, códigos AL…) no cabría en los 45 min del job. Ahora:
   - cada página cuesta menos (fiflp_carga: sin esperas fijas; test_fiflp_carga.py);
   - el orden es por prioridad: los grupos de los equipos prioritarios, los cerrados que tocan, una
-    cuota de alevín y después prebenjamín, benjamín y el resto de alevín;
-  - la rotación NO tiene estado: cada nivel empieza en cada pasada más allá que en la anterior según
-    el número de la pasada (run_number), no según nada guardado (update.yml no sube la base ni
-    data-health.json en una pasada sin cambios publicados);
+    cuota de alevín y el turno de prebenjamín y de benjamín, el turno siguiente de cada nivel (el
+    margen) y el resto, intercalados;
+  - la rotación NO tiene estado: cada nivel tiene cuatro turnos fijos y la pasada lee primero el de su
+    número (run_number), no según nada guardado (update.yml no sube la base ni data-health.json en una
+    pasada sin cambios publicados); dentro del turno, el inicio cambia de una época a otra (spin);
   - un plazo GLOBAL cubre las dos pasadas y reserva tiempo para las actas y los goleadores; lo que no
     cabe queda para otra pasada, sin marcarlo como error;
   - un grupo cerrado (todo jugado, última jornada hace más de 21 días) solo se refresca una de cada
-    cuatro pasadas. La simulación de muchas pasadas con 81 grupos está en test_bot_rotacion.py.
+    cuatro pasadas, en una que salta dos puestos de una época a otra. La simulación de muchas
+    pasadas con 81 grupos está en test_bot_rotacion.py.
 Sin red: páginas y raspador falsos.
 """
 from datetime import date, datetime, timedelta, timezone
@@ -146,8 +148,7 @@ def test_a_priority_team_includes_its_club_filials_and_not_a_namesake_club():
 
 def test_order_is_priority_then_the_turns_then_the_rest_by_level():
     """Los prioritarios; el turno de cada nivel (la cuota de alevín, prebenjamín, benjamín: ceil(N/4)
-    de cada uno); el turno siguiente de cada nivel (el margen); y el resto: prebenjamín, benjamín y
-    alevín, por este orden."""
+    de cada uno); el turno siguiente de cada nivel (el margen); y el resto, intercalados (interleave)."""
     order = codes(plan(season(), env={"FIFLP_ALEVIN_MIN": "1"}).order)
     assert order[:3] == ["PG2", "FF5", "AL3"]                         # los de Las Mesas, por categoría
     assert order[3:] == ["AL1", "PG1", "FF1",                         # los turnos
@@ -166,8 +167,9 @@ def test_the_portal_group_is_a_priority_even_before_it_has_teams():
 
 
 def test_each_level_starts_further_on_in_each_pass():
-    """La rotación sale del número de la pasada: cada nivel empieza ceil(N/4) grupos más allá que en la
-    anterior y en cuatro pasadas seguidas vuelve al principio; los prioritarios, siempre delante."""
+    """La rotación sale del número de la pasada: cada nivel tiene cuatro turnos fijos (aquí, de un grupo)
+    y la pasada lee primero el de su número; en cuatro pasadas seguidas, cada uno el suyo. Los
+    prioritarios, siempre delante."""
     conn = season()
     env = {"FIFLP_ALEVIN_MIN": "1"}
     orders = [codes(plan(conn, number=n, env=env).order) for n in range(812, 817)]
@@ -175,8 +177,50 @@ def test_each_level_starts_further_on_in_each_pass():
     benjamin = [[c for c in o if c in ("FF1", "FF2", "FF10", "LZ1")] for o in orders]
     assert [b[0] for b in benjamin] == ["FF1", "FF2", "FF10", "LZ1", "FF1"]
     assert benjamin[1] == ["FF2", "FF10", "LZ1", "FF1"]                # sigue el orden, desde su turno
-    assert [o[3] for o in orders] == ["AL1", "ALX1", "AL1", "ALX1", "AL1"]      # la cuota de alevín
-    assert U.rotate(list("abcdefgh"), 1) == list("cdefghab") and U.rotate([], 5) == []
+    # Alevín (AL1 y ALX1): turnos [AL1], [ALX1], [] y []. Con el suyo vacío, la cuota (1) toma el
+    # primero de los siguientes.
+    assert [o[3] for o in orders] == ["AL1", "ALX1", "AL1", "AL1", "AL1"]
+
+
+def test_the_turns_are_four_fixed_blocks_whatever_the_size():
+    """Cuatro turnos siempre (24 h con el cron cada 6 h), aunque el nivel tenga menos de cuatro grupos o
+    no sea múltiplo de cuatro: con tres prebenjamín, tres turnos de uno y uno vacío (un ciclo de tres
+    pasadas se desacompasaba de los saltos del número de ejecución)."""
+    assert U.turn_blocks(["PG1", "PG3", "PG4"]) == [["PG1"], ["PG3"], ["PG4"], []]
+    assert [len(b) for b in U.turn_blocks(list(range(43)))] == [11, 11, 11, 10]
+    assert [len(b) for b in U.turn_blocks(list(range(28)))] == [7, 7, 7, 7]
+    assert U.turn_blocks([]) == [[], [], [], []]
+    # rotate: el turno de la pasada y después los siguientes, cada uno girado según su época.
+    assert U.rotate(list("abcdefgh"), 0) == list("abcdefgh")
+    assert U.rotate(list("abcdefgh"), 1) == list("cdefgh") + U.spin(list("ab"), 1) == list("cdefghba")
+    assert U.rotate([], 5) == []
+    for n in range(40):
+        assert sorted(U.rotate(list(range(43)), n)) == list(range(43))
+        block = U.turn_blocks(list(range(43)))[n % 4]
+        assert set(U.rotate(list(range(43)), n)[:len(block)]) == set(block)
+
+
+def test_the_part_of_a_turn_left_out_changes_from_one_day_to_the_next():
+    """spin: si el plazo solo deja leer el principio de un turno, lo que queda fuera cambia de una época
+    (cuatro pasadas) a otra; con hasta un tercio fuera, ningún grupo se queda fuera dos seguidas. Antes
+    el corte caía siempre en la cola de un turno que avanzaba un puesto cada cuatro pasadas."""
+    assert U.spin(list("abcde"), 0) == list("abcde") and U.spin([], 7) == []
+    for size in range(1, 40):
+        items = list(range(size))
+        for out in range(1, size // 3 + 1):
+            for epoch in range(2000):
+                left = set(U.spin(items, epoch)[size - out:])
+                assert sorted(U.spin(items, epoch)) == items
+                assert not left & set(U.spin(items, epoch + 1)[size - out:]), (size, out, epoch)
+
+
+def test_the_margin_and_the_rest_are_interleaved():
+    """Si el plazo corta el margen (el turno siguiente), corta a todos los niveles por igual y el primero
+    de cada uno entra antes que el segundo de ninguno: con una pasada perdida cada día, el margen de la
+    anterior lee algo de cada nivel (antes, la cuota de alevín se lo llevaba todo y benjamín no se
+    recuperaba)."""
+    assert U.interleave([list("abc"), ["x"], list("123456")]) == ["a", "x", "1", "2", "b", "3", "4", "c", "5", "6"]
+    assert U.interleave([[], ["x"], []]) == ["x"] and U.interleave([]) == []
 
 
 def test_the_order_depends_on_the_pass_number_and_not_on_what_was_published():
@@ -204,18 +248,24 @@ def test_alevin_keeps_its_quota_even_when_benjamin_would_fill_the_pass():
               + [(f"FF{i}", "BENJAMIN", [f"Local {i}", f"Visitante {i}"]) for i in range(1, 31)]
               + [(f"AL{i}", "ALEVIN", [f"Alevín {i}", f"Alevín R{i}"]) for i in range(1, 33)])
     conn = season(groups)
+    turns = [len(b) for b in U.turn_blocks(list(range(30)))]           # benjamín: 8, 8, 8 y 6
     for number in range(4):
         order = codes(plan(conn, number=number).order)
+        own, after = turns[number], turns[(number + 1) % 4]
         assert order[0] == "PG2"
         assert all(code.startswith("AL") for code in order[1:9]), order[:10]       # 8, antes que benjamín
-        assert all(code.startswith("FF") for code in order[9:17])                  # su turno, 8 de 30
-        assert all(code.startswith("AL") for code in order[17:25])                 # el turno siguiente…
-        assert all(code.startswith("FF") for code in order[25:47])                 # …y benjamín, entero
-        assert all(code.startswith("AL") for code in order[47:])
+        assert all(code.startswith("FF") for code in order[9:9 + own])             # su turno
+        margin = order[9 + own:9 + own + 8 + after]                                 # los siguientes, intercalados
+        assert sum(c.startswith("AL") for c in margin) == 8 and sum(c.startswith("FF") for c in margin) == after
+        assert margin[0].startswith("AL") and margin[1].startswith("FF")
+        assert len(order) == 63 and sorted(order) == sorted(c for c, _, _ in groups)
     seen = {c for n in range(4) for c in codes(plan(conn, number=n).order)[1:9]}
     assert seen == {f"AL{i}" for i in range(1, 33)}                     # en cuatro pasadas, los 32
+    assert {c for n in range(4) for c in codes(plan(conn, number=n).order)[9:9 + turns[n]]} == {
+        f"FF{i}" for i in range(1, 31)}                                  # y los 30 de benjamín
     assert U.alevin_quota(list(range(32)), {"FIFLP_ALEVIN_MIN": "12"}) == 12
     assert U.alevin_quota(list(range(48)), {"FIFLP_ALEVIN_MIN": "0"}) == 12  # nunca menos que su turno
+    assert U.alevin_quota(list(range(48)), {"FIFLP_ALEVIN_MIN": "0"}, 11) == 11
     assert U.alevin_quota(list(range(5)), {}) == 5 and U.alevin_quota([], {}) == 0
 
 
@@ -227,15 +277,23 @@ def turn_of(code):
 
 
 def test_a_closed_group_is_refreshed_once_every_four_passes():
+    """Una vez en cada época de cuatro pasadas, en una que salta dos puestos de una época a otra: con un
+    turno fijo (crc32 % 4), una pasada perdida cada día a la misma hora dejaba sin leer, para siempre,
+    a los cerrados de esa hora."""
     conn = season(played="2026-09-19")                 # todo jugado hace 25 días
     all_ok = {code: checked(6) for code in ALL}
     for number in range(8):
         p = plan(conn, all_ok, number=number)
         assert set(codes(p.order)) == {c for c in ALL if U.closed_turn(c, number)}, number
         assert set(codes(p.order)) | set(codes(p.resting)) == set(ALL)
-    n = turn_of("FF1")
-    assert "FF1" in codes(plan(conn, all_ok, number=n).order) and "FF1" in codes(plan(conn, all_ok, number=n + 4).order)
-    assert all("FF1" in codes(plan(conn, all_ok, number=m).resting) for m in range(n + 1, n + 4))
+    for code in ALL:
+        turns = [n for n in range(40, 64) if U.closed_turn(code, n)]
+        assert [n // 4 for n in turns] == list(range(10, 16)), code         # una vez por época
+        assert {(b - a) for a, b in zip(turns, turns[1:])} <= {2, 6}, code  # dos puestos más allá o más acá
+        assert len({n % 4 for n in turns}) == 2, code
+        for lost in range(4):                     # una pasada perdida al día: se lee al menos en cada 8
+            kept = [n for n in turns if n % 4 != lost]
+            assert all(b - a <= 8 for a, b in zip(kept, kept[1:])) and kept, (code, lost)
 
 
 def test_a_closed_group_with_something_to_do_is_not_left_resting():
@@ -420,8 +478,8 @@ def test_what_does_not_fit_waits_for_the_next_pass_without_an_error(health):
 
 @pytest.mark.parametrize("commits", [True, False])
 def test_the_rotation_reaches_every_group_without_any_saved_state(health, commits, monkeypatch):
-    """Con plazo para 6 de 10 grupos (3 prioritarios), la pasada siguiente empieza más allá y en cuatro
-    pasadas seguidas (24 h) todos se refrescan, alevín también. Igual si ninguna pasada sube nada
+    """Con plazo para 6 de 10 grupos (3 prioritarios), la pasada siguiente lee primero otro turno y en
+    cuatro pasadas seguidas (24 h) todos se refrescan, alevín también. Igual si ninguna pasada sube nada
     (commits=False: cada una arranca del mismo data-health.json): el orden sale del número de la pasada.
     (Con la cuota de alevín por defecto, 8, los dos grupos alevín irían siempre y no quedaría sitio
     para benjamín: aquí, la cuota es su turno, 1 de 2.)"""
@@ -443,8 +501,8 @@ def test_the_rotation_reaches_every_group_without_any_saved_state(health, commit
 @pytest.mark.parametrize("commits", [True, False])
 def test_the_second_pass_rotates_too(health, commits):
     """Con la primera pasada entera y plazo para unas pocas segundas (actas y goleadores), la siguiente
-    empieza, tras los prioritarios, más allá (en el orden de la primera, que rota): en cuatro pasadas
-    seguidas todos tienen sus goleadores, alevín también, se suba algo o no."""
+    empieza, tras los prioritarios, por otro turno (en el orden de la primera, que rota): en cuatro
+    pasadas seguidas todos tienen sus goleadores, alevín también, se suba algo o no."""
     conn = season()
     base = report({code: checked(6) for code in ALL})
     previous, read = base, []
@@ -512,8 +570,8 @@ def test_venues_and_team_cards_are_read_even_when_the_second_pass_runs_out(healt
 
 def test_a_closed_group_is_refreshed_once_every_four_passes_and_the_rest_carry_their_check(health):
     """Todo cerrado: cada pasada lee solo los cerrados a los que les toca (closed_turn); los demás
-    descansan con su última comprobación. En cuatro pasadas seguidas, todos una vez, sin estado: igual
-    si ninguna pasada sube data-health.json."""
+    descansan con su última comprobación. En cada época de cuatro pasadas, todos una vez, sin estado:
+    igual si ninguna pasada sube data-health.json."""
     conn = season(played="2026-09-19")
     base = report({code: checked(24) for code in ALL})
     visited = []
@@ -525,8 +583,7 @@ def test_a_closed_group_is_refreshed_once_every_four_passes_and_the_rest_carry_t
         for code in set(ALL) - visited[-1]:
             assert data["groups"][code] == base["groups"][code]
     assert all(sum(code in v for v in visited) == 2 for code in ALL)     # en 8 pasadas, dos veces cada uno
-    for i in range(len(visited) - 3):
-        assert set().union(*visited[i:i + 4]) == set(ALL)
+    assert set().union(*visited[:4]) == set().union(*visited[4:]) == set(ALL)    # una vez en cada época
 
 
 def test_a_pass_with_nothing_new_does_not_rewrite_the_report(health):

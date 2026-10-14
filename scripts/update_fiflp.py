@@ -53,16 +53,20 @@ MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se pue
 # paso del bot queda en ≤ ~32 min y el job en 29-33, ~35 en el peor caso, sobre los 45 de update.yml.
 DEADLINE_SECONDS = 25 * 60
 # Lo que la primera pasada deja siempre para la segunda (FIFLP_RESERVE_MIN): las actas y los
-# goleadores de los grupos prioritarios, que van los primeros, y los goleadores del turno.
+# goleadores de los grupos prioritarios, que van los primeros, y los goleadores del turno y del margen.
 RESERVE_SECONDS = 6 * 60
 CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada más vieja: cerrado
 # Rotación SIN ESTADO (plan_groups): el orden de cada pasada sale solo de su número (run_number), no
 # de nada guardado en la base ni en data-health.json, que update.yml no sube en una pasada sin cambios
-# publicados (y entonces la siguiente repetía los mismos grupos). Cada nivel empieza en cada pasada
-# un turno (ceil(N/ROTATION_PASSES) grupos) más allá que en la anterior y los turnos de todos los
-# niveles van antes que el resto: en ROTATION_PASSES pasadas seguidas (24 h con el cron cada 6 h) cada
-# grupo tiene el suyo. Un grupo cerrado se lee una de cada ROTATION_PASSES pasadas (closed_turn).
+# publicados (y entonces la siguiente repetía los mismos grupos). Cada nivel se parte en ROTATION_PASSES
+# turnos fijos de ceil(N/ROTATION_PASSES) grupos (turn_blocks) y la pasada `number` lee primero el
+# turno number % ROTATION_PASSES de cada nivel: en ROTATION_PASSES pasadas seguidas (24 h con el cron
+# cada 6 h) cada grupo tiene el suyo, sea cual sea N. Dentro del turno, el punto de partida cambia de
+# una época (ROTATION_PASSES pasadas) a otra (spin): si el plazo no llega al turno entero, lo que queda
+# fuera no es siempre lo mismo. Un grupo cerrado se lee una de cada ROTATION_PASSES pasadas
+# (closed_turn), en una que salta dos puestos de una época a otra.
 ROTATION_PASSES = 4
+GOLDEN = (5 ** 0.5 - 1) / 2      # el giro de spin: una fracción irracional, que no repite ciclo
 # Cuota de alevín (FIFLP_ALEVIN_MIN): su turno, tras los prioritarios y los cerrados que tocan y antes
 # que los de prebenjamín y benjamín, es de al menos estos grupos (y nunca menos que ceil(N/4)): el
 # último nivel no se queda sin leer aunque benjamín y prebenjamín llenen el plazo.
@@ -169,11 +173,15 @@ def _natural(code):
 
 def run_number(env=None, now=None):
     """El número de esta pasada del bot, del que sale su orden (plan_groups): GITHUB_RUN_NUMBER, que
-    GitHub sube en cada ejecución de update.yml, haga commit o no, y que no se repite ni se salta entre
-    dos pasadas seguidas (la franja horaria sí: el cron llega con horas de retraso y las tandas y las
-    ejecuciones a mano caen en la franja de otra); fuera de GitHub (a mano, en las pruebas), la franja
-    de 6 h del reloj (UTC). Nada guardado: un turno en la base (o en data-health.json) se perdía en las
-    pasadas sin cambios publicados, que update.yml no sube, y la siguiente repetía los mismos grupos."""
+    GitHub sube en cada ejecución de update.yml, haga commit o no; fuera de GitHub (a mano, en las
+    pruebas), la franja de 6 h del reloj (UTC). Nada guardado: un turno en la base (o en
+    data-health.json) se perdía en las pasadas sin cambios publicados, que update.yml no sube, y la
+    siguiente repetía los mismos grupos. El número puede saltarse uno (una ejecución pendiente que la
+    concurrency cancela al llegar otra la gasta sin pasar por el bot) o repetirse (relanzar una
+    ejecución fallida cambia run_attempt, no el número): plan_groups lleva un margen para lo primero,
+    y lo segundo repite el orden de una pasada que no llegó a hacerse. La franja horaria no sirve de
+    número: el cron llega con horas de retraso y las tandas y las ejecuciones a mano caen en la franja
+    de otra pasada."""
     env = os.environ if env is None else env
     try:
         return int(env["GITHUB_RUN_NUMBER"])
@@ -186,28 +194,58 @@ def turn_size(items, passes=ROTATION_PASSES):
     return -(-len(items) // passes)
 
 
-def rotate(items, number, passes=ROTATION_PASSES):
-    """`items` (en su orden fijo) empezando por el turno de la pasada `number`: cada pasada empieza
-    turn_size puestos más allá que la anterior, así que en `passes` pasadas seguidas cada uno va una
-    vez entre los turn_size primeros (su turno) y, si cabe más, también en las demás."""
+def turn_blocks(items, passes=ROTATION_PASSES):
+    """Los `passes` turnos fijos de un nivel (`items`, en su orden fijo): bloques seguidos de turn_size
+    grupos (el último, más corto o vacío). Siempre `passes` turnos, sea cual sea N: con 3 grupos son
+    tres de uno y uno vacío, no un ciclo de tres pasadas que una ejecución saltada cada tres dejaría
+    sin el turno de alguno."""
+    size = turn_size(items, passes)
+    return [items[j * size:(j + 1) * size] for j in range(passes)]
+
+
+def spin(items, epoch):
+    """`items` empezando en floor(frac(epoch·GOLDEN)·N): de una época a la siguiente el inicio avanza
+    ~0,62·N puestos, así que si el plazo solo deja leer el principio de un turno, lo que queda fuera
+    cambia de una época a otra: con hasta un tercio fuera, ningún grupo se queda fuera dos épocas
+    seguidas (test_bot_plazo comprueba N hasta 39 en 5.000 épocas)."""
     if not items:
         return []
-    start = (number * turn_size(items, passes)) % len(items)
-    return items[start:] + items[:start]
+    k = int((epoch * GOLDEN) % 1 * len(items))
+    return items[k:] + items[:k]
+
+
+def rotate(items, number, passes=ROTATION_PASSES):
+    """Todo el nivel en el orden de la pasada `number`: su turno (turn_blocks[number % passes]) y
+    después los de las pasadas siguientes, cada uno girado según su época (spin, (number + i) //
+    passes). Los primeros (los de su bloque) son el turno: en `passes` pasadas seguidas, cada grupo
+    una vez."""
+    blocks = turn_blocks(items, passes)
+    return [g for t in range(number, number + passes) for g in spin(blocks[t % passes], t // passes)]
+
+
+def interleave(lists):
+    """Las listas intercaladas en proporción a su largo (el i-ésimo de una de n va en i/n; a la par, en
+    el orden de las listas): si el plazo corta, corta a todas por igual, y el primero de cada una entra
+    antes que el segundo de ninguna."""
+    keyed = [(i / len(items), k, i) for k, items in enumerate(lists) for i in range(len(items))]
+    return [lists[k][i] for _, k, i in sorted(keyed)]
 
 
 def closed_turn(code, number, passes=ROTATION_PASSES):
-    """¿Le toca a este grupo cerrado? Una de cada `passes` pasadas (24 h con el cron cada 6 h), según
-    su código (crc32): sin estado y con los cerrados repartidos entre las pasadas."""
-    return zlib.crc32(code.encode()) % passes == number % passes
+    """¿Le toca a este grupo cerrado? Una vez en cada época de `passes` pasadas (24 h con el cron cada
+    6 h), sin estado: en la pasada (crc32(código) + 2·época) % passes de su época. Repartidos entre las
+    pasadas por el código; y como la suya salta dos puestos de una época a otra, una pasada que se
+    pierde cada día a la misma hora le quita como mucho una de cada dos: se lee al menos una vez en
+    cada 8 pasadas (con un turno fijo, los de esa hora no se leían nunca)."""
+    return (zlib.crc32(code.encode()) + 2 * (number // passes)) % passes == number % passes
 
 
-def alevin_quota(groups, env=None):
+def alevin_quota(groups, env=None, turn=None):
     """Cuántos grupos alevín van antes que prebenjamín y benjamín: FIFLP_ALEVIN_MIN (8 por defecto),
-    nunca menos que su turno (ceil(N/ROTATION_PASSES)) ni más de los que hay."""
+    nunca menos que su turno (`turn`; por defecto, ceil(N/ROTATION_PASSES)) ni más de los que hay."""
     text = (os.environ if env is None else env).get("FIFLP_ALEVIN_MIN", "").strip()
     wanted = int(text) if text.isdigit() else ALEVIN_MIN_GROUPS
-    return min(len(groups), max(wanted, turn_size(groups)))
+    return min(len(groups), max(wanted, turn_size(groups) if turn is None else turn))
 
 
 def is_closed(conn, group_id, today):
@@ -225,18 +263,21 @@ def plan_groups(conn, groups, checks, today, number, priority=None, pinned=None,
         1. los de los equipos prioritarios (priority_teams, pinned_groups): todos, en cada pasada;
         2. los cerrados a los que les toca (closed_turn), los que fallaron y los nunca comprobados
            (checks: las entradas publicadas de data-health.json);
-        3. el turno de cada nivel (rotate, turn_size): la cuota de alevín (alevin_quota, ≥ su
+        3. el turno de cada nivel (rotate, turn_blocks): la cuota de alevín (alevin_quota, ≥ su
            turno), el de prebenjamín y el de benjamín. Cabe siempre (~27 grupos con 81), y en
            ROTATION_PASSES pasadas seguidas cada grupo tiene el suyo;
-        4. el turno siguiente de cada nivel, con la misma cuota: el margen para una pasada perdida
-           (un número que se salta: una ejecución cancelada en la cola) o lenta;
-        5. con lo que quede, el resto por niveles: prebenjamín, benjamín y alevín.
-      Lo que no cabe en el plazo queda para otra pasada, que empieza más allá. Nada de esto depende
-      de lo que haya hecho la pasada anterior: solo de `number`, de la base y del estado publicado;
+        4. el turno siguiente de cada nivel, intercalados (interleave): el margen para una pasada
+           perdida (un número que se salta, o una que cae cada día a la misma hora: la anterior lee
+           lo que puede de su turno, cada época una parte distinta) o lenta;
+        5. con lo que quede, el resto, intercalado igual.
+      Lo que no cabe en el plazo queda para otra pasada. Nada de esto depende de lo que haya hecho la
+      pasada anterior: solo de `number`, de la base y del estado publicado;
     - resting: los cerrados (is_closed) comprobados bien, sin actas pendientes y fuera de su turno:
       descansan esta pasada;
     - priority: los códigos de los grupos prioritarios;
-    - turn: los de 2 y 3 (sus goleadores van antes que las actas de los demás: run_passes)."""
+    - turn: los de 2, 3 y 4 (sus goleadores, los de los que haya leído la primera pasada, van antes
+      que las actas de los demás: run_passes). Los del margen también: si la pasada a la que les toca
+      se pierde, solo los tendrían tras las actas, que tras un fin de semana llenan la reserva."""
     if not groups:
         return Plan([], [], set(), number, set())
     keys = priority_keys(priority_teams() if priority is None else priority)
@@ -265,12 +306,20 @@ def plan_groups(conn, groups, checks, today, number, priority=None, pinned=None,
             due.append(group)
         else:
             levels[level(group)].append(group)
-    alevin, prebenjamin, benjamin = (rotate(levels[n], number) for n in (3, 1, 2))
-    lots = ((alevin, alevin_quota(alevin, env)), (prebenjamin, turn_size(prebenjamin)), (benjamin, turn_size(benjamin)))
-    laps = [[g for items, size in lots for g in items[lap * size:(lap + 1) * size]] for lap in (0, 1)]
-    order = (mine + due + laps[0] + laps[1]
-             + prebenjamin[2 * lots[1][1]:] + benjamin[2 * lots[2][1]:] + alevin[2 * lots[0][1]:])
-    return Plan(order, resting, {c for _, c, _ in mine}, number, {c for _, c, _ in due + laps[0]})
+    # Alevín, prebenjamín y benjamín: todo el nivel desde su turno (rotate), cuántos van en el 3 (su
+    # turno; de alevín, su cuota) y hasta dónde llega el 4 (el turno siguiente).
+    lots = []
+    for n in (3, 1, 2):
+        sizes = [len(b) for b in turn_blocks(levels[n])]
+        own = sizes[number % ROTATION_PASSES]
+        head = alevin_quota(levels[n], env, own) if n == 3 else own
+        upto = max(head, own + sizes[(number + 1) % ROTATION_PASSES])
+        lots.append((rotate(levels[n], number), head, upto))
+    turn = [g for items, head, _ in lots for g in items[:head]]
+    margin = interleave([items[head:upto] for items, head, upto in lots])
+    rest = interleave([items[upto:] for items, _, upto in lots])
+    return Plan(mine + due + turn + margin + rest, resting, {c for _, c, _ in mine}, number,
+                {c for _, c, _ in due + turn + margin})
 
 
 # ── Competiciones nuevas en la federación ─────────────────────────────────────
@@ -945,11 +994,12 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     1. clasificación y jornadas de cada grupo (todas las jugadas en la primera
        pasada de un grupo recién activado, fiflp_full_pending), mientras quede
        plazo y la reserva (reserve_seconds) para la segunda; lo que no cabe queda
-       para otra pasada, que empieza más allá (rotación sin estado);
+       para otra pasada, que lee primero otro turno (rotación sin estado);
     2. con lo que quede: las actas y los goleadores de los prioritarios; el
        directorio de campos y las fichas de los equipos que faltan; los goleadores
-       del turno (plan.turn); y las actas y los goleadores de los demás, en el
-       orden de la primera pasada (que rota: el turno de cada nivel, primero).
+       del turno y del margen (plan.turn); y las actas y los goleadores de los
+       demás, en el orden de la primera pasada (que rota: el turno de cada nivel,
+       primero).
     Los grupos cerrados que descansan y los que no caben conservan su última
     comprobación en data-health.json (source_health.carry): no son un error."""
     start = clock()
@@ -960,7 +1010,8 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     number = run_number() if number is None else number
     now = now or datetime.now(timezone.utc)
     plan = plan_groups(conn, groups, checks, today, number)
-    print(f"  Pasada {number}: {len(plan.priority)} de equipos prioritarios primero "
+    print(f"  Pasada {number} (turno {number % ROTATION_PASSES}, época {number // ROTATION_PASSES}): "
+          f"{len(plan.priority)} de equipos prioritarios primero "
           f"({', '.join(sorted(plan.priority)) or '—'}); {len(plan.order)} por refrescar, "
           f"{len(plan.resting)} cerrados descansan", flush=True)
     stamp = lambda: now + timedelta(seconds=clock() - start)     # la hora de cada comprobación
@@ -1071,8 +1122,9 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     except Exception as e:
         conn.rollback()
         print(f"  ! directorio: {e}")
-    # Los goleadores del turno (una página por grupo) antes que las actas de nadie más: tras un fin de
-    # semana las actas pendientes llenan la reserva, y sin esto los goleadores no rotarían.
+    # Los goleadores del turno y del margen (una página por grupo) antes que las actas de nadie más: tras
+    # un fin de semana las actas pendientes llenan la reserva, y sin esto los goleadores no rotarían (ni
+    # los de un turno cuya pasada se pierde, que solo lee el margen de otra).
     for group_id, code, url in second:
         if code in plan.turn and clock() <= deadline and not blocked():
             notes = []

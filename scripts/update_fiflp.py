@@ -902,9 +902,12 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     print(f"  Orden: {len(plan.priority)} de equipos prioritarios primero ({', '.join(sorted(plan.priority)) or '—'}); "
           f"{len(plan.order)} por refrescar, {len(plan.resting)} cerrados descansan", flush=True)
     stamp = lambda: now + timedelta(seconds=clock() - start)     # la hora de cada comprobación
+    # La federación no sirve páginas (fiflp_carga.BLOCKED_AFTER seguidas sin cargar, tras sus reintentos):
+    # bloquea o se ha caído. No se le pide nada más en esta pasada; lo que falta, a la siguiente.
+    blocked = lambda: bool(getattr(F, "blocked", False))
     results, stamps, deferred = {}, {}, []
     for group_id, code, url in plan.order:
-        if clock() > first_deadline:
+        if clock() > first_deadline or blocked():
             deferred.append((group_id, code, url))
             continue
         print(f"  [{code}]", flush=True)
@@ -921,11 +924,13 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     pages = getattr(F, "pages", None)
     print(f"  Primera pasada: {len(results)} grupos en {first_pass / 60:.1f} min"
           + (f" ({pages} páginas, {first_pass / pages:.1f} s cada una)" if pages else ""), flush=True)
+    if blocked():
+        print("  ! la federación no sirve páginas: nada más en esta pasada", flush=True)
     if deferred:
         print(f"  Rotación: {len(deferred)} grupos, a la próxima pasada ({_codes(deferred)})", flush=True)
     # Una página: las competiciones que la federación publica y la web no tiene (la Segunda Fase).
     try:
-        if clock() <= deadline:
+        if clock() <= deadline and not blocked():
             check_competitions(page, F, conn, season_id, today)
     except Exception as e:
         print(f"  ! competiciones: {e}")
@@ -947,7 +952,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         """Las actas (MAX_ACTAS_PER_RUN en toda la pasada) y los goleadores de un grupo. extras: la hora
         de su segunda pasada, si acabó; cut: los que el plazo no dejó acabar."""
         nonlocal budget
-        if clock() > deadline:
+        if clock() > deadline or blocked():
             cut.append(code)
             return
         at = stamp()
@@ -960,7 +965,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         except Exception as e:
             conn.rollback()
             notes.append(f"actas: {e}")
-        if clock() > deadline:                 # el plazo la cortó en las actas: va primero la próxima vez
+        if clock() > deadline or blocked():    # cortada en las actas: va primero la próxima vez
             cut.append(code)
         else:
             extras[code] = at
@@ -982,13 +987,13 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # solo hay algo que leer con grupos o equipos nuevos): el directorio de campos, si falta alguno de
     # los de la temporada, y la ficha (equipación y campo) de los equipos que aún no la tienen.
     try:
-        if clock() <= deadline and missing_venues(conn, season_id):
+        if clock() <= deadline and not blocked() and missing_venues(conn, season_id):
             print(f"\n  Campos: {update_campos(page, F, conn, deadline)} en el directorio de la federación")
     except Exception as e:
         conn.rollback()
         print(f"  ! campos: {e}")
     try:
-        if clock() <= deadline:
+        if clock() <= deadline and not blocked():
             cards, fields = update_directorio(page, F, conn, season_id, refreshed, deadline)
             if cards or fields:
                 print(f"\n  Directorio: {cards} fichas de equipo y {fields} de campo")
@@ -999,7 +1004,8 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         if group[1] not in plan.priority:
             actas_and_scorers(*group)
     if cut:
-        print(f"  (plazo agotado: las actas y los goleadores de {len(cut)} grupos, primero en la próxima pasada: "
+        print(f"  ({'sin federación' if blocked() else 'plazo agotado'}: las actas y los goleadores de {len(cut)} "
+              "grupos, primero en la próxima pasada: "
               f"{', '.join(cut[:12])}{' y más' if len(cut) > 12 else ''})")
     for group_id, code, url in groups:
         if code in results:
@@ -1010,7 +1016,8 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     source_health.note_run({
         "groups": len(groups), "refreshed": len(results), "resting": [c for _, c, _ in plan.resting],
         "deferred": [c for _, c, _ in deferred], "extrasDeferred": cut, "firstPassSeconds": round(first_pass),
-        "seconds": round(clock() - start), **({"firstPassPages": pages} if pages else {})})
+        "seconds": round(clock() - start), **({"firstPassPages": pages} if pages else {}),
+        **({"blocked": True} if blocked() else {})})
     # La rotación (de las dos pasadas) y los cerrados se ordenan por la hora de su última comprobación
     # o segunda pasada: sin publicarla, la pasada siguiente volvería a empezar por los mismos.
     if deferred or cut or (plan.due_closed & set(results)):

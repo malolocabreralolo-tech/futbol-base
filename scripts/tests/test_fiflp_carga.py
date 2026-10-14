@@ -61,16 +61,23 @@ def test_ready_selector_waits_for_the_dropdown_the_reader_uses():
         assert C.ready_selector(f"{BASE}/{page}") is None
 
 
+class Response:
+    def __init__(self, status):
+        self.status = status
+
+
 class FakePage:
-    """goto que falla `fails` veces; registra lo que espera."""
-    def __init__(self, fails=0, ready=True):
+    """goto que falla `fails` veces (o responde con los estados de `statuses`); registra lo que espera."""
+    def __init__(self, fails=0, ready=True, statuses=()):
         self.fails, self.ready, self.gotos, self.waits = fails, ready, [], []
+        self.statuses = list(statuses)
 
     def goto(self, url, wait_until=None, timeout=None):
         self.gotos.append((url, wait_until))
         if self.fails:
             self.fails -= 1
             raise TimeoutError("503")
+        return Response(self.statuses.pop(0)) if self.statuses else None
 
     def wait_for_function(self, js, arg=None, timeout=None, polling=None):
         self.waits.append((arg, timeout))
@@ -107,6 +114,39 @@ def test_goto_retries_with_backoff_but_never_past_the_deadline():
     page = FakePage(fails=5)
     assert not C.goto(page, GROUP, sleep=slept.append, log=lambda *_: None)
     assert slept == [15, 30] and len(page.gotos) == 3
+
+
+def test_an_error_status_is_a_page_that_did_not_load():
+    """page.goto no lanza con un 503 o un 429: la página de error de la federación (un bloqueo, una
+    caída) no es una página cargada. Se reintenta con las mismas esperas y, si sigue, no carga: el
+    acta no gasta un intento y el bot puede cortar la pasada."""
+    slept, said = [], []
+    page = FakePage(statuses=[503, 200])
+    assert C.goto(page, GROUP, sleep=slept.append, log=said.append)
+    assert slept == [15] and len(page.gotos) == 2 and "503" in said[0]
+    for status in (503, 429, 500):
+        slept.clear()
+        page = FakePage(statuses=[status] * 3)
+        assert not C.goto(page, GROUP, sleep=slept.append, log=lambda *_: None), status
+        assert slept == [15, 30] and len(page.gotos) == 3 and page.waits == []
+    # Lo demás es una página: un 404 (la lee el lector) o sin respuesta.
+    for statuses in ([404], [200], []):
+        assert C.goto(FakePage(statuses=statuses), GROUP, sleep=slept.append, log=lambda *_: None)
+
+
+def test_the_bot_adapter_knows_when_the_federation_stops_serving(monkeypatch):
+    """Federacion cuenta las páginas seguidas que no cargan (cada una tras sus reintentos): con
+    BLOCKED_AFTER, blocked; una que carga lo deshace."""
+    import fetch_fiflp_2425 as F
+    monkeypatch.setattr(C, "goto", lambda page, url, deadline=None: page.statuses.pop(0) == 200)
+    fed = C.Federacion(F)
+    page = FakePage(statuses=[503, 503, 200] + [503] * C.BLOCKED_AFTER)
+    for _ in range(3):
+        fed.goto(page, GROUP)
+        assert not fed.blocked
+    for n in range(C.BLOCKED_AFTER):
+        fed.goto(page, GROUP)
+    assert fed.blocked and fed.failures == C.BLOCKED_AFTER and fed.pages == 3 + C.BLOCKED_AFTER
 
 
 def test_the_bot_adapter_keeps_the_readers_and_counts_pages(monkeypatch):
@@ -194,6 +234,36 @@ def test_the_page_is_flattened_only_after_the_federation_stylesheets(sync_api, s
     # Las cifras salen de la hoja que tardaba; la que no es de la federación no se espera.
     assert score.replace(" ", "") == "7-2"
     assert 1.0 < took < 5.0
+
+
+def test_a_503_in_a_real_browser_is_not_a_loaded_page(sync_api):
+    """Chromium no da error con un 503 de Apache (el bloqueo de la federación): se ve en el estado."""
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            body = b"<html><head><title>503 Service Unavailable</title></head><body></body></html>"
+            self.send_response(503)
+            self.send_header("Content-Type", "text/html")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):
+            pass
+
+    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    slept = []
+    try:
+        with sync_api.sync_playwright() as p:
+            browser, page = _browser_page(p)
+            try:
+                loaded = C.goto(page, f"http://127.0.0.1:{httpd.server_address[1]}/NFG_CmpPartido?CodActa=1",
+                                ready_ms=500, sleep=slept.append, log=lambda *_: None)
+            finally:
+                browser.close()
+    finally:
+        httpd.shutdown()
+    assert not loaded and slept == [15, 30]
 
 
 def test_a_stylesheet_that_never_loads_only_costs_the_cap(sync_api, server):

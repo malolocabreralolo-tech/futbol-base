@@ -10,7 +10,10 @@ grupos, 19 min de primera pasada; con la Segunda Fase y alevín no cabría en el
     que ya está leído al acabar domcontentloaded. Si lo esperado no llega, se sigue igual: los
     lectores saben qué hacer con una página vacía (como antes tras los 2,5 s);
   - la pausa entre peticiones, educada pero menor: FIFLP_DELAY segundos («1-1.5» por defecto, con
-    jitter; «2-3.5» era la de antes).
+    jitter; «2-3.5» era la de antes);
+  - una página de error de la federación (un 5xx, como el 503 de Apache cuando bloquea, o un 429) no
+    es una página cargada: se reintenta como una que no carga y, con BLOCKED_AFTER seguidas, el bot
+    deja de pedirle más en esa pasada (Federacion.blocked).
 No cambia cómo se aplana ni cómo se lee el HTML: solo cuándo. Lo usa el bot (update_fiflp,
 Federacion); las tandas de temporadas pasadas (fetch_fiflp_actas, _goleadores, _detalle, _islas)
 siguen con el paso de fetch_fiflp_2425, sin prisa.
@@ -25,6 +28,9 @@ from fiflp_render import FIFLP_HOSTS
 DEFAULT_DELAY = (1.0, 1.5)
 DEFAULT_READY_MS = 5000
 RETRY_WAITS = (15, 30)    # entre intentos de una página que no carga (tres intentos)
+# Páginas seguidas que no cargan (cada una tras sus intentos): la federación bloquea o se ha caído, y
+# el bot deja de pedirle más en esa pasada (Federacion.blocked).
+BLOCKED_AFTER = 3
 
 _OPTION = ' option:not([value=""]):not([value="0"])'
 
@@ -91,42 +97,60 @@ def wait_ready(page, selector, timeout_ms, hosts=FIFLP_HOSTS):
         return False
 
 
+def _refused(response):
+    """¿La federación contestó con una página de error (un 503 de Apache cuando bloquea o se cae, un
+    429 por ir deprisa)? page.goto no lanza con ellas. Sin respuesta (las páginas de prueba), no."""
+    status = getattr(response, "status", None)
+    return isinstance(status, int) and (status >= 500 or status == 429)
+
+
 def goto(page, url, deadline=None, retries=3, ready_ms=None, hosts=FIFLP_HOSTS, sleep=time.sleep, log=print):
     """Carga `url` y espera a que esté lista para el lector (ready_selector y hojas de estilo). Hasta
     `retries` intentos, con 15 y 30 s entre ellos, nunca más allá de `deadline` (time.monotonic()):
-    una página que no carga se deja para la próxima pasada. True si cargó."""
+    una página que no carga (o que la federación sirve con un 5xx o un 429) se deja para la próxima
+    pasada. True si cargó."""
     timeout_ms = ready_timeout_ms() if ready_ms is None else ready_ms
     for attempt in range(retries):
         try:
-            page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            response = page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            failure = f"responde {response.status}" if _refused(response) else None
         except Exception:
-            if attempt + 1 >= retries:
-                return False
-            wait = RETRY_WAITS[min(attempt, len(RETRY_WAITS) - 1)]
-            if deadline is not None and time.monotonic() + wait > deadline:
-                return False
-            log(f"      no carga ({attempt + 1}/{retries}), se reintenta en {wait} s")
-            sleep(wait)
-            continue
-        wait_ready(page, ready_selector(url), timeout_ms, hosts)
-        return True
+            failure = "no carga"
+        if failure is None:
+            wait_ready(page, ready_selector(url), timeout_ms, hosts)
+            return True
+        if attempt + 1 >= retries:
+            return False
+        wait = RETRY_WAITS[min(attempt, len(RETRY_WAITS) - 1)]
+        if deadline is not None and time.monotonic() + wait > deadline:
+            return False
+        log(f"      {failure} ({attempt + 1}/{retries}), se reintenta en {wait} s")
+        sleep(wait)
     return False
 
 
 class Federacion:
     """Lo que el bot usa del raspador de la federación (fetch_fiflp_2425: BASE y los lectores de
     clasificación y de jornada) con la carga y la pausa de aquí. `deadline` (time.monotonic()) corta
-    los reintentos de una página; `pages` cuenta las cargas (el log del bot da el coste por página)."""
+    los reintentos de una página; `pages` cuenta las cargas (el log del bot da el coste por página) y
+    `failures`, las seguidas que no cargan (con BLOCKED_AFTER, `blocked`: no pedirle más)."""
 
     def __init__(self, scraper, deadline=None):
         self._scraper = scraper
         self.BASE = scraper.BASE
         self.deadline = deadline
         self.pages = 0
+        self.failures = 0
+
+    @property
+    def blocked(self):
+        return self.failures >= BLOCKED_AFTER
 
     def goto(self, page, url):
         self.pages += 1
-        return goto(page, url, deadline=self.deadline)
+        loaded = goto(page, url, deadline=self.deadline)
+        self.failures = 0 if loaded else self.failures + 1
+        return loaded
 
     def delay(self, extra=0):
         pause(extra)

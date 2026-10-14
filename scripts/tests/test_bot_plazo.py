@@ -315,14 +315,14 @@ def health(tmp_path, monkeypatch):
     monkeypatch.setattr(source_health, "REPORT_PATH", tmp_path / "data-health.json")
     monkeypatch.setattr(source_health, "_report", None)
 
-    def run(previous, conn, budget, checks_now=NOW):
+    def run(previous, conn, budget, checks_now=NOW, make_fed=Fed):
         import json
         source_health.REPORT_PATH.write_text(json.dumps(previous))
         source_health.begin("2026-2027")
         clock = Clock()
         monkeypatch.setattr(U, "clock", clock)
         monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
-        fed = Fed(clock)
+        fed = make_fed(clock)
         groups = U.fiflp_groups(conn, 1)
         pending = {code: u for _, code, u in groups}
         U.run_passes(Page(), fed, conn, 1, groups, TODAY, pending, deadline_seconds=budget, now=checks_now)
@@ -398,6 +398,39 @@ def test_the_second_pass_rotates_too(health):
     assert all(len(got) < len(ALL) for got in read)                       # el plazo la corta siempre
     for first, second in zip(read, read[1:]):
         assert set(first) | set(second) == set(ALL)
+
+
+class BlockedFed(Fed):
+    """Tras `serve` páginas la federación deja de servir (un 503, tras los reintentos de cada página):
+    blocked, como fiflp_carga.Federacion, con tres seguidas."""
+
+    def __init__(self, clock, serve):
+        super().__init__(clock)
+        self.serve, self.failures = serve, 0
+
+    @property
+    def blocked(self):
+        return self.failures >= 3
+
+    def goto(self, page, url):
+        ok = len(self.urls) < self.serve
+        super().goto(page, url)
+        self.failures = 0 if ok else self.failures + 1
+        return ok
+
+
+def test_a_federation_that_stops_serving_cuts_the_pass(health):
+    """Tres páginas seguidas sin cargar: la federación bloquea o se ha caído. No se le piden más (el
+    resto de grupos, a la pasada siguiente, sin marcarlos como error), y lo que se leyó, se queda."""
+    previous = report({code: checked(6) for code in ALL})
+    data, fed = health(previous, season(), budget=600, make_fed=lambda clock: BlockedFed(clock, serve=9))
+    assert len(fed.urls) == 9 + 4                                         # PG2, FF5 y AL3; PG1 y FF1 fallan
+    groups = data["groups"]
+    assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3", "PG1", "FF1")] == ["ok", "ok", "ok", "error", "error"]
+    assert data["run"]["deferred"] == ["FF2", "FF10", "LZ1", "AL1", "ALX1"] and data["run"]["blocked"]
+    for code in data["run"]["deferred"]:
+        assert groups[code] == previous["groups"][code], code
+    assert data["run"]["extrasDeferred"] == ["PG2", "FF5", "AL3"]         # sus actas, primero la próxima vez
 
 
 def test_venues_and_team_cards_are_read_even_when_the_second_pass_runs_out(health):

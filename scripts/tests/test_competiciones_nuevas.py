@@ -221,6 +221,19 @@ def test_one_issue_per_new_competition_and_never_twice(tmp_path):
     assert len([c for c in gh.calls if c[:2] == ["issue", "create"]]) == 1
 
 
+def test_the_issue_steps_refresh_the_catalog_first_and_pull_before_the_manifest():
+    """fetch-fiflp-islas saca las competiciones de 2026-27 del catálogo del repositorio
+    (fiflp_comps_catalog.json): una competición publicada después no se descarga hasta que
+    discover-fiflp.yml la apunta. Y el raw lo sube el workflow: git pull antes del manifiesto."""
+    lines = A.body(FV, "2026-2027").splitlines()
+    step = lambda text: next(i for i, line in enumerate(lines) if text in line)
+    discover, fetch = step("gh workflow run discover-fiflp.yml"), step("gh workflow run fetch-fiflp-islas.yml")
+    pull, manifest = step("git pull"), step("fiflp_manifest.py")
+    assert discover < fetch < pull < manifest
+    for launched, workflow in ((discover, "discover-fiflp.yml"), (fetch, "fetch-fiflp-islas.yml")):
+        assert "gh run watch" in lines[launched + 1] and workflow in lines[launched + 1]   # a que acabe
+
+
 def test_the_issue_only_carries_the_competition(tmp_path):
     """El repositorio es público: ni equipos ni personas; solo el nombre y el código de la competición."""
     path = write(tmp_path / "data-health.json", [FV])

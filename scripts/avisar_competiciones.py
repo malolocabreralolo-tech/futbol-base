@@ -30,6 +30,12 @@ def season_code(season):
     return str(int(m.group(1)) - 2004) if m else "<CodTemporada>"
 
 
+def _watch(workflow):
+    """La línea que espera a que acabe el último run de `workflow` (y falla si falla)."""
+    return (f"sleep 10; gh run watch --exit-status \"$(gh run list --workflow={workflow} --limit 1 "
+            "--json databaseId -q '.[0].databaseId')\"")
+
+
 def body(comp, season):
     cid, code = comp["id"], season_code(season)
     raw = f"scripts/fiflp_islas_{code}_raw.json"
@@ -42,7 +48,11 @@ def body(comp, season):
         "Para añadirla (docs/temporada-nueva.md, «fase nueva»), sin ningún workflow en marcha:",
         "",
         "```bash",
+        "gh workflow run discover-fiflp.yml   # el catálogo (fiflp_comps_catalog.json), del que sale la descarga",
+        _watch("discover-fiflp.yml"),
         f"gh workflow run fetch-fiflp-islas.yml -f temporada={code} -f ids={cid}   # sus grupos, al raw",
+        _watch("fetch-fiflp-islas.yml"),
+        "git pull                             # el catálogo y el raw que acaban de subir",
         f"python3 scripts/fiflp_manifest.py {raw} {season} --comps {cid} > fase.json",
         f"python3 scripts/activate_season.py fase.json --fiflp-raw {raw} --add          # comprueba",
         f"python3 scripts/activate_season.py fase.json --fiflp-raw {raw} --add --apply  # escribe",

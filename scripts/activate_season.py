@@ -216,15 +216,23 @@ def add_groups(conn, manifest, evidence):
         insert_groups(conn, sid, evidence)
 
 
+def category_id(conn, key):
+    """El id de la categoría de la web ('alevin') en la tabla categories: sin distinguir mayúsculas,
+    la fila en mayúsculas si hay dos (la 'prebenjamin' duplicada) y, si falta, se crea en
+    mayúsculas ('ALEVIN'). Como db.get_or_create_category, sin su commit: la activación entera
+    es una sola transacción."""
+    row = conn.execute("SELECT id FROM categories WHERE upper(name)=upper(?) ORDER BY name<>upper(name), id LIMIT 1",
+                       (key,)).fetchone()
+    return row[0] if row else conn.execute("INSERT INTO categories(name) VALUES(?)", (key.upper(),)).lastrowid
+
+
 def insert_groups(conn, sid, evidence):
     """Grupos con su clasificación y su calendario, ya verificados (verify_sources)."""
     for item in evidence:
         g = item["group"]
-        cat = conn.execute("SELECT id FROM categories WHERE lower(name)=?", (g["cat"],)).fetchone()
-        if not cat:
-            raise ValueError("Falta la categoría en la base")
+        cat = category_id(conn, g["cat"])
         gid = conn.execute("""INSERT INTO groups(season_id,category_id,code,name,full_name,phase,island,url,current_jornada)
-            VALUES(?,?,?,?,?,?,?,?,?)""", (sid, cat[0], g["id"], g["name"], g.get("fullName", g["name"]),
+            VALUES(?,?,?,?,?,?,?,?,?)""", (sid, cat, g["id"], g["name"], g.get("fullName", g["name"]),
             g["phase"], g["island"], g["url"], item.get("current") or next(reversed(item["rounds"])))).lastrowid
         team_ids = {}
         for row in item["standings"]:

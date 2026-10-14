@@ -41,7 +41,9 @@ def import_season(conn, data):
         if not groups:
             continue
 
-        cat_id = get_or_create_category(conn, category_key)
+        # El nombre de la tabla categories va en mayúsculas: con la clave en minúsculas se creaba
+        # una segunda fila 'prebenjamin' (migrate_categories.py la borra).
+        cat_id = get_or_create_category(conn, category_key.upper())
         print(f"\n  Category: {category_key} ({len(groups)} groups)")
 
         for group_data in groups:

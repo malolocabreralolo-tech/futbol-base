@@ -919,6 +919,9 @@ def import_past_seasons(conn, log=print):
 def main():
     conn = get_connection()
     init_db(conn)
+    # Las categorías con su nombre canónico (sin la 'prebenjamin' duplicada, con ALEVIN).
+    from migrate_categories import migrate as migrate_categories
+    migrate_categories(conn)
     season_id, season_name = active_season(conn)
     print(f"Temporada verificada: {season_name}")
 

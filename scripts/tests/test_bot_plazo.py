@@ -30,8 +30,11 @@ NOW = datetime(2026, 10, 14, 4, 0, tzinfo=timezone.utc)
 # ── El navegador del bot ───────────────────────────────────────────────────────
 
 def test_the_bot_browser_uses_the_ready_wait_and_the_short_delay(monkeypatch):
+    """Sin Playwright instalado también (tests.yml solo instala pytest y pyyaml): el módulo es falso."""
+    import types
     import fiflp_carga
-    import playwright.sync_api as sync_api
+    sync_api = types.ModuleType("playwright.sync_api")
+    monkeypatch.setitem(sys.modules, "playwright.sync_api", sync_api)
     seen = {}
 
     class Page:
@@ -56,7 +59,7 @@ def test_the_bot_browser_uses_the_ready_wait_and_the_short_delay(monkeypatch):
         def __exit__(self, *a):
             return False
 
-    monkeypatch.setattr(sync_api, "sync_playwright", lambda: Playwright())
+    sync_api.sync_playwright = lambda: Playwright()
     deadline = 12345.0
     U._with_browser(lambda page, F: seen.update(F=F), deadline=deadline)
     assert isinstance(seen["F"], fiflp_carga.Federacion) and seen["F"].deadline == deadline

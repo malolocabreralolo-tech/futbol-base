@@ -203,6 +203,17 @@ def test_tests_yml_pytest_installs_pyyaml():
     )
 
 
+def test_python_tests_run_without_playwright():
+    """El job pytest de tests.yml no instala Playwright (update.yml sí): una prueba que lo importa
+    tal cual tumba el job (14/10/2026, test_bot_plazo). Las que necesitan navegador lo piden con
+    pytest.importorskip, mejor dentro de la prueba o de un fixture, para no saltarse las demás."""
+    runs = " ".join(_runs(_load("tests.yml"), "pytest"))
+    assert "playwright" not in runs
+    for path in sorted((ROOT / "scripts" / "tests").glob("test_*.py")):
+        for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            assert not re.match(r"\s*(?:import|from)\s+playwright\b", line), f"{path.name}:{n}: {line.strip()}"
+
+
 def test_tests_yml_paths_cover_fonts_icons_and_crests():
     """Plan B4 (spec §5.5): un cambio que solo toque la fuente, los iconos o los escudos corre las
     pruebas que los miran (test_rediseno_assets, test_build_icons, test_build_crests y el precache de

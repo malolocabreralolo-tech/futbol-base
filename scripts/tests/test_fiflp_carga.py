@@ -123,7 +123,12 @@ def test_the_bot_adapter_keeps_the_readers_and_counts_pages(monkeypatch):
 
 # ── Con un navegador de verdad ────────────────────────────────────────────────
 
-sync_api = pytest.importorskip("playwright.sync_api")
+@pytest.fixture
+def sync_api():
+    """Playwright, si está (update.yml lo instala; tests.yml no): sin él solo se saltan estas pruebas,
+    no las de arriba."""
+    return pytest.importorskip("playwright.sync_api")
+
 
 PAGE = """<!doctype html><html><head>
 <link rel="stylesheet" href="/digits.css">
@@ -174,7 +179,7 @@ def _browser_page(p):
     return browser, browser.new_page()
 
 
-def test_the_page_is_flattened_only_after_the_federation_stylesheets(server):
+def test_the_page_is_flattened_only_after_the_federation_stylesheets(sync_api, server):
     from fiflp_render import flatten
     with sync_api.sync_playwright() as p:
         browser, page = _browser_page(p)
@@ -191,7 +196,7 @@ def test_the_page_is_flattened_only_after_the_federation_stylesheets(server):
     assert 1.0 < took < 5.0
 
 
-def test_a_stylesheet_that_never_loads_only_costs_the_cap(server):
+def test_a_stylesheet_that_never_loads_only_costs_the_cap(sync_api, server):
     with sync_api.sync_playwright() as p:
         browser, page = _browser_page(p)
         try:

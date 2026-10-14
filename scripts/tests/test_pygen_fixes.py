@@ -347,6 +347,89 @@ class TestStandingsFreshness:
         assert rows[0] == [1, "Casa", 1, 1, 0, 1, 0, 1, 1, 0]
 
 
+# ─── Un retirado que la tabla oficial ya no lista (AL15, AL20 y AL32 de 2026-27) ─
+
+class TestRetiredOutsideTable:
+    """La federación quita al retirado de su clasificación y deja sus partidos en el calendario con
+    0-1/1-0 o 0-3/3-0 administrativos. Sus partidos no son J jugada que falte en la tabla: la
+    publicada es la oficial, nunca una reconstruida que lo meta con 0 puntos."""
+
+    def _seed(self, conn):
+        conn.executescript("""
+          INSERT INTO groups (id, season_id, category_id, code, name, phase, current_jornada)
+            VALUES (1, 1, 1, 'AL15', 'Grupo 15', 'Primera Fase GC', 'Jornada 3');
+          INSERT INTO teams (id, name) VALUES (1, 'Alfa'), (2, 'Beta'), (3, 'Gamma'), (4, 'Retirado C');
+          INSERT INTO matches (group_id, jornada, date, home_team_id, away_team_id, home_score, away_score)
+            VALUES (1, 'Jornada 1', '2026-10-03', 1, 2, 5, 0),
+                   (1, 'Jornada 1', '2026-10-03', 4, 3, 0, 1),
+                   (1, 'Jornada 2', '2026-10-10', 2, 4, 1, 0),
+                   (1, 'Jornada 2', '2026-10-10', 3, 1, 2, 2),
+                   (1, 'Jornada 3', '2026-10-17', 4, 1, 0, 1),
+                   (1, 'Jornada 3', '2026-10-17', 2, 3, NULL, NULL);
+        """)
+
+    def _official(self, conn, rows):
+        conn.executemany("""INSERT INTO standings (group_id, team_id, position, points, played, won, drawn,
+                                                   lost, gf, gc, gd) VALUES (1,?,?,?,?,?,?,?,?,?,?)""", rows)
+
+    def test_official_table_is_published(self):
+        """J almacenada 6 (los rivales cuentan sus victorias administrativas, el retirado no tiene fila)
+        frente a 9 con la suya: la tabla no está desfasada."""
+        from scripts.generate_js import generate_category_js
+        conn = _synth_conn()
+        self._seed(conn)
+        # Gamma, como Guiniguada en AL15: la victoria administrativa en J y goles, sin los puntos.
+        self._official(conn, [(1, 1, 7, 3, 2, 1, 0, 8, 2, 6), (2, 2, 3, 2, 1, 0, 1, 1, 5, -4),
+                              (3, 3, 1, 2, 1, 1, 0, 3, 2, 1)])
+        js = generate_category_js(conn, "BENJAMIN", "BENJAMIN", "BENJ_STATS")
+        group = _parse_const(js, "BENJAMIN")[0]
+        assert group["standings"] == [
+            [1, "Alfa", 7, 3, 2, 1, 0, 8, 2, 6],
+            [2, "Beta", 3, 2, 1, 0, 1, 1, 5, -4],
+            [3, "Gamma", 1, 2, 1, 1, 0, 3, 2, 1],
+        ]
+        assert group["standingsKind"] == "source"
+
+    def test_federation_that_annuls_the_results_is_not_stale_either(self):
+        """Si la federación anula los resultados del retirado (J 4 en la tabla), tampoco."""
+        from scripts.generate_js import get_effective_standings, get_standings
+        conn = _synth_conn()
+        self._seed(conn)
+        self._official(conn, [(1, 1, 4, 2, 1, 1, 0, 7, 2, 5), (2, 2, 0, 1, 0, 0, 1, 0, 5, -5),
+                              (3, 3, 1, 1, 0, 1, 0, 2, 2, 0)])  # sin los 1-0 de nadie
+        assert get_effective_standings(conn, 1, "AL15", "Primera Fase GC") == get_standings(conn, 1)
+
+    def test_stale_table_is_rebuilt_without_the_retired_row(self, capsys):
+        """Desfasada de verdad (la tabla no ha visto la jornada 2 entre los que siguen): se reconstruye
+        como la federación, sin fila del retirado y con las victorias administrativas de los demás."""
+        from scripts.generate_js import get_effective_standings
+        conn = _synth_conn()
+        self._seed(conn)
+        self._official(conn, [(1, 1, 3, 1, 1, 0, 0, 5, 0, 5), (2, 2, 0, 1, 0, 0, 1, 0, 5, -5),
+                              (3, 3, 0, 0, 0, 0, 0, 0, 0, 0)])
+        assert get_effective_standings(conn, 1, "AL15", "Primera Fase GC") == [
+            [1, "Alfa", 7, 3, 2, 1, 0, 8, 2, 6],
+            [2, "Gamma", 4, 2, 1, 1, 0, 3, 2, 1],
+            [3, "Beta", 3, 2, 1, 0, 1, 1, 5, -4],
+        ]
+        assert "standings desfasados en grupo AL15 (J almacenada 2 < J jugada 4)" in capsys.readouterr().err
+
+    def test_retired_outside_table_rule(self):
+        """Solo el que no está en la tabla y nunca ha competido: sin resultados o con todas sus derrotas
+        sin marcar. El de fuera de la tabla que marcó o ganó (un nombre distinto) no lo es."""
+        from scripts.generate_js import retired_outside_table
+        stored = [[1, "Alfa", 3, 1, 1, 0, 0, 2, 0, 2], [2, "Beta", 0, 1, 0, 0, 1, 0, 2, -2]]
+        played = [("Alfa", "Beta", 2, 0)]
+        assert retired_outside_table(stored, played + [("Ret", "Alfa", 0, 3), ("Beta", "Ret", 1, 0)]) == {"Ret"}
+        assert retired_outside_table(stored, played + [("Ret", "Alfa", None, None)]) == {"Ret"}
+        assert retired_outside_table(stored, played + [("Ret", "Alfa", 1, 3)]) == set()
+        assert retired_outside_table(stored, played + [("Beta", "Ret", 0, 0)]) == set()
+        assert retired_outside_table(stored, played + [("Beta", "Ret", 0, 2)]) == set()
+        # Sin tabla o sin ningún resultado en el grupo, nadie.
+        assert retired_outside_table([], [("Ret", "Alfa", 0, 3)]) == set()
+        assert retired_outside_table(stored, [("Ret", "Alfa", None, None)]) == set()
+
+
 # ─── Fix (2026-06-15): row-level points repair for corrupt-but-complete tables ─
 
 class TestStandingsPointsRepair:

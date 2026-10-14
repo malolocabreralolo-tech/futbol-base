@@ -203,13 +203,9 @@ def get_standings(conn, group_id):
     return [list(r) for r in rows]
 
 
-def compute_standings_from_matches(conn, group_id):
-    """Recompute a league table from the matches of a group.
-
-    Rows in the canonical standings format [pos, team, pts, J, G, E, P, GF,
-    GC, DF]; 3/1/0 points; order pts desc, DF desc, GF desc, name asc.
-    Teams appearing only in unplayed fixtures still get a zeroed row.
-    Out-of-range scores are ignored (match treated as unplayed)."""
+def _group_results(conn, group_id):
+    """[(local, visitante, goles local, goles visitante)] de los partidos de un grupo, en orden de id,
+    con los marcadores saneados (fuera de rango -> None, el partido cuenta como no jugado)."""
     rows = conn.execute(
         """SELECT h.name, a.name, m.home_score, m.away_score
            FROM matches m
@@ -219,17 +215,22 @@ def compute_standings_from_matches(conn, group_id):
            ORDER BY m.id""",
         (group_id,),
     ).fetchall()
+    out = []
+    for home, away, hs, as_ in rows:
+        ctx = f"en {home} vs {away} (grupo {group_id})"
+        out.append((home, away, sanitize_score(hs, ctx), sanitize_score(as_, ctx)))
+    return out
 
+
+def _table_from_results(results):
+    """La tabla [pos, equipo, pts, J, G, E, P, GF, GC, DF] de unos resultados de _group_results."""
     table = {}
 
     def _entry(team):
         return table.setdefault(team, {"pts": 0, "j": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0})
 
-    for home, away, hs, as_ in rows:
+    for home, away, hs, as_ in results:
         th, ta = _entry(home), _entry(away)
-        ctx = f"en {home} vs {away} (grupo {group_id})"
-        hs = sanitize_score(hs, ctx)
-        as_ = sanitize_score(as_, ctx)
         if hs is None or as_ is None:
             continue
         th["j"] += 1
@@ -261,6 +262,36 @@ def compute_standings_from_matches(conn, group_id):
          st["gf"], st["gc"], st["gf"] - st["gc"]]
         for i, (name, st) in enumerate(ordered)
     ]
+
+
+def compute_standings_from_matches(conn, group_id):
+    """Recompute a league table from the matches of a group.
+
+    Rows in the canonical standings format [pos, team, pts, J, G, E, P, GF,
+    GC, DF]; 3/1/0 points; order pts desc, DF desc, GF desc, name asc.
+    Teams appearing only in unplayed fixtures still get a zeroed row.
+    Out-of-range scores are ignored (match treated as unplayed)."""
+    return _table_from_results(_group_results(conn, group_id))
+
+
+def retired_outside_table(stored, results):
+    """Los retirados que la clasificación oficial ya no lista: equipos del calendario que no están en
+    `stored` y que nunca han competido (sin resultados, o todos sus partidos con resultado son derrotas
+    sin goles a favor: los 0-1 y 0-3 administrativos, a veces con acta). La federación los quita de su
+    tabla y deja sus partidos en el calendario (AL11, AL15, AL20, AL31 y AL32 de 2026-27). Es la regla de
+    la web (model.retiredTeams); sin tabla o sin ningún resultado en el grupo, nadie."""
+    listed = {r[1] for r in stored}
+    played = [r for r in results if r[2] is not None and r[3] is not None]
+    if not listed or not played:
+        return set()
+    outside = {t for home, away, _, _ in results for t in (home, away) if t not in listed}
+    competed = set()
+    for home, away, hs, as_ in played:
+        if not (hs == 0 and as_ > 0):
+            competed.add(home)
+        if not (as_ == 0 and hs > 0):
+            competed.add(away)
+    return outside - competed
 
 
 def _is_league_group(code, phase):
@@ -323,19 +354,31 @@ def get_effective_standings(conn, group_id, code=None, phase=None):
     to J29). If the stored table is up to date it wins, because the official
     one may carry sanctions a recompute can't know about. When the stored table
     is complete but a row's points are impossible (a mis-scraped points
-    column), only that field is repaired (see _repair_incoherent_points)."""
+    column), only that field is repaired (see _repair_incoherent_points).
+
+    A team the official table no longer lists because it retired (retired_outside_table: in the
+    calendar with only administrative 0-1/0-3 losses, or no results) is not a sign of a stale table:
+    its matches don't count as played J in the comparison (the federation drops its row and, as in
+    AL15 of 2026-27, counts the administrative wins of the others or not), and a recomputed table
+    never brings it back."""
     stored = get_standings(conn, group_id)
     if not stored or not _is_league_group(code, phase):
         return stored
-    computed = compute_standings_from_matches(conn, group_id)
+    results = _group_results(conn, group_id)
+    retired = retired_outside_table(stored, results)
     stored_j = sum((r[3] or 0) for r in stored)
-    computed_j = sum(r[3] for r in computed)
+    computed_j = 2 * sum(1 for home, away, hs, as_ in results
+                         if hs is not None and as_ is not None and home not in retired and away not in retired)
     if computed_j > stored_j:
         print(
             f"  WARNING: standings desfasados en grupo {code or group_id} "
             f"(J almacenada {stored_j} < J jugada {computed_j}) — recalculados desde matches",
             file=sys.stderr,
         )
+        # Como la federación: sin la fila del retirado y con los resultados administrativos de los demás.
+        computed = [r for r in _table_from_results(results) if r[1] not in retired]
+        for i, r in enumerate(computed):
+            r[0] = i + 1
         return computed
     repaired, changed = _repair_incoherent_points(stored)
     if changed:

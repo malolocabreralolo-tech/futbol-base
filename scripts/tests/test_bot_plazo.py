@@ -191,6 +191,23 @@ def test_a_closed_group_with_something_to_do_is_not_left_resting():
     assert codes(plan(conn, all_ok).order) == ["LZ1"]
 
 
+def test_a_check_stamped_minutes_into_its_pass_counts_for_that_pass():
+    """La hora de cada comprobación es la de su grupo, minutos después de que empiece su pasada (y el
+    cron se retrasa sin regla). Con el cron cada 6 h, la pasada que toca no se la salta por unos
+    minutos: un cerrado comprobado hace 24 h menos 5 min se refresca ya (no a las 30 h) y un grupo
+    sin comprobar desde hace dos pasadas (12 h menos 10 min) se adelanta ya (no a la tercera)."""
+    conn = season(played="2026-09-19")
+    all_ok = {code: checked(6) for code in ALL}
+    p = plan(conn, {**all_ok, "FF1": checked(24 - 5 / 60)})
+    assert codes(p.order) == ["FF1"] and p.due_closed == {"FF1"}
+    assert codes(plan(conn, {**all_ok, "FF1": checked(18 + 20 / 60)}).order) == []     # la pasada anterior, aún no
+    checks = {code: checked(1) for code in ALL}
+    order = codes(plan(season(), {**checks, "AL1": checked(12 - 10 / 60)}).order)
+    assert order[:4] == ["PG2", "FF5", "AL3", "AL1"]                                    # tras los prioritarios
+    order = codes(plan(season(), {**checks, "AL1": checked(6 + 20 / 60)}).order)
+    assert order[-2:] == ["AL1", "ALX1"]                                                # una pasada: en su nivel
+
+
 def test_a_group_is_not_closed_with_a_result_missing_or_a_recent_round():
     all_ok = {code: checked(6) for code in ALL}
     assert codes(plan(season(played="2026-09-24"), all_ok).resting) == []      # hace 20 días
@@ -331,6 +348,18 @@ def test_a_closed_group_refreshed_after_a_day_is_published_to_keep_the_rotation(
     assert sorted(data["run"]["resting"]) == sorted(set(ALL) - {"FF1"})
     for code in set(ALL) - {"FF1"}:
         assert data["groups"][code] == previous["groups"][code]
+
+
+def test_a_closed_group_is_refreshed_every_fourth_pass(health):
+    """Cinco pasadas cada 6 h con todo cerrado: se refresca en la primera y en la quinta (24 h), aunque
+    su hora sea la de su grupo, segundos después de que empezara aquella pasada."""
+    conn = season(played="2026-09-19")
+    previous = report({code: checked(24) for code in ALL})
+    visited = []
+    for n in range(5):
+        previous, fed = health(previous, conn, budget=600, checks_now=NOW + timedelta(hours=6 * n))
+        visited.append({u.split("CodGrupo=")[1].split("&")[0] for u in fed.urls if "CodGrupo=" in u})
+    assert [len(v) for v in visited] == [len(ALL), 0, 0, 0, len(ALL)]
 
 
 def test_nothing_new_and_nothing_left_out_does_not_rewrite_the_report(health):

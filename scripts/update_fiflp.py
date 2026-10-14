@@ -57,6 +57,11 @@ CLOSED_EVERY = timedelta(hours=24)   # …y solo se refresca una vez al día
 # Un grupo sin comprobar desde hace dos pasadas (o nunca) se adelanta a los niveles: si el plazo no
 # da para todos, la rotación no deja a alevín (el último nivel) sin refrescar nunca.
 STALE_AFTER = timedelta(hours=12)
+# Margen de las dos esperas de arriba: la hora de cada comprobación es la de su grupo, minutos después
+# de que empiece su pasada, y el cron (cada 6 h) se retrasa sin regla. Sin margen, la pasada que toca
+# llegaba minutos antes de cumplirse la espera y se la saltaba (un cerrado, cada 30 h y no cada 24).
+# Media pasada del cron: ni se salta la que toca ni se adelanta a la anterior.
+PASS_SLACK = timedelta(hours=3)
 ACTA_URL = "/NFG_CmpPartido?cod_primaria=1000120&CodActa={code}"
 GOLEADORES_URL = ("/NFG_CMP_Goleadores?cod_primaria=1000120&CodJornada="
                   "&codcompeticion={comp}&codtemporada={season}&codgrupo={group}")
@@ -151,6 +156,11 @@ def _checked_at(entry):
     return moment if moment.tzinfo else moment.replace(tzinfo=timezone.utc)
 
 
+def _due(now, when, wait):
+    """¿Ha pasado `wait` (con PASS_SLACK de margen) desde la comprobación `when`? Sin ella, sí."""
+    return not when or now - when >= wait - PASS_SLACK
+
+
 def is_closed(conn, group_id, today):
     """¿Todo jugado y la última jornada hace más de CLOSED_DAYS días? (Las jornadas de ese grupo ya
     no entran en rounds_to_refresh: solo se leerían la clasificación y el calendario.)"""
@@ -163,9 +173,10 @@ def is_closed(conn, group_id, today):
 def plan_groups(conn, groups, checks, now, today, priority=None, pinned=None):
     """El orden de la pasada. Plan(order, resting, due_closed, priority):
     - order: los grupos que tocan: primero los de los equipos prioritarios; después los que llevan
-      STALE_AFTER sin comprobar (o nunca); después el resto por nivel (prebenjamín, benjamín,
-      alevín). Dentro, el comprobado hace más tiempo primero (checks: las entradas de
-      data-health.json; sin comprobación, el primero) y después por categoría y código;
+      STALE_AFTER sin comprobar (o nunca; con PASS_SLACK de margen, como CLOSED_EVERY); después el
+      resto por nivel (prebenjamín, benjamín, alevín). Dentro, el comprobado hace más tiempo primero
+      (checks: las entradas de data-health.json; sin comprobación, el primero) y después por
+      categoría y código;
     - resting: los cerrados (is_closed) comprobados bien hace menos de CLOSED_EVERY y sin actas
       pendientes: descansan esta pasada;
     - due_closed: los cerrados que se refrescan por haber pasado el día (o sin comprobación): su
@@ -192,18 +203,17 @@ def plan_groups(conn, groups, checks, now, today, priority=None, pinned=None):
         entry = checks.get(code) or {}
         when = _checked_at(entry)
         if is_closed(conn, gid, today):
-            if (entry.get("status") == "ok" and when and now - when < CLOSED_EVERY
-                    and not pending_actas(conn, gid)):
+            if entry.get("status") == "ok" and not _due(now, when, CLOSED_EVERY) and not pending_actas(conn, gid):
                 resting.append(group)
                 continue
-            if not when or now - when >= CLOSED_EVERY:
+            if _due(now, when, CLOSED_EVERY):
                 due.add(code)
         level = _level(categories.get(gid), code)
         if code in pinned or any(is_priority(t, keys) for t in teams.get(gid, [])):
             mine.add(code)
             tier = 0
         else:
-            tier = 1 if not when or now - when >= STALE_AFTER else 2
+            tier = 1 if _due(now, when, STALE_AFTER) else 2
         order.append((tier, level if tier == 2 else 0, when or oldest, level, _natural(code), group))
     order.sort(key=lambda item: item[:5])
     return Plan([item[-1] for item in order], resting, due, mine)

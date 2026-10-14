@@ -209,7 +209,30 @@ def test_the_real_reviewed_table_keeps_the_four_clubs_apart(monkeypatch):
     assert alias("NATURALEZA VERDE-VALLESECO DE G.C., C.D.") == "Naturaleza Verde-Valleseco"
     assert alias("ALCOTAN CANARIAS, C.D.") == "Alcotán Can."
     assert alias('GUINIGUADA APOLINARIO, C.D. "A"') == "Guiniguada"
-    assert alias("PALMAS, U.D. LAS") is None and alias("VALLESECO, U.D.") is None
+    assert alias("PALMAS, U.D. LAS") == alias('PALMAS, U.D. LAS "A"') == "Las Palmas"
+    assert alias('PALMAS, U.D. LAS "B"') is None and alias("VALLESECO, U.D.") is None
+
+
+def test_ud_las_palmas_keeps_its_row_when_the_foundation_has_one(monkeypatch):
+    """'Fundación UD Las Palmas' y 'Las Palmas' tienen la misma clave para el emparejamiento por palabras
+    (FUNDACION, UD y LAS son ruido: las dos son PALMAS) y en el empate gana la Fundación por orden
+    alfabético. Cuando el bot crea su fila (AL5), la activación de la temporada siguiente, con un raw solo
+    de benjamín (sin la Fundación, que se llevaría la fila por la tabla), llevaba a UD Las Palmas a ella:
+    la tabla del proyecto fija 'PALMAS, U.D. LAS' en 'Las Palmas'."""
+    monkeypatch.setattr(fiflp_names, "FED_NAMES_PATH", str(ROOT / "scripts" / "fiflp_team_names.json"))
+    fiflp_names.fed_alias.cache_clear()
+    assert fiflp_names.team_key("Fundación UD Las Palmas") == fiflp_names.team_key("Las Palmas")
+    conn = base()
+    put(conn, 3, 1, "FF8", "grancanaria", ["Las Palmas"], fed={"Las Palmas": "PALMAS, U.D. LAS"})
+    put(conn, 3, 2, "PG3", "grancanaria", ["Las Palmas"])
+    put(conn, 3, 4, "AL5", "grancanaria", ["Fundación UD Las Palmas"])
+    put(conn, 3, 4, "AL13", "grancanaria", ["Las Palmas"])
+    for cat in ("benjamin", "prebenjamin", "alevin"):
+        names = known_names(raw(["PALMAS, U.D. LAS"], cat=cat), conn)
+        assert names == {"PALMAS, U.D. LAS": "Las Palmas"}, cat
+    both = known_names(raw(["PALMAS, U.D. LAS"], ["FUNDACION CANARIA U.D. LAS PALMAS, C.D."]), conn)
+    assert both == {"PALMAS, U.D. LAS": "Las Palmas", "FUNDACION CANARIA U.D. LAS PALMAS, C.D.": "Fundación UD Las Palmas"}
+    assert name_clashes(both) == []
 
 
 # ── El paso del bot: migrate_team_names ─────────────────────────────────────

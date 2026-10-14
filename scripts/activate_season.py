@@ -427,10 +427,83 @@ def pretty_name(raw):
         else:
             # Con guion, cada parte con mayúscula: 'LAS MAJORERAS-GUAYADEQUE' -> 'Las Majoreras-Guayadeque'.
             out.append("-".join(_ACCENTS.get(p, p.capitalize()) for p in w.split("-")))
+    # La abreviatura del final se va entera y deja colgando su preposición: 'PUERTOS DE L.P., C.E.F.' daba
+    # 'Puertos de' y 'NATURALEZA VERDE-VALLESECO DE G.C., C.D.', 'Naturaleza Verde-Valleseco de'.
+    while len(out) > 1 and out[-1] in {w.lower() for w in _SMALL}:
+        out.pop()
     return " ".join(out) + (f" {letter}" if letter else "")
 
 
-def known_names(raw, conn, years=None, keep_existing=False):
+def _same_team(a, b):
+    """¿Dos claves de la federación (núcleo, letra) son el mismo equipo escrito de dos formas? La misma
+    letra y todas sus palabras emparejadas una a una ('TINAJOB "B"' y 'TINAJO "B"'); no si a uno le sobra
+    una palabra: 'FUNDACION GUINIGUADA' y 'GUINIGUADA APOLINARIO', o 'FUNDACION CANARIA U.D. LAS PALMAS' y
+    'PALMAS, U.D. LAS', son dos clubes."""
+    from fiflp_names import _common
+    (core_a, letter_a), (core_b, letter_b) = a, b
+    return letter_a == letter_b and len(core_a) == len(core_b) and _common(core_a, core_b) == len(core_a)
+
+
+def season_fed_names(conn, season):
+    """{clave del club (fiflp_names._club_key): {nombres de la base}}: el equipo de la base de cada nombre
+    de la federación en las fichas (team_seasons, el directorio de cada grupo) de `season`, como
+    import_fiflp_detalle._season_fed_teams. Solo los nombres con forma de portal: una fila con la grafía
+    de la federación es un resto, no el nombre del club."""
+    from fiflp_names import _club_key
+    if not season or not conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='team_seasons'").fetchone():
+        return {}
+    out = {}
+    for name, fed in conn.execute(
+            """SELECT t.name, ts.fiflp_name FROM team_seasons ts JOIN teams t ON t.id=ts.team_id
+               JOIN seasons s ON s.id=ts.season_id WHERE s.name=? AND ts.fiflp_name IS NOT NULL""", (season,)):
+        if _portal_style(name):
+            out.setdefault(_club_key(fed), set()).add(name)
+    return out
+
+
+def raw_categories(raw):
+    """{nombre limpio de la federación: {categorías de los grupos del raw en que sale}} (None si el grupo
+    no la dice)."""
+    from import_fiflp_cups_2324 import clean_team_name
+    cats = {}
+    for entry in raw:
+        teams = {clean_team_name(m.get(side)) for j in entry.get("jornadas") or []
+                 for m in j.get("matches") or [] for side in ("home", "away")}
+        teams |= {clean_team_name(r.get("team")) for r in entry.get("standings") or []}
+        for t in teams:
+            cats.setdefault(t, set()).add(entry.get("cat") or None)
+    return cats
+
+
+def name_clashes(names, cats=None):
+    """[(nombre, [nombres de la federación])] que darían a dos equipos distintos (otra clave de club, que no
+    es el mismo escrito de otra forma) de una misma categoría la misma fila de la base. Los dos de la tabla
+    revisada a mano no cuentan: es una fusión decidida ('ROQUE AMAGRO-CLARAVISION' y 'CLARAVISION-ROQUE
+    AMAGRO'). Con `cats` (raw_categories), dos de categorías distintas tampoco: es el mismo club con otro
+    nombre en cada una ('CLARAVISION-ROQUE AMAGRO' en benjamín y 'ROQUE AMAGRO DE GALDAR' en prebenjamín)."""
+    from fiflp_names import _club_key, fed_alias
+    cats = cats or {}
+    shared = lambda a, b: (not cats or {c for n in a for c in cats.get(n, {None})} &
+                           {c for n in b for c in cats.get(n, {None})})
+    by_name = {}
+    for raw_name, name in names.items():
+        by_name.setdefault(name, []).append(raw_name)
+    clashes = []
+    for name, raws in sorted(by_name.items()):
+        keys = {}
+        for raw_name in raws:
+            keys.setdefault(_club_key(raw_name), []).append(raw_name)
+        groups = list(keys.items())
+        bad = [(a, b) for i, a in enumerate(groups) for b in groups[i + 1:]
+               if not _same_team(a[0], b[0]) and not all(fed_alias(n) == name for n in a[1] + b[1])
+               and shared(a[1], b[1])]
+        if bad:
+            clashes.append((name, sorted(raws)))
+    return clashes
+
+
+def known_names(raw, conn, years=None, keep_existing=False, season=None):
     """{nombre limpio de FIFLP: nombre que ya usa la base}. Un club que vuelve
     conserva su nombre, su escudo y su histórico; lo que no casa se queda con su
     nombre de FIFLP (mejor un nombre feo que fundir dos clubes).
@@ -443,9 +516,20 @@ def known_names(raw, conn, years=None, keep_existing=False):
     'Arguineguín' (el emparejamiento por tokens lo admitía con penalización);
     si la base no tiene ese filial, se nombra como su primer equipo más la
     letra ('Arguineguín C'). Y si el primer equipo del club es nuevo, su filial
-    también: 'BACHICAN LAS MESAS "B"' no es 'Las Mesas B' (UD Las Mesas)."""
+    también: 'BACHICAN LAS MESAS "B"' no es 'Las Mesas B' (UD Las Mesas).
+
+    Un nombre de la base es, en cada categoría, de un solo club: el que ya se lo ha llevado (por la
+    ficha, por la tabla revisada o en una pasada anterior) no se lo deja a otro de su categoría
+    ('FUNDACION GUINIGUADA' no es Guiniguada, que es GUINIGUADA APOLINARIO); en otra categoría, sí (el mismo
+    club con otro nombre: 'CLARAVISION-ROQUE AMAGRO' en benjamín y 'ROQUE AMAGRO DE GALDAR' en
+    prebenjamín son Roque Amagro). Y un filial va con su club: si su primer equipo es Las Mesas Hu., 'MESAS
+    HURACAN, U.D. LAS "B"' no es 'Huracán B' (el B de AD Huracán), sino 'Las Mesas Hu. B'.
+
+    `season`: al añadir una fase a la temporada en curso, su nombre. El club que ya juega en ella en otra
+    categoría con el mismo nombre de la federación (su ficha, team_seasons) es esa fila, la de benjamín y
+    prebenjamín: 'VICTORIA, REAL CLUB "A"' es 'RC Victoria' como en benjamín, no 'Victoria' (2014-25)."""
     from import_fiflp_cups_2324 import clean_team_name
-    from fiflp_names import canonical_names, fed_alias, is_bye, team_key, team_score, MIN_TEAM_SCORE
+    from fiflp_names import _club_key as club, canonical_names, fed_alias, is_bye, team_key, team_score, MIN_TEAM_SCORE
 
     if years is None:
         top = conn.execute("SELECT max(start_year) FROM seasons").fetchone()[0]
@@ -473,10 +557,42 @@ def known_names(raw, conn, years=None, keep_existing=False):
         for t in teams:
             islands.setdefault(t, set()).add(entry.get("island") or "grancanaria")
     crudos = sorted(n for n in islands if n and not is_bye(n))
+    cats = raw_categories(raw)
 
     def fits(n, canon):
         return (_filial(canon) == _filial(n) and
                 (canon not in base_islands or base_islands[canon] & islands[n]))
+
+    names = {n: n for n in crudos}
+    # Lo que no se empareja por palabras: la ficha de la federación de la misma temporada (lo que ya
+    # usan las otras categorías) y, si no, los nombres de la federación revisados a mano
+    # (fiflp_team_names.json), que mandan sobre el emparejamiento: el club que se fundió o renombró no
+    # vuelve con otra grafía al rehacer un grupo.
+    by_card = season_fed_names(conn, season)
+    fixed, aliased = {}, set()
+    for n in crudos:
+        card = by_card.get(club(n), set())
+        if len(card) == 1 and fits(n, next(iter(card))):
+            fixed[n] = next(iter(card))
+        elif fed_alias(n):
+            fixed[n] = fed_alias(n)
+            aliased.add(n)
+    names.update(fixed)
+    # Cada nombre de la base, de un solo club en cada categoría: el que ya tiene dueño en ella no es de
+    # otro club de esa categoría ({nombre de la base: [(clave del club, categorías)] de quien lo tiene}); sí
+    # del mismo equipo escrito de otra forma ('MESAS B, U.D. LAS "B"' y 'MESAS "B", U.D. LAS "B"'). Sin
+    # categoría (los grupos de import_fiflp_grupos), como siempre: nunca se aparta.
+    taken = {}
+
+    def take(canon, raw_names):
+        for n in raw_names:
+            taken.setdefault(canon, []).append((club(n), frozenset(c for c in cats.get(n, ()) if c)))
+
+    def free(canon, key, kinds):
+        return all(_same_team(key, holder) or not (held & kinds) for holder, held in taken.get(canon, []))
+
+    for n, canon in fixed.items():
+        take(canon, [n])
 
     # Primeros equipos y filiales por separado: el emparejamiento es uno a uno,
     # y un filial que se llevara el nombre del primer equipo lo dejaría sin él.
@@ -484,9 +600,8 @@ def known_names(raw, conn, years=None, keep_existing=False):
     # el mismo equipo: se emparejan juntos, o solo uno se llevaría el nombre de
     # la base y el club quedaría partido en dos.
     stem = lambda n: re.sub(r',?\s*"A"\s*$', "", n).strip()
-    names = {n: n for n in crudos}
-    firsts_subset = [n for n in crudos if not _filial(n)]
-    for subset in (firsts_subset, [n for n in crudos if _filial(n)]):
+    firsts_subset = [n for n in crudos if not _filial(n) and n not in fixed]
+    for subset in (firsts_subset, [n for n in crudos if _filial(n) and n not in fixed]):
         variants = {}
         for n in subset:
             variants.setdefault(stem(n), []).append(n)
@@ -499,27 +614,69 @@ def known_names(raw, conn, years=None, keep_existing=False):
         passes = [(year, nice) for nice in (True, False) for year in years]
         for year, nice in passes:
             candidates = [c for c in pool(year) if bool(_filial(c)) == filial and (not nice or _portal_style(c))]
-            found = canonical_names(rest, [], candidates)
-            for key in rest:
-                if found.get(key, key) != key and all(fits(n, found[key]) for n in variants[key]):
-                    for n in variants[key]:
-                        names[n] = found[key]
-            rest = [key for key in rest if names[variants[key][0]] == variants[key][0]]
+            kinds = lambda key: frozenset(c for n in variants[key] for c in cats.get(n, ()) if c)
+            unnamed = lambda key: names[variants[key][0]] == variants[key][0]
 
-    # Los nombres de la federación ya revisados a mano (fiflp_team_names.json) mandan sobre el
-    # emparejamiento: el club que se fundió o renombró no vuelve con otra grafía al rehacer un grupo.
-    # Antes de los filiales, que toman el nombre de su primer equipo.
+            def assign(keys, local):
+                """Empareja `keys` con `local` (uno a uno, el mejor par primero) y les pone el nombre si encaja
+                y está libre en sus categorías; devuelve las que casaron con uno que ya es de otro club."""
+                found, refused = canonical_names(keys, [], local), []
+                for key in keys:
+                    canon = found.get(key, key)
+                    if canon == key or not all(fits(n, canon) for n in variants[key]):
+                        continue
+                    if not free(canon, club(variants[key][0]), kinds(key)):
+                        refused.append(key)
+                        continue
+                    for n in variants[key]:
+                        names[n] = canon
+                    take(canon, variants[key])
+                return refused
+
+            # Isla por isla y antes de emparejar: un equipo de otra isla que empataba se llevaba el sitio y,
+            # descartado después, dejaba al bueno sin nombre ('PUERTOS DE L.P., C.E.F.' empataba con Puerto
+            # del Carmen, de Lanzarote, y Puertos LP se quedaba fuera: salía 'Puertos de'). Los que casan con
+            # un nombre que ya es de otro club de su categoría lo intentan otra vez sin los ocupados.
+            for island in sorted({i for key in rest for n in variants[key] for i in islands[n]}):
+                keys = [k for k in rest if unnamed(k) and any(island in islands[n] for n in variants[k])]
+                local = [c for c in candidates if c not in base_islands or island in base_islands[c]]
+                for key in assign(keys, local):
+                    if unnamed(key):
+                        assign([key], [c for c in local if free(c, club(variants[key][0]), kinds(key))])
+            rest = [key for key in rest if unnamed(key)]
+    # El mismo equipo escrito de dos formas que no comparten clave ('TINAJOB "B"' en la tabla y 'TINAJO
+    # "B"' en el calendario): el que quedó sin nombre toma el del otro.
     for n in crudos:
-        names[n] = fed_alias(n) or names[n]
+        if names[n] == n:
+            twin = next((m for m in crudos if names[m] != m and _same_team(club(n), club(m))
+                         and islands[n] & islands[m]), None)
+            if twin:
+                names[n] = names[twin]
 
     firsts = [n for n in crudos if not _filial(n)]
+    every = {r[0] for r in conn.execute("SELECT name FROM teams")}
     for n in crudos:
         letter = _filial(n)
-        if not letter:
+        if not letter or n in fixed:
             continue
         core = team_key(n)[0]
-        same = {names[f] for f in firsts if team_key(f)[0] == core}
+        own = [f for f in firsts if team_key(f)[0] == core and islands[f] & islands[n]]
+        same = {names[f] for f in own}
         near = [f for f in firsts if team_score((core, ""), (team_key(f)[0], "")) >= MIN_TEAM_SCORE]
+        # Un filial va con su club. Si su primer equipo ya tiene nombre de la base, el filial es el de su
+        # familia si la base lo tiene ('Las Mesas Hu.' → 'Las Mesas Hu. B') y, si no, el que ha casado solo
+        # si es del mismo club: 'Huracán B' y 'AD Huracán C' son de AD Huracán, no de Las Mesas Hu. Si su
+        # primer equipo es nuevo, su filial también. La familia no sale de un nombre de la tabla revisada:
+        # esa fila puede ser la de otras temporadas ('Victoria', 2014-25; ahora 'RC Victoria' y 'RC Victoria B').
+        if len(same) == 1:
+            first = next(iter(same))
+            family = f"{first} {letter}"
+            if (first not in firsts and family in every and fits(n, family)
+                    and not any(f in aliased for f in own)):
+                names[n] = family
+            elif names[n] != n and (first in firsts or team_score(
+                    (team_key(first)[0], ""), (team_key(names[n])[0], "")) < MIN_TEAM_SCORE):
+                names[n] = n
         if not same and near and all(names[f] == f for f in near):
             names[n] = n                      # primer equipo nuevo: su filial también
         elif (names[n] == n and len(same) == 1 and next(iter(same)) not in firsts
@@ -556,9 +713,16 @@ def main():
         raw = json.loads(args.fiflp_raw.read_text())
         conn = get_connection()
         try:
-            names = known_names(raw, conn)
+            # Una fase nueva de la temporada en curso: los clubes que ya juegan en ella, con su fila.
+            names = known_names(raw, conn, season=manifest["season"] if args.add else None)
         finally:
             conn.close()
+        # Dentro de un grupo lo comprueba fiflp_evidence; entre grupos, aquí: dos clubes en la misma fila
+        # de teams (que comparten todas las categorías) mezclan sus fichas.
+        clashes = name_clashes(names, raw_categories(raw))
+        if clashes:
+            raise ValueError("Dos equipos distintos acabarían con el mismo nombre: " +
+                             "; ".join(f"{name} ← {', '.join(raws)}" for name, raws in clashes))
     evidence = verify_sources(manifest, fiflp_raw=raw, names=names)
     print(f'{manifest["season"]}: {len(evidence)} grupos verificados con calendarios fechados.')
     if args.add and args.apply:

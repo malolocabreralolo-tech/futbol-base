@@ -138,7 +138,9 @@ ARCHIVE_NAMES = {
 # {posición: nombre en la base}}. Van por posición, que en un grupo cerrado ya no se mueve: repetirlo
 # no deshace nada. En la temporada en curso (o un equipo sin fila en la tabla), {nombre que tiene:
 # nombre que debe tener}. Los aplica fix_positions, en el bot después de los grupos; con uno nuevo, subir
-# import_fiflp_detalle.DETALLE_VERSION, que rehace las fichas de la temporada que borra.
+# import_fiflp_detalle.DETALLE_VERSION, que rehace las fichas de la temporada que borra. (Uno que cambia
+# un nombre de la tabla ya cambia la huella del detalle de su temporada, que se reimporta sola: PG2 de
+# 2025-26.)
 POSITION_FIXES = {
     # 'TARAJALEJO, U.D.' es UD Tarajalejo y 'G. TARAJAL SOC. TAMAS.' (A y B), Gran Tarajal: al revés.
     ("2016-2017", "FV13"): {4: "UD Tarajalejo", 9: "Gran Tarajal B", 10: "Gran Tarajal"},
@@ -185,6 +187,9 @@ POSITION_FIXES = {
     ("2025-2026", "LZ1"): {6: "Juventud Marítima", 7: "Unión Sur Yaiza", 8: "Puerto del Carmen"},
     ("2025-2026", "LZ4"): {1: "Unión Sur Yaiza B", 6: "Puerto del Carmen B"},
     ("2025-2026", "FV12"): {5: "Peña B"},
+    # El retirado de la federación ('ATLETICO FOMENTO, CLUB', 28 derrotas 0-3 y fuera de su tabla), con
+    # el nombre de su campo en la del portal ('CD Batán', 0 puntos y 0-84), la que guarda la base.
+    ("2025-2026", "PG2"): {15: "Atlético Fomento"},
     # En la temporada en curso, por nombre (las posiciones se mueven): 'JUVENTUD MARITIMA, C.D. "A"'.
     ("2026-2027", "LZ1"): {"O. Marítima": "Juventud Marítima"},
 }

@@ -517,3 +517,40 @@ def test_in_the_current_season_a_team_is_put_right_by_its_name(monkeypatch):
     assert not conn.execute("SELECT 1 FROM teams WHERE name='O. Marítima'").fetchone()
     assert GR.fix_positions(conn, log=lambda *_: None) == 0
 
+
+
+def test_the_retired_atletico_fomento_of_pg2_2025_26_keeps_its_name_and_its_calendar(tmp_path):
+    """«CD Batán» en la tabla del portal de PG2 de 2025-26 es el Atlético Fomento que se retiró ('ATLETICO
+    FOMENTO, CLUB' en la federación, con sus 28 derrotas 0-3 y fuera de su clasificación). Las pasadas del
+    bot (fix_positions y, como cambia la tabla, el detalle de 2025-26) lo dejan con su nombre, con sus
+    partidos del calendario de la federación y sin pasar la línea base del desvío; otra pasada no cambia
+    nada. Sobre una copia de la base del repo."""
+    import shutil
+    import pytest
+    from import_fiflp_detalle import import_changed_detalle
+    from score_deviation import group_deviation, load_baseline
+    if not (ROOT / "futbolbase.db").exists():
+        pytest.skip("futbolbase.db no está disponible")
+    shutil.copy(ROOT / "futbolbase.db", tmp_path / "futbolbase.db")
+    conn = sqlite3.connect(tmp_path / "futbolbase.db")
+    gid, = conn.execute("""SELECT g.id FROM groups g JOIN seasons s ON s.id=g.season_id
+                           WHERE s.name='2025-2026' AND g.code='PG2'""").fetchone()
+
+    def state():
+        row = conn.execute("""SELECT t.name, st.points, st.played FROM standings st JOIN teams t ON t.id=st.team_id
+                              WHERE st.group_id=? AND st.position=15""", (gid,)).fetchone()
+        scores = conn.execute("""SELECT CASE WHEN m.home_team_id=t.id THEN m.home_score ELSE m.away_score END,
+                                        CASE WHEN m.home_team_id=t.id THEN m.away_score ELSE m.home_score END
+                                 FROM matches m JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
+                                 WHERE m.group_id=? AND t.name='Atlético Fomento'""", (gid,)).fetchall()
+        return row, sorted(set(scores)), len(scores)
+
+    quiet = lambda *_: None  # noqa: E731
+    for _ in range(2):
+        GR.fix_positions(conn, log=quiet)
+        import_changed_detalle(conn, folder=str(ROOT / "scripts"), log=quiet)
+        assert state() == (("Atlético Fomento", 0, 28), [(0, 3)], 28)
+        assert not conn.execute("""SELECT 1 FROM standings st JOIN teams t ON t.id=st.team_id
+                                   WHERE st.group_id=? AND t.name='CD Batán'""", (gid,)).fetchone()
+    assert GR.fix_positions(conn, log=quiet) == 0
+    assert group_deviation(conn, gid)["dev"] <= load_baseline()["2025-2026|PREBENJAMIN|PG2"]

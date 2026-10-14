@@ -338,3 +338,97 @@ def test_a_lagging_table_never_pulls_a_score_towards_zero():
     # La tabla oficial aún no cuenta ese partido (J=0 para los dos): nada que comparar.
     assert U.reconcile_with_table(conn, gid, log=lambda *_: None) == 0
     assert conn.execute("SELECT home_score, away_score FROM matches WHERE jornada='Jornada 1'").fetchone() == (3, 21)
+
+
+# ── Retirados que solo salen en el calendario y equipos entrados dos veces ──
+
+def _team(conn, name):
+    from db import get_or_create_team
+    return get_or_create_team(conn, name)
+
+
+def _match(conn, gid, jornada, home, away, hs=None, as_=None, acta=None):
+    conn.execute("""INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score,
+                                        fiflp_acta) VALUES (?,?,?,?,?,?,?,?)""",
+                 (gid, jornada, "2026-10-17", _team(conn, home), _team(conn, away), hs, as_, acta))
+
+
+def _official_three():
+    return table([(1, 'MESAS HURACAN, U.D. LAS "A"', 3, 1, 1, 0, 0, 3, 1), (2, 'ARUCAS, C.F. "A"', 0, 0, 0, 0, 0, 0, 0),
+                  (3, 'TABLERO, C.D. "A"', 0, 1, 0, 0, 1, 1, 3)])
+
+
+def test_a_retired_team_only_in_the_calendar_keeps_its_base_name():
+    """AL11, AL20 y AL32 de 2026-27: la federación quita al retirado de su clasificación y deja sus
+    partidos en el calendario. Sus partidos ya están en la base con el nombre de la base (los dio de alta
+    activate_season): la lectura del grupo los traduce a ese nombre aunque no esté en la tabla, en vez de
+    crear un equipo con el de la federación y repetirle los partidos (y con ellos el acta)."""
+    conn, gid = seeded()
+    _match(conn, gid, "Jornada 3", "Retirado B", "Tablero", 0, 3)
+    teams, matches = (conn.execute(f"SELECT count(*) FROM {t}").fetchone()[0] for t in ("teams", "matches"))
+    rounds = {"Jornada 3": [{"home": 'RETIRADO, C.D. "B"', "away": 'TABLERO, C.D. "A"', "hs": 0, "as": 3,
+                             "date": "2026-10-17", "time": "", "venue": "", "fiflp_acta": 288183}]}
+    assert U.group_team_names(conn, gid)[-1] == "Retirado B"
+    assert U.update_group(conn, gid, "PG1", _official_three(), rounds, log=lambda *_: None)[0] == "ok"
+    assert conn.execute("SELECT count(*) FROM teams").fetchone()[0] == teams, "ningún equipo nuevo"
+    assert conn.execute("SELECT count(*) FROM matches").fetchone()[0] == matches, "ningún partido repetido"
+    assert conn.execute("""SELECT h.name, home_score, away_score, fiflp_acta FROM matches m JOIN teams h
+                           ON h.id=home_team_id WHERE jornada='Jornada 3'""").fetchone() == ("Retirado B", 0, 3, 288183)
+
+
+def _twins():
+    """PG1 con el retirado dos veces: «Retirado» (activate_season, los primeros partidos) y 'RETIRADO, C.D.
+    "A"' (una lectura de antes de group_team_names), con J3 y J4 repetidas; la J3 del gemelo trae el
+    resultado y el código del acta que al bueno le faltan."""
+    conn, gid = seeded()
+    _match(conn, gid, "Jornada 3", "Retirado", "Tablero")
+    _match(conn, gid, "Jornada 4", "Arucas", "Retirado")
+    _match(conn, gid, "Jornada 5", "Retirado", "Las Mesas Hu.")
+    _match(conn, gid, "Jornada 3", 'RETIRADO, C.D. "A"', "Tablero", 0, 3, 288183)
+    _match(conn, gid, "Jornada 4", "Arucas", 'RETIRADO, C.D. "A"')
+    return conn, gid
+
+
+def test_a_team_entered_twice_is_merged_into_the_older_one():
+    """PG2 de 2026-27: 'FOMENTO, ATLÉTICO "A"' repetía J1-J3 de Atlético Fomento. merge_twin_teams se queda
+    con los partidos del equipo de la base, con lo que el gemelo traía, y borra el gemelo; otra pasada
+    no hace nada. Un equipo con algún partido propio (no repetido) no es un gemelo."""
+    conn, gid = _twins()
+    quiet = lambda *_: None  # noqa: E731
+    assert U.merge_twin_teams(conn, gid, log=quiet) == 1
+    rows = conn.execute("""SELECT jornada, h.name, a.name, home_score, away_score, fiflp_acta FROM matches m
+                           JOIN teams h ON h.id=home_team_id JOIN teams a ON a.id=away_team_id
+                           WHERE 'Retirado' IN (h.name, a.name) ORDER BY jornada""").fetchall()
+    assert rows == [("Jornada 3", "Retirado", "Tablero", 0, 3, 288183), ("Jornada 4", "Arucas", "Retirado", None, None, None),
+                    ("Jornada 5", "Retirado", "Las Mesas Hu.", None, None, None)]
+    assert not conn.execute("""SELECT 1 FROM teams WHERE name='RETIRADO, C.D. "A"'""").fetchone()
+    assert U.merge_twin_teams(conn, gid, log=quiet) == 0
+    # Con un partido que el otro no tiene, no son el mismo equipo entrado dos veces.
+    conn, gid = _twins()
+    _match(conn, gid, "Jornada 6", 'RETIRADO, C.D. "A"', "Las Mesas Hu.")
+    assert U.merge_twin_teams(conn, gid, log=quiet) == 0
+
+
+def test_after_the_merge_the_federation_name_reads_into_the_base_team():
+    conn, gid = _twins()
+    rounds = {"Jornada 4": [{"home": 'ARUCAS, C.F. "A"', "away": 'RETIRADO, C.D. "A"', "hs": 3, "as": 0,
+                             "date": "2026-10-24", "time": "", "venue": ""}]}
+    U.update_group(conn, gid, "PG1", _official_three(), rounds, log=lambda *_: None)
+    assert conn.execute("""SELECT count(*) FROM matches m JOIN teams t ON t.id IN (home_team_id, away_team_id)
+                           WHERE t.name='Retirado'""").fetchone()[0] == 3
+    assert not conn.execute("""SELECT 1 FROM teams WHERE name='RETIRADO, C.D. "A"'""").fetchone()
+
+
+def test_the_bot_merges_twins_in_every_group_even_if_the_federation_does_not_answer(monkeypatch):
+    """update_groups junta los gemelos de todos los grupos de la federación antes de abrir el navegador:
+    en la pasada siguiente a este cambio, PG2 de 2026-27 queda bien aunque no le toque o la federación no
+    conteste."""
+    conn, gid = _twins()
+
+    def down(work, deadline=None):
+        raise RuntimeError("sin navegador")
+    monkeypatch.setattr(U, "_with_browser", down)
+    monkeypatch.setattr(U.source_health, "record", lambda *a, **k: None)
+    season, = conn.execute("SELECT id FROM seasons WHERE is_current=1").fetchone()
+    U.update_groups(conn, season, today=date(2026, 10, 20))
+    assert not conn.execute("""SELECT 1 FROM teams WHERE name='RETIRADO, C.D. "A"'""").fetchone()

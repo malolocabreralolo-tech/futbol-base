@@ -40,7 +40,7 @@ from fiflp_render import flatten, fiflp_only
 from fiflp_carga import ready_selector, ready_timeout_ms, wait_ready
 from fetch_futbolaspalmas import standings_regression, stored_standings
 from generate_js import _repair_incoherent_points
-from fiflp_names import team_key, team_score
+from fiflp_names import MIN_TEAM_SCORE, team_key, team_score
 import source_health
 
 BACK_DAYS = 21          # jornadas ya jugadas que se vuelven a mirar
@@ -431,6 +431,148 @@ def rounds_to_refresh(options, stored, today, full=False):
     return picked
 
 
+def group_team_names(conn, group_id):
+    """Los nombres de la base de los equipos de un grupo, contra los que se traducen los de la
+    federación: los de su clasificación y, detrás, los que solo salen en sus partidos (un retirado que la
+    federación ya no lista, como en AL11, AL20 y AL32 de 2026-27). Sin estos, el retirado del calendario
+    no casaba con nadie, entraba con el nombre de la federación y sus partidos se duplicaban."""
+    names = [r[1] for r in stored_standings(conn, group_id)]
+    seen = set(names)
+    for (name,) in conn.execute(
+            """SELECT t.name FROM matches m JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
+               WHERE m.group_id=? GROUP BY t.id ORDER BY min(m.id), t.name""", (group_id,)):
+        if name not in seen:
+            names.append(name)
+            seen.add(name)
+    return names
+
+
+# Lo que cuelga del acta de un partido (con cod_acta) y lo que lo enlaza con la app de futbolaspalmas:
+# al juntar dos partidos gemelos, pasa al que se queda si él no lo tiene.
+ACTA_CHILDREN = ("goals", "appearances", "match_events", "match_staff", "match_staff_all")
+OTHER_CHILDREN = ("fp_matches",)
+# Lo que un partido gemelo puede traer y el que se queda no tiene.
+TWIN_FIELDS = ("date", "time", "venue", "venue_code", "fiflp_acta")
+
+
+def _tables(conn):
+    return {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+
+
+def _twin_pairs(conn, group_id):
+    """[(gemelo, equipo que se queda, {partido del gemelo: el repetido})] de un grupo. Gemelo: un equipo
+    fuera de su clasificación con TODOS sus partidos repetidos por otro equipo de nombre parecido
+    (team_score) y más antiguo en el grupo (su primer partido es anterior): la misma jornada, el mismo
+    rival y el mismo lado (local o visitante). Nadie juega dos veces contra el mismo rival en una
+    jornada, así que es el mismo equipo entrado dos veces: lo que dejaba update_group antes de
+    group_team_names ('FOMENTO, ATLÉTICO "A"' con J1-J3 de Atlético Fomento en PG2 de 2026-27)."""
+    listed = {r[0] for r in conn.execute("SELECT team_id FROM standings WHERE group_id=?", (group_id,))}
+    fixtures, first = {}, {}
+    for mid, jornada, home, away in conn.execute(
+            "SELECT id, jornada, home_team_id, away_team_id FROM matches WHERE group_id=?", (group_id,)):
+        fixtures.setdefault(home, {})[(jornada, "local", away)] = mid
+        fixtures.setdefault(away, {})[(jornada, "visitante", home)] = mid
+        for team in (home, away):
+            first[team] = min(first.get(team, mid), mid)
+    if len(fixtures) < 2:
+        return []
+    marks = ",".join("?" * len(fixtures))
+    names = dict(conn.execute(f"SELECT id, name FROM teams WHERE id IN ({marks})", tuple(fixtures)))
+    pairs, gone = [], set()
+    for twin in sorted(fixtures, key=lambda t: -first[t]):
+        if twin in listed or twin in gone:
+            continue
+        for keep in sorted(fixtures, key=lambda t: first[t]):
+            if keep == twin or keep in gone or first[keep] >= first[twin]:
+                continue
+            if (all(key in fixtures[keep] for key in fixtures[twin])
+                    and team_score(team_key(names[twin]), team_key(names[keep])) >= MIN_TEAM_SCORE):
+                pairs.append((twin, keep, {fixtures[twin][k]: fixtures[keep][k] for k in fixtures[twin]}))
+                gone.add(twin)
+                break
+    return pairs
+
+
+def merge_twin_teams(conn, group_id, log=print):
+    """Junta en su equipo los gemelos de un grupo (_twin_pairs): de cada partido repetido se queda el del
+    equipo bueno, con lo que el gemelo traía y a él le faltaba (marcador, fecha, hora, campo, código del
+    acta y lo que cuelga del acta), y el equipo gemelo se borra si ya no sale en ningún sitio. Idempotente:
+    el bot lo pasa a todos los grupos de la federación al empezar (update_groups) y a cada grupo antes de
+    escribirlo (update_group). Un grupo que no se puede juntar (un choque de UNIQUE) se deja como estaba y
+    se avisa: nunca para la pasada. Devuelve cuántos equipos juntó."""
+    from import_fiflp_grupos import _referenced
+    pairs = _twin_pairs(conn, group_id)
+    if not pairs:
+        return 0
+    tables = _tables(conn)
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(matches)")}
+    fields = [f for f in TWIN_FIELDS if f in cols]
+    in_group = "match_id IN (SELECT id FROM matches WHERE group_id=?)"
+    select = f"SELECT home_score, away_score, cod_acta, {', '.join(fields)} FROM matches WHERE id=?"
+
+    def has(match, children):
+        return any(conn.execute(f"SELECT 1 FROM {t} WHERE match_id=? LIMIT 1", (match,)).fetchone()
+                   for t in children if t in tables)
+
+    merged = 0
+    for twin, keep, twins in pairs:
+        names = dict(conn.execute("SELECT id, name FROM teams WHERE id IN (?, ?)", (twin, keep)))
+        conn.execute("SAVEPOINT gemelos")
+        try:
+            for dup, mid in twins.items():
+                old = dict(zip(["home_score", "away_score", "cod_acta", *fields], conn.execute(select, (dup,)).fetchone()))
+                new = dict(zip(old, conn.execute(select, (mid,)).fetchone()))
+                update = {}
+                if new["home_score"] is None and old["home_score"] is not None and old["away_score"] is not None:
+                    update.update(home_score=old["home_score"], away_score=old["away_score"])
+                for f in fields:
+                    if new[f] in (None, "") and old[f] not in (None, ""):
+                        update[f] = old[f]
+                # El acta del gemelo (su código, su marcador comprobado y lo que cuelga de ella), si el que se
+                # queda no tiene ninguna.
+                if (new["cod_acta"] is None and not has(mid, ACTA_CHILDREN)
+                        and (old["cod_acta"] is not None or has(dup, ACTA_CHILDREN))):
+                    update["cod_acta"] = old["cod_acta"]
+                    if old["home_score"] is not None and old["away_score"] is not None:
+                        update.update(home_score=old["home_score"], away_score=old["away_score"])
+                    for t in ACTA_CHILDREN:
+                        if t in tables:
+                            conn.execute(f"UPDATE {t} SET match_id=? WHERE match_id=?", (mid, dup))
+                for t in OTHER_CHILDREN:
+                    if t in tables and not has(mid, (t,)):
+                        conn.execute(f"UPDATE {t} SET match_id=? WHERE match_id=?", (mid, dup))
+                for t in ACTA_CHILDREN + OTHER_CHILDREN:
+                    if t in tables:
+                        conn.execute(f"DELETE FROM {t} WHERE match_id=?", (dup,))
+                conn.execute("DELETE FROM matches WHERE id=?", (dup,))
+                if update:
+                    conn.execute(f"UPDATE matches SET {', '.join(k + '=?' for k in update)} WHERE id=?",
+                                 (*update.values(), mid))
+            # Lo demás del gemelo en el grupo (alineaciones, goleadores, casa y fuera), al equipo bueno.
+            for t in ("appearances", "match_events", "match_staff", "match_staff_all"):
+                if t in tables:
+                    conn.execute(f"UPDATE {t} SET team_id=? WHERE team_id=? AND {in_group}", (keep, twin, group_id))
+            for t in ("scorers", "standings_detail"):
+                if t in tables:
+                    conn.execute(f"UPDATE OR IGNORE {t} SET team_id=? WHERE team_id=? AND group_id=?",
+                                 (keep, twin, group_id))
+                    conn.execute(f"DELETE FROM {t} WHERE team_id=? AND group_id=?", (twin, group_id))
+            if not _referenced(conn, twin):
+                for t in ("team_seasons", "standings_detail", "match_staff_all", "fp_teams"):
+                    if t in tables:
+                        conn.execute(f"DELETE FROM {t} WHERE team_id=?", (twin,))
+                conn.execute("DELETE FROM teams WHERE id=?", (twin,))
+        except Exception as e:      # sqlite3.IntegrityError, sobre todo: el grupo, como estaba
+            conn.execute("ROLLBACK TO gemelos")
+            conn.execute("RELEASE gemelos")
+            log(f"    ! {names.get(twin)} no se junta con {names.get(keep)}: {e}")
+            continue
+        conn.execute("RELEASE gemelos")
+        log(f"    {names.get(twin)} era {names.get(keep)}: {len(twins)} partidos repetidos fuera")
+        merged += 1
+    return merged
+
+
 def name_map(scraped_names, group_teams):
     """{nombre FIFLP limpio: nombre de la base}. Primero contra la plantilla del
     grupo; lo que no casa, con el nombre limpio de FIFLP. Un nombre de la federación
@@ -446,20 +588,6 @@ def name_map(scraped_names, group_teams):
     mapa = canonical_names([n for n in crudos if n not in fixed], rest, []) if rest else {}
     mapa.update(fixed)
     return {n: mapa.get(n, n) for n in crudos}
-
-
-def group_team_names(conn, group_id):
-    """Los equipos del grupo: los de su clasificación y, detrás, los que solo están en su calendario.
-    Un retirado (la federación lo quita de la tabla y deja sus partidos, AL20 de 2026-27) casaba con
-    nada y el bot abría un equipo con el nombre de la federación ('SAN JOSE, REAL SPORTING "B"') y le
-    repetía los partidos."""
-    names = [r[1] for r in stored_standings(conn, group_id)]
-    for (name,) in conn.execute(
-            """SELECT DISTINCT t.name FROM matches m JOIN teams t ON t.id IN (m.home_team_id, m.away_team_id)
-               WHERE m.group_id=? ORDER BY t.name""", (group_id,)):
-        if name not in names:
-            names.append(name)
-    return names
 
 
 def deviation(conn, group_id, override=None):
@@ -698,7 +826,10 @@ def add_detail(standings, html):
 
 
 def update_group(conn, group_id, code, raw_standings, raw_rounds, log=print):
-    """Escribe en la base lo scrapeado de un grupo. Devuelve (estado, mensaje)."""
+    """Escribe en la base lo scrapeado de un grupo. Devuelve (estado, mensaje). Los nombres de la
+    federación se traducen a los del grupo (group_team_names), con los retirados que solo salen en el
+    calendario, después de juntar los equipos entrados dos veces (merge_twin_teams)."""
+    merge_twin_teams(conn, group_id, log)
     group_teams = group_team_names(conn, group_id)
     names = name_map([r["team"] for r in raw_standings] +
                      [m[s] for ms in raw_rounds.values() for m in ms for s in ("home", "away")],
@@ -850,8 +981,8 @@ def parse_goleadores(html):
 
 def write_scorers(conn, group_id, rows, group_teams=None):
     """Sustituye los goleadores del grupo con los de la federación, con los
-    nombres de equipo que ya usa la base (`group_teams`; por defecto, los de su
-    clasificación y su calendario)."""
+    nombres de equipo que ya usa la base (`group_teams`; por defecto, los del grupo:
+    group_team_names, con los retirados que solo salen en el calendario)."""
     if not rows:
         return 0
     if group_teams is None:
@@ -964,6 +1095,11 @@ def update_groups(conn, season_id, today=None):
     deadline = clock() + budget_seconds()
     from migrate_actas_schema import migrate
     migrate(conn)                 # fiflp_acta, players.fiflp_id, delegados
+    # Los equipos entrados dos veces en un grupo (un retirado del calendario con el nombre de la
+    # federación, antes de group_team_names), en todos los grupos, se lean o no en esta pasada.
+    for group_id, code, _ in every:
+        if merge_twin_teams(conn, group_id, log=lambda line, code=code: print(f"  {code}: {line.strip()}")):
+            conn.commit()
     today = today or date.today()
     print(f"\nFederación (FIFLP): {len(groups)} grupos, plazo de {budget_seconds() / 60:g} min", flush=True)
     pending = {code: url for _, code, url in groups}

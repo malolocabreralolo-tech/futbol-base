@@ -153,7 +153,12 @@ def verify_sources(manifest, fetcher=fetch, fiflp_raw=None, names=None):
         if any(not first <= date.fromisoformat(m[0]) <= last for m in matches):
             raise ValueError(f'{group["id"]}: el calendario contiene fechas de otra temporada')
         table = {r[1] for r in standings}
-        if any(m[1] not in table or m[2] not in table for m in matches):
+        # Un retirado: la federación lo quita de la tabla y deja sus partidos en el calendario (sin
+        # resultado o con 0-3/0-1 administrativos, a veces con acta, como AL20 de 2026-27); la web lo
+        # reconoce (model.retiredTeams). Lo que esta comprobación busca es un calendario de otro grupo:
+        # entonces casi ningún equipo está en la tabla. Una minoría fuera de ella son retirados.
+        outside = {t for m in matches for t in (m[1], m[2]) if t not in table}
+        if len(outside) > max(1, len(table) // 3):
             raise ValueError(f'{group["id"]}: calendario y clasificación tienen equipos diferentes')
         default = manifest.get("defaultTeam") or {}
         if group["id"] == default.get("groupId") and default["name"] not in table:
@@ -259,6 +264,9 @@ def insert_groups(conn, sid, evidence):
             for dt, home, away, hs, away_score, kickoff, venue, *acta in matches:
                 # El código del acta, si el raw de la federación lo trae (octava columna de fiflp_evidence).
                 extra = ",fiflp_acta" if acta else ""
+                for team in (home, away):   # un retirado solo está en el calendario (verify_sources)
+                    if team not in team_ids:
+                        team_ids[team] = club_id(conn, team)
                 conn.execute(f"""INSERT INTO matches(group_id,jornada,date,time,home_team_id,away_team_id,home_score,away_score,
                                                      venue{extra}) VALUES(?,?,?,?,?,?,?,?,?{",?" if acta else ""})""",
                              (gid, round_name, dt, kickoff, team_ids[home], team_ids[away], hs, away_score, venue, *acta[:1]))

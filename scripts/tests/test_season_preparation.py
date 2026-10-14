@@ -129,8 +129,11 @@ def test_seed_creates_a_missing_category_and_rolls_back_if_something_fails():
     conn.close()
     conn = empty()
     broken = evidence()
-    broken[0]['standings'] = []          # un equipo del calendario sin fila: falla al meter sus partidos
-    with pytest.raises(KeyError):
+    # Una fila de partido incompleta: falla al meter los partidos, con el grupo ya insertado. (Un equipo
+    # del calendario sin fila en la tabla ya no falla: es un retirado, ver test_alevin_activacion.)
+    label = next(iter(broken[0]['rounds']))
+    broken[0]['rounds'][label] = [broken[0]['rounds'][label][0][:5]]
+    with pytest.raises(ValueError):
         seed_season(conn, MANIFEST, broken)
     assert conn.execute('SELECT name,is_current FROM seasons').fetchall() == [('2025-2026', 1)]
     assert conn.execute('SELECT count(*) FROM groups').fetchone()[0] == 0

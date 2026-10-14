@@ -409,3 +409,48 @@ def test_source_health_carry_keeps_the_previous_entry_of_the_same_group(tmp_path
     H.carry("AL9", "u9")                  # nunca leído: no sale todavía
     assert H._report["groups"] == {"AL2": previous["groups"]["AL2"]}
     monkeypatch.setattr(H, "_report", None)
+
+
+def _with_retired(played_against_retired, acta=None):
+    """Un grupo de la federación cuya clasificación ya no lista a un equipo retirado que sigue en el
+    calendario (AL11 de 2026-27: la federación lo quita de la tabla y deja sus partidos sin fecha)."""
+    raw = [group("54976940", ALEVIN, 1, TEAMS, played=True)]
+    raw[0]["standings"] = [
+        {"pos": 1, "team": TEAMS[0], "pts": 3, "j": 1, "g": 1, "e": 0, "p": 0, "gf": 3, "gc": 1, "df": 2},
+        {"pos": 2, "team": TEAMS[1], "pts": 0, "j": 1, "g": 0, "e": 0, "p": 1, "gf": 1, "gc": 3, "df": -2}]
+    raw[0]["jornadas"].append({"num": "2", "date": "10-10-2026", "matches": [
+        {"home": TEAMS[0], "away": 'RETIRADO, C.D. "B"', "hs": 2 if played_against_retired else None,
+         "as": 0 if played_against_retired else None, "date": "10-10-2026", "time": "", "venue": "",
+         **({"fiflp_acta": acta} if acta else {})}]})
+    return raw
+
+
+def test_a_retired_team_only_in_the_calendar_does_not_stop_the_activation():
+    """La web ya lo trata como retirado (model.retiredTeams: en el calendario, fuera de la tabla y sin
+    resultados); la activación no debe abortar por él."""
+    raw = _with_retired(False)
+    manifest = alevin_manifest(raw)
+    conn = db()
+    add_groups(conn, manifest, verify_sources(manifest, fiflp_raw=raw, names=NAMES))
+    assert conn.execute("SELECT COUNT(*) FROM matches").fetchone() == (2,)
+
+
+def test_administrative_results_of_a_retired_team_do_not_stop_the_activation():
+    """AL15 de 2026-27: el retirado tiene 0-1 y 1-0 en todas las jornadas, sin acta."""
+    raw = _with_retired(True)
+    manifest = alevin_manifest(raw)
+    conn = db()
+    add_groups(conn, manifest, verify_sources(manifest, fiflp_raw=raw, names=NAMES))
+    assert conn.execute("SELECT COUNT(*) FROM matches WHERE home_score IS NOT NULL").fetchone() == (2,)
+
+
+def test_a_calendar_of_another_group_still_stops_the_activation():
+    """Lo que la comprobación busca: el calendario de otro grupo, con casi todos sus equipos fuera de
+    la tabla. Uno o dos retirados (como AL20, que jugó la J1 con acta y se retiró) no lo son."""
+    raw = _with_retired(True, acta=281999)
+    manifest = alevin_manifest(raw)
+    verify_sources(manifest, fiflp_raw=raw, names=NAMES)      # un retirado con acta: se acepta
+    raw[0]["standings"] = raw[0]["standings"][:1]
+    raw[0]["standings"][0]["team"] = 'OTRO, C.D. "A"'
+    with pytest.raises(ValueError, match="equipos diferentes"):
+        verify_sources(manifest, fiflp_raw=raw, names=NAMES)

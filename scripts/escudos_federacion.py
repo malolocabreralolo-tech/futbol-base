@@ -65,8 +65,9 @@ def candidates(conn, folder=ROOT / "scripts"):
         row = conn.execute("SELECT id FROM seasons WHERE name=?", (season,)).fetchone()
         if not row:
             continue
-        index_path = Path(folder) / f"fiflp_actas_{season}_index.json"
-        index = json.loads(index_path.read_text(encoding="utf-8")) if index_path.exists() else {}
+        # Los índices de actas de todos los lotes (los de alevín van aparte: actas_lotes).
+        from actas_lotes import load_merged
+        index = load_merged(folder, season, "index")
         for entry in json.loads(path.read_text(encoding="utf-8")).values():
             if not entry.get("crests"):
                 continue

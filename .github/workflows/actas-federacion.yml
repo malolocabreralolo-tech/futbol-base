@@ -2,9 +2,12 @@ name: Actas de la federación (relleno encadenado)
 
 # Descarga las actas de una temporada en tandas de ~5,5 h y se relanza sola
 # hasta acabarla; después pasa a la siguiente de la cola. Solo sube el raw
-# (scripts/fiflp_actas_<S>_raw.json, su índice y su estado): la base y los
-# data-*.js los pone al día el bot (update.yml) al importar los raw nuevos,
-# así dos workflows nunca chocan en futbolbase.db. Ver docs/federacion.md.
+# (scripts/fiflp_actas_<S>_raw.json, su índice y su estado; las de alevín van
+# aparte, en scripts/fiflp_actas_<S>_alevin_raw.json, _alevin_index.json y
+# _alevin_status.json: scripts/actas_lotes.py): la base y los data-*.js los pone
+# al día el bot (update.yml) al importar los raw nuevos, así dos workflows nunca
+# chocan en futbolbase.db. Una cadena es de un solo lote (benjamín y prebenjamín,
+# o alevín) y solo escribe y sube los ficheros de ese lote. Ver docs/federacion.md.
 on:
   workflow_dispatch:
     inputs:
@@ -26,7 +29,7 @@ on:
         required: false
         default: ''
       categorias:
-        description: 'Categorías del catálogo: benjamin,prebenjamin o alevin (solo Gran Canaria); pasa a las tandas y a la cola'
+        description: 'Categorías del catálogo: benjamin,prebenjamin o alevin (solo Gran Canaria, a su raw aparte; nunca las dos cosas); pasa a las tandas y a la cola'
         required: false
         default: 'benjamin,prebenjamin'
       reindex:
@@ -44,9 +47,14 @@ permissions:
   contents: write
   actions: write
 
-# Una cadena por temporada (pueden correr varias a la vez, cada una sube solo sus ficheros).
+# Una cadena por temporada y lote (pueden correr varias a la vez, cada una escribe y sube solo
+# los ficheros de su lote): la de alevín de una temporada no espera a la de benjamín y prebenjamín.
+# El lote sale de las categorías con 'alev' (contains no distingue mayúsculas pero sí tildes:
+# «alevín» contiene 'alev' y no 'alevin'); LOTE_CADENA, la misma expresión, va a
+# fetch_fiflp_actas.py --lote, que para si sus categorías no son de ese lote o mezclan los dos:
+# una cadena nunca escribe los ficheros de otro grupo de concurrencia.
 concurrency:
-  group: actas-federacion-${{ inputs.temporada }}
+  group: actas-federacion-${{ inputs.temporada }}${{ contains(inputs.categorias, 'alev') && '-alevin' || '' }}
   cancel-in-progress: false
 
 jobs:
@@ -68,11 +76,12 @@ jobs:
           TEMP_INPUT: ${{ inputs.temporada }}
           COMPS_INPUT: ${{ inputs.comps }}
           CATS_INPUT: ${{ inputs.categorias }}
+          LOTE_CADENA: ${{ contains(inputs.categorias, 'alev') && 'alevin' || 'siempre' }}
           REINDEX: ${{ inputs.reindex }}
           REFRESCAR: ${{ inputs.refrescar }}
           PYTHONUNBUFFERED: '1'
         run: |
-          ARGS="--temporada $TEMP_INPUT --max-minutes 320 --categorias ${CATS_INPUT:-benjamin,prebenjamin}"
+          ARGS="--temporada $TEMP_INPUT --max-minutes 320 --categorias ${CATS_INPUT:-benjamin,prebenjamin} --lote $LOTE_CADENA"
           if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
           if [ "$REINDEX" = "true" ]; then ARGS="$ARGS --reindex"; fi
           if [ "$REFRESCAR" = "true" ]; then ARGS="$ARGS --refrescar"; fi
@@ -85,12 +94,17 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
           TEMP_INPUT: ${{ inputs.temporada }}
+          LOTE_CADENA: ${{ contains(inputs.categorias, 'alev') && 'alevin' || 'siempre' }}
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
+          # Solo los del lote de la cadena (scripts/actas_lotes.py): los del otro lote son de la
+          # cadena de su grupo de concurrencia, que puede estar corriendo a la vez.
+          LOTE=""
+          if [ "$LOTE_CADENA" = "alevin" ]; then LOTE="_alevin"; fi
           for f in raw index status; do
-            [ -e "scripts/fiflp_actas_${LABEL}_${f}.json" ] && git add "scripts/fiflp_actas_${LABEL}_${f}.json"
+            [ -e "scripts/fiflp_actas_${LABEL}${LOTE}_${f}.json" ] && git add "scripts/fiflp_actas_${LABEL}${LOTE}_${f}.json"
           done
           if git diff --cached --quiet; then
             echo "Nada nuevo que subir."
@@ -123,16 +137,27 @@ jobs:
           TANDAS: ${{ inputs.tandas }}
           COMPS_INPUT: ${{ inputs.comps }}
           CATS_INPUT: ${{ inputs.categorias }}
+          LOTE_CADENA: ${{ contains(inputs.categorias, 'alev') && 'alevin' || 'siempre' }}
           REFRESCAR: ${{ inputs.refrescar }}
         run: |
           LABEL=$(python3 -c "from scripts.fetch_fiflp_actas import SEASON_NAME; print(SEASON_NAME['$TEMP_INPUT'])")
-          STATUS="scripts/fiflp_actas_${LABEL}_status.json"
-          PENDING=$(python3 -c "import json; print(json.load(open('$STATUS'))['pending'])" 2>/dev/null || echo 1)
-          # Una tanda que no trajo ninguna acta ni dejó competiciones sin enumerar no avanza: las
-          # que quedan no se dejan leer (se reintentan cuando se vuelva a lanzar la temporada).
-          STUCK=$(python3 -c "import json; d=json.load(open('$STATUS')); print(int(d.get('fetched', 1) == 0 and not d.get('unenumerated_comps')))" 2>/dev/null || echo 0)
+          # El estado del lote de la tanda (el de alevín es aparte), sin navegador: {"pending",
+          # "stuck", "lote"} (chain_state). Una tanda que no trajo ninguna acta (fetched 0) ni dejó
+          # competiciones sin enumerar (unenumerated_comps) no avanza: las que quedan no se dejan
+          # leer (se reintentan cuando se vuelva a lanzar la temporada). Sin estado, otra tanda.
+          # Unas categorías que no existen, de los dos lotes o de otro que el de la cadena dan
+          # "error": la cadena para (tampoco pasa a la cola: fallaría igual).
+          ARGS="--temporada $TEMP_INPUT --categorias ${CATS_INPUT:-benjamin,prebenjamin} --lote $LOTE_CADENA --estado"
+          if [ -n "$COMPS_INPUT" ]; then ARGS="$ARGS --comps $COMPS_INPUT"; fi
+          STATE=$(python3 scripts/fetch_fiflp_actas.py $ARGS 2>/dev/null || echo '{"pending": 1, "stuck": 0}')
+          echo "Estado de la tanda: $STATE"
+          PENDING=$(python3 -c "import json, sys; print(json.loads(sys.argv[1])['pending'])" "$STATE" 2>/dev/null || echo 1)
+          STUCK=$(python3 -c "import json, sys; print(json.loads(sys.argv[1])['stuck'])" "$STATE" 2>/dev/null || echo 0)
+          ERROR=$(python3 -c "import json, sys; print(json.loads(sys.argv[1]).get('error') or '')" "$STATE" 2>/dev/null || echo "")
           LEFT=$((TANDAS - 1))
-          if [ "$LEFT" -le 0 ]; then
+          if [ -n "$ERROR" ]; then
+            echo "La cadena para: $ERROR"
+          elif [ "$LEFT" -le 0 ]; then
             echo "Freno: sin tandas. Pendientes en $LABEL: $PENDING"
           elif [ "$PENDING" -gt 0 ] && [ "$STUCK" = "0" ]; then
             echo "Quedan $PENDING actas de $LABEL: otra tanda."

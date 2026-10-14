@@ -259,13 +259,10 @@ def import_raw(conn, path, log=print):
     season_id = row[0]
     with open(path, encoding="utf-8") as f:
         raw = json.load(f)
-    index_path = os.path.join(os.path.dirname(path), f"fiflp_actas_{season}_index.json")
-    index = {}
-    if os.path.exists(index_path):
-        with open(index_path, encoding="utf-8") as f:
-            data = json.load(f)
-        # El índice es una lista de {cod_acta, comp_id, grupo, jornada} o un dict por cod_acta.
-        index = {str(e["cod_acta"]): e for e in data} if isinstance(data, list) else data
+    # Los índices de actas de la temporada, de todos los lotes (los de alevín van aparte: actas_lotes).
+    # Cada uno, una lista de {cod_acta, comp_id, grupo, jornada} o un dict por cod_acta.
+    from actas_lotes import load_merged
+    index = load_merged(os.path.dirname(os.path.abspath(path)), season, "index")
     conn.execute("""CREATE TABLE IF NOT EXISTS fiflp_scorer_groups (
         group_id INTEGER PRIMARY KEY, comp TEXT NOT NULL, grupo TEXT NOT NULL)""")
     # Importación perezosa: import_fiflp_grupos importa este módulo.

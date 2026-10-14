@@ -2,21 +2,34 @@
 """Scrape FIFLP actas (lineups + events + staff) for benjamin/prebenjamin
 across all 5 seasons, incrementally and resumably.
 
-Saves to scripts/fiflp_actas_<season>_raw.json keyed by CodActa.
+Saves to scripts/fiflp_actas_<season>_raw.json keyed by CodActa (benjamín y
+prebenjamín) y las de alevín APARTE, en scripts/fiflp_actas_<season>_alevin_raw.json,
+cada lote con su índice y su estado (actas_lotes.py): el histórico alevín en el
+mismo raw lo duplicaría y lo acercaría a los límites de GitHub. Una tanda es de UN
+lote (tanda_lote: las categorías que mezclan los dos se rechazan) y solo escribe los
+ficheros de ese lote, los que sube su cadena de actas-federacion.yml (una por
+temporada y lote): dos cadenas nunca escriben el mismo fichero. Tampoco al refrescar
+ni con varios navegadores.
 
 CLI:
   --temporada NN      (required) CodTemporada: 12..22
   --comps "id,id"     (optional) override comp list; otherwise auto-discover
   --categorias LISTA  (optional) 'benjamin,prebenjamin' (por defecto) o 'alevin' (solo
-                      Gran Canaria, sin sala): las competiciones del catálogo que se recorren
+                      Gran Canaria, sin sala): las competiciones del catálogo que se recorren;
+                      las de un solo lote
+  --lote siempre|alevin (optional) el lote de la cadena (su grupo de concurrencia en
+                      actas-federacion.yml): si las categorías son de otro, para
   --max-actas N       (optional) cap for spike runs
   --dump-fixture COD  (optional) dump acta HTML to scripts/tests/fixtures/
+  --estado            (optional) sin navegador: imprime {"pending", "stuck", "lote"} del lote
+                      de la tanda (lo lee actas-federacion.yml para encadenar)
 
 Designed to run only in GitHub Actions (FIFLP blocks the local IP).
 """
 import os, sys, re, json, time, random, argparse, threading
 from pathlib import Path
 from scripts.acta_parser import parse_acta
+from scripts import actas_lotes
 
 # Playwright is only needed at runtime (inside main()). Importing it at module
 # level made the Tests CI pytest job red because the runner doesn't install
@@ -24,6 +37,7 @@ from scripts.acta_parser import parse_acta
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
+HERE = Path(__file__).parent   # donde van los raws, índices y estados (las pruebas lo cambian)
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 UA   = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/120 Safari/537")
@@ -76,21 +90,97 @@ def catalog_comps(season_code, categories=None):
     no la tiene."""
     C = _categorias()
     categories = categories or C.DEFAULT_CATEGORIES
-    path = Path(__file__).parent / "fiflp_comps_catalog.json"
-    if season_code not in SEASON_NAME or not path.exists():
-        return []
-    entry = json.loads(path.read_text(encoding="utf-8")).get(SEASON_NAME[season_code]) or {}
+    entry = _catalog_entry(season_code)
     return [c["id"] for c in entry.get("all", []) if C.category_of(c["name"]) in categories]
 
 
-def index_path(season_code):
+def _catalog_entry(season_code):
+    path = Path(__file__).parent / "fiflp_comps_catalog.json"
+    if season_code not in SEASON_NAME or not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8")).get(SEASON_NAME[season_code]) or {}
+
+
+def catalog_names(season_code):
+    """{id: nombre} de las competiciones de la temporada en el catálogo ({} si no la tiene)."""
+    return {str(c["id"]): c["name"] for c in _catalog_entry(season_code).get("all", [])}
+
+
+def comp_lotes(season_code, comps, categories=None, names=None):
+    """{competición: lote} (actas_lotes: '' benjamín y prebenjamín, 'alevin' alevín), por el nombre
+    de la competición en el catálogo o en `names` (el desplegable que lee discover_comps). Una que
+    no está en ninguno va al lote de las categorías pedidas si son de uno solo; si son de los dos,
+    no se sabe dónde guardarla y se para (ValueError): mejor no bajar que mezclar."""
+    categories = categories or _categorias().DEFAULT_CATEGORIES
+    known = {**catalog_names(season_code), **{str(k): v for k, v in (names or {}).items()}}
+    asked = actas_lotes.lotes_of(categories)
+    out = {}
+    for comp in comps:
+        lote = actas_lotes.lote_of_name(known.get(str(comp)))
+        if lote is None:
+            if len(asked) != 1:
+                raise ValueError(f"competición {comp}: no está en el catálogo y las categorías "
+                                 f"({', '.join(categories)}) son de los dos lotes; "
+                                 "pide --categorias alevin o benjamin,prebenjamin")
+            lote = asked[0]
+        out[str(comp)] = lote
+    return out
+
+
+# --lote de la CLI (actas-federacion.yml lo pasa con el lote de su grupo de concurrencia).
+LOTE_ARG = {"siempre": "", "alevin": "alevin"}
+
+
+def _lote_label(lote):
+    return lote or "benjamín/prebenjamín"
+
+
+def tanda_lote(season_code, categories=None, comps=None, names=None, expected=None):
+    """El lote de una tanda, que es UNO: el de sus categorías. Una cadena de actas-federacion.yml
+    escribe y sube solo los ficheros de su lote (su grupo de concurrencia es por temporada y lote):
+    si escribiera los del otro, chocaría con la cadena de ese lote y una de las dos perdería su
+    tanda al subir. Por eso para (ValueError) si las categorías mezclan los dos lotes, si una
+    competición de --comps es del otro lote (por su nombre en el catálogo o en `names`) o si el lote
+    no es el que espera la cadena (`expected`, el de --lote)."""
+    categories = categories or _categorias().DEFAULT_CATEGORIES
+    lotes = actas_lotes.lotes_of(categories)
+    if len(lotes) != 1:
+        raise ValueError(f"las categorías ({', '.join(categories)}) son de los dos lotes: una tanda baja "
+                         "las de uno solo; lanza alevin y benjamin,prebenjamin por separado")
+    lote = lotes[0]
+    if comps:
+        other = sorted(c for c, lt in comp_lotes(season_code, comps, categories, names).items() if lt != lote)
+        if other:
+            raise ValueError(f"competiciones que no son del lote de las categorías ({_lote_label(lote)}): "
+                             f"{', '.join(other)}")
+    if expected is not None and expected != lote:
+        raise ValueError(f"la cadena es del lote {_lote_label(expected)} y las categorías "
+                         f"({', '.join(categories)}) del {_lote_label(lote)}")
+    return lote
+
+
+def index_path(season_code, lote=""):
     """Índice de actas enumeradas (cod_acta → comp, grupo, jornada): una tanda
-    encadenada no vuelve a recorrer todas las jornadas de la temporada."""
-    return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_index.json"
+    encadenada no vuelve a recorrer todas las jornadas de la temporada. Uno por lote."""
+    return HERE / actas_lotes.file_name(SEASON_NAME[season_code], "index", lote)
 
 
-def status_path(season_code):
-    return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_status.json"
+def status_path(season_code, lote=""):
+    return HERE / actas_lotes.file_name(SEASON_NAME[season_code], "status", lote)
+
+
+def chain_state(season_code, lote=""):
+    """{"pending", "stuck", "lote"} de la tanda por el estado de su lote: lo que queda (sin estado,
+    1: que siga) y si está atascada (no trajo ninguna acta ni dejó competiciones sin enumerar: lo
+    que queda no se deja leer). La regla de actas-federacion.yml para lanzar otra tanda o pasar a
+    la temporada siguiente."""
+    try:
+        status = json.loads(status_path(season_code, lote).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"pending": 1, "stuck": 0, "lote": lote}
+    pending = int(status.get("pending", 1))
+    stuck = int(status.get("fetched", 1)) == 0 and not int(status.get("unenumerated_comps") or 0)
+    return {"pending": pending, "stuck": int(stuck), "lote": lote}
 
 
 def needs_refresh(acta):
@@ -140,8 +230,10 @@ def goto(page, url, retries=3):
     return False
 
 
-def raw_path(season_code):
-    return Path(__file__).parent / f"fiflp_actas_{SEASON_NAME[season_code]}_raw.json"
+def raw_path(season_code, lote=""):
+    """scripts/fiflp_actas_<S>_raw.json (benjamín y prebenjamín) o, la del lote 'alevin',
+    scripts/fiflp_actas_<S>_alevin_raw.json."""
+    return HERE / actas_lotes.file_name(SEASON_NAME[season_code], "raw", lote)
 
 
 def is_empty_acta(acta):
@@ -162,8 +254,8 @@ def is_empty_acta(acta):
     )
 
 
-def load_raw(season_code):
-    p = raw_path(season_code)
+def load_raw(season_code, lote=""):
+    p = raw_path(season_code, lote)
     if not p.exists():
         return {}
     data = json.loads(p.read_text(encoding="utf-8"))
@@ -177,17 +269,141 @@ def load_raw(season_code):
     return data
 
 
-def save_raw(season_code, data):
-    raw_path(season_code).write_text(
+def save_raw(season_code, data, lote=""):
+    raw_path(season_code, lote).write_text(
         json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
     )
 
 
+def acta_lote(acta, default=None):
+    """El lote de un acta por la competición de su cabecera, si la dice; si no, `default`."""
+    competition = ((acta or {}).get("header") or {}).get("competition")
+    lote = actas_lotes.lote_of_name(competition) if competition else None
+    return default if lote is None else lote
+
+
+class RawStore:
+    """Las actas ya descargadas de una temporada, para una tanda de un lote. Solo escribe el raw de
+    su lote (el de su cadena); los de los otros lotes solo los lee, para no volver a leer un acta
+    que ya está en ellos.
+
+    Un acta en el raw que no es el suyo (la dejó una tanda de antes de partir los raws, que bajaba
+    las de alevín al de siempre) pasa sola al suyo, cada cadena con sus ficheros: la tanda del lote
+    del acta la ADOPTA (get: la copia a su raw sin volver a leerla) y la tanda del lote donde estaba
+    la SUELTA (al cargar: la quita del suyo si su cabecera es de otro lote y ya está en el raw de
+    ese lote). Mientras tanto está en los dos y la importación da lo mismo (import_fiflp_actas:
+    la misma acta, el mismo partido)."""
+
+    def __init__(self, season_code, lote="", log=print):
+        self.season, self.lote, self.log = season_code, lote, log
+        self.data = load_raw(season_code, lote)
+        self._others = {}
+        self.dirty = False
+        self.adopted = 0
+        self.released = self._release()
+
+    def other(self, lote):
+        if lote not in self._others:
+            self._others[lote] = load_raw(self.season, lote)
+        return self._others[lote]
+
+    def _release(self):
+        gone = []
+        for cod, acta in self.data.items():
+            lote = acta_lote(acta)
+            if lote not in (None, self.lote) and cod in self.other(lote):
+                gone.append(cod)
+        for cod in gone:
+            del self.data[cod]
+        if gone:
+            self.dirty = True
+            self.log(f"  {len(gone)} acta(s) de otro lote ya en su raw: se quitan de "
+                     f"{raw_path(self.season, self.lote).name}")
+        return len(gone)
+
+    def get(self, cod):
+        """(lote, acta) del acta `cod` para la tanda: la de su raw (lote, el de la tanda); si solo
+        está en el raw de otro lote, la adopta (la copia al suyo), salvo que su cabecera diga ese
+        otro lote (está donde debe: no es de esta tanda; (ese lote, acta)). (None, None) si no está
+        en ninguno."""
+        if cod in self.data:
+            return self.lote, self.data[cod]
+        for lote in actas_lotes.LOTES:
+            if lote == self.lote or cod not in self.other(lote):
+                continue
+            acta = self.other(lote)[cod]
+            if acta_lote(acta) == lote:
+                return lote, acta
+            self.data[cod] = acta
+            self.dirty = True
+            self.adopted += 1
+            return self.lote, acta
+        return None, None
+
+    def put(self, cod, acta):
+        self.data[cod] = acta
+        self.dirty = True
+
+    def save(self, force=False):
+        if self.dirty or force:
+            save_raw(self.season, self.data, self.lote)
+        self.dirty = False
+
+
+class Collector:
+    """on_result de fetch_parallel (lo llaman los hilos de los navegadores, de uno en uno con su
+    cerrojo): cada acta leída va al raw del lote de la tanda (el de su competición), nunca al de
+    otro; si su cabecera dice el otro lote, se avisa (no se escribe el raw de otra cadena). Con
+    --refrescar, la relectura que sale peor se descarta y la vieja queda marcada. Cuenta las actas
+    aplanadas nuevas (el avance de la cadena) y guarda cada `save_every`."""
+
+    def __init__(self, store, refrescar=False, save_every=25, total=0, log=print):
+        self.store, self.refrescar, self.save_every, self.total, self.log = store, refrescar, save_every, total, log
+        self.lock = threading.Lock()
+        self.fetched = 0
+        self.started = time.time()
+
+    def __call__(self, t, acta):
+        cod = t["cod_acta"]
+        if acta is None:
+            return
+        if is_empty_acta(acta):
+            # Anti-scrape blank survived all retries: do NOT persist it as
+            # done, so the next incremental run retries this acta.
+            self.log(f"  ! acta {cod} empty after retries — not persisted (will retry next run)")
+            return
+        acta["cod_acta"] = int(cod)
+        acta["enumeration"] = {"comp_id": t["comp_id"], "grupo": t["grupo"], "jornada": t["jornada"]}
+        flat = "consistent" in acta
+        if not flat:
+            acta["rescrape_failed"] = True     # leída ya con el lector nuevo: no se vuelve a pedir
+        mine = self.store.lote
+        with self.lock:
+            old = self.store.data.get(cod)
+            if self.refrescar and keep_old_on_refresh(old, acta):
+                # La relectura salió peor que la que ya había: se queda la vieja y no se vuelve a pedir.
+                old["staff_refresh_failed"] = True
+                self.store.dirty = True
+                return
+            if acta_lote(acta, mine) != mine:
+                self.log(f"  ! acta {cod}: su cabecera es del lote {_lote_label(acta_lote(acta))} y su "
+                         f"competición ({t['comp_id']}) del {_lote_label(mine)}: se guarda en el de la tanda")
+            self.store.put(cod, acta)
+            # Solo cuenta como acta nueva la que se dejó aplanar: la cadena sigue mientras avanza.
+            self.fetched += flat
+            # save every 25 actas to survive crashes
+            if flat and self.fetched % self.save_every == 0:
+                self.store.save()
+                rate = (time.time() - self.started) / self.fetched
+                self.log(f"    progress: {self.fetched}/{self.total} (saved; {rate:.1f} s por acta)")
+
+
 # ── Comp discovery ────────────────────────────────────────────────────────────
 
-def discover_comps(page, season_code, categories=None):
+def discover_comps(page, season_code, categories=None, names=None):
     """Read the comp dropdown from NFG_CmpJornada and keep those of `categories`
-    (benjamín/prebenjamín by default; categorias.category_of)."""
+    (benjamín/prebenjamín by default; categorias.category_of). `names`, si se da,
+    recibe {id: nombre} de las que se quedan (comp_lotes las reparte por lote)."""
     url = f"{BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season_code}"
     if not goto(page, url):
         return []
@@ -202,6 +418,8 @@ def discover_comps(page, season_code, categories=None):
     C = _categorias()
     categories = categories or C.DEFAULT_CATEGORIES
     keep = [o["value"] for o in opts if C.category_of(o["text"]) in categories]
+    if names is not None:
+        names.update({o["value"]: o["text"] for o in opts if o["value"] in keep})
     print(f"  discovered {len(keep)} comps ({', '.join(categories)}) for season {season_code}")
     return keep
 
@@ -501,6 +719,10 @@ def parse_args():
                     help="CodActa whose raw HTML to dump to scripts/tests/fixtures/")
     ap.add_argument("--refrescar", action="store_true",
                     help="Volver a leer las actas ya descargadas sin todo el cuerpo técnico (needs_refresh)")
+    ap.add_argument("--lote", choices=list(LOTE_ARG), default=None,
+                    help="El lote de la cadena (su grupo de concurrencia): para si las categorías son de otro")
+    ap.add_argument("--estado", action="store_true",
+                    help="Sin navegador: imprime en JSON lo que queda del lote de la tanda (chain_state)")
     return ap.parse_args()
 
 
@@ -559,17 +781,32 @@ def fetch_parallel(pending, workers, over, on_result, dump_fixture="", open_page
 def main():
     # Lazy import — keeps the module importable in environments without playwright
     # (the Tests CI pytest job doesn't install it).
-    global sync_playwright
-    from playwright.sync_api import sync_playwright  # noqa: F401
-
     args = parse_args()
     GROUP_FILTER[:] = [g.strip() for g in args.grupos.split(",") if g.strip()]
     season = args.temporada
+    comps_arg = [c.strip() for c in args.comps.split(",") if c.strip()]
+    expected = LOTE_ARG[args.lote] if args.lote else None
+    if args.estado:
+        # Sin navegador ni red: lo que queda del lote de la tanda (actas-federacion.yml). Unas
+        # categorías que no existen o de los dos lotes, o de otro lote que el de la cadena: para.
+        try:
+            categories = _categorias().parse_categories(args.categorias)
+            state = chain_state(season, tanda_lote(season, categories, comps_arg, expected=expected))
+        except ValueError as ex:
+            state = {"pending": 0, "stuck": 1, "lote": None, "error": str(ex)}
+        print(json.dumps(state, ensure_ascii=False))
+        return
+    # Antes de abrir ningún navegador: un solo lote, el de la cadena (si no, para sin escribir nada).
+    categories = _categorias().parse_categories(args.categorias)
+    lote = tanda_lote(season, categories, comps_arg, expected=expected)
+
+    global sync_playwright
+    from playwright.sync_api import sync_playwright  # noqa: F401
 
     # Resolve comp list
-    categories = _categorias().parse_categories(args.categorias)
-    if args.comps:
-        comps = [c.strip() for c in args.comps.split(",") if c.strip()]
+    names = {}
+    if comps_arg:
+        comps = comps_arg
     elif catalog_comps(season, categories):
         # Las competiciones de fútbol 7/8 de esas categorías de esa temporada (sin sala ni alevín
         # de otra isla) del catálogo de la federación (discover_fiflp_comps.py).
@@ -581,14 +818,15 @@ def main():
         with sync_playwright() as p:
             br = p.chromium.launch(headless=True)
             page = _fiflp_only(br.new_context(user_agent=UA).new_page())
-            comps = discover_comps(page, season, categories)
+            comps = discover_comps(page, season, categories, names)
             br.close()
 
-    print(f"Season {SEASON_NAME[season]} ({season}): {len(comps)} comps to walk")
+    # Todas las competiciones, del lote de la tanda: sus actas van a su raw, su índice y su estado.
+    tanda_lote(season, categories, comps, names, expected=lote)
+    print(f"Season {SEASON_NAME[season]} ({season}): {len(comps)} comps to walk (lote {_lote_label(lote)})")
 
-    raw = load_raw(season)
-    print(f"Resume state: {len(raw)} actas already scraped")
-    fetched = 0
+    store = RawStore(season, lote)
+    print(f"Resume state ({raw_path(season, lote).name}): {len(store.data)} actas already scraped")
     # El plazo cuenta desde el arranque: enumerar también lleva su tiempo.
     BUDGET = (args.max_minutes or 330) * 60   # bajo el timeout del job, para guardar y subir
     run_start = time.time()
@@ -599,10 +837,9 @@ def main():
         br = p.chromium.launch(headless=True)
         page = _fiflp_only(br.new_context(user_agent=UA).new_page())
 
-        # --- Enumerate targets (o el índice de una tanda anterior) ---
-        index = {}
-        if index_path(season).exists() and not args.reindex:
-            index = json.loads(index_path(season).read_text(encoding="utf-8"))
+        # --- Enumerate targets (o el índice de una tanda anterior), en el índice del lote ---
+        ipath = index_path(season, lote)
+        index = json.loads(ipath.read_text(encoding="utf-8")) if ipath.exists() and not args.reindex else {}
         all_targets = []
         for comp_id in comps:
             cached = [dict(v, cod_acta=k) for k, v in index.items()
@@ -612,7 +849,7 @@ def main():
                 all_targets += cached
                 continue
             if over():
-                unenumerated += 1         # la tanda siguiente la enumera
+                unenumerated += 1   # la tanda siguiente la enumera
                 continue
             started = time.time()
             print(f"  enumerating comp {comp_id}...")
@@ -621,10 +858,10 @@ def main():
             for t in actas:
                 index[t["cod_acta"]] = {k: v for k, v in t.items() if k != "cod_acta"}
             # Tras cada competición: una tanda cortada no pierde lo enumerado.
-            index_path(season).write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
+            ipath.write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
             print(f"    ({time.time() - started:.0f} s)")
             delay()
-        index_path(season).write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
+        ipath.write_text(json.dumps(index, ensure_ascii=False, indent=1), encoding="utf-8")
 
         # Dedupe all_targets by cod_acta (multiple comps may reference same acta)
         seen_t: set = set()
@@ -635,11 +872,16 @@ def main():
                 deduped.append(t)
         all_targets = deduped
 
-        # Filter out already scraped (resume support)
+        # Filter out already scraped (resume support). Una que está en el raw de otro lote: la de
+        # una tanda antigua se adopta (RawStore.get) y la que es de ese lote no es de esta tanda.
         def wanted(cod):
-            return (cod not in raw or needs_rescrape(raw[cod])
-                    or (args.refrescar and needs_refresh(raw[cod])))
+            where, acta = store.get(cod)
+            if acta is None:
+                return True
+            return where == lote and (needs_rescrape(acta) or (args.refrescar and needs_refresh(acta)))
         pending = [t for t in all_targets if wanted(t["cod_acta"])]
+        if store.adopted:
+            print(f"  {store.adopted} acta(s) adoptadas del raw de otro lote (de una tanda antigua)")
         print(f"Enumerated {len(all_targets)} actas total, {len(pending)} pending")
 
         # --- Fetch + parse loop ---
@@ -647,50 +889,19 @@ def main():
 
     if args.max_actas:
         pending = pending[:args.max_actas]
-    lock = threading.Lock()
-    started = time.time()
-
-    def on_result(t, acta):
-        nonlocal fetched
-        cod = t["cod_acta"]
-        if acta is None:
-            return
-        if is_empty_acta(acta):
-            # Anti-scrape blank survived all retries: do NOT persist it as
-            # done, so the next incremental run retries this acta.
-            print(f"  ! acta {cod} empty after retries — not persisted (will retry next run)")
-            return
-        acta["cod_acta"] = int(cod)
-        acta["enumeration"] = {"comp_id": t["comp_id"], "grupo": t["grupo"], "jornada": t["jornada"]}
-        flat = "consistent" in acta
-        if not flat:
-            acta["rescrape_failed"] = True     # leída ya con el lector nuevo: no se vuelve a pedir
-        with lock:
-            if args.refrescar and keep_old_on_refresh(raw.get(cod), acta):
-                # La relectura salió peor que la que ya había: se queda la vieja y no se vuelve a pedir.
-                raw[cod]["staff_refresh_failed"] = True
-                return
-            raw[cod] = acta
-            # Solo cuenta como acta nueva la que se dejó aplanar: la cadena sigue mientras avanza.
-            fetched += flat
-            # save every 25 actas to survive crashes
-            if fetched % 25 == 0:
-                save_raw(season, raw)
-                rate = (time.time() - started) / fetched
-                print(f"    progress: {fetched}/{len(pending)} (saved; {rate:.1f} s por acta)")
-
-    fetch_parallel(pending, args.workers, over, on_result, dump_fixture=args.dump_fixture)
+    collector = Collector(store, refrescar=args.refrescar, total=len(pending))
+    fetch_parallel(pending, args.workers, over, collector, dump_fixture=args.dump_fixture)
     if over():
-        print(f"  time budget reached, stopping cleanly with {len(raw)} actas saved")
+        print(f"  time budget reached, stopping cleanly with {len(store.data)} actas saved")
 
-    save_raw(season, raw)
+    store.save(force=True)
     left = sum(1 for t in all_targets if wanted(t["cod_acta"]))
     # Una competición sin enumerar por falta de plazo cuenta como pendiente: la cadena sigue.
-    status_path(season).write_text(json.dumps({"season": SEASON_NAME[season], "enumerated": len(all_targets),
-                                               "in_raw": len(raw), "pending": left + unenumerated,
-                                               "unenumerated_comps": unenumerated, "fetched": fetched},
-                                              indent=1) + "\n", encoding="utf-8")
-    print(f"Done season {season}: total {len(raw)} actas in raw, {left} pending")
+    status_path(season, lote).write_text(json.dumps(
+        {"season": SEASON_NAME[season], "enumerated": len(all_targets), "in_raw": len(store.data),
+         "pending": left + unenumerated, "unenumerated_comps": unenumerated,
+         "fetched": collector.fetched}, indent=1) + "\n", encoding="utf-8")
+    print(f"Done season {season} ({raw_path(season, lote).name}): total {len(store.data)} actas in raw, {left} pending")
 
 
 if __name__ == "__main__":

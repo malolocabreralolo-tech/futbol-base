@@ -85,9 +85,12 @@ CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada
 # (closed_turn), en una que salta dos puestos de una época a otra.
 ROTATION_PASSES = 4
 GOLDEN = (5 ** 0.5 - 1) / 2      # el giro de spin: una fracción irracional, que no repite ciclo
-# Cuota de alevín (FIFLP_ALEVIN_MIN): su turno, tras los prioritarios y los cerrados que tocan y antes
-# que los de prebenjamín y benjamín, es de al menos estos grupos (y nunca menos que ceil(N/4)): el
-# último nivel no se queda sin leer aunque benjamín y prebenjamín llenen el plazo.
+# Cuota de alevín (FIFLP_ALEVIN_MIN): su parte del turno, tras los prioritarios y los cerrados que tocan,
+# es de al menos estos grupos (y nunca menos que ceil(N/4)), intercalada con el turno de prebenjamín y el
+# de benjamín (interleave): el último nivel no se queda sin leer aunque benjamín y prebenjamín llenen el
+# plazo, ni ellos si lo llena alevín. Hasta el 15/10/2026 iba DELANTE de ellos: con el cupo de la
+# federación (~15 páginas por IP: una pasada lee los prioritarios y ~3-8 grupos más) se llevaba todos los
+# no prioritarios y benjamín y prebenjamín no se leían nunca (test_bot_rotacion).
 ALEVIN_MIN_GROUPS = 8
 ACTA_URL = "/NFG_CmpPartido?cod_primaria=1000120&CodActa={code}"
 GOLEADORES_URL = ("/NFG_CMP_Goleadores?cod_primaria=1000120&CodJornada="
@@ -259,8 +262,9 @@ def closed_turn(code, number, passes=ROTATION_PASSES):
 
 
 def alevin_quota(groups, env=None, turn=None):
-    """Cuántos grupos alevín van antes que prebenjamín y benjamín: FIFLP_ALEVIN_MIN (8 por defecto),
-    nunca menos que su turno (`turn`; por defecto, ceil(N/ROTATION_PASSES)) ni más de los que hay."""
+    """Cuántos grupos alevín van en el turno (intercalados con el de prebenjamín y el de benjamín):
+    FIFLP_ALEVIN_MIN (8 por defecto), nunca menos que su turno (`turn`; por defecto,
+    ceil(N/ROTATION_PASSES)) ni más de los que hay."""
     text = (os.environ if env is None else env).get("FIFLP_ALEVIN_MIN", "").strip()
     wanted = int(text) if text.isdigit() else ALEVIN_MIN_GROUPS
     return min(len(groups), max(wanted, turn_size(groups) if turn is None else turn))
@@ -282,8 +286,11 @@ def plan_groups(conn, groups, checks, today, number, priority=None, pinned=None,
         2. los cerrados a los que les toca (closed_turn), los que fallaron y los nunca comprobados
            (checks: las entradas publicadas de data-health.json);
         3. el turno de cada nivel (rotate, turn_blocks): la cuota de alevín (alevin_quota, ≥ su
-           turno), el de prebenjamín y el de benjamín. Cabe siempre (~27 grupos con 81), y en
-           ROTATION_PASSES pasadas seguidas cada grupo tiene el suyo;
+           turno), el de prebenjamín y el de benjamín, intercalados (interleave, desde el 15/10/2026: si
+           el plazo o el cupo de la federación lo cortan, cortan a todos los niveles por igual). Sin el
+           cupo cabe siempre (~27 grupos con 81), y en ROTATION_PASSES pasadas seguidas cada grupo tiene
+           el suyo; con él (~3-8 grupos además de los prioritarios), cada nivel lee el principio de su
+           turno, y cada época otro (spin): todo grupo, en ~5-7 días (11 con 3 por pasada);
         4. el turno siguiente de cada nivel, intercalados (interleave): el margen para una pasada
            perdida (un número que se salta, o una que cae cada día a la misma hora: la anterior lee
            lo que puede de su turno, cada época una parte distinta) o lenta;
@@ -325,7 +332,8 @@ def plan_groups(conn, groups, checks, today, number, priority=None, pinned=None,
         else:
             levels[level(group)].append(group)
     # Alevín, prebenjamín y benjamín: todo el nivel desde su turno (rotate), cuántos van en el 3 (su
-    # turno; de alevín, su cuota) y hasta dónde llega el 4 (el turno siguiente).
+    # turno; de alevín, su cuota) y hasta dónde llega el 4 (el turno siguiente). Los tres tramos,
+    # intercalados: con la cuota de alevín delante, el cupo de la federación no pasaba de ella.
     lots = []
     for n in (3, 1, 2):
         sizes = [len(b) for b in turn_blocks(levels[n])]
@@ -333,7 +341,7 @@ def plan_groups(conn, groups, checks, today, number, priority=None, pinned=None,
         head = alevin_quota(levels[n], env, own) if n == 3 else own
         upto = max(head, own + sizes[(number + 1) % ROTATION_PASSES])
         lots.append((rotate(levels[n], number), head, upto))
-    turn = [g for items, head, _ in lots for g in items[:head]]
+    turn = interleave([items[:head] for items, head, _ in lots])
     margin = interleave([items[head:upto] for items, head, upto in lots])
     rest = interleave([items[upto:] for items, _, upto in lots])
     return Plan(mine + due + turn + margin + rest, resting, {c for _, c, _ in mine}, number,

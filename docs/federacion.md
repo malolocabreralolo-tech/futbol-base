@@ -41,12 +41,12 @@ Para que quepa siempre en el job (55 min desde el 15/10/2026, eran 45; desde oct
 - **Orden** (`plan_groups`), en cada pasada:
   1. los grupos de los equipos prioritarios, todos (`FIFLP_PRIORITY_TEAMS`, separados por comas; por defecto el `defaultTeam` de `src/config.js`, con sus filiales: «Las Mesas Hu.» incluye «Las Mesas Hu. B» y no «Atlético Bachicán Las Mesas»; y el `groupId` de ese equipo);
   2. los cerrados a los que les toca (abajo), los que fallaron y los nunca comprobados;
-  3. el **turno** de cada nivel: el de prebenjamín y el de benjamín, y de alevín (códigos `AL…`) su **cuota**, al menos `FIFLP_ALEVIN_MIN` (8; nunca menos que su turno), que va delante de prebenjamín y benjamín: aunque llenen el plazo, alevín no se queda sin leer. Los prioritarios van siempre antes que la cuota;
+  3. el **turno** de cada nivel: el de prebenjamín y el de benjamín, y de alevín (códigos `AL…`) su **cuota**, al menos `FIFLP_ALEVIN_MIN` (8; nunca menos que su turno), **intercalados** (`interleave`, desde el 15/10/2026): si el plazo o el cupo de la federación cortan el turno, cortan a todos los niveles por igual, y el primero de cada uno entra antes que el segundo de ninguno; alevín no se queda sin leer aunque benjamín y prebenjamín llenen el plazo, ni ellos si lo llena alevín. Hasta el 15/10/2026 la cuota iba **delante** de prebenjamín y benjamín: con el cupo (una pasada lee los prioritarios y ~3-8 grupos más) se llevaba todos los no prioritarios, y los de benjamín y prebenjamín (46 de los 81 de la temporada llena) no se leían nunca. Los prioritarios van siempre antes que la cuota;
   4. el turno siguiente de cada nivel, intercalados (el **margen**: si el plazo lo corta, corta a todos los niveles por igual);
   5. con lo que quede, el resto, intercalado igual.
 - **Rotación sin estado**: cada nivel (sin los prioritarios ni los cerrados) se parte en 4 turnos fijos de ceil(N/4) grupos seguidos (`turn_blocks`; con los 3 prebenjamín no prioritarios, tres de uno y uno vacío) y la pasada lee primero el turno `número % 4` (`run_number`: `GITHUB_RUN_NUMBER`, que GitHub sube en cada ejecución de `update.yml`, haga commit o no; fuera de GitHub, la franja de 6 h del reloj). Dentro del turno, el inicio cambia de una **época** (4 pasadas, 24 h) a otra (`spin`, un giro de ~0,62 del turno): si el plazo no llega al turno entero, lo que queda fuera no es siempre lo mismo. No depende de nada guardado: `update.yml` solo sube la base y `data-health.json` si cambia algo publicado, y con un turno (o las horas de comprobación) guardado ahí, una pasada sin cambios hacía que la siguiente repitiera los mismos grupos. Lo comprueba `scripts/tests/test_bot_rotacion.py` (81 grupos, 24-28 pasadas, con y sin commits entre ellas):
   - en 4 pasadas seguidas (24 h) cada grupo tiene su turno y, con él, sus goleadores; con ~3 s por página, de hecho, cada grupo se lee al menos una de cada 3 pasadas, también si se pierde una (un número que se salta: una ejecución cancelada en la cola, o una de cada tres) o se salta uno de cada dos;
-  - en 4 mientras la primera pasada dé para los prioritarios y los turnos (~27 grupos): hasta ~6 s por página con 7 páginas por grupo, ~5,3 s con 8 (un sábado: 21 días atrás y 14 adelante eran 6 jornadas; las simulaciones de `test_bot_rotacion.py` conservan ese modelo, 25 min de plazo y la ventana de antes del 15/10/2026: con los de ahora todo cabe con más holgura; lo que manda ya es el cupo, abajo). Más lento, el plazo corta el turno de benjamín (el último del paso 3); con hasta un tercio fuera, ningún grupo se queda fuera dos épocas seguidas: al menos una vez en cada 8 pasadas (48 h), hasta ~6,8 s con 7 páginas (antes, a 6,8 s, 31 grupos pasaban hasta 14 pasadas sin leer). La cuota de alevín por encima de su turno (8 frente a 7 con la Fase Previa) cuesta un grupo de benjamín por pasada: con `FIFLP_ALEVIN_MIN=7`, 6,5 s aún caben en 4;
+  - en 4 mientras la primera pasada dé para los prioritarios y los turnos (~27 grupos): hasta ~6 s por página con 7 páginas por grupo, ~5,3 s con 8 (un sábado: 21 días atrás y 14 adelante eran 6 jornadas; las simulaciones de `test_bot_rotacion.py` conservan ese modelo, 25 min de plazo y la ventana de antes del 15/10/2026: con los de ahora todo cabe con más holgura; lo que manda ya es el cupo, abajo). Más lento, el plazo corta el turno (intercalado: a todos los niveles por igual; hasta el 15/10/2026, el de benjamín, el último del paso 3); con hasta un tercio fuera, ningún grupo se queda fuera dos épocas seguidas: al menos una vez en cada 8 pasadas (48 h), hasta ~6,8 s con 7 páginas (antes, a 6,8 s, 31 grupos pasaban hasta 14 pasadas sin leer). La cuota de alevín por encima de su turno (8 frente a 7 con la Fase Previa) cuesta un grupo más por pasada: con `FIFLP_ALEVIN_MIN=7`, 6,5 s aún caben en 4;
   - una pasada que se pierde cada día a la misma hora (una franja en que la federación bloquea o se cae) deja su turno al margen de la anterior: con ~3 s por página, todo grupo se lee al menos una de cada 4 pasadas (la perdida incluida) y, con 4 s, cada día una parte distinta, al menos una de cada 8. El límite: si además el plazo no llega ni al margen (≥ ~6 s por página), ese turno espera a que una tanda o una ejecución a mano mueva el número de las pasadas de esa hora. Dar a cada época otro reparto de turnos lo evitaría, pero rompería las 4 pasadas cuando el plazo solo da para los turnos;
   - un número que se repite (relanzar una ejecución fallida cambia `run_attempt`, no el número) repite el orden de una pasada que no llegó a hacerse.
   Se prefirió `GITHUB_RUN_NUMBER` a la franja horaria porque el cron llega con 3-5 h de retraso y las tandas lanzan el bot a cualquier hora: dos pasadas en la misma franja repetirían turno y uno se saltaría.
@@ -272,11 +272,24 @@ Cada vuelta son ~6-7 min (15 páginas a 7 s, ~1,75 min, y la espera, ~5): el pla
 25 min, 3-4; con **33** (`FIFLP_BUDGET_MIN` desde el 15/10/2026, con 8 de reserva, en proporción a los 6 de
 25), ~5: unas 75-85 peticiones por pasada, sondeos incluidos. Simulado sin red con la temporada llena (los 81
 grupos de `test_bot_rotacion.py`, 7 prioritarios, 6 páginas por grupo) y el cupo medido (15 páginas, 5 min):
-cada pasada, 84 peticiones y 4 frenos, los 7 prioritarios y 3 grupos más con sus actas y goleadores; en 12
-pasadas (3 días), 35 grupos distintos. Con el código de antes (25 min, pausas fijas, ventana de 21 y 14): 63
-peticiones, solo los 7 prioritarios, ninguna acta, se rendía a los ~22 min tras sus 3 pausas, y en 12 pasadas
-no leía ningún otro grupo. La rotación (turnos, épocas) sigue igual, pero con este cupo da la vuelta a la
-temporada en días, no en 24 h: cada página que se ahorra por grupo acerca la vuelta diaria.
+cada pasada, 84 peticiones y 4 frenos, los 7 prioritarios y 3 grupos más con sus actas y goleadores. Con el
+código de antes (25 min, pausas fijas, ventana de 21 y 14): 63 peticiones, solo los 7 prioritarios, ninguna
+acta, y se rendía a los ~22 min tras sus 3 pausas.
+
+**La rotación con el cupo.** Una pasada lee los prioritarios y unos pocos grupos más: ~6 de media (3-11) en
+una simulación con fechas reales (12 jornadas, las actas de cada fin de semana, bloqueos de 2-6 min al azar),
+3-8 en las de `test_bot_rotacion.py`. Con la cuota de alevín **delante** del turno de prebenjamín y de
+benjamín, como hasta el 15/10/2026, esos pocos eran siempre alevín: en 12 pasadas, 35 grupos distintos, que
+eran los 7 prioritarios y los 28 alevín; de los 46 de benjamín y prebenjamín (también una Segunda Fase recién
+activada, sin su primera pasada completa), en 10 días, 40 **ni una vez** (con 8 o menos por pasada, ninguno:
+solo una pasada con más de 8 llegaba a su turno). Ahora el turno va
+**intercalado** (arriba, «Orden»): cada pasada lee algo de cada nivel y, cada día, otra parte de su turno
+(`spin`). Todo grupo se lee en **~una semana** (en esa simulación, en 26-27 pasadas; con 4 o más grupos por
+pasada, en 28; con 3, uno de cada nivel, en 11 días, lo menos posible para los 43 de benjamín a uno por
+pasada), no en 24 h como sin el cupo. Lo prueba `test_bot_rotacion.py` (`test_with_the_measured_quota_…`:
+la federación con el cupo medido, la temporada llena y muchas pasadas, con y sin commits). Lo que acercaría
+la vuelta: cada página que se ahorra por grupo (el calendario, arriba) y medir en páginas, no en minutos, la
+ventana de las actas de los prioritarios y la reserva (una espera del freno de ~5 min se las come).
 
 Para cruzar frenos con IPs, `update.yml` imprime la IP pública del runner antes del paso del bot (paso
 «IP pública del runner», `api.ipify.org`, 5 s como mucho; nunca para el job y no va a `data-health.json`).

@@ -28,7 +28,10 @@ y 14 adelante (7 páginas por grupo abierto). Desde el 15/10/2026 el bot tiene 3
 10 días atrás y 8 adelante (~4-5 páginas por grupo): más tiempo y menos páginas, así que con estos costes
 por página todo lo de aquí se cumple con más holgura (con los nuevos, los 81 caben a 3 s por página y no
 habría nada que rotar). Lo que manda ahora es el cupo de la federación (~15 páginas por IP y ~5 min de
-bloqueo, fiflp_carga), que no es un coste fijo por página: sus pasadas, en test_bot_freno.py.
+bloqueo, fiflp_carga), que no es un coste fijo por página: una pasada, en test_bot_freno.py; muchas, con
+la temporada llena, al final de este (test_with_the_measured_quota_…: con el cupo, una pasada lee los
+prioritarios y 3-8 grupos más, y con la cuota de alevín delante del turno de benjamín y prebenjamín, como
+hasta el 15/10/2026, esos dos niveles no se leían nunca).
 """
 from datetime import date, datetime, timedelta, timezone
 import json
@@ -407,3 +410,139 @@ def test_the_priority_actas_go_ahead_without_costing_the_others_the_deadline_or_
         assert any("CodActa=" in u for u in p["urls"][:others[0]]), actas
     assert runs[8]["first"] == runs[0]["first"]
     assert runs[8]["run"]["deferred"] == runs[0]["run"]["deferred"]
+
+
+# ── Con el cupo de la federación (15/10/2026) ──────────────────────────────────
+
+class Cupo:
+    """La federación MEDIDA el 15/10/2026 (freno-fiflp.yml; test_bot_freno.Quota): sirve `per_ip`
+    documentos y después vacías durante `block` s desde la primera vacía (los sondeos no lo alargan); al
+    pasar, otro cupo. Cada carga, `cost` s del reloj. Apunta cuándo empieza cada petición y las que sirve."""
+
+    def __init__(self, clock, per_ip=15, block=300, cost=2.0):
+        self.clock, self.per_ip, self.block, self.cost = clock, per_ip, block, cost
+        self.count, self.since, self.urls, self.starts, self.served = 0, None, [], [], []
+
+    def braking(self):
+        if self.since is not None and self.clock.t >= self.since + self.block:
+            self.since, self.count = None, 0
+        if self.since is None and self.count >= self.per_ip:
+            self.since = self.clock.t
+        if self.since is None:
+            self.count += 1
+        return self.since is not None
+
+
+class CupoPage(Page):
+    """La página del navegador sobre Cupo. El calendario de un grupo abierto trae las jornadas del 3/10 y
+    el 10/10, ya en la base, y `rounds` - 1 más (17/10, 24/10…) que no tiene: se leen la del 10 y esas, y un
+    grupo cuesta 2 + `rounds` páginas (clasificación, calendario y sus jornadas: 4 un miércoles y 5 un
+    sábado, test_bot_paginas)."""
+
+    def __init__(self, web, closed=(), rounds=2):
+        super().__init__(closed)
+        self.web, self.empty, self.rounds = web, False, rounds
+
+    def goto(self, url, wait_until=None, timeout=None):
+        web = self.web
+        web.urls.append(url)
+        web.starts.append(web.clock.t)
+        self.url, self.empty = url, web.braking()
+        if not self.empty:
+            web.served.append(url)
+        web.clock.t += web.cost
+
+    def evaluate(self, js, *a):
+        import fiflp_carga as C
+        if js == C.EMPTY_JS:
+            return self.empty
+        return [] if self.empty else super().evaluate(js, *a)[:1 + self.rounds]
+
+    def wait_for_function(self, js, arg=None, timeout=None, polling=None):
+        pass
+
+
+class Reader:
+    BASE = Fed.BASE
+
+    @staticmethod
+    def parse_standings(page):
+        return []
+
+    @staticmethod
+    def parse_matches(page):
+        return []
+
+
+def level(code):
+    return "alevín" if code.startswith("AL") else "prebenjamín" if code.startswith("PG") else "benjamín"
+
+
+@pytest.mark.parametrize("commits, rounds, days", [(True, 2, 7), (True, 3, 7), (False, 2, 7), (False, 3, 11)],
+                         ids=["con-commits-4pag", "con-commits-5pag", "sin-commits-4pag", "sin-commits-5pag"])
+def test_with_the_measured_quota_every_group_is_read_within_days(tmp_path, monkeypatch, commits, rounds, days):
+    """Con el cupo medido el 15/10/2026 (~15 páginas por IP y ~5 min de bloqueo: fiflp_carga) y el bot de
+    ahora (33 min, 8 de reserva, la ventana de 10 y 8 días), una pasada lee los siete prioritarios (con sus
+    actas y goleadores) y unos pocos grupos más: aquí 3-8 (4 o 5 páginas por grupo; sin commits, las
+    actas de los prioritarios vuelven a estar pendientes en cada pasada). Con la cuota de alevín DELANTE
+    del turno de prebenjamín y de benjamín (hasta el 15/10/2026), esos pocos eran siempre alevín: los 46
+    grupos no prioritarios de benjamín y prebenjamín no se leían NUNCA. Con el turno intercalado
+    (plan_groups), cada nivel lee su parte en cada pasada y, cada día, otra parte de su turno (spin): todo
+    grupo se lee en una semana (28 pasadas) con 4 o más grupos por pasada; con 3 (uno de cada nivel),
+    en 11 días, lo menos posible para los 43 de benjamín a uno por pasada. Ningún error, ninguna página
+    pasado el plazo y los prioritarios, en todas."""
+    import fiflp_carga as C
+    import source_health
+    (tmp_path / "index.html").write_text('<script src="./data-seasons.js?v=20261014a"></script>')
+    monkeypatch.setattr(source_health, "ROOT", tmp_path)
+    monkeypatch.setattr(source_health, "REPORT_PATH", tmp_path / "data-health.json")
+    monkeypatch.setattr(source_health, "_report", None)
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    monkeypatch.setattr(U, "apply_acta", lambda conn, mid, code, acta, log=print: bool(
+        conn.execute("UPDATE matches SET cod_acta=? WHERE id=?", (code, mid))))
+    for name in ("FIFLP_PRIORITY_TEAMS", "FIFLP_ALEVIN_MIN", "FIFLP_BUDGET_MIN", "FIFLP_RESERVE_MIN",
+                 "FIFLP_BRAKE_PAUSE_MIN", "FIFLP_BRAKE_PAUSES", "FIFLP_BRAKE_PROBE_S", "FIFLP_BRAKE_MAX_MIN",
+                 "FIFLP_MIN_INTERVAL"):
+        monkeypatch.delenv(name, raising=False)
+    base = base_db()
+    codes = {gid: code for gid, code, _ in U.fiflp_groups(base, 1)}
+    start_report = base_report(base)
+    conn, report, reads, others = base, start_report, {code: 0 for code in codes.values()}, []
+    for i in range(4 * days):
+        if not commits:
+            conn = sqlite3.connect(":memory:")
+            base.backup(conn)
+            report = start_report
+        source_health.REPORT_PATH.write_text(json.dumps(report))
+        source_health.begin("2026-2027")
+        clock = Clock()
+        monkeypatch.setattr(U, "clock", clock)
+
+        def sleep(s):
+            clock.t += max(s, 0)
+        monkeypatch.setattr(C, "pause", lambda extra=0: sleep(1.0 + extra))
+        now = NOW + timedelta(hours=6 * i)
+        web = Cupo(clock)
+        F = C.Federacion(Reader, deadline=clock() + U.budget_seconds(), interval=7.0, clock=clock, sleep=sleep,
+                         wall=lambda: now + timedelta(seconds=clock.t), log=lambda s: None)
+        groups = U.fiflp_groups(conn, 1)
+        pending = {code: u for _, code, u in groups}
+        U.run_passes(CupoPage(web, rounds=rounds), F, conn, 1, groups, TODAY, pending, now=now, number=1000 + i)
+        source_health.finish(now=now + timedelta(minutes=40))
+        assert pending == {}
+        assert all(t <= F.deadline for t in web.starts), i                 # nada pasado el plazo
+        report = json.loads(source_health.REPORT_PATH.read_text())
+        assert report["summary"]["error"] == 0, i
+        assert report["run"]["pauses"] >= 3, i                              # el cupo manda: varias vueltas
+        # Leído: su calendario servido, y el grupo entero (no en unserved: el freno lo cortó).
+        fresh = {codes[int(m.group(1))] for u in web.served if "CodJornada" not in u
+                 for m in [re.search(r"NFG_CmpJornada\?.*CodGrupo=(\d+)$", u)] if m} - set(report["run"]["unserved"])
+        assert set(MINE) <= fresh, (i, set(MINE) - fresh)                   # los prioritarios, en todas
+        for code in fresh:
+            reads[code] += 1
+        rest = fresh - set(MINE)
+        others.append(len(rest))
+        assert {"alevín", "benjamín"} <= {level(c) for c in rest}, (i, rest)      # cada nivel, en cada pasada
+    assert 3 <= min(others) and max(others) <= 8, others
+    never = sorted(c for c, n in reads.items() if not n)
+    assert never == [], (len(never), never)

@@ -312,10 +312,11 @@ def _read(fed):
 
 
 def test_the_alevin_quota_takes_turns_by_the_pass_number_even_without_commits(monkeypatch):
-    """La cuota de alevín (FIFLP_ALEVIN_MIN) va tras los prioritarios y antes que benjamín, y empieza en
-    cada pasada por otro turno: el número de la pasada (GITHUB_RUN_NUMBER), no nada guardado en la
-    base, que update.yml solo sube si cambia algún data-*.js (con un turno guardado en ella,
-    fiflp_reads, cada pasada sin cambios volvía a leer los mismos grupos)."""
+    """La cuota de alevín (FIFLP_ALEVIN_MIN) va tras los prioritarios, intercalada con el turno de benjamín
+    (desde el 15/10/2026; antes, delante de él), y empieza en cada pasada por otro turno: el número de la
+    pasada (GITHUB_RUN_NUMBER), no nada guardado en la base, que update.yml solo sube si cambia algún
+    data-*.js (con un turno guardado en ella, fiflp_reads, cada pasada sin cambios volvía a leer los mismos
+    grupos)."""
     monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
     monkeypatch.setenv("FIFLP_ALEVIN_MIN", "2")
     committed = _bot_base()
@@ -330,8 +331,9 @@ def test_the_alevin_quota_takes_turns_by_the_pass_number_even_without_commits(mo
     # PG2, el grupo del equipo de la portada (src/config.js), siempre el primero; la cuota, 2 alevín
     # desde su turno (5 grupos: turnos [AL1, AL2], [AL3, AL4], [AL5] y []; dentro del turno, el inicio
     # de su época, update_fiflp.spin: 3000-3003 son la época 750, que empieza por el segundo); FF1, el
-    # único de benjamín, en su turno (la pasada 3000) va tras la cuota y en las demás, entre el resto.
-    assert reads == [["PG2", "AL2", "AL1", "FF1", "AL4", "AL3", "AL5"],
+    # único de benjamín, en su turno (la pasada 3000) va intercalado con la cuota (tras el primero de ella:
+    # antes del 15/10/2026, tras toda) y en las demás, entre el resto.
+    assert reads == [["PG2", "AL2", "FF1", "AL1", "AL4", "AL3", "AL5"],
                      ["PG2", "AL4", "AL3", "AL5", "AL1", "FF1", "AL2"],
                      ["PG2", "AL5", "AL1", "AL2", "FF1", "AL3", "AL4"]]
 

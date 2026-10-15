@@ -556,6 +556,28 @@ def test_a_closed_browser_is_an_error_and_not_a_brake(bot, capsys):
     assert "      el navegador se ha cerrado: nada más en esta pasada\n" in log
 
 
+def test_an_acta_the_deadline_does_not_let_start_is_not_counted_as_read(monkeypatch):
+    """Federacion no pide una página que, tras la espera del intervalo, empezaría pasado el plazo. Esa acta
+    no se ha leído: ni cuenta en «n/m actas» ni gasta del cupo de la pasada (antes: «2/3 actas» con dos
+    pedidas)."""
+    conn = with_actas(season(), {"PG2": 3})
+    clock = Clock()
+    monkeypatch.setattr(U, "clock", clock)
+    monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
+    monkeypatch.setattr(U, "apply_acta", lambda conn, mid, code, acta, log=print: True)
+
+    def sleep(s):
+        clock.t += s
+    monkeypatch.setattr(C, "pause", lambda extra=0: sleep(1.0 + extra))
+    web = Federation(clock)
+    # Actas a las 1000 y a las 1007 (cada una 2 s y 1 de pausa); la 3.ª empezaría a las 1014.
+    F = C.Federacion(Reader, deadline=1012.0, interval=7.0, clock=clock, sleep=sleep, log=lambda *_: None)
+    tried = set()
+    done, read = U.import_actas(web.page(), F, conn, ID["PG2"], 60, deadline=F.deadline, tried=tried, log=lambda *_: None)
+    assert [t for t, _ in web.starts] == [1000.0, 1007.0]
+    assert (done, read) == (2, 2) and len(tried) == 2
+
+
 class Patchy(Federation):
     """La jornada 2 de AL4, vacía dos veces (el freno, que la pausa larga arregla); su jornada 4, un 503 en
     sus tres intentos."""

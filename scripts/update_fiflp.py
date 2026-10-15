@@ -955,10 +955,12 @@ def import_actas(page, F, conn, group_id, budget, deadline=None, log=print, trie
     """Lee e importa las actas pendientes del grupo (hasta `budget` y hasta
     `deadline`, en clock()). Devuelve cuántas importó y cuántas leyó.
     Una lectura fallida suma un intento; una página que no carga, no (es la
-    red, no el acta), pero tres seguidas cortan la pasada. `tried` (un set):
-    los partidos cuya acta ya se pidió en esta pasada, que no se vuelven a
-    pedir (los MAX_ACTA_TRIES intentos son para pasadas distintas, que dan
-    tiempo a la federación a rellenarla); se apuntan los que se piden."""
+    red, no el acta), pero tres seguidas cortan la pasada. Una que F ni pide
+    (pasado el plazo tras la espera del intervalo, o la federación ya
+    bloqueada: F.pages no cambia) no es una lectura: no cuenta y corta. `tried`
+    (un set): los partidos cuya acta ya se pidió en esta pasada, que no se
+    vuelven a pedir (los MAX_ACTA_TRIES intentos son para pasadas distintas,
+    que dan tiempo a la federación a rellenarla); se apuntan los que se piden."""
     from fiflp_acta import parse_flat_acta
     done = read = failed_loads = 0
     pending = [(mid, code) for mid, code in pending_actas(conn, group_id) if tried is None or mid not in tried]
@@ -969,8 +971,14 @@ def import_actas(page, F, conn, group_id, budget, deadline=None, log=print, trie
             tried.add(mid)
         read += 1
         ok = False
+        asked = getattr(F, "pages", None)
         try:
             if not F.goto(page, F.BASE + ACTA_URL.format(code=code)):
+                if asked is not None and F.pages == asked:      # ni se pidió
+                    read -= 1
+                    if tried is not None:
+                        tried.discard(mid)
+                    break
                 failed_loads += 1
                 if failed_loads >= 3:
                     log("    ! la federación no sirve actas: se deja para la próxima pasada")

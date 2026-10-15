@@ -2,8 +2,8 @@
 
 La federación da sus documentos (NFG_*) con «Cache-Control: private, max-age=300»: con la caché HTTP
 (fiflp_launch_args, sin ruta), la misma URL otra vez antes de 5 min sale de la caché de disco sin pedirle
-nada. Y las URLs que se repiten son las del freno: los reintentos de fiflp_carga.goto (tras una página
-vacía, un 503, un corte), la otra página de Federacion._serving, la misma tras la pausa larga, la recarga
+nada. Y las URLs que se repiten son las del freno: los reintentos de fiflp_carga.goto (tras
+un 503, un corte), la otra página de Federacion._serving, los sondeos de la espera del freno, la recarga
 del calendario y la clasificación otra vez de update_fiflp.scrape_group, y los reintentos de las tandas.
 fiflp_render.goto las pide frescas (fresh: el documento a la red, por CDP), exactamente las repeticiones y
 no la primera vez de cada URL (con la caché, que sirve los scripts y las hojas).
@@ -267,10 +267,11 @@ def test_carga_retries_are_fresh_and_the_first_attempt_is_not():
     page = Page(outcome=lambda url, n: outcomes.get(n, "ok"))
     assert _carga(page, group(1)) == (True, [15, 30])
     assert page.fresh_loads(group(1)) == [False, True, True]
-    # La página vacía del freno: el reintento tras EMPTY_WAIT, fresco (si no, sería la vacía guardada).
+    # La página vacía del freno no se reintenta (15/10/2026): la espera y sus sondeos son de Federacion
+    # (test_federacion_asks_the_brake_probes_fresh). Antes, un reintento tras EMPTY_WAIT, fresco.
     page = Page(outcome=lambda url, n: "empty" if n == 1 else "ok")
-    assert _carga(page, group(2)) == (True, [C.EMPTY_WAIT])
-    assert page.fresh_loads(group(2)) == [False, True]
+    assert _carga(page, group(2)) == (False, [])
+    assert page.fresh_loads(group(2)) == [False]
     # A la primera: ni fresca ni CDP.
     page = Page()
     assert _carga(page, group(3)) == (True, [])
@@ -302,14 +303,14 @@ class Reader:
         return []
 
 
-def federacion(monkeypatch, max_pauses=3):
+def federacion(monkeypatch, max_pauses=None):
     clock = Clock()
 
     def sleep(s):
         clock.t += s
     monkeypatch.setattr(C, "pause", lambda extra=0: None)
     return C.Federacion(Reader, deadline=clock() + 3600, interval=7.0, clock=clock, sleep=sleep,
-                        pause_seconds=300, max_pauses=max_pauses,
+                        pause_seconds=240, probe_seconds=60, cap_seconds=600, max_pauses=max_pauses,
                         wall=lambda: datetime(2026, 10, 15, tzinfo=timezone.utc), log=lambda *_: None)
 
 
@@ -343,8 +344,9 @@ def test_federacion_checks_the_catalog_normally_the_first_time(monkeypatch):
     assert F.goto(page, catalog) and page.fresh_loads(catalog) == [False, True]
 
 
-def test_federacion_asks_the_same_page_fresh_after_the_long_pause(monkeypatch):
-    """La misma página tras la pausa larga (5 min, justo el max-age): fresca, no la vacía guardada."""
+def test_federacion_asks_the_brake_probes_fresh(monkeypatch):
+    """Los sondeos del freno (la misma página a los 4 min y cada minuto después: dentro del max-age de 5 min
+    de la vacía): frescos, no la vacía guardada."""
     url = group(4)
     page = Page(outcome=lambda u, n: "empty" if u == url and n <= 2 else "ok")
     F = federacion(monkeypatch)

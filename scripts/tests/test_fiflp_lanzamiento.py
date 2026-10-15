@@ -16,8 +16,8 @@ muy probablemente, las peticiones. Aquí:
     segunda página, y los documentos se piden siempre. Los de la federación llevan «Cache-Control:
     private, max-age=300» (15/10/2026): la misma URL otra vez saldría de la caché (lo documenta una
     prueba con page.goto a secas), y fiflp_render.goto la pide a la red (fresh) sin volver a pedir los
-    scripts ni las hojas; así, el reintento de una página vacía del freno no es la vacía guardada, y el
-    «¿sirve otra página?» de fiflp_carga.Federacion._serving pregunta de verdad.
+    scripts ni las hojas; así, el sondeo de la espera del freno (la misma página) no es la vacía
+    guardada, y el «¿sirve otra página?» de fiflp_carga.Federacion._serving pregunta de verdad.
 Sin red: los hosts de la prueba son *.localhost, que Chromium resuelve a 127.0.0.1 sin DNS.
 """
 import ast
@@ -435,29 +435,38 @@ def test_fresh_ends_even_if_the_navigation_throws(sync_api, server):
         assert fresh == [_path(slow)] and vars(page)[R._SESSION].depth == 0
 
 
-def _retry_after_an_empty_page(sync_api, server):
-    """fiflp_carga.goto sobre una página que la federación sirve vacía la primera vez (su freno) y bien
-    la segunda: (¿cargó?, los motivos de los intentos fallidos, las peticiones del documento, las
-    «no-cache», #n)."""
+def _probe_after_an_empty_page(sync_api, server):
+    """fiflp_carga.Federacion sobre una página que la federación sirve vacía la primera vez (su freno) y bien
+    la segunda: sin reintento de la vacía, la espera del freno (en un reloj falso: el navegador no la ve, y
+    lo que guardó en su caché sigue valiendo) y el sondeo de la misma página. (¿cargó?, las peticiones del
+    documento, las «no-cache», #n, la Federacion)."""
     port, seen, fresh = server
     url = _page_url(port, "E") + "&vacia=1"
+    now = [0.0]
+
+    class Scraper:
+        BASE = ""
     with _chromium(sync_api) as page:
-        why = []
-        loaded = C.goto(page, url, ready_ms=5000, hosts=HOSTS, sleep=lambda s: None, log=lambda *_: None, why=why)
+        F = C.Federacion(Scraper, deadline=3600.0, interval=7.0, clock=lambda: now[0],
+                         sleep=lambda s: now.__setitem__(0, now[0] + s), pause_seconds=C.BRAKE_PAUSE,
+                         probe_seconds=C.BRAKE_PROBE, cap_seconds=C.BRAKE_CAP, log=lambda *_: None)
+        loaded = F.goto(page, url)
         number = page.inner_text("#n") if loaded else None
-    return loaded, why, [p for _, p in seen if p == _path(url)], fresh, number
+    return loaded, [p for _, p in seen if p == _path(url)], fresh, number, F
 
 
-def test_the_retry_after_an_empty_page_asks_the_federation_not_the_cache(sync_api, server):
-    loaded, why, docs, fresh, number = _retry_after_an_empty_page(sync_api, server)
-    assert loaded and why == [C.EMPTY]
+def test_the_brake_probe_asks_the_federation_not_the_cache(sync_api, server):
+    """El sondeo tras la espera del freno pide el documento a la red: llega a la federación con «no-cache» y
+    trae la página nueva (#n = 2), en el primer sondeo."""
+    loaded, docs, fresh, number, F = _probe_after_an_empty_page(sync_api, server)
+    assert loaded and F.pauses == 1 and F.probes == 1 and F.resumed == 1
     assert len(docs) == 2 and fresh == docs[1:] and number == "2"
 
 
-def test_without_fresh_the_retry_would_be_the_stored_empty_page(sync_api, server, monkeypatch):
-    """El control: sin fresh, el reintento tras la espera de la página vacía sale de la caché (la vacía
-    guardada) sin pedirle nada a la federación, y la página no carga aunque ya sirva."""
+def test_without_fresh_every_probe_would_be_the_stored_empty_page(sync_api, server, monkeypatch):
+    """El control: sin fresh, cada sondeo sale de la caché (la vacía guardada, «private, max-age=300») sin
+    pedirle nada a la federación: los siete hasta el tope, y la página no carga aunque ya sirva."""
     monkeypatch.setattr(R, "fresh", lambda page: contextlib.nullcontext(False))
-    loaded, why, docs, fresh, _ = _retry_after_an_empty_page(sync_api, server)
-    assert not loaded and why == [C.EMPTY] * 2
+    loaded, docs, fresh, _, F = _probe_after_an_empty_page(sync_api, server)
+    assert not loaded and F.halted and F.probes == 7
     assert len(docs) == 1 and fresh == []

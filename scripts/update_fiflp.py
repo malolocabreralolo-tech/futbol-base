@@ -61,9 +61,9 @@ MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~3-6 s cada una); el resto,
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
 # Plazo GLOBAL de las dos pasadas, desde que arranca update_groups (FIFLP_BUDGET_MIN). Fuera de la
 # federación el job gasta 4-8 min (preparación, app, importaciones, generate_js, pruebas y commit): el
-# paso del bot queda en ≤ ~32 min y el job en 29-33, ~35 en el peor caso, sobre los 45 de update.yml. Las
-# pausas largas cuando la federación frena (fiflp_carga.Federacion) caben dentro de este plazo, y ninguna
-# página empieza después: no lo alargan.
+# paso del bot queda en ≤ ~32 min y el job en 29-33, ~35 en el peor caso, sobre los 45 de update.yml. La
+# espera del freno (fiflp_carga.Federacion) cabe dentro de este plazo, y ninguna página empieza después:
+# no lo alarga.
 DEADLINE_SECONDS = 25 * 60
 # Lo que la primera pasada deja siempre para la segunda (FIFLP_RESERVE_MIN): las actas y los
 # goleadores de los grupos prioritarios (de su primera mitad, delante de los demás grupos, en cuanto
@@ -1226,8 +1226,8 @@ def update_groups(conn, season_id, today=None):
 def _with_browser(work, deadline=None):
     """Abre Chromium y llama a work(page, F) con el scraper de la federación: los lectores de
     fetch_fiflp_2425 con la carga de fiflp_carga (espera a lo que el lector necesita, sin los 2,5 s
-    fijos, y pausa FIFLP_DELAY), y los reintentos, las pausas largas del freno y las páginas cortados
-    en `deadline` (en clock(), el reloj de los plazos).
+    fijos, y pausa FIFLP_DELAY), y los reintentos, la espera del freno (la primera y sus sondeos) y las
+    páginas cortados en `deadline` (en clock(), el reloj de los plazos).
 
     Sin lo ajeno a la federación ni imágenes desde el lanzamiento (fiflp_render.fiflp_launch_args), sin
     page.route: una ruta desactiva la caché HTTP y cada página volvía a pedir sus ~20 scripts y sus hojas
@@ -1294,11 +1294,12 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
        de los equipos que faltan; los goleadores del turno y del margen
        (plan.turn); y las actas y los goleadores de los demás, en el orden de la
        primera pasada (que rota: el turno de cada nivel, primero).
-    Cada acta se pide como mucho una vez por pasada. Cuando la federación frena,
-    F (fiflp_carga.Federacion) hace pausas largas y vuelve a pedir la misma
-    página mientras quepan; si deja de servir páginas (F.blocked), no se le pide
-    nada más, esté donde esté. Los grupos cerrados que descansan y los que no
-    caben conservan su última comprobación en data-health.json
+    Cada acta se pide como mucho una vez por pasada. Cuando la federación frena
+    (~15 páginas por IP: fiflp_carga), F (fiflp_carga.Federacion) espera y vuelve
+    a pedir la misma página cada minuto hasta que sirva (con un tope por freno y
+    sin tope de frenos, mientras quepa en el plazo); si deja de servir páginas
+    (F.blocked), no se le pide nada más, esté donde esté. Los grupos cerrados
+    que descansan y los que no caben conservan su última comprobación en data-health.json
     (source_health.carry): no son un error. Tampoco los que la federación no
     sirvió por su freno («un freno no es un error»: run.unserved): un grupo cuyo
     calendario no carga (NotServed) con una señal del freno en su lectura (una
@@ -1309,7 +1310,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     se pase o no el freno. Sin señal de freno (una URL muerta mientras el resto
     carga, o varias seguidas: la federación sirve otra página), sigue siendo un
     error; también si se cerró el navegador (F.closed: no es la federación); un
-    fallo de los datos (lectura, update_group), como siempre. Las pausas por el
+    fallo de los datos (lectura, update_group), como siempre. Las esperas del
     freno en los calendarios de los prioritarios no les quitan su plazo
     (calendars, stretch): lo pagan la reserva y los demás grupos."""
     start = clock()
@@ -1350,7 +1351,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         """Clasificación y jornadas de cada grupo de `rows` que empiece antes de `until`; los demás, a
         otra pasada (deferred). Uno que la federación no sirve por su freno, también a otra pasada
         (unserved), sin escribir nada de él y sin marcarlo como error. `stretch` (los prioritarios): el
-        plazo se alarga lo que duren las pausas por el freno en ellos, sin comerse lo que la reserva deja
+        plazo se alarga lo que duren las esperas del freno en ellos, sin comerse lo que la reserva deja
         siempre al final (el doble del calendario más largo y, al menos, BRAKE_ROOM)."""
         nonlocal longest
         held0 = paused()
@@ -1557,7 +1558,8 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         "extrasDeferred": cut, "firstPassSeconds": round(first_pass), "seconds": round(clock() - start),
         **({"firstPassPages": pages} if pages else {}), **({"blocked": True} if blocked() else {}),
         **({"calendarShows": dict(sorted(shows.items()))} if shows else {}),
-        **({"pauses": pauses, "resumed": getattr(F, "resumed", 0)} if pauses else {})})
+        **({"pauses": pauses, "resumed": getattr(F, "resumed", 0),
+            "brakeAfter": list(getattr(F, "brake_after", []))} if pauses else {})})
     print(f"  Federación: {round((clock() - start) / 60, 1)} min de {round((deadline - start) / 60, 1)}", flush=True)
 
 def update_directorio(page, F, conn, season_id, groups, deadline=None):

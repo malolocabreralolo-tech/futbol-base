@@ -51,19 +51,19 @@ Para que quepa siempre en el job (45 min; desde octubre de 2026 la Segunda Fase 
   - un número que se repite (relanzar una ejecución fallida cambia `run_attempt`, no el número) repite el orden de una pasada que no llegó a hacerse.
   Se prefirió `GITHUB_RUN_NUMBER` a la franja horaria porque el cron llega con 3-5 h de retraso y las tandas lanzan el bot a cualquier hora: dos pasadas en la misma franja repetirían turno y uno se saltaría.
 - Lo que no cabe queda para otra pasada: en `data-health.json` conserva su última comprobación (no es un error) y `run` dice el número de la pasada (`pass`), qué quedó fuera (`deferred`; de la segunda pasada, `extrasDeferred`), qué descansó (`resting`) y cuánto tardó (`firstPassSeconds` y `firstPassPages`, la primera pasada sin las actas ni los goleadores de los prioritarios; `seconds`, todo). Ni `run` ni las horas (`checkedAt`) reescriben el informe por sí solas: no hay commit solo por la hora.
-- **Un freno no es un error** (desde el 15/10/2026): un grupo cuyo calendario la federación no sirve por su freno conserva también su última comprobación y queda para otra pasada (`run.unserved`, aparte de `deferred`, que son los que no se intentaron; en el registro, «sin federación: a otra pasada»). Es su freno si hubo una señal del freno en la lectura del grupo (una página vacía o con un 503 o un 429, cargara o no tras sus reintentos, o una racha de tres sin cargar en la que la federación tampoco sirve otra página: `Federacion.brakes`), aunque la página que acabe fallando sea otra, o si la federación quedó bloqueada al acabarla; y también el grupo que falló sin señal justo antes de una (sin servir ninguna página entre su fallo y la señal: cortes de conexión hasta que la racha se ve; `brake_marks`), se pase o no el freno con la pausa larga. Un 503 («no disponible») o un 429 («demasiadas peticiones») es la federación, no la página: es señal por sí solo, sin esperar a la racha (un freno de 503 que se pasaba antes de ella, o justo al comprobar si servía otra página, dejaba el grupo como error). No se escribe nada de lo que ya había leído (las jornadas se guardan en memoria y `update_group` no llega a llamarse) y su hora no avanza. Un grupo que no carga sin señal de freno (una URL muerta, con un 500, mientras el resto carga bien; también dos o más seguidas, aunque sean las primeras de la pasada, porque la federación sirve otra página) sigue siendo un error, y un fallo de los datos (lectura, `update_group` rechazado), como siempre. Lo que cuesta: un 500 o un corte de conexión no es señal (puede ser la URL), así que un freno que solo corta conexiones y se pasa antes de formar la racha deja como error el grupo que pilla, como antes; y una URL muerta leída mientras la federación responde 503 queda en `unserved` esa pasada (sale como error en la primera sin freno). Si se cierra el navegador (Chromium caído), no es la federación: ni pausas ni «sin federación»; el grupo que se estaba leyendo, error, y nada más en esa pasada (`Federacion.closed`, `run.blocked`). Si la clasificación de un grupo se perdió en un freno que se vio después, en su calendario, y la pausa lo arregló, se pide otra vez. Antes, en la pasada 1103, AL4 y AL9 (de Las Mesas) quedaban como «error» y la web ponía «Revisión pendiente.» en sus equipos.
+- **Un freno no es un error** (desde el 15/10/2026): un grupo cuyo calendario la federación no sirve por su freno conserva también su última comprobación y queda para otra pasada (`run.unserved`, aparte de `deferred`, que son los que no se intentaron; en el registro, «sin federación: a otra pasada»). Es su freno si hubo una señal del freno en la lectura del grupo (una página vacía o con un 503 o un 429, cargara o no tras sus reintentos, o una racha de tres sin cargar en la que la federación tampoco sirve otra página: `Federacion.brakes`), aunque la página que acabe fallando sea otra, o si la federación quedó bloqueada al acabarla; y también el grupo que falló sin señal justo antes de una (sin servir ninguna página entre su fallo y la señal: cortes de conexión hasta que la racha se ve; `brake_marks`), se pase o no el freno con su espera. Un 503 («no disponible») o un 429 («demasiadas peticiones») es la federación, no la página: es señal por sí solo, sin esperar a la racha (un freno de 503 que se pasaba antes de ella, o justo al comprobar si servía otra página, dejaba el grupo como error). No se escribe nada de lo que ya había leído (las jornadas se guardan en memoria y `update_group` no llega a llamarse) y su hora no avanza. Un grupo que no carga sin señal de freno (una URL muerta, con un 500, mientras el resto carga bien; también dos o más seguidas, aunque sean las primeras de la pasada, porque la federación sirve otra página) sigue siendo un error, y un fallo de los datos (lectura, `update_group` rechazado), como siempre. Lo que cuesta: un 500 o un corte de conexión no es señal (puede ser la URL), así que un freno que solo corta conexiones y se pasa antes de formar la racha deja como error el grupo que pilla, como antes; y una URL muerta leída mientras la federación responde 503 queda en `unserved` esa pasada (sale como error en la primera sin freno). Si se cierra el navegador (Chromium caído), no es la federación: ni esperas ni «sin federación»; el grupo que se estaba leyendo, error, y nada más en esa pasada (`Federacion.closed`, `run.blocked`). Si la clasificación de un grupo se perdió en un freno que se vio después, en su calendario, y la espera lo arregló, se pide otra vez. Antes, en la pasada 1103, AL4 y AL9 (de Las Mesas) quedaban como «error» y la web ponía «Revisión pendiente.» en sus equipos.
 - **Grupos cerrados**: todo jugado y la última jornada hace más de 21 días. Se refrescan una vez en cada época de 4 pasadas (`closed_turn`: la pasada `(crc32(código) + 2·época) % 4`, repartidos entre las pasadas por su código), o en cada una si su última comprobación publicada falló o no existe, o si tienen un acta pendiente. Su pasada salta dos puestos de una época a otra: nunca pasan más de 5 seguidas sin leerse y, si se pierde una pasada cada día a la misma hora, les quita como mucho una de cada dos (al menos una de cada 8, lo pedido; con un turno fijo, los de esa hora no se leían nunca). Los que descansan no se leen aunque sobre plazo: lo que sobra de la primera pasada es de las actas y los goleadores.
 - **Competiciones nuevas** (`check_competitions`, una página entre las dos pasadas): lee el desplegable de competiciones de la temporada en curso (el mismo JS que `discover_fiflp_comps.py`), se queda con benjamín, prebenjamín y alevín de Gran Canaria (`categorias.category_of`, el mismo de todos los importadores: sin fútbol sala ni LPFS; alevín de Lanzarote y Fuerteventura, fuera), quita las que ya tienen grupos en la temporada (`CodCompeticion` de `groups.url`) y las de `IGNORED_COMPETITIONS`, y deja el resto en `data-health.json` (`newCompetitions: [{id, name, firstSeen}]`; `firstSeen` no cambia, así que no hay commit por la hora). Si la página falla, se queda lo que había. Después, `update.yml` abre una issue por cada una (`avisar_competiciones.py`, permiso `issues: write`), sin repetirla: busca su código también en las cerradas, así que cerrarla es decir «esta no». La issue lleva solo el nombre y el código de la competición y los pasos para añadirla (los de alevín, con su tanda `22al`: [alevin.md](alevin.md)).
-- **Cada página** (`fiflp_carga.py`): sin esperas fijas. Espera, con tope (`FIFLP_READY_MS`, 5 s), a que estén las hojas de estilo de la federación (de ellas salen las cifras que materializa el aplanado: sin ellas el marcador se pierde) y el desplegable que rellena su JS. Entre peticiones, `FIFLP_DELAY` (1-1,5 s con jitter; era 2-3,5). Desde el freno de octubre de 2026, además, al menos `FIFLP_MIN_INTERVAL` s (7) entre el inicio de dos peticiones (abajo). Una página de error de la federación (un 5xx, como el 503 de Apache cuando bloquea, o un 429) no cuenta como cargada: se reintenta (15 y 30 s), un acta así no gasta intento y, con tres páginas seguidas sin cargar, la federación bloquea o se ha caído: con un 503 o un 429, sin más; si no, solo si tampoco sirve otra página (la última que cargó o, si aún no ha cargado ninguna, la de competiciones de la temporada; si la sirve, son URLs muertas: se sigue). Una página vacía es su freno: se reintenta una vez tras 60 s. En los dos casos, antes de rendirse, la **pausa larga** (abajo); si no la arregla, el bot no le pide nada más en esa pasada (lo que falta, a la siguiente; `run.blocked`). Ninguna página empieza pasado el plazo global, contando la espera del intervalo (si no cabe, se espera igual y no se pide). Las tandas de temporadas pasadas siguen con el paso de `fetch_fiflp_2425`.
+- **Cada página** (`fiflp_carga.py`): sin esperas fijas. Espera, con tope (`FIFLP_READY_MS`, 5 s), a que estén las hojas de estilo de la federación (de ellas salen las cifras que materializa el aplanado: sin ellas el marcador se pierde) y el desplegable que rellena su JS. Entre peticiones, `FIFLP_DELAY` (1-1,5 s con jitter; era 2-3,5). Desde el freno de octubre de 2026, además, al menos `FIFLP_MIN_INTERVAL` s (7) entre el inicio de dos peticiones (abajo). Una página de error de la federación (un 5xx, como el 503 de Apache cuando bloquea, o un 429) no cuenta como cargada: se reintenta (15 y 30 s), un acta así no gasta intento y, con tres páginas seguidas sin cargar, la federación bloquea o se ha caído: con un 503 o un 429, sin más; si no, solo si tampoco sirve otra página (la última que cargó o, si aún no ha cargado ninguna, la de competiciones de la temporada; si la sirve, son URLs muertas: se sigue). Una página vacía es su freno, a la primera: sin reintento (desde el 15/10/2026; antes, uno tras 60 s, que salía vacío siempre). En los dos casos, antes de rendirse, la **espera del freno** (abajo); si no lo pasa, el bot no le pide nada más en esa pasada (lo que falta, a la siguiente; `run.blocked`). Ninguna página empieza pasado el plazo global, contando la espera del intervalo (si no cabe, se espera igual y no se pide). Las tandas de temporadas pasadas siguen con el paso de `fetch_fiflp_2425`.
 - **Sin lo ajeno y con caché** (`fiflp_render.fiflp_launch_args`, desde el 15/10/2026): las páginas de la federación cargan decenas de scripts de publicidad y medición (refinery89, doubleclick, consentmanager…) que colgaban la carga (cada acta, ~55 s el 4/10/2026). Hasta el 15/10 se bloqueaban con una ruta de Playwright (`page.route`, `fiflp_only`), y una ruta **desactiva la caché HTTP** del navegador: cada página volvía a pedir los scripts, las hojas y las fuentes de la federación, que llevan `Cache-Control: max-age=15552000, public`, y las imágenes. Medido con Chromium de verdad (peticiones a la red menos las servidas de la caché, por CDP; clasificación, calendario y jornada seguidas): **~45-52 peticiones por página**, 22-24 a www.fiflp.com (20 scripts, el documento y 2 XHR), y además 5 hojas, 4 fuentes y 11-20 imágenes de files.fiflp.com y laspalmas.filesnovanet.es. Ahora todo Chromium que lee la federación (el bot, las tandas de actas, goleadores, detalle e islas, `fetch_fiflp_2425` y las sondas) se lanza sin ruta y con `chromium.launch(headless=True, args=fiflp_launch_args())`:
   - `--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE fiflp.com, EXCLUDE *.fiflp.com, EXCLUDE filesnovanet.es, EXCLUDE *.filesnovanet.es`, sacado de `FIFLP_HOSTS`: solo se resuelven la federación y sus subdominios; lo ajeno (también una IP) falla en el DNS de Chromium sin salir a la red. Reglas separadas por comas, como en la documentación de Chromium (`MAP * ~NOTFOUND , EXCLUDE myproxy`) y en el propio Playwright con un proxy SOCKS; el comodín de `EXCLUDE` es un glob (`*.fiflp.com` vale para `a.b.fiflp.com`, no para `fiflp.com`, que va aparte). Un host nuevo de la federación va en `FIFLP_HOSTS` (vale a la vez para estas reglas, `fiflp_request` y la espera de las hojas de `fiflp_carga`); con un proxy no cargaría nada (ni Actions ni el bot lo usan). En las páginas guardadas, `*.novanet.es` (weblaspalmas, federadolaspalmas, laspalmas) e intranet.fiflp.com salen solo como enlaces del menú.
   - `--blink-settings=…,imagesEnabled=false`: sin imágenes. Ningún lector las necesita cargadas: los escudos se leen del `src` de su `<img>` (`CRESTS_JS`, `fiflp_detalle`) y las cifras salen de las hojas y las fuentes, que sí cargan. Lleva delante los ajustes de ratón que Playwright pone sin ventana (`PLAYWRIGHT_HEADLESS_BLINK`): Chromium se queda con el último `--blink-settings` y, sin ellos, `(hover: hover)` y `(pointer: fine)` dejaban de cumplirse.
   - Resultado, medido igual: la primera página, 34 peticiones; las siguientes, **5** (3 a www.fiflp.com: el documento y 2 XHR; y 2 scripts ajenos que fallan en el DNS). ~10 veces menos (≈7 a www.fiflp.com), muy probablemente lo que cuenta su freno. El desplegable de jornadas se rellena igual (27 opciones) y las hojas de estilo están (`document.styleSheets`, 10-12).
   - La caché es por contexto: el bot usa una sola página para toda la pasada, y las tandas también; `fetch_fiflp_actas` abre un navegador por hilo (`--workers 2`: dos cachés, unas decenas de peticiones más por tanda, no por acta).
-  - **Lo que se repite, a la red** (`fiflp_render.goto` y `fresh`, 15/10/2026). Los documentos de la federación (sus `NFG_*`) llevan `Cache-Control: private, max-age=300`: con la caché, volver a la **misma URL** antes de 5 min sale de la caché de disco sin pedirle nada (medido por el controlador con CDP: `fromDiskCache`). Y las URLs que se repiten son justo las del freno: el reintento de `fiflp_carga.goto` (tras la espera de una página vacía: si la vacía llega con las mismas cabeceras, se guarda igual, y el reintento habría sido la vacía guardada), la «otra página» con la que `Federacion._serving` comprueba si la federación sirve (un falso «sirve»), la misma página tras la pausa larga (5 min, justo en el límite), la recarga del calendario y la clasificación perdida en el freno (`update_fiflp.scrape_group`), y los reintentos de las tandas (`fetch_fiflp_2425.goto`, el acta vacía otra vez de `fetch_fiflp_actas`). Ahora todo lector navega a la federación con `fiflp_render.goto(page, url, …)` (`test_fiflp_lanzamiento` falla con un `page.goto` a secas): la primera vez de cada URL en ese navegador, como siempre; cada vez siguiente, con `fresh(page)`, el documento va a la red. La memoria de las URLs pedidas la guarda el contexto del navegador (la caché es suya), no `Federacion`: vale para cualquier lector, y para `fiflp_render` y `scripts.fiflp_render` a la vez.
+  - **Lo que se repite, a la red** (`fiflp_render.goto` y `fresh`, 15/10/2026). Los documentos de la federación (sus `NFG_*`) llevan `Cache-Control: private, max-age=300`: con la caché, volver a la **misma URL** antes de 5 min sale de la caché de disco sin pedirle nada (medido por el controlador con CDP: `fromDiskCache`). Y las URLs que se repiten son justo las del freno: el reintento de `fiflp_carga.goto` (tras la espera de una página vacía: si la vacía llega con las mismas cabeceras, se guarda igual, y el reintento habría sido la vacía guardada), la «otra página» con la que `Federacion._serving` comprueba si la federación sirve (un falso «sirve»), los sondeos de la espera del freno (la misma página a los 4 min y cada minuto después, dentro de los 5 min), la recarga del calendario y la clasificación perdida en el freno (`update_fiflp.scrape_group`), y los reintentos de las tandas (`fetch_fiflp_2425.goto`, el acta vacía otra vez de `fetch_fiflp_actas`). Ahora todo lector navega a la federación con `fiflp_render.goto(page, url, …)` (`test_fiflp_lanzamiento` falla con un `page.goto` a secas): la primera vez de cada URL en ese navegador, como siempre; cada vez siguiente, con `fresh(page)`, el documento va a la red. La memoria de las URLs pedidas la guarda el contexto del navegador (la caché es suya), no `Federacion`: vale para cualquier lector, y para `fiflp_render` y `scripts.fiflp_render` a la vez.
     - Cómo: mientras dura `fresh(page)`, una sesión CDP de la página (una por página, no una por carga) intercepta con `Fetch` **solo los documentos** (`resourceType: Document`, el de la página y los de sus marcos) y los deja seguir con sus cabeceras más `Cache-Control: no-cache` y `Pragma: no-cache` (lo que manda Ctrl+F5): la caché HTTP de Chromium no los sirve de lo guardado, y la respuesta nueva sustituye a la guardada. Los scripts, las hojas y las fuentes siguen saliendo de la caché, también en esa carga: una carga fresca cuesta el documento (y sus XHR), no las ~34 peticiones de una primera página. Se quita al salir, también si la navegación lanza; si un documento no puede seguir con esas cabeceras, sigue tal cual (nunca se queda parado). Sin CDP (otro navegador, las páginas falsas de las pruebas), nada.
     - Por qué no `Network.setCacheDisabled`: medido con el Chromium de la prueba, no hace nada sin `Network.enable` en la sesión y, con él, vuelve a pedir **todo** lo de la página (sus ~20 scripts y sus hojas) justo cuando la federación frena; quitarlo al «commit» de la navegación no sirve (los scripts ya van pedidos), y `page.reload()` solo vale para la URL en la que ya está la página.
-    - Las pruebas: `test_fiflp_fresca.py` (páginas falsas con CDP falso: fresca exactamente en las repeticiones de `fiflp_carga.goto`, `Federacion` —`_serving`, tras la pausa, la de competiciones solo si ya se pidió—, `scrape_group` y las tandas, y nunca la primera vez) y `test_fiflp_lanzamiento.py` (Chromium de verdad y un servidor con esas cabeceras: la segunda navegación normal sale de la caché, la fresca llega al servidor sin volver a pedir scripts ni hojas, y tras ella una navegación normal a otra URL los sigue sirviendo de la caché; y el reintento de una página vacía, sin `fresh`, era la vacía guardada).
+    - Las pruebas: `test_fiflp_fresca.py` (páginas falsas con CDP falso: fresca exactamente en las repeticiones de `fiflp_carga.goto`, `Federacion` —`_serving`, los sondeos del freno, la de competiciones solo si ya se pidió—, `scrape_group` y las tandas, y nunca la primera vez) y `test_fiflp_lanzamiento.py` (Chromium de verdad y un servidor con esas cabeceras: la segunda navegación normal sale de la caché, la fresca llega al servidor sin volver a pedir scripts ni hojas, y tras ella una navegación normal a otra URL los sigue sirviendo de la caché; y el reintento de una página vacía, sin `fresh`, era la vacía guardada).
   - `fiflp_only` queda sin hacer nada (para que una llamada suelta no rompa). `test_fiflp_lanzamiento.py` falla si un lector de la federación vuelve a usar una ruta (`route`, `route_from_har`) o lanza Chromium sin `fiflp_launch_args`, comprueba que las reglas dejan pasar justo lo que `fiflp_request` da por de la federación (también en las páginas guardadas) y, con un Chromium de verdad y un servidor en 127.0.0.1 (hosts `*.localhost`, sin red), que lo ajeno y las imágenes no se piden, que los scripts y las hojas se piden una sola vez en tres páginas y que el desplegable y las cifras salen igual.
 
 Actas publicadas: un fichero por grupo, `data-lineups-<S>-<grupo>.js` (`const LINEUPS_<S>_<grupo>`), que la ficha de Equipo y Partido piden con `ensureLineups(temporada, grupo)` (un 404 es «sin actas»). Una temporada entera con todas sus actas pesa ~10 MB; un grupo, unos cientos de KB (comprimidos, decenas). El service worker no las precachea: guarda las que se usan y cada versión nueva vuelve a bajar las de los grupos ya vistos (`lineupsToCarry`, como mucho 12), para que la plantilla de mi equipo siga sin conexión tras una subida de datos.
@@ -166,70 +166,105 @@ Las temporadas anteriores a la web (CodTemporada 12 a 16, `ARCHIVE_SEASONS` en `
 
 2016-17 (CodTemporada 12) se añadió así en octubre de 2026: su nombre en `SEASON_NAME` (`fetch_fiflp_actas.py`) y sus competiciones en `fiflp_comps_catalog.json` (`discover_fiflp_comps.py`); goleadores y actas (`goleadores-federacion.yml -f temporadas=12`; `actas-federacion.yml -f temporada=12`); `meta_by_name` da código a sus 11 competiciones (las mismas que en 2017-18); y `ARCHIVE_SEASONS`, con sus fases en `phases-archivo.json`. 2015-16 (11) no tiene benjamín ni prebenjamín en la federación.
 
-## El freno de la federación (14/10/2026)
+## El freno de la federación (14-15/10/2026)
 
-Tras unas 20 páginas seguidas a ~5 s cada una, fiflp.com deja de servir: responde 200 con una página
-vacía (`<html><head></head><body></body></html>`, 39 bytes; lo guardó la sonda probe-fiflp, run
-38584760192). La primera pasada con las esperas recortadas (run 38581710573) lo tomó por página
-cargada y 63 de 69 grupos dieron «no sirvió las jornadas». Desde entonces (fiflp_carga):
-- entre el inicio de dos peticiones pasan al menos `FIFLP_MIN_INTERVAL` s (7 por defecto: el ritmo de
-  antes de octubre, ~6,8 s por página, que nunca frenó);
-- una página vacía no carga: se reintenta una vez tras 60 s y, si sigue, es el freno (la pausa larga,
-  abajo); una página que no carga por otra cosa cuenta para `blocked` (3 seguidas);
-- el desplegable de jornadas se espera hasta dos veces más y, si no, se recarga el calendario una vez.
-- desde el 15/10, Chromium sin ruta, sin lo ajeno ni imágenes y con la caché HTTP: ~5 peticiones por página
-  en vez de ~45-52 (arriba, «Sin lo ajeno y con caché»); lo que se vuelve a pedir (reintentos, la otra
-  página, la misma tras la pausa) va a la red y no a la caché (`fiflp_render.goto`).
+Tras unas decenas de páginas seguidas, fiflp.com deja de servir: responde 200 con una página vacía
+(`<html><head></head><body></body></html>` en el navegador; lo guardó la sonda probe-fiflp, run
+38584760192). La primera pasada con las esperas recortadas (run 38581710573) lo tomó por página cargada y
+63 de 69 grupos dieron «no sirvió las jornadas». Una página vacía no carga, y es la señal del freno.
+Además (`fiflp_carga`): entre el inicio de dos peticiones, al menos `FIFLP_MIN_INTERVAL` s (7, por
+cortesía: el freno no depende del ritmo, abajo); el desplegable de jornadas se espera hasta dos veces más
+y, si no, se recarga el calendario una vez; Chromium va sin ruta, sin lo ajeno ni imágenes y con la caché
+HTTP (~5 peticiones por página en vez de ~45-52: arriba, «Sin lo ajeno y con caché»), y lo que se vuelve a
+pedir (reintentos, la otra página, los sondeos) va a la red y no a la caché (`fiflp_render.goto`).
 
-### La pausa larga (15/10/2026)
+### Lo medido (15/10/2026)
 
-El freno es errático (a 7 s por página, el 14/10: a las 11:18 ~130 páginas sin frenar; a las 16:39 frenó
-tras ~13; a las 20:30, tras ~41; a las 21:19, 169 sin frenar; el 15/10 a las 03:28, pasada 1103, tras
-~14) y se pasa solo: entre el freno de las 20:42 y la pasada limpia de las 21:19 pasaron 37 min, y en la
-1103 seguía 3 min después (vacías a las 03:30:43, 03:31:43 y 03:32:45). La pasada 1103 se rindió a los
-4,8 min con 20 de plazo sin usar, y dejó AL4 y AL9 como error y AL18 y AL20 sin intentar.
+Con el experimento `freno-fiflp.yml` (`scripts/freno_experimento.py`): tres runners de GitHub a la vez,
+cada uno con su IP, pidiendo documentos distintos (calendarios y primeras jornadas de los grupos de la
+temporada) con la caché y `fiflp_launch_args`, cada uno a un ritmo fijo, y al frenar, la misma página a los
+10 s, la misma en un contexto nuevo y después una cada 60 s hasta que vuelve:
 
-Ahora (`fiflp_carga.Federacion.goto`), cuando frena —una página vacía tras su espera de 60 s, o la
-página que dejaría a la federación bloqueada (la tercera seguida sin cargar): con un 503 o un 429, sin
-más; si no (un 500, un corte), solo si la federación tampoco sirve otra página—, el bot no se rinde: si
-cabe antes del plazo global con 2 min de margen después (`BRAKE_ROOM`, para leer algo), espera una pausa
-larga (`FIFLP_BRAKE_PAUSE_MIN`, 5 min) y vuelve a pedir **la misma página**. (La otra página es la última
-que cargó o, si aún no ha cargado ninguna, la de competiciones de la temporada, que existe siempre: si
-carga, la racha es de URLs muertas, por ejemplo dos grupos seguidos de una competición retirada, aunque
-sean los dos primeros de la pasada: ni pausa ni bloqueo, y esos grupos, como error. Con un 503 o un 429
-no se prueba: no distingue nada, y el freno podía pasarse justo entonces y dejar sus grupos como error.)
+| Ritmo | Páginas servidas antes de cada freno | Vuelve a servir a los… |
+|---|---|---|
+| 7 s | 15, 16, 17 | 304 s, 364 s (y seguía 242 s después, al acabar) |
+| 15 s | 15, 15, 15 | 304 s, 122 s (y seguía 181 s después) |
+| 30 s | 15 (7,5 min) y 20 sin frenar hasta acabar | 303 s |
 
-- si carga (o, si no carga ni está vacía, carga la última que cargó: la federación sirve y esta página
-  no), sigue la pasada y, el resto de la pasada, más despacio: el intervalo ×1,5 (7 → 10,5 s), y si
-  vuelve a frenar y a servir, el doble (14 s), no más;
-- si no, otra pausa, mientras quepa, hasta `FIFLP_BRAKE_PAUSES` (3) por pasada; agotadas, o sin plazo para
-  otra, `blocked`: nada más en esa pasada, y el grupo que se estaba leyendo conserva su comprobación
-  (`run.unserved`: «un freno no es un error», arriba). `FIFLP_BRAKE_PAUSES=0` es lo de antes, salvo que
-  una página vacía tras su espera ya para la pasada (antes hacían falta tres).
+- **El cupo es de ~15 documentos por IP**, y después **~2-6 min de bloqueo, casi siempre ~5**. **El ritmo no
+  importa**: 15 páginas a 7, a 15 y a 30 s.
+- Al frenar, la misma página 10 s después, vacía; y en un **contexto nuevo** (otra sesión, otras cookies, la
+  misma IP), vacía: el cupo es **por IP**, no por sesión.
+- Un sondeo de una página cada 60 s durante el bloqueo **no lo alarga** (vuelve a ~300 s igual).
+- La página del freno: un 200 con `content-length: 0` y `Server: Apache`; la normal, con
+  `Cache-Control: private, max-age=300` y por trozos (`chunked`).
+- Las pasadas reales del bot ese día frenaban tras ~10-12 páginas; la pausa fija de 5 min a veces bastaba y
+  a veces no («sigue frenando»), y el ×1,5 de ralentización al volver no servía de nada (el cupo es de
+  páginas, no de ritmo).
 
-Por qué esos valores: 5 min pasa del mínimo visto (3) y, con 3 pausas, el bot vuelve a probar a los ~6,
-~11 y ~16 min de la primera página vacía, sin pedir nada entretanto: cubre un freno de un cuarto de hora.
-Uno más largo cuesta tiempo de runner, no páginas (la pasada se da por perdida, como antes, y el plazo
-global no se mueve: el job sigue en 29-33 min, ~35 en el peor caso, de 45). Más despacio tras volver a
-servir porque el freno no sale solo del ritmo (a 7 s hubo pasadas de 169 páginas y frenos tras 13): ×1,5
-aún deja ~85 páginas en 15 min.
+Lo que se creía antes (un freno «errático»: pasadas de 130-169 páginas sin frenar el 14/10 y frenos tras
+10-41 páginas otras; y que ir más despacio ayudaba) no se vio en el experimento: con documentos distintos, las
+tres IPs frenaron a las ~15, a cualquier ritmo. Por qué aquellas pasadas no frenaron no se sabe; el bot cuenta
+con el cupo. **No se intenta saltar** (ni varias IPs, ni proxies, ni runners en paralelo, ni cambiar de
+identidad): el bot trabaja **dentro del cupo** y saca el máximo de cada página (abajo, y «Menos páginas por
+grupo», arriba).
 
-En el registro: «la federación frena: pausa de 5 min (1/3), hasta las 03:35 UTC» y, después, «la
-federación vuelve a servir: se sigue, una página cada 10.5 s» o «la federación sigue frenando». En
-`run` (sin commit solo por ello, como todo `run`), si hubo alguna pausa: `pauses`, cuántas, y `resumed`,
-cuántas veces volvió a servir tras una (no tras cuántas pausas: con `pauses: 3, resumed: 1` y un solo
-freno, volvió tras la tercera; con varios frenos, el registro dice cuál); además, `unserved`; y la primera
-pasada da aparte el tiempo en pausa (no es coste de las páginas ni del calendario más largo, del que sale
-lo que se adelantan las actas de los prioritarios).
+### La espera del freno (`fiflp_carga.Federacion`, desde el 15/10/2026)
 
-Las pausas y el orden de lectura: una pausa en los calendarios de los prioritarios no les quita su plazo
-(se alarga lo que duren, sin pasar de lo que la reserva deja siempre al final: el doble del calendario
-más largo y al menos `BRAKE_ROOM`); lo pagan la reserva y los demás grupos, y sus actas siguen yendo
-después de todos sus calendarios. Una pausa en esas actas no alarga el plazo de los calendarios de los
-demás. Lo prueban `test_fiflp_carga.py` y `test_bot_freno.py` (la pasada 1103 con el freno que se pasa y
-con el que no, un freno de 12 min que se pasa en la tercera pausa, el freno con 503, también el corto, una
-URL muerta y dos seguidas, también al empezar la pasada, el navegador cerrado, el plazo con cualquier
-presupuesto y las pausas máximas).
+Cuando frena —una página vacía, o la página que dejaría a la federación bloqueada (la tercera seguida sin
+cargar): con un 503 o un 429, sin más; si no (un 500, un corte), solo si la federación tampoco sirve otra
+página: la última que cargó o, si aún no ha cargado ninguna, la de competiciones de la temporada, que existe
+siempre (si carga, la racha es de URLs muertas: ni espera ni bloqueo, y esos grupos, como error)—:
+
+- **Sin reintento de la vacía**. Antes se reintentaba tras 60 s (`EMPTY_WAIT`), y salía vacía siempre: el
+  bloqueo dura minutos. Era un minuto y una petición perdidos en cada freno.
+- **Una primera espera de 4 min** (`FIFLP_BRAKE_PAUSE_MIN`) sin pedir nada: casi ningún bloqueo dura menos,
+  así que un sondeo antes saldría vacío.
+- Después, **la misma página cada 60 s** (`FIFLP_BRAKE_PROBE_S`; no menos de 30): un **sondeo**, una sola
+  petición, al documento de la red y no al de la caché (la URL se repite: `fiflp_render.goto`). Con lo medido
+  (~5 min) vuelve en el 2.º o el 3.º sondeo (a los ~300 o ~360 s); el bloqueo de 122 s, en el 1.º. Se pierde,
+  como mucho, un minuto de cada freno; con las pausas fijas de 5 min de antes, hasta 5, y otras 5 si no
+  bastaba.
+- La primera espera y cada sondeo, solo si caben antes del plazo global con 2 min de margen después
+  (`BRAKE_ROOM`, ~15 páginas a 7 s, para leer algo tras volver).
+- **Un tope de 10 min por freno** (`FIFLP_BRAKE_MAX_MIN`), desde la página vacía: siete sondeos (a los 240,
+  300… 600 s), casi el doble del bloqueo más largo visto (364 s). Si no vuelve, algo distinto pasa (una
+  caída, otro bloqueo): nada más en esa pasada (`run.blocked`), y el grupo que se estaba leyendo conserva su
+  comprobación (`run.unserved`: «un freno no es un error», arriba).
+- **Sin tope de frenos por pasada**, salvo el plazo: cada vuelta son otras ~15 páginas. (Antes, 3 pausas por
+  pasada.) `FIFLP_BRAKE_PAUSES` los limita si se quiere; con 0, ninguna espera: al frenar, se acaba la pasada.
+- **Sin ralentizar al volver** (antes, el intervalo ×1,5 y hasta ×2): el cupo es de páginas, no de ritmo, y
+  cada segundo de más es plazo perdido. El intervalo de 7 s se mantiene, por cortesía.
+- Si el sondeo no carga sin estar vacío (un 500, un corte) y la última página que cargó sí, la federación
+  sirve y esta página no: se sigue, y esta no carga.
+- Lo demás, igual: un 503 o un 429 es señal del freno aunque la página cargue tras sus reintentos; el
+  navegador cerrado no es el freno (ni señal ni espera; el grupo, error); y ninguna página empieza pasado el
+  plazo, contando la espera del intervalo.
+
+En el registro: «la federación frena tras 15 páginas: espera de 4 min y después la misma página cada 60 s,
+hasta las 03:40 UTC como mucho» (las páginas servidas desde el freno anterior: el cupo), un «a los 240 s,
+sigue frenando» por sondeo vacío y «la federación vuelve a servir a los 300 s: se sigue» (o «…, pero no esta
+página: se sigue»); si no vuelve, «la federación sigue frenando a los 600 s (tope de 10 min por freno): nada
+más en esta pasada» o «…a los 540 s y no queda plazo para otro sondeo…»; sin sitio para la primera espera,
+«la federación frena y no queda plazo para esperarla (4 min y 2 de margen): nada más en esta pasada». En
+`run` (sin commit solo por ello, como todo `run`), si hubo alguna espera: `pauses`, los frenos esperados;
+`resumed`, tras cuántos volvió a servir; y `brakeAfter`, las páginas servidas antes de cada freno (si el cupo
+cambia, se ve en `data-health.json`). La primera pasada da aparte el tiempo en espera («en pausa por el
+freno»: no es coste de las páginas ni del calendario más largo, del que sale lo que se adelantan las actas
+de los prioritarios).
+
+Las esperas y el orden de lectura: una espera en los calendarios de los prioritarios no les quita su plazo
+(se alarga lo que dure, sin pasar de lo que la reserva deja siempre al final: el doble del calendario más
+largo y al menos `BRAKE_ROOM`); lo pagan la reserva y los demás grupos, y sus actas siguen yendo después de
+todos sus calendarios. Una espera en esas actas no alarga el plazo de los calendarios de los demás.
+
+Lo prueban `test_fiflp_carga.py` (el cupo medido: 15 páginas y 5 min, que se reanuda en el 2.º sondeo y al
+mismo ritmo; el freno que no vuelve en el tope; varios frenos en una pasada hasta el plazo; el plazo, la
+página vacía sin reintento y la configuración) y `test_bot_freno.py` (la pasada 1103 con el freno que se pasa
+y con el que no, un bloqueo de ~6 min con 600 s de plazo, uno de 9 min en los calendarios de los
+prioritarios, el freno con 503, también el corto, una URL muerta y dos seguidas, también al empezar la
+pasada, el navegador cerrado, el plazo con cualquier presupuesto; y con el cupo medido, varios frenos hasta
+el plazo sin ningún error y, caiga donde caiga el freno, ningún prioritario como error).
 
 Para cruzar frenos con IPs, `update.yml` imprime la IP pública del runner antes del paso del bot (paso
 «IP pública del runner», `api.ipify.org`, 5 s como mucho; nunca para el job y no va a `data-health.json`).

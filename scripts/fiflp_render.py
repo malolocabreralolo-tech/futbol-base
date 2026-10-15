@@ -146,11 +146,12 @@ def fiflp_launch_args(hosts=FIFLP_HOSTS):
 # Los documentos de la federación (sus NFG_*) llegan con «Cache-Control: private, max-age=300»: con la
 # caché HTTP (fiflp_launch_args, sin ruta), volver a la MISMA URL antes de 5 min sale de la caché de
 # disco sin pedirle nada a la federación (medido por el controlador con CDP: fromDiskCache). Y las URLs
-# que se repiten son justo las del freno: el reintento de una página vacía o con un 503 (fiflp_carga.goto),
-# la «otra página» con la que Federacion._serving mira si la federación sirve, la misma página tras la
-# pausa larga, la recarga del calendario y la clasificación perdida en el freno (update_fiflp.scrape_group),
-# y los reintentos de las tandas (fetch_fiflp_2425.goto, fetch_fiflp_actas: el acta vacía otra vez). Sin
-# esto, el reintento podría devolver la página vacía guardada, y la comprobación, un falso «sirve».
+# que se repiten son justo las del freno: el reintento de una página con un 503 o un corte
+# (fiflp_carga.goto), la «otra página» con la que Federacion._serving mira si la federación sirve, los
+# sondeos de la espera del freno (la misma página), la recarga del calendario y la clasificación perdida
+# en el freno (update_fiflp.scrape_group), y los reintentos de las tandas (fetch_fiflp_2425.goto,
+# fetch_fiflp_actas: el acta vacía otra vez). Sin esto, un sondeo del freno o el reintento de una tanda
+# podría devolver la página vacía guardada, y la comprobación, un falso «sirve».
 #
 # Cómo: mientras dura fresh(page), las peticiones de DOCUMENTOS de la página (el suyo y los de sus marcos)
 # pasan por CDP (Fetch, solo resourceType Document) y salen con FRESH_HEADERS, que la caché HTTP de
@@ -266,7 +267,7 @@ def goto(page, url, **kwargs):
     """page.goto(url, **kwargs) para una página de la federación: la usan todos sus lectores (fiflp_carga.goto
     y con ella el bot, fetch_fiflp_2425.goto y con ella las tandas, fetch_fiflp_actas.goto, las sondas).
     La primera vez que el navegador pide `url`, como siempre: con la caché, que sirve los scripts y las hojas.
-    Cada vez siguiente (un reintento, la comprobación de si sirve, la misma página tras la pausa larga, la
+    Cada vez siguiente (un reintento, la comprobación de si sirve, un sondeo de la espera del freno, la
     recarga del calendario…), con fresh(): el documento, a la red. Da lo que page.goto."""
     asked = requested(page)
     again = asked is not None and url in asked

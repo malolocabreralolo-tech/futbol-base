@@ -16,29 +16,48 @@ grupos, 19 min de primera pasada; con la Segunda Fase y alevín no cabría en el
     deja de pedirle más en esa pasada (Federacion.blocked). Un 503 o un 429 («no disponible»,
     «demasiadas peticiones») es además señal del freno, como una página vacía: la federación, no la
     página. Un 500 (u otro 5xx) o un corte de conexión, no: puede ser la URL;
-  - una página VACÍA (un 200 con «<html><head></head><body></body></html>») es su freno: tras unas
-    20 páginas seguidas a ~5 s cada una deja de servir (14/10/2026, ejecución 38581710573: 63 de 69
-    grupos). Se reintenta una vez tras EMPTY_WAIT y, si sigue, no carga (cuenta para blocked);
-  - el RITMO: entre dos peticiones, al menos FIFLP_MIN_INTERVAL segundos (DEFAULT_INTERVAL, el de
-    antes de octubre, ~6,8 s por página, que nunca frenó), por rápido que cargue cada página;
-  - la PAUSA LARGA (Federacion, desde el 15/10/2026): el freno es errático (a 7 s por página, 130 y
-    169 páginas sin frenar unas pasadas y 10-41 otras) y se pasa solo (seguía 3 min después en la
-    pasada 1103; 37 min después del de las 20:42 la pasada fue limpia). Cuando frena (una página
-    vacía tras su espera de EMPTY_WAIT, o la página que dejaría a la federación `blocked`: con un 503
-    o un 429, sin más; si no, solo si la federación tampoco sirve otra página, la última que cargó o,
-    sin ninguna, la de competiciones de la temporada: si la sirve, la racha es de URLs muertas), si
-    cabe antes del plazo (con BRAKE_ROOM para leer algo después), el bot espera FIFLP_BRAKE_PAUSE_MIN
-    minutos y vuelve a pedir LA MISMA página: si carga (o carga otra), sigue la pasada, más despacio
-    (el intervalo ×BRAKE_SLOWDOWN, como mucho ×BRAKE_SLOWDOWN_MAX); si no, otra pausa, hasta
-    FIFLP_BRAKE_PAUSES por pasada. Agotadas (o sin plazo para otra), `blocked`: nada más en esa pasada.
-    Ninguna página empieza pasado el plazo, contando la espera del intervalo;
-  - si el navegador se cierra (Chromium caído), no es la federación: ni reintentos ni pausas, y nada
+  - el RITMO: entre dos peticiones, al menos FIFLP_MIN_INTERVAL segundos (DEFAULT_INTERVAL, 7: el de
+    antes de octubre, ~6,8 s por página), por rápido que cargue cada página. Por cortesía: el freno no
+    depende del ritmo (abajo);
+  - si el navegador se cierra (Chromium caído), no es la federación: ni reintentos ni esperas, y nada
     más en esa pasada (Federacion.closed);
   - lo que se REPITE va a la red (fiflp_render.goto, 15/10/2026): la federación da sus documentos con
     «Cache-Control: private, max-age=300», y con la caché HTTP la misma URL antes de 5 min saldría de
     la caché sin pedirle nada. Toda URL que el navegador ya pidió (los reintentos de goto, la otra página
-    de Federacion._serving, la misma tras la pausa larga, la recarga del calendario y la clasificación
-    otra vez de update_fiflp.scrape_group) pide su documento a la red; los scripts y las hojas, de la caché.
+    de Federacion._serving, los sondeos del freno, la recarga del calendario y la clasificación otra vez
+    de update_fiflp.scrape_group) pide su documento a la red; los scripts y las hojas, de la caché.
+
+EL FRENO (medido el 15/10/2026 con freno-fiflp.yml, scripts/freno_experimento.py: tres runners de GitHub
+a la vez, cada uno con su IP, pidiendo documentos distintos con la caché y fiflp_launch_args):
+  - la federación sirve ~15 DOCUMENTOS POR IP y después una página VACÍA (un 200 con «content-length: 0»
+    de Apache, que el navegador pinta como «<html><head></head><body></body></html>»; la normal llega con
+    «Cache-Control: private, max-age=300» y por trozos) durante ~2-6 min, casi siempre ~5:
+      a 7 s por página: 15 páginas, vuelve a los 304 s; 16, vuelve a los 364 s; 17 (y seguía 242 s después);
+      a 15 s: 15, vuelve a los 304 s; 15, vuelve a los 122 s; 15 (y seguía 181 s después);
+      a 30 s: 15 (7,5 min), vuelve a los 303 s; y 20 sin frenar hasta acabar el plazo;
+  - EL RITMO NO IMPORTA (15 páginas a 7, a 15 y a 30 s): el cupo es de páginas. Pasadas reales de ese
+    día: frenaba tras ~10-12 páginas, y el ×1,5 de ralentización al reanudar no servía de nada;
+  - la misma página 10 s después, vacía; y en un CONTEXTO NUEVO (otra sesión, otras cookies, la misma IP),
+    vacía: el cupo es POR IP, no por sesión. No se intenta saltarlo (ni varias IPs, ni proxies, ni
+    runners en paralelo, ni otra identidad): se trabaja DENTRO del cupo;
+  - un sondeo de una página cada 60 s durante el bloqueo no lo alarga (vuelve a ~300 s igual).
+Por eso, desde ese día (Federacion):
+  - una página vacía es el freno a la primera: SIN reintento (antes, uno tras EMPTY_WAIT = 60 s, que
+    siempre salía vacío: un minuto perdido, y una petición);
+  - la ESPERA del freno: FIFLP_BRAKE_PAUSE_MIN (4) minutos sin pedir nada y después LA MISMA página cada
+    FIFLP_BRAKE_PROBE_S (60) segundos (un sondeo: una sola petición, al documento de la red y no al de la
+    caché, porque la URL se repite), hasta que sirva; cada uno, si cabe en el plazo con BRAKE_ROOM para
+    leer algo después. Con un tope por freno, FIFLP_BRAKE_MAX_MIN (10) minutos desde la página vacía: si
+    no vuelve, nada más en esa pasada (`blocked`). Con lo medido (~5 min) vuelve en el 2.º o el 3.º
+    sondeo (a los ~300 o ~360 s); el de 122 s, en el 1.º; y el tope deja 7 sondeos, hasta casi el doble
+    del más largo visto (364 s);
+  - SIN TOPE de frenos por pasada salvo el plazo: cada vuelta da otras ~15 páginas. FIFLP_BRAKE_PAUSES
+    los limita si se quiere (0: ninguna espera, al frenar se acaba la pasada);
+  - SIN RALENTIZAR al reanudar (antes, el intervalo ×1,5 y hasta ×2): el cupo no es de ritmo, y cada
+    segundo de más es tiempo de plazo perdido;
+  - lo demás, igual: un freno no es un error (update_fiflp.run_passes), un 503 o un 429 es señal del
+    freno, una racha de URLs muertas mientras la federación sirve otra página no lo es, el navegador
+    cerrado tampoco, y ninguna página empieza pasado el plazo, contando la espera del intervalo.
 No cambia cómo se aplana ni cómo se lee el HTML: solo cuándo. Lo usa el bot (update_fiflp,
 Federacion); las tandas de temporadas pasadas (fetch_fiflp_actas, _goleadores, _detalle, _islas)
 siguen con el paso de fetch_fiflp_2425, sin prisa.
@@ -55,33 +74,32 @@ from fiflp_render import FIFLP_HOSTS
 DEFAULT_DELAY = (1.0, 1.5)
 DEFAULT_READY_MS = 5000
 DEFAULT_INTERVAL = 7.0    # segundos entre el inicio de dos peticiones (FIFLP_MIN_INTERVAL)
-EMPTY_WAIT = 60           # tras una página vacía (el freno de la federación), antes de reintentarla
 EMPTY_JS = "() => !document.body || document.body.innerHTML.trim() === ''"
 RETRY_WAITS = (15, 30)    # entre intentos de una página que no carga (tres intentos)
 # Páginas seguidas que no cargan (cada una tras sus intentos): la federación bloquea o se ha caído, y
-# el bot deja de pedirle más en esa pasada (Federacion.blocked), si una pausa larga no lo arregla. Salvo
-# que, sin un 503 ni un 429 en ellas, la federación sirva otra página (Federacion._serving): entonces son
-# URLs muertas, no la federación.
+# el bot deja de pedirle más en esa pasada (Federacion.blocked), si la espera del freno no lo arregla.
+# Salvo que, sin un 503 ni un 429 en ellas, la federación sirva otra página (Federacion._serving):
+# entonces son URLs muertas, no la federación.
 BLOCKED_AFTER = 3
 # Los estados con los que la federación dice que no sirve (no la página): señal del freno, como una vacía.
 BRAKE_STATUSES = (429, 503)
 # La página de competiciones de la temporada, que existe siempre (update_fiflp.check_competitions): con
 # ella, Federacion._serving prueba si la federación sirve cuando aún no ha cargado ninguna otra página.
 CATALOG_URL = "/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
-# La pausa larga cuando frena (FIFLP_BRAKE_PAUSE_MIN, FIFLP_BRAKE_PAUSES). El freno seguía 3 min después
-# en la pasada 1103 (páginas vacías a las 03:30:43, 03:31:43 y 03:32:45) y se había pasado 37 min después
-# del de las 20:42 del 14/10 (la pasada de las 21:19, 169 páginas sin freno). 5 min pasa del mínimo visto
-# y, con 3 pausas, el bot vuelve a probar a los ~6, ~11 y ~16 min de la primera página vacía: cubre un
-# freno de un cuarto de hora sin pedir nada entretanto. Uno más largo cuesta tiempo de runner, no páginas:
-# la pasada se da por perdida como antes, y el plazo global (y con él el job) no se mueve.
-BRAKE_PAUSE = 5 * 60
-BRAKE_PAUSES = 3
-BRAKE_ROOM = 2 * 60       # tras la pausa, antes del plazo: la página otra vez y el resto de su grupo
-# Tras volver a servir, más despacio el resto de la pasada. El freno no sale solo del ritmo (a 7 s, 169
-# páginas sin frenar a las 21:19 y freno tras 13 a las 16:39): no merece pararse en seco. ×1,5 (7 → 10,5 s)
-# aún deja ~85 páginas en 15 min; si vuelve a frenar y a servir, el doble (14 s), y no más.
-BRAKE_SLOWDOWN = 1.5
-BRAKE_SLOWDOWN_MAX = 2.0
+# La espera del freno (lo medido el 15/10/2026, en el docstring del módulo). La primera, sin pedir nada
+# (FIFLP_BRAKE_PAUSE_MIN): el bloqueo dura ~5 min y casi nunca menos de 2, así que antes de 4 min un
+# sondeo saldría vacío casi siempre. Después, la misma página cada BRAKE_PROBE s (FIFLP_BRAKE_PROBE_S):
+# vuelve a servir hacia los 300 o los 360 s, y con sondeos de minuto en minuto se pierde, como mucho, un
+# minuto de cada freno (con pausas fijas de 5 min, hasta 5). Cada freno, como mucho BRAKE_CAP s desde la
+# página vacía (FIFLP_BRAKE_MAX_MIN): el más largo visto duró 364 s; si a los 10 min no ha vuelto, algo
+# distinto pasa (una caída, otro bloqueo) y la pasada se da por acabada. Sin tope de frenos por pasada
+# (BRAKE_PAUSES, None; FIFLP_BRAKE_PAUSES lo pone): cada vuelta son ~15 páginas más, y el plazo manda.
+BRAKE_PAUSE = 4 * 60
+BRAKE_PROBE = 60
+BRAKE_PROBE_MIN = 30      # un sondeo más seguido no es educado (FIFLP_BRAKE_PROBE_S por debajo: el de siempre)
+BRAKE_CAP = 10 * 60
+BRAKE_PAUSES = None
+BRAKE_ROOM = 2 * 60       # tras la espera (y tras cada sondeo), antes del plazo: ~15 páginas a 7 s
 # Los motivos de un intento fallido (goto, `why`) que Federacion mira: el freno (una página vacía, o un
 # BRAKE_STATUSES) y el navegador cerrado (no la federación). Los demás, el texto del registro.
 EMPTY = "vacía"
@@ -109,6 +127,13 @@ def _env_number(text):
     return float(text.strip().replace(",", "."))
 
 
+def _env_value(name, env=None):
+    """El número de la variable `name` (con coma o punto decimal), o None si no está o no se entiende."""
+    text = (os.environ if env is None else env).get(name, "")
+    m = re.fullmatch(r"\s*([0-9]+(?:[.,][0-9]+)?)\s*", text or "")
+    return _env_number(m.group(1)) if m else None
+
+
 def delay_range(env=None):
     """(mínimo, máximo) de la pausa entre peticiones: FIFLP_DELAY, «1-1.5» o «1.2» (fija). Un valor
     que no se entiende, al revés o negativo no deja al bot sin pausa: vale el de por defecto."""
@@ -131,23 +156,39 @@ def ready_timeout_ms(env=None):
 def min_interval(env=None):
     """Los segundos mínimos entre el inicio de dos peticiones a la federación (FIFLP_MIN_INTERVAL). Un
     valor que no se entiende o negativo deja el de por defecto: nunca el bot sin freno."""
-    text = (os.environ if env is None else env).get("FIFLP_MIN_INTERVAL", "")
-    m = re.fullmatch(r"\s*([0-9]+(?:[.,][0-9]+)?)\s*", text or "")
-    return _env_number(m.group(1)) if m else DEFAULT_INTERVAL
+    value = _env_value("FIFLP_MIN_INTERVAL", env)
+    return DEFAULT_INTERVAL if value is None else value
 
 
 def brake_pause_seconds(env=None):
-    """La pausa larga cuando la federación frena (FIFLP_BRAKE_PAUSE_MIN minutos; 5 por defecto). Un
-    valor que no se entiende o que no es positivo deja el de por defecto."""
-    text = (os.environ if env is None else env).get("FIFLP_BRAKE_PAUSE_MIN", "")
-    m = re.fullmatch(r"\s*([0-9]+(?:[.,][0-9]+)?)\s*", text or "")
-    value = _env_number(m.group(1)) * 60 if m else 0
-    return value if value > 0 else BRAKE_PAUSE
+    """La primera espera cuando la federación frena, sin pedirle nada (FIFLP_BRAKE_PAUSE_MIN minutos; 4
+    por defecto; hasta el 15/10/2026 era cada una de las pausas fijas, de 5). Un valor que no se entiende
+    o que no es positivo deja el de por defecto."""
+    value = _env_value("FIFLP_BRAKE_PAUSE_MIN", env)
+    return value * 60 if value else BRAKE_PAUSE
+
+
+def brake_probe_seconds(env=None):
+    """Cada cuánto, tras la primera espera, se vuelve a pedir la misma página (FIFLP_BRAKE_PROBE_S
+    segundos; 60 por defecto). Menos de BRAKE_PROBE_MIN, o un valor que no se entiende, deja el de por
+    defecto: un sondeo detrás de otro no es educado (y el bloqueo no se pasa antes)."""
+    value = _env_value("FIFLP_BRAKE_PROBE_S", env)
+    return value if value is not None and value >= BRAKE_PROBE_MIN else BRAKE_PROBE
+
+
+def brake_cap_seconds(env=None):
+    """El tope de cada freno, desde la página vacía (FIFLP_BRAKE_MAX_MIN minutos; 10 por defecto): si no
+    vuelve a servir antes, nada más en esa pasada. Un valor que no se entiende o no positivo, el de
+    por defecto."""
+    value = _env_value("FIFLP_BRAKE_MAX_MIN", env)
+    return value * 60 if value else BRAKE_CAP
 
 
 def brake_pauses(env=None):
-    """Cuántas pausas largas por pasada (FIFLP_BRAKE_PAUSES; 3 por defecto). Con 0, ninguna: al frenar,
-    la pasada se da por perdida, como antes del 15/10/2026."""
+    """Cuántos frenos se esperan por pasada (FIFLP_BRAKE_PAUSES): por defecto, sin tope (None: los que
+    quepan en el plazo). Con 0, ninguno: al frenar, la pasada se da por perdida, como antes del
+    15/10/2026. Lo que no es un entero, sin tope. (Hasta el 15/10/2026 eran las pausas de 5 min por
+    pasada, 3.)"""
     text = (os.environ if env is None else env).get("FIFLP_BRAKE_PAUSES", "").strip()
     return int(text) if text.isdigit() else BRAKE_PAUSES
 
@@ -187,8 +228,8 @@ def wait_ready(page, selector, timeout_ms, hosts=FIFLP_HOSTS):
 
 
 class _Closed(Exception):
-    """El navegador se cerró en una petición de Federacion (la página, la de _serving o la de tras una
-    pausa): Federacion.goto lo atiende en un solo sitio."""
+    """El navegador se cerró en una petición de Federacion (la página, la de _serving o un sondeo del
+    freno): Federacion.goto lo atiende en un solo sitio."""
 
 
 def _closed(page, error):
@@ -212,15 +253,15 @@ def _refused(response):
 def goto(page, url, deadline=None, retries=3, ready_ms=None, hosts=FIFLP_HOSTS, sleep=time.sleep, log=print,
          clock=time.monotonic, why=None):
     """Carga `url` y espera a que esté lista para el lector (ready_selector y hojas de estilo). Hasta
-    `retries` intentos, con 15 y 30 s entre ellos (tras una página vacía, una sola espera de EMPTY_WAIT),
-    nunca más allá de `deadline` (en `clock`): una página que no carga (o que la federación sirve con un
-    5xx, un 429 o vacía) se deja para la próxima pasada. True si cargó. En `why` (una lista), el motivo
-    de cada intento fallido: EMPTY o REFUSED si fue el freno (vacía, o un BRAKE_STATUSES), CLOSED si se
-    cerró el navegador (sin más intentos: no es la federación); Federacion los usa para su pausa larga.
+    `retries` intentos, con 15 y 30 s entre ellos, nunca más allá de `deadline` (en `clock`): una página
+    que no carga (o que la federación sirve con un 5xx o un 429) se deja para la próxima pasada. Una
+    página VACÍA (el freno) no se reintenta: la misma página 10 s después sigue vacía y el bloqueo dura
+    ~5 min (15/10/2026); Federacion espera el freno. True si cargó. En `why` (una lista), el motivo de
+    cada intento fallido: EMPTY o REFUSED si fue el freno (vacía, o un BRAKE_STATUSES), CLOSED si se
+    cerró el navegador (sin más intentos: no es la federación); Federacion los usa para su espera.
     Cada carga, por fiflp_render.goto: desde el 2.º intento (la misma URL otra vez), y la 1.ª si el navegador
     ya la pidió antes, el documento va a la red y no a la caché HTTP (la federación los da con
-    «Cache-Control: private, max-age=300»: si no, el reintento de una página vacía podría ser la vacía
-    guardada)."""
+    «Cache-Control: private, max-age=300»: si no, un sondeo del freno podría ser la vacía guardada)."""
     timeout_ms = ready_timeout_ms() if ready_ms is None else ready_ms
     for attempt in range(retries):
         status = None
@@ -244,10 +285,10 @@ def goto(page, url, deadline=None, retries=3, ready_ms=None, hosts=FIFLP_HOSTS, 
         braking = failure.startswith("página vacía")
         if why is not None:
             why.append(EMPTY if braking else REFUSED if status in BRAKE_STATUSES else failure)
-        # El freno dura: una sola espera larga; si sigue, la página no carga (Federacion decide si pausa).
-        if attempt + 1 >= retries or (braking and attempt >= 1):
+        # El freno dura minutos: ni un reintento (Federacion lo espera). Lo demás, con sus esperas cortas.
+        if braking or attempt + 1 >= retries:
             return False
-        wait = EMPTY_WAIT if braking else RETRY_WAITS[min(attempt, len(RETRY_WAITS) - 1)]
+        wait = RETRY_WAITS[min(attempt, len(RETRY_WAITS) - 1)]
         if deadline is not None and clock() + wait > deadline:
             return False
         log(f"      {failure} ({attempt + 1}/{retries}), se reintenta en {wait} s")
@@ -260,43 +301,50 @@ class Federacion:
     clasificación y de jornada) con la carga y la pausa de aquí, para UNA pasada. `deadline` (en
     `clock`) es el plazo global del bot: ninguna página empieza después (contando la espera del
     intervalo: si no cabe, se espera igual y no se pide, y el bot ve el plazo agotado), y corta los
-    reintentos de una página y las pausas largas. Entre el inicio de dos peticiones pasan al menos
-    `interval` segundos (min_interval). Cuenta:
-      - `pages`, las peticiones (también la de después de una pausa larga y la de comprobar si sirve
-        otra: el log del bot da el coste por página), y `served`, las páginas que cargaron;
+    reintentos de una página y la espera del freno. Entre el inicio de dos peticiones pasan al menos
+    `interval` segundos (min_interval), también tras un freno (sin ralentizar: el cupo es de páginas).
+    Cuenta:
+      - `pages`, las peticiones (también los sondeos del freno y la de comprobar si sirve otra: el log
+        del bot da el coste por página), y `served`, las páginas que cargaron;
       - `failures`, las seguidas que no cargan (con BLOCKED_AFTER, `blocked`: no pedirle más);
       - el freno: `brakes`, sus señales (cada página vacía o con un 503 o un 429, cargue o no tras sus
         reintentos, y cada racha de BLOCKED_AFTER sin cargar en la que la federación no sirve otra
-        página: _serving), y en `brake_marks`
-        las páginas servidas (`served`) hasta cada una (el bot sabe así si un fallo anterior, sin servir
-        nada entre medias, ya era el freno); `unserved`, las páginas que no sirvió por su freno;
-        `pauses`, las pausas largas hechas (como mucho `max_pauses`, de `pause_seconds` cada una:
-        brake_pauses y brake_pause_seconds); `resumed`, cuántas veces volvió a servir tras una pausa (no
-        tras cuántas pausas: eso lo dice el registro); `paused`, los segundos en pausa (no son coste de
-        ninguna página ni de ningún grupo); y `halted`: frenó sin pausas o sin plazo para otra, y no se
-        le pide nada más (`blocked`);
-      - `closed`: el navegador se cerró (Chromium caído). No es el freno (ni señal ni pausas): `halted`,
+        página: _serving), y en `brake_marks` las páginas servidas (`served`) hasta cada una (el bot sabe
+        así si un fallo anterior, sin servir nada entre medias, ya era el freno); `unserved`, las páginas
+        que no sirvió por su freno;
+      - la espera de cada freno (una página vacía, o la que dejaría a la federación `blocked`): `pauses`,
+        los frenos esperados (cada uno, su primera espera de `pause_seconds` y sus sondeos cada
+        `probe_seconds`, como mucho `cap_seconds` desde la página vacía; como mucho `max_pauses` por
+        pasada, None sin tope: brake_pause_seconds, brake_probe_seconds, brake_cap_seconds y
+        brake_pauses); `resumed`, tras cuántos volvió a servir; `probes`, los sondeos; `brake_after`, las
+        páginas servidas antes de cada freno, desde el anterior (el cupo, que el registro da también:
+        «frena tras 15 páginas»); `paused`, los segundos esperando (no son coste de ninguna página ni de ningún grupo); y
+        `halted`: frenó y no volvió (sin sitio en el plazo, pasado el tope o sin esperas), y no se le pide
+        nada más (`blocked`);
+      - `closed`: el navegador se cerró (Chromium caído). No es el freno (ni señal ni espera): `halted`,
         y el bot da por error el grupo que se estaba leyendo.
     Toda petición pasa por goto y fiflp_render.goto: una URL que el navegador ya pidió en la pasada (la otra
-    página de _serving, la misma tras una pausa larga, lo que el bot vuelve a pedir) va a la red, no a la
-    caché HTTP. Lo recuerda el navegador (su contexto), no esta clase: vale igual para cualquier lector."""
+    página de _serving, los sondeos, lo que el bot vuelve a pedir) va a la red, no a la caché HTTP. Lo
+    recuerda el navegador (su contexto), no esta clase: vale igual para cualquier lector."""
 
     def __init__(self, scraper, deadline=None, interval=None, clock=time.monotonic, sleep=time.sleep,
-                 pause_seconds=None, max_pauses=None, wall=None, log=print):
+                 pause_seconds=None, max_pauses=None, probe_seconds=None, cap_seconds=None, wall=None, log=print):
         self._scraper = scraper
         self.BASE = scraper.BASE
         self.deadline = deadline
         self.pages = self.served = self.failures = self.unserved = self.brakes = 0
-        self.brake_marks = []
+        self.brake_marks, self.brake_after = [], []
         self.interval = min_interval() if interval is None else interval
-        self.base_interval = self.interval
         self.pause_seconds = brake_pause_seconds() if pause_seconds is None else pause_seconds
+        self.probe_seconds = brake_probe_seconds() if probe_seconds is None else probe_seconds
+        self.cap_seconds = brake_cap_seconds() if cap_seconds is None else cap_seconds
         self.max_pauses = brake_pauses() if max_pauses is None else max_pauses
-        self.pauses = self.resumed = 0
+        self.pauses = self.resumed = self.probes = 0
         self.paused = 0.0
         self.halted = self.closed = False
         self._clock, self._sleep, self._last = clock, sleep, None
         self._good = None                 # la última página que cargó (_serving)
+        self._run = 0                     # las páginas servidas desde el último freno (su cupo)
         self._wall = wall or (lambda: datetime.now(timezone.utc))
         self._log = log
 
@@ -325,6 +373,10 @@ class Federacion:
             self._good = url
         return loaded, why
 
+    def _count_served(self):
+        self.served += 1
+        self._run += 1
+
     def _serving(self, page, url):
         """¿Sirve la federación otra página: la última que cargó o, si aún no ha cargado ninguna, la de
         competiciones de la temporada (CATALOG_URL, que existe siempre)? Distingue una racha de URLs
@@ -337,37 +389,74 @@ class Federacion:
         if not got or not got[0]:
             return False
         self.failures = 0
-        self.served += 1
+        self._count_served()
         return True
 
-    def _pause_fits(self):
-        """¿Otra pausa larga? Si quedan y, tras ella, aún hay BRAKE_ROOM antes del plazo."""
-        if self.pauses >= self.max_pauses:
-            n = self.pauses
-            self._log(f"      la federación sigue frenando tras {n} pausa{'s' if n > 1 else ''}: nada más en esta pasada"
-                      if n else "      la federación frena (sin pausas largas): nada más en esta pasada")
-            return False
-        if self.deadline is not None and self._clock() + self.pause_seconds + BRAKE_ROOM > self.deadline:
-            self._log(f"      la federación frena y no queda plazo para una pausa de {self.pause_seconds / 60:g} "
-                      "min: nada más en esta pasada")
-            return False
-        return True
-
-    def _pause(self):
-        self.pauses += 1
-        until = self._wall() + timedelta(seconds=self.pause_seconds)
-        self._log(f"      la federación frena: pausa de {self.pause_seconds / 60:g} min "
-                  f"({self.pauses}/{self.max_pauses}), hasta las {until:%H:%M} UTC")
+    def _idle(self, seconds):
+        """Espera `seconds` sin pedir nada (la del freno): cuenta en `paused`."""
+        if seconds <= 0:
+            return
         began = self._clock()
-        self._sleep(self.pause_seconds)
+        self._sleep(seconds)
         self.paused += self._clock() - began
+
+    def _wait_brake(self, page, url):
+        """La espera de un freno en `url`: la primera, de `pause_seconds`, sin pedir nada; después, un sondeo
+        (la misma página, una sola petición, fresca) cada `probe_seconds` hasta que sirva, mientras cada uno
+        quepa con BRAKE_ROOM antes del plazo y no pase de `cap_seconds` desde ahora (la página vacía). Da
+        (¿cargó esta página?, ¿volvió a servir?): vuelve a servir si carga esta o, si esta no y no está
+        vacía, otra (_serving: la federación sirve y esta página no)."""
+        n = self._run
+        self.brake_after.append(n)
+        if self.max_pauses is not None and self.pauses >= self.max_pauses:
+            self._log("      la federación frena (sin esperas: FIFLP_BRAKE_PAUSES=0): nada más en esta pasada"
+                      if not self.max_pauses else
+                      f"      la federación frena otra vez, y ya se esperaron {self.pauses} (FIFLP_BRAKE_PAUSES): "
+                      "nada más en esta pasada")
+            return False, False
+        began = self._clock()
+        if self.deadline is not None and began + self.pause_seconds + BRAKE_ROOM > self.deadline:
+            self._log(f"      la federación frena y no queda plazo para esperarla ({self.pause_seconds / 60:g} min y "
+                      f"{BRAKE_ROOM / 60:g} de margen): nada más en esta pasada")
+            return False, False
+        self.pauses += 1
+        until =self._wall() + timedelta(seconds=self.cap_seconds)
+        self._log(f"      la federación frena tras {n} página{'' if n == 1 else 's'}: espera de "
+                  f"{self.pause_seconds / 60:g} min y después la misma página cada {self.probe_seconds:g} s, "
+                  f"hasta las {until:%H:%M} UTC como mucho")
+        self._idle(self.pause_seconds)
+        while True:
+            got = self._request(page, url, retries=1)
+            if got is None:                       # tras el intervalo, pasado el plazo: ni se pidió
+                self._log("      la federación sigue frenando y se acaba el plazo: nada más en esta pasada")
+                return False, False
+            self.probes += 1
+            at = self._last                       # cuándo empezó el sondeo
+            loaded, empty = got[0], EMPTY in got[1]
+            if loaded or (not empty and self._serving(page, url)):
+                self.resumed += 1
+                self._run = 0 if loaded else 1       # la que cargó, la 1.ª de la vuelta (esta la cuenta _goto)
+                self._log(f"      la federación vuelve a servir a los {at - began:.0f} s"
+                          f"{'' if loaded else ', pero no esta página'}: se sigue")
+                return loaded, True
+            following = at + self.probe_seconds
+            if following - began > self.cap_seconds:
+                self._log(f"      la federación sigue frenando a los {at - began:.0f} s (tope de "
+                          f"{self.cap_seconds / 60:g} min por freno): nada más en esta pasada")
+                return False, False
+            if self.deadline is not None and following + BRAKE_ROOM > self.deadline:
+                self._log(f"      la federación sigue frenando a los {at - began:.0f} s y no queda plazo "
+                          "para otro sondeo: nada más en esta pasada")
+                return False, False
+            self._log(f"      a los {at - began:.0f} s, sigue frenando")
+            self._idle(following - self._clock())
 
     def goto(self, page, url):
         if self.halted or (self.deadline is not None and self._clock() > self.deadline):
             return False                  # frenada sin remedio, o pasado el plazo: ni se pide
         try:
             return self._goto(page, url)
-        except _Closed:                   # el navegador, no la federación: ni señal del freno ni pausas
+        except _Closed:                   # el navegador, no la federación: ni señal del freno ni espera
             self.closed = self.halted = True
             self.failures += 1
             self._log("      el navegador se ha cerrado: nada más en esta pasada")
@@ -391,27 +480,15 @@ class Federacion:
         if signal or streak:
             self.brakes += 1
             self.brake_marks.append(self.served)
-        # En vez de rendirse, pausas largas mientras quepan, y la misma página otra vez.
+        # En vez de rendirse, la espera del freno: la misma página hasta que vuelva a servir.
         braking = not loaded and (empty or streak)
-        while braking:
-            if not self._pause_fits():
-                self.halted = True
-                break
-            self._pause()
-            got = self._request(page, url, retries=1)
-            loaded, empty = (got[0], EMPTY in got[1]) if got else (False, False)
-            # Vuelve a servir si carga esta o, si esta no y no está vacía, otra (_serving).
-            if loaded or (got and not empty and self._serving(page, url)):
-                braking = False
-                self.resumed += 1
-                self.interval = min(self.interval * BRAKE_SLOWDOWN, self.base_interval * BRAKE_SLOWDOWN_MAX)
-                self._log(f"      la federación vuelve a servir{'' if loaded else ', pero no esta página'}: se "
-                          f"sigue, una página cada {self.interval:g} s")
-            else:
-                self._log("      la federación sigue frenando")
+        if braking:
+            loaded, resumed = self._wait_brake(page, url)
+            braking = not resumed
+            self.halted = braking
         if loaded:
             self.failures = 0
-            self.served += 1
+            self._count_served()
         else:
             self.failures += 1
             self.unserved += braking

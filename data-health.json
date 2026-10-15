@@ -119,8 +119,8 @@
     "FF5": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234218",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-15T09:47:44+00:00"
+      "message": "2 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 17 goleadores",
+      "checkedAt": "2026-10-15T12:46:38+00:00"
     },
     "FF6": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234221",
@@ -178,9 +178,9 @@
     },
     "LZ2": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976982&CodGrupo=55134273",
-      "status": "error",
-      "message": "la federación no sirvió las jornadas del grupo",
-      "checkedAt": "2026-10-14T14:39:59+00:00"
+      "status": "ok",
+      "message": "2 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
+      "checkedAt": "2026-10-15T13:10:29+00:00"
     },
     "LZ3": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976982&CodGrupo=55141374",
@@ -209,8 +209,8 @@
     "PG2": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247208",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-15T09:47:13+00:00"
+      "message": "2 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 26 goleadores",
+      "checkedAt": "2026-10-15T12:46:15+00:00"
     },
     "PG3": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247221",
@@ -281,8 +281,8 @@
     "AL18": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203443",
       "status": "ok",
-      "message": "4 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-15T09:56:04+00:00"
+      "message": "2 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 31 goleadores",
+      "checkedAt": "2026-10-15T12:53:10+00:00"
     },
     "AL19": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203466",
@@ -299,8 +299,8 @@
     "AL20": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203542",
       "status": "ok",
-      "message": "4 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 0/1 actas, 15 goleadores",
-      "checkedAt": "2026-10-15T07:53:45+00:00"
+      "message": "2 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 0/1 actas, 15 goleadores",
+      "checkedAt": "2026-10-15T12:53:37+00:00"
     },
     "AL21": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203564",
@@ -364,15 +364,15 @@
     },
     "AL30": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203711",
-      "status": "error",
-      "message": "la federación no sirvió las jornadas del grupo",
-      "checkedAt": "2026-10-14T14:39:47+00:00"
+      "status": "ok",
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
+      "checkedAt": "2026-10-15T13:09:55+00:00"
     },
     "AL31": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203767",
-      "status": "error",
-      "message": "la federación no sirvió las jornadas del grupo",
-      "checkedAt": "2026-10-14T14:40:11+00:00"
+      "status": "ok",
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
+      "checkedAt": "2026-10-15T13:10:57+00:00"
     },
     "AL32": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203894",
@@ -383,8 +383,8 @@
     "AL4": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203220",
       "status": "ok",
-      "message": "4 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-15T09:48:18+00:00"
+      "message": "2 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 33 goleadores",
+      "checkedAt": "2026-10-15T12:47:06+00:00"
     },
     "AL5": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203222",
@@ -413,8 +413,8 @@
     "AL9": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203306",
       "status": "ok",
-      "message": "4 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-15T09:55:02+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 23 goleadores",
+      "checkedAt": "2026-10-15T12:47:34+00:00"
     }
   },
   "nextSeason": {
@@ -422,98 +422,97 @@
     "status": "pending"
   },
   "run": {
-    "pass": 1105,
+    "pass": 1107,
     "groups": 69,
-    "refreshed": 5,
+    "refreshed": 9,
     "resting": [],
     "deferred": [
-      "AL14",
-      "AL15",
-      "AL16",
-      "AL10",
-      "AL11",
-      "AL12",
-      "AL13",
-      "AL23",
-      "PG3",
-      "FF14",
-      "FF15",
-      "FF16",
-      "FF17",
-      "FF10",
-      "FF11",
-      "FF12",
-      "FF13",
-      "AL24",
-      "PG4",
-      "FF22",
-      "FF23",
-      "AL25",
-      "FF24",
-      "AL17",
-      "FV11",
-      "AL19",
-      "FF18",
-      "FF19",
-      "AL21",
-      "FF20",
-      "AL22",
-      "FF21",
-      "AL30",
-      "PG1",
-      "LZ2",
-      "LZ3",
-      "AL31",
-      "LZ4",
       "AL32",
-      "LZ5",
+      "LZ4",
       "AL26",
-      "FV12",
+      "LZ5",
       "AL27",
-      "FV13",
+      "FV12",
       "AL28",
-      "FV14",
+      "FV13",
       "AL29",
-      "LZ1",
+      "FV14",
       "AL2",
+      "LZ1",
+      "AL3",
+      "PG1",
       "FF2",
       "FF3",
-      "AL3",
-      "FF4",
       "AL5",
-      "FF6",
+      "FF4",
       "AL6",
-      "FF7",
+      "FF6",
       "AL7",
+      "FF7",
       "FF8",
       "AL8",
       "FF9",
       "AL1",
-      "FF1"
+      "FF1",
+      "AL11",
+      "PG3",
+      "FF11",
+      "FF12",
+      "AL12",
+      "FF13",
+      "AL13",
+      "FF14",
+      "AL14",
+      "FF15",
+      "AL15",
+      "FF16",
+      "AL16",
+      "FF17",
+      "AL10",
+      "FF10",
+      "AL19",
+      "PG4",
+      "FF19",
+      "FF20",
+      "AL21",
+      "FF21",
+      "AL22",
+      "FF22",
+      "AL23",
+      "FF23",
+      "AL24",
+      "FF24",
+      "AL25",
+      "FV11",
+      "AL17",
+      "FF18"
     ],
     "unserved": [
-      "AL20"
+      "LZ3"
     ],
     "extrasDeferred": [
-      "PG2",
-      "FF5",
-      "AL4",
-      "AL9",
-      "AL18"
+      "AL30",
+      "LZ2",
+      "AL31"
     ],
-    "firstPassSeconds": 1285,
-    "seconds": 1285,
-    "firstPassPages": 34,
+    "firstPassSeconds": 875,
+    "seconds": 1824,
+    "firstPassPages": 44,
     "blocked": true,
     "pauses": 3,
-    "resumed": 1
+    "resumed": 2,
+    "brakeAfter": [
+      16,
+      15,
+      15
+    ]
   },
-  "checkedAt": "2026-10-15T10:09:47+00:00",
-  "lastDataChange": "2026-10-14",
-  "dataVersion": "20261014j",
+  "checkedAt": "2026-10-15T13:17:54+00:00",
+  "lastDataChange": "2026-10-15",
+  "dataVersion": "20261015",
   "summary": {
-    "ok": 32,
+    "ok": 35,
     "rejected": 0,
-    "error": 37
+    "error": 34
   }
 }

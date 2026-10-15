@@ -429,19 +429,35 @@ def option_round(text):
 
 
 def stored_rounds(conn, group_id):
-    """{jornada: (fecha más temprana ISO, ¿falta algún resultado?)}."""
+    """{jornada: (fecha ISO del primer partido sin resultado, o '' si no falta ninguno con fecha;
+    ¿falta algún resultado?)}. La del primero SIN resultado, no la más temprana: un partido adelantado
+    y ya jugado no hace leer antes de tiempo su jornada (rounds_to_refresh)."""
     out = {}
     for jornada, day, pending in conn.execute(
-            """SELECT jornada, min(date), max(home_score IS NULL OR away_score IS NULL)
+            """SELECT jornada, min(CASE WHEN home_score IS NULL OR away_score IS NULL THEN date END),
+                      max(home_score IS NULL OR away_score IS NULL)
                FROM matches WHERE group_id=? GROUP BY jornada""", (group_id,)):
         out[jornada] = (day or "", bool(pending))
     return out
 
 
+def _waiting(day, today):
+    """¿Es `day` (una fecha, o ISO) de hace menos de PENDING_DAYS, y ya pasada?"""
+    if isinstance(day, str):
+        try:
+            day = date.fromisoformat(day[:10])
+        except ValueError:
+            return False
+    return day is not None and today - timedelta(days=PENDING_DAYS) <= day < today
+
+
 def rounds_to_refresh(options, stored, today, full=False):
     """Qué jornadas (las opciones del desplegable de FIFLP) hay que volver a leer: las de la ventana
     (BACK_DAYS atrás y AHEAD_DAYS adelante: la última jugada y la próxima), las que la base no tiene y
-    las que tienen un resultado pendiente desde hace menos de PENDING_DAYS (aplazados). Con `full` (la
+    las que tienen un resultado pendiente desde hace menos de PENDING_DAYS (aplazados): por la fecha del
+    desplegable o por la guardada (stored_rounds: la del primer partido sin resultado). Lo segundo es una
+    jornada entera que la federación pasa a más adelante (fuera de AHEAD_DAYS): la base la tiene en su
+    fecha vieja, ya pasada y sin resultados, hasta que se lee una vez y toma la nueva. Con `full` (la
     primera pasada sobre un grupo recién activado: full_read_pending), también todas las ya
     jugadas, por viejas que sean: así se guarda el código de sus actas."""
     picked = []
@@ -452,8 +468,7 @@ def rounds_to_refresh(options, stored, today, full=False):
             recent = True
         new = label not in stored
         day, pending = stored.get(label, ("", False))
-        overdue = (pending and when is not None and
-                   today - timedelta(days=PENDING_DAYS) <= when < today)
+        overdue = pending and (_waiting(when, today) or _waiting(day, today))
         if recent or new or overdue:
             picked.append(opt)
     return picked

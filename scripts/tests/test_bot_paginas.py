@@ -4,10 +4,11 @@ La federación sirve ~15 páginas por IP y después frena ~5 min (medido el 15/1
 página es ~1/15 del cupo. Un grupo costaba la clasificación, el calendario y las jornadas de la ventana de
 21 días atrás y 14 adelante (~5: ~7 páginas). Ahora la ventana es de 10 atrás y 8 adelante (BACK_DAYS,
 AHEAD_DAYS): la última jornada jugada y la próxima, 2-3 jornadas (~4-5 páginas), sin perder lo que
-importa: los resultados que faltan (PENDING_DAYS, aplazados incluidos), las jornadas que la base no
-tiene, las de entre semana y la primera pasada completa de un grupo recién activado. Lo que sí deja de
-hacerse: releer una jornada COMPLETA de hace 11-21 días (una corrección tan tardía ya no se ve en la
-jornada; el acta, que manda, sí se lee).
+importa: los resultados que faltan (PENDING_DAYS, aplazados incluidos, también una jornada entera que
+la federación pasa a fuera de la ventana), las jornadas que la base no tiene, las de entre semana y la
+primera pasada completa de un grupo recién activado. Lo que sí deja de hacerse: releer una jornada
+COMPLETA de hace 11-21 días (una corrección tan tardía ya no se ve en la jornada; el acta, que manda, sí
+se lee).
 
 Y el calendario (NFG_CmpJornada sin CodJornada): ¿trae ya los partidos de la jornada seleccionada en su
 desplegable? Sin red no se puede asegurar (no hay ninguna guardada, y leer como una jornada los partidos
@@ -117,6 +118,50 @@ def test_what_is_no_longer_reread_is_a_complete_round_two_or_three_weeks_old():
     options = calendar()
     today = date(2026, 10, 15)                                  # la 4 (10/10) y la 3 (3/10): 5 y 12 días
     assert "3" not in picked(options, today) and "3" in window(today, 21, 14, options)
+
+
+def test_a_whole_round_moved_two_weeks_on_is_read_once_with_its_new_date():
+    """La federación pasa una jornada entera sin jugar (la 5, del sábado 17/10) al 31/10 (un puente). La base la
+    sigue teniendo en su fecha vieja, ya pasada y sin resultados, y el desplegable da la nueva, fuera de la
+    ventana (AHEAD_DAYS, 8). Se lee por su fecha GUARDADA (un partido sin resultado de hace menos de
+    PENDING_DAYS), una vez: write_round les pone la nueva a sus partidos (la de la jornada, si no traen la suya)
+    y ya no se vuelve a leer hasta que entre en la ventana. Sin esto, la web la enseñaba hasta el 23/10 como
+    jugada el 17 y sin resultado (con la ventana de antes, 14 días, solo si caía a 9-14 días vista)."""
+    today = date(2026, 10, 20)
+    options = [{"value": "4", "text": "4 - 10-10-2026"}, {"value": "5", "text": "5 - 31-10-2026"},
+               {"value": "6", "text": "6 - 24-10-2026"}]
+    stored = {"Jornada 4": ("2026-10-10", False), "Jornada 5": ("2026-10-17", True), "Jornada 6": ("2026-10-24", True)}
+    assert [o["value"] for o in U.rounds_to_refresh(options, stored, today)] == ["4", "5", "6"]
+    for day in ("21-11-2026", "13-02-2027"):                    # a un mes o a cuatro, igual: una vez
+        moved = options[:1] + [{"value": "5", "text": f"5 - {day}"}] + options[2:]
+        assert [o["value"] for o in U.rounds_to_refresh(moved, stored, today)] == ["4", "5", "6"]
+    stored["Jornada 5"] = ("2026-10-31", True)                  # leída: en la base, en su fecha nueva
+    assert [o["value"] for o in U.rounds_to_refresh(options, stored, today)] == ["4", "6"]
+    stored["Jornada 5"] = ("2026-06-01", True)                  # más de PENDING_DAYS: ni así (como antes)
+    assert [o["value"] for o in U.rounds_to_refresh(options, stored, today)] == ["4", "6"]
+
+
+def test_the_stored_date_of_a_round_is_its_first_match_without_a_result():
+    """stored_rounds da, de cada jornada, la fecha del primer partido SIN resultado: un partido adelantado y ya
+    jugado (con resultado y fecha pasada) no hace leer antes de tiempo su jornada, que sigue a dos semanas; uno
+    adelantado que aún no tiene resultado, sí (lo busca PENDING_DAYS); y sin ninguno pendiente, nada."""
+    import sqlite3
+    from db import SCHEMA
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(SCHEMA)
+    for t in range(1, 5):
+        conn.execute("INSERT INTO teams(id, name) VALUES (?, ?)", (t, f"Equipo {t}"))
+    rows = [("Jornada 7", "2026-10-17", 1, 2, 3, 1), ("Jornada 7", "2026-10-31", 3, 4, None, None),   # adelantado, jugado
+            ("Jornada 8", "2026-10-18", 1, 3, None, None), ("Jornada 8", "2026-11-07", 2, 4, None, None),  # sin resultado
+            ("Jornada 3", "2026-10-03", 1, 4, 0, 0), ("Jornada 3", "2026-10-03", 2, 3, 1, 1)]
+    for jornada, day, home, away, hs, as_ in rows:
+        conn.execute("""INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score, away_score)
+                        VALUES (1, ?, ?, ?, ?, ?, ?)""", (jornada, day, home, away, hs, as_))
+    stored = U.stored_rounds(conn, 1)
+    assert stored == {"Jornada 7": ("2026-10-31", True), "Jornada 8": ("2026-10-18", True), "Jornada 3": ("", False)}
+    options = [{"value": "7", "text": "7 - 31-10-2026"}, {"value": "8", "text": "8 - 07-11-2026"},
+               {"value": "3", "text": "3 - 03-10-2026"}]
+    assert [o["value"] for o in U.rounds_to_refresh(options, stored, date(2026, 10, 20))] == ["8"]
 
 
 # ── Lo que cuesta un grupo ─────────────────────────────────────────────────────

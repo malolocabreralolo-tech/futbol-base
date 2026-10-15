@@ -420,7 +420,7 @@ class Federacion:
                       f"{BRAKE_ROOM / 60:g} de margen): nada más en esta pasada")
             return False, False
         self.pauses += 1
-        until =self._wall() + timedelta(seconds=self.cap_seconds)
+        until = self._wall() + timedelta(seconds=self.cap_seconds)
         self._log(f"      la federación frena tras {n} página{'' if n == 1 else 's'}: espera de "
                   f"{self.pause_seconds / 60:g} min y después la misma página cada {self.probe_seconds:g} s, "
                   f"hasta las {until:%H:%M} UTC como mucho")

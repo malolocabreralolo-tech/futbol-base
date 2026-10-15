@@ -47,10 +47,10 @@ Por eso, desde ese día (Federacion):
   - la ESPERA del freno: FIFLP_BRAKE_PAUSE_MIN (4) minutos sin pedir nada y después LA MISMA página cada
     FIFLP_BRAKE_PROBE_S (60) segundos (un sondeo: una sola petición, al documento de la red y no al de la
     caché, porque la URL se repite), hasta que sirva; cada uno, si cabe en el plazo con BRAKE_ROOM para
-    leer algo después. Con un tope por freno, FIFLP_BRAKE_MAX_MIN (10) minutos desde la página vacía: si
+    leer algo después. Con un tope por freno, FIFLP_BRAKE_MAX_MIN (20) minutos desde la página vacía: si
     no vuelve, nada más en esa pasada (`blocked`). Con lo medido (~5 min) vuelve en el 2.º o el 3.º
-    sondeo (a los ~300 o ~360 s); el de 122 s, en el 1.º; y el tope deja 7 sondeos, hasta casi el doble
-    del más largo visto (364 s);
+    sondeo (a los ~300 o ~360 s); el de 122 s, en el 1.º; y el tope deja 17 sondeos (en la pasada 1106
+    un freno seguía a los 11 min);
   - SIN TOPE de frenos por pasada salvo el plazo: cada vuelta da otras ~15 páginas. FIFLP_BRAKE_PAUSES
     los limita si se quiere (0: ninguna espera, al frenar se acaba la pasada);
   - SIN RALENTIZAR al reanudar (antes, el intervalo ×1,5 y hasta ×2): el cupo no es de ritmo, y cada
@@ -91,13 +91,15 @@ CATALOG_URL = "/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
 # sondeo saldría vacío casi siempre. Después, la misma página cada BRAKE_PROBE s (FIFLP_BRAKE_PROBE_S):
 # vuelve a servir hacia los 300 o los 360 s, y con sondeos de minuto en minuto se pierde, como mucho, un
 # minuto de cada freno (con pausas fijas de 5 min, hasta 5). Cada freno, como mucho BRAKE_CAP s desde la
-# página vacía (FIFLP_BRAKE_MAX_MIN): el más largo visto duró 364 s; si a los 10 min no ha vuelto, algo
-# distinto pasa (una caída, otro bloqueo) y la pasada se da por acabada. Sin tope de frenos por pasada
+# página vacía (FIFLP_BRAKE_MAX_MIN): en el experimento el más largo duró 364 s, pero en la pasada 1106
+# (15/10/2026, 11:07 UTC) el segundo freno seguía a los 11 min; esperar cuesta solo un sondeo por minuto, así
+# que el tope es de 20 min. Si no ha vuelto, algo distinto pasa (una caída, otro bloqueo) y la pasada se da
+# por acabada. Sin tope de frenos por pasada
 # (BRAKE_PAUSES, None; FIFLP_BRAKE_PAUSES lo pone): cada vuelta son ~15 páginas más, y el plazo manda.
 BRAKE_PAUSE = 4 * 60
 BRAKE_PROBE = 60
 BRAKE_PROBE_MIN = 30      # un sondeo más seguido no es educado (FIFLP_BRAKE_PROBE_S por debajo: el de siempre)
-BRAKE_CAP = 10 * 60
+BRAKE_CAP = 20 * 60
 BRAKE_PAUSES = None
 BRAKE_ROOM = 2 * 60       # tras la espera (y tras cada sondeo), antes del plazo: ~15 páginas a 7 s
 # Los motivos de un intento fallido (goto, `why`) que Federacion mira: el freno (una página vacía, o un
@@ -177,7 +179,7 @@ def brake_probe_seconds(env=None):
 
 
 def brake_cap_seconds(env=None):
-    """El tope de cada freno, desde la página vacía (FIFLP_BRAKE_MAX_MIN minutos; 10 por defecto): si no
+    """El tope de cada freno, desde la página vacía (FIFLP_BRAKE_MAX_MIN minutos; 20 por defecto): si no
     vuelve a servir antes, nada más en esa pasada. Un valor que no se entiende o no positivo, el de
     por defecto."""
     value = _env_value("FIFLP_BRAKE_MAX_MIN", env)

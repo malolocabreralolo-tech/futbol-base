@@ -465,8 +465,8 @@ def test_the_brake_probe_asks_the_federation_not_the_cache(sync_api, server):
 
 def test_without_fresh_every_probe_would_be_the_stored_empty_page(sync_api, server, monkeypatch):
     """El control: sin fresh, cada sondeo sale de la caché (la vacía guardada, «private, max-age=300») sin
-    pedirle nada a la federación: los siete hasta el tope, y la página no carga aunque ya sirva."""
+    pedirle nada a la federación: los diecisiete hasta el tope, y la página no carga aunque ya sirva."""
     monkeypatch.setattr(R, "fresh", lambda page: contextlib.nullcontext(False))
     loaded, docs, fresh, _, F = _probe_after_an_empty_page(sync_api, server)
-    assert not loaded and F.halted and F.probes == 7
+    assert not loaded and F.halted and F.probes == 17
     assert len(docs) == 1 and fresh == []

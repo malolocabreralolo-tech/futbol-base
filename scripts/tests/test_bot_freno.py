@@ -14,7 +14,7 @@ se intentaron. Ahora:
   - B: al frenar, la espera del freno y LA MISMA página otra vez, mientras quepa en el plazo. Desde lo
     medido el 15/10/2026 (freno-fiflp.yml: ~15 páginas por IP y ~2-6 min de bloqueo, casi siempre ~5; el
     ritmo no importa): sin reintentar la vacía, 4 min sin pedir nada y después un sondeo de la misma
-    página cada minuto, con un tope de 10 min por freno y sin tope de frenos por pasada; al volver, al
+    página cada minuto, con un tope de 20 min por freno y sin tope de frenos por pasada; al volver, al
     mismo ritmo (antes, pausas fijas de 5 min, 3 por pasada, y más despacio al volver). Las esperas no
     les quitan su plazo a los calendarios de los prioritarios. Ninguna página empieza pasado el plazo.
 Sin red: la federación del bot de verdad (fiflp_carga.Federacion) con un reloj y un sueño falsos, sobre
@@ -237,7 +237,7 @@ def test_the_1103_brake_passes_after_the_brake_wait_and_the_pass_goes_on(bot, ca
     assert run["unserved"] == [] and run["deferred"] == [] and run["extrasDeferred"] == []
     assert "se reintenta en 60 s" not in log
     assert (f"      la federación frena tras {SERVED_1103} páginas: espera de 4 min y después la misma página cada "
-            "60 s, hasta las 03:39 UTC como mucho\n") in log
+            "60 s, hasta las 03:49 UTC como mucho\n") in log
     assert "      la federación vuelve a servir a los 240 s: se sigue\n" in log
     assert "error" not in log and "sin federación" not in log
     # Al mismo ritmo el resto de la pasada (antes, ×1,5): 7 s entre el inicio de dos peticiones.
@@ -249,11 +249,11 @@ def test_the_1103_brake_passes_after_the_brake_wait_and_the_pass_goes_on(bot, ca
     assert "de ellos en pausa por el freno" in log
 
 
-@pytest.mark.parametrize("cap, probes", [(None, 7), ("5", 2)])
+@pytest.mark.parametrize("cap, probes", [(None, 17), ("5", 2)])
 def test_the_1103_brake_that_does_not_pass_keeps_the_last_checks_and_stops_the_pass(bot, capsys, monkeypatch, cap,
                                                                                         probes):
     """Si el freno no se pasa: la espera, los sondeos de la misma página cada minuto desde los 4 min hasta el
-    tope (FIFLP_BRAKE_MAX_MIN: 10 min por defecto, 7 sondeos; con 5, 2), y después nada más en esta pasada.
+    tope (FIFLP_BRAKE_MAX_MIN: 20 min por defecto, 17 sondeos; con 5, 2), y después nada más en esta pasada.
     AL4, que la federación no sirvió, conserva su comprobación anterior (no «error»: la web no pone
     «Revisión pendiente.» en sus equipos), sin escribir nada de las jornadas 2 y 3 que ya había leído y sin
     mover su hora; AL9 y los demás, a otra pasada como siempre."""
@@ -277,7 +277,7 @@ def test_the_1103_brake_that_does_not_pass_keeps_the_last_checks_and_stops_the_p
     assert run["deferred"] == ["AL9", "AL18", "AL20", "AL1", "PG1", "FF1", "FF2"]
     assert run["extrasDeferred"] == ["PG2", "FF5"] and run["refreshed"] == 2
     assert f"      la federación frena tras {SERVED_1103} páginas: espera de 4 min" in log
-    assert (f"      la federación sigue frenando a los {240 + 60 * (probes - 1)} s (tope de {int(cap or 10)} min por "
+    assert (f"      la federación sigue frenando a los {240 + 60 * (probes - 1)} s (tope de {int(cap or 20)} min por "
             "freno): nada más en esta pasada\n") in log
     assert "    sin federación: a otra pasada (no carga la jornada 4)\n" in log
     assert "  Sin federación: 1 grupo conserva su última comprobación, a otra pasada (AL4)\n" in log
@@ -446,7 +446,7 @@ def with_actas(conn, counts):
 
 
 def test_a_long_brake_in_the_priority_calendars_does_not_put_their_actas_first(bot, capsys):
-    """Un freno de 9 min en la jornada 4 de AL4 (dentro del tope de 10) se pasa en el 6.º sondeo, con 25 de
+    """Un freno de 9 min en la jornada 4 de AL4 (dentro del tope de 20) se pasa en el 6.º sondeo, con 25 de
     primera pasada (33 de plazo y 8 de reserva): las esperas no les quitan su plazo a los calendarios de
     los prioritarios (lo pagan la reserva y los demás grupos). AL20 (de Las Mesas) se lee, y antes que las
     actas de PG2 y FF5."""
@@ -637,7 +637,7 @@ def test_a_braked_pass_does_not_rewrite_the_report(bot, capsys):
     solo por eso)."""
     previous = report(at=NOW - timedelta(hours=1))
     data, web, F, log = bot(capsys, previous=previous, serve=0)
-    assert data == previous and F.pauses == 1 and F.probes == 7 and F.halted
+    assert data == previous and F.pauses == 1 and F.probes == 17 and F.halted
 
 
 # ── El cupo medido el 15/10/2026: ~15 páginas por IP y ~5 min de bloqueo ──────

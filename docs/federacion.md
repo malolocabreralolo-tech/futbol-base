@@ -227,8 +227,9 @@ siempre (si carga, la racha es de URLs muertas: ni espera ni bloqueo, y esos gru
   bastaba.
 - La primera espera y cada sondeo, solo si caben antes del plazo global con 2 min de margen después
   (`BRAKE_ROOM`, ~15 páginas a 7 s, para leer algo tras volver).
-- **Un tope de 10 min por freno** (`FIFLP_BRAKE_MAX_MIN`), desde la página vacía: siete sondeos (a los 240,
-  300… 600 s), casi el doble del bloqueo más largo visto (364 s). Si no vuelve, algo distinto pasa (una
+- **Un tope de 20 min por freno** (`FIFLP_BRAKE_MAX_MIN`), desde la página vacía: 17 sondeos (a los 240,
+  300… 1200 s). En el experimento el bloqueo más largo duró 364 s, pero en la pasada 1106 (15/10/2026, 11:07
+  UTC) el segundo freno seguía a los 11 min; esperar solo cuesta un sondeo por minuto. Si no vuelve, algo distinto pasa (una
   caída, otro bloqueo): nada más en esa pasada (`run.blocked`), y el grupo que se estaba leyendo conserva su
   comprobación (`run.unserved`: «un freno no es un error», arriba).
 - **Sin tope de frenos por pasada**, salvo el plazo: cada vuelta son otras ~15 páginas. (Antes, 3 pausas por
@@ -244,7 +245,7 @@ siempre (si carga, la racha es de URLs muertas: ni espera ni bloqueo, y esos gru
 En el registro: «la federación frena tras 15 páginas: espera de 4 min y después la misma página cada 60 s,
 hasta las 03:40 UTC como mucho» (las páginas servidas desde el freno anterior: el cupo), un «a los 240 s,
 sigue frenando» por sondeo vacío y «la federación vuelve a servir a los 300 s: se sigue» (o «…, pero no esta
-página: se sigue»); si no vuelve, «la federación sigue frenando a los 600 s (tope de 10 min por freno): nada
+página: se sigue»); si no vuelve, «la federación sigue frenando a los 1200 s (tope de 20 min por freno): nada
 más en esta pasada» o «…a los 540 s y no queda plazo para otro sondeo…»; sin sitio para la primera espera,
 «la federación frena y no queda plazo para esperarla (4 min y 2 de margen): nada más en esta pasada». En
 `run` (sin commit solo por ello, como todo `run`), si hubo alguna espera: `pauses`, los frenos esperados;

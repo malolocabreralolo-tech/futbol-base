@@ -297,7 +297,7 @@ def test_the_measured_brake_15_pages_and_5_minutes_resumes_with_probes_of_the_sa
     assert fed.served == 16 and fed.failures == 0 and fed.interval == 7.0
     assert [s for s in b.said if "fren" in s or "servir" in s] == [
         "      la federación frena tras 15 páginas: espera de 4 min y después la misma página cada 60 s, "
-        "hasta las 03:40 UTC como mucho",
+        "hasta las 03:50 UTC como mucho",
         "      a los 240 s, sigue frenando",
         "      la federación vuelve a servir a los 300 s: se sigue"]
     # Al mismo ritmo, y otras 15 (la del sondeo es la primera) antes del freno siguiente.
@@ -309,19 +309,20 @@ def test_the_measured_brake_15_pages_and_5_minutes_resumes_with_probes_of_the_sa
 
 
 def test_a_brake_that_does_not_pass_within_its_cap_stops_the_pass():
-    """Si a los 10 min (FIFLP_BRAKE_MAX_MIN) de la página vacía no ha vuelto a servir (el más largo medido
-    duró 364 s), nada más en esa pasada: blocked, y la página cuenta como no servida por el freno. Siete
-    sondeos (a los 240, 300… 600 s), una petición cada uno; nada entre medias."""
+    """Si a los 20 min (FIFLP_BRAKE_MAX_MIN) de la página vacía no ha vuelto a servir (en el experimento el
+    más largo duró 364 s; en la pasada 1106, más de 11 min), nada más en esa pasada: blocked, y la página
+    cuenta como no servida por el freno. Diecisiete sondeos (a los 240, 300… 1200 s), una petición cada uno;
+    nada entre medias."""
     b = Brake(start=1000.0)
     fed, page = b.fed(deadline=1000.0 + 33 * 60), b.page()
     assert not fed.goto(page, GROUP)
-    assert len(page.gotos) == 1 + 7 and fed.probes == 7
-    assert [round(t - b.starts[0] - 2) for t in b.starts[1:]] == [240, 300, 360, 420, 480, 540, 600]
-    assert b.slept == [240] + [58.0] * 6
+    assert len(page.gotos) == 1 + 17 and fed.probes == 17
+    assert [round(t - b.starts[0] - 2) for t in b.starts[1:]] == list(range(240, 1201, 60))
+    assert b.slept == [240] + [58.0] * 16
     assert fed.pauses == 1 and fed.resumed == 0 and fed.blocked and fed.halted
     assert fed.unserved == 1 and fed.served == 0 and fed.brake_after == [0]
-    assert b.said[-1] == "      la federación sigue frenando a los 600 s (tope de 10 min por freno): nada más en esta pasada"
-    assert not fed.goto(page, GROUP) and len(page.gotos) == 8                # nada más
+    assert b.said[-1] == "      la federación sigue frenando a los 1200 s (tope de 20 min por freno): nada más en esta pasada"
+    assert not fed.goto(page, GROUP) and len(page.gotos) == 18               # nada más
     # Con otro tope, otros sondeos (FIFLP_BRAKE_MAX_MIN, cap_seconds).
     b = Brake(start=1000.0)
     fed, page = b.fed(deadline=1000.0 + 33 * 60, cap_seconds=300), b.page()
@@ -540,7 +541,7 @@ def test_a_closed_browser_is_not_the_federation_braking():
 def test_the_brake_wait_is_set_by_environment(monkeypatch):
     """FIFLP_BRAKE_PAUSE_MIN, la primera espera (4 min; hasta el 15/10/2026, cada pausa fija, de 5);
     FIFLP_BRAKE_PROBE_S, cada cuánto el sondeo (60 s; menos de 30 no: no es educado); FIFLP_BRAKE_MAX_MIN,
-    el tope de cada freno (10 min); FIFLP_BRAKE_PAUSES, cuántos frenos se esperan por pasada (sin tope por
+    el tope de cada freno (20 min); FIFLP_BRAKE_PAUSES, cuántos frenos se esperan por pasada (sin tope por
     defecto; hasta el 15/10/2026, 3 pausas), y con 0, ninguno."""
     assert C.brake_pause_seconds({}) == C.BRAKE_PAUSE == 240
     assert C.brake_pause_seconds({"FIFLP_BRAKE_PAUSE_MIN": "7,5"}) == 450
@@ -550,10 +551,10 @@ def test_the_brake_wait_is_set_by_environment(monkeypatch):
     assert C.brake_probe_seconds({"FIFLP_BRAKE_PROBE_S": "90"}) == 90
     for bad in ("", "x", "-1", "0", "10", "29,5"):
         assert C.brake_probe_seconds({"FIFLP_BRAKE_PROBE_S": bad}) == 60, bad
-    assert C.brake_cap_seconds({}) == C.BRAKE_CAP == 600
+    assert C.brake_cap_seconds({}) == C.BRAKE_CAP == 1200
     assert C.brake_cap_seconds({"FIFLP_BRAKE_MAX_MIN": "12"}) == 720
     for bad in ("", "x", "-1", "0"):
-        assert C.brake_cap_seconds({"FIFLP_BRAKE_MAX_MIN": bad}) == 600, bad
+        assert C.brake_cap_seconds({"FIFLP_BRAKE_MAX_MIN": bad}) == 1200, bad
     assert C.brake_pauses({}) is None and C.BRAKE_PAUSES is None
     assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": "0"}) == 0          # ninguno: como antes del 15/10/2026
     assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": "5"}) == 5

@@ -240,7 +240,7 @@ def category_id(conn, key):
 
 
 # Los grupos de la federación recién dados de alta: la primera pasada del bot lee TODAS sus jornadas
-# ya jugadas (update_fiflp.full_read_pending), no solo las de las últimas tres semanas, para tener el
+# ya jugadas (update_fiflp.full_read_pending), no solo las de los últimos 10 días (BACK_DAYS), para tener el
 # código del acta de cada partido; sin eso, las actas de las primeras jornadas no se leían nunca.
 FULL_READ_TABLE = "CREATE TABLE IF NOT EXISTS fiflp_full_pending (group_id INTEGER PRIMARY KEY, since TEXT)"
 

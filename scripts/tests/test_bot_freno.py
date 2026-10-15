@@ -8,9 +8,11 @@ la federación no las sirvió, y la pasada se rindió a los 4,8 min con 20 de pl
 se intentaron. Ahora:
   - A: un grupo cuyo calendario la federación no sirve por su freno conserva su última comprobación y
     queda para otra pasada (run.unserved), sin escribir nada de lo que ya había leído; uno que no carga
-    sin señal de freno (una URL muerta mientras el resto carga) sigue siendo un error;
+    sin señal de freno (una URL muerta mientras el resto carga, o dos seguidas: la última página leída
+    carga) sigue siendo un error;
   - B: al frenar, una pausa larga (5 min) y LA MISMA página otra vez, mientras quepa en el plazo y hasta
-    3 por pasada; si vuelve a servir, la pasada sigue, más despacio.
+    3 por pasada; si vuelve a servir, la pasada sigue, más despacio, sin que las pausas les quiten su
+    plazo a los calendarios de los prioritarios. Ninguna página empieza pasado el plazo.
 Sin red: la federación del bot de verdad (fiflp_carga.Federacion) con un reloj y un sueño falsos, sobre
 una página falsa que sirve vacío mientras dura el freno.
 """
@@ -288,13 +290,13 @@ def test_a_brake_in_the_priority_scorers_pauses_and_the_others_are_read(bot, cap
 
 class Unpaused:
     """La federación del bot como era hasta el 15/10/2026 (sin pausas largas: bloqueada con tres páginas
-    seguidas sin cargar), con su cuenta de las que no sirvió por su freno: tras `serve` páginas, todas
+    seguidas sin cargar), con su cuenta de las señales del freno (`brakes`): tras `serve` páginas, todas
     vacías (cada una, con su espera de 60 s)."""
     BASE = BASE
 
     def __init__(self, reader, deadline=None, clock=None, sleep=None, serve=SERVED_1103, **kw):
         self.deadline, self.clock, self.serve = deadline, clock, serve
-        self.urls, self.failures, self.served, self.unserved = [], 0, 0, 0
+        self.urls, self.failures, self.served, self.brakes = [], 0, 0, 0
 
     @property
     def blocked(self):
@@ -307,7 +309,7 @@ class Unpaused:
         self.clock.t += 7 if ok else 7 + 60 + 2
         self.failures = 0 if ok else self.failures + 1
         self.served += ok
-        self.unserved += not ok
+        self.brakes += not ok
         return ok
 
     def delay(self, *a):
@@ -412,6 +414,126 @@ def test_a_group_cut_by_the_deadline_waits_for_another_pass(bot, capsys):
     assert data["groups"]["PG2"] == previous["groups"]["PG2"] and matches(conn, "PG2") == before
     assert data["run"]["deferred"] == ORDER and data["run"]["unserved"] == [] and data["summary"]["error"] == 0
     assert "    plazo agotado: a otra pasada (no carga la jornada 4)\n" in log
+
+
+def with_actas(conn, counts):
+    """Actas por leer (partidos jugados con su código de acta) en los grupos de `counts`."""
+    for code, n in counts.items():
+        for k in range(n):
+            conn.execute("""INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score,
+                            away_score, fiflp_acta) SELECT group_id, ?, '2026-10-10', away_team_id, home_team_id, 2, 2, ?
+                            FROM matches WHERE group_id=? AND jornada='Jornada 1'""",
+                         (f"Jornada {20 + k}", 9000 + 100 * ID[code] + k, ID[code]))
+    conn.commit()
+    return conn
+
+
+def test_a_long_brake_in_the_priority_calendars_does_not_put_their_actas_first(bot, capsys):
+    """Un freno de 12 min en la jornada 4 de AL4 se pasa en la 3.ª pausa, a los ~18 min, con la primera
+    pasada de 19: las pausas no les quitan su plazo a los calendarios de los prioritarios (lo pagan la
+    reserva y los demás grupos). AL20 (de Las Mesas) se lee, y antes que las actas de PG2 y FF5 (antes, a
+    otra pasada, y su tiempo para esas actas: el orden de main al revés)."""
+    conn = with_actas(season(), {"PG2": 8, "FF5": 8})
+    data, web, F, log = bot(capsys, conn=conn, serve=SERVED_1103, lasts=12 * 60)
+    run = data["run"]
+    assert run["pauses"] == 3 and run["resumed"] == 1
+    assert calendars(web)[:6] == ORDER[:6] and "AL20" not in run["deferred"]
+    assert all(data["groups"][c]["status"] == "ok" for c in ORDER[:6])
+    first_acta = next(i for i, (_, u) in enumerate(web.starts) if "CodActa=" in u)
+    al20 = max(i for i, (_, u) in enumerate(web.starts) if u.startswith(url(ID["AL20"])))
+    assert al20 < first_acta
+    assert log.index("[AL20]") < log.index("Actas y goleadores de los prioritarios") < log.index("[PG2] ")
+
+
+class Refusing(Federation):
+    """La federación que frena con un 503 (el Apache de la federación cuando bloquea) en vez de con páginas
+    vacías: tras `serve` peticiones, durante `lasts` s (None: toda la pasada)."""
+
+    def page(self):
+        page = Page(self)
+        plain = page.goto
+
+        def goto(url, wait_until=None, timeout=None):
+            response = plain(url, wait_until, timeout)
+            if page.empty:
+                page.empty = False
+                return Response(503)
+            return response
+        page.goto = goto
+        return page
+
+
+@pytest.mark.parametrize("lasts", [4 * 60, None])
+def test_a_brake_of_error_pages_is_a_brake_whether_or_not_it_passes(bot, capsys, lasts):
+    """El freno con 503 desde la jornada 4 de AL4: AL4 falla con una página sin cargar, que en ese momento
+    no es señal de freno; AL9 deja la tercera seguida y la última página ya leída tampoco carga: el freno.
+    AL4 no queda como error ni si la pausa lo arregla ni si no (antes: error si lo arreglaba, y sin error si
+    no). Si lo arregla, AL9 se lee entero, también su clasificación, que se perdió en el freno."""
+    previous = report()
+    data, web, F, log = bot(capsys, previous=previous, web=Refusing, serve=SERVED_1103, lasts=lasts)
+    assert data["groups"]["AL4"] == previous["groups"]["AL4"] and data["summary"]["error"] == 0
+    assert "    ! error: no carga la jornada 4\n" in log                     # en ese momento, sin señal de freno
+    if lasts:
+        assert data["run"]["unserved"] == ["AL4"] and data["run"]["pauses"] == 1 and data["run"]["resumed"] == 1
+        assert all(data["groups"][c]["status"] == "ok" for c in ALL if c != "AL4")
+        standings = [t for t, u in web.starts if "NFG_VisClasificacion" in u and f"codgrupo={ID['AL9']}&" in u]
+        assert len(standings) == 3 + 1 and standings[-1] > web.brake_from + lasts  # sus 3 intentos y, tras la pausa, otra
+        assert list(dict.fromkeys(calendars(web))) == ORDER                  # todos, AL9 con sus reintentos
+    else:
+        assert data["run"]["unserved"] == ["AL4", "AL9"] and data["run"]["blocked"]
+    assert "  Sin federación: " in log
+
+
+def test_two_dead_urls_in_a_row_are_still_errors_and_not_a_brake(bot, capsys):
+    """Dos grupos seguidos con la URL muerta (500 a todo) hacen tres páginas seguidas sin cargar, y no son el
+    freno: la última página leída carga. Ni pausas ni bloqueo, los dos como error, y la pasada sigue (antes:
+    tres pausas de 5 min, la pasada perdida y los dos con su «ok» de antes)."""
+    data, web, F, log = bot(capsys, dead={"AL1", "PG1"})
+    groups = data["groups"]
+    assert groups["AL1"]["status"] == groups["PG1"]["status"] == "error"
+    assert all(groups[c]["status"] == "ok" for c in ALL if c not in ("AL1", "PG1"))
+    assert data["summary"]["error"] == 2 and data["run"]["unserved"] == [] and data["run"]["deferred"] == []
+    assert "pauses" not in data["run"] and "blocked" not in data["run"] and "pausa de" not in log
+    assert "      3 páginas seguidas sin cargar, pero otra ya leída carga: no es el freno, es esta página\n" in log
+
+
+class Patchy(Federation):
+    """La jornada 2 de AL4, vacía dos veces (el freno, que la pausa larga arregla); su jornada 4, un 503 en
+    sus tres intentos."""
+
+    def page(self):
+        web, page = self, Page(self)
+        plain = page.goto
+
+        def goto(u, wait_until=None, timeout=None):
+            response = plain(u, wait_until, timeout)
+            asked = sum(x == u for _, x in web.starts)
+            if u == url(ID["AL4"]) + "&CodJornada=2" and asked <= 2:
+                page.empty = True
+            if u == url(ID["AL4"]) + "&CodJornada=4" and asked <= 3:
+                return Response(503)
+            return response
+        page.goto = goto
+        return page
+
+
+def test_a_group_with_an_empty_page_in_its_read_is_braked_even_if_another_page_fails(bot, capsys):
+    """Una página vacía en la lectura de un grupo es el freno aunque la que acaba fallando sea otra (aquí, un
+    503 en la jornada 4 de AL4, tras la pausa que arregló la 2): AL4 conserva su comprobación."""
+    previous = report()
+    data, web, F, log = bot(capsys, previous=previous, web=Patchy)
+    assert data["run"]["pauses"] == 1 and data["run"]["resumed"] == 1
+    assert data["groups"]["AL4"] == previous["groups"]["AL4"] and data["run"]["unserved"] == ["AL4"]
+    assert data["summary"]["error"] == 0
+    assert "    sin federación: a otra pasada (no carga la jornada 4)\n" in log
+
+
+@pytest.mark.parametrize("budget", range(20, 80, 3))
+def test_no_page_starts_past_the_deadline_whatever_the_budget(bot, capsys, budget):
+    """Ninguna página empieza pasado el plazo (lo comprueba bot), caiga donde caiga: también dentro de la
+    espera del intervalo entre dos peticiones. El grupo que el plazo corta queda para otra pasada, sin error."""
+    data, web, F, log = bot(capsys, budget=budget)
+    assert data["summary"]["error"] == 0 and "! error" not in log
 
 
 def test_a_braked_pass_does_not_rewrite_the_report(bot, capsys):

@@ -37,7 +37,7 @@ from fiflp_names import canonical_names, is_bye
 from import_fiflp_cups_2324 import clean_team_name
 from activate_season import fiflp_ids, _iso
 from fiflp_render import flatten, fiflp_only
-from fiflp_carga import ready_selector, ready_timeout_ms, wait_ready
+from fiflp_carga import BRAKE_ROOM, ready_selector, ready_timeout_ms, wait_ready
 from fetch_futbolaspalmas import standings_regression, stored_standings
 from generate_js import _repair_incoherent_points
 from fiflp_names import MIN_TEAM_SCORE, team_key, team_score
@@ -759,10 +759,10 @@ def current_round(conn, group_id):
 
 
 class NotServed(RuntimeError):
-    """La federación no sirvió una página del calendario de un grupo (no carga, vacía, un 5xx o un 429):
-    la red o la federación, no los datos del grupo. run_passes mira si fue su freno (Parte A, 15/10/2026):
-    entonces el grupo conserva su última comprobación; si no (una URL muerta mientras el resto carga), es
-    un error, como siempre."""
+    """La federación no sirvió una página del calendario de un grupo (no carga, vacía, un 5xx o un 429, o
+    no cabe en el plazo): la red, la federación o el plazo, no los datos del grupo. run_passes mira si fue
+    su freno (15/10/2026): entonces el grupo conserva su última comprobación; si fue el plazo, también; si
+    no (una URL muerta mientras el resto carga), es un error, como siempre."""
 
 
 JORNADAS_TRIES = 3       # dos esperas al desplegable de jornadas y una recarga (scrape_group)
@@ -773,22 +773,33 @@ JORNADAS_JS = """() => {
 }"""
 
 
+def _standings(page, F, url):
+    """La clasificación de un grupo (con el detalle de add_detail); None si la federación no la sirvió."""
+    if not F.goto(page, url):
+        F.delay()
+        return None
+    standings = F.parse_standings(page)
+    try:
+        add_detail(standings, page.content())
+    except Exception:           # una página sin HTML que leer (las de prueba): solo los totales
+        pass
+    F.delay()
+    return standings
+
+
 def scrape_group(page, F, url, stored, today, full=False):
     """(standings crudas, {jornada: [partidos crudos]}) de un grupo de FIFLP; `full`: todas las
     jornadas ya jugadas (rounds_to_refresh). Si la federación no sirve el calendario o una jornada,
     NotServed: lo leído se queda en memoria y no se escribe nada del grupo (update_group no llega a
-    llamarse). Sin clasificación (no cargó) sigue: la escritura la salta, como siempre."""
+    llamarse). Sin clasificación (no cargó) sigue: la escritura la salta, como siempre; pero si la
+    federación frenó en la lectura del grupo después (F.brakes: el freno se vio en una página posterior)
+    y volvió a servir, se pide otra vez, tras el calendario."""
     comp, code = fiflp_ids(url)
     season = re.search(r"CodTemporada=(\d+)", url).group(1)
     base = f"{F.BASE}/NFG_VisClasificacion?cod_primaria=1000120&CodTemporada={season}"
-    standings = []
-    if F.goto(page, f"{base}&codcompeticion={comp}&codgrupo={code}&codjornada=99"):
-        standings = F.parse_standings(page)
-        try:
-            add_detail(standings, page.content())
-        except Exception:           # una página sin HTML que leer (las de prueba): solo los totales
-            pass
-    F.delay()
+    brakes = getattr(F, "brakes", 0)
+    standings_url = f"{base}&codcompeticion={comp}&codgrupo={code}&codjornada=99"
+    standings = _standings(page, F, standings_url)
     rounds = {}
     calendar = (f"{F.BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
                 f"&CodCompeticion={comp}&CodGrupo={code}")
@@ -809,6 +820,8 @@ def scrape_group(page, F, url, stored, today, full=False):
         options = page.evaluate(JORNADAS_JS)
     if not options and stored:
         raise RuntimeError("la federación no sirvió las jornadas del grupo")
+    if standings is None and getattr(F, "brakes", 0) > brakes:      # perdida en el freno: otra vez
+        standings = _standings(page, F, standings_url)
     for opt in rounds_to_refresh(options, stored, today, full):
         label, when = option_round(opt["text"])
         # Cada jornada por su URL, no con BuscarPartidos: esa función no es
@@ -820,7 +833,7 @@ def scrape_group(page, F, url, stored, today, full=False):
         rounds[label] = [{**m, "date": _iso(m.get("date")) or (when.isoformat() if when else "")}
                          for m in F.parse_matches(page)]
         F.delay()
-    return standings, rounds
+    return standings or [], rounds
 
 
 def add_detail(standings, html):
@@ -1204,11 +1217,16 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     caben conservan su última comprobación en data-health.json
     (source_health.carry): no son un error. Tampoco los que la federación no
     sirvió por su freno («un freno no es un error»: run.unserved): un grupo cuyo
-    calendario no carga (NotServed) con una página vacía en su lectura
-    (F.unserved), o con la federación bloqueada al acabarla o justo después (sin
-    ninguna página servida entre su fallo y el bloqueo, F.served). Sin señal de
-    freno (una URL muerta mientras el resto carga), sigue siendo un error; un
-    fallo de los datos (lectura, update_group), como siempre."""
+    calendario no carga (NotServed) con una señal del freno en su lectura (una
+    página vacía, cargue o no tras su espera, o una racha sin cargar que no es
+    de URLs muertas: F.brakes), o con la federación bloqueada al acabarla; o uno
+    que falló sin señal justo antes del freno (sin ninguna página servida entre
+    su fallo y la señal: F.served, F.brake_marks), se pase o no el freno. Sin
+    señal de freno (una URL muerta mientras el resto carga, o varias seguidas:
+    la última página leída carga), sigue siendo un error; un fallo de los datos
+    (lectura, update_group), como siempre. Las pausas por el freno en los
+    calendarios de los prioritarios no les quitan su plazo (calendars, stretch):
+    lo pagan la reserva y los demás grupos."""
     start = clock()
     if deadline is None:
         deadline = start + (budget_seconds() if deadline_seconds is None else deadline_seconds)
@@ -1227,32 +1245,38 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # bloquea o se ha caído. No se le pide nada más en esta pasada; lo que falta, a la siguiente.
     blocked = lambda: bool(getattr(F, "blocked", False))
     # Lo que F cuenta del freno (fiflp_carga.Federacion; las federaciones de prueba, lo que tengan).
-    unserved_pages = lambda: getattr(F, "unserved", 0)
+    brake_signals = lambda: getattr(F, "brakes", 0)
     paused = lambda: getattr(F, "paused", 0.0)
     served = lambda: getattr(F, "served", None)
     full = full_read_pending(conn)
     results, stamps, deferred = {}, {}, []
     # Sin federación por su freno: conservan su última comprobación (run.unserved). suspects: los que
     # fallaron sin señal de freno, con las páginas servidas hasta su fallo (si no sirve ninguna más antes
-    # de bloquearse, también eran el freno).
+    # de la señal del freno, también eran el freno).
     unserved, suspects = [], {}
     # Actas y goleadores: MAX_ACTAS_PER_RUN actas en toda la pasada (las de los prioritarios, las primeras),
     # cada una una vez (tried); cut, los grupos que el plazo o la federación no dejaron acabar.
     cut, scored, tried, budget = [], set(), set(), MAX_ACTAS_PER_RUN
     longest = 0.0                       # el calendario que más ha tardado (sin las pausas del freno)
 
-    def calendars(rows, until):
+    def calendars(rows, until, stretch=False):
         """Clasificación y jornadas de cada grupo de `rows` que empiece antes de `until`; los demás, a
         otra pasada (deferred). Uno que la federación no sirve por su freno, también a otra pasada
-        (unserved), sin escribir nada de él y sin marcarlo como error."""
+        (unserved), sin escribir nada de él y sin marcarlo como error. `stretch` (los prioritarios): el
+        plazo se alarga lo que duren las pausas por el freno en ellos, sin comerse lo que la reserva deja
+        siempre al final (el doble del calendario más largo y, al menos, BRAKE_ROOM)."""
         nonlocal longest
+        held0 = paused()
         for group in rows:
             group_id, code, url = group
-            if clock() > until or blocked():
+            limit = until
+            if stretch and paused() > held0:
+                limit = max(until, min(until + paused() - held0, deadline - max(2 * longest, BRAKE_ROOM)))
+            if clock() > limit or blocked():
                 deferred.append(group)
                 continue
             print(f"  [{code}]" + (" (primera pasada: todas las jornadas)" if group_id in full else ""), flush=True)
-            stamps[code], began, brakes, held = stamp(), clock(), unserved_pages(), paused()
+            stamps[code], began, brakes, held = stamp(), clock(), brake_signals(), paused()
             try:
                 raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today,
                                                          full=group_id in full)
@@ -1263,7 +1287,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
                     _mark_db()
             except NotServed as e:          # la federación no sirvió: ¿su freno, el plazo o el grupo?
                 conn.rollback()
-                if unserved_pages() > brakes or blocked():
+                if brake_signals() > brakes or blocked():
                     unserved.append(group)
                     print(f"    sin federación: a otra pasada ({e})")
                     continue
@@ -1329,7 +1353,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # no los servía. Tras todos sus calendarios: un freno en sus actas no deja sin calendario a otro.
     mine = [g for g in plan.order if g[1] in plan.priority]
     others = [g for g in plan.order if g[1] not in plan.priority]
-    calendars(mine, first_deadline)
+    calendars(mine, first_deadline, stretch=True)
     ahead = [g for g in mine if results.get(g[1], [None])[0] == "ok"]
     # A cuenta de la reserva (room), y lo que gastan (spent) corre el plazo de los demás, que tienen el mismo
     # tiempo que antes. Como mucho la mitad, y siempre dejan en ella el doble del calendario más largo: lo
@@ -1338,7 +1362,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # como antes. Lo que no quepa sigue el primero en la segunda pasada (again), donde iba.
     room = max(0.0, min(reserve / 2, reserve - 2 * longest))
     began, pages_before, held = clock(), getattr(F, "pages", 0), paused()
-    if ahead and room and not blocked():
+    if ahead and room and clock() <= min(began + room, deadline - room) and not blocked():
         print("\n  Actas y goleadores de los prioritarios", flush=True)
         for group in ahead:
             actas_and_scorers(*group, until=min(began + room, deadline - room))
@@ -1413,13 +1437,16 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         why = "sin federación" if blocked() else "plazo agotado" if clock() > deadline else "páginas sin cargar"
         print(f"  ({why}: las actas y los goleadores de {len(cut)} "
               f"grupos, en otra pasada: {', '.join(cut[:12])}{' y más' if len(cut) > 12 else ''})")
-    # Un calendario que no cargó sin señal de freno justo antes de que la federación dejara de servir
-    # (ninguna página servida entre su fallo y el bloqueo: un 503 tras otro) también era el freno.
-    if blocked() and served() is not None:
-        for code, (group, mark) in suspects.items():
-            if mark == served():
-                results.pop(code, None)
-                unserved.append(group)
+    # Un calendario que no cargó sin señal de freno justo antes de una (ninguna página servida entre su
+    # fallo y la señal: un 503 tras otro hasta que la racha se ve) también era el freno, se pasara o no.
+    # Las federaciones sin brake_marks (las de prueba de antes): el bloqueo final es la señal.
+    marks = getattr(F, "brake_marks", None)
+    if marks is None:
+        marks = [served()] if blocked() and served() is not None else []
+    for code, (group, mark) in suspects.items():
+        if mark in marks:
+            results.pop(code, None)
+            unserved.append(group)
     if unserved:
         unserved.sort(key=plan.order.index)
         many = len(unserved) > 1

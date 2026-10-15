@@ -1,0 +1,50 @@
+name: Experimento del freno de la federación
+
+# Mide el freno de la federación (páginas vacías desde el 14/10/2026) desde un runner: cuántas páginas
+# sirve a un ritmo dado, si una sesión nueva lo salta y cuánto tarda en pasarse. No toca la base ni el
+# repo (scripts/freno_experimento.py). Resumen en el log y en el artefacto freno-fiflp.
+on:
+  workflow_dispatch:
+    inputs:
+      interval:
+        description: 'Segundos entre páginas'
+        required: true
+        default: '7'
+      minutes:
+        description: 'Minutos de experimento'
+        required: false
+        default: '22'
+
+permissions:
+  contents: read
+
+jobs:
+  freno:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Instalar Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+      - name: IP pública del runner
+        continue-on-error: true
+        timeout-minutes: 1
+        run: |
+          echo "IP pública del runner: $(curl -s --max-time 5 https://api.ipify.org || echo desconocida)"
+      - name: Experimento
+        env:
+          FRENO_INTERVAL: ${{ inputs.interval }}
+          FRENO_MINUTES: ${{ inputs.minutes }}
+        run: python3 scripts/freno_experimento.py
+        timeout-minutes: 26
+      - name: Subir resultado
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: freno-fiflp
+          path: probe_out/

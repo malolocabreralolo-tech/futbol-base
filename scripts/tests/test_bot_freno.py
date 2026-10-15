@@ -7,9 +7,10 @@ quedaron como «error» en data-health.json (la web ponía «Revisión pendiente
 la federación no las sirvió, y la pasada se rindió a los 4,8 min con 20 de plazo sin usar: AL18 y AL20 ni
 se intentaron. Ahora:
   - A: un grupo cuyo calendario la federación no sirve por su freno conserva su última comprobación y
-    queda para otra pasada (run.unserved), sin escribir nada de lo que ya había leído; uno que no carga
-    sin señal de freno (una URL muerta mientras el resto carga, o dos seguidas: la última página leída
-    carga) sigue siendo un error;
+    queda para otra pasada (run.unserved), sin escribir nada de lo que ya había leído (señal del freno:
+    una página vacía, un 503 o un 429); uno que no carga sin señal de freno (una URL muerta mientras el
+    resto carga, o dos seguidas: la federación sirve otra página) sigue siendo un error, y también si se
+    cierra el navegador;
   - B: al frenar, una pausa larga (5 min) y LA MISMA página otra vez, mientras quepa en el plazo y hasta
     3 por pasada; si vuelve a servir, la pasada sigue, más despacio, sin que las pausas les quiten su
     plazo a los calendarios de los prioritarios. Ninguna página empieza pasado el plazo.
@@ -347,20 +348,22 @@ def test_a_dead_url_without_a_brake_is_still_an_error(bot, capsys):
 
 
 def test_a_failure_just_before_the_federation_stops_serving_was_the_brake(bot, capsys, monkeypatch):
-    """Un calendario que no carga sin página vacía (un 503 tras otro, el Apache de la federación cuando
-    bloquea) no es, en ese momento, señal de freno: AL4 falla con una página sin cargar, que no bloquea.
-    Pero si la federación no sirve ninguna página más hasta quedar bloqueada (en AL9), también era el
-    freno: AL4 conserva su comprobación, como AL9."""
+    """Un calendario que no carga por un corte de conexión (o un 500) no es, en ese momento, señal de freno
+    (puede ser la URL): AL4 falla con una página sin cargar, que no bloquea. Pero si la federación no sirve
+    ninguna página más hasta quedar bloqueada (en AL9: la racha, y la última página que cargó tampoco
+    carga), también era el freno: AL4 conserva su comprobación, como AL9."""
     monkeypatch.setenv("FIFLP_BRAKE_PAUSES", "0")
 
-    class Down(Federation):          # tras las 14 primeras, todo 503
+    class Down(Federation):          # tras las 14 primeras, conexiones cortadas
         def page(self):
             web, page = self, Page(self)
             plain = page.goto
 
             def goto(url, wait_until=None, timeout=None):
                 response = plain(url, wait_until, timeout)
-                return Response(503) if len(web.starts) > SERVED_1103 else response
+                if len(web.starts) > SERVED_1103:
+                    raise TimeoutError("Timeout 30000ms exceeded")
+                return response
             page.goto = goto
             return page
     previous = report()
@@ -465,14 +468,13 @@ class Refusing(Federation):
 
 @pytest.mark.parametrize("lasts", [4 * 60, None])
 def test_a_brake_of_error_pages_is_a_brake_whether_or_not_it_passes(bot, capsys, lasts):
-    """El freno con 503 desde la jornada 4 de AL4: AL4 falla con una página sin cargar, que en ese momento
-    no es señal de freno; AL9 deja la tercera seguida y la última página ya leída tampoco carga: el freno.
-    AL4 no queda como error ni si la pausa lo arregla ni si no (antes: error si lo arreglaba, y sin error si
-    no). Si lo arregla, AL9 se lee entero, también su clasificación, que se perdió en el freno."""
+    """El freno con 503 desde la jornada 4 de AL4: un 503 es señal del freno, y AL4 no queda como error ni
+    si la pausa (en AL9, la tercera página seguida sin cargar) lo arregla ni si no. Si lo arregla, AL9 se
+    lee entero, también su clasificación, que se perdió en el freno."""
     previous = report()
     data, web, F, log = bot(capsys, previous=previous, web=Refusing, serve=SERVED_1103, lasts=lasts)
     assert data["groups"]["AL4"] == previous["groups"]["AL4"] and data["summary"]["error"] == 0
-    assert "    ! error: no carga la jornada 4\n" in log                     # en ese momento, sin señal de freno
+    assert "    sin federación: a otra pasada (no carga la jornada 4)\n" in log and "! error" not in log
     if lasts:
         assert data["run"]["unserved"] == ["AL4"] and data["run"]["pauses"] == 1 and data["run"]["resumed"] == 1
         assert all(data["groups"][c]["status"] == "ok" for c in ALL if c != "AL4")
@@ -494,7 +496,64 @@ def test_two_dead_urls_in_a_row_are_still_errors_and_not_a_brake(bot, capsys):
     assert all(groups[c]["status"] == "ok" for c in ALL if c not in ("AL1", "PG1"))
     assert data["summary"]["error"] == 2 and data["run"]["unserved"] == [] and data["run"]["deferred"] == []
     assert "pauses" not in data["run"] and "blocked" not in data["run"] and "pausa de" not in log
-    assert "      3 páginas seguidas sin cargar, pero otra ya leída carga: no es el freno, es esta página\n" in log
+    assert "      3 páginas seguidas sin cargar, pero la federación sirve otra: no es el freno, es esta página\n" in log
+
+
+def test_two_dead_urls_at_the_start_of_the_pass_are_still_errors(bot, capsys):
+    """Como la anterior, pero los dos muertos son los dos primeros de la pasada (PG2 y FF5: los prioritarios
+    van siempre los primeros, en el mismo orden). Aún no ha cargado ninguna página que volver a pedir: el bot
+    prueba la página de competiciones de la temporada, que existe siempre. Carga: no es el freno, los dos
+    como error y la pasada sigue (antes: tres pausas de 5 min, la pasada perdida y los dos con su «ok» de
+    antes, en cada pasada)."""
+    data, web, F, log = bot(capsys, dead={"PG2", "FF5"})
+    groups = data["groups"]
+    assert groups["PG2"]["status"] == groups["FF5"]["status"] == "error"
+    assert all(groups[c]["status"] == "ok" for c in ALL if c not in ("PG2", "FF5"))
+    assert data["run"]["unserved"] == [] and data["run"]["deferred"] == []
+    assert "pauses" not in data["run"] and "blocked" not in data["run"] and F.paused == 0
+    catalog = BASE + "/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22"
+    assert [u for _, u in web.starts].count(catalog) == 2          # la prueba y check_competitions
+
+
+@pytest.mark.parametrize("cost,lasts", [(2.0, 154), (2.0, 200), (7.0, 60), (7.0, 150), (7.0, 190)])
+def test_a_short_brake_of_error_pages_is_not_an_error(bot, capsys, cost, lasts):
+    """Un 503 (o un 429) es la federación que no sirve («no disponible», «demasiadas peticiones»), no la
+    página: es señal del freno aunque no llegue a la racha de tres páginas. Un freno con 503 que se pasa
+    antes de la racha (60-190 s a 7 s por página) o justo antes de comprobar si la federación sirve otra
+    (154 s) no deja a AL4 como error ni mueve su hora (antes: «error», «no carga la jornada 4»)."""
+    previous = report()
+    data, web, F, log = bot(capsys, previous=previous, web=Refusing, serve=SERVED_1103, lasts=lasts, cost=cost)
+    assert data["groups"]["AL4"] == previous["groups"]["AL4"] and "AL4" in data["run"]["unserved"]
+    assert data["summary"]["error"] == 0 and "! error" not in log
+    assert "    sin federación: a otra pasada (no carga la jornada 4)\n" in log
+
+
+class Closing(Federation):
+    """Chromium cae tras `serve` peticiones: la página, cerrada (TargetClosedError de Playwright)."""
+
+    def page(self):
+        web, page = self, Page(self)
+        plain = page.goto
+        page.is_closed = lambda: len(web.starts) >= web.serve
+
+        def goto(url, wait_until=None, timeout=None):
+            if page.is_closed():
+                web.starts.append((web.clock.t, url))
+                raise RuntimeError("Target page, context or browser has been closed")
+            return plain(url, wait_until, timeout)
+        page.goto = goto
+        return page
+
+
+def test_a_closed_browser_is_an_error_and_not_a_brake(bot, capsys):
+    """Si Chromium cae a mitad de AL4, no es el freno de la federación: ni pausas largas ni «sin federación».
+    AL4 queda como error (se ve en la web, como antes de la pausa larga) y lo demás, a otra pasada."""
+    data, web, F, log = bot(capsys, web=Closing, serve=SERVED_1103)
+    assert data["groups"]["AL4"]["status"] == "error" and data["summary"]["error"] == 1
+    assert data["run"]["unserved"] == [] and data["run"]["blocked"] and "pauses" not in data["run"]
+    assert data["run"]["deferred"] == ["AL9", "AL18", "AL20", "AL1", "PG1", "FF1", "FF2"]
+    assert F.paused == 0 and "frena" not in log and len(web.starts) == SERVED_1103 + 1
+    assert "      el navegador se ha cerrado: nada más en esta pasada\n" in log
 
 
 class Patchy(Federation):

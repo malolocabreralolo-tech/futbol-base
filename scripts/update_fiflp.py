@@ -37,7 +37,7 @@ from fiflp_names import canonical_names, is_bye
 from import_fiflp_cups_2324 import clean_team_name
 from activate_season import fiflp_ids, _iso
 from fiflp_render import flatten, fiflp_only
-from fiflp_carga import BRAKE_ROOM, ready_selector, ready_timeout_ms, wait_ready
+from fiflp_carga import BRAKE_ROOM, CATALOG_URL, ready_selector, ready_timeout_ms, wait_ready
 from fetch_futbolaspalmas import standings_regression, stored_standings
 from generate_js import _repair_incoherent_points
 from fiflp_names import MIN_TEAM_SCORE, team_key, team_score
@@ -327,8 +327,8 @@ def plan_groups(conn, groups, checks, today, number, priority=None, pinned=None,
 
 # ── Competiciones nuevas en la federación ─────────────────────────────────────
 
-CATALOG_URL = "/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
-# El desplegable de competiciones de la temporada (el mismo JS que discover_fiflp_comps.py).
+# El desplegable de competiciones de la temporada (el mismo JS que discover_fiflp_comps.py), en CATALOG_URL
+# (de fiflp_carga: con esa página, Federacion prueba si la federación sirve cuando aún no ha cargado ninguna).
 COMPETITIONS_JS = """() => {
     const sel = document.querySelector('select[name="competicion"]');
     if (!sel) return [];
@@ -1218,15 +1218,16 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     (source_health.carry): no son un error. Tampoco los que la federación no
     sirvió por su freno («un freno no es un error»: run.unserved): un grupo cuyo
     calendario no carga (NotServed) con una señal del freno en su lectura (una
-    página vacía, cargue o no tras su espera, o una racha sin cargar que no es
-    de URLs muertas: F.brakes), o con la federación bloqueada al acabarla; o uno
-    que falló sin señal justo antes del freno (sin ninguna página servida entre
-    su fallo y la señal: F.served, F.brake_marks), se pase o no el freno. Sin
-    señal de freno (una URL muerta mientras el resto carga, o varias seguidas:
-    la última página leída carga), sigue siendo un error; un fallo de los datos
-    (lectura, update_group), como siempre. Las pausas por el freno en los
-    calendarios de los prioritarios no les quitan su plazo (calendars, stretch):
-    lo pagan la reserva y los demás grupos."""
+    página vacía o con un 503 o un 429, cargue o no tras sus reintentos, o una
+    racha sin cargar que no es de URLs muertas: F.brakes), o con la federación
+    bloqueada al acabarla; o uno que falló sin señal justo antes del freno (sin
+    ninguna página servida entre su fallo y la señal: F.served, F.brake_marks),
+    se pase o no el freno. Sin señal de freno (una URL muerta mientras el resto
+    carga, o varias seguidas: la federación sirve otra página), sigue siendo un
+    error; también si se cerró el navegador (F.closed: no es la federación); un
+    fallo de los datos (lectura, update_group), como siempre. Las pausas por el
+    freno en los calendarios de los prioritarios no les quitan su plazo
+    (calendars, stretch): lo pagan la reserva y los demás grupos."""
     start = clock()
     if deadline is None:
         deadline = start + (budget_seconds() if deadline_seconds is None else deadline_seconds)
@@ -1244,6 +1245,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # La federación no sirve páginas (fiflp_carga.BLOCKED_AFTER seguidas sin cargar, tras sus reintentos):
     # bloquea o se ha caído. No se le pide nada más en esta pasada; lo que falta, a la siguiente.
     blocked = lambda: bool(getattr(F, "blocked", False))
+    closed = lambda: bool(getattr(F, "closed", False))      # el navegador cayó: no es la federación
     # Lo que F cuenta del freno (fiflp_carga.Federacion; las federaciones de prueba, lo que tengan).
     brake_signals = lambda: getattr(F, "brakes", 0)
     paused = lambda: getattr(F, "paused", 0.0)
@@ -1287,7 +1289,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
                     _mark_db()
             except NotServed as e:          # la federación no sirvió: ¿su freno, el plazo o el grupo?
                 conn.rollback()
-                if brake_signals() > brakes or blocked():
+                if (brake_signals() > brakes or blocked()) and not closed():
                     unserved.append(group)
                     print(f"    sin federación: a otra pasada ({e})")
                     continue
@@ -1386,7 +1388,8 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
           + (f", más {spent / 60:.1f} de actas y goleadores de los prioritarios" if round(spent / 60, 1) else ""),
           flush=True)
     if blocked():
-        print("  ! la federación no sirve páginas: nada más en esta pasada", flush=True)
+        print("  ! el navegador se ha cerrado" if closed() else "  ! la federación no sirve páginas",
+              ": nada más en esta pasada", sep="", flush=True)
     if deferred:
         print(f"  Rotación: {len(deferred)} grupos, a otra pasada ({_codes(deferred)})", flush=True)
     # Una página: las competiciones que la federación publica y la web no tiene (la Segunda Fase).

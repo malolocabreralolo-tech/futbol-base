@@ -9,7 +9,7 @@
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -156,7 +156,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -280,9 +280,9 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
-    "jornada_actual": 1,
+    "jornada_actual": 2,
     "plazas_ascenso": 4,
     "plazas_copa": 0,
     "plazas_descenso": 0,
@@ -308,12 +308,12 @@
      "id": 1198,
      "nombre": "UD Atalaya",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 1,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "3",
+     "pp": 0,
+     "puntos": 3,
      "racha_ultimos_5": [
       "V"
      ],
@@ -329,12 +329,12 @@
      "id": 1199,
      "nombre": "Gáldar Jacobeo27 B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 1,
      "posicion_anterior": 2,
-     "pp": "0",
-     "puntos": "3",
+     "pp": 0,
+     "puntos": 3,
      "racha_ultimos_5": [
       "V"
      ],
@@ -350,12 +350,12 @@
      "id": 1202,
      "nombre": "CD Firgas",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 0,
      "posicion_anterior": 3,
-     "pp": "0",
-     "puntos": "0",
+     "pp": 0,
+     "puntos": 0,
      "racha_ultimos_5": [],
      "sanciones": 0
     },
@@ -369,12 +369,12 @@
      "id": 1201,
      "nombre": "San Nicolás",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 1,
      "posicion_anterior": 4,
-     "pp": "1",
-     "puntos": "0",
+     "pp": 1,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D"
      ],
@@ -390,12 +390,12 @@
      "id": 1200,
      "nombre": "Villa Santa Brígida B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 1,
      "posicion_anterior": 5,
-     "pp": "1",
-     "puntos": "0",
+     "pp": 1,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D"
      ],
@@ -404,7 +404,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -553,7 +553,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -700,7 +700,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -824,7 +824,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -971,7 +971,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1095,7 +1095,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1219,7 +1219,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1362,7 +1362,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1486,7 +1486,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1633,7 +1633,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1757,7 +1757,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1881,7 +1881,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2028,7 +2028,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2175,7 +2175,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2322,7 +2322,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2469,7 +2469,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2589,7 +2589,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2713,7 +2713,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2837,7 +2837,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2984,7 +2984,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -3131,7 +3131,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -3278,7 +3278,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -3570,7 +3570,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -3858,7 +3858,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -4150,7 +4150,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-15T16:55:58",
+   "fetched": "2026-10-15T21:30:31",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -5249,45 +5249,98 @@
    "visitante": "San Nicolás"
   },
   "18742": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/dk1P853zEEF2",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100firgas.png",
    "escudo_visitante": "200x200AtalayaSanPablo.png",
    "estadio": "Domingo Ponce",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 17:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18742,
+   "id_local": 1202,
+   "id_visitante": 1198,
    "jornada": 2,
    "liga_id": 123,
    "local": "CD Firgas",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [],
+   "racha_visitante": [
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "UD Atalaya"
   },
   "18743": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/TUaU1txQGphnk5uH6",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100villa.png",
    "escudo_visitante": "galdarEscudoColor.png",
    "estadio": "Los Olivos",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-18 10:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18743,
+   "id_local": 1200,
+   "id_visitante": 1199,
    "jornada": 2,
    "liga_id": 123,
    "local": "Villa Santa Brígida B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Gáldar Jacobeo27 B"
   },
   "18744": {
+   "campo_gps": "Venancio Monzónhttps://goo.gl/maps/AXt5UdgsT9axsRBn9",
    "escudo_local": "galdarEscudoColor.png",
    "escudo_visitante": "100x100firgas.png",
-   "estadio": null,
+   "estadio": "Venancio Monzón",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-23 18:15:00",
    "goles_local": 0,
@@ -5298,12 +5351,14 @@
    "local": "Gáldar Jacobeo27 B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
+   "permitir_comentarios_liga": 1,
    "visitante": "CD Firgas"
   },
   "18745": {
+   "campo_gps": "https://goo.gl/maps/duUPQJmNRCHX3WrKA",
    "escudo_local": "100x100sannicolas.png",
    "escudo_visitante": "100x100villa.png",
-   "estadio": null,
+   "estadio": "Los Cascajos",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-24 17:00:00",
    "goles_local": 0,
@@ -5314,6 +5369,7 @@
    "local": "San Nicolás",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
+   "permitir_comentarios_liga": 1,
    "visitante": "Villa Santa Brígida B"
   },
   "18746": {

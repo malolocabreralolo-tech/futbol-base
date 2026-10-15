@@ -50,7 +50,9 @@ MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~3-6 s cada una); el resto,
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
 # Plazo GLOBAL de las dos pasadas, desde que arranca update_groups (FIFLP_BUDGET_MIN). Fuera de la
 # federación el job gasta 4-8 min (preparación, app, importaciones, generate_js, pruebas y commit): el
-# paso del bot queda en ≤ ~32 min y el job en 29-33, ~35 en el peor caso, sobre los 45 de update.yml.
+# paso del bot queda en ≤ ~32 min y el job en 29-33, ~35 en el peor caso, sobre los 45 de update.yml. Las
+# pausas largas cuando la federación frena (fiflp_carga.Federacion) caben dentro de este plazo, y ninguna
+# página empieza después: no lo alargan.
 DEADLINE_SECONDS = 25 * 60
 # Lo que la primera pasada deja siempre para la segunda (FIFLP_RESERVE_MIN): las actas y los
 # goleadores de los grupos prioritarios (de su primera mitad, delante de los demás grupos, en cuanto
@@ -756,6 +758,13 @@ def current_round(conn, group_id):
     return played[-1] if played else (rows[0][0] if rows else None)
 
 
+class NotServed(RuntimeError):
+    """La federación no sirvió una página del calendario de un grupo (no carga, vacía, un 5xx o un 429):
+    la red o la federación, no los datos del grupo. run_passes mira si fue su freno (Parte A, 15/10/2026):
+    entonces el grupo conserva su última comprobación; si no (una URL muerta mientras el resto carga), es
+    un error, como siempre."""
+
+
 JORNADAS_TRIES = 3       # dos esperas al desplegable de jornadas y una recarga (scrape_group)
 JORNADAS_JS = """() => {
     const sel = document.querySelector('select[name="jornada"]');
@@ -766,7 +775,9 @@ JORNADAS_JS = """() => {
 
 def scrape_group(page, F, url, stored, today, full=False):
     """(standings crudas, {jornada: [partidos crudos]}) de un grupo de FIFLP; `full`: todas las
-    jornadas ya jugadas (rounds_to_refresh)."""
+    jornadas ya jugadas (rounds_to_refresh). Si la federación no sirve el calendario o una jornada,
+    NotServed: lo leído se queda en memoria y no se escribe nada del grupo (update_group no llega a
+    llamarse). Sin clasificación (no cargó) sigue: la escritura la salta, como siempre."""
     comp, code = fiflp_ids(url)
     season = re.search(r"CodTemporada=(\d+)", url).group(1)
     base = f"{F.BASE}/NFG_VisClasificacion?cod_primaria=1000120&CodTemporada={season}"
@@ -782,7 +793,7 @@ def scrape_group(page, F, url, stored, today, full=False):
     calendar = (f"{F.BASE}/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
                 f"&CodCompeticion={comp}&CodGrupo={code}")
     if not F.goto(page, calendar):
-        raise RuntimeError("no carga el calendario de la federación")
+        raise NotServed("no carga el calendario de la federación")
     # La carga ya esperó, con tope, al desplegable (fiflp_carga.ready_selector). Si no llegó y el grupo
     # tiene jornadas, FIFLP tarda en servirlo («0J»): hasta dos esperas más, al desplegable y con tope,
     # y si aún no, se recarga el calendario una vez (antes de octubre eran 4 × 3 s fijos; con una
@@ -794,7 +805,7 @@ def scrape_group(page, F, url, stored, today, full=False):
         if attempt < JORNADAS_TRIES - 1:
             wait_ready(page, ready_selector(calendar), ready_timeout_ms())
         elif not F.goto(page, calendar):
-            break
+            raise NotServed("la federación no sirvió las jornadas del grupo")
         options = page.evaluate(JORNADAS_JS)
     if not options and stored:
         raise RuntimeError("la federación no sirvió las jornadas del grupo")
@@ -804,7 +815,7 @@ def scrape_group(page, F, url, stored, today, full=False):
         # AJAX, navega leyendo un formulario OCULTO de la página, y flatten()
         # quita lo oculto (desde la 2.ª jornada fallaba el grupo entero).
         if not F.goto(page, f"{calendar}&CodJornada={opt['value']}"):
-            raise RuntimeError(f"no carga la {label.lower()}")
+            raise NotServed(f"no carga la {label.lower()}")
         flatten(page)            # lo que se ve, sin señuelos (fiflp_render.py)
         rounds[label] = [{**m, "date": _iso(m.get("date")) or (when.isoformat() if when else "")}
                          for m in F.parse_matches(page)]
@@ -1124,11 +1135,12 @@ def update_groups(conn, season_id, today=None):
 def _with_browser(work, deadline=None):
     """Abre Chromium y llama a work(page, F) con el scraper de la federación: los lectores de
     fetch_fiflp_2425 con la carga de fiflp_carga (espera a lo que el lector necesita, sin los 2,5 s
-    fijos, y pausa FIFLP_DELAY) y los reintentos cortados en `deadline` (time.monotonic())."""
+    fijos, y pausa FIFLP_DELAY), y los reintentos, las pausas largas del freno y las páginas cortados
+    en `deadline` (en clock(), el reloj de los plazos)."""
     import fetch_fiflp_2425
     from fiflp_carga import Federacion
     from playwright.sync_api import sync_playwright
-    F = Federacion(fetch_fiflp_2425, deadline)
+    F = Federacion(fetch_fiflp_2425, deadline, clock=clock)
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(user_agent=(
@@ -1185,10 +1197,18 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
        de los equipos que faltan; los goleadores del turno y del margen
        (plan.turn); y las actas y los goleadores de los demás, en el orden de la
        primera pasada (que rota: el turno de cada nivel, primero).
-    Cada acta se pide como mucho una vez por pasada. Si la federación deja de
-    servir páginas (F.blocked), no se le pide nada más, esté donde esté. Los
-    grupos cerrados que descansan y los que no caben conservan su última
-    comprobación en data-health.json (source_health.carry): no son un error."""
+    Cada acta se pide como mucho una vez por pasada. Cuando la federación frena,
+    F (fiflp_carga.Federacion) hace pausas largas y vuelve a pedir la misma
+    página mientras quepan; si deja de servir páginas (F.blocked), no se le pide
+    nada más, esté donde esté. Los grupos cerrados que descansan y los que no
+    caben conservan su última comprobación en data-health.json
+    (source_health.carry): no son un error. Tampoco los que la federación no
+    sirvió por su freno («un freno no es un error»: run.unserved): un grupo cuyo
+    calendario no carga (NotServed) con una página vacía en su lectura
+    (F.unserved), o con la federación bloqueada al acabarla o justo después (sin
+    ninguna página servida entre su fallo y el bloqueo, F.served). Sin señal de
+    freno (una URL muerta mientras el resto carga), sigue siendo un error; un
+    fallo de los datos (lectura, update_group), como siempre."""
     start = clock()
     if deadline is None:
         deadline = start + (budget_seconds() if deadline_seconds is None else deadline_seconds)
@@ -1206,23 +1226,33 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # La federación no sirve páginas (fiflp_carga.BLOCKED_AFTER seguidas sin cargar, tras sus reintentos):
     # bloquea o se ha caído. No se le pide nada más en esta pasada; lo que falta, a la siguiente.
     blocked = lambda: bool(getattr(F, "blocked", False))
+    # Lo que F cuenta del freno (fiflp_carga.Federacion; las federaciones de prueba, lo que tengan).
+    unserved_pages = lambda: getattr(F, "unserved", 0)
+    paused = lambda: getattr(F, "paused", 0.0)
+    served = lambda: getattr(F, "served", None)
     full = full_read_pending(conn)
     results, stamps, deferred = {}, {}, []
+    # Sin federación por su freno: conservan su última comprobación (run.unserved). suspects: los que
+    # fallaron sin señal de freno, con las páginas servidas hasta su fallo (si no sirve ninguna más antes
+    # de bloquearse, también eran el freno).
+    unserved, suspects = [], {}
     # Actas y goleadores: MAX_ACTAS_PER_RUN actas en toda la pasada (las de los prioritarios, las primeras),
     # cada una una vez (tried); cut, los grupos que el plazo o la federación no dejaron acabar.
     cut, scored, tried, budget = [], set(), set(), MAX_ACTAS_PER_RUN
-    longest = 0.0                       # el calendario que más ha tardado
+    longest = 0.0                       # el calendario que más ha tardado (sin las pausas del freno)
 
     def calendars(rows, until):
         """Clasificación y jornadas de cada grupo de `rows` que empiece antes de `until`; los demás, a
-        otra pasada (deferred)."""
+        otra pasada (deferred). Uno que la federación no sirve por su freno, también a otra pasada
+        (unserved), sin escribir nada de él y sin marcarlo como error."""
         nonlocal longest
-        for group_id, code, url in rows:
+        for group in rows:
+            group_id, code, url = group
             if clock() > until or blocked():
-                deferred.append((group_id, code, url))
+                deferred.append(group)
                 continue
             print(f"  [{code}]" + (" (primera pasada: todas las jornadas)" if group_id in full else ""), flush=True)
-            stamps[code], began = stamp(), clock()
+            stamps[code], began, brakes, held = stamp(), clock(), unserved_pages(), paused()
             try:
                 raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today,
                                                          full=group_id in full)
@@ -1231,12 +1261,25 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
                     conn.execute("DELETE FROM fiflp_full_pending WHERE group_id=?", (group_id,))
                     conn.commit()
                     _mark_db()
+            except NotServed as e:          # la federación no sirvió: ¿su freno, el plazo o el grupo?
+                conn.rollback()
+                if unserved_pages() > brakes or blocked():
+                    unserved.append(group)
+                    print(f"    sin federación: a otra pasada ({e})")
+                    continue
+                if clock() > deadline:
+                    deferred.append(group)
+                    print(f"    plazo agotado: a otra pasada ({e})")
+                    continue
+                status, msg = "error", e
+                print(f"    ! error: {e}")
+                suspects[code] = (group, served())
             except Exception as e:          # un grupo que falla no tumba a los demás
                 conn.rollback()
                 status, msg = "error", e
                 print(f"    ! error: {e}")
             results[code] = [status, msg]
-            longest = max(longest, clock() - began)
+            longest = max(longest, clock() - began - (paused() - held))
 
     def note(code, notes):
         if notes:
@@ -1294,7 +1337,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # página de competiciones), para que nada empiece pasado el plazo global y las competiciones se lean
     # como antes. Lo que no quepa sigue el primero en la segunda pasada (again), donde iba.
     room = max(0.0, min(reserve / 2, reserve - 2 * longest))
-    began, pages_before = clock(), getattr(F, "pages", 0)
+    began, pages_before, held = clock(), getattr(F, "pages", 0), paused()
     if ahead and room and not blocked():
         print("\n  Actas y goleadores de los prioritarios", flush=True)
         for group in ahead:
@@ -1304,15 +1347,18 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     else:
         cut.extend(code for _, code, _ in ahead)      # sin sitio en la reserva o sin federación: a la segunda
     spent = clock() - began
+    held = paused() - held              # una pausa por el freno en ellas no corre el plazo de los demás
     spent_pages = getattr(F, "pages", 0) - pages_before
     again = [g for g in ahead if g[1] in cut]          # prioritarios sin acabar: en la segunda, los primeros
     cut.clear()
-    calendars(others, first_deadline + spent)
+    calendars(others, first_deadline + spent - held)
     first_pass = clock() - start - spent               # sin las actas ni los goleadores de los prioritarios
+    idle = paused() - held                             # las pausas por el freno en los calendarios
     pages = getattr(F, "pages", None)
     pages = pages - spent_pages if pages else pages
     print(f"  Primera pasada: {len(results)} grupos en {first_pass / 60:.1f} min"
-          + (f" ({pages} páginas, {first_pass / pages:.1f} s cada una)" if pages else "")
+          + (f" ({pages} páginas, {(first_pass - idle) / pages:.1f} s cada una)" if pages else "")
+          + (f", {idle / 60:.1f} de ellos en pausa por el freno" if round(idle / 60, 1) else "")
           + (f", más {spent / 60:.1f} de actas y goleadores de los prioritarios" if round(spent / 60, 1) else ""),
           flush=True)
     if blocked():
@@ -1367,17 +1413,32 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         why = "sin federación" if blocked() else "plazo agotado" if clock() > deadline else "páginas sin cargar"
         print(f"  ({why}: las actas y los goleadores de {len(cut)} "
               f"grupos, en otra pasada: {', '.join(cut[:12])}{' y más' if len(cut) > 12 else ''})")
+    # Un calendario que no cargó sin señal de freno justo antes de que la federación dejara de servir
+    # (ninguna página servida entre su fallo y el bloqueo: un 503 tras otro) también era el freno.
+    if blocked() and served() is not None:
+        for code, (group, mark) in suspects.items():
+            if mark == served():
+                results.pop(code, None)
+                unserved.append(group)
+    if unserved:
+        unserved.sort(key=plan.order.index)
+        many = len(unserved) > 1
+        print(f"  Sin federación: {len(unserved)} grupo{'s' if many else ''} conserva{'n' if many else ''} su "
+              f"última comprobación, a otra pasada ({_codes(unserved)})", flush=True)
     for group_id, code, url in groups:
         if code in results:
             source_health.record(code, url, *results[code], now=stamps[code])
         else:
-            source_health.carry(code, url)     # descansa o no cupo: su última comprobación
+            source_health.carry(code, url)     # descansa, no cupo o no se sirvió: su última comprobación
         pending.pop(code, None)
+    pauses = getattr(F, "pauses", 0)
     source_health.note_run({
         "pass": number, "groups": len(groups), "refreshed": len(results),
         "resting": [c for _, c, _ in plan.resting], "deferred": [c for _, c, _ in deferred],
+        "unserved": [c for _, c, _ in unserved],
         "extrasDeferred": cut, "firstPassSeconds": round(first_pass), "seconds": round(clock() - start),
-        **({"firstPassPages": pages} if pages else {}), **({"blocked": True} if blocked() else {})})
+        **({"firstPassPages": pages} if pages else {}), **({"blocked": True} if blocked() else {}),
+        **({"pauses": pauses, "resumed": getattr(F, "resumed", 0)} if pauses else {})})
     print(f"  Federación: {round((clock() - start) / 60, 1)} min de {round((deadline - start) / 60, 1)}", flush=True)
 
 def update_directorio(page, F, conn, season_id, groups, deadline=None):

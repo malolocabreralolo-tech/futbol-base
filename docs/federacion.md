@@ -49,9 +49,10 @@ Para que quepa siempre en el job (45 min; desde octubre de 2026 la Segunda Fase 
   - un número que se repite (relanzar una ejecución fallida cambia `run_attempt`, no el número) repite el orden de una pasada que no llegó a hacerse.
   Se prefirió `GITHUB_RUN_NUMBER` a la franja horaria porque el cron llega con 3-5 h de retraso y las tandas lanzan el bot a cualquier hora: dos pasadas en la misma franja repetirían turno y uno se saltaría.
 - Lo que no cabe queda para otra pasada: en `data-health.json` conserva su última comprobación (no es un error) y `run` dice el número de la pasada (`pass`), qué quedó fuera (`deferred`; de la segunda pasada, `extrasDeferred`), qué descansó (`resting`) y cuánto tardó (`firstPassSeconds` y `firstPassPages`, la primera pasada sin las actas ni los goleadores de los prioritarios; `seconds`, todo). Ni `run` ni las horas (`checkedAt`) reescriben el informe por sí solas: no hay commit solo por la hora.
+- **Un freno no es un error** (desde el 15/10/2026): un grupo cuyo calendario la federación no sirve por su freno conserva también su última comprobación y queda para otra pasada (`run.unserved`, aparte de `deferred`, que son los que no se intentaron; en el registro, «sin federación: a otra pasada»). Es su freno si hubo una página vacía en la lectura del grupo, o si la federación quedó bloqueada al acabarla o justo después, sin servir ninguna página entre el fallo del grupo y el bloqueo (un 503 tras otro). No se escribe nada de lo que ya había leído (las jornadas se guardan en memoria y `update_group` no llega a llamarse) y su hora no avanza. Un grupo que no carga sin señal de freno (una URL muerta mientras el resto carga bien) sigue siendo un error, y un fallo de los datos (lectura, `update_group` rechazado), como siempre. Antes, en la pasada 1103, AL4 y AL9 (de Las Mesas) quedaban como «error» y la web ponía «Revisión pendiente.» en sus equipos.
 - **Grupos cerrados**: todo jugado y la última jornada hace más de 21 días. Se refrescan una vez en cada época de 4 pasadas (`closed_turn`: la pasada `(crc32(código) + 2·época) % 4`, repartidos entre las pasadas por su código), o en cada una si su última comprobación publicada falló o no existe, o si tienen un acta pendiente. Su pasada salta dos puestos de una época a otra: nunca pasan más de 5 seguidas sin leerse y, si se pierde una pasada cada día a la misma hora, les quita como mucho una de cada dos (al menos una de cada 8, lo pedido; con un turno fijo, los de esa hora no se leían nunca). Los que descansan no se leen aunque sobre plazo: lo que sobra de la primera pasada es de las actas y los goleadores.
 - **Competiciones nuevas** (`check_competitions`, una página entre las dos pasadas): lee el desplegable de competiciones de la temporada en curso (el mismo JS que `discover_fiflp_comps.py`), se queda con benjamín, prebenjamín y alevín de Gran Canaria (`categorias.category_of`, el mismo de todos los importadores: sin fútbol sala ni LPFS; alevín de Lanzarote y Fuerteventura, fuera), quita las que ya tienen grupos en la temporada (`CodCompeticion` de `groups.url`) y las de `IGNORED_COMPETITIONS`, y deja el resto en `data-health.json` (`newCompetitions: [{id, name, firstSeen}]`; `firstSeen` no cambia, así que no hay commit por la hora). Si la página falla, se queda lo que había. Después, `update.yml` abre una issue por cada una (`avisar_competiciones.py`, permiso `issues: write`), sin repetirla: busca su código también en las cerradas, así que cerrarla es decir «esta no». La issue lleva solo el nombre y el código de la competición y los pasos para añadirla (los de alevín, con su tanda `22al`: [alevin.md](alevin.md)).
-- **Cada página** (`fiflp_carga.py`): sin esperas fijas. Espera, con tope (`FIFLP_READY_MS`, 5 s), a que estén las hojas de estilo de la federación (de ellas salen las cifras que materializa el aplanado: sin ellas el marcador se pierde) y el desplegable que rellena su JS. Entre peticiones, `FIFLP_DELAY` (1-1,5 s con jitter; era 2-3,5). Unos 3 s por página frente a los 6,8 de antes. Una página de error de la federación (un 5xx, como el 503 de Apache cuando bloquea, o un 429) no cuenta como cargada: se reintenta (15 y 30 s), un acta así no gasta intento y, con tres páginas seguidas sin cargar, el bot no le pide nada más en esa pasada (lo que falta, a la siguiente; `run.blocked`). Las tandas de temporadas pasadas siguen con el paso de `fetch_fiflp_2425`.
+- **Cada página** (`fiflp_carga.py`): sin esperas fijas. Espera, con tope (`FIFLP_READY_MS`, 5 s), a que estén las hojas de estilo de la federación (de ellas salen las cifras que materializa el aplanado: sin ellas el marcador se pierde) y el desplegable que rellena su JS. Entre peticiones, `FIFLP_DELAY` (1-1,5 s con jitter; era 2-3,5). Desde el freno de octubre de 2026, además, al menos `FIFLP_MIN_INTERVAL` s (7) entre el inicio de dos peticiones (abajo). Una página de error de la federación (un 5xx, como el 503 de Apache cuando bloquea, o un 429) no cuenta como cargada: se reintenta (15 y 30 s), un acta así no gasta intento y, con tres páginas seguidas sin cargar, la federación bloquea o se ha caído. Una página vacía es su freno: se reintenta una vez tras 60 s. En los dos casos, antes de rendirse, la **pausa larga** (abajo); si no la arregla, el bot no le pide nada más en esa pasada (lo que falta, a la siguiente; `run.blocked`). Ninguna página empieza pasado el plazo global. Las tandas de temporadas pasadas siguen con el paso de `fetch_fiflp_2425`.
 
 Actas publicadas: un fichero por grupo, `data-lineups-<S>-<grupo>.js` (`const LINEUPS_<S>_<grupo>`), que la ficha de Equipo y Partido piden con `ensureLineups(temporada, grupo)` (un 404 es «sin actas»). Una temporada entera con todas sus actas pesa ~10 MB; un grupo, unos cientos de KB (comprimidos, decenas). El service worker no las precachea: guarda las que se usan y cada versión nueva vuelve a bajar las de los grupos ya vistos (`lineupsToCarry`, como mucho 12), para que la plantilla de mi equipo siga sin conexión tras una subida de datos.
 
@@ -161,6 +162,45 @@ vacía (`<html><head></head><body></body></html>`, 39 bytes; lo guardó la sonda
 cargada y 63 de 69 grupos dieron «no sirvió las jornadas». Desde entonces (fiflp_carga):
 - entre el inicio de dos peticiones pasan al menos `FIFLP_MIN_INTERVAL` s (7 por defecto: el ritmo de
   antes de octubre, ~6,8 s por página, que nunca frenó);
-- una página vacía no carga: se reintenta una vez tras 60 s y, si sigue, cuenta para `blocked`
-  (3 seguidas: el bot deja de pedir en esa pasada y lo que falta va en la siguiente, por turnos);
+- una página vacía no carga: se reintenta una vez tras 60 s y, si sigue, es el freno (la pausa larga,
+  abajo); una página que no carga por otra cosa cuenta para `blocked` (3 seguidas);
 - el desplegable de jornadas se espera hasta dos veces más y, si no, se recarga el calendario una vez.
+
+### La pausa larga (15/10/2026)
+
+El freno es errático (a 7 s por página, el 14/10: a las 11:18 ~130 páginas sin frenar; a las 16:39 frenó
+tras ~13; a las 20:30, tras ~41; a las 21:19, 169 sin frenar; el 15/10 a las 03:28, pasada 1103, tras
+~14) y se pasa solo: entre el freno de las 20:42 y la pasada limpia de las 21:19 pasaron 37 min, y en la
+1103 seguía 3 min después (vacías a las 03:30:43, 03:31:43 y 03:32:45). La pasada 1103 se rindió a los
+4,8 min con 20 de plazo sin usar, y dejó AL4 y AL9 como error y AL18 y AL20 sin intentar.
+
+Ahora (`fiflp_carga.Federacion.goto`), cuando frena —una página vacía tras su espera de 60 s, o la
+página que dejaría a la federación bloqueada (la tercera seguida sin cargar)—, el bot no se rinde: si
+cabe antes del plazo global con 2 min de margen después (`BRAKE_ROOM`, para leer algo), espera una
+pausa larga (`FIFLP_BRAKE_PAUSE_MIN`, 5 min) y vuelve a pedir **la misma página**:
+
+- si carga, sigue la pasada (el grupo no falla) y, el resto de la pasada, más despacio: el intervalo ×1,5
+  (7 → 10,5 s), y si vuelve a frenar y a servir, el doble (14 s), no más;
+- si no, otra pausa, mientras quepa, hasta `FIFLP_BRAKE_PAUSES` (3) por pasada; agotadas, o sin plazo para
+  otra, `blocked`: nada más en esa pasada, y el grupo que se estaba leyendo conserva su comprobación
+  (`run.unserved`: «un freno no es un error», arriba). `FIFLP_BRAKE_PAUSES=0` es lo de antes, salvo que
+  una página vacía tras su espera ya para la pasada (antes hacían falta tres).
+
+Por qué esos valores: 5 min pasa del mínimo visto (3) y, con 3 pausas, el bot vuelve a probar a los ~6,
+~11 y ~16 min de la primera página vacía, sin pedir nada entretanto: cubre un freno de un cuarto de hora.
+Uno más largo cuesta tiempo de runner, no páginas (la pasada se da por perdida, como antes, y el plazo
+global no se mueve: el job sigue en 29-33 min, ~35 en el peor caso, de 45). Más despacio tras volver a
+servir porque el freno no sale solo del ritmo (a 7 s hubo pasadas de 169 páginas y frenos tras 13): ×1,5
+aún deja ~85 páginas en 15 min.
+
+En el registro: «la federación frena: pausa de 5 min (1/3), hasta las 03:35 UTC» y, después, «la
+federación vuelve a servir: se sigue, una página cada 10.5 s» o «la federación sigue frenando». En
+`run` (sin commit solo por ello, como todo `run`): `pauses` y `resumed` (tras cuántas volvió a servir),
+si hubo alguna; `unserved`; y la primera pasada da aparte el tiempo en pausa (no es coste de las páginas
+ni del calendario más largo, del que sale lo que se adelantan las actas de los prioritarios; una pausa en
+esas actas no alarga el plazo de los calendarios de los demás). Lo prueban `test_fiflp_carga.py` y
+`test_bot_freno.py` (la pasada 1103 con el freno que se pasa y con el que no, una URL muerta, el plazo y
+las pausas máximas).
+
+Para cruzar frenos con IPs, `update.yml` imprime la IP pública del runner antes del paso del bot (paso
+«IP pública del runner», `api.ipify.org`, 5 s como mucho; nunca para el job y no va a `data-health.json`).

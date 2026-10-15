@@ -22,12 +22,13 @@ grupos, 19 min de primera pasada; con la Segunda Fase y alevín no cabría en el
   - la PAUSA LARGA (Federacion, desde el 15/10/2026): el freno es errático (a 7 s por página, 130 y
     169 páginas sin frenar unas pasadas y 10-41 otras) y se pasa solo (seguía 3 min después en la
     pasada 1103; 37 min después del de las 20:42 la pasada fue limpia). Cuando frena (una página
-    vacía tras su espera de EMPTY_WAIT, o la página que dejaría a la federación `blocked`), si cabe
-    antes del plazo (con BRAKE_ROOM para leer algo después), el bot espera FIFLP_BRAKE_PAUSE_MIN
-    minutos y vuelve a pedir LA MISMA página: si carga, sigue la pasada, más despacio (el intervalo
+    vacía tras su espera de EMPTY_WAIT, o la página que dejaría a la federación `blocked` si la última
+    que cargó tampoco carga: si carga, la racha es de URLs muertas, no el freno), si cabe antes del
+    plazo (con BRAKE_ROOM para leer algo después), el bot espera FIFLP_BRAKE_PAUSE_MIN minutos y vuelve
+    a pedir LA MISMA página: si carga (o carga otra), sigue la pasada, más despacio (el intervalo
     ×BRAKE_SLOWDOWN, como mucho ×BRAKE_SLOWDOWN_MAX); si no, otra pausa, hasta FIFLP_BRAKE_PAUSES por
     pasada. Agotadas (o sin plazo para otra), `blocked`: nada más en esa pasada. Ninguna página empieza
-    pasado el plazo.
+    pasado el plazo, contando la espera del intervalo.
 No cambia cómo se aplana ni cómo se lee el HTML: solo cuándo. Lo usa el bot (update_fiflp,
 Federacion); las tandas de temporadas pasadas (fetch_fiflp_actas, _goleadores, _detalle, _islas)
 siguen con el paso de fetch_fiflp_2425, sin prisa.
@@ -47,7 +48,8 @@ EMPTY_WAIT = 60           # tras una página vacía (el freno de la federación)
 EMPTY_JS = "() => !document.body || document.body.innerHTML.trim() === ''"
 RETRY_WAITS = (15, 30)    # entre intentos de una página que no carga (tres intentos)
 # Páginas seguidas que no cargan (cada una tras sus intentos): la federación bloquea o se ha caído, y
-# el bot deja de pedirle más en esa pasada (Federacion.blocked), si una pausa larga no lo arregla.
+# el bot deja de pedirle más en esa pasada (Federacion.blocked), si una pausa larga no lo arregla. Salvo
+# que la última página que cargó cargue otra vez: entonces son URLs muertas, no la federación.
 BLOCKED_AFTER = 3
 # La pausa larga cuando frena (FIFLP_BRAKE_PAUSE_MIN, FIFLP_BRAKE_PAUSES). El freno seguía 3 min después
 # en la pasada 1103 (páginas vacías a las 03:30:43, 03:31:43 y 03:32:45) y se había pasado 37 min después
@@ -205,24 +207,30 @@ def goto(page, url, deadline=None, retries=3, ready_ms=None, hosts=FIFLP_HOSTS, 
 class Federacion:
     """Lo que el bot usa del raspador de la federación (fetch_fiflp_2425: BASE y los lectores de
     clasificación y de jornada) con la carga y la pausa de aquí, para UNA pasada. `deadline` (en
-    `clock`) es el plazo global del bot: ninguna página empieza después, y corta los reintentos de una
-    página y las pausas largas. Entre el inicio de dos peticiones pasan al menos `interval` segundos
-    (min_interval). Cuenta:
-      - `pages`, las peticiones (también la de después de una pausa larga: el log del bot da el coste
-        por página), y `served`, las páginas que cargaron;
+    `clock`) es el plazo global del bot: ninguna página empieza después (contando la espera del
+    intervalo: si no cabe, se espera igual y no se pide, y el bot ve el plazo agotado), y corta los
+    reintentos de una página y las pausas largas. Entre el inicio de dos peticiones pasan al menos
+    `interval` segundos (min_interval). Cuenta:
+      - `pages`, las peticiones (también la de después de una pausa larga y la de comprobar si sirve
+        otra: el log del bot da el coste por página), y `served`, las páginas que cargaron;
       - `failures`, las seguidas que no cargan (con BLOCKED_AFTER, `blocked`: no pedirle más);
-      - el freno: `unserved`, las páginas que no sirvió por su freno (vacías, o la que la deja
-        bloqueada); `pauses`, las pausas largas hechas (como mucho `max_pauses`, de `pause_seconds`
-        cada una: brake_pauses y brake_pause_seconds); `resumed`, tras cuántas volvió a servir;
-        `paused`, los segundos en pausa (no son coste de ninguna página ni de ningún grupo); y
-        `halted`: frenó sin pausas o sin plazo para otra, y no se le pide nada más (`blocked`)."""
+      - el freno: `brakes`, sus señales (cada página vacía, cargue o no tras su espera, y cada racha de
+        BLOCKED_AFTER sin cargar en la que la última página que cargó tampoco carga), y en `brake_marks`
+        las páginas servidas (`served`) hasta cada una (el bot sabe así si un fallo anterior, sin servir
+        nada entre medias, ya era el freno); `unserved`, las páginas que no sirvió por su freno;
+        `pauses`, las pausas largas hechas (como mucho `max_pauses`, de `pause_seconds` cada una:
+        brake_pauses y brake_pause_seconds); `resumed`, cuántas veces volvió a servir tras una pausa (no
+        tras cuántas pausas: eso lo dice el registro); `paused`, los segundos en pausa (no son coste de
+        ninguna página ni de ningún grupo); y `halted`: frenó sin pausas o sin plazo para otra, y no se
+        le pide nada más (`blocked`)."""
 
     def __init__(self, scraper, deadline=None, interval=None, clock=time.monotonic, sleep=time.sleep,
                  pause_seconds=None, max_pauses=None, wall=None, log=print):
         self._scraper = scraper
         self.BASE = scraper.BASE
         self.deadline = deadline
-        self.pages = self.served = self.failures = self.unserved = 0
+        self.pages = self.served = self.failures = self.unserved = self.brakes = 0
+        self.brake_marks = []
         self.interval = min_interval() if interval is None else interval
         self.base_interval = self.interval
         self.pause_seconds = brake_pause_seconds() if pause_seconds is None else pause_seconds
@@ -231,6 +239,7 @@ class Federacion:
         self.paused = 0.0
         self.halted = False
         self._clock, self._sleep, self._last = clock, sleep, None
+        self._good = None                 # la última página que cargó (_serving)
         self._wall = wall or (lambda: datetime.now(timezone.utc))
         self._log = log
 
@@ -239,17 +248,34 @@ class Federacion:
         return self.halted or self.failures >= BLOCKED_AFTER
 
     def _request(self, page, url, retries=3):
-        """Una petición (con sus reintentos cortos: goto) al ritmo de `interval`. (¿cargó?, ¿frenó?)"""
+        """Una petición (con sus reintentos cortos: goto) al ritmo de `interval`. (¿cargó?, ¿vacía alguna
+        vez?), o None si, tras la espera del intervalo, ya ha pasado el plazo: entonces ni se pide."""
         if self._last is not None:
             wait = self._last + self.interval - self._clock()
             if wait > 0:
                 self._sleep(wait)
+        if self.deadline is not None and self._clock() > self.deadline:
+            return None
         self._last = self._clock()
         self.pages += 1
         why = []
         loaded = goto(page, url, deadline=self.deadline, retries=retries, sleep=self._sleep, log=self._log,
                       clock=self._clock, why=why)
+        if loaded:
+            self._good = url
         return loaded, EMPTY in why
+
+    def _serving(self, page, url):
+        """¿Sirve la federación otra página, la última que cargó? Distingue una racha de URLs muertas (sí:
+        no es el freno) del freno o de una caída (no). Sin otra que probar, no se sabe: como el freno."""
+        if self._good is None or self._good == url:
+            return False
+        got = self._request(page, self._good, retries=1)
+        if not got or not got[0]:
+            return False
+        self.failures = 0
+        self.served += 1
+        return True
 
     def _pause_fits(self):
         """¿Otra pausa larga? Si quedan y, tras ella, aún hay BRAKE_ROOM antes del plazo."""
@@ -276,20 +302,37 @@ class Federacion:
     def goto(self, page, url):
         if self.halted or (self.deadline is not None and self._clock() > self.deadline):
             return False                  # frenada sin remedio, o pasado el plazo: ni se pide
-        loaded, braking = self._request(page, url)
-        # El freno: una página vacía tras su espera, o la que dejaría a la federación bloqueada (un 503
-        # tras otro). En vez de rendirse, pausas largas mientras quepan, y la misma página otra vez.
-        braking = not loaded and (braking or self.failures + 1 >= BLOCKED_AFTER)
-        while braking and not loaded:
+        got = self._request(page, url)
+        if got is None:
+            return False                  # tras el intervalo, pasado el plazo: ni se pide
+        loaded, empty = got
+        # El freno: una página vacía (aunque cargue tras su espera), o la que dejaría a la federación
+        # bloqueada (un 503 tras otro) si la última que cargó tampoco carga. Si esa carga, la racha es de
+        # páginas muertas (dos grupos seguidos con la URL muerta, p. ej.): esta no carga y se sigue.
+        streak = not loaded and not empty and self.failures + 1 >= BLOCKED_AFTER
+        if streak and self._serving(page, url):
+            streak = False
+            self._log(f"      {BLOCKED_AFTER} páginas seguidas sin cargar, pero otra ya leída carga: no es el "
+                      "freno, es esta página")
+        if empty or streak:
+            self.brakes += 1
+            self.brake_marks.append(self.served)
+        # En vez de rendirse, pausas largas mientras quepan, y la misma página otra vez.
+        braking = not loaded and (empty or streak)
+        while braking:
             if not self._pause_fits():
                 self.halted = True
                 break
             self._pause()
-            loaded, _ = self._request(page, url, retries=1)
-            if loaded:
+            got = self._request(page, url, retries=1)
+            loaded, empty = got or (False, False)
+            # Vuelve a servir si carga esta o, si esta no y no está vacía, la última que cargó.
+            if loaded or (got and not empty and self._serving(page, url)):
+                braking = False
                 self.resumed += 1
                 self.interval = min(self.interval * BRAKE_SLOWDOWN, self.base_interval * BRAKE_SLOWDOWN_MAX)
-                self._log(f"      la federación vuelve a servir: se sigue, una página cada {self.interval:g} s")
+                self._log(f"      la federación vuelve a servir{'' if loaded else ', pero no esta página'}: se "
+                          f"sigue, una página cada {self.interval:g} s")
             else:
                 self._log("      la federación sigue frenando")
         if loaded:

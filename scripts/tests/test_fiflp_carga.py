@@ -6,6 +6,7 @@ pausa): 33 grupos eran 19 min de primera pasada. Ahora la carga espera a lo que 
 desplegable que rellena su JS), con tope, y la pausa es menor y configurable (FIFLP_DELAY).
 Sin red: una página falsa o un servidor local con Chromium (si no está, esas pruebas se saltan).
 """
+from datetime import datetime, timedelta, timezone
 import http.server
 import sys
 import threading
@@ -190,10 +191,11 @@ def test_the_minimum_interval_is_set_by_environment():
 
 def test_the_bot_adapter_knows_when_the_federation_stops_serving(monkeypatch):
     """Federacion cuenta las páginas seguidas que no cargan (cada una tras sus reintentos): con
-    BLOCKED_AFTER, blocked; una que carga lo deshace."""
+    BLOCKED_AFTER, blocked; una que carga lo deshace. Sin pausas largas (max_pauses=0, FIFLP_BRAKE_PAUSES=0:
+    lo de antes del 15/10/2026); con ellas, test_a_streak_of_error_pages_pauses_before_blocking."""
     import fetch_fiflp_2425 as F
-    monkeypatch.setattr(C, "goto", lambda page, url, deadline=None: page.statuses.pop(0) == 200)
-    fed = C.Federacion(F, interval=0)
+    monkeypatch.setattr(C, "goto", lambda page, url, **kw: page.statuses.pop(0) == 200)
+    fed = C.Federacion(F, interval=0, max_pauses=0, log=lambda *_: None)
     page = FakePage(statuses=[503, 503, 200] + [503] * C.BLOCKED_AFTER)
     for _ in range(3):
         fed.goto(page, GROUP)
@@ -201,6 +203,308 @@ def test_the_bot_adapter_knows_when_the_federation_stops_serving(monkeypatch):
     for n in range(C.BLOCKED_AFTER):
         fed.goto(page, GROUP)
     assert fed.blocked and fed.failures == C.BLOCKED_AFTER and fed.pages == 3 + C.BLOCKED_AFTER
+    assert fed.served == 1 and fed.pauses == 0
+    # Bloqueada, no se le pide nada más.
+    assert not fed.goto(page, GROUP) and fed.pages == 3 + C.BLOCKED_AFTER
+
+
+# ── El freno: la pausa larga y la misma página otra vez ──────────────────────
+
+class Brake:
+    """La federación frena entre `start` y `end` (en el reloj falso; end None: no se pasa) y sirve vacías
+    sus páginas. Cada carga cuesta `cost` s. Apunta cuándo empezó cada petición y cuánto durmió el bot."""
+
+    def __init__(self, start=0.0, end=None, cost=2.0, now=1000.0):
+        self.start, self.end, self.cost, self.t = start, end, cost, now
+        self.starts, self.slept, self.said = [], [], []
+
+    def clock(self):
+        return self.t
+
+    def sleep(self, s):
+        self.slept.append(round(s, 2))
+        self.t += s
+
+    def braking(self):
+        return self.t >= self.start and (self.end is None or self.t < self.end)
+
+    def page(self):
+        brake = self
+
+        class Page(FakePage):
+            def goto(self, url, wait_until=None, timeout=None):
+                brake.starts.append(brake.t)
+                self.served_empty = brake.braking()
+                brake.t += brake.cost
+                return super().goto(url, wait_until, timeout)
+
+            def evaluate(self, js, *a):
+                return self.served_empty if js == C.EMPTY_JS else None
+        return Page()
+
+    def fed(self, **kw):
+        import fetch_fiflp_2425 as F
+        kw.setdefault("interval", 7.0)
+        kw.setdefault("pause_seconds", 300)
+        kw.setdefault("max_pauses", 3)
+        return C.Federacion(F, clock=self.clock, sleep=self.sleep, log=self.said.append,
+                            wall=lambda: datetime(2026, 10, 15, 3, 29, tzinfo=timezone.utc)
+                            + timedelta(seconds=self.t - 1000), **kw)
+
+
+def test_a_brake_that_passes_after_a_long_pause_resumes_the_same_page_and_slows_down():
+    """La pasada 1103 (15/10/2026): la federación frena (página vacía, y otra tras la espera de 60 s) y,
+    en vez de rendirse, el bot espera FIFLP_BRAKE_PAUSE_MIN (5) y vuelve a pedir LA MISMA página. Si
+    carga, sigue, y más despacio (×1,5 el intervalo) el resto de la pasada."""
+    b = Brake(start=1000.0, end=1000.0 + 4 * 60)           # frena 4 min desde la primera petición
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    assert fed.goto(page, GROUP)
+    assert page.gotos == [(GROUP, "domcontentloaded")] * 3                 # la misma página, tres veces
+    assert b.slept == [C.EMPTY_WAIT, 300]
+    assert fed.pauses == 1 and fed.resumed == 1 and fed.paused == 300 and not fed.blocked
+    assert fed.served == 1 and fed.unserved == 0 and fed.failures == 0 and fed.pages == 2
+    assert "      la federación frena: pausa de 5 min (1/3), hasta las 03:35 UTC" in b.said
+    assert "      la federación vuelve a servir: se sigue, una página cada 10.5 s" in b.said
+    fed.goto(page, GROUP)
+    fed.goto(page, GROUP)
+    assert b.starts[-1] - b.starts[-2] == 10.5 and fed.interval == 10.5
+    # Si vuelve a frenar y a servir, el doble del intervalo de partida, y no más.
+    b.start, b.end = b.t, b.t + 3 * 60
+    assert fed.goto(page, GROUP) and fed.interval == 14.0 and fed.resumed == 2
+    b.start, b.end = b.t, b.t + 3 * 60
+    assert fed.goto(page, GROUP) and fed.interval == 14.0 and fed.pauses == 3
+
+
+def test_a_brake_that_does_not_pass_uses_up_the_pauses_and_blocks():
+    """Si tras la pausa sigue vacía, otra, hasta FIFLP_BRAKE_PAUSES (3) por pasada; agotadas, blocked como
+    antes, y no se le pide nada más. La página cuenta como no servida por el freno (unserved)."""
+    b = Brake(start=1000.0)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    assert not fed.goto(page, GROUP)
+    assert b.slept == [C.EMPTY_WAIT, 300, 300, 300] and len(page.gotos) == 5
+    assert fed.pauses == 3 and fed.resumed == 0 and fed.blocked and fed.halted
+    assert fed.unserved == 1 and fed.served == 0
+    assert [s for s in b.said if "frena" in s] == [
+        "      página vacía (la federación frena) (1/3), se reintenta en 60 s",
+        "      la federación frena: pausa de 5 min (1/3), hasta las 03:35 UTC",
+        "      la federación sigue frenando",
+        "      la federación frena: pausa de 5 min (2/3), hasta las 03:40 UTC",
+        "      la federación sigue frenando",
+        "      la federación frena: pausa de 5 min (3/3), hasta las 03:45 UTC",
+        "      la federación sigue frenando",
+        "      la federación sigue frenando tras 3 pausas: nada más en esta pasada"]
+    assert not fed.goto(page, GROUP) and len(page.gotos) == 5               # nada más
+    # Las pausas son por pasada: si ya se gastaron, el siguiente freno para la pasada sin esperar.
+    b = Brake(start=1000.0, end=1000.0 + 4 * 60)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60, max_pauses=1), b.page()
+    assert fed.goto(page, GROUP) and fed.pauses == 1
+    b.start, b.end = b.t, None
+    assert not fed.goto(page, GROUP) and fed.blocked and fed.pauses == 1 and b.slept[-1] == C.EMPTY_WAIT
+
+
+def test_the_long_pause_is_only_taken_if_it_fits_before_the_deadline():
+    """Tras la pausa tiene que quedar BRAKE_ROOM (2 min) antes del plazo global para leer algo: si no,
+    blocked sin esperar. Ninguna página empieza pasado el plazo."""
+    for room, paused in ((C.BRAKE_ROOM - 1, False), (C.BRAKE_ROOM + 1, True)):
+        b = Brake(start=1000.0)
+        # El freno se confirma a los 2 + 60 + 2 s: el plazo deja `room` tras una pausa de 5 min.
+        fed, page = b.fed(deadline=1000.0 + 64 + 300 + room), b.page()
+        assert not fed.goto(page, GROUP)
+        assert fed.blocked and fed.pauses == int(paused), room
+        assert b.slept == ([C.EMPTY_WAIT, 300] if paused else [C.EMPTY_WAIT]), room
+        assert all(t <= fed.deadline for t in b.starts)
+        if not paused:
+            assert "      la federación frena y no queda plazo para una pausa de 5 min: nada más en esta pasada" in b.said
+    # Pasado el plazo, ni se pide (y no cuenta como fallo de la federación).
+    b = Brake(start=10 ** 9)
+    fed, page = b.fed(deadline=1010.0), b.page()
+    assert fed.goto(page, GROUP)
+    b.t = 1010.5
+    assert not fed.goto(page, GROUP) and len(page.gotos) == 1 and fed.failures == 0 and not fed.blocked
+
+
+def test_a_streak_of_error_pages_pauses_before_blocking():
+    """Lo que antes acababa en blocked (BLOCKED_AFTER páginas seguidas sin cargar: un 503 tras otro, el
+    Apache de la federación cuando bloquea) también hace la pausa larga antes de rendirse, en la página
+    que la dejaría bloqueada; si tras ella carga, sigue."""
+    b = Brake(start=10 ** 9)
+    fed = b.fed(deadline=1000.0 + 25 * 60)
+    page = b.page()
+    page.statuses = [503] * 3 * (C.BLOCKED_AFTER - 1) + [503] * 3 + [200]
+    for n in range(C.BLOCKED_AFTER - 1):
+        assert not fed.goto(page, GROUP) and fed.pauses == 0
+    assert fed.goto(page, GROUP)
+    assert fed.pauses == 1 and fed.resumed == 1 and fed.failures == 0 and not fed.blocked
+    assert b.slept.count(300) == 1 and fed.unserved == 0
+
+
+def test_a_streak_of_dead_pages_while_another_page_loads_is_not_the_brake():
+    """Dos URLs muertas seguidas (un 500 tras otro, cada una tras sus reintentos) también son tres páginas
+    seguidas sin cargar, y no son el freno (antes: tres pausas de 5 min, la pasada perdida y sus grupos sin
+    error). Antes de la pausa larga, el bot vuelve a pedir la última página que cargó: si carga, la
+    federación sirve; ni pausa ni bloqueo, la racha se deshace y esta página no carga (su grupo, un error).
+    Si esa tampoco carga, sí es el freno (o una caída): la pausa, y tras ella lo mismo (si sirve otras y no
+    esta, sin más pausas)."""
+    b = Brake(start=10 ** 9)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    good = GROUP + "&CodJornada=3"
+    page.statuses = [200] + [500] * 3 * C.BLOCKED_AFTER + [200]
+    assert fed.goto(page, good)
+    for n in range(C.BLOCKED_AFTER):
+        assert not fed.goto(page, GROUP)
+    assert [u for u, _ in page.gotos] == [good] + [GROUP] * 3 * C.BLOCKED_AFTER + [good]
+    assert fed.pauses == 0 and fed.brakes == 0 and fed.brake_marks == [] and not fed.blocked
+    assert fed.failures == 1 and fed.served == 2 and fed.unserved == 0 and 300 not in b.slept
+    assert "      3 páginas seguidas sin cargar, pero la federación sirve otra: no es el freno, es esta página" in b.said
+    page.statuses = [200]
+    assert fed.goto(page, good) and fed.failures == 0
+    # La otra tampoco carga: el freno (o una caída), la pausa; tras ella sirve otras y no esta: se sigue.
+    b = Brake(start=10 ** 9)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    page.statuses = [200] + [500] * 3 * C.BLOCKED_AFTER + [500] + [500, 200]
+    assert fed.goto(page, good)
+    for n in range(C.BLOCKED_AFTER):
+        assert not fed.goto(page, GROUP)
+    assert [u for u, _ in page.gotos][-4:] == [GROUP, good, GROUP, good]
+    assert fed.pauses == 1 and fed.resumed == 1 and fed.brakes == 1 and fed.brake_marks == [1]
+    assert not fed.blocked and fed.failures == 1 and fed.unserved == 0 and fed.interval == 10.5
+    assert "      la federación vuelve a servir, pero no esta página: se sigue, una página cada 10.5 s" in b.said
+
+
+def test_with_no_page_loaded_yet_the_season_catalog_tells_dead_pages_from_the_brake():
+    """Las dos URLs muertas, las primeras de la pasada: aún no ha cargado ninguna página que volver a pedir.
+    El bot prueba la de competiciones de la temporada (CATALOG_URL, que existe siempre): si carga, no es el
+    freno (antes: «como el freno», tres pausas de 5 min y sus grupos sin error, en cada pasada)."""
+    b = Brake(start=10 ** 9)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    catalog = BASE + "/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22"
+    page.statuses = [500] * 3 * C.BLOCKED_AFTER + [200]
+    for n in range(C.BLOCKED_AFTER):
+        assert not fed.goto(page, GROUP)
+    assert [u for u, _ in page.gotos] == [GROUP] * 3 * C.BLOCKED_AFTER + [catalog]
+    assert fed.pauses == 0 and fed.brakes == 0 and not fed.blocked and fed.failures == 1
+    # Si esa tampoco carga, el freno (o una caída): la pausa.
+    b = Brake(start=10 ** 9)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    page.statuses = [500] * 3 * C.BLOCKED_AFTER + [500, 200]
+    for n in range(C.BLOCKED_AFTER - 1):
+        assert not fed.goto(page, GROUP)
+    assert fed.goto(page, GROUP)
+    assert [u for u, _ in page.gotos][-2:] == [catalog, GROUP] and fed.pauses == 1 and fed.brakes == 1
+
+
+def test_a_503_or_a_429_is_a_brake_signal_without_asking_another_page():
+    """Un 503 o un 429 es la federación que no sirve («no disponible», «demasiadas peticiones»), no la página:
+    señal del freno (`brakes`) en cada página que lo recibe, cargue o no tras sus reintentos, y la racha
+    que forman hace la pausa sin probar otra página (su respuesta no distingue nada: el freno puede
+    pasarse justo entonces). Un 500 no lo es: puede ser la URL."""
+    b = Brake(start=10 ** 9)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    good = GROUP + "&CodJornada=3"
+    page.statuses = [200, 503, 200, 429, 429, 429, 500, 500, 500]
+    assert fed.goto(page, good) and fed.goto(page, GROUP)
+    assert fed.brakes == 1 and fed.brake_marks == [1] and fed.pauses == 0
+    assert not fed.goto(page, GROUP) and fed.brakes == 2 and fed.brake_marks == [1, 2]
+    assert not fed.goto(page, GROUP) and fed.brakes == 2 and fed.failures == 2
+    b = Brake(start=10 ** 9)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    page.statuses = [200] + [503] * 3 * C.BLOCKED_AFTER + [200]
+    assert fed.goto(page, good)
+    for n in range(C.BLOCKED_AFTER - 1):
+        assert not fed.goto(page, GROUP)
+    assert fed.goto(page, GROUP)
+    assert [u for u, _ in page.gotos] == [good] + [GROUP] * (3 * C.BLOCKED_AFTER + 1)       # sin probar otra
+    assert fed.pauses == 1 and fed.resumed == 1 and fed.brakes == C.BLOCKED_AFTER
+
+
+def test_no_page_starts_past_the_deadline_after_its_interval():
+    """El plazo se mira cuando la página EMPEZARÍA, tras la espera del intervalo: con el plazo dentro de esa
+    espera, no se pide, y no cuenta como fallo de la federación. Antes se miraba antes de esperar, y una
+    página podía empezar hasta un intervalo (7 s, 14 tras frenar) pasado el plazo. La espera sí se hace: el
+    bot ve el plazo agotado (clock() > deadline) y deja el resto para otra pasada."""
+    b = Brake(start=10 ** 9)
+    fed, page = b.fed(deadline=1005.0), b.page()
+    assert fed.goto(page, GROUP)          # a las 1000; la página, 2 s
+    b.t += 1                              # el lector y la pausa
+    assert not fed.goto(page, GROUP)      # empezaría a las 1007
+    assert b.starts == [1000.0] and fed.pages == 1 and fed.failures == 0 and not fed.blocked
+    assert b.t > fed.deadline and fed.brakes == 0
+
+
+def test_an_empty_page_is_a_brake_signal_even_if_it_loads_after_its_wait():
+    """Cada página vacía es una señal del freno (`brakes`, y en `brake_marks` las páginas servidas hasta
+    entonces), también si carga tras su espera de 60 s: el bot (run_passes) no da por error un grupo cuya
+    lectura la tuvo."""
+    b = Brake(start=1000.0, end=1030.0)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60), b.page()
+    assert fed.goto(page, GROUP)
+    assert b.slept == [C.EMPTY_WAIT] and fed.pauses == 0 and fed.brakes == 1 and fed.brake_marks == [0]
+    assert fed.served == 1 and fed.unserved == 0
+
+
+class TargetClosedError(Exception):
+    """La de Playwright cuando la página o el navegador ya se cerraron (Chromium caído)."""
+
+
+class ClosedPage(FakePage):
+    """Una página que se cierra (el navegador cae) tras `serves` cargas."""
+    def __init__(self, serves=0, **kw):
+        super().__init__(**kw)
+        self.serves = serves
+
+    def is_closed(self):
+        return len(self.gotos) >= self.serves
+
+    def goto(self, url, wait_until=None, timeout=None):
+        if self.is_closed():
+            self.gotos.append((url, wait_until))
+            raise TargetClosedError("Target page, context or browser has been closed")
+        return super().goto(url, wait_until, timeout)
+
+
+def test_a_closed_browser_is_not_the_federation_braking():
+    """Si Chromium cae (la página o el navegador cerrados), no es la federación: ni reintentos ni pausas
+    largas, y nada más en esta pasada (`closed`, `blocked`). Antes: tres páginas «no carga» con sus esperas,
+    tres pausas de 5 min («la federación frena») y sus grupos sin error, como un freno."""
+    b = Brake(start=10 ** 9)
+    fed = b.fed(deadline=1000.0 + 25 * 60)
+    page = ClosedPage(serves=2)
+    good = GROUP + "&CodJornada=3"
+    assert fed.goto(page, good) and fed.goto(page, GROUP)
+    assert not fed.goto(page, GROUP + "&CodJornada=4")
+    assert fed.closed and fed.blocked and fed.pauses == 0 and fed.brakes == 0 and fed.unserved == 0
+    assert len(page.gotos) == 3 and 15 not in b.slept and 300 not in b.slept
+    assert "      el navegador se ha cerrado: nada más en esta pasada" in b.said
+    assert not any("frena" in s for s in b.said)
+    assert not fed.goto(page, GROUP) and len(page.gotos) == 3                # nada más
+    # También si se cierra al probar otra página (tras una racha de 500): sin pausa ni señal del freno.
+    b = Brake(start=10 ** 9)
+    fed = b.fed(deadline=1000.0 + 25 * 60)
+    page = ClosedPage(serves=1 + 3 * C.BLOCKED_AFTER, statuses=[200] + [500] * 3 * C.BLOCKED_AFTER)
+    assert fed.goto(page, good)
+    for n in range(C.BLOCKED_AFTER):
+        assert not fed.goto(page, GROUP)
+    assert [u for u, _ in page.gotos][-1] == good and fed.closed and fed.pauses == 0 and fed.brakes == 0
+    # goto, sin Federacion: tampoco reintenta (el motivo, CLOSED).
+    why, slept = [], []
+    assert not C.goto(ClosedPage(), GROUP, sleep=slept.append, log=lambda *_: None, why=why)
+    assert why == [C.CLOSED] and slept == []
+
+
+def test_the_long_pause_is_set_by_environment():
+    assert C.brake_pause_seconds({}) == C.BRAKE_PAUSE == 300
+    assert C.brake_pause_seconds({"FIFLP_BRAKE_PAUSE_MIN": "7,5"}) == 450
+    for bad in ("", "x", "-1", "0"):
+        assert C.brake_pause_seconds({"FIFLP_BRAKE_PAUSE_MIN": bad}) == 300, bad
+    assert C.brake_pauses({}) == C.BRAKE_PAUSES == 3
+    assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": "0"}) == 0          # ninguna: como antes
+    assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": "5"}) == 5
+    for bad in ("x", "-1", "1.5"):
+        assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": bad}) == 3, bad
+    # Sin pausas: una página vacía tras su espera para la pasada, sin esperar más.
+    b = Brake(start=1000.0)
+    fed, page = b.fed(deadline=1000.0 + 25 * 60, max_pauses=0), b.page()
+    assert not fed.goto(page, GROUP) and fed.blocked and b.slept == [C.EMPTY_WAIT]
 
 
 def test_the_bot_adapter_keeps_the_readers_and_counts_pages(monkeypatch):
@@ -346,6 +650,39 @@ def test_a_503_in_a_real_browser_is_not_a_loaded_page(sync_api):
     finally:
         httpd.shutdown()
     assert not loaded and slept == [15, 30]
+
+
+def test_a_closed_page_in_a_real_browser_is_not_a_page_that_does_not_load(sync_api):
+    """Con Chromium de verdad: tras page.close(), goto lo ve (TargetClosedError, page.is_closed()) y no
+    reintenta: no es la federación."""
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            body = b"<html><body><p>x</p></body></html>"
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):
+            pass
+
+    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    url = f"http://127.0.0.1:{httpd.server_address[1]}/NFG_CmpPartido?CodActa=1"
+    why, slept = [], []
+    try:
+        with sync_api.sync_playwright() as p:
+            browser, page = _browser_page(p)
+            try:
+                assert C.goto(page, url, ready_ms=500, sleep=slept.append, log=lambda *_: None)
+                page.close()
+                loaded = C.goto(page, url, ready_ms=500, sleep=slept.append, log=lambda *_: None, why=why)
+            finally:
+                browser.close()
+    finally:
+        httpd.shutdown()
+    assert not loaded and why == [C.CLOSED] and slept == []
 
 
 def test_a_stylesheet_that_never_loads_only_costs_the_cap(sync_api, server):

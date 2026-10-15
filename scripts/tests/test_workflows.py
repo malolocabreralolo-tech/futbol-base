@@ -103,6 +103,21 @@ def test_update_logs_the_federation_pass_as_it_goes():
     assert scrape["env"].get("FIFLP_UPDATE") == "1"
 
 
+def test_update_prints_the_runner_ip_before_the_bot_and_never_fails():
+    """Diagnóstico del freno de la federación (15/10/2026): la IP pública del runner en el log, antes del
+    paso del bot, para cruzar frenos con IPs. Nunca para el job (continue-on-error, tope de 5 s y una
+    alternativa si curl falla), sin secretos, sin variables ni nada interpolado."""
+    steps = _steps(_load("update.yml"), "update")
+    runs = [(s.get("run") or "") for s in steps]
+    ip = next(i for i, r in enumerate(runs) if "api.ipify.org" in r)
+    bot = next(i for i, r in enumerate(runs) if "fetch_futbolaspalmas" in r)
+    step = steps[ip]
+    assert ip < bot
+    assert step.get("continue-on-error") is True and step.get("timeout-minutes", 99) <= 2
+    assert "--max-time 5" in step["run"] and "||" in step["run"]
+    assert "${{" not in step["run"] and not step.get("env") and "secrets" not in step["run"]
+
+
 def test_update_opens_one_issue_per_new_competition_without_stopping_the_bot():
     """Las competiciones nuevas de la federación (newCompetitions de data-health.json, que escribe
     update_fiflp.check_competitions) abren una issue cada una (avisar_competiciones.py, que no las

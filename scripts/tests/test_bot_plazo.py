@@ -547,11 +547,11 @@ def test_the_second_pass_rotates_too(health, commits):
 
 class BlockedFed(Fed):
     """Tras `serve` páginas la federación deja de servir (un 503, tras los reintentos de cada página):
-    blocked, como fiflp_carga.Federacion, con tres seguidas."""
+    blocked, como fiflp_carga.Federacion sin pausas largas, con tres seguidas; `served`, las que cargaron."""
 
     def __init__(self, clock, serve):
         super().__init__(clock)
-        self.serve, self.failures = serve, 0
+        self.serve, self.failures, self.served = serve, 0, 0
 
     @property
     def blocked(self):
@@ -561,6 +561,7 @@ class BlockedFed(Fed):
         ok = len(self.urls) < self.serve
         super().goto(page, url)
         self.failures = 0 if ok else self.failures + 1
+        self.served += ok
         return ok
 
 
@@ -622,7 +623,10 @@ def test_the_federation_stops_after_the_priority_groups_and_their_actas_and_scor
     iban en la segunda pasada, tras la primera de todos, y se perdían («sin federación: las actas y los
     goleadores de 6 grupos, en otra pasada»), un fin de semana tras otro. Ahora van en cuanto acaban sus
     calendarios, antes que los demás grupos: las páginas que la federación sirve de más son para ellas
-    (antes, para AL1 y ALX1, y las de los prioritarios no llegaban)."""
+    (antes, para AL1 y ALX1, y las de los prioritarios no llegaban). AL1 y ALX1, que la federación ya no
+    sirve, conservan su última comprobación (un freno no es un error, desde el 15/10/2026: hasta entonces
+    quedaban como error): ALX1 la deja bloqueada y AL1 falló justo antes, sin ninguna página servida entre
+    su fallo y el bloqueo."""
     conn = with_actas(season(), {"PG2": 2, "FF5": 1})
     previous = report({code: checked(6) for code in ALL})
     # Los tres calendarios (9 páginas); las actas de PG2 y sus goleadores (3), las de FF5 y los suyos (2)
@@ -633,7 +637,9 @@ def test_the_federation_stops_after_the_priority_groups_and_their_actas_and_scor
     assert len(fed.urls) == 15 + 4                                        # AL1 y ALX1 fallan, y nada más
     assert actas_left(conn, "PG2") == actas_left(conn, "FF5") == []
     groups = data["groups"]
-    assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3", "AL1", "ALX1")] == ["ok", "ok", "ok", "error", "error"]
+    assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3")] == ["ok", "ok", "ok"]
+    assert groups["AL1"] == previous["groups"]["AL1"] and groups["ALX1"] == previous["groups"]["ALX1"]
+    assert data["summary"]["error"] == 0 and data["run"]["unserved"] == ["AL1", "ALX1"]
     assert "; 2/2 actas" in groups["PG2"]["message"] and "; 1/1 actas" in groups["FF5"]["message"]
     assert data["run"]["blocked"] and data["run"]["extrasDeferred"] == []
     assert data["run"]["deferred"] == ["PG1", "FF1", "FF2", "FF10", "LZ1"]
@@ -641,7 +647,8 @@ def test_the_federation_stops_after_the_priority_groups_and_their_actas_and_scor
     assert (log.index("[AL3]") < log.index("\n  Actas y goleadores de los prioritarios\n") < log.index("[PG2] 2/2 actas")
             < log.index("[FF5] 1/1 actas") < log.index("\n  Los demás grupos\n") < log.index("[AL1]"))
     assert "\n  Actas y goleadores de los demás\n" in log
-    assert "sin federación" not in log                                    # nada de los prioritarios, a otra pasada
+    assert "(sin federación: las actas" not in log                        # nada de los prioritarios, a otra pasada
+    assert "    sin federación: a otra pasada (no carga el calendario de la federación)\n" in log    # ALX1
 
 
 def test_a_federation_that_stops_in_the_priority_actas_stops_everything(health, actas_ok, capsys):
@@ -686,11 +693,12 @@ def test_a_priority_group_whose_scorers_the_federation_does_not_serve_is_left_fo
 
 def test_the_log_says_of_the_others_only_after_the_priority_actas(health, actas_ok, capsys):
     """Si la federación frena en el primer calendario, ningún prioritario lee sus actas: ni «Actas y
-    goleadores de los prioritarios» ni «de los demás»."""
+    goleadores de los prioritarios» ni «de los demás». (PG2 y FF5, que no sirvió, conservan su
+    comprobación: data-health.json no cambia y no se reescribe; el bloqueo se ve en la federación.)"""
     conn = with_actas(season(), {"PG2": 4})
-    data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=600,
-                       make_fed=lambda clock: BlockedFed(clock, serve=1))
-    assert read_groups(fed) == ["PG2", "FF5"] and data["run"]["blocked"]
+    previous = report({code: checked(6) for code in ALL})
+    data, fed = health(previous, conn, budget=600, make_fed=lambda clock: BlockedFed(clock, serve=1))
+    assert read_groups(fed) == ["PG2", "FF5"] and fed.blocked and data == previous
     log = capsys.readouterr().out
     assert "\n  Actas y goleadores\n" in log
     assert "de los prioritarios" not in log and "de los demás" not in log

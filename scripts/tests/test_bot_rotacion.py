@@ -22,6 +22,10 @@ sube nada porque no ha cambiado ningún dato publicado). En 24 pasadas (seis dí
     una pasada al día;
   - ninguna página se pide pasado el plazo, tampoco con las actas de los prioritarios delante de los
     demás grupos aunque pasen de la reserva (y la página de competiciones se lee igual).
+EL MODELO de estas simulaciones es el de cuando se calibraron (octubre de 2026) y se fija aquí: la ventana de
+jornadas de 21 días atrás y 14 adelante (7 páginas por grupo abierto). Desde el 15/10/2026 el bot lee 10 días
+atrás y 8 adelante (~4-5 páginas por grupo): menos páginas, así que con estos costes por página todo lo de
+aquí se cumple con más holgura.
 """
 from datetime import date, datetime, timedelta, timezone
 import json
@@ -190,6 +194,10 @@ def simulate(tmp_path, monkeypatch, commits, closed=(), numbers=None, page=PAGE,
         conn.execute("UPDATE matches SET cod_acta=? WHERE id=?", (code, mid))))
     for name in ("FIFLP_PRIORITY_TEAMS", "FIFLP_ALEVIN_MIN", "FIFLP_BUDGET_MIN", "FIFLP_RESERVE_MIN"):
         monkeypatch.delenv(name, raising=False)
+    # El modelo de cuando se calibró (docstring del módulo): la ventana de 21 días atrás y 14 adelante. Con la
+    # de ahora (10 y 8) todo cabe con más holgura.
+    monkeypatch.setattr(U, "BACK_DAYS", 21)
+    monkeypatch.setattr(U, "AHEAD_DAYS", 14)
     base = base_db(closed)
     codes = dict((gid, code) for gid, code, _ in U.fiflp_groups(base, 1))
     for gid, code in codes.items():

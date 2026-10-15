@@ -150,8 +150,9 @@ def test_rounds_to_refresh_recent_new_and_overdue_only():
                {"value": "3", "text": "3 - 17-10-2026"}, {"value": "9", "text": "9 - 01-03-2027"},
                {"value": "10", "text": "10 - 08-03-2027"}]
     picked = [o["value"] for o in U.rounds_to_refresh(options, stored, today)]
-    # 1 y 3: recientes; 2: resultado pendiente desde hace 49 días; 10: nueva; 9: lejana y ya guardada.
-    assert picked == ["1", "2", "3", "10"]
+    # 3: reciente; 2: resultado pendiente desde hace 49 días; 10: nueva; 9: lejana y ya guardada. La 1, completa
+    # y de hace 17 días, ya no (15/10/2026: la ventana es de 10 días atrás; antes, 21, y se releía).
+    assert picked == ["2", "3", "10"]
 
 
 def test_update_writes_results_with_the_base_names_and_moves_the_current_round():

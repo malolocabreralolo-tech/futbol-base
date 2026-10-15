@@ -43,8 +43,19 @@ from generate_js import _repair_incoherent_points
 from fiflp_names import MIN_TEAM_SCORE, team_key, team_score
 import source_health
 
-BACK_DAYS = 21          # jornadas ya jugadas que se vuelven a mirar
-AHEAD_DAYS = 14         # jornadas próximas (horarios y campos se publican tarde)
+# Qué jornadas se vuelven a leer (rounds_to_refresh). Cada página es ~1/15 del cupo de la federación
+# (~15 documentos por IP y ~5 min de bloqueo: fiflp_carga), así que la ventana es la justa (15/10/2026;
+# antes, 21 días atrás y 14 adelante: ~5 jornadas, ~7 páginas por grupo; ahora 2-3 jornadas, ~4-5):
+#   - BACK_DAYS: la última jornada jugada siempre (las jornadas son semanales: 0-6 días) y la anterior unos
+#     días más (7-10), por si la federación corrige un resultado o completa el código del acta tras el
+#     fin de semana. Un resultado que FALTA no depende de esto: lo busca PENDING_DAYS (120 días), y un
+#     aplazado con él; una jornada entre semana cae dentro igual (está más cerca, no más lejos);
+#   - AHEAD_DAYS: la próxima siempre (≤ 7 días; 8 con una jornada fechada en domingo vista un sábado),
+#     que es la que publica horarios y campos. La de dentro de dos semanas se lee cuando entra en ella;
+#   - una jornada que la base no tiene, siempre; y la primera pasada de un grupo recién activado
+#     (full_read_pending), todas las jugadas, como antes.
+BACK_DAYS = 10          # jornadas ya jugadas que se vuelven a mirar
+AHEAD_DAYS = 8          # jornadas próximas (horarios y campos se publican tarde)
 PENDING_DAYS = 120      # resultados pendientes (aplazados) que se siguen buscando
 MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~3-6 s cada una); el resto, en la siguiente
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
@@ -416,7 +427,9 @@ def stored_rounds(conn, group_id):
 
 
 def rounds_to_refresh(options, stored, today, full=False):
-    """Qué jornadas (las opciones del desplegable de FIFLP) hay que volver a leer. Con `full` (la
+    """Qué jornadas (las opciones del desplegable de FIFLP) hay que volver a leer: las de la ventana
+    (BACK_DAYS atrás y AHEAD_DAYS adelante: la última jugada y la próxima), las que la base no tiene y
+    las que tienen un resultado pendiente desde hace menos de PENDING_DAYS (aplazados). Con `full` (la
     primera pasada sobre un grupo recién activado: full_read_pending), también todas las ya
     jugadas, por viejas que sean: así se guarda el código de sus actas."""
     picked = []
@@ -787,14 +800,55 @@ def _standings(page, F, url):
     return standings
 
 
-def scrape_group(page, F, url, stored, today, full=False):
+# ¿Qué jornada enseña el calendario (NFG_CmpJornada sin CodJornada)? La opción seleccionada del desplegable
+# de jornadas, si la hay (calendar_shows).
+SELECTED_JS = """() => {
+    const sel = document.querySelector('select[name="jornada"]');
+    if (!sel || sel.selectedIndex < 0) return null;
+    const o = sel.options[sel.selectedIndex];
+    return o && o.value && o.value !== '0' ? {value: o.value, text: o.text.trim()} : null;
+}"""
+
+
+def _match_keys(matches):
+    """Lo que se compara de los partidos de una página de jornada (calendar_shows): todo lo que se escribe."""
+    return sorted((str(m.get("home")), str(m.get("away")), str(m.get("hs")), str(m.get("as")),
+                   str(m.get("fiflp_acta")), str(_iso(m.get("date")) or m.get("date") or ""),
+                   str(m.get("time") or ""), str(m.get("venue") or "")) for m in matches or [])
+
+
+def calendar_shows(page, F, picked):
+    """DIAGNÓSTICO, sin peticiones (15/10/2026): el calendario de un grupo (la primera carga de
+    NFG_CmpJornada, sin CodJornada) puede traer ya los partidos de una jornada, la seleccionada en su
+    desplegable, y esa página se podría ahorrar (cada página es ~1/15 del cupo de la federación). Pero
+    no hay ninguna guardada (ni fixture ni raw: las tandas y el bot leen cada jornada por su URL o con
+    BuscarPartidos), el desplegable lo rellena el JS de la federación después de cargar, y leer como una
+    jornada los partidos de otra los escribiría en la que no es (write_round mueve de jornada un partido
+    sin jugar). Así que, antes de aprovecharla, se mide: si la seleccionada se va a leer igualmente
+    (`picked`), se aplana el calendario y se leen sus partidos; scrape_group los compara después con los
+    de su página (`check`). (la opción seleccionada, sus partidos) o None si no hay nada que comparar.
+    Nunca falla: es solo un diagnóstico."""
+    try:
+        selected = page.evaluate(SELECTED_JS)
+        if not isinstance(selected, dict) or str(selected.get("value") or "") not in {o["value"] for o in picked}:
+            return None
+        flatten(page)
+        return selected, F.parse_matches(page)
+    except Exception:
+        return None
+
+
+def scrape_group(page, F, url, stored, today, full=False, check=None):
     """(standings crudas, {jornada: [partidos crudos]}) de un grupo de FIFLP; `full`: todas las
     jornadas ya jugadas (rounds_to_refresh). Si la federación no sirve el calendario o una jornada,
     NotServed: lo leído se queda en memoria y no se escribe nada del grupo (update_group no llega a
     llamarse). Sin clasificación (no cargó) sigue: la escritura la salta, como siempre; pero si la
     federación frenó en la lectura del grupo después (F.brakes: el freno se vio en una página posterior)
     y volvió a servir, se pide otra vez, tras el calendario. Lo que se pide otra vez (la clasificación, el
-    calendario recargado) va a la red, no a la caché HTTP: fiflp_render.goto, por F.goto."""
+    calendario recargado) va a la red, no a la caché HTTP: fiflp_render.goto, por F.goto. Cuesta 2 páginas
+    (clasificación y calendario) más una por jornada de rounds_to_refresh. `check` (un dict): cuenta si
+    los partidos que enseña el calendario son los de la jornada seleccionada en su desplegable leída por
+    su URL («same») o no («different»; calendar_shows), sin pedir nada más."""
     comp, code = fiflp_ids(url)
     season = re.search(r"CodTemporada=(\d+)", url).group(1)
     base = f"{F.BASE}/NFG_VisClasificacion?cod_primaria=1000120&CodTemporada={season}"
@@ -822,9 +876,12 @@ def scrape_group(page, F, url, stored, today, full=False):
         options = page.evaluate(JORNADAS_JS)
     if not options and stored:
         raise RuntimeError("la federación no sirvió las jornadas del grupo")
+    picked = rounds_to_refresh(options, stored, today, full)
+    shown = calendar_shows(page, F, picked) if check is not None else None
     if standings is None and getattr(F, "brakes", 0) > brakes:      # perdida en el freno: otra vez
         standings = _standings(page, F, standings_url)
-    for opt in rounds_to_refresh(options, stored, today, full):
+    read = {}
+    for opt in picked:
         label, when = option_round(opt["text"])
         # Cada jornada por su URL, no con BuscarPartidos: esa función no es
         # AJAX, navega leyendo un formulario OCULTO de la página, y flatten()
@@ -832,9 +889,20 @@ def scrape_group(page, F, url, stored, today, full=False):
         if not F.goto(page, f"{calendar}&CodJornada={opt['value']}"):
             raise NotServed(f"no carga la {label.lower()}")
         flatten(page)            # lo que se ve, sin señuelos (fiflp_render.py)
+        read[opt["value"]] = F.parse_matches(page)
         rounds[label] = [{**m, "date": _iso(m.get("date")) or (when.isoformat() if when else "")}
-                         for m in F.parse_matches(page)]
+                         for m in read[opt["value"]]]
         F.delay()
+    if shown is not None:
+        (selected, matches), mine = shown, _match_keys(shown[1])
+        same = mine == _match_keys(read.get(selected["value"]))
+        check["same" if same else "different"] = check.get("same" if same else "different", 0) + 1
+        if not same:
+            label = option_round(selected.get("text"))[0].lower()
+            other = [option_round(o["text"])[0].lower() for o in picked
+                     if o["value"] != selected["value"] and _match_keys(read.get(o["value"])) == mine]
+            print(f"    calendario: seleccionada la {label}, pero sus partidos no son los de su página"
+                  + (f" (son los de la {other[0]})" if other else f" ({len(matches or [])} partidos)"))
     return standings or [], rounds
 
 
@@ -1276,6 +1344,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     # cada una una vez (tried); cut, los grupos que el plazo o la federación no dejaron acabar.
     cut, scored, tried, budget = [], set(), set(), MAX_ACTAS_PER_RUN
     longest = 0.0                       # el calendario que más ha tardado (sin las pausas del freno)
+    shows = {}                          # ¿enseña el calendario la jornada seleccionada? (calendar_shows)
 
     def calendars(rows, until, stretch=False):
         """Clasificación y jornadas de cada grupo de `rows` que empiece antes de `until`; los demás, a
@@ -1297,7 +1366,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
             stamps[code], began, brakes, held = stamp(), clock(), brake_signals(), paused()
             try:
                 raw_standings, raw_rounds = scrape_group(page, F, url, stored_rounds(conn, group_id), today,
-                                                         full=group_id in full)
+                                                         full=group_id in full, check=shows)
                 status, msg = update_group(conn, group_id, code, raw_standings, raw_rounds)
                 if status == "ok" and group_id in full:
                     conn.execute("DELETE FROM fiflp_full_pending WHERE group_id=?", (group_id,))
@@ -1408,6 +1477,9 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
               ": nada más en esta pasada", sep="", flush=True)
     if deferred:
         print(f"  Rotación: {len(deferred)} grupos, a otra pasada ({_codes(deferred)})", flush=True)
+    if shows:
+        print(f"  Calendario (diagnóstico): en {shows.get('same', 0)} de {sum(shows.values())} grupos enseña los "
+              "partidos de la jornada seleccionada, iguales que en su página", flush=True)
     # Una página: las competiciones que la federación publica y la web no tiene (la Segunda Fase).
     try:
         if clock() <= deadline and not blocked():
@@ -1484,6 +1556,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
         "unserved": [c for _, c, _ in unserved],
         "extrasDeferred": cut, "firstPassSeconds": round(first_pass), "seconds": round(clock() - start),
         **({"firstPassPages": pages} if pages else {}), **({"blocked": True} if blocked() else {}),
+        **({"calendarShows": dict(sorted(shows.items()))} if shows else {}),
         **({"pauses": pauses, "resumed": getattr(F, "resumed", 0)} if pauses else {})})
     print(f"  Federación: {round((clock() - start) / 60, 1)} min de {round((deadline - start) / 60, 1)}", flush=True)
 

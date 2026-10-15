@@ -624,3 +624,28 @@ def test_a_braked_pass_does_not_rewrite_the_report(bot, capsys):
     previous = report(at=NOW - timedelta(hours=1))
     data, web, F, log = bot(capsys, previous=previous, serve=0)
     assert data == previous and F.pauses == 3 and F.halted
+
+
+@pytest.mark.parametrize("selected, shows", [("3", {"same": 10}), ("2", {"different": 10}), (None, None)])
+def test_the_calendar_diagnostic_is_noted_in_the_run(bot, capsys, selected, shows):
+    """Lo que enseña el calendario de cada grupo (update_fiflp.calendar_shows), en el registro y en run
+    (calendarShows: sin commit solo por ello, como todo run), sin pedir ninguna página más. Aquí la jornada 3
+    no trae partidos ni en el calendario ni en su página (iguales) y la 2 trae uno en su página y ninguno en
+    el calendario (distintas)."""
+    option = next((o for o in OPTIONS if o["value"] == selected), None)
+
+    class Selecting(Federation):
+        def page(self):
+            page = Page(self)
+            plain = page.evaluate
+            page.evaluate = lambda js, *a: option if js == U.SELECTED_JS else plain(js, *a)
+            return page
+    plain_data, plain_web, _, _ = bot(capsys)
+    data, web, F, log = bot(capsys, web=Selecting)
+    assert [u for _, u in web.starts] == [u for _, u in plain_web.starts]          # ni una página más
+    assert data["run"].get("calendarShows") == shows
+    if shows:
+        same = shows.get("same", 0)
+        assert f"  Calendario (diagnóstico): en {same} de 10 grupos enseña los partidos de la jornada seleccionada" in log
+    else:
+        assert "Calendario (diagnóstico)" not in log

@@ -14,7 +14,11 @@ el contenido de cada ::before/::after VISIBLE y quita los elementos cortos
 (cifras sueltas) que no se ven. Después, page.content() o inner_text() dan el
 texto real y los parsers estáticos (acta_parser.py, el de jornadas) funcionan
 sin saber nada de la ofuscación.
+
+Y cómo se lanza y navega el Chromium que la lee: fiflp_launch_args (sin lo ajeno, sin imágenes, con la
+caché HTTP) y goto/fresh (lo que se repite, a la red).
 """
+from contextlib import contextmanager
 
 FLATTEN_JS = r"""(root) => {
   root = root || document.body;
@@ -136,6 +140,142 @@ def fiflp_launch_args(hosts=FIFLP_HOSTS):
     (y vale a la vez para fiflp_request y para estos argumentos)."""
     return [f"--host-resolver-rules={host_resolver_rules(hosts)}",
             f"--blink-settings={PLAYWRIGHT_HEADLESS_BLINK},imagesEnabled=false"]
+
+
+# ── Lo que se repite, a la red (15/10/2026) ───────────────────────────────────
+# Los documentos de la federación (sus NFG_*) llegan con «Cache-Control: private, max-age=300»: con la
+# caché HTTP (fiflp_launch_args, sin ruta), volver a la MISMA URL antes de 5 min sale de la caché de
+# disco sin pedirle nada a la federación (medido por el controlador con CDP: fromDiskCache). Y las URLs
+# que se repiten son justo las del freno: el reintento de una página vacía o con un 503 (fiflp_carga.goto),
+# la «otra página» con la que Federacion._serving mira si la federación sirve, la misma página tras la
+# pausa larga, la recarga del calendario y la clasificación perdida en el freno (update_fiflp.scrape_group),
+# y los reintentos de las tandas (fetch_fiflp_2425.goto, fetch_fiflp_actas: el acta vacía otra vez). Sin
+# esto, el reintento podría devolver la página vacía guardada, y la comprobación, un falso «sirve».
+#
+# Cómo: mientras dura fresh(page), las peticiones de DOCUMENTOS de la página (el suyo y los de sus marcos)
+# pasan por CDP (Fetch, solo resourceType Document) y salen con FRESH_HEADERS, que la caché HTTP de
+# Chromium no sirve de lo guardado (las cabeceras «no-cache» de una petición la saltan: lo que hace
+# Ctrl+F5); la respuesta nueva sustituye a la guardada. Los scripts, las hojas y las fuentes no se tocan:
+# siguen saliendo de la caché, también en esa carga. Medido con el Chromium de la prueba (127.0.0.1):
+# Network.setCacheDisabled, la otra forma, no hace nada sin Network.enable en la sesión y, con él, vuelve
+# a pedir TODO lo de la página (sus ~20 scripts y sus hojas, como una primera página: unas 34 peticiones
+# en vez de 3, justo cuando la federación frena); quitarlo al «commit» de la navegación tampoco sirve,
+# porque los scripts ya van pedidos; y page.reload() vale solo para la URL en la que ya está la página.
+FRESH_HEADERS = {"Cache-Control": "no-cache", "Pragma": "no-cache"}
+FRESH_PATTERNS = [{"urlPattern": "*", "resourceType": "Document", "requestStage": "Request"}]
+# El estado se guarda en los propios objetos de Playwright (la página, su contexto): lo comparten todos
+# los que la usan, aunque este módulo se haya importado dos veces (fiflp_render y scripts.fiflp_render).
+_SESSION = "_fiflp_fresh_session"
+_ASKED = "_fiflp_asked"
+
+
+class _FreshSession:
+    """La sesión CDP de una página para fresh(): una por página (no una por carga), con su manejador de
+    Fetch.requestPaused. Anidable: el Fetch se habilita al entrar en la primera y se quita al salir de
+    la última."""
+
+    def __init__(self, cdp):
+        self.cdp, self.depth = cdp, 0
+        cdp.on("Fetch.requestPaused", self._paused)
+
+    def _paused(self, event):
+        """Cada documento parado: sigue con sus cabeceras y FRESH_HEADERS. Si eso falla, sigue tal cual
+        (de la caché, si estaba): nunca se queda parado."""
+        request_id = event.get("requestId")
+        headers = [(name, value) for name, values in ((event.get("request") or {}).get("headers") or {}).items()
+                   if name.lower() not in {n.lower() for n in FRESH_HEADERS}
+                   for value in str(values).split("\n")]       # CDP junta las repetidas con saltos de línea
+        headers += list(FRESH_HEADERS.items())
+        try:
+            self.cdp.send("Fetch.continueRequest", {"requestId": request_id, "headers": [
+                {"name": name, "value": value} for name, value in headers]})
+        except Exception:
+            try:
+                self.cdp.send("Fetch.continueRequest", {"requestId": request_id})
+            except Exception:                 # la petición ya no está (una navegación que la sustituye)
+                pass
+
+    def enter(self):
+        if self.depth == 0:
+            try:
+                self.cdp.send("Fetch.enable", {"patterns": FRESH_PATTERNS})
+            except Exception:                 # la página se ha cerrado: la navegación lo dirá
+                return False
+        self.depth += 1
+        return True
+
+    def exit(self):
+        self.depth -= 1
+        if self.depth == 0:
+            try:
+                self.cdp.send("Fetch.disable")
+            except Exception:
+                pass
+
+
+def _stored(obj, name, make):
+    """El valor `name` guardado en `obj` (si no está, make() y se guarda). None si el objeto no guarda
+    atributos. Con vars(): un __getattr__ que lo inventa todo (un Mock) no cuenta."""
+    try:
+        state = vars(obj)
+    except TypeError:
+        return None
+    if name not in state:
+        state[name] = make()
+    return state[name]
+
+
+def _fresh_session(page):
+    """La sesión de fresh() de la página, la misma en cada carga; None sin CDP (otro navegador que
+    Chromium, las páginas falsas de las pruebas) o si no se pudo abrir."""
+    def make():
+        try:
+            return _FreshSession(page.context.new_cdp_session(page))
+        except Exception:
+            return False
+    return _stored(page, _SESSION, make) or None
+
+
+@contextmanager
+def fresh(page):
+    """Dentro, cada documento que pida `page` (el de una navegación y los de sus marcos) va a la red, no
+    a la caché HTTP: con FRESH_HEADERS, por CDP. Los scripts, las hojas y las fuentes siguen saliendo de
+    la caché. Se quita al salir, también si la navegación lanza. Sin CDP (otro navegador, las páginas de
+    prueba), nada. Da True si está activo."""
+    session = _fresh_session(page)
+    on = session is not None and session.enter()
+    try:
+        yield on
+    finally:
+        if on:
+            session.exit()
+
+
+def requested(page):
+    """Las URLs que ya pidió goto() en el navegador de `page`: en su contexto (la caché HTTP es por
+    contexto) o, sin él (las páginas de prueba), en la página. None si no se pueden guardar."""
+    try:
+        owner = page.context
+    except Exception:
+        owner = None
+    asked = _stored(owner, _ASKED, set) if owner is not None else None
+    return asked if asked is not None else _stored(page, _ASKED, set)
+
+
+def goto(page, url, **kwargs):
+    """page.goto(url, **kwargs) para una página de la federación: la usan todos sus lectores (fiflp_carga.goto
+    y con ella el bot, fetch_fiflp_2425.goto y con ella las tandas, fetch_fiflp_actas.goto, las sondas).
+    La primera vez que el navegador pide `url`, como siempre: con la caché, que sirve los scripts y las hojas.
+    Cada vez siguiente (un reintento, la comprobación de si sirve, la misma página tras la pausa larga, la
+    recarga del calendario…), con fresh(): el documento, a la red. Da lo que page.goto."""
+    asked = requested(page)
+    again = asked is not None and url in asked
+    if asked is not None:
+        asked.add(url)
+    if not again:
+        return page.goto(url, **kwargs)
+    with fresh(page):
+        return page.goto(url, **kwargs)
 
 
 def fiflp_only(page):

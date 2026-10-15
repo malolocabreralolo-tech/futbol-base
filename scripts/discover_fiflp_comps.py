@@ -53,6 +53,7 @@ def main():
         with open(OUTPUT, encoding="utf-8") as f:
             results = json.load(f)
     from fiflp_render import fiflp_launch_args   # sin lo ajeno ni imágenes, y con caché (sin page.route)
+    import fiflp_render                          # goto: lo que se repite, a la red y no a la caché
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, args=fiflp_launch_args())
         page = browser.new_page(user_agent=(
@@ -66,7 +67,7 @@ def main():
             print(f"\n=== Season {season_code} ({season_name}) ===")
             print(f"  URL: {url}")
             try:
-                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                fiflp_render.goto(page, url, wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(3000)
             except Exception as e:
                 print(f"  goto err: {e}")

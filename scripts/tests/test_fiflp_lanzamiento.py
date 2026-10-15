@@ -9,20 +9,25 @@ Desde el 14/10 la federación frena al bot tras unas decenas de páginas: lo que
 muy probablemente, las peticiones. Aquí:
   - los argumentos (--host-resolver-rules y --blink-settings), sacados de FIFLP_HOSTS, y que dejan
     pasar justo lo que fiflp_request da por de la federación (también lo de las páginas guardadas);
-  - la guarda: ningún lector de la federación usa una ruta y todo Chromium que la lee se lanza con
-    ellos;
+  - la guarda: ningún lector de la federación usa una ruta, todo Chromium que la lee se lanza con
+    ellos y ninguno navega con page.goto a secas (sí con fiflp_render.goto);
   - con un Chromium de verdad (si no está, se salta) y un servidor en 127.0.0.1: un host ajeno no
     carga (tampoco una IP), las imágenes no se piden, la caché sirve los scripts y las hojas desde la
-    segunda página, y los documentos se piden siempre (también el mismo otra vez: el «¿sirve otra
-    página?» de fiflp_carga.Federacion._serving pide de nuevo la última que cargó).
+    segunda página, y los documentos se piden siempre. Los de la federación llevan «Cache-Control:
+    private, max-age=300» (15/10/2026): la misma URL otra vez saldría de la caché (lo documenta una
+    prueba con page.goto a secas), y fiflp_render.goto la pide a la red (fresh) sin volver a pedir los
+    scripts ni las hojas; así, el reintento de una página vacía del freno no es la vacía guardada, y el
+    «¿sirve otra página?» de fiflp_carga.Federacion._serving pregunta de verdad.
 Sin red: los hosts de la prueba son *.localhost, que Chromium resuelve a 127.0.0.1 sin DNS.
 """
 import ast
+import contextlib
 import fnmatch
 import http.server
 import re
 import sys
 import threading
+import time
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -30,6 +35,7 @@ import pytest
 
 SCRIPTS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS))
+import fiflp_carga as C  # noqa: E402
 import fiflp_render as R  # noqa: E402
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -157,10 +163,35 @@ def test_no_federation_reader_routes_and_every_chromium_takes_the_launch_args():
         assert any(w.startswith(name + ":") for w in launches), name
 
 
+def test_every_federation_reader_navigates_through_fiflp_render_goto():
+    """Ningún lector de la federación navega con page.goto a secas: con la caché HTTP, la misma URL otra
+    vez (un reintento, la comprobación de si sirve…) saldría de la caché (sus documentos llevan
+    «private, max-age=300»). fiflp_render.goto la pide a la red."""
+    bare, through = [], {}
+    for path in _federation_scripts():
+        if path.name == "fiflp_render.py":
+            continue
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "goto":
+                owner = ast.unparse(node.func.value)
+                if owner == "fiflp_render":
+                    through[path.name] = True
+                elif owner.split(".")[-1].lower().endswith("page"):
+                    bare.append(f"{path.name}:{node.lineno}")
+    assert not bare, f"page.goto a la federación sin fiflp_render.goto: {bare}"
+    # La guarda mira de verdad: la carga del bot, las tandas y las sondas pasan por fiflp_render.goto.
+    for name in ("fiflp_carga.py", "fetch_fiflp_2425.py", "fetch_fiflp_actas.py", "probe_fiflp.py",
+                 "discover_fiflp_comps.py", "debug_fiflp_copa.py"):
+        assert through.get(name), name
+
+
 # ── Con un Chromium de verdad ─────────────────────────────────────────────────
 
 HOSTS = ("fiflp.localhost", "filesnovanet.localhost")
 CACHED = "public, max-age=15552000"          # el de los scripts y las hojas de la federación
+PRIVATE = "private, max-age=300"             # el de sus documentos (NFG_*), medido el 15/10/2026
+EMPTY = "<html><head></head><body></body></html>"      # la página vacía de su freno
 
 DOC = """<!doctype html><html><head>
 <link rel="stylesheet" href="http://files.fiflp.localhost:{port}/pnfg/css/nova.css">
@@ -173,6 +204,7 @@ DOC = """<!doctype html><html><head>
 <script src="http://fiflp.localhost.evil.localhost:{port}/sufijo.js"></script>
 <script src="http://evilfiflp.localhost:{port}/pegado.js"></script>
 </head><body>
+<p id="n">{n}</p>
 <select name="jornada"><option value="">Jornada</option></select>
 <p id="score"><i class="fa-7"></i> - <i class="fa-2"></i></p>
 <table><tr><td><img src="http://laspalmas.filesnovanet.localhost:{port}/pnfg/pimg/Clubes/00100_1.png"> HARIA C.F.</td></tr></table>
@@ -192,19 +224,28 @@ def sync_api():
 
 @pytest.fixture
 def server():
-    """Una «federación» en 127.0.0.1: el documento (sin cabeceras de caché, como sus NFG_*), su script
-    y sus hojas (con las de caché de los de verdad), el XHR que rellena el desplegable (sin caché), un
-    escudo y lo ajeno. Apunta cada petición: (host, ruta)."""
-    seen = []
+    """Una «federación» en 127.0.0.1, con las cabeceras de caché de la de verdad: el documento
+    («private, max-age=300», como sus NFG_*; en #n, la vez que lo sirve, y con «vacia=1» en la URL, la
+    primera vez la página vacía del freno, con las mismas cabeceras; con «lenta=1», a los 2 s), su
+    script y sus hojas («public,
+    max-age=15552000»), el XHR que rellena el desplegable (sin caché), un escudo y lo ajeno. Apunta cada
+    petición, (host, ruta), y las que llegan con «Cache-Control: no-cache» (las de fiflp_render.fresh)."""
+    seen, fresh, served = [], [], {}
 
     class Handler(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
             host = (self.headers.get("Host") or "").rsplit(":", 1)[0]
             seen.append((host, self.path))
+            if self.headers.get("Cache-Control") == "no-cache":
+                fresh.append(self.path)
             path = self.path.split("?")[0]
             port = self.server.server_address[1]
             if path.startswith("/pnfg/NPcd/NFG_CmpJornada"):
-                body, kind, cache = DOC.format(port=port), "text/html", None
+                if "lenta=1" in self.path:                # una página que tarda más que la espera de goto
+                    time.sleep(2)
+                n = served[self.path] = served.get(self.path, 0) + 1
+                body = EMPTY if n == 1 and "vacia=1" in self.path else DOC.format(port=port, n=n)
+                kind, cache = "text/html", PRIVATE
             elif path == "/pnfg/script/nova.js":
                 body, kind, cache = NOVA_JS, "application/javascript", CACHED
             elif path == "/pnfg/NPcd/opciones":
@@ -230,13 +271,19 @@ def server():
     httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     httpd.daemon_threads = True
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
-    yield httpd.server_address[1], seen
+    yield httpd.server_address[1], seen, fresh
     httpd.shutdown()
 
 
 def _page_url(port, grupo):
     return (f"http://www.fiflp.localhost:{port}/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120"
             f"&CodTemporada=22&CodCompeticion=1&CodGrupo={grupo}")
+
+
+def _path(url):
+    """La ruta de una URL tal como la apunta el servidor (con su consulta)."""
+    parsed = urlparse(url)
+    return parsed.path + (f"?{parsed.query}" if parsed.query else "")
 
 
 STATE_JS = """() => ({
@@ -250,8 +297,8 @@ STATE_JS = """() => ({
 
 def _read(sync_api, port, args):
     """Tres páginas en el mismo navegador, como el bot: dos grupos y el primero otra vez. Cada una con
-    la carga de fiflp_carga (espera las hojas de la federación y el desplegable) y aplanada."""
-    import fiflp_carga as C
+    la carga de fiflp_carga (espera las hojas de la federación y el desplegable; por fiflp_render.goto)
+    y aplanada."""
     states, scores = [], []
     with sync_api.sync_playwright() as p:
         try:
@@ -271,7 +318,7 @@ def _read(sync_api, port, args):
 
 
 def test_a_real_chromium_with_the_args_skips_the_foreign_and_the_images_and_caches(sync_api, server):
-    port, seen = server
+    port, seen, fresh = server
     states, scores = _read(sync_api, port, R.fiflp_launch_args(HOSTS))
     requested = lambda path: [h for h, p in seen if p.split("?")[0] == path]
     # Lo ajeno no se pide nunca: ni otro host, ni una IP, ni un host que solo contiene el dominio.
@@ -286,8 +333,10 @@ def test_a_real_chromium_with_the_args_skips_the_foreign_and_the_images_and_cach
     assert requested("/pnfg/css/nova.css") == ["files.fiflp.localhost"]
     assert requested("/pnfg/css/dos-niveles.css") == ["a.b.files.fiflp.localhost"]
     assert requested("/pnfg/css/raiz.css") == ["fiflp.localhost"]
-    # Cada documento y su XHR, en cambio, se piden siempre: también el mismo grupo otra vez.
-    assert len([p for _, p in seen if "NFG_CmpJornada" in p]) == 3
+    # Cada documento y su XHR, en cambio, se piden siempre: también el mismo grupo otra vez, aunque la
+    # federación lo deje guardar 5 min (fiflp_render.goto lo pide a la red: solo él con «no-cache»).
+    assert [p for _, p in seen if "NFG_CmpJornada" in p] == [_path(_page_url(port, g)) for g in (1, 2, 1)]
+    assert fresh == [_path(_page_url(port, 1))]
     assert len(requested("/pnfg/NPcd/opciones")) == 3
     # El lector tiene lo que necesita: el desplegable relleno por el JS y las cifras de las hojas.
     assert [s["options"] for s in states] == [4, 4, 4]
@@ -299,8 +348,116 @@ def test_a_real_chromium_with_the_args_skips_the_foreign_and_the_images_and_cach
 def test_without_the_args_the_same_chromium_loads_the_foreign_and_the_images(sync_api, server):
     """El control: lo ajeno sí se resuelve sin los argumentos (*.localhost e IPs), así que lo que lo
     deja fuera arriba son ellos."""
-    port, seen = server
+    port, seen, _ = server
     states, _ = _read(sync_api, port, [])
     assert {"anuncios.localhost", "127.0.0.1"} <= {h for h, _ in seen}
     assert [p for _, p in seen if p.endswith(".png")]
     assert all(s["ajeno"] > 0 for s in states)
+
+
+# ── Lo que se repite, a la red (fiflp_render.goto y fresh) ────────────────────
+
+@contextlib.contextmanager
+def _chromium(sync_api, args=None):
+    """Una página de un Chromium de verdad lanzado con fiflp_launch_args (o se salta la prueba)."""
+    with sync_api.sync_playwright() as p:
+        try:
+            browser = p.chromium.launch(headless=True, args=R.fiflp_launch_args(HOSTS) if args is None else args)
+        except Exception as e:                      # sin Chromium instalado
+            pytest.skip(f"sin navegador: {e}")
+        try:
+            yield browser.new_page()
+        finally:
+            browser.close()
+
+
+def test_a_document_comes_back_from_the_cache_within_five_minutes_unless_fresh(sync_api, server):
+    """Lo que hace la caché HTTP con un documento de la federación («private, max-age=300»), y fresh."""
+    port, seen, fresh = server
+    a, b, c = (_page_url(port, g) for g in ("A", "B", "C"))
+    docs = lambda url: [p for _, p in seen if p == _path(url)]
+    assets = lambda: sorted(p for _, p in seen if p.startswith(("/pnfg/script/", "/pnfg/css/")))
+    with _chromium(sync_api) as page:
+        page.goto(a)                                # page.goto a secas: lo que hace Chromium solo
+        page.goto(b)
+        first_assets = assets()
+        assert len(first_assets) == 4               # el script y las tres hojas, de la primera página
+        page.goto(a)
+        # La misma URL antes de 5 min: de la caché de disco, sin pedir nada (la copia de la 1.ª vez).
+        assert docs(a) == [_path(a)] and page.inner_text("#n") == "1"
+        with R.fresh(page) as on:
+            page.goto(a)
+        assert on
+        # Con fresh, el documento llega al servidor, «no-cache», y es la copia nueva…
+        assert docs(a) == [_path(a)] * 2 and fresh == [_path(a)] and page.inner_text("#n") == "2"
+        # …pero el script y las hojas siguen saliendo de la caché, también en esa carga.
+        assert assets() == first_assets
+        # Pasado fresh, una navegación normal a otra URL: su documento sin «no-cache», y lo demás de la caché.
+        page.goto(c)
+        assert docs(c) == [_path(c)] and fresh == [_path(a)] and assets() == first_assets
+        assert page.evaluate("document.styleSheets.length") >= 3
+        # La copia nueva sustituye a la guardada: la misma URL otra vez, ya sin fresh, es la de fresh.
+        page.goto(a)
+        assert docs(a) == [_path(a)] * 2 and page.inner_text("#n") == "2"
+
+
+def test_goto_sends_to_the_network_only_what_the_browser_already_asked(sync_api, server):
+    port, seen, fresh = server
+    a, b = _page_url(port, "A"), _page_url(port, "B")
+    with _chromium(sync_api) as page:
+        for url in (a, b, a, a, b):
+            R.goto(page, url, wait_until="domcontentloaded")
+        assert [p for _, p in seen if "NFG_CmpJornada" in p] == [_path(u) for u in (a, b, a, a, b)]
+        # Fresca solo cada vez siguiente; la primera de cada URL, como siempre.
+        assert fresh == [_path(u) for u in (a, a, b)]
+        assert page.inner_text("#n") == "2"
+        # El script y las hojas, una sola vez en las cinco cargas.
+        assert len([p for _, p in seen if p.startswith(("/pnfg/script/", "/pnfg/css/"))]) == 4
+        # Una sesión CDP para toda la página, no una por carga.
+        assert R.requested(page) == {a, b}
+        session = vars(page)[R._SESSION]
+        R.goto(page, a)
+        assert vars(page)[R._SESSION] is session and session.depth == 0
+
+
+def test_fresh_ends_even_if_the_navigation_throws(sync_api, server):
+    """Si la navegación lanza (aquí, una página que tarda más que su espera), fresh se quita igual: la
+    siguiente navegación normal no sale «no-cache»."""
+    port, seen, fresh = server
+    slow, d = _page_url(port, "S") + "&lenta=1", _page_url(port, "D")
+    with _chromium(sync_api) as page:
+        with pytest.raises(Exception, match="Timeout"):
+            with R.fresh(page):
+                page.goto(slow, timeout=300)
+        page.goto(d)
+        assert page.inner_text("#n") == "1"
+        assert [p for _, p in seen if "NFG_CmpJornada" in p] == [_path(slow), _path(d)]
+        assert fresh == [_path(slow)] and vars(page)[R._SESSION].depth == 0
+
+
+def _retry_after_an_empty_page(sync_api, server):
+    """fiflp_carga.goto sobre una página que la federación sirve vacía la primera vez (su freno) y bien
+    la segunda: (¿cargó?, los motivos de los intentos fallidos, las peticiones del documento, las
+    «no-cache», #n)."""
+    port, seen, fresh = server
+    url = _page_url(port, "E") + "&vacia=1"
+    with _chromium(sync_api) as page:
+        why = []
+        loaded = C.goto(page, url, ready_ms=5000, hosts=HOSTS, sleep=lambda s: None, log=lambda *_: None, why=why)
+        number = page.inner_text("#n") if loaded else None
+    return loaded, why, [p for _, p in seen if p == _path(url)], fresh, number
+
+
+def test_the_retry_after_an_empty_page_asks_the_federation_not_the_cache(sync_api, server):
+    loaded, why, docs, fresh, number = _retry_after_an_empty_page(sync_api, server)
+    assert loaded and why == [C.EMPTY]
+    assert len(docs) == 2 and fresh == docs[1:] and number == "2"
+
+
+def test_without_fresh_the_retry_would_be_the_stored_empty_page(sync_api, server, monkeypatch):
+    """El control: sin fresh, el reintento tras la espera de la página vacía sale de la caché (la vacía
+    guardada) sin pedirle nada a la federación, y la página no carga aunque ya sirva."""
+    monkeypatch.setattr(R, "fresh", lambda page: contextlib.nullcontext(False))
+    loaded, why, docs, fresh, _ = _retry_after_an_empty_page(sync_api, server)
+    assert not loaded and why == [C.EMPTY] * 2
+    assert len(docs) == 1 and fresh == []

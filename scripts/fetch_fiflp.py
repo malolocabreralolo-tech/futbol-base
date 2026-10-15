@@ -38,9 +38,10 @@ def save(data):
 
 def goto(page, url, retries=3):
     """Navigate with retry on timeout."""
+    import fiflp_render   # lo que se repite, a la red (la federación guarda sus documentos 5 min)
     for attempt in range(retries):
         try:
-            page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            fiflp_render.goto(page, url, wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(2500)
             return True
         except Exception as e:

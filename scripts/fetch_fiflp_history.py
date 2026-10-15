@@ -35,8 +35,9 @@ DELAY = 2.0  # seconds between requests
 
 def get_page_data(page, url, max_retries=2):
     """Navigate to URL and wait for content to load. Returns page content or None."""
+    import fiflp_render   # lo que se repite, a la red (la federación guarda sus documentos 5 min)
     for attempt in range(max_retries):
-        page.goto(url, wait_until="networkidle", timeout=15000)
+        fiflp_render.goto(page, url, wait_until="networkidle", timeout=15000)
         page.wait_for_timeout(2000)
 
         # Check if content loaded
@@ -53,13 +54,14 @@ def get_page_data(page, url, max_retries=2):
 
 def find_groups(page, codcompeticion):
     """Find all group codes for a given competition by trying a range of codes."""
+    import fiflp_render
     groups = []
     # Known group code: 190080 for prebenjamin grupo 2
     # Try a wide range
     for g in range(189900, 190200):
         url = f"{BASE}/NFG_VisClasificacion?cod_primaria=1000120&codjornada=99&codcompeticion={codcompeticion}&codgrupo={g}"
         try:
-            page.goto(url, wait_until="networkidle", timeout=8000)
+            fiflp_render.goto(page, url, wait_until="networkidle", timeout=8000)
             page.wait_for_timeout(1500)
 
             info = page.evaluate("""() => {

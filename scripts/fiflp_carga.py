@@ -33,7 +33,12 @@ grupos, 19 min de primera pasada; con la Segunda Fase y alevín no cabría en el
     FIFLP_BRAKE_PAUSES por pasada. Agotadas (o sin plazo para otra), `blocked`: nada más en esa pasada.
     Ninguna página empieza pasado el plazo, contando la espera del intervalo;
   - si el navegador se cierra (Chromium caído), no es la federación: ni reintentos ni pausas, y nada
-    más en esa pasada (Federacion.closed).
+    más en esa pasada (Federacion.closed);
+  - lo que se REPITE va a la red (fiflp_render.goto, 15/10/2026): la federación da sus documentos con
+    «Cache-Control: private, max-age=300», y con la caché HTTP la misma URL antes de 5 min saldría de
+    la caché sin pedirle nada. Toda URL que el navegador ya pidió (los reintentos de goto, la otra página
+    de Federacion._serving, la misma tras la pausa larga, la recarga del calendario y la clasificación
+    otra vez de update_fiflp.scrape_group) pide su documento a la red; los scripts y las hojas, de la caché.
 No cambia cómo se aplana ni cómo se lee el HTML: solo cuándo. Lo usa el bot (update_fiflp,
 Federacion); las tandas de temporadas pasadas (fetch_fiflp_actas, _goleadores, _detalle, _islas)
 siguen con el paso de fetch_fiflp_2425, sin prisa.
@@ -44,6 +49,7 @@ import random
 import re
 import time
 
+import fiflp_render
 from fiflp_render import FIFLP_HOSTS
 
 DEFAULT_DELAY = (1.0, 1.5)
@@ -210,12 +216,18 @@ def goto(page, url, deadline=None, retries=3, ready_ms=None, hosts=FIFLP_HOSTS, 
     nunca más allá de `deadline` (en `clock`): una página que no carga (o que la federación sirve con un
     5xx, un 429 o vacía) se deja para la próxima pasada. True si cargó. En `why` (una lista), el motivo
     de cada intento fallido: EMPTY o REFUSED si fue el freno (vacía, o un BRAKE_STATUSES), CLOSED si se
-    cerró el navegador (sin más intentos: no es la federación); Federacion los usa para su pausa larga."""
+    cerró el navegador (sin más intentos: no es la federación); Federacion los usa para su pausa larga.
+    Cada carga, por fiflp_render.goto: desde el 2.º intento (la misma URL otra vez), y la 1.ª si el navegador
+    ya la pidió antes, el documento va a la red y no a la caché HTTP (la federación los da con
+    «Cache-Control: private, max-age=300»: si no, el reintento de una página vacía podría ser la vacía
+    guardada)."""
     timeout_ms = ready_timeout_ms() if ready_ms is None else ready_ms
     for attempt in range(retries):
         status = None
         try:
-            response = page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            # El 2.º intento (y cualquier URL que el navegador ya pidió) va a la red, no a la caché HTTP:
+            # sus documentos se guardan 5 min (fiflp_render.goto).
+            response = fiflp_render.goto(page, url, wait_until="domcontentloaded", timeout=30000)
             status = getattr(response, "status", None)
             failure = f"responde {status}" if _refused(response) else None
             if failure is None and _empty(page):
@@ -264,7 +276,10 @@ class Federacion:
         ninguna página ni de ningún grupo); y `halted`: frenó sin pausas o sin plazo para otra, y no se
         le pide nada más (`blocked`);
       - `closed`: el navegador se cerró (Chromium caído). No es el freno (ni señal ni pausas): `halted`,
-        y el bot da por error el grupo que se estaba leyendo."""
+        y el bot da por error el grupo que se estaba leyendo.
+    Toda petición pasa por goto y fiflp_render.goto: una URL que el navegador ya pidió en la pasada (la otra
+    página de _serving, la misma tras una pausa larga, lo que el bot vuelve a pedir) va a la red, no a la
+    caché HTTP. Lo recuerda el navegador (su contexto), no esta clase: vale igual para cualquier lector."""
 
     def __init__(self, scraper, deadline=None, interval=None, clock=time.monotonic, sleep=time.sleep,
                  pause_seconds=None, max_pauses=None, wall=None, log=print):

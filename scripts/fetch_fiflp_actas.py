@@ -220,9 +220,17 @@ def delay(extra=0):
 
 
 def goto(page, url, retries=3):
+    """Carga `url` (hasta `retries` intentos) y espera 2,5 s. Por fiflp_render.goto: un reintento, o
+    una URL que el navegador ya pidió (el acta vacía otra vez de fetch_and_parse_acta, la competición
+    otra vez de enumerate_actas_cascade), pide su documento a la red y no a la caché HTTP: la federación
+    los guarda 5 min (y, con las mismas cabeceras, también su página vacía)."""
+    try:
+        from scripts import fiflp_render
+    except ImportError:
+        import fiflp_render
     for attempt in range(retries):
         try:
-            page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            fiflp_render.goto(page, url, wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(2500)
             return True
         except Exception:
@@ -628,7 +636,9 @@ def fetch_and_parse_acta(page, cod_acta, dump_fixture_for=None, max_retries=2):
     FIFLP returns ~40-byte empty framesets ~50% of the time as anti-scrape. We
     retry up to `max_retries` times with a longer delay before giving up. This
     multiplies the harvest yield meaningfully (probe showed ~50% loss without
-    retry; with 2 retries the loss drops substantially).
+    retry; with 2 retries the loss drops substantially). Each retry asks the federation, not the HTTP
+    cache: the same URL again goes through fiflp_render.goto (goto), which sends it to the network
+    (the federation lets its documents be cached for 5 min, likely the empty one too).
 
     Returns parsed dict from acta_parser.parse_acta, or None on goto failure.
     """

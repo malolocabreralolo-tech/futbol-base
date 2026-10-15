@@ -52,9 +52,16 @@ def save(data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 def goto(page, url, retries=3):
+    """Carga `url` (hasta `retries` intentos) y espera 2,5 s. La usan las tandas (goleadores, detalle,
+    islas, copas). Por fiflp_render.goto: un reintento, o una URL que el navegador ya pidió, pide su
+    documento a la red y no a la caché HTTP (la federación los guarda 5 min)."""
+    try:
+        import fiflp_render
+    except ImportError:                   # importado como scripts.fetch_fiflp_2425
+        from scripts import fiflp_render
     for attempt in range(retries):
         try:
-            page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            fiflp_render.goto(page, url, wait_until="domcontentloaded", timeout=30000)
             page.wait_for_timeout(2500)
             return True
         except Exception:

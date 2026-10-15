@@ -84,8 +84,10 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     report = {"season": SEASON, "comp": COMP, "grupo": GRUPO, "pages": [], "endpoints": {}}
     endpoints = {}
+    from fiflp_render import fiflp_launch_args   # sin lo ajeno ni imágenes, y con caché (sin page.route)
+    import fiflp_render                          # goto: lo que se repite, a la red y no a la caché
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=True, args=fiflp_launch_args())
         page = browser.new_page(user_agent=(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
             "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"))
@@ -93,7 +95,7 @@ def main():
 
         def visit(name, url):
             try:
-                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                fiflp_render.goto(page, url, wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(3000)
                 info = save(name, page, url)
                 for k, v in links_in(page).items():

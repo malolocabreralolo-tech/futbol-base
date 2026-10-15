@@ -64,9 +64,10 @@ def is_blocked(page):
 
 def safe_goto(page, url, max_retries=2):
     """Navigate to a URL with retry logic and block detection."""
+    import fiflp_render   # lo que se repite, a la red (la federación guarda sus documentos 5 min)
     for attempt in range(max_retries):
         try:
-            page.goto(url, wait_until="networkidle", timeout=20000)
+            fiflp_render.goto(page, url, wait_until="networkidle", timeout=20000)
             page.wait_for_timeout(3000)
 
             if is_blocked(page):
@@ -312,8 +313,9 @@ def main():
     print(f"  Block backoff: {BLOCK_BACKOFF}s", flush=True)
     print(flush=True)
 
+    from fiflp_render import fiflp_launch_args   # sin lo ajeno ni imágenes, y con caché (sin page.route)
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=True, args=fiflp_launch_args())
         context = browser.new_context(
             user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
         )

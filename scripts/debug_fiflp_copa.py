@@ -10,6 +10,7 @@ Outputs scripts/debug_fiflp_copa.json with:
 
 Run via .github/workflows/debug-fiflp-copa.yml (FIFLP IP-blocks local).
 """
+import contextlib
 import json
 import os
 import re
@@ -30,8 +31,10 @@ SEASON = os.environ.get("DBG_SEASON", "20")
 
 
 def main():
+    from fiflp_render import fiflp_launch_args   # sin lo ajeno ni imágenes, y con caché (sin page.route)
+    import fiflp_render                          # goto: lo que se repite, a la red y no a la caché
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=True, args=fiflp_launch_args())
         page = browser.new_page(user_agent=(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -43,7 +46,7 @@ def main():
                f"&CodCompeticion={COMP_ID}"
                f"&CodGrupo={GRUPO_ID}")
         print(f"Loading: {url}")
-        page.goto(url, wait_until="domcontentloaded", timeout=30000)
+        fiflp_render.goto(page, url, wait_until="domcontentloaded", timeout=30000)
         page.wait_for_timeout(3500)
 
         result = {"url": url, "jornadas": []}
@@ -83,10 +86,13 @@ def main():
             jornada_opts = jornada_opts[:rich]
             for jor in jornada_opts:
                 for load in range(3):
-                    page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                    # Tres cargas de la federación, no de la caché HTTP (guarda sus documentos 5 min): la
+                    # misma URL otra vez va a la red (fiflp_render.goto), y la jornada también (fresh).
+                    fiflp_render.goto(page, url, wait_until="domcontentloaded", timeout=30000)
                     page.wait_for_timeout(3500)
-                    page.evaluate(f"BuscarPartidos('{jor['value']}')")
-                    page.wait_for_timeout(3000)
+                    with fiflp_render.fresh(page) if load else contextlib.nullcontext():
+                        page.evaluate(f"BuscarPartidos('{jor['value']}')")
+                        page.wait_for_timeout(3000)
                     cells = page.evaluate(r"""
                       () => {
                         const st = (el, p) => { const c = getComputedStyle(el, p || null);

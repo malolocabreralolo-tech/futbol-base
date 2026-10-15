@@ -90,8 +90,25 @@ def test_update_has_concurrency_and_timeout():
     assert conc, "update.yml must declare a concurrency group"
     assert conc.get("group") == "update-data"
     assert conc.get("cancel-in-progress") is False
-    # 45 desde 2026/27: los grupos de la federación se leen con navegador.
-    assert data["jobs"]["update"].get("timeout-minutes") == 45
+    # 45 desde 2026/27: los grupos de la federación se leen con navegador. 55 desde el 15/10/2026: el
+    # plazo del bot pasa de 25 a 33 min (update_fiflp.DEADLINE_SECONDS: la federación sirve ~15 páginas
+    # por IP y frena ~5 min, y el plazo se mide en vueltas), y el resto del job son 4-8 min más.
+    assert data["jobs"]["update"].get("timeout-minutes") == 55
+
+
+def test_the_federation_budget_fits_in_the_update_job():
+    """El plazo del bot (update_fiflp.DEADLINE_SECONDS), el resto del job (4-8 min: preparación, app,
+    importaciones, generate_js, pruebas y commit) y lo que puede pasarse la última página (empezada justo
+    antes del plazo: sus tres intentos de hasta 30 s y sus esperas de 15 y 30 s, ~2 min) caben en el
+    timeout de update.yml con margen: si sube el plazo sin subir el timeout, esto falla."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import update_fiflp
+    timeout = _load("update.yml")["jobs"]["update"]["timeout-minutes"]
+    worst = update_fiflp.DEADLINE_SECONDS / 60 + 8 + 2.25
+    assert worst + 10 <= timeout, (worst, timeout)
+    # La reserva de la segunda pasada, en proporción (run_passes no da más de un cuarto del plazo).
+    assert update_fiflp.RESERVE_SECONDS <= update_fiflp.DEADLINE_SECONDS / 4
 
 
 def test_update_logs_the_federation_pass_as_it_goes():

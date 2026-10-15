@@ -22,10 +22,13 @@ sube nada porque no ha cambiado ningún dato publicado). En 24 pasadas (seis dí
     una pasada al día;
   - ninguna página se pide pasado el plazo, tampoco con las actas de los prioritarios delante de los
     demás grupos aunque pasen de la reserva (y la página de competiciones se lee igual).
-EL MODELO de estas simulaciones es el de cuando se calibraron (octubre de 2026) y se fija aquí: la ventana de
-jornadas de 21 días atrás y 14 adelante (7 páginas por grupo abierto). Desde el 15/10/2026 el bot lee 10 días
-atrás y 8 adelante (~4-5 páginas por grupo): menos páginas, así que con estos costes por página todo lo de
-aquí se cumple con más holgura.
+EL MODELO de estas simulaciones es el de cuando se calibraron (octubre de 2026) y se fija aquí: un plazo
+de 25 min con 6 de reserva (FIFLP_BUDGET_MIN, FIFLP_RESERVE_MIN) y la ventana de jornadas de 21 días atrás
+y 14 adelante (7 páginas por grupo abierto). Desde el 15/10/2026 el bot tiene 33 min y 8 de reserva y lee
+10 días atrás y 8 adelante (~4-5 páginas por grupo): más tiempo y menos páginas, así que con estos costes
+por página todo lo de aquí se cumple con más holgura (con los nuevos, los 81 caben a 3 s por página y no
+habría nada que rotar). Lo que manda ahora es el cupo de la federación (~15 páginas por IP y ~5 min de
+bloqueo, fiflp_carga), que no es un coste fijo por página: sus pasadas, en test_bot_freno.py.
 """
 from datetime import date, datetime, timedelta, timezone
 import json
@@ -44,6 +47,7 @@ import update_fiflp as U  # noqa: E402
 TODAY = date(2026, 10, 14)
 NOW = datetime(2026, 10, 14, 0, 20, tzinfo=timezone.utc)
 PAGE = 3.0                       # segundos por página (carga, espera y pausa)
+BUDGET = 25 * 60                 # el plazo del modelo (el del bot hasta el 15/10/2026; ahora, 33 min)
 PASSES = 24
 # Las Mesas Huracán (y sus filiales): siete grupos prioritarios.
 MINE = {"PG2": "Las Mesas Hu.", "FF5": "Las Mesas Hu.", "B2": "Las Mesas Hu.", "AL3": "Las Mesas Hu. A",
@@ -192,10 +196,12 @@ def simulate(tmp_path, monkeypatch, commits, closed=(), numbers=None, page=PAGE,
     # Un acta que se lee bien queda importada (con su código): deja de estar pendiente.
     monkeypatch.setattr(U, "apply_acta", lambda conn, mid, code, acta, log=print: bool(
         conn.execute("UPDATE matches SET cod_acta=? WHERE id=?", (code, mid))))
-    for name in ("FIFLP_PRIORITY_TEAMS", "FIFLP_ALEVIN_MIN", "FIFLP_BUDGET_MIN", "FIFLP_RESERVE_MIN"):
+    for name in ("FIFLP_PRIORITY_TEAMS", "FIFLP_ALEVIN_MIN"):
         monkeypatch.delenv(name, raising=False)
-    # El modelo de cuando se calibró (docstring del módulo): la ventana de 21 días atrás y 14 adelante. Con la
-    # de ahora (10 y 8) todo cabe con más holgura.
+    # El modelo de cuando se calibró (docstring del módulo): 25 min de plazo, 6 de reserva y la ventana de
+    # 21 días atrás y 14 adelante. Con los de ahora (33, 8, 10 y 8) todo cabe con más holgura.
+    monkeypatch.setenv("FIFLP_BUDGET_MIN", str(BUDGET // 60))
+    monkeypatch.setenv("FIFLP_RESERVE_MIN", "6")
     monkeypatch.setattr(U, "BACK_DAYS", 21)
     monkeypatch.setattr(U, "AHEAD_DAYS", 14)
     base = base_db(closed)
@@ -258,7 +264,7 @@ def gaps(passes, key, code):
 def check(passes, everyone, closed=(), page=PAGE, most=3, most_closed=5):
     """`most`: las pasadas seguidas que un grupo abierto puede quedarse sin leer (3: «al menos una vez
     en cada cuatro»), contando las perdidas; `most_closed`, uno cerrado (lo pedido: en cada ocho, 7)."""
-    budget = U.DEADLINE_SECONDS
+    budget = BUDGET
     for i, p in enumerate(passes):
         assert p["last_start"] <= budget, (i, p["last_start"])                   # nada pasado el plazo
         assert p["end"] <= budget + page, (i, p["end"])
@@ -391,7 +397,7 @@ def test_the_priority_actas_go_ahead_without_costing_the_others_the_deadline_or_
         (passes, everyone), = [simulate(tmp_path, monkeypatch, commits=False, numbers=[1000], page=page,
                                         actas=actas)]
         runs[actas] = p = passes[0]
-        assert p["last_start"] <= U.DEADLINE_SECONDS and p["end"] <= U.DEADLINE_SECONDS + page, actas
+        assert p["last_start"] <= BUDGET and p["end"] <= BUDGET + page, actas
         assert any("NFG_CmpJornada" in u and "CodGrupo=" not in u for u in p["urls"]), actas    # competiciones
         assert set(MINE) <= p["first"], actas
         # Delante: la primera acta va antes que el primer calendario que no es de un prioritario.

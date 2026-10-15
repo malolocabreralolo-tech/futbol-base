@@ -59,16 +59,20 @@ AHEAD_DAYS = 8          # jornadas próximas (horarios y campos se publican tard
 PENDING_DAYS = 120      # resultados pendientes (aplazados) que se siguen buscando
 MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~3-6 s cada una); el resto, en la siguiente
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
-# Plazo GLOBAL de las dos pasadas, desde que arranca update_groups (FIFLP_BUDGET_MIN). Fuera de la
-# federación el job gasta 4-8 min (preparación, app, importaciones, generate_js, pruebas y commit): el
-# paso del bot queda en ≤ ~32 min y el job en 29-33, ~35 en el peor caso, sobre los 45 de update.yml. La
-# espera del freno (fiflp_carga.Federacion) cabe dentro de este plazo, y ninguna página empieza después:
-# no lo alarga.
-DEADLINE_SECONDS = 25 * 60
+# Plazo GLOBAL de las dos pasadas, desde que arranca update_groups (FIFLP_BUDGET_MIN). Desde el 15/10/2026
+# lo que manda es el cupo de la federación (fiflp_carga: ~15 páginas por IP y ~5 min de bloqueo): cada
+# vuelta son ~6-7 min (15 páginas a 7 s y la espera del freno) y el plazo, en vueltas: con 25 min, ~3-4;
+# con 33, ~5. Fuera de la federación el job gasta 4-8 min (preparación, app, importaciones, generate_js,
+# pruebas y commit): el job queda en 37-41 min, ~43 en el peor caso (con la última página empezada justo
+# antes del plazo y sus reintentos), sobre los 55 de update.yml (eran 45 con 25 min de plazo: 29-33, ~35).
+# La espera del freno (fiflp_carga.Federacion) cabe dentro de este plazo, y ninguna página empieza
+# después: no lo alarga.
+DEADLINE_SECONDS = 33 * 60
 # Lo que la primera pasada deja siempre para la segunda (FIFLP_RESERVE_MIN): las actas y los
 # goleadores de los grupos prioritarios (de su primera mitad, delante de los demás grupos, en cuanto
-# acaban los calendarios de los prioritarios: run_passes), y los goleadores del turno y del margen.
-RESERVE_SECONDS = 6 * 60
+# acaban los calendarios de los prioritarios: run_passes), y los goleadores del turno y del margen. En
+# proporción al plazo (eran 6 de 25): 8 de 33, algo más de una vuelta del freno.
+RESERVE_SECONDS = 8 * 60
 CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada más vieja: cerrado
 # Rotación SIN ESTADO (plan_groups): el orden de cada pasada sale solo de su número (run_number), no
 # de nada guardado en la base ni en data-health.json, que update.yml no sube en una pasada sin cambios
@@ -124,12 +128,12 @@ def _minutes_env(name, default_seconds, env=None):
 
 
 def budget_seconds(env=None):
-    """El plazo global de la federación en el bot (FIFLP_BUDGET_MIN minutos; 25 por defecto)."""
+    """El plazo global de la federación en el bot (FIFLP_BUDGET_MIN minutos; 33 por defecto)."""
     return _minutes_env("FIFLP_BUDGET_MIN", DEADLINE_SECONDS, env)
 
 
 def reserve_seconds(env=None):
-    """La reserva de la segunda pasada (FIFLP_RESERVE_MIN minutos; 6 por defecto)."""
+    """La reserva de la segunda pasada (FIFLP_RESERVE_MIN minutos; 8 por defecto)."""
     return _minutes_env("FIFLP_RESERVE_MIN", RESERVE_SECONDS, env)
 
 

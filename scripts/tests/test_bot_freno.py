@@ -37,7 +37,7 @@ import update_fiflp as U  # noqa: E402
 
 TODAY = date(2026, 10, 15)
 NOW = datetime(2026, 10, 15, 3, 28, tzinfo=timezone.utc)     # la pasada 1103
-BUDGET = 25 * 60
+BUDGET = U.DEADLINE_SECONDS            # el plazo del bot: 33 min desde el 15/10/2026 (eran 25)
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 
 # Los seis grupos de Las Mesas Huracán de la pasada 1103 y unos pocos más.
@@ -446,8 +446,8 @@ def with_actas(conn, counts):
 
 
 def test_a_long_brake_in_the_priority_calendars_does_not_put_their_actas_first(bot, capsys):
-    """Un freno de 9 min en la jornada 4 de AL4 (dentro del tope de 10) se pasa en el 6.º sondeo, con 19 de
-    primera pasada (25 de plazo y 6 de reserva): las esperas no les quitan su plazo a los calendarios de
+    """Un freno de 9 min en la jornada 4 de AL4 (dentro del tope de 10) se pasa en el 6.º sondeo, con 25 de
+    primera pasada (33 de plazo y 8 de reserva): las esperas no les quitan su plazo a los calendarios de
     los prioritarios (lo pagan la reserva y los demás grupos). AL20 (de Las Mesas) se lee, y antes que las
     actas de PG2 y FF5."""
     conn = with_actas(season(), {"PG2": 8, "FF5": 8})
@@ -675,24 +675,20 @@ def busy_season():
 
 
 def test_with_the_measured_quota_the_pass_brakes_several_times_and_goes_on_until_the_deadline(bot, capsys):
-    """El caso medido: 15 páginas, ~5 min de bloqueo, otra vez 15… En el plazo (25 min) la federación frena
-    varias veces y cada vez se espera (sin tope de frenos por pasada) y se sigue: los calendarios (los seis
-    prioritarios y los demás) y sus actas hasta el plazo; ningún grupo como error (el que pilla un freno sin
-    sitio para esperarlo conserva su comprobación), y ninguna página empieza pasado el plazo (lo comprueba
-    bot). Antes, tres pausas de 5 min por pasada, la primera tras un reintento perdido de 60 s, y más
-    despacio al volver."""
-    previous = report()
-    data, web, F, log = bot(capsys, conn=busy_season(), previous=previous, web=Quota,
-                            blocks=(304, 364, 304, 122, 303, 300))
+    """El caso medido: 15 páginas, ~5 min de bloqueo, otra vez 15… En los 33 min del plazo la federación frena
+    varias veces (al menos 4) y cada vez se espera (sin tope de frenos por pasada) y se sigue: todos los
+    calendarios (los seis prioritarios y los demás) y sus actas hasta el plazo; ningún grupo como error, y
+    ninguna página empieza pasado el plazo (lo comprueba bot). Con 25 min eran 3 frenos, 5 actas y el último
+    grupo sin leer (conservaba su comprobación); antes del 15/10/2026, tres pausas de 5 min por pasada, la
+    primera tras un reintento perdido de 60 s, y más despacio al volver."""
+    data, web, F, log = bot(capsys, conn=busy_season(), web=Quota, blocks=(304, 364, 304, 122, 303, 300))
     run = data["run"]
-    assert run["pauses"] >= 3 and run["resumed"] >= run["pauses"] - 1 and len(web.history) >= run["pauses"]
+    assert run["pauses"] >= 4 and run["resumed"] >= run["pauses"] - 1 and len(web.history) >= run["pauses"]
     assert run["brakeAfter"][:run["resumed"]] == [15] * run["resumed"]
     assert data["summary"] == {"ok": len(ALL), "rejected": 0, "error": 0}
-    read = list(dict.fromkeys(calendars(web)))
-    assert read == ORDER[:len(read)] and set(ORDER[:6]) <= set(read)          # los prioritarios, todos
-    for code in run["unserved"] + run["deferred"]:
-        assert data["groups"][code] == previous["groups"][code], code
-    assert sum("CodActa=" in u for _, u in web.starts) > 0                    # y actas
+    assert all(data["groups"][c]["status"] == "ok" for c in ALL) and run["unserved"] == []
+    assert list(dict.fromkeys(calendars(web))) == ORDER and run["deferred"] == []
+    assert sum("CodActa=" in u for _, u in web.starts) > 15                   # y actas, vuelta tras vuelta
     assert F.interval == 7.0 and "se reintenta en 60 s" not in log
     # Hasta el plazo: lo que no cupo (actas, goleadores) se queda para otra pasada.
     assert run["extrasDeferred"] and max(t for t, _ in web.starts) > F.deadline - (C.BRAKE_PAUSE + C.BRAKE_ROOM + 60)

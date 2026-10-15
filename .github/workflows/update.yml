@@ -17,12 +17,13 @@ jobs:
   update:
     # La imagen fijada y las acciones en Node 24, como tests.yml (plan B4, decisión 55; test_workflows.py).
     runs-on: ubuntu-24.04
-    # 45: los grupos de la federación se leen con navegador (~7 s por página, fiflp_carga.py). Su
-    # parte tiene un plazo global de 25 min (update_fiflp.DEADLINE_SECONDS, con rotación sin estado de
-    # lo que no cabe; la espera del freno de la federación cabe dentro, y ninguna página empieza
-    # después): con preparación, app, importaciones, generate_js, pruebas y commit (4-8 min), 29-33 min,
-    # ~35 en el peor caso.
-    timeout-minutes: 45
+    # 55: los grupos de la federación se leen con navegador (~7 s por página, fiflp_carga.py) y la
+    # federación sirve ~15 páginas por IP antes de frenar ~5 min (medido el 15/10/2026). Su parte tiene un
+    # plazo global de 33 min (update_fiflp.DEADLINE_SECONDS: ~5 vueltas de ~15 páginas, con rotación sin
+    # estado de lo que no cabe; la espera del freno cabe dentro, y ninguna página empieza después): con
+    # preparación, app, importaciones, generate_js, pruebas y commit (4-8 min), 37-41 min, ~43 en el peor
+    # caso (eran 45 con 25 min de plazo: 29-33, ~35).
+    timeout-minutes: 55
 
     steps:
       # ref: main, el main de AHORA: un workflow_dispatch en cola (las tandas de actas lanzan el bot)

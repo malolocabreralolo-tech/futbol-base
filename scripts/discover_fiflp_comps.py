@@ -52,8 +52,9 @@ def main():
     if os.path.exists(OUTPUT):
         with open(OUTPUT, encoding="utf-8") as f:
             results = json.load(f)
+    from fiflp_render import fiflp_launch_args   # sin lo ajeno ni imágenes, y con caché (sin page.route)
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=True, args=fiflp_launch_args())
         page = browser.new_page(user_agent=(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"

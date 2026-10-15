@@ -36,7 +36,7 @@ from db import get_or_create_team
 from fiflp_names import canonical_names, is_bye
 from import_fiflp_cups_2324 import clean_team_name
 from activate_season import fiflp_ids, _iso
-from fiflp_render import flatten, fiflp_only
+from fiflp_render import flatten, fiflp_launch_args
 from fiflp_carga import BRAKE_ROOM, CATALOG_URL, ready_selector, ready_timeout_ms, wait_ready
 from fetch_futbolaspalmas import standings_regression, stored_standings
 from generate_js import _repair_incoherent_points
@@ -1157,17 +1157,21 @@ def _with_browser(work, deadline=None):
     """Abre Chromium y llama a work(page, F) con el scraper de la federación: los lectores de
     fetch_fiflp_2425 con la carga de fiflp_carga (espera a lo que el lector necesita, sin los 2,5 s
     fijos, y pausa FIFLP_DELAY), y los reintentos, las pausas largas del freno y las páginas cortados
-    en `deadline` (en clock(), el reloj de los plazos)."""
+    en `deadline` (en clock(), el reloj de los plazos).
+
+    Sin lo ajeno a la federación ni imágenes desde el lanzamiento (fiflp_render.fiflp_launch_args), sin
+    page.route: una ruta desactiva la caché HTTP y cada página volvía a pedir sus ~20 scripts y sus hojas
+    (~45-52 peticiones por página; así, ~5 tras la primera). Una sola página (un solo contexto) para
+    toda la pasada: la caché es por contexto."""
     import fetch_fiflp_2425
     from fiflp_carga import Federacion
     from playwright.sync_api import sync_playwright
     F = Federacion(fetch_fiflp_2425, deadline, clock=clock)
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=True, args=fiflp_launch_args())
         page = browser.new_page(user_agent=(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"))
-        fiflp_only(page)   # sin la publicidad de la federación, que colgaba las cargas
         page.set_default_timeout(30000)
         try:
             work(page, F)

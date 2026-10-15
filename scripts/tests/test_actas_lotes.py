@@ -133,8 +133,11 @@ class _Browser:
         pass
 
 
+LAUNCHES = []
+
+
 class _Playwright:
-    chromium = types.SimpleNamespace(launch=lambda **kw: _Browser())
+    chromium = types.SimpleNamespace(launch=lambda **kw: LAUNCHES.append(kw) or _Browser())
 
     def __enter__(self):
         return self
@@ -173,8 +176,8 @@ def fed(tmp_path, monkeypatch):
     monkeypatch.setitem(sys.modules, "playwright.sync_api", api)
     monkeypatch.setattr(A, "sync_playwright", None, raising=False)
     monkeypatch.setattr(A, "HERE", tmp_path)
-    monkeypatch.setattr(A, "_fiflp_only", lambda page: page)
     monkeypatch.setattr(A, "delay", lambda *a, **k: None)
+    LAUNCHES.clear()
     names = A.catalog_names("21")
     state = {"competition": {}, "read": [], "answer": None, "mislabel": True}
 
@@ -209,6 +212,9 @@ def files(folder):
 def test_each_tanda_writes_only_the_files_of_its_lote_with_several_browsers_and_chained_tandas(fed, capsys):
     raw, raw_al = "fiflp_actas_2025-2026_raw.json", "fiflp_actas_2025-2026_alevin_raw.json"
     fed["run"]("--categorias", "alevin", "--lote", "alevin", "--workers", "3")
+    # Cada navegador (el de enumerar y uno por hilo), sin lo ajeno ni imágenes y sin ruta (con caché).
+    from scripts.fiflp_render import fiflp_launch_args
+    assert len(LAUNCHES) == 4 and all(kw == {"headless": True, "args": fiflp_launch_args()} for kw in LAUNCHES)
     got = files(fed["dir"])
     assert set(got) == {f"fiflp_actas_2025-2026_alevin_{kind}.json" for kind in ("raw", "index", "status")}
     alevin = got[raw_al]

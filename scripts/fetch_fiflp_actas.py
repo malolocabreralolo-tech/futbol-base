@@ -728,13 +728,18 @@ def parse_args():
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def _fiflp_only(page):
-    """Sin la publicidad de la federación (fiflp_render.fiflp_only), que colgaba la carga de cada acta."""
+def _launch(pw):
+    """Chromium para leer la federación: sin la publicidad (colgaba la carga de cada acta) ni lo demás
+    ajeno a la federación, sin imágenes y CON la caché HTTP (fiflp_render.fiflp_launch_args; sin
+    page.route, que la desactiva: cada acta volvía a pedir los ~20 scripts y las hojas de la federación).
+    Cada navegador tiene un contexto y una página para toda su tanda, así que sus scripts se piden una
+    vez; la caché es por contexto: con --workers 2, dos navegadores, dos cachés (unas decenas de
+    peticiones más por tanda, no por acta)."""
     try:
-        from scripts.fiflp_render import fiflp_only
+        from scripts.fiflp_render import fiflp_launch_args
     except ImportError:
-        from fiflp_render import fiflp_only
-    return fiflp_only(page)
+        from fiflp_render import fiflp_launch_args
+    return pw.chromium.launch(headless=True, args=fiflp_launch_args())
 
 
 def fetch_parallel(pending, workers, over, on_result, dump_fixture="", open_page=None):
@@ -751,8 +756,8 @@ def fetch_parallel(pending, workers, over, on_result, dump_fixture="", open_page
     def default_open():
         from playwright.sync_api import sync_playwright
         pw = sync_playwright().start()
-        br = pw.chromium.launch(headless=True)
-        page = _fiflp_only(br.new_context(user_agent=UA).new_page())
+        br = _launch(pw)
+        page = br.new_context(user_agent=UA).new_page()
         return page, lambda: (br.close(), pw.stop())
 
     def worker():
@@ -816,8 +821,8 @@ def main():
     else:
         # auto-discover (used for seasons 17 and 18)
         with sync_playwright() as p:
-            br = p.chromium.launch(headless=True)
-            page = _fiflp_only(br.new_context(user_agent=UA).new_page())
+            br = _launch(p)
+            page = br.new_context(user_agent=UA).new_page()
             comps = discover_comps(page, season, categories, names)
             br.close()
 
@@ -834,8 +839,8 @@ def main():
     unenumerated = 0
 
     with sync_playwright() as p:
-        br = p.chromium.launch(headless=True)
-        page = _fiflp_only(br.new_context(user_agent=UA).new_page())
+        br = _launch(p)
+        page = br.new_context(user_agent=UA).new_page()
 
         # --- Enumerate targets (o el índice de una tanda anterior), en el índice del lote ---
         ipath = index_path(season, lote)

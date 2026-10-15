@@ -40,15 +40,18 @@ NOW = datetime(2026, 10, 14, 4, 0, tzinfo=timezone.utc)
 # ── El navegador del bot ───────────────────────────────────────────────────────
 
 def test_the_bot_browser_uses_the_ready_wait_and_the_short_delay(monkeypatch):
-    """Sin Playwright instalado también (tests.yml solo instala pytest y pyyaml): el módulo es falso."""
+    """Sin Playwright instalado también (tests.yml solo instala pytest y pyyaml): el módulo es falso.
+    Chromium se lanza sin lo ajeno a la federación ni imágenes (fiflp_launch_args) y la página no lleva
+    ruta: una ruta de Playwright desactiva la caché HTTP (~10 veces más peticiones por página)."""
     import types
     import fiflp_carga
+    from fiflp_render import fiflp_launch_args
     sync_api = types.ModuleType("playwright.sync_api")
     monkeypatch.setitem(sys.modules, "playwright.sync_api", sync_api)
     seen = {}
 
     class Page:
-        def route(self, *a):
+        def route(self, *a, **k):
             seen["route"] = True
         def set_default_timeout(self, ms):
             pass
@@ -62,7 +65,8 @@ def test_the_bot_browser_uses_the_ready_wait_and_the_short_delay(monkeypatch):
     class Playwright:
         class chromium:
             @staticmethod
-            def launch(headless=True):
+            def launch(headless=True, args=None):
+                seen["args"] = args
                 return Browser()
         def __enter__(self):
             return self
@@ -73,7 +77,8 @@ def test_the_bot_browser_uses_the_ready_wait_and_the_short_delay(monkeypatch):
     deadline = 12345.0
     U._with_browser(lambda page, F: seen.update(F=F), deadline=deadline)
     assert isinstance(seen["F"], fiflp_carga.Federacion) and seen["F"].deadline == deadline
-    assert seen["F"].BASE.startswith("https://www.fiflp.com/") and seen["route"] and seen["closed"]
+    assert seen["F"].BASE.startswith("https://www.fiflp.com/") and seen["closed"]
+    assert seen["args"] == fiflp_launch_args() and "route" not in seen
 
 
 # ── La temporada de prueba ─────────────────────────────────────────────────────

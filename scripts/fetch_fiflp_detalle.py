@@ -271,14 +271,14 @@ def main(argv=None):
     jornadas = {s.strip() for s in args.jornadas.split(",") if s.strip()}
     deadline = time.monotonic() + args.max_minutes * 60
     import fetch_fiflp_2425 as F
-    from fiflp_render import fiflp_only
+    from fiflp_render import fiflp_launch_args
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        # Sin lo ajeno a la federación ni imágenes, y con caché: sin ruta (fiflp_launch_args).
+        browser = p.chromium.launch(headless=True, args=fiflp_launch_args())
         page = browser.new_page(user_agent=(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"))
-        fiflp_only(page)   # sin la publicidad de la federación, que colgaba las cargas
         page.set_default_timeout(30000)
         try:
             complete = run_groups(page, F, seasons, jornadas, deadline, categories=categories)

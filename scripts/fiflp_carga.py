@@ -85,7 +85,8 @@ CLOSED = "navegador cerrado"
 _OPTION = ' option:not([value=""]):not([value="0"])'
 
 # ¿Listo? El elemento que necesita el lector (si hace falta) y las hojas de estilo de los hosts de
-# la federación cargadas. Una hoja de otro host (bloqueada por fiflp_only) no carga nunca: no se mira.
+# la federación cargadas. Una hoja de otro host (no se resuelve: fiflp_render.fiflp_launch_args) no carga
+# nunca: no se mira. Con la caché HTTP, las de la federación ya están desde la segunda página.
 READY_JS = """([selector, hosts]) => {
   if (selector && !document.querySelector(selector)) return false;
   const ours = (url) => {

@@ -474,6 +474,59 @@ def test_campos_directory_page_and_venue_matching():
         "Agapito Reyes Viera F-8": ["C. Mosta, 1B", "Arrecife", "Hierba Artificial", "Fútbol 11"]}
 
 
+def test_a_campos_directory_cut_short_keeps_the_venues_it_did_not_read(monkeypatch):
+    """update_campos lee el directorio a páginas de 100. Si la federación deja de servir a media lectura (su
+    segundo freno: desde el 16/10/2026 F.goto da False al momento, fiflp_carga.BRAKE_PAUSES = 1) o llega el
+    plazo, solo añade o actualiza lo leído y conserva lo demás: hasta el corrector del 16/10/2026 vaciaba la
+    tabla igual, y un directorio de 249 campos cortado en la 2.ª página dejaba 100. Leído entero, la
+    sustituye (fuera el campo que ya no está)."""
+    from generate_js import venue_key
+    pages = {n: [(f"Campo {n}-{i}", "C. Mayor, 1", "Telde", "Hierba Artificial", "Fútbol 7", n * 1000 + i)
+                 for i in range(100 if n < 3 else 49)] for n in (1, 2, 3)}
+    monkeypatch.setattr(U, "parse_campos", lambda html: (pages[int(html)], 3))
+
+    class Page:
+        n = 0
+
+        def content(self):
+            return str(self.n)
+
+    class Fed:
+        BASE = "https://www.fiflp.com/pnfg/NPcd"
+
+        def __init__(self, serves):
+            self.serves, self.asked = serves, []
+
+        def goto(self, page, url):
+            page.n = int(re.search(r"NPcd_Page=(\d+)", url).group(1))
+            self.asked.append(page.n)
+            return page.n <= self.serves
+
+        def delay(self):
+            pass
+
+    def directory(conn):
+        conn.execute("DELETE FROM venues")
+        conn.executemany("INSERT INTO venues(name, norm, address, city, surface, kind, code) VALUES (?,?,?,?,?,?,?)",
+                         [(r[0], venue_key(r[0]), "vieja", *r[2:]) for rows in pages.values() for r in rows]
+                         + [("Campo cerrado", venue_key("Campo cerrado"), "x", "Telde", None, None, 9)])
+        conn.commit()
+
+    count = lambda conn, where="1": conn.execute(f"SELECT count(*) FROM venues WHERE {where}").fetchone()[0]
+    conn = base()
+    directory(conn)
+    fed = Fed(serves=1)                                     # la 2.ª página, el segundo freno
+    assert U.update_campos(Page(), fed, conn) == 100 and fed.asked == [1, 2]
+    assert count(conn) == 250 and count(conn, "address='C. Mayor, 1'") == 100 and count(conn, "name='Campo cerrado'") == 1
+    directory(conn)
+    monkeypatch.setattr(U, "clock", iter([0, 99, 99]).__next__)          # el plazo, tras la 1.ª página
+    assert U.update_campos(Page(), Fed(serves=3), conn, deadline=50) == 100 and count(conn) == 250
+    monkeypatch.setattr(U, "clock", lambda: 0)
+    directory(conn)
+    assert U.update_campos(Page(), Fed(serves=3), conn) == 249                # entero: la sustituye
+    assert count(conn) == 249 and count(conn, "address='vieja'") == 0 and count(conn, "name='Campo cerrado'") == 0
+
+
 def test_both_passes_end_to_end_with_a_simulated_federation(monkeypatch):
     """run_passes entero: jornada → acta (marcador y alineaciones) → goleadores →
     directorio de campos → estado por grupo. Sin red: una página falsa sirve las

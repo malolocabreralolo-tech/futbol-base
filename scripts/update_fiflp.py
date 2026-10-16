@@ -1462,11 +1462,19 @@ def missing_venues(conn, season_id):
 
 
 def update_campos(page, F, conn, deadline=None):
-    """Refresca el directorio de campos (páginas de 100, hasta `deadline`). Devuelve cuántos."""
+    """Refresca el directorio de campos (páginas de 100, hasta `deadline`). Devuelve cuántos leyó. Leído
+    entero, sustituye la tabla venues (los campos que ya no están, fuera); a medias (la federación deja de
+    servir, F.goto da False: su segundo freno corta la pasada al momento desde el 16/10/2026,
+    fiflp_carga.BRAKE_PAUSES; o llega el plazo), solo añade o actualiza los leídos y conserva los demás:
+    hasta el 16/10/2026 la vaciaba igual, y un directorio cortado en la 2.ª página dejaba publicados
+    (generate_js, CAMPOS) 100 de ~250 campos hasta otra lectura entera."""
     from generate_js import venue_key
-    rows, pages = [], 1
+    rows, pages, whole = [], 1, False
     for n in range(1, 30):
-        if n > pages or (deadline is not None and clock() > deadline):
+        if n > pages:
+            whole = True
+            break
+        if deadline is not None and clock() > deadline:
             break
         if not F.goto(page, F.BASE + CAMPOS_URL.format(page=n)):
             break
@@ -1475,7 +1483,8 @@ def update_campos(page, F, conn, deadline=None):
         F.delay()
     if not rows:
         return 0
-    conn.execute("DELETE FROM venues")
+    if whole:
+        conn.execute("DELETE FROM venues")
     conn.executemany("INSERT OR REPLACE INTO venues(name, norm, address, city, surface, kind, code) VALUES (?,?,?,?,?,?,?)",
                      [(r[0], venue_key(r[0]), *r[1:]) for r in rows])
     conn.commit()

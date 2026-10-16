@@ -5,11 +5,12 @@
   "2026-10-10": "2026-10-11T04:43:17",
   "2026-10-11": "2026-10-12T05:01:08",
   "2026-10-13": "2026-10-14T14:50:00",
-  "2026-10-14": "2026-10-15T13:16:39"
+  "2026-10-14": "2026-10-15T13:16:39",
+  "2026-10-16": "2026-10-16T11:20:16"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -156,7 +157,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -280,7 +281,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -404,7 +405,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -553,7 +554,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -700,7 +701,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -824,7 +825,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -971,7 +972,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1095,7 +1096,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1219,7 +1220,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1362,7 +1363,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1486,7 +1487,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1633,7 +1634,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1757,7 +1758,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1881,7 +1882,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2028,7 +2029,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2175,7 +2176,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2322,7 +2323,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2469,7 +2470,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2589,7 +2590,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2713,7 +2714,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2837,7 +2838,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 4,
@@ -2984,7 +2985,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -3131,7 +3132,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -3278,7 +3279,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -3570,7 +3571,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -3858,7 +3859,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -4150,7 +4151,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-15T21:30:31",
+   "fetched": "2026-10-16T11:20:16",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -4590,6 +4591,8 @@
    "campo_gps": "https://goo.gl/maps/Fo4MXUjfvWguQDXM9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200udbarrial.png",
    "escudo_visitante": "100x100guia.png",
    "estadio": "Sardina",
@@ -4616,6 +4619,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -4971,6 +4975,8 @@
    "campo_gps": "https://goo.gl/maps/AXt5UdgsT9axsRBn9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "galdarEscudoColor.png",
    "escudo_visitante": "100x100sardina.png",
    "estadio": "Venancio Monzón",
@@ -4997,6 +5003,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -5014,6 +5021,8 @@
    "campo_gps": "https://maps.app.goo.gl/JbxetytbNzbzEqCK7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100teror.png",
    "escudo_visitante": "escudoRoqueAmagro.png",
    "estadio": "El Pino",
@@ -5040,6 +5049,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -5255,6 +5265,8 @@
    "campo_gps": "https://goo.gl/maps/dk1P853zEEF2",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100firgas.png",
    "escudo_visitante": "200x200AtalayaSanPablo.png",
    "estadio": "Domingo Ponce",
@@ -5281,6 +5293,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -5637,6 +5650,8 @@
    "campo_gps": "https://maps.app.goo.gl/hkGXfkW2fXEWTfQk7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100goleta.png",
    "escudo_visitante": "100x100santidad.png",
    "estadio": "Cirilo Lorenzo",
@@ -5663,6 +5678,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -6396,21 +6412,48 @@
    "visitante": "CF Heidelberg"
   },
   "18792": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/6rwmFAa78DPWbw9K9",
+   "campo_latitud": null,
+   "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100heidelberg.png",
    "escudo_visitante": "100x100sanlazaro.png",
    "estadio": "Manuel Betancor",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 17:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18792,
+   "id_local": 1223,
+   "id_visitante": 1224,
    "jornada": 2,
    "liga_id": 127,
    "local": "CF Heidelberg",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 6",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "San Lázaro B"
   },
   "18793": {
@@ -8380,6 +8423,8 @@
    "campo_gps": "https://maps.app.goo.gl/ZP8qtd4DuuT1Ybzd8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200claret.png",
    "escudo_visitante": "200x200piletas.png",
    "estadio": "Colegio Claret",
@@ -8406,6 +8451,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -9806,6 +9852,8 @@
    "campo_gps": "https://goo.gl/maps/HnuQiSsKUwdPGrxA8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100unionmarina.png",
    "escudo_visitante": "200x200atleticograncanaria19-20.png",
    "estadio": "MN Naño",
@@ -9832,6 +9880,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -10235,6 +10284,8 @@
    "campo_gps": "https://maps.app.goo.gl/zSLNQZS56Px1NgVz9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100ojosdegarza.png",
    "escudo_visitante": "100x100Marzasport2017.png",
    "estadio": "Ojos de Garza",
@@ -10261,6 +10312,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -10664,6 +10716,8 @@
    "campo_gps": "https://goo.gl/maps/UbBRTW2EmFQ2",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100ingenio.png",
    "escudo_visitante": "100x100arinaga.png",
    "estadio": "Cristóbal Herrera",
@@ -10690,6 +10744,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -10709,6 +10764,8 @@
    "campo_gps": "https://goo.gl/maps/RAp1dDBKeyu",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100carrizal.png",
    "escudo_visitante": "100x100lasmajoreras.png",
    "estadio": "El Toril",
@@ -10735,6 +10792,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -11035,21 +11093,48 @@
    "visitante": "UD Valsequillo"
   },
   "18957": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/HstbJBBoFZs",
+   "campo_latitud": null,
+   "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100valsequillo.png",
    "escudo_visitante": "100x100carrizal.png",
    "estadio": "Valsequillo",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 18:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18957,
+   "id_local": 1299,
+   "id_visitante": 1296,
    "jornada": 2,
    "liga_id": 140,
    "local": "UD Valsequillo",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 19",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
+   "racha_local": [],
+   "racha_visitante": [
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Unión Carrizal B"
   },
   "18958": {
@@ -12227,6 +12312,8 @@
    "campo_gps": "https://goo.gl/maps/B9wCeDbQv2HLe8YP8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "estrellaEscudo.png",
    "escudo_visitante": "100x100sanpedromartir.png",
    "estadio": "Las Palmitas",
@@ -12253,6 +12340,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -13229,6 +13317,8 @@
    "campo_gps": "https://goo.gl/maps/jGnsjd1EmbvhLCnz6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "sanIsidroEscudo.png",
    "escudo_visitante": "100x100moya.png",
    "estadio": "Venancio Monzón",
@@ -13255,6 +13345,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V"
@@ -13274,6 +13365,8 @@
    "campo_gps": "https://goo.gl/maps/1qeQ3MQ53KiP1jTo8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "escudoGuayarmina.png",
    "escudo_visitante": "100x100santidad.png",
    "estadio": "Cruz del Poleo",
@@ -13300,6 +13393,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "E"
@@ -13319,6 +13413,8 @@
    "campo_gps": "https://maps.app.goo.gl/2XqfjBGLdyTkUCuc9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100guia.png",
    "escudo_visitante": "escudoRoqueAmagro.png",
    "estadio": "Guía",
@@ -13345,6 +13441,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D"
@@ -18959,39 +19056,95 @@
    "visitante": "CF Heidelberg"
   },
   "19348": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/ySQtak4DDU32",
+   "campo_latitud": null,
+   "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "doramasEscudo.png",
    "escudo_visitante": "maspaTrainingEscudo.png",
    "estadio": "Cruce Arinaga",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 17:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19348,
+   "id_local": 1364,
+   "id_visitante": 1367,
    "jornada": 2,
    "liga_id": 148,
    "local": "CD Doramas B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 3",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "V"
+   ],
+   "racha_visitante": [],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Maspa Training B"
   },
   "19349": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/6rwmFAa78DPWbw9K9",
+   "campo_latitud": null,
+   "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100heidelberg.png",
    "escudo_visitante": "100x100valsequillo.png",
    "estadio": "Manuel Betancor",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 17:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19349,
+   "id_local": 1366,
+   "id_visitante": 1358,
    "jornada": 2,
    "liga_id": 148,
    "local": "CF Heidelberg",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 3",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "V"
+   ],
+   "racha_visitante": [
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "UD Valsequillo"
   },
   "19350": {
@@ -21661,6 +21814,8 @@
    "campo_gps": "https://maps.app.goo.gl/WUwQ7qQ6QZC95WJcA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "arguineguinEscudo.png",
    "escudo_visitante": "100x100balos.png",
    "estadio": "Arguineguín",
@@ -21687,6 +21842,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [
@@ -21704,6 +21860,8 @@
    "campo_gps": "https://goo.gl/maps/GaipofziWgw",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "tableroEscudo.png",
    "escudo_visitante": "100x100cerruda.png",
    "estadio": "Eleuterio Valerón",
@@ -21730,6 +21888,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V"

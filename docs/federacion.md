@@ -302,7 +302,8 @@ calendario).
 Desde el 16/10/2026, cada pasada son ~15 páginas, la espera del primer freno (~5 min), ~15 más y, en el
 segundo freno, nada más: **~30 páginas útiles en ~9 min**, y una pasada cada 2 h, **~360 al día** (con el
 cron cada 6 h y 33 min, ~45 por pasada en ~30 min y ~180 al día). Lo mide `test_bot_pasada_corta.py`: una
-semana sin red (84 pasadas desde el jueves 15/10/2026 00:23 UTC) con la temporada llena de
+semana sin red (84 pasadas desde el jueves 15/10/2026 00:23 UTC) y, para la información completa, tres
+semanas (252 pasadas, `LONG_DAYS`: es un máximo, y con una sola semana salía truncado; abajo) con la temporada llena de
 `test_bot_rotacion.py` (81 grupos, los 7 de Las Mesas), seis equipos por grupo y una jornada por semana
 (sábados y domingos), cada resultado publicado 1,5-7,5 h después del saque y su acta a la vez o unas horas
 después, la federación con 15 páginas por IP y bloqueos que escalan (300, 900 y 2700 s) y una IP nueva en
@@ -318,29 +319,43 @@ ahora:
 | Prioritarios: entre dos lecturas | 6 h (en todas) | ≤ 6,1 h (una de cada tres pasadas, repartidos) |
 | Un resultado suyo recién publicado | en la primera pasada tras él (hasta 6 h) | en la primera pasada tras él (hasta 2 h) |
 | Lecturas por pasada: prioritarios / demás | 7 / 0,9 | 2,5 / 1,8 |
-| Información completa (calendario, goleadores y actas): lo más vieja, mediana de los 81 | 6,8 días (casi ninguno completo en la semana) | 4,25 días |
+| Información completa (calendario, goleadores y actas), en tres semanas: lo más vieja, mediana de los 81 | 20,8 días (ningún no prioritario completo nunca) | 4,26 días |
+| … el máximo | nunca (37 de los 74 no prioritarios sin ninguna lectura) | 7,8 días (AL23; 7,0 FF13; los demás, ≤ 6,9) |
 | … de los prioritarios | ≤ 1 día | ≤ 0,9 días (casi todos ≤ 4 h) |
-| … grupos en ≤ 3 días / ≤ 5 días | 7 / 7 (los prioritarios) | 25 / 67 |
+| … grupos en ≤ 3 días / ≤ 5 días (de 81; no prioritarios, de 74) | 7 / 7 (los prioritarios); 0 / 0 | 11 / 61; 4 / 54 |
 | Los 28 «error» heredados | 23 al final de la semana | 0 a las 80 h |
 | Actas pendientes al final | 156 | 1 |
 
 (Solo con el cron cada 2 h y el código de antes, 540 páginas al día, pero cada pasada esperaba los 15 min del
-segundo bloqueo, seguía leyendo los siete prioritarios en todas y la mediana seguía en 6,9 días.)
+segundo bloqueo, seguía leyendo los siete prioritarios en todas y en tres semanas ningún no prioritario
+quedaba completo nunca: 15 sin ninguna lectura.)
+
+Hasta el corrector del 16/10/2026 estas cifras eran de una sola semana: 6,9 días de máximo y 25 / 67 en
+≤ 3 / ≤ 5 días. Eran un máximo truncado por la ventana: AL23 no se leía ni una vez en la semana, y su
+«6,9» era el tope de la semana, no un hueco medido (de verdad pasa 7,8 días sin leerse). Con dos o tres
+semanas el máximo ya no crece (14 días, lo mismo), y la prueba exige que ningún grupo quede sin leer en
+la ventana y que el máximo no sea el de un hueco aún abierto al acabar (`open_complete_gaps`: eso es una
+cota, no una medida). Los recuentos de ≤ 3 y ≤ 5 días bajan con la ventana: un máximo crece con más
+semanas en las que tener un hueco largo.
 
 **El objetivo de ≤ 3 días para todos no se alcanza** con esto: los prioritarios se llevan ~165 páginas al día
-(cada 6 h y, calientes, en cada pasada) y quedan ~22 lecturas al día para 74 grupos, ~3,4 días de media; la
-rotación sin estado reparte con un giro (`spin`, `pass_phase`) que deja a unos pocos una semana sin leer.
-Medido con la misma simulación (no está en el código; son decisiones):
+(cada 6 h y, calientes, en cada pasada) y quedan ~25 lecturas al día para 74 grupos, ~3 días de media; la
+rotación sin estado reparte con un giro (`spin`, `pass_phase`) que deja a unos pocos más de una semana sin
+leer. Medido con la misma simulación, en tres semanas (no está en el código; son decisiones):
 
 | Palanca | Mediana | Máximo | Grupos no prioritarios en ≤ 3 días |
 |---|---|---|---|
-| Lo de ahora | 4,25 | 6,9 | 18 de 74 |
-| Cron cada 90 min (dos líneas: `'23 */3 * * *'` y `'53 1-23/3 * * *'`; `PASS_EVERY` = 1,5 h) | 2,3 | 6,0 | 38 |
-| Ordenar el resto por la comprobación publicada más vieja (con estado: publicar la hora de todos, un commit de `data-health.json` por pasada) | 4,1 | 4,3 | 0 (todos en ≤ 5) |
-| Las dos anteriores | 2,2 | **2,4** | **74** |
-| No releer una jornada jugada con todos sus partidos con resultado y acta importada (+50 % de lecturas; deja de verse un cambio de resultado de Competición en un partido ya con acta) | 2,7 | 6,8 | 36 |
-| Esa y ordenar por la comprobación más vieja | 2,8 | 3,2 | 62 |
-| `FIFLP_PRIORITY_MAX_H=8` (prioritarios cada 8 h) | 3,3 | 6,9 | 28 |
+| Lo de ahora | 4,26 | 7,8 | 4 de 74 (54 en ≤ 5) |
+| Cron cada 90 min (dos líneas: `'23 */3 * * *'` y `'53 1-23/3 * * *'`; `PASS_EVERY` = 1,5 h) | 3,2 | 6,0 | 21 (68) |
+| Ordenar el resto por la comprobación publicada más vieja (con estado: publicar la hora de todos, un commit de `data-health.json` por pasada) | 4,1 | 5,1 | 0 (73) |
+| Las dos anteriores | 2,25 | **3,1** | **73** (74) |
+| No releer una jornada jugada con todos sus partidos con resultado y acta importada (+50 % de lecturas; deja de verse un cambio de resultado de Competición en un partido ya con acta) | 3,25 | 6,8 | 26 (71) |
+| Esa y ordenar por la comprobación más vieja | 2,8 | 3,2 | 62 (74) |
+| `FIFLP_PRIORITY_MAX_H=8` (prioritarios cada 8 h) | 4,3 | 6,9 | 14 (59) |
+
+(Con una semana, la tabla daba otras cifras: lo de ahora 4,25 / 6,9 / 18; cada 90 min, 2,3 / 6,0 / 38;
+ordenar, 4,1 / 4,3 / 0; las dos, 2,2 / 2,4 / 74; no releer, 2,7 / 6,8 / 36; con ordenar, 2,8 / 3,2 / 62;
+cada 8 h, 3,3 / 6,9 / 28. Los máximos de una semana se quedaban cortos.)
 
 Para cruzar frenos con IPs, `update.yml` imprime la IP pública del runner antes del paso del bot (paso
 «IP pública del runner», `api.ipify.org`, 5 s como mucho; nunca para el job y no va a `data-health.json`).

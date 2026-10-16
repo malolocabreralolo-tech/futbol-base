@@ -14,7 +14,8 @@ actas pendientes) antes del siguiente.
 
 La simulación: la temporada llena de test_bot_rotacion (81 grupos, los siete de Las Mesas Huracán), cada
 grupo con seis equipos y una jornada por semana (tres partidos, el sábado o el domingo), una semana de
-pasadas desde el jueves 15/10/2026 00:23 UTC (una cada 2 h; con el código de antes, cada 6 h). La
+pasadas desde el jueves 15/10/2026 00:23 UTC (una cada 2 h; con el código de antes, cada 6 h) y, para la
+información completa de cada grupo (c), tres (LONG_DAYS: es un máximo, y una sola lo truncaba). La
 federación publica cada resultado entre 1,5 y 7,5 h después del saque y el acta, a la vez o unas horas
 más tarde (antes, el acta no se puede leer: «se reintentará»); sirve 15 páginas por IP y frena 300, 900
 y 2700 s, y cada pasada empieza con el cupo entero (IP nueva). La base de partida es la de ahora: la
@@ -45,6 +46,11 @@ import update_fiflp as U  # noqa: E402
 START = datetime(2026, 10, 15, 0, 23, tzinfo=timezone.utc)      # un jueves, a la hora del cron nuevo
 CANARIAS = timedelta(hours=1)          # la hora de Canarias en octubre (WEST, UTC+1, hasta el 25/10)
 DAYS = 7
+# La información completa de cada grupo (c), con tres semanas: lo más vieja que llega a estar es un máximo, y
+# en una sola semana salía truncado (un grupo sin ninguna lectura en ella daba «6,9 días», el tope de la
+# ventana; el hueco de verdad pasa de la semana: corrector del 16/10/2026). Con 21 días ninguno queda sin
+# leer completo y el máximo ya no crece con la ventana (14 días, lo mismo).
+LONG_DAYS = 21
 BLOCKS = (300, 900, 2700)              # los bloqueos de una pasada (1107-1110), con IP nueva en cada una
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 MINE = {"PG2": "Las Mesas Hu.", "FF5": "Las Mesas Hu.", "B2": "Las Mesas Hu.", "AL3": "Las Mesas Hu. A",
@@ -375,7 +381,7 @@ def acta_times(passes, season):
 
 
 def complete_gaps(passes, season, start=START):
-    """{código: lo más vieja que llegó a estar su información COMPLETA en la semana, en días}. Al acabar cada
+    """{código: lo más vieja que llegó a estar su información COMPLETA en la ventana, en días}. Al acabar cada
     pasada (τ), un grupo está completo hasta t, la última lectura correcta de su calendario (t ≤ τ) tal que
     en τ ya están importadas todas las actas que la federación tenía antes de t (en esa pasada o en otra
     posterior: las actas nuevas que el segundo freno dejó a medias se recuperan en la siguiente) y sus
@@ -383,7 +389,20 @@ def complete_gaps(passes, season, start=START):
     edad en τ es τ - t; sin ninguna, τ - el comienzo de la simulación (la base de partida está a medias:
     28 «error», actas pendientes y ocho grupos sin su primera pasada completa). Los resultados no se miran
     aparte: una lectura correcta lee siempre su última jornada jugada y las que tienen un resultado
-    pendiente (rounds_to_refresh)."""
+    pendiente (rounds_to_refresh). Un máximo que sigue abierto al final de la ventana es solo una cota
+    inferior (open_complete_gaps)."""
+    return {code: worst for code, (worst, _) in _complete(passes, season, start).items()}
+
+
+def open_complete_gaps(passes, season, start=START):
+    """Los grupos cuyo máximo de complete_gaps sigue abierto al acabar la ventana (desde su última lectura
+    completa, o desde el principio si no tuvo ninguna): su valor es una cota inferior, el hueco de verdad es
+    mayor. Con una semana, uno sin ninguna lectura salía con el tope de la ventana (6,9 días)."""
+    return sorted(code for code, (_, still) in _complete(passes, season, start).items() if still)
+
+
+def _complete(passes, season, start=START):
+    """{código: (lo más vieja en días, ¿ese máximo sigue abierto al final?)} (complete_gaps)."""
     ends = [p["end"] for p in passes]
     got, scorers, actas = reads(passes, season), scorer_times(passes, season), acta_times(passes, season)
     actas.update({code: start for code in season.imported})
@@ -399,11 +418,12 @@ def complete_gaps(passes, season, start=START):
             scored = min((s for s in scorers[code] if s >= change), default=never)
             imported = max((actas.get(m["acta"], never) for m in ready), default=start)
             points.append((t, max(t, scored, imported)))
-        worst = timedelta(0)
+        worst, gap = timedelta(0), timedelta(0)
         for tau in ends:
             last = max((t for t, done in points if done <= tau), default=start)
-            worst = max(worst, tau - last)
-        out[code] = worst.total_seconds() / 86400
+            gap = tau - last
+            worst = max(worst, gap)
+        out[code] = (worst.total_seconds() / 86400, gap == worst > timedelta(0))
     return out
 
 
@@ -464,6 +484,9 @@ def summary(passes, season, conn):
         "complete_median_days": round(statistics.median(open_gaps), 2),
         "complete_within_3_days": sum(g <= 3 for g in open_gaps),
         "complete_within_5_days": sum(g <= 5 for g in open_gaps),
+        "others_within_3_days": sum(g <= 3 for c, g in gaps.items() if c not in MINE),
+        "others_within_5_days": sum(g <= 5 for c, g in gaps.items() if c not in MINE),
+        "complete_still_open": open_complete_gaps(passes, season),
         "priority_complete_max_days": round(max(gaps[c] for c in MINE), 2),
         "errors_start": len(ERRORED), "errors_end": errors[-1],
         "errors_cleaned_h": None if cleaned is None else round((cleaned - START).total_seconds() / 3600, 1),
@@ -479,6 +502,17 @@ def week(tmp_path_factory):
     mp = pytest.MonkeyPatch()
     try:
         passes, season, conn = simulate(tmp_path_factory.mktemp("semana"), mp)
+        yield passes, season, conn, summary(passes, season, conn)
+    finally:
+        mp.undo()
+
+
+@pytest.fixture(scope="module")
+def three_weeks(tmp_path_factory):
+    """Tres semanas (LONG_DAYS) con el bot de ahora, para (c): en una, el máximo salía truncado."""
+    mp = pytest.MonkeyPatch()
+    try:
+        passes, season, conn = simulate(tmp_path_factory.mktemp("tres-semanas"), mp, days=LONG_DAYS)
         yield passes, season, conn, summary(passes, season, conn)
     finally:
         mp.undo()
@@ -505,22 +539,30 @@ def test_every_priority_group_is_read_every_six_hours_and_right_after_its_match(
     assert not late, late
 
 
-def test_how_long_each_open_group_takes_to_be_read_complete(week):
+def test_how_long_each_open_group_takes_to_be_read_complete(three_weeks):
     """(c) Calendario, goleadores y actas: lo más vieja que llega a estar la información completa de cada grupo
     abierto (complete_gaps; desde la base a medias del principio, con los 28 «error» y la Segunda Fase recién
-    activada). El objetivo era ≤ 3 días para todos; con el cupo (~30 páginas por pasada, ~360 al día) no se
-    llega con la rotación sin estado: los prioritarios se llevan ~165 páginas al día (cada 6 h y, calientes,
-    en cada pasada) y quedan ~22 lecturas al día para 74 grupos, ~3,4 días de media; el giro sin estado deja
-    a unos pocos una semana. Lo que se consigue (y el código de antes, cada 6 h, no: 6,8 días de mediana, casi
-    ninguno completo en la semana): los prioritarios, completos en ≤ 1 día (casi todos en ≤ 4 h), y los demás,
-    mediana ≤ 4,5 días y tres de cada cuatro en ≤ 5. Las palancas que llegarían a ≤ 3 (medidas con esta misma
-    simulación), en docs/federacion.md, «Lo que da una pasada»."""
-    passes, season, conn, s = week
+    activada), en TRES semanas (LONG_DAYS): es un máximo, y con una sola salía truncado (un grupo sin ninguna
+    lectura en la semana daba 6,9 días, el tope de la ventana; de verdad pasa 7,8 días sin leerse: corrector
+    del 16/10/2026). Por eso, además, ningún grupo sin leer completo en la ventana, y el máximo no es de uno
+    cuyo hueco sigue abierto al final (open_complete_gaps: una cota, no una medida). El objetivo era ≤ 3 días
+    para todos; con el cupo (~30 páginas por pasada, ~360 al día) no se llega con la rotación sin estado: los
+    prioritarios se llevan ~165 páginas al día (cada 6 h y, calientes, en cada pasada) y quedan ~25 lecturas
+    al día para 74 grupos, ~3 días de media; el giro sin estado deja a unos pocos más de una semana. Lo que se
+    consigue (y el código de antes, cada 6 h, no: en tres semanas, ningún grupo no prioritario completo nunca
+    y 37 sin ninguna lectura): los prioritarios, completos en ≤ 1 día (casi todos en ≤ 4 h), y los demás,
+    mediana ≤ 4,5 días, todos en ≤ 8 y siete de cada diez en ≤ 5. Las palancas que llegarían a ≤ 3
+    (medidas con esta misma simulación), en docs/federacion.md, «Lo que da una pasada»."""
+    passes, season, conn, s = three_weeks
     gaps = complete_gaps(passes, season)
     others = sorted(g for c, g in gaps.items() if c not in MINE)
+    worst = max(gaps.values())
     assert max(gaps[c] for c in MINE) <= 1, {c: round(gaps[c], 2) for c in MINE}
+    assert all(reads(passes, season).values()), "un grupo sin ninguna lectura en tres semanas"
+    assert all(gaps[c] < worst for c in open_complete_gaps(passes, season)), s["complete_still_open"]
+    assert worst <= 8, s
     assert statistics.median(gaps.values()) <= 4.5, s
-    assert sum(g <= 5 for g in others) >= 0.75 * len(others), others
+    assert sum(g <= 5 for g in others) >= 0.7 * len(others), others
 
 
 def test_a_brake_is_never_an_error_and_the_old_errors_are_cleaned(week):

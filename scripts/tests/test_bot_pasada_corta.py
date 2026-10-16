@@ -9,7 +9,7 @@ Mesas, y solo ~3 grupos más, sin sus actas ni sus goleadores.
 Lo decidido: pasadas CORTAS y MÁS FRECUENTES, una cada vez (sin IPs en paralelo): cada pasada espera solo
 el primer freno (fiflp_carga.BRAKE_PAUSES = 1) y acaba en el segundo, con el cron cada 2 h; los
 prioritarios, solo cuando toca (más de 6 h desde su última comprobación, o un partido suyo recién jugado
-sin resultado o sin acta: update_fiflp.plan_groups); y cada grupo, completo (calendario, goleadores y
+sin resultado o con su acta por leer, durante 12 h: update_fiflp.plan_groups); y cada grupo, completo (calendario, goleadores y
 actas pendientes) antes del siguiente.
 
 La simulación: la temporada llena de test_bot_rotacion (81 grupos, los siete de Las Mesas Huracán), cada

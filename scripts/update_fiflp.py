@@ -59,6 +59,13 @@ AHEAD_DAYS = 8          # jornadas próximas (horarios y campos se publican tard
 PENDING_DAYS = 120      # resultados pendientes (aplazados) que se siguen buscando
 MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~3-6 s cada una); el resto, en la siguiente
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
+# Un acta que ya falló (acta_tries > 0) se reintenta solo si la última comprobación correcta publicada de su
+# grupo es de hace ACTA_RETRY_AFTER o más (retry_actas): los MAX_ACTA_TRIES intentos son para dar tiempo a la
+# federación a rellenarla (~18 h con una lectura cada 6 h, como con el cron cada 6 h). Con una pasada cada
+# 2 h, un prioritario caliente se lee en todas, y un acta suya que tarda se quedaba sin intentos en ~6-8 h
+# (corrector del 16/10/2026: en la simulación de cuatro semanas, una de AL27). Los demás grupos se leen cada
+# uno o varios días: se reintentan siempre.
+ACTA_RETRY_AFTER = timedelta(hours=4)
 # La PASADA CORTA (16/10/2026). En las pasadas 1107-1110 la federación servía ~15 documentos por IP y el
 # bloqueo escalaba dentro de la pasada: el 1.º ~300 s, el 2.º ~900 s y el 3.º más que el plazo. Cada
 # ejecución de GitHub tiene IP nueva y vuelve a empezar con ~5 min, así que cada pasada espera solo el 1.º
@@ -1286,15 +1293,24 @@ def apply_acta(conn, mid, code, acta, log=print):
     return True
 
 
-def pending_actas(conn, group_id):
+def pending_actas(conn, group_id, retry=True):
     """Partidos jugados con código de acta y sin acta importada (o marcados para
     releer, o con otro código de acta), los nunca intentados primero y los más
-    recientes antes; los que fallaron MAX_ACTA_TRIES veces se dejan."""
+    recientes antes; los que fallaron MAX_ACTA_TRIES veces se dejan. Sin `retry`
+    (retry_actas), solo los nunca intentados."""
     return conn.execute(
         """SELECT id, fiflp_acta FROM matches WHERE group_id=? AND fiflp_acta IS NOT NULL
            AND home_score IS NOT NULL AND acta_tries < ?
            AND (cod_acta IS NULL OR acta_recheck=1 OR cod_acta <> fiflp_acta)
-           ORDER BY acta_tries, date DESC, id""", (group_id, MAX_ACTA_TRIES)).fetchall()
+           ORDER BY acta_tries, date DESC, id""", (group_id, MAX_ACTA_TRIES if retry else 1)).fetchall()
+
+
+def retry_actas(check, now):
+    """¿Se reintentan en esta lectura del grupo sus actas que ya fallaron? Si su última comprobación correcta
+    publicada (`check`, data-health.json) es de hace ACTA_RETRY_AFTER (4 h) o más, o no la hay: al ritmo de
+    sus lecturas por edad, no en cada pasada de un prioritario caliente (cada 2 h). Sin estado nuevo."""
+    at = checked_at(check) if checked_ok(check) else None
+    return at is None or _aware(now) - at >= ACTA_RETRY_AFTER
 
 
 def new_actas(conn, group_ids):
@@ -1311,7 +1327,7 @@ def new_actas(conn, group_ids):
             GROUP BY group_id ORDER BY max(date) DESC, group_id""", ids)]
 
 
-def import_actas(page, F, conn, group_id, budget, deadline=None, log=print, tried=None, unloaded=None):
+def import_actas(page, F, conn, group_id, budget, deadline=None, log=print, tried=None, unloaded=None, retry=True):
     """Lee e importa las actas pendientes del grupo (hasta `budget` y hasta
     `deadline`, en clock()). Devuelve cuántas importó y cuántas leyó.
     Una lectura fallida suma un intento; una página que no carga, no (es la
@@ -1322,10 +1338,11 @@ def import_actas(page, F, conn, group_id, budget, deadline=None, log=print, trie
     vuelven a pedir (los MAX_ACTA_TRIES intentos son para pasadas distintas,
     que dan tiempo a la federación a rellenarla); se apuntan los que se piden.
     `unloaded` (un set): se apuntan los partidos cuya acta no cargó (run_passes:
-    quedan para otra pasada)."""
+    quedan para otra pasada). Sin `retry` (retry_actas), solo las nunca
+    intentadas."""
     from fiflp_acta import parse_flat_acta
     done = read = failed_loads = 0
-    pending = [(mid, code) for mid, code in pending_actas(conn, group_id) if tried is None or mid not in tried]
+    pending = [(mid, code) for mid, code in pending_actas(conn, group_id, retry) if tried is None or mid not in tried]
     for mid, code in pending[:budget]:
         if deadline and clock() > deadline:
             break
@@ -1627,7 +1644,9 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
       2. si fue bien, JUSTO DESPUÉS sus goleadores, si tocan (scorers_due: si la lectura cambió resultados,
          si hay un acta nueva o una vez al día), y sus actas pendientes (pending_actas: como mucho
          MAX_ACTAS_PER_RUN en la pasada, cada una una vez por pasada, `tried`, y MAX_ACTA_TRIES en
-         total), hasta el plazo; lo que el plazo o la federación no dejan acabar, a otra pasada
+         total; las que ya fallaron, solo si su última comprobación es de hace 4 h o más, retry_actas:
+         no en cada pasada de un prioritario caliente), hasta el plazo; lo que el plazo o la federación
+         no dejan acabar, a otra pasada
          (run.extrasDeferred).
     El orden, el de plan_groups: los prioritarios a los que les toca (calientes primero), los cerrados que
     tocan y el turno de cada nivel. Tras los prioritarios: una vez al día (extras_turn), las competiciones
@@ -1718,12 +1737,14 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
             cut.append(code)
             return
         notes, loaded = [], True
+        # Las que ya fallaron, solo al ritmo de sus lecturas por edad (retry_actas), no en cada pasada.
+        retry = retry_actas(checks.get(code), now)
         if scorers_due(conn, group_id, checks.get(code), today, now, changed):
             loaded = scorers(group_id, code, url, notes)
         if clock() <= deadline and not blocked():
             try:
                 done, read = import_actas(page, F, conn, group_id, budget, deadline, tried=tried,
-                                          unloaded=unloaded)
+                                          unloaded=unloaded, retry=retry)
                 budget -= read
                 if read:
                     notes.append(f"{done}/{read} actas")
@@ -1732,7 +1753,7 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
                 notes.append(f"actas: {e}")
         # Cortado: sus goleadores sin servir, o actas pendientes sin pedir (el cupo de actas de la pasada, el
         # plazo, la federación frenada) o que no cargaron.
-        if not loaded or any(mid not in tried or mid in unloaded for mid, _ in pending_actas(conn, group_id)):
+        if not loaded or any(mid not in tried or mid in unloaded for mid, _ in pending_actas(conn, group_id, retry)):
             cut.append(code)
         note(code, notes)
 

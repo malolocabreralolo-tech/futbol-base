@@ -799,6 +799,32 @@ def test_an_acta_that_fails_is_read_once_per_pass(health, monkeypatch):
     assert [code for _, code in actas_left(conn, "PG2")] == [7001]        # para la próxima pasada
 
 
+def test_a_failed_acta_is_retried_at_the_pace_of_age_not_in_every_pass(health, monkeypatch):
+    """Un acta que ya falló se reintenta solo si la última comprobación correcta publicada de su grupo es de
+    hace 4 h o más (retry_actas, ACTA_RETRY_AFTER): sus MAX_ACTA_TRIES intentos son para dar tiempo a la
+    federación a rellenarla. Con una pasada cada 2 h, un prioritario caliente se lee en todas, y un acta suya
+    que tardaba se quedaba sin intentos en ~6-8 h (en la simulación de cuatro semanas, una de AL27); con el
+    cron cada 6 h, ~18 h. Una nueva, siempre; y la que no se reintenta no deja el grupo «a medias»."""
+    def apply(conn, mid, code, acta, log=print):
+        if code == 7001:
+            return False
+        return bool(conn.execute("UPDATE matches SET cod_acta=? WHERE id=?", (code, mid)))
+    monkeypatch.setattr(U, "apply_acta", apply)
+    assert U.ACTA_RETRY_AFTER == timedelta(hours=4)
+    for hours, retried in ((1, False), (3.9, False), (4, True), (6, True)):
+        conn = with_actas(season(), {"PG2": 2})
+        conn.execute("UPDATE matches SET acta_tries=1 WHERE fiflp_acta=7001")            # ya falló una vez
+        checks = {code: checked(6) for code in ALL}
+        checks["PG2"] = checked(hours)
+        number = next(n for n in range(12) if "PG2" in plan(conn, checks, number=n).priority)
+        data, fed = health(report(checks), conn, budget=600, number=number)
+        s = steps(fed)
+        assert "PG2" in s and "acta 7002" in s and ("acta 7001" in s) is retried, (hours, s)
+        assert conn.execute("SELECT acta_tries FROM matches WHERE fiflp_acta=7001").fetchone() == (1 + retried,)
+        assert "PG2" not in data["run"]["extrasDeferred"]
+    assert U.retry_actas(None, NOW) and U.retry_actas(checked(1, "error"), NOW)
+
+
 def test_without_priority_groups_the_passes_are_as_before(health, actas_ok, monkeypatch, capsys):
     """Sin equipos prioritarios (FIFLP_PRIORITY_TEAMS vacía y sin grupo del portal), todos los grupos en el
     orden de la rotación, cada uno completo (calendario, goleadores y actas) y, al final, si sobra pasada,

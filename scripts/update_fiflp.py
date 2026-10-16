@@ -85,13 +85,25 @@ CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada
 # la vez), si en la pasada siguiente su última comprobación correcta (data-health.json, cuya hora se publica
 # siempre para ellos) ya pasaría de PRIORITY_MAX_AGE (FIFLP_PRIORITY_MAX_H; la frescura de antes) con
 # PASS_SLACK de margen, o si no la tiene; o si está CALIENTE (hot_reason): un partido de sus equipos
-# prioritarios de los últimos HOT_DAYS días, empezado hace más de HOT_AFTER, sin resultado, sin el código de
-# su acta o con el acta sin importar y sin intentar. Si no toca, descansa como un cerrado: conserva su
-# comprobación. Con una pasada cada 2 h, cada prioritario se lee al menos cada 6 h y, con un partido suyo
-# recién jugado, en cada pasada hasta tener su resultado y su acta.
+# prioritarios de los últimos HOT_DAYS días, empezado hace más de HOT_AFTER, sin resultado o con su acta por
+# leer (con código, sin importar y sin intentar: pending_actas), mientras ninguna lectura correcta del grupo
+# sea de más de HOT_FOR después (lo que falta y la federación no da en ese rato ya no corre prisa: un
+# aplazado que conserva su fecha, un resultado o un acta que llegan al día siguiente). Si no toca, descansa
+# como un cerrado: conserva su comprobación. Con una pasada cada 2 h, cada prioritario se lee al menos cada
+# 6 h y, con un partido suyo recién jugado, en cada pasada hasta tener su resultado y su acta (como mucho
+# HOT_FOR; después, cada 6 h).
 PRIORITY_MAX_AGE = timedelta(hours=6)
 HOT_DAYS = 2
 HOT_AFTER = timedelta(minutes=60)   # un partido de fútbol base dura ~1 h: antes, no hay resultado que leer
+# Cuánto se relee en cada pasada un prioritario caliente: desde HOT_AFTER tras el saque, 12 h (~6 pasadas).
+# En la base real (16/10/2026) hay resultados de mesa (3-0 a un retirado) sin acta posible y aplazados que
+# conservan su fecha sin resultado: sin este tope, su grupo se leía en todas las pasadas durante ~3 días
+# (HOT_DAYS), ~36 lecturas en vez de ~12, ~100-150 páginas del cupo de ~360 al día.
+HOT_FOR = timedelta(hours=12)
+# Un partido sin hora (la federación aún no la ha puesto, o un resultado de mesa): el primer saque habitual
+# de una mañana de fútbol base (9:00; la base de 2026-27 va de las 9:00 a las 20:00). Contar desde las 0:00
+# lo calentaba de madrugada, cuando no se juega.
+UNTIMED_KICKOFF = timedelta(hours=9)
 LOCAL_ZONE = "Atlantic/Canary"      # la hora de los partidos de la base (date y time de matches)
 # Rotación SIN ESTADO (plan_groups): el orden de cada pasada sale solo de su número (run_number), no
 # de nada guardado en la base ni en data-health.json, que update.yml no sube en una pasada sin cambios
@@ -402,14 +414,21 @@ def priority_slot(index, number, max_age=PRIORITY_MAX_AGE):
     return index % period == number % period
 
 
-def hot_reason(conn, group_id, keys, now):
+def hot_reason(conn, group_id, keys, now, check=None):
     """¿Está caliente un grupo prioritario? Un partido de sus equipos prioritarios (is_priority) de los
-    últimos HOT_DAYS días (hora de Canarias: local_time), empezado hace más de HOT_AFTER (sin hora, desde
-    el principio de su día), y en la base: sin resultado («resultado»), o con él y sin el código de su
-    acta, o con su acta sin importar y aún sin intentar («acta»: el bot la lee tras el calendario; la que
-    ya falló se reintenta en las pasadas por edad, que dan tiempo a la federación a rellenarla). Solo la
-    base: ni estado nuevo ni páginas. El motivo, o None."""
+    últimos HOT_DAYS días (hora de Canarias: local_time), empezado hace más de HOT_AFTER (sin hora, desde las
+    9:00 de su día: UNTIMED_KICKOFF), y en la base: sin resultado («resultado»), o con él y con su acta por
+    leer: con código (fiflp_acta), sin importar y aún sin intentar («acta»: el bot la lee tras el
+    calendario; la que ya falló se reintenta en las pasadas por edad, que dan tiempo a la federación a
+    rellenarla). Como pending_actas: un resultado sin código de acta (uno de mesa, 3-0 a un retirado) no
+    tiene acta que leer, nunca (hasta el 16/10/2026 calentaba su grupo ~3 días). Y no si la última
+    comprobación correcta del grupo (`check`, la de data-health.json) es de más de HOT_AFTER + HOT_FOR
+    después del saque: se leyó pasado ese rato y seguía sin ello (un aplazado que conserva su fecha, un
+    resultado o un acta que la federación da al día siguiente): al ritmo de PRIORITY_MAX_AGE. Solo la base y
+    la comprobación publicada: ni estado nuevo ni páginas. El motivo, o None."""
     local = local_time(now)
+    seen = checked_at(check) if checked_ok(check) else None
+    seen = local_time(seen) if seen else None
     rows = conn.execute(
         """SELECT m.date, m.time, m.home_score, m.away_score, m.fiflp_acta, m.cod_acta, m.acta_recheck,
                   m.acta_tries, h.name, a.name
@@ -424,13 +443,12 @@ def hot_reason(conn, group_id, keys, now):
         except ValueError:
             continue
         hm = re.match(r"\s*(\d{1,2}):(\d{2})", hour or "")
-        if hm:
-            kickoff += timedelta(hours=int(hm.group(1)), minutes=int(hm.group(2)))
-        if kickoff + HOT_AFTER > local:
+        kickoff += timedelta(hours=int(hm.group(1)), minutes=int(hm.group(2))) if hm else UNTIMED_KICKOFF
+        if kickoff + HOT_AFTER > local or (seen is not None and seen >= kickoff + HOT_AFTER + HOT_FOR):
             continue
         if hs is None or as_ is None:
             return "resultado"
-        if acta is None or (not tries and (cod is None or recheck or cod != acta)):
+        if acta is not None and not tries and (cod is None or recheck or cod != acta):
             return "acta"
     return None
 
@@ -441,7 +459,8 @@ def plan_groups(conn, groups, checks, today, number, priority=None, pinned=None,
     - order: los grupos que tocan, por este orden:
         1. los de los equipos prioritarios (priority_teams, pinned_groups) a los que les toca (desde el
            16/10/2026; hasta entonces, todos en cada pasada): los calientes (hot_reason: un partido suyo
-           recién jugado sin resultado o sin acta) y los que en la pasada siguiente pasarían de
+           recién jugado sin resultado o con su acta por leer, durante HOT_FOR) y los que en la pasada
+           siguiente pasarían de
            PRIORITY_MAX_AGE desde su última comprobación correcta, o no la tienen (stale; checks: las
            entradas publicadas de data-health.json, cuya hora se publica siempre para ellos:
            source_health.record). Los calientes primero y, dentro, la comprobación más vieja primero: si
@@ -496,7 +515,7 @@ def plan_groups(conn, groups, checks, today, number, priority=None, pinned=None,
         if closed and checked_ok(checks.get(code)) and not closed_turn(code, number) and not pending_actas(conn, gid):
             resting.append(group)
         elif code in pinned or any(is_priority(t, keys) for t in teams.get(gid, [])):
-            why = None if closed else hot_reason(conn, gid, keys, now)
+            why = None if closed else hot_reason(conn, gid, keys, now, checks.get(code))
             if why:
                 hot[code] = why
             slot = not closed and priority_slot(opened, number, max_age)

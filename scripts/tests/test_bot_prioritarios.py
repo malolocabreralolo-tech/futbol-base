@@ -6,7 +6,8 @@ páginas que daba la federación por pasada (pasadas 1107-1110). Con pasadas cad
     comprobación correcta (data-health.json) ya tendría más de PRIORITY_MAX_AGE (6 h; FIFLP_PRIORITY_MAX_H),
     o no la tiene (stale);
   - o si está CALIENTE (hot_reason): un partido de sus equipos de los dos últimos días, empezado hace más de
-    una hora, sin resultado o con el acta sin importar y sin intentar;
+    una hora, sin resultado o con su acta por leer (con código, sin importar y sin intentar), durante 12 h
+    (HOT_FOR: una lectura correcta posterior que sigue sin ello lo devuelve al ritmo de 6 h);
   - si no, descansa como un cerrado: conserva su comprobación. La hora de los que se leen se publica siempre
     (source_health.record(publish_time=True)): de ella sale cuándo les vuelve a tocar.
 Y cada grupo leído se completa antes del siguiente: sus goleadores si tocan (scorers_due) y sus actas
@@ -98,8 +99,9 @@ def base(matches):
     (("2026-10-17", "11:00", "Las Mesas Hu.", "Moya", None, 501, False, 0), "resultado"),   # 13:23: 2 h 23 después
     (("2026-10-17", "12:30", "Moya", "Las Mesas Hu.", None, 501, False, 0), None),          # empezó hace 53 min
     (("2026-10-17", "12:20", "Moya", "Las Mesas Hu.", None, 501, False, 0), "resultado"),   # hace 1 h 3 min
-    (("2026-10-17", None, "Moya", "Las Mesas Hu.", None, 501, False, 0), "resultado"),      # sin hora: desde las 0:00
-    (("2026-10-17", "11:00", "Las Mesas Hu.", "Moya", (2, 1), None, False, 0), "acta"),    # sin el código del acta
+    (("2026-10-17", None, "Moya", "Las Mesas Hu.", None, 501, False, 0), "resultado"),      # sin hora: desde las 9:00
+    (("2026-10-17", "11:00", "Las Mesas Hu.", "Moya", (2, 1), None, False, 0), None),      # sin código: no hay acta
+    (("2026-10-17", None, "Las Mesas Hu.", "Moya", (3, 0), None, False, 0), None),         # de mesa (un retirado)
     (("2026-10-17", "11:00", "Las Mesas Hu.", "Moya", (2, 1), 501, False, 0), "acta"),     # el acta, sin intentar
     (("2026-10-17", "11:00", "Las Mesas Hu.", "Moya", (2, 1), 501, False, 1), None),       # ya falló: por edad
     (("2026-10-17", "11:00", "Las Mesas Hu.", "Moya", (2, 1), 501, True, 0), None),        # importada: al día
@@ -107,13 +109,63 @@ def base(matches):
     (("2026-10-14", "18:00", "Las Mesas Hu.", "Moya", None, 501, False, 0), None),          # hace tres días: por edad
     (("2026-10-17", "11:00", "Moya", "Teror", None, 501, False, 0), None),                  # no es de Las Mesas
     (("2026-10-18", "10:00", "Las Mesas Hu.", "Moya", None, 501, False, 0), None),          # mañana
-], ids=["sin-resultado", "aun-jugandose", "hace-una-hora", "sin-hora", "sin-codigo", "acta-nueva",
+], ids=["sin-resultado", "aun-jugandose", "hace-una-hora", "sin-hora", "sin-codigo", "de-mesa", "acta-nueva",
         "acta-fallida", "al-dia", "anteayer", "hace-tres-dias", "otro-club", "manana"])
 def test_a_priority_group_is_hot_while_a_match_of_its_teams_has_just_been_played(match, why):
     """Un partido de sus equipos prioritarios de los dos últimos días (hora de Canarias, la de la base),
-    empezado hace más de una hora: sin resultado, o con él y sin el código de su acta o con el acta sin
-    importar y sin intentar. Solo con la base: nada de estado nuevo ni de páginas."""
+    empezado hace más de una hora: sin resultado, o con él y con su acta por leer (con código, sin importar y
+    sin intentar: como pending_actas). Solo con la base: nada de estado nuevo ni de páginas. Cambiado el
+    16/10/2026 (corrector): «sin-codigo» era «acta», pero un resultado sin código de acta no tiene acta que
+    leer (uno de mesa, «de-mesa», nunca la tiene: AL20 en la base real, caliente ~3 días seguidos)."""
     assert U.hot_reason(base([match]), 1, KEYS, NOW) == why
+
+
+@pytest.mark.parametrize("match, last, why", [
+    (("2026-10-17", "09:00", "Las Mesas Hu.", "Moya", None, 501, False, 0), 1, "resultado"),     # leído a las 12:23
+    (("2026-10-16", "09:30", "Las Mesas Hu.", "Moya", None, 501, False, 0), 16, "resultado"),    # el 16 a las 21:23
+    (("2026-10-16", "09:30", "Las Mesas Hu.", "Moya", None, 501, False, 0), 14, None),           # a las 23:23
+    (("2026-10-16", "09:30", "Las Mesas Hu.", "Moya", None, 501, False, 0), None, "resultado"),  # sin comprobación
+    (("2026-10-16", "09:30", "Las Mesas Hu.", "Moya", (2, 1), 501, False, 0), 14, None),         # el acta, igual
+    (("2026-10-16", "17:00", "Las Mesas Hu.", "Moya", None, 501, False, 0), 8, "resultado"),     # el 17 a las 5:23
+    (("2026-10-16", "17:00", "Las Mesas Hu.", "Moya", None, 501, False, 0), 6, None),            # a las 7:23
+    (("2026-10-16", None, "Las Mesas Hu.", "Moya", None, 501, False, 0), 16, "resultado"),       # sin hora: las 9:00
+    (("2026-10-16", None, "Las Mesas Hu.", "Moya", None, 501, False, 0), 14, None),
+], ids=["dentro", "antes-del-tope", "pasado-el-tope", "sin-comprobacion", "acta-pasado-el-tope", "de-tarde",
+        "de-tarde-pasado", "sin-hora", "sin-hora-pasado"])
+def test_a_hot_group_cools_down_once_read_well_past_its_match(match, last, why):
+    """Caliente, como mucho HOT_FOR (12 h) desde HOT_AFTER tras el saque: si una lectura correcta del grupo
+    (la comprobación publicada) es de después y sigue sin el resultado o el acta, la federación tarda (un
+    aplazado que conserva su fecha, un resultado de mesa, un acta que llega al día siguiente): vuelve al
+    ritmo de 6 h (el tope: el saque + 13 h; el 16 a las 9:30, a las 22:30). Una comprobación con error no
+    cuenta (y el grupo toca igual, stale). NOW: sábado 17, 13:23 en Canarias; `last`, horas antes de NOW
+    (12:23 UTC; en Canarias, una más)."""
+    assert U.HOT_FOR == timedelta(hours=12)
+    conn = base([match])
+    assert U.hot_reason(conn, 1, KEYS, NOW, None if last is None else check(last)) == why
+    if last is not None:
+        assert U.hot_reason(conn, 1, KEYS, NOW, check(last, "error")) == U.hot_reason(conn, 1, KEYS, NOW) is not None
+
+
+def test_an_administrative_result_does_not_keep_a_priority_group_hot_for_days():
+    """Lo de la base real del 16/10/2026: AL20 (prioritario) con un 3-0 a un retirado del 11/10, sin hora y sin
+    código de acta, y sus pasadas cada 2 h del 11 al 15/10 (cada una lee lo que toca y publica su hora).
+    Antes, caliente («acta») en 36 pasadas seguidas (todas hasta el 13/10 22:23 UTC) y leído en 36 de las 36
+    primeras; ahora ninguna, y leído una de cada tres pasadas, como los demás prioritarios. Igual con un
+    aplazado que conserva su fecha (sin resultado): caliente unas 12 h, no tres días."""
+    for score, most in (((3, 0), 0), (None, 7)):
+        conn = base([("2026-10-11", None, "Las Mesas Hu.", "Moya", score, None, False, 0)])
+        conn.execute("UPDATE groups SET url='https://www.fiflp.com/x?CodTemporada=22&CodCompeticion=9&CodGrupo=1'")
+        start = datetime(2026, 10, 11, 0, 23, tzinfo=timezone.utc)
+        checks, hot, reads = {"PG2": {"url": "u", "status": "ok", "checkedAt": (start - timedelta(hours=1)).isoformat()}}, 0, 0
+        for k in range(48):
+            now = start + 2 * k * timedelta(hours=1)
+            p = U.plan_groups(conn, U.fiflp_groups(conn, 1), checks, now.date(), 3000 + k, priority=["Las Mesas Hu."],
+                              pinned=(), env={}, now=now)
+            hot += "PG2" in p.hot
+            if "PG2" in p.priority:
+                reads += 1
+                checks["PG2"] = {"url": "u", "status": "ok", "checkedAt": now.isoformat()}
+        assert hot <= most and reads <= 16 + most, (score, hot, reads)
 
 
 def test_hot_uses_the_canary_time_of_the_matches():

@@ -92,8 +92,9 @@ def test_update_has_concurrency_and_timeout():
     assert conc.get("cancel-in-progress") is False
     # 45 desde 2026/27: los grupos de la federación se leen con navegador. 55 desde el 15/10/2026: el
     # plazo del bot pasa de 25 a 33 min (update_fiflp.DEADLINE_SECONDS: la federación sirve ~15 páginas
-    # por IP y frena ~5 min, y el plazo se mide en vueltas), y el resto del job son 4-8 min más.
-    assert data["jobs"]["update"].get("timeout-minutes") == 55
+    # por IP y frena ~5 min, y el plazo se mide en vueltas), y el resto del job son 4-8 min más. 40 desde
+    # el 16/10/2026: pasadas cortas (16 min de plazo; una espera del freno por pasada), cada 2 h.
+    assert data["jobs"]["update"].get("timeout-minutes") == 40
 
 
 def test_the_federation_budget_fits_in_the_update_job():
@@ -107,8 +108,43 @@ def test_the_federation_budget_fits_in_the_update_job():
     timeout = _load("update.yml")["jobs"]["update"]["timeout-minutes"]
     worst = update_fiflp.DEADLINE_SECONDS / 60 + 8 + 2.25
     assert worst + 10 <= timeout, (worst, timeout)
-    # La reserva de la segunda pasada, en proporción (run_passes no da más de un cuarto del plazo).
+    # El final del plazo en el que no empieza ningún grupo, en proporción (run_passes no da más de un cuarto).
     assert update_fiflp.RESERVE_SECONDS <= update_fiflp.DEADLINE_SECONDS / 4
+
+
+def test_short_passes_every_two_hours_off_the_hour_and_the_job_fits_between_them():
+    """Pasadas cortas y más frecuentes (16/10/2026): el cron, cada 2 h y no a en punto (GitHub retrasa o
+    pierde más los de las :00), el mismo periodo que update_fiflp.PASS_EVERY (de él salen la frescura de los
+    prioritarios, sus turnos y la franja de run_number), y el job entero (su timeout) cabe entre dos. Una
+    sola pasada a la vez: la concurrency las pone en fila, sin cancelar ninguna."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import update_fiflp
+    data = _load("update.yml")
+    crons = [e.get("cron") for e in (_triggers(data).get("schedule") or [])]
+    assert len(crons) == 1
+    minute, hour, *rest = crons[0].split()
+    assert minute.isdigit() and int(minute) not in (0, 30) and rest == ["*", "*", "*"]
+    assert hour.startswith("*/") and int(hour[2:]) * 3600 == update_fiflp.PASS_EVERY.total_seconds()
+    assert data["jobs"]["update"]["timeout-minutes"] * 60 < update_fiflp.PASS_EVERY.total_seconds()
+    assert data["concurrency"] == {"group": "update-data", "cancel-in-progress": False}
+
+
+def test_two_passes_in_a_row_do_not_step_on_each_other():
+    """Con una pasada cada 2 h (y las tandas de la federación lanzando el bot), dos pasadas seguidas no se
+    pisan: la concurrency update-data las pone en fila (sin cancelar la que corre); cada una parte del main de
+    cuando arranca (checkout ref: main), con la base y data-health.json que subió la anterior; y al subir,
+    si main se ha movido (una tanda sube su raw), se rebasa con --autostash y se reintenta, también el
+    diagnóstico de una pasada fallida (hasta el 16/10/2026, un git push a secas que fallaba si main se
+    movía). Un conflicto aborta el rebase y se deja para la pasada siguiente."""
+    data = _load("update.yml")
+    steps = _steps(data, "update")
+    checkout = next(s for s in steps if str(s.get("uses", "")).startswith("actions/checkout"))
+    assert checkout["with"]["ref"] == "main"
+    for name in ("Commit y push si hay cambios", "Publicar diagnóstico si la fuente falla"):
+        run = next(s for s in steps if s.get("name") == name)["run"]
+        assert "for intento in 1 2 3" in run and "git pull --rebase --autostash origin main" in run, name
+        assert "git rebase --abort" in run, name
 
 
 def test_update_logs_the_federation_pass_as_it_goes():

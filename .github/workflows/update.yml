@@ -138,7 +138,8 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          # No se publican datos deportivos parciales de una ejecución fallida.
+          # No se publican datos deportivos parciales de una ejecución fallida, ni sus comprobaciones
+          # correctas (source_health.finish(failed=True)): solo sus errores.
           git add data-health.json
           if ! git diff --cached --quiet; then
             git commit -m "Estado de las fuentes $(date '+%d/%m/%Y %H:%M UTC')"

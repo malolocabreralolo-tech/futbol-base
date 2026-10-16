@@ -125,3 +125,75 @@ def test_meaningful_view_ignores_only_timestamps():
     c = {"season": "x", "checkedAt": "2", "groups": {"A1": {"status": "error", "checkedAt": "2"}}}
     assert source_health.meaningful(a) == source_health.meaningful(b)
     assert source_health.meaningful(a) != source_health.meaningful(c)
+
+
+def test_a_failed_run_publishes_its_errors_but_not_its_good_checks(portal):
+    """update.yml, si el paso del bot falla («Publicar diagnóstico si la fuente falla»), sube solo
+    data-health.json, sin la base ni los datos: las comprobaciones correctas de esa ejecución no se publican
+    (vuelven a la anterior; sin ella, nada), y los errores sí (el diagnóstico). La hora de un prioritario
+    (publish_time) tampoco: con ella la pasada siguiente lo daba por leído (update_fiflp.plan_groups) y no
+    lo releía hasta ~6 h, con sus datos perdidos."""
+    first = json.loads(run(OK + [("B1", "ok", "8 equipos")], T0))
+    later = T0 + timedelta(hours=2)
+    for failed in (True, False):
+        source_health.REPORT_PATH.write_text(json.dumps(first))
+        source_health.begin("2025-2026")
+        source_health.record("A1", "https://example.test/A1", "ok", "11 equipos; 3 encuentros", now=later,
+                             publish_time=True)
+        source_health.record("PG2", "https://example.test/PG2", "error", "HTTP 500", now=later)
+        source_health.record("NUEVO", "https://example.test/NUEVO", "ok", "6 equipos", now=later)
+        source_health.record("B1", "https://example.test/otro", "ok", "8 equipos", now=later)
+        source_health.finish(now=later, failed=failed)
+        report = json.loads(source_health.REPORT_PATH.read_text())
+        assert report["groups"]["PG2"]["status"] == "error"
+        if failed:
+            assert report["groups"]["A1"] == first["groups"]["A1"]
+            assert "NUEVO" not in report["groups"] and "B1" not in report["groups"]
+            assert report["summary"] == {"ok": 1, "rejected": 0, "error": 1}
+        else:
+            assert report["groups"]["A1"]["checkedAt"] == later.isoformat(timespec="seconds")
+            assert report["groups"]["NUEVO"]["status"] == "ok"
+
+
+def test_the_bot_run_tells_finish_whether_it_failed(portal, monkeypatch):
+    """fetch_futbolaspalmas.main pasa failed=True a source_health.finish si algo falla tras comprobar (p. ej.
+    generate_js), y False si acaba bien."""
+    import fetch_futbolaspalmas as FB
+    import generate_js
+    import migrate_categories
+    import migrate_compactar
+    import migrate_team_names
+    import update_fiflp
+
+    class Conn:
+        def commit(self):
+            pass
+
+        def rollback(self):
+            pass
+
+        def close(self):
+            pass
+    for name, module in (("migrate", migrate_categories), ("migrate", migrate_compactar),
+                         ("migrate", migrate_team_names)):
+        monkeypatch.setattr(module, name, lambda conn: None)
+    monkeypatch.setattr(FB, "get_connection", Conn)
+    monkeypatch.setattr(FB, "init_db", lambda conn: None)
+    monkeypatch.setattr(FB, "active_season", lambda conn: (1, "2025-2026"))
+    monkeypatch.setattr(FB, "FILES", [])
+    monkeypatch.setattr(FB, "update_fp_app", lambda conn, name: None)
+    monkeypatch.setattr(FB, "import_past_seasons", lambda conn: None)
+    monkeypatch.setenv("FIFLP_UPDATE", "1")
+    monkeypatch.setattr(update_fiflp, "update_groups", lambda conn, season_id: source_health.record(
+        "A1", "https://example.test/A1", "ok", "leído", publish_time=True))
+    seen = []
+    monkeypatch.setattr(source_health, "finish", lambda now=None, failed=False: seen.append(failed))
+
+    def boom():
+        raise RuntimeError("generate_js roto")
+    monkeypatch.setattr(generate_js, "main", boom)
+    with pytest.raises(RuntimeError):
+        FB.main()
+    monkeypatch.setattr(generate_js, "main", lambda: None)
+    FB.main()
+    assert seen == [True, False]

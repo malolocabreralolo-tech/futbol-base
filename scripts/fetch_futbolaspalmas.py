@@ -941,6 +941,7 @@ def main():
     print(f"Temporada verificada: {season_name}")
 
     source_health.begin(season_name)
+    failed = True
     try:
         for js_path, var_name, stats_var in FILES:
             category_id = get_or_create_category(conn, var_name)
@@ -956,9 +957,12 @@ def main():
         import_past_seasons(conn)
         from generate_js import main as generate_main
         generate_main()
+        failed = False
     finally:
         conn.close()
-        source_health.finish()
+        # Si algo falla, update.yml publica solo data-health.json, sin los datos: tampoco las
+        # comprobaciones correctas de esta ejecución (la hora de los prioritarios decide cuándo les toca).
+        source_health.finish(failed=failed)
 
     print("\nTerminado.")
 

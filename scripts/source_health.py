@@ -127,9 +127,34 @@ def _is_recent(report, now):
     return now - checked < HEARTBEAT
 
 
-def finish(now=None):
+def _discard_checks():
+    """Las comprobaciones correctas de una ejecución que falla, fuera: cada grupo «ok» vuelve a su entrada
+    anterior (como carry; sin ella, o con otra URL, sin entrada). update.yml no publica los datos de una
+    ejecución fallida («Publicar diagnóstico si la fuente falla»: solo data-health.json, sin la base), así
+    que su «ok» con la hora nueva diría leído lo que no se ha publicado; y la hora de los prioritarios
+    (_timed) decide cuándo les toca (update_fiflp.plan_groups): con ella, la pasada siguiente los daba por
+    al día y no los releía hasta su turno (hasta ~6 h; antes del 16/10/2026 se releían en todas). Los
+    errores y los rechazos se quedan: son el diagnóstico."""
+    previous = previous_groups()
+    for code, entry in list(_report["groups"].items()):
+        if not isinstance(entry, dict) or entry.get("status") != "ok":
+            continue
+        before = previous.get(code)
+        if isinstance(before, dict) and before.get("url") == entry.get("url"):
+            _report["groups"][code] = dict(before)
+        else:
+            del _report["groups"][code]
+    _timed.clear()
+
+
+def finish(now=None, failed=False):
+    """Escribe data-health.json si cambia algo con significado, si cambia la hora de un prioritario (_timed)
+    o si la última tiene más de un día (HEARTBEAT). Con `failed` (la ejecución falló: fetch_futbolaspalmas.main
+    lo pasa desde su finally), sin sus comprobaciones correctas (_discard_checks)."""
     if _report is None:
         return
+    if failed:
+        _discard_checks()
     now = now or datetime.now(timezone.utc)
     _report["checkedAt"] = _stamp(now)
     text = (ROOT / "index.html").read_text()

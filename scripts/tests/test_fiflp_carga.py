@@ -283,9 +283,10 @@ def test_the_measured_brake_15_pages_and_5_minutes_resumes_with_probes_of_the_sa
     """Lo medido el 15/10/2026: 15 páginas, la 16.ª vacía y ~5 min de bloqueo. Sin reintento de la vacía,
     la espera de 4 min (FIFLP_BRAKE_PAUSE_MIN) y después LA MISMA página cada minuto (FIFLP_BRAKE_PROBE_S):
     a los 240 s, vacía; a los 300, servida. Se sigue al mismo ritmo (7 s: el cupo es de páginas, no de
-    ritmo; antes, ×1,5) y la vuelta siguiente da otras 15."""
+    ritmo; antes, ×1,5) y la vuelta siguiente da otras 15. Sin tope de frenos (FIFLP_BRAKE_PAUSES=sin, lo
+    de antes del 16/10/2026), el segundo también se espera; por defecto, ya no (la prueba siguiente)."""
     b = Quota(per_ip=15, lasts=(300, 300))
-    fed, page = b.fed(deadline=1000.0 + 33 * 60), b.page()
+    fed, page = b.fed(deadline=1000.0 + 33 * 60, max_pauses=None), b.page()
     urls = pages(40)
     for url in urls[:15]:
         assert fed.goto(page, url)
@@ -306,6 +307,23 @@ def test_the_measured_brake_15_pages_and_5_minutes_resumes_with_probes_of_the_sa
     assert b.starts[-1] - b.starts[-2] == 7.0
     assert fed.goto(page, urls[30]) and fed.pauses == 2 and fed.resumed == 2 and fed.brake_after == [15, 15]
     assert len(b.blocks) == 2
+
+
+def test_by_default_a_pass_waits_for_the_first_brake_only():
+    """Desde el 16/10/2026, una espera por pasada (BRAKE_PAUSES = 1): en las pasadas 1107-1110 el bloqueo
+    escalaba dentro de la pasada (~300 s el 1.º, ~900 s el 2.º, más que el plazo el 3.º) y la pasada
+    siguiente, con IP nueva, vuelve a empezar con ~5 min. Así: 15 páginas, la espera del 1.º (vuelve a los
+    300 s), otras 15 y, en el 2.º freno, nada más en esta pasada (sin esperar sus 15 min). Esa página no
+    se sirvió por el freno (unserved): el bot no la da por error."""
+    b = Quota(per_ip=15, lasts=(300, 900, 2700))
+    fed, page = b.fed(deadline=1000.0 + 16 * 60), b.page()
+    loaded = [fed.goto(page, url) for url in pages(40)]
+    assert loaded[:30] == [True] * 30 and not any(loaded[30:])     # 15 y 15 (la 16.ª, en el sondeo)
+    assert fed.pauses == 1 and fed.resumed == 1 and fed.brake_after == [15, 15] and fed.halted and fed.blocked
+    assert fed.unserved == 1 and fed.paused == C.BRAKE_PAUSE + C.BRAKE_PROBE - 2 and len(b.blocks) == 2
+    assert len(page.gotos) == 30 + 3                        # las 30, la vacía, el sondeo vacío y la del 2.º: nada más
+    assert b.said[-1] == "      la federación frena otra vez, y ya se esperó 1 (FIFLP_BRAKE_PAUSES): nada más en esta pasada"
+    assert b.t - 1000.0 < 9 * 60                            # ~9 min: 15 páginas, 5 min y 15 más
 
 
 def test_a_brake_that_does_not_pass_within_its_cap_stops_the_pass():
@@ -330,12 +348,13 @@ def test_a_brake_that_does_not_pass_within_its_cap_stops_the_pass():
 
 
 def test_several_brakes_in_a_pass_until_the_deadline():
-    """Sin tope de frenos por pasada (antes, 3 pausas): con el cupo medido (15 páginas y ~2-6 min), en los
-    33 min del plazo la federación frena varias veces y cada vez se sigue, hasta el plazo. Ninguna página
-    empieza después. Cada vuelta, 15 páginas."""
+    """Sin tope de frenos por pasada (FIFLP_BRAKE_PAUSES=sin, max_pauses None; lo de por defecto del 15 al
+    16/10/2026; antes, 3 pausas): con el cupo medido (15 páginas y ~2-6 min), en los 33 min del plazo la
+    federación frena varias veces y cada vez se sigue, hasta el plazo. Ninguna página empieza después.
+    Cada vuelta, 15 páginas."""
     b = Quota(per_ip=15, lasts=(304, 364, 304, 122, 303, 300))       # lo medido, a 7 y a 15 s
     deadline = 1000.0 + 33 * 60
-    fed, page = b.fed(deadline=deadline), b.page()
+    fed, page = b.fed(deadline=deadline, max_pauses=None), b.page()
     loaded = [fed.goto(page, url) for url in pages(400)]
     assert all(t <= deadline for t in b.starts)
     assert fed.pauses >= 4 and fed.resumed >= fed.pauses - 1
@@ -541,8 +560,9 @@ def test_a_closed_browser_is_not_the_federation_braking():
 def test_the_brake_wait_is_set_by_environment(monkeypatch):
     """FIFLP_BRAKE_PAUSE_MIN, la primera espera (4 min; hasta el 15/10/2026, cada pausa fija, de 5);
     FIFLP_BRAKE_PROBE_S, cada cuánto el sondeo (60 s; menos de 30 no: no es educado); FIFLP_BRAKE_MAX_MIN,
-    el tope de cada freno (20 min); FIFLP_BRAKE_PAUSES, cuántos frenos se esperan por pasada (sin tope por
-    defecto; hasta el 15/10/2026, 3 pausas), y con 0, ninguno."""
+    el tope de cada freno (20 min); FIFLP_BRAKE_PAUSES, cuántos frenos se esperan por pasada (uno por
+    defecto desde el 16/10/2026; del 15 al 16, sin tope, que es «sin»; hasta el 15/10/2026, 3 pausas), y con
+    0, ninguno."""
     assert C.brake_pause_seconds({}) == C.BRAKE_PAUSE == 240
     assert C.brake_pause_seconds({"FIFLP_BRAKE_PAUSE_MIN": "7,5"}) == 450
     for bad in ("", "x", "-1", "0"):
@@ -555,11 +575,14 @@ def test_the_brake_wait_is_set_by_environment(monkeypatch):
     assert C.brake_cap_seconds({"FIFLP_BRAKE_MAX_MIN": "12"}) == 720
     for bad in ("", "x", "-1", "0"):
         assert C.brake_cap_seconds({"FIFLP_BRAKE_MAX_MIN": bad}) == 1200, bad
-    assert C.brake_pauses({}) is None and C.BRAKE_PAUSES is None
+    assert C.brake_pauses({}) == C.BRAKE_PAUSES == 1
     assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": "0"}) == 0          # ninguno: como antes del 15/10/2026
     assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": "5"}) == 5
-    for bad in ("x", "-1", "1.5"):
-        assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": bad}) is None, bad
+    assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": "sin"}) is None      # sin tope: del 15 al 16/10/2026
+    assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": " Sin "}) is None
+    for bad in ("x", "-1", "1.5", ""):
+        assert C.brake_pauses({"FIFLP_BRAKE_PAUSES": bad}) == 1, bad
+    assert Brake().fed(max_pauses=None).max_pauses is None and Brake().fed().max_pauses == 1
     # Sin esperas: una página vacía para la pasada, sin esperar nada.
     b = Brake(start=1000.0)
     fed, page = b.fed(deadline=1000.0 + 33 * 60, max_pauses=0), b.page()
@@ -570,7 +593,7 @@ def test_the_brake_wait_is_set_by_environment(monkeypatch):
     fed, page = b.fed(deadline=1000.0 + 33 * 60, max_pauses=1), b.page()
     assert all(fed.goto(page, url) for url in pages(4))
     assert not fed.goto(page, pages(1, 5)[0]) and fed.blocked and fed.pauses == 1
-    assert b.said[-1] == "      la federación frena otra vez, y ya se esperaron 1 (FIFLP_BRAKE_PAUSES): nada más en esta pasada"
+    assert b.said[-1] == "      la federación frena otra vez, y ya se esperó 1 (FIFLP_BRAKE_PAUSES): nada más en esta pasada"
     # Y desde el entorno, como en el bot.
     for name, value in {"FIFLP_BRAKE_PAUSE_MIN": "3", "FIFLP_BRAKE_PROBE_S": "45", "FIFLP_BRAKE_MAX_MIN": "8",
                         "FIFLP_BRAKE_PAUSES": "2"}.items():

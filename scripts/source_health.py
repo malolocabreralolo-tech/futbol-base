@@ -18,6 +18,9 @@ VOLATILE = ("checkedAt", "run")
 GROUP_VOLATILE = ("checkedAt",)
 _report = None
 _previous = None
+# Los grupos cuya hora de comprobación se publica aunque no cambie nada más (record(publish_time=True)): los
+# prioritarios del bot de la federación, a los que les vuelve a tocar según ella (update_fiflp.plan_groups).
+_timed = set()
 
 
 def _stamp(now=None):
@@ -32,8 +35,9 @@ def _read_previous():
 
 
 def begin(season):
-    global _report, _previous
+    global _report, _previous, _timed
     _previous = _read_previous()
+    _timed = set()
     _report = {"version": 1, "season": season, "groups": {},
                "nextSeason": _previous.get("nextSeason", {"name": load_config()["nextSeason"], "status": "pending"})}
     _carry_new_competitions()
@@ -74,13 +78,19 @@ def previous_groups():
     return dict(groups) if isinstance(groups, dict) else {}
 
 
-def record(code, url, status, message="", now=None):
+def record(code, url, status, message="", now=None, publish_time=False):
+    """La comprobación de un grupo. Su hora (checkedAt) no reescribe el informe por sí sola (VOLATILE), salvo
+    con `publish_time`: los prioritarios del bot de la federación, a los que les vuelve a tocar según la hora
+    de su última comprobación publicada (update_fiflp.plan_groups; sin publicarla, la pasada siguiente los
+    leería otra vez, en cada pasada)."""
     if _report is None:
         return
     _report["groups"][code] = {
         "url": url, "status": status, "message": str(message)[:350],
         "checkedAt": _stamp(now),
     }
+    if publish_time:
+        _timed.add(code)
 
 
 def carry(code, url=None):
@@ -134,6 +144,9 @@ def finish(now=None):
         _report["dataVersion"] = version.group(1)
     _report["summary"] = {status: sum(g["status"] == status for g in _report["groups"].values())
                           for status in ["ok", "rejected", "error"]}
-    if meaningful(_report) == meaningful(_previous or {}) and _is_recent(_previous, now):
+    before = (_previous or {}).get("groups") or {}
+    timed = any(_report["groups"].get(code, {}).get("checkedAt") != (before.get(code) or {}).get("checkedAt")
+                for code in _timed)
+    if not timed and meaningful(_report) == meaningful(_previous or {}) and _is_recent(_previous, now):
         return
     REPORT_PATH.write_text(json.dumps(_report, ensure_ascii=False, indent=2) + "\n")

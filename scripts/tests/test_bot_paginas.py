@@ -265,11 +265,17 @@ def test_the_calendar_round_is_measured_without_asking_anything_more(scrape, cap
     assert urls == plain and check == {"different": 1} and list(got) == ["Jornada 4", "Jornada 5"]
     assert ("    calendario: seleccionada la jornada 4, pero sus partidos no son los de su página (son los de la "
             "jornada 5)") in capsys.readouterr().out
-    # Una seleccionada que no se lee en esta pasada, o ninguna: nada que comparar (ni se aplana el calendario).
-    for selected in ({"value": "20", "text": "20 - 30-01-2027"}, None):
+    # Una seleccionada que no se lee en esta pasada, o ninguna: hasta el 16/10/2026, nada que comparar (y en
+    # las pasadas reales, 1107-1110, nunca salió nada: la seleccionada sería la primera opción). Ahora se
+    # compara con todas las leídas: el calendario enseña los de la jornada 4 («other»).
+    for selected, line in (({"value": "20", "text": "20 - 30-01-2027"}, "y la seleccionada es la jornada 20"),
+                           (None, ", sin jornada seleccionada")):
         check = {}
         urls, _ = scrape(today, page=Page(calendar(), selected, ROUND_4), fed=Fed(rounds), check=check)
-        assert urls == plain and check == {}
+        assert urls == plain and check == {"other": 1}
+        assert f"    calendario: enseña los partidos de la jornada 4{' ' if selected else ''}{line}" in capsys.readouterr().out
+    # Y no se pide nada sin ninguna jornada que leer.
+    assert U.calendar_shows(Page(calendar(), None, ROUND_4), Fed(rounds), []) is None
 
 
 def test_the_calendar_diagnostic_never_breaks_a_group(scrape):

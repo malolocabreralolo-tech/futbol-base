@@ -14,9 +14,13 @@ se intentaron. Ahora:
   - B: al frenar, la espera del freno y LA MISMA página otra vez, mientras quepa en el plazo. Desde lo
     medido el 15/10/2026 (freno-fiflp.yml: ~15 páginas por IP y ~2-6 min de bloqueo, casi siempre ~5; el
     ritmo no importa): sin reintentar la vacía, 4 min sin pedir nada y después un sondeo de la misma
-    página cada minuto, con un tope de 20 min por freno y sin tope de frenos por pasada; al volver, al
-    mismo ritmo (antes, pausas fijas de 5 min, 3 por pasada, y más despacio al volver). Las esperas no
-    les quitan su plazo a los calendarios de los prioritarios. Ninguna página empieza pasado el plazo.
+    página cada minuto, con un tope de 20 min por freno; al volver, al mismo ritmo (antes, pausas fijas
+    de 5 min, 3 por pasada, y más despacio al volver). Desde el 16/10/2026 (pasadas 1107-1110: el bloqueo
+    escala dentro de una pasada, ~300 s, ~900 s y más que el plazo), una sola espera por pasada
+    (fiflp_carga.BRAKE_PAUSES): el segundo freno acaba la pasada, que dura 16 min como mucho
+    (update_fiflp.DEADLINE_SECONDS) y se repite cada 2 h con otra IP; y cada grupo se lee completo
+    (calendario, goleadores y actas) antes del siguiente (update_fiflp.run_passes). Ninguna página empieza
+    pasado el plazo.
 Sin red: la federación del bot de verdad (fiflp_carga.Federacion) con un reloj y un sueño falsos, sobre
 una página falsa que sirve vacío mientras dura el freno (o, Quota, con el cupo medido).
 """
@@ -37,7 +41,7 @@ import update_fiflp as U  # noqa: E402
 
 TODAY = date(2026, 10, 15)
 NOW = datetime(2026, 10, 15, 3, 28, tzinfo=timezone.utc)     # la pasada 1103
-BUDGET = U.DEADLINE_SECONDS            # el plazo del bot: 33 min desde el 15/10/2026 (eran 25)
+BUDGET = U.DEADLINE_SECONDS            # el plazo del bot: 16 min desde el 16/10/2026 (33 desde el 15, eran 25)
 BASE = "https://www.fiflp.com/pnfg/NPcd"
 
 # Los seis grupos de Las Mesas Huracán de la pasada 1103 y unos pocos más.
@@ -47,7 +51,9 @@ GROUPS = [("PG2", "PREBENJAMIN", ["Las Mesas Hu.", "Moya"]), ("FF5", "BENJAMIN",
           ("AL1", "ALEVIN", ["Guiniguada", "Lomo Blanco"]), ("PG1", "PREBENJAMIN", ["Unión Viera", "Pedro Hidalgo"]),
           ("FF1", "BENJAMIN", ["Valsequillo", "Haría"]), ("FF2", "BENJAMIN", ["Tías", "Carnevali"])]
 ALL = [code for code, _, _ in GROUPS]
-ORDER = ["PG2", "FF5", "AL4", "AL9", "AL18", "AL20", "AL1", "PG1", "FF1", "FF2"]     # el de la pasada 1103
+# El de la pasada 1103: los seis de Las Mesas (todos tocan: comprobados hace 6 h) y el turno. Desde el
+# 16/10/2026, con la fase de cada nivel en el turno intercalado (update_fiflp.pass_phase), FF1 antes que PG1.
+ORDER = ["PG2", "FF5", "AL4", "AL9", "AL18", "AL20", "AL1", "FF1", "PG1", "FF2"]
 ID = {code: i for i, (code, _, _) in enumerate(GROUPS, 1)}
 CODE = {i: code for code, i in ID.items()}
 # El calendario de cada grupo: tres jornadas en la ventana del bot (la 2, la 3 y la 4).
@@ -217,8 +223,10 @@ def calendars(web):
 
 
 # La pasada 1103: PG2 y FF5 (cinco páginas cada uno: clasificación, calendario y tres jornadas) y, de AL4,
-# la clasificación, el calendario y las jornadas 2 y 3. La jornada 4 de AL4, vacía.
-SERVED_1103 = 14
+# la clasificación, el calendario y las jornadas 2 y 3. La jornada 4 de AL4, vacía. Desde el 16/10/2026 cada
+# grupo se lee completo, con sus goleadores justo tras su calendario (aquí sin goleadores en la base: tocan),
+# así que el freno de la jornada 4 de AL4 llega dos páginas después: 16.
+SERVED_1103 = 16
 
 
 def test_the_1103_brake_passes_after_the_brake_wait_and_the_pass_goes_on(bot, capsys):
@@ -249,14 +257,17 @@ def test_the_1103_brake_passes_after_the_brake_wait_and_the_pass_goes_on(bot, ca
     assert "de ellos en pausa por el freno" in log
 
 
-@pytest.mark.parametrize("cap, probes", [(None, 17), ("5", 2)])
+@pytest.mark.parametrize("cap, probes", [(None, 9), ("5", 2)])
 def test_the_1103_brake_that_does_not_pass_keeps_the_last_checks_and_stops_the_pass(bot, capsys, monkeypatch, cap,
                                                                                         probes):
-    """Si el freno no se pasa: la espera, los sondeos de la misma página cada minuto desde los 4 min hasta el
-    tope (FIFLP_BRAKE_MAX_MIN: 20 min por defecto, 17 sondeos; con 5, 2), y después nada más en esta pasada.
+    """Si el freno no se pasa: la espera, los sondeos de la misma página cada minuto desde los 4 min mientras
+    quepan en el plazo con 2 min de margen (con los 16 min de plazo desde el 16/10/2026, 9: el tope de 20 min
+    por freno, FIFLP_BRAKE_MAX_MIN, ya no llega; con un tope de 5, 2), y después nada más en esta pasada.
     AL4, que la federación no sirvió, conserva su comprobación anterior (no «error»: la web no pone
     «Revisión pendiente.» en sus equipos), sin escribir nada de las jornadas 2 y 3 que ya había leído y sin
-    mover su hora; AL9 y los demás, a otra pasada como siempre."""
+    mover su hora; AL9 y los demás, a otra pasada como siempre. PG2 y FF5, completos: sus goleadores, justo
+    tras su calendario (hasta el 16/10/2026 iban tras todos los calendarios de los prioritarios y aquí se
+    quedaban para otra pasada)."""
     if cap:
         monkeypatch.setenv("FIFLP_BRAKE_MAX_MIN", cap)
     conn = season()
@@ -274,28 +285,40 @@ def test_the_1103_brake_that_does_not_pass_keeps_the_last_checks_and_stops_the_p
     assert matches(conn, "PG2") == before["PG2"] + 1 and matches(conn, "FF5") == before["FF5"] + 1
     run = data["run"]
     assert run["unserved"] == ["AL4"] and run["blocked"] and run["pauses"] == 1 and run["resumed"] == 0
-    assert run["deferred"] == ["AL9", "AL18", "AL20", "AL1", "PG1", "FF1", "FF2"]
-    assert run["extrasDeferred"] == ["PG2", "FF5"] and run["refreshed"] == 2
+    assert run["deferred"] == ["AL9", "AL18", "AL20", "AL1", "FF1", "PG1", "FF2"]
+    assert run["extrasDeferred"] == [] and run["refreshed"] == 2
+    scorers = [CODE[int(u.rsplit("=", 1)[1])] for _, u in web.starts if "NFG_CMP_Goleadores" in u]
+    assert scorers == ["PG2", "FF5"]                                        # cada uno, tras su calendario
     assert f"      la federación frena tras {SERVED_1103} páginas: espera de 4 min" in log
-    assert (f"      la federación sigue frenando a los {240 + 60 * (probes - 1)} s (tope de {int(cap or 20)} min por "
-            "freno): nada más en esta pasada\n") in log
+    if cap:
+        assert (f"      la federación sigue frenando a los {240 + 60 * (probes - 1)} s (tope de {cap} min por "
+                "freno): nada más en esta pasada\n") in log
+    else:
+        assert (f"      la federación sigue frenando a los {240 + 60 * (probes - 1)} s y no queda plazo para otro "
+                "sondeo: nada más en esta pasada\n") in log
     assert "    sin federación: a otra pasada (no carga la jornada 4)\n" in log
     assert "  Sin federación: 1 grupo conserva su última comprobación, a otra pasada (AL4)\n" in log
-    assert "(sin federación: las actas y los goleadores de 2 grupos, en otra pasada: PG2, FF5)" in log
+    assert "(sin federación: las actas y los goleadores" not in log
     assert "! error" not in log
 
 
 def test_a_brake_in_the_priority_scorers_pauses_and_the_others_are_read(bot, capsys):
-    """El freno puede caer en las actas y los goleadores de los prioritarios (tras sus 30 páginas de
-    calendario): la misma espera, y la pasada sigue con los demás grupos. La espera no es tiempo de actas:
-    no alarga el plazo de los calendarios de los demás (lo pierden ellos, como en cualquier espera)."""
-    data, web, F, log = bot(capsys, serve=31, lasts=4 * 60)
+    """El freno puede caer en los goleadores (o las actas) de un prioritario, que desde el 16/10/2026 van
+    justo tras su calendario (cada grupo, completo): aquí en los de FF5, la página 12 (PG2: cinco y sus
+    goleadores; FF5: cinco). La misma espera, la misma página otra vez y la pasada sigue con los demás
+    grupos, cada uno con sus goleadores tras su calendario."""
+    data, web, F, log = bot(capsys, serve=11, lasts=4 * 60)
     scorers = [CODE[int(u.rsplit("=", 1)[1])] for _, u in web.starts if "NFG_CMP_Goleadores" in u]
     assert scorers[:6] == ["PG2", "FF5", "FF5", "AL4", "AL9", "AL18"]   # FF5: vacía y, a los 4 min, servida
     assert calendars(web) == ORDER
     assert data["run"]["pauses"] == 1 and data["run"]["resumed"] == 1 and data["summary"]["error"] == 0
-    assert data["run"]["unserved"] == [] and data["run"]["deferred"] == []
-    assert log.index("Actas y goleadores de los prioritarios") < log.index("la federación frena tras") < log.index("[AL1]")
+    assert data["run"]["unserved"] == [] and data["run"]["deferred"] == [] and data["run"]["extrasDeferred"] == []
+    assert log.index("[FF5]") < log.index("la federación frena tras") < log.index("[AL4]")
+    # Cada grupo, completo antes del siguiente: sus goleadores, entre su calendario y el del siguiente.
+    order = [("cal", CODE[int(u.rsplit("=", 1)[1])]) if "NFG_CmpJornada" in u and "CodGrupo=" in u
+             and "CodJornada" not in u else ("gol", CODE[int(u.rsplit("=", 1)[1])]) for _, u in web.starts
+             if "NFG_CMP_Goleadores" in u or ("NFG_CmpJornada" in u and "CodGrupo=" in u and "CodJornada" not in u)]
+    assert [x for x in dict.fromkeys(order)] == [(k, c) for c in ORDER for k in ("cal", "gol")]
 
 
 class Unpaused:
@@ -339,7 +362,7 @@ def test_a_group_the_federation_does_not_serve_is_not_an_error(bot, capsys):
     assert data["groups"]["AL4"] == previous["groups"]["AL4"] and data["groups"]["AL9"] == previous["groups"]["AL9"]
     assert data["summary"]["error"] == 0
     assert data["run"]["unserved"] == ["AL4", "AL9"] and data["run"]["blocked"]
-    assert data["run"]["deferred"] == ["AL18", "AL20", "AL1", "PG1", "FF1", "FF2"]
+    assert data["run"]["deferred"] == ["AL18", "AL20", "AL1", "FF1", "PG1", "FF2"]
     assert log.count("    sin federación: a otra pasada (") == 2
     assert "    sin federación: a otra pasada (no carga el calendario de la federación)\n" in log
 
@@ -397,9 +420,11 @@ def test_the_brake_wait_is_not_taken_if_it_does_not_fit_before_the_deadline(bot,
 
 def test_after_a_late_resume_no_page_starts_past_the_deadline(bot, capsys):
     """Con 600 s de plazo y un bloqueo de ~6 min (el más largo medido, 364 s), la espera cabe justo: tres
-    sondeos (a los 240, 300 y 360 s) y AL4 se lee tras ellos; lo que sigue se corta en el plazo: los
-    calendarios de los demás, a otra pasada, y las actas de los prioritarios, hasta el plazo. Ninguna
-    página empieza después (lo comprueba bot: Federacion ni las pide)."""
+    sondeos (a los 240, 300 y 360 s) y la pasada sigue; lo que sigue se corta en el plazo. Desde el
+    16/10/2026 cada grupo se lee completo, así que el freno cae en las 20 actas de PG2, justo tras su
+    calendario y sus goleadores (antes iban tras los calendarios de los prioritarios y caía en AL4): tras la
+    espera, sus actas hasta el plazo, y los calendarios de los demás, a otra pasada (en los últimos 2 min no
+    empieza ninguno). Ninguna página empieza después del plazo (lo comprueba bot: Federacion ni las pide)."""
     conn = season()
     for k in range(20):          # 20 actas por leer en PG2
         conn.execute("""INSERT INTO matches(group_id, jornada, date, home_team_id, away_team_id, home_score,
@@ -407,14 +432,15 @@ def test_after_a_late_resume_no_page_starts_past_the_deadline(bot, capsys):
                         FROM matches WHERE group_id=? AND jornada='Jornada 1'""", (f"Jornada {20 + k}", 9000 + k, ID["PG2"]))
     conn.commit()
     data, web, F, log = bot(capsys, conn=conn, budget=600, serve=SERVED_1103, lasts=358)
-    assert data["run"]["pauses"] == 1 and data["run"]["resumed"] == 1 and data["groups"]["AL4"]["status"] == "ok"
+    assert data["run"]["pauses"] == 1 and data["run"]["resumed"] == 1 and data["groups"]["PG2"]["status"] == "ok"
     assert F.probes == 3 and "      la federación vuelve a servir a los 360 s: se sigue\n" in log
+    assert "CodActa=" in web.starts[SERVED_1103][1]                     # el freno, en las actas de PG2
     deferred = data["run"]["deferred"]
     assert deferred and deferred == ORDER[len(ORDER) - len(deferred):]                 # la cola, a otra pasada
-    assert "AL4" not in deferred and data["summary"]["error"] == 0
-    actas = [t for t, u in web.starts if "CodActa=" in u]
-    assert len(actas) < 20 and max(t for t, _ in web.starts) <= F.deadline
-    assert "PG2" in data["run"]["extrasDeferred"]
+    assert data["summary"]["error"] == 0
+    actas = {u for _, u in web.starts if "CodActa=" in u}
+    assert len(actas) <= 20 and max(t for t, _ in web.starts) <= F.deadline
+    assert ("PG2" in data["run"]["extrasDeferred"]) == bool(U.pending_actas(conn, ID["PG2"]))
 
 
 def test_a_group_cut_by_the_deadline_waits_for_another_pass(bot, capsys):
@@ -445,21 +471,29 @@ def with_actas(conn, counts):
     return conn
 
 
-def test_a_long_brake_in_the_priority_calendars_does_not_put_their_actas_first(bot, capsys):
-    """Un freno de 9 min en la jornada 4 de AL4 (dentro del tope de 20) se pasa en el 6.º sondeo, con 25 de
-    primera pasada (33 de plazo y 8 de reserva): las esperas no les quitan su plazo a los calendarios de
-    los prioritarios (lo pagan la reserva y los demás grupos). AL20 (de Las Mesas) se lee, y antes que las
-    actas de PG2 y FF5."""
+def test_a_long_brake_in_a_priority_group_is_waited_and_each_group_is_read_complete(bot, capsys):
+    """Un freno de 9 min (dentro del tope de 20) se pasa en el 6.º sondeo, y la pasada sigue. Desde el
+    16/10/2026 cada grupo se lee completo antes del siguiente: las 8 actas de PG2 y las de FF5, justo tras su
+    calendario y sus goleadores (hasta entonces iban tras los calendarios de todos los prioritarios, que
+    tenían su plazo alargado por las esperas). Lo que no cabe en los 16 min, a otra pasada (la siguiente, 2 h
+    después, con otra IP), sin error."""
     conn = with_actas(season(), {"PG2": 8, "FF5": 8})
     data, web, F, log = bot(capsys, conn=conn, serve=SERVED_1103, lasts=9 * 60)
     run = data["run"]
-    assert run["pauses"] == 1 and run["resumed"] == 1 and F.probes == 6
-    assert calendars(web)[:6] == ORDER[:6] and "AL20" not in run["deferred"]
-    assert all(data["groups"][c]["status"] == "ok" for c in ORDER[:6])
-    first_acta = next(i for i, (_, u) in enumerate(web.starts) if "CodActa=" in u)
-    al20 = max(i for i, (_, u) in enumerate(web.starts) if u.startswith(url(ID["AL20"])))
-    assert al20 < first_acta
-    assert log.index("[AL20]") < log.index("Actas y goleadores de los prioritarios") < log.index("[PG2] ")
+    assert run["pauses"] == 1 and run["resumed"] == 1 and F.probes == 6 and data["summary"]["error"] == 0
+    read = calendars(web)
+    assert read == ORDER[:len(read)] and {"PG2", "FF5"} <= set(read)
+    assert all(data["groups"][c]["status"] == "ok" for c in read)
+    # Las actas de cada uno, entre su calendario y el del siguiente.
+    owner = []
+    for _, u in web.starts:
+        acta = re.search(r"CodActa=(\d+)", u)
+        group = re.search(r"(?i)codgrupo=(\d+)", u)
+        owner.append(CODE[(int(acta.group(1)) - 9000) // 100] if acta else CODE[int(group.group(1))] if group else None)
+    for code in ("PG2", "FF5"):
+        at = [i for i, o in enumerate(owner) if o == code]
+        assert all(owner[i] == code for i in range(at[0], at[-1] + 1)), code
+    assert U.pending_actas(conn, ID["PG2"]) == [] and U.pending_actas(conn, ID["FF5"]) == []
 
 
 class Refusing(Federation):
@@ -503,11 +537,12 @@ def test_a_brake_of_error_pages_is_a_brake_whether_or_not_it_passes(bot, capsys,
 def test_two_dead_urls_in_a_row_are_still_errors_and_not_a_brake(bot, capsys):
     """Dos grupos seguidos con la URL muerta (500 a todo) hacen tres páginas seguidas sin cargar, y no son el
     freno: la última página leída carga. Ni pausas ni bloqueo, los dos como error, y la pasada sigue (antes:
-    tres pausas de 5 min, la pasada perdida y los dos con su «ok» de antes)."""
-    data, web, F, log = bot(capsys, dead={"AL1", "PG1"})
+    tres pausas de 5 min, la pasada perdida y los dos con su «ok» de antes). (AL1 y FF1: los dos seguidos
+    del turno desde el 16/10/2026; antes, AL1 y PG1.)"""
+    data, web, F, log = bot(capsys, dead={"AL1", "FF1"})
     groups = data["groups"]
-    assert groups["AL1"]["status"] == groups["PG1"]["status"] == "error"
-    assert all(groups[c]["status"] == "ok" for c in ALL if c not in ("AL1", "PG1"))
+    assert groups["AL1"]["status"] == groups["FF1"]["status"] == "error"
+    assert all(groups[c]["status"] == "ok" for c in ALL if c not in ("AL1", "FF1"))
     assert data["summary"]["error"] == 2 and data["run"]["unserved"] == [] and data["run"]["deferred"] == []
     assert "pauses" not in data["run"] and "blocked" not in data["run"] and "pausa de" not in log
     assert "      3 páginas seguidas sin cargar, pero la federación sirve otra: no es el freno, es esta página\n" in log
@@ -565,7 +600,7 @@ def test_a_closed_browser_is_an_error_and_not_a_brake(bot, capsys):
     data, web, F, log = bot(capsys, web=Closing, serve=SERVED_1103)
     assert data["groups"]["AL4"]["status"] == "error" and data["summary"]["error"] == 1
     assert data["run"]["unserved"] == [] and data["run"]["blocked"] and "pauses" not in data["run"]
-    assert data["run"]["deferred"] == ["AL9", "AL18", "AL20", "AL1", "PG1", "FF1", "FF2"]
+    assert data["run"]["deferred"] == ["AL9", "AL18", "AL20", "AL1", "FF1", "PG1", "FF2"]
     assert F.paused == 0 and "frena" not in log and len(web.starts) == SERVED_1103 + 1
     assert "      el navegador se ha cerrado: nada más en esta pasada\n" in log
 
@@ -634,10 +669,11 @@ def test_no_page_starts_past_the_deadline_whatever_the_budget(bot, capsys, budge
 def test_a_braked_pass_does_not_rewrite_the_report(bot, capsys):
     """Si la federación frena desde la primera página y no se le pasa, todo conserva su comprobación: ni
     las notas de la pasada (run.pauses, run.unserved, VOLATILE) reescriben data-health.json (sin commit
-    solo por eso)."""
+    solo por eso). Diez sondeos, los que caben en los 16 min del plazo con 2 de margen (hasta el
+    16/10/2026, con 33 min, los 17 del tope de 20 min por freno)."""
     previous = report(at=NOW - timedelta(hours=1))
     data, web, F, log = bot(capsys, previous=previous, serve=0)
-    assert data == previous and F.pauses == 1 and F.probes == 17 and F.halted
+    assert data == previous and F.pauses == 1 and F.probes == 10 and F.halted
 
 
 # ── El cupo medido el 15/10/2026: ~15 páginas por IP y ~5 min de bloqueo ──────
@@ -674,24 +710,26 @@ def busy_season():
     return with_actas(season(), {code: 12 for code in ALL})
 
 
-def test_with_the_measured_quota_the_pass_brakes_several_times_and_goes_on_until_the_deadline(bot, capsys):
-    """El caso medido: 15 páginas, ~5 min de bloqueo, otra vez 15… En los 33 min del plazo la federación frena
-    varias veces (al menos 4) y cada vez se espera (sin tope de frenos por pasada) y se sigue: todos los
-    calendarios (los seis prioritarios y los demás) y sus actas hasta el plazo; ningún grupo como error, y
-    ninguna página empieza pasado el plazo (lo comprueba bot). Con 25 min eran 3 frenos, 5 actas y el último
-    grupo sin leer (conservaba su comprobación); antes del 15/10/2026, tres pausas de 5 min por pasada, la
-    primera tras un reintento perdido de 60 s, y más despacio al volver."""
-    data, web, F, log = bot(capsys, conn=busy_season(), web=Quota, blocks=(304, 364, 304, 122, 303, 300))
+@pytest.mark.parametrize("blocks", [(304, 364, 304, 122, 303, 300), (300, 900, 2700)], ids=["15-10", "1107-1110"])
+def test_with_the_measured_quota_the_pass_waits_the_first_brake_and_ends_at_the_second(bot, capsys, blocks):
+    """El caso medido: 15 páginas, ~5 min de bloqueo, otra vez 15… y, en las pasadas 1107-1110, el bloqueo
+    escala dentro de la pasada (300, 900 y 2700 s). Desde el 16/10/2026, una espera por pasada
+    (fiflp_carga.BRAKE_PAUSES): la del primero, ~15 páginas más y, en el segundo freno, nada más (la pasada
+    siguiente, 2 h después, tiene otra IP y vuelve a empezar con 5 min). ~30 páginas en ~9 min, ninguna
+    espera del de 900 s, ningún grupo como error y ninguna página pasado el plazo; cada grupo leído, completo
+    (sus actas y sus goleadores, justo tras su calendario); lo que no cupo, a otra pasada. Hasta el
+    16/10/2026, en 33 min, una espera tras otra (al menos 4) y la segunda pasada, sin llegar casi nunca."""
+    data, web, F, log = bot(capsys, conn=busy_season(), web=Quota, blocks=blocks)
     run = data["run"]
-    assert run["pauses"] >= 4 and run["resumed"] >= run["pauses"] - 1 and len(web.history) >= run["pauses"]
-    assert run["brakeAfter"][:run["resumed"]] == [15] * run["resumed"]
-    assert data["summary"] == {"ok": len(ALL), "rejected": 0, "error": 0}
-    assert all(data["groups"][c]["status"] == "ok" for c in ALL) and run["unserved"] == []
-    assert list(dict.fromkeys(calendars(web))) == ORDER and run["deferred"] == []
-    assert sum("CodActa=" in u for _, u in web.starts) > 15                   # y actas, vuelta tras vuelta
+    assert run["pauses"] == 1 and run["resumed"] == 1 and len(web.history) == 2 and run["blocked"]
+    assert run["brakeAfter"] == [15, 15] and F.paused < 600
+    assert "la federación frena otra vez, y ya se esperó 1 (FIFLP_BRAKE_PAUSES): nada más en esta pasada" in log
+    assert data["summary"] == {"ok": len(ALL), "rejected": 0, "error": 0} and "! error" not in log
+    read = list(dict.fromkeys(calendars(web)))
+    assert read == ORDER[:len(read)] and len(read) >= 2
+    assert len(web.starts) == 30 + 2 + F.probes - 1        # las 30, las dos vacías y los sondeos vacíos
+    assert max(t for t, _ in web.starts) - 1000 < 10 * 60                    # ~9 min: 15, la espera y 15
     assert F.interval == 7.0 and "se reintenta en 60 s" not in log
-    # Hasta el plazo: lo que no cupo (actas, goleadores) se queda para otra pasada.
-    assert run["extrasDeferred"] and max(t for t, _ in web.starts) > F.deadline - (C.BRAKE_PAUSE + C.BRAKE_ROOM + 60)
 
 
 @pytest.mark.parametrize("served", [0, 3, 7, 11, 14, 15, 19, 23, 27])
@@ -711,13 +749,39 @@ def test_with_the_measured_quota_no_priority_group_becomes_an_error(bot, capsys,
     assert data["run"]["pauses"] >= 1 and data["run"]["resumed"] >= 1
 
 
-@pytest.mark.parametrize("selected, shows", [("3", {"same": 10}), ("2", {"different": 10}), (None, None)])
-def test_the_calendar_diagnostic_is_noted_in_the_run(bot, capsys, selected, shows):
-    """Lo que enseña el calendario de cada grupo (update_fiflp.calendar_shows), en el registro y en run
-    (calendarShows: sin commit solo por ello, como todo run), sin pedir ninguna página más. Aquí la jornada 3
-    no trae partidos ni en el calendario ni en su página (iguales) y la 2 trae uno en su página y ninguno en
-    el calendario (distintas)."""
-    option = next((o for o in OPTIONS if o["value"] == selected), None)
+@pytest.mark.parametrize("selected, calendar, shows, line", [
+    ("2", "J2", {"same": 10}, None),
+    ("3", "J2", {"different": 10}, "    calendario: seleccionada la jornada 3, pero sus partidos no son los de su "
+                                   "página (son los de la jornada 2)\n"),
+    ("1", "J2", {"other": 10}, "    calendario: enseña los partidos de la jornada 2 y la seleccionada es la jornada 1\n"),
+    (None, "J2", {"other": 10}, "    calendario: enseña los partidos de la jornada 2, sin jornada seleccionada\n"),
+    ("2", "otro", {"different": 10}, "    calendario: seleccionada la jornada 2, pero sus partidos no son los de su "
+                                     "página (1 partidos)\n"),
+    ("1", "otro", {"unread": 10}, None), (None, "otro", {"unselected": 10}, None), ("2", None, {"empty": 10}, None),
+], ids=["igual", "distinta-otra", "otra-seleccionada-1", "otra-sin-seleccion", "distinta", "no-leida", "sin-seleccion",
+        "vacio"])
+def test_the_calendar_diagnostic_is_noted_in_the_run(bot, capsys, monkeypatch, selected, calendar, shows, line):
+    """Lo que enseña el calendario de cada grupo (su primera carga, sin CodJornada: update_fiflp.calendar_shows
+    y calendar_check) frente a las jornadas que se leen por su URL, en el registro y en run (calendarShows: sin
+    commit solo por ello, como todo run), sin pedir ninguna página más. Hasta el 16/10/2026 solo se medía si
+    la opción SELECCIONADA del desplegable (selectedIndex) se iba a leer, y en las pasadas reales (1107-1110)
+    no salió nunca: si el JS de la federación no marca la jornada que enseña, la seleccionada es la primera
+    (la vacía o «0», que se filtra, o la jornada 1, fuera de la ventana). Ahora se compara con todas las
+    leídas: «same» (la seleccionada), «other» (otra leída, o ninguna seleccionada), «different» (la
+    seleccionada se leyó y no coincide), «unread» (ninguna leída y la seleccionada no se leyó), «unselected»
+    (ninguna leída ni seleccionada) y «empty» (el calendario sin partidos). Aquí la jornada 2 trae un partido
+    y la 3 y la 4, ninguno; el calendario, el de la 2, otro o ninguno."""
+    option = {"value": selected, "text": f"{selected} - 26-09-2026"} if selected else None
+    plain_matches = Reader.parse_matches
+
+    def parse_matches(page):
+        if "CodJornada" in page.url or calendar is None:
+            return plain_matches(page)
+        home, away = dict((c, t) for c, _, t in GROUPS)[CODE[int(re.search(r"CodGrupo=(\d+)", page.url).group(1))]]
+        if calendar == "otro":
+            home, away = away, home
+        return [{"home": home, "away": away, "hs": None, "as": None, "date": "", "time": "", "venue": ""}]
+    monkeypatch.setattr(Reader, "parse_matches", staticmethod(parse_matches))
 
     class Selecting(Federation):
         def page(self):
@@ -729,8 +793,7 @@ def test_the_calendar_diagnostic_is_noted_in_the_run(bot, capsys, selected, show
     data, web, F, log = bot(capsys, web=Selecting)
     assert [u for _, u in web.starts] == [u for _, u in plain_web.starts]          # ni una página más
     assert data["run"].get("calendarShows") == shows
-    if shows:
-        same = shows.get("same", 0)
-        assert f"  Calendario (diagnóstico): en {same} de 10 grupos enseña los partidos de la jornada seleccionada" in log
-    else:
-        assert "Calendario (diagnóstico)" not in log
+    same = shows.get("same", 0)
+    assert f"  Calendario (diagnóstico): en {same} de 10 grupos enseña los partidos de la jornada seleccionada" in log
+    if line:
+        assert log.count(line) == 10, line

@@ -51,8 +51,14 @@ Por eso, desde ese día (Federacion):
     no vuelve, nada más en esa pasada (`blocked`). Con lo medido (~5 min) vuelve en el 2.º o el 3.º
     sondeo (a los ~300 o ~360 s); el de 122 s, en el 1.º; y el tope deja 17 sondeos (en la pasada 1106
     un freno seguía a los 11 min);
-  - SIN TOPE de frenos por pasada salvo el plazo: cada vuelta da otras ~15 páginas. FIFLP_BRAKE_PAUSES
-    los limita si se quiere (0: ninguna espera, al frenar se acaba la pasada);
+  - UNA espera por pasada (BRAKE_PAUSES = 1, FIFLP_BRAKE_PAUSES; desde el 16/10/2026): el segundo freno
+    acaba la pasada. Lo medido en las pasadas 1107-1110 (15-16/10/2026): el bloqueo ESCALA dentro de una
+    pasada (el 1.º ~300 s, el 2.º ~900 s, el 3.º más que el plazo) y cada ejecución de GitHub, con su IP
+    nueva, vuelve a empezar con ~5 min. Esperar el 2.º eran 15 min por ~15 páginas; una pasada nueva (el
+    cron cada 2 h de update.yml) las da con 5. Así cada pasada son ~15 páginas, la espera de ~5 min, ~15
+    más y nada después, en ~9 min (update_fiflp.DEADLINE_SECONDS, 16, es para una pasada sin freno).
+    Hasta el 16/10/2026 no había tope (cada vuelta, ~15 páginas más, hasta el plazo de 33 min); con 0,
+    ninguna espera (al frenar se acaba la pasada), y con «sin», sin tope;
   - SIN RALENTIZAR al reanudar (antes, el intervalo ×1,5 y hasta ×2): el cupo no es de ritmo, y cada
     segundo de más es tiempo de plazo perdido;
   - lo demás, igual: un freno no es un error (update_fiflp.run_passes), un 503 o un 429 es señal del
@@ -94,14 +100,17 @@ CATALOG_URL = "/NFG_CmpJornada?cod_primaria=1000120&CodTemporada={season}"
 # página vacía (FIFLP_BRAKE_MAX_MIN): en el experimento el más largo duró 364 s, pero en la pasada 1106
 # (15/10/2026, 11:07 UTC) el segundo freno seguía a los 11 min; esperar cuesta solo un sondeo por minuto, así
 # que el tope es de 20 min. Si no ha vuelto, algo distinto pasa (una caída, otro bloqueo) y la pasada se da
-# por acabada. Sin tope de frenos por pasada
-# (BRAKE_PAUSES, None; FIFLP_BRAKE_PAUSES lo pone): cada vuelta son ~15 páginas más, y el plazo manda.
+# por acabada. Un freno esperado por pasada (BRAKE_PAUSES, FIFLP_BRAKE_PAUSES; desde el 16/10/2026): el
+# bloqueo escala dentro de la pasada (~300 s el 1.º, ~900 s el 2.º, más que el plazo el 3.º; pasadas
+# 1107-1110), y la pasada siguiente, con IP nueva, vuelve a empezar con ~5 min. None: sin tope (hasta el
+# 16/10/2026: cada vuelta, ~15 páginas más, hasta el plazo).
 BRAKE_PAUSE = 4 * 60
 BRAKE_PROBE = 60
 BRAKE_PROBE_MIN = 30      # un sondeo más seguido no es educado (FIFLP_BRAKE_PROBE_S por debajo: el de siempre)
 BRAKE_CAP = 20 * 60
-BRAKE_PAUSES = None
+BRAKE_PAUSES = 1
 BRAKE_ROOM = 2 * 60       # tras la espera (y tras cada sondeo), antes del plazo: ~15 páginas a 7 s
+DEFAULT = object()        # Federacion(max_pauses=…) sin darlo: brake_pauses() (None es «sin tope»)
 # Los motivos de un intento fallido (goto, `why`) que Federacion mira: el freno (una página vacía, o un
 # BRAKE_STATUSES) y el navegador cerrado (no la federación). Los demás, el texto del registro.
 EMPTY = "vacía"
@@ -187,11 +196,13 @@ def brake_cap_seconds(env=None):
 
 
 def brake_pauses(env=None):
-    """Cuántos frenos se esperan por pasada (FIFLP_BRAKE_PAUSES): por defecto, sin tope (None: los que
-    quepan en el plazo). Con 0, ninguno: al frenar, la pasada se da por perdida, como antes del
-    15/10/2026. Lo que no es un entero, sin tope. (Hasta el 15/10/2026 eran las pausas de 5 min por
-    pasada, 3.)"""
-    text = (os.environ if env is None else env).get("FIFLP_BRAKE_PAUSES", "").strip()
+    """Cuántos frenos se esperan por pasada (FIFLP_BRAKE_PAUSES): por defecto uno (BRAKE_PAUSES, desde el
+    16/10/2026: el segundo freno acaba la pasada). Con 0, ninguno: al frenar, la pasada se da por perdida;
+    con «sin», sin tope (None: los que quepan en el plazo, como del 15 al 16/10/2026). Lo que no se
+    entiende, el de por defecto. (Hasta el 15/10/2026 eran las pausas de 5 min por pasada, 3.)"""
+    text = (os.environ if env is None else env).get("FIFLP_BRAKE_PAUSES", "").strip().lower()
+    if text == "sin":
+        return None
     return int(text) if text.isdigit() else BRAKE_PAUSES
 
 
@@ -317,8 +328,8 @@ class Federacion:
       - la espera de cada freno (una página vacía, o la que dejaría a la federación `blocked`): `pauses`,
         los frenos esperados (cada uno, su primera espera de `pause_seconds` y sus sondeos cada
         `probe_seconds`, como mucho `cap_seconds` desde la página vacía; como mucho `max_pauses` por
-        pasada, None sin tope: brake_pause_seconds, brake_probe_seconds, brake_cap_seconds y
-        brake_pauses); `resumed`, tras cuántos volvió a servir; `probes`, los sondeos; `brake_after`, las
+        pasada, uno por defecto y None sin tope: brake_pause_seconds, brake_probe_seconds,
+        brake_cap_seconds y brake_pauses); `resumed`, tras cuántos volvió a servir; `probes`, los sondeos; `brake_after`, las
         páginas servidas antes de cada freno, desde el anterior (el cupo, que el registro da también:
         «frena tras 15 páginas»); `paused`, los segundos esperando (no son coste de ninguna página ni de ningún grupo); y
         `halted`: frenó y no volvió (sin sitio en el plazo, pasado el tope o sin esperas), y no se le pide
@@ -330,7 +341,7 @@ class Federacion:
     recuerda el navegador (su contexto), no esta clase: vale igual para cualquier lector."""
 
     def __init__(self, scraper, deadline=None, interval=None, clock=time.monotonic, sleep=time.sleep,
-                 pause_seconds=None, max_pauses=None, probe_seconds=None, cap_seconds=None, wall=None, log=print):
+                 pause_seconds=None, max_pauses=DEFAULT, probe_seconds=None, cap_seconds=None, wall=None, log=print):
         self._scraper = scraper
         self.BASE = scraper.BASE
         self.deadline = deadline
@@ -340,7 +351,7 @@ class Federacion:
         self.pause_seconds = brake_pause_seconds() if pause_seconds is None else pause_seconds
         self.probe_seconds = brake_probe_seconds() if probe_seconds is None else probe_seconds
         self.cap_seconds = brake_cap_seconds() if cap_seconds is None else cap_seconds
-        self.max_pauses = brake_pauses() if max_pauses is None else max_pauses
+        self.max_pauses = brake_pauses() if max_pauses is DEFAULT else max_pauses     # None: sin tope
         self.pauses = self.resumed = self.probes = 0
         self.paused = 0.0
         self.halted = self.closed = False
@@ -413,8 +424,8 @@ class Federacion:
         if self.max_pauses is not None and self.pauses >= self.max_pauses:
             self._log("      la federación frena (sin esperas: FIFLP_BRAKE_PAUSES=0): nada más en esta pasada"
                       if not self.max_pauses else
-                      f"      la federación frena otra vez, y ya se esperaron {self.pauses} (FIFLP_BRAKE_PAUSES): "
-                      "nada más en esta pasada")
+                      f"      la federación frena otra vez, y ya se {'esperó' if self.pauses == 1 else 'esperaron'} "
+                      f"{self.pauses} (FIFLP_BRAKE_PAUSES): nada más en esta pasada")
             return False, False
         began = self._clock()
         if self.deadline is not None and began + self.pause_seconds + BRAKE_ROOM > self.deadline:

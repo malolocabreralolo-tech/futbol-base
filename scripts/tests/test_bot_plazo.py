@@ -10,15 +10,19 @@ grupos) y alevín (+32, códigos AL…) no cabría en los 45 min del job. Ahora:
   - la rotación NO tiene estado: cada nivel tiene cuatro turnos fijos y la pasada lee primero el de su
     número (run_number), no según nada guardado (update.yml no sube la base ni data-health.json en una
     pasada sin cambios publicados); dentro del turno, el inicio cambia de una época a otra (spin);
-  - un plazo GLOBAL cubre las dos pasadas y reserva tiempo para las actas y los goleadores; lo que no
-    cabe queda para otra pasada, sin marcarlo como error;
-  - las actas y los goleadores de los prioritarios van en cuanto acaban sus calendarios, antes que los
-    demás grupos (la federación frena tras unas decenas de páginas: en la segunda pasada ya no los
-    servía), a cuenta de esa reserva y sin comerse el tiempo de los demás grupos ni lo que la reserva
-    cubre al final de la primera pasada; cada acta, una vez por pasada;
-  - un grupo cerrado (todo jugado, última jornada hace más de 21 días) solo se refresca una de cada
-    cuatro pasadas, en una que salta dos puestos de una época a otra. La simulación de muchas
-    pasadas con 81 grupos está en test_bot_rotacion.py.
+  - un plazo GLOBAL (16 min desde el 16/10/2026: pasadas cortas cada 2 h) cubre la pasada; en su último
+    cuarto como mucho (2 min) no empieza ningún grupo; lo que no cabe queda para otra pasada, sin
+    marcarlo como error;
+  - cada grupo se lee COMPLETO antes del siguiente (desde el 16/10/2026): su calendario y justo después
+    sus goleadores, si tocan, y sus actas pendientes (hasta entonces, las actas y los goleadores iban en
+    una segunda pasada, y los de los prioritarios, tras todos sus calendarios, a cuenta de su reserva: el
+    segundo freno de la federación casi nunca dejaba llegar); cada acta, una vez por pasada, y las que el
+    final de una pasada deja a medias, las primeras de la siguiente tras los prioritarios (catch_up);
+  - los prioritarios, solo cuando toca (test_bot_prioritarios.py);
+  - un grupo cerrado (todo jugado, última jornada hace más de 21 días) solo se refresca una vez al día
+    (CLOSED_PASSES: una de cada doce pasadas, cada cuatro con el cron cada 6 h), en una que salta dos
+    puestos de un día a otro. La simulación de muchas pasadas con 81 grupos está en test_bot_rotacion.py
+    y la de una semana con el cupo de la federación, en test_bot_pasada_corta.py.
 Sin red: páginas y raspador falsos.
 """
 from datetime import date, datetime, timedelta, timezone
@@ -128,6 +132,7 @@ def plan(conn, checks=None, number=0, **kw):
     kw.setdefault("priority", ["Las Mesas Hu."])
     kw.setdefault("pinned", ())
     kw.setdefault("env", {})
+    kw.setdefault("now", NOW)
     return U.plan_groups(conn, U.fiflp_groups(conn, 1), checks or {}, TODAY, number, **kw)
 
 
@@ -158,22 +163,26 @@ def test_a_priority_team_includes_its_club_filials_and_not_a_namesake_club():
 def test_order_is_priority_then_the_turns_then_the_rest_by_level():
     """Los prioritarios; el turno de cada nivel (la cuota de alevín, prebenjamín, benjamín: ceil(N/4)
     de cada uno); el turno siguiente de cada nivel (el margen); y el resto. Los tres, intercalados
-    (interleave; el turno, desde el 15/10/2026)."""
+    (interleave; el turno, desde el 15/10/2026), cada nivel con la fase de su turno (pass_phase, desde el
+    16/10/2026: el primero de cada nivel ya no va siempre antes que el segundo de ninguno; aquí, en la
+    pasada 0, prebenjamín tras benjamín)."""
     order = codes(plan(season(), env={"FIFLP_ALEVIN_MIN": "1"}).order)
     assert order[:3] == ["PG2", "FF5", "AL3"]                         # los de Las Mesas, por categoría
-    assert order[3:] == ["AL1", "PG1", "FF1",                         # los turnos
+    assert order[3:] == ["AL1", "FF1", "PG1",                         # los turnos
                          "ALX1", "FF2",                               # los siguientes
                          "FF10", "LZ1"]                               # el resto
     # Por defecto la cuota es de 8: aquí, los dos alevín, intercalados en el turno con prebenjamín y
     # benjamín. Hasta el 15/10/2026 iban delante de ellos (AL1, ALX1, PG1, FF1): con el cupo de la
     # federación, la cuota se llevaba todos los grupos no prioritarios de la pasada (test_bot_rotacion).
-    assert codes(plan(season()).order)[3:] == ["AL1", "PG1", "FF1", "ALX1", "FF2", "FF10", "LZ1"]
+    assert codes(plan(season()).order)[3:] == ["AL1", "FF1", "ALX1", "PG1", "FF2", "FF10", "LZ1"]
 
 
 def test_the_portal_group_is_a_priority_even_before_it_has_teams():
+    """El grupo del equipo del portal va el primero aunque aún no tenga equipos. (Sin él, los dos, en su
+    turno: desde el 16/10/2026 cada nivel con su fase, y aquí benjamín va antes.)"""
     conn = season([("FF1", "BENJAMIN", ["Arucas", "Tablero"]), ("PG4", "PREBENJAMIN", ["Unión Viera", "Moya"])])
     assert codes(plan(conn, priority=[], pinned={"PG4"}).order) == ["PG4", "FF1"]
-    assert codes(plan(conn, priority=[], pinned=()).order) == ["PG4", "FF1"]     # prebenjamín antes, igualmente
+    assert codes(plan(conn, priority=[], pinned=()).order) == ["FF1", "PG4"]
     conn = season([("FF1", "BENJAMIN", ["Arucas", "Tablero"]), ("FF7", "BENJAMIN", ["Unión Viera", "Moya"])])
     assert codes(plan(conn, priority=[], pinned={"FF7"}).order) == ["FF7", "FF1"]
 
@@ -236,13 +245,21 @@ def test_the_margin_and_the_rest_are_interleaved():
 
 
 def test_the_order_depends_on_the_pass_number_and_not_on_what_was_published():
-    """Sin estado: dos pasadas con el mismo número dan el mismo orden aunque data-health.json diga otra
-    cosa (una pasada sin cambios publicados no lo sube), y dos números seguidos, órdenes distintos."""
+    """Sin estado: dos pasadas con el mismo número dan el mismo orden de la rotación aunque data-health.json
+    diga otra cosa (una pasada sin cambios publicados no lo sube), y dos números seguidos, órdenes
+    distintos. Los prioritarios, desde el 16/10/2026, sí dependen de su última comprobación publicada (solo
+    cuando toca: test_bot_prioritarios): comprobados hace 1 h, solo el de su turno; hace 30 h o nunca,
+    todos."""
     conn = season()
     fresh = {code: checked(1) for code in ALL}
     stale = {code: checked(30) for code in ALL}
-    assert plan(conn, fresh, number=7).order == plan(conn, stale, number=7).order == plan(conn, {}, number=7).order
-    assert plan(conn, fresh, number=7).order != plan(conn, fresh, number=8).order
+    mine = {"PG2", "FF5", "AL3"}
+    rotation = lambda checks, number: [c for c in codes(plan(conn, checks, number=number).order) if c not in mine]
+    assert rotation(fresh, 7) == rotation(stale, 7) == rotation({}, 7)
+    assert rotation(fresh, 7) != rotation(fresh, 8)
+    assert set(codes(plan(conn, stale, number=7).order)) & mine == set(codes(plan(conn, {}, number=7).order)) & mine == mine
+    slot = {c for i, c in enumerate(["PG2", "FF5", "AL3"]) if U.priority_slot(i, 7)}
+    assert set(codes(plan(conn, fresh, number=7).order)) & mine == slot
 
 
 def test_the_pass_number_is_the_run_number_or_the_6_hour_slot():
@@ -290,29 +307,31 @@ def test_alevin_keeps_its_quota_even_when_benjamin_would_fill_the_pass():
 
 # ── Grupos cerrados ────────────────────────────────────────────────────────────
 
-def turn_of(code):
-    """Un número de pasada en la que le toca a ese grupo cerrado."""
-    return next(n for n in range(4) if U.closed_turn(code, n))
-
-
 def test_a_closed_group_is_refreshed_once_every_four_passes():
-    """Una vez en cada época de cuatro pasadas, en una que salta dos puestos de una época a otra: con un
-    turno fijo (crc32 % 4), una pasada perdida cada día a la misma hora dejaba sin leer, para siempre,
-    a los cerrados de esa hora."""
+    """Una vez en cada época de CLOSED_PASSES pasadas, en una que salta dos puestos de una época a otra: con
+    un turno fijo (crc32 % 4), una pasada perdida cada día a la misma hora dejaba sin leer, para siempre,
+    a los cerrados de esa hora. Desde el 16/10/2026, con el cron cada 2 h, la época es de 12 pasadas (24 h,
+    como antes las 4 cada 6 h; y lo mismo daily_turn con cualquier número de pasadas)."""
+    period = U.CLOSED_PASSES
+    assert period == 12 and U.PASS_EVERY * period == timedelta(hours=24)
     conn = season(played="2026-09-19")                 # todo jugado hace 25 días
     all_ok = {code: checked(6) for code in ALL}
-    for number in range(8):
+    for number in range(2 * period):
         p = plan(conn, all_ok, number=number)
         assert set(codes(p.order)) == {c for c in ALL if U.closed_turn(c, number)}, number
         assert set(codes(p.order)) | set(codes(p.resting)) == set(ALL)
-    for code in ALL:
-        turns = [n for n in range(40, 64) if U.closed_turn(code, n)]
-        assert [n // 4 for n in turns] == list(range(10, 16)), code         # una vez por época
-        assert {(b - a) for a, b in zip(turns, turns[1:])} <= {2, 6}, code  # dos puestos más allá o más acá
-        assert len({n % 4 for n in turns}) == 2, code
-        for lost in range(4):                     # una pasada perdida al día: se lee al menos en cada 8
-            kept = [n for n in turns if n % 4 != lost]
-            assert all(b - a <= 8 for a, b in zip(kept, kept[1:])) and kept, (code, lost)
+    for passes in (period, 4):
+        for code in ALL:
+            turns = [n for n in range(10 * passes, 16 * passes) if U.daily_turn(code, n, passes)]
+            assert [n // passes for n in turns] == list(range(10, 16)), (passes, code)   # una vez por época
+            # Una pasada perdida al día: se lee al menos una vez en cada dos días (con 12, y 8 h: su pasada
+            # salta dos puestos de un día a otro y la perdida le quita como mucho una de cada seis).
+            for lost in range(passes):
+                kept = [n for n in turns if n % passes != lost]
+                assert all(b - a <= 2 * passes + 4 % passes for a, b in zip(kept, kept[1:])) and kept, (passes, code, lost)
+        if passes == 4:                           # con 4: dos puestos más allá o más acá, en dos pasadas del día
+            assert all({b - a for a, b in zip(turns, turns[1:])} <= {2, 6} for code in ALL
+                       for turns in [[n for n in range(40, 64) if U.daily_turn(code, n, 4)]])
 
 
 def test_a_closed_group_with_something_to_do_is_not_left_resting():
@@ -498,67 +517,62 @@ def steps(fed):
 
 
 def test_what_does_not_fit_waits_for_the_next_pass_without_an_error(health):
+    """Lo que no cabe en el plazo queda para otra pasada, sin error y con su comprobación de antes. Desde el
+    16/10/2026 cada grupo se lee completo antes del siguiente (sus goleadores, justo tras su calendario: aquí
+    sin goleadores en la base, tocan) y en el último cuarto del plazo (aquí 20 s de 80; por defecto, 2 min:
+    RESERVE_SECONDS) no empieza ninguno: ya no hay segunda pasada que reservar. Al acabar, si sobra pasada
+    (ni freno ni plazo), la página de competiciones."""
     previous = report({code: checked(6) for code in ALL})
     data, fed = health(previous, season(), budget=80)
     groups = data["groups"]
     deferred = data["run"]["deferred"]
-    assert deferred == ["FF2", "FF10", "LZ1"]                            # benjamín, tras los turnos
-    for code in ("PG2", "FF5", "AL3", "AL1", "PG1", "FF1", "ALX1"):        # prioritarios, cuota y turnos, dentro
+    assert deferred == ["PG1", "FF2", "FF10", "LZ1"]                     # tras los turnos
+    for code in ("PG2", "FF5", "AL3", "AL1", "FF1", "ALX1"):             # prioritarios y turnos, dentro
         assert groups[code]["checkedAt"] > previous["groups"][code]["checkedAt"], code
     for code in deferred:                                                 # lo demás, como estaba
         assert groups[code] == previous["groups"][code], code
     assert data["summary"] == {"ok": len(ALL), "rejected": 0, "error": 0}
     assert data["run"]["pass"] == 0
-    # Los goleadores de los prioritarios, en cuanto acaban sus calendarios (desde el 14/10/2026; antes, tras
-    # la primera pasada de todos y la página de competiciones), a cuenta de la reserva: los demás grupos
-    # leen los mismos (FF2, FF10 y LZ1, fuera, como antes). Aquí la reserva (20 s) solo da para una página
-    # delante (deja el doble del calendario más largo, 2 × 9 s, para el final de la primera pasada); los
-    # demás, tras la página de competiciones, como antes, y después los goleadores del turno. (El turno,
-    # intercalado desde el 15/10/2026: la cuota de alevín, AL1 y ALX1, ya no va delante de PG1 y FF1.)
-    assert steps(fed) == ["PG2", "FF5", "AL3", "PG2 goleadores", "AL1", "PG1", "FF1", "ALX1", "competiciones",
-                          "FF5 goleadores", "AL3 goleadores", "AL1 goleadores", "PG1 goleadores"]
-    assert data["run"]["extrasDeferred"] == ["AL1", "PG1", "FF1", "ALX1"]  # los demás, a otra pasada
+    assert steps(fed) == ["PG2", "PG2 goleadores", "FF5", "FF5 goleadores", "AL3", "AL3 goleadores", "AL1",
+                          "AL1 goleadores", "FF1", "FF1 goleadores", "ALX1", "ALX1 goleadores", "competiciones"]
+    assert data["run"]["extrasDeferred"] == []                            # todos los leídos, completos
 
 
 @pytest.mark.parametrize("commits", [True, False])
 def test_the_rotation_reaches_every_group_without_any_saved_state(health, commits, monkeypatch):
-    """Con plazo para 6 de 10 grupos (3 prioritarios), la pasada siguiente lee primero otro turno y en
-    cuatro pasadas seguidas (24 h) todos se refrescan, alevín también. Igual si ninguna pasada sube nada
-    (commits=False: cada una arranca del mismo data-health.json): el orden sale del número de la pasada.
-    (Con la cuota de alevín por defecto, 8, los dos grupos alevín irían siempre y no quedaría sitio
-    para benjamín: aquí, la cuota es su turno, 1 de 2.)"""
+    """Con plazo para 7 de 10 grupos (3 prioritarios), la pasada siguiente lee primero otro turno y en
+    cuatro pasadas seguidas todos se refrescan, alevín también, con sus goleadores (cada grupo, completo:
+    desde el 16/10/2026 los goleadores van con cada grupo leído, no en una segunda pasada). Igual si ninguna
+    pasada sube nada (commits=False: cada una arranca del mismo data-health.json): el orden sale del número
+    de la pasada. (Con la cuota de alevín por defecto, 8, los dos grupos alevín irían siempre y no quedaría
+    sitio para benjamín: aquí, la cuota es su turno, 1 de 2. Las pasadas, cada 6 h: los prioritarios, en
+    todas.)"""
     monkeypatch.setenv("FIFLP_ALEVIN_MIN", "0")
     conn = season()
     base = report({code: checked(6) for code in ALL})
-    previous, refreshed = base, []
+    previous, refreshed, scored = base, [], []
     for n in range(8):
-        data, fed = health(previous, conn, budget=60, checks_now=NOW + timedelta(hours=6 * n), number=500 + n)
+        data, fed = health(previous, conn, budget=100, checks_now=NOW + timedelta(hours=6 * n), number=500 + n)
         refreshed.append(set(read_groups(fed)))
+        scored.append(set(scorers_read(fed)))
         previous = data if commits else base
     mine = {"PG2", "FF5", "AL3"}
     assert all(mine <= done for done in refreshed)
     assert all(len(done) < len(ALL) for done in refreshed)               # el plazo corta siempre
     for i in range(len(refreshed) - 3):
         assert set().union(*refreshed[i:i + 4]) == set(ALL), i
+        assert set().union(*scored[i:i + 4]) == set(ALL), i
 
 
-@pytest.mark.parametrize("commits", [True, False])
-def test_the_second_pass_rotates_too(health, commits):
-    """Con la primera pasada entera y plazo para unas pocas segundas (actas y goleadores), la siguiente
-    empieza, tras los prioritarios, por otro turno (en el orden de la primera, que rota): en cuatro
-    pasadas seguidas todos tienen sus goleadores, alevín también, se suba algo o no."""
-    conn = season()
-    base = report({code: checked(6) for code in ALL})
-    previous, read = base, []
-    for n in range(8):
-        data, fed = health(previous, conn, budget=112, checks_now=NOW + timedelta(hours=6 * n), number=900 + n)
-        assert data["run"]["deferred"] == []
-        read.append(scorers_read(fed))
-        previous = data if commits else base
-    assert all(got[:3] == ["PG2", "FF5", "AL3"] for got in read)
-    assert all(len(got) < len(ALL) for got in read)                       # el plazo la corta siempre
-    for i in range(len(read) - 3):
-        assert set().union(*map(set, read[i:i + 4])) == set(ALL), i
+def test_each_group_read_has_its_scorers_right_after_its_calendar(health):
+    """Cada grupo leído, completo antes del siguiente: sus goleadores, si tocan (scorers_due: aquí, sin
+    goleadores en la base), justo tras su calendario. Hasta el 16/10/2026 iban en una segunda pasada (los del
+    turno y del margen, primero), que el segundo freno de la federación casi nunca dejaba empezar: los grupos
+    leídos se quedaban sin goleadores («sin federación: las actas y los goleadores de 3 grupos»)."""
+    data, fed = health(report({code: checked(6) for code in ALL}), season(), budget=600)
+    s = [x for x in steps(fed) if x != "competiciones"]
+    assert s == [x for code in read_groups(fed) for x in (code, f"{code} goleadores")]
+    assert data["run"]["deferred"] == [] and data["run"]["extrasDeferred"] == []
 
 
 class BlockedFed(Fed):
@@ -581,7 +595,7 @@ class BlockedFed(Fed):
         return ok
 
 
-# ── Las actas y los goleadores de los prioritarios, tras sus calendarios ───────
+# ── Cada grupo, completo: sus goleadores y sus actas justo tras su calendario ──
 
 def with_actas(conn, counts):
     """Partidos jugados (el 10/10) con su acta por leer (fiflp_acta 7001, 7002…) en los grupos de `counts`
@@ -613,161 +627,165 @@ def actas_ok(monkeypatch):
 
 @pytest.mark.parametrize("actas", [{}, {"PG2": 3, "FF5": 3}], ids=["sin-actas", "con-actas"])
 def test_a_federation_that_stops_serving_cuts_the_pass(health, actas_ok, actas):
-    """Tres páginas seguidas sin cargar: la federación bloquea o se ha caído. No se le piden más (el
-    resto de grupos, a otra pasada, sin marcarlos como error), y lo que se leyó, se queda. Aquí sirve 9
-    páginas, justo los calendarios de los tres prioritarios (como la pasada 1101, que frenó tras los de
-    los seis): los tres quedan bien, tengan actas por leer o no. Sus actas y sus goleadores van detrás de
-    todos sus calendarios, no del de cada uno (con «grupo a grupo», las actas de PG2 se comían las páginas
-    de AL3, que quedaba como error). El freno cae en ellos y no en los siguientes (antes de octubre, 9 + 4
-    páginas: las de AL1 y ALX1 fallaban, y quedaban como error): esos no se piden y conservan su última
-    comprobación. Las actas y los goleadores de los prioritarios, a otra pasada (extrasDeferred)."""
+    """Tres páginas seguidas sin cargar: la federación bloquea o se ha caído. No se le piden más (el resto
+    de grupos, a otra pasada, sin marcarlos como error), y lo que se leyó, se queda. Aquí sirve 12 páginas.
+    Sin actas, justo los tres prioritarios completos (calendario y goleadores, 4 páginas cada uno); el
+    siguiente, AL1, no carga y conserva su comprobación. Con 3 actas en PG2 y en FF5, desde el 16/10/2026
+    cada grupo se lee completo antes del siguiente: PG2 entero (7 páginas), FF5 con su calendario, sus
+    goleadores y la primera de sus actas, y AL3, a otra pasada con su comprobación de antes; las dos actas
+    de FF5 que la federación ya no sirvió, también (run.extrasDeferred). Hasta entonces las actas iban
+    tras los tres calendarios: AL3 se leía y las actas se quedaban todas para otra pasada."""
     previous = report({code: checked(6) for code in ALL})
-    data, fed = health(previous, with_actas(season(), actas), budget=600,
-                       make_fed=lambda clock: BlockedFed(clock, serve=9))
-    assert read_groups(fed) == ["PG2", "FF5", "AL3"] and len(fed.urls) == 9 + 3
+    conn = with_actas(season(), actas)
+    data, fed = health(previous, conn, budget=600, make_fed=lambda clock: BlockedFed(clock, serve=12))
     groups = data["groups"]
-    assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3")] == ["ok", "ok", "ok"]
-    assert data["run"]["deferred"] == ["AL1", "PG1", "FF1", "ALX1", "FF2", "FF10", "LZ1"] and data["run"]["blocked"]
+    assert data["run"]["blocked"] and data["summary"]["error"] == 0
+    if not actas:
+        # AL1 falla (sin señal de freno: un error, de momento) y FF1 deja a la federación bloqueada: los
+        # dos, sin servir por el freno (AL1, justo antes, sin ninguna página servida entre medias).
+        assert read_groups(fed) == ["PG2", "FF5", "AL3", "AL1", "FF1"] and scorers_read(fed) == ["PG2", "FF5", "AL3"]
+        assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3")] == ["ok", "ok", "ok"]
+        assert data["run"]["unserved"] == ["AL1", "FF1"] and data["run"]["extrasDeferred"] == []
+        assert data["run"]["deferred"] == ["ALX1", "PG1", "FF2", "FF10", "LZ1"]
+    else:
+        # Las dos últimas actas de FF5 no cargan; el calendario de AL3 deja a la federación bloqueada.
+        assert steps(fed) == ["PG2", "PG2 goleadores", "acta 7001", "acta 7002", "acta 7003", "FF5",
+                              "FF5 goleadores", "acta 7004", "acta 7005", "acta 7006", "AL3"]
+        assert actas_left(conn, "PG2") == [] and len(actas_left(conn, "FF5")) == 2
+        assert [groups[c]["status"] for c in ("PG2", "FF5")] == ["ok", "ok"]
+        assert data["run"]["extrasDeferred"] == ["FF5"] and data["run"]["unserved"] == ["AL3"]
+        assert data["run"]["deferred"] == ["AL1", "FF1", "ALX1", "PG1", "FF2", "FF10", "LZ1"]
     for code in data["run"]["deferred"]:
         assert groups[code] == previous["groups"][code], code
-    assert data["run"]["extrasDeferred"] == ["PG2", "FF5", "AL3"]         # sus actas y goleadores, en otra pasada
 
 
 def test_the_federation_stops_after_the_priority_groups_and_their_actas_and_scorers_are_in(health, actas_ok, capsys):
     """La pasada 1101 (14/10/2026): la federación sirvió los calendarios de los seis grupos prioritarios
     y algunas páginas más, y después páginas vacías (su freno, F.blocked). Sus actas y sus goleadores
-    iban en la segunda pasada, tras la primera de todos, y se perdían («sin federación: las actas y los
-    goleadores de 6 grupos, en otra pasada»), un fin de semana tras otro. Ahora van en cuanto acaban sus
-    calendarios, antes que los demás grupos: las páginas que la federación sirve de más son para ellas
-    (antes, para AL1 y ALX1, y las de los prioritarios no llegaban). AL1 y PG1 (los dos siguientes desde
-    el 15/10/2026, con el turno intercalado; antes, AL1 y ALX1), que la federación ya no sirve, conservan
-    su última comprobación (un freno no es un error, desde el 15/10/2026: hasta entonces quedaban como
-    error): PG1 la deja bloqueada y AL1 falló justo antes, sin ninguna página servida entre su fallo y el
-    bloqueo."""
+    iban en la segunda pasada y se perdían («sin federación: las actas y los goleadores de 6 grupos, en otra
+    pasada»), un fin de semana tras otro. Desde el 16/10/2026 cada grupo se lee completo antes del
+    siguiente: las páginas que la federación sirve son para los prioritarios enteros (calendario,
+    goleadores y actas). AL1 y FF1 (los dos siguientes, que la federación ya no sirve) conservan su última
+    comprobación (un freno no es un error): FF1 la deja bloqueada y AL1 falló justo antes, sin ninguna
+    página servida entre su fallo y el bloqueo."""
     conn = with_actas(season(), {"PG2": 2, "FF5": 1})
     previous = report({code: checked(6) for code in ALL})
-    # Los tres calendarios (9 páginas); las actas de PG2 y sus goleadores (3), las de FF5 y los suyos (2)
-    # y los de AL3 (1). Después, nada.
+    # PG2 con sus goleadores y sus dos actas (6 páginas), FF5 con los suyos y su acta (5) y AL3 con los suyos
+    # (4). Después, nada.
     data, fed = health(previous, conn, budget=600, make_fed=lambda clock: BlockedFed(clock, serve=15))
-    assert steps(fed)[:9] == ["PG2", "FF5", "AL3", "acta 7001", "acta 7002", "PG2 goleadores", "acta 7003",
-                              "FF5 goleadores", "AL3 goleadores"]
-    assert len(fed.urls) == 15 + 4                                        # AL1 y PG1 fallan, y nada más
+    assert steps(fed)[:9] == ["PG2", "PG2 goleadores", "acta 7001", "acta 7002", "FF5", "FF5 goleadores",
+                              "acta 7003", "AL3", "AL3 goleadores"]
+    assert len(fed.urls) == 15 + 4                                        # AL1 y FF1 fallan, y nada más
     assert actas_left(conn, "PG2") == actas_left(conn, "FF5") == []
     groups = data["groups"]
     assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3")] == ["ok", "ok", "ok"]
-    assert groups["AL1"] == previous["groups"]["AL1"] and groups["PG1"] == previous["groups"]["PG1"]
-    assert data["summary"]["error"] == 0 and data["run"]["unserved"] == ["AL1", "PG1"]
+    assert groups["AL1"] == previous["groups"]["AL1"] and groups["FF1"] == previous["groups"]["FF1"]
+    assert data["summary"]["error"] == 0 and data["run"]["unserved"] == ["AL1", "FF1"]
     assert "; 2/2 actas" in groups["PG2"]["message"] and "; 1/1 actas" in groups["FF5"]["message"]
     assert data["run"]["blocked"] and data["run"]["extrasDeferred"] == []
-    assert data["run"]["deferred"] == ["FF1", "ALX1", "FF2", "FF10", "LZ1"]
+    assert data["run"]["deferred"] == ["ALX1", "PG1", "FF2", "FF10", "LZ1"]
     log = capsys.readouterr().out
-    assert (log.index("[AL3]") < log.index("\n  Actas y goleadores de los prioritarios\n") < log.index("[PG2] 2/2 actas")
-            < log.index("[FF5] 1/1 actas") < log.index("\n  Los demás grupos\n") < log.index("[AL1]"))
-    assert "\n  Actas y goleadores de los demás\n" in log
+    assert log.index("[PG2] 2/2 actas") < log.index("[FF5]\n") < log.index("[FF5] 1/1 actas") < log.index("[AL3]\n")
     assert "(sin federación: las actas" not in log                        # nada de los prioritarios, a otra pasada
-    assert "    sin federación: a otra pasada (no carga el calendario de la federación)\n" in log    # PG1
+    assert "    sin federación: a otra pasada (no carga el calendario de la federación)\n" in log    # FF1
 
 
 def test_a_federation_that_stops_in_the_priority_actas_stops_everything(health, actas_ok, capsys):
-    """Si frena en las actas de un prioritario, como en cualquier otro punto: nada más en esta pasada (ni
-    los goleadores de ese grupo, ni los demás prioritarios, ni el resto), sin marcar nada como error; sus
-    actas y sus goleadores, a otra pasada."""
+    """Si frena en las actas de un prioritario, como en cualquier otro punto: nada más en esta pasada (ni los
+    demás prioritarios ni el resto), sin marcar nada como error; sus actas, a otra pasada (sin gastar
+    intentos: una página que no carga no es un acta leída)."""
     conn = with_actas(season(), {"PG2": 5})
     previous = report({code: checked(6) for code in ALL})
-    data, fed = health(previous, conn, budget=600, make_fed=lambda clock: BlockedFed(clock, serve=10))
-    assert steps(fed) == ["PG2", "FF5", "AL3", "acta 7001", "acta 7002", "acta 7003", "acta 7004"]   # tres sin cargar
-    assert len(actas_left(conn, "PG2")) == 4                              # una página que no carga no gasta intento
+    data, fed = health(previous, conn, budget=600, make_fed=lambda clock: BlockedFed(clock, serve=6))
+    assert steps(fed) == ["PG2", "PG2 goleadores", "acta 7001", "acta 7002", "acta 7003", "acta 7004", "acta 7005"]
+    assert len(actas_left(conn, "PG2")) == 3                              # las tres que no cargaron
     groups = data["groups"]
-    assert [groups[c]["status"] for c in ("PG2", "FF5", "AL3")] == ["ok", "ok", "ok"]
-    assert data["run"]["blocked"] and data["run"]["extrasDeferred"] == ["PG2", "FF5", "AL3"]
-    assert data["run"]["deferred"] == ["AL1", "PG1", "FF1", "ALX1", "FF2", "FF10", "LZ1"]
+    assert groups["PG2"]["status"] == "ok"
+    assert data["run"]["blocked"] and data["run"]["extrasDeferred"] == ["PG2"]
+    assert data["run"]["deferred"] == ["FF5", "AL3", "AL1", "FF1", "ALX1", "PG1", "FF2", "FF10", "LZ1"]
     for code in data["run"]["deferred"]:
         assert groups[code] == previous["groups"][code], code
     log = capsys.readouterr().out
-    assert "(sin federación: las actas y los goleadores de 3 grupos, en otra pasada: PG2, FF5, AL3)" in log
-    assert "\n  Actas y goleadores\n" in log                              # no acabaron: no es «de los demás»
+    assert "(sin federación: las actas y los goleadores de 1 grupos, en otra pasada: PG2)" in log
 
 
-@pytest.mark.parametrize("n, served", [
-    (2, ["acta 7001", "acta 7002", "PG2 goleadores", "FF5 goleadores", "AL3 goleadores"]),   # frena en sus goleadores
-    (4, ["acta 7001", "acta 7002", "acta 7003", "acta 7004", "PG2 goleadores"]),              # 2 actas sin cargar y sus goleadores
-])
-def test_a_priority_group_whose_scorers_the_federation_does_not_serve_is_left_for_another_pass(
-        health, actas_ok, capsys, n, served):
-    """Si la federación no sirve la página de goleadores de un prioritario (aquí frena en ella, con menos de
-    tres actas sin cargar antes: import_actas no la para), sus goleadores, y las actas que no cargaron,
-    quedan para otra pasada: el grupo va en extrasDeferred y el registro lo dice («sin federación: …»),
-    no «de los demás» como si estuviera hecho."""
-    conn = with_actas(season(), {"PG2": n})
+def test_a_group_whose_scorers_the_federation_does_not_serve_is_left_for_another_pass(health, actas_ok, capsys):
+    """Si la federación no sirve la página de goleadores de un grupo (aquí frena en ella, tras el calendario
+    de PG2), sus goleadores y sus actas quedan para otra pasada: el grupo va en extrasDeferred y el registro
+    lo dice («sin federación: …»)."""
+    conn = with_actas(season(), {"PG2": 2})
     data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=600,
-                       make_fed=lambda clock: BlockedFed(clock, serve=11))
-    assert steps(fed) == ["PG2", "FF5", "AL3"] + served
-    assert data["run"]["blocked"] and data["run"]["extrasDeferred"] == ["PG2", "FF5", "AL3"]
+                       make_fed=lambda clock: BlockedFed(clock, serve=3))
+    assert steps(fed) == ["PG2", "PG2 goleadores", "acta 7001", "acta 7002"]
+    assert data["run"]["blocked"] and data["run"]["extrasDeferred"] == ["PG2"]
+    assert data["groups"]["PG2"]["status"] == "ok" and len(actas_left(conn, "PG2")) == 2
     log = capsys.readouterr().out
-    assert "(sin federación: las actas y los goleadores de 3 grupos, en otra pasada: PG2, FF5, AL3)" in log
-    assert "\n  Actas y goleadores\n" in log and "de los demás" not in log
+    assert "(sin federación: las actas y los goleadores de 1 grupos, en otra pasada: PG2)" in log
 
 
-def test_the_log_says_of_the_others_only_after_the_priority_actas(health, actas_ok, capsys):
-    """Si la federación frena en el primer calendario, ningún prioritario lee sus actas: ni «Actas y
-    goleadores de los prioritarios» ni «de los demás». (PG2 y FF5, que no sirvió, conservan su
-    comprobación: data-health.json no cambia y no se reescribe; el bloqueo se ve en la federación.)"""
+def test_a_federation_that_stops_at_the_first_calendar_changes_nothing(health, actas_ok, capsys):
+    """Si la federación frena en el primer calendario, ningún grupo se lee: los dos que la pasada intentó
+    conservan su comprobación (data-health.json no cambia y no se reescribe; el bloqueo se ve en la
+    federación) y no se pide nada más (ni las competiciones)."""
     conn = with_actas(season(), {"PG2": 4})
     previous = report({code: checked(6) for code in ALL})
     data, fed = health(previous, conn, budget=600, make_fed=lambda clock: BlockedFed(clock, serve=1))
     assert read_groups(fed) == ["PG2", "FF5"] and fed.blocked and data == previous
+    assert "competiciones" not in steps(fed)
     log = capsys.readouterr().out
-    assert "\n  Actas y goleadores\n" in log
-    assert "de los prioritarios" not in log and "de los demás" not in log
+    assert "  Sin federación: 2 grupos conservan su última comprobación, a otra pasada (PG2, FF5)\n" in log
 
 
 @pytest.mark.parametrize("n", [0, 2, 10])
-def test_the_priority_actas_come_out_of_the_reserve_and_not_out_of_the_other_groups(health, actas_ok, n):
-    """Las actas y los goleadores de los prioritarios, tras sus calendarios, van a cuenta de la reserva de
-    la segunda pasada (aquí 20 s de 80, un cuarto): lo que gastan corre el plazo de la primera, y los demás
-    grupos leen lo mismo que cuando iban en la segunda, tengan muchas actas o ninguna (FF2, FF10 y LZ1,
-    fuera, como en test_what_does_not_fit…). Dejan siempre en la reserva el doble del calendario más largo
-    (2 × 9 s), lo que cubría al acabar la primera pasada: aquí solo caben 2 s, una página. Lo demás sigue
-    en la segunda pasada tras la página de competiciones, como antes: en total, las mismas actas (las que
-    caben hasta el plazo: 5 de 10) y nada empieza pasado el plazo."""
+def test_each_group_is_complete_before_the_next_and_the_deadline_cuts_the_rest(health, actas_ok, n):
+    """Las actas de PG2 (0, 2 o 10), justo tras su calendario y sus goleadores, antes que el calendario de
+    FF5: cada grupo, completo antes del siguiente (desde el 16/10/2026; hasta entonces iban tras los tres
+    calendarios de los prioritarios, a cuenta de la reserva de la segunda pasada, y no les quitaban nada a
+    los demás). Ahora se las quitan: con más actas, los demás leen menos en esa pasada, y lo que no cabe,
+    a otra pasada (en el último cuarto del plazo, 20 s de 80, no empieza ningún grupo). Ninguna página
+    empieza pasado el plazo y, si sobra pasada, se leen las competiciones."""
     conn = with_actas(season(), {"PG2": n})
     data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=80)
-    assert read_groups(fed) == ["PG2", "FF5", "AL3", "AL1", "PG1", "FF1", "ALX1"]
-    assert data["run"]["deferred"] == ["FF2", "FF10", "LZ1"]
-    assert data["run"]["firstPassSeconds"] == 7 * 9                       # sin las actas ni los goleadores
     s = steps(fed)
-    assert "competiciones" in s and data["run"]["seconds"] <= 80 + 3       # nada empieza pasado el plazo
-    ahead = s[3:s.index("AL1")]
-    assert ahead == (["acta 7001"] if n else ["PG2 goleadores"])           # una página, la de 2 s
-    read = [x for x in s if x.startswith("acta")]
-    assert len(read) == min(n, 5) and len(actas_left(conn, "PG2")) == n - len(read)
-    if n > len(read):
-        assert data["run"]["extrasDeferred"][:3] == ["PG2", "FF5", "AL3"]
-    else:
-        assert not {"PG2", "FF5", "AL3"} & set(data["run"]["extrasDeferred"])
-        assert scorers_read(fed)[:3] == ["PG2", "FF5", "AL3"]
+    assert s[:2 + n + 1] == ["PG2", "PG2 goleadores"] + [f"acta {7001 + k}" for k in range(n)] + ["FF5"]
+    assert data["run"]["seconds"] <= 80 + 3                               # nada empieza pasado el plazo
+    read = read_groups(fed)
+    assert read == codes(plan(conn, number=0).order)[:len(read)]
+    assert data["run"]["deferred"] == codes(plan(conn, number=0).order)[len(read):]
+    assert len(read) == {0: 6, 2: 5, 10: 3}[n]                            # las actas, a costa de los demás
+    assert actas_left(conn, "PG2") == [] and data["summary"]["error"] == 0
 
 
-def test_priority_actas_cut_by_the_reserve_go_on_first_in_the_second_pass(health, actas_ok, capsys):
-    """Las actas de los prioritarios toman, delante de los demás, como mucho la mitad de la reserva (aquí,
-    25 s de 50). Si no caben (una fase recién activada, con todas sus jornadas por leer) y la primera
-    pasada acaba antes de su plazo, siguen las primeras en la segunda, donde iban antes: no esperan a otra
-    pasada por ir delante."""
-    conn = with_actas(season(), {"PG2": 30})
-    data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=200)    # reserva: 50 s
-    assert data["run"]["deferred"] == [] and actas_left(conn, "PG2") == []
+def test_actas_the_end_of_a_pass_leaves_are_caught_up_first_in_the_next(health, actas_ok, capsys, monkeypatch):
+    """Las actas que el final de una pasada deja a medias (el último grupo: el segundo freno de la federación
+    o el plazo) ya no esperan a la lectura siguiente del grupo, días después: la pasada siguiente las
+    recupera (new_actas, catch_up), con los goleadores del grupo, tras los prioritarios que tocan y antes que
+    el turno (como mucho CATCHUP_ACTAS). Aquí AL1, el último grupo de la pasada 0, con 12 actas: el plazo
+    corta tras la 11.ª; en una pasada siguiente en la que AL1 no va entre los CATCHUP_SKIP primeros grupos
+    no prioritarios (esos las leerían tras su calendario), lo que falta va tras AL3. (La cuota de alevín,
+    su turno: con la de por defecto, 8, los dos alevín irían siempre entre los primeros.)"""
+    monkeypatch.setenv("FIFLP_ALEVIN_MIN", "0")
+    conn = with_actas(season(), {"AL1": 12})
+    previous = report({code: checked(6) for code in ALL})
+    first, fed = health(previous, conn, budget=80)
+    assert read_groups(fed)[-1] == "AL1" and first["run"]["extrasDeferred"] == ["AL1"]
+    left = actas_left(conn, "AL1")
+    assert 0 < len(left) < U.CATCHUP_ACTAS
+    soon = lambda n: codes(plan(conn, number=n, env={"FIFLP_ALEVIN_MIN": "0"}).order)[3:3 + U.CATCHUP_SKIP]
+    number = next(n for n in range(1, 40) if "AL1" not in soon(n))
+    data, fed = health(first, conn, budget=80, checks_now=NOW + timedelta(hours=6), number=number)
     s = steps(fed)
-    assert s[:12] == ["PG2", "FF5", "AL3"] + [f"acta {7001 + k}" for k in range(9)] and s[12] == "AL1"   # 9 en 25 s
-    rest = s[s.index("competiciones") + 1:]
-    assert rest[:24] == [f"acta {7010 + k}" for k in range(21)] + ["PG2 goleadores", "FF5 goleadores", "AL3 goleadores"]
-    assert not {"PG2", "FF5", "AL3"} & set(data["run"]["extrasDeferred"])
-    assert "\n  Actas y goleadores\n" in capsys.readouterr().out
+    assert "AL1" not in read_groups(fed)
+    at = s.index("AL3 goleadores") + 1
+    assert s[at:at + 1 + len(left)] == ["AL1 goleadores"] + [f"acta {code}" for _, code in left]
+    assert actas_left(conn, "AL1") == []
+    assert "\n  Actas nuevas de otras pasadas\n" in capsys.readouterr().out
 
 
 def test_an_acta_that_fails_is_read_once_per_pass(health, monkeypatch):
     """Un acta que falla (sin alineaciones aún: «se reintentará») gasta uno de sus MAX_ACTA_TRIES intentos,
-    que son para pasadas distintas (6 h: la federación tiene tiempo de rellenarla). Las de los prioritarios
-    que la reserva corta delante siguen en la segunda pasada, pero sin volver a pedir la que ya falló."""
+    que son para pasadas distintas (la federación tiene tiempo de rellenarla): en una pasada, cada acta una
+    vez, también la que se lee de nuevo como acta nueva de otra pasada (catch_up)."""
     def apply(conn, mid, code, acta, log=print):
         if code == 7001:
             return False
@@ -782,66 +800,81 @@ def test_an_acta_that_fails_is_read_once_per_pass(health, monkeypatch):
 
 
 def test_without_priority_groups_the_passes_are_as_before(health, actas_ok, monkeypatch, capsys):
-    """Sin equipos prioritarios (FIFLP_PRIORITY_TEAMS vacía y sin grupo del portal) no cambia nada: toda
-    la primera pasada, la página de competiciones y, con lo que quede, la segunda (los goleadores del
-    turno y del margen, y las actas y los goleadores de todos, en el orden de la primera)."""
+    """Sin equipos prioritarios (FIFLP_PRIORITY_TEAMS vacía y sin grupo del portal), todos los grupos en el
+    orden de la rotación, cada uno completo (calendario, goleadores y actas) y, al final, si sobra pasada,
+    la página de competiciones. (El acta de PG2 ya se intentó en otra pasada: una nueva iría la primera,
+    con las que otra pasada dejó a medias: test_actas_the_end_of_a_pass_leaves_are_caught_up_first_….)"""
     monkeypatch.setenv("FIFLP_PRIORITY_TEAMS", "")
     monkeypatch.delenv("FIFLP_ALEVIN_MIN", raising=False)
     monkeypatch.setattr(U, "pinned_groups", lambda: set())
     conn = with_actas(season(), {"PG2": 1})
+    conn.execute("UPDATE matches SET acta_tries=1 WHERE fiflp_acta=7001")
     order = codes(plan(conn, priority=[]).order)
     data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=600)
     s = steps(fed)
-    assert s[:len(ALL) + 1] == order + ["competiciones"]
-    assert "acta 7001" in s and set(scorers_read(fed)) == set(ALL)
+    expected = [x for code in order for x in ([code, f"{code} goleadores"] + (["acta 7001"] if code == "PG2" else []))]
+    assert s == expected + ["competiciones"]
     assert data["run"]["extrasDeferred"] == [] and actas_left(conn, "PG2") == []
     log = capsys.readouterr().out
-    assert "0 de equipos prioritarios primero (—)" in log and "\n  Actas y goleadores\n" in log
-    assert "prioritarios:" not in log and "de los demás" not in log and "de actas y goleadores" not in log
-    assert "de los prioritarios" not in log and "Los demás grupos" not in log
+    assert "0 de equipos prioritarios primero (—)" in log and "calientes" not in log
 
 
-def test_venues_and_team_cards_are_read_even_when_the_second_pass_runs_out(health):
-    """El directorio de campos (si falta uno de la temporada) y las fichas de los equipos que no la
-    tienen van tras las actas y los goleadores de los prioritarios y antes de los demás: si el plazo
-    corta la segunda pasada en todas (lo previsto con alevín), se leen igual."""
+def test_venues_and_team_cards_are_read_once_a_day_after_the_priority_groups(health):
+    """El directorio de campos (si falta uno de la temporada) y las fichas de los equipos que no la tienen,
+    con la página de competiciones, una vez al día (extras_turn) tras los prioritarios que tocan: si el
+    segundo freno o el plazo cortan la pasada, se leen igual. Hasta el 16/10/2026 iban en la segunda pasada
+    de cada pasada, que el freno casi nunca dejaba empezar. (En las demás pasadas, solo si sobra pasada.)"""
     conn = season()
     conn.execute("UPDATE matches SET venue='CAMPO NUEVO' WHERE group_id=8")                 # AL1
     for position, name in enumerate(["Arucas", "Tablero"], 1):                               # FF1, sin fichas
         conn.execute("INSERT INTO standings(group_id, team_id, position) SELECT 1, id, ? FROM teams WHERE name=?",
                      (position, name))
     conn.commit()
-    data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=112)
-    assert data["run"]["extrasDeferred"]                                                     # el plazo la cortó
+    number = next(n for n in range(100) if U.extras_turn(n))
+    data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=112, number=number)
+    assert data["run"]["deferred"] and data["run"]["extras"] == ["campos", "competiciones", "directorio"]
     pages = [u.split("NPcd/")[1].split("?")[0] for u in fed.urls]
     scorers = [i for i, name in enumerate(pages) if name == "NFG_CMP_Goleadores"]
+    first_other = [i for i, u in enumerate(fed.urls) if "NFG_CmpJornada" in u and "CodGrupo=" in u
+                   and "CodJornada" not in u][3]
     assert "NFG_LstCampos" in pages and "NFG_LstDirectorioEquipos" in pages
-    assert scorers[2] < pages.index("NFG_LstCampos") < pages.index("NFG_LstDirectorioEquipos")   # tras PG2, FF5 y AL3
+    assert scorers[2] < pages.index("NFG_LstCampos") < pages.index("NFG_LstDirectorioEquipos") < first_other
+    # En una pasada que no es la suya y que la federación corta (su segundo freno), no.
+    other = next(n for n in range(100) if not U.extras_turn(n))
+    data, fed = health(report({code: checked(6) for code in ALL}), conn, budget=600, number=other,
+                       make_fed=lambda clock: BlockedFed(clock, serve=20))
+    assert data["run"]["blocked"] and "NFG_LstCampos" not in " ".join(fed.urls) and "extras" not in data["run"]
 
 
 def test_a_closed_group_is_refreshed_once_every_four_passes_and_the_rest_carry_their_check(health):
     """Todo cerrado: cada pasada lee solo los cerrados a los que les toca (closed_turn); los demás
-    descansan con su última comprobación. En cada época de cuatro pasadas, todos una vez, sin estado:
-    igual si ninguna pasada sube data-health.json."""
+    descansan con su última comprobación. En cada época de CLOSED_PASSES pasadas (12 con el cron cada 2 h,
+    desde el 16/10/2026; antes 4 cada 6 h: 24 h), todos una vez, sin estado: igual si ninguna pasada sube
+    data-health.json."""
     conn = season(played="2026-09-19")
     base = report({code: checked(24) for code in ALL})
-    visited = []
-    for n in range(8):
-        data, fed = health(base, conn, budget=600, checks_now=NOW + timedelta(hours=6 * n), number=40 + n)
+    visited, period = [], U.CLOSED_PASSES
+    for n in range(2 * period):
+        data, fed = health(base, conn, budget=600, checks_now=NOW + timedelta(hours=2 * n), number=120 + n)
         visited.append(set(read_groups(fed)))
-        assert visited[-1] == {c for c in ALL if U.closed_turn(c, 40 + n)}
+        assert visited[-1] == {c for c in ALL if U.closed_turn(c, 120 + n)}
+        if not visited[-1]:                     # sin nada que leer, cada uno con su comprobación
+            assert data["groups"] == base["groups"]
+            continue
         assert sorted(data["run"]["resting"]) == sorted(set(ALL) - visited[-1])
         for code in set(ALL) - visited[-1]:
             assert data["groups"][code] == base["groups"][code]
-    assert all(sum(code in v for v in visited) == 2 for code in ALL)     # en 8 pasadas, dos veces cada uno
-    assert set().union(*visited[:4]) == set().union(*visited[4:]) == set(ALL)    # una vez en cada época
+    assert all(sum(code in v for v in visited) == 2 for code in ALL)     # en dos épocas, dos veces cada uno
+    assert set().union(*visited[:period]) == set().union(*visited[period:]) == set(ALL)    # una vez en cada época
 
 
 def test_a_pass_with_nothing_new_does_not_rewrite_the_report(health):
     """Sin nada nuevo, ni la hora de cada grupo ni las notas de la pasada reescriben data-health.json:
-    no hay commit solo por la hora (la rotación no la necesita)."""
+    no hay commit solo por la hora (la rotación no la necesita). (Salvo la de los prioritarios abiertos,
+    que deciden cuándo les vuelve a tocar: aquí todo está cerrado.)"""
     conn = season(played="2026-09-19")
+    number = next(n for n in range(100) if any(U.closed_turn(c, n) for c in ALL))
     first, _ = health(report({code: checked(24) for code in ALL}, at=NOW - timedelta(hours=1)), conn, budget=600,
-                      number=7)
-    data, fed = health(first, conn, budget=600, checks_now=NOW + timedelta(hours=6), number=7)
+                      number=number)
+    data, fed = health(first, conn, budget=600, checks_now=NOW + timedelta(hours=6), number=number)
     assert data == first and read_groups(fed)                             # leyó, pero no cambió nada

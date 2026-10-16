@@ -332,9 +332,10 @@ def test_the_alevin_quota_takes_turns_by_the_pass_number_even_without_commits(mo
     # desde su turno (5 grupos: turnos [AL1, AL2], [AL3, AL4], [AL5] y []; dentro del turno, el inicio
     # de su época, update_fiflp.spin: 3000-3003 son la época 750, que empieza por el segundo); FF1, el
     # único de benjamín, en su turno (la pasada 3000) va intercalado con la cuota (tras el primero de ella:
-    # antes del 15/10/2026, tras toda) y en las demás, entre el resto.
+    # antes del 15/10/2026, tras toda) y en las demás, entre el resto, según la fase de cada nivel en esa
+    # pasada (update_fiflp.pass_phase, desde el 16/10/2026: en la 3001, ahora tras AL2 y no antes).
     assert reads == [["PG2", "AL2", "FF1", "AL1", "AL4", "AL3", "AL5"],
-                     ["PG2", "AL4", "AL3", "AL5", "AL1", "FF1", "AL2"],
+                     ["PG2", "AL4", "AL3", "AL5", "AL1", "AL2", "FF1"],
                      ["PG2", "AL5", "AL1", "AL2", "FF1", "AL3", "AL4"]]
 
 
@@ -353,11 +354,12 @@ def test_a_base_with_the_old_turn_table_still_works_and_it_is_not_used(monkeypat
 
 
 def test_without_a_run_number_the_turn_comes_from_the_clock():
-    """Fuera de GitHub (una pasada a mano), la franja de 6 h: cambia de turno de una franja a otra."""
+    """Fuera de GitHub (una pasada a mano), la franja del cron: cambia de turno de una franja a otra. Desde
+    el 16/10/2026, de 2 h (update_fiflp.PASS_EVERY: el cron cada 2 h); antes, de 6."""
     from datetime import datetime, timezone
-    a = U.run_number({}, datetime(2026, 10, 14, 1, tzinfo=timezone.utc))
-    assert U.run_number({}, datetime(2026, 10, 14, 5, 59, tzinfo=timezone.utc)) == a
-    assert U.run_number({}, datetime(2026, 10, 14, 6, tzinfo=timezone.utc)) == a + 1
+    a = U.run_number({}, datetime(2026, 10, 14, 0, tzinfo=timezone.utc))
+    assert U.run_number({}, datetime(2026, 10, 14, 1, 59, tzinfo=timezone.utc)) == a
+    assert U.run_number({}, datetime(2026, 10, 14, 2, tzinfo=timezone.utc)) == a + 1
     assert U.run_number({"GITHUB_RUN_NUMBER": "812"}) == 812
 
 

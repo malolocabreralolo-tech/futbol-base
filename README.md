@@ -50,7 +50,7 @@ sw.js                        Caché y actualización de la PWA
 
 ## Actualización y publicación
 
-GitHub Actions comprueba los datos cada seis horas. Ejecuta las pruebas antes de publicar cambios deportivos. Si falla la fuente, conserva los datos publicados y publica únicamente el diagnóstico. GitHub Pages sirve la raíz de `main`.
+GitHub Actions comprueba los datos cada dos horas (pasadas cortas por el freno de la federación: [docs/federacion.md](docs/federacion.md)). Ejecuta las pruebas antes de publicar cambios deportivos. Si falla la fuente, conserva los datos publicados y publica únicamente el diagnóstico. GitHub Pages sirve la raíz de `main`.
 
 ```bash
 bash scripts/update.sh          # importar, probar y publicar

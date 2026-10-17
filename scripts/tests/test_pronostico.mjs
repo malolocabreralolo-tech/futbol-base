@@ -200,6 +200,59 @@ test('el marcador, del Poisson y siempre dentro del favorito de las notas; los g
   }
 });
 
+// Liga de cuatro en la que las notas y los goles no van con el mismo favorito en Beta–Delta (revisión del
+// 17/10/2026). Los dos llevan 12 goles a favor y 12 en contra, pero Delta ganó 9-0 y perdió 3-12, y Beta
+// perdió 0-9 y ganó 12-3: para las notas («cuántas veces más goles» con colchón), un 9-0 vale más que un
+// 12-3 y Delta es favorito; para los goles del Poisson van casi igual, y el campo es de Beta.
+const SPLIT = [
+  [row('2026-10-03', 'Alfa', 'Beta', 9, 0), row('2026-10-03', 'Gamma', 'Delta', 12, 3)],
+  [row('2026-10-10', 'Beta', 'Gamma', 12, 3), row('2026-10-10', 'Delta', 'Alfa', 9, 0)],
+  [row('2026-10-17', 'Alfa', 'Gamma'), row('2026-10-17', 'Beta', 'Delta')],
+];
+
+test('goalsAgree: si los goles del Poisson no van con el favorito de las notas, false, y el marcador sigue del lado del favorito', () => {
+  const group = makeGroup(SPLIT);
+  const f = forecastMatch(group, matchOf(group, 3, 'Beta'), OPTS);
+  assert.equal(f.pick, 'away');
+  assert.ok(f.pAway > 0.6 && f.pAway > f.pHome + 0.3, JSON.stringify(f));
+  assert.ok(f.xgHome > f.xgAway, `los goles, con Beta: ${f.xgHome} frente a ${f.xgAway}`);
+  assert.equal(f.goalsAgree, false);
+  // El marcador: el más probable SI gana Delta, que no es el más probable del Poisson (ni el segundo).
+  assert.ok(f.score[0] < f.score[1], `${f.score}`);
+  assert.deepEqual(f.score, likelyScore(f.xgHome, f.xgAway, 'away').score);
+  const top = topScores(f.xgHome, f.xgAway, { n: 2 }).map(x => x.score.join('-'));
+  assert.ok(!top.includes(f.score.join('-')), `${f.score} entre ${top}`);
+  assert.equal(outcome(f.xgHome, f.xgAway).pick, 'home', 'para el Poisson, Beta');
+  // En el otro partido de la jornada, los dos van con el mismo.
+  const other = forecastMatch(group, matchOf(group, 3, 'Alfa'), OPTS);
+  assert.equal(other.goalsAgree, true);
+  assert.equal(other.pick, outcome(other.xgHome, other.xgAway).pick);
+  // Con el empate de favorito, siempre true.
+  const draw = forecastMatch(group, matchOf(group, 3, 'Beta'), { ...OPTS, params: { ...PARAMS, slope: 0.01, band: 2 } });
+  assert.equal(draw.pick, 'draw');
+  assert.equal(draw.goalsAgree, true);
+});
+
+test('la caché de los ajustes va por los parámetros de cada parte: otro colchón, otro ridge u otra contracción, otro ajuste', () => {
+  const group = makeGroup();
+  const m = matchOf(group, 4, 'Alfa');
+  const base = forecastMatch(group, m, OPTS);
+  const training = trainingFor(group, m);
+  for (const change of [{ cushion: 1 }, { ridge: 3 }, { cushion: 8, ridge: 0.1 }]) {
+    const p = { ...PARAMS, ...change };
+    const f = forecastMatch(group, m, { ...OPTS, params: p });
+    const fresh = notesOdds(fitNotes(training, p), 'Alfa', 'Delta', p);
+    assert.deepEqual([f.pHome, f.pDraw, f.pAway], [fresh.pHome, fresh.pDraw, fresh.pAway], JSON.stringify(change));
+    assert.notEqual(f.pHome, base.pHome, `${JSON.stringify(change)}: con la caché de PARAMS daría lo mismo`);
+    assert.deepEqual([f.xgHome, f.xgAway], [base.xgHome, base.xgAway], 'los goles no dependen de ellos');
+  }
+  const shrunk = forecastMatch(group, m, { ...OPTS, params: { ...PARAMS, shrink: 6 } });
+  assert.notEqual(shrunk.xgHome, base.xgHome);
+  assert.deepEqual([shrunk.pHome, shrunk.pAway], [base.pHome, base.pAway], 'las notas no dependen de la contracción');
+  // Y, de vuelta a PARAMS, lo de antes.
+  assert.deepEqual(numbers(forecastMatch(group, m, OPTS)), numbers(base));
+});
+
 test('simetría: dar la vuelta al partido da la vuelta al pronóstico; sin campo, exacta', () => {
   const swapped = BASE.map((ms, i) => (i === 3 ? ms.map(r => (r[1] === 'Beta' ? row(r[0], 'Gamma', 'Beta') : r)) : ms));
   const g1 = makeGroup(), g2 = makeGroup(swapped);

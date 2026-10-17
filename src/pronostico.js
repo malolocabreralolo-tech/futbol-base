@@ -33,12 +33,13 @@
  * parámetros globales de PARAMS.
  *
  * Por qué Massey (el banco, 17/10/2026: los parámetros de cada modelo, fijados solo con las temporadas de
- * AJUSTE, 2013-14 a 2020-21, y puntuados en las de EVALUACIÓN, 2021-22 a 2025-26, que el ajuste no ve:
- * 2.747 partidos de 28 grupos, IC 95 % por bootstrap de temporada-grupo): log-loss del 1X2 0,534 frente a
- * 0,544 del Poisson, Δ −0,010 [−0,016, −0,003], y Brier 0,297 frente a 0,302, Δ −0,006 [−0,009, −0,003];
- * acierta el favorito como él (79,5 % frente a 79,1 %, sin diferencia real). Ni el Elo de goles, ni los
- * rivales comunes y sus cadenas contados uno a uno, ni el Poisson bayesiano, ni las mezclas de los
- * mejores lo mejoran (la tabla, en la cabecera del banco; cada familia, en scripts/pronostico_modelos/).
+ * AJUSTE, 2013-14 a 2020-21, y puntuados en las de EVALUACIÓN, 2021-22 a 2025-26, con las que no se ajustó
+ * nada, aunque se miraron al diseñar algunas variantes: la cabecera del banco lo detalla; 2.747 partidos de
+ * 28 grupos, IC 95 % por bootstrap de temporada-grupo): log-loss del 1X2 0,534 frente a 0,544 del Poisson,
+ * Δ −0,010 [−0,016, −0,003], y Brier 0,297 frente a 0,302, Δ −0,006 [−0,009, −0,003]; acierta el favorito
+ * como él (79,5 % frente a 79,1 %, sin diferencia real). Ni el Elo de goles, ni los rivales comunes y sus
+ * cadenas contados uno a uno, ni el Poisson bayesiano, ni las mezclas de los mejores mejoran a Massey (la
+ * tabla, en la cabecera del banco; cada familia, en scripts/pronostico_modelos/).
  *
  * Qué se muestra (con `today`, como en la web): solo la próxima jornada de cada grupo (horizonOf), y
  * solo con dos jornadas jugadas en el grupo y algún partido de cada uno de los dos equipos.
@@ -92,20 +93,31 @@ import { matchState, retiredTeams } from './model.js';
  *   goles esperados (2,195 frente a 2,212 sin ella) y con él cuadran por tramos (de 10 a 12, 10,8 frente a
  *   10,7 reales).
  *
- * Desde cuándo se muestra (con el modelo de la web: el 1X2 de las notas; backtest de las 13 temporadas,
- * revisado el 17/10/2026 al cambiar de modelo):
- * - minRounds: jornadas jugadas del grupo desde las que se muestra: 2. Con una, las notas ya no se pasan
- *   de seguras (dicen 85 % y aciertan el 86 %; el Poisson decía 85-93 % y acertaba el 74-82 %), pero apenas
- *   mejoran a la tabla (log-loss 0,800 frente a 0,835; aciertan como ella, 66,3 % frente a 67,1 %; en la
- *   EVALUACIÓN del banco, −0,035 [−0,132, +0,056]: nada demostrable). Con dos, aciertan más que la tabla
- *   (73,0 % frente a 68,0 %) y sus probabilidades son mucho mejores (log-loss 0,677 frente a 0,817; Brier
- *   0,384 frente a 0,487; en la EVALUACIÓN, −0,121 [−0,245, +0,013], aún con pocos partidos); desde tres,
- *   la diferencia ya es clara en todo;
+ * Desde cuándo se muestra (con el modelo de la web, el 1X2 de las notas, y SOLO con las cifras de
+ * EVALUACIÓN del banco: 126 partidos con una jornada jugada, 126 con dos y 128 con tres; revisión del
+ * 17/10/2026, que quitó las de todas las temporadas, que incluyen las de AJUSTE, con las que se fijaron
+ * las notas). Es una decisión, no una prueba: con dos jornadas la ventaja aún no es demostrable.
+ * - minRounds: jornadas jugadas del grupo desde las que se muestra: 2. Frente a la tabla (gana el mejor
+ *   clasificado), con dos jornadas las notas aciertan más (73,8 % frente a 70,6 %; +3,2 puntos [−6,0,
+ *   +11,7]) y dan mejores probabilidades en el 96 % de las remuestras (log-loss −0,121 [−0,245, +0,013];
+ *   Brier −0,083 [−0,174, +0,016]): mejor casi siempre y nunca peor de forma demostrable, aunque el
+ *   intervalo aún toca el cero. Con una, solo en el 76 % (−0,035 [−0,132, +0,056]) y aciertan lo mismo
+ *   (67,5 % las dos): ahí la tabla, que es mirar quién ganó su partido, dice lo mismo, y no se enseña nada.
+ *   Desde tres, la ventaja ya es demostrable (−0,180 [−0,280, −0,089]; 76,6 % frente a 70,3 %). Subir a 3
+ *   dejaría la web sin pronóstico hasta la cuarta jornada; es lo que hay que revisar con los resultados de
+ *   2026-27, la primera temporada que nada de esto ha visto.
+ *   La fiabilidad, en EVALUACIÓN (lo que se le da al favorito frente a lo que gana; IC 95 % de la
+ *   diferencia): con una jornada, 61,5 % frente a 67,5 % (+6,0 puntos [−2,3, +13,1]); con dos, 72,6 %
+ *   frente a 73,8 % (+1,2 [−7,4, +8,5]), con la casilla de 80 % o más algo pasada (89,2 % frente a 84,3 %,
+ *   51 partidos, −4,8 [−16,7, +5,1]); en total, 78,4 % frente a 79,5 % (+1,1 [−0,3, +2,4]), y el Poisson
+ *   de antes se quedaba corto (75,9 % frente a 79,1 %, +3,1 [+1,6, +4,5]). Con una o dos jornadas, con tan
+ *   pocos partidos, ni una cosa ni otra es demostrable;
  * - minPlayed: partidos que tiene que llevar cada uno de los dos equipos: 1 (revisión del 17/10/2026). Sin
  *   ninguno, un equipo es la media del grupo y el pronóstico solo mira al rival (Cardones, que descansó en
- *   la jornada 1 y aún no ha jugado la 2); el archivo casi no tiene casos (7) con los que probarlo. Con uno
- *   (112 partidos), sus probabilidades son mejores que las de la tabla (log-loss 0,673 frente a 0,772) y
- *   aciertan como ella (69,6 %). */
+ *   la jornada 1 y aún no ha jugado la 2); EVALUACIÓN casi no tiene casos (3) con los que probarlo. Con uno
+ *   (desde dos jornadas, 55 partidos de EVALUACIÓN), las notas no se distinguen de la tabla (log-loss
+ *   0,710 frente a 0,669, +0,041 [−0,128, +0,222]; aciertan 70,9 % frente a 74,5 %, −3,6 puntos [−16,4,
+ *   +8,5]); en AJUSTE, donde se fijaron, eran mejores (−0,243 [−0,383, −0,132]). */
 export const PARAMS = Object.freeze({
   cushion: 3.64, ridge: 0.335, ratingHome: 0.0586, slope: 5.58, band: 0.385, slopeVar: 1.85, bandVar: 0.925,
   shrink: 1.5, home: 1.08, size: Infinity, cap: Infinity, soften: 8,
@@ -513,11 +525,14 @@ export function topScores(meanHome, meanAway, { n = 3, pick = null, params = PAR
  * las notas de Massey (notesOdds); score, el marcador más probable de los goles del Poisson DENTRO de ese
  * favorito (likelyScore), y pScore, su probabilidad; xg* los goles esperados del Poisson (amortiguados
  * por encima de soften); goalsAgree, si van con el favorito (el suyo marca al menos los del otro; con el
- * empate, siempre): en un partido igualado pueden ir al revés (en el archivo, desde dos jornadas, 155 de
- * 4.832: nueve de cada diez, con el favorito por debajo del 55 %, y la mitad, con menos de un cuarto de
- * gol de diferencia; ahí el favorito de las notas acierta 74 y el de los goles, 55), y la pantalla
- * Partido entonces no los enseña; `rounds` las jornadas jugadas con las que se calcula, `matches`
- * sus partidos (la nota «según los N partidos jugados») y played* los de cada equipo entre ellos. null si el grupo no lo admite (forecastApplies), si el partido
+ * empate, siempre): pueden ir al revés (en el archivo, 155 de los 4.825 partidos que se pronostican desde
+ * dos jornadas: nueve de cada diez, con el favorito por debajo del 55 %, pero alguno hasta del 71 %, y más
+ * de la mitad, con menos de un cuarto de gol de diferencia; ahí el favorito de las notas acierta 74 y el
+ * de los goles, 55). Entonces score no es el marcador más probable del Poisson (nunca entre sus dos
+ * primeros), sino el más probable SI gana el favorito: la web no enseña los goles esperados y lo rotula así
+ * (forecastLine de ui.js y la pantalla Partido; revisión del 17/10/2026). `rounds` las jornadas jugadas con
+ * las que se calcula, `matches` sus partidos (la nota «según los N partidos jugados») y played* los de cada
+ * equipo entre ellos. null si el grupo no lo admite (forecastApplies), si el partido
  * ya tiene marcador, si con `today` no está pendiente (matchState: uno sin fecha o con la fecha pasada y
  * sin resultado no se pronostica) o va más allá de la próxima jornada (horizonOf), si es de un retirado o
  * la app lo da por retirado, anulado o suspendido, si aún no hay PARAMS.minRounds jornadas jugadas o si

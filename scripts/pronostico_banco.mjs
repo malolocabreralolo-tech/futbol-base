@@ -84,18 +84,41 @@
 //   tabla                                    0,679     0,376  77,1 %   0,779    0,774    +0,136 [+0,112, +0,156]   +0,145 [+0,118, +0,167]
 //   local                                    0,897     0,562  47,9 %   0,870    0,855    +0,354 [+0,305, +0,395]   +0,363 [+0,311, +0,407]
 //
-// Massey es el único que mejora al Poisson de forma demostrable en log-loss y en Brier (−0,006 [−0,009,
-// −0,003]); el acierto del favorito, +0,4 puntos [−0,2, +1,1], es el mismo. Por tramo, frente al Poisson:
+// Massey es el que más mejora al Poisson (−0,010 en log-loss y −0,006 [−0,009, −0,003] en Brier). No es el
+// único que lo mejora de forma demostrable: también Massey sin campo y las mezclas (como Massey solo) y,
+// muy poco, una cuarta parte, el Poisson bayesiano (−0,0026 [−0,0045, −0,0006]; Brier −0,0014 [−0,0025,
+// −0,0003]). El acierto del favorito de Massey, +0,4 puntos [−0,2, +1,1], es el del Poisson. Por tramo,
+// frente al Poisson:
 // 1 jornada −0,015 [−0,062, +0,026]; 2, −0,039 [−0,085, +0,003]; 3, −0,027 [−0,071, +0,015]; 4-6, −0,002
 // [−0,020, +0,018]; 7+, −0,008 [−0,013, −0,003] (126, 126, 128, 364 y 2.003 partidos). Las mezclas empatan
 // con Massey solo, y el Elo de goles también (sin ganar al Poisson de forma demostrable): a igualdad, el
 // más sencillo, una nota por equipo y un sistema lineal. Con 1-2 jornadas, ninguno le gana de forma
-// demostrable a la tabla (Massey − tabla: 1 jornada, −0,035 [−0,132, +0,056]; 2, −0,121 [−0,245, +0,013];
-// desde 3, entre −0,15 y −0,18, todos reales): la web sigue sin enseñar nada con una. El campo, que el
+// demostrable a la tabla (Massey − tabla: 1 jornada, −0,035 [−0,132, +0,056], mejor en el 76 % de las
+// remuestras y con el mismo acierto, 67,5 %; 2, −0,121 [−0,245, +0,013], mejor en el 96 % y con 3,2 puntos
+// más de acierto [−6,0, +11,7]; desde 3, entre −0,15 y −0,18, todos reales). La web enseña desde dos: es
+// una decisión, no una prueba (el criterio, en minRounds de src/pronostico.js). El campo, que el
 // usuario cree que no decide: es poco (en Massey, el local mete un 6 % más; P(local) se mueve 3,5 puntos de
 // media), y quitarlo no cambia el log-loss (+0,001 [−0,004, +0,005]) pero se acierta menos el favorito
 // (−0,9 puntos [−1,7, −0,2]); en el ajuste, sin él, +0,006 [+0,002, +0,010]: se queda. Cada fila se repite
 // con `--modelo scripts/pronostico_modelos/<familia>.mjs --contra poisson` (y `--contra actual`).
+//
+// LO QUE EVALUACIÓN YA NO ES (revisión del 17/10/2026): con ella no se ajustó ningún parámetro, pero sí
+// se miró al diseñar. La variante de Massey con la banda de empate que se estrecha (κₑ) se puntuó en
+// EVALUACIÓN antes de entrar en massey.mjs (el ajuste ya la justificaba: 0,5131 → 0,5117); las mezclas se
+// puntuaron ahí; y los rivales comunes (el parámetro c, y k de 0,5 a 0,1: 0,547 → 0,544) y el Elo se
+// retocaron después de ver la suya. Massey no se tocó tras su primera pasada por EVALUACIÓN, los retoques
+// favorecen a los que perdieron y su ventaja sobre el Poisson (mejor en el 99,9 % de las remuestras)
+// aguanta una corrección de Bonferroni por las cuatro familias: la elección se mantiene. Pero el Δ −0,010
+// arrastra algo del sesgo de quedarse con el mejor de varios en los mismos datos, y para las próximas
+// decisiones (minRounds, variantes nuevas) EVALUACIÓN ya no es una prueba nueva: la siguiente es 2026-27,
+// que nada de esto ha visto (o una validación anidada por temporadas).
+//
+// LAS COPIAS DEL ARCHIVO (revisión del 17/10/2026): en PGC1 de 2023-24 y PGC4 de 2024-25, el filial está
+// apuntado también al primer equipo (Roque Amagro, 46 partidos en 26 jornadas; Arguineguín, 26 en 22, y 28
+// cruces local–visitante repetidos), pero cada copia cae en la misma jornada que su partido de verdad y
+// copiedMatches de src/pronostico.js la quita: sin copias, en ninguna liga del banco hay un equipo dos
+// veces en una jornada, con más partidos que jornadas o con el mismo cruce dos veces, y ninguna pareja
+// lleva una copia (test_pronostico_banco.mjs lo comprueba). La tabla de arriba no las tiene.
 //
 // Desde otro script: import { evaluate, ejecutar, cargarModelo, pares, REFERENCIAS } from
 // './pronostico_banco.mjs'; evaluate(predictor, { split, B, semilla, referencia }) da el informe (sin

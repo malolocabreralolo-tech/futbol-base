@@ -149,11 +149,16 @@ function favorite(f) {
 // pequeña, sin negrita y en --mute (también en la fila propia, que va en tinta), y empieza por
 // «Pronóstico»; el lector de pantalla oye otra frase, que dice que no es un resultado. La usan matchRow
 // (Jornada) y el próximo partido de Mi equipo, cada uno con su clase (cls). f: el de forecastMatch, o
-// null (nada).
+// null (nada). Si los goles esperados no van con el favorito (goalsAgree false: el 1X2 es de las notas
+// y el marcador, del Poisson), ese marcador no es el más probable (en el archivo, nunca entre los dos
+// primeros del Poisson; revisión del 17/10/2026): la línea, sin marcador, «Pronóstico · Valsequillo 45 %».
 export function forecastLine(f, cls = 'match-forecast') {
   if (!f) return '';
   const [l, v] = f.score;
   const fav = favorite(f);
+  if (f.goalsAgree === false) {
+    return html`<span class="${cls}"><span aria-hidden="true">Pronóstico · ${fav.who} ${percent(fav.p)}</span><span class="vh">Pronóstico, no es un resultado: favorito, ${fav.who}, con un ${percent(fav.p)}.</span></span>`;
+  }
   const spoken = f.pick === 'draw'
     ? `lo más probable, empate a ${l}, con un ${percent(f.pDraw)}`
     : `lo más probable, ${l} a ${v}; favorito, ${fav.who}, con un ${percent(fav.p)}`;

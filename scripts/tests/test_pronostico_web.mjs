@@ -68,6 +68,12 @@ test('forecastLine: «Pronóstico 6–2 · Moya 83 %» a la vista y, para el lec
   assert.match(text(forecastLine({ ...GUESS, pick: 'draw', score: [4, 4], pDraw: 0.41 })), /no es un resultado: lo más probable, empate a 4, con un 41 %\.$/);
   assert.equal(s(forecastLine(null)), '');
   assert.match(s(forecastLine(GUESS, 'fixture-forecast')), /^<span class="fixture-forecast">/);
+  // Si los goles no van con el favorito (goalsAgree false), ese marcador no es el más probable: sin él, ni a
+  // la vista ni para el lector de pantalla (revisión del 17/10/2026). Con true, o sin el campo, como siempre.
+  const split = { ...GUESS, pAway: 0.45, pHome: 0.42, pDraw: 0.13, pick: 'away', score: [3, 4], goalsAgree: false };
+  assert.equal(s(forecastLine(split)), '<span class="match-forecast"><span aria-hidden="true">Pronóstico · Atalaya 45\u00a0%</span><span class="vh">Pronóstico, no es un resultado: favorito, Atalaya, con un 45\u00a0%.</span></span>');
+  assert.doesNotMatch(text(forecastLine(split)), /3–4|3 a 4|más probable/);
+  assert.equal(s(forecastLine({ ...GUESS, goalsAgree: true })), s(forecastLine(GUESS)));
 });
 
 test('matchRow: el pronóstico va debajo, nunca en la casilla del marcador; jugado o sin pronóstico, la fila de siempre', () => {
@@ -240,10 +246,11 @@ test('Partido sin jugar de prebenjamín: el bloque «Pronóstico» bajo el resul
     `Con los ${f.matches} partidos jugados en el grupo esta temporada. Es una estimación, no un resultado.`);
 });
 
-test('Partido: si los goles esperados no van con el favorito (el 1X2 es de las notas; los goles, del Poisson), no se enseñan', () => {
+test('Partido y Jornada: si los goles esperados no van con el favorito (el 1X2 es de las notas; los goles, del Poisson), ni goles ni «más probable»', () => {
   // Con un 0-4 de Santa Brígida en el campo del Gran Canaria en la jornada 1, las notas ponen a La Garita de
   // favorita contra Acodetti, y el Poisson les da casi los mismos goles, algo más a Acodetti: un partido
-  // igualado, en el que cada modelo inclina la balanza a un lado.
+  // igualado, en el que cada modelo inclina la balanza a un lado. El marcador es el más probable SI gana La
+  // Garita, no el más probable del Poisson: se rotula así, sin «También probables» (revisión del 17/10/2026).
   const params = { g: 'PG2', r: 'Jornada 3', h: 'La Garita', a: 'Acodetti' };
   const raw = currentAt(TODAY);
   const first = raw.history.PG2['Jornada 1'].find((row) => row[1] === 'Gran Canaria' && row[2] === 'Santa Brígida');
@@ -253,15 +260,25 @@ test('Partido: si los goles esperados no van con el favorito (el 1X2 es de las n
   assert.equal(f.pick, 'home');
   assert.equal(f.goalsAgree, false);
   assert.ok(f.xgAway > f.xgHome && f.score[0] > f.score[1], JSON.stringify(f));
+  const top = topScores(f.xgHome, f.xgAway, { n: 2 }).map((x) => x.score.join('-'));
+  assert.ok(!top.includes(f.score.join('-')), `${f.score}: no está entre los dos más probables del Poisson (${top})`);
   const block = blockOf(renderPartido(params, opts), 'Pronóstico');
   const cells = [...block.matchAll(/<div class="cell is-muted"><dt class="cell-label">(.*?)<\/dt><dd class="cell-value">(.*?)<\/dd>/g)].map((m) => [m[1], m[2]]);
-  assert.deepEqual(cells, [['Resultado más probable', `${f.score[0]}–${f.score[1]}`]]);
+  assert.deepEqual(cells, [['Si gana La Garita', `${f.score[0]}–${f.score[1]}`]]);
   assert.match(block, /<dl class="cells cells-1">/);
-  assert.doesNotMatch(block, /Goles esperados/);
+  assert.doesNotMatch(block, /Goles esperados|Resultado más probable|También probables|odds-also/);
   assert.match(block, /class="odds-bar"/, 'la barra y las cifras, como siempre');
-  // Sin el cambio, el mismo partido con sus dos casillas.
+  // En la Jornada, su línea sin marcador; las de los demás, con el suyo.
+  const out = renderJornada({ g: 'PG2', r: 'Jornada 3' }, opts);
+  const garita = rows(out).find((row) => row.includes('La Garita'));
+  assert.ok(seen(garita).endsWith(`Pronóstico · La Garita ${Math.round(f.pHome * 100)} %`), seen(garita));
+  assert.match(text(garita), /Pronóstico, no es un resultado: favorito, La Garita, con un \d+ %\.$/);
+  assert.doesNotMatch(text(garita), /más probable/);
+  assert.equal(lines(out).filter((l) => /Pronóstico \d+–\d+ ·/.test(l)).length, 5, 'los otros cinco, con su marcador');
+  // Sin el cambio, el mismo partido con sus dos casillas y sus «También probables».
   assert.equal(expected(params).goalsAgree, true);
-  assert.match(blockOf(renderPartido(params), 'Pronóstico'), /Goles esperados/);
+  const normal = blockOf(renderPartido(params), 'Pronóstico');
+  assert.match(normal, /Resultado más probable[^]*Goles esperados[^]*También probables/);
 });
 
 test('un equipo que aún no ha jugado: ni línea en la Jornada ni bloque en Partido (solo miraría al rival)', () => {

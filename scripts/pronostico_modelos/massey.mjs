@@ -30,7 +30,8 @@
  *
  * Solo con los partidos de ESTA temporada del grupo (el `training` del banco; de `group` no se usa nada).
  * Las temporadas de AJUSTE (2013-14 a 2020-21) fijan los siete parámetros globales (ajustar) y deciden la
- * variante; las de EVALUACIÓN (2021-22 a 2025-26) solo la puntúan.
+ * variante; las de EVALUACIÓN (2021-22 a 2025-26) solo la puntúan (aunque la banda de empate con κₑ se
+ * puntuó en ellas antes de entrar aquí: «Lo que EVALUACIÓN ya no es», en la cabecera del banco).
  *
  * Lo que se probó en AJUSTE (log-loss del 1X2; «actual», src/pronostico.js, da 0,523 ahí, con unos PARAMS
  * que vieron también la evaluación), cada uno con su conversión ajustada:

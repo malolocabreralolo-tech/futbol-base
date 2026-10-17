@@ -12,7 +12,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { PARAMS, forecastMatch } from '../../src/pronostico.js';
+import { PARAMS, copiedMatches, forecastMatch } from '../../src/pronostico.js';
 import * as massey from '../pronostico_modelos/massey.mjs';
 import * as poisson from '../pronostico_modelos/poisson.mjs';
 import {
@@ -61,6 +61,42 @@ test('la referencia «actual» es el pronóstico de la web con el mismo entrenam
     assert.equal(f.rounds, p.jornadas);
     const r = REFERENCIAS.actual.predictor(p.training, p.match, p.group);
     assert.deepEqual([r.pHome, r.pDraw, r.pAway], [f.pHome, f.pDraw, f.pAway]);
+  }
+});
+
+test('sin las copias de la importación, ninguna liga del banco mezcla dos equipos en uno', () => {
+  // PGC1 de 2023-24 y PGC4 de 2024-25 apuntan el filial también al primer equipo (Roque Amagro, 46 partidos
+  // con marcador en 26 jornadas), pero cada copia cae en la jornada de su partido de verdad y copiedMatches
+  // la quita (revisión del 17/10/2026). Sin ellas, en cada liga: nadie juega dos veces en una jornada, ni más
+  // partidos que jornadas, ni el mismo cruce local–visitante dos veces; y ninguna pareja lleva una copia.
+  const groups = new Set(pares('todas').map(p => p.group));
+  let leagues = 0;
+  for (const group of groups) {
+    if (group.kind !== 'league') continue;
+    leagues += 1;
+    const copies = copiedMatches(group);
+    const where = `${group.season} ${group.id}`;
+    const played = new Map(), fixtures = new Set();
+    for (const round of group.rounds) {
+      const inRound = new Set();
+      for (const m of round.matches) {
+        if (m.hs == null || m.as == null || copies.has(m)) continue;
+        for (const t of [m.home, m.away]) {
+          assert.ok(!inRound.has(t), `${where} ${round.key}: ${t} juega dos veces`);
+          inRound.add(t);
+          played.set(t, (played.get(t) || 0) + 1);
+        }
+        const key = `${m.home}|${m.away}`;
+        assert.ok(!fixtures.has(key), `${where}: ${m.home}–${m.away} dos veces`);
+        fixtures.add(key);
+      }
+    }
+    for (const [t, n] of played) assert.ok(n <= group.rounds.length, `${where}: ${t}, ${n} partidos en ${group.rounds.length} jornadas`);
+  }
+  assert.ok(leagues > 40, `${leagues} ligas`);
+  for (const p of pares('todas')) {
+    const copies = copiedMatches(p.group);
+    assert.ok(!copies.has(p.m) && !p.training.some(t => copies.has(t)), `${p.clave} ${p.m.home}–${p.m.away}`);
   }
 });
 

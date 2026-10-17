@@ -11,6 +11,11 @@ futbolaspalmas.com migró a una app nueva (`directo.php?liga_id=N`, con API JSON
 FIFLP contesta vacío a las IPs domésticas: el scrape va en GitHub Actions y todo lo demás en local.
 
 ```bash
+# 0. El reloj de las pasadas (reloj.yml), activo: GitHub desactiva los workflows con schedule de un repositorio
+#    público tras 60 días sin commits, y en verano el bot casi no hace (docs/federacion.md, «El reloj de las
+#    pasadas»). Si sale «disabled_inactivity», no hay pasadas del bot (ni nada en rojo):
+gh workflow list --all | grep -i reloj
+gh workflow enable reloj.yml                  # solo si estaba desactivado
 # 1. Catálogo de competiciones de la temporada nueva (CodTemporada = año inicial − 2004)
 gh workflow run discover-fiflp.yml            # escribe scripts/fiflp_comps_catalog.json
 # 2. Grupos, clasificaciones y calendarios (tanda = CodTemporada; las competiciones

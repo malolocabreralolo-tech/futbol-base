@@ -60,16 +60,27 @@ PENDING_DAYS = 120      # resultados pendientes (aplazados) que se siguen buscan
 MAX_ACTAS_PER_RUN = 60   # actas por pasada del bot (~3-6 s cada una); el resto, en la siguiente
 MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se puede releer a mano)
 # Un acta que ya falló (acta_tries > 0) se reintenta solo si la última comprobación correcta publicada de su
-# grupo es de hace ACTA_RETRY_AFTER o más (retry_actas): los MAX_ACTA_TRIES intentos son para dar tiempo a la
-# federación a rellenarla (~18 h con una lectura cada 6 h, como con el cron cada 6 h). Con una pasada cada
-# 2 h, un prioritario caliente se lee en todas, y un acta suya que tarda se quedaba sin intentos en ~6-8 h
-# (corrector del 16/10/2026: en la simulación de cuatro semanas, una de AL27). Los demás grupos se leen cada
-# uno o varios días: se reintentan siempre. En las ventanas de partidos (17/10/2026, reloj.yml: una pasada
-# cada hora) un prioritario se lee en su pasada cada ~3 h (priority_slot), que no llega a las 4 h: el acta
-# que falló espera a la primera lectura de 4 h o más (al acabar la ventana, o si GitHub pierde ticks), y sus
-# intentos duran más, nunca menos. Medido (test_bot_pasada_corta, la semana con el reloj; doce semillas):
-# las de Las Mesas, p90 de 7,7 h desde que la federación las tiene (6,4 h con una pasada cada 2 h), ninguna
-# sin intentos. Con 2 h 30 serían 5,2 h, pero en las ventanas los 4 intentos se gastarían en ~9 h.
+# grupo es de hace un rato (retry_actas): los MAX_ACTA_TRIES intentos son para dar tiempo a la federación a
+# rellenarla (~18 h con una lectura cada 6 h, como con el cron cada 6 h). Con una pasada cada 2 h, un
+# prioritario caliente se lee en todas, y un acta suya que tarda se quedaba sin intentos en ~6-8 h (corrector
+# del 16/10/2026: en la simulación de cuatro semanas, una de AL27). Los demás grupos se leen cada uno o varios
+# días: se reintentan siempre. Cada lectura deja la comprobación al día, así que entre dos intentos de un acta
+# pasa al menos ese rato. Desde el 17/10/2026, en dos tramos:
+#   - el 2.º intento, desde ACTA_RETRY_SOON (2 h 45): en las ventanas de partidos (reloj.yml, una pasada cada
+#     hora) un prioritario ya frío se lee en su pasada cada ~3 h (priority_slot), y con las 4 h de antes no se
+#     reintentaba en toda la ventana (un sábado de 10 a 24): las de Las Mesas que la federación completa tarde
+#     tardaban el doble, p90 de 14 h desde que las tiene en vez de 7,5 (corrector del 17/10/2026). Por debajo
+#     de las ~3 h de su pasada y por encima de las 1-2 h de las lecturas calientes;
+#   - el 3.º y el 4.º, desde ACTA_RETRY_AFTER (4 h), como antes: en una ventana, al acabarla (o si GitHub
+#     pierde ticks). Así entre el primer intento y el último pasan al menos 2 h 45 + 4 + 4 h (~11 h; un
+#     sábado, ~20 h, hasta la mañana del domingo), y no ~8-9 h, como con 2 h 45 para todos.
+# Medido (test_bot_pasada_corta, la semana a las horas del reloj; doce semillas, las 84 actas de Las Mesas,
+# desde que la federación las tiene): con el reloj sin perder ticks, p90 de 4,3 h en vez de 12,5; perdiendo
+# el 20 % y con 0-15 min de retraso, 6,0 en vez de 11,8; perdiendo el 55 % y con 0-60 min, 4,8 en vez de
+# 7,7; con una pasada cada 2 h exactas, 5,8 en vez de 6,2. Ninguna sin intentos en tres semanas
+# (docs/federacion.md, «El reloj de las pasadas»).
+ACTA_RETRY_SOON = timedelta(hours=2, minutes=45)
+ACTA_RETRY_SOON_TRIES = 2      # las que fallaron menos de esto (una vez) se reintentan desde ACTA_RETRY_SOON
 ACTA_RETRY_AFTER = timedelta(hours=4)
 # La PASADA CORTA (16/10/2026). En las pasadas 1107-1110 la federación servía ~15 documentos por IP y el
 # bloqueo escalaba dentro de la pasada: el 1.º ~300 s, el 2.º ~900 s y el 3.º más que el plazo. Cada
@@ -95,7 +106,8 @@ RESERVE_SECONDS = 2 * 60
 # cada hora (reloj_pasadas.WINDOW). Lo que va por número de pasada (los turnos de ROTATION_PASSES,
 # priority_slot, closed_turn, extras_turn) solo se adelanta en ellas; lo que mira PASS_EVERY (stale: «la
 # pasada siguiente», que en una ventana llega antes; la franja de run_number fuera de GitHub), la base: lee
-# antes, nunca después. Los plazos que van por tiempo (HOT_FOR, ACTA_RETRY_AFTER, scorers_due), igual.
+# antes, nunca después. Los plazos que van por tiempo (HOT_FOR, scorers_due), igual; los de retry_actas,
+# en dos tramos desde el 17/10/2026 (ACTA_RETRY_SOON): con las 4 h de antes, en las ventanas no se reintentaba.
 PASS_EVERY = timedelta(hours=2)
 PASS_SLACK = timedelta(minutes=30)  # lo que puede retrasarse una pasada (stale): ticks del reloj perdidos
 CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada más vieja: cerrado
@@ -1316,23 +1328,40 @@ def apply_acta(conn, mid, code, acta, log=print):
 def pending_actas(conn, group_id, retry=True):
     """Partidos jugados con código de acta y sin acta importada (o marcados para
     releer, o con otro código de acta), los nunca intentados primero y los más
-    recientes antes; los que fallaron MAX_ACTA_TRIES veces se dejan. Sin `retry`
-    (retry_actas), solo los nunca intentados."""
+    recientes antes; los que fallaron MAX_ACTA_TRIES veces se dejan. `retry`:
+    True, todos; False, solo los nunca intentados; o un número (retry_actas),
+    los que han fallado menos veces que él."""
     return conn.execute(
         """SELECT id, fiflp_acta FROM matches WHERE group_id=? AND fiflp_acta IS NOT NULL
            AND home_score IS NOT NULL AND acta_tries < ?
            AND (cod_acta IS NULL OR acta_recheck=1 OR cod_acta <> fiflp_acta)
-           ORDER BY acta_tries, date DESC, id""", (group_id, MAX_ACTA_TRIES if retry else 1)).fetchall()
+           ORDER BY acta_tries, date DESC, id""", (group_id, _tries_below(retry))).fetchall()
+
+
+def _tries_below(retry):
+    """El tope de intentos (exclusivo) de pending_actas: True, MAX_ACTA_TRIES; False o None, 1 (las nunca
+    intentadas); un número, ese (entre 1 y MAX_ACTA_TRIES)."""
+    if retry is True:
+        return MAX_ACTA_TRIES
+    if retry is False or retry is None:
+        return 1
+    return max(1, min(int(retry), MAX_ACTA_TRIES))
 
 
 def retry_actas(check, now):
-    """¿Se reintentan en esta lectura del grupo sus actas que ya fallaron? Si su última comprobación correcta
-    publicada (`check`, data-health.json) es de hace ACTA_RETRY_AFTER (4 h) o más, o no la hay: al ritmo de
-    sus lecturas por edad, no en cada pasada de un prioritario caliente (cada 1-2 h). En una ventana de
-    partidos sus lecturas por su pasada (~3 h) tampoco llegan: espera a la primera de 4 h o más. Sin estado
-    nuevo."""
+    """¿Qué actas que ya fallaron se reintentan en esta lectura del grupo? El tope de intentos para
+    pending_actas: todas (MAX_ACTA_TRIES) si su última comprobación correcta publicada (`check`,
+    data-health.json) es de hace ACTA_RETRY_AFTER (4 h) o más, o no la hay; las que fallaron una vez
+    (ACTA_RETRY_SOON_TRIES) si es de hace ACTA_RETRY_SOON (2 h 45) o más; si no, solo las nuevas (1). Al
+    ritmo de sus lecturas por edad (cada ~3 h en su pasada en una ventana de partidos, cada 6 h fuera), no en
+    cada pasada de un prioritario caliente (cada 1-2 h). Sin estado nuevo."""
     at = checked_at(check) if checked_ok(check) else None
-    return at is None or _aware(now) - at >= ACTA_RETRY_AFTER
+    age = None if at is None else _aware(now) - at
+    if age is None or age >= ACTA_RETRY_AFTER:
+        return MAX_ACTA_TRIES
+    if age >= ACTA_RETRY_SOON:
+        return ACTA_RETRY_SOON_TRIES
+    return 1
 
 
 def new_actas(conn, group_ids):
@@ -1360,8 +1389,9 @@ def import_actas(page, F, conn, group_id, budget, deadline=None, log=print, trie
     vuelven a pedir (los MAX_ACTA_TRIES intentos son para pasadas distintas,
     que dan tiempo a la federación a rellenarla); se apuntan los que se piden.
     `unloaded` (un set): se apuntan los partidos cuya acta no cargó (run_passes:
-    quedan para otra pasada). Sin `retry` (retry_actas), solo las nunca
-    intentadas."""
+    quedan para otra pasada). `retry`, como en pending_actas: True, todas;
+    False, solo las nunca intentadas; un número (retry_actas), las que han
+    fallado menos veces."""
     from fiflp_acta import parse_flat_acta
     done = read = failed_loads = 0
     pending = [(mid, code) for mid, code in pending_actas(conn, group_id, retry) if tried is None or mid not in tried]
@@ -1666,8 +1696,9 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
       2. si fue bien, JUSTO DESPUÉS sus goleadores, si tocan (scorers_due: si la lectura cambió resultados,
          si hay un acta nueva o una vez al día), y sus actas pendientes (pending_actas: como mucho
          MAX_ACTAS_PER_RUN en la pasada, cada una una vez por pasada, `tried`, y MAX_ACTA_TRIES en
-         total; las que ya fallaron, solo si su última comprobación es de hace 4 h o más, retry_actas:
-         no en cada pasada de un prioritario caliente), hasta el plazo; lo que el plazo o la federación
+         total; las que ya fallaron, solo si su última comprobación es de hace un rato, retry_actas: la
+         que falló una vez desde 2 h 45, las demás desde 4 h; no en cada pasada de un prioritario
+         caliente), hasta el plazo; lo que el plazo o la federación
          no dejan acabar, a otra pasada
          (run.extrasDeferred).
     El orden, el de plan_groups: los prioritarios a los que les toca (calientes primero), los cerrados que

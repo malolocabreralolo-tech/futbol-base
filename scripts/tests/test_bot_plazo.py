@@ -801,28 +801,46 @@ def test_an_acta_that_fails_is_read_once_per_pass(health, monkeypatch):
 
 def test_a_failed_acta_is_retried_at_the_pace_of_age_not_in_every_pass(health, monkeypatch):
     """Un acta que ya falló se reintenta solo si la última comprobación correcta publicada de su grupo es de
-    hace 4 h o más (retry_actas, ACTA_RETRY_AFTER): sus MAX_ACTA_TRIES intentos son para dar tiempo a la
-    federación a rellenarla. Con una pasada cada 2 h, un prioritario caliente se lee en todas, y un acta suya
-    que tardaba se quedaba sin intentos en ~6-8 h (en la simulación de cuatro semanas, una de AL27); con el
-    cron cada 6 h, ~18 h. Una nueva, siempre; y la que no se reintenta no deja el grupo «a medias»."""
+    hace un rato (retry_actas): sus MAX_ACTA_TRIES intentos son para dar tiempo a la federación a rellenarla.
+    Con una pasada cada 2 h, un prioritario caliente se lee en todas, y un acta suya que tardaba se quedaba sin
+    intentos en ~6-8 h (en la simulación de cuatro semanas, una de AL27); con el cron cada 6 h, ~18 h. Desde
+    el 17/10/2026, en dos tramos: la que falló una vez, desde 2 h 45 (ACTA_RETRY_SOON: en las ventanas de
+    partidos, con una pasada cada hora, un prioritario frío se lee en su pasada cada ~3 h, y con las 4 h de
+    antes no se reintentaba en toda la ventana); las que fallaron más, desde 4 h (ACTA_RETRY_AFTER), como
+    antes. Una nueva, siempre; y la que no se reintenta no deja el grupo «a medias»."""
     def apply(conn, mid, code, acta, log=print):
         if code == 7001:
             return False
         return bool(conn.execute("UPDATE matches SET cod_acta=? WHERE id=?", (code, mid)))
     monkeypatch.setattr(U, "apply_acta", apply)
-    assert U.ACTA_RETRY_AFTER == timedelta(hours=4)
-    for hours, retried in ((1, False), (3.9, False), (4, True), (6, True)):
+    assert (U.ACTA_RETRY_SOON, U.ACTA_RETRY_AFTER) == (timedelta(hours=2, minutes=45), timedelta(hours=4))
+    assert U.ACTA_RETRY_SOON_TRIES == 2 and U.MAX_ACTA_TRIES == 4
+    for tries, hours, retried in ((1, 1, False), (1, 2.7, False), (1, 2.75, True), (1, 3, True), (1, 6, True),
+                                  (2, 2.75, False), (2, 3.9, False), (2, 4, True), (3, 3, False), (3, 4, True)):
         conn = with_actas(season(), {"PG2": 2})
-        conn.execute("UPDATE matches SET acta_tries=1 WHERE fiflp_acta=7001")            # ya falló una vez
+        conn.execute("UPDATE matches SET acta_tries=? WHERE fiflp_acta=7001", (tries,))     # ya falló
         checks = {code: checked(6) for code in ALL}
         checks["PG2"] = checked(hours)
         number = next(n for n in range(12) if "PG2" in plan(conn, checks, number=n).priority)
         data, fed = health(report(checks), conn, budget=600, number=number)
         s = steps(fed)
-        assert "PG2" in s and "acta 7002" in s and ("acta 7001" in s) is retried, (hours, s)
-        assert conn.execute("SELECT acta_tries FROM matches WHERE fiflp_acta=7001").fetchone() == (1 + retried,)
+        assert "PG2" in s and "acta 7002" in s and ("acta 7001" in s) is retried, (tries, hours, s)
+        assert conn.execute("SELECT acta_tries FROM matches WHERE fiflp_acta=7001").fetchone() == (tries + retried,)
         assert "PG2" not in data["run"]["extrasDeferred"]
-    assert U.retry_actas(None, NOW) and U.retry_actas(checked(1, "error"), NOW)
+    assert U.retry_actas(None, NOW) == U.MAX_ACTA_TRIES == U.retry_actas(checked(1, "error"), NOW)
+    assert [U.retry_actas(checked(h), NOW) for h in (1, 2.75, 4)] == [1, 2, U.MAX_ACTA_TRIES]
+
+
+def test_the_retry_cap_of_pending_actas():
+    """pending_actas: True, todas las que no se han agotado; False, solo las nunca intentadas; un número
+    (retry_actas), las que fallaron menos veces que él, entre 1 y MAX_ACTA_TRIES."""
+    conn = with_actas(season(), {"PG2": 5})
+    for tries, acta in enumerate(range(7001, 7006)):
+        conn.execute("UPDATE matches SET acta_tries=? WHERE fiflp_acta=?", (tries, acta))
+    left = lambda retry: sorted(code for _, code in U.pending_actas(conn, ALL.index("PG2") + 1, retry))
+    assert left(True) == left(U.MAX_ACTA_TRIES) == left(99) == [7001, 7002, 7003, 7004]
+    assert left(False) == left(1) == left(0) == left(None) == [7001]
+    assert left(2) == [7001, 7002] and left(3) == [7001, 7002, 7003]
 
 
 def test_without_priority_groups_the_passes_are_as_before(health, actas_ok, monkeypatch, capsys):

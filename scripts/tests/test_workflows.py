@@ -15,12 +15,17 @@ Guards the CI contracts fixed on 2026-06-11:
    data-lineups-*.js, future files), plus index.html, sw.js
    (CACHE_NAME bump, contracts C3/C4) and futbolbase.db.
 4. (17/10/2026) update.yml no tiene cron: lo lanza el reloj (reloj.yml, con
-   scripts/reloj_pasadas.py), cada 15 min, con los permisos justos y sin
-   pip, y solo cuando toca (test_reloj_pasadas.py prueba la decisión).
+   scripts/reloj_pasadas.py), cada 15 min, con los permisos justos (también
+   en el job) y solo sus disparadores, sin pip, y solo cuando toca
+   (test_reloj_pasadas.py prueba la decisión). El guion del paso que decide
+   se ejecuta con un gh de mentira: un fallo de gh lo deja en rojo y sin due.
 
-Static YAML checks only — no network, no workflow execution.
+Static YAML checks — no network, no workflow execution (except that one
+step script, run locally with bash and a fake gh).
 """
+import os
 import re
+import subprocess
 from datetime import timedelta
 from pathlib import Path
 
@@ -141,7 +146,7 @@ def test_the_clock_ticks_every_15_minutes_off_the_hour():
     data, _ = _reloj_job()
     assert data["name"] == "Reloj de las pasadas"
     trig = _triggers(data)
-    assert "workflow_dispatch" in trig
+    assert set(trig) == {"schedule", "workflow_dispatch"}, "solo el tick y a mano (con actions: write)"
     crons = [e.get("cron") for e in (trig.get("schedule") or [])]
     assert len(crons) == 1
     minute, *rest = crons[0].split()
@@ -158,6 +163,7 @@ def test_the_clock_has_minimal_permissions_and_is_light():
     sin credenciales guardadas, con el python3 del sistema y sin pip ni setup-python."""
     data, job = _reloj_job()
     assert data["permissions"] == {"actions": "write", "contents": "read"}
+    assert "permissions" not in job, "los del job sustituirían a los del workflow"
     assert data["concurrency"]["cancel-in-progress"] is False and data["concurrency"]["group"]
     assert data["concurrency"]["group"] != "update-data", "no comparte fila con las pasadas"
     assert job["runs-on"] == "ubuntu-24.04" and job.get("timeout-minutes", 99) <= 10
@@ -184,6 +190,9 @@ def test_the_clock_launches_update_on_main_only_when_due():
     assert steps.index(decide) < steps.index(launch)
     assert "set -euo pipefail" in decide["run"]
     assert re.search(r"gh run list [^\n]*--workflow update\.yml", decide["run"])
+    fields = re.search(r"--json (\S+)", decide["run"]).group(1).split(",")
+    assert {"status", "createdAt", "startedAt"} <= set(fields), "startedAt: un relanzamiento cuenta desde que se relanza"
+    assert "||" not in decide["run"], "un fallo de gh no se cambia por otra cosa: el job, en rojo"
     assert "python3 scripts/reloj_pasadas.py <" in decide["run"]
     assert decide["env"]["GH_TOKEN"] == "${{ github.token }}" and decide.get("id")
     assert not decide.get("continue-on-error")
@@ -191,6 +200,62 @@ def test_the_clock_launches_update_on_main_only_when_due():
     assert "gh workflow run update.yml --ref main" in launch["run"]
     assert launch["env"]["GH_TOKEN"] == "${{ github.token }}"
     assert [st for st in steps if "gh workflow run" in (st.get("run") or "")] == [launch]
+
+
+def _run_decide_step(tmp_path, gh_script):
+    """El guion del paso que decide de reloj.yml, con bash y un gh de mentira (`gh_script`, su cuerpo), desde
+    la raíz del repositorio: (código de salida, lo que escribió en $GITHUB_OUTPUT o None, la salida)."""
+    _, job = _reloj_job()
+    decide = next(st for st in job["steps"] if "reloj_pasadas.py" in (st.get("run") or ""))
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir(parents=True)
+    gh = bin_dir / "gh"
+    gh.write_text("#!/bin/bash\n" + gh_script + "\n", encoding="utf-8")
+    gh.chmod(0o755)
+    out = tmp_path / "salida"
+    env = {"PATH": f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}", "RUNNER_TEMP": str(tmp_path),
+           "GITHUB_OUTPUT": str(out), "GITHUB_REPOSITORY": "dueño/futbol-base", "GH_TOKEN": "x"}
+    done = subprocess.run(["bash", "-c", decide["run"]], cwd=ROOT, env=env, capture_output=True, text=True,
+                          timeout=60)
+    return done.returncode, (out.read_text() if out.exists() else None), done.stdout + done.stderr
+
+
+def test_a_gh_failure_fails_the_clock_and_launches_nothing(tmp_path):
+    """El guion de verdad del paso que decide: con un gh que falla (sin red, sin permisos, la API caída), sale
+    en rojo y sin due, así que el paso que lanza no corre (con un `|| echo '[]'`, «no hay ninguna» y una pasada
+    en cada tick). Con un gh que responde, decide y escribe due."""
+    code, out, log = _run_decide_step(tmp_path / "falla", 'echo "HTTP 502: Bad Gateway" >&2; exit 1')
+    assert code != 0 and out is None, (code, out, log)
+    code, out, log = _run_decide_step(tmp_path / "basura", 'echo "<html>no es la lista</html>"')
+    assert code != 0 and out is None, (code, out, log)
+    code, out, log = _run_decide_step(tmp_path / "vacia", 'echo "[]"')
+    assert code == 0 and out == "due=true\n", (code, out, log)
+
+
+def test_every_workflow_that_launches_the_bot_is_named_where_the_bot_is():
+    """Quien lanza update.yml sube GITHUB_RUN_NUMBER (el orden de cada pasada) y, para parar las pasadas, hay
+    que desactivarlo: los comentarios de update.yml y de reloj.yml los nombran a todos (el reloj, que lo
+    lanza, y las tandas de la federación que lo lanzan al subir sus raw)."""
+    launchers = sorted(f.name for f in WF_DIR.glob("*.yml")
+                       if "gh workflow run update.yml" in f.read_text(encoding="utf-8"))
+    assert "reloj.yml" in launchers and "detalle-federacion.yml" in launchers, launchers
+    for name in ("update.yml", "reloj.yml"):
+        head = "\n".join(line for line in (WF_DIR / name).read_text(encoding="utf-8").splitlines()
+                         if line.lstrip().startswith("#"))
+        missing = [f for f in launchers if f != name and f not in head]
+        assert not missing, (name, missing)
+
+
+def test_how_to_wake_the_clock_after_60_days_is_written_down():
+    """En un repositorio público GitHub desactiva los workflows con schedule tras 60 días sin actividad, sin
+    nada en rojo: reloj.yml, docs/federacion.md y el arranque de temporada dicen cómo verlo y reactivarlo (en
+    verano de 2026 hubo 43 días sin commits). Y update.sh ya no habla del cron de update.yml, que no tiene."""
+    for path in (WF_DIR / "reloj.yml", ROOT / "docs" / "federacion.md", ROOT / "docs" / "temporada-nueva.md"):
+        text = path.read_text(encoding="utf-8")
+        assert "gh workflow enable reloj.yml" in text and "disabled_inactivity" in text, path.name
+        assert "60 días" in text, path.name
+    sh = (ROOT / "scripts" / "update.sh").read_text(encoding="utf-8")
+    assert "reloj.yml" in sh and "cron" not in sh and "6 horas" not in sh
 
 
 def test_the_clock_cadence_is_the_bots_and_a_pass_fits_in_the_shortest_one():

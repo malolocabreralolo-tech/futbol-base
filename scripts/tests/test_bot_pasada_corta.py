@@ -574,6 +574,33 @@ def clock_week(tmp_path_factory):
 
 
 @pytest.fixture(scope="module")
+def perfect_clock_week(tmp_path_factory):
+    """La misma semana con el reloj sin perder ni retrasar ningún tick (clock_times(loss=0, delay=0)): una
+    pasada cada hora en las ventanas y cada 2 h fuera, lo que se busca."""
+    mp = pytest.MonkeyPatch()
+    try:
+        passes, season, conn = simulate(tmp_path_factory.mktemp("reloj-perfecto"), mp, times=clock_times(loss=0, delay=0))
+        yield passes, season, conn
+    finally:
+        mp.undo()
+
+
+def mine_acta_hours(passes, season):
+    """Por cada acta de Las Mesas que la federación tiene durante la simulación: (grupo, jornada, horas desde que
+    la tiene hasta que el bot la importa; None si no la importa)."""
+    got = acta_times(passes, season)
+    out = []
+    for code in MINE:
+        gid = season.gid[code]
+        for j in range(1, ROUNDS + 1):
+            for m in season.matches[(gid, j)]:
+                if MINE[code] in (m["home"], m["away"]) and START <= m["acta_at"] <= passes[-1]["now"]:
+                    at = got.get(m["acta"])
+                    out.append((code, j, None if at is None else (at - m["acta_at"]).total_seconds() / 3600))
+    return out
+
+
+@pytest.fixture(scope="module")
 def three_weeks(tmp_path_factory):
     """Tres semanas (LONG_DAYS) con el bot de ahora, para (c): en una, el máximo salía truncado."""
     mp = pytest.MonkeyPatch()
@@ -664,8 +691,8 @@ def test_with_the_clock_one_pass_an_hour_on_match_days_and_nothing_breaks(clock_
     que empieza con él publicado, que en las ventanas llega antes (la mediana, ≤ 1 h desde que la federación
     lo publica), los prioritarios no pasan de PRIORITY_MAX_AGE sin leerse más lo que GitHub retrase un tick
     (stale mira PASS_EVERY, la cadencia base, también en las ventanas: lo seguro), ningún acta se queda sin
-    intentos (ACTA_RETRY_AFTER: en las ventanas sus lecturas por edad van cada ~3 h y una que falló espera a
-    la primera de 4 h o más) y las páginas útiles al día no bajan."""
+    intentos (retry_actas: en las ventanas sus lecturas por edad van cada ~3 h; la que falló una vez se
+    reintenta desde 2 h 45 y las demás desde 4 h) y las páginas útiles al día no bajan."""
     passes, season, conn, s = clock_week
     assert len(passes) >= 75 and sum(1 for p in passes if R.window(p["now"])) >= 20, s
     assert all(p["pauses"] <= 1 and p["paused"] < 600 and p["blocks"] <= 2 for p in passes), s
@@ -682,3 +709,19 @@ def test_with_the_clock_one_pass_an_hour_on_match_days_and_nothing_breaks(clock_
     exhausted = conn.execute("""SELECT count(*) FROM matches WHERE fiflp_acta IS NOT NULL AND acta_tries >= ?
                                 AND (cod_acta IS NULL OR cod_acta <> fiflp_acta)""", (U.MAX_ACTA_TRIES,)).fetchone()[0]
     assert exhausted == 0 and s["pending_actas_end"] <= 5, s
+
+
+def test_with_a_perfect_clock_the_actas_of_las_mesas_do_not_wait_for_the_end_of_the_window(perfect_clock_week):
+    """(f) Cuanto mejor entregue GitHub los ticks, antes, no después (corrector del 17/10/2026): con el reloj
+    perfecto, en las ventanas un prioritario ya frío se lee en su pasada cada ~3 h, y con un solo plazo de 4 h
+    (ACTA_RETRY_AFTER) un acta suya que falló no se reintentaba en toda la ventana: la de PG2 de la jornada 3
+    (la federación la completa 3 h después del resultado, el sábado) esperaba 12,4 h, hasta la madrugada del
+    domingo. Con el 2.º intento desde 2 h 45 (ACTA_RETRY_SOON), ninguna tarda más de 8 h (la de B2, que la
+    federación completa 9 h después del resultado, ~7 h), todas se importan y ninguna se queda sin intentos."""
+    passes, season, conn = perfect_clock_week
+    hours = mine_acta_hours(passes, season)
+    assert len(hours) == len(MINE) and all(h is not None for _, _, h in hours), hours
+    assert max(h for _, _, h in hours) <= 8, hours
+    exhausted = conn.execute("""SELECT count(*) FROM matches WHERE fiflp_acta IS NOT NULL AND acta_tries >= ?
+                                AND (cod_acta IS NULL OR cod_acta <> fiflp_acta)""", (U.MAX_ACTA_TRIES,)).fetchone()[0]
+    assert exhausted == 0

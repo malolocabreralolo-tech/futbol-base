@@ -4,11 +4,11 @@ name: Actualización automática
 # ejecución tiene IP nueva: docs/federacion.md). Desde el 17/10/2026 no tiene cron: las lanza el reloj
 # (reloj.yml, scripts/reloj_pasadas.py) cada 2 h (update_fiflp.PASS_EVERY) y cada hora en las ventanas de
 # partidos (viernes de 18 a 24 y sábado y domingo de 10 a 24, hora de Canarias), nunca con otra sin acabar;
-# también las tandas de actas y goleadores al subir sus raw, y a mano. Su cron ('23 */2 * * *' desde el
-# 16/10/2026; '0 */6 * * *' antes) casi no llegaba: 5 de 13 en ~26 h, una pasada cada 4-6 h. El reloj es
-# otro workflow, y no un job «¿toca?» aquí, porque cada ejecución de update.yml, aunque no haga nada, sube
-# GITHUB_RUN_NUMBER, del que sale el orden de cada pasada (update_fiflp.run_number): así solo sube en
-# pasadas de verdad.
+# también las tandas de la federación al subir sus raw (actas-federacion.yml, goleadores-federacion.yml y
+# detalle-federacion.yml), y a mano. Su cron ('23 */2 * * *' desde el 16/10/2026; '0 */6 * * *' antes) casi
+# no llegaba: 5 de 13 en ~26 h, una pasada cada 4-6 h. El reloj es otro workflow, y no un job «¿toca?» aquí,
+# porque cada ejecución de update.yml, aunque no haga nada, sube GITHUB_RUN_NUMBER, del que sale el orden de
+# cada pasada (update_fiflp.run_number): así solo sube en pasadas de verdad.
 on:
   workflow_dispatch:          # el reloj (reloj.yml), las tandas de la federación y a mano desde GitHub
 

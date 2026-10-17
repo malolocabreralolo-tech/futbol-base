@@ -6,8 +6,10 @@
 #   bash scripts/update.sh --local    # todo menos el push
 #
 # Hace lo mismo que el workflow «Actualización automática» (update.yml), que es
-# quien lo hace de verdad cada 6 horas. Esto es la vía manual para cuando hace
-# falta empujar una actualización sin esperar al cron.
+# quien lo hace de verdad: lo lanza el reloj (reloj.yml) cada 2 h, y cada hora
+# en las ventanas de partidos (desde el 17/10/2026; docs/federacion.md). Esto es
+# la vía manual para cuando hace falta empujar una actualización sin esperar al
+# reloj.
 #
 # La versión anterior de este script llevaba tiempo muerta: llamaba a
 # scripts/build_matchdetail.py, que ya no existe, y publicaba un app.js que

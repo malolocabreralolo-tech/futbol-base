@@ -5,11 +5,14 @@ hora de Canarias (viernes de 18 a 24 y sábado y domingo de 10 a 24, con su camb
 entrada es el JSON de `gh run list`. El workflow, en test_workflows.py; con el bot, la semana simulada de
 test_bot_pasada_corta.py (test_with_the_clock_…)."""
 from datetime import datetime, timedelta, timezone
+import importlib.util
 import io
 import json
+import os
 import shutil
 import subprocess
 import sys
+import zoneinfo
 from pathlib import Path
 
 import pytest
@@ -24,9 +27,12 @@ def utc(text):
     return datetime.fromisoformat(text).replace(tzinfo=timezone.utc)
 
 
-def run(created, status="completed", conclusion="success", event="workflow_dispatch", number=1):
-    return {"number": number, "event": event, "status": status, "conclusion": conclusion if status == "completed" else "",
-            "createdAt": created.strftime("%Y-%m-%dT%H:%M:%SZ")}
+def run(created, status="completed", conclusion="success", event="workflow_dispatch", number=1, started=None):
+    out = {"number": number, "event": event, "status": status, "conclusion": conclusion if status == "completed" else "",
+           "createdAt": created.strftime("%Y-%m-%dT%H:%M:%SZ")}
+    if started is not None:
+        out["startedAt"] = started.strftime("%Y-%m-%dT%H:%M:%SZ")
+    return out
 
 
 # ── Las ventanas ──────────────────────────────────────────────────────────────
@@ -136,6 +142,38 @@ def test_entering_a_window_the_next_pass_comes_sooner():
     assert R.due(friday, [run(friday - timedelta(minutes=70))])
 
 
+def test_a_rerun_counts_from_when_it_was_relaunched():
+    """Relanzar una ejecución (Re-run) conserva su createdAt y cambia su startedAt (corrector del 17/10/2026):
+    la 1120, creada el sábado 24/10 a las 10:08 de Canarias, falla y se relanza a las 11:30. En el tick de las
+    11:52, con solo createdAt, «se creó hace 104 min» y el reloj lanzaba otra pasada ~20 min después de
+    acabar el relanzamiento (y el relanzamiento repite el número: el mismo turno). Cuenta desde las 11:30."""
+    created, rerun = utc("2026-10-24T09:08"), utc("2026-10-24T10:30")
+    runs = [run(created, number=1120, started=rerun), run(created - timedelta(hours=2), number=1119)]
+    ok, why = R.decide(utc("2026-10-24T10:52"), runs)
+    assert not ok and "la 1120" in why and "se relanzó hace 22 min" in why, why
+    assert not R.due(rerun + timedelta(minutes=49), runs) and R.due(rerun + timedelta(minutes=50), runs)
+    # En la cola o en marcha, el relanzamiento no deja lanzar otra (su status ya no es completed).
+    assert not R.due(utc("2026-10-24T12:00"), [run(created, status="in_progress", number=1120, started=rerun)])
+
+
+def test_without_startedat_it_counts_from_its_creation():
+    """En el primer intento startedAt es su creación (o casi); sin él, vacío o null (otra versión de gh), la
+    creación. Uno que no se lee: mejor un job en rojo."""
+    at = SAT - timedelta(minutes=55)
+    for started in (at, at + timedelta(seconds=20)):
+        ok, why = R.decide(SAT, [run(at, started=started)])
+        assert ok and "se creó hace" in why, why
+    for started in (None, ""):
+        bare = run(at)
+        bare["startedAt"] = started
+        assert R.due(SAT, [bare]) and R.run_time(bare) == R.created_at(bare)
+    for bad in ("ayer", 17, ["2026-10-17T10:00:00Z"]):
+        wrong = run(at)
+        wrong["startedAt"] = bad
+        with pytest.raises(ValueError):
+            R.decide(SAT, [wrong])
+
+
 def test_a_run_created_in_the_future_is_not_due():
     """Un reloj que va por detrás del de GitHub no lanza otra encima."""
     ok, why = R.decide(SAT, [run(SAT + timedelta(minutes=5))])
@@ -188,3 +226,40 @@ def test_it_runs_alone_with_the_system_python(tmp_path):
     assert done.returncode == 0, done.stderr
     assert "Toca: no hay ninguna ejecución de update.yml." in done.stdout
     assert out.read_text() == "due=true\n"
+
+
+# ── Sin la base de zonas horarias ─────────────────────────────────────────────
+
+def test_without_the_time_zones_there_are_no_windows_but_the_clock_goes_on(monkeypatch, tmp_path, capsys):
+    """Sin la zona Atlantic/Canary (ZoneInfoNotFoundError, un KeyError: la base de zonas del sistema no está y
+    el reloj no instala tzdata), el reloj no sabe la hora de Canarias: sin ventanas, una pasada cada 2 h
+    (BASE), con un aviso, y sin dejar el job en rojo (corrector del 17/10/2026: salía con una traza, sin due,
+    y como update.yml no tiene cron no había ninguna pasada)."""
+    def missing(key):
+        raise zoneinfo.ZoneInfoNotFoundError(f"No time zone found with key {key}")
+    monkeypatch.setattr(R, "ZoneInfo", missing)
+    assert R.local_time(SAT) is None and R.window(SAT) is None and R.interval(SAT) == H2
+    assert R.due(SAT, []) and not R.due(SAT, [run(SAT - timedelta(minutes=60))])
+    assert R.due(SAT, [run(SAT - timedelta(minutes=110))])
+    out = tmp_path / "salida"
+    assert R.main(["--now", "2026-10-17T12:00:00Z"], io.StringIO("[]"), {"GITHUB_OUTPUT": str(out)}) == 0
+    assert out.read_text() == "due=true\n"
+    printed = capsys.readouterr().out
+    assert printed.startswith("17/10/2026 12:00 UTC, sin la hora de Canarias"), printed
+    assert "::warning::reloj_pasadas: no está la zona Atlantic/Canary" in printed
+
+
+@pytest.mark.skipif(importlib.util.find_spec("tzdata") is not None,
+                    reason="con el paquete tzdata, zoneinfo no depende de la base del sistema")
+def test_without_the_system_time_zones_the_script_still_decides(tmp_path):
+    """Lo mismo de verdad: el guion solo, con PYTHONTZPATH en un directorio vacío (sin la base del sistema)."""
+    alone = tmp_path / "reloj_pasadas.py"
+    shutil.copy(Path(R.__file__), alone)
+    empty = tmp_path / "zonas"
+    empty.mkdir()
+    out = tmp_path / "salida"
+    env = {"PATH": os.environ.get("PATH", ""), "PYTHONTZPATH": str(empty), "GITHUB_OUTPUT": str(out)}
+    done = subprocess.run([sys.executable, str(alone), "--now", "2026-10-17T12:00:00Z"], input="[]", text=True,
+                          capture_output=True, cwd=tmp_path, env=env, timeout=60)
+    assert done.returncode == 0, done.stderr
+    assert "::warning::" in done.stdout and out.read_text() == "due=true\n"

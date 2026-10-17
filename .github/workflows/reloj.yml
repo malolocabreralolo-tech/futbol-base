@@ -2,9 +2,10 @@ name: Reloj de las pasadas
 
 # El único reloj del bot (desde el 17/10/2026): cada ~15 min mira las ejecuciones de update.yml y, si toca,
 # lanza una pasada (workflow_dispatch). Toca (scripts/reloj_pasadas.py) si ninguna está sin acabar y desde
-# que se creó la última han pasado 2 h (update_fiflp.PASS_EVERY, la cadencia base), o 1 h en las ventanas de
-# partidos, hora de Canarias: viernes de 18 a 24 y sábado y domingo de 10 a 24 (una hora después de los
-# primeros saques, que es cuando el bot ya busca resultados: update_fiflp.hot_reason); con 10 min de holgura.
+# que empezó la última (su creación o, si se relanzó, su startedAt) han pasado 2 h (update_fiflp.PASS_EVERY,
+# la cadencia base), o 1 h en las ventanas de partidos, hora de Canarias: viernes de 18 a 24 y sábado y
+# domingo de 10 a 24 (una hora después de los primeros saques, que es cuando el bot ya busca resultados:
+# update_fiflp.hot_reason); con 10 min de holgura.
 # El cron de update.yml ('23 */2 * * *' desde el 16/10/2026) casi no llegaba: 5 de 13 en ~26 h, una pasada
 # cada 4-6 h. Con un tick cada 15 min, uno perdido solo retrasa la pasada hasta el siguiente que llegue.
 #
@@ -13,11 +14,19 @@ name: Reloj de las pasadas
 # pasada (update_fiflp.run_number: los turnos de ROTATION_PASSES, priority_slot, closed_turn y extras_turn):
 # con ~90 ejecuciones vacías al día entre dos pasadas de verdad, el número saltaría de 4 en 4 o de 8 en 8 y
 # la rotación sin estado dejaría turnos sin leer. Con el reloj aparte, el número de update.yml solo sube en
-# pasadas de verdad (y en las que lanzan las tandas de actas y goleadores, o a mano, como siempre).
+# pasadas de verdad (y en las que lanzan las tandas de la federación al subir sus raw: actas-federacion.yml,
+# goleadores-federacion.yml y detalle-federacion.yml; o a mano, como siempre).
 #
 # Ligero: checkout disperso de reloj_pasadas.py, el python3 del sistema, sin pip; y los permisos justos para
 # leer y lanzar workflows (actions: write) y leer el repositorio (contents: read). Un fallo de gh o una
-# respuesta que no se entiende: el job falla a la vista y no lanza nada.
+# respuesta que no se entiende: el job falla a la vista y no lanza nada. Sin la base de zonas horarias, un
+# aviso y una pasada cada 2 h (sin ventanas), no un job en rojo.
+#
+# En un repositorio público GitHub DESACTIVA los workflows con schedule tras 60 días sin actividad (sin
+# commits): este también, y entonces no hay pasadas ni nada en rojo, solo deja de haber ejecuciones. En verano
+# el bot casi no hace commits (del 28/7 al 9/9/2026, 43 días sin ninguno): al empezar la temporada, mirar que
+# esté activo (gh workflow list --all: «disabled_inactivity») y reactivarlo con `gh workflow enable reloj.yml`
+# o desde la pestaña Actions (docs/federacion.md, «El reloj de las pasadas»).
 on:
   schedule:
     # Cada 15 min, a y 7, 22, 37 y 52: no a en punto ni a y media (GitHub retrasa o pierde más esos).
@@ -54,7 +63,7 @@ jobs:
         run: |
           set -euo pipefail
           gh run list --repo "$GITHUB_REPOSITORY" --workflow update.yml --limit 20 \
-            --json number,event,status,conclusion,createdAt > "$RUNNER_TEMP/pasadas.json"
+            --json number,event,status,conclusion,createdAt,startedAt > "$RUNNER_TEMP/pasadas.json"
           python3 scripts/reloj_pasadas.py < "$RUNNER_TEMP/pasadas.json"
 
       - name: Lanzar la pasada

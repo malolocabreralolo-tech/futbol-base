@@ -240,6 +240,30 @@ test('Partido sin jugar de prebenjamín: el bloque «Pronóstico» bajo el resul
     `Con los ${f.matches} partidos jugados en el grupo esta temporada. Es una estimación, no un resultado.`);
 });
 
+test('Partido: si los goles esperados no van con el favorito (el 1X2 es de las notas; los goles, del Poisson), no se enseñan', () => {
+  // Con un 0-4 de Santa Brígida en el campo del Gran Canaria en la jornada 1, las notas ponen a La Garita de
+  // favorita contra Acodetti, y el Poisson les da casi los mismos goles, algo más a Acodetti: un partido
+  // igualado, en el que cada modelo inclina la balanza a un lado.
+  const params = { g: 'PG2', r: 'Jornada 3', h: 'La Garita', a: 'Acodetti' };
+  const raw = currentAt(TODAY);
+  const first = raw.history.PG2['Jornada 1'].find((row) => row[1] === 'Gran Canaria' && row[2] === 'Santa Brígida');
+  first[3] = 0; first[4] = 4;
+  const opts = at(TODAY, raw);
+  const f = expected(params, opts);
+  assert.equal(f.pick, 'home');
+  assert.equal(f.goalsAgree, false);
+  assert.ok(f.xgAway > f.xgHome && f.score[0] > f.score[1], JSON.stringify(f));
+  const block = blockOf(renderPartido(params, opts), 'Pronóstico');
+  const cells = [...block.matchAll(/<div class="cell is-muted"><dt class="cell-label">(.*?)<\/dt><dd class="cell-value">(.*?)<\/dd>/g)].map((m) => [m[1], m[2]]);
+  assert.deepEqual(cells, [['Resultado más probable', `${f.score[0]}–${f.score[1]}`]]);
+  assert.match(block, /<dl class="cells cells-1">/);
+  assert.doesNotMatch(block, /Goles esperados/);
+  assert.match(block, /class="odds-bar"/, 'la barra y las cifras, como siempre');
+  // Sin el cambio, el mismo partido con sus dos casillas.
+  assert.equal(expected(params).goalsAgree, true);
+  assert.match(blockOf(renderPartido(params), 'Pronóstico'), /Goles esperados/);
+});
+
 test('un equipo que aún no ha jugado: ni línea en la Jornada ni bloque en Partido (solo miraría al rival)', () => {
   // Los dos partidos de Las Mesas, sin el marcador (la fuente aún no lo ha publicado).
   const raw = currentAt(TODAY);

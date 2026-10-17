@@ -4,19 +4,41 @@
  * portal por parámetro (nunca config.js, R2-1) y no lee ningún global de datos. Nada en la base ni en
  * el bot, ni ninguna petición nueva: solo los partidos ya jugados del grupo, los que la web ya carga.
  *
- * El modelo (el de Maher, el clásico de ataque y defensa con goles de Poisson), en una frase: cada
- * equipo tiene un ataque A y una defensa D (1 = la media del grupo; una defensa de 2 encaja el doble),
- * y el local de un partido marca de media b·H·A_local·D_visitante goles, y el visitante,
- * b·A_visitante·D_local, con b los goles medios del grupo y H el factor de campo. A y D salen de los
- * partidos jugados del grupo EN ESTA temporada, con k = 1,5 partidos ficticios en la media del grupo
- * (contracción): con un partido jugado, un equipo es un 40 % lo suyo y un 60 % la media; con quince,
- * un 91 % lo suyo. Nada de temporadas anteriores, ni como entrada ni como previo de un equipo o de un
- * club (decisión del 17/10/2026): las pasadas solo sirven para PROBAR el modelo
- * (scripts/backtest_pronostico.mjs) y para fijar los parámetros globales de PARAMS (la contracción, el
- * campo, la amortiguación de las goleadas y desde cuándo se muestra; y descartar las variantes que no
- * mejoran). Con las dos medias (por encima de 8 goles, amortiguadas: el modelo multiplicativo se pasa
- * en las goleadas), una distribución de goles por equipo, independientes, y de ahí P(local), P(empate),
- * P(visitante) y el resultado más probable.
+ * El modelo, en dos piezas (elegido el 17/10/2026 con el banco de pruebas, scripts/pronostico_banco.mjs):
+ * - El 1X2 (P(local), P(empate), P(visitante) y el favorito), con las NOTAS DE MASSEY: la «regla de tres»
+ *   de los resultados que propuso el usuario (si A le ganó a B y B a C, A tiene que poder con C), hecha
+ *   cuenta para todo el grupo a la vez. Cada equipo tiene una nota r, y en cada partido jugado
+ *       r_local − r_visitante + campo ≈ ln((goles del local + c) / (goles del visitante + c)),
+ *   «cuántas veces más goles mete uno que otro», con c = 3,64 goles de colchón, que recorta las goleadas
+ *   sin tirarlas (un 15-0 cuenta 1,6; un 30-0, 2,2; un 5-4, 0,1). Las notas son las que mejor cuadran con
+ *   TODOS los partidos jugados a la vez (mínimos cuadrados): A le saca a C lo que A le sacó a B más lo que
+ *   B le sacó a C, aunque no se hayan visto, y cada rival común y cada cadena de rivales cuentan, cada uno
+ *   con lo que pesa; si se vieron, ese partido es uno más. Con λ = 0,335 partidos ficticios contra la media
+ *   (nota 0), quien ha jugado poco se queda cerca de ella. De la diferencia de notas d del partido, una
+ *   logística ordenada con banda de empate: P(local) = σ(s·d − t), P(visitante) = σ(−s·d − t) y el empate,
+ *   lo que queda; la pendiente s y la banda t bajan cuanto menos se sabe de esa diferencia (su varianza):
+ *   con una o dos jornadas, los favoritos se moderan sin inflar el empate.
+ * - El resultado más probable y los goles esperados, con el Poisson de ataque y defensa de Maher (el que
+ *   daba también el 1X2 hasta el 17/10/2026): cada equipo tiene un ataque A y una defensa D (1 = la media
+ *   del grupo; una defensa de 2 encaja el doble), y el local de un partido marca de media
+ *   b·H·A_local·D_visitante goles, y el visitante, b·A_visitante·D_local, con b los goles medios del grupo
+ *   y H el factor de campo; con k = 1,5 partidos ficticios en la media del grupo (contracción: con un
+ *   partido jugado, un equipo es un 40 % lo suyo; con quince, un 91 %). Con las dos medias (por encima de
+ *   8 goles, amortiguadas: el modelo multiplicativo se pasa en las goleadas), una distribución de goles
+ *   por equipo, independientes, y de ahí el marcador más probable DENTRO del desenlace favorito de las
+ *   notas: nunca una victoria del que no es el favorito, ni un 1-1 con un favorito claro.
+ * Las dos, solo con los partidos jugados del grupo EN ESTA temporada. Nada de temporadas anteriores, ni
+ * como entrada ni como previo de un equipo o de un club (decisión del 17/10/2026): las pasadas solo sirven
+ * para PROBAR los modelos (scripts/pronostico_banco.mjs, scripts/backtest_pronostico.mjs) y para fijar los
+ * parámetros globales de PARAMS.
+ *
+ * Por qué Massey (el banco, 17/10/2026: los parámetros de cada modelo, fijados solo con las temporadas de
+ * AJUSTE, 2013-14 a 2020-21, y puntuados en las de EVALUACIÓN, 2021-22 a 2025-26, que el ajuste no ve:
+ * 2.747 partidos de 28 grupos, IC 95 % por bootstrap de temporada-grupo): log-loss del 1X2 0,534 frente a
+ * 0,544 del Poisson, Δ −0,010 [−0,016, −0,003], y Brier 0,297 frente a 0,302, Δ −0,006 [−0,009, −0,003];
+ * acierta el favorito como él (79,5 % frente a 79,1 %, sin diferencia real). Ni el Elo de goles, ni los
+ * rivales comunes y sus cadenas contados uno a uno, ni el Poisson bayesiano, ni las mezclas de los
+ * mejores lo mejoran (la tabla, en la cabecera del banco; cada familia, en scripts/pronostico_modelos/).
  *
  * Qué se muestra (con `today`, como en la web): solo la próxima jornada de cada grupo (horizonOf), y
  * solo con dos jornadas jugadas en el grupo y algún partido de cada uno de los dos equipos.
@@ -28,10 +50,31 @@
  * temporada del portal); y los partidos sin fecha, que no se sabe si son anteriores. */
 import { matchState, retiredTeams } from './model.js';
 
-/* Los parámetros globales, fijados con el backtest de las temporadas pasadas de prebenjamín
+/* Los parámetros globales.
+ *
+ * Los del 1X2, las notas de Massey: los que da el ajuste por máxima verosimilitud del 1X2 con SOLO las
+ * temporadas de AJUSTE del banco (2013-14 a 2020-21, 2.331 partidos; ajustar de
+ * scripts/pronostico_modelos/massey.mjs, que `node scripts/backtest_pronostico.mjs --calibrar` repite y
+ * compara con estos), redondeados a tres cifras; log-loss en el ajuste, 0,5117 (el Poisson, 0,5234):
+ * - cushion: c, el colchón de goles del objetivo ln((goles del local + c) / (goles del visitante + c)): 3,64;
+ * - ridge: λ, los partidos ficticios de cada equipo contra la media (nota 0): 0,335;
+ * - ratingHome: el campo, en la escala de las notas: 0,0586 (el local mete un 6 % más; ver abajo);
+ * - slope: β, la pendiente de la logística sobre la diferencia de notas: 5,58;
+ * - band: θ, la mitad de la banda de empate: 0,385;
+ * - slopeVar: κ, cuánto baja la pendiente con la varianza v de la diferencia, β / √(1 + κ·v): 1,85;
+ * - bandVar: κₑ, cuánto se estrecha la banda con ella, θ / √(1 + κₑ·v): 0,925 (con la banda fija, con una
+ *   jornada se preveía un 13 % de empates, y hay un 7-8 %).
+ * El campo, que el usuario cree que no decide (17/10/2026): tiene razón en que es poco. Mueve P(local) 3,5
+ * puntos de media y cambia el favorito en 131 de los 2.747 partidos de EVALUACIÓN. Pero algo aporta: sin él
+ * (reajustado en el ajuste), el log-loss de EVALUACIÓN no cambia (+0,001 [−0,004, +0,005]) y se acierta
+ * menos el favorito (−0,9 puntos [−1,7, −0,2]: de esos 131, con campo se aciertan 67 y sin él, 41); en el
+ * ajuste, sin él, +0,006 [+0,002, +0,010] de log-loss. Se queda.
+ *
+ * Los de los goles (el Poisson: el resultado más probable y los goles esperados), fijados con el backtest
+ * de las temporadas pasadas de prebenjamín cuando el Poisson daba también el 1X2
  * (scripts/backtest_pronostico.mjs; revisado el 17/10/2026 sin las copias de la importación ni lo que
  * puede ser de mesa: 13 temporadas, 53 grupos, 5.078 partidos, cada uno con solo las jornadas anteriores
- * de su temporada; la tabla, en su salida):
+ * de su temporada; la tabla, en su salida, con el 1X2 del Poisson):
  * - shrink: k, los partidos ficticios en la media del grupo de cada equipo (ataque y defensa): 1,5. Con
  *   los datos limpios, el mejor log-loss del 1X2 del archivo es el de 1 (0,5338 frente a 0,5343), a menos
  *   de la milésima con la que el backtest da por empatadas dos opciones; y con dos jornadas jugadas, las
@@ -44,21 +87,30 @@ import { matchState, retiredTeams } from './model.js';
  * - cap: ese tope de goles por equipo y partido (Infinity: sin tope);
  * - soften: por encima de este umbral, los goles esperados se amortiguan, T·(1 + ln(x/T)) (revisión del
  *   17/10/2026): sin ella, con 15-20 esperados se marcaban 13,7 (16,8 de media esperada) y el «resultado
- *   más probable» salía inflado (Guanarteme–Acodetti de 2016-17, 0-24, acabó 2-12; ahora, 0-17). El 1X2 no cambia (0,5343 con cualquiera: las
- *   goleadas ya pasan del 99 %); 8 es el de menor error de los goles esperados (2,195 frente a 2,212 sin
- *   ella) y con él cuadran por tramos (de 10 a 12, 10,8 frente a 10,7 reales);
- * - minRounds: jornadas jugadas del grupo desde las que se muestra: 2. Con una, apenas mejora a la
- *   tabla (log-loss 0,819 frente a 0,835; acierta como ella en el 1X2, 66,7 % frente a 67,1 %) y se pasa
- *   de seguro con sus favoritos claros (dice 85-93 % y acierta el 74-82 %). Con dos acierta como la
- *   tabla (69,3 % frente a 68,0 %), pero sus probabilidades son mucho mejores (log-loss 0,709 frente a
- *   0,817; Brier 0,402 frente a 0,487) y lo que dice es lo que pasa (dice 86 % y acierta el 84 %); desde
- *   tres, además, acierta más (74,9 % frente a 70,9 %);
+ *   más probable» salía inflado (Guanarteme–Acodetti de 2016-17, 0-24, acabó 2-12; ahora, 0-17). El 1X2 del
+ *   Poisson no cambia (0,5343 con cualquiera: las goleadas ya pasan del 99 %); 8 es el de menor error de los
+ *   goles esperados (2,195 frente a 2,212 sin ella) y con él cuadran por tramos (de 10 a 12, 10,8 frente a
+ *   10,7 reales).
+ *
+ * Desde cuándo se muestra (con el modelo de la web: el 1X2 de las notas; backtest de las 13 temporadas,
+ * revisado el 17/10/2026 al cambiar de modelo):
+ * - minRounds: jornadas jugadas del grupo desde las que se muestra: 2. Con una, las notas ya no se pasan
+ *   de seguras (dicen 85 % y aciertan el 86 %; el Poisson decía 85-93 % y acertaba el 74-82 %), pero apenas
+ *   mejoran a la tabla (log-loss 0,800 frente a 0,835; aciertan como ella, 66,3 % frente a 67,1 %; en la
+ *   EVALUACIÓN del banco, −0,035 [−0,132, +0,056]: nada demostrable). Con dos, aciertan más que la tabla
+ *   (73,0 % frente a 68,0 %) y sus probabilidades son mucho mejores (log-loss 0,677 frente a 0,817; Brier
+ *   0,384 frente a 0,487; en la EVALUACIÓN, −0,121 [−0,245, +0,013], aún con pocos partidos); desde tres,
+ *   la diferencia ya es clara en todo;
  * - minPlayed: partidos que tiene que llevar cada uno de los dos equipos: 1 (revisión del 17/10/2026). Sin
  *   ninguno, un equipo es la media del grupo y el pronóstico solo mira al rival (Cardones, que descansó en
  *   la jornada 1 y aún no ha jugado la 2); el archivo casi no tiene casos (7) con los que probarlo. Con uno
- *   (112 partidos), sus probabilidades siguen siendo mejores que las de la tabla (log-loss 0,735 frente a
- *   0,772), aunque acierta algo menos el 1X2 (66,1 % frente a 69,6 %). */
-export const PARAMS = Object.freeze({ shrink: 1.5, home: 1.08, size: Infinity, cap: Infinity, soften: 8, minRounds: 2, minPlayed: 1 });
+ *   (112 partidos), sus probabilidades son mejores que las de la tabla (log-loss 0,673 frente a 0,772) y
+ *   aciertan como ella (69,6 %). */
+export const PARAMS = Object.freeze({
+  cushion: 3.64, ridge: 0.335, ratingHome: 0.0586, slope: 5.58, band: 0.385, slopeVar: 1.85, bandVar: 0.925,
+  shrink: 1.5, home: 1.08, size: Infinity, cap: Infinity, soften: 8,
+  minRounds: 2, minPlayed: 1,
+});
 
 // Los estados de la app de futbolaspalmas (model.matchStatus) con los que un marcador no es deportivo
 // y un partido sin jugar no se pronostica.
@@ -200,6 +252,7 @@ export function trainingFor(group, match, { status = null } = {}) {
 // Los ajustes ya hechos, por grupo, por `status` y por jornada, tamaño del entrenamiento y parámetros del
 // ajuste: los partidos de una jornada con el mismo entrenamiento (los de días distintos sin nada jugado
 // entre medias, las jornadas futuras) comparten ajuste. Solo es una caché: el resultado es el mismo.
+// Cada uno, { goals: el de fitRatings, notes: el de fitNotes } o null sin partidos.
 const FITS = new WeakMap();
 
 function cachedFit(group, match, status, p) {
@@ -209,10 +262,93 @@ function cachedFit(group, match, status, p) {
   if (!byStatus.has(st)) byStatus.set(st, new Map());
   const memo = byStatus.get(st);
   const training = trainingFor(group, match, { status: st });
-  const key = [match.roundKey, training.length, p.shrink, p.home, p.cap].join('\u0001');
-  if (!memo.has(key)) memo.set(key, fitRatings(training, p));
+  const key = [match.roundKey, training.length, p.shrink, p.home, p.cap, p.cushion, p.ridge].join('\u0001');
+  if (!memo.has(key)) memo.set(key, training.length ? { goals: fitRatings(training, p), notes: fitNotes(training, p) } : null);
   return memo.get(key);
 }
+
+const sigma = x => (x >= 0 ? 1 / (1 + Math.exp(-x)) : Math.exp(x) / (1 + Math.exp(x)));
+
+// Cholesky de una matriz simétrica definida positiva n×n (por filas, en un Float64Array): L, con
+// M = L·Lᵀ; y la solución de L·Lᵀ·x = b.
+function cholesky(M, n) {
+  const L = new Float64Array(n * n);
+  for (let i = 0; i < n; i += 1) {
+    for (let j = 0; j <= i; j += 1) {
+      let s = M[i * n + j];
+      for (let q = 0; q < j; q += 1) s -= L[i * n + q] * L[j * n + q];
+      L[i * n + j] = i === j ? Math.sqrt(s) : s / L[j * n + j];
+    }
+  }
+  return L;
+}
+function cholSolve(L, n, b) {
+  const y = new Float64Array(n), x = new Float64Array(n);
+  for (let i = 0; i < n; i += 1) {
+    let s = b[i];
+    for (let q = 0; q < i; q += 1) s -= L[i * n + q] * y[q];
+    y[i] = s / L[i * n + i];
+  }
+  for (let i = n - 1; i >= 0; i -= 1) {
+    let s = y[i];
+    for (let q = i + 1; q < n; q += 1) s -= L[q * n + i] * x[q];
+    x[i] = s / L[i * n + i];
+  }
+  return x;
+}
+
+/* Las notas de Massey con los partidos `matches` (los de trainingFor): las r que mejor cuadran, por mínimos
+ * cuadrados con λ (ridge) partidos ficticios de cada equipo contra la media, con
+ * r_local − r_visitante ≈ ln((goles del local + c) / (goles del visitante + c)). El sistema es
+ * (XᵀX + λI)·r = Xᵀy, con X la matriz de los partidos (+1 el local, −1 el visitante), definido positivo
+ * con λ > 0: una sola solución, por Cholesky (un 16×16 en un grupo de 16). Como el campo entra lineal, se
+ * resuelve sin él (notes) y aparte lo que el campo de los partidos jugados mueve cada nota (field: la
+ * solución con y = 1 en cada partido); con campo h, las notas son notes − h·field. Devuelve { index (equipo
+ * → fila), n, L (el factor de Cholesky, para la varianza de cada partido), ridge, notes, field } o null sin
+ * partidos. Determinista: el orden de los equipos y de las sumas es el de los partidos. */
+export function fitNotes(matches, params = PARAMS) {
+  const p = { ...PARAMS, ...params };
+  if (!matches.length) return null;
+  const index = new Map();
+  const at = name => { if (!index.has(name)) index.set(name, index.size); return index.get(name); };
+  for (const m of matches) { at(m.home); at(m.away); }
+  const n = index.size;
+  const M = new Float64Array(n * n), b = new Float64Array(n), u = new Float64Array(n);
+  for (const m of matches) {
+    const i = index.get(m.home), j = index.get(m.away);
+    const y = Math.log((m.hs + p.cushion) / (m.as + p.cushion));
+    M[i * n + i] += 1; M[j * n + j] += 1; M[i * n + j] -= 1; M[j * n + i] -= 1;
+    b[i] += y; b[j] -= y; u[i] += 1; u[j] -= 1;
+  }
+  for (let i = 0; i < n; i += 1) M[i * n + i] += p.ridge;
+  const L = cholesky(M, n);
+  return { index, n, L, ridge: p.ridge, notes: cholSolve(L, n, b), field: cholSolve(L, n, u) };
+}
+
+/* El 1X2 de las notas para local–visitante: { pHome, pDraw, pAway, diff, variance }. diff es la diferencia
+ * de notas con el campo, d = (r_local − r_visitante) + h·(1 − (field_local − field_visitante)): el campo
+ * del partido menos el que ya se les quitó a sus partidos jugados. variance, la de esa diferencia
+ * (relativa: cᵀ·(XᵀX + λI)⁻¹·c, con c = +1 en el local y −1 en el visitante); un equipo sin partidos
+ * tiene nota 0 y varianza 1/λ. Con ellas, la logística ordenada: s = β / √(1 + κ·v), t = θ / √(1 + κₑ·v),
+ * P(local) = σ(s·d − t), P(visitante) = σ(−s·d − t) y el empate, lo que queda (con θ > 0, nunca negativo). */
+export function notesOdds(fit, home, away, params = PARAMS) {
+  const p = { ...PARAMS, ...params };
+  const h = fit.index.has(home) ? fit.index.get(home) : -1;
+  const a = fit.index.has(away) ? fit.index.get(away) : -1;
+  const c = new Float64Array(fit.n);
+  if (h >= 0) c[h] = 1;
+  if (a >= 0) c[a] = -1;
+  const w = cholSolve(fit.L, fit.n, c);
+  const of = (x, i) => (i >= 0 ? x[i] : 0);
+  const variance = of(w, h) - of(w, a) + ((h < 0) + (a < 0)) / fit.ridge;
+  const diff = (of(fit.notes, h) - of(fit.notes, a)) + p.ratingHome * (1 - (of(fit.field, h) - of(fit.field, a)));
+  const s = p.slope / Math.sqrt(1 + p.slopeVar * variance), t = p.band / Math.sqrt(1 + p.bandVar * variance);
+  const pHome = sigma(s * diff - t), pAway = sigma(-s * diff - t);
+  return { pHome, pDraw: Math.max(0, 1 - pHome - pAway), pAway, diff, variance };
+}
+
+// El desenlace más probable de unas probabilidades; a igualdad, el local, luego el visitante (como outcome).
+const pickOf = ({ pHome, pDraw, pAway }) => (pHome >= pAway && pHome >= pDraw ? 'home' : pAway >= pDraw ? 'away' : 'draw');
 
 /* Ataque y defensa de cada equipo con los partidos `matches` (los de trainingFor): ascenso por
  * coordenadas (cada paso, el mejor A con las D fijas, el mejor D con las A fijas y el mejor b con las
@@ -329,6 +465,25 @@ export function outcome(meanHome, meanAway, params = PARAMS) {
   return { pHome, pDraw, pAway, pick, score, pScore: best / sum };
 }
 
+/* El marcador más probable de los goles con las dos medias DENTRO del desenlace `pick` ('home' | 'draw' |
+ * 'away'): { score: [l, v], pScore }, con a igualdad el mismo orden que outcome (menos goles del local y
+ * luego del visitante). Es el de forecastMatch, con el favorito de las notas: con el de outcome, su mismo
+ * marcador. */
+export function likelyScore(meanHome, meanAway, pick, params = PARAMS) {
+  const p = { ...PARAMS, ...params };
+  const ph = goalPmf(meanHome, p.size), pa = goalPmf(meanAway, p.size);
+  const inside = INSIDE[pick];
+  let best = -1, score = [0, 0], sum = 0;
+  for (let i = 0; i < ph.length; i += 1) {
+    for (let j = 0; j < pa.length; j += 1) {
+      const v = ph[i] * pa[j];
+      sum += v;
+      if (inside(i, j) && v > best) { best = v; score = [i, j]; }
+    }
+  }
+  return { score, pScore: best / sum };
+}
+
 /* Los marcadores más probables con las dos medias, de más a menos: [{ score: [l, v], p }], `n` como
  * mucho y, con `pick` ('home' | 'draw' | 'away'), solo los de ese desenlace. Es lo que pinta la pantalla
  * Partido (17/10/2026): con el `pick` del pronóstico, el primero es su `score` (a igualdad, el mismo
@@ -352,11 +507,17 @@ export function topScores(meanHome, meanAway, { n = 3, pick = null, params = PAR
 }
 
 /* Pronóstico de un partido sin jugar de una liga de prebenjamín de la temporada del portal:
- *   { home, away, pHome, pDraw, pAway, pick, score: [l, v], pScore, xgHome, xgAway,
+ *   { home, away, pHome, pDraw, pAway, pick, score: [l, v], pScore, xgHome, xgAway, goalsAgree,
  *     rounds, matches, playedHome, playedAway }
- * con xg* los goles esperados de cada uno (amortiguados por encima de soften), `rounds` las jornadas
- * jugadas con las que se calcula, `matches` sus partidos (la nota «según los N partidos jugados») y
- * played* los de cada equipo entre ellos. null si el grupo no lo admite (forecastApplies), si el partido
+ * con el 1X2 y su favorito (pick: 'home' | 'draw' | 'away'; a igualdad, el local, luego el visitante) de
+ * las notas de Massey (notesOdds); score, el marcador más probable de los goles del Poisson DENTRO de ese
+ * favorito (likelyScore), y pScore, su probabilidad; xg* los goles esperados del Poisson (amortiguados
+ * por encima de soften); goalsAgree, si van con el favorito (el suyo marca al menos los del otro; con el
+ * empate, siempre): en un partido igualado pueden ir al revés (en el archivo, desde dos jornadas, 155 de
+ * 4.832: nueve de cada diez, con el favorito por debajo del 55 %, y la mitad, con menos de un cuarto de
+ * gol de diferencia; ahí el favorito de las notas acierta 74 y el de los goles, 55), y la pantalla
+ * Partido entonces no los enseña; `rounds` las jornadas jugadas con las que se calcula, `matches`
+ * sus partidos (la nota «según los N partidos jugados») y played* los de cada equipo entre ellos. null si el grupo no lo admite (forecastApplies), si el partido
  * ya tiene marcador, si con `today` no está pendiente (matchState: uno sin fecha o con la fecha pasada y
  * sin resultado no se pronostica) o va más allá de la próxima jornada (horizonOf), si es de un retirado o
  * la app lo da por retirado, anulado o suspendido, si aún no hay PARAMS.minRounds jornadas jugadas o si
@@ -375,8 +536,9 @@ export function forecastMatch(group, match, { portalSeason = null, today = null,
   }
   const { retired } = factsOf(group);
   if (retired.has(match.home) || retired.has(match.away)) return null;
-  const fit = cachedFit(group, match, status, p);
-  if (!fit || fit.rounds < p.minRounds) return null;
+  const fits = cachedFit(group, match, status, p);
+  if (!fits || fits.goals.rounds < p.minRounds) return null;
+  const fit = fits.goals;
   const avg = { attack: 1, defense: 1, played: 0 };
   const home = fit.teams.get(match.home) || avg;
   const away = fit.teams.get(match.away) || avg;
@@ -384,12 +546,19 @@ export function forecastMatch(group, match, { portalSeason = null, today = null,
   const soft = x => (x > p.soften ? p.soften * (1 + Math.log(x / p.soften)) : x);
   const xgHome = soft(fit.base * fit.home * home.attack * away.defense);
   const xgAway = soft(fit.base * away.attack * home.defense);
+  const { pHome, pDraw, pAway } = notesOdds(fits.notes, match.home, match.away, p);
+  const pick = pickOf({ pHome, pDraw, pAway });
   return {
     home: match.home,
     away: match.away,
-    ...outcome(xgHome, xgAway, p),
+    pHome,
+    pDraw,
+    pAway,
+    pick,
+    ...likelyScore(xgHome, xgAway, pick, p),
     xgHome,
     xgAway,
+    goalsAgree: pick === 'home' ? xgHome >= xgAway : pick === 'away' ? xgAway >= xgHome : true,
     rounds: fit.rounds,
     matches: fit.matches,
     playedHome: home.played,

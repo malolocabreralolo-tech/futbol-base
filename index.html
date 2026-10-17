@@ -58,7 +58,7 @@
     // estilos en línea y «Reintentar»: nunca «Cargando…» para siempre. Es texto fijo, sin datos.
     (async () => {
       try {
-        const CODIGO = '39e76c28';
+        const CODIGO = 'fcd266ca';
         let seen = null;
         try { seen = localStorage.getItem('futbol-base:codigo'); } catch { /* sin almacenamiento */ }
         if (navigator.serviceWorker?.controller && seen !== CODIGO) {

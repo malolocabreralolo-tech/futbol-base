@@ -3,13 +3,18 @@
 // corrigiendo. Lo que se prueba es el protocolo: las partes del examen, las parejas, que la referencia
 // «actual» es el pronóstico de la web con el mismo entrenamiento, los nulos, la diferencia pareada, la
 // semilla, que ajustar solo ve el ajuste, las comprobaciones del predictor y el CLI con un modelo de fichero.
+// Y, desde el 17/10/2026, que el 1X2 de la web es el de las notas de scripts/pronostico_modelos/massey.mjs
+// (el elegido con el banco) y la referencia «poisson», el Poisson de antes (la variante «actual» de
+// scripts/pronostico_modelos/poisson.mjs).
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { forecastMatch } from '../../src/pronostico.js';
+import { PARAMS, forecastMatch } from '../../src/pronostico.js';
+import * as massey from '../pronostico_modelos/massey.mjs';
+import * as poisson from '../pronostico_modelos/poisson.mjs';
 import {
   REFERENCIAS, ROOT, TEMPORADAS, TRAMOS, bancoDeAjuste, ejecutar, evaluate, frecuenciasAjuste, pares,
 } from '../pronostico_banco.mjs';
@@ -56,6 +61,25 @@ test('la referencia «actual» es el pronóstico de la web con el mismo entrenam
     assert.equal(f.rounds, p.jornadas);
     const r = REFERENCIAS.actual.predictor(p.training, p.match, p.group);
     assert.deepEqual([r.pHome, r.pDraw, r.pAway], [f.pHome, f.pDraw, f.pAway]);
+  }
+});
+
+test('el 1X2 de la web es el de las notas de massey.mjs con sus parámetros; «poisson», el Poisson de antes', () => {
+  const M = massey.PARAMS;
+  assert.deepEqual(
+    { cushion: PARAMS.cushion, ridge: PARAMS.ridge, ratingHome: PARAMS.ratingHome, slope: PARAMS.slope, band: PARAMS.band, slopeVar: PARAMS.slopeVar, bandVar: PARAMS.bandVar },
+    { cushion: M.k, ridge: M.lambda, ratingHome: M.home, slope: M.beta, band: M.theta, slopeVar: M.kappa, bandVar: M.empate },
+  );
+  const before = poisson.crear(poisson.PARAMS_ACTUAL);
+  for (const p of pares('todas')) {
+    const a = REFERENCIAS.actual.predictor(p.training, p.match, p.group);
+    const b = massey.pronostico(p.training, p.match, M);
+    const c = REFERENCIAS.poisson.predictor(p.training, p.match, p.group);
+    const d = before(p.training, p.match, p.group);
+    for (const k of ['pHome', 'pDraw', 'pAway']) {
+      assert.ok(Math.abs(a[k] - b[k]) < 1e-12, `${p.clave} ${p.match.home}–${p.match.away} ${k}: ${a[k]} frente a ${b[k]}`);
+      assert.ok(Math.abs(c[k] - d[k]) < 1e-12, `${p.clave} ${p.match.home}–${p.match.away} ${k}: ${c[k]} frente a ${d[k]}`);
+    }
   }
 });
 

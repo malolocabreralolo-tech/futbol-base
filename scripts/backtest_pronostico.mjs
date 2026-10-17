@@ -1,9 +1,11 @@
 // Backtest del pronóstico de prebenjamín (src/pronostico.js, 17/10/2026).
 //
 //   node scripts/backtest_pronostico.mjs              la tabla con los PARAMS del módulo
-//   node scripts/backtest_pronostico.mjs --calibrar   además, la búsqueda de las variantes y sus parámetros
-//                                                     y la de la amortiguación de las goleadas (unos cuatro
-//                                                     minutos; la tabla sola, unos dos segundos)
+//   node scripts/backtest_pronostico.mjs --calibrar   además, el ajuste de las notas de Massey (el 1X2, con
+//                                                     las temporadas de ajuste del banco), la búsqueda de las
+//                                                     variantes del Poisson de los goles y la de la
+//                                                     amortiguación de las goleadas (unos cuatro minutos; la
+//                                                     tabla sola, unos tres segundos)
 //
 // Importa el MISMO src/pronostico.js que la web, con `prueba: true` (solo aquí: abre el pronóstico a
 // las temporadas pasadas de prebenjamín) y, en la calibración, `params`. Cada temporada va por separado y
@@ -12,6 +14,11 @@
 // otra. Los objetivos son los partidos de liga (o de liguilla de copa) con fecha y marcador, sin
 // retirados ni resultados de mesa (los mismos filtros que el entrenamiento). Aparte, las jornadas ya
 // jugadas de 2026-27, con sus estados de la app de futbolaspalmas (model.matchStatus), como en la web.
+//
+// El modelo, el de la web (17/10/2026): el 1X2, de las notas de Massey; el marcador más probable, del
+// Poisson de los goles, dentro del favorito de las notas. La comparación entre modelos, con sus temporadas
+// de ajuste y de evaluación separadas, es la del banco (scripts/pronostico_banco.mjs, en su cabecera); aquí,
+// todas las temporadas juntas, como se ve el modelo de la web en el archivo.
 //
 // Métricas, por jornadas jugadas del grupo (las de la nota «según N jornadas»: 1, 2, 3, 4-6, 7+):
 // acierto del 1X2 (el desenlace más probable), log-loss y Brier del 1X2, frente a dos líneas base: «el
@@ -25,9 +32,11 @@
 // métricas salen del banco de pruebas, scripts/pronostico_banco.mjs (17/10/2026), el mismo examen para
 // cualquier modelo; las frecuencias de las líneas base de aquí, del archivo entero, no son las de sus
 // referencias, medidas solo en las temporadas de ajuste.
-import { PARAMS, forecastMatch } from '../src/pronostico.js';
+import { PARAMS, forecastMatch, outcome } from '../src/pronostico.js';
+import { ajustar as ajustarNotas, PARAMS as NOTAS } from './pronostico_modelos/massey.mjs';
 import {
-  BUCKETS, CURRENT, bucketOf, brier, currentSeason, logLoss, outcomeOf, pairsOf, pastSeasons, probsOf, show, tableLeader, tableOf,
+  BUCKETS, CURRENT, bancoDeAjuste, bucketOf, brier, currentSeason, logLoss, outcomeOf, pairsOf, pastSeasons, probsOf, show, tableLeader,
+  tableOf,
 } from './pronostico_banco.mjs';
 
 // Todos los pronósticos de unas parejas (entrenamiento, partido) del banco (pairsOf, con los objetivos y
@@ -121,6 +130,27 @@ function printDraws(rows) {
   console.log(`\nEmpate previsto ${pct(pd)} frente a ${pct(d)} real; goles esperados ${xh.toFixed(2)}-${xa.toFixed(2)} frente a ${gh.toFixed(2)}-${ga.toFixed(2)} reales.`);
 }
 
+// Las notas frente al Poisson de los goles (el 1X2 de la web hasta el 17/10/2026), con los mismos partidos,
+// por jornadas jugadas; y cuántas veces los goles esperados no van con el favorito de las notas
+// (goalsAgree: la pantalla Partido entonces no los enseña).
+function printPoisson(rows) {
+  console.log('\n## Las notas de Massey frente al Poisson de los goles (el 1X2 de antes), los mismos partidos\n');
+  console.log('| Jornadas jugadas | Partidos | 1X2 notas | 1X2 Poisson | Log-loss notas | Poisson | Goles esperados contra el favorito |');
+  console.log('|---|---|---|---|---|---|---|');
+  const groups = [...BUCKETS.map(([b]) => [b, rows.filter(r => r.bucket === b)]), ['Todas', rows]];
+  for (const [b, rs] of groups) {
+    if (!rs.length) continue;
+    let ok = 0, okP = 0, ll = 0, llP = 0, against = 0;
+    for (const { m, f } of rs) {
+      const y = outcomeOf(m.hs, m.as), q = poissonProbs(f, PARAMS);
+      const pickP = q.home >= q.away && q.home >= q.draw ? 'home' : q.away >= q.draw ? 'away' : 'draw';
+      ok += f.pick === y; okP += pickP === y; ll += logLoss(probsOf(f), y); llP += logLoss(q, y); against += !f.goalsAgree;
+    }
+    const n = rs.length;
+    console.log(`| ${b} | ${n} | ${pct(ok / n)} | ${pct(okP / n)} | ${num(ll / n)} | ${num(llP / n)} | ${against} |`);
+  }
+}
+
 // Los goles esperados frente a los reales, por tramos de lo esperado (cada equipo de cada partido): la
 // amortiguación de las goleadas (soften) sale de aquí.
 function printGoals(rows) {
@@ -159,16 +189,41 @@ function printSeasons(rows, rates) {
   }
 }
 
-// ── Calibración de las variantes (--calibrar) ─────────────────────────────────────────────────────
-// Cada variante, por descenso por coordenadas sobre una rejilla, minimizando el log-loss de todas las
-// temporadas pasadas (todas las jornadas con pronóstico). Sin minRounds: se mide desde la primera.
-// Empatan dos variantes a menos de TIE de log-loss (una milésima: la décima parte de lo que separa
-// una contracción de 1,5 de una de 3).
+// ── Calibración (--calibrar) ──────────────────────────────────────────────────────────────────────
+
+// Las notas de Massey (el 1X2): el ajuste de scripts/pronostico_modelos/massey.mjs con SOLO las temporadas
+// de ajuste del banco (2013-14 a 2020-21), con sus variantes (sin campo, con la banda de empate fija), y si
+// da los PARAMS de src/pronostico.js (con sus nombres: k → cushion, lambda → ridge, home → ratingHome,
+// beta → slope, theta → band, kappa → slopeVar, empate → bandVar).
+function calibrateNotes() {
+  console.log('\n## Las notas de Massey (el 1X2; temporadas de ajuste del banco)\n');
+  const banco = bancoDeAjuste();
+  let web = null;
+  for (const [name, opts] of [['sin campo', { campo: false }], ['con la banda de empate fija', { empate: false }], ['la de la web', {}]]) {
+    const r = ajustarNotas(banco, opts);
+    console.log(`- ${name}: log-loss en el ajuste ${r.logLossAjuste.toFixed(4)} con ${show(r.params)}`);
+    web = r.params;
+  }
+  const NAMES = { k: 'cushion', lambda: 'ridge', home: 'ratingHome', beta: 'slope', theta: 'band', kappa: 'slopeVar', empate: 'bandVar' };
+  const same = Object.entries(NAMES).every(([k, name]) => web[k] === PARAMS[name] && NOTAS[k] === PARAMS[name]);
+  console.log(`\nLos de src/pronostico.js ${same ? 'son' : 'NO son'} los de este ajuste (y los PARAMS de massey.mjs).`);
+}
+
+// El 1X2 del Poisson de los goles (el de la web hasta el 17/10/2026) de un pronóstico: sus probabilidades
+// con los goles esperados de forecastMatch.
+const poissonProbs = (f, params) => probsOf(outcome(f.xgHome, f.xgAway, { ...PARAMS, ...params }));
+
+// Las variantes del Poisson de los goles: cada una, por descenso por coordenadas sobre una rejilla,
+// minimizando el log-loss del 1X2 del propio Poisson en todas las temporadas pasadas (todas las jornadas
+// con pronóstico; así se eligieron sus parámetros cuando daba también el 1X2 de la web). Sin minRounds: se
+// mide desde la primera. Empatan dos variantes a menos de TIE de log-loss (una milésima: la décima parte
+// de lo que separa una contracción de 1,5 de una de 3).
 const TIE = 0.001;
 function calibrate(pairs) {
+  calibrateNotes();
   const loss = params => {
     const rows = collect(pairs, { ...params, minRounds: 1, minPlayed: 0 });
-    return rows.reduce((s, { m, f }) => s + logLoss(probsOf(f), outcomeOf(m.hs, m.as)), 0) / rows.length;
+    return rows.reduce((s, { m, f }) => s + logLoss(poissonProbs(f, params), outcomeOf(m.hs, m.as)), 0) / rows.length;
   };
   const GRID = {
     shrink: [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8],
@@ -182,7 +237,7 @@ function calibrate(pairs) {
     ['Poisson con tope de goles al ajustar', { shrink: 2, home: 1.06, size: Infinity, cap: 10, soften: Infinity }, ['shrink', 'home', 'cap']],
     ['Binomial negativa con tope', { shrink: 2, home: 1.06, size: 6, cap: 10, soften: Infinity }, ['shrink', 'home', 'size', 'cap']],
   ];
-  console.log('\n## Calibración de las variantes (log-loss del 1X2, temporadas pasadas)\n');
+  console.log('\n## Calibración de las variantes del Poisson de los goles (log-loss de su 1X2, temporadas pasadas)\n');
   const results = [];
   for (const [name, start, keys] of VARIANTS) {
     let best = { ...start }, bestLoss = loss(best);
@@ -209,17 +264,18 @@ function calibrate(pairs) {
 }
 
 // La amortiguación de los goles esperados por encima de `soften` (pronostico.js): casi no mueve el
-// log-loss del 1X2 (las goleadas ya están por encima del 99 %), así que se elige con la contracción y el
-// campo de PARAMS (los de la web) por el error de los goles esperados (raíz del error cuadrático medio,
-// por equipo y partido); a menos de una milésima del mejor, la que menos toca (la de umbral más alto).
+// log-loss del 1X2 del Poisson (las goleadas ya están por encima del 99 %), así que se elige con la
+// contracción y el campo de PARAMS (los de la web) por el error de los goles esperados (raíz del error
+// cuadrático medio, por equipo y partido); a menos de una milésima del mejor, la que menos toca (la de
+// umbral más alto). El exacto y el ±1 gol, del marcador de la web (dentro del favorito de las notas).
 function calibrateSoften(pairs, base = PARAMS) {
   console.log('\n## Amortiguación de los goles esperados (soften)\n');
-  console.log('| soften | Log-loss 1X2 | Error de los goles | Exacto | ±1 gol |');
+  console.log('| soften | Log-loss 1X2 (Poisson) | Error de los goles | Exacto | ±1 gol |');
   console.log('|---|---|---|---|---|');
   const out = [];
   for (const soften of [Infinity, 15, 12, 10, 9, 8, 7, 6]) {
     const rows = collect(pairs, { ...base, soften, minRounds: 1, minPlayed: 0 });
-    const ll = rows.reduce((s, { m, f }) => s + logLoss(probsOf(f), outcomeOf(m.hs, m.as)), 0) / rows.length;
+    const ll = rows.reduce((s, { m, f }) => s + logLoss(poissonProbs(f, { ...base, soften }), outcomeOf(m.hs, m.as)), 0) / rows.length;
     const rmse = Math.sqrt(rows.reduce((s, { m, f }) => s + (f.xgHome - m.hs) ** 2 + (f.xgAway - m.as) ** 2, 0) / (2 * rows.length));
     const s = metrics(rows, baseRates(rows));
     out.push({ soften, rmse });
@@ -240,6 +296,7 @@ console.log(`\nPARAMS: ${show(PARAMS)} (las tablas, desde 1 jornada jugada y con
 console.log(`Archivo: ${past.length} partidos pronosticados de ${new Set(past.map(r => `${r.season} ${r.group}`)).size} grupos de prebenjamín en ${new Set(past.map(r => r.season)).size} temporadas.`);
 console.log(`Frecuencias del archivo: local ${pct(rates.home.home)}, empate ${pct(rates.home.draw)}, visitante ${pct(rates.home.away)}; mejor clasificado ${pct(rates.leader.better)}, empate ${pct(rates.leader.draw)}, peor ${pct(rates.leader.worse)}.`);
 printTable('Temporadas pasadas de prebenjamín', past, rates);
+printPoisson(past);
 printDraws(past);
 printGoals(past);
 printFresh(past, rates);

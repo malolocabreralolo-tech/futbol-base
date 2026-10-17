@@ -131,7 +131,9 @@ function resultBlock(match, { today, shields, status = null, campos = null, isla
 // texto (el nombre, recortado con «…» si no cabe; entero en el title y para el lector de pantalla), el
 // resultado más probable (siempre del favorito) con los dos que le siguen sin cambiar de ganador
 // (topScores) y los goles esperados, en casillas apagadas (is-muted: nunca con la letra de un dato real
-// como la fecha o la hora del bloque de arriba; revisión del 17/10/2026); debajo, en qué se basa: los
+// como la fecha o la hora del bloque de arriba; revisión del 17/10/2026). El 1X2 sale de las notas y
+// los goles, del Poisson: en un partido igualado pueden no ir con el favorito (goalsAgree), y entonces
+// los goles esperados no se enseñan, que dirían lo contrario que la barra. Debajo, en qué se basa: los
 // partidos de esta temporada del grupo. Nada si forecastMatch no da pronóstico: otra categoría o
 // temporada, una copa, jugado, sin fecha o con la fecha pasada, más allá de la próxima jornada, un
 // retirado, lo que la app da por retirado, anulado o suspendido, menos de 2 jornadas o un equipo que aún
@@ -144,7 +146,7 @@ function forecastBlock(match, group, ctx) {
   const odds = html`<div class="odds">${oddsBar(f.pHome, f.pDraw, f.pAway)}<dl class="odds-legend">${side('is-home', html`<span class="vh">Gana </span>${teamShort(f.home)}`, f.pHome, f.home)}${side('is-draw', 'Empate', f.pDraw)}${side('is-away', html`<span class="vh">Gana </span>${teamShort(f.away)}`, f.pAway, f.away)}</dl></div>`;
   const facts = cells([
     { label: 'Resultado más probable', value: score(...f.score), muted: true },
-    { label: 'Goles esperados', value: `${decimal(f.xgHome, 1)} – ${decimal(f.xgAway, 1)}`, muted: true },
+    ...(f.goalsAgree ? [{ label: 'Goles esperados', value: `${decimal(f.xgHome, 1)} – ${decimal(f.xgAway, 1)}`, muted: true }] : []),
   ]);
   const others = topScores(f.xgHome, f.xgAway, { n: 3, pick: f.pick }).slice(1).map((x) => score(...x.score));
   const also = others.length ? html`<p class="odds-also">También probables: ${listEs(others)}.</p>` : '';

@@ -1,10 +1,10 @@
 // Banco de pruebas del pronóstico de prebenjamín (17/10/2026): el mismo examen para cualquier modelo.
 //
 //   node scripts/pronostico_banco.mjs --modelo <fichero.mjs> [--split evaluacion|ajuste|todas]
-//                                     [--contra actual|web|local|tabla|<fichero.mjs>|ninguno]
+//                                     [--contra actual|web|poisson|local|tabla|<fichero.mjs>|ninguno]
 //                                     [--B 2000] [--semilla 17102026] [--salida informe.json]
 //   node scripts/pronostico_banco.mjs --modelo tabla          una de las referencias, por su nombre
-//   node scripts/pronostico_banco.mjs --referencias           las cuatro referencias, frente a «actual»
+//   node scripts/pronostico_banco.mjs --referencias           las cinco referencias, frente a «actual»
 //
 // Escribe el informe en JSON por la salida estándar (o en --salida) y un resumen por la de errores. Sin
 // red ni escrituras fuera de --salida: solo lee los data-season-*.js del repositorio (y, para el
@@ -65,15 +65,50 @@
 //   · logLoss(p, y), brier(p, y) (p: { home, draw, away }), outcomeOf(hs, as), tableOf(matches),
 //     tableLeader(table, match), TRAMOS, tramoDe(jornadas), temporadas, split.
 //
+// LA COMPARACIÓN DEL 17/10/2026 (la que decidió el modelo de la web). El usuario propuso «reglas de tres»
+// (si A le ganó a B y B a C, A tiene que poder con C) y dudaba de que el campo decida. Se probaron cuatro
+// familias, cada una en su fichero de scripts/pronostico_modelos/ (con su resultado en la cabecera),
+// con sus parámetros fijados SOLO en AJUSTE, y las mezclas de las mejores (media de probabilidades con
+// los pesos del ajuste). EVALUACIÓN, 2.747 partidos de 28 grupos, B = 2000, semilla 17102026; «Δ» es la
+// diferencia pareada de log-loss (negativa, mejor) con su IC 95 %:
+//
+//   modelo                                   log-loss  Brier  acierto  2 jorn.  3 jorn.  Δ Poisson de antes        Δ Massey
+//   Massey (las notas; ELEGIDO)              0,534     0,297  79,5 %   0,658    0,593    −0,010 [−0,016, −0,003]   —
+//   Massey sin campo                         0,535     0,298  78,6 %   0,658    0,591    −0,009 [−0,016, −0,002]   +0,001 [−0,004, +0,005]
+//   Elo de goles iterado (elo.mjs)           0,538     0,299  79,4 %   0,651    0,615    −0,006 [−0,013, +0,001]   +0,004 [−0,001, +0,008]
+//   Poisson bayesiano (poisson.mjs)          0,541     0,301  78,9 %   0,698    0,593    −0,003 [−0,004, −0,001]   +0,007 [+0,002, +0,012]
+//   rivales comunes y cadenas                0,544     0,304  78,3 %   0,682    0,633    +0,001 [−0,006, +0,008]   +0,010 [+0,006, +0,014]
+//   mezcla Massey 0,74 + Elo 0,26            0,534     0,297  79,4 %   0,654    0,597    −0,009 [−0,015, −0,004]   +0,000 [−0,001, +0,001]
+//   mezcla Massey 0,66 + Elo 0,27 + bayes    0,534     0,297  79,3 %   0,656    0,597    −0,010 [−0,015, −0,004]   −0,000 [−0,002, +0,001]
+//   Poisson de antes (referencia «poisson»)  0,544     0,302  79,1 %   0,697    0,621    —                         +0,010 [+0,003, +0,016]
+//   tabla                                    0,679     0,376  77,1 %   0,779    0,774    +0,136 [+0,112, +0,156]   +0,145 [+0,118, +0,167]
+//   local                                    0,897     0,562  47,9 %   0,870    0,855    +0,354 [+0,305, +0,395]   +0,363 [+0,311, +0,407]
+//
+// Massey es el único que mejora al Poisson de forma demostrable en log-loss y en Brier (−0,006 [−0,009,
+// −0,003]); el acierto del favorito, +0,4 puntos [−0,2, +1,1], es el mismo. Por tramo, frente al Poisson:
+// 1 jornada −0,015 [−0,062, +0,026]; 2, −0,039 [−0,085, +0,003]; 3, −0,027 [−0,071, +0,015]; 4-6, −0,002
+// [−0,020, +0,018]; 7+, −0,008 [−0,013, −0,003] (126, 126, 128, 364 y 2.003 partidos). Las mezclas empatan
+// con Massey solo, y el Elo de goles también (sin ganar al Poisson de forma demostrable): a igualdad, el
+// más sencillo, una nota por equipo y un sistema lineal. Con 1-2 jornadas, ninguno le gana de forma
+// demostrable a la tabla (Massey − tabla: 1 jornada, −0,035 [−0,132, +0,056]; 2, −0,121 [−0,245, +0,013];
+// desde 3, entre −0,15 y −0,18, todos reales): la web sigue sin enseñar nada con una. El campo, que el
+// usuario cree que no decide: es poco (en Massey, el local mete un 6 % más; P(local) se mueve 3,5 puntos de
+// media), y quitarlo no cambia el log-loss (+0,001 [−0,004, +0,005]) pero se acierta menos el favorito
+// (−0,9 puntos [−1,7, −0,2]); en el ajuste, sin él, +0,006 [+0,002, +0,010]: se queda. Cada fila se repite
+// con `--modelo scripts/pronostico_modelos/<familia>.mjs --contra poisson` (y `--contra actual`).
+//
 // Desde otro script: import { evaluate, ejecutar, cargarModelo, pares, REFERENCIAS } from
 // './pronostico_banco.mjs'; evaluate(predictor, { split, B, semilla, referencia }) da el informe (sin
 // llamar a ningún ajustar) y ejecutar(modelo, { split, contra }) hace lo del CLI (ajustar y examen).
 //
 // Las referencias (REFERENCIAS; sus frecuencias, medidas SOLO en las temporadas de ajuste):
 // - actual: src/pronostico.js con los PARAMS de la web, desde la primera jornada y con equipos sin
-//   partidos (minRounds 1, minPlayed 0: pronostica todas las parejas, como las tablas del backtest);
+//   partidos (minRounds 1, minPlayed 0: pronostica todas las parejas, como las tablas del backtest); desde
+//   el 17/10/2026, las notas de Massey;
 // - web: src/pronostico.js con PARAMS tal cual (minRounds 2, minPlayed 1): lo que enseña la web; no
 //   pronostica el tramo 1 ni los partidos de un equipo sin partidos (nulos);
+// - poisson: el 1X2 del Poisson de los goles de src/pronostico.js (outcome de sus goles esperados), el de la
+//   web hasta el 17/10/2026, como «actual»: desde la primera jornada;
 // - local: siempre las frecuencias de local, empate y visitante;
 // - tabla: gana el mejor clasificado con el entrenamiento (puntos, diferencia de goles y goles), con las
 //   frecuencias del mejor, el empate y el peor; si van igual, las del local.
@@ -82,7 +117,7 @@ import { basename, join, dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import vm from 'node:vm';
 import { buildSeason, createModel, retiredTeams } from '../src/model.js';
-import { PARAMS, copiedMatches, forecastApplies, forecastMatch, isDeskResult, offVenue, trainingFor } from '../src/pronostico.js';
+import { PARAMS, copiedMatches, forecastApplies, forecastMatch, isDeskResult, offVenue, outcome, trainingFor } from '../src/pronostico.js';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const CURRENT = '2026-2027';
@@ -404,7 +439,7 @@ const asJSON = params => JSON.parse(show(params));
 export const REFERENCIAS = Object.freeze({
   actual: Object.freeze({
     nombre: 'actual',
-    descripcion: 'src/pronostico.js con PARAMS, desde la primera jornada y con equipos sin partidos (minRounds 1, minPlayed 0)',
+    descripcion: 'src/pronostico.js con PARAMS (las notas de Massey), desde la primera jornada y con equipos sin partidos (minRounds 1, minPlayed 0)',
     ajustar: () => ({ params: asJSON(EVAL_PARAMS) }),
     predictor: (training, match, group) => fromForecast(forecastMatch(group, match, { prueba: true, params: EVAL_PARAMS })),
   }),
@@ -413,6 +448,15 @@ export const REFERENCIAS = Object.freeze({
     descripcion: 'src/pronostico.js con PARAMS tal cual (minRounds 2, minPlayed 1): lo que enseña la web',
     ajustar: () => ({ params: asJSON(PARAMS) }),
     predictor: (training, match, group) => fromForecast(forecastMatch(group, match, { prueba: true, params: PARAMS })),
+  }),
+  poisson: Object.freeze({
+    nombre: 'poisson',
+    descripcion: 'el 1X2 del Poisson de los goles de src/pronostico.js (el de la web hasta el 17/10/2026), desde la primera jornada',
+    ajustar: () => ({ params: asJSON(EVAL_PARAMS) }),
+    predictor: (training, match, group) => {
+      const f = forecastMatch(group, match, { prueba: true, params: EVAL_PARAMS });
+      return f && fromForecast(outcome(f.xgHome, f.xgAway, EVAL_PARAMS));
+    },
   }),
   local: Object.freeze({
     nombre: 'local',
@@ -518,7 +562,7 @@ async function main(argv) {
     }
     out = { split, frecuenciasAjuste: frecuenciasAjuste(), referencias };
   } else {
-    if (!a.modelo) throw new Error('falta --modelo <fichero.mjs | actual | web | local | tabla> (o --referencias)');
+    if (!a.modelo) throw new Error('falta --modelo <fichero.mjs | actual | web | poisson | local | tabla> (o --referencias)');
     const modelo = await cargarModelo(a.modelo);
     const contra = a.contra === 'ninguno' ? null : await cargarModelo(a.contra || 'actual');
     out = await ejecutar(modelo, { split, B, semilla, contra });

@@ -1,4 +1,5 @@
-// Pronóstico de prebenjamín (src/pronostico.js, 17/10/2026). Solo grupos sintéticos, construidos con el
+// Pronóstico de prebenjamín (src/pronostico.js, 17/10/2026: el 1X2, de las notas de Massey; el marcador y
+// los goles esperados, del Poisson, dentro del favorito de las notas). Solo grupos sintéticos, construidos con el
 // buildGroup de model.js como los de la temporada del portal (las jornadas, de la tabla de HISTORY):
 // ni los data-*.js de la web, que cambian cada dos horas, ni config.js (R2-1: la temporada del portal
 // entra por parámetro).
@@ -6,7 +7,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildGroup } from '../../src/model.js';
 import {
-  PARAMS, copiedMatches, fitRatings, forecastApplies, forecastMatch, forecastRound, horizonOf, isDeskResult, outcome, trainingFor,
+  PARAMS, copiedMatches, fitNotes, fitRatings, forecastApplies, forecastMatch, forecastRound, horizonOf, isDeskResult, likelyScore,
+  notesOdds, outcome, topScores, trainingFor,
 } from '../../src/pronostico.js';
 
 const SEASON = '2026-2027';
@@ -99,10 +101,110 @@ test('nunca un 1-1 con un favorito claro: el empate es el marcador más probable
   assert.deepEqual(o.score, [2, 1]);
 });
 
+// Liga de cuatro con dos jornadas jugadas: Alfa le gana 6-2 a Beta y Beta, 5-1 a Gamma; Alfa y Gamma no
+// se han visto (la «regla de tres» del usuario, 17/10/2026).
+const THREE = [
+  [row('2026-10-03', 'Alfa', 'Beta', 6, 2), row('2026-10-03', 'Gamma', 'Delta', 3, 3)],
+  [row('2026-10-10', 'Beta', 'Gamma', 5, 1), row('2026-10-10', 'Delta', 'Alfa', 2, 4)],
+  [row('2026-10-17', 'Alfa', 'Gamma'), row('2026-10-17', 'Beta', 'Delta')],
+];
+
+test('el 1X2, de las notas de Massey: si A le ganó a B y B a C, A es favorito contra C sin haberse visto', () => {
+  const group = makeGroup(THREE);
+  const m = matchOf(group, 3, 'Alfa');
+  const f = forecastMatch(group, m, OPTS);
+  assert.equal(f.pick, 'home');
+  assert.ok(f.pHome > 0.8 && f.pAway < 0.15, JSON.stringify(f));
+  // Las notas, en el orden de la cadena: Alfa por encima de Beta, y Beta de Gamma.
+  const fit = fitNotes(trainingFor(group, m));
+  const note = name => fit.notes[fit.index.get(name)];
+  assert.ok(note('Alfa') > note('Beta') && note('Beta') > note('Gamma'), JSON.stringify([...fit.index.keys()].map(n => [n, note(n)])));
+  // El 1X2 de forecastMatch es el de notesOdds con el ajuste de su entrenamiento.
+  const o = notesOdds(fit, 'Alfa', 'Gamma');
+  assert.deepEqual([f.pHome, f.pDraw, f.pAway], [o.pHome, o.pDraw, o.pAway]);
+  close(o.pHome + o.pDraw + o.pAway, 1, 'suman 1');
+  // Al revés (Gamma en casa), Alfa sigue de favorita, algo menos (el campo es de Gamma).
+  const back = notesOdds(fit, 'Gamma', 'Alfa');
+  assert.ok(back.pAway > 0.75 && back.pAway < f.pHome, `${back.pAway} y ${f.pHome}`);
+  // Sin el partido de Beta y Gamma, Alfa ya no tiene a quién comparar con Gamma más que a Delta.
+  const fewer = fitNotes(trainingFor(group, m).filter(t => !(t.home === 'Beta' && t.away === 'Gamma')));
+  assert.ok(notesOdds(fewer, 'Alfa', 'Gamma').pHome < f.pHome);
+  assert.equal(fitNotes([]), null);
+});
+
+test('las notas: un equipo sin partidos, en 0 y con la varianza del previo; con más jornadas, se sabe más y se modera menos', () => {
+  const group = makeGroup();
+  const used = trainingFor(group, matchOf(group, 4, 'Alfa'));
+  const fit = fitNotes(used);
+  // Dos que no han jugado: nota 0, varianza 2/λ y solo el campo.
+  const none = notesOdds(fit, 'Nuevo', 'Otro');
+  close(none.variance, 2 / PARAMS.ridge, 'la varianza de dos sin partidos');
+  close(none.diff, PARAMS.ratingHome, 'solo el campo');
+  assert.ok(none.pHome > none.pAway);
+  const flat = notesOdds(fit, 'Nuevo', 'Otro', { ratingHome: 0 });
+  close(flat.pHome, flat.pAway, 'sin campo, a medias');
+  // Con una jornada, Alfa–Delta es más incierta que con tres, y el favorito, más moderado.
+  const one = fitNotes(used.filter(m => m.roundKey === 'Jornada 1'));
+  const a1 = notesOdds(one, 'Alfa', 'Delta'), a3 = notesOdds(fit, 'Alfa', 'Delta');
+  assert.ok(a1.variance > a3.variance, `${a1.variance} frente a ${a3.variance}`);
+  // Con la misma diferencia, la varianza acerca al 50 % al favorito; y la banda de empate, que también se
+  // estrecha con ella, no infla el empate (con la banda fija, más empate).
+  const sharp = notesOdds(fit, 'Alfa', 'Delta', { slopeVar: 0, bandVar: 0 });
+  const fixedBand = notesOdds(fit, 'Alfa', 'Delta', { bandVar: 0 });
+  close(sharp.diff, a3.diff, 'la misma diferencia');
+  assert.ok(a3.pHome < sharp.pHome, `${a3.pHome} frente a ${sharp.pHome}`);
+  assert.ok(a3.pDraw < fixedBand.pDraw, `${a3.pDraw} frente a ${fixedBand.pDraw}`);
+  // Probabilidades en [0, 1] que suman 1, también con goleadas y con todo empates.
+  const blowout = fitNotes([{ home: 'X', away: 'Y', hs: 30, as: 0, roundKey: 'J1' }, { home: 'Y', away: 'Z', hs: 0, as: 24, roundKey: 'J2' }]);
+  const draws = fitNotes([{ home: 'X', away: 'Y', hs: 2, as: 2, roundKey: 'J1' }, { home: 'Y', away: 'Z', hs: 0, as: 0, roundKey: 'J2' }]);
+  for (const [f, h, a] of [[blowout, 'X', 'Y'], [blowout, 'Y', 'Z'], [blowout, 'Z', 'X'], [draws, 'X', 'Z'], [draws, 'Z', 'Nuevo']]) {
+    const o = notesOdds(f, h, a);
+    for (const v of [o.pHome, o.pDraw, o.pAway]) assert.ok(v >= 0 && v <= 1 && Number.isFinite(v), `${h}–${a}: ${v}`);
+    close(o.pHome + o.pDraw + o.pAway, 1, `${h}–${a}`);
+  }
+  // X le hizo 30 a Y y Z, 24: X, por delante de Z, pero esos seis goles entre dos goleadas pesan menos que
+  // los cuatro de un 4-0 frente a un 0-0 (el colchón de goles: «cuántas veces más», no «cuántos más»).
+  const xz = notesOdds(blowout, 'X', 'Z', { ratingHome: 0 });
+  const short = fitNotes([{ home: 'X', away: 'Y', hs: 4, as: 0, roundKey: 'J1' }, { home: 'Y', away: 'Z', hs: 0, as: 0, roundKey: 'J2' }]);
+  assert.ok(xz.pHome > xz.pAway && xz.pHome < notesOdds(short, 'X', 'Z', { ratingHome: 0 }).pHome, JSON.stringify(xz));
+});
+
+test('el marcador, del Poisson y siempre dentro del favorito de las notas; los goles esperados, si van con él', () => {
+  const means = [0.3, 1, 1.8, 2.5, 3.7, 4.4, 7, 12];
+  for (const h of means) {
+    for (const a of means) {
+      // Con el favorito del Poisson, likelyScore es el marcador de outcome; con cualquiera, el de topScores.
+      const o = outcome(h, a);
+      const same = likelyScore(h, a, o.pick);
+      assert.deepEqual(same.score, o.score, `${h}-${a}`);
+      close(same.pScore, o.pScore, `${h}-${a}`);
+      for (const pick of ['home', 'draw', 'away']) {
+        const x = likelyScore(h, a, pick);
+        const [l, v] = x.score;
+        assert.equal(l > v ? 'home' : l < v ? 'away' : 'draw', pick, `${h}-${a} ${pick}: ${l}-${v}`);
+        assert.deepEqual(x.score, topScores(h, a, { n: 1, pick })[0].score);
+      }
+    }
+  }
+  // Los de forecastMatch: el marcador, del favorito, y goalsAgree, si los goles esperados van con él.
+  const groups = [makeGroup(), makeGroup(THREE)];
+  for (const group of groups) {
+    for (const round of group.rounds) {
+      for (const f of forecastRound(group, round, { ...OPTS, params: { ...PARAMS, minRounds: 1, minPlayed: 0 } })) {
+        if (!f) continue;
+        const [l, v] = f.score;
+        assert.equal(l > v ? 'home' : l < v ? 'away' : 'draw', f.pick, `${f.home}–${f.away}`);
+        assert.equal(f.goalsAgree, f.pick === 'home' ? f.xgHome >= f.xgAway : f.pick === 'away' ? f.xgAway >= f.xgHome : true);
+      }
+    }
+  }
+});
+
 test('simetría: dar la vuelta al partido da la vuelta al pronóstico; sin campo, exacta', () => {
   const swapped = BASE.map((ms, i) => (i === 3 ? ms.map(r => (r[1] === 'Beta' ? row(r[0], 'Gamma', 'Beta') : r)) : ms));
   const g1 = makeGroup(), g2 = makeGroup(swapped);
-  const flat = { ...PARAMS, home: 1 };
+  // Sin campo: ni en las notas (ratingHome) ni en los goles (home).
+  const flat = { ...PARAMS, home: 1, ratingHome: 0 };
   const a = forecastMatch(g1, matchOf(g1, 4, 'Beta'), { ...OPTS, params: flat });
   const b = forecastMatch(g2, matchOf(g2, 4, 'Gamma'), { ...OPTS, params: flat });
   close(a.pHome, b.pAway, 'local y visitante');

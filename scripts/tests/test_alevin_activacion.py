@@ -354,8 +354,9 @@ def test_a_base_with_the_old_turn_table_still_works_and_it_is_not_used(monkeypat
 
 
 def test_without_a_run_number_the_turn_comes_from_the_clock():
-    """Fuera de GitHub (una pasada a mano), la franja del cron: cambia de turno de una franja a otra. Desde
-    el 16/10/2026, de 2 h (update_fiflp.PASS_EVERY: el cron cada 2 h); antes, de 6."""
+    """Fuera de GitHub (una pasada a mano), la franja de la hora UTC: cambia de turno de una franja a otra.
+    Desde el 16/10/2026, de 2 h (update_fiflp.PASS_EVERY, la cadencia base del reloj, reloj.yml); antes, de
+    6."""
     from datetime import datetime, timezone
     a = U.run_number({}, datetime(2026, 10, 14, 0, tzinfo=timezone.utc))
     assert U.run_number({}, datetime(2026, 10, 14, 1, 59, tzinfo=timezone.utc)) == a

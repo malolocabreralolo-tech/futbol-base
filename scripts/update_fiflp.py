@@ -64,15 +64,21 @@ MAX_ACTA_TRIES = 4       # lecturas fallidas de un acta antes de dejarla (se pue
 # federación a rellenarla (~18 h con una lectura cada 6 h, como con el cron cada 6 h). Con una pasada cada
 # 2 h, un prioritario caliente se lee en todas, y un acta suya que tarda se quedaba sin intentos en ~6-8 h
 # (corrector del 16/10/2026: en la simulación de cuatro semanas, una de AL27). Los demás grupos se leen cada
-# uno o varios días: se reintentan siempre.
+# uno o varios días: se reintentan siempre. En las ventanas de partidos (17/10/2026, reloj.yml: una pasada
+# cada hora) un prioritario se lee en su pasada cada ~3 h (priority_slot), que no llega a las 4 h: el acta
+# que falló espera a la primera lectura de 4 h o más (al acabar la ventana, o si GitHub pierde ticks), y sus
+# intentos duran más, nunca menos. Medido (test_bot_pasada_corta, la semana con el reloj; doce semillas):
+# las de Las Mesas, p90 de 7,7 h desde que la federación las tiene (6,4 h con una pasada cada 2 h), ninguna
+# sin intentos. Con 2 h 30 serían 5,2 h, pero en las ventanas los 4 intentos se gastarían en ~9 h.
 ACTA_RETRY_AFTER = timedelta(hours=4)
 # La PASADA CORTA (16/10/2026). En las pasadas 1107-1110 la federación servía ~15 documentos por IP y el
 # bloqueo escalaba dentro de la pasada: el 1.º ~300 s, el 2.º ~900 s y el 3.º más que el plazo. Cada
 # ejecución de GitHub tiene IP nueva y vuelve a empezar con ~5 min, así que cada pasada espera solo el 1.º
 # freno (fiflp_carga.BRAKE_PAUSES = 1) y acaba en el 2.º: ~15 páginas, ~5 min, ~15 más, en ~9 min; y el
-# cron de update.yml pasa de cada 6 h a cada 2 h (PASS_EVERY). El plazo (FIFLP_BUDGET_MIN, desde que
-# arranca update_groups) es para una pasada SIN freno (o con un 1.º largo: sondeos hasta 2 min antes del
-# plazo, fiflp_carga.BRAKE_ROOM): 16 min, ~130 páginas a 7 s. Fuera de la federación el job gasta 4-8 min
+# cron de update.yml pasa de cada 6 h a cada 2 h (PASS_EVERY; desde el 17/10/2026 las lanza reloj.yml, cada
+# 2 h y cada hora en las ventanas de partidos). El plazo (FIFLP_BUDGET_MIN, desde que arranca update_groups)
+# es para una pasada SIN freno (o con un 1.º largo: sondeos hasta 2 min antes del plazo,
+# fiflp_carga.BRAKE_ROOM): 16 min, ~130 páginas a 7 s. Fuera de la federación el job gasta 4-8 min
 # (preparación, app, importaciones, generate_js, pruebas y commit): 20-24 min, ~26 en el peor caso (la
 # última página empezada justo antes del plazo, con sus reintentos), sobre los 40 de update.yml. Hasta el
 # 16/10/2026 eran 33 min (con una espera tras otra, sin tope) y el cron cada 6 h: ~45 páginas útiles por
@@ -83,8 +89,15 @@ DEADLINE_SECONDS = 16 * 60
 # actas del que se está leyendo (cada grupo, completo: run_passes) y de las competiciones nuevas. Hasta el
 # 16/10/2026 era la reserva de la segunda pasada (8 de 33 min); ya no hay segunda pasada.
 RESERVE_SECONDS = 2 * 60
-PASS_EVERY = timedelta(hours=2)  # el cron de update.yml ('23 */2 * * *'): una pasada cada 2 h
-PASS_SLACK = timedelta(minutes=30)  # lo que GitHub suele retrasar una pasada (stale)
+# La cadencia BASE de las pasadas: una cada 2 h (reloj_pasadas.BASE: desde el 17/10/2026 las lanza reloj.yml;
+# hasta entonces, el cron '23 */2 * * *' de update.yml, que GitHub casi nunca disparaba a su hora: 5 de 13 en
+# ~26 h). En las ventanas de partidos (viernes de 18 a 24 y sábado y domingo de 10 a 24, hora de Canarias), una
+# cada hora (reloj_pasadas.WINDOW). Lo que va por número de pasada (los turnos de ROTATION_PASSES,
+# priority_slot, closed_turn, extras_turn) solo se adelanta en ellas; lo que mira PASS_EVERY (stale: «la
+# pasada siguiente», que en una ventana llega antes; la franja de run_number fuera de GitHub), la base: lee
+# antes, nunca después. Los plazos que van por tiempo (HOT_FOR, ACTA_RETRY_AFTER, scorers_due), igual.
+PASS_EVERY = timedelta(hours=2)
+PASS_SLACK = timedelta(minutes=30)  # lo que puede retrasarse una pasada (stale): ticks del reloj perdidos
 CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada más vieja: cerrado
 # Los prioritarios, SOLO CUANDO TOCA (16/10/2026; plan_groups): hasta entonces, todos en cada pasada (con el
 # cron cada 6 h, cada 6 h; ~33 de las ~45 páginas de cada pasada). Toca (stale) en su pasada
@@ -98,11 +111,13 @@ CLOSED_DAYS = 21                 # un grupo con todo jugado y la última jornada
 # aplazado que conserva su fecha, un resultado o un acta que llegan al día siguiente). Si no toca, descansa
 # como un cerrado: conserva su comprobación. Con una pasada cada 2 h, cada prioritario se lee al menos cada
 # 6 h y, con un partido suyo recién jugado, en cada pasada hasta tener su resultado y su acta (como mucho
-# HOT_FOR; después, cada 6 h).
+# HOT_FOR; después, cada 6 h). En las ventanas de partidos, con una pasada cada hora, en la suya cada ~3 h y,
+# caliente, cada hora.
 PRIORITY_MAX_AGE = timedelta(hours=6)
 HOT_DAYS = 2
 HOT_AFTER = timedelta(minutes=60)   # un partido de fútbol base dura ~1 h: antes, no hay resultado que leer
-# Cuánto se relee en cada pasada un prioritario caliente: desde HOT_AFTER tras el saque, 12 h (~6 pasadas).
+# Cuánto se relee en cada pasada un prioritario caliente: desde HOT_AFTER tras el saque, 12 h (~6 pasadas cada
+# 2 h; en una ventana de partidos, ~12: las mismas páginas de cada pasada, en más pasadas).
 # En la base real (16/10/2026) hay resultados de mesa (3-0 a un retirado) sin acta posible y aplazados que
 # conservan su fecha sin resultado: sin este tope, su grupo se leía en todas las pasadas durante ~3 días
 # (HOT_DAYS), ~36 lecturas en vez de ~12, ~100-150 páginas del cupo de ~360 al día.
@@ -116,19 +131,21 @@ LOCAL_ZONE = "Atlantic/Canary"      # la hora de los partidos de la base (date y
 # de nada guardado en la base ni en data-health.json, que update.yml no sube en una pasada sin cambios
 # publicados (y entonces la siguiente repetía los mismos grupos). Cada nivel se parte en ROTATION_PASSES
 # turnos fijos de ceil(N/ROTATION_PASSES) grupos (turn_blocks) y la pasada `number` lee primero el
-# turno number % ROTATION_PASSES de cada nivel: en ROTATION_PASSES pasadas seguidas (8 h con el cron
-# cada 2 h) cada grupo tiene el suyo, sea cual sea N. Dentro del turno, el punto de partida cambia de
-# una época (ROTATION_PASSES pasadas) a otra (spin): si el cupo de la federación no llega al turno entero
-# (lo normal: ~3 grupos no prioritarios por pasada), lo que queda fuera no es siempre lo mismo.
+# turno number % ROTATION_PASSES de cada nivel: en ROTATION_PASSES pasadas seguidas (8 h a la cadencia
+# base; 4 en una ventana de partidos) cada grupo tiene el suyo, sea cual sea N. Dentro del turno, el punto
+# de partida cambia de una época (ROTATION_PASSES pasadas) a otra (spin): si el cupo de la federación no
+# llega al turno entero (lo normal: ~3 grupos no prioritarios por pasada), lo que queda fuera no es siempre
+# lo mismo.
 ROTATION_PASSES = 4
 GOLDEN = (5 ** 0.5 - 1) / 2      # el giro de spin: una fracción irracional, que no repite ciclo
-# Un grupo cerrado se lee una vez cada CLOSED_PASSES pasadas (closed_turn: 24 h con el cron cada 2 h, como
-# antes con 4 cada 6 h), en una que salta dos puestos de una época de CLOSED_PASSES a otra.
+# Un grupo cerrado se lee una vez cada CLOSED_PASSES pasadas (closed_turn: 24 h a la cadencia base, como
+# antes con 4 cada 6 h; un sábado o un domingo, con 19 pasadas, ~15 h), en una que salta dos puestos de una
+# época de CLOSED_PASSES a otra.
 CLOSED_PASSES = 12
 # Las competiciones nuevas (check_competitions), el directorio de campos y las fichas de los equipos que
-# no la tienen: una vez cada EXTRAS_PASSES pasadas (extras_turn, como closed_turn: 24 h), tras los
-# prioritarios que tocan, con como mucho EXTRAS_PAGES páginas de fichas; y al final de cualquier pasada
-# que acabe sin frenar ni llegar al plazo. Hasta el 16/10/2026, en cada pasada entre la primera y la
+# no la tienen: una vez cada EXTRAS_PASSES pasadas (extras_turn, como closed_turn: 24 h a la cadencia
+# base), tras los prioritarios que tocan, con como mucho EXTRAS_PAGES páginas de fichas; y al final de
+# cualquier pasada que acabe sin frenar ni llegar al plazo. Hasta el 16/10/2026, en cada pasada entre la primera y la
 # segunda (las competiciones) y en la segunda (el directorio), que el freno casi nunca dejaba leer.
 EXTRAS_PASSES = 12
 EXTRAS_PAGES = 8
@@ -259,15 +276,16 @@ def _natural(code):
 
 def run_number(env=None, now=None):
     """El número de esta pasada del bot, del que sale su orden (plan_groups): GITHUB_RUN_NUMBER, que
-    GitHub sube en cada ejecución de update.yml, haga commit o no; fuera de GitHub (a mano, en las
-    pruebas), la franja de 2 h del reloj (UTC; PASS_EVERY, el cron). Nada guardado: un turno en la base (o
-    en data-health.json) se perdía en las pasadas sin cambios publicados, que update.yml no sube, y la
+    GitHub sube en cada ejecución de update.yml, haga commit o no (por eso el reloj es otro workflow,
+    reloj.yml, y no un job de update.yml que mire cada 15 min si toca); fuera de GitHub (a mano, en las
+    pruebas), la franja de 2 h de la hora UTC (PASS_EVERY, la cadencia base). Nada guardado: un turno en
+    la base (o en data-health.json) se perdía en las pasadas sin cambios publicados, que update.yml no sube, y la
     siguiente repetía los mismos grupos. El número puede saltarse uno (una ejecución pendiente que la
     concurrency cancela al llegar otra la gasta sin pasar por el bot) o repetirse (relanzar una
     ejecución fallida cambia run_attempt, no el número): plan_groups lleva un margen para lo primero,
     y lo segundo repite el orden de una pasada que no llegó a hacerse. La franja horaria no sirve de
-    número: el cron llega con horas de retraso y las tandas y las ejecuciones a mano caen en la franja
-    de otra pasada."""
+    número: las pasadas no caen en franjas fijas (cada 1 o 2 h según la ventana de partidos, con los
+    retrasos de GitHub) y las tandas y las ejecuciones a mano caen en la franja de otra pasada."""
     env = os.environ if env is None else env
     try:
         return int(env["GITHUB_RUN_NUMBER"])
@@ -343,10 +361,10 @@ def daily_turn(key, number, passes):
 
 
 def closed_turn(code, number, passes=None):
-    """¿Le toca a este grupo cerrado? Una vez en cada época de `passes` pasadas (CLOSED_PASSES: 24 h con el
-    cron cada 2 h; hasta el 16/10/2026, 4 cada 6 h), en una que salta dos puestos de una época a otra
-    (daily_turn): una pasada que se pierde cada día a la misma hora le quita como mucho una de cada dos (con
-    un turno fijo, los de esa hora no se leían nunca)."""
+    """¿Le toca a este grupo cerrado? Una vez en cada época de `passes` pasadas (CLOSED_PASSES: 24 h a la
+    cadencia base, menos los días con ventana de partidos; hasta el 16/10/2026, 4 cada 6 h), en una que
+    salta dos puestos de una época a otra (daily_turn): una pasada que se pierde cada día a la misma hora le
+    quita como mucho una de cada dos (con un turno fijo, los de esa hora no se leían nunca)."""
     return daily_turn(code, number, passes or CLOSED_PASSES)
 
 
@@ -404,9 +422,10 @@ def checked_ok(check):
 def stale(check, now, max_age=PRIORITY_MAX_AGE, slot=False):
     """¿Toca leer un prioritario aunque no esté caliente? En su pasada (`slot`, priority_slot: una de cada
     max_age/PASS_EVERY, 3 con 6 h y una cada 2 h); si su última comprobación correcta (data-health.json)
-    no está o no es correcta; o si en la pasada siguiente (PASS_EVERY después) ya pasaría de `max_age` con
-    PASS_SLACK de margen (su pasada se perdió, no llegó a él o las pasadas van más espaciadas). Así, con una
-    pasada cada 2 h, entre dos lecturas no pasan más de `max_age` (si no se retrasan ni se pierden), y los
+    no está o no es correcta; o si en la pasada siguiente (PASS_EVERY después: la cadencia base; en una
+    ventana de partidos llega antes, y así lee antes, nunca después) ya pasaría de `max_age` con PASS_SLACK de
+    margen (su pasada se perdió, no llegó a él o las pasadas van más espaciadas). Así, con una pasada cada
+    2 h, entre dos lecturas no pasan más de `max_age` (si no se retrasan ni se pierden), y los
     prioritarios se reparten entre las pasadas: con «más de 6 h en la pasada siguiente» y nada más, todos
     tocaban a la vez (~35 páginas para un cupo de ~30) y alguno pasaba a la siguiente, a las 8 h
     (test_bot_pasada_corta)."""
@@ -416,7 +435,8 @@ def stale(check, now, max_age=PRIORITY_MAX_AGE, slot=False):
 
 def priority_slot(index, number, max_age=PRIORITY_MAX_AGE):
     """¿Es la pasada `number` la del prioritario `index` (su puesto entre los prioritarios abiertos, por
-    nivel y código)? Una de cada max_age/PASS_EVERY pasadas (3: 6 h), repartidos por su puesto."""
+    nivel y código)? Una de cada max_age/PASS_EVERY pasadas (3: 6 h a la cadencia base; ~3 h en una ventana
+    de partidos, con una pasada cada hora), repartidos por su puesto."""
     period = max(1, round(max_age / PASS_EVERY))
     return index % period == number % period
 
@@ -1308,7 +1328,9 @@ def pending_actas(conn, group_id, retry=True):
 def retry_actas(check, now):
     """¿Se reintentan en esta lectura del grupo sus actas que ya fallaron? Si su última comprobación correcta
     publicada (`check`, data-health.json) es de hace ACTA_RETRY_AFTER (4 h) o más, o no la hay: al ritmo de
-    sus lecturas por edad, no en cada pasada de un prioritario caliente (cada 2 h). Sin estado nuevo."""
+    sus lecturas por edad, no en cada pasada de un prioritario caliente (cada 1-2 h). En una ventana de
+    partidos sus lecturas por su pasada (~3 h) tampoco llegan: espera a la primera de 4 h o más. Sin estado
+    nuevo."""
     at = checked_at(check) if checked_ok(check) else None
     return at is None or _aware(now) - at >= ACTA_RETRY_AFTER
 
@@ -1634,8 +1656,8 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
     Desde el 16/10/2026, una PASADA CORTA: la federación sirve ~15 páginas por IP y su bloqueo escala dentro
     de la pasada (~300 s, ~900 s, más que el plazo), así que F (fiflp_carga.Federacion) espera solo el
     primer freno (BRAKE_PAUSES) y, en el segundo, deja de pedir (F.blocked): ~30 páginas en ~9 min, y la
-    siguiente pasada, 2 h después y con otra IP, sigue. Por eso cada grupo se lee COMPLETO antes del
-    siguiente, para que el freno final no deje calendarios leídos sin sus goleadores ni sus actas (hasta el
+    siguiente pasada, 1-2 h después (reloj.yml) y con otra IP, sigue. Por eso cada grupo se lee COMPLETO
+    antes del siguiente, para que el freno final no deje calendarios leídos sin sus goleadores ni sus actas (hasta el
     16/10/2026, en una segunda pasada que el freno casi nunca dejaba empezar: «sin federación: las actas y
     los goleadores de 3 grupos, en otra pasada», en cada pasada):
       1. su clasificación y sus jornadas (scrape_group, update_group: todas las jugadas en la primera

@@ -1,12 +1,16 @@
 name: Actualización automática
 
+# Las pasadas del bot: pasadas cortas (la federación bloquea más cada vez dentro de una pasada y cada
+# ejecución tiene IP nueva: docs/federacion.md). Desde el 17/10/2026 no tiene cron: las lanza el reloj
+# (reloj.yml, scripts/reloj_pasadas.py) cada 2 h (update_fiflp.PASS_EVERY) y cada hora en las ventanas de
+# partidos (viernes de 18 a 24 y sábado y domingo de 10 a 24, hora de Canarias), nunca con otra sin acabar;
+# también las tandas de actas y goleadores al subir sus raw, y a mano. Su cron ('23 */2 * * *' desde el
+# 16/10/2026; '0 */6 * * *' antes) casi no llegaba: 5 de 13 en ~26 h, una pasada cada 4-6 h. El reloj es
+# otro workflow, y no un job «¿toca?» aquí, porque cada ejecución de update.yml, aunque no haga nada, sube
+# GITHUB_RUN_NUMBER, del que sale el orden de cada pasada (update_fiflp.run_number): así solo sube en
+# pasadas de verdad.
 on:
-  schedule:
-    # Cada 2 horas, a y 23 (00:23, 02:23… UTC): pasadas cortas (update_fiflp.PASS_EVERY; la federación
-    # bloquea más cada vez dentro de una pasada y cada ejecución tiene IP nueva: docs/federacion.md). No a
-    # en punto: GitHub retrasa o pierde más los cron de las :00. Hasta el 16/10/2026, '0 */6 * * *'.
-    - cron: '23 */2 * * *'
-  workflow_dispatch:          # También se puede lanzar manualmente desde GitHub
+  workflow_dispatch:          # el reloj (reloj.yml), las tandas de la federación y a mano desde GitHub
 
 permissions:
   contents: write
@@ -123,7 +127,7 @@ jobs:
             # concurrency update-data las pone en fila y cada una parte del
             # main de cuando arranca (checkout ref: main). Un conflicto (la
             # base tocada en los dos lados) aborta en rojo; la pasada
-            # siguiente (2 h después) lo rehace.
+            # siguiente (1-2 h después: reloj.yml) lo rehace.
             for intento in 1 2 3; do
               if git push; then break; fi
               if [ "$intento" = 3 ]; then exit 1; fi
@@ -144,7 +148,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "Estado de las fuentes $(date '+%d/%m/%Y %H:%M UTC')"
             # Como el commit de datos: si main se ha movido (otra subida en el rato del bot), se rebasa y
-            # se reintenta; un conflicto se deja para la pasada siguiente (2 h después).
+            # se reintenta; un conflicto se deja para la pasada siguiente (1-2 h después: reloj.yml).
             for intento in 1 2 3; do
               if git push; then break; fi
               if [ "$intento" = 3 ]; then break; fi

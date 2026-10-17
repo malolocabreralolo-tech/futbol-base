@@ -7,10 +7,11 @@ que el plazo. Cada ejecución de GitHub tiene una IP nueva y vuelve a empezar co
 Mesas, y solo ~3 grupos más, sin sus actas ni sus goleadores.
 
 Lo decidido: pasadas CORTAS y MÁS FRECUENTES, una cada vez (sin IPs en paralelo): cada pasada espera solo
-el primer freno (fiflp_carga.BRAKE_PAUSES = 1) y acaba en el segundo, con el cron cada 2 h; los
-prioritarios, solo cuando toca (más de 6 h desde su última comprobación, o un partido suyo recién jugado
-sin resultado o con su acta por leer, durante 12 h: update_fiflp.plan_groups); y cada grupo, completo (calendario, goleadores y
-actas pendientes) antes del siguiente.
+el primer freno (fiflp_carga.BRAKE_PAUSES = 1) y acaba en el segundo, con el cron cada 2 h (desde el
+17/10/2026, el reloj: abajo); los prioritarios, solo cuando toca (más de 6 h desde su última comprobación,
+o un partido suyo recién jugado sin resultado o con su acta por leer, durante 12 h:
+update_fiflp.plan_groups); y cada grupo, completo (calendario, goleadores y actas pendientes) antes del
+siguiente.
 
 La simulación: la temporada llena de test_bot_rotacion (81 grupos, los siete de Las Mesas Huracán), cada
 grupo con seis equipos y una jornada por semana (tres partidos, el sábado o el domingo), una semana de
@@ -25,6 +26,11 @@ la base y data-health.json pasan tal cual (data-health.json solo si se reescribe
 
 `simulate` sirve también para el código de antes (con sus módulos en sys.path): así se midieron los
 números de «antes» de docs/federacion.md («Lo que da una pasada»).
+
+Desde el 17/10/2026 las pasadas las lanza el reloj (reloj.yml, reloj_pasadas.due): cada 2 h, y cada hora en
+las ventanas de partidos (viernes de 18 a 24 y sábado y domingo de 10 a 24, hora de Canarias). (f) simula la
+misma semana a las horas que daría el reloj con GitHub perdiendo más de la mitad de sus ticks y retrasando los
+demás hasta 1 h (clock_times): lo de las pruebas (a)-(e) se sigue cumpliendo con pasadas cada hora.
 """
 from datetime import date, datetime, timedelta, timezone
 import json
@@ -41,6 +47,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from db import SCHEMA  # noqa: E402
 from migrate_actas_schema import migrate  # noqa: E402
 import fiflp_carga as C  # noqa: E402
+import reloj_pasadas as R  # noqa: E402
 import update_fiflp as U  # noqa: E402
 
 START = datetime(2026, 10, 15, 0, 23, tzinfo=timezone.utc)      # un jueves, a la hora del cron nuevo
@@ -283,8 +290,9 @@ class Reader:
         return self.web.season.page_matches(_gid(page.url), int(m.group(1)), self.web.wall())
 
 
-def simulate(tmp_path, monkeypatch, every=timedelta(hours=2), days=DAYS, blocks=BLOCKS, env=None, seed=7):
-    """Una semana de pasadas (una cada `every`) sobre la temporada simulada. Devuelve un dict por pasada:
+def simulate(tmp_path, monkeypatch, every=timedelta(hours=2), days=DAYS, blocks=BLOCKS, env=None, seed=7, times=None):
+    """Una semana de pasadas (una cada `every`, o a las horas `times`: las del reloj, clock_times) sobre la
+    temporada simulada. Devuelve un dict por pasada:
     su hora, las peticiones (hora, URL, ¿servida?), lo que el bot comprobó (el informe en memoria), los
     grupos cuyos goleadores se leyeron, las esperas del freno y el informe publicado; y la temporada y la
     base, para medir."""
@@ -312,9 +320,9 @@ def simulate(tmp_path, monkeypatch, every=timedelta(hours=2), days=DAYS, blocks=
             return False
         return bool(conn.execute("UPDATE matches SET cod_acta=? WHERE id=?", (code, mid)))
     monkeypatch.setattr(U, "apply_acta", apply_acta)
-    n = int(timedelta(days=days) / every)
-    for i in range(n):
-        now = START + i * every
+    if times is None:
+        times = [START + i * every for i in range(int(timedelta(days=days) / every))]
+    for i, now in enumerate(times):
         source_health._report = None
         source_health.begin("2026-2027")
         clock = Clock()
@@ -494,6 +502,53 @@ def summary(passes, season, conn):
     }
 
 
+# El reloj (reloj.yml, 17/10/2026): un tick a las :07, :22, :37 y :52 que GitHub pierde con CLOCK_LOSS de
+# probabilidad (del cron de update.yml llegaron 5 de 13 en ~26 h) y retrasa 0-CLOCK_DELAY min si llega; cada
+# tick, en fila (la concurrency del reloj), lanza una pasada si toca (reloj_pasadas.due), que está sin acabar
+# CLOCK_JOB min y empieza a pedir páginas a la federación CLOCK_SETUP después de crearse.
+CLOCK_TICKS = (7, 22, 37, 52)
+CLOCK_LOSS = 0.55
+CLOCK_DELAY = 60
+CLOCK_JOB = (20, 25)
+CLOCK_SETUP = timedelta(minutes=3)
+
+
+def clock_times(seed=1, days=DAYS, start=START, loss=CLOCK_LOSS, delay=CLOCK_DELAY):
+    """Las horas (UTC, en segundos enteros, como checkedAt) a las que empiezan las pasadas que lanzaría el
+    reloj en `days` días desde `start`, con ticks perdidos y retrasados (arriba). Con `loss` 0 y `delay` 0,
+    una cada hora en punto de las ventanas y cada 2 h fuera."""
+    rnd = random.Random(seed)
+    end = start + timedelta(days=days)
+    ticks, hour = [], start.replace(minute=0, second=0, microsecond=0) - timedelta(hours=1)
+    while hour < end:
+        ticks += [hour + timedelta(minutes=m + rnd.uniform(0, delay)) for m in CLOCK_TICKS if rnd.random() >= loss]
+        hour += timedelta(hours=1)
+    runs, free = [], start - timedelta(hours=3)
+    for at in sorted(ticks):
+        at = free = max(at, free) + timedelta(seconds=30)
+        seen = [{"status": "completed" if done <= at else "in_progress", "createdAt": made.isoformat()}
+                for made, done in runs[-20:]]
+        if R.due(at, seen):
+            runs.append((at, at + timedelta(minutes=rnd.uniform(*CLOCK_JOB))))
+    return [(made + CLOCK_SETUP).replace(microsecond=0) for made, _ in runs if start <= made + CLOCK_SETUP < end]
+
+
+def priority_minutes(passes, season):
+    """Por cada partido de Las Mesas publicado durante la simulación, los minutos desde que la federación publica
+    el resultado hasta que el bot lo lee (la hora de la lectura de su grupo en la pasada que lo deja en la base)."""
+    out = []
+    for code in MINE:
+        gid = season.gid[code]
+        for j in range(1, ROUNDS + 1):
+            for m in season.matches[(gid, j)]:
+                if MINE[code] not in (m["home"], m["away"]) or not START <= m["published"] <= passes[-1]["now"]:
+                    continue
+                key = (gid, f"Jornada {j}", m["home"], m["away"])
+                got = next(p for p in passes if key in p["scored"])
+                out.append((datetime.fromisoformat(got["checked"][code]["checkedAt"]) - m["published"]).total_seconds() / 60)
+    return out
+
+
 # ── Las pruebas ───────────────────────────────────────────────────────────────
 
 @pytest.fixture(scope="module")
@@ -502,6 +557,17 @@ def week(tmp_path_factory):
     mp = pytest.MonkeyPatch()
     try:
         passes, season, conn = simulate(tmp_path_factory.mktemp("semana"), mp)
+        yield passes, season, conn, summary(passes, season, conn)
+    finally:
+        mp.undo()
+
+
+@pytest.fixture(scope="module")
+def clock_week(tmp_path_factory):
+    """La misma semana con las pasadas a las horas del reloj (clock_times), una sola vez."""
+    mp = pytest.MonkeyPatch()
+    try:
+        passes, season, conn = simulate(tmp_path_factory.mktemp("reloj"), mp, times=clock_times())
         yield passes, season, conn, summary(passes, season, conn)
     finally:
         mp.undo()
@@ -578,3 +644,41 @@ def test_more_useful_pages_per_day(week):
     con una cada 2 h, el doble largo."""
     passes, season, conn, s = week
     assert s["served_per_day"] >= 330, s
+
+
+def test_the_clock_without_losses_is_one_pass_an_hour_in_the_windows_and_every_two_hours_outside():
+    """clock_times con GitHub perfecto: en la semana desde el jueves 15/10/2026, 34 h de ventanas (viernes de 18
+    a 24, sábado y domingo de 10 a 24) con una pasada cada hora y el resto, cada 2 h."""
+    times = clock_times(loss=0, delay=0)
+    gaps = {(b - a) for a, b in zip(times, times[1:])}
+    assert sum(1 for t in times if R.window(t)) == 34
+    assert gaps == {timedelta(hours=1), timedelta(hours=2)}, gaps
+    assert len(times) == 34 + 67
+
+
+def test_with_the_clock_one_pass_an_hour_on_match_days_and_nothing_breaks(clock_week):
+    """(f) Con el reloj (17/10/2026) y GitHub perdiendo más de la mitad de los ticks y retrasando los demás hasta
+    1 h: ~80 pasadas en la semana, ~25 en las 34 h de ventanas (con el cron de antes, 5-7 de ~33). Y nada se
+    rompe con pasadas cada hora: ninguna espera el bloqueo de 900 s ni pide páginas pasado el plazo, ningún
+    freno deja un error, los 28 heredados se limpian, cada resultado de Las Mesas se lee en la primera pasada
+    que empieza con él publicado, que en las ventanas llega antes (la mediana, ≤ 1 h desde que la federación
+    lo publica), los prioritarios no pasan de PRIORITY_MAX_AGE sin leerse más lo que GitHub retrase un tick
+    (stale mira PASS_EVERY, la cadencia base, también en las ventanas: lo seguro), ningún acta se queda sin
+    intentos (ACTA_RETRY_AFTER: en las ventanas sus lecturas por edad van cada ~3 h y una que falló espera a
+    la primera de 4 h o más) y las páginas útiles al día no bajan."""
+    passes, season, conn, s = clock_week
+    assert len(passes) >= 75 and sum(1 for p in passes if R.window(p["now"])) >= 20, s
+    assert all(p["pauses"] <= 1 and p["paused"] < 600 and p["blocks"] <= 2 for p in passes), s
+    assert all(t <= p["deadline"] for p in passes for t, _, _ in p["requests"]), "ninguna página pasado el plazo"
+    for p in passes:
+        assert not [c for c, g in p["checked"].items() if g["status"] != "ok" and c not in ERRORED], p["now"]
+    assert s["errors_end"] == 0, s
+    late = [(code, j, d) for code, j, d in priority_latency(passes, season) if d is None or d > 0]
+    assert not late, late
+    minutes = priority_minutes(passes, season)
+    assert statistics.median(minutes) <= 60 and max(minutes) <= 150, sorted(minutes)
+    assert max(priority_gaps(passes, season).values()) <= (U.PRIORITY_MAX_AGE + timedelta(hours=2)) / timedelta(hours=1), s
+    assert s["served_per_day"] >= 330, s
+    exhausted = conn.execute("""SELECT count(*) FROM matches WHERE fiflp_acta IS NOT NULL AND acta_tries >= ?
+                                AND (cod_acta IS NULL OR cod_acta <> fiflp_acta)""", (U.MAX_ACTA_TRIES,)).fetchone()[0]
+    assert exhausted == 0 and s["pending_actas_end"] <= 5, s

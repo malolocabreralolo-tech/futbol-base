@@ -326,7 +326,7 @@ def test_new_actas_are_the_untried_pending_ones_most_recent_first():
 
 
 def test_competitions_and_the_directory_once_a_day():
-    """extras_turn: una pasada de cada EXTRAS_PASSES (12: 24 h con el cron cada 2 h), en una que salta dos
+    """extras_turn: una pasada de cada EXTRAS_PASSES (12: 24 h a la cadencia base), en una que salta dos
     puestos de un día a otro (daily_turn, como los cerrados)."""
     assert U.EXTRAS_PASSES == 12
     for day in range(10):

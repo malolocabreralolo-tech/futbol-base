@@ -310,7 +310,7 @@ def test_alevin_keeps_its_quota_even_when_benjamin_would_fill_the_pass():
 def test_a_closed_group_is_refreshed_once_every_four_passes():
     """Una vez en cada época de CLOSED_PASSES pasadas, en una que salta dos puestos de una época a otra: con
     un turno fijo (crc32 % 4), una pasada perdida cada día a la misma hora dejaba sin leer, para siempre,
-    a los cerrados de esa hora. Desde el 16/10/2026, con el cron cada 2 h, la época es de 12 pasadas (24 h,
+    a los cerrados de esa hora. Desde el 16/10/2026, con una pasada cada 2 h, la época es de 12 pasadas (24 h,
     como antes las 4 cada 6 h; y lo mismo daily_turn con cualquier número de pasadas)."""
     period = U.CLOSED_PASSES
     assert period == 12 and U.PASS_EVERY * period == timedelta(hours=24)
@@ -874,7 +874,7 @@ def test_venues_and_team_cards_are_read_once_a_day_after_the_priority_groups(hea
 
 def test_a_closed_group_is_refreshed_once_every_four_passes_and_the_rest_carry_their_check(health):
     """Todo cerrado: cada pasada lee solo los cerrados a los que les toca (closed_turn); los demás
-    descansan con su última comprobación. En cada época de CLOSED_PASSES pasadas (12 con el cron cada 2 h,
+    descansan con su última comprobación. En cada época de CLOSED_PASSES pasadas (12 con una cada 2 h,
     desde el 16/10/2026; antes 4 cada 6 h: 24 h), todos una vez, sin estado: igual si ninguna pasada sube
     data-health.json."""
     conn = season(played="2026-09-19")

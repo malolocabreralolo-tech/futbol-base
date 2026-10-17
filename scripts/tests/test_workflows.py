@@ -14,10 +14,14 @@ Guards the CI contracts fixed on 2026-06-11:
    outputs: `data-*.js` glob (covers data-seasons.js, data-season-*.js,
    data-lineups-*.js, future files), plus index.html, sw.js
    (CACHE_NAME bump, contracts C3/C4) and futbolbase.db.
+4. (17/10/2026) update.yml no tiene cron: lo lanza el reloj (reloj.yml, con
+   scripts/reloj_pasadas.py), cada 15 min, con los permisos justos y sin
+   pip, y solo cuando toca (test_reloj_pasadas.py prueba la decisión).
 
 Static YAML checks only — no network, no workflow execution.
 """
 import re
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
@@ -26,7 +30,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 WF_DIR = ROOT / ".github" / "workflows"
 
-OWNED = ["update.yml", "tests.yml", "fetch-fiflp.yml", "fetch-fiflp-actas.yml"]
+OWNED = ["update.yml", "tests.yml", "fetch-fiflp.yml", "fetch-fiflp-actas.yml", "reloj.yml"]
 
 
 def _load(name):
@@ -93,7 +97,8 @@ def test_update_has_concurrency_and_timeout():
     # 45 desde 2026/27: los grupos de la federación se leen con navegador. 55 desde el 15/10/2026: el
     # plazo del bot pasa de 25 a 33 min (update_fiflp.DEADLINE_SECONDS: la federación sirve ~15 páginas
     # por IP y frena ~5 min, y el plazo se mide en vueltas), y el resto del job son 4-8 min más. 40 desde
-    # el 16/10/2026: pasadas cortas (16 min de plazo; una espera del freno por pasada), cada 2 h.
+    # el 16/10/2026: pasadas cortas (16 min de plazo; una espera del freno por pasada), cada 2 h (desde el
+    # 17/10/2026 las lanza reloj.yml: cada 2 h, y cada hora en las ventanas de partidos).
     assert data["jobs"]["update"].get("timeout-minutes") == 40
 
 
@@ -112,26 +117,99 @@ def test_the_federation_budget_fits_in_the_update_job():
     assert update_fiflp.RESERVE_SECONDS <= update_fiflp.DEADLINE_SECONDS / 4
 
 
-def test_short_passes_every_two_hours_off_the_hour_and_the_job_fits_between_them():
-    """Pasadas cortas y más frecuentes (16/10/2026): el cron, cada 2 h y no a en punto (GitHub retrasa o
-    pierde más los de las :00), el mismo periodo que update_fiflp.PASS_EVERY (de él salen la frescura de los
-    prioritarios, sus turnos y la franja de run_number), y el job entero (su timeout) cabe entre dos. Una
-    sola pasada a la vez: la concurrency las pone en fila, sin cancelar ninguna."""
-    import sys
-    sys.path.insert(0, str(ROOT / "scripts"))
-    import update_fiflp
+def test_update_has_no_schedule_the_clock_launches_it():
+    """Desde el 17/10/2026 update.yml no tiene cron: su '23 */2 * * *' casi no llegaba (5 de 13 en ~26 h) y lo
+    lanza el reloj (reloj.yml) con workflow_dispatch, que también usan las tandas y quien lo lance a mano. Un
+    cron aquí volvería a sumar ejecuciones fuera del reloj (y GITHUB_RUN_NUMBER, del que sale la rotación).
+    Una sola pasada a la vez: la concurrency las pone en fila, sin cancelar ninguna."""
     data = _load("update.yml")
-    crons = [e.get("cron") for e in (_triggers(data).get("schedule") or [])]
-    assert len(crons) == 1
-    minute, hour, *rest = crons[0].split()
-    assert minute.isdigit() and int(minute) not in (0, 30) and rest == ["*", "*", "*"]
-    assert hour.startswith("*/") and int(hour[2:]) * 3600 == update_fiflp.PASS_EVERY.total_seconds()
-    assert data["jobs"]["update"]["timeout-minutes"] * 60 < update_fiflp.PASS_EVERY.total_seconds()
+    trig = _triggers(data)
+    assert "schedule" not in trig, "el reloj (reloj.yml) es el único reloj del bot"
+    assert "workflow_dispatch" in trig
     assert data["concurrency"] == {"group": "update-data", "cancel-in-progress": False}
 
 
+def _reloj_job():
+    data = _load("reloj.yml")
+    assert list(data["jobs"]) == ["reloj"]
+    return data, data["jobs"]["reloj"]
+
+
+def test_the_clock_ticks_every_15_minutes_off_the_hour():
+    """El reloj (17/10/2026): un tick cada 15 min, nunca a en punto ni a y media (GitHub retrasa o pierde más
+    esos), cada hora del día: si GitHub pierde uno, el siguiente lanza la pasada que toque. Y a mano."""
+    data, _ = _reloj_job()
+    assert data["name"] == "Reloj de las pasadas"
+    trig = _triggers(data)
+    assert "workflow_dispatch" in trig
+    crons = [e.get("cron") for e in (trig.get("schedule") or [])]
+    assert len(crons) == 1
+    minute, *rest = crons[0].split()
+    minutes = sorted(int(m) for m in minute.split(","))
+    assert rest == ["*", "*", "*", "*"], crons
+    assert not {0, 30} & set(minutes), minutes
+    steps = [b - a for a, b in zip(minutes, minutes[1:] + [minutes[0] + 60])]
+    assert len(minutes) >= 4 and max(steps) <= 15, minutes
+
+
+def test_the_clock_has_minimal_permissions_and_is_light():
+    """Solo lee y lanza workflows (actions: write) y lee el repositorio (contents: read), nada más; un job
+    corto, uno cada vez (dos ticks juntos, en fila y sin cancelarse), con un checkout disperso de su guion,
+    sin credenciales guardadas, con el python3 del sistema y sin pip ni setup-python."""
+    data, job = _reloj_job()
+    assert data["permissions"] == {"actions": "write", "contents": "read"}
+    assert data["concurrency"]["cancel-in-progress"] is False and data["concurrency"]["group"]
+    assert data["concurrency"]["group"] != "update-data", "no comparte fila con las pasadas"
+    assert job["runs-on"] == "ubuntu-24.04" and job.get("timeout-minutes", 99) <= 10
+    uses = [st["uses"] for st in job["steps"] if "uses" in st]
+    assert uses == ["actions/checkout@v5"], uses
+    checkout = next(st for st in job["steps"] if "uses" in st)
+    assert checkout["with"]["sparse-checkout"].split() == ["scripts/reloj_pasadas.py"]
+    assert checkout["with"].get("sparse-checkout-cone-mode") is False
+    assert checkout["with"].get("persist-credentials") is False
+    runs = " ".join(st.get("run") or "" for st in job["steps"])
+    assert not re.search(r"\bpip3?\b", runs) and "setup-python" not in runs
+    for st in job["steps"]:
+        assert "${{" not in (st.get("run") or ""), "nada interpolado en el guion"
+
+
+def test_the_clock_launches_update_on_main_only_when_due():
+    """El paso que decide lee las ejecuciones de update.yml con gh y se las pasa a reloj_pasadas.py (que
+    escribe due en $GITHUB_OUTPUT), con pipefail: un fallo de gh tumba el job a la vista y no lanza nada. El
+    que lanza, solo si toca, y sobre main (como las tandas: el GITHUB_TOKEN sí puede lanzar workflow_dispatch)."""
+    _, job = _reloj_job()
+    steps = job["steps"]
+    decide = next(st for st in steps if "reloj_pasadas.py" in (st.get("run") or ""))
+    launch = next(st for st in steps if "gh workflow run" in (st.get("run") or ""))
+    assert steps.index(decide) < steps.index(launch)
+    assert "set -euo pipefail" in decide["run"]
+    assert re.search(r"gh run list [^\n]*--workflow update\.yml", decide["run"])
+    assert "python3 scripts/reloj_pasadas.py <" in decide["run"]
+    assert decide["env"]["GH_TOKEN"] == "${{ github.token }}" and decide.get("id")
+    assert not decide.get("continue-on-error")
+    assert launch["if"] == f"steps.{decide['id']}.outputs.due == 'true'"
+    assert "gh workflow run update.yml --ref main" in launch["run"]
+    assert launch["env"]["GH_TOKEN"] == "${{ github.token }}"
+    assert [st for st in steps if "gh workflow run" in (st.get("run") or "")] == [launch]
+
+
+def test_the_clock_cadence_is_the_bots_and_a_pass_fits_in_the_shortest_one():
+    """La cadencia base del reloj es la del bot (update_fiflp.PASS_EVERY: de ella salen la frescura de los
+    prioritarios, sus turnos y la franja de run_number), con la misma zona horaria que la base; y el job
+    entero de update.yml (su timeout) cabe en la cadencia más corta, la de las ventanas, menos la holgura."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import reloj_pasadas
+    import update_fiflp
+    assert reloj_pasadas.BASE == update_fiflp.PASS_EVERY
+    assert reloj_pasadas.HOT_AFTER == update_fiflp.HOT_AFTER
+    assert reloj_pasadas.LOCAL_ZONE == update_fiflp.LOCAL_ZONE
+    timeout = _load("update.yml")["jobs"]["update"]["timeout-minutes"]
+    assert timedelta(minutes=timeout) < reloj_pasadas.WINDOW - reloj_pasadas.SLACK
+
+
 def test_two_passes_in_a_row_do_not_step_on_each_other():
-    """Con una pasada cada 2 h (y las tandas de la federación lanzando el bot), dos pasadas seguidas no se
+    """Con una pasada cada 1-2 h (y las tandas de la federación lanzando el bot), dos pasadas seguidas no se
     pisan: la concurrency update-data las pone en fila (sin cancelar la que corre); cada una parte del main de
     cuando arranca (checkout ref: main), con la base y data-health.json que subió la anterior; y al subir,
     si main se ha movido (una tanda sube su raw), se rebasa con --autostash y se reintenta, también el
@@ -269,6 +347,7 @@ def test_tests_yml_paths_cover_known_gaps():
         assert ".github/workflows/update.yml" in paths, (
             f"{event} paths must include .github/workflows/update.yml"
         )
+        assert ".github/workflows/reloj.yml" in paths, f"{event} paths must include .github/workflows/reloj.yml"
         # Rediseño «Acta»: desde el corte de B2 la hoja es acta.css; un PR que
         # solo la toque debe correr las pruebas de contraste y de CSS.
         assert "acta.css" in paths, f"{event} paths must include acta.css"
@@ -316,7 +395,7 @@ def test_tests_yml_paths_cover_fonts_icons_and_crests():
 NODE24 = {"actions/checkout": "v5", "actions/setup-python": "v6", "actions/setup-node": "v5"}
 
 
-@pytest.mark.parametrize("name", ["tests.yml", "update.yml"])
+@pytest.mark.parametrize("name", ["tests.yml", "update.yml", "reloj.yml"])
 def test_actions_run_on_node24(name):
     data = _load(name)
     uses = [step["uses"] for job in data["jobs"].values() for step in job["steps"] if "uses" in step]

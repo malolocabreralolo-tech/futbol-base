@@ -54,9 +54,10 @@ Por eso, desde ese día (Federacion):
   - UNA espera por pasada (BRAKE_PAUSES = 1, FIFLP_BRAKE_PAUSES; desde el 16/10/2026): el segundo freno
     acaba la pasada. Lo medido en las pasadas 1107-1110 (15-16/10/2026): el bloqueo ESCALA dentro de una
     pasada (el 1.º ~300 s, el 2.º ~900 s, el 3.º más que el plazo) y cada ejecución de GitHub, con su IP
-    nueva, vuelve a empezar con ~5 min. Esperar el 2.º eran 15 min por ~15 páginas; una pasada nueva (el
-    cron cada 2 h de update.yml) las da con 5. Así cada pasada son ~15 páginas, la espera de ~5 min, ~15
-    más y nada después, en ~9 min (update_fiflp.DEADLINE_SECONDS, 16, es para una pasada sin freno).
+    nueva, vuelve a empezar con ~5 min. Esperar el 2.º eran 15 min por ~15 páginas; una pasada nueva (cada
+    2 h, y cada hora en las ventanas de partidos: reloj.yml) las da con 5. Así cada pasada son ~15
+    páginas, la espera de ~5 min, ~15 más y nada después, en ~9 min (update_fiflp.DEADLINE_SECONDS, 16, es
+    para una pasada sin freno).
     Hasta el 16/10/2026 no había tope (cada vuelta, ~15 páginas más, hasta el plazo de 33 min); con 0,
     ninguna espera (al frenar se acaba la pasada), y con «sin», sin tope;
   - SIN RALENTIZAR al reanudar (antes, el intervalo ×1,5 y hasta ×2): el cupo no es de ritmo, y cada

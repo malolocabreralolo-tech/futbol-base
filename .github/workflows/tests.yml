@@ -20,6 +20,7 @@ on:
       - 'escudos/**'
       - '.github/workflows/tests.yml'
       - '.github/workflows/update.yml'
+      - '.github/workflows/reloj.yml'
   pull_request:
     paths:
       - 'scripts/**.py'
@@ -38,6 +39,7 @@ on:
       - 'escudos/**'
       - '.github/workflows/tests.yml'
       - '.github/workflows/update.yml'
+      - '.github/workflows/reloj.yml'
   # Red de seguridad: los push del bot con GITHUB_TOKEN no disparan este
   # workflow (anti-recursión de GitHub), así que un cron diario garantiza
   # que las suites corren sobre main al menos una vez al día.

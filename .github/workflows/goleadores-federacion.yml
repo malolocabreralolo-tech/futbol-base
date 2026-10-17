@@ -80,4 +80,4 @@ jobs:
         if: ${{ !cancelled() }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run update.yml --ref main || echo "no se pudo lanzar el bot; lo hará su cron"
+        run: gh workflow run update.yml --ref main || echo "no se pudo lanzar el bot; lo lanzará el reloj (reloj.yml)"

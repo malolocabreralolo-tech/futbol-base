@@ -1,0 +1,78 @@
+name: Reloj de las pasadas
+
+# El único reloj del bot (desde el 17/10/2026): cada ~15 min mira las ejecuciones de update.yml y, si toca,
+# lanza una pasada (workflow_dispatch). Toca (scripts/reloj_pasadas.py) si ninguna está sin acabar y desde
+# que se creó la última han pasado 2 h (update_fiflp.PASS_EVERY, la cadencia base), o 1 h en las ventanas de
+# partidos, hora de Canarias: viernes de 18 a 24 y sábado y domingo de 10 a 24 (una hora después de los
+# primeros saques, que es cuando el bot ya busca resultados: update_fiflp.hot_reason); con 10 min de holgura.
+# El cron de update.yml ('23 */2 * * *' desde el 16/10/2026) casi no llegaba: 5 de 13 en ~26 h, una pasada
+# cada 4-6 h. Con un tick cada 15 min, uno perdido solo retrasa la pasada hasta el siguiente que llegue.
+#
+# ¿Por qué un workflow aparte y no un job «¿toca?» dentro de update.yml, con su cron cada 15 min? Porque
+# cada ejecución de update.yml, aunque no haga nada, sube GITHUB_RUN_NUMBER, y de él sale el orden de cada
+# pasada (update_fiflp.run_number: los turnos de ROTATION_PASSES, priority_slot, closed_turn y extras_turn):
+# con ~90 ejecuciones vacías al día entre dos pasadas de verdad, el número saltaría de 4 en 4 o de 8 en 8 y
+# la rotación sin estado dejaría turnos sin leer. Con el reloj aparte, el número de update.yml solo sube en
+# pasadas de verdad (y en las que lanzan las tandas de actas y goleadores, o a mano, como siempre).
+#
+# Ligero: checkout disperso de reloj_pasadas.py, el python3 del sistema, sin pip; y los permisos justos para
+# leer y lanzar workflows (actions: write) y leer el repositorio (contents: read). Un fallo de gh o una
+# respuesta que no se entiende: el job falla a la vista y no lanza nada.
+on:
+  schedule:
+    # Cada 15 min, a y 7, 22, 37 y 52: no a en punto ni a y media (GitHub retrasa o pierde más esos).
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+# Uno cada vez: dos ticks que GitHub entrega juntos se miran uno tras otro (el segundo ya ve la pasada que
+# lanzó el primero, en cola o en marcha, y no lanza otra).
+concurrency:
+  group: reloj-pasadas
+  cancel-in-progress: false
+
+jobs:
+  reloj:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout (solo el reloj)
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          persist-credentials: false
+          sparse-checkout: scripts/reloj_pasadas.py
+          sparse-checkout-cone-mode: false
+
+      - name: ¿Toca una pasada?
+        id: reloj
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh run list --repo "$GITHUB_REPOSITORY" --workflow update.yml --limit 20 \
+            --json number,event,status,conclusion,createdAt > "$RUNNER_TEMP/pasadas.json"
+          python3 scripts/reloj_pasadas.py < "$RUNNER_TEMP/pasadas.json"
+
+      - name: Lanzar la pasada
+        if: steps.reloj.outputs.due == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run update.yml --ref main --repo "$GITHUB_REPOSITORY"
+          # Hasta que GitHub la enseñe (unos segundos), para que el tick siguiente, en fila tras este, la vea
+          # en cola o en marcha. Si tarda más de un minuto, solo un aviso: ya está lanzada.
+          for i in $(seq 12); do
+            sleep 5
+            busy=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update.yml --limit 5 --json status \
+              --jq '[.[] | select(.status != "completed")] | length' || echo 0)
+            if [ "$busy" != "0" ]; then
+              echo "Pasada lanzada: $busy sin acabar."
+              exit 0
+            fi
+          done
+          echo "::warning::La pasada está lanzada, pero GitHub aún no la enseña."

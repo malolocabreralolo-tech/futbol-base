@@ -3,9 +3,13 @@
 // jornada y la botonera. Bajo la cabecera, la tira de los grupos de su competición (groupStrip), con
 // «Todos» delante, y a su derecha, «Mi grupo» u «Otras ligas». Sin `g` y con `c` y `f`, «Todos los
 // grupos»: la misma jornada en todos los de la competición, un bloque por grupo. mount() añade
-// compartir y el .ics del grupo.
+// compartir y el .ics del grupo. En prebenjamín de la temporada en curso (17/10/2026), cada partido
+// sin jugar lleva debajo su pronóstico (pronostico.js; la línea, forecastLine de ui.js) y la jornada,
+// la nota de en qué se basa; en cualquier otro grupo, forecastRound no da ninguno y no se pinta nada.
 import { html } from './html.js';
-import { screenHead, matchRow, notice, empty, listEs, shareStatus, block, groupStrip, scrollToCurrent } from './ui.js';
+import {
+  screenHead, matchRow, notice, empty, listEs, shareStatus, block, groupStrip, scrollToCurrent, forecastNote, forecastOptions,
+} from './ui.js';
 import { errorBox } from './shell.js';
 import {
   CAT_NAMES, competitionRound, competitions, defaultRound, findRound, groupSummary, roundNotice, retiredTeams, matchState,
@@ -15,6 +19,7 @@ import {
 import { MONTHS, WEEKDAYS, routeHref, matchHref, downloadCalendar, shareAndAnnounce } from './links.js';
 import { jornadaNumber, seasonNeeds } from './state.js';
 import { myGroupIn, myTeamIn } from './myteam.js';
+import { forecastRound } from './pronostico.js';
 
 function dayParts(iso) {
   const [y, m, d] = iso.split('-').map(Number);
@@ -55,6 +60,15 @@ function roundTitle(group, round) {
 const againstRetired = retired => m => retired.has(m.home) || retired.has(m.away);
 // Si `m` es un partido de `mine` (el nombre resuelto, o null sin equipo propio en este grupo).
 const isMineOf = mine => m => mine !== null && (m.home === mine || m.away === mine);
+
+// Los pronósticos de una jornada (forecastRound de pronostico.js, con las opciones de la web): { of(m),
+// list }, el de cada partido (o null) y todos, para la nota. Fuera de prebenjamín de la temporada en
+// curso, todos null.
+function roundForecasts(ctx, group, round) {
+  const list = forecastRound(group, round, forecastOptions(ctx));
+  const byMatch = new Map(round.matches.map((m, i) => [m, list[i]]));
+  return { of: m => byMatch.get(m) || null, list };
+}
 
 // Días de la jornada, sin los partidos contra retirados (nunca se jugarán; el aviso los
 // explica). El día del partido propio va primero y, dentro, el propio en cabeza; los demás, por
@@ -170,6 +184,8 @@ function competitionView(ctx, s) {
   const near = m => (m == null ? null : routeHref('jornada', { ...at, r: String(m) }));
   const nav = html`<nav class="round-nav" aria-label="Jornadas">${roundStep(near(numbers[k - 1]), `Jornada ${numbers[k - 1]}`, '‹', 'Jornada anterior', 'round-prev')}<div class="round-now"><h2 class="round-title">Jornada ${n} de ${numbers[numbers.length - 1]}</h2><p class="round-dates">${dateRange(dates[0], dates[dates.length - 1])}</p></div>${roundStep(near(numbers[k + 1]), `Jornada ${numbers[k + 1]}`, '›', 'Jornada siguiente', 'round-next')}</nav>`;
   const ordered = [...rounds.filter(x => x.mine), ...rounds.filter(x => !x.mine)];
+  // Los pronósticos de todos los grupos, para una sola nota debajo (la misma en cada uno sería ruido).
+  const guesses = [];
   const sections = ordered.map(({ group, round, mine }) => {
     const { label } = groupSummary(group);
     const title = mine ? html`${label}<span class="block-mine"> · mi grupo</span>` : label;
@@ -180,12 +196,14 @@ function competitionView(ctx, s) {
     const isMine = isMineOf(mine);
     const days = roundDays(group, round, mine);
     const warn = noticeText(roundNotice(group, round));
+    const guess = roundForecasts(ctx, group, round);
+    guesses.push(...guess.list);
     const body = days.length
-      ? html`<div class="box">${days.map(day => html`<h3 class="match-day">${dayLabel(day.date)}</h3>${day.matches.map(m => matchRow(m, { mine: isMine(m), today, shields, href: matchHref(m) }))}`)}</div>`
+      ? html`<div class="box">${days.map(day => html`<h3 class="match-day">${dayLabel(day.date)}</h3>${day.matches.map(m => matchRow(m, { mine: isMine(m), today, shields, href: matchHref(m), forecast: guess.of(m) }))}`)}</div>`
       : empty('La fuente no trae partidos de esta jornada.');
     return block(title, html`${body}${warn ? notice(warn.term, warn.text) : ''}`, { context: table, id });
   });
-  return html`<section data-screen="jornada">${head}${strip}${nav}<div class="round-groups">${sections}</div></section>`;
+  return html`<section data-screen="jornada">${head}${strip}${nav}<div class="round-groups">${sections}</div>${forecastNote(guesses, { each: true })}</section>`;
 }
 
 function render(ctx) {
@@ -231,15 +249,16 @@ function render(ctx) {
   const dates = days.map(day => day.date).filter(Boolean).sort();
   const nav = html`<nav class="round-nav" aria-label="Jornadas">${step(group.rounds[at - 1], '‹', 'Jornada anterior', 'round-prev')}<div class="round-now"><h2 class="round-title">${roundTitle(group, round)}</h2><p class="round-dates">${dateRange(dates[0], dates[dates.length - 1])}</p></div>${step(group.rounds[at + 1], '›', 'Jornada siguiente', 'round-next')}</nav>`;
   const isMine = isMineOf(mine);
+  const guess = roundForecasts(ctx, group, round);
   const list = days.length
-    ? html`<div class="days">${days.map(day => html`<section class="day"><h3 class="day-title">${dayLabel(day.date)}</h3><div class="box">${day.matches.map(m => matchRow(m, { mine: isMine(m), today, shields, href: matchHref(m) }))}</div></section>`)}</div>`
+    ? html`<div class="days">${days.map(day => html`<section class="day"><h3 class="day-title">${dayLabel(day.date)}</h3><div class="box">${day.matches.map(m => matchRow(m, { mine: isMine(m), today, shields, href: matchHref(m), forecast: guess.of(m) }))}</div></section>`)}</div>`
     : empty('La fuente no trae partidos de esta jornada.');
   const warn = noticeText(roundNotice(group, round));
   const calendar = groupCalendar(group, today).length > 0
     ? html`<button class="button" type="button" data-action="group-calendar">Calendario del grupo</button>` : '';
   // Bajo la botonera, la región de estado de «Compartir jornada» (shareStatus, la de todas las pantallas).
   const actions = html`<div class="box round-actions"><div class="buttons"><button class="button" type="button" data-action="share-round">Compartir jornada</button>${calendar}</div></div>${shareStatus()}`;
-  return html`<section data-screen="jornada">${head}${nav}${list}${warn ? notice(warn.term, warn.text) : ''}${actions}</section>`;
+  return html`<section data-screen="jornada">${head}${nav}${list}${warn ? notice(warn.term, warn.text) : ''}${forecastNote(guess.list)}${actions}</section>`;
 }
 
 function mount(root, ctx) {

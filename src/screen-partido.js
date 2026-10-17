@@ -1,14 +1,18 @@
 // Pantalla Partido (spec §4.5): resultado con los penaltis, los goles de
 // timelineFor con su aviso si no cuadran con el marcador, las alineaciones del
 // acta, el cara a cara del grupo con las temporadas anteriores bajo demanda y
-// el contexto de los dos equipos.
+// el contexto de los dos equipos. Sin jugar y de prebenjamín de la temporada en
+// curso, el pronóstico debajo del resultado (pronostico.js, 17/10/2026).
 // render(ctx) es pura y síncrona: no toca el DOM ni el reloj (hoy llega en
 // ctx.today). mount(root, ctx) pone el comportamiento: compartir, desplegar
 // las temporadas anteriores (con su «Reintentar») y el «Reintentar» de los Goles
 // y de las Alineaciones, que los pinta en su sitio (B5, decisión 3). «‹» y el
 // «Reintentar» de la pantalla son del router (data-action="back" y "retry").
 import { html, join } from './html.js';
-import { block, box, cells, crest, empty, formChips, notice, score, screenHead, shareStatus } from './ui.js';
+import {
+  block, box, cells, crest, decimal, empty, forecastOptions, formChips, listEs, notice, oddsBar, percent, score, screenHead,
+  shareStatus,
+} from './ui.js';
 import {
   actaFor, competitionKey, findGroup, findMatch, headToHead, lastResults, matchState, penaltyWinner, playerName,
   roleLabel, roundOf, seasonLabel, teamShort, timelineFor,
@@ -18,6 +22,7 @@ import {
   ensureLineups, ensureMatchDetail, ensureSeasonData, lineupsKey, loadAlevinSeasons, loadSeasons, normalizeTeamName,
 } from './state.js';
 import { errorBox, retryBlock } from './shell.js';
+import { forecastMatch, topScores } from './pronostico.js';
 
 const DASH = '–';
 const PREVIOUS_ID = 'partido-anteriores';
@@ -119,6 +124,31 @@ function resultBlock(match, { today, shields, status = null, campos = null, isla
   const why = off ? notice(`${off}:`, status.note ? `${status.note} (según futbolaspalmas).` : 'según futbolaspalmas.') : '';
   return box(html`${facts}${map}<div class="pt-teams">${team(match.home, 'Local')}${marker}${team(match.away, 'Visitante')}</div>${penalties}${why}`,
     { title: 'Resultado', context });
+}
+
+// Pronóstico de un partido sin jugar de prebenjamín de la temporada en curso (17/10/2026; el modelo y
+// sus límites, en pronostico.js): la barra del 1X2 (oddsBar de ui.js) con las tres probabilidades en
+// texto, el resultado más probable (siempre del favorito) con los dos que le siguen sin cambiar de
+// ganador (topScores) y los goles esperados; debajo, en qué se basa: las jornadas y los partidos de esta
+// temporada del grupo y, si uno de los dos aún no ha jugado, que cuenta como un equipo medio. Nada si
+// forecastMatch no da pronóstico: otra categoría o temporada, un cuadro, jugado, sin fecha o con la fecha
+// pasada, un retirado, lo que la app da por retirado, anulado o suspendido, o menos de 2 jornadas.
+const FORECAST_ID = 'pronostico';
+function forecastBlock(match, group, ctx) {
+  const f = forecastMatch(group, match, forecastOptions(ctx));
+  if (!f) return '';
+  const side = (cls, who, p) => html`<div class="odds-item ${cls}"><dt><span class="odds-key" aria-hidden="true"></span>${who}</dt><dd>${percent(p)}</dd></div>`;
+  const odds = html`<div class="odds">${oddsBar(f.pHome, f.pDraw, f.pAway)}<dl class="odds-legend">${side('is-home', html`<span class="vh">Gana </span>${teamShort(f.home)}`, f.pHome)}${side('is-draw', 'Empate', f.pDraw)}${side('is-away', html`<span class="vh">Gana </span>${teamShort(f.away)}`, f.pAway)}</dl></div>`;
+  const facts = cells([
+    { label: 'Resultado más probable', value: score(...f.score) },
+    { label: 'Goles esperados', value: `${decimal(f.xgHome, 1)} – ${decimal(f.xgAway, 1)}` },
+  ]);
+  const others = topScores(f.xgHome, f.xgAway, { n: 3, pick: f.pick }).slice(1).map((x) => score(...x.score));
+  const also = others.length ? html`<p class="odds-also">También probables: ${listEs(others)}.</p>` : '';
+  const fresh = [[f.home, f.playedHome], [f.away, f.playedAway]].filter(([, n]) => n === 0).map(([team]) => team);
+  const average = fresh.length ? ` ${listEs(fresh)} aún no ${fresh.length > 1 ? 'han' : 'ha'} jugado: cuenta${fresh.length > 1 ? 'n' : ''} como ${fresh.length > 1 ? 'equipos medios' : 'un equipo medio'}.` : '';
+  const basis = `Con las ${f.rounds} jornadas jugadas en el grupo esta temporada (${f.matches} partidos).${average} Es una estimación, no un resultado.`;
+  return block('Pronóstico', html`<div class="box">${odds}${facts}${also}</div>${notice(null, basis)}`, { context: 'estimación', id: FORECAST_ID });
 }
 
 const noName = html`<span class="pt-noname">sin nombre</span>`;
@@ -390,7 +420,7 @@ export function render(ctx) {
   const model = ctx.model || {};
   const status = typeof model.matchStatus === 'function' ? model.matchStatus(match) : null;
   const campos = typeof model.campos === 'function' ? model.campos(match.season) : null;
-  const main = html`${resultBlock(match, { today: ctx.today, shields, status, campos, island: group.island })}${played ? goalsBlock(match, group, ctx) : ''}${played ? lineupsBlock(match, group, ctx) : ''}`;
+  const main = html`${resultBlock(match, { today: ctx.today, shields, status, campos, island: group.island })}${played ? '' : forecastBlock(match, group, ctx)}${played ? goalsBlock(match, group, ctx) : ''}${played ? lineupsBlock(match, group, ctx) : ''}`;
   const side = html`${h2hBlock(match, group, ctx)}${contextBlock(match, group)}`;
   return screenHtml(html`${head}<div class="pt-cols"><div class="pt-main">${main}</div><div class="pt-aside">${side}</div></div>`);
 }

@@ -2,7 +2,7 @@
 // devuelven Html: no leen globales ni tocan el DOM al importarse. Las clases
 // que emiten están definidas en acta.css.
 import { html, Html } from './html.js';
-import { groupSummary, matchState, penaltyWinner, seasonLabel } from './model.js';
+import { groupSummary, matchState, penaltyWinner, seasonLabel, teamShort } from './model.js';
 import { shieldFile } from './state.js';
 
 // ── Escudo y monograma ──────────────────────────────────────────────────
@@ -99,17 +99,89 @@ export function matchNote(match, state) {
 }
 
 // note: false, sin la nota, donde la lista ya la dice (los «Sin fecha» de una liguilla de Copa, B5,
-// decisión 5).
-export function matchRow(match, { mine = false, today, shields, href, note: withNote = true } = {}) {
+// decisión 5). forecast: el pronóstico del partido (forecastMatch de pronostico.js, 17/10/2026), o null:
+// su línea (forecastLine) va debajo, y solo si el partido no se ha jugado; la casilla del marcador sigue
+// con su «–».
+export function matchRow(match, { mine = false, today, shields, href, note: withNote = true, forecast = null } = {}) {
   if (!today) throw new TypeError('matchRow necesita today (AAAA-MM-DD): el reloj se inyecta');
   const state = matchState(match, today);
   const result = state === 'jugado'
     ? html`<span class="match-score">${score(match.hs, match.as)}</span>`
     : html`<span class="match-score is-pending">–</span>`;
   const note = withNote ? matchNote(match, state) : null;
-  const inner = html`${mine ? html`<span class="vh">Partido de mi equipo. </span>` : ''}<span class="match-time">${match.time || ''}</span><span class="match-team match-home"><span class="match-name">${match.home}</span>${crest(match.home, { shields })}</span>${result}<span class="match-team match-away">${crest(match.away, { shields })}<span class="match-name">${match.away}</span></span>${note ? html`<span class="match-note">${note}</span>` : ''}`;
+  const guess = state === 'jugado' ? '' : forecastLine(forecast);
+  const inner = html`${mine ? html`<span class="vh">Partido de mi equipo. </span>` : ''}<span class="match-time">${match.time || ''}</span><span class="match-team match-home"><span class="match-name">${match.home}</span>${crest(match.home, { shields })}</span>${result}<span class="match-team match-away">${crest(match.away, { shields })}<span class="match-name">${match.away}</span></span>${note ? html`<span class="match-note">${note}</span>` : ''}${guess}`;
   const cls = mine ? 'match-row is-mine' : 'match-row';
   return href ? html`<a class="${cls}" href="${href}">${inner}</a>` : html`<div class="${cls}">${inner}</div>`;
+}
+
+// ── Pronóstico (prebenjamín de la temporada en curso; pronostico.js, 17/10/2026) ──
+
+// Las opciones de forecastMatch y forecastRound en la web: la temporada del portal, hoy (solo los
+// partidos `pendiente`) y los estados de la app de futbolaspalmas (model.matchStatus, que no usa this:
+// la misma función en cada pintado, y la caché de los ajustes de pronostico.js va por ella).
+export function forecastOptions(ctx) {
+  const model = (ctx && ctx.model) || {};
+  return {
+    portalSeason: ctx && ctx.portal ? ctx.portal.season : null,
+    today: ctx ? ctx.today : null,
+    status: typeof model.matchStatus === 'function' ? model.matchStatus : null,
+  };
+}
+
+// Una probabilidad en tanto por ciento entero, con espacio de no separación: «72 %». Nunca «0 %» ni
+// «100 %», que serían seguros: lo que redondea a ellos es «<1 %» y «>99 %».
+export function percent(p) {
+  const n = Math.round(p * 100);
+  return `${n < 1 ? '<1' : n > 99 ? '>99' : n}\u00a0%`;
+}
+
+// El favorito de un pronóstico, { who, p }: el nombre corto del que gana (teamShort) o «empate».
+function favorite(f) {
+  if (f.pick === 'home') return { who: teamShort(f.home), p: f.pHome };
+  if (f.pick === 'away') return { who: teamShort(f.away), p: f.pAway };
+  return { who: 'empate', p: f.pDraw };
+}
+
+// La línea del pronóstico de un partido sin jugar: «Pronóstico 4–1 · Moya 72 %», el resultado más
+// probable (siempre del favorito: pronostico.js) y el favorito con su probabilidad. Nunca parece un
+// resultado: va debajo del partido, nunca en la casilla del marcador (que sigue con su «–»), en letra
+// pequeña, sin negrita y en --mute (también en la fila propia, que va en tinta), y empieza por
+// «Pronóstico»; el lector de pantalla oye otra frase, que dice que no es un resultado. La usan matchRow
+// (Jornada) y el próximo partido de Mi equipo, cada uno con su clase (cls). f: el de forecastMatch, o
+// null (nada).
+export function forecastLine(f, cls = 'match-forecast') {
+  if (!f) return '';
+  const [l, v] = f.score;
+  const fav = favorite(f);
+  const spoken = f.pick === 'draw'
+    ? `lo más probable, empate a ${l}, con un ${percent(f.pDraw)}`
+    : `lo más probable, ${l} a ${v}; favorito, ${fav.who}, con un ${percent(fav.p)}`;
+  return html`<span class="${cls}"><span aria-hidden="true">Pronóstico ${score(l, v)} · ${fav.who} ${percent(fav.p)}</span><span class="vh">Pronóstico, no es un resultado: ${spoken}.</span></span>`;
+}
+
+// La nota de la Jornada (y de «Todos los grupos», `each`) si algún partido lleva pronóstico: de dónde
+// sale, en una frase. forecasts: los de forecastRound, con sus null. Las jornadas de la nota son las del
+// pronóstico (`rounds`: las jugadas antes del partido, sin la suya); si no son las mismas en todos, sin
+// número.
+export function forecastNote(forecasts, { each = false } = {}) {
+  const rounds = [...new Set(forecasts.filter(Boolean).map(f => f.rounds))];
+  if (!rounds.length) return '';
+  const what = rounds.length > 1 ? 'las jornadas jugadas' : rounds[0] === 1 ? 'la jornada jugada' : `las ${rounds[0]} jornadas jugadas`;
+  return notice('Pronóstico:', `estimación según ${what} ${each ? 'en cada grupo' : 'en el grupo'}; no es un resultado.`);
+}
+
+// La barra del 1X2 de la pantalla Partido: tres tramos sólidos, el local en tinta, el empate en --draw
+// y el visitante en --text, cada uno del ancho de su probabilidad, con una raya del color del papel
+// entre ellos; sin discontinuas ni degradados (preferencia del usuario). Es decorativa (aria-hidden): las
+// cifras van debajo, en texto. Como pointsChart, un SVG que se estira al ancho de su caja; los anchos,
+// en milésimas enteras.
+export function oddsBar(pHome, pDraw, pAway) {
+  const total = pHome + pDraw + pAway;
+  const home = Math.round((pHome / total) * 1000);
+  const draw = Math.round((pDraw / total) * 1000);
+  const away = 1000 - home - draw;
+  return html`<svg class="odds-bar" viewBox="0 0 1000 10" preserveAspectRatio="none" aria-hidden="true" focusable="false"><rect class="odds-home" x="0" y="0" width="${home}" height="10"></rect><rect class="odds-draw" x="${home}" y="0" width="${draw}" height="10"></rect><rect class="odds-away" x="${home + draw}" y="0" width="${away}" height="10"></rect></svg>`;
 }
 
 // ── Cifras y recuentos, una sola vez (B5, decisión 6) ───────────────────

@@ -173,6 +173,11 @@ abbr[title] { text-decoration: none; }
 }
 .match-score.is-pending { color: var(--mute); font-weight: 600; }
 .match-note { grid-column: 2 / -1; font-size: 12.5px; font-weight: 600; color: var(--mute); text-align: center; }
+/* El pronóstico de un partido sin jugar (forecastLine de ui.js; prebenjamín de la temporada en curso,
+ * 17/10/2026): debajo, a lo ancho de los dos equipos y nunca en la casilla del marcador, que sigue con su
+ * «–»; más pequeño que los nombres, sin negrita y en --mute, también en la fila propia (en tinta y 800). */
+.match-forecast,
+.match-row.is-mine .match-forecast { grid-column: 2 / -1; font-size: 12px; font-weight: 400; line-height: 1.3; color: var(--mute); text-align: center; }
 .match-row.is-mine {
   background: var(--mark);
   color: var(--ink);
@@ -563,6 +568,8 @@ abbr[title] { text-decoration: none; }
   white-space: nowrap;
 }
 .fixture-vs { align-self: center; padding: 0 6px; font-size: 19px; font-weight: 800; color: var(--rule); }
+/* Su pronóstico (forecastLine de ui.js, 17/10/2026), la misma línea discreta de la Jornada, bajo los dos. */
+.fixture-forecast { grid-column: 1 / -1; margin-top: 2px; font-size: 12.5px; line-height: 1.3; color: var(--mute); text-align: center; }
 .fixture-venue { display: flex; flex-direction: column; gap: 1px; padding: 6px 8px 8px; }
 .fixture-place { font-size: 15px; overflow-wrap: anywhere; }
 .fixture-place.is-muted { font-size: 13.5px; font-weight: 600; color: var(--mute); }
@@ -898,6 +905,28 @@ abbr[title] { text-decoration: none; }
 .pt-score.is-pending { font-weight: 600; color: var(--mute); }
 .pt-penalties { padding: 8px 10px; font-size: 12.5px; font-weight: 700; color: var(--mute); text-align: center; }
 .pt-tanda { white-space: nowrap; }
+
+/* Pronóstico (17/10/2026): la barra fina del 1X2 (oddsBar de ui.js), tres tramos sólidos (local en
+ * tinta, empate en --draw y visitante en --text) con una raya del papel entre ellos, sin discontinuas;
+ * debajo, las tres cifras con la muestra de su color, el local a la izquierda y el visitante a la
+ * derecha; luego, el resultado más probable y los goles esperados (casillas) y otros marcadores. */
+.odds { padding: 10px 10px 8px; }
+.odds-bar { display: block; width: 100%; height: 8px; }
+.odds-bar rect { stroke: var(--paper); stroke-width: 2px; vector-effect: non-scaling-stroke; }
+.odds-home { fill: var(--ink); }
+.odds-draw { fill: var(--draw); }
+.odds-away { fill: var(--text); }
+.odds-legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 8px; margin-top: 8px; }
+.odds-item { min-width: 0; }
+.odds-item.is-draw { text-align: center; }
+.odds-item.is-away { text-align: right; }
+.odds-item dt { font-size: 12.5px; color: var(--mute); overflow-wrap: anywhere; }
+.odds-item dd { font-size: 15px; font-weight: 800; }
+.odds-key { display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: 0; }
+.is-home .odds-key { background: var(--ink); }
+.is-draw .odds-key { background: var(--draw); }
+.is-away .odds-key { background: var(--text); }
+.odds-also { padding: 8px 10px; font-size: 12.5px; color: var(--mute); }
 
 /* Goles: tres columnas (local | minuto y marcador | visitante) o dos listas. */
 .pt-goals { width: 100%; border-collapse: collapse; table-layout: fixed; }

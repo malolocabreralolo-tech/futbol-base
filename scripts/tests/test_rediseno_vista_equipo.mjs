@@ -55,8 +55,12 @@ function untimedJ18() {
 // 2026-10-04: todos salvo E y X, con lo de la ficha: el calendario completo siempre (#calendario y su
 // .ics), la evolución de puntos, el hueco de la plantilla (homeCtx no trae actas) y la trayectoria; E y
 // X no pasan por la vista de equipo y siguen idénticos.
+// 2026-10-17: los tres A de Las Mesas Hu. (prebenjamín de la temporada del portal, con dos jornadas o
+// más jugadas), con la línea del pronóstico bajo el próximo partido (forecastLine); sin ella, el render
+// es byte a byte el de antes. Los demás no la pintan: benjamín (A2), un retirado, B sin jugar, C y D sin
+// próximo partido, E y X.
 const HOME = {
-  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, '062616427c1cf19db58ae77a448cfcba9d4e7d24'],
+  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, 'd6223c3f42744cd6b98fcecaf8a21f2174e3ad7f'],
   'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, '6d60fb613c156c2f417aacf20283b56c12638296'],
   B: [{ raw: nextSeasonRaw({ benjamin: ['A1', 'B2', 'FF15'], prebenjamin: ['PG2', 'PG3'] }), myTeam: { ...LAS_MESAS, season: '2026-2027' }, today: '2026-10-01', portalSeason: '2026-2027', goles: false }, '8f38ff09c03b854b3c67b06379db98f43a7906a5'],
   'B de CD Batán': [{ raw: currentAt('2026-03-01'), myTeam: { ...LAS_MESAS, name: 'CD Batán' }, today: '2026-03-01' }, 'ec9408309fb1e01858c0f10de2323a8cb2b9b978'],
@@ -71,8 +75,8 @@ const HOME = {
   'D sin «Verano»': [{ myTeam: { ...LAS_MESAS, name: 'RC Victoria' }, today: '2026-09-23' }, 'd286ecc605a4802ca61f4f102e7000f7e0d5d8c5'],
   'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, 'c2444e026d549f3ac3dc941e2a92e056c9d04fc8'],
   'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '5744594dda12a29f299cc39c80e98519e0b0fd47'],
-  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, 'f245004e9b5e0b3d21c3241147ed7940179da926'],
-  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, 'f40e8faf1c07dda0534dc3df64a38879a1a470d2'],
+  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, '0748d56f44caa1f057b38760b8c9cbc1e5bc358e'],
+  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, '01db474362351f3cfdea712bb1fa6c84a3264ecb'],
 };
 
 test('la portada pinta, byte a byte, lo que fijan sus huellas en A, B, C, D, E y X', () => {

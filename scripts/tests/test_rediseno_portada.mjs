@@ -135,8 +135,12 @@ test('A (PG2, 01/03/2026): próximo partido con cuenta atrás, casillas, local y
   assert.match(out, /data-state="A"/);
   const block = blockOf(out, 'Próximo partido');
   assert.match(block, /<p class="block-context">faltan 6 días<\/p>/);
+  // Bajo los dos equipos, la línea del pronóstico (prebenjamín de la temporada del portal, 17/10/2026),
+  // con su frase para el lector de pantalla.
   assert.equal(text(block), 'Próximo partido faltan 6 días Jornada 18 Fecha sáb 7 mar Hora 09:00 '
-    + 'Local Veteranos – Visitante Las Mesas Hu. Campo no publicado Calendario Compartir');
+    + 'Local Veteranos – Visitante Las Mesas Hu. Pronóstico 6–2 · Veteranos 91 % '
+    + 'Pronóstico, no es un resultado: lo más probable, 6 a 2; favorito, Veteranos, con un 91 %. '
+    + 'Campo no publicado Calendario Compartir');
   assert.match(block, /<span class="cell-label">Campo<\/span><span class="fixture-place is-muted">no publicado<\/span>/);
   assert.match(block, /<div class="buttons"><button type="button" class="button is-main" data-action="calendario">Calendario<\/button><button type="button" class="button" data-action="compartir">Compartir<\/button><\/div>/);
   // La región de estado de «Compartir», la común (shareStatus): visible, bajo el bloque.

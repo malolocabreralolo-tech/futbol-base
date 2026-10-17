@@ -194,6 +194,9 @@ function goalPmf(mean, size) {
   return pmf;
 }
 
+// Los marcadores de cada desenlace: el local gana, empatan o gana el visitante.
+const INSIDE = { home: (i, j) => i > j, draw: (i, j) => i === j, away: (i, j) => i < j };
+
 /* De las dos medias, el desenlace y el marcador: { pHome, pDraw, pAway, pick, score: [l, v], pScore }.
  * pick es el desenlace más probable ('home' | 'draw' | 'away'; a igualdad, el local, luego el
  * visitante) y score el marcador más probable DENTRO de él: nunca un 1-1 con un favorito claro. */
@@ -210,7 +213,7 @@ export function outcome(meanHome, meanAway, params = PARAMS) {
   const sum = pHome + pDraw + pAway;
   pHome /= sum; pDraw /= sum; pAway /= sum;
   const pick = pHome >= pAway && pHome >= pDraw ? 'home' : pAway >= pDraw ? 'away' : 'draw';
-  const inside = pick === 'home' ? (i, j) => i > j : pick === 'away' ? (i, j) => i < j : (i, j) => i === j;
+  const inside = INSIDE[pick];
   let best = -1, score = [0, 0];
   for (let i = 0; i < ph.length; i += 1) {
     for (let j = 0; j < pa.length; j += 1) {
@@ -220,6 +223,28 @@ export function outcome(meanHome, meanAway, params = PARAMS) {
     }
   }
   return { pHome, pDraw, pAway, pick, score, pScore: best / sum };
+}
+
+/* Los marcadores más probables con las dos medias, de más a menos: [{ score: [l, v], p }], `n` como
+ * mucho y, con `pick` ('home' | 'draw' | 'away'), solo los de ese desenlace. Es lo que pinta la pantalla
+ * Partido (17/10/2026): con el `pick` del pronóstico, el primero es su `score` (a igualdad, el mismo
+ * orden que outcome: menos goles del local y luego del visitante) y los demás, los que le siguen sin
+ * cambiar de ganador. p es la probabilidad de ese marcador exacto (la pScore de outcome en el primero). */
+export function topScores(meanHome, meanAway, { n = 3, pick = null, params = PARAMS } = {}) {
+  const p = { ...PARAMS, ...params };
+  const ph = goalPmf(meanHome, p.size), pa = goalPmf(meanAway, p.size);
+  const inside = pick ? INSIDE[pick] : () => true;
+  const found = [];
+  let sum = 0;
+  for (let i = 0; i < ph.length; i += 1) {
+    for (let j = 0; j < pa.length; j += 1) {
+      const v = ph[i] * pa[j];
+      sum += v;
+      if (inside(i, j)) found.push({ score: [i, j], p: v });
+    }
+  }
+  // sort es estable: a igualdad, el orden del recorrido (el de outcome).
+  return found.sort((a, b) => b.p - a.p).slice(0, n).map(x => ({ score: x.score, p: x.p / sum }));
 }
 
 /* Pronóstico de un partido sin jugar de un grupo de prebenjamín de la temporada del portal:

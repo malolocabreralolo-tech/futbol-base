@@ -12,11 +12,14 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { PARAMS, copiedMatches, forecastMatch } from '../../src/pronostico.js';
+import { buildGroup } from '../../src/model.js';
+import { PARAMS, copiedMatches, forecastMatch, roundsAhead } from '../../src/pronostico.js';
 import * as massey from '../pronostico_modelos/massey.mjs';
 import * as poisson from '../pronostico_modelos/poisson.mjs';
+import * as distancia from '../pronostico_modelos/distancia.mjs';
 import {
-  REFERENCIAS, ROOT, TEMPORADAS, TRAMOS, bancoDeAjuste, ejecutar, evaluate, frecuenciasAjuste, pares,
+  REFERENCIAS, ROOT, TEMPORADAS, TRAMOS, TRAMOS_CRUCE, TRAMOS_K, bancoDeAjuste, distancePairsOf, distanciaDe, ejecutar, evaluarDistancia,
+  evaluate, frecuenciasAjuste, logLoss, pairsOf, pares, paresDistancia,
 } from '../pronostico_banco.mjs';
 
 const uniform = () => ({ pHome: 1 / 3, pDraw: 1 / 3, pAway: 1 / 3 });
@@ -208,6 +211,156 @@ test('el CLI con un modelo de fichero: ajustar, examen de evaluación y diferenc
     assert.match(r.stderr, /uniforme · evaluacion/);
     const bad = spawnSync(process.execPath, ['scripts/pronostico_banco.mjs', '--modelo', file, '--split', 'futuro'], { cwd: ROOT, encoding: 'utf8' });
     assert.notEqual(bad.status, 0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+// ── A varias jornadas vista (17/10/2026) ─────────────────────────────────────────────────────────────
+
+// Una liga de cuatro con seis jornadas semanales, todas jugadas; la 4, la mitad el sábado y la mitad el domingo.
+function ordered() {
+  const row = (date, home, away, hs, as) => [date, home, away, hs, as, null, '10:00', 'CAMPO MUNICIPAL'];
+  const rounds = [
+    [row('2026-10-03', 'A', 'B', 5, 1), row('2026-10-03', 'C', 'D', 2, 2)],
+    [row('2026-10-10', 'A', 'C', 4, 2), row('2026-10-10', 'B', 'D', 1, 3)],
+    [row('2026-10-17', 'A', 'D', 6, 0), row('2026-10-17', 'B', 'C', 2, 4)],
+    [row('2026-10-24', 'B', 'A', 0, 7), row('2026-10-25', 'D', 'C', 3, 3)],
+    [row('2026-10-31', 'C', 'A', 1, 5), row('2026-10-31', 'D', 'B', 4, 1)],
+    [row('2026-11-07', 'D', 'A', 2, 6), row('2026-11-07', 'C', 'B', 3, 1)],
+  ];
+  const raw = { id: 'PG9', name: 'Grupo 9', fullName: 'PREBENJAMIN GRAN CANARIA - GRUPO 9', phase: 'Gran Canaria', island: 'grancanaria', standings: [] };
+  return buildGroup(raw, { season: '2026-2027', cat: 'prebenjamin', current: true, history: { PG9: Object.fromEntries(rounds.map((ms, i) => [`Jornada ${i + 1}`, ms])) } });
+}
+
+test('distancePairsOf: en un calendario en orden, a k vista, lo jugado antes de que empiece la jornada N − k + 1', () => {
+  const group = ordered();
+  const base = pairsOf([{ name: '2026-2027', groups: [group] }]);
+  const all = distancePairsOf(base);
+  const of = (round, home) => all.filter(p => p.m.roundKey === round && p.m.home === home);
+  // C–A de la jornada 5: la víspera (k 1, sin corte), y antes de la 4 (empieza el sábado 24), de la 3 y de la 2.
+  const ca = of('Jornada 5', 'C');
+  assert.deepEqual(ca.map(p => [p.k, p.corte]), [[1, null], [2, '2026-10-24'], [3, '2026-10-17'], [4, '2026-10-10']]);
+  assert.deepEqual(ca.map(p => p.jornadas), [4, 3, 2, 1]);
+  assert.ok(ca.every(p => p.base === ca[0].base && p.base === base.find(b => b.m === p.m)));
+  // El domingo 25 (con la mitad de la 4 jugada) da la misma distancia que la víspera: se queda la víspera, que sabe más.
+  assert.ok(!ca.some(p => p.corte === '2026-10-25'));
+  // D–C del domingo 25 (jornada 4): su víspera no tiene nada de la 4, que es la suya; a 2 vista, antes de la 3.
+  assert.deepEqual(of('Jornada 4', 'D').map(p => [p.k, p.corte]), [[1, null], [2, '2026-10-17'], [3, '2026-10-10']]);
+  // La jornada 1 no tiene nada detrás: ninguna pareja.
+  assert.equal(of('Jornada 1', 'A').length, 0);
+});
+
+test('las parejas a varias jornadas vista: lo jugado antes del corte, la distancia de la web y una por distancia', () => {
+  const ps = paresDistancia('todas');
+  const bases = pares('todas');
+  assert.ok(ps.length > 5 * bases.length, `${ps.length} parejas de ${bases.length} partidos`);
+  const byBase = new Map();
+  for (const p of ps) {
+    assert.ok(Object.isFrozen(p) && Object.isFrozen(p.training));
+    assert.ok(bases.includes(p.base));
+    if (!byBase.has(p.base)) byBase.set(p.base, []);
+    byBase.get(p.base).push(p);
+    const where = `${p.clave} ${p.m.roundKey} ${p.m.home}–${p.m.away} corte ${p.corte}`;
+    if (p.corte === null) {
+      assert.equal(p.training, p.base.training, where);
+      assert.equal(p.k, p.base.k, where);
+    } else {
+      const inBase = new Set(p.base.training);
+      assert.ok(p.training.length > 0 && p.training.length < p.base.training.length, where);
+      assert.ok(p.training.every(t => t.dateISO < p.corte && inBase.has(t)), where);
+    }
+    assert.equal(p.k, roundsAhead(p.group, p.m, { status: p.status, before: p.corte }), where);
+    assert.equal(p.distancia, distanciaDe(p.k));
+    assert.equal(p.jornadas, new Set(p.training.map(t => t.roundKey)).size);
+  }
+  assert.equal(byBase.size, bases.length, 'cada partido, con su pareja de siempre');
+  for (const [b, list] of byBase) {
+    assert.equal(list[0].corte, null, 'la de siempre, la primera');
+    const ks = list.map(p => p.k);
+    assert.equal(new Set(ks).size, ks.length, `${b.clave} ${b.m.home}–${b.m.away}: una por distancia`);
+  }
+  // En EVALUACIÓN, la de siempre es siempre la de k = 1.
+  assert.ok(pares('evaluacion').every(p => p.k === 1));
+  // La referencia de la web, con el mismo entrenamiento y la misma distancia (una de cada siete, por tiempo).
+  ps.filter((p, i) => i % 7 === 0).forEach(p => {
+    const f = REFERENCIAS.actual.predictor(p.training, p.match, p.group, p);
+    const g = forecastMatch(p.group, p.match, { prueba: true, before: p.corte, params: { minRounds: 1, minPlayed: 0 } });
+    assert.deepEqual(f, { pHome: g.pHome, pDraw: g.pDraw, pAway: g.pAway });
+    assert.equal(g.matches, p.training.length);
+    assert.equal(g.ahead, p.k);
+  });
+});
+
+test('el examen a distancia: en k = 1, las cifras de siempre; la diferencia con la víspera y la fiabilidad, a mano', () => {
+  const inf = evaluarDistancia(REFERENCIAS.web.predictor, { B: 0 });
+  const old = evaluate(REFERENCIAS.web.predictor, { B: 0 });
+  const k1 = inf.porDistancia['1'];
+  for (const key of ['pares', 'predichos', 'nulos', 'logLoss', 'brier', 'acierto', 'empatePrevisto', 'empateReal']) assert.equal(k1[key], old.global[key], key);
+  assert.equal(k1.frenteK1.logLoss, 0);
+  assert.equal(inf.partidos, old.pares);
+  assert.equal(inf.pares, paresDistancia('evaluacion').length);
+  assert.deepEqual(Object.keys(inf.porDistancia), TRAMOS_K);
+  for (const d of TRAMOS_K) {
+    const cells = TRAMOS_CRUCE.map(c => inf.porDistanciaYJornadas[d][c]);
+    assert.equal(cells.reduce((s, c) => s + c.pares, 0), inf.porDistancia[d].pares, d);
+    assert.equal(inf.porDistanciaYJornadas[d]['1'].predichos, 0, `${d}: con una jornada, la web nada`);
+  }
+  // Uniforme la víspera y 50-25-25 con corte: la diferencia con la víspera, la de esas dos en cada pareja; la
+  // fiabilidad, lo que se le da al elegido (el local) menos lo que gana.
+  const toy = (training, match, group, info) => (info.corte ? { pHome: 0.5, pDraw: 0.25, pAway: 0.25 } : { pHome: 1 / 3, pDraw: 1 / 3, pAway: 1 / 3 });
+  const t = evaluarDistancia(toy, { B: 0, referencias: {} });
+  const ps = paresDistancia('evaluacion').filter(p => p.distancia === '4-6');
+  const want = ps.reduce((s, p) => s + (p.corte ? logLoss({ home: 0.5, draw: 0.25, away: 0.25 }, p.y) - Math.log(3) : 0), 0) / ps.length;
+  assert.ok(Math.abs(t.porDistancia['4-6'].frenteK1.logLoss - want) < 1e-6, `${t.porDistancia['4-6'].frenteK1.logLoss} frente a ${want}`);
+  const home = ps.filter(p => p.y === 'home').length / ps.length;
+  const fav = ps.reduce((s, p) => s + (p.corte ? 0.5 : 1 / 3), 0) / ps.length;
+  assert.ok(Math.abs(t.porDistancia['4-6'].fiabilidad.diferencia - (fav - home)) < 1e-6);
+  assert.ok(Math.abs(t.porDistancia['4-6'].acierto - home) < 1e-6);
+  assert.deepEqual(t.referencias, []);
+});
+
+test('la corrección por distancia (distancia.mjs): sin deriva, la web; con deriva, el favorito menos por encima del otro; el ajuste la deja en 0', () => {
+  assert.equal(distancia.PARAMS.deriva, 0);
+  const ps = paresDistancia('evaluacion').filter((p, i) => i % 11 === 0);
+  for (const p of ps) {
+    assert.deepEqual(distancia.predictor(p.training, p.match, p.group, p), REFERENCIAS.web.predictor(p.training, p.match, p.group, p));
+  }
+  const far = ps.filter(p => p.k >= 5 && distancia.predictor(p.training, p.match, p.group, p)).slice(0, 50);
+  assert.ok(far.length === 50);
+  // Más varianza baja la pendiente y estrecha la banda de empate: la probabilidad del favorito puede subir
+  // (le quita al empate), pero su ventaja sobre el otro, P(favorito) / P(el otro), siempre baja; con una
+  // deriva enorme, a medias y sin empate.
+  for (const p of far) {
+    const a = distancia.pronostico(p.training, p.match, p.group, p, 0), b = distancia.pronostico(p.training, p.match, p.group, p, 0.05);
+    const ratio = q => Math.max(q.pHome, q.pAway) / Math.min(q.pHome, q.pAway);
+    assert.ok(ratio(b) <= ratio(a) + 1e-12 && Math.abs(b.pHome + b.pDraw + b.pAway - 1) < 1e-12, `${ratio(a)} → ${ratio(b)}`);
+    const flat = distancia.pronostico(p.training, p.match, p.group, p, 1e9);
+    assert.ok(Math.abs(flat.pHome - 0.5) < 0.01 && Math.abs(flat.pAway - 0.5) < 0.01, JSON.stringify(flat));
+  }
+  const near = ps.find(p => p.k === 1 && distancia.predictor(p.training, p.match, p.group, p));
+  assert.deepEqual(distancia.pronostico(near.training, near.match, near.group, near, 0.05), distancia.predictor(near.training, near.match, near.group, near), 'a 1 vista, nada');
+  const r = distancia.ajustar(bancoDeAjuste());
+  assert.equal(r.params.deriva, 0);
+  assert.equal(r.coincideConPARAMS, true);
+  assert.ok(r.rejilla.every(([d, l], i) => i === 0 || l > r.rejilla[i - 1][1]), 'cualquier deriva empeora el ajuste');
+});
+
+test('el CLI --distancia con un modelo de fichero: por distancia, con la tabla y el local', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'banco-'));
+  try {
+    const file = join(dir, 'uniforme.mjs');
+    writeFileSync(file, "export function predictor() { return { pHome: 1 / 3, pDraw: 1 / 3, pAway: 1 / 3 }; }\n");
+    const r = spawnSync(process.execPath, ['scripts/pronostico_banco.mjs', '--distancia', '--modelo', file, '--B', '20'], { cwd: ROOT, encoding: 'utf8' });
+    assert.equal(r.status, 0, r.stderr);
+    const inf = JSON.parse(r.stdout);
+    assert.equal(inf.modelo, 'uniforme');
+    assert.deepEqual(inf.referencias, ['tabla', 'local']);
+    assert.deepEqual(Object.keys(inf.porDistancia), TRAMOS_K);
+    assert.equal(inf.partidos, pares('evaluacion').length);
+    assert.ok(Math.abs(inf.global.logLoss - Math.log(3)) < 1e-6);
+    assert.ok(inf.porDistancia['13+'].frente.tabla.logLoss > 0, 'la tabla, mejor que tirar una moneda de tres caras');
+    assert.match(r.stderr, /a varias jornadas vista/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

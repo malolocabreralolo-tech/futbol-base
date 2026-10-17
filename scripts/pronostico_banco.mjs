@@ -5,6 +5,9 @@
 //                                     [--B 2000] [--semilla 17102026] [--salida informe.json]
 //   node scripts/pronostico_banco.mjs --modelo tabla          una de las referencias, por su nombre
 //   node scripts/pronostico_banco.mjs --referencias           las cinco referencias, frente a «actual»
+//   node scripts/pronostico_banco.mjs --distancia [--modelo web|<fichero.mjs>] [--split …] [--contra …]
+//                                     a varias jornadas vista: por distancia y por jornadas jugadas,
+//                                     con la tabla y el local (y --contra, si se da) de referencias
 //
 // Escribe el informe en JSON por la salida estándar (o en --salida) y un resumen por la de errores. Sin
 // red ni escrituras fuera de --salida: solo lee los data-season-*.js del repositorio (y, para el
@@ -51,7 +54,11 @@
 //     resultados de después del partido. Un modelo solo puede sacar resultados de `training`; de group,
 //     solo lo que no lo es (el id, los equipos, el calendario). La referencia «actual» lo pasa a
 //     forecastMatch, que vuelve a calcular el mismo trainingFor.
-//   · info: { temporada, grupo, jornadas, tramo } (jornadas: las del entrenamiento; tramo: '1'…'7+').
+//   · info: { temporada, grupo, jornadas, tramo, k, distancia, corte } (jornadas: las del entrenamiento;
+//     tramo: '1'…'7+'; k, a cuántas jornadas vista, roundsAhead de src/pronostico.js, y distancia, su
+//     tramo; corte, el día antes del cual se sabe lo jugado: null en las de siempre, un día en las de
+//     --distancia). Un modelo que no use `training` y vuelva a sacar el entrenamiento de `group` (las
+//     referencias de src/pronostico.js) tiene que cortarlo en info.corte (forecastMatch, con before).
 //   · Devuelve tres probabilidades finitas, no negativas, que sumen 1 (a 1e-6; se renormalizan), o null
 //     para no pronosticar (el informe cuenta los `nulos`; sus métricas son las de los que pronostica, y la
 //     comparación con `contra`, la de los que pronostican los dos). Lo demás que devuelva se ignora.
@@ -120,9 +127,78 @@
 // veces en una jornada, con más partidos que jornadas o con el mismo cruce dos veces, y ninguna pareja
 // lleva una copia (test_pronostico_banco.mjs lo comprueba). La tabla de arriba no las tiene.
 //
+// A VARIAS JORNADAS VISTA (17/10/2026: el usuario pidió el pronóstico de todo el calendario, que se recalcule
+// con cada resultado). Lo que se mide: cuánto pierde el pronóstico de la web hecho con jornadas por medio.
+// - La distancia k de un partido es roundsAhead de src/pronostico.js, LA MISMA función que da `ahead` en la
+//   web: 1 más las jornadas del calendario sin ningún resultado en el entrenamiento cuya fecha (la mediana
+//   de las de sus partidos) cae entre el último partido del entrenamiento y el del partido (la próxima
+//   jornada, 1). Por fecha y no por número: los aplazados, las jornadas sin fecha, los descansos, la vuelta
+//   y los calendarios que no se juegan en orden, en su cabecera. En el banco, el 91,4 % de los pronósticos
+//   tiene la misma distancia contando por número de jornada; el resto, aplazamientos de jornadas enteras
+//   (PLZ1, PFV1-3 de 2025-26, PGC1 de 2014-15 y de 2021-22…).
+// - Las parejas (paresDistancia, distancePairsOf): cada partido de pares(), con el entrenamiento de siempre,
+//   y, por cada día de ese entrenamiento, el que se habría tenido antes de ese día (trainingFor con before);
+//   su distancia, la de roundsAhead con ese corte, y de cada distancia, el corte más tardío. En un calendario
+//   en orden, un partido de la jornada N a k vista se pronostica con lo jugado antes de que empiece la
+//   N − k + 1. La de siempre es la de k = 1 en los 2.747 partidos de EVALUACIÓN (en AJUSTE, 2.327 de 2.331:
+//   los otros cuatro, de la jornada 22 de PGC1 de 2014-15, tienen por medio tres jornadas sin resultados en
+//   el archivo, y van a k = 4). Con cada corte se respetan los límites de la web (minRounds 2 y minPlayed 1,
+//   con lo jugado hasta él), y las referencias tabla y local reciben el mismo entrenamiento.
+// - Las métricas (evaluarDistancia): las de siempre por tramo de distancia (1, 2, 3, 4-6, 7-12 y 13+:
+//   todos con más de 2.000 pronósticos en EVALUACIÓN; la mayor, 33, con 8) y cruzadas con las jornadas del
+//   entrenamiento (2-3 o 4 y más; con 1, la web no enseña nada), y además: la fiabilidad, la probabilidad
+//   media que se le da al favorito menos la frecuencia con que gana (en puntos: positiva, se pasa de
+//   seguro), con su IC; «Δ k=1», la diferencia pareada con el pronóstico del MISMO partido la víspera (su
+//   pareja de siempre): lo que se pierde por pronosticar antes, sin mezclarlo con qué partidos caen en cada
+//   tramo (los de 13+ son todos de final de temporada); y la diferencia con la tabla y con el local.
+// - Las cifras de siempre no cambian: sin --distancia, el banco y el backtest dan lo mismo que antes (diff
+//   de sus salidas, 17/10/2026), y la fila de k = 1 es la de la web en la tabla de arriba.
+//
+// EVALUACIÓN, con el modelo de la web (--distancia --modelo web; 2.747 partidos, 35.132 pronósticos, B = 2000,
+// semilla 17102026; «fiab.» y los Δ de acierto, en puntos; los Δ de log-loss, negativos, mejor la web):
+//
+//   distancia  pronóst.  log-loss [IC 95 %]    Brier  acierto [IC 95 %]     fiab. [IC 95 %]     Δ k=1 log-loss            Δ k=1 acierto        Δ tabla                   Δ local
+//   1          2.618     0,522 [0,467, 0,586]  0,289  80,1 % [77,0, 82,8]   −0,8 [−2,2, +0,5]   —                         —                    −0,151 [−0,174, −0,124]   −0,375
+//   2          2.486     0,524 [0,465, 0,591]  0,290  80,1 % [76,7, 83,2]   −1,2 [−3,0, +0,6]   +0,010 [+0,005, +0,016]   −0,3 [−1,0, +0,3]    −0,153 [−0,178, −0,126]   −0,373
+//   3          2.360     0,533 [0,473, 0,605]  0,296  79,4 % [76,0, 82,4]   −0,3 [−2,0, +1,5]   +0,024 [+0,015, +0,035]   −1,3 [−2,3, −0,6]    −0,160 [−0,185, −0,131]   −0,367
+//   4-6        6.341     0,548 [0,482, 0,624]  0,304  78,6 % [75,0, 82,0]   +0,3 [−1,9, +2,1]   +0,045 [+0,033, +0,062]   −2,2 [−3,1, −1,6]    −0,151 [−0,173, −0,126]   −0,355
+//   7-12       9.524     0,551 [0,477, 0,637]  0,306  78,4 % [74,0, 82,5]   +0,5 [−1,8, +2,8]   +0,053 [+0,039, +0,073]   −2,4 [−3,7, −1,5]    −0,138 [−0,160, −0,119]   −0,357
+//   13+        8.992     0,615 [0,510, 0,714]  0,345  75,6 % [69,9, 81,1]   +0,9 [−2,3, +3,9]   +0,087 [+0,068, +0,115]   −4,2 [−6,9, −2,3]    −0,150 [−0,188, −0,115]   −0,299
+//
+// A más distancia se acierta menos (a 13 o más jornadas vista, −4,2 puntos frente a la víspera en los mismos
+// partidos; demostrable desde k = 3) y las probabilidades son peores (demostrable desde k = 2); pero en todos los
+// tramos la web sigue ganando a la tabla de forma demostrable (de −0,138 a −0,160 de log-loss y de +1,6 a
+// +3,3 puntos de acierto) y NO se pasa de seguro: la fiabilidad va de −1,2 a +0,9 puntos, todos con el cero
+// dentro. Cruzado con las jornadas jugadas: con 2-3, lo que se pierde es más (Δ k=1: +0,026 [−0,010, +0,063]
+// a k = 2, +0,074 a 3, +0,157 a 4-6 y a 7-12, +0,138 a 13+) y la fiabilidad, más ruidosa (de −4,2 [−8,4, +0,8]
+// a +3,3 [−0,2, +7,2], en 4-6), sin ningún tramo demostrable; con 4 o más, de +0,008 (k = 2) a +0,070 (13+),
+// con la fiabilidad entre −0,9 y +1,5 [−2,3, +5,1]. En AJUSTE, lo mismo: fiabilidad de −0,8 a +0,6 puntos, Δ
+// k=1 de +0,014 (k = 2) a +0,095 (13+). Es decir, la pérdida es de información (con menos jornadas jugadas,
+// las notas están peor medidas), y notesOdds ya la cuenta: con menos partidos, más varianza y favoritos más
+// moderados.
+//
+// LA CORRECCIÓN POR DISTANCIA, PROBADA Y NO ADOPTADA (scripts/pronostico_modelos/distancia.mjs). La regla,
+// fijada antes de ajustar nada: se adopta solo si en AJUSTE mejora el log-loss (en una milésima al menos,
+// la de siempre en el banco y el backtest para dar por empatadas dos opciones) y en EVALUACIÓN no empeora
+// k = 1 ni ningún tramo de forma demostrable. La forma, la de la incertidumbre de las notas: la varianza de
+// la diferencia, más una deriva por cada jornada de por medio (v + deriva·(k − 1), en la pendiente y la
+// banda de empate). En AJUSTE, la mejor deriva es 0: cualquiera mayor empeora (0,50313 sin ella; 0,50316 con
+// 0,001; 0,50365 con 0,01; 0,50824 con 0,05), y la pendiente que mejor va en cada tramo es la de siempre
+// (×1,00) hasta k = 12 y una MÁS afilada a 13+ (×1,08): no hay nada que suavizar. No se adopta, y la web no
+// lleva ninguna corrección. La cota, con EVALUACIÓN (no es una prueba: es la deriva que mejor le va a la
+// propia EVALUACIÓN, 0,01): −0,0005 de log-loss [−0,0027, +0,0017] en total y −0,0014 [−0,0063, +0,0039] a
+// 13+, nada demostrable, el mismo acierto, y en AJUSTE esa misma deriva empeora (+0,0005).
+//
+// LO QUE EVALUACIÓN YA NO ES, A DISTANCIA (17/10/2026): ya se había consultado en el diseño del modelo
+// (arriba), y aquí sus cifras por distancia se vieron antes de decidir sobre la corrección. La decisión
+// salió de AJUSTE (la deriva 0 y las pendientes por tramo); de EVALUACIÓN, solo la tabla de arriba y la cota.
+// La prueba limpia de cómo se comporta a distancia es 2026-27, que nada de esto ha visto.
+//
 // Desde otro script: import { evaluate, ejecutar, cargarModelo, pares, REFERENCIAS } from
 // './pronostico_banco.mjs'; evaluate(predictor, { split, B, semilla, referencia }) da el informe (sin
-// llamar a ningún ajustar) y ejecutar(modelo, { split, contra }) hace lo del CLI (ajustar y examen).
+// llamar a ningún ajustar) y ejecutar(modelo, { split, contra }) hace lo del CLI (ajustar y examen). A
+// distancia, paresDistancia(split), evaluarDistancia(predictor, { split, B, semilla, referencias }) y
+// ejecutarDistancia(modelo, { split, contra }).
 //
 // Las referencias (REFERENCIAS; sus frecuencias, medidas SOLO en las temporadas de ajuste):
 // - actual: src/pronostico.js con los PARAMS de la web, desde la primera jornada y con equipos sin
@@ -140,7 +216,9 @@ import { basename, join, dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import vm from 'node:vm';
 import { buildSeason, createModel, retiredTeams } from '../src/model.js';
-import { PARAMS, copiedMatches, forecastApplies, forecastMatch, isDeskResult, offVenue, outcome, trainingFor } from '../src/pronostico.js';
+import {
+  PARAMS, copiedMatches, forecastApplies, forecastMatch, isDeskResult, offVenue, outcome, roundsAhead, trainingFor,
+} from '../src/pronostico.js';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const CURRENT = '2026-2027';
@@ -191,6 +269,14 @@ export const BUCKETS = [['1', n => n === 1], ['2', n => n === 2], ['3', n => n =
 export const bucketOf = n => (BUCKETS.find(([, f]) => f(n)) || ['0'])[0];
 export const TRAMOS = Object.freeze(BUCKETS.map(([b]) => b));
 export const tramoDe = bucketOf;
+// Los tramos de la distancia (roundsAhead de src/pronostico.js: 1, la próxima jornada) y, para cruzarlos,
+// los de las jornadas del entrenamiento.
+export const DISTANCIAS = [['1', k => k === 1], ['2', k => k === 2], ['3', k => k === 3], ['4-6', k => k >= 4 && k <= 6], ['7-12', k => k >= 7 && k <= 12], ['13+', k => k >= 13]];
+export const distanciaDe = k => (DISTANCIAS.find(([, f]) => f(k)) || ['0'])[0];
+export const TRAMOS_K = Object.freeze(DISTANCIAS.map(([d]) => d));
+export const CRUCE = [['1', n => n === 1], ['2-3', n => n === 2 || n === 3], ['4+', n => n >= 4]];
+export const cruceDe = n => (CRUCE.find(([, f]) => f(n)) || ['0'])[0];
+export const TRAMOS_CRUCE = Object.freeze(CRUCE.map(([c]) => c));
 
 // Los objetivos de un grupo: partidos de liga con fecha y marcador, sin retirados, copias de la
 // importación (copiedMatches) ni estados de fuera, y sin lo que seguro es de mesa: el campo «EXCLUIDO» o
@@ -234,9 +320,12 @@ export function tableLeader(table, m) {
 
 /* Las parejas (entrenamiento, partido) de unas temporadas, en el orden del examen (temporada, grupo,
  * jornada y el de la fuente): [{ temporada, grupo, clave, group, m, match, training, hs, as, y, jornadas,
- * tramo, status }]. m es el partido con su marcador (el del archivo); match, su copia congelada sin él
- * (la que recibe el predictor); training, congelado; status, el model.matchStatus de la temporada (null en
- * las pasadas). `statusOf(season)` da el status de cada temporada (el backtest se lo pasa a 2026-27). */
+ * tramo, status, k, distancia, corte }]. m es el partido con su marcador (el del archivo); match, su copia
+ * congelada sin él (la que recibe el predictor); training, congelado; status, el model.matchStatus de la
+ * temporada (null en las pasadas); k, la distancia de ese entrenamiento (roundsAhead: casi siempre 1) y
+ * distancia, su tramo; corte, null (el entrenamiento de siempre: todo lo de antes de su día; las de
+ * distancePairsOf llevan el día del corte). `statusOf(season)` da el status de cada temporada (el
+ * backtest se lo pasa a 2026-27). */
 export function pairsOf(seasons, statusOf = () => null) {
   const out = [];
   for (const season of seasons) {
@@ -247,6 +336,7 @@ export function pairsOf(seasons, statusOf = () => null) {
         const training = trainingFor(group, m, { status });
         const jornadas = new Set(training.map(t => t.roundKey)).size;
         if (!jornadas) continue;
+        const k = roundsAhead(group, m, { status });
         out.push(Object.freeze({
           temporada: season.name,
           grupo: group.id,
@@ -261,8 +351,41 @@ export function pairsOf(seasons, statusOf = () => null) {
           jornadas,
           tramo: bucketOf(jornadas),
           status,
+          k,
+          distancia: distanciaDe(k),
+          corte: null,
         }));
       }
+    }
+  }
+  return out;
+}
+
+/* Las parejas a varias jornadas vista (17/10/2026): las de pairsOf y, de cada una, el pronóstico que se
+ * habría hecho antes, cada día en que cambia lo jugado. Para cada día de su entrenamiento, `corte`, el
+ * entrenamiento es el de siempre con solo lo jugado antes de ese día (trainingFor con before) y la
+ * distancia, la de la web con él (roundsAhead con before: la MISMA función). De cada distancia se queda
+ * el corte más tardío (el que más sabe a esa distancia): en un calendario en orden, para un partido de la
+ * jornada N a k vista, lo jugado antes de que empiece la N − k + 1. La de siempre (corte null) va primero
+ * y se queda su distancia (casi siempre 1). Cada una lleva `base`, la de siempre de su partido (la de
+ * pairsOf; la suya, ella misma), para la diferencia pareada con el pronóstico de la víspera. Sin nada
+ * jugado antes del corte, nada. */
+export function distancePairsOf(basePairs) {
+  const out = [];
+  for (const b of basePairs) {
+    out.push(Object.freeze({ ...b, base: b }));
+    const seen = new Set([b.k]);
+    const days = [...new Set(b.training.map(t => t.dateISO))].sort().reverse();
+    for (const day of days) {
+      const training = trainingFor(b.group, b.m, { status: b.status, before: day });
+      if (!training.length) break;
+      const k = roundsAhead(b.group, b.m, { status: b.status, before: day });
+      if (seen.has(k)) continue;
+      seen.add(k);
+      const jornadas = new Set(training.map(t => t.roundKey)).size;
+      out.push(Object.freeze({
+        ...b, training: Object.freeze(training), jornadas, tramo: bucketOf(jornadas), k, distancia: distanciaDe(k), corte: day, base: b,
+      }));
     }
   }
   return out;
@@ -278,6 +401,18 @@ export function pares(split = 'evaluacion') {
     CACHE[split] = Object.freeze(CACHE.todas.filter(p => keep.has(p.temporada)));
   }
   return CACHE[split];
+}
+
+// Las parejas a varias jornadas vista de una parte del examen (distancePairsOf de las de pares), una vez.
+const CACHE_K = {};
+export function paresDistancia(split = 'evaluacion') {
+  if (!SPLITS.includes(split)) throw new RangeError(`pronostico_banco: split no válido (${split}); se aceptan ${SPLITS.join(', ')}`);
+  if (!CACHE_K.todas) CACHE_K.todas = Object.freeze(distancePairsOf(pares('todas')));
+  if (!CACHE_K[split]) {
+    const keep = new Set(TEMPORADAS[split]);
+    CACHE_K[split] = Object.freeze(CACHE_K.todas.filter(p => keep.has(p.temporada)));
+  }
+  return CACHE_K[split];
 }
 
 // ── Las métricas ─────────────────────────────────────────────────────────────────────────────────────
@@ -335,9 +470,9 @@ function quantile(values, q) {
 const r6 = x => (x === null || x === undefined || !Number.isFinite(x) ? null : Math.round(x * 1e6) / 1e6);
 
 // Sumas por grupo y tramo: { [tramo | 'global']: Float64Array(C) por campo }.
-function sums(C, fields) {
+function sums(C, fields, keys = ['global', ...TRAMOS]) {
   const out = {};
-  for (const t of ['global', ...TRAMOS]) out[t] = Object.fromEntries(fields.map(f => [f, new Float64Array(C)]));
+  for (const t of keys) out[t] = Object.fromEntries(fields.map(f => [f, new Float64Array(C)]));
   return out;
 }
 const total = a => a.reduce((s, x) => s + x, 0);
@@ -355,6 +490,11 @@ function interval(num, den, W, keep = null) {
   return { ic95: [r6(quantile(vals, 0.025)), r6(quantile(vals, 0.975))], share: keep ? cnt.filter(Boolean).length / cnt.length : null };
 }
 const ic95Of = (num, den, W) => { const r = interval(num, den, W); return r ? r.ic95 : null; };
+
+// Lo que recibe el predictor de cada pareja: { temporada, grupo, jornadas, tramo, k, distancia, corte }.
+const infoOf = pair => Object.freeze({
+  temporada: pair.temporada, grupo: pair.grupo, jornadas: pair.jornadas, tramo: pair.tramo, k: pair.k, distancia: pair.distancia, corte: pair.corte,
+});
 
 /* El examen de un predictor en una parte de las temporadas. Opciones: split ('evaluacion' por defecto),
  * B (remuestras del bootstrap; 0, sin intervalos), semilla, referencia (otro predictor: la diferencia
@@ -375,7 +515,7 @@ export function evaluate(predictor, { split = 'evaluacion', B = B_DEFECTO, semil
   const S = sums(C, ['pares', 'n', 'll', 'br', 'ok', 'pd', 'd']);
   const D = referencia ? sums(C, ['n', 'll', 'br', 'ok']) : null;
   for (const pair of ps) {
-    const info = Object.freeze({ temporada: pair.temporada, grupo: pair.grupo, jornadas: pair.jornadas, tramo: pair.tramo });
+    const info = infoOf(pair);
     const p = checked(predictor(pair.training, pair.match, pair.group, info), pair);
     const q = referencia ? checked(referencia(pair.training, pair.match, pair.group, info), pair) : null;
     const c = idx.get(pair.clave);
@@ -429,6 +569,104 @@ export function evaluate(predictor, { split = 'evaluacion', B = B_DEFECTO, semil
   };
 }
 
+// ── El examen a varias jornadas vista ───────────────────────────────────────────────────────────────
+
+// La diferencia pareada de unas sumas (n, ll, br, ok: las diferencias por grupo), como `frente` de evaluate.
+function pairedOf(n, ll, br, ok, W) {
+  const N = total(n);
+  const ratio = a => (N ? total(a) / N : null);
+  const r = W.length && N ? interval(ll, n, W, v => v < 0) : null;
+  return {
+    pares: N, logLoss: r6(ratio(ll)), brier: r6(ratio(br)), acierto: r6(ratio(ok)),
+    ic95: W.length && N ? { logLoss: r ? r.ic95 : null, brier: ic95Of(br, n, W), acierto: ic95Of(ok, n, W) } : null,
+    pMejor: r ? r6(r.share) : null,
+  };
+}
+
+/* El examen de un predictor a varias jornadas vista (17/10/2026), con las parejas de paresDistancia (o
+ * `pairs`): cada partido, una vez por cada distancia a la que se habría pronosticado. Opciones: split, B,
+ * semilla y referencias ({ nombre: predictor }; por defecto, la tabla y el local), que reciben el mismo
+ * entrenamiento. Devuelve, serializable en JSON:
+ *   { split, temporadas, grupos, pares, partidos, bootstrap, global, porDistancia: { '1', '2', '3', '4-6',
+ *     '7-12', '13+' }, porDistanciaYJornadas: { [distancia]: { '1', '2-3', '4+' } } }
+ * con cada bloque { pares, predichos, nulos, logLoss, brier, acierto, favorito, empatePrevisto, empateReal,
+ * ic95: { logLoss, brier, acierto, favorito }, fiabilidad: { diferencia, ic95 }, frenteK1, frente }:
+ * favorito, la probabilidad media que se le da al desenlace elegido, y fiabilidad.diferencia, favorito −
+ * acierto (positiva, se pasa de seguro; negativa, se queda corto); frenteK1, la diferencia pareada con el
+ * pronóstico del mismo partido con el entrenamiento de siempre (su `base`, la de la víspera: lo que se
+ * pierde por pronosticar antes; en las de distancia 1, casi siempre cero), y frente, la del modelo menos
+ * cada referencia en la misma pareja. Las diferencias, como en evaluate (log-loss y Brier: negativo, mejor
+ * el modelo o la víspera; acierto: positivo). No llama a ningún ajustar. */
+export function evaluarDistancia(predictor, { split = 'evaluacion', B = B_DEFECTO, semilla = SEMILLA, referencias = null, pairs = null } = {}) {
+  if (typeof predictor !== 'function') throw new TypeError('evaluarDistancia: el predictor tiene que ser una función');
+  const ps = pairs || paresDistancia(split);
+  const refs = Object.entries(referencias || { tabla: REFERENCIAS.tabla.predictor, local: REFERENCIAS.local.predictor });
+  const claves = [...new Set(ps.map(p => p.clave))];
+  const idx = new Map(claves.map((k, i) => [k, i]));
+  const C = claves.length;
+  const keys = ['global', ...TRAMOS_K, ...TRAMOS_K.flatMap(d => TRAMOS_CRUCE.map(c => `${d}|${c}`))];
+  const fields = ['pares', 'n', 'll', 'br', 'ok', 'fav', 'fo', 'pd', 'd', 'n1', 'll1', 'br1', 'ok1', ...refs.flatMap(([r]) => [`n:${r}`, `ll:${r}`, `br:${r}`, `ok:${r}`])];
+  const S = sums(C, fields, keys);
+  // Cada pronóstico, una vez por predictor: el de la víspera (corte null) es el mismo en su pareja y en las
+  // que la tienen de base.
+  const memo = new Map();
+  const predOf = (f, pair) => {
+    if (!memo.has(f)) memo.set(f, new Map());
+    const seen = memo.get(f);
+    const key = pair.corte === null ? (pair.base || pair) : pair;
+    if (!seen.has(key)) seen.set(key, checked(f(pair.training, pair.match, pair.group, infoOf(pair)), pair));
+    return seen.get(key);
+  };
+  for (const pair of ps) {
+    const p = predOf(predictor, pair);
+    const base = predOf(predictor, pair.base || pair);
+    const c = idx.get(pair.clave);
+    const qs = refs.map(([r, f]) => [r, predOf(f, pair)]);
+    for (const t of ['global', pair.distancia, `${pair.distancia}|${cruceDe(pair.jornadas)}`]) {
+      const s = S[t];
+      s.pares[c] += 1;
+      if (!p) continue;
+      const ll = logLoss(p, pair.y), br = brier(p, pair.y), pick = pickOf(p), ok = pick === pair.y;
+      s.n[c] += 1; s.ll[c] += ll; s.br[c] += br; s.ok[c] += ok; s.fav[c] += p[pick]; s.fo[c] += p[pick] - ok;
+      s.pd[c] += p.draw; s.d[c] += pair.y === 'draw';
+      if (base) {
+        s.n1[c] += 1; s.ll1[c] += ll - logLoss(base, pair.y); s.br1[c] += br - brier(base, pair.y); s.ok1[c] += ok - (pickOf(base) === pair.y);
+      }
+      for (const [r, q] of qs) {
+        if (!q) continue;
+        s[`n:${r}`][c] += 1; s[`ll:${r}`][c] += ll - logLoss(q, pair.y); s[`br:${r}`][c] += br - brier(q, pair.y);
+        s[`ok:${r}`][c] += ok - (pickOf(q) === pair.y);
+      }
+    }
+  }
+  const W = B > 0 ? resamples(C, B, semilla) : [];
+  const block = s => {
+    const n = total(s.n), pairsN = total(s.pares);
+    const ratio = k => (n ? total(s[k]) / n : null);
+    return {
+      pares: pairsN, predichos: n, nulos: pairsN - n,
+      logLoss: r6(ratio('ll')), brier: r6(ratio('br')), acierto: r6(ratio('ok')), favorito: r6(ratio('fav')),
+      empatePrevisto: r6(ratio('pd')), empateReal: r6(ratio('d')),
+      ic95: W.length && n ? { logLoss: ic95Of(s.ll, s.n, W), brier: ic95Of(s.br, s.n, W), acierto: ic95Of(s.ok, s.n, W), favorito: ic95Of(s.fav, s.n, W) } : null,
+      fiabilidad: { diferencia: r6(ratio('fo')), ic95: W.length && n ? ic95Of(s.fo, s.n, W) : null },
+      frenteK1: pairedOf(s.n1, s.ll1, s.br1, s.ok1, W),
+      frente: Object.fromEntries(refs.map(([r]) => [r, pairedOf(s[`n:${r}`], s[`ll:${r}`], s[`br:${r}`], s[`ok:${r}`], W)])),
+    };
+  };
+  return {
+    split: pairs ? 'parejas' : split,
+    temporadas: [...new Set(ps.map(p => p.temporada))],
+    grupos: C,
+    pares: ps.length,
+    partidos: new Set(ps.map(p => p.base || p)).size,
+    bootstrap: { B: W.length, semilla, unidad: 'temporada-grupo', intervalo: 'percentiles 2,5 y 97,5' },
+    referencias: refs.map(([r]) => r),
+    global: block(S.global),
+    porDistancia: Object.fromEntries(TRAMOS_K.map(d => [d, block(S[d])])),
+    porDistanciaYJornadas: Object.fromEntries(TRAMOS_K.map(d => [d, Object.fromEntries(TRAMOS_CRUCE.map(c => [c, block(S[`${d}|${c}`])]))])),
+  };
+}
+
 // ── Las referencias ──────────────────────────────────────────────────────────────────────────────────
 
 // Las frecuencias de las temporadas de ajuste: del local, el empate y el visitante, y del mejor
@@ -455,6 +693,9 @@ export function frecuenciasAjuste() {
 
 const EVAL_PARAMS = Object.freeze({ ...PARAMS, minRounds: 1, minPlayed: 0 });
 const fromForecast = f => f && { pHome: f.pHome, pDraw: f.pDraw, pAway: f.pAway };
+// Las referencias de src/pronostico.js con el entrenamiento de la pareja: el de siempre o, en las de
+// distancePairsOf, solo lo jugado antes de su corte (info.corte; forecastMatch lo vuelve a calcular igual).
+const forecastOf = (match, group, info, params) => forecastMatch(group, match, { prueba: true, params, before: (info && info.corte) || null });
 // Infinity, escrito como tal (JSON lo deja en null).
 export const show = params => JSON.stringify(params, (k, v) => (v === Infinity ? 'Infinity' : v));
 const asJSON = params => JSON.parse(show(params));
@@ -464,20 +705,20 @@ export const REFERENCIAS = Object.freeze({
     nombre: 'actual',
     descripcion: 'src/pronostico.js con PARAMS (las notas de Massey), desde la primera jornada y con equipos sin partidos (minRounds 1, minPlayed 0)',
     ajustar: () => ({ params: asJSON(EVAL_PARAMS) }),
-    predictor: (training, match, group) => fromForecast(forecastMatch(group, match, { prueba: true, params: EVAL_PARAMS })),
+    predictor: (training, match, group, info) => fromForecast(forecastOf(match, group, info, EVAL_PARAMS)),
   }),
   web: Object.freeze({
     nombre: 'web',
     descripcion: 'src/pronostico.js con PARAMS tal cual (minRounds 2, minPlayed 1): lo que enseña la web',
     ajustar: () => ({ params: asJSON(PARAMS) }),
-    predictor: (training, match, group) => fromForecast(forecastMatch(group, match, { prueba: true, params: PARAMS })),
+    predictor: (training, match, group, info) => fromForecast(forecastOf(match, group, info, PARAMS)),
   }),
   poisson: Object.freeze({
     nombre: 'poisson',
     descripcion: 'el 1X2 del Poisson de los goles de src/pronostico.js (el de la web hasta el 17/10/2026), desde la primera jornada',
     ajustar: () => ({ params: asJSON(EVAL_PARAMS) }),
-    predictor: (training, match, group) => {
-      const f = forecastMatch(group, match, { prueba: true, params: EVAL_PARAMS });
+    predictor: (training, match, group, info) => {
+      const f = forecastOf(match, group, info, EVAL_PARAMS);
       return f && fromForecast(outcome(f.xgHome, f.xgAway, EVAL_PARAMS));
     },
   }),
@@ -510,7 +751,10 @@ export function bancoDeAjuste() {
     temporadas: TEMPORADAS.ajuste,
     pares: pares('ajuste'),
     evaluate: (predictor, opts = {}) => evaluate(predictor, { ...opts, pairs: null, split: 'ajuste' }),
-    logLoss, brier, outcomeOf, tableOf, tableLeader, TRAMOS, tramoDe,
+    // Las de varias jornadas vista, también solo de ajuste (se calculan al pedirlas: unos segundos).
+    paresDistancia: () => paresDistancia('ajuste'),
+    evaluarDistancia: (predictor, opts = {}) => evaluarDistancia(predictor, { ...opts, pairs: null, split: 'ajuste' }),
+    logLoss, brier, outcomeOf, tableOf, tableLeader, TRAMOS, tramoDe, TRAMOS_K, distanciaDe,
   });
 }
 
@@ -531,6 +775,17 @@ export async function ejecutar(modelo, { split = 'evaluacion', contra = REFERENC
   const ref = contra && contra.predictor !== modelo.predictor ? contra : null;
   if (ref && ref.ajustar) await ref.ajustar(bancoDeAjuste());
   const informe = evaluate(modelo.predictor, { split, B, semilla, referencia: ref ? ref.predictor : null, nombreReferencia: ref ? ref.nombre : null });
+  return { modelo: modelo.nombre, descripcion: modelo.descripcion || null, ajuste, ...informe };
+}
+
+/* Lo mismo a varias jornadas vista (--distancia): el ajustar del modelo y el de `contra`, y evaluarDistancia
+ * con la tabla, el local y, si lo hay, `contra` de referencias. */
+export async function ejecutarDistancia(modelo, { split = 'evaluacion', contra = null, B = B_DEFECTO, semilla = SEMILLA } = {}) {
+  const ajuste = modelo.ajustar ? (await modelo.ajustar(bancoDeAjuste())) ?? null : null;
+  const ref = contra && contra.predictor !== modelo.predictor ? contra : null;
+  if (ref && ref.ajustar) await ref.ajustar(bancoDeAjuste());
+  const referencias = { tabla: REFERENCIAS.tabla.predictor, local: REFERENCIAS.local.predictor, ...(ref ? { [ref.nombre]: ref.predictor } : {}) };
+  const informe = evaluarDistancia(modelo.predictor, { split, B, semilla, referencias });
   return { modelo: modelo.nombre, descripcion: modelo.descripcion || null, ajuste, ...informe };
 }
 
@@ -555,13 +810,34 @@ export function resumen(inf) {
   return lines.join('\n');
 }
 
+// El resumen de un informe de evaluarDistancia: por distancia y, debajo, cruzado con las jornadas jugadas.
+// «Fiab.» es favorito − acierto (positivo, se pasa de seguro); «Δ k=1», lo que se pierde frente a la víspera.
+export function resumenDistancia(inf) {
+  const refs = inf.referencias || [];
+  const d3 = x => x.toFixed(3);
+  const pp = x => `${x > 0 ? '+' : ''}${(100 * x).toFixed(1)}`;
+  const dl = d => (d && d.pares ? `${sgn(d.logLoss, d3)}${ic(d.ic95 && d.ic95.logLoss, d3)}` : '—');
+  const lines = [`${inf.modelo || 'modelo'} · ${inf.split} a varias jornadas vista (${inf.temporadas.join(', ')}): ${inf.pares} pronósticos de ${inf.partidos} partidos de ${inf.grupos} grupos`];
+  lines.push(`| Distancia | Jornadas | Pronósticos | Nulos | Log-loss [IC 95 %] | Brier | Acierto [IC 95 %] | Favorito | Fiab. (puntos) [IC 95 %] | Δ k=1 [IC 95 %] |${refs.map(r => ` Δ ${r} [IC 95 %] |`).join('')}`);
+  lines.push(`|---|---|---|---|---|---|---|---|---|---|${refs.map(() => '---|').join('')}`);
+  const rowOf = (label, j, s) => {
+    if (!s.pares) return;
+    const f = s.fiabilidad;
+    lines.push(`| ${label} | ${j} | ${s.pares} | ${s.nulos} | ${num(s.logLoss)}${ic(s.ic95 && s.ic95.logLoss, num)} | ${num(s.brier)} | ${pct(s.acierto)}${ic(s.ic95 && s.ic95.acierto, pct)} | ${pct(s.favorito)} | ${f.diferencia === null ? '—' : pp(f.diferencia)}${ic(f.ic95, pp)} | ${dl(s.frenteK1)} |${refs.map(r => ` ${dl(s.frente[r])} |`).join('')}`);
+  };
+  for (const d of TRAMOS_K) rowOf(d, 'todas', inf.porDistancia[d]);
+  rowOf('Todas', 'todas', inf.global);
+  for (const d of TRAMOS_K) for (const c of TRAMOS_CRUCE) rowOf(d, c, inf.porDistanciaYJornadas[d][c]);
+  return lines.join('\n');
+}
+
 function argsOf(argv) {
   const out = {};
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (!a.startsWith('--')) throw new Error(`argumento suelto: ${a}`);
     const key = a.slice(2);
-    if (key === 'referencias') { out.referencias = true; continue; }
+    if (key === 'referencias' || key === 'distancia') { out[key] = true; continue; }
     if (i + 1 >= argv.length) throw new Error(`falta el valor de ${a}`);
     out[key] = argv[(i += 1)];
   }
@@ -576,7 +852,12 @@ async function main(argv) {
   const semilla = a.semilla === undefined ? SEMILLA : Number(a.semilla);
   if (!Number.isInteger(B) || B < 0 || !Number.isInteger(semilla)) throw new Error('--B y --semilla: enteros');
   let out;
-  if (a.referencias) {
+  if (a.distancia) {
+    const modelo = await cargarModelo(a.modelo || 'web');
+    const contra = !a.contra || a.contra === 'ninguno' ? null : await cargarModelo(a.contra);
+    out = await ejecutarDistancia(modelo, { split, B, semilla, contra });
+    console.error(`\n${resumenDistancia(out)}`);
+  } else if (a.referencias) {
     const referencias = {};
     for (const name of Object.keys(REFERENCIAS)) {
       const inf = await ejecutar(REFERENCIAS[name], { split, B, semilla, contra: REFERENCIAS.actual });

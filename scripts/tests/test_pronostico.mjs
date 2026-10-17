@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import { buildGroup } from '../../src/model.js';
 import {
   PARAMS, copiedMatches, fitNotes, fitRatings, forecastApplies, forecastMatch, forecastRound, horizonOf, isDeskResult, likelyScore,
-  notesOdds, outcome, topScores, trainingFor,
+  notesOdds, outcome, roundsAhead, topScores, trainingFor,
 } from '../../src/pronostico.js';
 
 const SEASON = '2026-2027';
@@ -530,4 +530,116 @@ test('las goleadas, amortiguadas: por encima de soften, los goles esperados crec
   // Por debajo del umbral, nada cambia.
   const mid = matchOf(group, 4, 'Beta');
   assert.deepEqual(numbers(forecastMatch(group, mid, OPTS)), numbers(forecastMatch(group, mid, { ...OPTS, params: { ...PARAMS, soften: Infinity } })));
+});
+
+// ── A varias jornadas vista (17/10/2026: el usuario pidió el pronóstico de todo el calendario) ──────────
+
+test('la distancia (roundsAhead): la próxima jornada, 1, y una más por cada jornada sin jugar de por medio', () => {
+  const group = makeGroup();
+  const m4 = matchOf(group, 4, 'Alfa'), m5 = matchOf(group, 5, 'Gamma');
+  assert.equal(roundsAhead(group, m4), 1);
+  assert.equal(roundsAhead(group, m5), 2);
+  // Con lo jugado antes de que empiece la 3 (el 17), la 4 está a 2 vista y la 5, a 3; antes de la 2, a 3 y 4.
+  assert.equal(roundsAhead(group, m4, { before: '2026-10-17' }), 2);
+  assert.equal(roundsAhead(group, m5, { before: '2026-10-17' }), 3);
+  assert.equal(roundsAhead(group, m5, { before: '2026-10-10' }), 4);
+  // Sin nada jugado antes, null; sin fecha, también.
+  assert.equal(roundsAhead(group, m5, { before: '2026-10-03' }), null);
+  assert.equal(roundsAhead(group, { ...m5, dateISO: null }), null);
+  assert.equal(roundsAhead(null, m5), null);
+  // forecastMatch la da en `ahead`, con su mismo entrenamiento.
+  for (const round of group.rounds.slice(3)) {
+    for (const m of round.matches) assert.equal(forecastMatch(group, m, OPTS).ahead, roundsAhead(group, m), `${m.home}–${m.away}`);
+  }
+  // Una jornada con la fecha pasada y sin resultados publicados (la 3) cuenta: lo que pase en ella no se sabe.
+  const stale = makeGroup(BASE.map((ms, i) => (i === 2 ? ms.map(r => row(r[0], r[1], r[2])) : ms)));
+  assert.equal(roundsAhead(stale, matchOf(stale, 4, 'Alfa')), 2);
+});
+
+test('la distancia con aplazados, jornadas sin fecha, descansos, la vuelta y un calendario que no va en orden', () => {
+  // Un aplazado de la jornada 2 (Alfa–Beta) al miércoles 21, antes de la 4: a 1 vista; al 27, tras la 4: a 2.
+  const moved = date => makeGroup(BASE.map((ms, i) => (i === 1 ? [ms[0], ms[1], row(date, 'Alfa', 'Beta')] : ms)));
+  const soon = moved('2026-10-21'), late = moved('2026-10-27');
+  assert.equal(roundsAhead(soon, matchOf(soon, 2, 'Alfa')), 1);
+  assert.equal(roundsAhead(late, matchOf(late, 2, 'Alfa')), 2);
+  // La jornada 2, empezada (dos de tres jugados), ya no cuenta para la 5: solo la 4 de por medio.
+  assert.equal(roundsAhead(late, matchOf(late, 5, 'Gamma')), 2);
+  // Una jornada sin ninguna fecha (la 4) no se sabe cuándo se juega: no cuenta.
+  const undated = makeGroup(BASE.map((ms, i) => (i === 3 ? ms.map(r => row(null, r[1], r[2])) : ms)));
+  assert.equal(undated.rounds[3].matches.every(m => m.dateISO === null), true);
+  assert.equal(roundsAhead(undated, matchOf(undated, 5, 'Gamma')), 1);
+  // Una jornada entera aplazada sin fecha nueva (la 2, con sus fechas de octubre y sin resultados), anterior
+  // a lo último jugado (la 3): no cuenta.
+  const postponed = makeGroup(BASE.map((ms, i) => (i === 1 ? ms.map(r => row(r[0], r[1], r[2])) : ms)));
+  assert.equal(roundsAhead(postponed, matchOf(postponed, 4, 'Alfa')), 1);
+  // Un descanso: Delta y Épsilon no juegan la 3; sus partidos de la 4 siguen a la distancia del grupo.
+  const rest = makeGroup(BASE.map((ms, i) => (i === 2 ? ms.slice(0, 2) : ms)));
+  assert.equal(roundsAhead(rest, matchOf(rest, 4, 'Alfa')), 1);
+  assert.equal(roundsAhead(rest, matchOf(rest, 4, 'Zeta')), 1);
+  // La vuelta, en enero, tras un mes sin partidos: la 4 sigue a 1 vista y la 5, a 2.
+  const winter = makeGroup(BASE.map((ms, i) => (i < 3 ? ms : ms.map(r => row(i === 3 ? '2027-01-09' : '2027-01-16', r[1], r[2])))));
+  assert.equal(roundsAhead(winter, matchOf(winter, 4, 'Alfa')), 1);
+  assert.equal(roundsAhead(winter, matchOf(winter, 5, 'Gamma')), 2);
+  // Un calendario que no va en orden (como PLZ1 de 2025-26, con la 2 en mayo, tras la 3): la 2, entera al
+  // 27 y 28, sin jugar. Por fecha, la 4 está a 1 vista, la 2 a 2 (la 4 por medio) y la 5 a 3; por número,
+  // la 2 parecería ya pasada.
+  const shuffled = makeGroup(BASE.map((ms, i) => (i === 1 ? ms.map((r, j) => row(j < 2 ? '2026-10-27' : '2026-10-28', r[1], r[2])) : ms)));
+  assert.equal(roundsAhead(shuffled, matchOf(shuffled, 4, 'Alfa')), 1);
+  assert.equal(roundsAhead(shuffled, matchOf(shuffled, 2, 'Alfa')), 2);
+  assert.equal(roundsAhead(shuffled, matchOf(shuffled, 5, 'Gamma')), 3);
+});
+
+test('before: el pronóstico con solo lo jugado antes de ese día es el de no saber lo de después', () => {
+  const group = makeGroup();
+  const stale = makeGroup(BASE.map((ms, i) => (i === 2 ? ms.map(r => row(r[0], r[1], r[2])) : ms)));
+  for (const n of [4, 5]) {
+    for (const m of group.rounds[n - 1].matches) {
+      const cut = forecastMatch(group, m, { ...OPTS, before: '2026-10-17' });
+      const blind = forecastMatch(stale, matchOf(stale, n, m.home), OPTS);
+      assert.deepEqual(numbers(cut), numbers(blind), `${m.home}–${m.away}`);
+      assert.equal(cut.ahead, blind.ahead);
+      assert.equal(cut.ahead, n - 2);
+      assert.equal(cut.matches, trainingFor(group, m, { before: '2026-10-17' }).length);
+    }
+  }
+  // Con una sola jornada antes del corte, no se muestra (minRounds), aunque esté a 3 vista.
+  assert.equal(forecastMatch(group, matchOf(group, 4, 'Alfa'), { ...OPTS, before: '2026-10-10' }), null);
+});
+
+test('k = 1, lo de siempre: sin before, con before null o con el día del partido, el mismo pronóstico', () => {
+  for (const group of [makeGroup(), makeGroup(THREE), makeGroup(SPLIT)]) {
+    for (const round of group.rounds) {
+      for (const m of round.matches) {
+        const free = { ...m, hs: null, as: null };
+        const f = forecastMatch(group, free, { ...OPTS, params: { ...PARAMS, minRounds: 1, minPlayed: 0 } });
+        assert.deepEqual(forecastMatch(group, free, { ...OPTS, before: null, params: { ...PARAMS, minRounds: 1, minPlayed: 0 } }), f);
+        assert.deepEqual(trainingFor(group, free, { before: free.dateISO }), trainingFor(group, free));
+        if (!f) continue;
+        assert.deepEqual(forecastMatch(group, free, { ...OPTS, before: free.dateISO, params: { ...PARAMS, minRounds: 1, minPlayed: 0 } }), f);
+        // El 1X2, el de las notas con el entrenamiento de siempre: ninguna corrección por distancia.
+        const o = notesOdds(fitNotes(trainingFor(group, free)), free.home, free.away);
+        assert.deepEqual([f.pHome, f.pDraw, f.pAway], [o.pHome, o.pDraw, o.pAway]);
+      }
+    }
+  }
+});
+
+test('full: con today, todo lo que queda del calendario, cada partido con su distancia; sin él, solo la próxima jornada', () => {
+  const group = makeGroup();
+  const today = '2026-10-20';
+  assert.deepEqual(forecastRound(group, group.rounds[4], { ...OPTS, today }), [null, null, null], 'sin full, el horizonte de siempre');
+  const all = forecastRound(group, group.rounds[4], { ...OPTS, today, full: true });
+  assert.ok(all.every(f => f && f.ahead === 2), JSON.stringify(all.map(f => f && f.ahead)));
+  // Lo mismo que el backtest (sin today) con lo jugado hasta hoy, y la 4, igual que sin full.
+  group.rounds[4].matches.forEach((m, i) => assert.deepEqual(all[i], forecastMatch(group, m, OPTS)));
+  assert.deepEqual(forecastRound(group, group.rounds[3], { ...OPTS, today, full: true }), forecastRound(group, group.rounds[3], { ...OPTS, today }));
+  assert.ok(forecastRound(group, group.rounds[3], { ...OPTS, today }).every(f => f && f.ahead === 1));
+  // Con full, lo que no está pendiente sigue sin pronóstico: la fecha pasada sin resultado y lo que no tiene fecha.
+  const m4 = matchOf(group, 4, 'Alfa');
+  assert.equal(forecastMatch(group, m4, { ...OPTS, today: '2026-10-25', full: true }), null);
+  assert.equal(forecastMatch(group, { ...m4, dateISO: null }, { ...OPTS, today, full: true }), null);
+  // Un aplazado al 15/11, fuera del horizonte: con full, sí, a 3 vista (la 4 y la 5 por medio).
+  const late = makeGroup(BASE.map((ms, i) => (i === 1 ? [ms[0], ms[1], row('2026-11-15', 'Alfa', 'Beta')] : ms)));
+  assert.equal(forecastMatch(late, matchOf(late, 2, 'Alfa'), { ...OPTS, today }), null);
+  assert.equal(forecastMatch(late, matchOf(late, 2, 'Alfa'), { ...OPTS, today, full: true }).ahead, 3);
 });

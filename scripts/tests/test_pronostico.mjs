@@ -5,11 +5,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildGroup } from '../../src/model.js';
-import { PARAMS, fitRatings, forecastApplies, forecastMatch, forecastRound, isDeskResult, outcome, trainingFor } from '../../src/pronostico.js';
+import {
+  PARAMS, copiedMatches, fitRatings, forecastApplies, forecastMatch, forecastRound, horizonOf, isDeskResult, outcome, trainingFor,
+} from '../../src/pronostico.js';
 
 const SEASON = '2026-2027';
 const OPTS = { portalSeason: SEASON };
-const row = (date, home, away, hs = null, as = null, time = '10:00') => [date, home, away, hs, as, null, time, 'CAMPO MUNICIPAL'];
+const row = (date, home, away, hs = null, as = null, time = '10:00', venue = 'CAMPO MUNICIPAL') => [date, home, away, hs, as, null, time, venue];
 
 // Liga de seis equipos y cinco jornadas: Alfa, el más fuerte; Zeta, el más flojo. Jugadas, la 1, la 2 y
 // la 3; la 4 y la 5, por jugar.
@@ -164,20 +166,53 @@ test('los retirados no cuentan, y sus partidos no se pronostican', () => {
   assert.ok(!trainingFor(g, matchOf(g, 4, 'Alfa')).some(m => m.home === 'Retirado CF' || m.away === 'Retirado CF'));
 });
 
-test('los resultados de mesa (3-0 o 1-0 sin hora) no cuentan; con hora, sí', () => {
-  const desk = (hs, as, time) => BASE.map((ms, i) => (i === 2 ? [...ms, row('2026-10-17', 'Épsilon', 'Zeta', hs, as, time)] : ms));
+test('lo que puede ser de mesa no cuenta: todo 3-0 o 1-0, con hora o sin ella, y un campo «EXCLUIDO» o «SUSPENDIDO»', () => {
+  // El bot guarda los de mesa de 2026-27 con la hora del partido (los 0-3 de AL20, AL32 y AL9 de alevín).
+  const desk = (hs, as, time, venue) => BASE.map((ms, i) => (i === 2 ? [...ms, row('2026-10-17', 'Épsilon', 'Zeta', hs, as, time, venue)] : ms));
   const base = makeGroup();
   const ref = numbers(forecastMatch(base, matchOf(base, 4, 'Zeta'), OPTS));
   for (const [hs, as] of [[3, 0], [0, 3], [1, 0], [0, 1]]) {
-    const g = makeGroup(desk(hs, as, null));
-    assert.ok(isDeskResult(matchOf(g, 3, 'Épsilon')), `${hs}-${as} sin hora es de mesa`);
-    assert.deepEqual(numbers(forecastMatch(g, matchOf(g, 4, 'Zeta'), OPTS)), ref, `${hs}-${as} sin hora no cuenta`);
+    for (const time of [null, '11:30']) {
+      const g = makeGroup(desk(hs, as, time));
+      assert.ok(isDeskResult(matchOf(g, 3, 'Épsilon')), `${hs}-${as} ${time || 'sin hora'}`);
+      assert.deepEqual(numbers(forecastMatch(g, matchOf(g, 4, 'Zeta'), OPTS)), ref, `${hs}-${as} ${time || 'sin hora'} no cuenta`);
+    }
   }
-  const real = makeGroup(desk(3, 0, '11:30'));
-  assert.equal(isDeskResult(matchOf(real, 3, 'Épsilon')), false);
-  assert.notDeepEqual(numbers(forecastMatch(real, matchOf(real, 4, 'Zeta'), OPTS)), ref, 'un 3-0 con hora cuenta');
-  // Un 4-0 o un 2-0 sin hora son de verdad.
+  // Cerruda B en PGC3 de 2014-15: sus partidos, en un campo «EXCLUIDO», con el marcador que sea.
+  for (const venue of ['EXCLUIDO', '*SUSPENDIDO*']) {
+    const g = makeGroup(desk(14, 0, '12:00', venue));
+    assert.ok(isDeskResult(matchOf(g, 3, 'Épsilon')), venue);
+    assert.deepEqual(numbers(forecastMatch(g, matchOf(g, 4, 'Zeta'), OPTS)), ref, venue);
+  }
+  // Un 4-0, un 2-0 o un 3-1 son de verdad, y cuentan; también en un campo que no es la palabra sola.
   for (const [hs, as] of [[4, 0], [2, 0], [3, 1]]) assert.equal(isDeskResult({ hs, as, time: null }), false, `${hs}-${as}`);
+  assert.equal(isDeskResult({ hs: 4, as: 0, time: '10:00', venue: 'CAMPO EXCLUIDO DE OBRAS' }), false);
+  assert.equal(isDeskResult({ hs: null, as: null, venue: 'EXCLUIDO' }), false, 'sin marcador, nada');
+  const real = makeGroup(desk(4, 0, '11:30'));
+  assert.notDeepEqual(numbers(forecastMatch(real, matchOf(real, 4, 'Zeta'), OPTS)), ref, 'un 4-0 cuenta');
+});
+
+test('las copias de la importación del archivo no cuentan: la del equipo que juega dos veces en la jornada', () => {
+  // Como en PGC1 de 2023-24: el filial (Alfa B) pierde 1-9 con Omega y la copia se le apunta también a
+  // Alfa, que esa jornada juega su partido (7-2 con Beta).
+  const filial = BASE.map((ms, i) => (i === 1 ? [...ms, row('2026-10-11', 'Alfa B', 'Omega', 1, 9)] : ms));
+  const copied = filial.map((ms, i) => (i === 1 ? [...ms, row('2026-10-11', 'Alfa', 'Omega', 1, 9, null, null)] : ms));
+  const ref = makeGroup(filial), g = makeGroup(copied);
+  const copy = g.rounds[1].matches.find(m => m.home === 'Alfa' && m.away === 'Omega');
+  assert.deepEqual([...copiedMatches(g)], [copy]);
+  assert.deepEqual(numbers(forecastMatch(g, matchOf(g, 4, 'Alfa'), OPTS)), numbers(forecastMatch(ref, matchOf(ref, 4, 'Alfa'), OPTS)));
+  assert.ok(!trainingFor(g, matchOf(g, 4, 'Alfa')).includes(copy));
+  assert.ok(trainingFor(g, matchOf(g, 4, 'Alfa')).some(m => m.home === 'Alfa B'), 'el del filial, sí');
+  // Si no se sabe cuál es la buena (los dos solo juegan ese), ninguna; el mismo partido dos veces, una.
+  const unsure = makeGroup(BASE.map((ms, i) => (i === 1 ? [...ms, row('2026-10-11', 'Alfa B', 'Omega', 1, 9), row('2026-10-11', 'Beta B', 'Omega', 1, 9)] : ms)));
+  assert.equal(copiedMatches(unsure).size, 2);
+  const twice = makeGroup(BASE.map((ms, i) => (i === 1 ? [...ms, ms[0]] : ms)));
+  assert.equal(copiedMatches(twice).size, 1);
+  assert.equal(trainingFor(twice, matchOf(twice, 4, 'Alfa')).length, 9);
+  // En una liguilla de copa de un día, un equipo juega varias veces en la misma «jornada»: nada.
+  assert.equal(copiedMatches({ ...g, kind: 'cup-league' }).size, 0);
+  // En los grupos de siempre, ninguna.
+  assert.equal(copiedMatches(makeGroup()).size, 0);
 });
 
 test('lo que la app da por retirado, anulado o suspendido no cuenta ni se pronostica', () => {
@@ -203,9 +238,12 @@ test('nada fuera del prebenjamín de la temporada del portal; el backtest lo abr
   assert.equal(forecastMatch(group, m, {}), null, 'sin la temporada del portal');
   assert.equal(forecastMatch(group, m, { portalSeason: '2027-2028' }), null, 'de otra temporada');
   assert.ok(forecastMatch(group, m, { portalSeason: '2027-2028', prueba: true }), 'el backtest');
-  // Un cuadro de copa (sin empates) tampoco; una liguilla de copa, sí.
+  // En la web, solo ligas: ni un cuadro de copa ni una liguilla de copa; el backtest, con prueba, también
+  // prueba el modelo con las liguillas (un cuadro no tiene empates).
   assert.equal(forecastApplies({ ...group, kind: 'cup-bracket' }, OPTS), false);
-  assert.equal(forecastApplies({ ...group, kind: 'cup-league' }, OPTS), true);
+  assert.equal(forecastApplies({ ...group, kind: 'cup-league' }, OPTS), false);
+  assert.equal(forecastApplies({ ...group, kind: 'cup-league' }, { prueba: true }), true);
+  assert.equal(forecastApplies({ ...group, kind: 'cup-bracket' }, { prueba: true }), false);
   assert.equal(forecastApplies(null, OPTS), false);
 });
 
@@ -224,11 +262,27 @@ test('el entrenamiento: solo jornadas anteriores, con marcador y fecha; un aplaz
   const used = trainingFor(group, m4);
   assert.equal(used.length, 9);
   assert.ok(used.every(m => m.roundKey !== m4.roundKey && m.dateISO < m4.dateISO));
+  // Uno de la 5 adelantado al mismo día que el de la 4 (24/10) y ya con marcador: no entra (es del mismo
+  // día, no de antes); uno del 23, sí.
+  const ahead = date => makeGroup(BASE.map((ms, i) => (i === 4 ? [row(date, 'Gamma', 'Zeta', 7, 1), ms[1], ms[2]] : ms)));
+  const same = ahead('2026-10-24'), before = ahead('2026-10-23');
+  assert.equal(trainingFor(same, matchOf(same, 4, 'Alfa')).length, 9);
+  assert.ok(!trainingFor(same, matchOf(same, 4, 'Alfa')).some(m => m.dateISO === '2026-10-24'));
+  assert.equal(trainingFor(before, matchOf(before, 4, 'Alfa')).length, 10);
   // Un partido de la jornada 2 aplazado al 26/10: cuenta con la 1 y la 3, nunca con los de la 2.
   const late = { ...matchOf(group, 2, 'Alfa'), hs: null, as: null, dateISO: '2026-10-26' };
   const lateUsed = trainingFor(group, late);
   assert.equal(lateUsed.length, 6);
   assert.ok(lateUsed.every(m => m.roundKey !== late.roundKey));
+  // La caché de los ajustes no los confunde: antes, el de la 2 en su fecha (solo la 1 detrás: sin
+  // pronóstico) y luego el aplazado, en el mismo grupo, con su propio ajuste.
+  const fresh = makeGroup();
+  const onTime = { ...matchOf(fresh, 2, 'Alfa'), hs: null, as: null };
+  assert.equal(forecastMatch(fresh, onTime, OPTS), null);
+  assert.equal(forecastMatch(fresh, onTime, { ...OPTS, params: { ...PARAMS, minRounds: 1 } }).matches, 3);
+  const moved = forecastMatch(fresh, { ...onTime, dateISO: '2026-10-26' }, OPTS);
+  assert.equal(moved.rounds, 2);
+  assert.equal(moved.matches, 6);
   assert.equal(forecastMatch(group, late, OPTS).rounds, 2);
 });
 
@@ -249,9 +303,76 @@ test('la contracción: con más partidos ficticios, todos más cerca de la media
     assert.ok(alfa.attack > t.attack, `ataque de Alfa frente a ${name}`);
   }
   assert.ok(alfa.defense < 1);
-  // Un equipo que aún no ha jugado queda en la media: el pronóstico solo mira al rival.
+  // Un equipo que aún no ha jugado queda en la media, y el pronóstico solo miraría al rival: no se
+  // muestra (minPlayed); con minPlayed 0, el del recién llegado.
   const newcomer = { ...matchOf(group, 4, 'Alfa'), away: 'Nuevo' };
-  const f = forecastMatch(group, newcomer, OPTS);
+  assert.equal(PARAMS.minPlayed, 1);
+  assert.equal(forecastMatch(group, newcomer, OPTS), null);
+  assert.equal(forecastMatch(group, { ...newcomer, home: 'Nuevo', away: 'Alfa' }, OPTS), null);
+  const f = forecastMatch(group, newcomer, { ...OPTS, params: { ...PARAMS, minPlayed: 0 } });
   assert.equal(f.playedAway, 0);
   close(f.xgAway, fit.base * 1 * alfa.defense, 'goles del recién llegado');
+});
+
+test('con today, solo la próxima jornada: la 4 sí y la 5 no; sin today (el backtest), todas', () => {
+  const group = makeGroup();
+  const at = today => ({ ...OPTS, today });
+  // La 3 ya jugada; la 4, el 24 y el 25; la 5, el 31 y el 1: el horizonte, seis días después del 24.
+  assert.equal(horizonOf(group, '2026-10-20'), '2026-10-30');
+  assert.ok(forecastRound(group, group.rounds[3], at('2026-10-20')).every(Boolean));
+  assert.deepEqual(forecastRound(group, group.rounds[4], at('2026-10-20')), [null, null, null]);
+  assert.ok(forecastRound(group, group.rounds[4], OPTS).every(Boolean), 'sin today, sin límite');
+  // El sábado 24, con dos de la 4 jugados: lo que falta de la 4 (el domingo) y la 5 entera.
+  const half = makeGroup(BASE.map((ms, i) => (i === 3 ? [row('2026-10-24', 'Zeta', 'Épsilon', 2, 5), row('2026-10-24', 'Alfa', 'Delta', 6, 3), ms[2]] : ms)));
+  assert.equal(horizonOf(half, '2026-10-24'), '2026-11-06');
+  assert.ok(forecastMatch(half, matchOf(half, 4, 'Beta'), at('2026-10-24')), 'el del domingo');
+  assert.ok(forecastRound(half, half.rounds[4], at('2026-10-24')).every(Boolean), 'la 5');
+  // Una jornada sin resultados y con la fecha pasada (la fuente aún no los ha publicado) no atasca.
+  const stale = makeGroup(BASE.map((ms, i) => (i === 2 ? ms.map(r => row(r[0], r[1], r[2])) : ms)));
+  assert.equal(horizonOf(stale, '2026-10-20'), '2026-10-30');
+  assert.ok(forecastRound(stale, stale.rounds[3], at('2026-10-20')).every(Boolean));
+  // Un aplazado de la 2: al 27/10, dentro del horizonte, sí (con la 1 y la 3); al 15/11, no.
+  const moved = date => makeGroup(BASE.map((ms, i) => (i === 1 ? [ms[0], ms[1], row(date, 'Alfa', 'Beta')] : ms)));
+  const soon = moved('2026-10-27'), late = moved('2026-11-15');
+  assert.equal(forecastMatch(soon, matchOf(soon, 2, 'Alfa'), at('2026-10-20')).rounds, 2);
+  assert.equal(forecastMatch(late, matchOf(late, 2, 'Alfa'), at('2026-10-20')), null);
+  assert.ok(forecastMatch(late, matchOf(late, 2, 'Alfa'), OPTS), 'sin today, sí');
+  // Los resultados de un retirado (la federación le apunta sus 0-3 por adelantado) o de mesa en una
+  // jornada futura no la dan por jugada: el horizonte sigue en la 4.
+  const ahead = makeGroup(BASE.map((ms, i) => [
+    ...ms,
+    ...(i === 0 ? [row('2026-10-03', 'Retirado CF', 'Delta', 0, 3)] : []),
+    ...(i === 4 ? [row('2026-10-31', 'Retirado CF', 'Beta', 0, 3)] : []),
+  ]), { unlisted: ['Retirado CF'] });
+  assert.equal(horizonOf(ahead, '2026-10-20'), '2026-10-30');
+  const desk = makeGroup(BASE.map((ms, i) => (i === 4 ? [...ms.slice(0, 2), row('2026-11-01', 'Épsilon', 'Alfa', 0, 3)] : ms)));
+  assert.equal(horizonOf(desk, '2026-10-20'), '2026-10-30');
+  // Con todo lo que queda ya en jornadas con resultados (los aplazados del final), sin límite.
+  const tail = makeGroup([...BASE.slice(0, 3), BASE[3].map((r, i) => (i ? row(r[0], r[1], r[2], 3, 2) : row('2026-12-12', r[1], r[2])))]);
+  assert.equal(horizonOf(tail, '2026-10-26'), null);
+  assert.ok(forecastMatch(tail, matchOf(tail, 4, 'Zeta'), at('2026-10-26')));
+});
+
+test('las goleadas, amortiguadas: por encima de soften, los goles esperados crecen con el logaritmo', () => {
+  // Un grupo de goleadas: Alfa marca 18, 15 y 16 y Zeta encaja 18, 14 y 13. Alfa–Zeta, muy por encima
+  // del umbral (8) sin amortiguar.
+  const group = makeGroup([
+    [row('2026-10-03', 'Alfa', 'Zeta', 18, 0), row('2026-10-03', 'Beta', 'Épsilon', 4, 3), row('2026-10-04', 'Gamma', 'Delta', 5, 5)],
+    [row('2026-10-10', 'Zeta', 'Delta', 0, 14), row('2026-10-10', 'Épsilon', 'Gamma', 3, 4), row('2026-10-11', 'Alfa', 'Beta', 15, 2)],
+    [row('2026-10-17', 'Beta', 'Zeta', 13, 1), row('2026-10-17', 'Gamma', 'Alfa', 2, 16), row('2026-10-18', 'Delta', 'Épsilon', 4, 4)],
+    ...BASE.slice(3),
+  ]);
+  const m = { ...matchOf(group, 4, 'Alfa'), away: 'Zeta' };
+  const raw = forecastMatch(group, m, { ...OPTS, params: { ...PARAMS, soften: Infinity } });
+  const soft = forecastMatch(group, m, OPTS);
+  const t = PARAMS.soften;
+  assert.equal(t, 8);
+  assert.ok(raw.xgHome > t + 2, String(raw.xgHome));
+  close(soft.xgHome, t * (1 + Math.log(raw.xgHome / t)), 'el del local');
+  assert.ok(soft.xgHome < raw.xgHome && soft.xgHome > t);
+  close(soft.xgAway, raw.xgAway, 'el visitante, por debajo, igual');
+  assert.ok(soft.score[0] <= raw.score[0] && soft.pick === raw.pick);
+  // Por debajo del umbral, nada cambia.
+  const mid = matchOf(group, 4, 'Beta');
+  assert.deepEqual(numbers(forecastMatch(group, mid, OPTS)), numbers(forecastMatch(group, mid, { ...OPTS, params: { ...PARAMS, soften: Infinity } })));
 });

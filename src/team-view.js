@@ -77,8 +77,8 @@ const staleNotice = stale => (stale
 
 // ── Próximo partido (A y B) y último partido (C) ────────────────────────
 
-// forecast: el pronóstico del partido (forecastMatch, solo en prebenjamín de la temporada en curso;
-// 17/10/2026), o null: su línea discreta (forecastLine de ui.js), bajo los dos equipos.
+// forecast: el pronóstico del partido (forecastMatch, solo en prebenjamín de la temporada en curso y si
+// es de la próxima jornada; 17/10/2026), o null: su línea discreta (forecastLine de ui.js), bajo los dos.
 function nextBlock(m, group, today, shields, campos = null, forecast = null) {
   const round = roundOf(group, m);
   const when = cells([

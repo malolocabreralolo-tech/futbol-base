@@ -3,8 +3,9 @@
 // partido de Mi equipo; solo en prebenjamín de la temporada del portal. render(ctx) es pura: se prueba
 // sobre el HTML, con las fixtures congeladas (la temporada del portal es 2025-26) y `today` inyectado,
 // como las demás pantallas. El modelo (src/pronostico.js) tiene sus pruebas en test_pronostico.mjs; aquí,
-// lo que se pinta y dónde no se pinta nada: benjamín, alevín, lo jugado, lo de un retirado y las
-// jornadas con menos de dos jugadas.
+// lo que se pinta y dónde no se pinta nada: benjamín, alevín, lo jugado, lo de un retirado, las
+// jornadas con menos de dos jugadas, un equipo que aún no ha jugado y lo que va más allá de la próxima
+// jornada (revisión del 17/10/2026).
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';
@@ -16,7 +17,7 @@ import { screen as home } from '../../src/screen-home.js';
 import { findRound } from '../../src/model.js';
 import { alevinData } from '../../src/state.js';
 import { forecastLine, forecastNote, forecastOptions, matchRow, oddsBar, percent } from '../../src/ui.js';
-import { forecastMatch, forecastRound, outcome, topScores } from '../../src/pronostico.js';
+import { forecastMatch, forecastRound, horizonOf, outcome, topScores } from '../../src/pronostico.js';
 
 const s = (h) => String(h);
 // Texto visible y oído: sin etiquetas, con las entidades básicas resueltas y los espacios juntos (también
@@ -48,7 +49,7 @@ function expected(params, opts = at()) {
 // ── Componentes (ui.js) ─────────────────────────────────────────────────
 
 const PENDING = { home: 'Moya', away: 'UD Atalaya', hs: null, as: null, dateISO: '2026-10-23', time: '17:30', roundKey: 'Jornada 3' };
-const GUESS = { home: 'Moya', away: 'UD Atalaya', pHome: 0.83, pDraw: 0.07, pAway: 0.1, pick: 'home', score: [6, 2], rounds: 2 };
+const GUESS = { home: 'Moya', away: 'UD Atalaya', pHome: 0.83, pDraw: 0.07, pAway: 0.1, pick: 'home', score: [6, 2], rounds: 2, matches: 9 };
 
 test('percent: entero con espacio de no separación; nunca 0 % ni 100 %', () => {
   assert.equal(percent(0.72), '72 %');
@@ -79,11 +80,12 @@ test('matchRow: el pronóstico va debajo, nunca en la casilla del marcador; juga
   assert.doesNotMatch(s(matchRow(played, { today: '2026-10-25', forecast: GUESS })), /forecast|Pronóstico/);
 });
 
-test('forecastNote: de dónde sale, una vez; sin pronósticos, nada', () => {
+test('forecastNote: de dónde sale, una vez y en partidos (no en jornadas, que pueden ir a medias); sin pronósticos, nada', () => {
   assert.equal(s(forecastNote([null, null])), '');
-  assert.equal(text(forecastNote([null, GUESS, GUESS])), 'Pronóstico: estimación según las 2 jornadas jugadas en el grupo; no es un resultado.');
-  assert.equal(text(forecastNote([GUESS, { ...GUESS, rounds: 3 }])), 'Pronóstico: estimación según las jornadas jugadas en el grupo; no es un resultado.');
-  assert.equal(text(forecastNote([GUESS], { each: true })), 'Pronóstico: estimación según las 2 jornadas jugadas en cada grupo; no es un resultado.');
+  assert.equal(text(forecastNote([null, GUESS, GUESS])), 'Pronóstico: estimación según los 9 partidos jugados en el grupo; no es un resultado.');
+  assert.equal(text(forecastNote([GUESS, { ...GUESS, matches: 11 }])), 'Pronóstico: estimación según los partidos jugados en el grupo; no es un resultado.');
+  assert.equal(text(forecastNote([GUESS], { each: true })), 'Pronóstico: estimación según los partidos jugados en cada grupo; no es un resultado.');
+  assert.doesNotMatch(text(forecastNote([GUESS])), /jornada/);
 });
 
 test('oddsBar: tres tramos sólidos en milésimas enteras que suman 1000, decorativa y sin discontinuas', () => {
@@ -96,7 +98,7 @@ test('oddsBar: tres tramos sólidos en milésimas enteras que suman 1000, decora
 
 // ── Jornada ─────────────────────────────────────────────────────────────
 
-test('Jornada de prebenjamín (PG2, jornada 3): cada partido sin jugar con su línea, el marcador en «–» y la nota de las 2 jornadas', () => {
+test('Jornada de prebenjamín (PG2, jornada 3): cada partido sin jugar con su línea, el marcador en «–» y la nota de los partidos jugados', () => {
   const out = renderJornada({ g: 'PG2', r: 'Jornada 3' });
   const list = rows(out);
   assert.equal(list.length, 6);
@@ -110,7 +112,7 @@ test('Jornada de prebenjamín (PG2, jornada 3): cada partido sin jugar con su l�
   assert.equal(f.pick, 'away');
   assert.ok(f.score[0] < f.score[1]);
   assert.ok(seen(list[0]).endsWith(`Pronóstico ${f.score[0]}–${f.score[1]} · Veteranos ${Math.round(f.pAway * 100)} %`), seen(list[0]));
-  assert.ok(notes(out).includes('Pronóstico: estimación según las 2 jornadas jugadas en el grupo; no es un resultado.'), notes(out).join(' | '));
+  assert.ok(notes(out).includes(`Pronóstico: estimación según los ${f.matches} partidos jugados en el grupo; no es un resultado.`), notes(out).join(' | '));
   // La nota, tras el aviso de la jornada y antes de la botonera.
   assert.match(out, /<p class="notice"><b>Sin partido en esta jornada:<\/b>[^]*<p class="notice"><b>Pronóstico:<\/b>[^]*data-action="share-round"/);
 });
@@ -127,6 +129,26 @@ test('Jornada: nada en lo jugado ni antes de dos jornadas jugadas', () => {
   const half = renderJornada({ g: 'PG2', r: 'Jornada 2' }, at('2025-10-18'));
   assert.ok(half.includes('match-score is-pending'));
   assert.doesNotMatch(half, /match-forecast|Pronóstico/);
+});
+
+test('solo la próxima jornada: el 20/10/2025, la 3 de PG2 sí; la 4, la 10 y la última, nada; Partido de una de ellas, sin bloque', () => {
+  const ctx = ctxOf('jornada', { g: 'PG2' });
+  const group = ctx.model.group(PORTAL_SEASON, 'PG2');
+  assert.equal(horizonOf(group, TODAY), '2025-10-29', 'seis días después del primero de la 3 (el 23)');
+  assert.equal(lines(renderJornada({ g: 'PG2', r: 'Jornada 3' })).length, 6);
+  const last = group.rounds[group.rounds.length - 1].key;
+  for (const r of ['Jornada 4', 'Jornada 10', last]) {
+    const out = renderJornada({ g: 'PG2', r });
+    assert.ok(rows(out).length > 0 && out.includes('match-score is-pending'), r);
+    assert.doesNotMatch(out, /match-forecast|Pronóstico/, r);
+    assert.ok(forecastRound(group, findRound(group, r), forecastOptions(ctx)).every((f) => f === null), r);
+  }
+  const far = findRound(group, last).matches[0];
+  const out = renderPartido({ g: 'PG2', r: last, h: far.home, a: far.away });
+  assert.match(out, /pt-score is-pending/);
+  assert.equal(blockOf(out, 'Pronóstico'), null);
+  // «Todos los grupos» de la jornada 4: tampoco.
+  assert.doesNotMatch(renderJornada({ c: 'prebenjamin', f: 'grancanaria', r: '4' }), /match-forecast|Pronóstico/);
 });
 
 test('Jornada de benjamín y de alevín: ningún pronóstico, aunque lleven dos jornadas jugadas', () => {
@@ -154,7 +176,7 @@ test('«Todos los grupos»: en prebenjamín, la línea en cada partido y una sol
   assert.equal(lines(out).length, rows(out).length);
   assert.ok(lines(out).length >= 12, String(lines(out).length));
   const forecasts = notes(out).filter((n) => n.startsWith('Pronóstico:'));
-  assert.deepEqual(forecasts, ['Pronóstico: estimación según las 2 jornadas jugadas en cada grupo; no es un resultado.']);
+  assert.deepEqual(forecasts, ['Pronóstico: estimación según los partidos jugados en cada grupo; no es un resultado.']);
   const benj = renderJornada({ c: 'benjamin', f: 'primera-fase', r: '3' });
   assert.ok(rows(benj).length > 0);
   assert.doesNotMatch(benj, /match-forecast|Pronóstico/);
@@ -197,12 +219,14 @@ test('Partido sin jugar de prebenjamín: el bloque «Pronóstico» bajo el resul
   assert.match(out, /<p class="pt-score is-pending"><span aria-hidden="true">–<\/span><span class="vh">Sin resultado<\/span><\/p>/);
   // La barra y sus tres cifras, local, empate y visitante, en ese orden.
   assert.match(block, /<svg class="odds-bar"[^>]*aria-hidden="true"/);
-  const odds = [...block.matchAll(/<div class="odds-item is-(home|draw|away)"><dt>(.*?)<\/dt><dd>(.*?)<\/dd><\/div>/g)].map((m) => [m[1], text(m[2]), m[3]]);
+  const odds = [...block.matchAll(/<div class="odds-item is-(home|draw|away)"><dt( title="[^"]*")?>(.*?)<\/dt><dd>(.*?)<\/dd><\/div>/g)].map((m) => [m[1], m[2] || '', text(m[3]), m[4]]);
   assert.deepEqual(odds, [
-    ['home', 'Gana Las Mesas Hu.', percent(f.pHome)], ['draw', 'Empate', percent(f.pDraw)], ['away', 'Gana Veteranos', percent(f.pAway)],
+    ['home', ' title="Las Mesas Hu."', 'Gana Las Mesas Hu.', percent(f.pHome)], ['draw', '', 'Empate', percent(f.pDraw)],
+    ['away', ' title="Veteranos"', 'Gana Veteranos', percent(f.pAway)],
   ]);
   // El más probable (el del favorito) y los dos que le siguen sin cambiar de ganador.
-  const cells = [...block.matchAll(/<dt class="cell-label">(.*?)<\/dt><dd class="cell-value">(.*?)<\/dd>/g)].map((m) => [m[1], m[2]]);
+  const cells = [...block.matchAll(/<div class="cell is-muted"><dt class="cell-label">(.*?)<\/dt><dd class="cell-value">(.*?)<\/dd>/g)].map((m) => [m[1], m[2]]);
+  assert.equal(cells.length, 2, 'las dos casillas, apagadas: nunca con la letra de un dato real');
   assert.deepEqual(cells[0], ['Resultado más probable', `${f.score[0]}–${f.score[1]}`]);
   assert.equal(cells[1][0], 'Goles esperados');
   assert.match(cells[1][1], /^\d+,\d – \d+,\d$/);
@@ -213,18 +237,22 @@ test('Partido sin jugar de prebenjamín: el bloque «Pronóstico» bajo el resul
   for (const x of others) assert.ok(x.score[0] < x.score[1], 'todos con el mismo ganador');
   // En qué se basa.
   assert.equal(text(block.match(/<p class="notice">.*?<\/p>/)[0]),
-    `Con las 2 jornadas jugadas en el grupo esta temporada (${f.matches} partidos). Es una estimación, no un resultado.`);
+    `Con los ${f.matches} partidos jugados en el grupo esta temporada. Es una estimación, no un resultado.`);
 });
 
-test('Partido: un equipo que aún no ha jugado cuenta como un equipo medio, y la nota lo dice', () => {
+test('un equipo que aún no ha jugado: ni línea en la Jornada ni bloque en Partido (solo miraría al rival)', () => {
   // Los dos partidos de Las Mesas, sin el marcador (la fuente aún no lo ha publicado).
   const raw = currentAt(TODAY);
   for (const key of ['Jornada 1', 'Jornada 2']) {
     for (const row of raw.history.PG2[key]) if (row[1] === 'Las Mesas Hu.' || row[2] === 'Las Mesas Hu.') { row[3] = null; row[4] = null; }
   }
-  const block = blockOf(renderPartido(MESAS_J3, at(TODAY, raw)), 'Pronóstico');
-  assert.ok(block);
-  assert.match(text(block), /Las Mesas Hu\. aún no ha jugado: cuenta como un equipo medio\. Es una estimación, no un resultado\.$/);
+  const opts = at(TODAY, raw);
+  assert.equal(expected(MESAS_J3, opts), null);
+  assert.equal(blockOf(renderPartido(MESAS_J3, opts), 'Pronóstico'), null);
+  const out = renderJornada({ g: 'PG2', r: 'Jornada 3' }, opts);
+  const mesas = rows(out).find((row) => row.includes('Las Mesas Hu.'));
+  assert.ok(mesas && !mesas.includes('match-forecast'), 'su fila, sin línea');
+  assert.equal(lines(out).length, 5, 'los demás, con la suya');
 });
 
 test('Partido: nada si se ha jugado, en benjamín ni en alevín', () => {
@@ -289,8 +317,12 @@ test('estilos: la línea, pequeña, sin negrita y en --mute (también en la fila
   assert.match(body('.match-score'), /font-size:\s*15px/, 'el marcador real, más grande');
   assert.match(body('.fixture-forecast'), /color:\s*var\(--mute\)/);
   assert.match(body('.odds-home'), /fill:\s*var\(--ink\)/);
-  assert.match(body('.odds-draw'), /fill:\s*var\(--draw\)/);
+  // El empate, en --mute (de 3:1 para arriba sobre el papel en los dos temas; --draw, a 1,24:1, no se veía).
+  assert.match(body('.odds-draw'), /fill:\s*var\(--mute\)/);
+  assert.match(body('.is-draw .odds-key'), /background:\s*var\(--mute\)/);
   assert.match(body('.odds-away'), /fill:\s*var\(--text\)/);
+  // El nombre de la leyenda, en una línea y con «…»: las tres cifras, a la misma altura.
+  for (const rule of [/white-space:\s*nowrap/, /overflow:\s*hidden/, /text-overflow:\s*ellipsis/]) assert.match(body('.odds-item dt'), rule);
   assert.doesNotMatch(rules.filter((r) => /odds|forecast/.test(r.selector)).map((r) => r.body).join(';'), /dashed|dotted|dasharray|gradient/);
   const out = [renderJornada({ g: 'PG2', r: 'Jornada 3' }), renderPartido(MESAS_J3), s(home.render(ctxFor('home', {}, at())))].join('');
   const used = new Set(out.match(/class="[^"]+"/g).flatMap((m) => m.slice(7, -1).split(/\s+/)));

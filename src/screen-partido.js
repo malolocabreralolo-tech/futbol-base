@@ -128,26 +128,27 @@ function resultBlock(match, { today, shields, status = null, campos = null, isla
 
 // Pronóstico de un partido sin jugar de prebenjamín de la temporada en curso (17/10/2026; el modelo y
 // sus límites, en pronostico.js): la barra del 1X2 (oddsBar de ui.js) con las tres probabilidades en
-// texto, el resultado más probable (siempre del favorito) con los dos que le siguen sin cambiar de
-// ganador (topScores) y los goles esperados; debajo, en qué se basa: las jornadas y los partidos de esta
-// temporada del grupo y, si uno de los dos aún no ha jugado, que cuenta como un equipo medio. Nada si
-// forecastMatch no da pronóstico: otra categoría o temporada, un cuadro, jugado, sin fecha o con la fecha
-// pasada, un retirado, lo que la app da por retirado, anulado o suspendido, o menos de 2 jornadas.
+// texto (el nombre, recortado con «…» si no cabe; entero en el title y para el lector de pantalla), el
+// resultado más probable (siempre del favorito) con los dos que le siguen sin cambiar de ganador
+// (topScores) y los goles esperados, en casillas apagadas (is-muted: nunca con la letra de un dato real
+// como la fecha o la hora del bloque de arriba; revisión del 17/10/2026); debajo, en qué se basa: los
+// partidos de esta temporada del grupo. Nada si forecastMatch no da pronóstico: otra categoría o
+// temporada, una copa, jugado, sin fecha o con la fecha pasada, más allá de la próxima jornada, un
+// retirado, lo que la app da por retirado, anulado o suspendido, menos de 2 jornadas o un equipo que aún
+// no ha jugado.
 const FORECAST_ID = 'pronostico';
 function forecastBlock(match, group, ctx) {
   const f = forecastMatch(group, match, forecastOptions(ctx));
   if (!f) return '';
-  const side = (cls, who, p) => html`<div class="odds-item ${cls}"><dt><span class="odds-key" aria-hidden="true"></span>${who}</dt><dd>${percent(p)}</dd></div>`;
-  const odds = html`<div class="odds">${oddsBar(f.pHome, f.pDraw, f.pAway)}<dl class="odds-legend">${side('is-home', html`<span class="vh">Gana </span>${teamShort(f.home)}`, f.pHome)}${side('is-draw', 'Empate', f.pDraw)}${side('is-away', html`<span class="vh">Gana </span>${teamShort(f.away)}`, f.pAway)}</dl></div>`;
+  const side = (cls, who, p, title = null) => html`<div class="odds-item ${cls}"><dt${title ? html` title="${title}"` : ''}><span class="odds-key" aria-hidden="true"></span>${who}</dt><dd>${percent(p)}</dd></div>`;
+  const odds = html`<div class="odds">${oddsBar(f.pHome, f.pDraw, f.pAway)}<dl class="odds-legend">${side('is-home', html`<span class="vh">Gana </span>${teamShort(f.home)}`, f.pHome, f.home)}${side('is-draw', 'Empate', f.pDraw)}${side('is-away', html`<span class="vh">Gana </span>${teamShort(f.away)}`, f.pAway, f.away)}</dl></div>`;
   const facts = cells([
-    { label: 'Resultado más probable', value: score(...f.score) },
-    { label: 'Goles esperados', value: `${decimal(f.xgHome, 1)} – ${decimal(f.xgAway, 1)}` },
+    { label: 'Resultado más probable', value: score(...f.score), muted: true },
+    { label: 'Goles esperados', value: `${decimal(f.xgHome, 1)} – ${decimal(f.xgAway, 1)}`, muted: true },
   ]);
   const others = topScores(f.xgHome, f.xgAway, { n: 3, pick: f.pick }).slice(1).map((x) => score(...x.score));
   const also = others.length ? html`<p class="odds-also">También probables: ${listEs(others)}.</p>` : '';
-  const fresh = [[f.home, f.playedHome], [f.away, f.playedAway]].filter(([, n]) => n === 0).map(([team]) => team);
-  const average = fresh.length ? ` ${listEs(fresh)} aún no ${fresh.length > 1 ? 'han' : 'ha'} jugado: cuenta${fresh.length > 1 ? 'n' : ''} como ${fresh.length > 1 ? 'equipos medios' : 'un equipo medio'}.` : '';
-  const basis = `Con las ${f.rounds} jornadas jugadas en el grupo esta temporada (${f.matches} partidos).${average} Es una estimación, no un resultado.`;
+  const basis = `Con ${f.matches === 1 ? 'el partido jugado' : `los ${f.matches} partidos jugados`} en el grupo esta temporada. Es una estimación, no un resultado.`;
   return block('Pronóstico', html`<div class="box">${odds}${facts}${also}</div>${notice(null, basis)}`, { context: 'estimación', id: FORECAST_ID });
 }
 

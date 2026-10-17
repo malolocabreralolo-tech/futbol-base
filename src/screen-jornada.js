@@ -3,9 +3,10 @@
 // jornada y la botonera. Bajo la cabecera, la tira de los grupos de su competición (groupStrip), con
 // «Todos» delante, y a su derecha, «Mi grupo» u «Otras ligas». Sin `g` y con `c` y `f`, «Todos los
 // grupos»: la misma jornada en todos los de la competición, un bloque por grupo. mount() añade
-// compartir y el .ics del grupo. En prebenjamín de la temporada en curso (17/10/2026), cada partido
-// sin jugar lleva debajo su pronóstico (pronostico.js; la línea, forecastLine de ui.js) y la jornada,
-// la nota de en qué se basa; en cualquier otro grupo, forecastRound no da ninguno y no se pinta nada.
+// compartir y el .ics del grupo. En las ligas de prebenjamín de la temporada en curso (17/10/2026), cada
+// partido sin jugar de la próxima jornada lleva debajo su pronóstico (pronostico.js, con su horizonte:
+// las jornadas de después, nada; la línea, forecastLine de ui.js) y la jornada, la nota de en qué se
+// basa; en cualquier otro grupo o jornada, forecastRound no da ninguno y no se pinta nada.
 import { html } from './html.js';
 import {
   screenHead, matchRow, notice, empty, listEs, shareStatus, block, groupStrip, scrollToCurrent, forecastNote, forecastOptions,

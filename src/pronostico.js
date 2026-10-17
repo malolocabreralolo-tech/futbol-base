@@ -13,35 +13,52 @@
  * un 91 % lo suyo. Nada de temporadas anteriores, ni como entrada ni como previo de un equipo o de un
  * club (decisión del 17/10/2026): las pasadas solo sirven para PROBAR el modelo
  * (scripts/backtest_pronostico.mjs) y para fijar los parámetros globales de PARAMS (la contracción, el
- * campo y desde cuántas jornadas se muestra; y descartar las variantes que no mejoran). Con las dos
- * medias, una distribución de goles por equipo, independientes, y de ahí P(local), P(empate),
+ * campo, la amortiguación de las goleadas y desde cuándo se muestra; y descartar las variantes que no
+ * mejoran). Con las dos medias (por encima de 8 goles, amortiguadas: el modelo multiplicativo se pasa
+ * en las goleadas), una distribución de goles por equipo, independientes, y de ahí P(local), P(empate),
  * P(visitante) y el resultado más probable.
  *
- * Qué no cuenta: los partidos de un retirado (retiredTeams de model.js) y los resultados de mesa (un
- * 3-0 o un 1-0, a favor de cualquiera de los dos, sin hora: en el archivo de prebenjamín, los quince
- * 3-0 sin hora son de mesa, los de Gran Tarajal en PFV3 de 2024-25, y no hay ningún 1-0 sin ella), ni
- * lo que la app de futbolaspalmas da por retirado, anulado o suspendido (status, el model.matchStatus
- * de la temporada del portal). Tampoco los partidos sin fecha: sin ella no se sabe si son anteriores. */
+ * Qué se muestra (con `today`, como en la web): solo la próxima jornada de cada grupo (horizonOf), y
+ * solo con dos jornadas jugadas en el grupo y algún partido de cada uno de los dos equipos.
+ *
+ * Qué no cuenta: los partidos de un retirado (retiredTeams de model.js); los resultados que pueden ser
+ * de mesa, todo 3-0 o 1-0 a favor de cualquiera de los dos, con hora o sin ella (isDeskResult); los de un
+ * campo «EXCLUIDO» o «SUSPENDIDO»; las copias de la importación del archivo (copiedMatches); lo que la
+ * app de futbolaspalmas da por retirado, anulado o suspendido (status, el model.matchStatus de la
+ * temporada del portal); y los partidos sin fecha, que no se sabe si son anteriores. */
 import { matchState, retiredTeams } from './model.js';
 
 /* Los parámetros globales, fijados con el backtest de las temporadas pasadas de prebenjamín
- * (scripts/backtest_pronostico.mjs, 17/10/2026: 13 temporadas, 53 grupos, 5.127 partidos, cada uno con
- * solo las jornadas anteriores de su temporada; la tabla, en su salida):
- * - shrink: k, los partidos ficticios en la media del grupo de cada equipo (ataque y defensa). El mejor
- *   log-loss del 1X2 es el de 1,5 (0,5406; 0,5408 con 1 y 0,5426 con 2);
+ * (scripts/backtest_pronostico.mjs; revisado el 17/10/2026 sin las copias de la importación ni lo que
+ * puede ser de mesa: 13 temporadas, 53 grupos, 5.078 partidos, cada uno con solo las jornadas anteriores
+ * de su temporada; la tabla, en su salida):
+ * - shrink: k, los partidos ficticios en la media del grupo de cada equipo (ataque y defensa): 1,5. Con
+ *   los datos limpios, el mejor log-loss del 1X2 del archivo es el de 1 (0,5338 frente a 0,5343), a menos
+ *   de la milésima con la que el backtest da por empatadas dos opciones; y con dos jornadas jugadas, las
+ *   primeras que se ven, 1,5 es claramente mejor (0,710 frente a 0,725): se queda 1,5 (con 2, 0,5368);
  * - home: H, el factor de campo sobre los goles del local (los del visitante no cambian): 1,08 (sin él,
- *   0,5430; en el archivo el local marca 4,0 y el visitante 3,8);
+ *   0,5367; en el archivo el local marca 4,0 y el visitante 3,8);
  * - size: r de la binomial negativa de los goles; Infinity es Poisson. La sobredispersión no mejora
- *   (su mejor r, 40, casi Poisson: 0,5403), ni el tope de goles al calcular A y D (cap; con 15, 0,5407):
+ *   (su mejor r, 40, casi Poisson: 0,5339), ni el tope de goles al calcular A y D (cap; con 15, 0,5338):
  *   a igualdad, la sencilla;
  * - cap: ese tope de goles por equipo y partido (Infinity: sin tope);
+ * - soften: por encima de este umbral, los goles esperados se amortiguan, T·(1 + ln(x/T)) (revisión del
+ *   17/10/2026): sin ella, con 15-20 esperados se marcaban 13,7 (16,8 de media esperada) y el «resultado
+ *   más probable» salía inflado (Guanarteme–Acodetti de 2016-17, 0-24, acabó 2-12; ahora, 0-17). El 1X2 no cambia (0,5343 con cualquiera: las
+ *   goleadas ya pasan del 99 %); 8 es el de menor error de los goles esperados (2,195 frente a 2,212 sin
+ *   ella) y con él cuadran por tramos (de 10 a 12, 10,8 frente a 10,7 reales);
  * - minRounds: jornadas jugadas del grupo desde las que se muestra: 2. Con una, apenas mejora a la
- *   tabla (log-loss 0,827 frente a 0,841; el mismo 66,5 % de acierto en el 1X2) y se pasa de seguro con
- *   sus favoritos claros (dice 84-94 % y acierta el 69-79 %). Con dos acierta lo mismo que la tabla
- *   (67,5 %), pero sus probabilidades son mucho mejores (log-loss 0,712 frente a 0,823; Brier 0,408
- *   frente a 0,493) y lo que dice es lo que pasa (dice 85 % y acierta el 84 %); desde tres, además,
- *   acierta más (75,7 % frente a 71,3 %). */
-export const PARAMS = Object.freeze({ shrink: 1.5, home: 1.08, size: Infinity, cap: Infinity, minRounds: 2 });
+ *   tabla (log-loss 0,819 frente a 0,835; acierta como ella en el 1X2, 66,7 % frente a 67,1 %) y se pasa
+ *   de seguro con sus favoritos claros (dice 85-93 % y acierta el 74-82 %). Con dos acierta como la
+ *   tabla (69,3 % frente a 68,0 %), pero sus probabilidades son mucho mejores (log-loss 0,709 frente a
+ *   0,817; Brier 0,402 frente a 0,487) y lo que dice es lo que pasa (dice 86 % y acierta el 84 %); desde
+ *   tres, además, acierta más (74,9 % frente a 70,9 %);
+ * - minPlayed: partidos que tiene que llevar cada uno de los dos equipos: 1 (revisión del 17/10/2026). Sin
+ *   ninguno, un equipo es la media del grupo y el pronóstico solo mira al rival (Cardones, que descansó en
+ *   la jornada 1 y aún no ha jugado la 2); el archivo casi no tiene casos (7) con los que probarlo. Con uno
+ *   (112 partidos), sus probabilidades siguen siendo mejores que las de la tabla (log-loss 0,735 frente a
+ *   0,772), aunque acierta algo menos el 1X2 (66,1 % frente a 69,6 %). */
+export const PARAMS = Object.freeze({ shrink: 1.5, home: 1.08, size: Infinity, cap: Infinity, soften: 8, minRounds: 2, minPlayed: 1 });
 
 // Los estados de la app de futbolaspalmas (model.matchStatus) con los que un marcador no es deportivo
 // y un partido sin jugar no se pronostica.
@@ -51,21 +68,68 @@ const TOLERANCE = 1e-12;
 
 const scored = m => m.hs != null && m.as != null;
 
-/* Resultado de mesa: 3-0 o 1-0 (en cualquier sentido) sin hora. En el archivo de prebenjamín, los quince
- * 3-0 sin hora son administrativos (los de Gran Tarajal) y no hay ningún 1-0 sin ella; un 3-0 con hora
- * es de verdad, y cuenta. */
+/* Resultado que puede ser de mesa (revisión del 17/10/2026): un 3-0 o un 1-0, en cualquier sentido, con
+ * hora o sin ella, o el de un campo «EXCLUIDO» o «SUSPENDIDO» (el archivo de 2014-15 apunta así los de
+ * Cerruda B, que jugó unas jornadas, con dos incomparecencias por 3-0, y luego perdió el resto 15-0 y
+ * 0-15). El bot guarda los de mesa de 2026-27 con la hora del partido (los 0-3 de AL20, AL32 y AL9 de
+ * alevín) y una incomparecencia suelta de un equipo que sigue en la tabla no la marca nada (retiredTeams
+ * pide cinco derrotas de mesa; ESTADOS, nada): con dos jornadas, un 3-0 así movería todo el grupo (en PG1,
+ * un 99 % pasaría a 94 %). Ante la duda, fuera del entrenamiento, también los de verdad: en el archivo,
+ * 124 3-0 y 38 1-0 con hora (sin retirados ni campos «EXCLUIDO») entre 5.506 partidos con marcador, y
+ * sacarlos no empeora el backtest (el log-loss mejora casi una milésima). Como objetivos del backtest sí
+ * cuentan los que tienen hora (scripts/backtest_pronostico.mjs: el examen no pierde los partidos cerrados
+ * de verdad). En el archivo, los 3-0 y 1-0 sin hora (52 1-0 y 35 3-0 de retirados, como Rosiana en
+ * 2016-17, Las Majoreras en 2022-23 y Atlético Fomento en 2025-26, y los quince 3-0 de Gran Tarajal en
+ * PFV3 de 2024-25) son todos de mesa. */
+const OFF_VENUE = /^\W*(excluido|suspendido)\W*$/i;
+export const offVenue = m => OFF_VENUE.test((m && m.venue) || '');
 export function isDeskResult(m) {
-  if (!scored(m) || m.time) return false;
+  if (!scored(m)) return false;
+  if (offVenue(m)) return true;
   const hi = Math.max(m.hs, m.as), lo = Math.min(m.hs, m.as);
   return lo === 0 && (hi === 3 || hi === 1);
 }
 
-/* Si el grupo admite pronóstico: prebenjamín, una liga o una liguilla (en un cuadro no hay empate), y
- * de la temporada del portal; `prueba` lo abre a otra temporada, y solo lo usa el backtest. */
+/* Las copias de la importación del archivo (revisión del 17/10/2026): en una liga cada equipo juega una
+ * vez por jornada, y en PGC1 de 2023-24 y PGC4 de 2024-25 hay 28 partidos dos veces en la misma jornada,
+ * con el mismo marcador y el mismo rival en el mismo lado: una copia es del filial (R. Amagro At.,
+ * Arguineguín B) y la otra se le apunta al primer equipo («R. Amagro At. 0-18 Arucas C» y «Roque Amagro
+ * 0-18 Arucas C» en la jornada 4, con el Roque Amagro de verdad jugando otro). La copia es la del equipo
+ * que juega dos veces en esa jornada; si no se sabe (los dos juegan solo ese), las dos. Un partido que
+ * sale dos veces igual cuenta una. Solo en ligas: en una liguilla de copa de un día, un equipo juega
+ * varios partidos en la misma «jornada». Devuelve el Set de los partidos que no cuentan; 2026-27 no tiene
+ * ninguno. */
+export function copiedMatches(group) {
+  const out = new Set();
+  if (!group || group.kind !== 'league') return out;
+  for (const round of group.rounds || []) {
+    const times = new Map();
+    for (const m of round.matches) for (const t of [m.home, m.away]) times.set(t, (times.get(t) || 0) + 1);
+    const ms = round.matches.filter(scored);
+    for (let i = 0; i < ms.length; i += 1) {
+      for (let j = i + 1; j < ms.length; j += 1) {
+        const a = ms[i], b = ms[j];
+        if (a.hs !== b.hs || a.as !== b.as || out.has(b)) continue;
+        if (a.home === b.home && a.away === b.away) { out.add(b); continue; }
+        const other = a.home === b.home ? [a.away, b.away] : a.away === b.away ? [a.home, b.home] : null;
+        if (!other) continue;
+        const twiceA = times.get(other[0]) > 1, twiceB = times.get(other[1]) > 1;
+        if (twiceA !== twiceB) out.add(twiceA ? a : b);
+        else { out.add(a); out.add(b); }
+      }
+    }
+  }
+  return out;
+}
+
+/* Si el grupo admite pronóstico: una liga de prebenjamín de la temporada del portal. `prueba`, que solo
+ * usa el backtest, lo abre a las temporadas pasadas y a las liguillas de copa, que le dan más partidos
+ * con los que probar el modelo (en un cuadro no hay empate); en la web, las copas, nada (revisión del
+ * 17/10/2026: el usuario pidió la próxima jornada de los grupos; «Todos los grupos» tampoco las pinta). */
 export function forecastApplies(group, { portalSeason = null, prueba = false } = {}) {
   if (!group || group.cat !== 'prebenjamin') return false;
-  if (group.kind !== 'league' && group.kind !== 'cup-league') return false;
-  return prueba === true || (typeof portalSeason === 'string' && group.season === portalSeason);
+  if (prueba === true) return group.kind === 'league' || group.kind === 'cup-league';
+  return group.kind === 'league' && typeof portalSeason === 'string' && group.season === portalSeason;
 }
 
 const offByStatus = (status, m) => {
@@ -74,29 +138,68 @@ const offByStatus = (status, m) => {
   return Boolean(s && OFF_STATES.has(s.state));
 };
 
+// Lo que no cambia de un grupo (el Group de model.js no cambia una vez construido): sus retirados, sus
+// copias y, por día, su horizonte (horizonOf), calculados una vez.
+const FACTS = new WeakMap();
+function factsOf(group) {
+  if (!FACTS.has(group)) FACTS.set(group, { retired: retiredTeams(group), copies: copiedMatches(group), horizon: new Map() });
+  return FACTS.get(group);
+}
+
+const addDays = (iso, n) => new Date(Date.parse(`${iso}T12:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
+
+/* Hasta qué día se pronostica con `today` (revisión del 17/10/2026: el usuario pidió «lo que puede pasar
+ * en la siguiente jornada», no todo el calendario): la próxima jornada es la del primer partido pendiente,
+ * por fecha, de las que van detrás de la última con algún resultado (sin retirados ni mesa), y se
+ * pronostica lo pendiente hasta seis días después de ese partido. Es decir, la próxima jornada, lo que
+ * falta de la que está en curso y lo que caiga entre medias (un aplazado, una jornada entre semana); nada
+ * de las de después, que el backtest no mide (cada partido, con todo lo jugado hasta la víspera, no a
+ * meses vista con dos jornadas). Por fecha y no por número, una jornada adelantada cuenta como la próxima,
+ * y una sin resultados con la fecha ya pasada no atasca nada. Sin nada pendiente detrás de la última con
+ * resultados, null: sin límite (los aplazados que queden). */
+export function horizonOf(group, today) {
+  const facts = factsOf(group);
+  if (facts.horizon.has(today)) return facts.horizon.get(today);
+  const live = m => !facts.retired.has(m.home) && !facts.retired.has(m.away);
+  const rounds = group.rounds || [];
+  let last = -1;
+  rounds.forEach((round, i) => { if (round.matches.some(m => scored(m) && live(m) && !isDeskResult(m))) last = i; });
+  let first = null;
+  for (const round of rounds.slice(last + 1)) {
+    for (const m of round.matches) {
+      if (live(m) && matchState(m, today) === 'pendiente' && (first === null || m.dateISO < first)) first = m.dateISO;
+    }
+  }
+  const until = first === null ? null : addDays(first, 6);
+  facts.horizon.set(today, until);
+  return until;
+}
+
 /* Los partidos que cuentan para el pronóstico de `match`: con marcador y fecha, anteriores a su día
- * (todos si no tiene fecha), de otra jornada (los de la suya, aunque se jueguen antes, no: el
- * pronóstico de una jornada es el mismo para todos sus partidos) y sin retirados, mesa ni estados de
- * fuera. Un aplazado de la jornada 2 que se juega tras la 5 se pronostica con la 1, la 3, la 4 y la 5.
- * La exporta el backtest, para su línea base de la clasificación con los mismos partidos. */
+ * (todos si no tiene fecha; los del mismo día de otra jornada, no), de otra jornada (los de la suya,
+ * aunque se jueguen antes, no: el pronóstico de una jornada es el mismo para todos sus partidos) y sin
+ * retirados, mesa, copias ni estados de fuera. Un aplazado de la jornada 2 que se juega tras la 5 se
+ * pronostica con la 1, la 3, la 4 y la 5. La exporta el backtest, para su línea base de la
+ * clasificación con los mismos partidos. Para una jornada fija, el conjunto solo crece con la fecha de
+ * `match`: su tamaño lo identifica (la clave de la caché de los ajustes). */
 export function trainingFor(group, match, { status = null } = {}) {
-  const retired = retiredTeams(group);
+  const { retired, copies } = factsOf(group);
   const out = [];
   for (const round of group.rounds || []) {
     if (round.key === match.roundKey) continue;
     for (const m of round.matches) {
       if (!scored(m) || !m.dateISO) continue;
       if (match.dateISO && !(m.dateISO < match.dateISO)) continue;
-      if (retired.has(m.home) || retired.has(m.away) || isDeskResult(m) || offByStatus(status, m)) continue;
+      if (retired.has(m.home) || retired.has(m.away) || copies.has(m) || isDeskResult(m) || offByStatus(status, m)) continue;
       out.push(m);
     }
   }
   return out;
 }
 
-// Los ajustes ya hechos, por grupo (el Group de model.js no cambia una vez construido), por `status` y
-// por jornada, día y parámetros del ajuste: los partidos de un mismo día de una jornada comparten
-// entrenamiento, y la jornada se pinta de una vez. Solo es una caché: el resultado es el mismo.
+// Los ajustes ya hechos, por grupo, por `status` y por jornada, tamaño del entrenamiento y parámetros del
+// ajuste: los partidos de una jornada con el mismo entrenamiento (los de días distintos sin nada jugado
+// entre medias, las jornadas futuras) comparten ajuste. Solo es una caché: el resultado es el mismo.
 const FITS = new WeakMap();
 
 function cachedFit(group, match, status, p) {
@@ -105,8 +208,9 @@ function cachedFit(group, match, status, p) {
   const st = typeof status === 'function' ? status : null;
   if (!byStatus.has(st)) byStatus.set(st, new Map());
   const memo = byStatus.get(st);
-  const key = [match.roundKey, match.dateISO || '', p.shrink, p.home, p.cap].join('\u0001');
-  if (!memo.has(key)) memo.set(key, fitRatings(trainingFor(group, match, { status: st }), p));
+  const training = trainingFor(group, match, { status: st });
+  const key = [match.roundKey, training.length, p.shrink, p.home, p.cap].join('\u0001');
+  if (!memo.has(key)) memo.set(key, fitRatings(training, p));
   return memo.get(key);
 }
 
@@ -247,31 +351,39 @@ export function topScores(meanHome, meanAway, { n = 3, pick = null, params = PAR
   return found.sort((a, b) => b.p - a.p).slice(0, n).map(x => ({ score: x.score, p: x.p / sum }));
 }
 
-/* Pronóstico de un partido sin jugar de un grupo de prebenjamín de la temporada del portal:
+/* Pronóstico de un partido sin jugar de una liga de prebenjamín de la temporada del portal:
  *   { home, away, pHome, pDraw, pAway, pick, score: [l, v], pScore, xgHome, xgAway,
  *     rounds, matches, playedHome, playedAway }
- * con xg* los goles esperados de cada uno, `rounds` las jornadas jugadas con las que se calcula (la nota
- * «según N jornadas»), `matches` sus partidos y played* los de cada equipo entre ellos. null si el grupo
- * no lo admite (forecastApplies), si el partido ya tiene marcador, si con `today` no está pendiente
- * (matchState: uno sin fecha o con la fecha pasada y sin resultado no se pronostica), si es de un
- * retirado o la app lo da por retirado, anulado o suspendido, o si aún no hay PARAMS.minRounds jornadas
- * jugadas. Opciones: portalSeason (la del contexto), today (AAAA-MM-DD; la web lo pasa siempre),
- * status (model.matchStatus) y, solo para el backtest, prueba (otra temporada) y params (otros
- * parámetros). */
+ * con xg* los goles esperados de cada uno (amortiguados por encima de soften), `rounds` las jornadas
+ * jugadas con las que se calcula, `matches` sus partidos (la nota «según los N partidos jugados») y
+ * played* los de cada equipo entre ellos. null si el grupo no lo admite (forecastApplies), si el partido
+ * ya tiene marcador, si con `today` no está pendiente (matchState: uno sin fecha o con la fecha pasada y
+ * sin resultado no se pronostica) o va más allá de la próxima jornada (horizonOf), si es de un retirado o
+ * la app lo da por retirado, anulado o suspendido, si aún no hay PARAMS.minRounds jornadas jugadas o si
+ * uno de los dos no ha jugado aún PARAMS.minPlayed partidos. Opciones: portalSeason (la del contexto),
+ * today (AAAA-MM-DD; la web lo pasa siempre; sin él, el backtest, sin horizonte), status
+ * (model.matchStatus) y, solo para el backtest, prueba (otra temporada o una liguilla de copa) y params
+ * (otros parámetros). */
 export function forecastMatch(group, match, { portalSeason = null, today = null, status = null, prueba = false, params = PARAMS } = {}) {
   const p = { ...PARAMS, ...params };
   if (!match || !forecastApplies(group, { portalSeason, prueba })) return null;
   if (scored(match) || offByStatus(status, match)) return null;
-  if (today !== null && matchState(match, today) !== 'pendiente') return null;
-  const retired = retiredTeams(group);
+  if (today !== null) {
+    if (matchState(match, today) !== 'pendiente') return null;
+    const until = horizonOf(group, today);
+    if (until !== null && match.dateISO > until) return null;
+  }
+  const { retired } = factsOf(group);
   if (retired.has(match.home) || retired.has(match.away)) return null;
   const fit = cachedFit(group, match, status, p);
   if (!fit || fit.rounds < p.minRounds) return null;
   const avg = { attack: 1, defense: 1, played: 0 };
   const home = fit.teams.get(match.home) || avg;
   const away = fit.teams.get(match.away) || avg;
-  const xgHome = fit.base * fit.home * home.attack * away.defense;
-  const xgAway = fit.base * away.attack * home.defense;
+  if (Math.min(home.played, away.played) < p.minPlayed) return null;
+  const soft = x => (x > p.soften ? p.soften * (1 + Math.log(x / p.soften)) : x);
+  const xgHome = soft(fit.base * fit.home * home.attack * away.defense);
+  const xgAway = soft(fit.base * away.attack * home.defense);
   return {
     home: match.home,
     away: match.away,

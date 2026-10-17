@@ -907,24 +907,27 @@ abbr[title] { text-decoration: none; }
 .pt-tanda { white-space: nowrap; }
 
 /* Pronóstico (17/10/2026): la barra fina del 1X2 (oddsBar de ui.js), tres tramos sólidos (local en
- * tinta, empate en --draw y visitante en --text) con una raya del papel entre ellos, sin discontinuas;
+ * tinta, empate en --mute y visitante en --text) con una raya del papel entre ellos, sin discontinuas;
  * debajo, las tres cifras con la muestra de su color, el local a la izquierda y el visitante a la
- * derecha; luego, el resultado más probable y los goles esperados (casillas) y otros marcadores. */
+ * derecha, y el nombre en una línea, recortado con «…» como en la fila del partido (con uno largo, las
+ * tres cifras quedaban a alturas distintas); luego, el resultado más probable y los goles esperados
+ * (casillas apagadas) y otros marcadores. El empate iba en --draw, que sobre el papel se confundía con
+ * las rayas (1,24:1); --mute pasa de 3:1 en los dos temas (revisión del 17/10/2026). */
 .odds { padding: 10px 10px 8px; }
 .odds-bar { display: block; width: 100%; height: 8px; }
 .odds-bar rect { stroke: var(--paper); stroke-width: 2px; vector-effect: non-scaling-stroke; }
 .odds-home { fill: var(--ink); }
-.odds-draw { fill: var(--draw); }
+.odds-draw { fill: var(--mute); }
 .odds-away { fill: var(--text); }
 .odds-legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 8px; margin-top: 8px; }
 .odds-item { min-width: 0; }
 .odds-item.is-draw { text-align: center; }
 .odds-item.is-away { text-align: right; }
-.odds-item dt { font-size: 12.5px; color: var(--mute); overflow-wrap: anywhere; }
+.odds-item dt { font-size: 12.5px; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .odds-item dd { font-size: 15px; font-weight: 800; }
 .odds-key { display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: 0; }
 .is-home .odds-key { background: var(--ink); }
-.is-draw .odds-key { background: var(--draw); }
+.is-draw .odds-key { background: var(--mute); }
 .is-away .odds-key { background: var(--text); }
 .odds-also { padding: 8px 10px; font-size: 12.5px; color: var(--mute); }
 

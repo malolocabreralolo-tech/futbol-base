@@ -161,17 +161,19 @@ export function forecastLine(f, cls = 'match-forecast') {
 }
 
 // La nota de la Jornada (y de «Todos los grupos», `each`) si algún partido lleva pronóstico: de dónde
-// sale, en una frase. forecasts: los de forecastRound, con sus null. Las jornadas de la nota son las del
-// pronóstico (`rounds`: las jugadas antes del partido, sin la suya); si no son las mismas en todos, sin
-// número.
+// sale, en una frase. forecasts: los de forecastRound, con sus null. Cuenta los partidos jugados con los
+// que se calcula (`matches`), no las jornadas: con la jornada 2 a medias, «las 2 jornadas jugadas» diría
+// que la base ya está completa (revisión del 17/10/2026); si no son los mismos en todos (un aplazado, o
+// cada grupo los suyos), sin número.
 export function forecastNote(forecasts, { each = false } = {}) {
-  const rounds = [...new Set(forecasts.filter(Boolean).map(f => f.rounds))];
-  if (!rounds.length) return '';
-  const what = rounds.length > 1 ? 'las jornadas jugadas' : rounds[0] === 1 ? 'la jornada jugada' : `las ${rounds[0]} jornadas jugadas`;
+  const counts = [...new Set(forecasts.filter(Boolean).map(f => f.matches))];
+  if (!counts.length) return '';
+  const what = each || counts.length > 1 ? 'los partidos jugados' : counts[0] === 1 ? 'el partido jugado' : `los ${counts[0]} partidos jugados`;
   return notice('Pronóstico:', `estimación según ${what} ${each ? 'en cada grupo' : 'en el grupo'}; no es un resultado.`);
 }
 
-// La barra del 1X2 de la pantalla Partido: tres tramos sólidos, el local en tinta, el empate en --draw
+// La barra del 1X2 de la pantalla Partido: tres tramos sólidos, el local en tinta, el empate en --mute
+// (el --draw de las fichas, a 1,24:1 sobre el papel, se perdía entre las rayas; revisión del 17/10/2026)
 // y el visitante en --text, cada uno del ancho de su probabilidad, con una raya del color del papel
 // entre ellos; sin discontinuas ni degradados (preferencia del usuario). Es decorativa (aria-hidden): las
 // cifras van debajo, en texto. Como pointsChart, un SVG que se estira al ancho de su caja; los anchos,

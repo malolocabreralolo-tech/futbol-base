@@ -65,8 +65,10 @@ function untimedJ18() {
 // del calendario completo (el usuario pidió el de «todos los siguientes enfrentamientos»); sin las líneas
 // del calendario, byte a byte los de antes (BEFORE_CALENDAR, que la prueba comprueba). Los demás no tienen
 // ningún partido que pronosticar y siguen idénticos.
+// 2026-10-18 (revisión): esos tres, con una nota bajo la lista del calendario (de dónde sale el pronóstico y
+// que se recalcula con cada resultado nuevo); sin las líneas ni la nota, byte a byte los de antes.
 const HOME = {
-  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, 'edb11a15b6fc60abca4388f220333532e04d9c93'],
+  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, 'c769f9bfc3df640816155239d219f909890e6bd4'],
   'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, '6d60fb613c156c2f417aacf20283b56c12638296'],
   B: [{ raw: nextSeasonRaw({ benjamin: ['A1', 'B2', 'FF15'], prebenjamin: ['PG2', 'PG3'] }), myTeam: { ...LAS_MESAS, season: '2026-2027' }, today: '2026-10-01', portalSeason: '2026-2027', goles: false }, '8f38ff09c03b854b3c67b06379db98f43a7906a5'],
   'B de CD Batán': [{ raw: currentAt('2026-03-01'), myTeam: { ...LAS_MESAS, name: 'CD Batán' }, today: '2026-03-01' }, 'ec9408309fb1e01858c0f10de2323a8cb2b9b978'],
@@ -81,8 +83,8 @@ const HOME = {
   'D sin «Verano»': [{ myTeam: { ...LAS_MESAS, name: 'RC Victoria' }, today: '2026-09-23' }, 'd286ecc605a4802ca61f4f102e7000f7e0d5d8c5'],
   'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, 'c2444e026d549f3ac3dc941e2a92e056c9d04fc8'],
   'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '5744594dda12a29f299cc39c80e98519e0b0fd47'],
-  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, 'f6263f951af6e719aed01fc15454057358d9d2e2'],
-  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, '1825ee3a348ef2dec47da113a3c897672f413a88'],
+  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, '379af833e01aaa399f7dbe016ec064bcb7da7290'],
+  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, 'f9af61404c380a5f4369208d77bc74ebc5b3b3e2'],
 };
 // Las huellas de esos tres antes de las líneas del calendario (el pronóstico, solo bajo el próximo partido).
 const BEFORE_CALENDAR = {
@@ -93,11 +95,12 @@ const BEFORE_CALENDAR = {
 
 test('la portada pinta, byte a byte, lo que fijan sus huellas en A, B, C, D, E y X', () => {
   const sha = (out) => createHash('sha1').update(out).digest('hex');
-  const withoutLines = (out) => out.replace(/<span class="match-forecast"><span aria-hidden="true">[^<]*<\/span><span class="vh">[^<]*<\/span><\/span>/g, '');
+  const withoutLines = (out) => out.replace(/<span class="match-forecast"><span aria-hidden="true">[^<]*<\/span><span class="vh">[^<]*<\/span><\/span>/g, '')
+    .replace(/<\/ol><p class="notice"><b>Pronóstico:<\/b> [^<]*<\/p><\/section>/, '</ol></section>');
   for (const [name, [options, sha1]] of Object.entries(HOME)) {
     const out = s(home.render(homeCtx(options)));
     assert.equal(sha(out), sha1, name);
-    // Sin las líneas del calendario, lo de antes; y sin ninguna, nada cambia en los demás.
+    // Sin las líneas del calendario ni su nota, lo de antes; y sin ninguna, nada cambia en los demás.
     assert.equal(sha(withoutLines(out)), BEFORE_CALENDAR[name] || sha1, `${name}, sin las líneas del calendario`);
   }
   // Lo que fija cada huella de B5, en claro: que el caso es el que dice su nombre.

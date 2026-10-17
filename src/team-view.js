@@ -6,7 +6,7 @@
 // su comportamiento. Todo es puro salvo mountTeamView, y nada toca el DOM al importarse.
 import { html } from './html.js';
 import {
-  block, box, cells, countLabel, crest, decimal, empty, forecastLine, forecastOptions, listEs, matchRow, notice, score,
+  block, box, cells, countLabel, crest, decimal, empty, forecastLine, forecastNote, forecastOptions, listEs, matchRow, notice, score,
   screenHead, shareStatus, sourcePhrase, standingsTable,
 } from './ui.js';
 import {
@@ -20,7 +20,7 @@ import {
 } from './links.js';
 import { teamScorers } from './state.js';
 import { zonesText } from './screen-tabla.js';
-import { forecastMatch } from './pronostico.js';
+import { awaitsFirstMatch, forecastMatch } from './pronostico.js';
 
 // Fechas y horas siempre en Canarias (spec §8). Las fechas de partido son días de calendario
 // ('AAAA-MM-DD') y se escriben con los nombres de links.js, sin los datos de idioma del motor (B9);
@@ -410,18 +410,24 @@ export function teamView(ctx, { group, name }, {
 // encima de la lista, «Calendario del equipo (.ics)» con todos sus partidos con fecha (decisión 15 de
 // B3), si los hay. Con `forecast` (las opciones de forecastMatch de la web, forecastOptions de ui.js;
 // 17/10/2026, el usuario pidió el pronóstico de «todos los siguientes enfrentamientos»), cada partido
-// sin jugar lleva debajo la línea discreta de su pronóstico (matchRow, como en la Jornada), sin nada
-// más: a cuántas jornadas vista lo dice la pantalla Partido. Fuera de prebenjamín de la temporada en
-// curso, forecastMatch no da ninguno y la lista es la de siempre.
+// sin jugar lleva debajo la línea discreta de su pronóstico (matchRow, como en la Jornada) y, bajo la
+// lista, una sola nota de en qué se basa y que se recalcula (forecastNote de ui.js; revisión del
+// 18/10/2026: era la única pantalla con pronósticos de hasta 24 jornadas vista y no lo decía; cada
+// partido, a su distancia, así que sin número: para dentro de cuántas jornadas lo dice la pantalla
+// Partido). Si no lleva ninguno porque el equipo aún no ha jugado, mientras el resto del grupo ya tiene
+// el suyo (awaitsFirstMatch de pronostico.js), una línea que lo dice. Fuera de prebenjamín de la
+// temporada en curso, forecastMatch no da ninguno y la lista es la de siempre.
 export function teamCalendar(team, group, { today, shields = {}, ics = false, forecast = null } = {}) {
   const items = group.rounds.flatMap(round => round.matches.filter(m => m.home === team || m.away === team).map(m => ({ round, m })));
   if (!items.length) return block('Calendario', empty('Sin partidos en el calendario de este grupo'), { id: 'calendario' });
-  const guess = m => (forecast ? forecastMatch(group, m, forecast) : null);
-  const rows = items.map(({ round, m }) => html`<li><p class="cal-when">${round.label}${m.dateISO ? ` · ${shortDate(m.dateISO)}` : ''}</p>${matchRow(m, { today, shields, href: matchHref(m), forecast: guess(m) })}</li>`);
+  const guesses = items.map(({ m }) => (forecast ? forecastMatch(group, m, forecast) : null));
+  const rows = items.map(({ round, m }, i) => html`<li><p class="cal-when">${round.label}${m.dateISO ? ` · ${shortDate(m.dateISO)}` : ''}</p>${matchRow(m, { today, shields, href: matchHref(m), forecast: guesses[i] })}</li>`);
   const download = ics && teamCalendarEvents(team, group).length
     ? html`<div class="box cal-actions"><div class="buttons"><button type="button" class="button" data-action="calendario-equipo">Calendario del equipo (.ics)</button></div></div>`
     : '';
-  return block('Calendario', html`${download}<ol class="box cal">${rows}</ol>`, { context: `${items.length} partidos`, id: 'calendario' });
+  const note = forecastNote(guesses)
+    || (forecast && awaitsFirstMatch(group, team, forecast) ? notice('Pronóstico:', 'saldrá cuando el equipo juegue su primer partido.') : '');
+  return block('Calendario', html`${download}<ol class="box cal">${rows}</ol>${note}`, { context: `${items.length} partidos`, id: 'calendario' });
 }
 
 // ── Compartir y calendario del próximo partido ──────────────────────────

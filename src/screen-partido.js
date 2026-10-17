@@ -138,7 +138,9 @@ function resultBlock(match, { today, shields, status = null, campos = null, isla
 // (para el Poisson, nunca entre sus dos primeros): va como «Si gana Valsequillo: 4–3», sin «También
 // probables» (revisión del 17/10/2026). Debajo, en qué se basa: los
 // partidos de esta temporada del grupo y, a 2 o más jornadas vista (`ahead`; todo el calendario, desde el
-// 17/10/2026), una frase más: que cambiará con los resultados de antes. Nada si forecastMatch no da
+// 17/10/2026), una frase más: que el partido se juega dentro de tantas jornadas y que el pronóstico se
+// recalcula con cada resultado nuevo (las palabras del usuario; revisión del 18/10/2026: «cambiará con
+// los resultados de antes» se leía como los ya jugados). Nada si forecastMatch no da
 // pronóstico: otra categoría o temporada, una copa, jugado, sin fecha o con la fecha pasada, un retirado,
 // lo que la app da por retirado, anulado o suspendido, menos de 2 jornadas o un equipo que aún no ha
 // jugado.
@@ -157,7 +159,7 @@ function forecastBlock(match, group, ctx) {
     : [{ label: `Si gana ${teamShort(winner)}`, value: score(...f.score), muted: true }]);
   const others = f.goalsAgree ? topScores(f.xgHome, f.xgAway, { n: 3, pick: f.pick }).slice(1).map((x) => score(...x.score)) : [];
   const also = others.length ? html`<p class="odds-also">También probables: ${listEs(others)}.</p>` : '';
-  const far = f.ahead >= 2 ? ` A\u00a0${f.ahead}\u00a0jornadas vista: cambiará con los resultados de antes.` : '';
+  const far = f.ahead >= 2 ? ` Este partido se juega dentro de\u00a0${f.ahead}\u00a0jornadas: el pronóstico se recalcula con cada resultado nuevo.` : '';
   const basis = `Con ${f.matches === 1 ? 'el partido jugado' : `los ${f.matches} partidos jugados`} en el grupo esta temporada.${far} Es una estimación, no un resultado.`;
   return block('Pronóstico', html`<div class="box">${odds}${facts}${also}</div>${notice(null, basis)}`, { context: 'estimación', id: FORECAST_ID });
 }

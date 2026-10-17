@@ -7,8 +7,8 @@
 // partido sin jugar de cualquier jornada (todo el calendario, no solo la próxima: lo pidió el usuario ese
 // mismo día) lleva debajo su pronóstico (pronostico.js; la línea, forecastLine de ui.js, la misma a
 // cualquier distancia) y la jornada, la nota de en qué se basa, que en una jornada de más adelante dice
-// a cuántas jornadas vista y que cambiará (forecastNote); en cualquier otro grupo, en lo jugado y en lo
-// que no está pendiente, forecastRound no da ninguno y no se pinta nada.
+// para dentro de cuántas jornadas y que se recalcula (forecastNote); en cualquier otro grupo, en lo
+// jugado y en lo que no está pendiente, forecastRound no da ninguno y no se pinta nada.
 import { html } from './html.js';
 import {
   screenHead, matchRow, notice, empty, listEs, shareStatus, block, groupStrip, scrollToCurrent, forecastNote, forecastOptions,

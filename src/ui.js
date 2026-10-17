@@ -152,8 +152,8 @@ function favorite(f) {
 // pequeña, sin negrita y en --mute (también en la fila propia, que va en tinta), y empieza por
 // «Pronóstico»; el lector de pantalla oye otra frase, que dice que no es un resultado. La usan matchRow
 // (Jornada y, desde el 17/10/2026, el calendario del equipo) y el próximo partido de Mi equipo, cada uno
-// con su clase (cls); la misma a cualquier distancia (a cuántas jornadas vista, solo en la nota de la
-// Jornada y en la pantalla Partido: en las listas sería ruido). f: el de forecastMatch, o
+// con su clase (cls); la misma a cualquier distancia (para dentro de cuántas jornadas, solo en la nota de
+// la Jornada y en la pantalla Partido: en las listas sería ruido). f: el de forecastMatch, o
 // null (nada). Si los goles esperados no van con el favorito (goalsAgree false: el 1X2 es de las notas
 // y el marcador, del Poisson), ese marcador no es el más probable (en el archivo, nunca entre los dos
 // primeros del Poisson; revisión del 17/10/2026): la línea, sin marcador, «Pronóstico · Valsequillo 45 %».
@@ -175,9 +175,12 @@ export function forecastLine(f, cls = 'match-forecast') {
 // que se calcula (`matches`), no las jornadas: con la jornada 2 a medias, «las 2 jornadas jugadas» diría
 // que la base ya está completa (revisión del 17/10/2026); si no son los mismos en todos (un aplazado, o
 // cada grupo los suyos), sin número. Con todo el calendario (17/10/2026), en una jornada de más adelante
-// (algún pronóstico a 2 o más jornadas vista, `ahead` de forecastMatch) dice además a cuántas, si es la
-// misma en todos (con espacios de no separación: «a 6 jornadas», junto), y que cambiará con los resultados
-// de antes: con cada uno que llega, se rehace.
+// (algún pronóstico a 2 o más jornadas vista, `ahead` de forecastMatch) dice además para dentro de
+// cuántas, si es la misma en todos (con espacios de no separación: «de 6 jornadas», junto), y que se
+// recalcula con cada resultado nuevo, con las palabras del usuario (revisión del 18/10/2026: «cambiará con
+// los resultados de antes» se leía al revés, como si fueran los ya jugados, que ya están dentro, y «a 6
+// jornadas vista» no es lo que diría un padre). También la del calendario del equipo (teamCalendar de
+// team-view.js), donde cada partido va a su distancia y sale sin número.
 export function forecastNote(forecasts, { each = false } = {}) {
   const shown = forecasts.filter(Boolean);
   const counts = [...new Set(shown.map(f => f.matches))];
@@ -186,8 +189,8 @@ export function forecastNote(forecasts, { each = false } = {}) {
   const where = each ? 'en cada grupo' : 'en el grupo';
   const ahead = [...new Set(shown.map(f => f.ahead))];
   if (!ahead.some(k => k >= 2)) return notice('Pronóstico:', `estimación según ${what} ${where}; no es un resultado.`);
-  const far = ahead.length === 1 ? ` a\u00a0${ahead[0]}\u00a0jornadas vista,` : '';
-  return notice('Pronóstico:', `estimación${far} según ${what} ${where}; cambiará con los resultados de antes. No es un resultado.`);
+  const far = ahead.length === 1 ? ` para dentro de\u00a0${ahead[0]}\u00a0jornadas,` : '';
+  return notice('Pronóstico:', `estimación${far} según ${what} ${where}; se recalcula con cada resultado nuevo. No es un resultado.`);
 }
 
 // La barra del 1X2 de la pantalla Partido: tres tramos sólidos, el local en tinta, el empate en --mute

@@ -7,7 +7,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildGroup } from '../../src/model.js';
 import {
-  PARAMS, copiedMatches, fitNotes, fitRatings, forecastApplies, forecastMatch, forecastRound, horizonOf, isDeskResult, likelyScore,
+  PARAMS, awaitsFirstMatch, copiedMatches, fitNotes, fitRatings, forecastApplies, forecastMatch, forecastRound, horizonOf, isDeskResult, likelyScore,
   notesOdds, outcome, roundsAhead, topScores, trainingFor,
 } from '../../src/pronostico.js';
 
@@ -554,6 +554,56 @@ test('la distancia (roundsAhead): la próxima jornada, 1, y una más por cada jo
   // Una jornada con la fecha pasada y sin resultados publicados (la 3) cuenta: lo que pase en ella no se sabe.
   const stale = makeGroup(BASE.map((ms, i) => (i === 2 ? ms.map(r => row(r[0], r[1], r[2])) : ms)));
   assert.equal(roundsAhead(stale, matchOf(stale, 4, 'Alfa')), 2);
+});
+
+test('en la web (con today), una jornada ya jugada sin sus resultados publicados no aleja la siguiente; en el banco, sí', () => {
+  // La 3 (17 y 18 de octubre), jugada pero sin nada publicado: el 20, la 4 es la próxima que se juega, a 1
+  // vista, y la 5, a 2 (revisión del 18/10/2026: decía «dentro de 2 jornadas» en la que abre la pantalla).
+  const stale = makeGroup(BASE.map((ms, i) => (i === 2 ? ms.map(r => row(r[0], r[1], r[2])) : ms)));
+  const m4 = matchOf(stale, 4, 'Alfa'), m5 = matchOf(stale, 5, 'Gamma');
+  const web = { ...OPTS, today: '2026-10-20', full: true };
+  assert.equal(roundsAhead(stale, m4, { today: '2026-10-20' }), 1);
+  assert.equal(roundsAhead(stale, m5, { today: '2026-10-20' }), 2);
+  assert.equal(forecastMatch(stale, m4, web).ahead, 1);
+  assert.equal(forecastMatch(stale, m5, web).ahead, 2);
+  // El día de la 3 (su fecha, la mediana: el 17) aún cuenta: se está jugando.
+  assert.equal(roundsAhead(stale, m4, { today: '2026-10-17' }), 2);
+  assert.equal(forecastMatch(stale, m4, { ...web, today: '2026-10-17' }).ahead, 2);
+  // El banco (sin today, o con before, que manda): la distancia de siempre; y el 1X2, el mismo en todos.
+  assert.equal(roundsAhead(stale, m4), 2);
+  assert.equal(forecastMatch(stale, m4, OPTS).ahead, 2);
+  assert.equal(forecastMatch(stale, m4, { ...web, before: '2026-10-20' }).ahead, 2);
+  assert.deepEqual(numbers(forecastMatch(stale, m4, web)), numbers(forecastMatch(stale, m4, OPTS)));
+  // Con los resultados de la 3 ya publicados, lo de siempre: la 4, a 1.
+  const group = makeGroup();
+  assert.equal(forecastMatch(group, matchOf(group, 4, 'Alfa'), web).ahead, 1);
+  assert.equal(forecastMatch(group, matchOf(group, 5, 'Gamma'), web).ahead, 2);
+});
+
+test('awaitsFirstMatch: sin pronóstico solo porque el equipo aún no ha jugado, mientras el grupo ya lo tiene', () => {
+  // Zeta, con sus tres partidos aplazados (sin resultado): ni uno de los suyos sale, y awaitsFirstMatch lo dice.
+  const NO_ZETA = BASE.map((ms, i) => (i < 3 ? ms.map(r => (r[1] === 'Zeta' || r[2] === 'Zeta' ? row(r[0], r[1], r[2]) : r)) : ms));
+  const late = makeGroup(NO_ZETA);
+  const web = { ...OPTS, today: '2026-10-20', full: true };
+  const zeta = late.rounds.flatMap(r => r.matches.filter(m => m.home === 'Zeta' || m.away === 'Zeta'));
+  assert.ok(zeta.every(m => forecastMatch(late, m, web) === null));
+  assert.equal(awaitsFirstMatch(late, 'Zeta', web), true);
+  // Los demás, que sí han jugado, no; ni en el grupo de siempre.
+  for (const team of ['Alfa', 'Beta', 'Gamma']) assert.equal(awaitsFirstMatch(late, team, web), false, team);
+  assert.equal(awaitsFirstMatch(makeGroup(), 'Zeta', web), false);
+  // Sin today, en otra temporada o categoría, con una sola jornada jugada en el grupo o sin nada pendiente: no.
+  assert.equal(awaitsFirstMatch(late, 'Zeta', OPTS), false);
+  assert.equal(awaitsFirstMatch(late, 'Zeta', { ...web, portalSeason: '2025-2026' }), false);
+  assert.equal(awaitsFirstMatch(makeGroup(NO_ZETA, { cat: 'benjamin' }), 'Zeta', web), false);
+  const early = makeGroup(BASE.map((ms, i) => (i > 0 ? ms.map(r => row(r[0], r[1], r[2])) : ms.map(r => (r[1] === 'Zeta' || r[2] === 'Zeta' ? row(r[0], r[1], r[2]) : r)))));
+  assert.equal(awaitsFirstMatch(early, 'Zeta', { ...web, today: '2026-10-05' }), false, 'una jornada: nadie lleva pronóstico');
+  assert.equal(awaitsFirstMatch(late, 'Zeta', { ...web, today: '2026-11-02' }), false, 'nada pendiente');
+  // Un retirado (fuera de la clasificación) no: no va a jugar.
+  assert.equal(awaitsFirstMatch(makeGroup(NO_ZETA, { unlisted: ['Zeta'] }), 'Zeta', web), false);
+  // Con un partido jugado que no cuenta (de mesa), sí ha jugado: no se dice nada.
+  const desk = makeGroup(NO_ZETA.map((ms, i) => (i === 0 ? [row('2026-10-03', 'Alfa', 'Zeta', 3, 0), ...ms.slice(1)] : ms)));
+  assert.equal(awaitsFirstMatch(desk, 'Zeta', web), false);
+  assert.equal(awaitsFirstMatch(null, 'Zeta', web), false);
 });
 
 test('la distancia con aplazados, jornadas sin fecha, descansos, la vuelta y un calendario que no va en orden', () => {

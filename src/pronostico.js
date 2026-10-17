@@ -56,7 +56,12 @@
  * demostrable, y sin pasarse de seguro a ninguna distancia (lo que se le da al favorito, a menos de un
  * punto y medio de lo que gana, con el cero dentro del intervalo): por eso no lleva corrección por
  * distancia. La que se probó (la varianza de las notas, más una deriva por cada jornada de por medio) la
- * deja en 0 el ajuste (scripts/pronostico_modelos/distancia.mjs).
+ * deja en 0 el ajuste (scripts/pronostico_modelos/distancia.mjs). Esas son cifras de toda la temporada, casi
+ * todas con cuatro jornadas jugadas o más (con ellas, 78,8 %). Con pocas, bastante menos (revisión del
+ * 18/10/2026, el día en que los cuatro grupos de 2026-27 llevaban dos): con solo dos jugadas, 72,2 % de
+ * todo lo que queda (73,2 % la próxima jornada, 69,6 % a 4-6 vista, 72,2 % a 13 o más), 7,6 puntos menos
+ * que la víspera de cada partido [−10,2, −5,5]; con tres, 74,7 %. Aun así, por delante de la tabla (+2,9
+ * puntos [+0,6, +5,1]; log-loss −0,127 [−0,163, −0,086]).
  *
  * Qué no cuenta: los partidos de un retirado (retiredTeams de model.js); los resultados que pueden ser
  * de mesa, todo 3-0 o 1-0 a favor de cualquiera de los dos, con hora o sin ella (isDeskResult); los de un
@@ -319,8 +324,9 @@ function eligibleOf(group, status) {
   return facts.eligible.get(st);
 }
 
-// La distancia de roundsAhead con el entrenamiento ya hecho (el de trainingFor de `match`).
-function aheadFrom(group, match, training) {
+// La distancia de roundsAhead con el entrenamiento ya hecho (el de trainingFor de `match`). Con `today`
+// (solo la web: forecastOf lo pasa sin `before`), tampoco las jornadas con la fecha ya pasada.
+function aheadFrom(group, match, training, today = null) {
   if (!match.dateISO || !training.length) return null;
   const started = new Set();
   let last = null;
@@ -330,7 +336,7 @@ function aheadFrom(group, match, training) {
   }
   let k = 1;
   for (const [key, date] of factsOf(group).roundDates) {
-    if (key !== match.roundKey && !started.has(key) && date > last && date < match.dateISO) k += 1;
+    if (key !== match.roundKey && !started.has(key) && date > last && date < match.dateISO && !(today !== null && date < today)) k += 1;
   }
   return k;
 }
@@ -348,11 +354,17 @@ function aheadFrom(group, match, training) {
  * último jugado y sin resultados (un aplazamiento aún sin fecha nueva). Es la distancia del grupo, no la
  * de cada equipo: el que descansa una jornada sigue a la de los demás. La vuelta sigue a la ida sin
  * reiniciar nada, aunque medie un mes sin partidos. null sin nada jugado o si el partido no tiene fecha.
- * Es LA MISMA función en la web (forecastMatch la devuelve en `ahead`) y en el banco de pruebas
- * (scripts/pronostico_banco.mjs, que la llama con `before`, el día en que se habría hecho el pronóstico). */
-export function roundsAhead(group, match, { status = null, before = null } = {}) {
+ * Con `today` (AAAA-MM-DD; la web, revisión del 18/10/2026), tampoco cuenta una jornada con la fecha ya
+ * pasada y sin ningún resultado publicado: jugada pero aún sin sus resultados (el bot los trae horas o
+ * días después), la siguiente es la próxima que se juega, y decir que está «dentro de 2 jornadas» lo
+ * entendería mal cualquiera (lo de esa jornada aún no ha entrado en el cálculo: al llegar, se
+ * recalcula). El banco no lo pasa: allí todo lo jugado antes del corte ya está en el entrenamiento, y las
+ * cifras medidas no cambian. Es LA MISMA función en la web (forecastMatch la devuelve en `ahead`) y en
+ * el banco de pruebas (scripts/pronostico_banco.mjs, que la llama con `before`, el día en que se habría
+ * hecho el pronóstico). */
+export function roundsAhead(group, match, { status = null, before = null, today = null } = {}) {
   if (!group || !match) return null;
-  return aheadFrom(group, match, trainingFor(group, match, { status, before }));
+  return aheadFrom(group, match, trainingFor(group, match, { status, before }), today);
 }
 
 // Los ajustes ya hechos, por grupo, por `status` y por los partidos del entrenamiento (su sitio en el
@@ -631,11 +643,12 @@ export function topScores(meanHome, meanAway, { n = 3, pick = null, params = PAR
  * primeros), sino el más probable SI gana el favorito: la web no enseña los goles esperados y lo rotula así
  * (forecastLine de ui.js y la pantalla Partido; revisión del 17/10/2026). `rounds` las jornadas jugadas con
  * las que se calcula, `matches` sus partidos (la nota «según los N partidos jugados»), played* los de cada
- * equipo entre ellos y `ahead`, a cuántas jornadas vista (roundsAhead con ese entrenamiento: 1, la próxima
- * jornada; 17/10/2026). null si el grupo no lo admite (forecastApplies), si el partido
- * ya tiene marcador, si con `today` no está pendiente (matchState: uno sin fecha o con la fecha pasada y
- * sin resultado no se pronostica) o, sin `full`, va más allá de la próxima jornada (horizonOf), si es de un
- * retirado o la app lo da por retirado, anulado o suspendido, si aún no hay PARAMS.minRounds jornadas
+ * equipo entre ellos y `ahead`, a cuántas jornadas vista (roundsAhead con ese entrenamiento y, sin
+ * `before`, con `today`: 1, la próxima jornada; 17/10/2026). null si el grupo no lo admite
+ * (forecastApplies), si el partido ya tiene marcador, si con `today` no está pendiente (matchState: uno
+ * sin fecha o con la fecha pasada y sin resultado no se pronostica) o, sin `full`, va más allá de la
+ * próxima jornada (horizonOf), si es de un retirado o la app lo da por retirado, anulado o suspendido, si
+ * aún no hay PARAMS.minRounds jornadas
  * jugadas o si uno de los dos no ha jugado aún PARAMS.minPlayed partidos (con lo jugado de verdad, no con
  * la distancia: lo mismo a 1 que a 10 jornadas vista). Opciones: portalSeason (la del contexto), today
  * (AAAA-MM-DD; la web lo pasa siempre; sin él, el backtest, sin horizonte), full (con today, todo lo
@@ -713,11 +726,27 @@ function forecastOf(group, match, { portalSeason, today, full, status, before, p
     matches: fit.matches,
     playedHome: home.played,
     playedAway: away.played,
-    ahead: aheadFrom(group, match, training),
+    ahead: aheadFrom(group, match, training, before === null ? today : null),
   };
 }
 
 /* Los pronósticos de una jornada, en el orden de round.matches: el de forecastMatch o null. */
 export function forecastRound(group, round, opts = {}) {
   return ((round && round.matches) || []).map(m => forecastMatch(group, m, opts));
+}
+
+/* Si `team` se queda sin ningún pronóstico solo porque aún no ha jugado (PARAMS.minPlayed; revisión del
+ * 18/10/2026: el calendario de Unión Viera, en PG2 de 2026-27, salía sin una sola línea y sin decir por
+ * qué, y el de los demás del grupo, con todo lo que les queda): el grupo admite pronóstico
+ * (forecastApplies) y ya lleva las PARAMS.minRounds jornadas jugadas (con lo que cuenta: eligibleOf), el
+ * equipo no es un retirado, no tiene ningún partido con resultado (ni uno contra un retirado, que no
+ * cuenta pero sí se jugó: ahí «aún no ha jugado» sería falso, y no se dice nada) y le queda alguno
+ * pendiente con `today`. Las opciones, las de forecastMatch (forecastOptions de ui.js; lo demás no se
+ * mira). La usa el calendario del equipo (teamCalendar de team-view.js), para decirlo en una línea. */
+export function awaitsFirstMatch(group, team, { portalSeason = null, today = null, status = null } = {}) {
+  if (!group || typeof group !== 'object' || !team || today === null || !forecastApplies(group, { portalSeason })) return false;
+  if (factsOf(group).retired.has(team)) return false;
+  if (new Set(eligibleOf(group, status).map(({ key }) => key)).size < PARAMS.minRounds) return false;
+  const mine = (group.rounds || []).flatMap(round => round.matches.filter(m => m.home === team || m.away === team));
+  return !mine.some(scored) && mine.some(m => !offByStatus(status, m) && matchState(m, today) === 'pendiente');
 }

@@ -232,9 +232,9 @@
     },
     "AL10": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203312",
-      "status": "error",
-      "message": "no carga el calendario de la federación",
-      "checkedAt": "2026-10-14T20:36:22+00:00"
+      "status": "ok",
+      "message": "4 jornadas leídas: 0 partidos nuevos, 3 actualizados, 3 resultados; 36 goleadores, 7/8 actas",
+      "checkedAt": "2026-10-17T17:46:55+00:00"
     },
     "AL11": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203360",
@@ -299,8 +299,8 @@
     "AL20": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203542",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 1 actualizados, 1 resultados; 20 goleadores, 1/1 actas",
-      "checkedAt": "2026-10-17T14:26:58+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
+      "checkedAt": "2026-10-17T17:40:08+00:00"
     },
     "AL21": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203564",
@@ -383,8 +383,8 @@
     "AL4": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203220",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 1 actualizados, 1 resultados; 41 goleadores, 1/1 actas",
-      "checkedAt": "2026-10-17T15:46:14+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
+      "checkedAt": "2026-10-17T17:40:37+00:00"
     },
     "AL5": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203222",
@@ -422,60 +422,44 @@
     "status": "pending"
   },
   "run": {
-    "pass": 1120,
+    "pass": 1121,
     "groups": 69,
     "refreshed": 3,
     "priority": [
-      "FF5",
-      "AL18"
+      "AL20",
+      "AL4"
     ],
     "fresh": [
       "PG2",
-      "AL4",
+      "FF5",
       "AL9",
-      "AL20"
+      "AL18"
     ],
     "resting": [],
     "deferred": [
-      "FF1",
-      "AL3",
-      "FF3",
-      "AL5",
-      "FF4",
-      "AL6",
-      "FF6",
-      "AL8",
-      "FF7",
-      "PG1",
-      "AL10",
-      "FF9",
-      "AL2",
-      "FF2",
-      "AL7",
-      "FF8",
-      "AL11",
       "FF10",
-      "FF11",
       "AL12",
       "FF12",
       "AL13",
       "FF13",
       "AL14",
       "FF14",
-      "PG3",
-      "FF15",
       "AL15",
-      "FF16",
+      "FF15",
       "AL16",
+      "FF16",
+      "AL11",
       "FF17",
       "AL17",
+      "FF11",
+      "PG3",
       "FF18",
-      "FF19",
       "AL19",
-      "FF20",
+      "FF19",
       "AL21",
-      "FF21",
+      "FF20",
       "AL22",
+      "FF21",
       "FF22",
       "AL23",
       "FF23",
@@ -483,11 +467,11 @@
       "FF24",
       "AL25",
       "FV11",
-      "AL26",
+      "PG4",
       "FV12",
+      "AL26",
       "FV13",
       "AL27",
-      "PG4",
       "FV14",
       "AL28",
       "LZ1",
@@ -498,13 +482,29 @@
       "AL31",
       "LZ4",
       "AL32",
-      "LZ5"
+      "LZ5",
+      "FF7",
+      "AL6",
+      "FF8",
+      "AL7",
+      "FF9",
+      "AL8",
+      "FF1",
+      "AL1",
+      "FF2",
+      "AL2",
+      "FF3",
+      "AL3",
+      "FF4",
+      "PG1",
+      "AL5",
+      "FF6"
     ],
     "unserved": [],
     "extrasDeferred": [
-      "AL1"
+      "AL10"
     ],
-    "seconds": 510,
+    "seconds": 511,
     "pages": 33,
     "blocked": true,
     "calendarShows": {
@@ -517,12 +517,12 @@
       15
     ]
   },
-  "checkedAt": "2026-10-17T16:45:37+00:00",
+  "checkedAt": "2026-10-17T17:49:50+00:00",
   "lastDataChange": "2026-10-17",
-  "dataVersion": "20261017d",
+  "dataVersion": "20261017e",
   "summary": {
-    "ok": 44,
+    "ok": 45,
     "rejected": 0,
-    "error": 25
+    "error": 24
   }
 }

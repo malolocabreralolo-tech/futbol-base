@@ -527,10 +527,13 @@ def test_a_campos_directory_cut_short_keeps_the_venues_it_did_not_read(monkeypat
     assert count(conn) == 249 and count(conn, "address='vieja'") == 0 and count(conn, "name='Campo cerrado'") == 0
 
 
-def test_both_passes_end_to_end_with_a_simulated_federation(monkeypatch):
+@pytest.mark.parametrize("number", [1116, 1117])   # 1117: la de los extras (extras_turn), antes del turno
+def test_both_passes_end_to_end_with_a_simulated_federation(monkeypatch, number):
     """run_passes entero: jornada → acta (marcador y alineaciones) → goleadores →
     directorio de campos → estado por grupo. Sin red: una página falsa sirve las
-    fixtures reales según la URL."""
+    fixtures reales según la URL. Con el número de la pasada fijo: con el de GitHub
+    (GITHUB_RUN_NUMBER), fallaba en las pasadas de los extras (1115 y 1117, 17/10/2026)."""
+    assert U.extras_turn(1117) and not U.extras_turn(1116)
     from datetime import date
     monkeypatch.setattr(U, "flatten", lambda page, selector=None: 0)
     recorded = []
@@ -562,7 +565,7 @@ def test_both_passes_end_to_end_with_a_simulated_federation(monkeypatch):
                      "date": "03-10-2026", "time": "09:00", "venue": "AGAPITO REYES VIERA F-8", "fiflp_acta": 280291}]
     page = Page()
     groups = U.fiflp_groups(conn, 1)
-    U.run_passes(page, Fed(page), conn, 1, groups, date(2026, 10, 5), {g[1]: g[2] for g in groups})
+    U.run_passes(page, Fed(page), conn, 1, groups, date(2026, 10, 5), {g[1]: g[2] for g in groups}, number=number)
     assert conn.execute("SELECT home_score, away_score, cod_acta FROM matches WHERE id=1").fetchone() == (3, 21, 280291)
     assert conn.execute("SELECT count(*) FROM appearances").fetchone()[0] == 22
     assert conn.execute("SELECT count(*) FROM scorers WHERE group_id=1").fetchone()[0] == 142

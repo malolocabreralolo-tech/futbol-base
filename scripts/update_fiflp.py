@@ -1810,12 +1810,16 @@ def run_passes(page, F, conn, season_id, groups, today, pending, deadline_second
                 check_competitions(page, F, conn, season_id, today)
             except Exception as e:
                 print(f"  ! competiciones: {e}")
+        # Hecho solo si se leyó: en la pasada de los extras (antes del turno) aún no están los campos de los
+        # calendarios que se leen después, y al final de la pasada se mira otra vez (hasta el 17/10/2026, no:
+        # el directorio esperaba al día siguiente, y test_both_passes_end_to_end fallaba 1 de cada 12 pasadas).
         if "campos" not in extras_done and clock() <= deadline and not blocked():
-            extras_done.add("campos")
             try:
                 if missing_venues(conn, season_id):
+                    extras_done.add("campos")
                     print(f"  Campos: {update_campos(page, F, conn, deadline)} en el directorio de la federación")
             except Exception as e:
+                extras_done.add("campos")
                 conn.rollback()
                 print(f"  ! campos: {e}")
         if "directorio" not in extras_done and clock() <= deadline and not blocked():

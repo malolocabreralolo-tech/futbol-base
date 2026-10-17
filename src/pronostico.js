@@ -96,7 +96,8 @@ import { matchState, retiredTeams } from './model.js';
  * Desde cuándo se muestra (con el modelo de la web, el 1X2 de las notas, y SOLO con las cifras de
  * EVALUACIÓN del banco: 126 partidos con una jornada jugada, 126 con dos y 128 con tres; revisión del
  * 17/10/2026, que quitó las de todas las temporadas, que incluyen las de AJUSTE, con las que se fijaron
- * las notas). Es una decisión, no una prueba: con dos jornadas la ventaja aún no es demostrable.
+ * las notas). Es una decisión, no una prueba: con dos jornadas la ventaja aún no es demostrable. La tomó el
+ * usuario el 17/10/2026, con estas cifras delante: desde 2 jornadas jugadas, no desde 3.
  * - minRounds: jornadas jugadas del grupo desde las que se muestra: 2. Frente a la tabla (gana el mejor
  *   clasificado), con dos jornadas las notas aciertan más (73,8 % frente a 70,6 %; +3,2 puntos [−6,0,
  *   +11,7]) y dan mejores probabilidades en el 96 % de las remuestras (log-loss −0,121 [−0,245, +0,013];

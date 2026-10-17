@@ -643,3 +643,57 @@ test('full: con today, todo lo que queda del calendario, cada partido con su dis
   assert.equal(forecastMatch(late, matchOf(late, 2, 'Alfa'), { ...OPTS, today }), null);
   assert.equal(forecastMatch(late, matchOf(late, 2, 'Alfa'), { ...OPTS, today, full: true }).ahead, 3);
 });
+
+// La jornada 4 a medias: Zeta–Épsilon, adelantado al jueves 22 y ya jugado; los otros dos, el 24 y el 25.
+const HALF = BASE.map((ms, i) => (i === 3 ? [row('2026-10-22', 'Zeta', 'Épsilon', 2, 5), ms[1], ms[2]] : ms));
+
+test('las cachés no cambian nada: en cualquier orden, en el mismo grupo, lo mismo que cada partido en un grupo recién hecho', () => {
+  // Dos entrenamientos: los de la 4 que faltan, sin el de su jornada (la 1, la 2 y la 3); los de la 5,
+  // también con él. Los ajustes van por los partidos del entrenamiento, no por la jornada.
+  const today = '2026-10-23';
+  const opts = { ...OPTS, today, full: true };
+  const group = makeGroup(HALF);
+  const pending = [...group.rounds[4].matches, ...group.rounds[3].matches.slice(1), ...group.rounds[4].matches];
+  const together = pending.map(m => forecastMatch(group, m, opts));
+  pending.forEach((m, i) => {
+    const alone = makeGroup(HALF);
+    const f = forecastMatch(alone, matchOf(alone, Number(m.roundKey.split(' ')[1]), m.home), opts);
+    assert.deepEqual(together[i], f, `${m.home}–${m.away}`);
+  });
+  assert.deepEqual(together.map(f => f.matches), [10, 10, 10, 9, 9, 10, 10, 10]);
+  assert.deepEqual(together.map(f => f.ahead), [1, 1, 1, 1, 1, 1, 1, 1], 'la 4, empezada, ya no cuenta para la 5');
+  // Con los estados de la app (status: Gamma–Alfa de la 3, anulado), otro entrenamiento; sin ellos, lo
+  // de antes: la caché de los partidos que cuentan va por `status`.
+  const status = m => (m.home === 'Gamma' && m.away === 'Alfa' ? { state: 'anulado' } : null);
+  const m5 = group.rounds[4].matches[0];
+  const off = forecastMatch(group, m5, { ...opts, status });
+  assert.equal(off.matches, 9);
+  assert.deepEqual(off, forecastMatch(makeGroup(HALF), matchOf(makeGroup(HALF), 5, m5.home), { ...OPTS, status }));
+  assert.equal(trainingFor(group, m5, { status }).length, 9);
+  assert.equal(trainingFor(group, m5).length, 10);
+  assert.deepEqual(forecastMatch(group, m5, opts), together[0]);
+});
+
+test('en la web (con today), cada pronóstico se calcula una vez: el mismo objeto; sin today, con before u otros parámetros, cada vez', () => {
+  const group = makeGroup();
+  const m = matchOf(group, 5, 'Gamma');
+  const today = '2026-10-20';
+  const web = forecastMatch(group, m, { ...OPTS, today, full: true });
+  assert.ok(web);
+  assert.equal(forecastMatch(group, m, { ...OPTS, today, full: true }), web, 'el mismo objeto');
+  // Con otras opciones, otra entrada: sin full, la 5 queda fuera del horizonte (null) y no tapa la de full.
+  assert.equal(forecastMatch(group, m, { ...OPTS, today }), null);
+  assert.equal(forecastMatch(group, m, { ...OPTS, today, full: true }), web);
+  // El backtest y el banco, sin caché: cada vez un objeto nuevo, con lo mismo.
+  for (const extra of [{}, { before: '2026-10-19' }, { today, full: true, params: { ...PARAMS } }, { today, full: true, before: '2026-10-19' }]) {
+    const a = forecastMatch(group, m, { ...OPTS, ...extra }), b = forecastMatch(group, m, { ...OPTS, ...extra });
+    assert.notEqual(a, b, JSON.stringify(extra));
+    assert.deepEqual(a, b, JSON.stringify(extra));
+    assert.deepEqual(numbers(a), numbers(web), JSON.stringify(extra));
+  }
+  // Un grupo nuevo (otros datos, aunque sean los mismos), todo de nuevo.
+  const rebuilt = makeGroup();
+  const again = forecastMatch(rebuilt, matchOf(rebuilt, 5, 'Gamma'), { ...OPTS, today, full: true });
+  assert.notEqual(again, web);
+  assert.deepEqual(again, web);
+});

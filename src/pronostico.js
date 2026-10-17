@@ -41,10 +41,13 @@
  * cadenas contados uno a uno, ni el Poisson bayesiano, ni las mezclas de los mejores mejoran a Massey (la
  * tabla, en la cabecera del banco; cada familia, en scripts/pronostico_modelos/).
  *
- * Qué se muestra (con `today`, como en la web): la próxima jornada de cada grupo (horizonOf) o, con `full`,
- * todo lo que queda del calendario, cada partido con su distancia (roundsAhead: a cuántas jornadas vista);
- * solo con dos jornadas jugadas en el grupo y algún partido de cada uno de los dos equipos. Se recalcula
- * con cada resultado: cada partido sin jugar, con todo lo jugado del grupo hasta ese momento.
+ * Qué se muestra (con `today`, como en la web): con `full`, que la web pasa desde el 17/10/2026 (el usuario
+ * lo pidió «de todo el calendario, de todos los siguientes enfrentamientos»), todo lo que queda del
+ * calendario, cada partido con su distancia (roundsAhead: a cuántas jornadas vista); sin él, solo la
+ * próxima jornada de cada grupo (horizonOf). Solo con dos jornadas jugadas en el grupo y algún partido de
+ * cada uno de los dos equipos. Se recalcula con cada resultado: cada partido sin jugar, con todo lo jugado
+ * del grupo hasta ese momento (con datos nuevos, el modelo construye otro Group y las cachés de aquí, que
+ * van por él, empiezan de cero).
  *
  * A varias jornadas vista (17/10/2026, el banco con --distancia, en su cabecera; EVALUACIÓN, 2.747
  * partidos): la víspera, 80,1 % de acierto y 0,522 de log-loss; a 2 jornadas, 80,1 % y +0,010 [+0,005,
@@ -227,11 +230,17 @@ function roundDatesOf(group) {
 }
 
 // Lo que no cambia de un grupo (el Group de model.js no cambia una vez construido): sus retirados, sus
-// copias, la fecha de cada jornada y, por día, su horizonte (horizonOf), calculados una vez.
+// copias, la fecha de cada jornada, el sitio de cada partido en el calendario (order: la clave de la
+// caché de los ajustes), por `status`, los partidos que pueden entrar en un entrenamiento (eligibleOf) y,
+// por día, su horizonte (horizonOf), calculados una vez.
 const FACTS = new WeakMap();
 function factsOf(group) {
   if (!FACTS.has(group)) {
-    FACTS.set(group, { retired: retiredTeams(group), copies: copiedMatches(group), roundDates: roundDatesOf(group), horizon: new Map() });
+    const order = new Map();
+    for (const round of group.rounds || []) for (const m of round.matches) order.set(m, order.size);
+    FACTS.set(group, {
+      retired: retiredTeams(group), copies: copiedMatches(group), roundDates: roundDatesOf(group), order, eligible: new Map(), horizon: new Map(),
+    });
   }
   return FACTS.get(group);
 }
@@ -247,7 +256,8 @@ const addDays = (iso, n) => new Date(Date.parse(`${iso}T12:00:00Z`) + n * 864000
  * varias jornadas vista desde el 17/10/2026; el usuario lo pidió ese día). Por fecha y no por número, una
  * jornada adelantada cuenta como la próxima, y una sin resultados con la fecha ya pasada no atasca nada.
  * Sin nada pendiente detrás de la última con resultados, null: sin límite (los aplazados que queden). Es
- * el comportamiento por defecto de la web hasta que la interfaz enseñe todo el calendario. */
+ * lo de forecastMatch sin `full`; la web pasa `full` desde el 17/10/2026 (forecastOptions de ui.js) y
+ * enseña todo el calendario. */
 export function horizonOf(group, today) {
   const facts = factsOf(group);
   if (facts.horizon.has(today)) return facts.horizon.get(today);
@@ -273,23 +283,40 @@ export function horizonOf(group, today) {
  * pronostica con la 1, la 3, la 4 y la 5. La exporta el backtest, para su línea base de la
  * clasificación con los mismos partidos. `before` (AAAA-MM-DD; solo el banco de pruebas, 17/10/2026):
  * además, solo lo jugado antes de ese día, el pronóstico que se habría hecho ese día con jornadas por
- * medio (roundsAhead); la web no lo pasa: lo que tiene marcador ya se ha jugado. Para una jornada fija, el
- * conjunto solo crece con la fecha de `match` y con `before`: su tamaño lo identifica (la clave de la
- * caché de los ajustes). */
+ * medio (roundsAhead); la web no lo pasa: lo que tiene marcador ya se ha jugado. Los partidos salen
+ * siempre en el orden del calendario: dos entrenamientos con los mismos partidos son la misma lista (la
+ * clave de la caché de los ajustes). */
 export function trainingFor(group, match, { status = null, before = null } = {}) {
-  const { retired, copies } = factsOf(group);
   const out = [];
-  for (const round of group.rounds || []) {
-    if (round.key === match.roundKey) continue;
-    for (const m of round.matches) {
-      if (!scored(m) || !m.dateISO) continue;
-      if (match.dateISO && !(m.dateISO < match.dateISO)) continue;
-      if (before !== null && !(m.dateISO < before)) continue;
-      if (retired.has(m.home) || retired.has(m.away) || copies.has(m) || isDeskResult(m) || offByStatus(status, m)) continue;
-      out.push(m);
-    }
+  for (const { key, m } of eligibleOf(group, status)) {
+    if (key === match.roundKey) continue;
+    if (match.dateISO && !(m.dateISO < match.dateISO)) continue;
+    if (before !== null && !(m.dateISO < before)) continue;
+    out.push(m);
   }
   return out;
+}
+
+// Los partidos que pueden entrar en un entrenamiento (trainingFor): con marcador y fecha, sin retirados,
+// copias, mesa ni estados de fuera, en el orden del calendario y cada uno con la clave de su jornada.
+// Una vez por grupo y `status` (17/10/2026: con todo el calendario, trainingFor va en cada partido de
+// cada pantalla, y mirar los estados de cada partido jugado cada vez era lo que más costaba).
+function eligibleOf(group, status) {
+  const facts = factsOf(group);
+  const st = typeof status === 'function' ? status : null;
+  if (!facts.eligible.has(st)) {
+    const { retired, copies } = facts;
+    const out = [];
+    for (const round of group.rounds || []) {
+      for (const m of round.matches) {
+        if (!scored(m) || !m.dateISO) continue;
+        if (retired.has(m.home) || retired.has(m.away) || copies.has(m) || isDeskResult(m) || offByStatus(st, m)) continue;
+        out.push({ key: round.key, m });
+      }
+    }
+    facts.eligible.set(st, out);
+  }
+  return facts.eligible.get(st);
 }
 
 // La distancia de roundsAhead con el entrenamiento ya hecho (el de trainingFor de `match`).
@@ -328,19 +355,25 @@ export function roundsAhead(group, match, { status = null, before = null } = {})
   return aheadFrom(group, match, trainingFor(group, match, { status, before }));
 }
 
-// Los ajustes ya hechos, por grupo, por `status` y por jornada, tamaño del entrenamiento y parámetros del
-// ajuste: los partidos de una jornada con el mismo entrenamiento (los de días distintos sin nada jugado
-// entre medias, las jornadas futuras) comparten ajuste. Solo es una caché: el resultado es el mismo.
-// Cada uno, { goals: el de fitRatings, notes: el de fitNotes } o null sin partidos.
+// Los ajustes ya hechos, por grupo, por `status` y por los partidos del entrenamiento (su sitio en el
+// calendario, en su orden: factsOf) y los parámetros del ajuste: dos partidos con el mismo entrenamiento
+// comparten ajuste, sean de la jornada que sean. Con todo el calendario (17/10/2026), las jornadas que
+// quedan por delante se entrenan con lo mismo, todo lo jugado, y en un grupo de 26 jornadas se ajusta una
+// vez (dos con una jornada a medias: la suya, sin sus propios partidos), no una por jornada. Con esto y
+// con eligibleOf, todo lo que queda de un grupo, en frío y a mitad de temporada (2025-26 el 20/01/2026,
+// en Node, la mediana de 14 pasadas), pasa de 10 ms de media a 4 (de 28 a 11 en el que más). Solo es una
+// caché: el resultado es el mismo (el ajuste es determinista con la misma lista). Cada uno, { goals: el de
+// fitRatings, notes: el de fitNotes } o null sin partidos.
 const FITS = new WeakMap();
 
-function cachedFit(group, match, training, status, p) {
+function cachedFit(group, training, status, p) {
   if (!FITS.has(group)) FITS.set(group, new Map());
   const byStatus = FITS.get(group);
   const st = typeof status === 'function' ? status : null;
   if (!byStatus.has(st)) byStatus.set(st, new Map());
   const memo = byStatus.get(st);
-  const key = [match.roundKey, training.length, p.shrink, p.home, p.cap, p.cushion, p.ridge].join('\u0001');
+  const { order } = factsOf(group);
+  const key = [training.map(m => order.get(m)).join(','), p.shrink, p.home, p.cap, p.cushion, p.ridge].join('\u0001');
   if (!memo.has(key)) memo.set(key, training.length ? { goals: fitRatings(training, p), notes: fitNotes(training, p) } : null);
   return memo.get(key);
 }
@@ -606,14 +639,44 @@ export function topScores(meanHome, meanAway, { n = 3, pick = null, params = PAR
  * jugadas o si uno de los dos no ha jugado aún PARAMS.minPlayed partidos (con lo jugado de verdad, no con
  * la distancia: lo mismo a 1 que a 10 jornadas vista). Opciones: portalSeason (la del contexto), today
  * (AAAA-MM-DD; la web lo pasa siempre; sin él, el backtest, sin horizonte), full (con today, todo lo
- * pendiente del calendario y no solo la próxima jornada; por defecto, false), status (model.matchStatus)
- * y, solo para el backtest y el banco, prueba (otra temporada o una liguilla de copa), before (AAAA-MM-DD:
- * con solo lo jugado antes de ese día, el pronóstico que se habría hecho entonces; trainingFor) y params
- * (otros parámetros). Sin corrección por distancia: el 1X2 es el mismo a cualquier distancia con el mismo
- * entrenamiento (el porqué, en la cabecera). */
+ * pendiente del calendario y no solo la próxima jornada; por defecto, false; la web lo pasa siempre),
+ * status (model.matchStatus) y, solo para el backtest y el banco, prueba (otra temporada o una liguilla
+ * de copa), before (AAAA-MM-DD: con solo lo jugado antes de ese día, el pronóstico que se habría hecho
+ * entonces; trainingFor) y params (otros parámetros). Sin corrección por distancia: el 1X2 es el mismo a
+ * cualquier distancia con el mismo entrenamiento (el porqué, en la cabecera). En la web (con `today`, sin
+ * `before` y con los PARAMS), cada pronóstico se calcula una vez por grupo y opciones (FORECASTS): pintar
+ * otra vez la misma pantalla no recalcula nada. */
 export function forecastMatch(group, match, { portalSeason = null, today = null, full = false, status = null, before = null, prueba = false, params = PARAMS } = {}) {
+  const options = { portalSeason, today, full, status, before, prueba, params };
+  if (!group || typeof group !== 'object' || !match || typeof match !== 'object') return null;
+  if (today === null || before !== null || params !== PARAMS) return forecastOf(group, match, options);
+  const memo = forecastMemo(group, status, [portalSeason, today, full, prueba].join('\u0001'));
+  if (!memo.has(match)) memo.set(match, forecastOf(group, match, options));
+  return memo.get(match);
+}
+
+/* Los pronósticos ya hechos en la web (17/10/2026: con todo el calendario, decenas por pantalla, y la
+ * pantalla se vuelve a pintar al volver a ella): por grupo, por `status`, por las opciones y por partido,
+ * el de forecastOf o null (otra vez todo lo que queda de los ocho grupos de 2025-26 el 20/01/2026, de 26
+ * ms a 0,6). Como FACTS y FITS, va por el objeto del grupo, que no cambia una vez construido: con datos
+ * nuevos (un resultado más), el modelo construye otro y se calcula todo otra vez con lo nuevo. El banco y
+ * el backtest (sin `today`, con `before` u otros parámetros) no la usan. Solo es una caché: el resultado
+ * es el mismo (el mismo objeto, que nadie modifica). */
+const FORECASTS = new WeakMap();
+function forecastMemo(group, status, key) {
+  if (!FORECASTS.has(group)) FORECASTS.set(group, new Map());
+  const byStatus = FORECASTS.get(group);
+  const st = typeof status === 'function' ? status : null;
+  if (!byStatus.has(st)) byStatus.set(st, new Map());
+  const byOptions = byStatus.get(st);
+  if (!byOptions.has(key)) byOptions.set(key, new WeakMap());
+  return byOptions.get(key);
+}
+
+// El pronóstico de forecastMatch, sin la caché de la web.
+function forecastOf(group, match, { portalSeason, today, full, status, before, prueba, params }) {
   const p = { ...PARAMS, ...params };
-  if (!match || !forecastApplies(group, { portalSeason, prueba })) return null;
+  if (!forecastApplies(group, { portalSeason, prueba })) return null;
   if (scored(match) || offByStatus(status, match)) return null;
   if (today !== null) {
     if (matchState(match, today) !== 'pendiente') return null;
@@ -623,7 +686,7 @@ export function forecastMatch(group, match, { portalSeason = null, today = null,
   const { retired } = factsOf(group);
   if (retired.has(match.home) || retired.has(match.away)) return null;
   const training = trainingFor(group, match, { status, before });
-  const fits = cachedFit(group, match, training, status, p);
+  const fits = cachedFit(group, training, status, p);
   if (!fits || fits.goals.rounds < p.minRounds) return null;
   const fit = fits.goals;
   const avg = { attack: 1, defense: 1, played: 0 };

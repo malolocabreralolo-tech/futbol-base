@@ -118,13 +118,16 @@ export function matchRow(match, { mine = false, today, shields, href, note: with
 // ── Pronóstico (prebenjamín de la temporada en curso; pronostico.js, 17/10/2026) ──
 
 // Las opciones de forecastMatch y forecastRound en la web: la temporada del portal, hoy (solo los
-// partidos `pendiente`) y los estados de la app de futbolaspalmas (model.matchStatus, que no usa this:
-// la misma función en cada pintado, y la caché de los ajustes de pronostico.js va por ella).
+// partidos `pendiente`), todo el calendario (full: cada partido que queda, no solo los de la próxima
+// jornada; el usuario lo pidió el 17/10/2026) y los estados de la app de futbolaspalmas
+// (model.matchStatus, que no usa this: la misma función en cada pintado, y las cachés de pronostico.js
+// van por ella).
 export function forecastOptions(ctx) {
   const model = (ctx && ctx.model) || {};
   return {
     portalSeason: ctx && ctx.portal ? ctx.portal.season : null,
     today: ctx ? ctx.today : null,
+    full: true,
     status: typeof model.matchStatus === 'function' ? model.matchStatus : null,
   };
 }
@@ -148,7 +151,9 @@ function favorite(f) {
 // resultado: va debajo del partido, nunca en la casilla del marcador (que sigue con su «–»), en letra
 // pequeña, sin negrita y en --mute (también en la fila propia, que va en tinta), y empieza por
 // «Pronóstico»; el lector de pantalla oye otra frase, que dice que no es un resultado. La usan matchRow
-// (Jornada) y el próximo partido de Mi equipo, cada uno con su clase (cls). f: el de forecastMatch, o
+// (Jornada y, desde el 17/10/2026, el calendario del equipo) y el próximo partido de Mi equipo, cada uno
+// con su clase (cls); la misma a cualquier distancia (a cuántas jornadas vista, solo en la nota de la
+// Jornada y en la pantalla Partido: en las listas sería ruido). f: el de forecastMatch, o
 // null (nada). Si los goles esperados no van con el favorito (goalsAgree false: el 1X2 es de las notas
 // y el marcador, del Poisson), ese marcador no es el más probable (en el archivo, nunca entre los dos
 // primeros del Poisson; revisión del 17/10/2026): la línea, sin marcador, «Pronóstico · Valsequillo 45 %».
@@ -169,12 +174,20 @@ export function forecastLine(f, cls = 'match-forecast') {
 // sale, en una frase. forecasts: los de forecastRound, con sus null. Cuenta los partidos jugados con los
 // que se calcula (`matches`), no las jornadas: con la jornada 2 a medias, «las 2 jornadas jugadas» diría
 // que la base ya está completa (revisión del 17/10/2026); si no son los mismos en todos (un aplazado, o
-// cada grupo los suyos), sin número.
+// cada grupo los suyos), sin número. Con todo el calendario (17/10/2026), en una jornada de más adelante
+// (algún pronóstico a 2 o más jornadas vista, `ahead` de forecastMatch) dice además a cuántas, si es la
+// misma en todos (con espacios de no separación: «a 6 jornadas», junto), y que cambiará con los resultados
+// de antes: con cada uno que llega, se rehace.
 export function forecastNote(forecasts, { each = false } = {}) {
-  const counts = [...new Set(forecasts.filter(Boolean).map(f => f.matches))];
+  const shown = forecasts.filter(Boolean);
+  const counts = [...new Set(shown.map(f => f.matches))];
   if (!counts.length) return '';
   const what = each || counts.length > 1 ? 'los partidos jugados' : counts[0] === 1 ? 'el partido jugado' : `los ${counts[0]} partidos jugados`;
-  return notice('Pronóstico:', `estimación según ${what} ${each ? 'en cada grupo' : 'en el grupo'}; no es un resultado.`);
+  const where = each ? 'en cada grupo' : 'en el grupo';
+  const ahead = [...new Set(shown.map(f => f.ahead))];
+  if (!ahead.some(k => k >= 2)) return notice('Pronóstico:', `estimación según ${what} ${where}; no es un resultado.`);
+  const far = ahead.length === 1 ? ` a\u00a0${ahead[0]}\u00a0jornadas vista,` : '';
+  return notice('Pronóstico:', `estimación${far} según ${what} ${where}; cambiará con los resultados de antes. No es un resultado.`);
 }
 
 // La barra del 1X2 de la pantalla Partido: tres tramos sólidos, el local en tinta, el empate en --mute

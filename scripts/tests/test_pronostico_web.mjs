@@ -1,11 +1,12 @@
 // El pronóstico en la web (17/10/2026): la línea discreta bajo cada partido sin jugar de la Jornada (y de
-// «Todos los grupos») con su nota, el bloque «Pronóstico» de la pantalla Partido y la línea del próximo
-// partido de Mi equipo; solo en prebenjamín de la temporada del portal. render(ctx) es pura: se prueba
-// sobre el HTML, con las fixtures congeladas (la temporada del portal es 2025-26) y `today` inyectado,
-// como las demás pantallas. El modelo (src/pronostico.js) tiene sus pruebas en test_pronostico.mjs; aquí,
-// lo que se pinta y dónde no se pinta nada: benjamín, alevín, lo jugado, lo de un retirado, las
-// jornadas con menos de dos jugadas, un equipo que aún no ha jugado y lo que va más allá de la próxima
-// jornada (revisión del 17/10/2026).
+// «Todos los grupos») con su nota, el bloque «Pronóstico» de la pantalla Partido, la línea del próximo
+// partido de Mi equipo y, desde el mismo día, la de cada partido sin jugar del calendario del equipo; solo
+// en prebenjamín de la temporada del portal, y de todo el calendario, no solo de la próxima jornada (lo
+// pidió el usuario: «de todos los siguientes enfrentamientos», recalculado con cada resultado). render(ctx)
+// es pura: se prueba sobre el HTML, con las fixtures congeladas (la temporada del portal es 2025-26) y
+// `today` inyectado, como las demás pantallas. El modelo (src/pronostico.js) tiene sus pruebas en
+// test_pronostico.mjs; aquí, lo que se pinta y dónde no se pinta nada: benjamín, alevín, lo jugado, lo de
+// un retirado, las jornadas con menos de dos jugadas y un equipo que aún no ha jugado.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';
@@ -14,10 +15,12 @@ import { ctxFor, datasetsFor, cssRules, PORTAL_SEASON } from './fixtures/redisen
 import { screen as jornada } from '../../src/screen-jornada.js';
 import { screen as partido } from '../../src/screen-partido.js';
 import { screen as home } from '../../src/screen-home.js';
+import { screen as equipo } from '../../src/screen-equipo.js';
 import { findRound } from '../../src/model.js';
 import { alevinData } from '../../src/state.js';
 import { forecastLine, forecastNote, forecastOptions, matchRow, oddsBar, percent } from '../../src/ui.js';
 import { forecastMatch, forecastRound, horizonOf, outcome, topScores } from '../../src/pronostico.js';
+import { teamCalendar } from '../../src/team-view.js';
 
 const s = (h) => String(h);
 // Texto visible y oído: sin etiquetas, con las entidades básicas resueltas y los espacios juntos (también
@@ -92,6 +95,27 @@ test('forecastNote: de dónde sale, una vez y en partidos (no en jornadas, que p
   assert.equal(text(forecastNote([GUESS, { ...GUESS, matches: 11 }])), 'Pronóstico: estimación según los partidos jugados en el grupo; no es un resultado.');
   assert.equal(text(forecastNote([GUESS], { each: true })), 'Pronóstico: estimación según los partidos jugados en cada grupo; no es un resultado.');
   assert.doesNotMatch(text(forecastNote([GUESS])), /jornada/);
+  // La próxima jornada (ahead 1), lo de siempre.
+  assert.equal(s(forecastNote([{ ...GUESS, ahead: 1 }, null])), s(forecastNote([GUESS, null])));
+});
+
+test('forecastNote, en una jornada de más adelante: a cuántas jornadas vista, si es la misma en todos, y que cambiará', () => {
+  const far = { ...GUESS, ahead: 6 };
+  assert.equal(text(forecastNote([null, far, far])),
+    'Pronóstico: estimación a 6 jornadas vista, según los 9 partidos jugados en el grupo; cambiará con los resultados de antes. No es un resultado.');
+  // Distancias distintas (un partido adelantado, o un aplazado de una jornada pasada entre los de una lejana):
+  // sin número, y lo demás igual.
+  assert.equal(text(forecastNote([far, { ...far, ahead: 7 }])),
+    'Pronóstico: estimación según los 9 partidos jugados en el grupo; cambiará con los resultados de antes. No es un resultado.');
+  assert.equal(text(forecastNote([{ ...GUESS, ahead: 1 }, far])),
+    'Pronóstico: estimación según los 9 partidos jugados en el grupo; cambiará con los resultados de antes. No es un resultado.');
+  assert.equal(text(forecastNote([far], { each: true })),
+    'Pronóstico: estimación a 6 jornadas vista, según los partidos jugados en cada grupo; cambiará con los resultados de antes. No es un resultado.');
+  // «a 6 jornadas», con espacios de no separación: nunca la «a» o el número al final de una línea y lo demás
+  // en la otra.
+  assert.match(s(forecastNote([far])), /a\u00a06\u00a0jornadas vista,/);
+  assert.equal(text(forecastNote([{ ...far, ahead: 2 }])),
+    'Pronóstico: estimación a 2 jornadas vista, según los 9 partidos jugados en el grupo; cambiará con los resultados de antes. No es un resultado.');
 });
 
 test('oddsBar: tres tramos sólidos en milésimas enteras que suman 1000, decorativa y sin discontinuas', () => {
@@ -137,24 +161,104 @@ test('Jornada: nada en lo jugado ni antes de dos jornadas jugadas', () => {
   assert.doesNotMatch(half, /match-forecast|Pronóstico/);
 });
 
-test('solo la próxima jornada: el 20/10/2025, la 3 de PG2 sí; la 4, la 10 y la última, nada; Partido de una de ellas, sin bloque', () => {
+test('todo el calendario: el 20/10/2025, la 3 de PG2, la 4, la 10 y la última, cada partido sin jugar con su línea', () => {
   const ctx = ctxOf('jornada', { g: 'PG2' });
   const group = ctx.model.group(PORTAL_SEASON, 'PG2');
+  assert.equal(forecastOptions(ctx).full, true, 'la web, con todo el calendario');
+  // El horizonte de antes (sin full) sigue en pronostico.js, pero la web ya no corta en él.
   assert.equal(horizonOf(group, TODAY), '2025-10-29', 'seis días después del primero de la 3 (el 23)');
-  assert.equal(lines(renderJornada({ g: 'PG2', r: 'Jornada 3' })).length, 6);
   const last = group.rounds[group.rounds.length - 1].key;
-  for (const r of ['Jornada 4', 'Jornada 10', last]) {
+  const ahead = { 'Jornada 3': 1, 'Jornada 4': 2, 'Jornada 10': 8, [last]: 28 };
+  const near = expected(MESAS_J3);
+  for (const [r, k] of Object.entries(ahead)) {
     const out = renderJornada({ g: 'PG2', r });
-    assert.ok(rows(out).length > 0 && out.includes('match-score is-pending'), r);
-    assert.doesNotMatch(out, /match-forecast|Pronóstico/, r);
-    assert.ok(forecastRound(group, findRound(group, r), forecastOptions(ctx)).every((f) => f === null), r);
+    const list = rows(out);
+    assert.ok(list.length > 0 && list.every((row) => row.includes('match-score is-pending')), r);
+    assert.equal(lines(out).length, list.length, `${r}: todos con su línea`);
+    // La línea, la de siempre, con su frase para el lector de pantalla: ni la distancia ni nada más.
+    for (const row of list) assert.match(row, /<span class="match-forecast"><span aria-hidden="true">Pronóstico (\d+–\d+ )?· [^<]+ \d+\u00a0%<\/span><span class="vh">Pronóstico, no es un resultado: [^<]+\.<\/span><\/span>$/, r);
+    const forecasts = forecastRound(group, findRound(group, r), forecastOptions(ctx));
+    assert.ok(forecasts.every((f) => f && f.ahead === k && f.matches === near.matches), `${r}: a ${k} vista, con los mismos ${near.matches} partidos`);
+    // La nota: en la próxima jornada, la de siempre; más adelante, a cuántas y que cambiará.
+    const note = notes(out).find((n) => n.startsWith('Pronóstico:'));
+    assert.equal(note, k === 1
+      ? `Pronóstico: estimación según los ${near.matches} partidos jugados en el grupo; no es un resultado.`
+      : `Pronóstico: estimación a ${k} jornadas vista, según los ${near.matches} partidos jugados en el grupo; cambiará con los resultados de antes. No es un resultado.`, r);
   }
+  // Con lo mismo jugado, el 1X2 no depende de la distancia: el de la última, el de forecastMatch sin
+  // horizonte (el del backtest, con todo lo jugado).
   const far = findRound(group, last).matches[0];
-  const out = renderPartido({ g: 'PG2', r: last, h: far.home, a: far.away });
+  const f = expected({ g: 'PG2', r: last, h: far.home, a: far.away });
+  assert.deepEqual(f, forecastMatch(group, far, { portalSeason: PORTAL_SEASON, status: forecastOptions(ctx).status }));
+  // «Todos los grupos» de la jornada 4: la línea en cada partido y una sola nota, a 2 vista.
+  const all = renderJornada({ c: 'prebenjamin', f: 'grancanaria', r: '4' });
+  assert.ok(rows(all).length >= 12);
+  assert.equal(lines(all).length, rows(all).length);
+  assert.deepEqual(notes(all).filter((n) => n.startsWith('Pronóstico:')),
+    ['Pronóstico: estimación a 2 jornadas vista, según los partidos jugados en cada grupo; cambiará con los resultados de antes. No es un resultado.']);
+});
+
+test('Partido de una jornada lejana: el bloque, con una frase más (a cuántas jornadas vista y que cambiará); en la próxima, sin ella', () => {
+  const ctx = ctxOf('jornada', { g: 'PG2' });
+  const group = ctx.model.group(PORTAL_SEASON, 'PG2');
+  const last = group.rounds[group.rounds.length - 1];
+  const far = last.matches[0];
+  const params = { g: 'PG2', r: last.key, h: far.home, a: far.away };
+  const out = renderPartido(params);
   assert.match(out, /pt-score is-pending/);
-  assert.equal(blockOf(out, 'Pronóstico'), null);
-  // «Todos los grupos» de la jornada 4: tampoco.
-  assert.doesNotMatch(renderJornada({ c: 'prebenjamin', f: 'grancanaria', r: '4' }), /match-forecast|Pronóstico/);
+  const block = blockOf(out, 'Pronóstico');
+  assert.ok(block, 'hay bloque');
+  const f = expected(params);
+  assert.equal(f.ahead, 28);
+  assert.equal(text(block.match(/<p class="notice">.*?<\/p>/)[0]),
+    `Con los ${f.matches} partidos jugados en el grupo esta temporada. A 28 jornadas vista: cambiará con los resultados de antes. Es una estimación, no un resultado.`);
+  // El resto del bloque, como en la próxima jornada: la barra, las cifras y el más probable.
+  assert.match(block, /class="odds-bar"[^]*Resultado más probable|class="odds-bar"[^]*Si gana /);
+  // A 2 vista (la 4), con su número; en la 3, la próxima, sin la frase.
+  const j4 = findRound(group, 'Jornada 4').matches[0];
+  assert.match(blockOf(renderPartido({ g: 'PG2', r: 'Jornada 4', h: j4.home, a: j4.away }), 'Pronóstico'), /A\u00a02\u00a0jornadas vista: cambiará con los resultados de antes\./);
+  assert.doesNotMatch(blockOf(renderPartido(MESAS_J3), 'Pronóstico'), /jornadas vista|cambiará/);
+});
+
+test('se recalcula con cada resultado: con la 3 ya jugada, la 10 se rehace con 6 partidos más y queda una jornada más cerca', () => {
+  const before = { g: 'PG2', r: 'Jornada 10' };
+  const ctx = ctxOf('jornada', before);
+  const group = ctx.model.group(PORTAL_SEASON, 'PG2');
+  const m = findRound(group, 'Jornada 10').matches[0];
+  const params = { ...before, h: m.home, a: m.away };
+  const was = expected(params);
+  // El 27/10/2025, con los resultados de la jornada 3 publicados.
+  const later = at('2025-10-27');
+  const now = expected(params, later);
+  assert.equal(now.matches, was.matches + 6);
+  assert.equal(now.ahead, was.ahead - 1);
+  assert.notEqual(now.pHome, was.pHome, 'otro ajuste, con lo nuevo');
+  assert.ok(notes(renderJornada(before, later)).includes(
+    `Pronóstico: estimación a ${now.ahead} jornadas vista, según los ${now.matches} partidos jugados en el grupo; cambiará con los resultados de antes. No es un resultado.`));
+  // La 3, ya jugada, sin ninguna línea; la 4, ahora la próxima, con la nota de siempre.
+  assert.doesNotMatch(renderJornada({ g: 'PG2', r: 'Jornada 3' }, later), /match-forecast|Pronóstico/);
+  const j4 = renderJornada({ g: 'PG2', r: 'Jornada 4' }, later);
+  assert.equal(lines(j4).length, rows(j4).length);
+  assert.ok(notes(j4).includes(`Pronóstico: estimación según los ${now.matches} partidos jugados en el grupo; no es un resultado.`));
+});
+
+test('sin recalcular en cada pintado: el mismo grupo y las mismas opciones dan el mismo pronóstico; con datos nuevos, otro', () => {
+  const ctx = ctxOf('jornada', { g: 'PG2', r: 'Jornada 10' });
+  const group = ctx.model.group(PORTAL_SEASON, 'PG2');
+  const round = findRound(group, 'Jornada 10');
+  const first = forecastRound(group, round, forecastOptions(ctx));
+  const again = forecastRound(group, round, forecastOptions(ctx));
+  first.forEach((f, i) => assert.equal(again[i], f, 'el mismo objeto: no se ha vuelto a calcular'));
+  assert.equal(renderJornada({ g: 'PG2', r: 'Jornada 10' }), renderJornada({ g: 'PG2', r: 'Jornada 10' }));
+  // Otro modelo con los mismos datos (otra carga de la página): otro grupo, calculado de nuevo e igual.
+  const other = ctxOf('jornada', { g: 'PG2', r: 'Jornada 10' });
+  const rebuilt = other.model.group(PORTAL_SEASON, 'PG2');
+  assert.notEqual(rebuilt, group);
+  const fresh = forecastRound(rebuilt, findRound(rebuilt, 'Jornada 10'), forecastOptions(other));
+  fresh.forEach((f, i) => { assert.notEqual(f, first[i]); assert.deepEqual(f, first[i]); });
+  // Otro día (otro `today`), otra entrada de la caché.
+  const tomorrow = forecastRound(group, round, { ...forecastOptions(ctx), today: '2025-10-21' });
+  tomorrow.forEach((f, i) => { assert.notEqual(f, first[i]); assert.deepEqual(f, first[i]); });
 });
 
 test('Jornada de benjamín y de alevín: ningún pronóstico, aunque lleven dos jornadas jugadas', () => {
@@ -321,10 +425,66 @@ test('Mi equipo (Las Mesas Hu., prebenjamín): la línea bajo el próximo partid
   assert.equal(seen(line[1]), `Pronóstico ${f.score[0]}–${f.score[1]} · Veteranos ${Math.round(f.pAway * 100)} %`);
   // Dentro de la caja del próximo partido, bajo los dos equipos y antes del campo.
   assert.match(out, /<div class="fixture">.*<span class="fixture-forecast">.*<\/div><p class="fixture-venue">/);
-  // Solo el próximo: el calendario completo, sin pronósticos.
-  assert.doesNotMatch(out, /match-forecast/);
   const benj = s(home.render(ctxFor('home', {}, { ...at(), myTeam: { name: 'Las Mesas Hu.', season: PORTAL_SEASON, cat: 'benjamin', groupId: 'FF5' } })));
   assert.doesNotMatch(benj, /forecast|Pronóstico/);
+});
+
+// Las filas del calendario del equipo (teamCalendar): { when, row } de cada partido.
+const calendarRows = (out) => [...s(out).matchAll(/<li><p class="cal-when">(.*?)<\/p>(<a class="match-row[^"]*" href="[^"]*">.*?<\/a>)<\/li>/g)].map((m) => ({ when: m[1], row: m[2] }));
+
+test('el calendario del equipo (Mi equipo y la ficha): la línea bajo cada partido sin jugar, la misma que en la Jornada; lo jugado, sin ella', () => {
+  const out = s(home.render(ctxFor('home', {}, at())));
+  const cal = out.match(/<section class="block" id="calendario">[^]*?<\/section>/)[0];
+  const list = calendarRows(cal);
+  assert.equal(list.length, 26);
+  const played = list.filter(({ row }) => !row.includes('match-score is-pending'));
+  const pending = list.filter(({ row }) => row.includes('match-score is-pending'));
+  assert.equal(played.length, 2, 'la 1 y la 2');
+  assert.ok(played.every(({ row }) => !row.includes('match-forecast')), 'lo jugado, sin línea');
+  assert.equal(pending.length, 24);
+  assert.ok(pending.every(({ row }) => row.includes('<span class="match-forecast">')), 'cada partido sin jugar, con la suya');
+  // La de la jornada 3 (la del próximo partido) y la de la última, las de la Jornada de esas jornadas.
+  const ctx = ctxOf('jornada', { g: 'PG2' });
+  const group = ctx.model.group(PORTAL_SEASON, 'PG2');
+  const last = group.rounds[group.rounds.length - 1].key;
+  for (const r of ['Jornada 3', last]) {
+    const jornadaRow = rows(renderJornada({ g: 'PG2', r })).find((row) => row.includes('Las Mesas Hu.'));
+    const calRow = pending.find(({ when }) => when.startsWith(`${findRound(group, r).label} ·`)).row;
+    assert.equal(calRow.match(/<span class="match-forecast">.*?<\/span><\/span>/)[0], jornadaRow.match(/<span class="match-forecast">.*?<\/span><\/span>/)[0], r);
+  }
+  // La del próximo partido, también arriba, en su caja (fixture-forecast).
+  assert.match(out, /<span class="fixture-forecast">/);
+  // La ficha de Equipo de otro (AD Huracán) pinta lo mismo en su calendario.
+  const ficha = s(equipo.render(ctxFor('equipo', { s: PORTAL_SEASON, g: 'PG2', t: 'AD Huracán' }, at())));
+  const fichaRows = calendarRows(ficha.match(/<section class="block" id="calendario">[^]*?<\/section>/)[0]);
+  assert.ok(fichaRows.filter(({ row }) => row.includes('match-score is-pending')).every(({ row }) => row.includes('match-forecast')));
+  assert.ok(fichaRows.some(({ row }) => row.includes('match-forecast')));
+});
+
+test('el calendario del equipo, sin línea: en benjamín, en una temporada pasada, sin las opciones y con la temporada jugada', () => {
+  // Benjamín (FF5): ninguna, aunque tenga partidos sin jugar.
+  const benj = s(home.render(ctxFor('home', {}, { ...at(), myTeam: { name: 'Las Mesas Hu.', season: PORTAL_SEASON, cat: 'benjamin', groupId: 'FF5' } })));
+  const benjCal = benj.match(/<section class="block" id="calendario">[^]*?<\/section>/)[0];
+  assert.ok(benjCal.includes('match-score is-pending'));
+  assert.doesNotMatch(benjCal, /match-forecast/);
+  // teamCalendar sin `forecast` (las opciones), la lista de siempre; con ellas, solo cambian las líneas.
+  const ctx = ctxOf('jornada', { g: 'PG2' });
+  const group = ctx.model.group(PORTAL_SEASON, 'PG2');
+  const plain = s(teamCalendar('Las Mesas Hu.', group, { today: TODAY }));
+  assert.doesNotMatch(plain, /match-forecast/);
+  const withLines = s(teamCalendar('Las Mesas Hu.', group, { today: TODAY, forecast: forecastOptions(ctx) }));
+  assert.equal(withLines.replace(/<span class="match-forecast">.*?<\/span><\/span>/g, ''), plain);
+  // El mismo grupo como si fuera de otra temporada (no la del portal): ninguna.
+  const past = s(teamCalendar('Las Mesas Hu.', { ...group, season: '2024-2025' }, { today: TODAY, forecast: forecastOptions(ctx) }));
+  assert.ok(past.includes('match-score is-pending'));
+  assert.doesNotMatch(past, /match-forecast/);
+  // Con la temporada ya jugada (el 03/06/2026, con los datos del 2: la 30, con la fecha pasada y sin
+  // resultado), ninguna.
+  const june = at('2026-06-03', currentAt('2026-06-02'));
+  const done = ctxOf('jornada', { g: 'PG2' }, june);
+  const juneOut = s(teamCalendar('Las Mesas Hu.', done.model.group(PORTAL_SEASON, 'PG2'), { today: '2026-06-03', forecast: forecastOptions(done) }));
+  assert.match(juneOut, /sin resultado/);
+  assert.doesNotMatch(juneOut, /match-forecast/);
 });
 
 // ── El modelo para la pantalla Partido: topScores (pronostico.js) ───────

@@ -77,8 +77,8 @@ const staleNotice = stale => (stale
 
 // ── Próximo partido (A y B) y último partido (C) ────────────────────────
 
-// forecast: el pronóstico del partido (forecastMatch, solo en prebenjamín de la temporada en curso y si
-// es de la próxima jornada; 17/10/2026), o null: su línea discreta (forecastLine de ui.js), bajo los dos.
+// forecast: el pronóstico del partido (forecastMatch, solo en prebenjamín de la temporada en curso;
+// 17/10/2026), o null: su línea discreta (forecastLine de ui.js), bajo los dos.
 function nextBlock(m, group, today, shields, campos = null, forecast = null) {
   const round = roundOf(group, m);
   const when = cells([
@@ -258,7 +258,7 @@ function seasonView(v, state) {
   } else {
     main.push(block(null, empty(notPlayedText(group, name))));
   }
-  const rest = [teamCalendar(name, group, { today: ctx.today, shields, ics: true })];
+  const rest = [teamCalendar(name, group, { today: ctx.today, shields, ics: true, forecast: forecastOptions(ctx) })];
   const info = teamInfoBlock(ctx, group, name);
   if (info) aside.push(info);
   aside.push(freshness(ctx, group));
@@ -377,7 +377,7 @@ function endedView(v, nextSeason) {
     endedBlock(ctx, group, name),
     ...summerBlocks(ctx, group, name),
   ];
-  const rest = [teamCalendar(name, group, { today: ctx.today, shields, ics: true })];
+  const rest = [teamCalendar(name, group, { today: ctx.today, shields, ics: true, forecast: forecastOptions(ctx) })];
   const aside = [finalStandings(group, name, v), teamInfoBlock(ctx, group, name)].filter(Boolean);
   return { head: html`${teamHeader(name, subtitle, v)}${staleNotice(v.stale)}`, main, aside, rest };
 }
@@ -408,11 +408,16 @@ export function teamView(ctx, { group, name }, {
 // Todos sus partidos del grupo, en orden de jornada y con su estado (spec §5.3). El bloque lleva
 // siempre el ancla #calendario, también sin partidos (un retirado). Con `ics` (las dos pantallas),
 // encima de la lista, «Calendario del equipo (.ics)» con todos sus partidos con fecha (decisión 15 de
-// B3), si los hay.
-export function teamCalendar(team, group, { today, shields = {}, ics = false } = {}) {
+// B3), si los hay. Con `forecast` (las opciones de forecastMatch de la web, forecastOptions de ui.js;
+// 17/10/2026, el usuario pidió el pronóstico de «todos los siguientes enfrentamientos»), cada partido
+// sin jugar lleva debajo la línea discreta de su pronóstico (matchRow, como en la Jornada), sin nada
+// más: a cuántas jornadas vista lo dice la pantalla Partido. Fuera de prebenjamín de la temporada en
+// curso, forecastMatch no da ninguno y la lista es la de siempre.
+export function teamCalendar(team, group, { today, shields = {}, ics = false, forecast = null } = {}) {
   const items = group.rounds.flatMap(round => round.matches.filter(m => m.home === team || m.away === team).map(m => ({ round, m })));
   if (!items.length) return block('Calendario', empty('Sin partidos en el calendario de este grupo'), { id: 'calendario' });
-  const rows = items.map(({ round, m }) => html`<li><p class="cal-when">${round.label}${m.dateISO ? ` · ${shortDate(m.dateISO)}` : ''}</p>${matchRow(m, { today, shields, href: matchHref(m) })}</li>`);
+  const guess = m => (forecast ? forecastMatch(group, m, forecast) : null);
+  const rows = items.map(({ round, m }) => html`<li><p class="cal-when">${round.label}${m.dateISO ? ` · ${shortDate(m.dateISO)}` : ''}</p>${matchRow(m, { today, shields, href: matchHref(m), forecast: guess(m) })}</li>`);
   const download = ics && teamCalendarEvents(team, group).length
     ? html`<div class="box cal-actions"><div class="buttons"><button type="button" class="button" data-action="calendario-equipo">Calendario del equipo (.ics)</button></div></div>`
     : '';

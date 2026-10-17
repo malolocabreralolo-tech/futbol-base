@@ -6,11 +6,12 @@
   "2026-10-11": "2026-10-12T05:01:08",
   "2026-10-13": "2026-10-14T14:50:00",
   "2026-10-14": "2026-10-15T13:16:39",
-  "2026-10-16": "2026-10-16T21:34:08"
+  "2026-10-16": "2026-10-17T07:12:39",
+  "2026-10-17": "2026-10-17T07:12:39"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -159,7 +160,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -187,14 +188,35 @@
      "id": 1193,
      "nombre": "Roque Amagro",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 1,
+     "pe": "1",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 4,
+     "pp": "0",
+     "puntos": "4",
      "racha_ultimos_5": [
       "E",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-verde-amarillo.png",
+     "dg": "29",
+     "equipacion": "2026-verde-amarillo-verdes.png",
+     "escudo": "galdarEscudoColor.png",
+     "gc": "0",
+     "gf": "29",
+     "id": 1197,
+     "nombre": "Gáldar Jacobeo27",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "1",
+     "pj": 1,
+     "posicion_anterior": 4,
+     "pp": "0",
+     "puntos": "3",
+     "racha_ultimos_5": [
       "V"
      ],
      "sanciones": 0
@@ -209,12 +231,12 @@
      "id": 1196,
      "nombre": "UD Teror",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 1,
-     "pp": 1,
-     "puntos": 3,
+     "pp": "1",
+     "puntos": "3",
      "racha_ultimos_5": [
       "V",
       "D"
@@ -231,53 +253,35 @@
      "id": 1195,
      "nombre": "UD Moya",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 0,
+     "pe": "1",
+     "pg": "0",
      "pj": 1,
      "posicion_anterior": 3,
-     "pp": 0,
-     "puntos": 1,
+     "pp": "0",
+     "puntos": "1",
      "racha_ultimos_5": [
       "E"
      ],
      "sanciones": 0
     },
     {
-     "banderas": "bandera-verde-amarillo.png",
-     "dg": "0",
-     "equipacion": "2026-verde-amarillo-verdes.png",
-     "escudo": "galdarEscudoColor.png",
-     "gc": "0",
-     "gf": "0",
-     "id": 1197,
-     "nombre": "Gáldar Jacobeo27",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 4,
-     "pp": 0,
-     "puntos": 0,
-     "racha_ultimos_5": [],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-roja-azul.png",
-     "dg": "-6",
+     "dg": "-35",
      "equipacion": "2026-roja-azules-rojas.png",
      "escudo": "100x100sardina.png",
-     "gc": "8",
+     "gc": "37",
      "gf": "2",
      "id": 1194,
      "nombre": "Sardina CF",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 1,
+     "pe": "0",
+     "pg": "0",
+     "pj": 2,
      "posicion_anterior": 5,
-     "pp": 1,
-     "puntos": 0,
+     "pp": "2",
+     "puntos": "0",
      "racha_ultimos_5": [
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -285,7 +289,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -412,7 +416,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -563,7 +567,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -710,7 +714,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -834,7 +838,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -981,7 +985,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1105,7 +1109,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1229,7 +1233,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1372,7 +1376,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1496,7 +1500,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1579,42 +1583,44 @@
     },
     {
      "banderas": "bandera-naranja-negro.png",
-     "dg": "-4",
+     "dg": "-3",
      "equipacion": "2026-naranjanegro-negro-naranjas.png",
      "escudo": "200x200piletas.png",
-     "gc": "5",
-     "gf": "1",
+     "gc": "10",
+     "gf": "7",
      "id": 1255,
      "nombre": "UD Piletas",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 0,
-     "pj": 1,
+     "pg": 1,
+     "pj": 2,
      "posicion_anterior": 4,
      "pp": 1,
-     "puntos": 0,
+     "puntos": 3,
      "racha_ultimos_5": [
-      "D"
+      "D",
+      "V"
      ],
      "sanciones": 0
     },
     {
      "banderas": "bandera-azul-gran-canaria.png",
-     "dg": "-6",
+     "dg": "-7",
      "equipacion": "2026-azul-azul-azul.png",
      "escudo": "200x200claret.png",
-     "gc": "8",
-     "gf": "2",
+     "gc": "14",
+     "gf": "7",
      "id": 1257,
      "nombre": "Corazón de María D",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 1,
+     "pj": 2,
      "posicion_anterior": 5,
-     "pp": 1,
+     "pp": 2,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -1643,7 +1649,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1767,7 +1773,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1891,7 +1897,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2038,7 +2044,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2057,6 +2063,28 @@
    "name": "Benjamin Gran Canaria Grupo 16",
    "tabla": [
     {
+     "banderas": "bandera-rojiblanca-rayas.png",
+     "dg": "18",
+     "equipacion": "2026-rojiblanca-azul-rojas.png",
+     "escudo": "200x200atleticograncanaria19-20.png",
+     "gc": "3",
+     "gf": "21",
+     "id": 1279,
+     "nombre": "Gran Canaria",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 2,
+     "pj": 2,
+     "posicion_anterior": 2,
+     "pp": 0,
+     "puntos": 6,
+     "racha_ultimos_5": [
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-azulmarino-roja.png",
      "dg": "11",
      "equipacion": "2026-azulmarina-rojo-rojas.png",
@@ -2070,27 +2098,6 @@
      "pg": 1,
      "pj": 1,
      "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 3,
-     "racha_ultimos_5": [
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-rojiblanca-rayas.png",
-     "dg": "5",
-     "equipacion": "2026-rojiblanca-azul-rojas.png",
-     "escudo": "200x200atleticograncanaria19-20.png",
-     "gc": "2",
-     "gf": "7",
-     "id": 1279,
-     "nombre": "Gran Canaria",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 1,
-     "posicion_anterior": 2,
      "pp": 0,
      "puntos": 3,
      "racha_ultimos_5": [
@@ -2163,21 +2170,22 @@
     },
     {
      "banderas": "bandera-rojiblanca-rayas.png",
-     "dg": "-11",
+     "dg": "-24",
      "equipacion": "2026-rojiblanca-negro-negras.png",
      "escudo": "100x100unionmarina.png",
-     "gc": "11",
-     "gf": "0",
+     "gc": "25",
+     "gf": "1",
      "id": 1283,
      "nombre": "Unión Marina",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 1,
+     "pj": 2,
      "posicion_anterior": 6,
-     "pp": 1,
+     "pp": 2,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -2185,7 +2193,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2334,7 +2342,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2485,7 +2493,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2608,7 +2616,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2732,7 +2740,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -2856,7 +2864,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -3003,7 +3011,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -3152,7 +3160,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -3299,7 +3307,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -3357,6 +3365,28 @@
      "puntos": 6,
      "racha_ultimos_5": [
       "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-amarilla-verde.png",
+     "dg": "8",
+     "equipacion": "2026-amarilla-verde-verdes.png",
+     "escudo": "escudoRoqueAmagro.png",
+     "gc": "3",
+     "gf": "11",
+     "id": 1334,
+     "nombre": "Roque Amagro",
+     "orden_manual": 0,
+     "pe": 1,
+     "pg": 1,
+     "pj": 2,
+     "posicion_anterior": 6,
+     "pp": 0,
+     "puntos": 4,
+     "racha_ultimos_5": [
+      "E",
       "V"
      ],
      "sanciones": 0
@@ -3422,27 +3452,6 @@
      "puntos": 3,
      "racha_ultimos_5": [
       "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-amarilla-verde.png",
-     "dg": "0",
-     "equipacion": "2026-amarilla-verde-verdes.png",
-     "escudo": "escudoRoqueAmagro.png",
-     "gc": "3",
-     "gf": "3",
-     "id": 1334,
-     "nombre": "Roque Amagro",
-     "orden_manual": 0,
-     "pe": 1,
-     "pg": 0,
-     "pj": 1,
-     "posicion_anterior": 6,
-     "pp": 0,
-     "puntos": 1,
-     "racha_ultimos_5": [
-      "E"
      ],
      "sanciones": 0
     },
@@ -3573,21 +3582,22 @@
     },
     {
      "banderas": "bandera-roja-negro.png",
-     "dg": "-11",
+     "dg": "-19",
      "equipacion": "2026-roja-negro-rojas.png",
      "escudo": "100x100guia.png",
-     "gc": "11",
+     "gc": "19",
      "gf": "0",
      "id": 1338,
      "nombre": "UD Guía",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 1,
+     "pj": 2,
      "posicion_anterior": 13,
-     "pp": 1,
+     "pp": 2,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -3595,7 +3605,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -3883,7 +3893,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -4180,7 +4190,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-16T21:34:08",
+   "fetched": "2026-10-17T07:12:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -4198,6 +4208,28 @@
    },
    "name": "Prebenjamín Gran Canaria Grupo 4",
    "tabla": [
+    {
+     "banderas": "bandera-roja-azul.png",
+     "dg": "3",
+     "equipacion": "2026-roja-azules-azules.png",
+     "escudo": "tableroEscudo.png",
+     "gc": "3",
+     "gf": "6",
+     "id": 1375,
+     "nombre": "CD Tablero",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 2,
+     "pj": 2,
+     "posicion_anterior": 4,
+     "pp": 0,
+     "puntos": 6,
+     "racha_ultimos_5": [
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
     {
      "banderas": "bandera-celeste-blanca.png",
      "dg": "7",
@@ -4279,27 +4311,6 @@
      "puntos": 3,
      "racha_ultimos_5": [
       "D",
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-roja-azul.png",
-     "dg": "2",
-     "equipacion": "2026-roja-azules-azules.png",
-     "escudo": "tableroEscudo.png",
-     "gc": "2",
-     "gf": "4",
-     "id": 1375,
-     "nombre": "CD Tablero",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 1,
-     "posicion_anterior": 4,
-     "pp": 0,
-     "puntos": 3,
-     "racha_ultimos_5": [
       "V"
      ],
      "sanciones": 0
@@ -4428,21 +4439,22 @@
     },
     {
      "banderas": "bandera-negra-blanca-rayas.png",
-     "dg": "-6",
+     "dg": "-7",
      "equipacion": "2026-blanquinegra-negro-negras.png",
      "escudo": "100x100cerruda.png",
-     "gc": "8",
-     "gf": "2",
+     "gc": "10",
+     "gf": "3",
      "id": 1373,
      "nombre": "CD Cerruda",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 1,
+     "pj": 2,
      "posicion_anterior": 12,
-     "pp": 1,
+     "pp": 2,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -4673,6 +4685,8 @@
    "campo_gps": "https://maps.app.goo.gl/hkGXfkW2fXEWTfQk7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "Arucas CF",
+   "club_padre_visitante": "",
    "escudo_local": "100x100arucas.png",
    "escudo_visitante": "sanIsidroEscudo.png",
    "estadio": "Cirilo Lorenzo",
@@ -4699,6 +4713,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -4718,6 +4733,8 @@
    "campo_gps": "https://goo.gl/maps/hRsg6Aww4Wt",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200AtalayaSanPablo.png",
    "escudo_visitante": "escudoGuayarmina.png",
    "estadio": "Atalaya",
@@ -4744,6 +4761,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -5014,14 +5032,14 @@
    "escudo_local": "galdarEscudoColor.png",
    "escudo_visitante": "100x100sardina.png",
    "estadio": "Venancio Monzón",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 18:15:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
+   "goles_local": 29,
    "goles_visitante": 0,
    "hora_inicio": null,
    "id": 18732,
@@ -5030,7 +5048,7 @@
    "jornada": 2,
    "liga_id": 122,
    "local": "Gáldar Jacobeo27",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 2",
    "pen_local": "",
@@ -5039,8 +5057,11 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
+   "racha_local": [
+    "V"
+   ],
    "racha_visitante": [
+    "D",
     "D"
    ],
    "tecnico_local": null,
@@ -5350,6 +5371,8 @@
    "campo_gps": "https://goo.gl/maps/TUaU1txQGphnk5uH6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100villa.png",
    "escudo_visitante": "galdarEscudoColor.png",
    "estadio": "Los Olivos",
@@ -5376,6 +5399,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -5739,6 +5763,8 @@
    "campo_gps": "https://goo.gl/maps/Dt8n7y9bGtG2",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100sanmateo.png",
    "escudo_visitante": "angosturaEscudo.png",
    "estadio": "San Mateo",
@@ -5765,6 +5791,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -6078,6 +6105,8 @@
    "campo_gps": "https://maps.app.goo.gl/ijbNHkoXCC91cZuq5",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "angosturaEscudo.png",
    "escudo_visitante": "lasMesasEscudo.png",
    "estadio": "La Angostura",
@@ -6104,6 +6133,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -6123,6 +6153,8 @@
    "campo_gps": "https://goo.gl/maps/eMyWhiRXaQ52",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100costayala.png",
    "escudo_visitante": "200x200acodetti.png",
    "estadio": "Costa Ayala",
@@ -6149,6 +6181,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -6168,6 +6201,8 @@
    "campo_gps": "https://maps.app.goo.gl/H7ZznwKDRmWNmhHz5",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "Arucas CF",
+   "club_padre_visitante": "",
    "escudo_local": "100x100arucas.png",
    "escudo_visitante": "200x200claret.png",
    "estadio": "Javier Armas",
@@ -6194,6 +6229,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -6505,6 +6541,8 @@
    "campo_gps": "https://goo.gl/maps/ZjKpiRpJTu3h6kYdA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100veteranos.png",
    "escudo_visitante": "200x200acodetti.png",
    "estadio": "MN Sosa 2",
@@ -6531,6 +6569,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -6794,6 +6833,8 @@
    "campo_gps": "https://maps.app.goo.gl/ZP8qtd4DuuT1Ybzd8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200claret.png",
    "escudo_visitante": "100x100tamaraceite.png",
    "estadio": "Colegio Claret",
@@ -6820,6 +6861,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -6839,6 +6881,8 @@
    "campo_gps": "https://goo.gl/maps/ZjKpiRpJTu3h6kYdA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100puertoslaspalmas.png",
    "escudo_visitante": "100x100sanantonio2016.png",
    "estadio": "MN Sosa 1",
@@ -6865,6 +6909,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -6884,6 +6929,8 @@
    "campo_gps": "https://maps.app.goo.gl/4FKVo3JWtXwB9VyY8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100unionviera.png",
    "escudo_visitante": "escudoCarnevali-26-27.png",
    "estadio": "Alfonso Silva",
@@ -6910,6 +6957,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -7175,6 +7223,8 @@
    "campo_gps": "https://goo.gl/maps/sJwUSMfFe6Anj7ob6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200victoria2019.png",
    "escudo_visitante": "isletaEscudo.png",
    "estadio": "Puerto Pi",
@@ -7201,6 +7251,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -7220,6 +7271,8 @@
    "campo_gps": "https://goo.gl/maps/sGH8HWp4fS5hAPCf6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200interPilar.png",
    "escudo_visitante": "100x100unionviera.png",
    "estadio": "El Pilar",
@@ -7246,6 +7299,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -7787,6 +7841,8 @@
    "campo_gps": "https://maps.app.goo.gl/ZBHoKu7SvWYoCoFA8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "isletaEscudo.png",
    "escudo_visitante": "100x100tamaraceite.png",
    "estadio": "Jardin de Infancia",
@@ -7813,6 +7869,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -7832,6 +7889,8 @@
    "campo_gps": "https://maps.app.goo.gl/4FKVo3JWtXwB9VyY8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100unionviera.png",
    "escudo_visitante": "sportingEscudo2025.png",
    "estadio": "Alfonso Silva",
@@ -7858,6 +7917,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -8164,6 +8224,8 @@
    "campo_gps": "https://maps.app.goo.gl/ZP8qtd4DuuT1Ybzd8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200claret.png",
    "escudo_visitante": "100x100puertoslaspalmas.png",
    "estadio": "Colegio Claret",
@@ -8190,6 +8252,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -8501,15 +8564,15 @@
    "escudo_local": "200x200claret.png",
    "escudo_visitante": "200x200piletas.png",
    "estadio": "Colegio Claret",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 18:45:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 5,
+   "goles_visitante": 6,
    "hora_inicio": null,
    "id": 18863,
    "id_local": 1257,
@@ -8517,7 +8580,7 @@
    "jornada": 2,
    "liga_id": 133,
    "local": "Corazón de María D",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
    "pen_local": "",
@@ -8527,10 +8590,12 @@
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
+    "D",
     "D"
    ],
    "racha_visitante": [
-    "D"
+    "D",
+    "V"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,
@@ -8544,6 +8609,8 @@
    "campo_gps": "https://goo.gl/maps/VmA4DDXVMYjXdNLH7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100sietepalmas.png",
    "escudo_visitante": "batanEscudo.png",
    "estadio": "Anexo GC",
@@ -8570,6 +8637,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -8589,6 +8657,8 @@
    "campo_gps": "https://maps.app.goo.gl/5Yb5GuK9RhsLkjMi8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100guiniguada2016.png",
    "escudo_visitante": "200x200huracan.png",
    "estadio": "Lomo Apolinario",
@@ -8615,6 +8685,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -8880,6 +8951,8 @@
    "campo_gps": "https://goo.gl/maps/5K5Me7HXoJ4LgJnT7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100pedrohidalgo.png",
    "escudo_visitante": "sportingEscudo2025.png",
    "estadio": "Vicente Sepúlveda",
@@ -8906,6 +8979,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -9164,6 +9238,8 @@
    "campo_gps": "https://goo.gl/maps/ZjKpiRpJTu3h6kYdA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100veteranos.png",
    "escudo_visitante": "escudoCarnevali-26-27.png",
    "estadio": "MN Sosa 1",
@@ -9190,6 +9266,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -9209,6 +9286,8 @@
    "campo_gps": "https://goo.gl/maps/Y3FqGgucwufXVT1FA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200huracan.png",
    "escudo_visitante": "esccudoBachicanLasMesas.png",
    "estadio": "Pepe Gonçalvez",
@@ -9235,6 +9314,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -9496,6 +9576,8 @@
    "campo_gps": "https://goo.gl/maps/eoZKM5WfyW5Cx3jw7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "laGaritaEscudoColor.png",
    "escudo_visitante": "100x100valsequillo.png",
    "estadio": "Las Remudas",
@@ -9522,6 +9604,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -9541,6 +9624,8 @@
    "campo_gps": "https://maps.app.goo.gl/7sQgRh3nYeDh5UMb6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100calero2018.png",
    "escudo_visitante": "jinamarEscudo.png",
    "estadio": "El Calero",
@@ -9567,6 +9652,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -9586,6 +9672,8 @@
    "campo_gps": "https://goo.gl/maps/7PXP7UqEfg63sm9G8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "udTeldeEscudo.png",
    "escudo_visitante": "200x200atleticograncanaria19-20.png",
    "estadio": "Pablo Hdez.",
@@ -9612,6 +9700,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -9930,15 +10019,15 @@
    "escudo_local": "100x100unionmarina.png",
    "escudo_visitante": "200x200atleticograncanaria19-20.png",
    "estadio": "MN Naño",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 17:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 1,
+   "goles_visitante": 14,
    "hora_inicio": null,
    "id": 18913,
    "id_local": 1283,
@@ -9946,7 +10035,7 @@
    "jornada": 2,
    "liga_id": 137,
    "local": "Unión Marina",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 16",
    "pen_local": "",
@@ -9956,9 +10045,11 @@
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
+    "D",
     "D"
    ],
    "racha_visitante": [
+    "V",
     "V"
    ],
    "tecnico_local": null,
@@ -9973,6 +10064,8 @@
    "campo_gps": "https://goo.gl/maps/EDkgJ3583ptEtk2D7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100laslongueras.png",
    "escudo_visitante": "vallinamarEscudo.png",
    "estadio": "La Herradura",
@@ -9999,6 +10092,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -10018,6 +10112,8 @@
    "campo_gps": "https://goo.gl/maps/vJqqrw1kwP4tNWsB6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100lashuesas2017.png",
    "escudo_visitante": "udTeldeEscudo.png",
    "estadio": "Las Huesas",
@@ -10044,6 +10140,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -10407,6 +10504,8 @@
    "campo_gps": "https://goo.gl/maps/TYvYP3scTESyi677A",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "udTeldeEscudo.png",
    "escudo_visitante": "laGaritaEscudoColor.png",
    "estadio": "Pablo Hdez.",
@@ -10433,6 +10532,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "E"
@@ -10452,6 +10552,8 @@
    "campo_gps": "https://maps.app.goo.gl/7sQgRh3nYeDh5UMb6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100calero2018.png",
    "escudo_visitante": "100x100lashuesas2017.png",
    "estadio": "El Calero",
@@ -10478,6 +10580,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -10891,6 +10994,8 @@
    "campo_gps": "https://goo.gl/maps/BgBn9SE8fYC9Gbp98",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "escudoFutboltec.png",
    "escudo_visitante": "200x200maspalomas20-21.png",
    "estadio": "Capellanía",
@@ -10917,6 +11022,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -11227,6 +11333,8 @@
    "campo_gps": "https://goo.gl/maps/ySQtak4DDU32",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "doramasEscudo.png",
    "escudo_visitante": "100x100playahombre.png",
    "estadio": "Cruce Arinaga",
@@ -11253,6 +11361,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -11464,6 +11573,8 @@
    "campo_gps": "https://goo.gl/maps/UbkUVsDSZwGkDuaC9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "moganEscudo.png",
    "escudo_visitante": "arguineguinEscudo.png",
    "estadio": "Mogán",
@@ -11490,6 +11601,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -11509,6 +11621,8 @@
    "campo_gps": "https://goo.gl/maps/x2vcRQNAkMh2Bn5NA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "sanfernandoEscudo.png",
    "escudo_visitante": "200x200maspalomas20-21.png",
    "estadio": "Maspalomas 3",
@@ -11535,6 +11649,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -11748,6 +11863,8 @@
    "campo_gps": "https://goo.gl/maps/VFAWSiAdnVp",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100sanpedromartir.png",
    "escudo_visitante": "100x100aguimes.png",
    "estadio": "Doctoral",
@@ -11774,6 +11891,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -11793,6 +11911,8 @@
    "campo_gps": "https://maps.app.goo.gl/BH7oKLzexQDsjSPL7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100cerruda.png",
    "escudo_visitante": "UDvecindario.png",
    "estadio": "Axo. Vecindario",
@@ -11819,6 +11939,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -12080,6 +12201,8 @@
    "campo_gps": "https://maps.app.goo.gl/htbTiCzaTWHQHp4cA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "escudoCasaPastores26.png",
    "escudo_visitante": "100x100lasrosas.png",
    "estadio": "La Madera",
@@ -12106,6 +12229,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -12125,6 +12249,8 @@
    "campo_gps": "https://maps.app.goo.gl/BH7oKLzexQDsjSPL7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100cerruda.png",
    "escudo_visitante": "losVelez.png",
    "estadio": "Axo. Vecindario",
@@ -12151,6 +12277,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "E"
@@ -12170,6 +12297,8 @@
    "campo_gps": "https://maps.app.goo.gl/BH7oKLzexQDsjSPL7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "UDvecindario.png",
    "escudo_visitante": "100x100arinaga.png",
    "estadio": "Axo. Vecindario",
@@ -12196,6 +12325,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -12559,6 +12689,8 @@
    "campo_gps": "https://maps.app.goo.gl/BH7oKLzexQDsjSPL7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "UDvecindario.png",
    "escudo_visitante": "arguineguinEscudo.png",
    "estadio": "Axo. Vecindario",
@@ -12585,6 +12717,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -12604,6 +12737,8 @@
    "campo_gps": "https://goo.gl/maps/NakCefMfuex",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100balos.png",
    "escudo_visitante": "100x100cerruda.png",
    "estadio": "Mun. Balos",
@@ -12630,6 +12765,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -12943,6 +13079,8 @@
    "campo_gps": "https://goo.gl/maps/cbJXj4iK3TgN95kL8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200maspalomas20-21.png",
    "escudo_visitante": "100x100castillo.png",
    "estadio": "Maspalomas 2",
@@ -12969,6 +13107,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -12988,6 +13127,8 @@
    "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "tableroEscudo.png",
    "estadio": "Maspalomas 4",
@@ -13014,6 +13155,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -13033,6 +13175,8 @@
    "campo_gps": "https://maps.app.goo.gl/WUwQ7qQ6QZC95WJcA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "arguineguinEscudo.png",
    "escudo_visitante": "sanfernandoEscudo.png",
    "estadio": "Arguineguín",
@@ -13059,6 +13203,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -13621,7 +13766,7 @@
    "escudo_local": "100x100guia.png",
    "escudo_visitante": "escudoRoqueAmagro.png",
    "estadio": "Guía",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 18:00:00",
    "goleadores_local": null,
@@ -13629,7 +13774,7 @@
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
    "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_visitante": 8,
    "hora_inicio": null,
    "id": 19038,
    "id_local": 1338,
@@ -13637,7 +13782,7 @@
    "jornada": 2,
    "liga_id": 146,
    "local": "UD Guía",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
    "pen_local": "",
@@ -13647,10 +13792,12 @@
    "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
+    "D",
     "D"
    ],
    "racha_visitante": [
-    "E"
+    "E",
+    "V"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,
@@ -13664,6 +13811,8 @@
    "campo_gps": "https://goo.gl/maps/hRsg6Aww4Wt",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200AtalayaSanPablo.png",
    "escudo_visitante": "galdarEscudoColor.png",
    "estadio": "Atalaya",
@@ -13690,6 +13839,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D"
@@ -13709,6 +13859,8 @@
    "campo_gps": "https://maps.app.goo.gl/AMuxUzLRX6MQ22KM8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100cardones.png",
    "escudo_visitante": "100x100firgas.png",
    "estadio": "Domingo Castro",
@@ -13735,6 +13887,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [],
    "racha_visitante": [
@@ -16397,6 +16550,8 @@
    "campo_gps": "https://maps.app.goo.gl/JcJ9HA6vVZMpWqSB6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "Arucas CF",
    "escudo_local": "glaucusEscudo.png",
    "escudo_visitante": "100x100arucas.png",
    "estadio": "CM La Suerte",
@@ -16423,6 +16578,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D"
@@ -16440,6 +16596,8 @@
    "campo_gps": "https://maps.app.goo.gl/eeMWR61QAYWEVFDX8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200acodetti.png",
    "escudo_visitante": "esccudoBachicanLasMesas.png",
    "estadio": "Mayordomía 1",
@@ -16466,6 +16624,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V"
@@ -16485,6 +16644,8 @@
    "campo_gps": "https://maps.app.goo.gl/AFV4Q1YjEgq98J9XA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100tamaraceite.png",
    "escudo_visitante": "100x100sanmateo.png",
    "estadio": "Juan Guedes",
@@ -16511,6 +16672,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D"
@@ -16530,6 +16692,8 @@
    "campo_gps": "https://goo.gl/maps/TUaU1txQGphnk5uH6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100villa.png",
    "escudo_visitante": "batanEscudo.png",
    "estadio": "Los Olivos",
@@ -16556,6 +16720,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V"
@@ -16573,6 +16738,8 @@
    "campo_gps": "https://goo.gl/maps/Zg9N3U6R7WMWpntCA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "lasMesasEscudo.png",
    "escudo_visitante": "200x200victoria2019.png",
    "estadio": "Pepe Gonçalvez",
@@ -16599,6 +16766,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V"
@@ -19364,6 +19532,8 @@
    "campo_gps": "https://goo.gl/maps/UbBRTW2EmFQ2",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100ingenio.png",
    "escudo_visitante": "100x100tamaraceite.png",
    "estadio": "Cristóbal Herrera",
@@ -19390,6 +19560,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V"
@@ -19409,6 +19580,8 @@
    "campo_gps": "https://goo.gl/maps/7PXP7UqEfg63sm9G8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "udTeldeEscudo.png",
    "escudo_visitante": "100x100lashuesas2017.png",
    "estadio": "Pablo Hdez.",
@@ -19435,6 +19608,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "E"
@@ -19454,6 +19628,8 @@
    "campo_gps": "https://maps.app.goo.gl/eeMWR61QAYWEVFDX8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200acodetti.png",
    "escudo_visitante": "200x200atleticograncanaria19-20.png",
    "estadio": "Mayordomía 1",
@@ -19480,6 +19656,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D"
@@ -19499,6 +19676,8 @@
    "campo_gps": "https://maps.app.goo.gl/7sQgRh3nYeDh5UMb6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100calero2018.png",
    "escudo_visitante": "laGaritaEscudoColor.png",
    "estadio": "El Calero",
@@ -19525,6 +19704,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D"
@@ -22198,15 +22378,15 @@
    "escudo_local": "tableroEscudo.png",
    "escudo_visitante": "100x100cerruda.png",
    "estadio": "Eleuterio Valerón",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-16 18:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 2,
+   "goles_visitante": 1,
    "hora_inicio": null,
    "id": 19505,
    "id_local": 1375,
@@ -22214,7 +22394,7 @@
    "jornada": 2,
    "liga_id": 149,
    "local": "CD Tablero",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
    "pen_local": "",
@@ -22224,9 +22404,11 @@
    "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
+    "V",
     "V"
    ],
    "racha_visitante": [
+    "D",
     "D"
    ],
    "tecnico_local": null,
@@ -22241,6 +22423,8 @@
    "campo_gps": "https://goo.gl/maps/RAp1dDBKeyu",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100carrizal.png",
    "escudo_visitante": "escudoFutboltec.png",
    "estadio": "El Toril",
@@ -22267,6 +22451,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V"
@@ -22284,6 +22469,8 @@
    "campo_gps": "https://goo.gl/maps/UbBRTW2EmFQ2",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100ingenio.png",
    "escudo_visitante": "UDvecindario.png",
    "estadio": "Cristóbal Herrera",
@@ -22310,6 +22497,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D"
@@ -22329,6 +22517,8 @@
    "campo_gps": "https://goo.gl/maps/x2vcRQNAkMh2Bn5NA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "sanfernandoEscudo.png",
    "escudo_visitante": "100x100sanpedromartir.png",
    "estadio": "Maspalomas 3",
@@ -22355,6 +22545,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D"
@@ -22374,6 +22565,8 @@
    "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "doramasEscudo.png",
    "estadio": "Maspalomas 4",
@@ -22400,6 +22593,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V"

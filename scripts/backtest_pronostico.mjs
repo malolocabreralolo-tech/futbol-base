@@ -2,8 +2,8 @@
 //
 //   node scripts/backtest_pronostico.mjs              la tabla con los PARAMS del módulo
 //   node scripts/backtest_pronostico.mjs --calibrar   además, la búsqueda de las variantes y sus parámetros
-//                                                     y la de la amortiguación de las goleadas (unos nueve
-//                                                     minutos; la tabla sola, unos cuatro segundos)
+//                                                     y la de la amortiguación de las goleadas (unos cuatro
+//                                                     minutos; la tabla sola, unos dos segundos)
 //
 // Importa el MISMO src/pronostico.js que la web, con `prueba: true` (solo aquí: abre el pronóstico a
 // las temporadas pasadas de prebenjamín) y, en la calibración, `params`. Cada temporada va por separado y
@@ -20,107 +20,27 @@
 // para el mejor, el empate y el peor, medidas sobre el propio archivo, que le favorece); y el acierto del
 // marcador exacto y a ±1 gol por equipo del resultado más probable. Sin red ni escrituras: solo lee los
 // data-*.js del repositorio.
-import { readFileSync, readdirSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import vm from 'node:vm';
-import { buildSeason, createModel, retiredTeams } from '../src/model.js';
-import { PARAMS, copiedMatches, forecastApplies, forecastMatch, isDeskResult, offVenue, trainingFor } from '../src/pronostico.js';
+//
+// La carga de las temporadas, los objetivos, el entrenamiento de cada uno (las parejas de pairsOf) y las
+// métricas salen del banco de pruebas, scripts/pronostico_banco.mjs (17/10/2026), el mismo examen para
+// cualquier modelo; las frecuencias de las líneas base de aquí, del archivo entero, no son las de sus
+// referencias, medidas solo en las temporadas de ajuste.
+import { PARAMS, forecastMatch } from '../src/pronostico.js';
+import {
+  BUCKETS, CURRENT, bucketOf, brier, currentSeason, logLoss, outcomeOf, pairsOf, pastSeasons, probsOf, show, tableLeader, tableOf,
+} from './pronostico_banco.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const CURRENT = '2026-2027';
-
-// Los `const NOMBRE = …` de un data-*.js, sin el navegador.
-function loadGlobals(file, names) {
-  const ctx = {};
-  vm.createContext(ctx);
-  const probe = names.map(n => `${n}: typeof ${n} !== 'undefined' ? ${n} : undefined`).join(', ');
-  vm.runInContext(`${readFileSync(join(ROOT, file), 'utf8')}\n;globalThis.__out = { ${probe} };`, ctx);
-  return ctx.__out;
-}
-
-function pastSeasons() {
-  return readdirSync(ROOT).filter(f => /^data-season-\d{4}-\d{4}\.js$/.test(f)).sort().map(f => {
-    const name = f.slice('data-season-'.length, -'.js'.length);
-    const raw = loadGlobals(f, [`SEASON_${name.replace('-', '_')}`])[`SEASON_${name.replace('-', '_')}`];
-    return buildSeason({ name, current: false, prebenjamin: raw.prebenjamin || [] });
-  }).filter(s => s.name !== CURRENT);
-}
-
-function currentSeason() {
-  const { PREBENJAMIN } = loadGlobals('data-prebenjamin.js', ['PREBENJAMIN']);
-  const { HISTORY, ESTADOS } = loadGlobals('data-history.js', ['HISTORY', 'ESTADOS']);
-  const model = createModel({ prebenjamin: PREBENJAMIN, benjamin: [], history: HISTORY, estados: ESTADOS },
-    { portalSeason: CURRENT });
-  return { season: model.season(CURRENT), status: m => model.matchStatus(m) };
-}
-
-const outcomeOf = (h, a) => (h > a ? 'home' : h < a ? 'away' : 'draw');
-const BUCKETS = [['1', n => n === 1], ['2', n => n === 2], ['3', n => n === 3], ['4-6', n => n >= 4 && n <= 6], ['7+', n => n >= 7]];
-const bucketOf = n => (BUCKETS.find(([, f]) => f(n)) || ['0'])[0];
-
-// Los objetivos de un grupo: partidos de liga con fecha y marcador, sin retirados, copias de la
-// importación (copiedMatches) ni estados de fuera, y sin lo que seguro es de mesa: el campo «EXCLUIDO» o
-// «SUSPENDIDO» y los 3-0 y 1-0 sin hora. Los 3-0 y 1-0 con hora, que el entrenamiento deja fuera ante la
-// duda (isDeskResult), aquí sí cuentan: casi todos son de verdad, y quitarlos dejaría el examen sin los
-// partidos cerrados. Cada uno se pronostica con su copia sin marcador.
-const deskForSure = m => offVenue(m) || (isDeskResult(m) && !m.time);
-function targets(group, status) {
-  const retired = retiredTeams(group);
-  const copies = copiedMatches(group);
-  const out = [];
-  for (const round of group.rounds) {
-    for (const m of round.matches) {
-      if (m.hs == null || m.as == null || !m.dateISO) continue;
-      if (retired.has(m.home) || retired.has(m.away) || copies.has(m) || deskForSure(m)) continue;
-      if (status) { const s = status(m); if (s && ['retirado', 'anulado', 'suspendido'].includes(s.state)) continue; }
-      out.push(m);
-    }
-  }
-  return out;
-}
-
-// La clasificación con los partidos de entrenamiento: [pts, dg, gf] de cada equipo.
-function tableOf(matches) {
-  const t = new Map();
-  const row = name => { if (!t.has(name)) t.set(name, [0, 0, 0]); return t.get(name); };
-  for (const m of matches) {
-    const h = row(m.home), a = row(m.away);
-    h[0] += m.hs > m.as ? 3 : m.hs === m.as ? 1 : 0;
-    a[0] += m.as > m.hs ? 3 : m.hs === m.as ? 1 : 0;
-    h[1] += m.hs - m.as; a[1] += m.as - m.hs; h[2] += m.hs; a[2] += m.as;
-  }
-  return t;
-}
-// 'home' o 'away' si uno va por delante, null si van igual.
-function tableLeader(table, m) {
-  const h = table.get(m.home) || [0, 0, 0], a = table.get(m.away) || [0, 0, 0];
-  for (let i = 0; i < 3; i += 1) if (h[i] !== a[i]) return h[i] > a[i] ? 'home' : 'away';
-  return null;
-}
-
-// Todos los pronósticos de un conjunto de temporadas: [{ season, group, m, f, leader, bucket }].
-function collect(seasons, params, statusOf = () => null) {
+// Todos los pronósticos de unas parejas (entrenamiento, partido) del banco (pairsOf, con los objetivos y
+// el entrenamiento de siempre): [{ season, group, m, f, leader, bucket }].
+function collect(pairs, params) {
   const rows = [];
-  for (const season of seasons) {
-    const status = statusOf(season);
-    for (const group of season.groups) {
-      if (!forecastApplies(group, { prueba: true })) continue;
-      for (const m of targets(group, status)) {
-        const f = forecastMatch(group, { ...m, hs: null, as: null }, { prueba: true, params, status });
-        if (!f) continue;
-        const leader = tableLeader(tableOf(trainingFor(group, m, { status })), m);
-        rows.push({ season: season.name, group: group.id, m, f, leader, bucket: bucketOf(f.rounds) });
-      }
-    }
+  for (const { temporada, grupo, group, m, match, training, status } of pairs) {
+    const f = forecastMatch(group, match, { prueba: true, params, status });
+    if (!f) continue;
+    rows.push({ season: temporada, group: grupo, m, f, leader: tableLeader(tableOf(training), m), bucket: bucketOf(f.rounds) });
   }
   return rows;
 }
-
-const EPS = 1e-15;
-const logLoss = (p, y) => -Math.log(Math.max(EPS, p[y]));
-const brier = (p, y) => ['home', 'draw', 'away'].reduce((s, o) => s + (p[o] - (o === y ? 1 : 0)) ** 2, 0);
-const probsOf = f => ({ home: f.pHome, draw: f.pDraw, away: f.pAway });
 
 // Las frecuencias del archivo: del local, el empate y el visitante, y del mejor clasificado, el empate y
 // el peor (cuando uno va por delante).
@@ -245,9 +165,9 @@ function printSeasons(rows, rates) {
 // Empatan dos variantes a menos de TIE de log-loss (una milésima: la décima parte de lo que separa
 // una contracción de 1,5 de una de 3).
 const TIE = 0.001;
-function calibrate(seasons) {
+function calibrate(pairs) {
   const loss = params => {
-    const rows = collect(seasons, { ...params, minRounds: 1, minPlayed: 0 });
+    const rows = collect(pairs, { ...params, minRounds: 1, minPlayed: 0 });
     return rows.reduce((s, { m, f }) => s + logLoss(probsOf(f), outcomeOf(m.hs, m.as)), 0) / rows.length;
   };
   const GRID = {
@@ -284,7 +204,7 @@ function calibrate(seasons) {
   const top = Math.min(...results.map(r => r.bestLoss));
   const chosen = results.find(r => r.bestLoss - top < TIE);
   console.log(`\nElegida (la más sencilla a menos de ${TIE} del mejor log-loss): ${chosen.name}, ${show(chosen.best)}.`);
-  calibrateSoften(seasons);
+  calibrateSoften(pairs);
   return results;
 }
 
@@ -292,13 +212,13 @@ function calibrate(seasons) {
 // log-loss del 1X2 (las goleadas ya están por encima del 99 %), así que se elige con la contracción y el
 // campo de PARAMS (los de la web) por el error de los goles esperados (raíz del error cuadrático medio,
 // por equipo y partido); a menos de una milésima del mejor, la que menos toca (la de umbral más alto).
-function calibrateSoften(seasons, base = PARAMS) {
+function calibrateSoften(pairs, base = PARAMS) {
   console.log('\n## Amortiguación de los goles esperados (soften)\n');
   console.log('| soften | Log-loss 1X2 | Error de los goles | Exacto | ±1 gol |');
   console.log('|---|---|---|---|---|');
   const out = [];
   for (const soften of [Infinity, 15, 12, 10, 9, 8, 7, 6]) {
-    const rows = collect(seasons, { ...base, soften, minRounds: 1, minPlayed: 0 });
+    const rows = collect(pairs, { ...base, soften, minRounds: 1, minPlayed: 0 });
     const ll = rows.reduce((s, { m, f }) => s + logLoss(probsOf(f), outcomeOf(m.hs, m.as)), 0) / rows.length;
     const rmse = Math.sqrt(rows.reduce((s, { m, f }) => s + (f.xgHome - m.hs) ** 2 + (f.xgAway - m.as) ** 2, 0) / (2 * rows.length));
     const s = metrics(rows, baseRates(rows));
@@ -309,15 +229,12 @@ function calibrateSoften(seasons, base = PARAMS) {
   console.log(`\nElegida: soften ${out.find(r => r.rmse - best < 0.001).soften}.`);
 }
 
-// Infinity, escrito como tal (JSON lo deja en null).
-const show = params => JSON.stringify(params, (k, v) => (v === Infinity ? 'Infinity' : v));
-
-const seasons = pastSeasons();
-if (process.argv.includes('--calibrar')) calibrate(seasons);
+const pairs = pairsOf(pastSeasons());
+if (process.argv.includes('--calibrar')) calibrate(pairs);
 
 // Las tablas, desde la primera jornada jugada: la regla de minRounds se decide con ellas.
 const EVAL = { ...PARAMS, minRounds: 1, minPlayed: 0 };
-const past = collect(seasons, EVAL);
+const past = collect(pairs, EVAL);
 const rates = baseRates(past);
 console.log(`\nPARAMS: ${show(PARAMS)} (las tablas, desde 1 jornada jugada y con equipos sin partidos; la web, desde ${PARAMS.minRounds} y con ${PARAMS.minPlayed} partido de cada uno)`);
 console.log(`Archivo: ${past.length} partidos pronosticados de ${new Set(past.map(r => `${r.season} ${r.group}`)).size} grupos de prebenjamín en ${new Set(past.map(r => r.season)).size} temporadas.`);
@@ -330,5 +247,5 @@ printSeasons(past, rates);
 printCalibration(past);
 
 const { season: cur, status } = currentSeason();
-const now = collect([cur], EVAL, () => status);
+const now = collect(pairsOf([cur], () => status), EVAL);
 printTable(`${CURRENT} (jornadas ya jugadas)`, now, rates);

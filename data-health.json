@@ -299,8 +299,8 @@
     "AL20": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203542",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 1 actualizados, 1 resultados; 23 goleadores, 1/1 actas",
-      "checkedAt": "2026-10-18T12:25:35+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
+      "checkedAt": "2026-10-18T14:56:17+00:00"
     },
     "AL21": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203564",
@@ -353,8 +353,8 @@
     "AL29": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203702",
       "status": "ok",
-      "message": "4 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-14T21:38:48+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 3 actualizados, 3 resultados; 42 goleadores, 8/9 actas",
+      "checkedAt": "2026-10-18T15:03:04+00:00"
     },
     "AL3": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203217",
@@ -384,7 +384,7 @@
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203220",
       "status": "ok",
       "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-18T12:26:24+00:00"
+      "checkedAt": "2026-10-18T14:56:46+00:00"
     },
     "AL5": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203222",
@@ -422,68 +422,54 @@
     "status": "pending"
   },
   "run": {
-    "pass": 1138,
+    "pass": 1139,
     "groups": 69,
-    "refreshed": 4,
+    "refreshed": 3,
     "priority": [
-      "FF5",
-      "AL18"
+      "AL20",
+      "AL4"
     ],
     "fresh": [
       "PG2",
-      "AL4",
+      "FF5",
       "AL9",
-      "AL20"
+      "AL18"
     ],
     "resting": [],
     "deferred": [
-      "AL23",
-      "FF23",
-      "AL24",
-      "FF24",
-      "AL25",
-      "FV11",
-      "AL17",
-      "FF18",
-      "AL19",
-      "FF19",
-      "AL21",
-      "FF20",
-      "PG4",
-      "AL29",
-      "FF21",
-      "LZ2",
-      "AL30",
       "LZ3",
-      "AL31",
-      "LZ4",
-      "AL32",
-      "LZ5",
-      "FV12",
-      "AL26",
-      "FV13",
-      "AL27",
-      "FV14",
-      "AL28",
+      "AL30",
       "LZ1",
+      "AL31",
+      "LZ2",
+      "AL32",
+      "LZ4",
+      "AL26",
+      "LZ5",
+      "AL27",
+      "FV12",
+      "AL28",
+      "FV13",
       "AL1",
+      "FV14",
       "FF2",
-      "FF3",
       "AL2",
-      "FF4",
+      "PG1",
+      "FF3",
       "AL3",
-      "FF6",
+      "FF4",
       "AL5",
+      "FF6",
       "FF7",
       "AL6",
       "FF8",
       "AL7",
       "FF9",
-      "PG1",
       "AL8",
       "FF1",
-      "AL10",
       "FF11",
+      "AL10",
+      "PG3",
       "FF12",
       "AL11",
       "FF13",
@@ -495,19 +481,34 @@
       "FF16",
       "AL15",
       "FF17",
-      "PG3",
       "AL16",
-      "FF10"
+      "FF10",
+      "FF19",
+      "AL17",
+      "PG4",
+      "FF20",
+      "AL19",
+      "FF21",
+      "AL21",
+      "FF22",
+      "AL22",
+      "FF23",
+      "AL23",
+      "FF24",
+      "AL24",
+      "FV11",
+      "AL25",
+      "FF18"
     ],
     "unserved": [],
     "extrasDeferred": [
-      "FF22"
+      "AL29"
     ],
     "seconds": 510,
     "pages": 33,
     "blocked": true,
     "calendarShows": {
-      "other": 4
+      "other": 3
     },
     "pauses": 1,
     "resumed": 1,
@@ -516,9 +517,9 @@
       15
     ]
   },
-  "checkedAt": "2026-10-18T14:15:31+00:00",
+  "checkedAt": "2026-10-18T15:05:53+00:00",
   "lastDataChange": "2026-10-18",
-  "dataVersion": "20261018l",
+  "dataVersion": "20261018m",
   "summary": {
     "ok": 53,
     "rejected": 0,

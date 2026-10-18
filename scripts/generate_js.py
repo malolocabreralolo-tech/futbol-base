@@ -395,6 +395,27 @@ def get_effective_standings(conn, group_id, code=None, phase=None):
     return repaired
 
 
+def points_order(rows):
+    """La clasificación por puntos, como la pide el usuario (18/10/2026: «primero se debe ordenar por la
+    cantidad de puntos y luego diferencia de goles y así»). La federación ordena las de prebenjamín por
+    puntos por partido (pts/J, 0 sin partidos; su columna pts/pj, parse_standings de fetch_fiflp.py), y
+    con J desiguales eso no es el orden por puntos (PG2 de 2026-27: Santa Brígida, 3 puntos en 1 J, por
+    encima de Las Mesas Hu., 6 en 2). Si alguna fila tiene menos puntos que otra de debajo, se reordena
+    por puntos, DF y GF (pts desc, DF desc, GF desc, el orden de _table_from_results) y se renumera; sin
+    los goles de alguna fila (una tabla resumida, las de 10 y 11 celdas), solo por puntos. El orden es
+    estable: a igualdad, el de la federación, que puede desempatar por lo que la web no sabe (el
+    enfrentamiento directo), y por eso tampoco el nombre. Una tabla ya por puntos no se toca, ni sus
+    empates; una sin los puntos de alguna fila, tampoco. Devuelve (filas, reordenada), sin cambiar `rows`."""
+    pts = [r[2] for r in rows]
+    if any(p is None for p in pts) or all(a >= b for a, b in zip(pts, pts[1:])):
+        return rows, False
+    goals = all(r[7] is not None and r[9] is not None for r in rows)
+    out = [list(r) for r in sorted(rows, key=lambda r: (-r[2], -r[9], -r[7]) if goals else -r[2])]
+    for i, r in enumerate(out):
+        r[0] = i + 1
+    return out, True
+
+
 def get_current_jornada_matches(conn, group_id, current_jornada):
     """Return matches for the current jornada as [date, time, home, away, hs, as, venue]."""
     if not current_jornada:
@@ -425,7 +446,15 @@ def generate_category_js(conn, category_name, var_name, stats_var):
     total_teams = 0
 
     for gid, code, name, full_name, phase, island, url, current_jornada in groups:
+        stored = get_standings(conn, gid)
         standings = get_effective_standings(conn, gid, code, phase)
+        # La procedencia, antes de ordenar por puntos: reordenada, la oficial sigue siendo la oficial.
+        kind = "source" if standings == stored else (
+            "reconstructed" if sum(r[3] for r in standings) > sum(r[3] for r in stored) else "corrected")
+        # Las ligas, por puntos (points_order); las copas, con el orden de su fuente (_is_league_group).
+        reordered = False
+        if _is_league_group(code, phase):
+            standings, reordered = points_order(standings)
         matches = get_current_jornada_matches(conn, gid, current_jornada)
         total_teams += len(standings)
 
@@ -439,9 +468,11 @@ def generate_category_js(conn, category_name, var_name, stats_var):
             "jornada": current_jornada,
             "standings": standings,
             "matches": matches,
-            "standingsKind": "source" if standings == get_standings(conn, gid) else (
-                "reconstructed" if sum(r[3] for r in standings) > sum(r[3] for r in get_standings(conn, gid)) else "corrected"),
+            "standingsKind": kind,
         }
+        # Solo si la web ha cambiado el orden de la tabla (la Tabla lo dice: src/screen-tabla.js).
+        if reordered:
+            group_obj["reordered"] = True
         # La clasificación detallada de la federación (casa/fuera y sanciones) y qué significa cada
         # puesto (app de futbolaspalmas), solo si los hay.
         detail = standings_detail_map(conn, gid)

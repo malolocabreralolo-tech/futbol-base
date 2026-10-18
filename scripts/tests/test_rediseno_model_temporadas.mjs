@@ -15,9 +15,10 @@ import { fixtureISO } from '../../src/links.js';
 
 const MATCH_KEYS = ['season', 'groupId', 'roundKey', 'dateISO', 'time', 'venue', 'home', 'away', 'hs', 'as', 'advancer', 'shootout'];
 const ROUND_KEYS = ['key', 'label', 'n', 'dateFrom', 'dateTo', 'matches'];
-// official (clasificación detallada de la federación) y zones (qué significa cada puesto), null si no los hay.
+// official (clasificación detallada de la federación) y zones (qué significa cada puesto), null si no los hay;
+// reordered (la web la ha ordenado por puntos), true o false.
 const GROUP_KEYS = ['season', 'id', 'cat', 'name', 'fullName', 'phase', 'island', 'url', 'standingsKind',
-  'kind', 'compKey', 'label', 'standings', 'rounds', 'currentRound', 'official', 'zones'];
+  'reordered', 'kind', 'compKey', 'label', 'standings', 'rounds', 'currentRound', 'official', 'zones'];
 const ROW_KEYS = ['pos', 'team', 'pts', 'pj', 'g', 'e', 'p', 'gf', 'gc', 'dg', 'retired'];
 
 const current = () => {
@@ -196,6 +197,19 @@ test('buildSeason actual: PFV2 ordena jornadas numéricas y deja sin fecha los p
   assert.equal(teguinte.length, 14);
   assert.ok(teguinte.every(m => m.dateISO === null && m.hs === null && m.as === null));
   assert.equal(pfv2.rounds[0].dateFrom, '2025-11-02');
+});
+
+test('buildGroup: reordered (la web la ha ordenado por puntos: points_order de generate_js.py), true solo si lo dice el crudo', () => {
+  const f = fixture('current-2025-2026');
+  const raw = f.prebenjamin.find(g => g.id === 'PG2');
+  const build = extra => buildGroup({ ...raw, ...extra }, { season: f.season, cat: 'prebenjamin', current: true, history: f.history });
+  assert.equal(build({}).reordered, false, 'la fixture no lo trae');
+  const g = build({ reordered: true });
+  assert.equal(g.reordered, true);
+  assert.equal(g.standingsKind, 'source', 'reordenada, sigue siendo la oficial');
+  assert.deepEqual(g.standings.map(r => r.team), raw.standings.map(r => r[1]), 'el orden, el de los datos');
+  assert.equal(build({ reordered: 'true' }).reordered, false);
+  assert.equal(build({ reordered: 1 }).reordered, false);
 });
 
 test('buildGroup actual: sin entrada en HISTORY no hay jornadas (nunca las matches en línea)', () => {

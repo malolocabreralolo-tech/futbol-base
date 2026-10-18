@@ -8,7 +8,7 @@
  *            hs, as, advancer, shootout }
  *   Round  { key, label, n, dateFrom, dateTo, matches: Match[] }
  *   Group  { season, id, cat, name, fullName, phase, island, url, standingsKind,
- *            kind, compKey, label, standings: Row[], rounds: Round[], currentRound }
+ *            reordered, kind, compKey, label, standings: Row[], rounds: Round[], currentRound }
  *   Season { name, current, groups: Group[] }     Cups { season, groups: Group[] }
  *
  * El estado de un partido depende del día: no se guarda en Match, se pide a
@@ -232,6 +232,9 @@ export function buildGroup(raw, { season, cat, current = false, history = null }
     island: raw.island ?? null,
     url: textOrNull(raw.url),
     standingsKind: raw.standingsKind ?? null,
+    // La web la ha ordenado por puntos (points_order de scripts/generate_js.py): la federación la publica
+    // en otro orden (por puntos por partido). Solo en la temporada en curso; true o false.
+    reordered: raw.reordered === true,
     kind,
     compKey: competitionKey({ ...raw, cat }, season).key,
     label: groupLabel({ ...raw, cat, season }),

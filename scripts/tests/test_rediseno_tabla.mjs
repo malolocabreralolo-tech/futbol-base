@@ -195,6 +195,29 @@ test('procedencia: sourceInfo (datos) con «Ver fuente»; sin enlace si el grupo
     /<p class="notice source-line">Clasificación de futbolaspalmas\.com con los puntos corregidos: consulta la fuente por si hay sanciones\. <a class="source-link"/);
 });
 
+test('procedencia: la oficial que la web ordena por puntos (reordered) lo dice, solo en la temporada del portal', () => {
+  // PG2 de 2026-27: la federación la publica por puntos por partido y generate_js.py la ordena por puntos.
+  const url = 'https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247208';
+  const raw = fixture('current-2025-2026');
+  Object.assign(raw.prebenjamin.find(g => g.id === 'PG2'), { url, reordered: true });
+  const out = render({ g: 'PG2' }, opts({ current: raw }));
+  assert.match(out, /<p class="notice source-line">Clasificación oficial de fiflp\.com, ordenada por puntos: la federación ordena este grupo por puntos por partido\. <a class="source-link" href="https:\/\/www\.fiflp\.com\/pnfg\/NPcd\/NFG_CmpJornada\?[^"]*" target="_blank" rel="noopener noreferrer">Ver fuente<\/a><\/p>/);
+  assert.equal((out.match(/ordenada por puntos/g) || []).length, 1, 'una sola vez, en la procedencia');
+  // Sin reordered, la de siempre.
+  delete raw.prebenjamin.find(g => g.id === 'PG2').reordered;
+  assert.match(render({ g: 'PG2' }, opts({ current: raw })), /<p class="notice source-line">Clasificación oficial de fiflp\.com\. <a class="source-link"/);
+  // Una calculada (ya por puntos: el generador nunca la marca), con su advertencia y nada más.
+  Object.assign(raw.prebenjamin.find(g => g.id === 'PG2'), { reordered: true, standingsKind: 'reconstructed' });
+  const rebuilt = text(render({ g: 'PG2' }, opts({ current: raw })));
+  assert.match(rebuilt, /Clasificación calculada con los resultados de fiflp\.com: puede no reflejar sanciones ni desempates de la federación\. Ver fuente/);
+  assert.doesNotMatch(rebuilt, /ordenada por puntos/);
+  // En una temporada pasada, nunca: el archivo no se reordena.
+  const past = pastSeasonRaw();
+  past.benjamin.find(g => g.id === 'P1').reordered = true;
+  assert.match(render({ s: '2024-2025', g: 'P1' }, { datasets: datasetsFor({ seasonRaw: { '2024-2025': past } }) }),
+    /<p class="notice source-line">Clasificación oficial\. Archivo de la temporada 2024\/25\.<\/p>/);
+});
+
 test('temporada pasada (P1 2024-25): la temporada en la etiqueta, forma del archivo y sin fila propia', () => {
   const out = render({ s: '2024-2025', g: 'P1', v: 'forma' }, { datasets: datasetsFor({ seasonRaw: { '2024-2025': pastSeasonRaw() } }) });
   assert.match(out, /<p class="screen-sub">Benjamín, Primera Fase, Grupo 1 · 2024\/25<\/p>/);

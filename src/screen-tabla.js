@@ -146,11 +146,15 @@ const SOURCE_TAIL = {
   calculada: ': puede no reflejar sanciones ni desempates de la federación.',
   corregida: ': consulta la fuente por si hay sanciones.',
 };
+// La oficial que la web ha ordenado por puntos (group.reordered: points_order de generate_js.py), en
+// la temporada del portal: la federación la publica por puntos por partido (PG2 de 2026-27).
+const REORDERED_TAIL = ', ordenada por puntos: la federación ordena este grupo por puntos por partido.';
 
 // Procedencia (sourceInfo de model.js, que devuelve datos: decisión 3 del esqueleto).
 function sourceLine(group, historical) {
   const info = sourceInfo(group, historical);
-  const say = `${sourcePhrase(info)}${SOURCE_TAIL[info.kind] || '.'}`;
+  const reordered = group.reordered && !historical && info.kind === 'oficial';
+  const say = `${sourcePhrase(info)}${reordered ? REORDERED_TAIL : SOURCE_TAIL[info.kind] || '.'}`;
   const archive = historical ? ` Archivo de la temporada ${seasonLabel(group.season)}.` : '';
   return html`<p class="notice source-line">${say}${archive}${info.url ? html` <a class="source-link" href="${info.url}" target="_blank" rel="noopener noreferrer">Ver fuente</a>` : ''}</p>`;
 }

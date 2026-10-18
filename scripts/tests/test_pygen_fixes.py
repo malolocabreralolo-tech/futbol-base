@@ -546,9 +546,10 @@ PG2_BY_POINTS = ["Acodetti", "Las Mesas Hu.", "Santa Brígida", "Glaucus", "AD H
 
 class TestPointsOrder:
     """points_order: la web ordena la clasificación por puntos, DF y GF (lo pidió el usuario: «primero
-    se debe ordenar por la cantidad de puntos y luego diferencia de goles y así»). Solo cuando la tabla
-    no está por puntos (la federación ordena prebenjamín por puntos por partido); una ya por puntos, con
-    sus empates, se queda como la da la federación."""
+    se debe ordenar por la cantidad de puntos y luego diferencia de goles y así»). La de prebenjamín
+    (per_game: la federación la ordena por puntos por partido), siempre, también sus empates a puntos
+    con distintos pts/J; la de benjamín o alevín, solo si no está por puntos. A igualdad de puntos por
+    partido, el orden de la federación."""
 
     def test_federation_order_is_points_per_game(self):
         """Lo que hace la federación con PG2: puntos por partido (0 sin partidos), DF y GF."""
@@ -605,16 +606,64 @@ class TestPointsOrder:
                  [3, "C", 6, 2, 2, 0, 0, 1, 0, 1]]
         assert [r[1] for r in points_order(mixed)[0]] == ["B", "C", "A"]
 
+    def test_per_game_ties_by_goal_difference_with_points_already_down(self):
+        """Prebenjamín con los puntos ya en orden: sus empates a puntos con distintos J los ha
+        desempatado la federación por pts/J (AD Huracán, 3 en 1 J y DF +6, encima de Glaucus, 3 en 2 y
+        DF +7): por DF y GF. Es PG2 sin las dos filas de 6 puntos."""
+        from scripts.generate_js import points_order
+        rows = [list(r) for r in PG2_FIFLP if r[2] != 6]
+        assert sorted(rows, key=lambda r: (-(r[2] / r[3] if r[3] else 0), -r[9], -r[7])) == rows
+        assert points_order(rows) == (rows, False), "benjamín o alevín: ya por puntos, no se toca"
+        ordered, changed = points_order(rows, per_game=True)
+        assert changed is True
+        assert [r[1] for r in ordered] == ["Santa Brígida", "Glaucus", "AD Huracán", "RC Victoria",
+                                           "Tamaraceite", "Unión Viera", "Atl. Angostura", "Arucas B",
+                                           "San Mateo", "Atlético Bachicán Las Mesas"]
+        assert [r[0] for r in ordered] == list(range(1, 11))
+        assert [r[1] for r in points_order(PG2_FIFLP, per_game=True)[0]] == PG2_BY_POINTS
+
+    def test_per_game_tie_with_different_games(self):
+        """El de los revisores: A (9 en 4 J, DF +3) encima de B (9 en 5, DF +10), como la federación (por
+        pts/J). Prebenjamín: B arriba; benjamín o alevín (la federación, por puntos), como está."""
+        from scripts.generate_js import points_order
+        rows = [[1, "A", 9, 4, 3, 0, 1, 8, 5, 3],
+                [2, "B", 9, 5, 3, 0, 2, 15, 5, 10],
+                [3, "C", 7, 4, 2, 1, 1, 6, 6, 0],
+                [4, "D", 3, 5, 1, 0, 4, 2, 12, -10]]
+        ordered, changed = points_order(rows, per_game=True)
+        assert changed is True and [r[:2] for r in ordered] == [[1, "B"], [2, "A"], [3, "C"], [4, "D"]]
+        assert points_order(rows) == (rows, False)
+
+    def test_per_game_keeps_the_federation_tiebreak_at_equal_points_per_game(self):
+        """Con los mismos puntos y las mismas J (los mismos pts/J), o a 0 puntos (0 por partido todos), el
+        orden es el desempate de la federación, aunque no sea el de la DF (PG2 de 2025-26: La Garita
+        encima de RC Victoria, 58 puntos en 28 J y peor DF; el enfrentamiento directo). No se toca."""
+        from scripts.generate_js import points_order
+        rows = [[1, "La Garita", 58, 28, 19, 1, 8, 138, 72, 66],
+                [2, "RC Victoria", 58, 28, 19, 1, 8, 145, 67, 78],
+                [3, "Gamma", 20, 28, 6, 2, 20, 50, 90, -40],
+                [4, "Delta", 0, 1, 0, 0, 1, 0, 9, -9],
+                [5, "Epsilon", 0, 0, 0, 0, 0, 0, 0, 0],
+                [6, "Zeta", 0, 2, 0, 0, 2, 1, 5, -4]]
+        ordered, changed = points_order(rows, per_game=True)
+        assert changed is False and ordered is rows
+        # Ya en el orden de la web (la reconstruida de _table_from_results, por ejemplo): tampoco.
+        canon = [[1, "A", 6, 2, 2, 0, 0, 9, 1, 8], [2, "B", 6, 3, 2, 0, 1, 5, 4, 1],
+                 [3, "C", 3, 1, 1, 0, 0, 2, 1, 1]]
+        assert points_order(canon, per_game=True) == (canon, False)
+
     def test_without_points_untouched(self):
         from scripts.generate_js import points_order
         rows = [[1, "A", None, 1, 1, 0, 0, 2, 0, 2], [2, "B", 3, 1, 1, 0, 0, 2, 0, 2]]
         assert points_order(rows) == (rows, False)
+        assert points_order(rows, per_game=True) == (rows, False)
         assert points_order([]) == ([], False)
+        assert points_order([], per_game=True) == ([], False)
 
     @staticmethod
-    def _seed(conn, gid, code, phase, rows):
+    def _seed(conn, gid, code, phase, rows, cat=2):
         conn.execute("""INSERT INTO groups (id, season_id, category_id, code, name, phase, current_jornada)
-                        VALUES (?, 1, 2, ?, ?, ?, 'Jornada 2')""", (gid, code, f"Grupo {code}", phase))
+                        VALUES (?, 1, ?, ?, ?, ?, 'Jornada 2')""", (gid, cat, code, f"Grupo {code}", phase))
         for pos, team, pts, j, g, e, p, gf, gc, gd in rows:
             conn.execute("INSERT OR IGNORE INTO teams (name) VALUES (?)", (team,))
             tid = conn.execute("SELECT id FROM teams WHERE name=?", (team,)).fetchone()[0]
@@ -645,8 +694,26 @@ class TestPointsOrder:
         assert [r[1] for r in groups["PCC1"]["standings"]] == ["Alfa", "Beta"]
         assert "reordered" not in groups["PCC1"]
 
+    def test_generator_per_game_only_in_prebenjamin(self):
+        """Los puntos ya en orden y un empate a puntos con distintos J por pts/J: en prebenjamín, por DF
+        (y reordered, y sigue siendo la oficial); la misma tabla en benjamín, como la da la federación."""
+        from scripts.generate_js import generate_category_js
+        rows = [[1, "A", 9, 4, 3, 0, 1, 8, 5, 3], [2, "B", 9, 5, 3, 0, 2, 15, 5, 10],
+                [3, "C", 7, 4, 2, 1, 1, 6, 6, 0]]
+        conn = _synth_conn()
+        self._seed(conn, 1, "PG1", "Gran Canaria", rows)
+        self._seed(conn, 2, "GC1", "Gran Canaria", rows, cat=1)
+        [pg1] = _parse_const(generate_category_js(conn, "PREBENJAMIN", "PREBENJAMIN", "PREBENJ_STATS"),
+                             "PREBENJAMIN")
+        [gc1] = _parse_const(generate_category_js(conn, "BENJAMIN", "BENJAMIN", "BENJ_STATS"), "BENJAMIN")
+        assert [r[:2] for r in pg1["standings"]] == [[1, "B"], [2, "A"], [3, "C"]]
+        assert pg1["standingsKind"] == "source" and pg1["reordered"] is True
+        assert gc1["standings"] == rows
+        assert gc1["standingsKind"] == "source" and "reordered" not in gc1
+
     def test_published_league_tables_are_by_points(self):
-        """Los data-*.js de la temporada en curso: cada liga, por puntos; reordered, solo en la oficial."""
+        """Los data-*.js de la temporada en curso: cada liga, por puntos, y las de prebenjamín, a igualdad de
+        puntos con distintos pts/J, por DF y GF; reordered, nunca en una calculada (ya está por puntos)."""
         from scripts.generate_js import _is_league_group
         seen = 0
         for name, const in (("data-benjamin.js", "BENJAMIN"), ("data-prebenjamin.js", "PREBENJAMIN"),
@@ -662,8 +729,14 @@ class TestPointsOrder:
                     continue
                 seen += 1
                 assert all(a >= b for a, b in zip(pts, pts[1:])), f"{g['id']}: {g['standings']}"
+                rows = g["standings"]
+                if const == "PREBENJAMIN" and all(r[7] is not None and r[9] is not None for r in rows):
+                    # Nunca uno con los mismos puntos, otras J y peor DF y GF encima: el desempate por pts/J.
+                    assert not [(a[1], b[1]) for i, a in enumerate(rows) for b in rows[i + 1:]
+                                if a[2] == b[2] != 0 and a[3] != b[3]
+                                and (a[9], a[7]) < (b[9], b[7])], g["id"]
                 if g.get("reordered"):
-                    assert g["reordered"] is True and g["standingsKind"] == "source", g["id"]
+                    assert g["reordered"] is True and g["standingsKind"] != "reconstructed", g["id"]
                     assert [r[0] for r in g["standings"]] == list(range(1, len(pts) + 1)), g["id"]
         if not seen:
             pytest.skip("sin clasificaciones publicadas")

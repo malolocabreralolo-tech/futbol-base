@@ -119,8 +119,8 @@
     "FF5": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234218",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-17T22:21:29+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 25 goleadores",
+      "checkedAt": "2026-10-18T03:54:41+00:00"
     },
     "FF6": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976988&CodGrupo=55234221",
@@ -244,9 +244,9 @@
     },
     "AL12": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203363",
-      "status": "error",
-      "message": "la federación no sirvió las jornadas del grupo",
-      "checkedAt": "2026-10-14T14:46:51+00:00"
+      "status": "ok",
+      "message": "4 jornadas leídas: 0 partidos nuevos, 1 actualizados, 1 resultados; 41 goleadores, 5/6 actas",
+      "checkedAt": "2026-10-18T04:01:42+00:00"
     },
     "AL13": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203376",
@@ -281,8 +281,8 @@
     "AL18": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203443",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-17T22:21:59+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 36 goleadores",
+      "checkedAt": "2026-10-18T03:55:18+00:00"
     },
     "AL19": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203466",
@@ -422,60 +422,45 @@
     "status": "pending"
   },
   "run": {
-    "pass": 1128,
+    "pass": 1129,
     "groups": 69,
     "refreshed": 3,
     "priority": [
-      "AL9",
-      "PG2"
+      "FF5",
+      "AL18"
     ],
     "fresh": [
-      "FF5",
+      "PG2",
       "AL4",
-      "AL18",
+      "AL9",
       "AL20"
     ],
     "resting": [],
     "deferred": [
-      "FF3",
-      "AL5",
-      "FF4",
-      "AL2",
-      "FF6",
-      "AL6",
-      "FF7",
-      "AL7",
-      "FF9",
-      "AL8",
-      "FF1",
-      "AL1",
-      "FF8",
-      "PG1",
-      "AL11",
-      "FF2",
       "FF12",
-      "AL12",
-      "FF13",
-      "AL13",
-      "FF14",
-      "AL14",
-      "FF15",
-      "FF16",
-      "AL15",
-      "FF17",
-      "AL16",
-      "FF10",
       "PG3",
+      "AL13",
+      "FF13",
+      "AL15",
+      "FF14",
+      "AL16",
+      "FF15",
+      "AL11",
+      "FF16",
+      "AL14",
+      "FF17",
       "AL10",
-      "FF11",
+      "FF10",
       "AL19",
+      "FF11",
       "FF20",
-      "FF21",
       "AL21",
-      "FF22",
+      "PG4",
+      "FF21",
       "AL22",
-      "FF23",
+      "FF22",
       "AL23",
+      "FF23",
       "FF24",
       "AL24",
       "FV11",
@@ -483,28 +468,43 @@
       "FF18",
       "AL17",
       "FF19",
-      "AL27",
       "FV14",
+      "AL27",
       "LZ1",
       "AL28",
       "LZ2",
       "AL29",
+      "PG1",
       "LZ3",
       "AL30",
       "LZ4",
       "AL31",
-      "PG4",
       "LZ5",
       "AL32",
       "FV12",
       "AL26",
-      "FV13"
+      "FV13",
+      "FF9",
+      "AL8",
+      "FF1",
+      "AL1",
+      "FF2",
+      "AL2",
+      "FF3",
+      "AL3",
+      "FF4",
+      "AL5",
+      "FF6",
+      "AL6",
+      "FF7",
+      "AL7",
+      "FF8"
     ],
     "unserved": [],
     "extrasDeferred": [
-      "AL3"
+      "AL12"
     ],
-    "seconds": 511,
+    "seconds": 510,
     "pages": 33,
     "blocked": true,
     "calendarShows": {
@@ -517,12 +517,12 @@
       15
     ]
   },
-  "checkedAt": "2026-10-18T02:13:15+00:00",
+  "checkedAt": "2026-10-18T04:04:23+00:00",
   "lastDataChange": "2026-10-18",
-  "dataVersion": "20261018b",
+  "dataVersion": "20261018c",
   "summary": {
-    "ok": 49,
+    "ok": 50,
     "rejected": 0,
-    "error": 20
+    "error": 19
   }
 }

@@ -210,7 +210,7 @@
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247208",
       "status": "ok",
       "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-18T18:18:58+00:00"
+      "checkedAt": "2026-10-18T20:50:44+00:00"
     },
     "PG3": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247221",
@@ -221,8 +221,8 @@
     "PG4": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247234",
       "status": "ok",
-      "message": "2 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-16T03:48:38+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 1 actualizados, 0 resultados; 37 goleadores",
+      "checkedAt": "2026-10-18T20:57:02+00:00"
     },
     "AL1": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203186",
@@ -323,8 +323,8 @@
     "AL24": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203586",
       "status": "ok",
-      "message": "2 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-16T21:33:35+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 2 actualizados, 2 resultados; 24 goleadores, 2/2 actas",
+      "checkedAt": "2026-10-18T20:57:43+00:00"
     },
     "AL25": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203609",
@@ -414,7 +414,7 @@
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203306",
       "status": "ok",
       "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-18T18:18:29+00:00"
+      "checkedAt": "2026-10-18T20:50:15+00:00"
     }
   },
   "nextSeason": {
@@ -422,38 +422,22 @@
     "status": "pending"
   },
   "run": {
-    "pass": 1145,
+    "pass": 1146,
     "groups": 69,
-    "refreshed": 3,
+    "refreshed": 4,
     "priority": [
-      "AL20",
-      "AL4"
+      "AL9",
+      "PG2"
     ],
     "fresh": [
-      "PG2",
       "FF5",
-      "AL9",
-      "AL18"
+      "AL4",
+      "AL18",
+      "AL20"
     ],
     "resting": [],
     "deferred": [
-      "AL16",
-      "FF17",
-      "AL10",
-      "FF10",
-      "AL11",
-      "FF12",
-      "AL12",
-      "FF13",
-      "AL13",
-      "FF14",
-      "PG3",
-      "AL14",
-      "FF15",
-      "AL24",
-      "FF11",
       "AL25",
-      "FF24",
       "FV11",
       "AL17",
       "FF18",
@@ -461,20 +445,19 @@
       "FF19",
       "AL21",
       "FF20",
-      "FF21",
-      "PG4",
       "AL22",
-      "FF22",
+      "FF21",
       "AL23",
-      "FF23",
+      "FF22",
       "AL31",
+      "FF23",
       "LZ4",
-      "LZ5",
       "AL32",
-      "FV12",
+      "LZ5",
       "AL26",
-      "FV13",
+      "FV12",
       "AL27",
+      "FV13",
       "FV14",
       "AL28",
       "LZ1",
@@ -482,13 +465,13 @@
       "LZ2",
       "AL30",
       "LZ3",
-      "AL3",
+      "PG1",
       "FF4",
+      "AL3",
       "FF6",
       "AL5",
       "FF7",
       "AL6",
-      "PG1",
       "FF8",
       "AL7",
       "FF9",
@@ -497,21 +480,33 @@
       "AL1",
       "FF2",
       "AL2",
-      "FF3"
+      "FF3",
+      "PG3",
+      "FF13",
+      "AL12",
+      "FF14",
+      "AL13",
+      "FF15",
+      "AL14",
+      "FF16",
+      "AL15",
+      "FF17",
+      "AL16",
+      "FF10",
+      "AL10",
+      "FF11",
+      "AL11",
+      "FF12"
     ],
     "unserved": [
-      "FF16"
+      "FF24"
     ],
     "extrasDeferred": [],
-    "seconds": 512,
+    "seconds": 511,
     "pages": 33,
-    "extras": [
-      "competiciones",
-      "directorio"
-    ],
     "blocked": true,
     "calendarShows": {
-      "other": 3
+      "other": 4
     },
     "pauses": 1,
     "resumed": 1,
@@ -520,9 +515,9 @@
       15
     ]
   },
-  "checkedAt": "2026-10-18T20:09:02+00:00",
+  "checkedAt": "2026-10-18T20:59:51+00:00",
   "lastDataChange": "2026-10-18",
-  "dataVersion": "20261018s",
+  "dataVersion": "20261018t",
   "summary": {
     "ok": 55,
     "rejected": 0,

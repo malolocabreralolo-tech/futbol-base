@@ -676,8 +676,11 @@ test('dos columnas (§4.8), como la ficha: a la izquierda lo principal y el cale
   };
   const a = columnsOf(render(CASES.A));
   assert.deepEqual(titles(a.main), ['Próximo partido', 'Últimos cinco']);
-  assert.deepEqual(titles(a.side), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Evolución de puntos', 'Plantilla', 'Trayectoria']);
-  assert.match(a.side, /<p class="home-fresh">.*<\/p><section class="block"><div class="block-head"><h2 class="block-title">Evolución de puntos<\/h2>/);
+  // Sin la evolución de puntos (19/10/2026). Su sitio es el del pronóstico de la clasificación final, que
+  // aquí no sale: la clasificación de las fixtures es la del final de la temporada y no cuadra con el
+  // calendario del 01/03/2026 (startMatchesCalendar; lo prueba test_proyeccion_web.mjs).
+  assert.deepEqual(titles(a.side), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Plantilla', 'Trayectoria']);
+  assert.match(a.side, /<p class="home-fresh">.*<\/p><section class="block" id="plantilla" data-slot="plantilla" aria-busy="true">/);
   assert.deepEqual(titles(a.rest), ['Calendario']);
   const c = columnsOf(render(CASES.C));
   assert.deepEqual(titles(c.main), ['Último partido', 'Últimos cinco']);
@@ -688,7 +691,8 @@ test('dos columnas (§4.8), como la ficha: a la izquierda lo principal y el cale
   assert.deepEqual(titles(b.rest), ['Calendario']);
   const d = columnsOf(render(CASES.D));
   assert.deepEqual(titles(d.main), ['Temporada 2026/27', 'Así terminó 2025/26', 'Verano: Maspalomas Cup 2026']);
-  assert.deepEqual(titles(d.side), ['Clasificación final', 'Evolución de puntos', 'Plantilla', 'Trayectoria']);
+  // Con la temporada terminada no queda nada que pronosticar: ni el pronóstico de la clasificación final.
+  assert.deepEqual(titles(d.side), ['Clasificación final', 'Plantilla', 'Trayectoria']);
   assert.deepEqual(titles(d.rest), ['Calendario']);
   for (const out of [a, b, c, d].map(x => x.main + x.side + x.rest)) assert.doesNotMatch(out, /data-slot="calendario"|home-all/);
 });

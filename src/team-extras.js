@@ -1,64 +1,56 @@
 // Lo que la consulta añade a la vista de equipo (spec §4.6; decisiones 12 a 14 de B3), en Mi equipo y
-// en la ficha: la evolución de puntos, la plantilla y la trayectoria, con su comportamiento. Puro salvo
-// los mount y fillSquad; nada toca el DOM al importarse.
+// en la ficha: el pronóstico de la clasificación final (19/10/2026; antes, en su sitio, la evolución de
+// puntos, que el usuario quitó: «no me aporta tanto»), la plantilla y la trayectoria, con su
+// comportamiento. Puro salvo los mount y fillSquad; nada toca el DOM al importarse.
 import { html, join } from './html.js';
-import { block, box, cells, countLabel, empty, listEs, notice, pointsChart, score } from './ui.js';
+import { block, box, countLabel, crest, empty, forecastOptions, notice, score } from './ui.js';
 import {
-  anyCards, coverageNote, playerMatches, playerName, pointsProgression, roleLabel, seasonLabel, teamFixtures, teamShort,
-  teamSquad, teamStaff,
+  anyCards, playerMatches, playerName, roleLabel, seasonLabel, teamFixtures, teamShort, teamSquad, teamStaff,
 } from './model.js';
 import { teamTrajectory } from './myteam.js';
-import { matchHref, playerHref, routeHref, weekdayDate } from './links.js';
+import { matchHref, playerHref, routeHref, teamHref, weekdayDate } from './links.js';
 import { errorBox, retryBlock } from './shell.js';
 import { ensureLineups, ensureSeasonData, lineupsKey, loadAlevinSeasons, loadSeasons } from './state.js';
-import { coverageText, missingResults } from './team-view.js';
+import { PARAMS } from './pronostico.js';
+import { projectStandings } from './proyeccion.js';
 
 const TRAJECTORY_ID = 'trayectoria';
 export const SQUAD_ID = 'plantilla';
 
-// ── Evolución de puntos (decisión 12) ───────────────────────────────────
+// ── Pronóstico de la clasificación final (19/10/2026) ───────────────────
 
-// Cuando la gráfica, que sale del calendario, no llega a los puntos oficiales (spec §7), la nota que lo
-// dice, { label, text }, o null (decisión 163 de B3):
-// - «Cobertura:» si al calendario le falta algo: los partidos contra retirados (cuáles) o resultados
-//   sin publicar (la nota de «La temporada en cifras»);
-// - «Nota:» si cuentan los mismos partidos y aun así no coinciden: solo lo dice, sin inventar la causa.
-export function pointsNote(name, group, today) {
-  const series = pointsProgression(name, group).filter(p => p.pts != null);
-  const row = group.standings.find(r => r.team === name);
-  const last = series.length ? series[series.length - 1].pts : null;
-  if (!row || row.pts == null || last == null || last === row.pts) return null;
-  const coverage = coverageNote(name, group);
-  const missing = missingResults(name, group, today);
-  const points = countLabel(last, 'punto', 'puntos');
-  if (coverage && coverage.vsRetired > 0 && !missing && coverage.withResult + coverage.vsRetired === coverage.played) {
-    const whom = `${listEs(coverage.retired)} (${coverage.retired.length > 1 ? 'retirados' : 'retirado'})`;
-    return { label: 'Cobertura:', text: `la gráfica suma ${points} con los ${coverage.withResult} partidos del calendario; la clasificación oficial da ${row.pts}, con ${countLabel(coverage.vsRetired, 'partido', 'partidos')} más contra ${whom}.` };
-  }
-  const why = coverageText(coverage, missing);
-  if (why) return { label: 'Cobertura:', text: `la gráfica suma ${points} con el calendario y la clasificación oficial da ${row.pts}: ${why.charAt(0).toLowerCase()}${why.slice(1)}.` };
-  const same = row.pj === 1 ? 'Con el mismo partido' : `Con los mismos ${row.pj} partidos`;
-  return { label: 'Nota:', text: `el calendario y la clasificación oficial no coinciden. ${same}, la gráfica suma ${points} y la clasificación oficial, ${row.pts}.` };
-}
+// «3.º»; «2.º y 4.º»; «2.º–4.º» en la tabla.
+const ordinal = n => `${n}.º`;
+const thousands = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+// El abanico en una frase: «Entre 2.º y 4.º» o, si es un solo puesto, «4.º».
+const fanPhrase = ({ lo, hi }) => (lo === hi ? ordinal(lo) : `Entre ${ordinal(lo)} y ${ordinal(hi)}`);
+const fanCell = ({ lo, hi }) => (lo === hi ? ordinal(lo) : `${ordinal(lo)}–${ordinal(hi)}`);
+const pointsPhrase = pts => (Math.round(pts) === 1 ? '1 punto' : `unos ${Math.round(pts)} puntos`);
 
-// La línea de sus puntos jornada a jornada, sobre el máximo posible (3 por partido del calendario, sin
-// los de retirados), y el dato en texto (la gráfica es aria-hidden): los puntos tras la primera
-// jornada y tras la última jugada, y ese máximo.
-function evolutionBlock(ctx, group, name) {
-  const series = pointsProgression(name, group);
-  const played = series.filter(p => p.pts != null);
-  const fx = teamFixtures(name, group, ctx.today);
-  const max = 3 * (fx.played + fx.remaining);
-  if (played.length < 2 || max <= 0) return '';
-  const [first, last] = [played[0], played[played.length - 1]];
-  const facts = cells([
-    { label: first.label, value: first.pts },
-    { label: last.label, value: last.pts },
-    { label: 'Máximo posible', value: max },
-  ]);
-  const note = pointsNote(name, group, ctx.today);
-  return html`${box(html`<div class="points-plot">${pointsChart(series, { max })}</div>${facts}`,
-    { title: 'Evolución de puntos', context: 'desde el calendario' })}${note ? notice(note.label, note.text) : ''}`;
+/* El pronóstico de la clasificación final del equipo (projectStandings de proyeccion.js, con las opciones
+ * de la web: forecastOptions de ui.js), donde hay pronóstico de partidos: una liga de prebenjamín de la
+ * temporada del portal, con PARAMS.minRounds jornadas jugadas y partidos por jugar. Arriba, muy visible,
+ * su puesto pronosticado («Pronóstico: 3.º», su puesto en la tabla final proyectada) y, en una línea, el
+ * abanico de puestos en que acaba 8 de cada 10 veces (medido con las temporadas pasadas; la cabecera de
+ * proyeccion.js) y los puntos que se esperan. Debajo, la tabla final proyectada de toda la liga, con las
+ * clases de la Tabla (standings): el puesto, el equipo (su nombre corto, con su escudo y el enlace a su
+ * ficha), los puntos previstos y el abanico, con su fila resaltada (mineText: «mi equipo» o «este
+ * equipo», como en la clasificación). Y en una nota, de dónde sale. Nada si no hay proyección, si el
+ * equipo no está en ella (un retirado) o si aún no ha jugado (PARAMS.minPlayed, como el pronóstico de sus
+ * partidos: solo miraría a los rivales). */
+export function projectionBlock(ctx, group, name, { mineText = 'este equipo' } = {}) {
+  const p = projectStandings(group, forecastOptions(ctx));
+  const me = p && p.rows.find(r => r.team === name);
+  if (!me || me.played < PARAMS.minPlayed) return '';
+  const shields = ctx.datasets?.shields || {};
+  const head = html`<div class="proj-head"><p class="proj-pick">Pronóstico: <b class="proj-pos">${ordinal(me.pos)}</b></p><p class="proj-range">${fanPhrase(me)}, 8 de cada 10 veces · ${pointsPhrase(me.pts)}</p></div>`;
+  const rows = p.rows.map((r) => {
+    const mine = r.team === name;
+    return html`<tr${mine ? html` class="is-mine"` : ''}><td class="st-pos">${r.pos}</td><th scope="row" class="st-team"><a class="st-link" href="${teamHref(group.season, group.id, r.team)}">${crest(r.team, { shields })}<span class="st-name">${teamShort(r.team)}</span></a>${mine ? html`<span class="vh"> (${mineText})</span>` : ''}</th><td class="st-pts">${Math.round(r.pts)}</td><td class="st-fan">${fanCell(r)}</td></tr>`;
+  });
+  const table = html`<table class="standings"><caption class="vh">Clasificación final pronosticada: ${group.label}</caption><thead><tr><th scope="col" class="st-pos"><abbr title="Puesto pronosticado">#</abbr></th><th scope="col" class="st-team">Equipo</th><th scope="col" class="st-pts"><abbr title="Puntos previstos">Pts</abbr></th><th scope="col" class="st-fan"><abbr title="Puestos en que acaba 8 de cada 10 veces">Entre</abbr></th></tr></thead><tbody>${rows}</tbody></table>`;
+  const basis = `Con el pronóstico de cada partido que queda: ${thousands(p.sims)} simulaciones del resto de la liga, que se rehacen con cada resultado nuevo. «Entre»: los puestos en que acaba cada equipo 8 de cada 10 veces (comprobado con temporadas pasadas). Es una estimación, no un resultado.`;
+  return block('Pronóstico de la clasificación final', html`${box(html`${head}${table}`)}${notice(null, basis)}`, { context: 'estimación' });
 }
 
 // ── Plantilla (decisión 13) ─────────────────────────────────────────────
@@ -194,13 +186,15 @@ export async function trajectoryContent(ctx, name, load = ensureSeasonData, alev
 
 // ── En las dos pantallas ────────────────────────────────────────────────
 
-// En las dos pantallas y en este orden (decisión 81 de B3). Con lazySquad (la portada), la plantilla
-// no espera a las actas: el hueco que llena fillSquad, o nada si el equipo no ha jugado.
-export function teamExtras(ctx, group, name, { lazySquad = false } = {}) {
+// En las dos pantallas y en este orden (decisión 81 de B3; el pronóstico de la clasificación final, en el
+// sitio de la evolución de puntos desde el 19/10/2026). Con lazySquad (la portada), la plantilla no espera
+// a las actas: el hueco que llena fillSquad, o nada si el equipo no ha jugado. mine: si el equipo es mi
+// equipo (el texto oculto de su fila en el pronóstico, como en la clasificación).
+export function teamExtras(ctx, group, name, { lazySquad = false, mine = false } = {}) {
   const squad = !lazySquad ? squadBlock(ctx, group, name)
     : teamFixtures(name, group, ctx.today).played === 0 ? ''
       : squadPending(ctx, group, name) ? squadSlot() : squadBlock(ctx, group, name);
-  return [evolutionBlock(ctx, group, name), squad, trajectoryBlock()];
+  return [projectionBlock(ctx, group, name, { mineText: mine ? 'mi equipo' : 'este equipo' }), squad, trajectoryBlock()];
 }
 
 // El detalle de un jugador: su fila de partidos, justo debajo de la suya, al desplegarlo; al

@@ -65,6 +65,7 @@ const STATIC_ASSETS = [
   './src/model.js',
   './src/myteam.js',
   './src/pronostico.js',
+  './src/proyeccion.js',
   './src/screen-home.js',
   './src/team-view.js',
   './src/team-extras.js',

@@ -1054,13 +1054,15 @@ abbr[title] { text-decoration: none; }
 /* «Calendario del equipo (.ics)», encima de la lista del calendario completo. */
 .cal-actions { margin-bottom: 8px; }
 
-/* Evolución de puntos (pointsChart de ui.js): una línea sólida en tinta, sin puntos, sin relleno y
- * sin trazos discontinuos, sobre la base del cero; el SVG se estira al ancho de la caja y el trazo no
- * se deforma. */
-.points-plot { padding: 14px 12px 10px; }
-.points-chart { display: block; width: 100%; height: 120px; overflow: visible; }
-.points-line { fill: none; stroke: var(--ink); stroke-width: 2.5px; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.points-base { stroke: var(--rule); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+/* Pronóstico de la clasificación final (projectionBlock de team-extras.js, 19/10/2026): arriba, el puesto
+ * pronosticado, grande y en tinta («Pronóstico: 3.º»), y la línea del abanico y los puntos; debajo, la
+ * tabla final proyectada con las clases de la Tabla (.standings, con la fila del equipo en .is-mine) y una
+ * columna más, la del abanico («2.º–4.º»), en --mute. */
+.proj-head { padding: 10px 12px 11px; }
+.proj-pick { font-size: 15px; font-weight: 700; line-height: 1.2; color: var(--text); }
+.proj-pos { font-size: 28px; font-weight: 800; color: var(--ink); }
+.proj-range { margin-top: 3px; font-size: 13.5px; color: var(--mute); }
+.standings .st-fan { width: 74px; padding-left: 6px; font-size: 12.5px; color: var(--mute); white-space: nowrap; }
 
 /* Plantilla: N.º, jugador (el botón que despliega sus partidos), PJ, titular y goles. */
 .squad { width: 100%; border-collapse: collapse; table-layout: fixed; }

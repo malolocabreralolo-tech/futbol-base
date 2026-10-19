@@ -67,30 +67,37 @@ function untimedJ18() {
 // ningún partido que pronosticar y siguen idénticos.
 // 2026-10-18 (revisión): esos tres, con una nota bajo la lista del calendario (de dónde sale el pronóstico y
 // que se recalcula con cada resultado nuevo); sin las líneas ni la nota, byte a byte los de antes.
+// 2026-10-19: todos los que la tenían, sin la evolución de puntos (el usuario la quitó: «no me aporta
+// tanto»), y por lo demás byte a byte los de antes (comprobado ese día con el código de 0b65879, caso a caso);
+// B, E y X no la pintaban y siguen idénticos. En su sitio, el pronóstico de la clasificación final no sale
+// en ninguno: la clasificación de las fixtures es la del final de la temporada (currentAt no la toca) y no
+// cuadra con el calendario de esos días (startMatchesCalendar de src/proyeccion.js). Lo prueba
+// test_proyeccion_web.mjs, con la clasificación de cada día.
 const HOME = {
-  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, 'c769f9bfc3df640816155239d219f909890e6bd4'],
-  'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, '6d60fb613c156c2f417aacf20283b56c12638296'],
+  A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, '6324408256e66f99200ca25b8cb24e0e92de3ab1'],
+  'A en A2, con campo': [{ raw: currentAt('2026-05-20'), myTeam: { ...LAS_MESAS, cat: 'benjamin', groupId: 'A2' }, today: '2026-05-20' }, '211ed85261c6501b00759816803616f915467347'],
   B: [{ raw: nextSeasonRaw({ benjamin: ['A1', 'B2', 'FF15'], prebenjamin: ['PG2', 'PG3'] }), myTeam: { ...LAS_MESAS, season: '2026-2027' }, today: '2026-10-01', portalSeason: '2026-2027', goles: false }, '8f38ff09c03b854b3c67b06379db98f43a7906a5'],
   'B de CD Batán': [{ raw: currentAt('2026-03-01'), myTeam: { ...LAS_MESAS, name: 'CD Batán' }, today: '2026-03-01' }, 'ec9408309fb1e01858c0f10de2323a8cb2b9b978'],
-  C: [{ raw: currentAt('2026-06-03'), today: '2026-06-03' }, '78c2ccf15140bcba7f4ab32cec7d977cb15b925d'],
-  'C con stale': [{ raw: currentAt('2026-06-03'), today: '2026-06-03', stale: true }, '55cd7df7d8cd584c80a5b1387b314fdd2c98c007'],
-  D: [{ today: '2026-09-23' }, 'f87e4cdba48b2842da8307c4622412e7a028af29'],
-  'D con stale': [{ today: '2026-09-23', stale: true }, '4a012403a8464d66a961e6754f4ad1ef3da84cd8'],
-  'D con 2026/27 lista': [{ today: '2026-06-15', withHealth: { ...fixture('health'), nextSeason: { name: '2026-2027', status: 'ready' } } }, '23d56557e72ace1bacfa47bf48efcdb93f5d74b0'],
-  'D sin data-health': [{ today: '2026-09-23', withHealth: null, legacyDate: '23/09/2026' }, '242aed028208c777fcfe06596347f7567bd076da'],
+  C: [{ raw: currentAt('2026-06-03'), today: '2026-06-03' }, '14296a10661c7a6e5a9918cca7cf346fc6b23cee'],
+  'C con stale': [{ raw: currentAt('2026-06-03'), today: '2026-06-03', stale: true }, '217db87f2ad1defe37fff1f9d18e4c3e47fd3156'],
+  D: [{ today: '2026-09-23' }, '71eab94fd5150caa979a6472aef5b33865b9b6f1'],
+  'D con stale': [{ today: '2026-09-23', stale: true }, 'd088711115588a4aeadcf1418b0e107c14538148'],
+  'D con 2026/27 lista': [{ today: '2026-06-15', withHealth: { ...fixture('health'), nextSeason: { name: '2026-2027', status: 'ready' } } }, 'c2b20c0ac04343ee9a28ad460dae357e5a904900'],
+  'D sin data-health': [{ today: '2026-09-23', withHealth: null, legacyDate: '23/09/2026' }, 'e4a00a69eaf3e8a9fa17177b2560a666694de910'],
   E: [{ myTeam: { name: 'Las Mesas Hu. B', season: '2025-2026', cat: 'benjamin', groupId: 'FF13' }, today: '2026-09-23' }, 'bede1e6746de45c5d2cf5882130d5d6594e6257d'],
   X: [{ raw: nextSeasonRaw({ benjamin: ['A1'], prebenjamin: ['PG3'] }), today: '2026-10-01', portalSeason: '2026-2027', goles: false }, 'b60fcec7f40d3730d9150338f6377318bec65bad'],
-  'D sin «Verano»': [{ myTeam: { ...LAS_MESAS, name: 'RC Victoria' }, today: '2026-09-23' }, 'd286ecc605a4802ca61f4f102e7000f7e0d5d8c5'],
-  'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, 'c2444e026d549f3ac3dc941e2a92e056c9d04fc8'],
-  'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '5744594dda12a29f299cc39c80e98519e0b0fd47'],
-  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, '379af833e01aaa399f7dbe016ec064bcb7da7290'],
-  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, 'f9af61404c380a5f4369208d77bc74ebc5b3b3e2'],
+  'D sin «Verano»': [{ myTeam: { ...LAS_MESAS, name: 'RC Victoria' }, today: '2026-09-23' }, '93620123c997c53929ed7c1aee5d80c382b55bf1'],
+  'C, próximo partido sin fecha publicada': [{ raw: undatedJ30(), today: '2026-05-31' }, '6b0135ae1070a1dbd6ba95cc050d06616e084258'],
+  'C, resultado pendiente de publicar': [{ raw: currentAt('2026-06-02'), today: '2026-06-03' }, '61dd4249eac31db1f1b6db53890feb0c4ef1f4f9'],
+  'A con menos de cinco resultados': [{ raw: currentAt('2025-10-25'), today: '2025-10-25' }, 'a0b05c59cc9116f2710597f6c59a57e0a9aa3b5a'],
+  'A con la hora por confirmar': [{ raw: untimedJ18(), today: '2026-03-01' }, 'e0c45a26160ff1fc042be442b64f54b51179b3c4'],
 };
-// Las huellas de esos tres antes de las líneas del calendario (el pronóstico, solo bajo el próximo partido).
+// Las huellas de esos tres antes de las líneas del calendario (el pronóstico, solo bajo el próximo partido);
+// desde el 19/10/2026, sin la evolución de puntos.
 const BEFORE_CALENDAR = {
-  A: 'c28fff6cadcba8447e335e2d049d3d195b780a00',
-  'A con menos de cinco resultados': '794dd8c4d3464848ced60a6efe1eb5950b11bd44',
-  'A con la hora por confirmar': '2db155be0733d76c47e68bb7c15e45a7767b0c29',
+  A: '115f4142f5be33054c2be4d82ebd01eb60e9ea17',
+  'A con menos de cinco resultados': 'e6c45c665b3b2799fe88e1051cd1b938c962636f',
+  'A con la hora por confirmar': 'f53215d991afed6e7100199174d8c85947a00181',
 };
 
 test('la portada pinta, byte a byte, lo que fijan sus huellas en A, B, C, D, E y X', () => {
@@ -102,6 +109,7 @@ test('la portada pinta, byte a byte, lo que fijan sus huellas en A, B, C, D, E y
     assert.equal(sha(out), sha1, name);
     // Sin las líneas del calendario ni su nota, lo de antes; y sin ninguna, nada cambia en los demás.
     assert.equal(sha(withoutLines(out)), BEFORE_CALENDAR[name] || sha1, `${name}, sin las líneas del calendario`);
+    assert.doesNotMatch(out, /Evolución de puntos|Pronóstico de la clasificación final/, name);
   }
   // Lo que fija cada huella de B5, en claro: que el caso es el que dice su nombre.
   const text = (options) => s(home.render(homeCtx(options)));
@@ -119,12 +127,13 @@ test('la portada pinta, byte a byte, lo que fijan sus huellas en A, B, C, D, E y
   assert.equal((calendar(a).match(/<a class="match-row"/g) || []).length, 26);
   assert.match(calendar(a), /data-action="calendario-equipo"/);
   const side = (out) => titles(out.match(/<div class="home-side">([\s\S]*)<\/div><div class="home-rest">/)[1]);
-  assert.deepEqual(side(a), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Evolución de puntos', 'Plantilla', 'Trayectoria']);
+  assert.deepEqual(side(a), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Plantilla', 'Trayectoria']);
   assert.match(a, /<section class="block" id="plantilla" data-slot="plantilla" aria-busy="true">/);
-  // B: sin nada jugado, ni evolución ni plantilla; D: el calendario, sin «Ver toda la temporada».
+  // B: sin nada jugado, ni pronóstico ni plantilla; D: el calendario, sin «Ver toda la temporada» ni nada
+  // que pronosticar.
   assert.deepEqual(side(b), ['Clasificación', 'Trayectoria']);
   assert.doesNotMatch(b, /Plantilla/);
-  assert.doesNotMatch(d, /home-all/);
+  assert.doesNotMatch(d, /home-all|Pronóstico de la clasificación final/);
   assert.match(d, /<div class="home-rest"><section class="block" id="calendario">/);
 });
 

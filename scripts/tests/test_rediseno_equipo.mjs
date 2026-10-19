@@ -7,13 +7,12 @@ import { fixture } from './fixtures/rediseno/load.mjs';
 import { currentAt, nextSeasonRaw, goleadores, groupLineups, lineupsFor, seasonLineups, archive } from './fixtures/rediseno/simulate.mjs';
 import { ctxFor, datasetsFor, pastSeasonRaw, cssRules } from './fixtures/rediseno/screens.mjs';
 import { fakeSection } from './fixtures/rediseno/fake-browser.mjs';
-import { anyCards, findGroup, playerMatches, pointsProgression, teamSquad } from '../../src/model.js';
+import { anyCards, findGroup, playerMatches, teamSquad } from '../../src/model.js';
 import { teamTrajectory } from '../../src/myteam.js';
-import { pointsChart } from '../../src/ui.js';
 import { buildCalendar, teamCalendarEvents } from '../../src/links.js';
 import { SCREEN_MAP } from '../../src/screens.js';
 import { screen } from '../../src/screen-equipo.js';
-import { playerDetail, pointsNote, trajectoryContent } from '../../src/team-extras.js';
+import { playerDetail, trajectoryContent } from '../../src/team-extras.js';
 
 const s = (h) => String(h);
 const text = (h) => s(h).replace(/<[^>]*>/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
@@ -284,7 +283,8 @@ test('cada clase que emite la ficha existe en acta.css', () => {
   assert.ok(rules.some((r) => r.media === null && r.selector === '.cal-actions'), 'el botón del .ics tiene su hueco');
 });
 
-// ── Plan B3, Tarea 5: evolución de puntos, plantilla y trayectoria (decisiones 12 a 14) ──────────
+// ── Plan B3, Tarea 5: plantilla y trayectoria (decisiones 13 y 14; la evolución de puntos, la 12, se quitó
+// el 19/10/2026: en su sitio, el pronóstico de la clasificación final, en test_proyeccion_web.mjs) ──────
 
 const ACTAS = seasonLineups('2025-2026');
 const A1 = (t) => ({ s: '2025-2026', g: 'A1', t });
@@ -292,70 +292,7 @@ const A1 = (t) => ({ s: '2025-2026', g: 'A1', t });
 const withActas = (params, today = '2026-09-23', { lineups = ACTAS, myTeam } = {}) => s(screen.render(ctxFor('equipo', params, {
   today, datasets: datasetsFor({ current: today < '2026-06-07' ? currentAt(today) : fixture('current-2025-2026'), ...goleadores(), lineups }), ...(myTeam ? { myTeam } : {}),
 })));
-const pg2 = (raw = fixture('current-2025-2026')) => findGroup(ctxAt(HURACAN, '2026-09-23', { raw }).model, '2025-2026', 'PG2');
 const a1 = () => findGroup(ctxAt(HURACAN, '2026-09-23').model, '2025-2026', 'A1');
-
-test('pointsProgression: los puntos acumulados jornada a jornada desde el calendario, sin retirados, y null en las que faltan por jugar', () => {
-  const final = pointsProgression('Las Mesas Hu.', pg2());
-  assert.equal(final.length, 30);
-  assert.deepEqual(final[0], { roundKey: 'Jornada 1', label: 'Jornada 1', pts: 3 });
-  assert.deepEqual(final.map((p) => p.pts), [3, 3, 3, 6, 6, 6, 6, 9, 12, 12, 12, 12, 12, 15, 15, 18, 18, 18, 21, 21, 24, 24, 27, 28, 28, 28, 28, 28, 31, 31]);
-  // El 01/03/2026: hasta la jornada 17, la última con algún resultado del grupo; después, por jugar.
-  const march = pointsProgression('Las Mesas Hu.', pg2(currentAt('2026-03-01')));
-  assert.deepEqual(march.slice(15, 18).map((p) => p.pts), [18, 18, null]);
-  assert.equal(march.filter((p) => p.pts == null).length, 13);
-  // Un retirado: todo a cero (no juega nada que cuente).
-  assert.ok(pointsProgression('CD Batán', pg2()).every((p) => p.pts === 0));
-});
-
-test('pointsChart: una línea sólida en tinta, sin puntos ni relleno ni trazos discontinuos; decorativa, y nada sin dos jornadas', () => {
-  const out = s(pointsChart([{ pts: 3 }, { pts: 3 }, { pts: 6 }, { pts: null }], { max: 9 }));
-  assert.equal(out, '<svg class="points-chart" viewBox="0 0 3 9" preserveAspectRatio="none" aria-hidden="true" focusable="false">'
-    + '<line class="points-base" x1="0" y1="9" x2="3" y2="9"></line><polyline class="points-line" points="0,6 1,6 2,3"></polyline></svg>');
-  assert.doesNotMatch(out, /circle|marker|dasharray|polygon|fill=/);
-  assert.equal(s(pointsChart([{ pts: 3 }, { pts: null }], { max: 9 })), '', 'una sola jornada jugada: no hay línea');
-  assert.equal(s(pointsChart([{ pts: 0 }, { pts: 0 }], { max: 0 })), '', 'sin partidos que puntúen');
-  const rules = cssRules();
-  const line = rules.filter((r) => r.selector === '.points-line').map((r) => r.body).join(';');
-  assert.match(line, /stroke:\s*var\(--ink\)/);
-  assert.match(line, /fill:\s*none/);
-  assert.match(line, /vector-effect:\s*non-scaling-stroke/);
-  assert.doesNotMatch(rules.filter((r) => /points-/.test(r.selector)).map((r) => r.body).join(';'), /dasharray|marker/);
-});
-
-test('evolución de puntos en la ficha: la gráfica, el dato en texto y la nota de cobertura cuando no llega a los puntos oficiales (Las Mesas: 31 y 37)', () => {
-  const out = render(LAS_MESAS, '2026-09-23', { myTeam: HURACAN_TEAM });
-  const evolution = blockOf(out, 'Evolución de puntos');
-  assert.match(evolution, /<p class="block-context">desde el calendario<\/p><\/div><div class="box"><div class="points-plot"><svg class="points-chart" viewBox="0 0 29 78"/);
-  assert.equal(text(evolution), 'Evolución de puntos desde el calendario Jornada 1 3 Jornada 30 31 Máximo posible 78');
-  assert.match(out, /<\/section><p class="notice"><b>Cobertura:<\/b> la gráfica suma 31 puntos con los 26 partidos del calendario; la clasificación oficial da 37, con 2 partidos más contra CD Batán \(retirado\)\.<\/p>/);
-  // Con el último resultado sin publicar, la nota de la temporada en cifras.
-  assert.deepEqual(pointsNote('Las Mesas Hu.', pg2(currentAt('2026-06-02')), '2026-06-03'), { label: 'Cobertura:',
-    text: 'la gráfica suma 31 puntos con el calendario y la clasificación oficial da 37: 25 de 26 partidos con resultado y 2 contra CD Batán (retirado).' });
-  // Sin retirados en su grupo, la gráfica llega a los puntos oficiales: sin nota.
-  const pg3 = findGroup(ctxAt(HURACAN, '2026-09-23').model, '2025-2026', 'PG3');
-  assert.equal(pointsProgression('UD Vecindario', pg3).at(-1).pts, 78);
-  assert.equal(pointsNote('UD Vecindario', pg3, '2026-09-23'), null);
-  // Ni en B, sin nada jugado, ni para un retirado.
-  assert.equal(blockOf(render({ ...HURACAN, t: 'CD Batán' }, '2026-03-01'), 'Evolución de puntos'), null);
-});
-
-test('la nota de la gráfica: «Cobertura:» si al calendario le faltan partidos; «Nota:» si con los mismos no coinciden, sin inventar la causa (decisión 163)', () => {
-  // Retirados (Las Mesas en PG2): lo que falta, con su etiqueta.
-  assert.deepEqual(pointsNote('Las Mesas Hu.', pg2(), '2026-09-23'), { label: 'Cobertura:',
-    text: 'la gráfica suma 31 puntos con los 26 partidos del calendario; la clasificación oficial da 37, con 2 partidos más contra CD Batán (retirado).' });
-  // Los mismos 26 partidos en el calendario y en la clasificación, que da 3 puntos menos (como 321
-  // fichas de los datos vivos, la mayoría con 3 de diferencia): que no coinciden, sin decir por qué.
-  const raw = fixture('current-2025-2026');
-  const admin = { ...raw, prebenjamin: raw.prebenjamin.map((g) => (g.id !== 'PG3' ? g
-    : { ...g, standings: g.standings.map((r) => (r[1] === 'UD Vecindario' ? [r[0], r[1], r[2] - 3, ...r.slice(3)] : r)) })) };
-  const vecindario = { s: '2025-2026', g: 'PG3', t: 'UD Vecindario' };
-  const pg3 = findGroup(ctxAt(vecindario, '2026-09-23', { raw: admin }).model, '2025-2026', 'PG3');
-  const nota = { label: 'Nota:', text: 'el calendario y la clasificación oficial no coinciden. Con los mismos 26 partidos, la gráfica suma 78 puntos y la clasificación oficial, 75.' };
-  assert.deepEqual(pointsNote('UD Vecindario', pg3, '2026-09-23'), nota);
-  assert.match(render(vecindario, '2026-09-23', { raw: admin }), new RegExp(`</section><p class="notice"><b>Nota:</b> ${nota.text.replace(/[.()]/g, '\\$&')}</p>`));
-  assert.doesNotMatch(render(vecindario, '2026-09-23', { raw: admin }), /Cobertura:/);
-});
 
 test('teamSquad: las actas de A1 por (s, gr), sin las de un lado vacío; Liam Garcia Larsen, 9 PJ, 9 de titular y 21 goles', () => {
   const squad = teamSquad(ACTAS['2025-2026/A1'], { group: a1(), team: 'Guayarmina' });
@@ -540,13 +477,17 @@ test('mount: «Ver la trayectoria» carga el archivo en su panel y su «Reintent
   }
 });
 
-test('la columna de consulta de la ficha: la clasificación, goleadores y cifras, y después la evolución, la plantilla y la trayectoria', () => {
+test('la columna de consulta de la ficha: la clasificación, goleadores y cifras, y después la plantilla y la trayectoria (A1, benjamín: sin pronóstico)', () => {
   assert.deepEqual(columnsOf(withActas(A1('Guayarmina'), '2026-03-01')).side,
-    ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Evolución de puntos', 'Plantilla', 'Trayectoria']);
-  assert.deepEqual(columnsOf(withActas(A1('Guayarmina'))).side, ['Clasificación final', 'Evolución de puntos', 'Plantilla', 'Trayectoria']);
+    ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Plantilla', 'Trayectoria']);
+  assert.deepEqual(columnsOf(withActas(A1('Guayarmina'))).side, ['Clasificación final', 'Plantilla', 'Trayectoria']);
+  // Ni rastro de la evolución de puntos (quitada el 19/10/2026), en ninguna de las dos.
+  for (const out of [withActas(A1('Guayarmina'), '2026-03-01'), render(LAS_MESAS, '2026-03-01'), render(LAS_MESAS, '2026-09-23')]) {
+    assert.doesNotMatch(out, /Evolución de puntos|points-|Máximo posible|la gráfica suma/);
+  }
 });
 
-test('estilos de la evolución, la plantilla y la trayectoria: cada clase existe, lo pulsable mide 44 px y sin radio ni sombra', () => {
+test('estilos de la plantilla y la trayectoria: cada clase existe, lo pulsable mide 44 px y sin radio ni sombra', () => {
   const rules = cssRules();
   const out = [withActas(A1('Guayarmina')), withActas(A1('Goleta')), s(playerDetail(ACTAS['2025-2026/A1'], a1(), 'Guayarmina', 'GARCIA LARSEN, LIAM'))].join('')
     + '<tr class="squad-detail"></tr><p class="team-loading"></p><h3 class="traj-season"></h3><a class="traj-row"><span class="traj-team"></span><span class="traj-group"></span><span class="traj-pos"></span><span class="traj-pts"></span></a>';
@@ -554,7 +495,7 @@ test('estilos de la evolución, la plantilla y la trayectoria: cada clase existe
   assert.deepEqual(missing, []);
   const decl = (selector) => rules.filter((r) => r.media === null && r.selector.split(',').map((x) => x.trim()).includes(selector)).map((r) => r.body).join(';');
   for (const selector of ['.squad-player', '.squad-match', '.team-toggle', '.traj-row']) assert.match(decl(selector), /min-height:\s*44px/, selector);
-  const mine = rules.filter((r) => /squad|traj|team-|points-/.test(r.selector)).map((r) => r.body).join(';');
+  const mine = rules.filter((r) => /squad|traj|team-|proj-/.test(r.selector)).map((r) => r.body).join(';');
   assert.doesNotMatch(mine, /border-radius|box-shadow|text-transform/);
 });
 

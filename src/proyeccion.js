@@ -75,8 +75,8 @@
  * Cuántas simulaciones (SIM.sims, 2.000) y lo que tarda, medido el 19/10/2026 en este portátil (Intel
  * i7-1165G7 con la CPU en modo de ahorro, a 1,1-1,5 GHz: más lento que un móvil de hoy), con PG1 de
  * 2026-27, el grupo más grande de prebenjamín (13 equipos, 144 partidos por jugar): en Chrome, con el
- * pronóstico de los partidos del calendario ya hecho, como en la ficha, 46-57 ms la primera vez (1.000
- * simulaciones, 39-44 ms; 5.000, 80-87 ms); en Node, en un proceso nuevo, 78-90 ms. Después, nada: va en
+ * pronóstico de los partidos del calendario ya hecho, como en la ficha, 46-58 ms la primera vez (1.000
+ * simulaciones, 39-44 ms; 5.000, 80-87 ms); en Node, en un proceso nuevo, 78-94 ms. Después, nada: va en
  * la caché. Mucho es poner en marcha el código (en Node, con una sola simulación, 45-52 ms en frío); en
  * Chrome, cada 1.000 simulaciones más, unos 11 ms. Con 2.000, la probabilidad de cada puesto lleva un
  * error de un punto, más o menos, y el abanico sale como con 10.000 (en el backtest, dentro el 80,8 %

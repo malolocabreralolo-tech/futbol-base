@@ -1270,30 +1270,7 @@ export function actaFor(match, lineups) {
   return entryForMatch(lineups[`${match.home}|${match.away}|${match.hs}-${match.as}`], match);
 }
 
-/* ── Ficha de Equipo: evolución de puntos y plantilla (spec §4.6; decisiones 12 y 13 de B3) ── */
-
-/* Evolución de puntos: los puntos acumulados del equipo tras cada jornada del grupo, en su orden,
- * desde el calendario y con el criterio de teamResults (sin los partidos contra retirados). Un
- * partido cuenta en su jornada, aunque se jugara más tarde (un aplazado). [{ roundKey, label, pts }],
- * con `pts` null en las jornadas posteriores a la última con algún resultado del grupo (por jugar). */
-export function pointsProgression(team, group) {
-  const rounds = group.rounds || [];
-  const retired = retiredTeams(group);
-  let last = -1;
-  rounds.forEach((round, i) => { if (round.matches.some(playedMatch)) last = i; });
-  let pts = 0;
-  return rounds.map((round, i) => {
-    for (const m of round.matches) {
-      if (!playedMatch(m) || (m.home !== team && m.away !== team)) continue;
-      const home = m.home === team;
-      if (retired.has(home ? m.away : m.home)) continue;
-      const gf = home ? m.hs : m.as;
-      const gc = home ? m.as : m.hs;
-      pts += gf > gc ? 3 : gf === gc ? 1 : 0;
-    }
-    return { roundKey: round.key, label: round.label, pts: i <= last ? pts : null };
-  });
-}
+/* ── Ficha de Equipo: plantilla (spec §4.6; decisión 13 de B3) ── */
 
 // Las actas de los partidos del equipo en el grupo, en orden de fecha: la entrada de su (s, gr)
 // (actaFor, también dentro de las {dup}). Un acta con un lado vacío no cuenta para nadie: las 10

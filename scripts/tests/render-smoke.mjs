@@ -151,11 +151,15 @@ async function fixtureStateD(chrome, port) {
     const { failures, state } = checkRenderedDom(dom, { teamName: 'Las Mesas Hu.' });
     const titles = [...dom.matchAll(/<h2 class="block-title">([^<]*)<\/h2>/g)].map((m) => m[1]);
     const wanted = ['Temporada 2026/27', 'Así terminó 2025/26', 'Verano: Maspalomas Cup 2026', 'Clasificación final',
-      'Evolución de puntos', 'Trayectoria', 'Calendario'];
+      'Trayectoria', 'Calendario'];
+    // La evolución de puntos ya no existe (19/10/2026), y con la temporada terminada no hay nada que
+    // pronosticar: ni el pronóstico de la clasificación final, que va en su sitio.
+    const unwanted = ['Evolución de puntos', 'Pronóstico de la clasificación final'];
     return [
       ...failures,
       ...(state === 'D' ? [] : [`la portada del 23/09/2026 está en ${state}, no en D`]),
       ...wanted.filter((title) => !titles.includes(title)).map((title) => `falta el bloque «${title}»`),
+      ...unwanted.filter((title) => titles.includes(title)).map((title) => `sobra el bloque «${title}»`),
       ...errors.map((message) => `error de JavaScript: ${message}`),
     ];
   } finally {
@@ -200,7 +204,7 @@ async function main() {
       console.log(`PASS: render smoke OK — Mi equipo en estado ${state} (DOM ${dom.length} bytes)`);
       const problems = await fixtureStateD(chrome, port);
       if (!problems.length) {
-        console.log('PASS: estado D con las fixtures y el reloj del 23/09/2026: «Temporada 2026/27», «Así terminó 2025/26», «Verano», la clasificación final, la evolución de puntos, la trayectoria y el calendario');
+        console.log('PASS: estado D con las fixtures y el reloj del 23/09/2026: «Temporada 2026/27», «Así terminó 2025/26», «Verano», la clasificación final, la trayectoria y el calendario, sin la evolución de puntos ni el pronóstico de la clasificación final');
         process.exit(0);
       }
       console.error('FAIL: estado D con las fixtures:');

@@ -1,8 +1,9 @@
 // Ficha de un equipo, `#/equipo?s&g&t` (spec §4.6 y §4.8). El mismo esqueleto que Mi equipo: la vista
 // de equipo (team-view.js) con los estados A, B, C o D, el D sin la caja de la temporada siguiente y
 // el calendario completo con su ancla #calendario y su .ics (decisión 15 de B3), y en la columna de
-// consulta los bloques de team-extras.js, compartidos con Mi equipo: la evolución de puntos (decisión
-// 12), la plantilla con el detalle de cada jugador (decisión 13) y la trayectoria del club bajo demanda
+// consulta los bloques de team-extras.js, compartidos con Mi equipo: el pronóstico de la clasificación
+// final (en prebenjamín de la temporada en curso; 19/10/2026, en el sitio de la evolución de puntos), la
+// plantilla con el detalle de cada jugador (decisión 13) y la trayectoria del club bajo demanda
 // (decisión 14). Además, «Hacer mi equipo» (decisión 11) y «Vistos hace poco» (decisión 5). render(ctx)
 // es pura; mount pone el comportamiento.
 // El router ya garantiza que el grupo existe en la temporada (cargada), que es de liga y que el
@@ -60,7 +61,7 @@ function render(ctx) {
   const moved = movedNotice(ctx, group, name, mine);
   const action = group.season === ctx.portal.season && !mine && !moved ? 'make' : null;
   const view = teamView(ctx, { group, name }, { action, mine, shields: ctx.datasets?.shields || {} });
-  const aside = [...view.aside, ...teamExtras(ctx, group, name)];
+  const aside = [...view.aside, ...teamExtras(ctx, group, name, { mine })];
   return html`<section data-screen="equipo" data-state="${view.state}">${view.head}${moved || ''}${teamColumns(view.main, aside, view.rest)}</section>`;
 }
 

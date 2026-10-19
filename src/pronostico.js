@@ -216,7 +216,9 @@ export function forecastApplies(group, { portalSeason = null, prueba = false } =
   return group.kind === 'league' && typeof portalSeason === 'string' && group.season === portalSeason;
 }
 
-const offByStatus = (status, m) => {
+// Si la app da el partido por retirado, anulado o suspendido. La usa también el pronóstico de la
+// clasificación final (src/proyeccion.js, 19/10/2026): esos partidos no se simulan.
+export const offByStatus = (status, m) => {
   if (typeof status !== 'function') return false;
   const s = status(m);
   return Boolean(s && OFF_STATES.has(s.state));
@@ -455,7 +457,7 @@ export function fitNotes(matches, params = PARAMS) {
  * tiene nota 0 y varianza 1/λ. Con ellas, la logística ordenada: s = β / √(1 + κ·v), t = θ / √(1 + κₑ·v),
  * P(local) = σ(s·d − t), P(visitante) = σ(−s·d − t) y el empate, lo que queda (con θ > 0, nunca negativo). */
 export function notesOdds(fit, home, away, params = PARAMS) {
-  const p = { ...PARAMS, ...params };
+  const p = params === PARAMS ? PARAMS : { ...PARAMS, ...params };
   const h = fit.index.has(home) ? fit.index.get(home) : -1;
   const a = fit.index.has(away) ? fit.index.get(away) : -1;
   const c = new Float64Array(fit.n);
@@ -686,9 +688,10 @@ function forecastMemo(group, status, key) {
   return byOptions.get(key);
 }
 
-// El pronóstico de forecastMatch, sin la caché de la web.
-function forecastOf(group, match, { portalSeason, today, full, status, before, prueba, params }) {
-  const p = { ...PARAMS, ...params };
+// Lo que comparten forecastMatch y forecastOdds: los filtros, el entrenamiento, el ajuste, los goles
+// esperados y el 1X2; null en los casos en que forecastMatch da null.
+function coreOf(group, match, { portalSeason, today, full, status, before, prueba, params }) {
+  const p = params === PARAMS ? PARAMS : { ...PARAMS, ...params };
   if (!forecastApplies(group, { portalSeason, prueba })) return null;
   if (scored(match) || offByStatus(status, match)) return null;
   if (today !== null) {
@@ -710,6 +713,14 @@ function forecastOf(group, match, { portalSeason, today, full, status, before, p
   const xgHome = soft(fit.base * fit.home * home.attack * away.defense);
   const xgAway = soft(fit.base * away.attack * home.defense);
   const { pHome, pDraw, pAway } = notesOdds(fits.notes, match.home, match.away, p);
+  return { p, training, fit, home, away, xgHome, xgAway, pHome, pDraw, pAway };
+}
+
+// El pronóstico de forecastMatch, sin la caché de la web.
+function forecastOf(group, match, options) {
+  const core = coreOf(group, match, options);
+  if (!core) return null;
+  const { p, training, fit, home, away, xgHome, xgAway, pHome, pDraw, pAway } = core;
   const pick = pickOf({ pHome, pDraw, pAway });
   return {
     home: match.home,
@@ -726,8 +737,19 @@ function forecastOf(group, match, { portalSeason, today, full, status, before, p
     matches: fit.matches,
     playedHome: home.played,
     playedAway: away.played,
-    ahead: aheadFrom(group, match, training, before === null ? today : null),
+    ahead: aheadFrom(group, match, training, options.before === null ? options.today : null),
   };
+}
+
+/* El 1X2 y los goles esperados de forecastMatch, { pHome, pDraw, pAway, xgHome, xgAway }, sin el
+ * marcador más probable ni lo demás: con las mismas opciones, las mismas cifras y null en los mismos
+ * casos (19/10/2026, para el pronóstico de la clasificación final, src/proyeccion.js, que los pide de
+ * todos los partidos que quedan en un grupo; el marcador recorre la rejilla de goles y era lo que más
+ * costaba). Sin la caché de la web: la guarda quien la llama. */
+export function forecastOdds(group, match, { portalSeason = null, today = null, full = false, status = null, before = null, prueba = false, params = PARAMS } = {}) {
+  if (!group || typeof group !== 'object' || !match || typeof match !== 'object') return null;
+  const core = coreOf(group, match, { portalSeason, today, full, status, before, prueba, params });
+  return core && { pHome: core.pHome, pDraw: core.pDraw, pAway: core.pAway, xgHome: core.xgHome, xgAway: core.xgAway };
 }
 
 /* Los pronósticos de una jornada, en el orden de round.matches: el de forecastMatch o null. */

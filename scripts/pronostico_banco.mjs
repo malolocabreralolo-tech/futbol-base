@@ -198,7 +198,8 @@
 // './pronostico_banco.mjs'; evaluate(predictor, { split, B, semilla, referencia }) da el informe (sin
 // llamar a ningún ajustar) y ejecutar(modelo, { split, contra }) hace lo del CLI (ajustar y examen). A
 // distancia, paresDistancia(split), evaluarDistancia(predictor, { split, B, semilla, referencias }) y
-// ejecutarDistancia(modelo, { split, contra }).
+// ejecutarDistancia(modelo, { split, contra }). Las remuestras del bootstrap, resamples(C, B, semilla) y
+// quantile(valores, q) (las usa también scripts/backtest_proyeccion.mjs, 19/10/2026).
 //
 // Las referencias (REFERENCIAS; sus frecuencias, medidas SOLO en las temporadas de ajuste):
 // - actual: src/pronostico.js con los PARAMS de la web, desde la primera jornada y con equipos sin
@@ -450,7 +451,7 @@ function rng(seed) {
   };
 }
 // B remuestras de C grupos con reemplazo: cuántas veces sale cada grupo en cada una.
-function resamples(C, B, seed) {
+export function resamples(C, B, seed) {
   const next = rng(seed);
   const out = [];
   for (let b = 0; b < B; b += 1) {
@@ -461,7 +462,7 @@ function resamples(C, B, seed) {
   return out;
 }
 // Percentil q (interpolado) de unos valores.
-function quantile(values, q) {
+export function quantile(values, q) {
   const v = [...values].sort((x, y) => x - y);
   if (!v.length) return null;
   const pos = (v.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos);

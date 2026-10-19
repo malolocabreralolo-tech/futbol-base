@@ -209,8 +209,8 @@
     "PG2": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247208",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-18T20:50:44+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 39 goleadores",
+      "checkedAt": "2026-10-19T01:38:47+00:00"
     },
     "PG3": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54977022&CodGrupo=55247221",
@@ -245,8 +245,8 @@
     "AL12": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203363",
       "status": "ok",
-      "message": "4 jornadas leídas: 0 partidos nuevos, 1 actualizados, 1 resultados; 41 goleadores, 5/6 actas",
-      "checkedAt": "2026-10-18T04:01:42+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 2 actualizados, 2 resultados; 44 goleadores, 2/2 actas",
+      "checkedAt": "2026-10-19T01:45:11+00:00"
     },
     "AL13": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203376",
@@ -413,8 +413,8 @@
     "AL9": {
       "url": "https://www.fiflp.com/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodCompeticion=54976940&CodGrupo=55203306",
       "status": "ok",
-      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados",
-      "checkedAt": "2026-10-18T20:50:15+00:00"
+      "message": "3 jornadas leídas: 0 partidos nuevos, 0 actualizados, 0 resultados; 32 goleadores",
+      "checkedAt": "2026-10-19T01:38:10+00:00"
     }
   },
   "nextSeason": {
@@ -422,58 +422,44 @@
     "status": "pending"
   },
   "run": {
-    "pass": 1148,
+    "pass": 1149,
     "groups": 69,
-    "refreshed": 4,
+    "refreshed": 3,
     "priority": [
-      "AL20",
-      "AL4"
+      "AL9",
+      "PG2"
     ],
     "fresh": [
-      "PG2",
       "FF5",
-      "AL9",
-      "AL18"
+      "AL4",
+      "AL18",
+      "AL20"
     ],
     "resting": [],
     "deferred": [
-      "FF6",
-      "AL6",
-      "FF7",
-      "AL7",
-      "FF1",
-      "AL8",
-      "FF3",
-      "AL1",
-      "FF8",
-      "AL2",
-      "FF9",
-      "PG1",
-      "AL12",
-      "FF2",
-      "FF13",
       "AL13",
       "FF14",
+      "PG3",
       "AL14",
       "FF15",
       "AL15",
       "FF16",
-      "FF17",
       "AL16",
-      "FF10",
+      "FF17",
       "AL10",
-      "FF11",
+      "FF10",
       "AL11",
-      "PG3",
       "FF12",
       "AL21",
+      "FF11",
       "FF21",
-      "FF22",
       "AL22",
-      "FF23",
+      "FF22",
+      "PG4",
       "AL23",
-      "FF24",
+      "FF23",
       "AL24",
+      "FF24",
       "FV11",
       "AL25",
       "FF18",
@@ -481,32 +467,47 @@
       "FF19",
       "AL19",
       "FF20",
-      "AL28",
       "LZ1",
+      "AL28",
       "LZ2",
       "AL29",
       "LZ3",
       "AL30",
       "LZ4",
       "AL31",
+      "PG1",
       "LZ5",
       "AL32",
       "FV12",
       "AL26",
       "FV13",
-      "PG4",
       "AL27",
-      "FV14"
+      "FV14",
+      "FF9",
+      "AL8",
+      "FF1",
+      "AL1",
+      "FF2",
+      "AL2",
+      "FF3",
+      "AL3",
+      "FF4",
+      "AL5",
+      "FF6",
+      "AL6",
+      "FF7",
+      "AL7",
+      "FF8"
     ],
     "unserved": [
-      "AL5"
+      "FF13"
     ],
     "extrasDeferred": [],
     "seconds": 510,
     "pages": 33,
     "blocked": true,
     "calendarShows": {
-      "other": 4
+      "other": 3
     },
     "pauses": 1,
     "resumed": 1,
@@ -515,9 +516,9 @@
       15
     ]
   },
-  "checkedAt": "2026-10-18T22:40:52+00:00",
-  "lastDataChange": "2026-10-18",
-  "dataVersion": "20261018v",
+  "checkedAt": "2026-10-19T01:47:47+00:00",
+  "lastDataChange": "2026-10-19",
+  "dataVersion": "20261019",
   "summary": {
     "ok": 57,
     "rejected": 0,

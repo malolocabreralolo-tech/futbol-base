@@ -676,9 +676,10 @@ test('dos columnas (§4.8), como la ficha: a la izquierda lo principal y el cale
   };
   const a = columnsOf(render(CASES.A));
   assert.deepEqual(titles(a.main), ['Próximo partido', 'Últimos cinco']);
-  // Sin la evolución de puntos (19/10/2026). Su sitio es el del pronóstico de la clasificación final, que
-  // aquí no sale: la clasificación de las fixtures es la del final de la temporada y no cuadra con el
-  // calendario del 01/03/2026 (startMatchesCalendar; lo prueba test_proyeccion_web.mjs).
+  // Sin la evolución de puntos (19/10/2026). El pronóstico de la clasificación final que la sustituye (una
+  // cifra de «La temporada en cifras») aquí no sale: la clasificación de las fixtures es la del final de la
+  // temporada y no cuadra con el calendario del 01/03/2026 (startMatchesCalendar; lo prueba
+  // test_proyeccion_web.mjs).
   assert.deepEqual(titles(a.side), ['Clasificación', 'Goleadores del equipo', 'La temporada en cifras', 'Plantilla', 'Trayectoria']);
   assert.match(a.side, /<p class="home-fresh">.*<\/p><section class="block" id="plantilla" data-slot="plantilla" aria-busy="true">/);
   assert.deepEqual(titles(a.rest), ['Calendario']);

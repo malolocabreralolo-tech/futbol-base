@@ -2,7 +2,11 @@
  *
  * Lo pidió el usuario en la ficha del equipo, en el sitio de la evolución de puntos, que quitó («no me
  * aporta tanto»): «en base a la evolución de los resultados, […] una proyección de la clasificación final
- * en la que pueda quedar […] pronóstico tercero, o segundo, o quinto». Puro e importable en Node sin DOM,
+ * en la que pueda quedar […] pronóstico tercero, o segundo, o quinto». Tras ver la primera versión (un
+ * bloque con la tabla en cada ficha), lo quiso como una cifra: en «La temporada en cifras» de la ficha y
+ * de Mi equipo, «Pronóstico final: 4.º, unos 45 puntos» (projectionFigure de team-view.js), que abre la
+ * tabla prevista en un solo sitio, la Tabla del grupo (v=pronostico, projectionView de screen-tabla.js;
+ * el router quita esa vista donde esto da null). Puro e importable en Node sin DOM,
  * como pronostico.js: recibe el Group de model.js y la temporada del portal por parámetro y no lee ningún
  * global de datos. Nada en la base ni en el bot, ni ninguna petición nueva.
  *
@@ -81,7 +85,12 @@
  * Chrome, cada 1.000 simulaciones más, unos 11 ms. Con 2.000, la probabilidad de cada puesto lleva un
  * error de un punto, más o menos, y el abanico sale como con 10.000 (en el backtest, dentro el 80,8 %
  * frente al 80,7 %, y 3,28 puestos de anchura media frente a 3,29); el puesto pronosticado y los puntos no
- * dependen de cuántas (se calculan sin sortear).
+ * dependen de cuántas (se calculan sin sortear). Ese mismo día, con el generador escrito en línea en
+ * simulate (los mismos números: la huella de test_proyeccion.mjs y el backtest, byte a byte), en Chrome
+ * con un modelo nuevo cada vez (y la CPU, en ahorro, a 0,4-1,3 GHz): PG1, 30 ms la primera vez y 18-23 ms
+ * después (con el generador en su función, 46 y 22-23 ms); con la CPU frenada 4× (como un móvil lento),
+ * 71-73 ms (antes, 89-92 ms); los otros tres grupos, algo menos. Se quedan las 2.000: más no cambiaría ni
+ * el puesto ni los puntos, y el abanico ya sale como con 10.000.
  *
  * La tabla y el calendario, de acuerdo: la clasificación de partida es la oficial, y lo que queda, lo que
  * no tiene marcador en el calendario. Si un día la una lleva un resultado que el otro aún no trae (la
@@ -241,19 +250,19 @@ export function simulate(teams, start, fixtures, { sims = SIM.sims, seed = SIM.s
   const count = new Float64Array(T * T);
   const pts = new Int32Array(T), gd = new Int32Array(T), gf = new Int32Array(T);
   const key = new Float64Array(T), order = new Uint8Array(T);
-  // mulberry32 (el generador del banco de pruebas), con su estado aquí.
-  let state = seed >>> 0;
-  const next = () => {
-    state = (state + 0x6D2B79F5) >>> 0;
-    let z = state;
-    z = Math.imul(z ^ (z >>> 15), z | 1);
-    z ^= z + Math.imul(z ^ (z >>> 7), z | 61);
-    return ((z ^ (z >>> 14)) >>> 0) / 4294967296;
-  };
+  // mulberry32 (el generador del banco de pruebas), escrito en cada sitio en que se sortea y con su estado
+  // en una variable de esta función, en 32 bits con signo (los mismos bits, y los mismos números, que
+  // con >>> 0). En una función aparte que lo cambiara, el estado viviría fuera, y cada sorteo crearía un
+  // número en memoria: 19/10/2026, en Node, 2.000 simulaciones de PG1, 23-26 ms con la función y 5-6 ms
+  // así (ver la cabecera).
+  let state = seed | 0, z = 0;
   for (let s = 0; s < sims; s += 1) {
     pts.set(basePts); gd.set(baseGd); gf.set(baseGf);
     for (let k = 0; k < M; k += 1) {
-      const u = next();
+      state = (state + 0x6D2B79F5) | 0;
+      z = Math.imul(state ^ (state >>> 15), state | 1);
+      z ^= z + Math.imul(z ^ (z >>> 7), z | 61);
+      const u = ((z ^ (z >>> 14)) >>> 0) / 4294967296;
       const r = (u >= cut1[k] ? 1 : 0) + (u >= cut2[k] ? 1 : 0);
       const q = 3 * k + r;
       // La casilla de su tabla, con u reescalado a su tramo (otro uniforme).
@@ -265,7 +274,10 @@ export function simulate(teams, start, fixtures, { sims = SIM.sims, seed = SIM.s
     // Puntos, diferencia y goles en una sola cifra (las dos últimas, en 12 bits) y, a igualdad, a suertes.
     for (let t = 0; t < T; t += 1) {
       const d = Math.max(0, Math.min(4095, gd[t] + 2048)), g = Math.max(0, Math.min(4095, gf[t]));
-      key[t] = (pts[t] * 4096 + d) * 4096 + g + next();
+      state = (state + 0x6D2B79F5) | 0;
+      z = Math.imul(state ^ (state >>> 15), state | 1);
+      z ^= z + Math.imul(z ^ (z >>> 7), z | 61);
+      key[t] = (pts[t] * 4096 + d) * 4096 + g + ((z ^ (z >>> 14)) >>> 0) / 4294967296;
       order[t] = t;
     }
     for (let p = 1; p < T; p += 1) {

@@ -4,6 +4,7 @@
 // de juguete para simulate: ni los data-*.js de la web, que cambian cada dos horas, ni config.js.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { buildGroup } from '../../src/model.js';
 import { PARAMS, forecastMatch, forecastOdds } from '../../src/pronostico.js';
 import {
@@ -133,6 +134,33 @@ test('determinista: con la semilla fija, lo mismo cada vez y con el grupo recons
   const other = web(makeGroup(), { seed: 7 });
   assert.deepEqual(other.rows.map(r => [r.team, r.pts]), a.rows.map(r => [r.team, r.pts]), 'el puesto y los puntos no dependen de la suerte');
   assert.notDeepEqual(other.rows.map(r => [...r.probs]), a.rows.map(r => [...r.probs]));
+});
+
+// Las huellas de simulate en una liga de juguete de cinco equipos (todos contra todos, ida y vuelta: 20
+// partidos), 3.000 simulaciones, con cuatro semillas (la de la web y tres que prueban los 32 bits: 1,
+// 2^32 − 1 y 2^31 + 5). Sacadas el 19/10/2026 con el generador en una función aparte (060700e); con el
+// generador escrito en línea, por velocidad (la cabecera de src/proyeccion.js), las mismas: los mismos
+// números, sorteo a sorteo. También el backtest (scripts/backtest_proyeccion.mjs) dio lo mismo, byte a byte.
+const SIM_PRINTS = {
+  1: '1af88e788458404f63c2bdcf088780f2c7148d92',
+  19102026: 'bbaac37c5f72be91e4693cf1b39d2e0c96ffe890',
+  4294967295: 'b1d43163e45be6b15492391a740f75487c5dcbc9',
+  2147483653: 'e58e23b21c0220535e19f241d2512d8564c6dfb9',
+};
+test('simulate: el generador en línea da, semilla a semilla, lo mismo que en su función (las huellas de antes del cambio)', () => {
+  const teams = ['A', 'B', 'C', 'D', 'E'];
+  const start = teams.map((t, i) => ({ pts: i % 2 ? 3 : 0, gf: i, gc: 1 }));
+  const fixtures = [];
+  for (let i = 0; i < 5; i += 1) {
+    for (let j = 0; j < 5; j += 1) {
+      if (i !== j) fixtures.push({ home: i, away: j, pHome: 0.4, pDraw: 0.2, pAway: 0.4, xgHome: 2 + i * 0.3, xgAway: 1.5 + j * 0.2 });
+    }
+  }
+  for (const [seed, print] of Object.entries(SIM_PRINTS)) {
+    const out = simulate(teams, start, fixtures, { sims: 3000, seed: Number(seed) });
+    const json = JSON.stringify(out.map(r => [r.team, r.pts, r.dg, r.gf, [...r.probs]]));
+    assert.equal(createHash('sha1').update(json).digest('hex'), print, `semilla ${seed}`);
+  }
 });
 
 test('projectStandings: una vez por grupo, opciones y día (el mismo objeto); con un grupo nuevo, se rehace', () => {

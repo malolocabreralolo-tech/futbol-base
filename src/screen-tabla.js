@@ -3,21 +3,31 @@
 // la forma, casa y fuera con su cobertura, los goleadores del grupo y la procedencia. Bajo la
 // cabecera, la tira de los grupos de su competición (groupStrip), y a su derecha, «Mi grupo» o
 // «Otras ligas». Una sola tabla: por debajo de 1024 px el CSS deja las columnas de la vista.
+// Desde el 19/10/2026, una vista más, fuera del selector: la del pronóstico de la clasificación final
+// (v=pronostico, projectionView), donde lo hay.
 import { html } from './html.js';
 import {
-  block, screenHead, standingsTable, segmented, crest, notice, empty, listEs, sourcePhrase, groupStrip, scrollToCurrent,
+  block, box, screenHead, standingsTable, segmented, crest, notice, empty, listEs, sourcePhrase, groupStrip, scrollToCurrent,
+  forecastOptions,
 } from './ui.js';
 import { errorBox } from './shell.js';
-import { lastResults, homeAwayTable, retiredTeams, groupFinished, playerName, sourceInfo, seasonLabel, siblingGroups } from './model.js';
+import {
+  lastResults, homeAwayTable, retiredTeams, groupFinished, playerName, sourceInfo, seasonLabel, siblingGroups, teamShort,
+} from './model.js';
 import { routeHref, teamHref } from './links.js';
 import { groupScorers, seasonNeeds } from './state.js';
 import { myGroupIn, myTeamIn } from './myteam.js';
+import { projectStandings } from './proyeccion.js';
 
 const NARROW = [['puntos', 'Puntos'], ['goles', 'Goles'], ['forma', 'Forma'], ['casa', 'Casa'], ['fuera', 'Fuera']]
   .map(([value, label]) => ({ value, label }));
 // Escritorio: todas las columnas y, además, Casa y Fuera (decisión 15 de B1).
 const WIDE = [['todas', 'Todas'], ['casa', 'Casa'], ['fuera', 'Fuera']].map(([value, label]) => ({ value, label }));
-const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas'];
+// La del pronóstico de la clasificación final (19/10/2026) no está en ningún selector: a 390 px ya hay
+// cinco, y el usuario pidió en su día menos opciones. Se llega desde «Pronóstico final» de «La temporada
+// en cifras» (team-view.js) y desde el enlace de debajo de la clasificación.
+export const PROJECTION_VIEW = 'pronostico';
+const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas', PROJECTION_VIEW];
 
 // Cobertura de Casa y Fuera (spec §7), que salen del calendario: los partidos con resultado
 // entre equipos activos frente a los que cuenta la clasificación oficial. null si cuadran.
@@ -159,6 +169,44 @@ function sourceLine(group, historical) {
   return html`<p class="notice source-line">${say}${archive}${info.url ? html` <a class="source-link" href="${info.url}" target="_blank" rel="noopener noreferrer">Ver fuente</a>` : ''}</p>`;
 }
 
+// ── Pronóstico de la clasificación final (19/10/2026) ───────────────────
+
+// La tabla prevista del grupo (v=pronostico), con `t`, la de ese equipo resaltada (desde su ficha); sin
+// él, la de mi equipo. El router quita la vista donde no hay pronóstico y `t` si no va con ella.
+export function projectionHref(group, team = null) {
+  return routeHref('tabla', { s: group.season, g: group.id, v: PROJECTION_VIEW, t: team });
+}
+
+// «3.º»; el abanico de la tabla, «2.º–4.º» o, si es un solo puesto, «4.º».
+const ordinal = n => `${n}.º`;
+const fanCell = ({ lo, hi }) => (lo === hi ? ordinal(lo) : `${ordinal(lo)}–${ordinal(hi)}`);
+const thousands = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+/* La vista del pronóstico de la clasificación final: la tabla final proyectada de toda la liga
+ * (projectStandings de proyeccion.js, con las opciones de la web), con las clases de la clasificación
+ * (standings): el puesto pronosticado, el equipo (nombre corto, escudo y enlace a su ficha), los puntos
+ * previstos y el abanico («Entre»: los puestos en que acaba 8 de cada 10 veces, comprobado con las
+ * temporadas pasadas; la cabecera de proyeccion.js), con una fila resaltada, como la propia en la
+ * clasificación: la de `t` si está en la tabla (se llega desde su ficha: «este equipo»; o «mi equipo», si
+ * lo es) y si no, la de mi equipo. Debajo, de dónde sale; arriba, el enlace de vuelta a la clasificación,
+ * en el sitio del selector de vistas, que esta vista no lleva. Era el bloque de la ficha y de Mi equipo
+ * hasta que el usuario lo pidió así: «esa tabla no me la pongas en cada uno de los equipos». */
+function projectionView(p, { group, s, mine, team, shields }) {
+  const marked = team && p.rows.some(r => r.team === team) ? team : mine;
+  const mineText = marked && marked === mine ? 'mi equipo' : 'este equipo';
+  const rows = p.rows.map((r) => {
+    const isMarked = marked != null && r.team === marked;
+    return html`<tr${isMarked ? html` class="is-mine"` : ''}><td class="st-pos">${r.pos}</td><th scope="row" class="st-team"><a class="st-link" href="${teamHref(s, group.id, r.team)}">${crest(r.team, { shields })}<span class="st-name">${teamShort(r.team)}</span></a>${isMarked ? html`<span class="vh"> (${mineText})</span>` : ''}</th><td class="st-pts">${Math.round(r.pts)}</td><td class="st-fan">${fanCell(r)}</td></tr>`;
+  });
+  const table = html`<table class="standings"><caption class="vh">Clasificación final pronosticada: ${group.label}</caption><thead><tr><th scope="col" class="st-pos"><abbr title="Puesto pronosticado">#</abbr></th><th scope="col" class="st-team">Equipo</th><th scope="col" class="st-pts"><abbr title="Puntos previstos">Pts</abbr></th><th scope="col" class="st-fan"><abbr title="Puestos en que acaba 8 de cada 10 veces">Entre</abbr></th></tr></thead><tbody>${rows}</tbody></table>`;
+  const basis = `Con el pronóstico de cada partido que queda: ${thousands(p.sims)} simulaciones del resto de la liga, que se rehacen con cada resultado nuevo. «Entre»: los puestos en que acaba cada equipo 8 de cada 10 veces (comprobado con temporadas pasadas). Es una estimación, no un resultado.`;
+  const back = html`<p class="tabla-switch"><a class="more" href="${routeHref('tabla', { s, g: group.id })}"><span aria-hidden="true">‹</span><span class="tabla-switch-label">Ver la clasificación actual</span></a></p>`;
+  return html`${back}${block('Pronóstico de la clasificación final', html`${box(table)}${notice(null, basis)}`, { context: 'estimación' })}`;
+}
+
+// El enlace de debajo de la clasificación a la vista del pronóstico, donde lo hay.
+const projectionLink = (group, s) => html`<p class="tabla-switch"><a class="more" href="${routeHref('tabla', { s, g: group.id, v: PROJECTION_VIEW })}"><span class="tabla-switch-label">Ver el pronóstico de la clasificación final</span><span aria-hidden="true">›</span></a></p>`;
+
 // La acción de la cabecera: «Mi grupo», la Tabla del grupo de mi equipo en esa temporada (el de su
 // misma competición si juega en ella), con la misma vista, cuando el que se mira no es el suyo; si lo
 // es, o mi equipo no juega esa temporada, «Otras ligas»: las de su categoría y su isla.
@@ -186,7 +234,11 @@ function render(ctx) {
     return html`<section data-screen="tabla">${screenHead('Tabla', { action: others })}${empty(why)}</section>`;
   }
   const historical = s !== ctx.portal.season;
-  const v = VIEWS.includes(params.v) ? params.v : 'puntos';
+  // El pronóstico de la clasificación final, donde lo hay (projectStandings: prebenjamín de la temporada
+  // del portal, en liga, con dos jornadas jugadas y algo por jugar; una vez por grupo). Sin él, su vista
+  // es la de por defecto, como una que no existe.
+  const projection = group.standings.length ? projectStandings(group, forecastOptions(ctx)) : null;
+  const v = VIEWS.includes(params.v) && (params.v !== PROJECTION_VIEW || projection) ? params.v : 'puntos';
   // La tira de los grupos de su competición, que conserva la vista (Puntos y Todas, las de por defecto,
   // van sin `v`), y la acción de la cabecera.
   const siblings = siblingGroups(model, group);
@@ -202,11 +254,16 @@ function render(ctx) {
   if (!group.standings.length) {
     return html`<section data-screen="tabla">${head}${block('Clasificación', empty('Clasificación sin publicar.'))}${scorers}${source}</section>`;
   }
+  const mine = myTeamIn(group, ctx.myTeam, ctx.resolution);
+  const zones = zonesText(group);
+  if (v === PROJECTION_VIEW) {
+    const view = projectionView(projection, { group, s, mine, team: params.t || null, shields });
+    return html`<section data-screen="tabla">${head}<div class="tabla-proj">${view}${zones ? notice('Qué se juega cada puesto:', zones) : ''}</div></section>`;
+  }
   const side = v === 'casa' || v === 'fuera' ? v : null;
   // Puntos (móvil) y Todas (escritorio) son la vista por defecto: sin `v` en el enlace.
   const href = value => routeHref('tabla', { s, g: group.id, v: value === 'puntos' || value === 'todas' ? '' : value });
   const views = html`<nav class="tabla-views is-narrow" aria-label="Vista de la tabla">${segmented(NARROW, v === 'todas' ? 'puntos' : v, href, { idPrefix: 'vista' })}</nav><nav class="tabla-views is-wide" aria-label="Vista de la tabla">${segmented(WIDE, side || 'todas', href, { idPrefix: 'vista-ancha' })}</nav>`;
-  const mine = myTeamIn(group, ctx.myTeam, ctx.resolution);
   const common = { mine, shields, hrefFor: row => teamHref(s, group.id, row.team) };
   let table;
   if (side) {
@@ -220,10 +277,10 @@ function render(ctx) {
     table = block('Clasificación', html`<div class="box tabla-${v === 'todas' ? 'puntos' : v}">${standingsTable(rows, { ...common, view: 'todas', caption: `Clasificación de ${group.label}` })}</div>`,
       { context: standingsContext(group, today, ctx.portal.season) });
   }
-  const zones = zonesText(group);
   const sanctions = sanctionsText(group);
   const extra = html`${zones ? notice('Qué se juega cada puesto:', zones) : ''}${sanctions ? notice('Puntos de sanción:', sanctions) : ''}`;
-  return html`<section data-screen="tabla">${head}${views}${table}${extra}${scorers}${source}</section>`;
+  const more = projection ? projectionLink(group, s) : '';
+  return html`<section data-screen="tabla">${head}${views}${table}${more}${extra}${scorers}${source}</section>`;
 }
 
 // Al montar, la tira de grupos se desliza hasta el actual, dentro de su caja: la página no se mueve.

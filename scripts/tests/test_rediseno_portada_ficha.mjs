@@ -1,9 +1,10 @@
 // Mi equipo con todo lo de la ficha (plan del 04/10/2026; spec §4.2, §4.6, §4.8 y §4.11): la portada
-// es la vista de la ficha de mi equipo con la cabecera de la portada, con el pronóstico de la clasificación
-// final (desde el 19/10/2026, en el sitio de la evolución de puntos; en prebenjamín de la temporada en
-// curso), la plantilla, la trayectoria y el calendario completo con su .ics. La plantilla no espera a las actas
-// (D4): render pinta un hueco que fillSquad llena tras la carga de la página, sin bloquear needs. Solo
-// fixtures y `today` inyectado; el ctx es el común (ctxFor) y la sección, la falsa de fake-browser.mjs.
+// es la vista de la ficha de mi equipo con la cabecera de la portada, con la plantilla, la trayectoria y
+// el calendario completo con su .ics (la evolución de puntos se quitó el 19/10/2026; el pronóstico de la
+// clasificación final que la sustituye es una cifra de «La temporada en cifras»). La plantilla no espera
+// a las actas (D4): render pinta un hueco que fillSquad llena tras la carga de la página, sin bloquear
+// needs. Solo fixtures y `today` inyectado; el ctx es el común (ctxFor) y la sección, la falsa de
+// fake-browser.mjs.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { fixture } from './fixtures/rediseno/load.mjs';

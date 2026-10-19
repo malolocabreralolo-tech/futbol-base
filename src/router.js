@@ -15,19 +15,25 @@ import { CATEGORIES, competitions, findGroup, findMatch, findRound, seasonLabel 
 import { defaultCategory, myTeamIn, routeIsMine, sameClub } from './myteam.js';
 import { skeleton, errorScreen, routeNotice, routeTitle, updateTabbar } from './shell.js';
 import { alevinNeeds, normalizeTeamName, seasonNeeds } from './state.js';
+import { forecastOptions } from './ui.js';
+import { projectStandings } from './proyeccion.js';
 
 // Destinos principales de la barra, por pantalla.
 const PRIMARY = { '': 'miequipo', jornada: 'jornada', tabla: 'tabla', explorar: 'explorar' };
 const TABS = new Set(Object.values(PRIMARY));
 const NO_PARAMS = new Set(['', 'temporadas', 'fuentes', 'ajustes']);
 // Las vistas de Tabla. Las de la antigua Evolución del grupo (evolucion y posiciones) se quitan, sin
-// aviso, como cualquier otra que no existe: los enlaces viejos abren la vista por defecto.
-const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas'];
+// aviso, como cualquier otra que no existe: los enlaces viejos abren la vista por defecto. La del
+// pronóstico de la clasificación final (pronostico, 19/10/2026; PROJECTION_VIEW de screen-tabla.js), solo
+// donde lo hay (projectionParams).
+const PROJECTION_VIEW = 'pronostico';
+const VIEWS = ['puntos', 'goles', 'forma', 'casa', 'fuera', 'todas', PROJECTION_VIEW];
 // Lo que se cambia sin crear entrada en el historial (§4.1): jornada, vista de Tabla y búsqueda; y el
 // grupo en Jornada y en Tabla (la tira de grupos y «Mi grupo»), también de un grupo a «Todos» y de
 // vuelta (c y f), que se recorre como las jornadas: Atrás no repasa cada grupo visto, sino que vuelve a
-// donde se estaba antes de recorrerlos, y el foco se queda en la ficha pulsada (mismo id).
-const REPLACE_ONLY = { jornada: ['r', 'g', 'c', 'f'], tabla: ['v', 'g'], explorar: ['q'], goleadores: ['q'] };
+// donde se estaba antes de recorrerlos, y el foco se queda en la ficha pulsada (mismo id). En Tabla, `t`
+// va con la vista del pronóstico (el equipo resaltado): de ella a la clasificación se quitan los dos.
+const REPLACE_ONLY = { jornada: ['r', 'g', 'c', 'f'], tabla: ['v', 'g', 't'], explorar: ['q'], goleadores: ['q'] };
 // Pantallas que se abren desde Explorar: su «‹» sin historial lleva a #/explorar.
 const UNDER_EXPLORE = new Set(['equipo', 'copa', 'goleadores', 'ligas', 'temporadas', 'records', 'fuentes', 'ajustes', 'jugador']);
 const MAX_REDIRECTS = 5;
@@ -155,8 +161,10 @@ export function resolveParams(route, ctx) {
 }
 
 // Jornada y Tabla: `g` por defecto, grupos que no son de liga a #/copa y, sin mi equipo, a #/ligas.
+// En Tabla, la vista del pronóstico solo donde lo hay (projectionParams), y `t` solo con ella.
 function leagueParams(screen, raw, params, ctx) {
   if (screen === 'tabla' && raw.v && !VIEWS.includes(raw.v)) return redirect(screen, omit(raw, 'v'));
+  if (screen === 'tabla' && raw.t && raw.v !== PROJECTION_VIEW) return redirect(screen, omit(raw, 't'));
   const season = ctx.model.season(params.s);
   if (!season) return { params, pending: true };
   const portal = ctx.portal.season;
@@ -192,7 +200,23 @@ function leagueParams(screen, raw, params, ctx) {
   }
   // La jornada vale por su clave o por su número (la pantalla lee las dos); si no, se quita.
   if (screen === 'jornada' && raw.r && !findRound(group, raw.r)) return redirect(screen, omit(raw, 'r'));
+  if (screen === 'tabla' && raw.v === PROJECTION_VIEW) {
+    const lost = projectionParams(raw, group, ctx);
+    if (lost) return lost;
+  }
   return { params: { ...params, g: group.id } };
+}
+
+// La vista del pronóstico de la clasificación final (19/10/2026): solo en un grupo con pronóstico
+// (projectStandings de proyeccion.js, el mismo de la pantalla y una vez por grupo: lo que calcula aquí lo
+// pinta después sin volver a simular); si no, se quita con su `t`, sin aviso, como una vista que no
+// existe. `t`, el equipo resaltado, solo si está en la tabla prevista (no un retirado ni otro grupo); si
+// no, se quita. La redirección (null si vale).
+function projectionParams(raw, group, ctx) {
+  const p = group.standings.length ? projectStandings(group, forecastOptions(ctx)) : null;
+  if (!p) return redirect('tabla', omit(omit(raw, 'v'), 't'));
+  if (raw.t && !p.rows.some((row) => row.team === raw.t)) return redirect('tabla', omit(raw, 't'));
+  return null;
 }
 
 // Jornada de todos los grupos de una competición («Todos los grupos», #/jornada?s&c&f&r, sin `g`): `c` y

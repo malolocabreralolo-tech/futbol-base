@@ -69,9 +69,10 @@ function untimedJ18() {
 // que se recalcula con cada resultado nuevo); sin las líneas ni la nota, byte a byte los de antes.
 // 2026-10-19: todos los que la tenían, sin la evolución de puntos (el usuario la quitó: «no me aporta
 // tanto»), y por lo demás byte a byte los de antes (comprobado ese día con el código de 0b65879, caso a caso);
-// B, E y X no la pintaban y siguen idénticos. En su sitio, el pronóstico de la clasificación final no sale
-// en ninguno: la clasificación de las fixtures es la del final de la temporada (currentAt no la toca) y no
-// cuadra con el calendario de esos días (startMatchesCalendar de src/proyeccion.js). Lo prueba
+// B, E y X no la pintaban y siguen idénticos. El pronóstico de la clasificación final que el usuario pidió
+// en su lugar (una cifra de «La temporada en cifras», «Pronóstico final», que abre su tabla en la Tabla)
+// no sale en ninguno: la clasificación de las fixtures es la del final de la temporada (currentAt no la
+// toca) y no cuadra con el calendario de esos días (startMatchesCalendar de src/proyeccion.js). Lo prueba
 // test_proyeccion_web.mjs, con la clasificación de cada día.
 const HOME = {
   A: [{ raw: currentAt('2026-03-01'), today: '2026-03-01' }, '6324408256e66f99200ca25b8cb24e0e92de3ab1'],
@@ -109,7 +110,7 @@ test('la portada pinta, byte a byte, lo que fijan sus huellas en A, B, C, D, E y
     assert.equal(sha(out), sha1, name);
     // Sin las líneas del calendario ni su nota, lo de antes; y sin ninguna, nada cambia en los demás.
     assert.equal(sha(withoutLines(out)), BEFORE_CALENDAR[name] || sha1, `${name}, sin las líneas del calendario`);
-    assert.doesNotMatch(out, /Evolución de puntos|Pronóstico de la clasificación final/, name);
+    assert.doesNotMatch(out, /Evolución de puntos|Pronóstico de la clasificación final|proj-figure/, name);
   }
   // Lo que fija cada huella de B5, en claro: que el caso es el que dice su nombre.
   const text = (options) => s(home.render(homeCtx(options)));
@@ -133,7 +134,7 @@ test('la portada pinta, byte a byte, lo que fijan sus huellas en A, B, C, D, E y
   // que pronosticar.
   assert.deepEqual(side(b), ['Clasificación', 'Trayectoria']);
   assert.doesNotMatch(b, /Plantilla/);
-  assert.doesNotMatch(d, /home-all|Pronóstico de la clasificación final/);
+  assert.doesNotMatch(d, /home-all|Pronóstico de la clasificación final|proj-figure/);
   assert.match(d, /<div class="home-rest"><section class="block" id="calendario">/);
 });
 

@@ -54,7 +54,7 @@ export const screen = {
     const team = { group: r.group, name: r.name };
     const view = teamView(ctx, team, { action: 'change', nextSeason: true, stale: r.stale || null, mine: true, shields, state });
     // La consulta de la ficha, en su orden; la plantilla, sin esperar a las actas (lazySquad).
-    const aside = [...view.aside, ...teamExtras(ctx, r.group, r.name, { lazySquad: true, mine: true })];
+    const aside = [...view.aside, ...teamExtras(ctx, r.group, r.name, { lazySquad: true })];
     // Los jugadores seguidos (la ficha de jugador), al final, si hay alguno.
     return html`<section data-screen="home" data-state="${view.state}">${view.head}${teamColumns(view.main, aside, view.rest)}${followedBlock(ctx)}</section>`;
   },

@@ -153,13 +153,15 @@ async function fixtureStateD(chrome, port) {
     const wanted = ['Temporada 2026/27', 'Así terminó 2025/26', 'Verano: Maspalomas Cup 2026', 'Clasificación final',
       'Trayectoria', 'Calendario'];
     // La evolución de puntos ya no existe (19/10/2026), y con la temporada terminada no hay nada que
-    // pronosticar: ni el pronóstico de la clasificación final, que va en su sitio.
+    // pronosticar: ni el bloque del pronóstico de la clasificación final de la primera versión, que ya no
+    // existe, ni su cifra («Pronóstico final», proj-figure), que desde ese día lo sustituye.
     const unwanted = ['Evolución de puntos', 'Pronóstico de la clasificación final'];
     return [
       ...failures,
       ...(state === 'D' ? [] : [`la portada del 23/09/2026 está en ${state}, no en D`]),
       ...wanted.filter((title) => !titles.includes(title)).map((title) => `falta el bloque «${title}»`),
       ...unwanted.filter((title) => titles.includes(title)).map((title) => `sobra el bloque «${title}»`),
+      ...(dom.includes('proj-figure') ? ['sobra la cifra «Pronóstico final»'] : []),
       ...errors.map((message) => `error de JavaScript: ${message}`),
     ];
   } finally {
@@ -204,7 +206,7 @@ async function main() {
       console.log(`PASS: render smoke OK — Mi equipo en estado ${state} (DOM ${dom.length} bytes)`);
       const problems = await fixtureStateD(chrome, port);
       if (!problems.length) {
-        console.log('PASS: estado D con las fixtures y el reloj del 23/09/2026: «Temporada 2026/27», «Así terminó 2025/26», «Verano», la clasificación final, la trayectoria y el calendario, sin la evolución de puntos ni el pronóstico de la clasificación final');
+        console.log('PASS: estado D con las fixtures y el reloj del 23/09/2026: «Temporada 2026/27», «Así terminó 2025/26», «Verano», la clasificación final, la trayectoria y el calendario, sin la evolución de puntos ni el pronóstico de la clasificación final (ni su bloque ni su cifra)');
         process.exit(0);
       }
       console.error('FAIL: estado D con las fixtures:');

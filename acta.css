@@ -852,6 +852,16 @@ abbr[title] { text-decoration: none; }
 .group-scorers .sc-pj { width: 36px; }
 .group-scorers td.sc-goals { font-weight: 800; color: var(--ink); }
 .source-line { margin-top: 14px; }
+/* El paso entre la clasificación y el pronóstico de la clasificación final (19/10/2026): «Ver el
+ * pronóstico de la clasificación final ›» bajo la clasificación y, en la vista del pronóstico, «‹ Ver la
+ * clasificación actual» en el sitio del selector (la flecha, aparte y sin subrayar: en .more, inline-flex,
+ * el espacio se perdería). El pronóstico, con las clases de la clasificación (.standings, la fila resaltada en .is-mine)
+ * y una columna más, la del abanico («2.º–4.º»), en --mute; en escritorio, a 640 px como mucho: con
+ * cuatro columnas, a todo el ancho, los puntos quedarían lejísimos del nombre. */
+.tabla-switch { margin-top: 14px; font-size: 13.5px; }
+.tabla-switch .more { gap: 0.3em; text-decoration: none; }
+.tabla-switch-label { text-decoration: underline; }
+.standings .st-fan { width: 74px; padding-left: 6px; font-size: 12.5px; color: var(--mute); white-space: nowrap; }
 
 /* Móvil y tableta: una sola tabla con todas las columnas; cada vista deja las suyas. */
 @media (max-width: 1023.98px) {
@@ -865,6 +875,7 @@ abbr[title] { text-decoration: none; }
 /* Escritorio: el selector de Todas, Casa y Fuera en lugar del de cinco (decisión 15 de B1),
  * y columnas de cifras más anchas, que en móvil van justas. */
 @media (min-width: 1024px) {
+  .tabla-proj { max-width: 640px; }
   .tabla-views.is-narrow { display: none; }
   .tabla-views.is-wide { display: block; max-width: 480px; }
   [data-screen="tabla"] .standings .st-num { width: 36px; }
@@ -1054,15 +1065,19 @@ abbr[title] { text-decoration: none; }
 /* «Calendario del equipo (.ics)», encima de la lista del calendario completo. */
 .cal-actions { margin-bottom: 8px; }
 
-/* Pronóstico de la clasificación final (projectionBlock de team-extras.js, 19/10/2026): arriba, el puesto
- * pronosticado, grande y en tinta («Pronóstico: 3.º»), y la línea del abanico y los puntos; debajo, la
- * tabla final proyectada con las clases de la Tabla (.standings, con la fila del equipo en .is-mine) y una
- * columna más, la del abanico («2.º–4.º»), en --mute. */
-.proj-head { padding: 10px 12px 11px; }
-.proj-pick { font-size: 15px; font-weight: 700; line-height: 1.2; color: var(--text); }
-.proj-pos { font-size: 28px; font-weight: 800; color: var(--ink); }
-.proj-range { margin-top: 3px; font-size: 13.5px; color: var(--mute); }
-.standings .st-fan { width: 74px; padding-left: 6px; font-size: 12.5px; color: var(--mute); white-space: nowrap; }
+/* «Pronóstico final», la primera cifra de «La temporada en cifras» (projectionFigure de team-view.js,
+ * 19/10/2026): la etiqueta de las casillas y, en una línea, el puesto, grande y en tinta («4.º»), los
+ * puntos y, a la derecha, «Ver la tabla prevista ›», subrayado como .more. Toda la fila es el enlace (a la
+ * vista del pronóstico de la Tabla); si no cabe, «Ver la tabla prevista» pasa debajo. */
+.proj-figure { display: block; padding: 6px 8px 8px; color: inherit; text-decoration: none; }
+.proj-figure:focus-visible { outline-offset: -4px; }
+.proj-figure-main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
+.proj-figure-pos { font-size: 28px; font-weight: 800; line-height: 1.15; color: var(--ink); }
+.proj-figure-pts { font-size: 15px; font-weight: 700; color: var(--text); }
+.proj-figure-more { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: underline; }
+@media (hover: hover) {
+  a.proj-figure:hover { background: var(--mark); }
+}
 
 /* Plantilla: N.º, jugador (el botón que despliega sus partidos), PJ, titular y goles. */
 .squad { width: 100%; border-collapse: collapse; table-layout: fixed; }

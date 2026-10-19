@@ -12,7 +12,7 @@
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -165,7 +165,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -294,7 +294,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -423,7 +423,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -576,7 +576,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -729,7 +729,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -855,7 +855,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1008,7 +1008,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1137,7 +1137,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1266,7 +1266,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1414,7 +1414,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1543,9 +1543,9 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
-    "jornada_actual": 2,
+    "jornada_actual": 3,
     "plazas_ascenso": 4,
     "plazas_copa": 1,
     "plazas_descenso": 0,
@@ -1571,12 +1571,12 @@
      "id": 1256,
      "nombre": "AD Huracán B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 2,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "6",
+     "pp": 0,
+     "puntos": 6,
      "racha_ultimos_5": [
       "V",
       "V"
@@ -1593,12 +1593,12 @@
      "id": 1254,
      "nombre": "CD Batán",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 2,
      "posicion_anterior": 2,
-     "pp": "0",
-     "puntos": "6",
+     "pp": 0,
+     "puntos": 6,
      "racha_ultimos_5": [
       "V",
       "V"
@@ -1615,12 +1615,12 @@
      "id": 1255,
      "nombre": "UD Piletas",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 2,
-     "posicion_anterior": 4,
-     "pp": "1",
-     "puntos": "3",
+     "posicion_anterior": 3,
+     "pp": 1,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V"
@@ -1637,12 +1637,12 @@
      "id": 1260,
      "nombre": "Guiniguada Apolinario B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 2,
-     "posicion_anterior": 3,
-     "pp": "1",
-     "puntos": "3",
+     "posicion_anterior": 4,
+     "pp": 1,
+     "puntos": 3,
      "racha_ultimos_5": [
       "V",
       "D"
@@ -1659,12 +1659,12 @@
      "id": 1257,
      "nombre": "Corazón de María D",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 2,
      "posicion_anterior": 5,
-     "pp": "2",
-     "puntos": "0",
+     "pp": 2,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D"
@@ -1681,12 +1681,12 @@
      "id": 1259,
      "nombre": "Siete Palmas",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 2,
      "posicion_anterior": 6,
-     "pp": "2",
-     "puntos": "0",
+     "pp": 2,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D"
@@ -1696,7 +1696,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1823,7 +1823,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1952,7 +1952,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2105,7 +2105,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2258,9 +2258,9 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
-    "jornada_actual": 2,
+    "jornada_actual": 3,
     "plazas_ascenso": 4,
     "plazas_copa": 1,
     "plazas_descenso": 0,
@@ -2286,12 +2286,12 @@
      "id": 1286,
      "nombre": "La Garita",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 2,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "6",
+     "pp": 0,
+     "puntos": 6,
      "racha_ultimos_5": [
       "V",
       "V"
@@ -2308,12 +2308,12 @@
      "id": 1288,
      "nombre": "Ojos de Garza",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 2,
-     "posicion_anterior": 5,
-     "pp": "1",
-     "puntos": "3",
+     "posicion_anterior": 2,
+     "pp": 1,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V"
@@ -2330,12 +2330,12 @@
      "id": 1289,
      "nombre": "CD Calero",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 2,
-     "posicion_anterior": 6,
-     "pp": "1",
-     "puntos": "3",
+     "posicion_anterior": 3,
+     "pp": 1,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V"
@@ -2352,12 +2352,12 @@
      "id": 1285,
      "nombre": "Las Huesas B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 2,
-     "posicion_anterior": 2,
-     "pp": "1",
-     "puntos": "3",
+     "posicion_anterior": 4,
+     "pp": 1,
+     "puntos": 3,
      "racha_ultimos_5": [
       "V",
       "D"
@@ -2374,12 +2374,12 @@
      "id": 1284,
      "nombre": "Atl. Marzasport",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "0",
+     "pe": 1,
+     "pg": 0,
      "pj": 2,
-     "posicion_anterior": 3,
-     "pp": "1",
-     "puntos": "1",
+     "posicion_anterior": 5,
+     "pp": 1,
+     "puntos": 1,
      "racha_ultimos_5": [
       "E",
       "D"
@@ -2396,12 +2396,12 @@
      "id": 1287,
      "nombre": "UD Telde C",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "0",
+     "pe": 1,
+     "pg": 0,
      "pj": 2,
-     "posicion_anterior": 4,
-     "pp": "1",
-     "puntos": "1",
+     "posicion_anterior": 6,
+     "pp": 1,
+     "puntos": 1,
      "racha_ultimos_5": [
       "E",
       "D"
@@ -2411,7 +2411,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2564,7 +2564,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2691,7 +2691,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2820,7 +2820,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2949,7 +2949,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3102,7 +3102,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3255,9 +3255,9 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
-    "jornada_actual": 2,
+    "jornada_actual": 3,
     "plazas_ascenso": 4,
     "plazas_copa": 1,
     "plazas_descenso": 0,
@@ -3283,12 +3283,12 @@
      "id": 1327,
      "nombre": "Maspa Training B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 2,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "6",
+     "pp": 0,
+     "puntos": 6,
      "racha_ultimos_5": [
       "V",
       "V"
@@ -3305,12 +3305,12 @@
      "id": 1325,
      "nombre": "San Fernando",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "1",
+     "pe": 1,
+     "pg": 1,
      "pj": 2,
      "posicion_anterior": 2,
-     "pp": "0",
-     "puntos": "4",
+     "pp": 0,
+     "puntos": 4,
      "racha_ultimos_5": [
       "V",
       "E"
@@ -3327,12 +3327,12 @@
      "id": 1328,
      "nombre": "CD Arguineguín B",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "1",
+     "pe": 1,
+     "pg": 1,
      "pj": 2,
      "posicion_anterior": 3,
-     "pp": "0",
-     "puntos": "4",
+     "pp": 0,
+     "puntos": 4,
      "racha_ultimos_5": [
       "V",
       "E"
@@ -3349,12 +3349,12 @@
      "id": 1326,
      "nombre": "CD Maspalomas B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 2,
-     "posicion_anterior": 5,
-     "pp": "1",
-     "puntos": "3",
+     "posicion_anterior": 4,
+     "pp": 1,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V"
@@ -3371,12 +3371,12 @@
      "id": 1324,
      "nombre": "CD Tablero",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 2,
-     "posicion_anterior": 4,
-     "pp": "2",
-     "puntos": "0",
+     "posicion_anterior": 5,
+     "pp": 2,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D"
@@ -3393,12 +3393,12 @@
      "id": 1323,
      "nombre": "Castillo CF",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 2,
      "posicion_anterior": 6,
-     "pp": "2",
-     "puntos": "0",
+     "pp": 2,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D"
@@ -3408,7 +3408,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -3713,7 +3713,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -4013,7 +4013,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -4318,7 +4318,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-19T10:47:27",
+   "fetched": "2026-10-19T12:41:47",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -9407,63 +9407,151 @@
    "visitante": "AD Huracán B"
   },
   "18866": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/JntSPeJMUkWg3V8s5",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "batanEscudo.png",
    "escudo_visitante": "100x100guiniguada2016.png",
    "estadio": "Ortiz Wiot",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-23 17:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18866,
+   "id_local": 1254,
+   "id_visitante": 1260,
    "jornada": 3,
    "liga_id": 133,
    "local": "CD Batán",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Guiniguada Apolinario B"
   },
   "18867": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/ZP8qtd4DuuT1Ybzd8",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "200x200claret.png",
    "escudo_visitante": "100x100sietepalmas.png",
    "estadio": "Colegio Claret",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-24 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18867,
+   "id_local": 1257,
+   "id_visitante": 1259,
    "jornada": 3,
    "liga_id": 133,
    "local": "Corazón de María D",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "D",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Siete Palmas"
   },
   "18868": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/iiQ3TUT6vwvNg2fC6",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "200x200piletas.png",
    "escudo_visitante": "200x200huracan.png",
    "estadio": "Piletas",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-24 10:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18868,
+   "id_local": 1255,
+   "id_visitante": 1256,
    "jornada": 3,
    "liga_id": 133,
    "local": "UD Piletas",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "AD Huracán B"
   },
   "18869": {
+   "campo_gps": "https://maps.app.goo.gl/iiQ3TUT6vwvNg2fC6",
    "escudo_local": "200x200piletas.png",
    "escudo_visitante": "100x100sietepalmas.png",
-   "estadio": null,
+   "estadio": "Piletas",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-31 09:00:00",
    "goles_local": 0,
@@ -9474,12 +9562,14 @@
    "local": "UD Piletas",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
+   "permitir_comentarios_liga": 1,
    "visitante": "Siete Palmas"
   },
   "18870": {
+   "campo_gps": "https://maps.app.goo.gl/5Yb5GuK9RhsLkjMi8",
    "escudo_local": "100x100guiniguada2016.png",
    "escudo_visitante": "200x200claret.png",
-   "estadio": null,
+   "estadio": "Lomo Apolinario",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-31 13:30:00",
    "goles_local": 0,
@@ -9490,12 +9580,14 @@
    "local": "Guiniguada Apolinario B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
+   "permitir_comentarios_liga": 1,
    "visitante": "Corazón de María D"
   },
   "18871": {
+   "campo_gps": "https://goo.gl/maps/Y3FqGgucwufXVT1FA",
    "escudo_local": "200x200huracan.png",
    "escudo_visitante": "batanEscudo.png",
-   "estadio": null,
+   "estadio": "Pepe Gonçalvez",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-01 09:00:00",
    "goles_local": 0,
@@ -9506,6 +9598,7 @@
    "local": "AD Huracán B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
+   "permitir_comentarios_liga": 1,
    "visitante": "CD Batán"
   },
   "18872": {
@@ -11570,63 +11663,151 @@
    "visitante": "Las Huesas B"
   },
   "18931": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/VpRhN6CsSyaKqSSW7",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100Marzasport2017.png",
    "escudo_visitante": "100x100calero2018.png",
    "estadio": "Marzagán",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-23 18:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18931,
+   "id_local": 1284,
+   "id_visitante": 1289,
    "jornada": 3,
    "liga_id": 138,
    "local": "Atl. Marzasport",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "E",
+    "D"
+   ],
+   "racha_visitante": [
+    "D",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Calero"
   },
   "18932": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/eoZKM5WfyW5Cx3jw7",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "laGaritaEscudoColor.png",
    "escudo_visitante": "100x100lashuesas2017.png",
    "estadio": "Las Remudas",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-24 12:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18932,
+   "id_local": 1286,
+   "id_visitante": 1285,
    "jornada": 3,
    "liga_id": 138,
    "local": "La Garita",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Las Huesas B"
   },
   "18933": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/TYvYP3scTESyi677A",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "udTeldeEscudo.png",
    "escudo_visitante": "100x100ojosdegarza.png",
    "estadio": "Pablo Hdez.",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-25 10:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18933,
+   "id_local": 1287,
+   "id_visitante": 1288,
    "jornada": 3,
    "liga_id": 138,
    "local": "UD Telde C",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "E",
+    "D"
+   ],
+   "racha_visitante": [
+    "D",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Ojos de Garza"
   },
   "18934": {
+   "campo_gps": "https://maps.app.goo.gl/7sQgRh3nYeDh5UMb6",
    "escudo_local": "100x100calero2018.png",
    "escudo_visitante": "udTeldeEscudo.png",
-   "estadio": null,
+   "estadio": "El Calero",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-29 17:30:00",
    "goles_local": 0,
@@ -11637,12 +11818,14 @@
    "local": "CD Calero",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
+   "permitir_comentarios_liga": 1,
    "visitante": "UD Telde C"
   },
   "18935": {
+   "campo_gps": "https://goo.gl/maps/eoZKM5WfyW5Cx3jw7",
    "escudo_local": "laGaritaEscudoColor.png",
    "escudo_visitante": "100x100ojosdegarza.png",
-   "estadio": null,
+   "estadio": "Las Remudas",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-31 09:00:00",
    "goles_local": 0,
@@ -11653,12 +11836,14 @@
    "local": "La Garita",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
+   "permitir_comentarios_liga": 1,
    "visitante": "Ojos de Garza"
   },
   "18936": {
+   "campo_gps": "https://goo.gl/maps/vJqqrw1kwP4tNWsB6",
    "escudo_local": "100x100lashuesas2017.png",
    "escudo_visitante": "100x100Marzasport2017.png",
-   "estadio": null,
+   "estadio": "Las Huesas",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-31 09:00:00",
    "goles_local": 0,
@@ -11669,6 +11854,7 @@
    "local": "Las Huesas B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
+   "permitir_comentarios_liga": 1,
    "visitante": "Atl. Marzasport"
   },
   "18937": {
@@ -14683,63 +14869,151 @@
    "visitante": "San Fernando"
   },
   "19021": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/TwjiYd2VD6s",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100castillo.png",
    "escudo_visitante": "arguineguinEscudo.png",
    "estadio": "Castillo Romeral",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-23 17:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19021,
+   "id_local": 1323,
+   "id_visitante": 1328,
    "jornada": 3,
    "liga_id": 145,
    "local": "Castillo CF",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "V",
+    "E"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Arguineguín B"
   },
   "19022": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/GaipofziWgw",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "tableroEscudo.png",
    "escudo_visitante": "sanfernandoEscudo.png",
    "estadio": "Eleuterio Valerón",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-24 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19022,
+   "id_local": 1324,
+   "id_visitante": 1325,
    "jornada": 3,
    "liga_id": 145,
    "local": "CD Tablero",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "V",
+    "E"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "San Fernando"
   },
   "19023": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "200x200maspalomas20-21.png",
    "estadio": "Maspalomas 4",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-24 12:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19023,
+   "id_local": 1327,
+   "id_visitante": 1326,
    "jornada": 3,
    "liga_id": 145,
    "local": "Maspa Training B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "D",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Maspalomas B"
   },
   "19024": {
+   "campo_gps": "https://maps.app.goo.gl/WUwQ7qQ6QZC95WJcA",
    "escudo_local": "arguineguinEscudo.png",
    "escudo_visitante": "maspaTrainingEscudo.png",
-   "estadio": null,
+   "estadio": "Arguineguín",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-31 09:00:00",
    "goles_local": 0,
@@ -14750,12 +15024,14 @@
    "local": "CD Arguineguín B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "permitir_comentarios_liga": 1,
    "visitante": "Maspa Training B"
   },
   "19025": {
+   "campo_gps": "https://goo.gl/maps/GaipofziWgw",
    "escudo_local": "tableroEscudo.png",
    "escudo_visitante": "200x200maspalomas20-21.png",
-   "estadio": null,
+   "estadio": "Eleuterio Valerón",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-31 10:30:00",
    "goles_local": 0,
@@ -14766,12 +15042,14 @@
    "local": "CD Tablero",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "permitir_comentarios_liga": 1,
    "visitante": "CD Maspalomas B"
   },
   "19026": {
+   "campo_gps": "https://maps.app.goo.gl/FsymPEsnkMBkAz2V6",
    "escudo_local": "sanfernandoEscudo.png",
    "escudo_visitante": "100x100castillo.png",
-   "estadio": null,
+   "estadio": "Maspalomas 4",
    "estado": "no_iniciado",
    "fecha_programada": "2026-10-31 12:30:00",
    "goles_local": 0,
@@ -14782,6 +15060,7 @@
    "local": "San Fernando",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "permitir_comentarios_liga": 1,
    "visitante": "Castillo CF"
   },
   "19027": {

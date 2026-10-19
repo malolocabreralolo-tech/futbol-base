@@ -8,7 +8,8 @@ import { createHash } from 'node:crypto';
 import { buildGroup } from '../../src/model.js';
 import { PARAMS, forecastMatch, forecastOdds } from '../../src/pronostico.js';
 import {
-  SIM, fanMass, fanOf, playedBy, playedRounds, projectStandings, projection, simulate, standingsStart, startMatchesCalendar,
+  SIM, fanMass, fanOf, playedBy, playedRounds, projectPlaces, projectStandings, projection, projectionApplies, simulate,
+  standingsStart, startMatchesCalendar,
 } from '../../src/proyeccion.js';
 
 const SEASON = '2026-2027';
@@ -42,10 +43,12 @@ function standingsOf(rounds, unlisted = []) {
     .map(([team, r], i) => [i + 1, team, r.pts, r.pj, r.g, r.e, r.p, r.gf, r.gc, r.gf - r.gc]);
 }
 
-function makeGroup(rounds = BASE, { cat = 'prebenjamin', season = SEASON, id = 'PG9', unlisted = [], phase = 'Gran Canaria' } = {}) {
+// table: los partidos de los que sale la clasificación, si no son los del calendario (una tabla de la
+// federación que va por delante o por detrás de él).
+function makeGroup(rounds = BASE, { cat = 'prebenjamin', season = SEASON, id = 'PG9', unlisted = [], phase = 'Gran Canaria', table = rounds } = {}) {
   const jornadas = Object.fromEntries(rounds.map((ms, i) => [`Jornada ${i + 1}`, ms]));
   const raw = { id, name: 'Grupo 9', fullName: 'PREBENJAMIN GRAN CANARIA - GRUPO 9', phase, island: 'grancanaria',
-    jornada: 'Jornada 4', standings: standingsOf(rounds, unlisted) };
+    jornada: 'Jornada 4', standings: standingsOf(table, unlisted) };
   return buildGroup(raw, { season, cat, current: true, history: { [id]: jornadas } });
 }
 const web = (group, extra = {}) => projection(group, { start: standingsStart(group), ...OPTS, ...extra });
@@ -271,4 +274,59 @@ test('startMatchesCalendar: la clasificación de partida, la que cuadra con el c
   without.standings.find(r => r.team === 'Zeta').pj -= 1;
   assert.equal(startMatchesCalendar(without, { status }), true);
   assert.equal(startMatchesCalendar(without), false);
+});
+
+test('startMatchesCalendar: lo que la federación puede contar o no, si lo cuenta, con su marcador; si no cuadra, puede ser un partido que el calendario aún no trae', () => {
+  // La app da por anulados Alfa–Zeta (9-1) y Beta–Épsilon (4-3), de la jornada 1, con marcador.
+  const off = new Set(['Alfa|Zeta', 'Beta|Épsilon']);
+  const status = m => (off.has(`${m.home}|${m.away}`) ? { state: 'anulado' } : null);
+  // La federación los cuenta, con su marcador: cuadra.
+  assert.equal(startMatchesCalendar(makeGroup(), { status }), true);
+  // No los cuenta: cuadra.
+  const without = BASE.map((ms, i) => (i === 0 ? ms.filter(m => !off.has(`${m[1]}|${m[2]}`)) : ms));
+  assert.equal(startMatchesCalendar(makeGroup(BASE, { table: without }), { status }), true);
+  // No los cuenta, pero ya cuenta el Zeta–Épsilon de la jornada 4 (1-2), que el calendario aún no trae: Zeta y
+  // Épsilon llevan un partido más que los suyos, como si contara el anulado, pero con otros goles. Antes del
+  // 19/10/2026 cuadraba, y el Zeta–Épsilon se contaba dos veces: en la tabla y en la simulación.
+  const ahead = without.map((ms, i) => (i === 3 ? ms.map(m => (m[1] === 'Zeta' ? row(m[0], 'Zeta', 'Épsilon', 1, 2) : m)) : ms));
+  const group = makeGroup(BASE, { table: ahead });
+  assert.equal(startMatchesCalendar(group, { status }), false);
+  assert.equal(projectStandings(group, { ...OPTS, today: '2026-10-19', status }), null);
+  assert.equal(projectionApplies(group, { ...OPTS, today: '2026-10-19', status }), false);
+});
+
+test('startMatchesCalendar: un retirado que el calendario no trae, en una liga a ida y vuelta, con los dos partidos en la tabla', () => {
+  // La vuelta de BASE, con los papeles cambiados y sin jugar: dos veces cada pareja.
+  const vuelta = BASE.map((ms, i) => ms.map(m => row(`2026-11-${String(7 + 7 * i).padStart(2, '0')}`, m[2], m[1])));
+  const withAbsent = (extra) => {
+    const group = makeGroup([...BASE, ...vuelta]);
+    group.standings.push({ pos: 7, team: 'Ausente', pts: 0, pj: 4, g: 0, e: 0, p: 4, gf: 0, gc: 12, dg: -12, retired: true });
+    const alfa = group.standings.find(r => r.team === 'Alfa');
+    alfa.pj += extra; alfa.pts += 3 * extra; alfa.gf += 3 * extra;
+    return group;
+  };
+  assert.equal(startMatchesCalendar(withAbsent(1)), true);
+  assert.equal(startMatchesCalendar(withAbsent(2)), true, 'ida y vuelta contra él');
+  assert.equal(startMatchesCalendar(withAbsent(3)), false, 'más veces de las que se enfrentan dos equipos');
+});
+
+test('sin simular (draw: false, projectPlaces): el mismo puesto y los mismos puntos que con las simulaciones; las tres de la web van a una', () => {
+  const group = makeGroup();
+  const full = web(group);
+  const places = web(group, { draw: false });
+  assert.deepEqual(Object.keys(places).sort(), ['matches', 'rounds', 'rows']);
+  assert.deepEqual(places.rows, full.rows.map(({ team, pos, pts, dg, gf, played }) => ({ team, pos, pts, dg, gf, played })));
+  assert.deepEqual([places.matches, places.rounds], [full.matches, full.rounds]);
+  // En la web, las tres, con la misma caché: lo de projectPlaces es lo de projectStandings sin simular.
+  const opts = { ...OPTS, today: '2026-10-19' };
+  assert.equal(projectionApplies(group, opts), true);
+  assert.deepEqual(projectPlaces(group, opts), places);
+  assert.equal(projectPlaces(group, opts), projectPlaces(group, opts));
+  assert.deepEqual(projectStandings(group, opts), full);
+  // Donde no hay, las tres dicen que no.
+  for (const g of [makeGroup(BASE, { cat: 'benjamin' }), makeGroup(BASE.map(ms => ms.map(m => (m[3] == null ? [m[0], m[1], m[2], 2, 1, null, m[6], m[7]] : m))))]) {
+    assert.equal(projectionApplies(g, opts), false);
+    assert.equal(projectPlaces(g, opts), null);
+    assert.equal(projectStandings(g, opts), null);
+  }
 });

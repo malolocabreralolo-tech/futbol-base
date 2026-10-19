@@ -11,13 +11,11 @@ import {
   forecastOptions,
 } from './ui.js';
 import { errorBox } from './shell.js';
-import {
-  lastResults, homeAwayTable, retiredTeams, groupFinished, playerName, sourceInfo, seasonLabel, siblingGroups, teamShort,
-} from './model.js';
+import { lastResults, homeAwayTable, retiredTeams, groupFinished, playerName, sourceInfo, seasonLabel, siblingGroups } from './model.js';
 import { routeHref, teamHref } from './links.js';
 import { groupScorers, seasonNeeds } from './state.js';
 import { myGroupIn, myTeamIn } from './myteam.js';
-import { projectStandings } from './proyeccion.js';
+import { projectStandings, projectionApplies } from './proyeccion.js';
 
 const NARROW = [['puntos', 'Puntos'], ['goles', 'Goles'], ['forma', 'Forma'], ['casa', 'Casa'], ['fuera', 'Fuera']]
   .map(([value, label]) => ({ value, label }));
@@ -184,7 +182,9 @@ const thousands = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
 /* La vista del pronóstico de la clasificación final: la tabla final proyectada de toda la liga
  * (projectStandings de proyeccion.js, con las opciones de la web), con las clases de la clasificación
- * (standings): el puesto pronosticado, el equipo (nombre corto, escudo y enlace a su ficha), los puntos
+ * (standings): el puesto pronosticado, el equipo (su escudo y su nombre, el mismo de la clasificación, con
+ * el enlace a su ficha; revisión del 19/10/2026: con el nombre corto, «AD Huracán» pasaba a «Huracán» al
+ * cambiar de vista), los puntos
  * previstos y el abanico («Entre»: los puestos en que acaba 8 de cada 10 veces, comprobado con las
  * temporadas pasadas; la cabecera de proyeccion.js), con una fila resaltada, como la propia en la
  * clasificación: la de `t` si está en la tabla (se llega desde su ficha: «este equipo»; o «mi equipo», si
@@ -196,7 +196,7 @@ function projectionView(p, { group, s, mine, team, shields }) {
   const mineText = marked && marked === mine ? 'mi equipo' : 'este equipo';
   const rows = p.rows.map((r) => {
     const isMarked = marked != null && r.team === marked;
-    return html`<tr${isMarked ? html` class="is-mine"` : ''}><td class="st-pos">${r.pos}</td><th scope="row" class="st-team"><a class="st-link" href="${teamHref(s, group.id, r.team)}">${crest(r.team, { shields })}<span class="st-name">${teamShort(r.team)}</span></a>${isMarked ? html`<span class="vh"> (${mineText})</span>` : ''}</th><td class="st-pts">${Math.round(r.pts)}</td><td class="st-fan">${fanCell(r)}</td></tr>`;
+    return html`<tr${isMarked ? html` class="is-mine"` : ''}><td class="st-pos">${r.pos}</td><th scope="row" class="st-team"><a class="st-link" href="${teamHref(s, group.id, r.team)}">${crest(r.team, { shields })}<span class="st-name">${r.team}</span></a>${isMarked ? html`<span class="vh"> (${mineText})</span>` : ''}</th><td class="st-pts">${Math.round(r.pts)}</td><td class="st-fan">${fanCell(r)}</td></tr>`;
   });
   const table = html`<table class="standings"><caption class="vh">Clasificación final pronosticada: ${group.label}</caption><thead><tr><th scope="col" class="st-pos"><abbr title="Puesto pronosticado">#</abbr></th><th scope="col" class="st-team">Equipo</th><th scope="col" class="st-pts"><abbr title="Puntos previstos">Pts</abbr></th><th scope="col" class="st-fan"><abbr title="Puestos en que acaba 8 de cada 10 veces">Entre</abbr></th></tr></thead><tbody>${rows}</tbody></table>`;
   const basis = `Con el pronóstico de cada partido que queda: ${thousands(p.sims)} simulaciones del resto de la liga, que se rehacen con cada resultado nuevo. «Entre»: los puestos en que acaba cada equipo 8 de cada 10 veces (comprobado con temporadas pasadas). Es una estimación, no un resultado.`;
@@ -234,10 +234,13 @@ function render(ctx) {
     return html`<section data-screen="tabla">${screenHead('Tabla', { action: others })}${empty(why)}</section>`;
   }
   const historical = s !== ctx.portal.season;
-  // El pronóstico de la clasificación final, donde lo hay (projectStandings: prebenjamín de la temporada
-  // del portal, en liga, con dos jornadas jugadas y algo por jugar; una vez por grupo). Sin él, su vista
-  // es la de por defecto, como una que no existe.
-  const projection = group.standings.length ? projectStandings(group, forecastOptions(ctx)) : null;
+  // El pronóstico de la clasificación final, donde lo hay (projectionApplies: prebenjamín de la temporada
+  // del portal, en liga, con dos jornadas jugadas y algo por jugar; sin pronosticar nada, solo para el
+  // enlace). Las simulaciones (projectStandings, una vez por grupo), solo en su vista; sin él, su vista es
+  // la de por defecto, como una que no existe.
+  const options = forecastOptions(ctx);
+  const applies = group.standings.length > 0 && projectionApplies(group, options);
+  const projection = applies && params.v === PROJECTION_VIEW ? projectStandings(group, options) : null;
   const v = VIEWS.includes(params.v) && (params.v !== PROJECTION_VIEW || projection) ? params.v : 'puntos';
   // La tira de los grupos de su competición, que conserva la vista (Puntos y Todas, las de por defecto,
   // van sin `v`), y la acción de la cabecera.
@@ -279,7 +282,7 @@ function render(ctx) {
   }
   const sanctions = sanctionsText(group);
   const extra = html`${zones ? notice('Qué se juega cada puesto:', zones) : ''}${sanctions ? notice('Puntos de sanción:', sanctions) : ''}`;
-  const more = projection ? projectionLink(group, s) : '';
+  const more = applies ? projectionLink(group, s) : '';
   return html`<section data-screen="tabla">${head}${views}${table}${more}${extra}${scorers}${source}</section>`;
 }
 

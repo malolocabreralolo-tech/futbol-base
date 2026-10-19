@@ -4,11 +4,12 @@
  * aporta tanto»): «en base a la evolución de los resultados, […] una proyección de la clasificación final
  * en la que pueda quedar […] pronóstico tercero, o segundo, o quinto». Tras ver la primera versión (un
  * bloque con la tabla en cada ficha), lo quiso como una cifra: en «La temporada en cifras» de la ficha y
- * de Mi equipo, «Pronóstico final: 4.º, unos 45 puntos» (projectionFigure de team-view.js), que abre la
- * tabla prevista en un solo sitio, la Tabla del grupo (v=pronostico, projectionView de screen-tabla.js;
- * el router quita esa vista donde esto da null). Puro e importable en Node sin DOM,
- * como pronostico.js: recibe el Group de model.js y la temporada del portal por parámetro y no lee ningún
- * global de datos. Nada en la base ni en el bot, ni ninguna petición nueva.
+ * de Mi equipo, «Pronóstico final: 4.º, unos 45 puntos» (projectionFigure de team-view.js, con
+ * projectPlaces), que abre la tabla prevista en un solo sitio, la Tabla del grupo (v=pronostico,
+ * projectionView de screen-tabla.js, con projectStandings; el router quita esa vista donde
+ * projectionApplies da false). Puro e importable en Node sin DOM, como pronostico.js: recibe el Group de
+ * model.js y la temporada del portal por parámetro y no lee ningún global de datos. Nada en la base ni en
+ * el bot, ni ninguna petición nueva.
  *
  * EL MÉTODO (projection): una simulación de Monte Carlo del resto de la liga con el pronóstico de cada
  * partido que ya enseña la web.
@@ -34,8 +35,8 @@
  *   ruido de la simulación, el puesto no depende de ella); el ABANICO, los puestos seguidos en que acaba 8
  *   de cada 10 veces (abajo); y la probabilidad de cada puesto (probs), la parte de las simulaciones.
  * - Generador con semilla fija (mulberry32, el del banco de pruebas; SIM.seed): el mismo resultado en cada
- *   pintado y en las pruebas. Una vez por grupo (projectStandings, como FACTS y FORECASTS): con un
- *   resultado nuevo, el modelo construye otro Group y se rehace todo.
+ *   pintado y en las pruebas. Una vez por grupo (la caché de la web, PROJECTIONS, como FACTS y FORECASTS):
+ *   con un resultado nuevo, el modelo construye otro Group y se rehace todo.
  * Se enseña donde hay pronóstico de partidos: una liga de prebenjamín de la temporada del portal
  * (forecastApplies), con PARAMS.minRounds jornadas jugadas (las de trainingFor: playedRounds) y algo por
  * jugar; y, en la ficha de un equipo, si ese equipo ya ha jugado PARAMS.minPlayed partidos, como el
@@ -76,27 +77,35 @@
  * 4,8, 3,4, 2,8 y 2,2 puestos de anchura media. Por eso la web dice «8 de cada 10 veces» (comprobado con
  * las temporadas pasadas) y no «en 8 de cada 10 simulaciones», que con pocas jornadas no sería verdad.
  *
- * Cuántas simulaciones (SIM.sims, 2.000) y lo que tarda, medido el 19/10/2026 en este portátil (Intel
- * i7-1165G7 con la CPU en modo de ahorro, a 1,1-1,5 GHz: más lento que un móvil de hoy), con PG1 de
- * 2026-27, el grupo más grande de prebenjamín (13 equipos, 144 partidos por jugar): en Chrome, con el
- * pronóstico de los partidos del calendario ya hecho, como en la ficha, 46-58 ms la primera vez (1.000
- * simulaciones, 39-44 ms; 5.000, 80-87 ms); en Node, en un proceso nuevo, 78-94 ms. Después, nada: va en
- * la caché. Mucho es poner en marcha el código (en Node, con una sola simulación, 45-52 ms en frío); en
- * Chrome, cada 1.000 simulaciones más, unos 11 ms. Con 2.000, la probabilidad de cada puesto lleva un
- * error de un punto, más o menos, y el abanico sale como con 10.000 (en el backtest, dentro el 80,8 %
- * frente al 80,7 %, y 3,28 puestos de anchura media frente a 3,29); el puesto pronosticado y los puntos no
- * dependen de cuántas (se calculan sin sortear). Ese mismo día, con el generador escrito en línea en
- * simulate (los mismos números: la huella de test_proyeccion.mjs y el backtest, byte a byte), en Chrome
- * con un modelo nuevo cada vez (y la CPU, en ahorro, a 0,4-1,3 GHz): PG1, 30 ms la primera vez y 18-23 ms
- * después (con el generador en su función, 46 y 22-23 ms); con la CPU frenada 4× (como un móvil lento),
- * 71-73 ms (antes, 89-92 ms); los otros tres grupos, algo menos. Se quedan las 2.000: más no cambiaría ni
- * el puesto ni los puntos, y el abanico ya sale como con 10.000.
+ * Cuántas simulaciones (SIM.sims, 2.000) y lo que tarda (revisión del 19/10/2026, medido EN FRÍO: las
+ * primeras cifras de esta cabecera eran con el motor ya caliente). En este portátil (Intel i7-1165G7 con
+ * la CPU en modo de ahorro: más lento que un móvil de hoy), con PG1 de 2026-27, el grupo más grande de
+ * prebenjamín (13 equipos, 144 partidos por jugar), en Chrome, en una página nueva que entra por #/ajustes
+ * (sin nada pronosticado antes), tres de cada, con la CPU tal cual y frenada 4× (como un móvil lento):
+ *   projectionApplies (si lo hay)                   4-5 ms     16-17 ms a 4×
+ *   projectPlaces, después (puesto y puntos)        21-24 ms   56-71 ms
+ *   projectStandings, después (las simulaciones)    31-34 ms   88-93 ms
+ *   projectStandings, todo de una vez               53-61 ms   156-170 ms
+ * (lo de projectPlaces es, casi todo, el pronóstico de los 144 partidos y su ajuste). Por eso cada
+ * pantalla pide solo lo que enseña (la web, abajo): las simulaciones, solo al abrir la tabla prevista. El
+ * primer pintado (mediana de 5, dos tandas, frente a una copia de origin/main, a 1×): la Tabla de PG1,
+ * igual que sin el pronóstico (−3 y −5 ms; cuando simulaba al pintar, 66-77 ms más); Mi equipo con Las
+ * Mesas Hu. (PG2), 21-24 ms más (cuando simulaba, 36-57 ms); a 4×, el ruido entre tandas (±150 ms) tapa
+ * la diferencia. Después, nada: va en la caché. En Node, simulate de PG1 entera (tablas de marcadores
+ * incluidas), unos 60 ms la primera vez en un proceso nuevo y, después (mediana de 60 vueltas), 8,5 ms con
+ * 1.000 simulaciones, 15 con 2.000, 35 con 5.000 y 66 con 10.000; con el generador en una función aparte,
+ * unos 21 ms con 2.000 (simulate). Con 2.000, la probabilidad de cada puesto lleva un error de un punto,
+ * más o menos, y el abanico sale como con 10.000 (en el backtest, dentro el 80,8 % frente al 80,7 %, y
+ * 3,28 puestos de anchura media frente a 3,29); el puesto pronosticado y los puntos no dependen de cuántas
+ * (se calculan sin sortear). Se quedan las 2.000: más no cambiaría ni el puesto ni los puntos, y la tabla
+ * prevista tardaría más en abrirse.
  *
  * La tabla y el calendario, de acuerdo: la clasificación de partida es la oficial, y lo que queda, lo que
  * no tiene marcador en el calendario. Si un día la una lleva un resultado que el otro aún no trae (la
  * federación publica la clasificación y los resultados por separado), ese partido se contaría dos veces o
- * ninguna: la web no pronostica hasta que cuadren (startMatchesCalendar; en 2026-27, hoy cuadran los cuatro
- * grupos). Un partido sin jugar en un campo «EXCLUIDO» o «SUSPENDIDO» se simula, como la web lo
+ * ninguna: la web no pronostica hasta que cuadren (startMatchesCalendar, que desde la revisión del
+ * 19/10/2026 también mira los goles de lo que la federación puede contar o no; en 2026-27, hoy cuadran los
+ * cuatro grupos). Un partido sin jugar en un campo «EXCLUIDO» o «SUSPENDIDO» se simula, como la web lo
  * pronostica: si el excluido ya no está en la tabla, no (no es de dos equipos de la tabla). Ni el
  * enfrentamiento directo ni otros desempates de la federación: tras puntos, diferencia y goles, a suertes. */
 import { retiredTeams } from './model.js';
@@ -205,33 +214,49 @@ function scoreTables(fixtures) {
   return cell;
 }
 
-/* La simulación del resto de la liga. teams: los nombres; start: [{ pts, gf, gc }] de cada uno, en su
- * orden; fixtures: [{ home, away (índices en teams), pHome, pDraw, pAway, xgHome, xgAway }]. En cada una
- * de las `sims` simulaciones, cada partido: el desenlace con su 1X2 y el marcador con scoreTables, con un
- * solo número aleatorio (lo que sobra del sorteo del desenlace, reescalado, es otro uniforme); y la
- * clasificación final por puntos, diferencia de goles y goles a favor (como las tablas de liga de la web)
- * y, a igualdad de las tres cosas, a suertes. Devuelve, por equipo y en el orden de teams, { team, pts,
- * dg, gf, probs }: los puntos, la diferencia y los goles a favor que se esperan al final, calculados sin
- * sortear nada (los de start más, de cada partido, 3·P(gana) + P(empate) y los goles medios de su tabla
- * en cada desenlace por su probabilidad: lo mismo a lo que tiende la media de las simulaciones, sin su
- * ruido), y probs, la parte de las simulaciones en que acaba en cada puesto, del 1.º al último.
- * Determinista con la misma semilla. */
+/* Lo que se espera al final, sin sortear nada (19/10/2026: aparte de las simulaciones, que la cifra de la
+ * ficha no necesita): de cada equipo, en el orden de start ([{ pts, gf, gc }]), sus puntos, su diferencia
+ * y sus goles a favor de start más, de cada partido de fixtures, 3·P(gana) + P(empate) y los goles medios
+ * de su tabla de marcadores (cell, de scoreTables) en cada desenlace por su probabilidad: lo mismo a lo que
+ * tiende la media de las simulaciones, sin su ruido. { pts, dg, gf }. */
 const WIN = [3, 1, 0], LOSS = [0, 1, 3];
-export function simulate(teams, start, fixtures, { sims = SIM.sims, seed = SIM.seed } = {}) {
-  const T = teams.length, M = fixtures.length;
+function expectations(start, fixtures, cell) {
+  const pts = Float64Array.from(start, r => r.pts || 0);
+  const gf = Float64Array.from(start, r => r.gf || 0);
+  const dg = Float64Array.from(start, r => (r.gf || 0) - (r.gc || 0));
+  fixtures.forEach((f, k) => {
+    const h = f.home, a = f.away;
+    const sum = f.pHome + f.pDraw + f.pAway;
+    const edges = [0, f.pHome / sum, (f.pHome + f.pDraw) / sum, 1];
+    for (let r = 0; r < 3; r += 1) {
+      const q = 3 * k + r, pr = edges[r + 1] - edges[r];
+      let gh = 0, ga = 0;
+      for (let st = 0; st < STEPS; st += 1) { gh += cell[q * STEPS + st] >> 8; ga += cell[q * STEPS + st] & 255; }
+      gh /= STEPS; ga /= STEPS;
+      pts[h] += pr * WIN[r]; pts[a] += pr * LOSS[r];
+      gf[h] += pr * gh; gf[a] += pr * ga; dg[h] += pr * (gh - ga); dg[a] += pr * (ga - gh);
+    }
+  });
+  return { pts, dg, gf };
+}
+
+/* Las simulaciones: en cada una de las `sims`, cada partido de fixtures, el desenlace con su 1X2 y el
+ * marcador con su tabla (cell), con un solo número aleatorio (lo que sobra del sorteo del desenlace,
+ * reescalado, es otro uniforme); y la clasificación final por puntos, diferencia de goles y goles a favor
+ * (como las tablas de liga de la web) y, a igualdad de las tres cosas, a suertes. Devuelve las veces que
+ * cada equipo acaba en cada puesto: count[t·T + p], el equipo t de start en el puesto p + 1. Determinista
+ * con la misma semilla. */
+function placeCounts(start, fixtures, cell, { sims, seed }) {
+  const T = start.length, M = fixtures.length;
   const basePts = new Int32Array(T), baseGd = new Int32Array(T), baseGf = new Int32Array(T);
   start.forEach((r, t) => { basePts[t] = r.pts || 0; baseGf[t] = r.gf || 0; baseGd[t] = (r.gf || 0) - (r.gc || 0); });
-  const cell = scoreTables(fixtures);
   // De cada partido, los dos cortes del sorteo del desenlace (u < cut1: gana el local; u < cut2: empate)
   // y, de cada desenlace, dónde empieza su tramo (lo) y cuánto se estira para recorrer su tabla (scale).
   const home = new Uint8Array(M), away = new Uint8Array(M), cut1 = new Float64Array(M), cut2 = new Float64Array(M);
   const lo = new Float64Array(3 * M), scale = new Float64Array(3 * M);
-  // Lo que se espera al final, sin sortear: lo de start más lo de cada partido.
-  const expPts = Float64Array.from(basePts), expGd = Float64Array.from(baseGd), expGf = Float64Array.from(baseGf);
   fixtures.forEach((f, k) => {
-    const h = f.home, a = f.away;
-    home[k] = h;
-    away[k] = a;
+    home[k] = f.home;
+    away[k] = f.away;
     const sum = f.pHome + f.pDraw + f.pAway;
     const edges = [0, f.pHome / sum, (f.pHome + f.pDraw) / sum, 1];
     cut1[k] = edges[1];
@@ -240,11 +265,6 @@ export function simulate(teams, start, fixtures, { sims = SIM.sims, seed = SIM.s
       const q = 3 * k + r, pr = edges[r + 1] - edges[r];
       lo[q] = edges[r];
       scale[q] = pr > 0 ? STEPS / pr : 0;
-      let gh = 0, ga = 0;
-      for (let st = 0; st < STEPS; st += 1) { gh += cell[q * STEPS + st] >> 8; ga += cell[q * STEPS + st] & 255; }
-      gh /= STEPS; ga /= STEPS;
-      expPts[h] += pr * WIN[r]; expPts[a] += pr * LOSS[r];
-      expGf[h] += pr * gh; expGf[a] += pr * ga; expGd[h] += pr * (gh - ga); expGd[a] += pr * (ga - gh);
     }
   });
   const count = new Float64Array(T * T);
@@ -253,8 +273,9 @@ export function simulate(teams, start, fixtures, { sims = SIM.sims, seed = SIM.s
   // mulberry32 (el generador del banco de pruebas), escrito en cada sitio en que se sortea y con su estado
   // en una variable de esta función, en 32 bits con signo (los mismos bits, y los mismos números, que
   // con >>> 0). En una función aparte que lo cambiara, el estado viviría fuera, y cada sorteo crearía un
-  // número en memoria: 19/10/2026, en Node, 2.000 simulaciones de PG1, 23-26 ms con la función y 5-6 ms
-  // así (ver la cabecera).
+  // número en memoria. Medido el 19/10/2026 en Node (simulate entera, 2.000 simulaciones de PG1, la mediana
+  // de 100 vueltas tras 20 de calentamiento): unos 14 ms así frente a unos 21 ms con la función, un tercio
+  // menos; la primera vez, en un proceso nuevo, 59-68 ms con los dos (ver la cabecera).
   let state = seed | 0, z = 0;
   for (let s = 0; s < sims; s += 1) {
     pts.set(basePts); gd.set(baseGd); gf.set(baseGf);
@@ -288,15 +309,28 @@ export function simulate(teams, start, fixtures, { sims = SIM.sims, seed = SIM.s
     }
     for (let p = 0; p < T; p += 1) count[order[p] * T + p] += 1;
   }
+  return count;
+}
+
+/* La simulación del resto de la liga. teams: los nombres; start: [{ pts, gf, gc }] de cada uno, en su
+ * orden; fixtures: [{ home, away (índices en teams), pHome, pDraw, pAway, xgHome, xgAway }]. Las tablas de
+ * marcadores de cada partido (scoreTables), lo que se espera (expectations) y las simulaciones
+ * (placeCounts). Devuelve, por equipo y en el orden de teams, { team, pts, dg, gf, probs }: los puntos, la
+ * diferencia y los goles a favor que se esperan al final, calculados sin sortear nada, y probs, la parte
+ * de las simulaciones en que acaba en cada puesto, del 1.º al último. Determinista con la misma semilla. */
+export function simulate(teams, start, fixtures, { sims = SIM.sims, seed = SIM.seed } = {}) {
+  const T = teams.length;
+  const cell = scoreTables(fixtures);
+  const exp = expectations(start, fixtures, cell);
+  const count = placeCounts(start, fixtures, cell, { sims, seed });
   return teams.map((team, t) => ({
     team,
-    pts: expPts[t],
-    dg: expGd[t],
-    gf: expGf[t],
+    pts: exp.pts[t],
+    dg: exp.dg[t],
+    gf: exp.gf[t],
     probs: Float64Array.from({ length: T }, (_, p) => count[t * T + p] / sims),
   }));
 }
-
 /* El abanico de un equipo: los puestos seguidos más juntos, con el pronosticado `pos` dentro, en los que
  * acaba en al menos `mass` de las simulaciones; a igual anchura, el que más reúne y, después, el de más
  * arriba. { lo, hi, mass }, del 1.º al último. */
@@ -316,19 +350,13 @@ export function fanOf(probs, pos, mass) {
   return best || { lo: 1, hi: T, mass: 1 };
 }
 
-/* La proyección de un grupo con una clasificación de partida, la de la web o la del backtest:
- *   { sims, matches, rounds, rows: [{ team, pos, pts, dg, gf, lo, hi, mass, probs, played }] }
- * con las filas en el orden de la tabla final proyectada. start: [{ team, pts, gf, gc }], los equipos
- * que se clasifican (sin retirados); played(m): si el partido ya está en esa clasificación (no se
- * simula). Se simula cada partido del calendario que no está jugado, entre dos equipos de start, que no
- * es una copia de la importación ni lo da la app por retirado, anulado o suspendido, con su pronóstico:
- * el de la web (forecastMatch con todo el calendario) o, si la web no enseña ninguno, el mismo modelo
- * sin los mínimos (LOOSE) y con todo lo jugado. null si el grupo no lo admite (forecastApplies y liga),
- * sin PARAMS.minRounds jornadas jugadas o sin nada por jugar. */
-export function projection(group, {
-  start, played = scored, portalSeason = null, today = null, status = null, before = null, prueba = false,
-  sims = SIM.sims, seed = SIM.seed, fan = null,
-} = {}) {
+/* Lo que queda por jugar con una clasificación de partida (start: [{ team, pts, gf, gc }], los equipos
+ * que se clasifican, sin retirados; played(m): si el partido ya está en ella), sin pronosticar nada
+ * todavía: cada partido del calendario que no está jugado, entre dos equipos de start, que no es una copia
+ * de la importación ni lo da la app por retirado, anulado o suspendido. { rounds (playedRounds), index (el
+ * sitio de cada equipo en start), matches } o null si el grupo no lo admite (forecastApplies y liga), sin
+ * PARAMS.minRounds jornadas jugadas o sin nada por jugar. */
+function remaining(group, { start, played = scored, portalSeason = null, status = null, before = null, prueba = false }) {
   if (!group || group.kind !== 'league' || !forecastApplies(group, { portalSeason, prueba })) return null;
   if (!Array.isArray(start) || start.length < 2) return null;
   const rounds = playedRounds(group, { status, before });
@@ -336,28 +364,77 @@ export function projection(group, {
   const retired = retiredTeams(group);
   const copies = copiedMatches(group);
   const index = new Map(start.map((r, i) => [r.team, i]));
-  const fixtures = [];
+  const matches = [];
   for (const round of group.rounds || []) {
     for (const m of round.matches) {
       if (played(m) || !index.has(m.home) || !index.has(m.away)) continue;
       if (retired.has(m.home) || retired.has(m.away) || copies.has(m) || offByStatus(status, m)) continue;
-      // En el backtest, lo jugado después del corte lleva su marcador: se pronostica sin él.
-      const match = scored(m) ? { ...m, hs: null, as: null } : m;
-      const f = forecastOdds(group, match, { portalSeason, today, full: true, status, before, prueba })
-        || forecastOdds(group, { ...match, dateISO: null }, { portalSeason, status, before, prueba, params: LOOSE });
-      if (!f) continue;
-      fixtures.push({ home: index.get(m.home), away: index.get(m.away), pHome: f.pHome, pDraw: f.pDraw, pAway: f.pAway, xgHome: f.xgHome, xgAway: f.xgAway });
+      matches.push(m);
     }
   }
+  return matches.length ? { rounds, index, matches } : null;
+}
+
+/* Lo que no sortea nada (19/10/2026: la cifra de la ficha, que solo lleva el puesto y los puntos, no
+ * espera a las simulaciones): el pronóstico de cada partido que queda (remaining), el de la web
+ * (forecastOdds con todo el calendario) o, si la web no enseña ninguno, el mismo modelo sin los mínimos
+ * (LOOSE) y con todo lo jugado; sus tablas de marcadores; lo que se espera (expectations); y la tabla final
+ * proyectada, por puntos esperados (y diferencia y goles esperados para desempatar): cada puesto, de un
+ * solo equipo. { start, fixtures, cell, order (el índice en start de cada puesto), places: { matches,
+ * rounds, rows: [{ team, pos, pts, dg, gf, played }] } } o null (remaining; o ningún partido con
+ * pronóstico, que con dos jornadas jugadas no pasa: LOOSE no pide mínimos). */
+function prepare(group, { start, played = scored, portalSeason = null, today = null, status = null, before = null, prueba = false }) {
+  const left = remaining(group, { start, played, portalSeason, status, before, prueba });
+  if (!left) return null;
+  const fixtures = [];
+  for (const m of left.matches) {
+    // En el backtest, lo jugado después del corte lleva su marcador: se pronostica sin él.
+    const match = scored(m) ? { ...m, hs: null, as: null } : m;
+    const f = forecastOdds(group, match, { portalSeason, today, full: true, status, before, prueba })
+      || forecastOdds(group, { ...match, dateISO: null }, { portalSeason, status, before, prueba, params: LOOSE });
+    if (!f) continue;
+    fixtures.push({ home: left.index.get(m.home), away: left.index.get(m.away), pHome: f.pHome, pDraw: f.pDraw, pAway: f.pAway, xgHome: f.xgHome, xgAway: f.xgAway });
+  }
   if (!fixtures.length) return null;
-  const teams = start.map(r => r.team);
-  const out = simulate(teams, start, fixtures, { sims, seed });
-  const order = out.map((r, i) => i).sort((a, b) => out[b].pts - out[a].pts || out[b].dg - out[a].dg || out[b].gf - out[a].gf || a - b);
-  const rows = order.map((i, p) => {
-    const r = out[i];
-    return { ...r, pos: p + 1, ...fanOf(r.probs, p + 1, fan ?? fanMass(rounds)), played: playedBy(group, r.team, { status, before }) };
+  const cell = scoreTables(fixtures);
+  const exp = expectations(start, fixtures, cell);
+  const order = start.map((r, i) => i).sort((a, b) => exp.pts[b] - exp.pts[a] || exp.dg[b] - exp.dg[a] || exp.gf[b] - exp.gf[a] || a - b);
+  const rows = order.map((i, p) => ({
+    team: start[i].team, pos: p + 1, pts: exp.pts[i], dg: exp.dg[i], gf: exp.gf[i],
+    played: playedBy(group, start[i].team, { status, before }),
+  }));
+  return { start, fixtures, cell, order, places: { matches: fixtures.length, rounds: left.rounds, rows } };
+}
+
+/* Lo de prepare con las simulaciones (placeCounts): de cada fila, probs (la parte de las simulaciones en
+ * que acaba en cada puesto) y el abanico (fanOf, con la masa de fanMass o `fan`). */
+function drawn(prep, { sims = SIM.sims, seed = SIM.seed, fan = null } = {}) {
+  const { start, fixtures, cell, order, places } = prep;
+  const T = start.length;
+  const count = placeCounts(start, fixtures, cell, { sims, seed });
+  const mass = fan ?? fanMass(places.rounds);
+  const rows = places.rows.map((r, p) => {
+    const i = order[p];
+    const probs = Float64Array.from({ length: T }, (_, q) => count[i * T + q] / sims);
+    return { ...r, probs, ...fanOf(probs, r.pos, mass) };
   });
-  return { sims, matches: fixtures.length, rounds, rows };
+  return { sims, matches: places.matches, rounds: places.rounds, rows };
+}
+
+/* La proyección de un grupo con una clasificación de partida, la de la web o la del backtest:
+ *   { sims, matches, rounds, rows: [{ team, pos, pts, dg, gf, played, probs, lo, hi, mass }] }
+ * con las filas en el orden de la tabla final proyectada. start y played, los de remaining; las demás
+ * opciones, las de forecastMatch, y sims, seed y fan, los de las simulaciones. Con `draw: false`, sin
+ * simular: { matches, rounds, rows: [{ team, pos, pts, dg, gf, played }] }, el mismo puesto y los mismos
+ * puntos (prepare). null si el grupo no lo admite (forecastApplies y liga), sin PARAMS.minRounds jornadas
+ * jugadas o sin nada por jugar. */
+export function projection(group, {
+  start, played = scored, portalSeason = null, today = null, status = null, before = null, prueba = false,
+  sims = SIM.sims, seed = SIM.seed, fan = null, draw = true,
+} = {}) {
+  const prep = prepare(group, { start, played, portalSeason, today, status, before, prueba });
+  if (!prep) return null;
+  return draw ? drawn(prep, { sims, seed, fan }) : prep.places;
 }
 
 /* La clasificación de partida de la web: la que enseña (group.standings, ya por puntos: points_order de
@@ -369,12 +446,20 @@ export function standingsStart(group) {
 
 /* Si la clasificación de partida cuadra con el calendario, que es de donde salen los partidos que quedan:
  * cada equipo lleva en ella (pj) todos sus partidos con marcador contra equipos que siguen (sin copias ni
- * lo que la app da por retirado, anulado o suspendido) y, como mucho, además, los que jugó contra un
- * retirado (con marcador en el calendario o contra uno que el calendario ni trae, tantos como veces se
- * enfrenta a cada rival: Batán en PG2 de 2025-26) y lo anulado con marcador, que la federación puede contar
- * o no. Si no cuadra (la tabla de la federación va por delante o por detrás del calendario, hasta la pasada
- * siguiente del bot), un partido se contaría dos veces o ninguna, y la web no pronostica (19/10/2026). Una
- * fila sin pj no se comprueba. */
+ * lo que la app da por retirado, anulado o suspendido) y, como mucho, además, los que la federación puede
+ * contar o no: los que jugó contra un retirado (con marcador en el calendario o contra uno que el
+ * calendario ni trae, tantos como veces se enfrentan dos equipos del calendario, ida y vuelta incluidas:
+ * Batán en PG2 de 2025-26) y lo anulado con marcador. Si cuenta alguno de esos, tiene que ser con su
+ * marcador (revisión del 19/10/2026): los goles a favor y en contra de la fila, los de los suyos más los de
+ * tantos de esos como le sobran (explains). Si no, lo que sobra puede ser un partido que la tabla ya cuenta
+ * y el calendario aún no trae, y se contaría dos veces: en la tabla y en la simulación. En el archivo y en
+ * 2026-27, de 314 filas que cuentan alguno de esos, 312 cuadran así (las otras dos, Unión Viera en PGC3 de
+ * 2016-17 y Unión Carrizal en GC4 de benjamín de 2017-18, con un marcador que no es el del calendario: sin
+ * pronóstico, el lado seguro). Contra un retirado que el calendario no trae no se sabe el marcador, y ahí
+ * solo se cuentan los partidos. Si no cuadra (la tabla de la federación va por delante o por detrás del
+ * calendario, hasta la pasada siguiente del bot), un partido se contaría dos veces o ninguna, y la web no
+ * pronostica (19/10/2026). Una fila sin pj no se comprueba. */
+const SUBSETS = 16;
 export function startMatchesCalendar(group, { status = null } = {}) {
   const retired = retiredTeams(group);
   const copies = copiedMatches(group);
@@ -382,38 +467,101 @@ export function startMatchesCalendar(group, { status = null } = {}) {
   const inCalendar = new Set();
   const meetings = new Map();
   const need = new Map(), may = new Map();
-  const add = (map, team) => map.set(team, (map.get(team) || 0) + 1);
   for (const round of group.rounds || []) {
     for (const m of round.matches) {
       inCalendar.add(m.home); inCalendar.add(m.away);
-      add(meetings, `${m.home}\u0001${m.away}`);
-      if (!scored(m) || copies.has(m)) continue;
+      if (copies.has(m)) continue;
+      // Las veces que se enfrentan dos equipos, sin mirar quién es el local (ida y vuelta, dos).
+      const pair = m.home < m.away ? `${m.home}\u0001${m.away}` : `${m.away}\u0001${m.home}`;
+      meetings.set(pair, (meetings.get(pair) || 0) + 1);
+      if (!scored(m)) continue;
       const off = retired.has(m.home) || retired.has(m.away) || offByStatus(status, m);
-      for (const team of [m.home, m.away]) add(off ? may : need, team);
+      for (const [team, gf, gc] of [[m.home, m.hs, m.as], [m.away, m.as, m.hs]]) {
+        if (off) {
+          if (!may.has(team)) may.set(team, []);
+          may.get(team).push([gf, gc]);
+          continue;
+        }
+        const n = need.get(team) || { n: 0, gf: 0, gc: 0 };
+        n.n += 1; n.gf += gf; n.gc += gc;
+        need.set(team, n);
+      }
     }
   }
   const absent = (group.standings || []).filter(r => retired.has(r.team) && !inCalendar.has(r.team)).length;
   const perRival = Math.max(0, ...meetings.values());
-  return rows.every(r => r.pj == null || ((need.get(r.team) || 0) <= r.pj
-    && r.pj <= (need.get(r.team) || 0) + (may.get(r.team) || 0) + absent * perRival));
+  return rows.every((r) => {
+    if (r.pj == null) return true;
+    const n = need.get(r.team) || { n: 0, gf: 0, gc: 0 };
+    const list = may.get(r.team) || [];
+    const extra = r.pj - n.n;
+    if (extra < 0 || extra > list.length + absent * perRival) return false;
+    // Con un retirado que el calendario no trae, o más de SUBSETS de esos (nunca: 0-4), solo los partidos.
+    if (extra === 0 || absent > 0 || r.gf == null || r.gc == null || list.length > SUBSETS) return true;
+    return explains(list, extra, r.gf - n.gf, r.gc - n.gc);
+  });
 }
 
-/* La de la web: projection con la clasificación que enseña y lo jugado, lo que tiene marcador, si las dos
- * cuadran (startMatchesCalendar); si no, null. Una vez por grupo, por `status` y por la temporada del
- * portal y el día (PROJECTIONS): pintar otra vez no vuelve a simular. Las opciones, las de forecastMatch
- * en la web (forecastOptions de ui.js). */
+// Si `k` de los partidos de `list` ([goles a favor, en contra] de cada uno) suman justo `gf` y `gc`.
+function explains(list, k, gf, gc) {
+  for (let mask = 0; mask < 1 << list.length; mask += 1) {
+    let n = 0, f = 0, c = 0;
+    for (let i = 0; i < list.length; i += 1) if (mask & (1 << i)) { n += 1; f += list[i][0]; c += list[i][1]; }
+    if (n === k && f === gf && c === gc) return true;
+  }
+  return false;
+}
+
+/* La de la web: con la clasificación que enseña (standingsStart) y lo jugado, lo que tiene marcador, si las
+ * dos cuadran (startMatchesCalendar). Tres pasos, y cada uno, una vez por grupo, por `status` y por la
+ * temporada del portal y el día (PROJECTIONS: pintar otra vez no vuelve a calcular nada); cada pantalla pide
+ * solo lo que enseña (revisión del 19/10/2026: antes, la Tabla de cada grupo, la ficha y Mi equipo
+ * simulaban en su primer pintado, y en frío, con la CPU frenada 4×, la Tabla de PG1 tardaba casi 0,3 s más
+ * en salir):
+ * - projectionApplies, si lo hay, sin pronosticar nada (remaining): el enlace de la Tabla y el router;
+ * - projectPlaces, el puesto y los puntos, sin simular (prepare): la cifra de la ficha y de Mi equipo;
+ * - projectStandings, todo, con las simulaciones (drawn, sobre lo de projectPlaces): la tabla prevista.
+ * Las tres van a una: projectionApplies es false justo cuando las otras dos dan null (salvo un grupo en
+ * que ningún partido tenga pronóstico, que con dos jornadas jugadas no pasa: LOOSE). Las opciones, las de
+ * forecastMatch en la web (forecastOptions de ui.js). */
 const PROJECTIONS = new WeakMap();
-export function projectStandings(group, { portalSeason = null, today = null, status = null } = {}) {
-  if (!group || typeof group !== 'object') return null;
+function webEntry(group, { portalSeason = null, today = null, status = null } = {}) {
   if (!PROJECTIONS.has(group)) PROJECTIONS.set(group, new Map());
   const byStatus = PROJECTIONS.get(group);
   const st = typeof status === 'function' ? status : null;
   if (!byStatus.has(st)) byStatus.set(st, new Map());
   const memo = byStatus.get(st);
   const key = `${portalSeason}\u0001${today}`;
-  if (!memo.has(key)) {
-    memo.set(key, startMatchesCalendar(group, { status: st })
-      ? projection(group, { start: standingsStart(group), portalSeason, today, status: st }) : null);
-  }
+  if (!memo.has(key)) memo.set(key, { options: { portalSeason, today, status: st } });
   return memo.get(key);
+}
+
+export function projectionApplies(group, opts = {}) {
+  if (!group || typeof group !== 'object') return false;
+  const entry = webEntry(group, opts);
+  if (entry.applies === undefined) {
+    const { portalSeason, status } = entry.options;
+    entry.applies = startMatchesCalendar(group, { status })
+      && remaining(group, { start: standingsStart(group), portalSeason, status }) !== null;
+  }
+  return entry.applies;
+}
+
+function webPrepared(group, opts) {
+  if (!projectionApplies(group, opts)) return null;
+  const entry = webEntry(group, opts);
+  if (entry.prep === undefined) entry.prep = prepare(group, { start: standingsStart(group), ...entry.options });
+  return entry.prep ? entry : null;
+}
+
+export function projectPlaces(group, opts = {}) {
+  const entry = webPrepared(group, opts);
+  return entry ? entry.prep.places : null;
+}
+
+export function projectStandings(group, opts = {}) {
+  const entry = webPrepared(group, opts);
+  if (!entry) return null;
+  if (entry.full === undefined) entry.full = drawn(entry.prep);
+  return entry.full;
 }

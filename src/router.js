@@ -16,7 +16,7 @@ import { defaultCategory, myTeamIn, routeIsMine, sameClub } from './myteam.js';
 import { skeleton, errorScreen, routeNotice, routeTitle, updateTabbar } from './shell.js';
 import { alevinNeeds, normalizeTeamName, seasonNeeds } from './state.js';
 import { forecastOptions } from './ui.js';
-import { projectStandings } from './proyeccion.js';
+import { projectionApplies, standingsStart } from './proyeccion.js';
 
 // Destinos principales de la barra, por pantalla.
 const PRIMARY = { '': 'miequipo', jornada: 'jornada', tabla: 'tabla', explorar: 'explorar' };
@@ -208,14 +208,14 @@ function leagueParams(screen, raw, params, ctx) {
 }
 
 // La vista del pronóstico de la clasificación final (19/10/2026): solo en un grupo con pronóstico
-// (projectStandings de proyeccion.js, el mismo de la pantalla y una vez por grupo: lo que calcula aquí lo
-// pinta después sin volver a simular); si no, se quita con su `t`, sin aviso, como una vista que no
-// existe. `t`, el equipo resaltado, solo si está en la tabla prevista (no un retirado ni otro grupo); si
-// no, se quita. La redirección (null si vale).
+// (projectionApplies de proyeccion.js, la misma de la pantalla y una vez por grupo, sin pronosticar ni
+// simular nada: las simulaciones, solo al pintar la vista); si no, se quita con su `t`, sin aviso, como una
+// vista que no existe. `t`, el equipo resaltado, solo si está en la tabla prevista, que es la de la
+// clasificación de partida (standingsStart: no un retirado ni otro grupo); si no, se quita. La redirección
+// (null si vale).
 function projectionParams(raw, group, ctx) {
-  const p = group.standings.length ? projectStandings(group, forecastOptions(ctx)) : null;
-  if (!p) return redirect('tabla', omit(omit(raw, 'v'), 't'));
-  if (raw.t && !p.rows.some((row) => row.team === raw.t)) return redirect('tabla', omit(raw, 't'));
+  if (!group.standings.length || !projectionApplies(group, forecastOptions(ctx))) return redirect('tabla', omit(omit(raw, 'v'), 't'));
+  if (raw.t && !standingsStart(group).some((row) => row.team === raw.t)) return redirect('tabla', omit(raw, 't'));
   return null;
 }
 

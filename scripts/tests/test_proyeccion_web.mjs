@@ -10,23 +10,27 @@
 //   clasificación, el enlace «Ver el pronóstico de la clasificación final ›»;
 // - el router (projectionParams): la vista solo donde hay pronóstico, `t` (el equipo resaltado) solo con
 //   ella, y las dos, sin entrada en el historial, como las demás vistas.
+// Revisión del 19/10/2026: cada pantalla pide solo lo que enseña (la cabecera de src/proyeccion.js): el
+// enlace y el router, projectionApplies (sin pronosticar nada); la cifra, projectPlaces (sin simular); y solo
+// la vista, projectStandings (con las simulaciones). La tabla prevista nombra a los equipos como la
+// clasificación (no con el nombre corto).
 // render(ctx) es pura: se prueba sobre el HTML, con las fixtures congeladas (la temporada del portal es
 // 2025-26) y `today` inyectado. El modelo (src/proyeccion.js) tiene sus pruebas en test_proyeccion.mjs; aquí,
 // lo que se pinta, dónde, y dónde no se pinta nada: benjamín, una temporada pasada o terminada, un retirado,
-// un equipo que aún no ha jugado, antes de dos jornadas y con una clasificación que no cuadra con el
-// calendario.
+// un equipo que aún no ha jugado o que no está en la tabla, antes de dos jornadas y con una clasificación que
+// no cuadra con el calendario.
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
+import { readFileSync } from 'node:fs';
 import { currentAt } from './fixtures/rediseno/simulate.mjs';
 import { ctxFor, datasetsFor, cssRules, PORTAL_SEASON } from './fixtures/rediseno/screens.mjs';
 import { screen as home } from '../../src/screen-home.js';
 import { screen as equipo } from '../../src/screen-equipo.js';
 import { screen as tabla, projectionHref, PROJECTION_VIEW } from '../../src/screen-tabla.js';
 import { historyMode, resolveParams } from '../../src/router.js';
-import { teamShort } from '../../src/model.js';
 import { parseRoute, routeHref, teamHref } from '../../src/links.js';
 import { forecastOptions } from '../../src/ui.js';
-import { projectStandings, startMatchesCalendar } from '../../src/proyeccion.js';
+import { projectPlaces, projectStandings, projectionApplies, startMatchesCalendar } from '../../src/proyeccion.js';
 
 const s = (h) => String(h);
 const text = (h) => s(h).replace(/<[^>]*>/g, '').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
@@ -144,17 +148,52 @@ test('sin cifra: benjamín, otra temporada, la temporada terminada, un retirado 
   assert.equal(projectStandings({ ...group, season: '2024-2025' }, forecastOptions(ctx)), null);
 });
 
-test('un equipo que aún no ha jugado: sin su cifra (como el pronóstico de sus partidos); los demás la tienen, y él va en la tabla', () => {
-  // El 20/10/2025, con los partidos de Veteranos de la 1 y la 2 sin resultado (aplazados).
+test('un equipo que aún no ha jugado: sin su cifra (como el pronóstico de sus partidos), aunque la ficha lleve «La temporada en cifras»; él va en la tabla', () => {
+  // Sin ningún resultado (los de la 1 y la 2, aplazados), la ficha ni siquiera lleva «La temporada en
+  // cifras» (figuresBlock pide resultados): ahí no se prueba el guarda.
   const noVeteranos = (raw) => {
     for (const rows of Object.values(raw.history.PG2)) {
       for (const row of rows) if (row[1] === 'Veteranos' || row[2] === 'Veteranos') { row[3] = null; row[4] = null; }
     }
   };
-  const opts = at(TODAY, dayRaw(TODAY, noVeteranos));
-  assert.equal(figureOf(ficha('Veteranos', opts)), null);
+  assert.doesNotMatch(ficha('Veteranos', at(TODAY, dayRaw(TODAY, noVeteranos))), /La temporada en cifras/);
+  // Con sus dos partidos de mesa (0-3 y 3-0 sin hora): están en el calendario y en la tabla, y la ficha
+  // lleva «La temporada en cifras», pero el pronóstico no los cuenta (trainingFor), así que no ha jugado
+  // ninguno de los que cuentan (PARAMS.minPlayed): sin cifra.
+  const desk = (raw) => {
+    for (const rows of Object.values(raw.history.PG2)) {
+      for (const row of rows) {
+        if ((row[1] === 'Veteranos' || row[2] === 'Veteranos') && row[3] != null) {
+          row[3] = row[1] === 'Veteranos' ? 0 : 3; row[4] = row[1] === 'Veteranos' ? 3 : 0; row[6] = null;
+        }
+      }
+    }
+  };
+  const opts = at(TODAY, dayRaw(TODAY, desk));
+  const vet = projOf(opts).rows.find((r) => r.team === 'Veteranos');
+  assert.equal(vet.played, 0);
+  const out = ficha('Veteranos', opts);
+  assert.match(out, /La temporada en cifras/);
+  assert.equal(figureOf(out), null);
   assert.ok(figureOf(ficha('Las Mesas Hu.', opts)));
   assert.match(blockOf(table({ v: 'pronostico' }, opts)), /<span class="st-name">Veteranos<\/span>/);
+});
+
+test('un equipo con resultados que no está en la clasificación: su ficha lleva «La temporada en cifras», sin cifra; ni en la tabla prevista', () => {
+  // Veteranos fuera de la tabla de la federación (como uno que la tabla ya no lista), con sus resultados en
+  // el calendario: no está en la clasificación de partida, ni en la tabla prevista.
+  const raw = dayRaw();
+  const pg2 = raw.prebenjamin.find((g) => g.id === 'PG2');
+  pg2.standings = pg2.standings.filter((r) => r[1] !== 'Veteranos').map((r, i) => [i + 1, ...r.slice(1)]);
+  const opts = at(TODAY, raw);
+  const p = projOf(opts);
+  assert.ok(p);
+  assert.ok(!p.rows.some((r) => r.team === 'Veteranos'));
+  const out = ficha('Veteranos', opts);
+  assert.match(out, /La temporada en cifras/);
+  assert.equal(figureOf(out), null);
+  assert.ok(figureOf(ficha('Las Mesas Hu.', opts)));
+  assert.doesNotMatch(blockOf(table({ v: 'pronostico' }, opts)), /Veteranos/);
 });
 
 test('con una clasificación que no cuadra con el calendario (la de las fixtures, la del final): ni cifra ni vista ni enlace', () => {
@@ -185,7 +224,8 @@ test('la vista del pronóstico: la tabla prevista de toda la liga, sin el select
   assert.match(block, /^<section class="block"><div class="block-head"><h2 class="block-title">Pronóstico de la clasificación final<\/h2><p class="block-context">estimación<\/p><\/div><div class="box"><table class="standings">/);
   const p = projOf();
   // Toda la liga (sin CD Batán, retirado), en su orden, con las clases de la clasificación: el puesto, el
-  // escudo y el nombre corto con el enlace a su ficha, los puntos y el abanico; sin `t`, mi equipo resaltado.
+  // escudo y el nombre (el de la clasificación) con el enlace a su ficha, los puntos y el abanico; sin `t`,
+  // mi equipo resaltado.
   const rows = [...block.matchAll(/<tr( class="is-mine")?><td class="st-pos">(\d+)<\/td><th scope="row" class="st-team"><a class="st-link" href="([^"]*)">.*?<span class="st-name">([^<]*)<\/span><\/a>(?:<span class="vh"> \(([^)]*)\)<\/span>)?<\/th><td class="st-pts">(\d+)<\/td><td class="st-fan">([^<]*)<\/td><\/tr>/g)];
   assert.equal(p.rows.length, 14, 'los 15 de la tabla menos CD Batán');
   assert.equal(rows.length, p.rows.length);
@@ -194,7 +234,7 @@ test('la vista del pronóstico: la tabla prevista de toda la liga, sin el select
     const [, mine, pos, href, name, hidden, pts, fan] = rows[i];
     assert.equal(Number(pos), r.pos);
     assert.equal(href, amp(teamHref(PORTAL_SEASON, 'PG2', r.team)));
-    assert.equal(name, amp(teamShort(r.team)));
+    assert.equal(name, amp(r.team));
     assert.equal(Number(pts), Math.round(r.pts));
     assert.equal(fan, r.lo === r.hi ? `${r.lo}.º` : `${r.lo}.º–${r.hi}.º`);
     assert.ok(r.lo <= r.pos && r.pos <= r.hi);
@@ -205,8 +245,29 @@ test('la vista del pronóstico: la tabla prevista de toda la liga, sin el select
   assert.match(block, /<th scope="col" class="st-pos"><abbr title="Puesto pronosticado">#<\/abbr><\/th><th scope="col" class="st-team">Equipo<\/th><th scope="col" class="st-pts"><abbr title="Puntos previstos">Pts<\/abbr><\/th><th scope="col" class="st-fan"><abbr title="Puestos en que acaba 8 de cada 10 veces">Entre<\/abbr><\/th>/);
   // Y de dónde sale, en una nota.
   assert.match(block, /<\/div><p class="notice">Con el pronóstico de cada partido que queda: 2\.000 simulaciones del resto de la liga, que se rehacen con cada resultado nuevo\. «Entre»: los puestos en que acaba cada equipo 8 de cada 10 veces \(comprobado con temporadas pasadas\)\. Es una estimación, no un resultado\.<\/p><\/section>$/);
+  // Los mismos nombres que la clasificación de la vista de por defecto («AD Huracán», no «Huracán»): al
+  // cambiar de vista, los equipos se llaman igual.
+  const names = (h) => [...h.matchAll(/<span class="st-name">([^<]*)<\/span>/g)].map((m) => m[1]).sort();
+  const standing = s(table({})).match(/<h2 class="block-title">Clasificación<\/h2>[\s\S]*?<\/table>/)[0];
+  assert.deepEqual(names(block), names(standing).filter((n) => n !== 'CD Batán'));
+  assert.ok(names(block).includes('AD Huracán'));
   // La misma tabla, una sola vez por grupo: el mismo pintado da lo mismo.
   assert.equal(table({ v: 'pronostico' }), out);
+});
+
+test('el abanico de un solo puesto: «3.º», sin guion (avanzada la temporada)', () => {
+  // El 2/2/2026, con 13 jornadas jugadas, Acodetti acaba 3.º en más de 8 de cada 10 simulaciones (fanMass).
+  const opts = at('2026-02-02');
+  const p = projOf(opts);
+  const one = p.rows.filter((r) => r.lo === r.hi);
+  assert.ok(one.length >= 1, 'algún equipo con un solo puesto');
+  const block = blockOf(table({ v: 'pronostico' }, opts));
+  for (const r of one) {
+    assert.match(block, new RegExp(`<span class="st-name">${r.team}</span></a>(?:<span class="vh"> \\([^)]*\\)</span>)?</th><td class="st-pts">\\d+</td><td class="st-fan">${r.lo}\\.º</td>`), r.team);
+  }
+  const acodetti = p.rows.find((r) => r.team === 'Acodetti');
+  assert.deepEqual([acodetti.lo, acodetti.hi], [3, 3]);
+  assert.match(block, /<span class="st-name">Acodetti<\/span><\/a><\/th><td class="st-pts">\d+<\/td><td class="st-fan">3\.º<\/td>/);
 });
 
 test('la vista del pronóstico con t: la fila de ese equipo resaltada («este equipo»), solo ella; con mi equipo, «mi equipo»', () => {
@@ -214,7 +275,7 @@ test('la vista del pronóstico con t: la fila de ese equipo resaltada («este eq
   const mine = blockOf(table({ v: 'pronostico' }));
   const huracan = blockOf(table({ v: 'pronostico', t: 'AD Huracán' }));
   assert.equal((huracan.match(/class="is-mine"/g) || []).length, 1);
-  assert.match(huracan, /<tr class="is-mine"><td class="st-pos">\d+<\/td><th scope="row" class="st-team"><a class="st-link" href="[^"]*AD%20Hurac%C3%A1n">.*?<span class="st-name">Huracán<\/span><\/a><span class="vh"> \(este equipo\)<\/span>/);
+  assert.match(huracan, /<tr class="is-mine"><td class="st-pos">\d+<\/td><th scope="row" class="st-team"><a class="st-link" href="[^"]*AD%20Hurac%C3%A1n">.*?<span class="st-name">AD Huracán<\/span><\/a><span class="vh"> \(este equipo\)<\/span>/);
   assert.equal(plain(huracan), plain(mine), 'las filas, las mismas salvo el resaltado');
   assert.equal(blockOf(table({ v: 'pronostico', t: 'Las Mesas Hu.' })), mine);
   // Un `t` que no está en la tabla (un retirado): mi equipo, como sin él.
@@ -243,6 +304,43 @@ test('donde no hay pronóstico, v=pronostico es la vista por defecto y no hay en
   const done = at('2026-09-23', currentAt('2026-09-23'));
   assert.equal(table({ v: 'pronostico' }, done), table({}, done));
   assert.doesNotMatch(table({}, done), /tabla-switch/);
+});
+
+test('cada pantalla pide solo lo que enseña: el enlace y el router, projectionApplies; la cifra, projectPlaces; las simulaciones, solo la vista', () => {
+  // Las tres van a una: projectionApplies es true justo cuando projectPlaces y projectStandings dan algo, y
+  // las dos dan el mismo puesto y los mismos puntos.
+  const cases = [
+    ['PG2 del día', at(), 'PG2', true],
+    ['una sola jornada', at('2025-10-13'), 'PG2', false],
+    ['terminada', at('2026-09-23', currentAt('2026-09-23')), 'PG2', false],
+    ['no cuadra', { today: TODAY, datasets: datasetsFor({ current: currentAt(TODAY) }) }, 'PG2', false],
+    ['benjamín', at(), 'FF5', false],
+  ];
+  for (const [label, opts, id, want] of cases) {
+    const ctx = ctxFor('tabla', {}, opts);
+    const group = ctx.model.group(PORTAL_SEASON, id);
+    const o = forecastOptions(ctx);
+    assert.equal(projectionApplies(group, o), want, label);
+    assert.equal(projectPlaces(group, o) !== null, want, label);
+    assert.equal(projectStandings(group, o) !== null, want, label);
+  }
+  const ctx = ctxFor('tabla', {}, at());
+  const group = ctx.model.group(PORTAL_SEASON, 'PG2');
+  const places = projectPlaces(group, forecastOptions(ctx));
+  const full = projectStandings(group, forecastOptions(ctx));
+  assert.equal(projectPlaces(group, forecastOptions(ctx)), places, 'una vez por grupo');
+  assert.deepEqual(full.rows.map(({ team, pos, pts, dg, gf, played }) => ({ team, pos, pts, dg, gf, played })), places.rows);
+  assert.ok(places.rows.every((r) => !('probs' in r) && !('lo' in r)), 'sin simular');
+  assert.deepEqual([places.matches, places.rounds], [full.matches, full.rounds]);
+  // En el código: la cifra (team-view.js) y el router no llaman a projectStandings; la Tabla, solo en su
+  // vista.
+  const src = (f) => readFileSync(new URL(`../../src/${f}`, import.meta.url), 'utf8');
+  assert.doesNotMatch(src('team-view.js'), /projectStandings/);
+  assert.match(src('team-view.js'), /projectPlaces\(group, forecastOptions\(ctx\)\)/);
+  assert.doesNotMatch(src('router.js'), /projectStandings|projectPlaces/);
+  assert.match(src('router.js'), /projectionApplies\(group, forecastOptions\(ctx\)\)/);
+  const calls = [...src('screen-tabla.js').matchAll(/^.*projectStandings\(.*$/gm)].map((m) => m[0].trim());
+  assert.deepEqual(calls, ['const projection = applies && params.v === PROJECTION_VIEW ? projectStandings(group, options) : null;']);
 });
 
 // ── El router: la vista y `t` ───────────────────────────────────────────

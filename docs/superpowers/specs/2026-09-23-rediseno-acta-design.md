@@ -169,7 +169,7 @@ La ruta vive en el hash con forma `#/<pantalla>?<parámetros>`. No hay modales: 
 
 Maquetas: `4-acta-roja.png` (estado A) y `6-1-pretemporada.png` (estado D). El estado lo decide `homeState()` (§5.6), que se **evalúa en este orden**. Solo cuentan los partidos de liga que no son contra retirados (§5.3), y el próximo partido es siempre el primer partido en estado `pendiente`.
 
-*(Nota: desde octubre de 2026, debajo de lo de cada estado van la evolución de puntos, la plantilla, la trayectoria y el calendario completo de la ficha (§4.6), en su orden; véase «Lo que cambió al construirlo», punto 13.)*
+*(Nota: desde octubre de 2026, debajo de lo de cada estado van la evolución de puntos, la plantilla, la trayectoria y el calendario completo de la ficha (§4.6), en su orden; véase «Lo que cambió al construirlo», punto 13. La evolución de puntos se quitó el 19/10/2026; véanse los puntos 14 y 15.)*
 
 **E. Elegir equipo.**
 - Cuándo: `resolveMyTeam` devuelve `ask` (§6.3).
@@ -295,7 +295,7 @@ Maqueta: `5-3-partido.png`.
 
 ### 4.6 Equipo (cualquier equipo)
 
-Mismo esqueleto que Mi equipo, con los estados A, B, C o D; el D sin la caja de la temporada siguiente. Además: *(Nota: desde octubre de 2026, Mi equipo también lleva el calendario, la evolución de puntos, la plantilla y la trayectoria; a la ficha solo le quedan «‹», «Hacer mi equipo» y «Vistos hace poco»; véase «Lo que cambió al construirlo», punto 13.)*
+Mismo esqueleto que Mi equipo, con los estados A, B, C o D; el D sin la caja de la temporada siguiente. Además: *(Nota: desde octubre de 2026, Mi equipo también lleva el calendario, la evolución de puntos, la plantilla y la trayectoria; a la ficha solo le quedan «‹», «Hacer mi equipo» y «Vistos hace poco»; véase «Lo que cambió al construirlo», punto 13. La evolución de puntos se quitó el 19/10/2026; véanse los puntos 14 y 15.)*
 - **«Hacer mi equipo»** arriba (salvo si ya lo es).
 - **Calendario completo** del equipo (ancla `#calendario`), con cada partido y su estado (§5.3), y el botón «Calendario del equipo (.ics)» con todos los partidos de la temporada.
 - **Evolución de puntos:** gráfica de línea sólida en tinta, sin puntos ni trazos discontinuos (preferencia del usuario), jornada a jornada, calculada con el modelo. *(Nota: quitada el 19/10/2026 a petición del usuario; en su lugar, el pronóstico de la clasificación final, que es una cifra de «La temporada en cifras» con su tabla en la Tabla; véase «Lo que cambió al construirlo», puntos 14 y 15.)*
@@ -357,7 +357,7 @@ Maqueta: `5-4-explorar.png`.
 - **Mi equipo en dos columnas.**
   - Izquierda: próximo o último partido, Últimos cinco y calendario completo del equipo.
   - Derecha: clasificación, goleadores y cifras.
-  - En móvil, el calendario completo no está en la portada, sino en «calendario completo». *(Nota: ya no es así: en móvil va al final de la portada, y la derecha suma la evolución de puntos, la plantilla y la trayectoria; véase «Lo que cambió al construirlo», punto 13.)*
+  - En móvil, el calendario completo no está en la portada, sino en «calendario completo». *(Nota: ya no es así: en móvil va al final de la portada, y la derecha suma la evolución de puntos, la plantilla y la trayectoria; véase «Lo que cambió al construirlo», punto 13. La evolución de puntos se quitó el 19/10/2026; véanse los puntos 14 y 15.)*
 - **Tabla:** todas las columnas. **Jornada:** los días en dos columnas si caben.
 - **Tableta (769–1023 px):** diseño móvil centrado a 640 px, con la barra inferior.
 
@@ -379,7 +379,7 @@ Maqueta: `5-4-explorar.png`.
 |---|---|
 | Top 30 goleadores globales | Récords (30) y `#/goleadores` (lista completa) |
 | Comparativa de prebenjamín por puntos por partido | «Comparar grupos» en `#/ligas` |
-| Evolución de puntos de la ficha de equipo | Ficha de equipo (§4.6) *(Nota: y Mi equipo; véase «Lo que cambió al construirlo», punto 13.)* |
+| Evolución de puntos de la ficha de equipo | Quitada el 19/10/2026; en su lugar, el pronóstico de la clasificación final (véase «Lo que cambió al construirlo», punto 15). *(Hasta entonces, en la ficha de equipo (§4.6) y en Mi equipo; punto 13.)* |
 | `.ics` de la temporada del equipo | Ficha de equipo (§4.6) *(Nota: y Mi equipo; véase «Lo que cambió al construirlo», punto 13.)* |
 | `.ics` de la jornada | *Calendario del grupo* (solo partidos futuros) |
 | Por isla | Explorar → Ligas (filtrado por isla) |
@@ -842,3 +842,4 @@ Adenda del plan B5 (27/09/2026), al cerrar el rediseño. El diseño de arriba es
     - bajo la clasificación de un grupo con pronóstico, «Ver el pronóstico de la clasificación final ›»;
     - el router (`projectionParams`): la vista solo donde hay pronóstico (si no, se quita con su `t`, sin aviso, como una vista que no existe); `t`, solo con ella y si está en la tabla prevista; las dos, en `REPLACE_ONLY` de Tabla, como las demás vistas (de la ficha a la tabla prevista, una entrada; de ella a la clasificación, ninguna).
     - Además, el generador de `simulate` va escrito en línea, por velocidad (los mismos números: huellas en `test_proyeccion.mjs` y el backtest, byte a byte).
+    - Revisión del mismo día: cada pantalla pide a `src/proyeccion.js` solo lo que enseña, porque simular en el primer pintado de la Tabla de cada grupo, de la ficha y de Mi equipo costaba, en frío y con la CPU frenada 4×, casi 0,3 s en la Tabla de PG1: el enlace de la Tabla y el router, `projectionApplies` (si lo hay, sin pronosticar nada); la cifra, `projectPlaces` (el puesto y los puntos, sin simular); y solo la tabla prevista, `projectStandings` (con las simulaciones). La tabla prevista nombra a los equipos como la clasificación («AD Huracán», no «Huracán»), para que no cambien de nombre al cambiar de vista. Y `startMatchesCalendar` mira también los goles de lo que la federación puede contar o no (un partido que la tabla ya cuenta y el calendario aún no trae se contaba dos veces), y cuenta las veces que se enfrentan dos equipos sin mirar quién es el local (ida y vuelta, dos).

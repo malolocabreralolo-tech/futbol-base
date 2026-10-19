@@ -21,7 +21,7 @@ import {
 import { teamScorers } from './state.js';
 import { projectionHref, zonesText } from './screen-tabla.js';
 import { PARAMS, awaitsFirstMatch, forecastMatch } from './pronostico.js';
-import { projectStandings } from './proyeccion.js';
+import { projectPlaces } from './proyeccion.js';
 
 // Fechas y horas siempre en Canarias (spec §8). Las fechas de partido son días de calendario
 // ('AAAA-MM-DD') y se escriben con los nombres de links.js, sin los datos de idioma del motor (B9);
@@ -187,13 +187,14 @@ const pointsPhrase = (pts) => {
 /* La primera cifra de «La temporada en cifras», donde hay pronóstico de la clasificación final (19/10/2026;
  * el usuario: «la temporada en cifras, ahí me pones pronóstico quinto, mis 55 puntos, y luego si pincho
  * ahí […] ver esa tabla»): «Pronóstico final», el puesto del equipo en la tabla final proyectada
- * (projectStandings de proyeccion.js, con las opciones de la web) y los puntos que se esperan. Toda la
+ * (projectPlaces de proyeccion.js, con las opciones de la web: sin simular, que el puesto y los puntos no
+ * lo necesitan; las simulaciones, solo en la tabla prevista) y los puntos que se esperan. Toda la
  * cifra es un enlace a esa tabla, la vista del pronóstico de la Tabla (projectionHref de screen-tabla.js),
  * con su fila resaltada. Donde lo hay: una liga de prebenjamín de la temporada del portal con dos
  * jornadas jugadas y algo por jugar; y si el equipo está en la tabla (no un retirado) y ya ha jugado
  * PARAMS.minPlayed partidos, como el pronóstico de los suyos. Si no, nada. */
 export function projectionFigure(ctx, group, name) {
-  const p = projectStandings(group, forecastOptions(ctx));
+  const p = projectPlaces(group, forecastOptions(ctx));
   const me = p && p.rows.find(r => r.team === name);
   if (!me || me.played < PARAMS.minPlayed) return '';
   return html`<a class="proj-figure" href="${projectionHref(group, name)}"><span class="cell-label">Pronóstico final<span class="vh">: </span></span><span class="proj-figure-main"><b class="proj-figure-pos">${me.pos}.º</b><span class="proj-figure-pts"><span class="vh">, </span>${pointsPhrase(me.pts)}</span><span class="proj-figure-more"><span class="vh">. </span>Ver la tabla prevista<span aria-hidden="true"> ›</span></span></span></a>`;

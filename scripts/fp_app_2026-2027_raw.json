@@ -9,11 +9,11 @@
   "2026-10-16": "2026-10-17T07:12:39",
   "2026-10-17": "2026-10-18T00:21:08",
   "2026-10-18": "2026-10-19T01:46:41",
-  "2026-10-20": "2026-10-20T17:21:59"
+  "2026-10-20": "2026-10-20T19:17:05"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -166,7 +166,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -295,7 +295,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -424,7 +424,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -577,7 +577,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -730,7 +730,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -856,7 +856,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1009,7 +1009,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1138,7 +1138,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1267,7 +1267,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1415,7 +1415,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1544,7 +1544,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1697,7 +1697,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1725,12 +1725,12 @@
      "id": 1262,
      "nombre": "Real Sporting San José",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
+     "pe": "0",
+     "pg": "2",
      "pj": 2,
      "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 6,
+     "pp": "0",
+     "puntos": "6",
      "racha_ultimos_5": [
       "V",
       "V"
@@ -1739,43 +1739,23 @@
     },
     {
      "banderas": "bandera-roja-azul.png",
-     "dg": "10",
+     "dg": "15",
      "equipacion": "2026-roja-azules-azules.png",
      "escudo": "100x100sanjuan.png",
-     "gc": "0",
-     "gf": "10",
+     "gc": "4",
+     "gf": "19",
      "id": 1261,
      "nombre": "San Juan Tres Palmas",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 1,
+     "pe": "0",
+     "pg": "2",
+     "pj": 2,
      "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 3,
+     "pp": "0",
+     "puntos": "6",
      "racha_ultimos_5": [
+      "V",
       "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-azulmarina.png",
-     "dg": "-8",
-     "equipacion": "2026-azulmarinoham-azulmarino-azulmarinas.png",
-     "escudo": "100x100universitario.png",
-     "gc": "9",
-     "gf": "1",
-     "id": 1265,
-     "nombre": "CD Julio Suárez",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 1,
-     "posicion_anterior": 4,
-     "pp": 1,
-     "puntos": 0,
-     "racha_ultimos_5": [
-      "D"
      ],
      "sanciones": 0
     },
@@ -1789,13 +1769,35 @@
      "id": 1264,
      "nombre": "CD Miguel León",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 1,
      "posicion_anterior": 5,
-     "pp": 1,
-     "puntos": 0,
+     "pp": "1",
+     "puntos": "0",
      "racha_ultimos_5": [
+      "D"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-azulmarina.png",
+     "dg": "-13",
+     "equipacion": "2026-azulmarinoham-azulmarino-azulmarinas.png",
+     "escudo": "100x100universitario.png",
+     "gc": "18",
+     "gf": "5",
+     "id": 1265,
+     "nombre": "CD Julio Suárez",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "0",
+     "pj": 2,
+     "posicion_anterior": 4,
+     "pp": "2",
+     "puntos": "0",
+     "racha_ultimos_5": [
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -1810,12 +1812,12 @@
      "id": 1263,
      "nombre": "Pedro Hidalgo",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 1,
      "posicion_anterior": 3,
-     "pp": 1,
-     "puntos": 0,
+     "pp": "1",
+     "puntos": "0",
      "racha_ultimos_5": [
       "D"
      ],
@@ -1824,7 +1826,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1953,7 +1955,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2106,7 +2108,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2259,7 +2261,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2412,7 +2414,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2565,7 +2567,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2692,7 +2694,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2821,7 +2823,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2950,7 +2952,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3103,7 +3105,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3256,7 +3258,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3409,7 +3411,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -3714,7 +3716,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4014,7 +4016,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4319,7 +4321,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-20T17:21:59",
+   "fetched": "2026-10-20T19:17:05",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -10108,15 +10110,15 @@
    "escudo_local": "100x100universitario.png",
    "escudo_visitante": "100x100sanjuan.png",
    "estadio": "Nicolás Sánchez",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-20 17:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 4,
+   "goles_visitante": 9,
    "hora_inicio": null,
    "id": 18878,
    "id_local": 1265,
@@ -10124,7 +10126,7 @@
    "jornada": 2,
    "liga_id": 134,
    "local": "CD Julio Suárez",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
    "pen_local": "",
@@ -10134,9 +10136,11 @@
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
+    "D",
     "D"
    ],
    "racha_visitante": [
+    "V",
     "V"
    ],
    "tecnico_local": null,

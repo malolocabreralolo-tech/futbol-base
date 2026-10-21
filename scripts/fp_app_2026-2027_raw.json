@@ -10,11 +10,11 @@
   "2026-10-17": "2026-10-18T00:21:08",
   "2026-10-18": "2026-10-19T01:46:41",
   "2026-10-20": "2026-10-21T00:56:53",
-  "2026-10-21": "2026-10-21T10:32:36"
+  "2026-10-21": "2026-10-21T19:58:04"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -167,7 +167,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -296,7 +296,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -425,7 +425,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -461,6 +461,29 @@
      "puntos": 6,
      "racha_ultimos_5": [
       "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-GranCanaria.jpg",
+     "dg": "1",
+     "equipacion": "2026-amarillaazul-azul-amarillas.png",
+     "escudo": "100x100costayala.png",
+     "gc": "13",
+     "gf": "14",
+     "id": 1206,
+     "nombre": "Costa Ayala B",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 2,
+     "pj": 3,
+     "posicion_anterior": 5,
+     "pp": 1,
+     "puntos": 6,
+     "racha_ultimos_5": [
+      "V",
+      "D",
       "V"
      ],
      "sanciones": 0
@@ -511,44 +534,23 @@
     },
     {
      "banderas": "bandera-nrgra-gc.png",
-     "dg": "-1",
+     "dg": "-4",
      "equipacion": "2026-negrahomblanco-negro-negrasblanca.png",
      "escudo": "angosturaEscudo.png",
-     "gc": "11",
-     "gf": "10",
+     "gc": "18",
+     "gf": "14",
      "id": 1205,
      "nombre": "Atl. Angostura B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
-     "pj": 2,
+     "pj": 3,
      "posicion_anterior": 4,
-     "pp": 1,
+     "pp": 2,
      "puntos": 3,
      "racha_ultimos_5": [
       "V",
-      "D"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-GranCanaria.jpg",
-     "dg": "-2",
-     "equipacion": "2026-amarillaazul-azul-amarillas.png",
-     "escudo": "100x100costayala.png",
-     "gc": "9",
-     "gf": "7",
-     "id": 1206,
-     "nombre": "Costa Ayala B",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 2,
-     "posicion_anterior": 5,
-     "pp": 1,
-     "puntos": 3,
-     "racha_ultimos_5": [
-      "V",
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -578,7 +580,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -731,7 +733,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -857,7 +859,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1010,7 +1012,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1139,7 +1141,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1268,7 +1270,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1416,7 +1418,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1545,7 +1547,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1698,7 +1700,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 4,
@@ -1827,7 +1829,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1956,7 +1958,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2109,7 +2111,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2262,7 +2264,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2415,7 +2417,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2568,7 +2570,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2695,7 +2697,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2824,7 +2826,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2953,7 +2955,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3106,7 +3108,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3259,7 +3261,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3412,7 +3414,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -3717,7 +3719,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4017,7 +4019,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4322,7 +4324,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-21T10:32:36",
+   "fetched": "2026-10-21T19:58:04",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -4350,12 +4352,12 @@
      "id": 1375,
      "nombre": "CD Tablero",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
+     "pe": "0",
+     "pg": "2",
      "pj": 2,
      "posicion_anterior": 4,
-     "pp": 0,
-     "puntos": 6,
+     "pp": "0",
+     "puntos": "6",
      "racha_ultimos_5": [
       "V",
       "V"
@@ -4372,12 +4374,12 @@
      "id": 1371,
      "nombre": "CD Doramas",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 1,
+     "pe": "1",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 4,
+     "pp": "0",
+     "puntos": "4",
      "racha_ultimos_5": [
       "V",
       "E"
@@ -4394,12 +4396,12 @@
      "id": 1379,
      "nombre": "Maspa Training",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 1,
+     "pe": "1",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 4,
+     "pp": "0",
+     "puntos": "4",
      "racha_ultimos_5": [
       "V",
       "E"
@@ -4416,12 +4418,12 @@
      "id": 1372,
      "nombre": "UD Vecindario",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 1,
+     "pe": "1",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 3,
-     "pp": 0,
-     "puntos": 4,
+     "pp": "0",
+     "puntos": "4",
      "racha_ultimos_5": [
       "V",
       "E"
@@ -4438,12 +4440,12 @@
      "id": 1368,
      "nombre": "San Pedro Mártir",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 10,
-     "pp": 1,
-     "puntos": 3,
+     "pp": "1",
+     "puntos": "3",
      "racha_ultimos_5": [
       "D",
       "V"
@@ -4460,12 +4462,12 @@
      "id": 1369,
      "nombre": "UD Balos",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 9,
-     "pp": 1,
-     "puntos": 3,
+     "pp": "1",
+     "puntos": "3",
      "racha_ultimos_5": [
       "D",
       "V"
@@ -4482,12 +4484,12 @@
      "id": 1374,
      "nombre": "Unión Carrizal",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 1,
      "posicion_anterior": 5,
-     "pp": 0,
-     "puntos": 3,
+     "pp": "0",
+     "puntos": "3",
      "racha_ultimos_5": [
       "V"
      ],
@@ -4503,12 +4505,12 @@
      "id": 1377,
      "nombre": "CD Ingenio",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 0,
+     "pe": "1",
+     "pg": "0",
      "pj": 2,
      "posicion_anterior": 13,
-     "pp": 1,
-     "puntos": 1,
+     "pp": "1",
+     "puntos": "1",
      "racha_ultimos_5": [
       "D",
       "E"
@@ -4525,12 +4527,12 @@
      "id": 1376,
      "nombre": "CD Arinaga",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 0,
      "posicion_anterior": 6,
-     "pp": 0,
-     "puntos": 0,
+     "pp": "0",
+     "puntos": "0",
      "racha_ultimos_5": [],
      "sanciones": 0
     },
@@ -4544,12 +4546,12 @@
      "id": 1370,
      "nombre": "CD Futboltec",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 0,
      "posicion_anterior": 7,
-     "pp": 0,
-     "puntos": 0,
+     "pp": "0",
+     "puntos": "0",
      "racha_ultimos_5": [],
      "sanciones": 0
     },
@@ -4563,12 +4565,12 @@
      "id": 1380,
      "nombre": "CD Arguineguín",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 1,
      "posicion_anterior": 8,
-     "pp": 1,
-     "puntos": 0,
+     "pp": "1",
+     "puntos": "0",
      "racha_ultimos_5": [
       "D"
      ],
@@ -4584,12 +4586,12 @@
      "id": 1373,
      "nombre": "CD Cerruda",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 2,
      "posicion_anterior": 12,
-     "pp": 2,
-     "puntos": 0,
+     "pp": "2",
+     "puntos": "0",
      "racha_ultimos_5": [
       "D",
       "D"
@@ -4606,12 +4608,12 @@
      "id": 1378,
      "nombre": "San Fernando",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 2,
      "posicion_anterior": 11,
-     "pp": 2,
-     "puntos": 0,
+     "pp": "2",
+     "puntos": "0",
      "racha_ultimos_5": [
       "D",
       "D"
@@ -6264,18 +6266,20 @@
    "campo_gps": "https://maps.app.goo.gl/ijbNHkoXCC91cZuq5",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "angosturaEscudo.png",
    "escudo_visitante": "100x100costayala.png",
    "estadio": "La Angostura",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-10-25 10:30:00",
+   "fecha_programada": "2026-10-21 17:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 4,
+   "goles_visitante": 7,
    "hora_inicio": null,
    "id": 18758,
    "id_local": 1205,
@@ -6283,21 +6287,24 @@
    "jornada": 3,
    "liga_id": 124,
    "local": "Atl. Angostura B",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
    "pen_local": "",
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
+    "D",
     "D"
    ],
    "racha_visitante": [
     "V",
-    "D"
+    "D",
+    "V"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,
@@ -16255,7 +16262,7 @@
    "estadio": "Domingo Castro",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-10-24 10:30:00",
+   "fecha_programada": "2026-10-23 17:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -25063,7 +25070,7 @@
    "escudo_local": "100x100carrizal.png",
    "escudo_visitante": "escudoFutboltec.png",
    "estadio": "El Toril",
-   "estado": "no_iniciado",
+   "estado": "suspendido",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-21 16:00:00",
    "goleadores_local": null,

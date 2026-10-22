@@ -11,11 +11,11 @@
   "2026-10-18": "2026-10-19T01:46:41",
   "2026-10-20": "2026-10-21T00:56:53",
   "2026-10-21": "2026-10-22T11:20:37",
-  "2026-10-22": "2026-10-22T17:03:13"
+  "2026-10-22": "2026-10-22T19:09:10"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -168,7 +168,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -297,7 +297,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -426,7 +426,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -581,7 +581,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -734,7 +734,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -860,7 +860,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1013,7 +1013,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1142,7 +1142,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1271,7 +1271,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1419,7 +1419,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1548,7 +1548,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1701,7 +1701,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1830,7 +1830,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1959,7 +1959,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2112,7 +2112,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2265,7 +2265,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2418,7 +2418,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2437,6 +2437,29 @@
    "name": "Benjamin Gran Canaria Grupo 18",
    "tabla": [
     {
+     "banderas": "bandera-blanca-gran-canaria.png",
+     "dg": "27",
+     "equipacion": "2026-blanca-blanco-blancas.png",
+     "escudo": "100x100carrizal.png",
+     "gc": "1",
+     "gf": "28",
+     "id": 1295,
+     "nombre": "Unión Carrizal",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 3,
+     "pj": 3,
+     "posicion_anterior": 2,
+     "pp": 0,
+     "puntos": 9,
+     "racha_ultimos_5": [
+      "V",
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-roja-azul-rayas.png",
      "dg": "29",
      "equipacion": "2026-azulgranafina-azul-azul.png",
@@ -2450,28 +2473,6 @@
      "pg": 2,
      "pj": 2,
      "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 6,
-     "racha_ultimos_5": [
-      "V",
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-blanca-gran-canaria.png",
-     "dg": "19",
-     "equipacion": "2026-blanca-blanco-blancas.png",
-     "escudo": "100x100carrizal.png",
-     "gc": "1",
-     "gf": "20",
-     "id": 1295,
-     "nombre": "Unión Carrizal",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
-     "pj": 2,
-     "posicion_anterior": 2,
      "pp": 0,
      "puntos": 6,
      "racha_ultimos_5": [
@@ -2526,21 +2527,22 @@
     },
     {
      "banderas": "bandera-amarilloClaro-azul.png",
-     "dg": "-13",
+     "dg": "-21",
      "equipacion": "2026-amarilla-azul-amarillasazul.png",
      "escudo": "100x100arinaga.png",
-     "gc": "14",
+     "gc": "22",
      "gf": "1",
      "id": 1290,
      "nombre": "CD Arinaga B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 2,
+     "pj": 3,
      "posicion_anterior": 5,
-     "pp": 2,
+     "pp": 3,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D",
       "D"
      ],
@@ -2571,7 +2573,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2698,7 +2700,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2827,7 +2829,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2956,7 +2958,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3109,7 +3111,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3262,7 +3264,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3415,7 +3417,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -3720,7 +3722,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4020,7 +4022,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4325,7 +4327,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-22T17:03:13",
+   "fetched": "2026-10-22T19:09:10",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -12589,7 +12591,7 @@
    "escudo_local": "100x100arinaga.png",
    "escudo_visitante": "100x100carrizal.png",
    "estadio": "Mun. Arinaga",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-22 17:00:00",
    "goleadores_local": null,
@@ -12597,7 +12599,7 @@
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
    "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_visitante": 8,
    "hora_inicio": null,
    "id": 18946,
    "id_local": 1290,
@@ -12605,7 +12607,7 @@
    "jornada": 3,
    "liga_id": 139,
    "local": "CD Arinaga B",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 18",
    "pen_local": "",
@@ -12616,9 +12618,11 @@
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
+    "D",
     "D"
    ],
    "racha_visitante": [
+    "V",
     "V",
     "V"
    ],

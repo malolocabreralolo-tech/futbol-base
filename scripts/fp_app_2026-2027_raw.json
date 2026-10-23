@@ -17,11 +17,11 @@
   "2026-10-20": "2026-10-21T00:56:53",
   "2026-10-21": "2026-10-22T11:20:37",
   "2026-10-22": "2026-10-23T00:43:18",
-  "2026-10-23": "2026-10-23T21:53:10"
+  "2026-10-23": "2026-10-23T22:57:31"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -178,7 +178,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -309,7 +309,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -440,7 +440,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -597,7 +597,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -750,7 +750,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -878,7 +878,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1031,7 +1031,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1160,7 +1160,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1289,7 +1289,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1437,7 +1437,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1566,7 +1566,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1721,7 +1721,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1850,7 +1850,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1979,7 +1979,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2132,7 +2132,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2152,21 +2152,22 @@
    "tabla": [
     {
      "banderas": "bandera-rojiblanca-rayas.png",
-     "dg": "18",
+     "dg": "29",
      "equipacion": "2026-rojiblanca-azul-rojas.png",
      "escudo": "200x200atleticograncanaria19-20.png",
-     "gc": "3",
-     "gf": "21",
+     "gc": "4",
+     "gf": "33",
      "id": 1279,
      "nombre": "Gran Canaria",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 2,
-     "pj": 2,
+     "pg": 3,
+     "pj": 3,
      "posicion_anterior": 1,
      "pp": 0,
-     "puntos": 6,
+     "puntos": 9,
      "racha_ultimos_5": [
+      "V",
       "V",
       "V"
      ],
@@ -2240,23 +2241,24 @@
     },
     {
      "banderas": "bandera-naranja-negro.png",
-     "dg": "-3",
+     "dg": "-14",
      "equipacion": "2026-naranjanegram-negro-negras.png",
      "escudo": "100x100lashuesas2017.png",
-     "gc": "12",
-     "gf": "9",
+     "gc": "24",
+     "gf": "10",
      "id": 1281,
      "nombre": "Las Huesas",
      "orden_manual": 0,
      "pe": 1,
      "pg": 0,
-     "pj": 2,
+     "pj": 3,
      "posicion_anterior": 5,
-     "pp": 1,
+     "pp": 2,
      "puntos": 1,
      "racha_ultimos_5": [
       "D",
-      "E"
+      "E",
+      "D"
      ],
      "sanciones": 0
     },
@@ -2285,7 +2287,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2440,7 +2442,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2595,7 +2597,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2726,7 +2728,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2857,7 +2859,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2988,7 +2990,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3143,7 +3145,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3298,7 +3300,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3453,7 +3455,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -3518,66 +3520,69 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-azul-blanca.png",
-     "dg": "7",
-     "equipacion": "2026-azul-blanco-azules.png",
-     "escudo": "sanIsidroEscudo.png",
-     "gc": "8",
-     "gf": "15",
-     "id": 1335,
-     "nombre": "San Isidro",
+     "banderas": "bandera-amarilla-verde.png",
+     "dg": "10",
+     "equipacion": "2026-amarilla-verde-verdes.png",
+     "escudo": "escudoRoqueAmagro.png",
+     "gc": "7",
+     "gf": "17",
+     "id": 1334,
+     "nombre": "Roque Amagro",
      "orden_manual": 0,
-     "pe": 0,
+     "pe": 1,
      "pg": 2,
-     "pj": 2,
-     "posicion_anterior": 3,
+     "pj": 3,
+     "posicion_anterior": 4,
      "pp": 0,
-     "puntos": 6,
+     "puntos": 7,
      "racha_ultimos_5": [
+      "E",
       "V",
       "V"
      ],
      "sanciones": 0
     },
     {
-     "banderas": "bandera-amarilla-verde.png",
-     "dg": "8",
-     "equipacion": "2026-amarilla-verde-verdes.png",
-     "escudo": "escudoRoqueAmagro.png",
-     "gc": "3",
-     "gf": "11",
-     "id": 1334,
-     "nombre": "Roque Amagro",
+     "banderas": "bandera-verdiblanca-rayas.png",
+     "dg": "10",
+     "equipacion": "2026-verdiblancafinas-verde-verdes.png",
+     "escudo": "100x100moya.png",
+     "gc": "11",
+     "gf": "21",
+     "id": 1332,
+     "nombre": "UD Moya",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 1,
-     "pj": 2,
-     "posicion_anterior": 4,
-     "pp": 0,
-     "puntos": 4,
+     "pe": 0,
+     "pg": 2,
+     "pj": 3,
+     "posicion_anterior": 5,
+     "pp": 1,
+     "puntos": 6,
      "racha_ultimos_5": [
-      "E",
+      "V",
+      "D",
       "V"
      ],
      "sanciones": 0
     },
     {
-     "banderas": "bandera-verdiblanca-rayas.png",
-     "dg": "6",
-     "equipacion": "2026-verdiblancafinas-verde-verdes.png",
-     "escudo": "100x100moya.png",
-     "gc": "9",
-     "gf": "15",
-     "id": 1332,
-     "nombre": "UD Moya",
+     "banderas": "bandera-azul-blanca.png",
+     "dg": "5",
+     "equipacion": "2026-azul-blanco-azules.png",
+     "escudo": "sanIsidroEscudo.png",
+     "gc": "14",
+     "gf": "19",
+     "id": 1335,
+     "nombre": "San Isidro",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 1,
-     "pj": 2,
-     "posicion_anterior": 5,
+     "pg": 2,
+     "pj": 3,
+     "posicion_anterior": 3,
      "pp": 1,
-     "puntos": 3,
+     "puntos": 6,
      "racha_ultimos_5": [
+      "V",
       "V",
       "D"
      ],
@@ -3696,21 +3701,22 @@
     },
     {
      "banderas": "bandera-amarillo-azul-rayas.png",
-     "dg": "-8",
+     "dg": "-12",
      "equipacion": "2026-azuliamarilla-azul-amarillas.png",
      "escudo": "200x200AtalayaSanPablo.png",
-     "gc": "11",
-     "gf": "3",
+     "gc": "17",
+     "gf": "5",
      "id": 1336,
      "nombre": "UD Atalaya",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 2,
+     "pj": 3,
      "posicion_anterior": 11,
-     "pp": 2,
+     "pp": 3,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D",
       "D"
      ],
@@ -3764,7 +3770,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4064,7 +4070,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4369,7 +4375,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4670,7 +4676,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -4842,7 +4848,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5049,7 +5055,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5254,7 +5260,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5461,7 +5467,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-23T21:53:10",
+   "fetched": "2026-10-23T22:57:31",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -12751,15 +12757,15 @@
    "escudo_local": "200x200atleticograncanaria19-20.png",
    "escudo_visitante": "100x100lashuesas2017.png",
    "estadio": "Mundial 82",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-23 19:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 12,
+   "goles_visitante": 1,
    "hora_inicio": null,
    "id": 18917,
    "id_local": 1279,
@@ -12767,7 +12773,7 @@
    "jornada": 3,
    "liga_id": 137,
    "local": "Gran Canaria",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 16",
    "pen_local": "",
@@ -12778,11 +12784,13 @@
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
+    "V",
     "V"
    ],
    "racha_visitante": [
     "D",
-    "E"
+    "E",
+    "D"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,
@@ -17542,15 +17550,15 @@
    "escudo_local": "100x100moya.png",
    "escudo_visitante": "200x200AtalayaSanPablo.png",
    "estadio": "Moya",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-23 17:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 6,
+   "goles_visitante": 2,
    "hora_inicio": null,
    "id": 19044,
    "id_local": 1332,
@@ -17558,7 +17566,7 @@
    "jornada": 3,
    "liga_id": 146,
    "local": "UD Moya",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
    "pen_local": "",
@@ -17569,9 +17577,11 @@
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "V",
-    "D"
+    "D",
+    "V"
    ],
    "racha_visitante": [
+    "D",
     "D",
     "D"
    ],
@@ -17592,15 +17602,15 @@
    "escudo_local": "escudoRoqueAmagro.png",
    "escudo_visitante": "sanIsidroEscudo.png",
    "estadio": "Venancio Monzón",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-23 18:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 6,
+   "goles_visitante": 4,
    "hora_inicio": null,
    "id": 19045,
    "id_local": 1334,
@@ -17608,7 +17618,7 @@
    "jornada": 3,
    "liga_id": 146,
    "local": "Roque Amagro",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
    "pen_local": "",
@@ -17619,11 +17629,13 @@
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "E",
+    "V",
     "V"
    ],
    "racha_visitante": [
     "V",
-    "V"
+    "V",
+    "D"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,

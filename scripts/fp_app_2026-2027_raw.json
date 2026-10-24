@@ -18,11 +18,11 @@
   "2026-10-21": "2026-10-22T11:20:37",
   "2026-10-22": "2026-10-23T00:43:18",
   "2026-10-23": "2026-10-24T00:42:36",
-  "2026-10-24": "2026-10-24T10:13:15"
+  "2026-10-24": "2026-10-24T11:09:37"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -181,7 +181,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -312,7 +312,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -443,7 +443,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -600,7 +600,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -755,7 +755,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -883,7 +883,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1040,7 +1040,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1173,7 +1173,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1302,7 +1302,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1450,7 +1450,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1579,7 +1579,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1734,7 +1734,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1865,7 +1865,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1994,7 +1994,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2149,7 +2149,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2308,7 +2308,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2328,21 +2328,22 @@
    "tabla": [
     {
      "banderas": "bandera-fusia-negra.png",
-     "dg": "24",
+     "dg": "34",
      "equipacion": "2026-fusiagarita-negros-negras.png",
      "escudo": "laGaritaEscudoColor.png",
      "gc": "0",
-     "gf": "24",
+     "gf": "34",
      "id": 1286,
      "nombre": "La Garita",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 2,
-     "pj": 2,
+     "pg": 3,
+     "pj": 3,
      "posicion_anterior": 1,
      "pp": 0,
-     "puntos": 6,
+     "puntos": 9,
      "racha_ultimos_5": [
+      "V",
       "V",
       "V"
      ],
@@ -2395,22 +2396,23 @@
     },
     {
      "banderas": "bandera-naranja-negro.png",
-     "dg": "-8",
+     "dg": "-18",
      "equipacion": "2026-naranjanegram-negro-negras.png",
      "escudo": "100x100lashuesas2017.png",
-     "gc": "11",
+     "gc": "21",
      "gf": "3",
      "id": 1285,
      "nombre": "Las Huesas B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
-     "pj": 2,
+     "pj": 3,
      "posicion_anterior": 4,
-     "pp": 1,
+     "pp": 2,
      "puntos": 3,
      "racha_ultimos_5": [
       "V",
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -2463,7 +2465,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2620,7 +2622,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2751,7 +2753,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2882,7 +2884,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2901,6 +2903,28 @@
    "name": "Benjamin Gran Canaria Grupo 21",
    "tabla": [
     {
+     "banderas": "bandera-celeste-blanca.png",
+     "dg": "22",
+     "equipacion": "2026-celestiblanca-blancos-blancos.png",
+     "escudo": "doramasEscudo.png",
+     "gc": "0",
+     "gf": "22",
+     "id": 1308,
+     "nombre": "CD Doramas",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "2",
+     "pj": 2,
+     "posicion_anterior": 2,
+     "pp": "0",
+     "puntos": "6",
+     "racha_ultimos_5": [
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-blanquinegra-rayas.png",
      "dg": "19",
      "equipacion": "2026-blanquinegra-negro-blancas.png",
@@ -2910,35 +2934,14 @@
      "id": 1307,
      "nombre": "UD Vecindario C",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
+     "pe": "0",
+     "pg": "2",
      "pj": 2,
      "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 6,
+     "pp": "0",
+     "puntos": "6",
      "racha_ultimos_5": [
       "V",
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-celeste-blanca.png",
-     "dg": "9",
-     "equipacion": "2026-celestiblanca-blancos-blancos.png",
-     "escudo": "doramasEscudo.png",
-     "gc": "0",
-     "gf": "9",
-     "id": 1308,
-     "nombre": "CD Doramas",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 1,
-     "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 3,
-     "racha_ultimos_5": [
       "V"
      ],
      "sanciones": 0
@@ -2953,12 +2956,12 @@
      "id": 1310,
      "nombre": "CD Cerruda",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 4,
-     "pp": 1,
-     "puntos": 3,
+     "pp": "1",
+     "puntos": "3",
      "racha_ultimos_5": [
       "D",
       "V"
@@ -2975,12 +2978,12 @@
      "id": 1306,
      "nombre": "Agüimes CF",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 3,
      "posicion_anterior": 3,
-     "pp": 2,
-     "puntos": 3,
+     "pp": "2",
+     "puntos": "3",
      "racha_ultimos_5": [
       "D",
       "V",
@@ -2990,21 +2993,22 @@
     },
     {
      "banderas": "bandera-roja-azul.png",
-     "dg": "-29",
+     "dg": "-42",
      "equipacion": "2026-roja-azules-azules.png",
      "escudo": "100x100sanpedromartir.png",
-     "gc": "29",
+     "gc": "42",
      "gf": "0",
      "id": 1309,
      "nombre": "San Pedro B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 2,
+     "pe": "0",
+     "pg": "0",
+     "pj": 3,
      "posicion_anterior": 5,
-     "pp": 2,
-     "puntos": 0,
+     "pp": "3",
+     "puntos": "0",
      "racha_ultimos_5": [
+      "D",
       "D",
       "D"
      ],
@@ -3013,7 +3017,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3170,7 +3174,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3327,7 +3331,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3484,7 +3488,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -3799,7 +3803,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4099,7 +4103,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4404,7 +4408,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4705,7 +4709,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -4877,7 +4881,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5084,7 +5088,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5289,7 +5293,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5496,7 +5500,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-24T10:13:15",
+   "fetched": "2026-10-24T11:09:37",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -13419,14 +13423,14 @@
    "escudo_local": "laGaritaEscudoColor.png",
    "escudo_visitante": "100x100lashuesas2017.png",
    "estadio": "Las Remudas",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-24 10:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
+   "goles_local": 10,
    "goles_visitante": 0,
    "hora_inicio": null,
    "id": 18932,
@@ -13435,7 +13439,7 @@
    "jornada": 3,
    "liga_id": 138,
    "local": "La Garita",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
    "pen_local": "",
@@ -13446,10 +13450,12 @@
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
+    "V",
     "V"
    ],
    "racha_visitante": [
     "V",
+    "D",
     "D"
    ],
    "tecnico_local": null,
@@ -15216,14 +15222,14 @@
    "escudo_local": "doramasEscudo.png",
    "escudo_visitante": "100x100sanpedromartir.png",
    "estadio": "Cruce Arinaga",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-24 09:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
+   "goles_local": 13,
    "goles_visitante": 0,
    "hora_inicio": null,
    "id": 18980,
@@ -15232,7 +15238,7 @@
    "jornada": 3,
    "liga_id": 142,
    "local": "CD Doramas",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 21",
    "pen_local": "",
@@ -15242,9 +15248,11 @@
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
+    "V",
     "V"
    ],
    "racha_visitante": [
+    "D",
     "D",
     "D"
    ],

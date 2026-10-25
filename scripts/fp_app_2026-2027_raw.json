@@ -18,12 +18,12 @@
   "2026-10-21": "2026-10-22T11:20:37",
   "2026-10-22": "2026-10-23T00:43:18",
   "2026-10-23": "2026-10-24T00:42:36",
-  "2026-10-24": "2026-10-25T17:33:12",
-  "2026-10-25": "2026-10-25T17:33:12"
+  "2026-10-24": "2026-10-25T18:28:25",
+  "2026-10-25": "2026-10-25T18:28:25"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -182,7 +182,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -315,7 +315,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -448,7 +448,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -607,7 +607,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -764,7 +764,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -892,7 +892,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1051,7 +1051,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1184,7 +1184,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1315,7 +1315,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1465,7 +1465,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1596,7 +1596,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1755,7 +1755,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1888,7 +1888,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2019,7 +2019,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2176,7 +2176,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2335,7 +2335,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2494,7 +2494,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2653,7 +2653,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2784,7 +2784,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2917,7 +2917,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3050,7 +3050,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3209,7 +3209,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3368,7 +3368,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3527,7 +3527,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -3844,7 +3844,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4150,7 +4150,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4467,7 +4467,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4667,51 +4667,6 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-verde-blanca.png",
-     "dg": "-4",
-     "equipacion": "2026-verde-blanco-blancas.png",
-     "escudo": "arguineguinEscudo.png",
-     "gc": "7",
-     "gf": "3",
-     "id": 1380,
-     "nombre": "CD Arguineguín",
-     "orden_manual": 0,
-     "pe": 1,
-     "pg": 0,
-     "pj": 2,
-     "posicion_anterior": 11,
-     "pp": 1,
-     "puntos": 1,
-     "racha_ultimos_5": [
-      "D",
-      "E"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-negra-blanca-rayas.png",
-     "dg": "-7",
-     "equipacion": "2026-blanquinegra-negro-negras.png",
-     "escudo": "100x100cerruda.png",
-     "gc": "10",
-     "gf": "3",
-     "id": 1373,
-     "nombre": "CD Cerruda",
-     "orden_manual": 0,
-     "pe": 1,
-     "pg": 0,
-     "pj": 3,
-     "posicion_anterior": 12,
-     "pp": 2,
-     "puntos": 1,
-     "racha_ultimos_5": [
-      "D",
-      "D",
-      "E"
-     ],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-amarilloClaro-azul.png",
      "dg": "0",
      "equipacion": "2026-amarilla-azul-amarillasazul.png",
@@ -4750,6 +4705,49 @@
      "sanciones": 0
     },
     {
+     "banderas": "bandera-verde-blanca.png",
+     "dg": "-4",
+     "equipacion": "2026-verde-blanco-blancas.png",
+     "escudo": "arguineguinEscudo.png",
+     "gc": "7",
+     "gf": "3",
+     "id": 1380,
+     "nombre": "CD Arguineguín",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 1,
+     "posicion_anterior": 11,
+     "pp": 1,
+     "puntos": 0,
+     "racha_ultimos_5": [
+      "D"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-negra-blanca-rayas.png",
+     "dg": "-7",
+     "equipacion": "2026-blanquinegra-negro-negras.png",
+     "escudo": "100x100cerruda.png",
+     "gc": "10",
+     "gf": "3",
+     "id": 1373,
+     "nombre": "CD Cerruda",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 0,
+     "pj": 2,
+     "posicion_anterior": 12,
+     "pp": 2,
+     "puntos": 0,
+     "racha_ultimos_5": [
+      "D",
+      "D"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-azul-gran-canaria.png",
      "dg": "-10",
      "equipacion": "2026-azul-azul-azul.png",
@@ -4774,7 +4772,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -4946,7 +4944,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5153,7 +5151,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5358,7 +5356,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5565,7 +5563,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-25T17:33:12",
+   "fetched": "2026-10-25T18:28:25",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -27335,7 +27333,7 @@
    "escudo_local": "100x100cerruda.png",
    "escudo_visitante": "arguineguinEscudo.png",
    "estadio": "Axo. Vecindario",
-   "estado": "en_juego",
+   "estado": "no_iniciado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-25 10:30:00",
    "goleadores_local": null,
@@ -27344,14 +27342,14 @@
    "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
-   "hora_inicio": "2026-10-25 18:30:14",
+   "hora_inicio": "2026-10-25 17:12:12",
    "id": 19515,
    "id_local": 1373,
    "id_visitante": 1380,
    "jornada": 3,
    "liga_id": 149,
    "local": "CD Cerruda",
-   "minutos_jugados": 17,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 4",
    "pen_local": "",
@@ -27362,12 +27360,10 @@
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D",
-    "D",
-    "E"
+    "D"
    ],
    "racha_visitante": [
-    "D",
-    "E"
+    "D"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,

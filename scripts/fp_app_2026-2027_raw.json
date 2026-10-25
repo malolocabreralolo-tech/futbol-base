@@ -18,12 +18,12 @@
   "2026-10-21": "2026-10-22T11:20:37",
   "2026-10-22": "2026-10-23T00:43:18",
   "2026-10-23": "2026-10-24T00:42:36",
-  "2026-10-24": "2026-10-25T08:17:57",
-  "2026-10-25": "2026-10-25T08:17:57"
+  "2026-10-24": "2026-10-25T10:12:48",
+  "2026-10-25": "2026-10-25T10:12:48"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -182,7 +182,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -315,7 +315,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -448,7 +448,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -605,7 +605,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -760,7 +760,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -888,7 +888,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1047,7 +1047,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1180,7 +1180,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1311,7 +1311,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1461,7 +1461,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1592,7 +1592,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1751,7 +1751,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1884,7 +1884,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2015,7 +2015,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2172,7 +2172,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2331,7 +2331,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2490,7 +2490,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2649,7 +2649,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2780,7 +2780,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2913,7 +2913,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3046,7 +3046,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3205,7 +3205,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3364,7 +3364,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3523,7 +3523,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -3840,7 +3840,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4146,7 +4146,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4279,6 +4279,29 @@
      "sanciones": 0
     },
     {
+     "banderas": "bandera-amarilloClaro-azul.png",
+     "dg": "-1",
+     "equipacion": "2026-amarilla-azulroyal-amarillas.png",
+     "escudo": "100x100calero2018.png",
+     "gc": "6",
+     "gf": "5",
+     "id": 1361,
+     "nombre": "CD Calero",
+     "orden_manual": 0,
+     "pe": 1,
+     "pg": 1,
+     "pj": 3,
+     "posicion_anterior": 7,
+     "pp": 1,
+     "puntos": 4,
+     "racha_ultimos_5": [
+      "D",
+      "V",
+      "E"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-blanca-gran-canaria.png",
      "dg": "5",
      "equipacion": "2026-blanca-blanco-blancas.png",
@@ -4297,28 +4320,6 @@
      "racha_ultimos_5": [
       "V",
       "D"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-amarilloClaro-azul.png",
-     "dg": "-1",
-     "equipacion": "2026-amarilla-azulroyal-amarillas.png",
-     "escudo": "100x100calero2018.png",
-     "gc": "6",
-     "gf": "5",
-     "id": 1361,
-     "nombre": "CD Calero",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 2,
-     "posicion_anterior": 7,
-     "pp": 1,
-     "puntos": 3,
-     "racha_ultimos_5": [
-      "D",
-      "V"
      ],
      "sanciones": 0
     },
@@ -4423,15 +4424,16 @@
      "id": 1359,
      "nombre": "Las Huesas",
      "orden_manual": 0,
-     "pe": 0,
+     "pe": 1,
      "pg": 0,
-     "pj": 2,
+     "pj": 3,
      "posicion_anterior": 11,
      "pp": 2,
-     "puntos": 0,
+     "puntos": 1,
      "racha_ultimos_5": [
       "D",
-      "D"
+      "D",
+      "E"
      ],
      "sanciones": 0
     },
@@ -4461,7 +4463,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4766,7 +4768,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -4938,7 +4940,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5145,7 +5147,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5350,7 +5352,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5557,7 +5559,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-25T08:17:57",
+   "fetched": "2026-10-25T10:12:48",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -24212,7 +24214,7 @@
    "escudo_local": "100x100lashuesas2017.png",
    "escudo_visitante": "100x100calero2018.png",
    "estadio": "Las Huesas",
-   "estado": "no_iniciado",
+   "estado": "en_juego",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-25 09:00:00",
    "goleadores_local": null,
@@ -24221,7 +24223,7 @@
    "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
-   "hora_inicio": null,
+   "hora_inicio": "2026-10-25 11:10:02",
    "id": 19359,
    "id_local": 1359,
    "id_visitante": 1361,
@@ -24239,11 +24241,13 @@
    "permitir_comentarios_liga": 0,
    "racha_local": [
     "D",
-    "D"
+    "D",
+    "E"
    ],
    "racha_visitante": [
     "D",
-    "V"
+    "V",
+    "E"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,

@@ -18,12 +18,12 @@
   "2026-10-21": "2026-10-22T11:20:37",
   "2026-10-22": "2026-10-23T00:43:18",
   "2026-10-23": "2026-10-24T00:42:36",
-  "2026-10-24": "2026-10-25T11:08:23",
-  "2026-10-25": "2026-10-25T11:08:23"
+  "2026-10-24": "2026-10-25T12:03:19",
+  "2026-10-25": "2026-10-25T12:03:19"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -182,7 +182,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -315,7 +315,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -448,7 +448,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -467,6 +467,29 @@
    "name": "Benjamin Gran Canaria Grupo 4",
    "tabla": [
     {
+     "banderas": "bandera-roja-blanca-cuadros.png",
+     "dg": "20",
+     "equipacion": "2026-rojiblancaarlequin-rojos-rojas.png",
+     "escudo": "100x100guiniguada2016.png",
+     "gc": "6",
+     "gf": "26",
+     "id": 1204,
+     "nombre": "Guiniguada Apolinario",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "3",
+     "pj": 3,
+     "posicion_anterior": 1,
+     "pp": "0",
+     "puntos": "9",
+     "racha_ultimos_5": [
+      "V",
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-naranja-azul.png",
      "dg": "6",
      "equipacion": "2026-naranja-azules-blancas.png",
@@ -476,39 +499,16 @@
      "id": 1207,
      "nombre": "San Mateo",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
+     "pe": "0",
+     "pg": "2",
      "pj": 3,
      "posicion_anterior": 3,
-     "pp": 1,
-     "puntos": 6,
+     "pp": "1",
+     "puntos": "6",
      "racha_ultimos_5": [
       "D",
       "V",
       "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-roja-blanca-cuadros.png",
-     "dg": "6",
-     "equipacion": "2026-rojiblancaarlequin-rojos-rojas.png",
-     "escudo": "100x100guiniguada2016.png",
-     "gc": "8",
-     "gf": "14",
-     "id": 1204,
-     "nombre": "Guiniguada Apolinario",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
-     "pj": 3,
-     "posicion_anterior": 1,
-     "pp": 1,
-     "puntos": 6,
-     "racha_ultimos_5": [
-      "V",
-      "V",
-      "D"
      ],
      "sanciones": 0
     },
@@ -522,12 +522,12 @@
      "id": 1206,
      "nombre": "Costa Ayala B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
+     "pe": "0",
+     "pg": "2",
      "pj": 3,
      "posicion_anterior": 5,
-     "pp": 1,
-     "puntos": 6,
+     "pp": "1",
+     "puntos": "6",
      "racha_ultimos_5": [
       "V",
       "D",
@@ -545,12 +545,12 @@
      "id": 1208,
      "nombre": "CD Goleta",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 3,
      "posicion_anterior": 2,
-     "pp": 2,
-     "puntos": 3,
+     "pp": "2",
+     "puntos": "3",
      "racha_ultimos_5": [
       "D",
       "V",
@@ -568,12 +568,12 @@
      "id": 1205,
      "nombre": "Atl. Angostura B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 3,
      "posicion_anterior": 4,
-     "pp": 2,
-     "puntos": 3,
+     "pp": "2",
+     "puntos": "3",
      "racha_ultimos_5": [
       "V",
       "D",
@@ -583,31 +583,31 @@
     },
     {
      "banderas": "bandera-blanquinegra-rayas.png",
-     "dg": "-13",
+     "dg": "-27",
      "equipacion": "2026-blanquinegra-negro-negras.png",
      "escudo": "100x100santidad.png",
-     "gc": "18",
-     "gf": "5",
+     "gc": "30",
+     "gf": "3",
      "id": 1203,
      "nombre": "Santidad Banot",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "0",
      "pj": 3,
      "posicion_anterior": 6,
-     "pp": 2,
-     "puntos": 3,
+     "pp": "3",
+     "puntos": "0",
      "racha_ultimos_5": [
       "D",
       "D",
-      "V"
+      "D"
      ],
      "sanciones": 0
     }
    ]
   },
   "125": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -693,6 +693,29 @@
      "sanciones": 0
     },
     {
+     "banderas": "bandera-blanca-diagonal-roja.png",
+     "dg": "-6",
+     "equipacion": "2026-blancafraroja-blancos-blancos.png",
+     "escudo": "lasMesasEscudo.png",
+     "gc": "10",
+     "gf": "4",
+     "id": 1211,
+     "nombre": "Las Mesas Huracán",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 1,
+     "pj": 3,
+     "posicion_anterior": 5,
+     "pp": 2,
+     "puntos": 3,
+     "racha_ultimos_5": [
+      "D",
+      "D",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-GranCanaria.jpg",
      "dg": "-13",
      "equipacion": "2026-amarillaazul-azul-amarillas.png",
@@ -716,44 +739,23 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-blanca-diagonal-roja.png",
-     "dg": "-8",
-     "equipacion": "2026-blancafraroja-blancos-blancos.png",
-     "escudo": "lasMesasEscudo.png",
-     "gc": "10",
-     "gf": "2",
-     "id": 1211,
-     "nombre": "Las Mesas Huracán",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 2,
-     "posicion_anterior": 5,
-     "pp": 2,
-     "puntos": 0,
-     "racha_ultimos_5": [
-      "D",
-      "D"
-     ],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-azul-gran-canaria.png",
-     "dg": "-14",
+     "dg": "-16",
      "equipacion": "2026-azul-azul-azul.png",
      "escudo": "200x200claret.png",
-     "gc": "19",
+     "gc": "21",
      "gf": "5",
      "id": 1209,
      "nombre": "Corazón de María C",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 2,
+     "pj": 3,
      "posicion_anterior": 6,
-     "pp": 2,
+     "pp": 3,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D",
       "D"
      ],
@@ -762,7 +764,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -890,7 +892,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1049,7 +1051,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1182,7 +1184,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1313,7 +1315,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1463,7 +1465,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1594,7 +1596,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1753,7 +1755,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1886,7 +1888,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2017,7 +2019,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2174,7 +2176,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2333,7 +2335,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2492,7 +2494,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2651,7 +2653,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2782,7 +2784,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2915,7 +2917,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3048,7 +3050,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3207,7 +3209,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3366,7 +3368,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -3525,7 +3527,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -3842,7 +3844,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4148,7 +4150,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4465,7 +4467,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4770,7 +4772,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -4942,7 +4944,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5149,7 +5151,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5354,7 +5356,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5561,7 +5563,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-25T11:08:23",
+   "fetched": "2026-10-25T12:03:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -7402,23 +7404,23 @@
    "escudo_local": "100x100santidad.png",
    "escudo_visitante": "100x100guiniguada2016.png",
    "estadio": "Javier Armas",
-   "estado": "en_juego",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-25 10:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 3,
-   "goles_visitante": 0,
-   "hora_inicio": "2026-10-24 18:54:29",
+   "goles_local": 1,
+   "goles_visitante": 12,
+   "hora_inicio": "2026-10-24 19:52:00",
    "id": 18757,
    "id_local": 1203,
    "id_visitante": 1204,
    "jornada": 3,
    "liga_id": 124,
    "local": "Santidad Banot",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
    "pen_local": "",
@@ -7430,12 +7432,12 @@
    "racha_local": [
     "D",
     "D",
-    "V"
+    "D"
    ],
    "racha_visitante": [
     "V",
     "V",
-    "D"
+    "V"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,
@@ -8010,16 +8012,16 @@
    "escudo_local": "lasMesasEscudo.png",
    "escudo_visitante": "200x200claret.png",
    "estadio": "Pepe Gonçalvez",
-   "estado": "no_iniciado",
+   "estado": "en_juego",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-25 11:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
+   "goles_local": 2,
    "goles_visitante": 0,
-   "hora_inicio": null,
+   "hora_inicio": "2026-10-24 19:38:23",
    "id": 18773,
    "id_local": 1211,
    "id_visitante": 1209,
@@ -8037,9 +8039,11 @@
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
-    "D"
+    "D",
+    "V"
    ],
    "racha_visitante": [
+    "D",
     "D",
     "D"
    ],

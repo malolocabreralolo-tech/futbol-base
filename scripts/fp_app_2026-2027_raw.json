@@ -20,11 +20,11 @@
   "2026-10-23": "2026-10-26T09:23:15",
   "2026-10-24": "2026-10-26T09:23:15",
   "2026-10-25": "2026-10-26T03:42:59",
-  "2026-10-26": "2026-10-26T11:18:12"
+  "2026-10-26": "2026-10-26T15:08:19"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -183,7 +183,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -316,7 +316,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -449,7 +449,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -608,7 +608,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -767,7 +767,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -895,7 +895,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1054,7 +1054,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1187,7 +1187,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1320,7 +1320,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1472,7 +1472,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -1605,7 +1605,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1764,9 +1764,9 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
-    "jornada_actual": 3,
+    "jornada_actual": 4,
     "plazas_ascenso": 4,
     "plazas_copa": 0,
     "plazas_descenso": 0,
@@ -1792,12 +1792,12 @@
      "id": 1262,
      "nombre": "Real Sporting San José",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "2",
+     "pe": 1,
+     "pg": 2,
      "pj": 3,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "7",
+     "pp": 0,
+     "puntos": 7,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -1815,12 +1815,12 @@
      "id": 1261,
      "nombre": "San Juan Tres Palmas",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "2",
+     "pe": 1,
+     "pg": 2,
      "pj": 3,
      "posicion_anterior": 2,
-     "pp": "0",
-     "puntos": "7",
+     "pp": 0,
+     "puntos": 7,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -1838,12 +1838,12 @@
      "id": 1264,
      "nombre": "CD Miguel León",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 2,
      "posicion_anterior": 3,
-     "pp": "1",
-     "puntos": "3",
+     "pp": 1,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V"
@@ -1860,12 +1860,12 @@
      "id": 1265,
      "nombre": "CD Julio Suárez",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 2,
      "posicion_anterior": 4,
-     "pp": "2",
-     "puntos": "0",
+     "pp": 2,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D"
@@ -1882,12 +1882,12 @@
      "id": 1263,
      "nombre": "Pedro Hidalgo",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 2,
      "posicion_anterior": 5,
-     "pp": "2",
-     "puntos": "0",
+     "pp": 2,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D"
@@ -1897,7 +1897,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2028,7 +2028,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2185,7 +2185,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2344,7 +2344,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2503,7 +2503,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2662,7 +2662,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2793,9 +2793,9 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
-    "jornada_actual": 3,
+    "jornada_actual": 4,
     "plazas_ascenso": 4,
     "plazas_copa": 0,
     "plazas_descenso": 0,
@@ -2821,12 +2821,12 @@
      "id": 1301,
      "nombre": "CD Arguineguín",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 3,
-     "posicion_anterior": 2,
-     "pp": "1",
-     "puntos": "6",
+     "posicion_anterior": 1,
+     "pp": 1,
+     "puntos": 6,
      "racha_ultimos_5": [
       "D",
       "V",
@@ -2844,12 +2844,12 @@
      "id": 1302,
      "nombre": "CD Maspalomas",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 2,
-     "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "6",
+     "posicion_anterior": 2,
+     "pp": 0,
+     "puntos": 6,
      "racha_ultimos_5": [
       "V",
       "V"
@@ -2866,12 +2866,12 @@
      "id": 1303,
      "nombre": "Maspa Training",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 2,
      "posicion_anterior": 3,
-     "pp": "0",
-     "puntos": "6",
+     "pp": 0,
+     "puntos": 6,
      "racha_ultimos_5": [
       "V",
       "V"
@@ -2888,12 +2888,12 @@
      "id": 1305,
      "nombre": "San Fernando B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 2,
      "posicion_anterior": 4,
-     "pp": "2",
-     "puntos": "0",
+     "pp": 2,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D"
@@ -2910,12 +2910,12 @@
      "id": 1304,
      "nombre": "CF Mogán",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 3,
      "posicion_anterior": 5,
-     "pp": "3",
-     "puntos": "0",
+     "pp": 3,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -2926,7 +2926,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3059,7 +3059,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3218,7 +3218,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3377,9 +3377,9 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
-    "jornada_actual": 3,
+    "jornada_actual": 4,
     "plazas_ascenso": 4,
     "plazas_copa": 1,
     "plazas_descenso": 0,
@@ -3405,12 +3405,12 @@
      "id": 1327,
      "nombre": "Maspa Training B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "3",
+     "pe": 0,
+     "pg": 3,
      "pj": 3,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "9",
+     "pp": 0,
+     "puntos": 9,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -3428,12 +3428,12 @@
      "id": 1328,
      "nombre": "CD Arguineguín B",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "2",
+     "pe": 1,
+     "pg": 2,
      "pj": 3,
-     "posicion_anterior": 3,
-     "pp": "0",
-     "puntos": "7",
+     "posicion_anterior": 2,
+     "pp": 0,
+     "puntos": 7,
      "racha_ultimos_5": [
       "V",
       "E",
@@ -3451,12 +3451,12 @@
      "id": 1325,
      "nombre": "San Fernando",
      "orden_manual": 0,
-     "pe": "2",
-     "pg": "1",
+     "pe": 2,
+     "pg": 1,
      "pj": 3,
-     "posicion_anterior": 2,
-     "pp": "0",
-     "puntos": "5",
+     "posicion_anterior": 3,
+     "pp": 0,
+     "puntos": 5,
      "racha_ultimos_5": [
       "V",
       "E",
@@ -3474,12 +3474,12 @@
      "id": 1326,
      "nombre": "CD Maspalomas B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 3,
      "posicion_anterior": 4,
-     "pp": "2",
-     "puntos": "3",
+     "pp": 2,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V",
@@ -3497,12 +3497,12 @@
      "id": 1324,
      "nombre": "CD Tablero",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "0",
+     "pe": 1,
+     "pg": 0,
      "pj": 3,
      "posicion_anterior": 5,
-     "pp": "2",
-     "puntos": "1",
+     "pp": 2,
+     "puntos": 1,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -3520,12 +3520,12 @@
      "id": 1323,
      "nombre": "Castillo CF",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 3,
      "posicion_anterior": 6,
-     "pp": "3",
-     "puntos": "0",
+     "pp": 3,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -3536,7 +3536,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3853,7 +3853,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4163,7 +4163,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4480,7 +4480,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 1,
@@ -4787,7 +4787,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -4963,7 +4963,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5176,7 +5176,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5389,7 +5389,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5602,7 +5602,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -5787,7 +5787,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -5995,7 +5995,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6195,7 +6195,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6399,7 +6399,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-10-26T11:18:12",
+   "fetched": "2026-10-26T15:08:19",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -12943,45 +12943,105 @@
    "visitante": "San Juan Tres Palmas"
   },
   "18881": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/xEHMH99iu5z",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "sportingEscudo2025.png",
    "escudo_visitante": "miguelLeonEscudo.png",
    "estadio": "Chano Cruz",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18881,
+   "id_local": 1262,
+   "id_visitante": 1264,
    "jornada": 4,
    "liga_id": 134,
    "local": "Real Sporting San José",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "V",
+    "E"
+   ],
+   "racha_visitante": [
+    "D",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Miguel León"
   },
   "18882": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/oeLW2CFEPBKQREvf6",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100universitario.png",
    "escudo_visitante": "100x100pedrohidalgo.png",
    "estadio": "Nicolás Sánchez",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-01 10:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18882,
+   "id_local": 1265,
+   "id_visitante": 1263,
    "jornada": 4,
    "liga_id": 134,
    "local": "CD Julio Suárez",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "D",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Pedro Hidalgo"
   },
   "18883": {
+   "campo_gps": "https://maps.app.goo.gl/FCAebopVSF54UsZD8",
    "escudo_local": "miguelLeonEscudo.png",
    "escudo_visitante": "100x100universitario.png",
-   "estadio": null,
+   "estadio": "Vega San José",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -12992,12 +13052,14 @@
    "local": "CD Miguel León",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
+   "permitir_comentarios_liga": 1,
    "visitante": "CD Julio Suárez"
   },
   "18884": {
+   "campo_gps": "https://goo.gl/maps/5K5Me7HXoJ4LgJnT7",
    "escudo_local": "100x100pedrohidalgo.png",
    "escudo_visitante": "100x100sanjuan.png",
-   "estadio": null,
+   "estadio": "Vicente Sepúlveda",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -13008,6 +13070,7 @@
    "local": "Pedro Hidalgo",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
+   "permitir_comentarios_liga": 1,
    "visitante": "San Juan Tres Palmas"
   },
   "18885": {
@@ -16526,45 +16589,105 @@
    "visitante": "CF Mogán"
   },
   "18971": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/cbJXj4iK3TgN95kL8",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "200x200maspalomas20-21.png",
    "escudo_visitante": "arguineguinEscudo.png",
    "estadio": "Maspalomas 2",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18971,
+   "id_local": 1302,
+   "id_visitante": 1301,
    "jornada": 4,
    "liga_id": 141,
    "local": "CD Maspalomas",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "D",
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Arguineguín"
   },
   "18972": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/x2vcRQNAkMh2Bn5NA",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "sanfernandoEscudo.png",
    "escudo_visitante": "maspaTrainingEscudo.png",
    "estadio": "Maspalomas 3",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 10:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18972,
+   "id_local": 1305,
+   "id_visitante": 1303,
    "jornada": 4,
    "liga_id": 141,
    "local": "San Fernando B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Maspa Training"
   },
   "18973": {
+   "campo_gps": "https://goo.gl/maps/UbkUVsDSZwGkDuaC9",
    "escudo_local": "moganEscudo.png",
    "escudo_visitante": "sanfernandoEscudo.png",
-   "estadio": null,
+   "estadio": "Mogán",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -16575,12 +16698,14 @@
    "local": "CF Mogán",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
+   "permitir_comentarios_liga": 1,
    "visitante": "San Fernando B"
   },
   "18974": {
+   "campo_gps": "https://goo.gl/maps/cbJXj4iK3TgN95kL8",
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "200x200maspalomas20-21.png",
-   "estadio": null,
+   "estadio": "Maspalomas 2",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -16591,6 +16716,7 @@
    "local": "Maspa Training",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
+   "permitir_comentarios_liga": 1,
    "visitante": "CD Maspalomas"
   },
   "18975": {
@@ -18795,63 +18921,157 @@
    "visitante": "CD Maspalomas B"
   },
   "19024": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/WUwQ7qQ6QZC95WJcA",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "arguineguinEscudo.png",
    "escudo_visitante": "maspaTrainingEscudo.png",
    "estadio": "Arguineguín",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19024,
+   "id_local": 1328,
+   "id_visitante": 1327,
    "jornada": 4,
    "liga_id": 145,
    "local": "CD Arguineguín B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "E",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Maspa Training B"
   },
   "19025": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/GaipofziWgw",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "tableroEscudo.png",
    "escudo_visitante": "200x200maspalomas20-21.png",
    "estadio": "Eleuterio Valerón",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 10:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19025,
+   "id_local": 1324,
+   "id_visitante": 1326,
    "jornada": 4,
    "liga_id": 145,
    "local": "CD Tablero",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "D",
+    "E"
+   ],
+   "racha_visitante": [
+    "D",
+    "V",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Maspalomas B"
   },
   "19026": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/FsymPEsnkMBkAz2V6",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "sanfernandoEscudo.png",
    "escudo_visitante": "100x100castillo.png",
    "estadio": "Maspalomas 4",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 12:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19026,
+   "id_local": 1325,
+   "id_visitante": 1323,
    "jornada": 4,
    "liga_id": 145,
    "local": "San Fernando",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "E",
+    "E"
+   ],
+   "racha_visitante": [
+    "D",
+    "D",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Castillo CF"
   },
   "19027": {
+   "campo_gps": "https://goo.gl/maps/cbJXj4iK3TgN95kL8",
    "escudo_local": "200x200maspalomas20-21.png",
    "escudo_visitante": "arguineguinEscudo.png",
-   "estadio": null,
+   "estadio": "Maspalomas 2",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -18862,12 +19082,14 @@
    "local": "CD Maspalomas B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "permitir_comentarios_liga": 1,
    "visitante": "CD Arguineguín B"
   },
   "19028": {
+   "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "sanfernandoEscudo.png",
-   "estadio": null,
+   "estadio": "Maspalomas 4",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -18878,12 +19100,14 @@
    "local": "Maspa Training B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "permitir_comentarios_liga": 1,
    "visitante": "San Fernando"
   },
   "19029": {
+   "campo_gps": "https://goo.gl/maps/TwjiYd2VD6s",
    "escudo_local": "100x100castillo.png",
    "escudo_visitante": "tableroEscudo.png",
-   "estadio": null,
+   "estadio": "Castillo Romeral",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -18894,6 +19118,7 @@
    "local": "Castillo CF",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
+   "permitir_comentarios_liga": 1,
    "visitante": "CD Tablero"
   },
   "19030": {

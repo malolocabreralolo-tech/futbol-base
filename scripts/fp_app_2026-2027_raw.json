@@ -20,12 +20,12 @@
   "2026-10-23": "2026-10-26T09:23:15",
   "2026-10-24": "2026-10-26T09:23:15",
   "2026-10-25": "2026-10-26T03:42:59",
-  "2026-10-26": "2026-10-27T21:38:40",
-  "2026-10-27": "2026-10-27T21:38:40"
+  "2026-10-26": "2026-10-27T23:33:19",
+  "2026-10-27": "2026-10-27T23:33:19"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -184,7 +184,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -317,7 +317,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -450,7 +450,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -609,7 +609,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -768,7 +768,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -896,7 +896,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1055,7 +1055,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1188,7 +1188,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1321,7 +1321,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1473,7 +1473,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1606,7 +1606,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1765,7 +1765,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1898,7 +1898,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2031,7 +2031,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2188,7 +2188,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2347,7 +2347,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2506,7 +2506,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2665,7 +2665,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2796,7 +2796,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2929,7 +2929,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3062,7 +3062,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3221,7 +3221,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3380,7 +3380,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3539,7 +3539,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3856,7 +3856,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4166,7 +4166,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4483,7 +4483,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4790,7 +4790,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -4966,7 +4966,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5179,7 +5179,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5392,7 +5392,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5605,7 +5605,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5790,7 +5790,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -5998,7 +5998,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6202,7 +6202,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6406,7 +6406,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-10-27T21:38:40",
+   "fetched": "2026-10-27T23:33:19",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,

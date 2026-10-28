@@ -20,12 +20,13 @@
   "2026-10-23": "2026-10-26T09:23:15",
   "2026-10-24": "2026-10-26T09:23:15",
   "2026-10-25": "2026-10-26T03:42:59",
-  "2026-10-26": "2026-10-27T23:33:19",
-  "2026-10-27": "2026-10-27T23:33:19"
+  "2026-10-26": "2026-10-28T03:23:04",
+  "2026-10-27": "2026-10-28T03:23:04",
+  "2026-10-28": "2026-10-28T03:23:04"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -184,7 +185,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -317,7 +318,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -450,7 +451,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -609,7 +610,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -768,7 +769,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -896,7 +897,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1055,7 +1056,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1188,7 +1189,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1321,7 +1322,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1473,7 +1474,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1606,7 +1607,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1765,7 +1766,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1898,7 +1899,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2031,7 +2032,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2188,7 +2189,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2347,7 +2348,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2506,7 +2507,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2665,7 +2666,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2796,7 +2797,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2929,7 +2930,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3062,7 +3063,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3221,7 +3222,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3380,7 +3381,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3539,7 +3540,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3856,7 +3857,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4166,7 +4167,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4483,7 +4484,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4790,7 +4791,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -4966,7 +4967,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5179,7 +5180,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5392,7 +5393,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5605,7 +5606,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5790,7 +5791,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -5998,7 +5999,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6202,7 +6203,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6406,7 +6407,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-10-27T23:33:19",
+   "fetched": "2026-10-28T03:23:04",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -8619,6 +8620,8 @@
    "campo_gps": "https://maps.app.goo.gl/X2ofJ9L9b2PgBwHe7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100costayala.png",
    "escudo_visitante": "100x100goleta.png",
    "estadio": "Costa Ayala",
@@ -8645,6 +8648,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
@@ -38465,6 +38469,8 @@
    "campo_gps": "https://maps.app.goo.gl/6K1u9KHkbdkfxXQH8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "penaAmistadEscudo.png",
    "escudo_visitante": "charcoEscudo.png",
    "estadio": "Fabelo",
@@ -38491,6 +38497,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],
@@ -39170,6 +39177,8 @@
    "campo_gps": "https://maps.app.goo.gl/YsotFHfhVyWjLxv16",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "f-brenamen.png",
    "escudo_visitante": "100x100teguinte.png",
    "estadio": "Las Playitas",
@@ -39196,6 +39205,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [],

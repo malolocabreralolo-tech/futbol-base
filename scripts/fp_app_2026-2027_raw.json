@@ -20,14 +20,14 @@
   "2026-10-23": "2026-10-26T09:23:15",
   "2026-10-24": "2026-10-26T09:23:15",
   "2026-10-25": "2026-10-26T03:42:59",
-  "2026-10-26": "2026-10-29T19:33:11",
+  "2026-10-26": "2026-10-29T21:22:49",
   "2026-10-27": "2026-10-28T03:23:04",
   "2026-10-28": "2026-10-29T00:22:34",
-  "2026-10-29": "2026-10-29T19:33:11"
+  "2026-10-29": "2026-10-29T21:22:49"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -47,21 +47,46 @@
    "tabla": [
     {
      "banderas": "bandera-blanca-gran-canaria.png",
-     "dg": "19",
+     "dg": "22",
      "equipacion": "2026-blanca-blanco-blancas.png",
      "escudo": "100x100arucas.png",
-     "gc": "4",
-     "gf": "23",
+     "gc": "6",
+     "gf": "28",
      "id": 1190,
      "nombre": "Arucas CF C",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 3,
-     "pj": 3,
+     "pg": 4,
+     "pj": 4,
      "posicion_anterior": 1,
      "pp": 0,
+     "puntos": 12,
+     "racha_ultimos_5": [
+      "V",
+      "V",
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-verde-gran-canaria.png",
+     "dg": "16",
+     "equipacion": "2026-verde-verde-verde.png",
+     "escudo": "escudoGuayarmina.png",
+     "gc": "11",
+     "gf": "27",
+     "id": 1189,
+     "nombre": "Guayarmina",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 3,
+     "pj": 4,
+     "posicion_anterior": 3,
+     "pp": 1,
      "puntos": 9,
      "racha_ultimos_5": [
+      "D",
       "V",
       "V",
       "V"
@@ -92,48 +117,26 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-verde-gran-canaria.png",
-     "dg": "4",
-     "equipacion": "2026-verde-verde-verde.png",
-     "escudo": "escudoGuayarmina.png",
-     "gc": "11",
-     "gf": "15",
-     "id": 1189,
-     "nombre": "Guayarmina",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
-     "pj": 3,
-     "posicion_anterior": 3,
-     "pp": 1,
-     "puntos": 6,
-     "racha_ultimos_5": [
-      "D",
-      "V",
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-amarillo-azul-rayas.png",
-     "dg": "6",
+     "dg": "3",
      "equipacion": "2026-azuliamarilla-azul-amarillas.png",
      "escudo": "200x200AtalayaSanPablo.png",
-     "gc": "12",
-     "gf": "18",
+     "gc": "17",
+     "gf": "20",
      "id": 1191,
-     "nombre": "UD Atalaya B",
+     "nombre": "Atalaya B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
-     "pj": 3,
+     "pj": 4,
      "posicion_anterior": 4,
-     "pp": 2,
+     "pp": 3,
      "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "D",
-      "V"
+      "V",
+      "D"
      ],
      "sanciones": 0
     },
@@ -162,21 +165,22 @@
     },
     {
      "banderas": "bandera-roja-negro.png",
-     "dg": "-32",
+     "dg": "-44",
      "equipacion": "2026-roja-negro-rojas.png",
      "escudo": "100x100guia.png",
-     "gc": "34",
+     "gc": "46",
      "gf": "2",
      "id": 1187,
      "nombre": "UD Guía",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 3,
+     "pj": 4,
      "posicion_anterior": 6,
-     "pp": 3,
+     "pp": 4,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D",
       "D",
       "D"
@@ -186,7 +190,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -212,7 +216,7 @@
      "gc": "1",
      "gf": "39",
      "id": 1197,
-     "nombre": "Gáldar Jacobeo27",
+     "nombre": "Gáldar CF",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -319,7 +323,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -367,7 +371,7 @@
      "gc": "11",
      "gf": "18",
      "id": 1199,
-     "nombre": "Gáldar Jacobeo27 B",
+     "nombre": "Gáldar B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -412,7 +416,7 @@
      "gc": "23",
      "gf": "10",
      "id": 1200,
-     "nombre": "Villa Santa Brígida B",
+     "nombre": "Villa SB B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -452,7 +456,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -478,7 +482,7 @@
      "gc": "6",
      "gf": "26",
      "id": 1204,
-     "nombre": "Guiniguada Apolinario",
+     "nombre": "Guiniguada",
      "orden_manual": 0,
      "pe": 0,
      "pg": 3,
@@ -595,7 +599,7 @@
      "gc": "30",
      "gf": "3",
      "id": 1203,
-     "nombre": "Santidad Banot",
+     "nombre": "CD Santidad",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -613,7 +617,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -662,7 +666,7 @@
      "gc": "11",
      "gf": "19",
      "id": 1210,
-     "nombre": "Acodetti CF B",
+     "nombre": "Acodetti B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -708,7 +712,7 @@
      "gc": "10",
      "gf": "15",
      "id": 1211,
-     "nombre": "Las Mesas Huracán",
+     "nombre": "LM Huracán",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -754,7 +758,7 @@
      "gc": "32",
      "gf": "5",
      "id": 1209,
-     "nombre": "Corazón de María C",
+     "nombre": "Corazón Mª C",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -772,7 +776,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -820,7 +824,7 @@
      "gc": "11",
      "gf": "14",
      "id": 1222,
-     "nombre": "CD Veteranos B",
+     "nombre": "Veteranos B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -862,7 +866,7 @@
      "gc": "6",
      "gf": "3",
      "id": 1220,
-     "nombre": "Arucas CF B",
+     "nombre": "Arucas B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -883,7 +887,7 @@
      "gc": "14",
      "gf": "1",
      "id": 1223,
-     "nombre": "CF Heidelberg",
+     "nombre": "Heidelberg",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -900,7 +904,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -926,7 +930,7 @@
      "gc": "5",
      "gf": "23",
      "id": 1229,
-     "nombre": "Corazón de María",
+     "nombre": "Corazón Mª",
      "orden_manual": 0,
      "pe": 0,
      "pg": 3,
@@ -949,7 +953,7 @@
      "gc": "14",
      "gf": "22",
      "id": 1225,
-     "nombre": "UD Tamaraceite B",
+     "nombre": "Tamaraceite B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -972,7 +976,7 @@
      "gc": "9",
      "gf": "17",
      "id": 1226,
-     "nombre": "Daniel Carnevali",
+     "nombre": "CD Carnevali",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -1059,7 +1063,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1151,7 +1155,7 @@
      "gc": "27",
      "gf": "10",
      "id": 1234,
-     "nombre": "RC Victoria B",
+     "nombre": "Victoria B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -1192,7 +1196,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1218,7 +1222,7 @@
      "gc": "7",
      "gf": "45",
      "id": 1239,
-     "nombre": "Villa Santa Brígida",
+     "nombre": "Villa SB",
      "orden_manual": 0,
      "pe": 0,
      "pg": 3,
@@ -1263,7 +1267,7 @@
      "gc": "40",
      "gf": "10",
      "id": 1237,
-     "nombre": "CD Veteranos C",
+     "nombre": "Veteranos C",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -1325,7 +1329,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1351,7 +1355,7 @@
      "gc": "3",
      "gf": "57",
      "id": 1241,
-     "nombre": "UD Tamaraceite",
+     "nombre": "Tamaraceite",
      "orden_manual": 0,
      "pe": 0,
      "pg": 3,
@@ -1459,7 +1463,7 @@
      "gc": "55",
      "gf": "4",
      "id": 1243,
-     "nombre": "Real Sportin San José B",
+     "nombre": "Real Sportin B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -1477,7 +1481,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1526,7 +1530,7 @@
      "gc": "4",
      "gf": "18",
      "id": 1253,
-     "nombre": "Lomo Blanco SJA",
+     "nombre": "Lomo Blanco",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -1571,7 +1575,7 @@
      "gc": "11",
      "gf": "3",
      "id": 1249,
-     "nombre": "Corazón de María B",
+     "nombre": "Corazón Mª B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -1610,7 +1614,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1682,7 +1686,7 @@
      "gc": "20",
      "gf": "10",
      "id": 1260,
-     "nombre": "Guiniguada Apolinario B",
+     "nombre": "Guiniguada B",
      "orden_manual": 0,
      "pe": 1,
      "pg": 1,
@@ -1705,7 +1709,7 @@
      "gc": "17",
      "gf": "14",
      "id": 1257,
-     "nombre": "Corazón de María D",
+     "nombre": "Corazón Mª D",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -1769,7 +1773,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1795,7 +1799,7 @@
      "gc": "2",
      "gf": "24",
      "id": 1262,
-     "nombre": "Real Sporting San José",
+     "nombre": "Real Sporting",
      "orden_manual": 0,
      "pe": 1,
      "pg": 2,
@@ -1818,7 +1822,7 @@
      "gc": "5",
      "gf": "20",
      "id": 1261,
-     "nombre": "San Juan Tres Palmas",
+     "nombre": "San Juan",
      "orden_manual": 0,
      "pe": 1,
      "pg": 2,
@@ -1864,7 +1868,7 @@
      "gc": "10",
      "gf": "11",
      "id": 1264,
-     "nombre": "CD Miguel León",
+     "nombre": "Miguel León",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -1904,7 +1908,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1953,7 +1957,7 @@
      "gc": "2",
      "gf": "39",
      "id": 1271,
-     "nombre": "AD Huracán C",
+     "nombre": "Huracán C",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -1997,7 +2001,7 @@
      "gc": "23",
      "gf": "0",
      "id": 1267,
-     "nombre": "Atl. Bachicán Las Mesas",
+     "nombre": "Atl. Bachicán LM",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -2019,7 +2023,7 @@
      "gc": "61",
      "gf": "2",
      "id": 1268,
-     "nombre": "Daniel Carnevali B",
+     "nombre": "Carnevali B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -2037,7 +2041,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 4,
@@ -2086,7 +2090,7 @@
      "gc": "5",
      "gf": "8",
      "id": 1276,
-     "nombre": "CD Calero B",
+     "nombre": "Calero B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -2155,7 +2159,7 @@
      "gc": "11",
      "gf": "2",
      "id": 1273,
-     "nombre": "UD Valsequillo B",
+     "nombre": "Valsequillo B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -2194,7 +2198,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2289,7 +2293,7 @@
      "gc": "9",
      "gf": "6",
      "id": 1278,
-     "nombre": "CD Vallinamar",
+     "nombre": "Vallinamar",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -2353,7 +2357,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2494,7 +2498,7 @@
      "gc": "21",
      "gf": "4",
      "id": 1287,
-     "nombre": "UD Telde C",
+     "nombre": "Telde C",
      "orden_manual": 0,
      "pe": 1,
      "pg": 0,
@@ -2512,7 +2516,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2607,7 +2611,7 @@
      "gc": "24",
      "gf": "3",
      "id": 1293,
-     "nombre": "CD Futboltec",
+     "nombre": "Futboltec",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -2630,7 +2634,7 @@
      "gc": "22",
      "gf": "1",
      "id": 1290,
-     "nombre": "CD Arinaga B",
+     "nombre": "Arinaga B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -2671,7 +2675,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2697,7 +2701,7 @@
      "gc": "1",
      "gf": "5",
      "id": 1298,
-     "nombre": "CD Ingenio B",
+     "nombre": "Ingenio B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -2742,7 +2746,7 @@
      "gc": "5",
      "gf": "24",
      "id": 1300,
-     "nombre": "CD Doramas B",
+     "nombre": "Doramas B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -2764,7 +2768,7 @@
      "gc": "8",
      "gf": "3",
      "id": 1299,
-     "nombre": "UD Valsequillo",
+     "nombre": "Valsequillo",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
@@ -2802,7 +2806,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2828,7 +2832,7 @@
      "gc": "10",
      "gf": "47",
      "id": 1301,
-     "nombre": "CD Arguineguín",
+     "nombre": "Arguineguín",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -2851,7 +2855,7 @@
      "gc": "1",
      "gf": "33",
      "id": 1302,
-     "nombre": "CD Maspalomas",
+     "nombre": "Maspalomas",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -2935,7 +2939,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2983,7 +2987,7 @@
      "gc": "2",
      "gf": "21",
      "id": 1307,
-     "nombre": "UD Vecindario C",
+     "nombre": "Vecindario C",
      "orden_manual": 0,
      "pe": 0,
      "pg": 2,
@@ -3068,7 +3072,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3094,7 +3098,7 @@
      "gc": "2",
      "gf": "47",
      "id": 1315,
-     "nombre": "UD Vecindario",
+     "nombre": "Vecindario",
      "orden_manual": 0,
      "pe": 0,
      "pg": 3,
@@ -3163,7 +3167,7 @@
      "gc": "28",
      "gf": "23",
      "id": 1314,
-     "nombre": "CD Cerruda B",
+     "nombre": "Cerruda B",
      "orden_manual": 0,
      "pe": 1,
      "pg": 1,
@@ -3227,7 +3231,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3253,7 +3257,7 @@
      "gc": "5",
      "gf": "18",
      "id": 1318,
-     "nombre": "San Pedro Mártir",
+     "nombre": "San Pedro",
      "orden_manual": 0,
      "pe": 1,
      "pg": 2,
@@ -3276,7 +3280,7 @@
      "gc": "6",
      "gf": "7",
      "id": 1319,
-     "nombre": "CD Cerruda C",
+     "nombre": "Cerruda C",
      "orden_manual": 0,
      "pe": 1,
      "pg": 2,
@@ -3323,7 +3327,7 @@
      "gc": "10",
      "gf": "9",
      "id": 1317,
-     "nombre": "CD Arguineguín C",
+     "nombre": "Arguineguín C",
      "orden_manual": 0,
      "pe": 1,
      "pg": 1,
@@ -3370,7 +3374,7 @@
      "gc": "9",
      "gf": "5",
      "id": 1322,
-     "nombre": "UD Vecindario B",
+     "nombre": "Vecindario B",
      "orden_manual": 0,
      "pe": 1,
      "pg": 0,
@@ -3388,7 +3392,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3437,7 +3441,7 @@
      "gc": "6",
      "gf": "15",
      "id": 1328,
-     "nombre": "CD Arguineguín B",
+     "nombre": "Arguineguín B",
      "orden_manual": 0,
      "pe": 1,
      "pg": 2,
@@ -3483,7 +3487,7 @@
      "gc": "14",
      "gf": "11",
      "id": 1326,
-     "nombre": "CD Maspalomas B",
+     "nombre": "Maspalomas B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
@@ -3547,7 +3551,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3864,7 +3868,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4174,7 +4178,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4491,7 +4495,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4798,7 +4802,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -4974,7 +4978,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5187,7 +5191,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5400,7 +5404,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5613,7 +5617,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5798,7 +5802,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6008,7 +6012,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6216,7 +6220,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6424,7 +6428,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-10-29T19:33:11",
+   "fetched": "2026-10-29T21:22:49",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6750,7 +6754,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Atalaya B"
+   "visitante": "Atalaya B"
   },
   "18717": {
    "arbitro_principal_nombre": null,
@@ -6929,7 +6933,7 @@
    "id_visitante": 1189,
    "jornada": 2,
    "liga_id": 121,
-   "local": "UD Atalaya B",
+   "local": "Atalaya B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 1",
@@ -7002,7 +7006,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Atalaya B"
+   "visitante": "Atalaya B"
   },
   "18722": {
    "arbitro_principal_nombre": null,
@@ -7169,23 +7173,23 @@
    "escudo_local": "200x200AtalayaSanPablo.png",
    "escudo_visitante": "100x100arucas.png",
    "estadio": "Atalaya",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-29 17:45:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 2,
+   "goles_visitante": 5,
    "hora_inicio": null,
    "id": 18725,
    "id_local": 1191,
    "id_visitante": 1190,
    "jornada": 4,
    "liga_id": 121,
-   "local": "UD Atalaya B",
-   "minutos_jugados": 0,
+   "local": "Atalaya B",
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 1",
    "pen_local": "",
@@ -7197,9 +7201,11 @@
    "racha_local": [
     "D",
     "D",
-    "V"
+    "V",
+    "D"
    ],
    "racha_visitante": [
+    "V",
     "V",
     "V",
     "V"
@@ -7221,14 +7227,14 @@
    "escudo_local": "escudoGuayarmina.png",
    "escudo_visitante": "100x100guia.png",
    "estadio": "Cruz del Poleo",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-29 17:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
+   "goles_local": 12,
    "goles_visitante": 0,
    "hora_inicio": null,
    "id": 18726,
@@ -7237,7 +7243,7 @@
    "jornada": 4,
    "liga_id": 121,
    "local": "Guayarmina",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 1",
    "pen_local": "",
@@ -7249,9 +7255,11 @@
    "racha_local": [
     "D",
     "V",
+    "V",
     "V"
    ],
    "racha_visitante": [
+    "D",
     "D",
     "D",
     "D"
@@ -7277,7 +7285,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 1",
    "permitir_comentarios_liga": 1,
-   "visitante": "UD Atalaya B"
+   "visitante": "Atalaya B"
   },
   "18728": {
    "campo_gps": "https://maps.app.goo.gl/hkGXfkW2fXEWTfQk7",
@@ -7441,7 +7449,7 @@
    "id_visitante": 1194,
    "jornada": 2,
    "liga_id": 122,
-   "local": "Gáldar Jacobeo27",
+   "local": "Gáldar CF",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 2",
@@ -7613,7 +7621,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Gáldar Jacobeo27"
+   "visitante": "Gáldar CF"
   },
   "18736": {
    "arbitro_principal_nombre": null,
@@ -7640,7 +7648,7 @@
    "id_visitante": 1195,
    "jornada": 4,
    "liga_id": 122,
-   "local": "Gáldar Jacobeo27",
+   "local": "Gáldar CF",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 2",
@@ -7726,7 +7734,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 2",
    "permitir_comentarios_liga": 1,
-   "visitante": "Gáldar Jacobeo27"
+   "visitante": "Gáldar CF"
   },
   "18739": {
    "campo_gps": "https://goo.gl/maps/u6CZXDCsxB52",
@@ -7794,7 +7802,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Villa Santa Brígida B"
+   "visitante": "Villa SB B"
   },
   "18741": {
    "arbitro_principal_nombre": null,
@@ -7823,7 +7831,7 @@
    "id_visitante": 1201,
    "jornada": 1,
    "liga_id": 123,
-   "local": "Gáldar Jacobeo27 B",
+   "local": "Gáldar B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
@@ -7920,7 +7928,7 @@
    "id_visitante": 1199,
    "jornada": 2,
    "liga_id": 123,
-   "local": "Villa Santa Brígida B",
+   "local": "Villa SB B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
@@ -7941,7 +7949,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Gáldar Jacobeo27 B"
+   "visitante": "Gáldar B"
   },
   "18744": {
    "arbitro_principal_nombre": null,
@@ -7970,7 +7978,7 @@
    "id_visitante": 1202,
    "jornada": 3,
    "liga_id": 123,
-   "local": "Gáldar Jacobeo27 B",
+   "local": "Gáldar B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
@@ -8043,7 +8051,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Villa Santa Brígida B"
+   "visitante": "Villa SB B"
   },
   "18746": {
    "arbitro_principal_nombre": null,
@@ -8091,7 +8099,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Gáldar Jacobeo27 B"
+   "visitante": "Gáldar B"
   },
   "18747": {
    "arbitro_principal_nombre": null,
@@ -8152,7 +8160,7 @@
    "id": 18748,
    "jornada": 5,
    "liga_id": 123,
-   "local": "Villa Santa Brígida B",
+   "local": "Villa SB B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
    "permitir_comentarios_liga": 1,
@@ -8203,7 +8211,7 @@
    "id_visitante": 1206,
    "jornada": 1,
    "liga_id": 124,
-   "local": "Santidad Banot",
+   "local": "CD Santidad",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
@@ -8254,7 +8262,7 @@
    "id_visitante": 1207,
    "jornada": 1,
    "liga_id": 124,
-   "local": "Guiniguada Apolinario",
+   "local": "Guiniguada",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
@@ -8377,7 +8385,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Guiniguada Apolinario"
+   "visitante": "Guiniguada"
   },
   "18754": {
    "arbitro_principal_nombre": null,
@@ -8427,7 +8435,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Santidad Banot"
+   "visitante": "CD Santidad"
   },
   "18755": {
    "arbitro_principal_nombre": null,
@@ -8559,7 +8567,7 @@
    "id_visitante": 1204,
    "jornada": 3,
    "liga_id": 124,
-   "local": "Santidad Banot",
+   "local": "CD Santidad",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
@@ -8582,7 +8590,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Guiniguada Apolinario"
+   "visitante": "Guiniguada"
   },
   "18758": {
    "arbitro_principal_nombre": null,
@@ -8715,7 +8723,7 @@
    "id_visitante": 1207,
    "jornada": 4,
    "liga_id": 124,
-   "local": "Santidad Banot",
+   "local": "CD Santidad",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
@@ -8764,7 +8772,7 @@
    "id_visitante": 1205,
    "jornada": 4,
    "liga_id": 124,
-   "local": "Guiniguada Apolinario",
+   "local": "Guiniguada",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
@@ -8822,7 +8830,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
    "permitir_comentarios_liga": 1,
-   "visitante": "Guiniguada Apolinario"
+   "visitante": "Guiniguada"
   },
   "18764": {
    "campo_gps": "https://maps.app.goo.gl/ijbNHkoXCC91cZuq5",
@@ -8840,7 +8848,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
    "permitir_comentarios_liga": 1,
-   "visitante": "Santidad Banot"
+   "visitante": "CD Santidad"
   },
   "18765": {
    "arbitro_principal_nombre": null,
@@ -8869,7 +8877,7 @@
    "id_visitante": 1212,
    "jornada": 1,
    "liga_id": 125,
-   "local": "Corazón de María C",
+   "local": "Corazón Mª C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
@@ -8919,7 +8927,7 @@
    "id_visitante": 1213,
    "jornada": 1,
    "liga_id": 125,
-   "local": "Acodetti CF B",
+   "local": "Acodetti B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
@@ -8969,7 +8977,7 @@
    "id_visitante": 1214,
    "jornada": 1,
    "liga_id": 125,
-   "local": "Las Mesas Huracán",
+   "local": "LM Huracán",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
@@ -9040,7 +9048,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Las Mesas Huracán"
+   "visitante": "LM Huracán"
   },
   "18769": {
    "arbitro_principal_nombre": null,
@@ -9090,7 +9098,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Acodetti CF B"
+   "visitante": "Acodetti B"
   },
   "18770": {
    "arbitro_principal_nombre": null,
@@ -9140,7 +9148,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Corazón de María C"
+   "visitante": "Corazón Mª C"
   },
   "18771": {
    "arbitro_principal_nombre": null,
@@ -9221,7 +9229,7 @@
    "id_visitante": 1214,
    "jornada": 3,
    "liga_id": 125,
-   "local": "Acodetti CF B",
+   "local": "Acodetti B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
@@ -9273,7 +9281,7 @@
    "id_visitante": 1209,
    "jornada": 3,
    "liga_id": 125,
-   "local": "Las Mesas Huracán",
+   "local": "LM Huracán",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
@@ -9296,7 +9304,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Corazón de María C"
+   "visitante": "Corazón Mª C"
   },
   "18774": {
    "arbitro_principal_nombre": null,
@@ -9372,7 +9380,7 @@
    "id_visitante": 1210,
    "jornada": 4,
    "liga_id": 125,
-   "local": "Corazón de María C",
+   "local": "Corazón Mª C",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
@@ -9394,7 +9402,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Acodetti CF B"
+   "visitante": "Acodetti B"
   },
   "18776": {
    "arbitro_principal_nombre": null,
@@ -9421,7 +9429,7 @@
    "id_visitante": 1212,
    "jornada": 4,
    "liga_id": 125,
-   "local": "Las Mesas Huracán",
+   "local": "LM Huracán",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
@@ -9479,7 +9487,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
    "permitir_comentarios_liga": 1,
-   "visitante": "Corazón de María C"
+   "visitante": "Corazón Mª C"
   },
   "18779": {
    "campo_gps": "https://maps.app.goo.gl/eeMWR61QAYWEVFDX8",
@@ -9493,11 +9501,11 @@
    "id": 18779,
    "jornada": 5,
    "liga_id": 125,
-   "local": "Acodetti CF B",
+   "local": "Acodetti B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 5",
    "permitir_comentarios_liga": 1,
-   "visitante": "Las Mesas Huracán"
+   "visitante": "LM Huracán"
   },
   "18790": {
    "arbitro_principal_nombre": null,
@@ -9526,7 +9534,7 @@
    "id_visitante": 1222,
    "jornada": 1,
    "liga_id": 127,
-   "local": "Arucas CF B",
+   "local": "Arucas B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 6",
@@ -9546,7 +9554,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Veteranos B"
+   "visitante": "Veteranos B"
   },
   "18791": {
    "arbitro_principal_nombre": null,
@@ -9595,7 +9603,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CF Heidelberg"
+   "visitante": "Heidelberg"
   },
   "18792": {
    "arbitro_principal_nombre": null,
@@ -9624,7 +9632,7 @@
    "id_visitante": 1224,
    "jornada": 2,
    "liga_id": 127,
-   "local": "CF Heidelberg",
+   "local": "Heidelberg",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 6",
@@ -9670,7 +9678,7 @@
    "id_visitante": 1221,
    "jornada": 2,
    "liga_id": 127,
-   "local": "CD Veteranos B",
+   "local": "Veteranos B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 6",
@@ -9720,7 +9728,7 @@
    "id_visitante": 1222,
    "jornada": 3,
    "liga_id": 127,
-   "local": "CF Heidelberg",
+   "local": "Heidelberg",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 6",
@@ -9742,7 +9750,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Veteranos B"
+   "visitante": "Veteranos B"
   },
   "18795": {
    "arbitro_principal_nombre": null,
@@ -9788,7 +9796,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Arucas CF B"
+   "visitante": "Arucas B"
   },
   "18796": {
    "arbitro_principal_nombre": null,
@@ -9815,7 +9823,7 @@
    "id_visitante": 1221,
    "jornada": 4,
    "liga_id": 127,
-   "local": "Arucas CF B",
+   "local": "Arucas B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 6",
@@ -9879,7 +9887,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Veteranos B"
+   "visitante": "Veteranos B"
   },
   "18798": {
    "campo_gps": "https://goo.gl/maps/6rwmFAa78DPWbw9K9",
@@ -9893,11 +9901,11 @@
    "id": 18798,
    "jornada": 5,
    "liga_id": 127,
-   "local": "CF Heidelberg",
+   "local": "Heidelberg",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 6",
    "permitir_comentarios_liga": 1,
-   "visitante": "Arucas CF B"
+   "visitante": "Arucas B"
   },
   "18799": {
    "campo_gps": "https://maps.app.goo.gl/eeMWR61QAYWEVFDX8",
@@ -9944,7 +9952,7 @@
    "id_visitante": 1228,
    "jornada": 1,
    "liga_id": 128,
-   "local": "UD Tamaraceite B",
+   "local": "Tamaraceite B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
@@ -9994,7 +10002,7 @@
    "id_visitante": 1229,
    "jornada": 1,
    "liga_id": 128,
-   "local": "Daniel Carnevali",
+   "local": "CD Carnevali",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
@@ -10015,7 +10023,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Corazón de María"
+   "visitante": "Corazón Mª"
   },
   "18802": {
    "arbitro_principal_nombre": null,
@@ -10094,7 +10102,7 @@
    "id_visitante": 1225,
    "jornada": 2,
    "liga_id": 128,
-   "local": "Corazón de María",
+   "local": "Corazón Mª",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
@@ -10115,7 +10123,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Tamaraceite B"
+   "visitante": "Tamaraceite B"
   },
   "18804": {
    "arbitro_principal_nombre": null,
@@ -10215,7 +10223,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Daniel Carnevali"
+   "visitante": "CD Carnevali"
   },
   "18806": {
    "arbitro_principal_nombre": null,
@@ -10244,7 +10252,7 @@
    "id_visitante": 1227,
    "jornada": 3,
    "liga_id": 128,
-   "local": "UD Tamaraceite B",
+   "local": "Tamaraceite B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
@@ -10296,7 +10304,7 @@
    "id_visitante": 1230,
    "jornada": 3,
    "liga_id": 128,
-   "local": "Corazón de María",
+   "local": "Corazón Mª",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
@@ -10348,7 +10356,7 @@
    "id_visitante": 1228,
    "jornada": 3,
    "liga_id": 128,
-   "local": "Daniel Carnevali",
+   "local": "CD Carnevali",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
@@ -10398,7 +10406,7 @@
    "id_visitante": 1230,
    "jornada": 4,
    "liga_id": 128,
-   "local": "UD Tamaraceite B",
+   "local": "Tamaraceite B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
@@ -10469,7 +10477,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Corazón de María"
+   "visitante": "Corazón Mª"
   },
   "18811": {
    "arbitro_principal_nombre": null,
@@ -10518,7 +10526,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Daniel Carnevali"
+   "visitante": "CD Carnevali"
   },
   "18812": {
    "campo_gps": "https://maps.app.goo.gl/4FKVo3JWtXwB9VyY8",
@@ -10550,7 +10558,7 @@
    "id": 18813,
    "jornada": 5,
    "liga_id": 128,
-   "local": "Corazón de María",
+   "local": "Corazón Mª",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
    "permitir_comentarios_liga": 1,
@@ -10568,11 +10576,11 @@
    "id": 18814,
    "jornada": 5,
    "liga_id": 128,
-   "local": "Daniel Carnevali",
+   "local": "CD Carnevali",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 7",
    "permitir_comentarios_liga": 1,
-   "visitante": "UD Tamaraceite B"
+   "visitante": "Tamaraceite B"
   },
   "18815": {
    "arbitro_principal_nombre": null,
@@ -10671,7 +10679,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "RC Victoria B"
+   "visitante": "Victoria B"
   },
   "18817": {
    "arbitro_principal_nombre": null,
@@ -10700,7 +10708,7 @@
    "id_visitante": 1231,
    "jornada": 2,
    "liga_id": 129,
-   "local": "RC Victoria B",
+   "local": "Victoria B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 8",
@@ -10821,7 +10829,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "RC Victoria B"
+   "visitante": "Victoria B"
   },
   "18820": {
    "arbitro_principal_nombre": null,
@@ -10981,7 +10989,7 @@
    "id": 18823,
    "jornada": 5,
    "liga_id": 129,
-   "local": "RC Victoria B",
+   "local": "Victoria B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 8",
    "permitir_comentarios_liga": 1,
@@ -11053,7 +11061,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Villa Santa Brígida"
+   "visitante": "Villa SB"
   },
   "18826": {
    "arbitro_principal_nombre": null,
@@ -11082,7 +11090,7 @@
    "id_visitante": 1240,
    "jornada": 1,
    "liga_id": 130,
-   "local": "CD Veteranos C",
+   "local": "Veteranos C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 9",
@@ -11180,7 +11188,7 @@
    "id_visitante": 1237,
    "jornada": 2,
    "liga_id": 130,
-   "local": "Villa Santa Brígida",
+   "local": "Villa SB",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 9",
@@ -11201,7 +11209,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Veteranos C"
+   "visitante": "Veteranos C"
   },
   "18829": {
    "arbitro_principal_nombre": null,
@@ -11230,7 +11238,7 @@
    "id_visitante": 1238,
    "jornada": 3,
    "liga_id": 130,
-   "local": "CD Veteranos C",
+   "local": "Veteranos C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 9",
@@ -11303,7 +11311,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Villa Santa Brígida"
+   "visitante": "Villa SB"
   },
   "18831": {
    "arbitro_principal_nombre": null,
@@ -11398,7 +11406,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Veteranos C"
+   "visitante": "Veteranos C"
   },
   "18833": {
    "campo_gps": "https://goo.gl/maps/TUaU1txQGphnk5uH6",
@@ -11412,7 +11420,7 @@
    "id": 18833,
    "jornada": 5,
    "liga_id": 130,
-   "local": "Villa Santa Brígida",
+   "local": "Villa SB",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 9",
    "permitir_comentarios_liga": 1,
@@ -11463,7 +11471,7 @@
    "id_visitante": 1244,
    "jornada": 1,
    "liga_id": 131,
-   "local": "UD Tamaraceite",
+   "local": "Tamaraceite",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
@@ -11558,7 +11566,7 @@
    "id_visitante": 1246,
    "jornada": 1,
    "liga_id": 131,
-   "local": "Real Sportin San José B",
+   "local": "Real Sportin B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
@@ -11629,7 +11637,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Tamaraceite"
+   "visitante": "Tamaraceite"
   },
   "18839": {
    "arbitro_principal_nombre": null,
@@ -11678,7 +11686,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Real Sportin San José B"
+   "visitante": "Real Sportin B"
   },
   "18840": {
    "arbitro_principal_nombre": null,
@@ -11800,7 +11808,7 @@
    "id_visitante": 1241,
    "jornada": 3,
    "liga_id": 131,
-   "local": "Real Sportin San José B",
+   "local": "Real Sportin B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
@@ -11823,7 +11831,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Tamaraceite"
+   "visitante": "Tamaraceite"
   },
   "18843": {
    "arbitro_principal_nombre": null,
@@ -11900,7 +11908,7 @@
    "id_visitante": 1242,
    "jornada": 4,
    "liga_id": 131,
-   "local": "UD Tamaraceite",
+   "local": "Tamaraceite",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
@@ -11945,7 +11953,7 @@
    "id_visitante": 1244,
    "jornada": 4,
    "liga_id": 131,
-   "local": "Real Sportin San José B",
+   "local": "Real Sportin B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
@@ -12049,7 +12057,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
    "permitir_comentarios_liga": 1,
-   "visitante": "UD Tamaraceite"
+   "visitante": "Tamaraceite"
   },
   "18849": {
    "campo_gps": "https://maps.app.goo.gl/JntSPeJMUkWg3V8s5",
@@ -12067,7 +12075,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
    "permitir_comentarios_liga": 1,
-   "visitante": "Real Sportin San José B"
+   "visitante": "Real Sportin B"
   },
   "18850": {
    "arbitro_principal_nombre": null,
@@ -12117,7 +12125,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Corazón de María B"
+   "visitante": "Corazón Mª B"
   },
   "18851": {
    "arbitro_principal_nombre": null,
@@ -12195,7 +12203,7 @@
    "id_visitante": 1248,
    "jornada": 2,
    "liga_id": 132,
-   "local": "Corazón de María B",
+   "local": "Corazón Mª B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 11",
@@ -12245,7 +12253,7 @@
    "id_visitante": 1247,
    "jornada": 2,
    "liga_id": 132,
-   "local": "Lomo Blanco SJA",
+   "local": "Lomo Blanco",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 11",
@@ -12346,7 +12354,7 @@
    "id_visitante": 1252,
    "jornada": 3,
    "liga_id": 132,
-   "local": "Lomo Blanco SJA",
+   "local": "Lomo Blanco",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 11",
@@ -12442,7 +12450,7 @@
    "id_visitante": 1253,
    "jornada": 4,
    "liga_id": 132,
-   "local": "Corazón de María B",
+   "local": "Corazón Mª B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 11",
@@ -12462,7 +12470,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Lomo Blanco SJA"
+   "visitante": "Lomo Blanco"
   },
   "18858": {
    "campo_gps": "https://maps.app.goo.gl/JcJ9HA6vVZMpWqSB6",
@@ -12480,7 +12488,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 11",
    "permitir_comentarios_liga": 1,
-   "visitante": "Corazón de María B"
+   "visitante": "Corazón Mª B"
   },
   "18859": {
    "campo_gps": "https://maps.app.goo.gl/fvZ1h31zYG5g7zZU8",
@@ -12494,7 +12502,7 @@
    "id": 18859,
    "jornada": 5,
    "liga_id": 132,
-   "local": "Lomo Blanco SJA",
+   "local": "Lomo Blanco",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 11",
    "permitir_comentarios_liga": 1,
@@ -12548,7 +12556,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Corazón de María D"
+   "visitante": "Corazón Mª D"
   },
   "18861": {
    "arbitro_principal_nombre": null,
@@ -12598,7 +12606,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Guiniguada Apolinario B"
+   "visitante": "Guiniguada B"
   },
   "18862": {
    "arbitro_principal_nombre": null,
@@ -12677,7 +12685,7 @@
    "id_visitante": 1255,
    "jornada": 2,
    "liga_id": 133,
-   "local": "Corazón de María D",
+   "local": "Corazón Mª D",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
@@ -12777,7 +12785,7 @@
    "id_visitante": 1256,
    "jornada": 2,
    "liga_id": 133,
-   "local": "Guiniguada Apolinario B",
+   "local": "Guiniguada B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
@@ -12850,7 +12858,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Guiniguada Apolinario B"
+   "visitante": "Guiniguada B"
   },
   "18867": {
    "arbitro_principal_nombre": null,
@@ -12879,7 +12887,7 @@
    "id_visitante": 1259,
    "jornada": 3,
    "liga_id": 133,
-   "local": "Corazón de María D",
+   "local": "Corazón Mª D",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
@@ -13030,7 +13038,7 @@
    "id_visitante": 1257,
    "jornada": 4,
    "liga_id": 133,
-   "local": "Guiniguada Apolinario B",
+   "local": "Guiniguada B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
@@ -13052,7 +13060,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Corazón de María D"
+   "visitante": "Corazón Mª D"
   },
   "18871": {
    "arbitro_principal_nombre": null,
@@ -13119,7 +13127,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
    "permitir_comentarios_liga": 1,
-   "visitante": "Guiniguada Apolinario B"
+   "visitante": "Guiniguada B"
   },
   "18873": {
    "campo_gps": "https://maps.app.goo.gl/ZP8qtd4DuuT1Ybzd8",
@@ -13133,7 +13141,7 @@
    "id": 18873,
    "jornada": 5,
    "liga_id": 133,
-   "local": "Corazón de María D",
+   "local": "Corazón Mª D",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 12",
    "permitir_comentarios_liga": 1,
@@ -13184,7 +13192,7 @@
    "id_visitante": 1264,
    "jornada": 1,
    "liga_id": 134,
-   "local": "San Juan Tres Palmas",
+   "local": "San Juan",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
@@ -13204,7 +13212,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Miguel León"
+   "visitante": "Miguel León"
   },
   "18876": {
    "arbitro_principal_nombre": null,
@@ -13233,7 +13241,7 @@
    "id_visitante": 1265,
    "jornada": 1,
    "liga_id": 134,
-   "local": "Real Sporting San José",
+   "local": "Real Sporting",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
@@ -13303,7 +13311,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Real Sporting San José"
+   "visitante": "Real Sporting"
   },
   "18878": {
    "arbitro_principal_nombre": null,
@@ -13353,7 +13361,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "San Juan Tres Palmas"
+   "visitante": "San Juan"
   },
   "18879": {
    "arbitro_principal_nombre": null,
@@ -13403,7 +13411,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Miguel León"
+   "visitante": "Miguel León"
   },
   "18880": {
    "arbitro_principal_nombre": null,
@@ -13432,7 +13440,7 @@
    "id_visitante": 1261,
    "jornada": 3,
    "liga_id": 134,
-   "local": "Real Sporting San José",
+   "local": "Real Sporting",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
@@ -13455,7 +13463,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "San Juan Tres Palmas"
+   "visitante": "San Juan"
   },
   "18881": {
    "arbitro_principal_nombre": null,
@@ -13482,7 +13490,7 @@
    "id_visitante": 1264,
    "jornada": 4,
    "liga_id": 134,
-   "local": "Real Sporting San José",
+   "local": "Real Sporting",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
@@ -13503,7 +13511,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Miguel León"
+   "visitante": "Miguel León"
   },
   "18882": {
    "arbitro_principal_nombre": null,
@@ -13569,7 +13577,7 @@
    "id": 18883,
    "jornada": 5,
    "liga_id": 134,
-   "local": "CD Miguel León",
+   "local": "Miguel León",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
    "permitir_comentarios_liga": 1,
@@ -13591,7 +13599,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
    "permitir_comentarios_liga": 1,
-   "visitante": "San Juan Tres Palmas"
+   "visitante": "San Juan"
   },
   "18885": {
    "arbitro_principal_nombre": null,
@@ -13620,7 +13628,7 @@
    "id_visitante": 1269,
    "jornada": 1,
    "liga_id": 135,
-   "local": "Atl. Bachicán Las Mesas",
+   "local": "Atl. Bachicán LM",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
@@ -13670,7 +13678,7 @@
    "id_visitante": 1270,
    "jornada": 1,
    "liga_id": 135,
-   "local": "Daniel Carnevali B",
+   "local": "Carnevali B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
@@ -13740,7 +13748,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Daniel Carnevali B"
+   "visitante": "Carnevali B"
   },
   "18888": {
    "arbitro_principal_nombre": null,
@@ -13769,7 +13777,7 @@
    "id_visitante": 1267,
    "jornada": 2,
    "liga_id": 135,
-   "local": "AD Huracán C",
+   "local": "Huracán C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
@@ -13789,7 +13797,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Atl. Bachicán Las Mesas"
+   "visitante": "Atl. Bachicán LM"
   },
   "18889": {
    "arbitro_principal_nombre": null,
@@ -13818,7 +13826,7 @@
    "id_visitante": 1271,
    "jornada": 3,
    "liga_id": 135,
-   "local": "Daniel Carnevali B",
+   "local": "Carnevali B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
@@ -13840,7 +13848,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "AD Huracán C"
+   "visitante": "Huracán C"
   },
   "18890": {
    "arbitro_principal_nombre": null,
@@ -13918,7 +13926,7 @@
    "id_visitante": 1270,
    "jornada": 4,
    "liga_id": 135,
-   "local": "AD Huracán C",
+   "local": "Huracán C",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
@@ -13965,7 +13973,7 @@
    "id_visitante": 1268,
    "jornada": 4,
    "liga_id": 135,
-   "local": "Atl. Bachicán Las Mesas",
+   "local": "Atl. Bachicán LM",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
@@ -13986,7 +13994,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "Daniel Carnevali B"
+   "visitante": "Carnevali B"
   },
   "18893": {
    "campo_gps": "https://goo.gl/maps/ZjKpiRpJTu3h6kYdA",
@@ -14004,7 +14012,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
    "permitir_comentarios_liga": 1,
-   "visitante": "AD Huracán C"
+   "visitante": "Huracán C"
   },
   "18894": {
    "campo_gps": "https://maps.app.goo.gl/JcJ9HA6vVZMpWqSB6",
@@ -14022,7 +14030,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 14",
    "permitir_comentarios_liga": 1,
-   "visitante": "Atl. Bachicán Las Mesas"
+   "visitante": "Atl. Bachicán LM"
   },
   "18895": {
    "arbitro_principal_nombre": null,
@@ -14101,7 +14109,7 @@
    "id_visitante": 1276,
    "jornada": 1,
    "liga_id": 136,
-   "local": "UD Valsequillo B",
+   "local": "Valsequillo B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
@@ -14122,7 +14130,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Calero B"
+   "visitante": "Calero B"
   },
   "18897": {
    "arbitro_principal_nombre": null,
@@ -14222,7 +14230,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Valsequillo B"
+   "visitante": "Valsequillo B"
   },
   "18899": {
    "arbitro_principal_nombre": null,
@@ -14251,7 +14259,7 @@
    "id_visitante": 1272,
    "jornada": 2,
    "liga_id": 136,
-   "local": "CD Calero B",
+   "local": "Calero B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
@@ -14403,7 +14411,7 @@
    "id_visitante": 1272,
    "jornada": 3,
    "liga_id": 136,
-   "local": "UD Valsequillo B",
+   "local": "Valsequillo B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
@@ -14476,7 +14484,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Calero B"
+   "visitante": "Calero B"
   },
   "18904": {
    "campo_gps": "https://maps.app.goo.gl/7sQgRh3nYeDh5UMb6",
@@ -14490,7 +14498,7 @@
    "id": 18904,
    "jornada": 4,
    "liga_id": 136,
-   "local": "CD Calero B",
+   "local": "Calero B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
    "permitir_comentarios_liga": 1,
@@ -14508,7 +14516,7 @@
    "id": 18905,
    "jornada": 4,
    "liga_id": 136,
-   "local": "UD Valsequillo B",
+   "local": "Valsequillo B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
    "permitir_comentarios_liga": 1,
@@ -14546,7 +14554,7 @@
    "local": "UD Telde",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
-   "visitante": "CD Calero B"
+   "visitante": "Calero B"
   },
   "18908": {
    "escudo_local": "laGaritaEscudoColor.png",
@@ -14578,7 +14586,7 @@
    "local": "Gran Canaria B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
-   "visitante": "UD Valsequillo B"
+   "visitante": "Valsequillo B"
   },
   "18910": {
    "arbitro_principal_nombre": null,
@@ -14607,7 +14615,7 @@
    "id_visitante": 1281,
    "jornada": 1,
    "liga_id": 137,
-   "local": "CD Vallinamar",
+   "local": "Vallinamar",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 16",
@@ -14828,7 +14836,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Vallinamar"
+   "visitante": "Vallinamar"
   },
   "18915": {
    "arbitro_principal_nombre": null,
@@ -14907,7 +14915,7 @@
    "id_visitante": 1280,
    "jornada": 3,
    "liga_id": 137,
-   "local": "CD Vallinamar",
+   "local": "Vallinamar",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 16",
@@ -15061,7 +15069,7 @@
    "id_visitante": 1283,
    "jornada": 4,
    "liga_id": 137,
-   "local": "CD Vallinamar",
+   "local": "Vallinamar",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 16",
@@ -15235,7 +15243,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 16",
    "permitir_comentarios_liga": 1,
-   "visitante": "CD Vallinamar"
+   "visitante": "Vallinamar"
   },
   "18925": {
    "arbitro_principal_nombre": null,
@@ -15285,7 +15293,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Telde C"
+   "visitante": "Telde C"
   },
   "18926": {
    "arbitro_principal_nombre": null,
@@ -15464,7 +15472,7 @@
    "id_visitante": 1286,
    "jornada": 2,
    "liga_id": 138,
-   "local": "UD Telde C",
+   "local": "Telde C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
@@ -15668,7 +15676,7 @@
    "id_visitante": 1288,
    "jornada": 3,
    "liga_id": 138,
-   "local": "UD Telde C",
+   "local": "Telde C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
@@ -15740,7 +15748,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Telde C"
+   "visitante": "Telde C"
   },
   "18935": {
    "arbitro_principal_nombre": null,
@@ -15870,7 +15878,7 @@
    "id": 18938,
    "jornada": 5,
    "liga_id": 138,
-   "local": "UD Telde C",
+   "local": "Telde C",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 17",
    "permitir_comentarios_liga": 1,
@@ -15921,7 +15929,7 @@
    "id_visitante": 1293,
    "jornada": 1,
    "liga_id": 139,
-   "local": "CD Arinaga B",
+   "local": "Arinaga B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 18",
@@ -15940,7 +15948,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Futboltec"
+   "visitante": "Futboltec"
   },
   "18941": {
    "arbitro_principal_nombre": null,
@@ -16091,7 +16099,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Arinaga B"
+   "visitante": "Arinaga B"
   },
   "18944": {
    "arbitro_principal_nombre": null,
@@ -16170,7 +16178,7 @@
    "id_visitante": 1292,
    "jornada": 2,
    "liga_id": 139,
-   "local": "CD Futboltec",
+   "local": "Futboltec",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 18",
@@ -16220,7 +16228,7 @@
    "id_visitante": 1295,
    "jornada": 3,
    "liga_id": 139,
-   "local": "CD Arinaga B",
+   "local": "Arinaga B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 18",
@@ -16272,7 +16280,7 @@
    "id_visitante": 1294,
    "jornada": 3,
    "liga_id": 139,
-   "local": "CD Futboltec",
+   "local": "Futboltec",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 18",
@@ -16396,7 +16404,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Futboltec"
+   "visitante": "Futboltec"
   },
   "18950": {
    "arbitro_principal_nombre": null,
@@ -16494,7 +16502,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Arinaga B"
+   "visitante": "Arinaga B"
   },
   "18952": {
    "campo_gps": "https://goo.gl/maps/UbBRTW2EmFQ2",
@@ -16526,7 +16534,7 @@
    "id": 18953,
    "jornada": 5,
    "liga_id": 139,
-   "local": "CD Futboltec",
+   "local": "Futboltec",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 18",
    "permitir_comentarios_liga": 1,
@@ -16544,7 +16552,7 @@
    "id": 18954,
    "jornada": 5,
    "liga_id": 139,
-   "local": "CD Arinaga B",
+   "local": "Arinaga B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 18",
    "permitir_comentarios_liga": 1,
@@ -16597,7 +16605,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Ingenio B"
+   "visitante": "Ingenio B"
   },
   "18956": {
    "arbitro_principal_nombre": null,
@@ -16645,7 +16653,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Valsequillo"
+   "visitante": "Valsequillo"
   },
   "18957": {
    "arbitro_principal_nombre": null,
@@ -16674,7 +16682,7 @@
    "id_visitante": 1296,
    "jornada": 2,
    "liga_id": 140,
-   "local": "UD Valsequillo",
+   "local": "Valsequillo",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 19",
@@ -16723,7 +16731,7 @@
    "id_visitante": 1297,
    "jornada": 2,
    "liga_id": 140,
-   "local": "CD Doramas B",
+   "local": "Doramas B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 19",
@@ -16771,7 +16779,7 @@
    "id_visitante": 1299,
    "jornada": 3,
    "liga_id": 140,
-   "local": "CD Ingenio B",
+   "local": "Ingenio B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 19",
@@ -16792,7 +16800,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Valsequillo"
+   "visitante": "Valsequillo"
   },
   "18960": {
    "arbitro_principal_nombre": null,
@@ -16843,7 +16851,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Doramas B"
+   "visitante": "Doramas B"
   },
   "18961": {
    "arbitro_principal_nombre": null,
@@ -16870,7 +16878,7 @@
    "id_visitante": 1298,
    "jornada": 4,
    "liga_id": 140,
-   "local": "CD Doramas B",
+   "local": "Doramas B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 19",
@@ -16890,7 +16898,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Ingenio B"
+   "visitante": "Ingenio B"
   },
   "18962": {
    "arbitro_principal_nombre": null,
@@ -16951,11 +16959,11 @@
    "id": 18963,
    "jornada": 5,
    "liga_id": 140,
-   "local": "UD Valsequillo",
+   "local": "Valsequillo",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 19",
    "permitir_comentarios_liga": 1,
-   "visitante": "CD Doramas B"
+   "visitante": "Doramas B"
   },
   "18964": {
    "campo_gps": "https://goo.gl/maps/UbBRTW2EmFQ2",
@@ -16969,7 +16977,7 @@
    "id": 18964,
    "jornada": 5,
    "liga_id": 140,
-   "local": "CD Ingenio B",
+   "local": "Ingenio B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 19",
    "permitir_comentarios_liga": 1,
@@ -17002,7 +17010,7 @@
    "id_visitante": 1303,
    "jornada": 1,
    "liga_id": 141,
-   "local": "CD Arguineguín",
+   "local": "Arguineguín",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
@@ -17051,7 +17059,7 @@
    "id_visitante": 1304,
    "jornada": 1,
    "liga_id": 141,
-   "local": "CD Maspalomas",
+   "local": "Maspalomas",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
@@ -17122,7 +17130,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Arguineguín"
+   "visitante": "Arguineguín"
   },
   "18968": {
    "arbitro_principal_nombre": null,
@@ -17171,7 +17179,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Maspalomas"
+   "visitante": "Maspalomas"
   },
   "18969": {
    "arbitro_principal_nombre": null,
@@ -17200,7 +17208,7 @@
    "id_visitante": 1305,
    "jornada": 3,
    "liga_id": 141,
-   "local": "CD Arguineguín",
+   "local": "Arguineguín",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
@@ -17300,7 +17308,7 @@
    "id_visitante": 1301,
    "jornada": 4,
    "liga_id": 141,
-   "local": "CD Maspalomas",
+   "local": "Maspalomas",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
@@ -17321,7 +17329,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Arguineguín"
+   "visitante": "Arguineguín"
   },
   "18972": {
    "arbitro_principal_nombre": null,
@@ -17404,7 +17412,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 20",
    "permitir_comentarios_liga": 1,
-   "visitante": "CD Maspalomas"
+   "visitante": "Maspalomas"
   },
   "18975": {
    "arbitro_principal_nombre": null,
@@ -17482,7 +17490,7 @@
    "id_visitante": 1309,
    "jornada": 1,
    "liga_id": 142,
-   "local": "UD Vecindario C",
+   "local": "Vecindario C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 21",
@@ -17602,7 +17610,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Vecindario C"
+   "visitante": "Vecindario C"
   },
   "18979": {
    "arbitro_principal_nombre": null,
@@ -17778,7 +17786,7 @@
    "id_visitante": 1306,
    "jornada": 4,
    "liga_id": 142,
-   "local": "UD Vecindario C",
+   "local": "Vecindario C",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 21",
@@ -17835,7 +17843,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 21",
    "permitir_comentarios_liga": 1,
-   "visitante": "UD Vecindario C"
+   "visitante": "Vecindario C"
   },
   "18985": {
    "arbitro_principal_nombre": null,
@@ -17885,7 +17893,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Cerruda B"
+   "visitante": "Cerruda B"
   },
   "18986": {
    "arbitro_principal_nombre": null,
@@ -17935,7 +17943,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Vecindario"
+   "visitante": "Vecindario"
   },
   "18987": {
    "arbitro_principal_nombre": null,
@@ -18064,7 +18072,7 @@
    "id_visitante": 1313,
    "jornada": 2,
    "liga_id": 143,
-   "local": "CD Cerruda B",
+   "local": "Cerruda B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 22",
@@ -18114,7 +18122,7 @@
    "id_visitante": 1311,
    "jornada": 2,
    "liga_id": 143,
-   "local": "UD Vecindario",
+   "local": "Vecindario",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 22",
@@ -18268,7 +18276,7 @@
    "id_visitante": 1315,
    "jornada": 3,
    "liga_id": 143,
-   "local": "CD Cerruda B",
+   "local": "Cerruda B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 22",
@@ -18291,7 +18299,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Vecindario"
+   "visitante": "Vecindario"
   },
   "18994": {
    "arbitro_principal_nombre": null,
@@ -18340,7 +18348,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Vecindario"
+   "visitante": "Vecindario"
   },
   "18995": {
    "arbitro_principal_nombre": null,
@@ -18389,7 +18397,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Cerruda B"
+   "visitante": "Cerruda B"
   },
   "18996": {
    "arbitro_principal_nombre": null,
@@ -18452,7 +18460,7 @@
    "id": 18997,
    "jornada": 5,
    "liga_id": 143,
-   "local": "UD Vecindario",
+   "local": "Vecindario",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 22",
    "permitir_comentarios_liga": 1,
@@ -18470,7 +18478,7 @@
    "id": 18998,
    "jornada": 5,
    "liga_id": 143,
-   "local": "CD Cerruda B",
+   "local": "Cerruda B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 22",
    "permitir_comentarios_liga": 1,
@@ -18521,7 +18529,7 @@
    "id_visitante": 1320,
    "jornada": 1,
    "liga_id": 144,
-   "local": "CD Arguineguín C",
+   "local": "Arguineguín C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
@@ -18571,7 +18579,7 @@
    "id_visitante": 1321,
    "jornada": 1,
    "liga_id": 144,
-   "local": "San Pedro Mártir",
+   "local": "San Pedro",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
@@ -18621,7 +18629,7 @@
    "id_visitante": 1322,
    "jornada": 1,
    "liga_id": 144,
-   "local": "CD Cerruda C",
+   "local": "Cerruda C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
@@ -18642,7 +18650,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Vecindario B"
+   "visitante": "Vecindario B"
   },
   "19003": {
    "arbitro_principal_nombre": null,
@@ -18692,7 +18700,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "San Pedro Mártir"
+   "visitante": "San Pedro"
   },
   "19004": {
    "arbitro_principal_nombre": null,
@@ -18721,7 +18729,7 @@
    "id_visitante": 1317,
    "jornada": 2,
    "liga_id": 144,
-   "local": "UD Vecindario B",
+   "local": "Vecindario B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
@@ -18742,7 +18750,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Arguineguín C"
+   "visitante": "Arguineguín C"
   },
   "19005": {
    "arbitro_principal_nombre": null,
@@ -18792,7 +18800,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Cerruda C"
+   "visitante": "Cerruda C"
   },
   "19006": {
    "arbitro_principal_nombre": null,
@@ -18844,7 +18852,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Vecindario B"
+   "visitante": "Vecindario B"
   },
   "19007": {
    "arbitro_principal_nombre": null,
@@ -18873,7 +18881,7 @@
    "id_visitante": 1321,
    "jornada": 3,
    "liga_id": 144,
-   "local": "CD Arguineguín C",
+   "local": "Arguineguín C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
@@ -18925,7 +18933,7 @@
    "id_visitante": 1319,
    "jornada": 3,
    "liga_id": 144,
-   "local": "San Pedro Mártir",
+   "local": "San Pedro",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
@@ -18948,7 +18956,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Cerruda C"
+   "visitante": "Cerruda C"
   },
   "19009": {
    "arbitro_principal_nombre": null,
@@ -18975,7 +18983,7 @@
    "id_visitante": 1322,
    "jornada": 4,
    "liga_id": 144,
-   "local": "San Pedro Mártir",
+   "local": "San Pedro",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
@@ -18997,7 +19005,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "UD Vecindario B"
+   "visitante": "Vecindario B"
   },
   "19010": {
    "arbitro_principal_nombre": null,
@@ -19075,7 +19083,7 @@
    "id_visitante": 1317,
    "jornada": 4,
    "liga_id": 144,
-   "local": "CD Cerruda C",
+   "local": "Cerruda C",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
@@ -19100,7 +19108,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Arguineguín C"
+   "visitante": "Arguineguín C"
   },
   "19012": {
    "campo_gps": "https://maps.app.goo.gl/BH7oKLzexQDsjSPL7",
@@ -19114,7 +19122,7 @@
    "id": 19012,
    "jornada": 5,
    "liga_id": 144,
-   "local": "UD Vecindario B",
+   "local": "Vecindario B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
    "permitir_comentarios_liga": 1,
@@ -19136,7 +19144,7 @@
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
    "permitir_comentarios_liga": 1,
-   "visitante": "CD Cerruda C"
+   "visitante": "Cerruda C"
   },
   "19014": {
    "campo_gps": "https://maps.app.goo.gl/WUwQ7qQ6QZC95WJcA",
@@ -19150,11 +19158,11 @@
    "id": 19014,
    "jornada": 5,
    "liga_id": 144,
-   "local": "CD Arguineguín C",
+   "local": "Arguineguín C",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
    "permitir_comentarios_liga": 1,
-   "visitante": "San Pedro Mártir"
+   "visitante": "San Pedro"
   },
   "19015": {
    "arbitro_principal_nombre": null,
@@ -19254,7 +19262,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Arguineguín B"
+   "visitante": "Arguineguín B"
   },
   "19017": {
    "arbitro_principal_nombre": null,
@@ -19304,7 +19312,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Maspalomas B"
+   "visitante": "Maspalomas B"
   },
   "19018": {
    "arbitro_principal_nombre": null,
@@ -19333,7 +19341,7 @@
    "id_visitante": 1323,
    "jornada": 2,
    "liga_id": 145,
-   "local": "CD Maspalomas B",
+   "local": "Maspalomas B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
@@ -19433,7 +19441,7 @@
    "id_visitante": 1325,
    "jornada": 2,
    "liga_id": 145,
-   "local": "CD Arguineguín B",
+   "local": "Arguineguín B",
    "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
@@ -19506,7 +19514,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Arguineguín B"
+   "visitante": "Arguineguín B"
   },
   "19022": {
    "arbitro_principal_nombre": null,
@@ -19610,7 +19618,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Maspalomas B"
+   "visitante": "Maspalomas B"
   },
   "19024": {
    "arbitro_principal_nombre": null,
@@ -19637,7 +19645,7 @@
    "id_visitante": 1327,
    "jornada": 4,
    "liga_id": 145,
-   "local": "CD Arguineguín B",
+   "local": "Arguineguín B",
    "minutos_jugados": 0,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
@@ -19708,7 +19716,7 @@
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
-   "visitante": "CD Maspalomas B"
+   "visitante": "Maspalomas B"
   },
   "19026": {
    "arbitro_principal_nombre": null,
@@ -19771,11 +19779,11 @@
    "id": 19027,
    "jornada": 5,
    "liga_id": 145,
-   "local": "CD Maspalomas B",
+   "local": "Maspalomas B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
    "permitir_comentarios_liga": 1,
-   "visitante": "CD Arguineguín B"
+   "visitante": "Arguineguín B"
   },
   "19028": {
    "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",

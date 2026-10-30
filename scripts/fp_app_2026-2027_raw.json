@@ -24,11 +24,11 @@
   "2026-10-27": "2026-10-28T03:23:04",
   "2026-10-28": "2026-10-29T00:22:34",
   "2026-10-29": "2026-10-30T06:52:43",
-  "2026-10-30": "2026-10-30T06:52:43"
+  "2026-10-30": "2026-10-30T10:42:39"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -191,7 +191,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -324,7 +324,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -457,7 +457,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -618,7 +618,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -777,7 +777,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -905,7 +905,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1064,7 +1064,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1197,7 +1197,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1330,7 +1330,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1482,7 +1482,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1615,7 +1615,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1774,7 +1774,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1909,7 +1909,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2042,9 +2042,9 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
-    "jornada_actual": 3,
+    "jornada_actual": 4,
     "plazas_ascenso": 4,
     "plazas_copa": 1,
     "plazas_descenso": 0,
@@ -2096,7 +2096,7 @@
      "pe": 0,
      "pg": 2,
      "pj": 3,
-     "posicion_anterior": 3,
+     "posicion_anterior": 2,
      "pp": 1,
      "puntos": 6,
      "racha_ultimos_5": [
@@ -2119,13 +2119,36 @@
      "pe": 0,
      "pg": 2,
      "pj": 3,
-     "posicion_anterior": 2,
+     "posicion_anterior": 3,
      "pp": 1,
      "puntos": 6,
      "racha_ultimos_5": [
       "V",
       "V",
       "D"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-azuliblanca-rayas.png",
+     "dg": "-13",
+     "equipacion": "2026-azuliblancafina-azul-azul.png",
+     "escudo": "jinamarEscudo.png",
+     "gc": "21",
+     "gf": "8",
+     "id": 1272,
+     "nombre": "UD Jinámar",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 1,
+     "pj": 3,
+     "posicion_anterior": 4,
+     "pp": 2,
+     "puntos": 3,
+     "racha_ultimos_5": [
+      "D",
+      "D",
+      "V"
      ],
      "sanciones": 0
     },
@@ -2142,7 +2165,7 @@
      "pe": 0,
      "pg": 1,
      "pj": 3,
-     "posicion_anterior": 6,
+     "posicion_anterior": 5,
      "pp": 2,
      "puntos": 3,
      "racha_ultimos_5": [
@@ -2154,43 +2177,22 @@
     },
     {
      "banderas": "bandera-celeste-azulmarino.png",
-     "dg": "-9",
+     "dg": "-15",
      "equipacion": "2026-celeste-azul-azul.png",
      "escudo": "100x100valsequillo.png",
-     "gc": "11",
-     "gf": "2",
+     "gc": "18",
+     "gf": "3",
      "id": 1273,
      "nombre": "Valsequillo B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 2,
-     "posicion_anterior": 4,
-     "pp": 2,
+     "pj": 3,
+     "posicion_anterior": 6,
+     "pp": 3,
      "puntos": 0,
      "racha_ultimos_5": [
       "D",
-      "D"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-azuliblanca-rayas.png",
-     "dg": "-19",
-     "equipacion": "2026-azuliblancafina-azul-azul.png",
-     "escudo": "jinamarEscudo.png",
-     "gc": "20",
-     "gf": "1",
-     "id": 1272,
-     "nombre": "UD Jinámar",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 2,
-     "posicion_anterior": 5,
-     "pp": 2,
-     "puntos": 0,
-     "racha_ultimos_5": [
       "D",
       "D"
      ],
@@ -2199,7 +2201,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2358,7 +2360,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2517,7 +2519,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2676,7 +2678,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2807,7 +2809,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2940,7 +2942,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3073,7 +3075,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3232,7 +3234,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3393,7 +3395,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3552,7 +3554,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3869,7 +3871,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4179,7 +4181,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4496,7 +4498,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4803,7 +4805,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -4979,7 +4981,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5192,7 +5194,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5405,7 +5407,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5618,7 +5620,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5803,7 +5805,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6013,7 +6015,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6221,7 +6223,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 3,
@@ -6429,9 +6431,9 @@
    ]
   },
   "191": {
-   "fetched": "2026-10-30T06:52:43",
+   "fetched": "2026-10-30T10:42:39",
    "meta": {
-    "jornada_actual": 1,
+    "jornada_actual": 2,
     "plazas_ascenso": 3,
     "plazas_copa": 6,
     "plazas_descenso": 0,
@@ -8077,7 +8079,7 @@
    "estadio": "Atalaya",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-10-30 17:00:00",
+   "fecha_programada": "2026-11-04 17:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -9867,7 +9869,7 @@
    "escudo_local": "100x100sanlazaro.png",
    "escudo_visitante": "100x100veteranos.png",
    "estadio": "López Socas",
-   "estado": "no_iniciado",
+   "estado": "retirado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-01 09:00:00",
    "goleadores_local": null,
@@ -10458,7 +10460,7 @@
    "estadio": "MN Sosa 1",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-10-31 10:30:00",
+   "fecha_programada": "2026-11-01 09:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -10507,7 +10509,7 @@
    "estadio": "López Socas",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-11-01 09:00:00",
+   "fecha_programada": "2026-10-31 10:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -11911,7 +11913,7 @@
    "escudo_local": "100x100tamaraceite.png",
    "escudo_visitante": "batanEscudo.png",
    "estadio": "Juan Guedes",
-   "estado": "no_iniciado",
+   "estado": "retirado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-30 17:00:00",
    "goleadores_local": null,
@@ -12408,7 +12410,7 @@
    "estadio": "Mayordomía 1",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-10-31 09:01:00",
+   "fecha_programada": "2026-10-31 09:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -14415,15 +14417,15 @@
    "escudo_local": "100x100valsequillo.png",
    "escudo_visitante": "jinamarEscudo.png",
    "estadio": "Valsequillo",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-26 17:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 1,
+   "goles_visitante": 7,
    "hora_inicio": null,
    "id": 18902,
    "id_local": 1273,
@@ -14506,63 +14508,157 @@
    "visitante": "Calero B"
   },
   "18904": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/7sQgRh3nYeDh5UMb6",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100calero2018.png",
    "escudo_visitante": "laGaritaEscudoColor.png",
    "estadio": "El Calero",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18904,
+   "id_local": 1276,
+   "id_visitante": 1277,
    "jornada": 4,
    "liga_id": 136,
    "local": "Calero B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "V",
+    "D"
+   ],
+   "racha_visitante": [
+    "V",
+    "V",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "La Garita B"
   },
   "18905": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/HstbJBBoFZs",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100valsequillo.png",
    "escudo_visitante": "udTeldeEscudo.png",
    "estadio": "Valsequillo",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 10:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18905,
+   "id_local": 1273,
+   "id_visitante": 1275,
    "jornada": 4,
    "liga_id": 136,
    "local": "Valsequillo B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "V",
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "UD Telde"
   },
   "18906": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/CgxHDYPR3e85LKz78",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "jinamarEscudo.png",
    "escudo_visitante": "200x200atleticograncanaria19-20.png",
    "estadio": "EM Jinámar",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 16:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18906,
+   "id_local": 1272,
+   "id_visitante": 1274,
    "jornada": 4,
    "liga_id": 136,
    "local": "UD Jinámar",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "D",
+    "V"
+   ],
+   "racha_visitante": [
+    "D",
+    "D",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Gran Canaria B"
   },
   "18907": {
+   "campo_gps": "https://goo.gl/maps/7PXP7UqEfg63sm9G8",
    "escudo_local": "udTeldeEscudo.png",
    "escudo_visitante": "100x100calero2018.png",
-   "estadio": null,
+   "estadio": "Pablo Hdez.",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -14573,12 +14669,14 @@
    "local": "UD Telde",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
+   "permitir_comentarios_liga": 1,
    "visitante": "Calero B"
   },
   "18908": {
+   "campo_gps": "https://goo.gl/maps/eoZKM5WfyW5Cx3jw7",
    "escudo_local": "laGaritaEscudoColor.png",
    "escudo_visitante": "jinamarEscudo.png",
-   "estadio": null,
+   "estadio": "Las Remudas",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -14589,12 +14687,14 @@
    "local": "La Garita B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
+   "permitir_comentarios_liga": 1,
    "visitante": "UD Jinámar"
   },
   "18909": {
+   "campo_gps": "https://maps.app.goo.gl/d9Ws2X3t7JV6H3Mn6",
    "escudo_local": "200x200atleticograncanaria19-20.png",
    "escudo_visitante": "100x100valsequillo.png",
-   "estadio": null,
+   "estadio": "Mundial 82",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 09:00:00",
    "goles_local": 0,
@@ -14605,6 +14705,7 @@
    "local": "Gran Canaria B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
+   "permitir_comentarios_liga": 1,
    "visitante": "Valsequillo B"
   },
   "18910": {
@@ -16435,7 +16536,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",
+   "campo_gps": "https://maps.app.goo.gl/MyZSN4X3hCWTR9j8A",
    "campo_latitud": null,
    "campo_longitud": null,
    "escudo_local": "200x200maspalomas20-21.png",
@@ -16492,7 +16593,7 @@
    "estadio": "Capellanía",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-10-31 12:30:00",
+   "fecha_programada": "2026-10-31 11:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -16890,7 +16991,7 @@
    "estadio": "Cruce Arinaga",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-10-31 09:00:00",
+   "fecha_programada": "2026-11-03 17:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -17312,7 +17413,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/cbJXj4iK3TgN95kL8",
+   "campo_gps": "https://maps.app.goo.gl/Y5fRcPUDk713j1MA6",
    "campo_latitud": null,
    "campo_longitud": null,
    "escudo_local": "200x200maspalomas20-21.png",
@@ -17360,7 +17461,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/x2vcRQNAkMh2Bn5NA",
+   "campo_gps": "https://maps.app.goo.gl/eindi3fqCgXPVgy9A",
    "campo_latitud": null,
    "campo_longitud": null,
    "escudo_local": "sanfernandoEscudo.png",
@@ -17422,7 +17523,7 @@
    "visitante": "San Fernando B"
   },
   "18974": {
-   "campo_gps": "https://goo.gl/maps/cbJXj4iK3TgN95kL8",
+   "campo_gps": "https://maps.app.goo.gl/Y5fRcPUDk713j1MA6",
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "200x200maspalomas20-21.png",
    "estadio": "Maspalomas 2",
@@ -19750,7 +19851,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://maps.app.goo.gl/FsymPEsnkMBkAz2V6",
+   "campo_gps": "https://maps.app.goo.gl/MyZSN4X3hCWTR9j8A",
    "campo_latitud": null,
    "campo_longitud": null,
    "escudo_local": "sanfernandoEscudo.png",
@@ -19796,7 +19897,7 @@
    "visitante": "Castillo CF"
   },
   "19027": {
-   "campo_gps": "https://goo.gl/maps/cbJXj4iK3TgN95kL8",
+   "campo_gps": "https://maps.app.goo.gl/Y5fRcPUDk713j1MA6",
    "escudo_local": "200x200maspalomas20-21.png",
    "escudo_visitante": "arguineguinEscudo.png",
    "estadio": "Maspalomas 2",
@@ -19814,7 +19915,7 @@
    "visitante": "Arguineguín B"
   },
   "19028": {
-   "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",
+   "campo_gps": "https://maps.app.goo.gl/MyZSN4X3hCWTR9j8A",
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "sanfernandoEscudo.png",
    "estadio": "Maspalomas 4",
@@ -27707,7 +27808,7 @@
    "visitante": "La Garita"
   },
   "19368": {
-   "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",
+   "campo_gps": "https://maps.app.goo.gl/MyZSN4X3hCWTR9j8A",
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "udTeldeEscudo.png",
    "estadio": "Maspalomas 4",
@@ -30833,7 +30934,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/x2vcRQNAkMh2Bn5NA",
+   "campo_gps": "https://maps.app.goo.gl/eindi3fqCgXPVgy9A",
    "campo_latitud": null,
    "campo_longitud": null,
    "escudo_local": "sanfernandoEscudo.png",
@@ -30922,7 +31023,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/iB4NkqBxtD34zMYC9",
+   "campo_gps": "https://maps.app.goo.gl/MyZSN4X3hCWTR9j8A",
    "campo_latitud": null,
    "campo_longitud": null,
    "escudo_local": "maspaTrainingEscudo.png",
@@ -33734,7 +33835,7 @@
    "escudo_local": "puertodelCarmenEscudo.png",
    "escudo_visitante": "tnajoEscudo2025.png",
    "estadio": "Pto. del Carmen",
-   "estado": "no_iniciado",
+   "estado": "retirado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:30:00",
    "goleadores_local": null,
@@ -34667,7 +34768,7 @@
    "estadio": "SF Javier",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-11-07 11:00:00",
+   "fecha_programada": "2026-11-05 17:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -37503,7 +37604,7 @@
    "estadio": "Agapito Reyes",
    "estado": "no_iniciado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-11-07 11:00:00",
+   "fecha_programada": "2026-11-05 17:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -39478,7 +39579,7 @@
    "escudo_local": "TamasiteEscudo.png",
    "escudo_visitante": "200x200uniontetir.png",
    "estadio": "Gran Tarajal",
-   "estado": "no_iniciado",
+   "estado": "aplazado",
    "fecha_programada": "2026-11-29 11:00:00",
    "goles_local": 0,
    "goles_visitante": 0,
@@ -40131,9 +40232,9 @@
    "escudo_local": "costaCalmaEscudo.png",
    "escudo_visitante": "f-200x200tarajalejo.png",
    "estadio": "Costa Calma",
-   "estado": "no_iniciado",
+   "estado": "retirado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-10-29 17:30:00",
+   "fecha_programada": "2026-10-24 17:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
@@ -40164,99 +40265,231 @@
    "visitante": "UD Tarajalejo"
   },
   "22229": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/YsotFHfhVyWjLxv16",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "f-brenamen.png",
    "escudo_visitante": "f-200x200tarajalejo.png",
    "estadio": "Las Playitas",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 22229,
+   "id_local": 1846,
+   "id_visitante": 1843,
    "jornada": 2,
    "liga_id": 191,
    "local": "CD Breñamen",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Tarajalejo B"
   },
   "22230": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/SqHsxMpvUtcx8prE7",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100playasdesotavento.png",
    "escudo_visitante": "100x100playasdesotavento.png",
    "estadio": "Morro Jable",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 22230,
+   "id_local": 1842,
+   "id_visitante": 1839,
    "jornada": 2,
    "liga_id": 191,
    "local": "UD Sotavento",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "E"
+   ],
+   "racha_visitante": [
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Sotavento B"
   },
   "22231": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/GoQugZsDs75gKbGD6",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "TamasiteEscudo.png",
    "escudo_visitante": "costaCalmaEscudo.png",
    "estadio": "Gran Tarajal",
-   "estado": "no_iniciado",
+   "estado": "retirado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 22231,
+   "id_local": 1844,
+   "id_visitante": 1847,
    "jornada": 2,
    "liga_id": 191,
    "local": "Tamasite B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Costa Calma"
   },
   "22232": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/wqWLqXXFxkL5eHgF9",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "hubaraEscudo.png",
    "escudo_visitante": "laLajitaEscudo.png",
    "estadio": "Costa Calma",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 10:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 22232,
+   "id_local": 1840,
+   "id_visitante": 1845,
    "jornada": 2,
    "liga_id": 191,
    "local": "CD Hubara",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V"
+   ],
+   "racha_visitante": [
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "La Lajita"
   },
   "22233": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/PcSbGcxsAUi8NoBm9",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "f-200x200tarajalejo.png",
    "escudo_visitante": "200x200jandia.png",
    "estadio": "Tuineje",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 10:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 22233,
+   "id_local": 1848,
+   "id_visitante": 1841,
    "jornada": 2,
    "liga_id": 191,
    "local": "UD Tarajalejo",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [],
+   "racha_visitante": [
+    "E"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "UD Jandía"
   },
   "22234": {
+   "campo_gps": "https://maps.app.goo.gl/YsotFHfhVyWjLxv16",
    "escudo_local": "f-brenamen.png",
    "escudo_visitante": "hubaraEscudo.png",
-   "estadio": null,
+   "estadio": "Las Playitas",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-06 17:00:00",
    "goles_local": 0,
@@ -40267,12 +40500,14 @@
    "local": "CD Breñamen",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "permitir_comentarios_liga": 1,
    "visitante": "CD Hubara"
   },
   "22235": {
+   "campo_gps": "https://goo.gl/maps/SqHsxMpvUtcx8prE7",
    "escudo_local": "100x100playasdesotavento.png",
    "escudo_visitante": "f-200x200tarajalejo.png",
-   "estadio": null,
+   "estadio": "Morro Jable",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 10:00:00",
    "goles_local": 0,
@@ -40283,12 +40518,14 @@
    "local": "Sotavento B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "permitir_comentarios_liga": 1,
    "visitante": "UD Tarajalejo"
   },
   "22236": {
+   "campo_gps": "https://maps.app.goo.gl/PcSbGcxsAUi8NoBm9",
    "escudo_local": "f-200x200tarajalejo.png",
    "escudo_visitante": "costaCalmaEscudo.png",
-   "estadio": null,
+   "estadio": "Tuineje",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 10:00:00",
    "goles_local": 0,
@@ -40299,12 +40536,14 @@
    "local": "Tarajalejo B",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "permitir_comentarios_liga": 1,
    "visitante": "Costa Calma"
   },
   "22237": {
+   "campo_gps": "https://goo.gl/maps/5AHRnFvmT6MXu6mN7",
    "escudo_local": "laLajitaEscudo.png",
    "escudo_visitante": "100x100playasdesotavento.png",
-   "estadio": null,
+   "estadio": "Costa Calma",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-07 16:30:00",
    "goles_local": 0,
@@ -40315,12 +40554,14 @@
    "local": "La Lajita",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "permitir_comentarios_liga": 1,
    "visitante": "UD Sotavento"
   },
   "22238": {
+   "campo_gps": "https://goo.gl/maps/SqHsxMpvUtcx8prE7",
    "escudo_local": "200x200jandia.png",
    "escudo_visitante": "TamasiteEscudo.png",
-   "estadio": null,
+   "estadio": "Morro Jable",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-08 10:00:00",
    "goles_local": 0,
@@ -40331,6 +40572,7 @@
    "local": "UD Jandía",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
+   "permitir_comentarios_liga": 1,
    "visitante": "Tamasite B"
   },
   "22239": {

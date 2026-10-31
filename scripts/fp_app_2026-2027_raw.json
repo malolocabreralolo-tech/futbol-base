@@ -25,11 +25,11 @@
   "2026-10-28": "2026-10-29T00:22:34",
   "2026-10-29": "2026-10-30T06:52:43",
   "2026-10-30": "2026-10-31T10:18:05",
-  "2026-10-31": "2026-10-31T11:12:45"
+  "2026-10-31": "2026-10-31T12:02:55"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -194,7 +194,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -331,7 +331,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -396,11 +396,11 @@
     },
     {
      "banderas": "bandera-roja-gran-canaria.png",
-     "dg": "-5",
+     "dg": "-2",
      "equipacion": "2026-roja-blanco-rojas.png",
      "escudo": "100x100firgas.png",
      "gc": "14",
-     "gf": "9",
+     "gf": "12",
      "id": 1202,
      "nombre": "CD Firgas",
      "orden_manual": 0,
@@ -442,10 +442,10 @@
     },
     {
      "banderas": "bandera-amarillo-negro.png",
-     "dg": "-7",
+     "dg": "-10",
      "equipacion": "2026-amarillanegra-negro-amarillas.png",
      "escudo": "100x100sannicolas.png",
-     "gc": "14",
+     "gc": "17",
      "gf": "7",
      "id": 1201,
      "nombre": "San Nicolás",
@@ -466,7 +466,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -627,7 +627,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -788,7 +788,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -916,7 +916,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1077,7 +1077,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1210,7 +1210,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1343,7 +1343,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1495,7 +1495,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1628,7 +1628,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1789,7 +1789,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1926,7 +1926,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2061,7 +2061,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2081,21 +2081,22 @@
    "tabla": [
     {
      "banderas": "bandera-azulmarino-roja.png",
-     "dg": "51",
+     "dg": "67",
      "equipacion": "2026-azulmarina-rojo-rojas.png",
      "escudo": "udTeldeEscudo.png",
      "gc": "0",
-     "gf": "51",
+     "gf": "67",
      "id": 1275,
      "nombre": "UD Telde",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 3,
-     "pj": 3,
+     "pg": 4,
+     "pj": 4,
      "posicion_anterior": 1,
      "pp": 0,
-     "puntos": 9,
+     "puntos": 12,
      "racha_ultimos_5": [
+      "V",
       "V",
       "V",
       "V"
@@ -2196,21 +2197,22 @@
     },
     {
      "banderas": "bandera-celeste-azulmarino.png",
-     "dg": "-15",
+     "dg": "-31",
      "equipacion": "2026-celeste-azul-azul.png",
      "escudo": "100x100valsequillo.png",
-     "gc": "18",
+     "gc": "34",
      "gf": "3",
      "id": 1273,
      "nombre": "Valsequillo B",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 3,
+     "pj": 4,
      "posicion_anterior": 6,
-     "pp": 3,
+     "pp": 4,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D",
       "D",
       "D"
@@ -2220,7 +2222,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2385,7 +2387,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2550,7 +2552,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2711,7 +2713,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2844,7 +2846,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2977,7 +2979,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2997,21 +2999,22 @@
    "tabla": [
     {
      "banderas": "bandera-celeste-blanca.png",
-     "dg": "22",
+     "dg": "25",
      "equipacion": "2026-celestiblanca-blancos-blancos.png",
      "escudo": "doramasEscudo.png",
-     "gc": "0",
-     "gf": "22",
+     "gc": "1",
+     "gf": "26",
      "id": 1308,
      "nombre": "CD Doramas",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 2,
-     "pj": 2,
+     "pg": 3,
+     "pj": 3,
      "posicion_anterior": 1,
      "pp": 0,
-     "puntos": 6,
+     "puntos": 9,
      "racha_ultimos_5": [
+      "V",
       "V",
       "V"
      ],
@@ -3041,23 +3044,24 @@
     },
     {
      "banderas": "bandera-negra-blanca-rayas.png",
-     "dg": "4",
+     "dg": "1",
      "equipacion": "2026-blanquinegra-negro-negras.png",
      "escudo": "100x100cerruda.png",
-     "gc": "8",
-     "gf": "12",
+     "gc": "12",
+     "gf": "13",
      "id": 1310,
      "nombre": "CD Cerruda",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
-     "pj": 2,
+     "pj": 3,
      "posicion_anterior": 3,
-     "pp": 1,
+     "pp": 2,
      "puntos": 3,
      "racha_ultimos_5": [
       "D",
-      "V"
+      "V",
+      "D"
      ],
      "sanciones": 0
     },
@@ -3110,7 +3114,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3273,7 +3277,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3436,7 +3440,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3597,7 +3601,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3914,7 +3918,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4224,7 +4228,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4541,7 +4545,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4848,7 +4852,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5024,7 +5028,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5237,7 +5241,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5450,7 +5454,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5663,7 +5667,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5848,7 +5852,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6060,7 +6064,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6272,7 +6276,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6482,7 +6486,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-10-31T11:12:45",
+   "fetched": "2026-10-31T12:02:55",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -8187,23 +8191,23 @@
    "escudo_local": "100x100firgas.png",
    "escudo_visitante": "100x100sannicolas.png",
    "estadio": "Domingo Ponce",
-   "estado": "en_juego",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 10:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 2,
+   "goles_local": 5,
    "goles_visitante": 1,
-   "hora_inicio": "2026-10-30 18:05:09",
+   "hora_inicio": "2026-10-30 18:41:57",
    "id": 18747,
    "id_local": 1202,
    "id_visitante": 1201,
    "jornada": 4,
    "liga_id": 123,
    "local": "CD Firgas",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
    "pen_local": "",
@@ -14693,7 +14697,7 @@
    "escudo_local": "100x100valsequillo.png",
    "escudo_visitante": "udTeldeEscudo.png",
    "estadio": "Valsequillo",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 10:30:00",
    "goleadores_local": null,
@@ -14701,7 +14705,7 @@
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
    "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_visitante": 16,
    "hora_inicio": null,
    "id": 18905,
    "id_local": 1273,
@@ -14709,7 +14713,7 @@
    "jornada": 4,
    "liga_id": 136,
    "local": "Valsequillo B",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 15",
    "pen_local": "",
@@ -14721,9 +14725,11 @@
    "racha_local": [
     "D",
     "D",
+    "D",
     "D"
    ],
    "racha_visitante": [
+    "V",
     "V",
     "V",
     "V"
@@ -18029,15 +18035,15 @@
    "escudo_local": "100x100cerruda.png",
    "escudo_visitante": "doramasEscudo.png",
    "estadio": "Axo. Vecindario",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 10:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 1,
+   "goles_visitante": 4,
    "hora_inicio": null,
    "id": 18981,
    "id_local": 1310,
@@ -18045,7 +18051,7 @@
    "jornada": 4,
    "liga_id": 142,
    "local": "CD Cerruda",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 21",
    "pen_local": "",
@@ -18056,9 +18062,11 @@
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
-    "V"
+    "V",
+    "D"
    ],
    "racha_visitante": [
+    "V",
     "V",
     "V"
    ],

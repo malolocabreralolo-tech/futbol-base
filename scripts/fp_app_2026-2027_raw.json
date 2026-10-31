@@ -24,12 +24,12 @@
   "2026-10-27": "2026-10-28T03:23:04",
   "2026-10-28": "2026-10-29T00:22:34",
   "2026-10-29": "2026-10-30T06:52:43",
-  "2026-10-30": "2026-10-31T09:07:55",
-  "2026-10-31": "2026-10-31T09:07:55"
+  "2026-10-30": "2026-10-31T10:18:05",
+  "2026-10-31": "2026-10-31T10:18:05"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -194,7 +194,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -331,7 +331,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -464,7 +464,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -625,7 +625,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -784,7 +784,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -912,7 +912,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1073,7 +1073,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1206,7 +1206,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1339,7 +1339,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1491,7 +1491,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1624,7 +1624,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1783,7 +1783,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1918,7 +1918,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2051,7 +2051,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2210,7 +2210,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2252,6 +2252,30 @@
      "sanciones": 0
     },
     {
+     "banderas": "bandera-roja-azul.png",
+     "dg": "19",
+     "equipacion": "2026-roja-azules-rojas.png",
+     "escudo": "100x100laslongueras.png",
+     "gc": "8",
+     "gf": "27",
+     "id": 1282,
+     "nombre": "Las Longueras",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 3,
+     "pj": 4,
+     "posicion_anterior": 3,
+     "pp": 1,
+     "puntos": 9,
+     "racha_ultimos_5": [
+      "D",
+      "V",
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-azulmarino-roja.png",
      "dg": "13",
      "equipacion": "2026-azulmarina-rojo-rojas.png",
@@ -2270,29 +2294,6 @@
      "racha_ultimos_5": [
       "V",
       "E",
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-roja-azul.png",
-     "dg": "14",
-     "equipacion": "2026-roja-azules-rojas.png",
-     "escudo": "100x100laslongueras.png",
-     "gc": "7",
-     "gf": "21",
-     "id": 1282,
-     "nombre": "Las Longueras",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
-     "pj": 3,
-     "posicion_anterior": 3,
-     "pp": 1,
-     "puntos": 6,
-     "racha_ultimos_5": [
-      "D",
-      "V",
       "V"
      ],
      "sanciones": 0
@@ -2323,23 +2324,24 @@
     },
     {
      "banderas": "bandera-naranja-negro.png",
-     "dg": "-14",
+     "dg": "-19",
      "equipacion": "2026-naranjanegram-negro-negras.png",
      "escudo": "100x100lashuesas2017.png",
-     "gc": "24",
-     "gf": "10",
+     "gc": "30",
+     "gf": "11",
      "id": 1281,
      "nombre": "Las Huesas",
      "orden_manual": 0,
      "pe": 1,
      "pg": 0,
-     "pj": 3,
+     "pj": 4,
      "posicion_anterior": 5,
-     "pp": 2,
+     "pp": 3,
      "puntos": 1,
      "racha_ultimos_5": [
       "D",
       "E",
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -2371,7 +2373,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2530,7 +2532,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2691,7 +2693,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2822,7 +2824,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2955,7 +2957,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3088,7 +3090,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3135,21 +3137,46 @@
      "dg": "10",
      "equipacion": "2026-amarilla-verde-verdes.png",
      "escudo": "escudoCasaPastores26.png",
-     "gc": "15",
-     "gf": "25",
+     "gc": "18",
+     "gf": "28",
      "id": 1316,
      "nombre": "Casa Pastores",
      "orden_manual": 0,
-     "pe": 0,
+     "pe": 1,
      "pg": 2,
-     "pj": 3,
+     "pj": 4,
      "posicion_anterior": 2,
      "pp": 1,
-     "puntos": 6,
+     "puntos": 7,
      "racha_ultimos_5": [
       "V",
       "V",
-      "D"
+      "D",
+      "E"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-negra-blanca-rayas.png",
+     "dg": "-5",
+     "equipacion": "2026-blanquinegra-negro-negras.png",
+     "escudo": "100x100cerruda.png",
+     "gc": "31",
+     "gf": "26",
+     "id": 1314,
+     "nombre": "Cerruda B",
+     "orden_manual": 0,
+     "pe": 2,
+     "pg": 1,
+     "pj": 4,
+     "posicion_anterior": 4,
+     "pp": 1,
+     "puntos": 5,
+     "racha_ultimos_5": [
+      "E",
+      "V",
+      "D",
+      "E"
      ],
      "sanciones": 0
     },
@@ -3173,29 +3200,6 @@
       "E",
       "D",
       "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-negra-blanca-rayas.png",
-     "dg": "-5",
-     "equipacion": "2026-blanquinegra-negro-negras.png",
-     "escudo": "100x100cerruda.png",
-     "gc": "28",
-     "gf": "23",
-     "id": 1314,
-     "nombre": "Cerruda B",
-     "orden_manual": 0,
-     "pe": 1,
-     "pg": 1,
-     "pj": 3,
-     "posicion_anterior": 4,
-     "pp": 1,
-     "puntos": 4,
-     "racha_ultimos_5": [
-      "E",
-      "V",
-      "D"
      ],
      "sanciones": 0
     },
@@ -3249,7 +3253,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3410,7 +3414,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3569,7 +3573,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3886,7 +3890,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4196,7 +4200,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4513,7 +4517,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4820,7 +4824,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -4996,7 +5000,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5209,7 +5213,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5422,7 +5426,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5635,7 +5639,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5820,7 +5824,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6030,7 +6034,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6240,7 +6244,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6448,7 +6452,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-10-31T09:07:55",
+   "fetched": "2026-10-31T10:18:05",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -15315,15 +15319,15 @@
    "escudo_local": "100x100lashuesas2017.png",
    "escudo_visitante": "100x100laslongueras.png",
    "estadio": "Las Huesas",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 1,
+   "goles_visitante": 6,
    "hora_inicio": null,
    "id": 18920,
    "id_local": 1281,
@@ -15331,7 +15335,7 @@
    "jornada": 4,
    "liga_id": 137,
    "local": "Las Huesas",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 16",
    "pen_local": "",
@@ -15343,10 +15347,12 @@
    "racha_local": [
     "D",
     "E",
+    "D",
     "D"
    ],
    "racha_visitante": [
     "D",
+    "V",
     "V",
     "V"
    ],
@@ -18618,15 +18624,15 @@
    "escudo_local": "escudoCasaPastores26.png",
    "escudo_visitante": "100x100cerruda.png",
    "estadio": "La Madera",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 09:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 3,
+   "goles_visitante": 3,
    "hora_inicio": null,
    "id": 18995,
    "id_local": 1316,
@@ -18634,7 +18640,7 @@
    "jornada": 4,
    "liga_id": 143,
    "local": "Casa Pastores",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 22",
    "pen_local": "",
@@ -18646,12 +18652,14 @@
    "racha_local": [
     "V",
     "V",
-    "D"
+    "D",
+    "E"
    ],
    "racha_visitante": [
     "E",
     "V",
-    "D"
+    "D",
+    "E"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,

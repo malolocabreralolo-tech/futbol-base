@@ -26,11 +26,11 @@
   "2026-10-29": "2026-10-30T06:52:43",
   "2026-10-30": "2026-10-31T10:18:05",
   "2026-10-31": "2026-11-01T03:37:18",
-  "2026-11-01": "2026-11-01T11:12:40"
+  "2026-11-01": "2026-11-01T12:07:11"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -195,7 +195,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -332,7 +332,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -467,9 +467,9 @@
    ]
   },
   "124": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
-    "jornada_actual": 4,
+    "jornada_actual": 5,
     "plazas_ascenso": 4,
     "plazas_copa": 1,
     "plazas_descenso": 0,
@@ -495,12 +495,12 @@
      "id": 1204,
      "nombre": "Guiniguada",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "4",
+     "pe": 0,
+     "pg": 4,
      "pj": 4,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "12",
+     "pp": 0,
+     "puntos": 12,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -519,12 +519,12 @@
      "id": 1207,
      "nombre": "San Mateo",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "3",
+     "pe": 0,
+     "pg": 3,
      "pj": 4,
      "posicion_anterior": 2,
-     "pp": "1",
-     "puntos": "9",
+     "pp": 1,
+     "puntos": 9,
      "racha_ultimos_5": [
       "D",
       "V",
@@ -543,12 +543,12 @@
      "id": 1206,
      "nombre": "Costa Ayala B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "3",
+     "pe": 0,
+     "pg": 3,
      "pj": 4,
      "posicion_anterior": 3,
-     "pp": "1",
-     "puntos": "9",
+     "pp": 1,
+     "puntos": 9,
      "racha_ultimos_5": [
       "V",
       "D",
@@ -567,12 +567,12 @@
      "id": 1208,
      "nombre": "CD Goleta",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 4,
      "posicion_anterior": 4,
-     "pp": "3",
-     "puntos": "3",
+     "pp": 3,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V",
@@ -591,12 +591,12 @@
      "id": 1205,
      "nombre": "Atl. Angostura B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 4,
      "posicion_anterior": 5,
-     "pp": "3",
-     "puntos": "3",
+     "pp": 3,
+     "puntos": 3,
      "racha_ultimos_5": [
       "V",
       "D",
@@ -615,12 +615,12 @@
      "id": 1203,
      "nombre": "CD Santidad",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 4,
      "posicion_anterior": 6,
-     "pp": "4",
-     "puntos": "0",
+     "pp": 4,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -632,7 +632,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -699,6 +699,30 @@
      "sanciones": 0
     },
     {
+     "banderas": "bandera-blanca-diagonal-roja.png",
+     "dg": "8",
+     "equipacion": "2026-blancafraroja-blancos-blancos.png",
+     "escudo": "lasMesasEscudo.png",
+     "gc": "10",
+     "gf": "18",
+     "id": 1211,
+     "nombre": "LM Huracán",
+     "orden_manual": 0,
+     "pe": 0,
+     "pg": 2,
+     "pj": 4,
+     "posicion_anterior": 4,
+     "pp": 2,
+     "puntos": 6,
+     "racha_ultimos_5": [
+      "D",
+      "D",
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
      "banderas": "bandera-nrgra-gc.png",
      "dg": "5",
      "equipacion": "2026-negrahomblanco-negro-negrasblanca.png",
@@ -723,46 +747,24 @@
      "sanciones": 0
     },
     {
-     "banderas": "bandera-blanca-diagonal-roja.png",
-     "dg": "5",
-     "equipacion": "2026-blancafraroja-blancos-blancos.png",
-     "escudo": "lasMesasEscudo.png",
-     "gc": "10",
-     "gf": "15",
-     "id": 1211,
-     "nombre": "LM Huracán",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 3,
-     "posicion_anterior": 4,
-     "pp": 2,
-     "puntos": 3,
-     "racha_ultimos_5": [
-      "D",
-      "D",
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
      "banderas": "bandera-GranCanaria.jpg",
-     "dg": "-13",
+     "dg": "-16",
      "equipacion": "2026-amarillaazul-azul-amarillas.png",
      "escudo": "100x100costayala.png",
-     "gc": "19",
+     "gc": "22",
      "gf": "6",
      "id": 1212,
      "nombre": "Costa Ayala",
      "orden_manual": 0,
      "pe": 0,
      "pg": 1,
-     "pj": 3,
+     "pj": 4,
      "posicion_anterior": 5,
-     "pp": 2,
+     "pp": 3,
      "puntos": 3,
      "racha_ultimos_5": [
       "V",
+      "D",
       "D",
       "D"
      ],
@@ -795,7 +797,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -925,7 +927,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1090,7 +1092,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1225,7 +1227,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1360,9 +1362,9 @@
    ]
   },
   "131": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
-    "jornada_actual": 4,
+    "jornada_actual": 5,
     "plazas_ascenso": 4,
     "plazas_copa": 1,
     "plazas_descenso": 0,
@@ -1388,12 +1390,12 @@
      "id": 1241,
      "nombre": "Tamaraceite",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "3",
+     "pe": 0,
+     "pg": 3,
      "pj": 3,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "9",
+     "pp": 0,
+     "puntos": 9,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -1411,12 +1413,12 @@
      "id": 1245,
      "nombre": "Unión Viera",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 3,
      "posicion_anterior": 2,
-     "pp": "1",
-     "puntos": "6",
+     "pp": 1,
+     "puntos": 6,
      "racha_ultimos_5": [
       "V",
       "D",
@@ -1434,12 +1436,12 @@
      "id": 1244,
      "nombre": "L. Torres/EUDLP",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "2",
+     "pe": 0,
+     "pg": 2,
      "pj": 3,
      "posicion_anterior": 3,
-     "pp": "1",
-     "puntos": "6",
+     "pp": 1,
+     "puntos": 6,
      "racha_ultimos_5": [
       "D",
       "V",
@@ -1457,12 +1459,12 @@
      "id": 1246,
      "nombre": "Atl. Isleta B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 3,
      "posicion_anterior": 4,
-     "pp": "2",
-     "puntos": "3",
+     "pp": 2,
+     "puntos": 3,
      "racha_ultimos_5": [
       "V",
       "D",
@@ -1480,12 +1482,12 @@
      "id": 1242,
      "nombre": "CD Batán B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 0,
      "posicion_anterior": 5,
-     "pp": "0",
-     "puntos": "0",
+     "pp": 0,
+     "puntos": 0,
      "racha_ultimos_5": [],
      "sanciones": 0
     },
@@ -1499,12 +1501,12 @@
      "id": 1243,
      "nombre": "Real Sportin B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 4,
      "posicion_anterior": 6,
-     "pp": "4",
-     "puntos": "0",
+     "pp": 4,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -1516,7 +1518,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1653,7 +1655,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1818,7 +1820,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1955,7 +1957,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2092,7 +2094,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2257,7 +2259,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2422,7 +2424,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2587,7 +2589,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2752,7 +2754,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2885,7 +2887,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3022,7 +3024,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3159,7 +3161,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3324,7 +3326,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3489,7 +3491,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3654,7 +3656,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3971,7 +3973,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4281,7 +4283,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4598,7 +4600,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4905,7 +4907,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5081,7 +5083,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5294,7 +5296,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5507,7 +5509,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5720,7 +5722,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5905,7 +5907,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6119,7 +6121,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6336,7 +6338,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6551,7 +6553,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-11-01T11:12:40",
+   "fetched": "2026-11-01T12:07:11",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -9121,57 +9123,156 @@
    "visitante": "Atl. Angostura B"
   },
   "18762": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/Dt8n7y9bGtG2",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100sanmateo.png",
    "escudo_visitante": "100x100costayala.png",
    "estadio": "San Mateo",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18762,
+   "id_local": 1207,
+   "id_visitante": 1206,
    "jornada": 5,
    "liga_id": 124,
    "local": "San Mateo",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "V",
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "D",
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Costa Ayala B"
   },
   "18763": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/hkGXfkW2fXEWTfQk7",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100goleta.png",
    "escudo_visitante": "100x100guiniguada2016.png",
    "estadio": "Cirilo Lorenzo",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18763,
+   "id_local": 1208,
+   "id_visitante": 1204,
    "jornada": 5,
    "liga_id": 124,
    "local": "CD Goleta",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "V",
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "V",
+    "V",
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Guiniguada"
   },
   "18764": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/ijbNHkoXCC91cZuq5",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "angosturaEscudo.png",
    "escudo_visitante": "100x100santidad.png",
    "estadio": "La Angostura",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18764,
+   "id_local": 1205,
+   "id_visitante": 1203,
    "jornada": 5,
    "liga_id": 124,
    "local": "Atl. Angostura B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 4",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "D",
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "D",
+    "D",
+    "D",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Santidad"
   },
   "18765": {
@@ -9750,16 +9851,16 @@
    "escudo_local": "lasMesasEscudo.png",
    "escudo_visitante": "100x100costayala.png",
    "estadio": "Pepe Gonçalvez",
-   "estado": "no_iniciado",
+   "estado": "en_juego",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-01 11:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
+   "goles_local": 3,
    "goles_visitante": 0,
-   "hora_inicio": null,
+   "hora_inicio": "2026-10-31 18:50:41",
    "id": 18776,
    "id_local": 1211,
    "id_visitante": 1212,
@@ -9778,10 +9879,12 @@
    "racha_local": [
     "D",
     "D",
+    "V",
     "V"
    ],
    "racha_visitante": [
     "V",
+    "D",
     "D",
     "D"
    ],
@@ -12413,57 +12516,147 @@
    "visitante": "Unión Viera"
   },
   "18847": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/jLjGK6J2nPu6NvbR8",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100lastorres.png",
    "escudo_visitante": "isletaEscudo.png",
    "estadio": "Las Torres",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18847,
+   "id_local": 1244,
+   "id_visitante": 1246,
    "jornada": 5,
    "liga_id": 131,
    "local": "L. Torres/EUDLP",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "D",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Atl. Isleta B"
   },
   "18848": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/4FKVo3JWtXwB9VyY8",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "100x100unionviera.png",
    "escudo_visitante": "100x100tamaraceite.png",
    "estadio": "Alfonso Silva",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18848,
+   "id_local": 1245,
+   "id_visitante": 1241,
    "jornada": 5,
    "liga_id": 131,
    "local": "Unión Viera",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "D",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Tamaraceite"
   },
   "18849": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/JntSPeJMUkWg3V8s5",
+   "campo_latitud": null,
+   "campo_longitud": null,
    "escudo_local": "batanEscudo.png",
    "escudo_visitante": "sportingEscudo2025.png",
    "estadio": "Ortiz Wiot",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 18849,
+   "id_local": 1242,
+   "id_visitante": 1243,
    "jornada": 5,
    "liga_id": 131,
    "local": "CD Batán B",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 10",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [],
+   "racha_visitante": [
+    "D",
+    "D",
+    "D",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Real Sportin B"
   },
   "18850": {

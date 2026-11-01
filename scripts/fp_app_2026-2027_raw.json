@@ -25,11 +25,12 @@
   "2026-10-28": "2026-10-29T00:22:34",
   "2026-10-29": "2026-10-30T06:52:43",
   "2026-10-30": "2026-10-31T10:18:05",
-  "2026-10-31": "2026-10-31T21:08:06"
+  "2026-10-31": "2026-11-01T03:37:18",
+  "2026-11-01": "2026-11-01T03:37:18"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -194,7 +195,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -331,7 +332,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -466,7 +467,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -631,7 +632,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -794,7 +795,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -924,7 +925,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1087,7 +1088,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1222,7 +1223,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1355,7 +1356,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1511,7 +1512,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1648,7 +1649,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1811,7 +1812,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1948,7 +1949,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2085,7 +2086,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2250,7 +2251,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2415,7 +2416,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2580,7 +2581,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2745,7 +2746,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2878,7 +2879,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3015,7 +3016,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3152,7 +3153,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3317,7 +3318,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3345,16 +3346,40 @@
      "id": 1318,
      "nombre": "San Pedro",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 3,
+     "pe": "1",
+     "pg": "3",
      "pj": 4,
      "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 10,
+     "pp": "0",
+     "puntos": "10",
      "racha_ultimos_5": [
       "V",
       "V",
       "E",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-verde-gran-canaria.png",
+     "dg": "0",
+     "equipacion": "2026-verde-verde-verde.png",
+     "escudo": "100x100balos.png",
+     "gc": "12",
+     "gf": "12",
+     "id": 1321,
+     "nombre": "UD Balos",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "3",
+     "pj": 4,
+     "posicion_anterior": 2,
+     "pp": "1",
+     "puntos": "9",
+     "racha_ultimos_5": [
+      "D",
+      "V",
+      "V",
       "V"
      ],
      "sanciones": 0
@@ -3369,39 +3394,16 @@
      "id": 1319,
      "nombre": "Cerruda C",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 2,
+     "pe": "1",
+     "pg": "2",
      "pj": 4,
      "posicion_anterior": 4,
-     "pp": 1,
-     "puntos": 7,
+     "pp": "1",
+     "puntos": "7",
      "racha_ultimos_5": [
       "V",
       "D",
       "E",
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-verde-gran-canaria.png",
-     "dg": "-2",
-     "equipacion": "2026-verde-verde-verde.png",
-     "escudo": "100x100balos.png",
-     "gc": "10",
-     "gf": "8",
-     "id": 1321,
-     "nombre": "UD Balos",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
-     "pj": 3,
-     "posicion_anterior": 2,
-     "pp": 1,
-     "puntos": 6,
-     "racha_ultimos_5": [
-      "D",
-      "V",
       "V"
      ],
      "sanciones": 0
@@ -3416,12 +3418,12 @@
      "id": 1317,
      "nombre": "Arguineguín C",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 1,
+     "pe": "1",
+     "pg": "1",
      "pj": 4,
      "posicion_anterior": 3,
-     "pp": 2,
-     "puntos": 4,
+     "pp": "2",
+     "puntos": "4",
      "racha_ultimos_5": [
       "V",
       "E",
@@ -3432,24 +3434,25 @@
     },
     {
      "banderas": "bandera-verdiblanca-rayas.png",
-     "dg": "-7",
+     "dg": "-9",
      "equipacion": "2026-verdiblancafinas-blanco-verdes.png",
      "escudo": "estrellaEscudo.png",
-     "gc": "14",
-     "gf": "7",
+     "gc": "18",
+     "gf": "9",
      "id": 1320,
      "nombre": "Estrella CF",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 3,
+     "pe": "0",
+     "pg": "1",
+     "pj": 4,
      "posicion_anterior": 5,
-     "pp": 2,
-     "puntos": 3,
+     "pp": "3",
+     "puntos": "3",
      "racha_ultimos_5": [
       "D",
       "D",
-      "V"
+      "V",
+      "D"
      ],
      "sanciones": 0
     },
@@ -3463,12 +3466,12 @@
      "id": 1322,
      "nombre": "Vecindario B",
      "orden_manual": 0,
-     "pe": 1,
-     "pg": 0,
+     "pe": "1",
+     "pg": "0",
      "pj": 4,
      "posicion_anterior": 6,
-     "pp": 3,
-     "puntos": 1,
+     "pp": "3",
+     "puntos": "1",
      "racha_ultimos_5": [
       "D",
       "E",
@@ -3480,7 +3483,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3645,7 +3648,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3962,7 +3965,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4272,7 +4275,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4589,7 +4592,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4896,7 +4899,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5072,7 +5075,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5285,7 +5288,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5498,7 +5501,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5711,7 +5714,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5896,7 +5899,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6110,7 +6113,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6327,7 +6330,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6542,7 +6545,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-10-31T21:08:06",
+   "fetched": "2026-11-01T03:37:18",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -9736,6 +9739,8 @@
    "campo_gps": "https://goo.gl/maps/B3eT3G14W8CsQLnn8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "lasMesasEscudo.png",
    "escudo_visitante": "100x100costayala.png",
    "estadio": "Pepe Gonçalvez",
@@ -9762,6 +9767,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
@@ -10181,6 +10187,8 @@
    "campo_gps": "https://goo.gl/maps/CkZR99XbZrTCs3yy6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100sanlazaro.png",
    "escudo_visitante": "100x100veteranos.png",
    "estadio": "López Socas",
@@ -10207,6 +10215,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -10772,6 +10781,8 @@
    "campo_gps": "https://goo.gl/maps/ZjKpiRpJTu3h6kYdA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100puertoslaspalmas.png",
    "escudo_visitante": "200x200claret.png",
    "estadio": "MN Sosa 1",
@@ -10798,6 +10809,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
@@ -11281,6 +11293,8 @@
    "campo_gps": "https://goo.gl/maps/SKhQngkPbvSGWmqq5",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "100x100unionviera.png",
    "escudo_visitante": "isletaEscudo.png",
    "estadio": "Alfonso Silva",
@@ -11307,6 +11321,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
@@ -11665,6 +11680,8 @@
    "campo_gps": "https://goo.gl/maps/b7kTZT2NbkbqBWTr9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200huracan.png",
    "escudo_visitante": "100x100sanlazaro.png",
    "estadio": "Pepe Gonçalvez",
@@ -11691,6 +11708,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
@@ -11712,6 +11730,8 @@
    "campo_gps": "https://goo.gl/maps/sJwUSMfFe6Anj7ob6",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200victoria2019.png",
    "escudo_visitante": "100x100veteranos.png",
    "estadio": "Puerto Pi",
@@ -11738,6 +11758,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
@@ -13447,6 +13468,8 @@
    "campo_gps": "https://goo.gl/maps/Y3FqGgucwufXVT1FA",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x200huracan.png",
    "escudo_visitante": "batanEscudo.png",
    "estadio": "Pepe Gonçalvez",
@@ -13473,6 +13496,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
@@ -19616,15 +19640,15 @@
    "escudo_local": "100x100balos.png",
    "escudo_visitante": "estrellaEscudo.png",
    "estadio": "Mun. Balos",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-10-31 12:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 4,
+   "goles_visitante": 2,
    "hora_inicio": null,
    "id": 19010,
    "id_local": 1321,
@@ -19632,7 +19656,7 @@
    "jornada": 4,
    "liga_id": 144,
    "local": "UD Balos",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 23",
    "pen_local": "",
@@ -19644,12 +19668,14 @@
    "racha_local": [
     "D",
     "V",
+    "V",
     "V"
    ],
    "racha_visitante": [
     "D",
     "D",
-    "V"
+    "V",
+    "D"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,
@@ -38562,6 +38588,8 @@
    "campo_gps": "https://maps.app.goo.gl/5Lycnn2PtoSxMbEv8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "corralejoEscudo.png",
    "escudo_visitante": "100x100cotillo2016.png",
    "estadio": "Jonathan Sesma",
@@ -38588,6 +38616,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [

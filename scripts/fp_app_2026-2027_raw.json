@@ -27,13 +27,13 @@
   "2026-10-30": "2026-10-31T10:18:05",
   "2026-10-31": "2026-11-01T03:37:18",
   "2026-11-01": "2026-11-02T01:37:27",
-  "2026-11-02": "2026-11-02T07:22:45"
+  "2026-11-02": "2026-11-02T20:48:11"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
-    "jornada_actual": 4,
+    "jornada_actual": 5,
     "plazas_ascenso": 4,
     "plazas_copa": 1,
     "plazas_descenso": 0,
@@ -59,12 +59,12 @@
      "id": 1190,
      "nombre": "Arucas CF C",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "4",
+     "pe": 0,
+     "pg": 4,
      "pj": 4,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "12",
+     "pp": 0,
+     "puntos": 12,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -83,12 +83,12 @@
      "id": 1192,
      "nombre": "UD Barrial",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "3",
+     "pe": 0,
+     "pg": 3,
      "pj": 4,
      "posicion_anterior": 2,
-     "pp": "1",
-     "puntos": "9",
+     "pp": 1,
+     "puntos": 9,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -107,12 +107,12 @@
      "id": 1189,
      "nombre": "Guayarmina",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "3",
+     "pe": 0,
+     "pg": 3,
      "pj": 4,
      "posicion_anterior": 3,
-     "pp": "1",
-     "puntos": "9",
+     "pp": 1,
+     "puntos": 9,
      "racha_ultimos_5": [
       "D",
       "V",
@@ -131,12 +131,12 @@
      "id": 1191,
      "nombre": "Atalaya B",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 4,
      "posicion_anterior": 4,
-     "pp": "3",
-     "puntos": "3",
+     "pp": 3,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -155,12 +155,12 @@
      "id": 1188,
      "nombre": "San Isidro",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 4,
      "posicion_anterior": 5,
-     "pp": "3",
-     "puntos": "3",
+     "pp": 3,
+     "puntos": 3,
      "racha_ultimos_5": [
       "V",
       "D",
@@ -179,12 +179,12 @@
      "id": 1187,
      "nombre": "UD Guía",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 4,
      "posicion_anterior": 6,
-     "pp": "4",
-     "puntos": "0",
+     "pp": 4,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -196,9 +196,9 @@
    ]
   },
   "122": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
-    "jornada_actual": 4,
+    "jornada_actual": 5,
     "plazas_ascenso": 4,
     "plazas_copa": 0,
     "plazas_descenso": 0,
@@ -224,12 +224,12 @@
      "id": 1197,
      "nombre": "Gáldar CF",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "3",
+     "pe": 0,
+     "pg": 3,
      "pj": 3,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "9",
+     "pp": 0,
+     "puntos": 9,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -247,12 +247,12 @@
      "id": 1193,
      "nombre": "Roque Amagro",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "2",
+     "pe": 1,
+     "pg": 2,
      "pj": 4,
-     "posicion_anterior": 3,
-     "pp": "1",
-     "puntos": "7",
+     "posicion_anterior": 2,
+     "pp": 1,
+     "puntos": 7,
      "racha_ultimos_5": [
       "E",
       "V",
@@ -271,12 +271,12 @@
      "id": 1195,
      "nombre": "UD Moya",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "1",
+     "pe": 1,
+     "pg": 1,
      "pj": 3,
-     "posicion_anterior": 2,
-     "pp": "1",
-     "puntos": "4",
+     "posicion_anterior": 3,
+     "pp": 1,
+     "puntos": 4,
      "racha_ultimos_5": [
       "E",
       "V",
@@ -294,12 +294,12 @@
      "id": 1196,
      "nombre": "UD Teror",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 3,
      "posicion_anterior": 4,
-     "pp": "2",
-     "puntos": "3",
+     "pp": 2,
+     "puntos": 3,
      "racha_ultimos_5": [
       "V",
       "D",
@@ -317,12 +317,12 @@
      "id": 1194,
      "nombre": "Sardina CF",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 3,
      "posicion_anterior": 5,
-     "pp": "3",
-     "puntos": "0",
+     "pp": 3,
+     "puntos": 0,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -333,7 +333,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -468,7 +468,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -633,7 +633,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -798,7 +798,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -928,7 +928,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1093,7 +1093,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1230,7 +1230,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1367,7 +1367,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1523,7 +1523,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1660,7 +1660,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1825,7 +1825,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -1962,7 +1962,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2099,7 +2099,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2264,7 +2264,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2429,7 +2429,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2594,7 +2594,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2759,7 +2759,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2892,7 +2892,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3029,7 +3029,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3166,7 +3166,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3331,7 +3331,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3496,7 +3496,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -3661,7 +3661,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3978,7 +3978,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4288,7 +4288,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4605,7 +4605,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4912,7 +4912,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5088,7 +5088,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5301,7 +5301,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5514,7 +5514,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5727,7 +5727,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5912,7 +5912,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6129,7 +6129,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6346,7 +6346,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6561,7 +6561,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-11-02T07:22:45",
+   "fetched": "2026-11-02T20:48:11",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 3,
@@ -6589,12 +6589,12 @@
      "id": 1840,
      "nombre": "CD Hubara",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
+     "pe": "0",
+     "pg": "2",
      "pj": 2,
      "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 6,
+     "pp": "0",
+     "puntos": "6",
      "racha_ultimos_5": [
       "V",
       "V"
@@ -6611,12 +6611,34 @@
      "id": 1846,
      "nombre": "CD Breñamen",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
+     "pe": "0",
+     "pg": "2",
      "pj": 2,
      "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 6,
+     "pp": "0",
+     "puntos": "6",
+     "racha_ultimos_5": [
+      "V",
+      "V"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-roja-ftv.png",
+     "dg": "5",
+     "equipacion": "2026-rojahomazul-rojo-rojas.png",
+     "escudo": "100x100playasdesotavento.png",
+     "gc": "4",
+     "gf": "9",
+     "id": 1842,
+     "nombre": "UD Sotavento",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "2",
+     "pj": 2,
+     "posicion_anterior": 4,
+     "pp": "0",
+     "puntos": "6",
      "racha_ultimos_5": [
       "V",
       "V"
@@ -6633,35 +6655,14 @@
      "id": 1841,
      "nombre": "UD Jandía",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 7,
-     "pp": 1,
-     "puntos": 3,
+     "pp": "1",
+     "puntos": "3",
      "racha_ultimos_5": [
       "D",
-      "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-roja-ftv.png",
-     "dg": "1",
-     "equipacion": "2026-rojahomazul-rojo-rojas.png",
-     "escudo": "100x100playasdesotavento.png",
-     "gc": "2",
-     "gf": "3",
-     "id": 1842,
-     "nombre": "UD Sotavento",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
-     "pj": 1,
-     "posicion_anterior": 4,
-     "pp": 0,
-     "puntos": 3,
-     "racha_ultimos_5": [
       "V"
      ],
      "sanciones": 0
@@ -6676,12 +6677,12 @@
      "id": 1843,
      "nombre": "Tarajalejo B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 2,
      "posicion_anterior": 3,
-     "pp": 1,
-     "puntos": 3,
+     "pp": "1",
+     "puntos": "3",
      "racha_ultimos_5": [
       "V",
       "D"
@@ -6698,12 +6699,12 @@
      "id": 1847,
      "nombre": "Costa Calma",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 0,
      "posicion_anterior": 5,
-     "pp": 0,
-     "puntos": 0,
+     "pp": "0",
+     "puntos": "0",
      "racha_ultimos_5": [],
      "sanciones": 0
     },
@@ -6717,33 +6718,12 @@
      "id": 1844,
      "nombre": "Tamasite B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 1,
      "posicion_anterior": 8,
-     "pp": 1,
-     "puntos": 0,
-     "racha_ultimos_5": [
-      "D"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-roja-ftv.png",
-     "dg": "-3",
-     "equipacion": "2026-rojahomazul-rojo-rojas.png",
-     "escudo": "100x100playasdesotavento.png",
-     "gc": "6",
-     "gf": "3",
-     "id": 1839,
-     "nombre": "Sotavento B",
-     "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 1,
-     "posicion_anterior": 9,
-     "pp": 1,
-     "puntos": 0,
+     "pp": "1",
+     "puntos": "0",
      "racha_ultimos_5": [
       "D"
      ],
@@ -6759,13 +6739,35 @@
      "id": 1848,
      "nombre": "UD Tarajalejo",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 1,
      "posicion_anterior": 6,
-     "pp": 1,
-     "puntos": 0,
+     "pp": "1",
+     "puntos": "0",
      "racha_ultimos_5": [
+      "D"
+     ],
+     "sanciones": 0
+    },
+    {
+     "banderas": "bandera-roja-ftv.png",
+     "dg": "-7",
+     "equipacion": "2026-rojahomazul-rojo-rojas.png",
+     "escudo": "100x100playasdesotavento.png",
+     "gc": "12",
+     "gf": "5",
+     "id": 1839,
+     "nombre": "Sotavento B",
+     "orden_manual": 0,
+     "pe": "0",
+     "pg": "0",
+     "pj": 2,
+     "posicion_anterior": 9,
+     "pp": "2",
+     "puntos": "0",
+     "racha_ultimos_5": [
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -6780,12 +6782,12 @@
      "id": 1845,
      "nombre": "La Lajita",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 2,
      "posicion_anterior": 10,
-     "pp": 2,
-     "puntos": 0,
+     "pp": "2",
+     "puntos": "0",
      "racha_ultimos_5": [
       "D",
       "D"
@@ -7419,8 +7421,8 @@
    "asistente1_nombre": null,
    "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/Fo4MXUjfvWguQDXM9",
-   "campo_latitud": null,
-   "campo_longitud": null,
+   "campo_latitud": "28.15528540",
+   "campo_longitud": "-15.69479470",
    "escudo_local": "200x200udbarrial.png",
    "escudo_visitante": "200x200AtalayaSanPablo.png",
    "estadio": "Sardina",
@@ -7470,8 +7472,8 @@
    "asistente1_nombre": null,
    "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/hkGXfkW2fXEWTfQk7",
-   "campo_latitud": null,
-   "campo_longitud": null,
+   "campo_latitud": "28.11859140",
+   "campo_longitud": "-15.53533280",
    "escudo_local": "100x100arucas.png",
    "escudo_visitante": "escudoGuayarmina.png",
    "estadio": "Cirilo Lorenzo",
@@ -7521,8 +7523,8 @@
    "asistente1_nombre": null,
    "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/sQnYk1SeWCP8AgqFA",
-   "campo_latitud": null,
-   "campo_longitud": null,
+   "campo_latitud": "28.13756230",
+   "campo_longitud": "-15.63310410",
    "escudo_local": "100x100guia.png",
    "escudo_visitante": "sanIsidroEscudo.png",
    "estadio": "Guía",
@@ -7977,8 +7979,8 @@
    "asistente1_nombre": null,
    "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/JbxetytbNzbzEqCK7",
-   "campo_latitud": null,
-   "campo_longitud": null,
+   "campo_latitud": "28.06326680",
+   "campo_longitud": "-15.55307470",
    "escudo_local": "100x100teror.png",
    "escudo_visitante": "galdarEscudoColor.png",
    "estadio": "El Pino",
@@ -8026,8 +8028,8 @@
    "asistente1_nombre": null,
    "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/u6CZXDCsxB52",
-   "campo_latitud": null,
-   "campo_longitud": null,
+   "campo_latitud": "28.11800260",
+   "campo_longitud": "-15.58384380",
    "escudo_local": "100x100moya.png",
    "escudo_visitante": "100x100sardina.png",
    "estadio": "Moya",
@@ -42416,7 +42418,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com28.05576360,-14.35530860",
+   "campo_gps": "https://goo.gl/maps/SqHsxMpvUtcx8prE7",
    "campo_latitud": "28.05576360",
    "campo_longitud": "-14.35530860",
    "club_padre_local": "",
@@ -42424,15 +42426,15 @@
    "escudo_local": "100x100playasdesotavento.png",
    "escudo_visitante": "100x100playasdesotavento.png",
    "estadio": "Morro Jable",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-02 18:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 6,
+   "goles_visitante": 2,
    "hora_inicio": null,
    "id": 22230,
    "id_local": 1842,
@@ -42440,7 +42442,7 @@
    "jornada": 2,
    "liga_id": 191,
    "local": "UD Sotavento",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Fuerteventura Grupo 4",
    "pen_local": "",
@@ -42450,9 +42452,11 @@
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
+    "V",
     "V"
    ],
    "racha_visitante": [
+    "D",
     "D"
    ],
    "tecnico_local": null,

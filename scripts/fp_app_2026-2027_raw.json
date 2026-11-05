@@ -29,11 +29,12 @@
   "2026-11-01": "2026-11-02T01:37:27",
   "2026-11-02": "2026-11-03T00:37:27",
   "2026-11-03": "2026-11-04T13:03:16",
-  "2026-11-04": "2026-11-04T22:27:59"
+  "2026-11-04": "2026-11-05T11:52:17",
+  "2026-11-05": "2026-11-05T11:52:17"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -198,7 +199,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -335,7 +336,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -470,7 +471,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -635,7 +636,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -800,7 +801,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -930,7 +931,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1095,7 +1096,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1232,7 +1233,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1369,7 +1370,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1525,7 +1526,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1662,7 +1663,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1827,7 +1828,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1964,7 +1965,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2101,7 +2102,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2266,7 +2267,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2431,7 +2432,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2596,7 +2597,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2761,7 +2762,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 4,
@@ -2896,7 +2897,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3033,7 +3034,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3170,7 +3171,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3335,7 +3336,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3500,7 +3501,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3665,7 +3666,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -3982,7 +3983,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4292,7 +4293,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4609,7 +4610,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4916,7 +4917,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5092,7 +5093,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5305,7 +5306,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5518,7 +5519,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5731,7 +5732,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5916,7 +5917,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6133,7 +6134,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6350,7 +6351,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6565,7 +6566,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6801,7 +6802,7 @@
    ]
   },
   "200": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -6993,7 +6994,7 @@
    ]
   },
   "201": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7166,7 +7167,7 @@
    ]
   },
   "202": {
-   "fetched": "2026-11-04T22:27:59",
+   "fetched": "2026-11-05T11:52:17",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7337,6 +7338,26 @@
      "sanciones": 0
     }
    ]
+  },
+  "207": {
+   "fetched": "2026-11-05T11:52:17",
+   "meta": {
+    "jornada_actual": 1,
+    "plazas_ascenso": 1,
+    "plazas_copa": 0,
+    "plazas_descenso": 0,
+    "plazas_playoff": 1,
+    "plazas_promocion": 0,
+    "texto_ascenso": "Campeón de liga",
+    "texto_copa": "Competición Europea",
+    "texto_descenso": "Descenso",
+    "texto_playoff": "Subcampeón de liga",
+    "texto_promocion": "Promoción",
+    "tipo_competicion": "regular",
+    "total_jornadas": 1
+   },
+   "name": "Prebenjamín Lanzarote Grupo 1",
+   "tabla": []
   }
  },
  "partidos": {
@@ -8917,7 +8938,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/hRsg6Aww4Wt",
+   "campo_gps": "https://google.com28.15273610,-15.63340670",
    "campo_latitud": "28.15273610",
    "campo_longitud": "-15.63340670",
    "club_padre_local": "",
@@ -36553,9 +36574,11 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/6gTkdcdh7PWXHBKY6",
+   "campo_gps": "https://google.com29.06260660,-13.55680460",
    "campo_latitud": "29.06260660",
    "campo_longitud": "-13.55680460",
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "adassaEscudo.png",
    "escudo_visitante": "200x200palmeiroTeguise.png",
    "estadio": "Teguise",
@@ -36582,6 +36605,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
@@ -37579,9 +37603,11 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/5RHsVFwVdcLiGD4v9",
+   "campo_gps": "https://google.com28.96599550,-13.56510150",
    "campo_latitud": "28.96599550",
    "campo_longitud": "-13.56510150",
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "200x20maciotSport.png",
    "escudo_visitante": "lomoEscudo.png",
    "estadio": "SF Javier",
@@ -37608,6 +37634,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
@@ -40415,9 +40442,11 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://goo.gl/maps/R6Q8LX2SDdxyjS598",
+   "campo_gps": "https://google.com28.97805810,-13.54820970",
    "campo_latitud": "28.97805810",
    "campo_longitud": "-13.54820970",
+   "club_padre_local": "",
+   "club_padre_visitante": "",
    "escudo_local": "lomoEscudo.png",
    "escudo_visitante": "100x100internacionalph.png",
    "estadio": "Agapito Reyes",
@@ -40444,6 +40473,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
@@ -41080,7 +41110,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://maps.app.goo.gl/5Lycnn2PtoSxMbEv8",
+   "campo_gps": "https://google.com28.73814870,-13.87587760",
    "campo_latitud": "28.73814870",
    "campo_longitud": "-13.87587760",
    "club_padre_local": "",

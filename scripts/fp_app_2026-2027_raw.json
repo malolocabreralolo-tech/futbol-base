@@ -32,11 +32,11 @@
   "2026-11-04": "2026-11-05T11:52:17",
   "2026-11-05": "2026-11-05T19:32:57",
   "2026-11-06": "2026-11-07T01:37:49",
-  "2026-11-07": "2026-11-07T13:02:42"
+  "2026-11-07": "2026-11-07T13:57:50"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -207,7 +207,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -348,7 +348,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -483,7 +483,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -652,7 +652,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -819,7 +819,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -951,7 +951,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1118,7 +1118,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1255,7 +1255,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1392,7 +1392,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1550,7 +1550,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1687,7 +1687,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1858,7 +1858,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1876,6 +1876,30 @@
    },
    "name": "Benjamin Gran Canaria Grupo 13",
    "tabla": [
+    {
+     "banderas": "bandera-roja-azul.png",
+     "dg": "32",
+     "equipacion": "2026-roja-azules-azules.png",
+     "escudo": "100x100sanjuan.png",
+     "gc": "5",
+     "gf": "37",
+     "id": 1261,
+     "nombre": "San Juan",
+     "orden_manual": 0,
+     "pe": 1,
+     "pg": 3,
+     "pj": 4,
+     "posicion_anterior": 2,
+     "pp": 0,
+     "puntos": 10,
+     "racha_ultimos_5": [
+      "V",
+      "V",
+      "E",
+      "V"
+     ],
+     "sanciones": 0
+    },
     {
      "banderas": "bandera-azuliblanca-rayas.png",
      "dg": "29",
@@ -1897,29 +1921,6 @@
       "V",
       "E",
       "V"
-     ],
-     "sanciones": 0
-    },
-    {
-     "banderas": "bandera-roja-azul.png",
-     "dg": "15",
-     "equipacion": "2026-roja-azules-azules.png",
-     "escudo": "100x100sanjuan.png",
-     "gc": "5",
-     "gf": "20",
-     "id": 1261,
-     "nombre": "San Juan",
-     "orden_manual": 0,
-     "pe": 1,
-     "pg": 2,
-     "pj": 3,
-     "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 7,
-     "racha_ultimos_5": [
-      "V",
-      "V",
-      "E"
      ],
      "sanciones": 0
     },
@@ -1973,21 +1974,22 @@
     },
     {
      "banderas": "bandera-verdiblanca-rayas.png",
-     "dg": "-40",
+     "dg": "-57",
      "equipacion": "2026-verdiblancafina-blanco-blancas.png",
      "escudo": "100x100pedrohidalgo.png",
-     "gc": "40",
+     "gc": "57",
      "gf": "0",
      "id": 1263,
      "nombre": "Pedro Hidalgo",
      "orden_manual": 0,
      "pe": 0,
      "pg": 0,
-     "pj": 3,
+     "pj": 4,
      "posicion_anterior": 5,
-     "pp": 3,
+     "pp": 4,
      "puntos": 0,
      "racha_ultimos_5": [
+      "D",
       "D",
       "D",
       "D"
@@ -1997,7 +1999,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2134,7 +2136,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2301,7 +2303,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2472,7 +2474,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2643,7 +2645,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2814,7 +2816,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2953,7 +2955,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3092,7 +3094,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3231,7 +3233,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3396,7 +3398,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3561,7 +3563,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3581,21 +3583,22 @@
    "tabla": [
     {
      "banderas": "bandera-blanca-gran-canaria.png",
-     "dg": "28",
+     "dg": "33",
      "equipacion": "2026-blanca-blanco-blancas.png",
      "escudo": "maspaTrainingEscudo.png",
-     "gc": "4",
-     "gf": "32",
+     "gc": "5",
+     "gf": "38",
      "id": 1327,
      "nombre": "Maspa Training B",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 4,
-     "pj": 4,
+     "pg": 5,
+     "pj": 5,
      "posicion_anterior": 1,
      "pp": 0,
-     "puntos": 12,
+     "puntos": 15,
      "racha_ultimos_5": [
+      "V",
       "V",
       "V",
       "V",
@@ -3605,25 +3608,26 @@
     },
     {
      "banderas": "bandera-azul-gran-canaria.png",
-     "dg": "19",
+     "dg": "14",
      "equipacion": "2026-azul-azul-azul.png",
      "escudo": "sanfernandoEscudo.png",
-     "gc": "9",
-     "gf": "28",
+     "gc": "15",
+     "gf": "29",
      "id": 1325,
      "nombre": "San Fernando",
      "orden_manual": 0,
      "pe": 2,
      "pg": 2,
-     "pj": 4,
+     "pj": 5,
      "posicion_anterior": 2,
-     "pp": 0,
+     "pp": 1,
      "puntos": 8,
      "racha_ultimos_5": [
       "V",
       "E",
       "E",
-      "V"
+      "V",
+      "D"
      ],
      "sanciones": 0
     },
@@ -3728,7 +3732,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4053,7 +4057,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4365,7 +4369,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4688,7 +4692,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -5003,7 +5007,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5179,7 +5183,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5392,7 +5396,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5607,7 +5611,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5820,7 +5824,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -6005,7 +6009,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6222,7 +6226,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6441,7 +6445,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6658,7 +6662,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6896,7 +6900,7 @@
    ]
   },
   "200": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7088,7 +7092,7 @@
    ]
   },
   "201": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7261,7 +7265,7 @@
    ]
   },
   "202": {
-   "fetched": "2026-11-07T13:02:42",
+   "fetched": "2026-11-07T13:57:50",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -15618,7 +15622,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com28.05423910,-15.44195690",
+   "campo_gps": "https://goo.gl/maps/5K5Me7HXoJ4LgJnT7",
    "campo_latitud": "28.05423910",
    "campo_longitud": "-15.44195690",
    "club_padre_local": "",
@@ -15626,7 +15630,7 @@
    "escudo_local": "100x100pedrohidalgo.png",
    "escudo_visitante": "100x100sanjuan.png",
    "estadio": "Vicente Sepúlveda",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:00:00",
    "goleadores_local": null,
@@ -15634,7 +15638,7 @@
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
    "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_visitante": 17,
    "hora_inicio": null,
    "id": 18884,
    "id_local": 1263,
@@ -15642,7 +15646,7 @@
    "jornada": 5,
    "liga_id": 134,
    "local": "Pedro Hidalgo",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 13",
    "pen_local": "",
@@ -15654,12 +15658,14 @@
    "racha_local": [
     "D",
     "D",
+    "D",
     "D"
    ],
    "racha_visitante": [
     "V",
     "V",
-    "E"
+    "E",
+    "V"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,
@@ -23072,7 +23078,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com27.76320750,-15.59538140",
+   "campo_gps": "https://maps.app.goo.gl/MyZSN4X3hCWTR9j8A",
    "campo_latitud": "27.76320750",
    "campo_longitud": "-15.59538140",
    "club_padre_local": "",
@@ -23080,15 +23086,15 @@
    "escudo_local": "maspaTrainingEscudo.png",
    "escudo_visitante": "sanfernandoEscudo.png",
    "estadio": "Maspalomas 4",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-07 09:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 6,
+   "goles_visitante": 1,
    "hora_inicio": null,
    "id": 19028,
    "id_local": 1327,
@@ -23096,7 +23102,7 @@
    "jornada": 5,
    "liga_id": 145,
    "local": "Maspa Training B",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 24",
    "pen_local": "",
@@ -23109,13 +23115,15 @@
     "V",
     "V",
     "V",
+    "V",
     "V"
    ],
    "racha_visitante": [
     "V",
     "E",
     "E",
-    "V"
+    "V",
+    "D"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,

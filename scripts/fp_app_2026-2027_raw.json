@@ -32,11 +32,11 @@
   "2026-11-04": "2026-11-05T11:52:17",
   "2026-11-05": "2026-11-05T19:32:57",
   "2026-11-06": "2026-11-07T01:37:49",
-  "2026-11-07": "2026-11-07T18:27:36"
+  "2026-11-07": "2026-11-07T19:22:53"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -207,7 +207,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -348,9 +348,9 @@
    ]
   },
   "123": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
-    "jornada_actual": 5,
+    "jornada_actual": 4,
     "plazas_ascenso": 4,
     "plazas_copa": 0,
     "plazas_descenso": 0,
@@ -368,21 +368,22 @@
    "tabla": [
     {
      "banderas": "bandera-amarillo-azul-rayas.png",
-     "dg": "18",
+     "dg": "23",
      "equipacion": "2026-azuliamarilla-azul-amarillas.png",
      "escudo": "200x200AtalayaSanPablo.png",
-     "gc": "3",
-     "gf": "21",
+     "gc": "7",
+     "gf": "30",
      "id": 1198,
      "nombre": "UD Atalaya",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
-     "pj": 2,
+     "pe": "0",
+     "pg": "3",
+     "pj": 3,
      "posicion_anterior": 1,
-     "pp": 0,
-     "puntos": 6,
+     "pp": "0",
+     "puntos": "9",
      "racha_ultimos_5": [
+      "V",
       "V",
       "V"
      ],
@@ -390,23 +391,24 @@
     },
     {
      "banderas": "bandera-verde-amarillo.png",
-     "dg": "7",
+     "dg": "2",
      "equipacion": "2026-verde-amarillo-verdes.png",
      "escudo": "galdarEscudoColor.png",
-     "gc": "11",
-     "gf": "18",
+     "gc": "20",
+     "gf": "22",
      "id": 1199,
      "nombre": "Gáldar B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
-     "pj": 3,
+     "pe": "0",
+     "pg": "2",
+     "pj": 4,
      "posicion_anterior": 2,
-     "pp": 1,
-     "puntos": 6,
+     "pp": "2",
+     "puntos": "6",
      "racha_ultimos_5": [
       "V",
       "V",
+      "D",
       "D"
      ],
      "sanciones": 0
@@ -421,12 +423,12 @@
      "id": 1202,
      "nombre": "CD Firgas",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 2,
+     "pe": "0",
+     "pg": "2",
      "pj": 3,
      "posicion_anterior": 3,
-     "pp": 1,
-     "puntos": 6,
+     "pp": "1",
+     "puntos": "6",
      "racha_ultimos_5": [
       "D",
       "V",
@@ -444,12 +446,12 @@
      "id": 1200,
      "nombre": "Villa SB B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 1,
+     "pe": "0",
+     "pg": "1",
      "pj": 3,
      "posicion_anterior": 4,
-     "pp": 2,
-     "puntos": 3,
+     "pp": "2",
+     "puntos": "3",
      "racha_ultimos_5": [
       "D",
       "D",
@@ -467,12 +469,12 @@
      "id": 1201,
      "nombre": "San Nicolás",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
+     "pe": "0",
+     "pg": "0",
      "pj": 3,
      "posicion_anterior": 5,
-     "pp": 3,
-     "puntos": 0,
+     "pp": "3",
+     "puntos": "0",
      "racha_ultimos_5": [
       "D",
       "D",
@@ -483,7 +485,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -654,7 +656,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -825,7 +827,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -957,7 +959,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1128,7 +1130,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1269,7 +1271,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1410,7 +1412,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1570,7 +1572,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1711,7 +1713,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1740,11 +1742,11 @@
      "nombre": "Huracán B",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 0,
-     "pj": 0,
+     "pg": 5,
+     "pj": 5,
      "posicion_anterior": 1,
      "pp": 0,
-     "puntos": 0,
+     "puntos": 15,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -1764,12 +1766,12 @@
      "id": 1254,
      "nombre": "CD Batán",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
+     "pe": 1,
+     "pg": 3,
+     "pj": 5,
      "posicion_anterior": 2,
-     "pp": 0,
-     "puntos": 0,
+     "pp": 1,
+     "puntos": 10,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -1789,12 +1791,12 @@
      "id": 1260,
      "nombre": "Guiniguada B",
      "orden_manual": 0,
-     "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 3,
-     "pp": 0,
-     "puntos": 0,
+     "pe": 1,
+     "pg": 2,
+     "pj": 5,
+     "posicion_anterior": 4,
+     "pp": 2,
+     "puntos": 7,
      "racha_ultimos_5": [
       "V",
       "D",
@@ -1815,11 +1817,11 @@
      "nombre": "Corazón Mª D",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 0,
-     "pj": 0,
-     "posicion_anterior": 4,
-     "pp": 0,
-     "puntos": 0,
+     "pg": 2,
+     "pj": 5,
+     "posicion_anterior": 3,
+     "pp": 3,
+     "puntos": 6,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -1840,11 +1842,11 @@
      "nombre": "UD Piletas",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 0,
-     "pj": 0,
+     "pg": 1,
+     "pj": 5,
      "posicion_anterior": 5,
-     "pp": 0,
-     "puntos": 0,
+     "pp": 4,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V",
@@ -1865,11 +1867,11 @@
      "nombre": "Siete Palmas",
      "orden_manual": 0,
      "pe": 0,
-     "pg": 0,
-     "pj": 0,
+     "pg": 1,
+     "pj": 5,
      "posicion_anterior": 6,
-     "pp": 0,
-     "puntos": 0,
+     "pp": 4,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -1882,7 +1884,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2023,7 +2025,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2162,7 +2164,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2333,7 +2335,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2504,7 +2506,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2675,7 +2677,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2846,7 +2848,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2985,7 +2987,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3126,7 +3128,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3267,7 +3269,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3438,7 +3440,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3609,7 +3611,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3780,7 +3782,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4109,7 +4111,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4428,7 +4430,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -4755,7 +4757,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 1,
@@ -5070,7 +5072,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5250,7 +5252,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5467,7 +5469,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5688,7 +5690,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -5903,7 +5905,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -6092,7 +6094,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6313,7 +6315,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6538,7 +6540,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6759,7 +6761,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 3,
     "plazas_ascenso": 3,
@@ -6999,7 +7001,7 @@
    ]
   },
   "200": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7191,7 +7193,7 @@
    ]
   },
   "201": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7364,7 +7366,7 @@
    ]
   },
   "202": {
-   "fetched": "2026-11-07T18:27:36",
+   "fetched": "2026-11-07T19:22:53",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -9160,7 +9162,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com28.15273610,-15.63340670",
+   "campo_gps": "https://goo.gl/maps/hRsg6Aww4Wt",
    "campo_latitud": "28.15273610",
    "campo_longitud": "-15.63340670",
    "club_padre_local": "",
@@ -9168,15 +9170,15 @@
    "escudo_local": "200x200AtalayaSanPablo.png",
    "escudo_visitante": "galdarEscudoColor.png",
    "estadio": "Atalaya",
-   "estado": "aplazado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
-   "fecha_programada": "2026-11-04 17:30:00",
+   "fecha_programada": "2026-11-06 17:00:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 9,
+   "goles_visitante": 4,
    "hora_inicio": null,
    "id": 18746,
    "id_local": 1198,
@@ -9184,7 +9186,7 @@
    "jornada": 4,
    "liga_id": 123,
    "local": "UD Atalaya",
-   "minutos_jugados": 0,
+   "minutos_jugados": 90,
    "motivo_aplazado": "La RFIFLP suspende todos los encuentros de los días 4 y 5 de noviembre en señal de duelo por Jesús de Miguel",
    "nombre_liga_partido": "Benjamin Gran Canaria Grupo 3",
    "pen_local": "",
@@ -9195,11 +9197,13 @@
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
+    "V",
     "V"
    ],
    "racha_visitante": [
     "V",
     "V",
+    "D",
     "D"
    ],
    "tecnico_local": null,

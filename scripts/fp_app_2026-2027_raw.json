@@ -39,11 +39,12 @@
   "2026-11-12": "2026-11-13T00:53:37",
   "2026-11-13": "2026-11-14T03:17:45",
   "2026-11-14": "2026-11-15T01:52:41",
-  "2026-11-15": "2026-11-15T16:42:49"
+  "2026-11-15": "2026-11-16T01:58:03",
+  "2026-11-16": "2026-11-16T01:58:03"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -214,7 +215,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -355,7 +356,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -496,7 +497,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -667,7 +668,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -838,7 +839,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -970,7 +971,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1141,7 +1142,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1282,7 +1283,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1423,7 +1424,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1583,7 +1584,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1724,7 +1725,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1895,7 +1896,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2036,7 +2037,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2177,7 +2178,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2348,7 +2349,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2519,7 +2520,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2690,7 +2691,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2861,7 +2862,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3000,7 +3001,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3141,7 +3142,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3282,7 +3283,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3453,7 +3454,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3624,7 +3625,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3795,9 +3796,9 @@
    ]
   },
   "146": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
-    "jornada_actual": 5,
+    "jornada_actual": 6,
     "plazas_ascenso": 1,
     "plazas_copa": 0,
     "plazas_descenso": 0,
@@ -3851,7 +3852,7 @@
      "pe": 0,
      "pg": 4,
      "pj": 5,
-     "posicion_anterior": 3,
+     "posicion_anterior": 2,
      "pp": 1,
      "puntos": 12,
      "racha_ultimos_5": [
@@ -3876,7 +3877,7 @@
      "pe": 1,
      "pg": 3,
      "pj": 5,
-     "posicion_anterior": 2,
+     "posicion_anterior": 3,
      "pp": 1,
      "puntos": 10,
      "racha_ultimos_5": [
@@ -3901,7 +3902,7 @@
      "pe": 0,
      "pg": 3,
      "pj": 5,
-     "posicion_anterior": 6,
+     "posicion_anterior": 4,
      "pp": 2,
      "puntos": 9,
      "racha_ultimos_5": [
@@ -3926,7 +3927,7 @@
      "pe": 0,
      "pg": 3,
      "pj": 4,
-     "posicion_anterior": 4,
+     "posicion_anterior": 5,
      "pp": 1,
      "puntos": 9,
      "racha_ultimos_5": [
@@ -3950,7 +3951,7 @@
      "pe": 1,
      "pg": 2,
      "pj": 4,
-     "posicion_anterior": 9,
+     "posicion_anterior": 6,
      "pp": 1,
      "puntos": 7,
      "racha_ultimos_5": [
@@ -3974,7 +3975,7 @@
      "pe": 0,
      "pg": 2,
      "pj": 4,
-     "posicion_anterior": 5,
+     "posicion_anterior": 7,
      "pp": 2,
      "puntos": 6,
      "racha_ultimos_5": [
@@ -3998,7 +3999,7 @@
      "pe": 0,
      "pg": 2,
      "pj": 5,
-     "posicion_anterior": 7,
+     "posicion_anterior": 8,
      "pp": 3,
      "puntos": 6,
      "racha_ultimos_5": [
@@ -4023,7 +4024,7 @@
      "pe": 0,
      "pg": 2,
      "pj": 4,
-     "posicion_anterior": 8,
+     "posicion_anterior": 9,
      "pp": 2,
      "puntos": 6,
      "racha_ultimos_5": [
@@ -4071,7 +4072,7 @@
      "pe": 0,
      "pg": 1,
      "pj": 4,
-     "posicion_anterior": 12,
+     "posicion_anterior": 11,
      "pp": 3,
      "puntos": 3,
      "racha_ultimos_5": [
@@ -4095,7 +4096,7 @@
      "pe": 0,
      "pg": 0,
      "pj": 5,
-     "posicion_anterior": 11,
+     "posicion_anterior": 12,
      "pp": 5,
      "puntos": 0,
      "racha_ultimos_5": [
@@ -4134,7 +4135,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 1,
@@ -4460,7 +4461,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 1,
@@ -4799,7 +4800,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 1,
@@ -5122,7 +5123,7 @@
    ]
   },
   "183": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 3,
@@ -5306,7 +5307,7 @@
    ]
   },
   "184": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 3,
@@ -5527,7 +5528,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 3,
@@ -5748,7 +5749,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 3,
@@ -5969,7 +5970,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 3,
@@ -6165,7 +6166,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -6396,7 +6397,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -6629,7 +6630,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -6860,7 +6861,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 4,
     "plazas_ascenso": 3,
@@ -7110,7 +7111,7 @@
    ]
   },
   "200": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7318,7 +7319,7 @@
    ]
   },
   "201": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 1,
@@ -7507,7 +7508,7 @@
    ]
   },
   "202": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -7692,7 +7693,7 @@
    ]
   },
   "207": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 0,
@@ -8721,7 +8722,7 @@
    ]
   },
   "208": {
-   "fetched": "2026-11-15T16:42:49",
+   "fetched": "2026-11-16T01:58:03",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 0,
@@ -27101,117 +27102,321 @@
    "visitante": "Gáldar CF"
   },
   "19060": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/3NMDXX95i6btRNLR9",
+   "campo_latitud": "28.12662660",
+   "campo_longitud": "-15.66627420",
    "escudo_local": "sanIsidroEscudo.png",
    "escudo_visitante": "100x100cardones.png",
    "estadio": "Venancio Monzón",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-20 17:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19060,
+   "id_local": 1335,
+   "id_visitante": 1341,
    "jornada": 6,
    "liga_id": 146,
    "local": "San Isidro",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "V",
+    "V",
+    "D",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "D",
+    "D",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Cardones"
   },
   "19061": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/Fo4MXUjfvWguQDXM9",
+   "campo_latitud": "28.15528540",
+   "campo_longitud": "-15.69479470",
    "escudo_local": "200x200udbarrial.png",
    "escudo_visitante": "escudoRoqueAmagro.png",
    "estadio": "Sardina",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-20 17:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19061,
+   "id_local": 1330,
+   "id_visitante": 1334,
    "jornada": 6,
    "liga_id": 146,
    "local": "UD Barrial",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "V",
+    "D",
+    "V",
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "E",
+    "V",
+    "V",
+    "V",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "Roque Amagro"
   },
   "19062": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/1qeQ3MQ53KiP1jTo8",
+   "campo_latitud": "28.09588020",
+   "campo_longitud": "-15.64199280",
    "escudo_local": "escudoGuayarmina.png",
    "escudo_visitante": "100x100firgas.png",
    "estadio": "Cruz del Poleo",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-20 17:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19062,
+   "id_local": 1340,
+   "id_visitante": 1333,
    "jornada": 6,
    "liga_id": 146,
    "local": "CD Guayarmina",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "E",
+    "D",
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "D",
+    "D",
+    "D",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Firgas"
   },
   "19063": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/2XqfjBGLdyTkUCuc9",
+   "campo_latitud": "28.13708340",
+   "campo_longitud": "-15.63237040",
    "escudo_local": "100x100guia.png",
    "escudo_visitante": "100x100sannicolas.png",
    "estadio": "Guía",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-20 18:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19063,
+   "id_local": 1338,
+   "id_visitante": 1337,
    "jornada": 6,
    "liga_id": 146,
    "local": "UD Guía",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "D",
+    "D",
+    "D",
+    "V"
+   ],
+   "racha_visitante": [
+    "D",
+    "V",
+    "V",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "San Nicolás"
   },
   "19064": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/3NMDXX95i6btRNLR9",
+   "campo_latitud": "28.12705270",
+   "campo_longitud": "-15.66573570",
    "escudo_local": "galdarEscudoColor.png",
    "escudo_visitante": "100x100moya.png",
    "estadio": "Venancio Monzón",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-20 18:30:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19064,
+   "id_local": 1329,
+   "id_visitante": 1332,
    "jornada": 6,
    "liga_id": 146,
    "local": "Gáldar CF",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "D",
+    "V",
+    "D",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "D",
+    "V",
+    "D",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "UD Moya"
   },
   "19065": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://maps.app.goo.gl/d1t8SH5uTWhkSMuo6",
+   "campo_latitud": "28.14848010",
+   "campo_longitud": "-15.52869610",
    "escudo_local": "100x100arucas.png",
    "escudo_visitante": "100x100santidad.png",
    "estadio": "Manuel Pablo",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-21 09:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 19065,
+   "id_local": 1339,
+   "id_visitante": 1331,
    "jornada": 6,
    "liga_id": 146,
    "local": "Arucas CF",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 0,
+   "racha_local": [
+    "V",
+    "V",
+    "V",
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "V",
+    "V",
+    "D",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Santidad"
   },
   "19066": {
+   "campo_gps": "https://goo.gl/maps/1qeQ3MQ53KiP1jTo8",
    "escudo_local": "escudoGuayarmina.png",
    "escudo_visitante": "100x100guia.png",
-   "estadio": null,
+   "estadio": "Cruz del Poleo",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-27 17:30:00",
    "goles_local": 0,
@@ -27222,12 +27427,14 @@
    "local": "CD Guayarmina",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Guía"
   },
   "19067": {
+   "campo_gps": "https://maps.app.goo.gl/H7ZznwKDRmWNmhHz5",
    "escudo_local": "100x100santidad.png",
    "escudo_visitante": "200x200udbarrial.png",
-   "estadio": null,
+   "estadio": "Javier Armas",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-27 17:30:00",
    "goles_local": 0,
@@ -27238,12 +27445,14 @@
    "local": "CD Santidad",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Barrial"
   },
   "19068": {
+   "campo_gps": "https://maps.app.goo.gl/3NMDXX95i6btRNLR9",
    "escudo_local": "escudoRoqueAmagro.png",
    "escudo_visitante": "galdarEscudoColor.png",
-   "estadio": null,
+   "estadio": "Venancio Monzón",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-27 18:30:00",
    "goles_local": 0,
@@ -27254,12 +27463,14 @@
    "local": "Roque Amagro",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "permitir_comentarios_liga": 0,
    "visitante": "Gáldar CF"
   },
   "19069": {
+   "campo_gps": "https://maps.app.goo.gl/AMuxUzLRX6MQ22KM8",
    "escudo_local": "100x100cardones.png",
    "escudo_visitante": "200x200AtalayaSanPablo.png",
-   "estadio": null,
+   "estadio": "Domingo Castro",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-28 10:30:00",
    "goles_local": 0,
@@ -27270,12 +27481,14 @@
    "local": "CD Cardones",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Atalaya"
   },
   "19070": {
+   "campo_gps": "https://goo.gl/maps/dk1P853zEEF2",
    "escudo_local": "100x100firgas.png",
    "escudo_visitante": "100x100moya.png",
-   "estadio": null,
+   "estadio": "Domingo Ponce",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-28 10:30:00",
    "goles_local": 0,
@@ -27286,12 +27499,14 @@
    "local": "CD Firgas",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "permitir_comentarios_liga": 0,
    "visitante": "UD Moya"
   },
   "19071": {
+   "campo_gps": "https://goo.gl/maps/duUPQJmNRCHX3WrKA",
    "escudo_local": "100x100sannicolas.png",
    "escudo_visitante": "sanIsidroEscudo.png",
-   "estadio": null,
+   "estadio": "Los Cascajos",
    "estado": "no_iniciado",
    "fecha_programada": "2026-11-28 12:00:00",
    "goles_local": 0,
@@ -27302,6 +27517,7 @@
    "local": "San Nicolás",
    "motivo_aplazado": null,
    "nombre_liga_partido": "Prebenjamín Gran Canaria Grupo 1",
+   "permitir_comentarios_liga": 0,
    "visitante": "San Isidro"
   },
   "19072": {
@@ -45680,11 +45896,11 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com28.73814870,-13.87587760",
+   "campo_gps": "https://maps.app.goo.gl/5Lycnn2PtoSxMbEv8",
    "campo_latitud": "28.73814870",
    "campo_longitud": "-13.87587760",
    "club_padre_local": "",
-   "club_padre_visitante": "",
+   "club_padre_visitante": "La Oliva",
    "escudo_local": "corralejo35Escudo.png",
    "escudo_visitante": "f-laoliva2019.png",
    "estadio": "Jonathan Sesma",
@@ -45715,11 +45931,13 @@
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V",
+    "D",
     "D"
    ],
    "racha_visitante": [
     "D",
-    "D"
+    "D",
+    "V"
    ],
    "tecnico_local": null,
    "tecnico_visitante": null,

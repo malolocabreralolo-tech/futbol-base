@@ -469,60 +469,103 @@
     }
   ],
   "run": {
-    "pass": 1656,
+    "pass": 1657,
     "groups": 69,
-    "refreshed": 44,
+    "refreshed": 0,
     "priority": [
-      "AL20",
-      "PG2",
-      "AL18"
+      "FF5",
+      "AL4"
     ],
     "fresh": [
-      "FF5",
-      "AL9"
+      "PG2",
+      "AL9",
+      "AL20"
     ],
     "resting": [
       "AL2",
       "AL3",
-      "AL4",
+      "AL18",
       "AL22",
-      "AL29"
+      "AL30"
     ],
     "deferred": [
+      "AL4",
+      "AL29",
+      "AL16",
+      "FF16",
+      "AL11",
+      "FF17",
+      "AL12",
+      "FF10",
+      "AL13",
+      "FF11",
+      "AL14",
+      "FF12",
+      "AL15",
+      "FF13",
+      "PG3",
+      "AL25",
+      "FF14",
+      "AL17",
+      "FF15",
+      "FF24",
+      "AL19",
+      "FV11",
+      "FF18",
+      "AL21",
+      "FF19",
+      "FF20",
+      "AL23",
+      "FF21",
       "PG4",
       "FF22",
-      "AL23",
-      "FF23",
       "AL24",
+      "FF23",
       "LZ4",
-      "LZ5",
       "AL32",
-      "FV12",
+      "LZ5",
       "AL26",
-      "FV13",
+      "FV12",
       "AL27",
+      "FV13",
       "FV14",
-      "LZ1",
       "AL28",
-      "LZ2",
+      "LZ1",
       "AL31",
-      "LZ3"
+      "LZ2",
+      "LZ3",
+      "AL6",
+      "FF4",
+      "AL7",
+      "FF6",
+      "FF7",
+      "AL8",
+      "FF8",
+      "AL10",
+      "FF9",
+      "PG1",
+      "FF1",
+      "AL1",
+      "FF2",
+      "AL5",
+      "FF3"
     ],
-    "unserved": [],
+    "unserved": [
+      "FF5"
+    ],
     "extrasDeferred": [],
-    "seconds": 849,
-    "pages": 122,
-    "extras": [
-      "competiciones",
-      "directorio"
-    ],
-    "calendarShows": {
-      "other": 7
-    }
+    "seconds": 783,
+    "pages": 11,
+    "blocked": true,
+    "pauses": 1,
+    "resumed": 0,
+    "brakeAfter": [
+      0
+    ]
   },
-  "checkedAt": "2026-11-21T18:04:42+00:00",
+  "checkedAt": "2026-11-21T18:58:47+00:00",
   "lastDataChange": "2026-11-21",
-  "dataVersion": "20261121h",
+  "dataVersion": "20261121i",
   "summary": {
     "ok": 69,
     "rejected": 0,

@@ -45,11 +45,12 @@
   "2026-11-18": "2026-11-19T01:53:12",
   "2026-11-19": "2026-11-20T18:47:31",
   "2026-11-20": "2026-11-21T04:16:43",
-  "2026-11-21": "2026-11-21T23:27:50"
+  "2026-11-21": "2026-11-22T01:23:00",
+  "2026-11-22": "2026-11-22T01:23:00"
  },
  "ligas": {
   "121": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -220,7 +221,7 @@
    ]
   },
   "122": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -361,7 +362,7 @@
    ]
   },
   "123": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -502,7 +503,7 @@
    ]
   },
   "124": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -673,7 +674,7 @@
    ]
   },
   "125": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -844,7 +845,7 @@
    ]
   },
   "127": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -976,7 +977,7 @@
    ]
   },
   "128": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1147,7 +1148,7 @@
    ]
   },
   "129": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1288,7 +1289,7 @@
    ]
   },
   "130": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1429,7 +1430,7 @@
    ]
   },
   "131": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1589,7 +1590,7 @@
    ]
   },
   "132": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1730,7 +1731,7 @@
    ]
   },
   "133": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -1901,7 +1902,7 @@
    ]
   },
   "134": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2042,7 +2043,7 @@
    ]
   },
   "135": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2183,7 +2184,7 @@
    ]
   },
   "136": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2354,7 +2355,7 @@
    ]
   },
   "137": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2525,7 +2526,7 @@
    ]
   },
   "138": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2696,7 +2697,7 @@
    ]
   },
   "139": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -2867,7 +2868,7 @@
    ]
   },
   "140": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3008,7 +3009,7 @@
    ]
   },
   "141": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3149,7 +3150,7 @@
    ]
   },
   "142": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3290,7 +3291,7 @@
    ]
   },
   "143": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3461,7 +3462,7 @@
    ]
   },
   "144": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3632,7 +3633,7 @@
    ]
   },
   "145": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 4,
@@ -3803,7 +3804,7 @@
    ]
   },
   "146": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 1,
@@ -4149,7 +4150,7 @@
    ]
   },
   "147": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 1,
@@ -4486,7 +4487,7 @@
    ]
   },
   "148": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 1,
@@ -4832,7 +4833,7 @@
    ]
   },
   "149": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 1,
@@ -5160,9 +5161,9 @@
    ]
   },
   "183": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
-    "jornada_actual": 6,
+    "jornada_actual": 7,
     "plazas_ascenso": 3,
     "plazas_copa": 3,
     "plazas_descenso": 0,
@@ -5188,12 +5189,12 @@
      "id": 1775,
      "nombre": "CD Tahiche",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "4",
+     "pe": 0,
+     "pg": 4,
      "pj": 4,
      "posicion_anterior": 1,
-     "pp": "0",
-     "puntos": "12",
+     "pp": 0,
+     "puntos": 12,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -5212,12 +5213,12 @@
      "id": 1777,
      "nombre": "Juv. Marítima",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "4",
+     "pe": 0,
+     "pg": 4,
      "pj": 4,
      "posicion_anterior": 2,
-     "pp": "0",
-     "puntos": "12",
+     "pp": 0,
+     "puntos": 12,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -5236,12 +5237,12 @@
      "id": 1774,
      "nombre": "UD Palmeiros",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "3",
+     "pe": 0,
+     "pg": 3,
      "pj": 5,
      "posicion_anterior": 3,
-     "pp": "2",
-     "puntos": "9",
+     "pp": 2,
+     "puntos": 9,
      "racha_ultimos_5": [
       "V",
       "V",
@@ -5261,12 +5262,12 @@
      "id": 1773,
      "nombre": "CD Adassa",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "1",
+     "pe": 0,
+     "pg": 1,
      "pj": 4,
      "posicion_anterior": 4,
-     "pp": "3",
-     "puntos": "3",
+     "pp": 3,
+     "puntos": 3,
      "racha_ultimos_5": [
       "D",
       "V",
@@ -5285,12 +5286,12 @@
      "id": 1779,
      "nombre": "US Yaiza B",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "0",
+     "pe": 1,
+     "pg": 0,
      "pj": 4,
      "posicion_anterior": 5,
-     "pp": "3",
-     "puntos": "1",
+     "pp": 3,
+     "puntos": 1,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -5309,12 +5310,12 @@
      "id": 1776,
      "nombre": "Tinajo B",
      "orden_manual": 0,
-     "pe": "1",
-     "pg": "0",
+     "pe": 1,
+     "pg": 0,
      "pj": 5,
      "posicion_anterior": 6,
-     "pp": "4",
-     "puntos": "1",
+     "pp": 4,
+     "puntos": 1,
      "racha_ultimos_5": [
       "D",
       "D",
@@ -5334,19 +5335,19 @@
      "id": 1778,
      "nombre": "Pto. del Carmen",
      "orden_manual": 0,
-     "pe": "0",
-     "pg": "0",
+     "pe": 0,
+     "pg": 0,
      "pj": 0,
      "posicion_anterior": 7,
-     "pp": "0",
-     "puntos": "-1",
+     "pp": 0,
+     "puntos": -1,
      "racha_ultimos_5": [],
      "sanciones": 1
     }
    ]
   },
   "184": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 3,
@@ -5567,7 +5568,7 @@
    ]
   },
   "185": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 3,
@@ -5788,7 +5789,7 @@
    ]
   },
   "186": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 6,
     "plazas_ascenso": 3,
@@ -6009,7 +6010,7 @@
    ]
   },
   "187": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 7,
     "plazas_ascenso": 3,
@@ -6205,7 +6206,7 @@
    ]
   },
   "188": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -6444,7 +6445,7 @@
    ]
   },
   "189": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -6685,7 +6686,7 @@
    ]
   },
   "190": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -6922,7 +6923,7 @@
    ]
   },
   "191": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 5,
     "plazas_ascenso": 3,
@@ -7182,7 +7183,7 @@
    ]
   },
   "200": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -7390,7 +7391,7 @@
    ]
   },
   "201": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -7579,7 +7580,7 @@
    ]
   },
   "202": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 2,
     "plazas_ascenso": 1,
@@ -7764,7 +7765,7 @@
    ]
   },
   "207": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 0,
@@ -8793,7 +8794,7 @@
    ]
   },
   "208": {
-   "fetched": "2026-11-21T23:27:50",
+   "fetched": "2026-11-22T01:23:00",
    "meta": {
     "jornada_actual": 1,
     "plazas_ascenso": 0,
@@ -41727,63 +41728,152 @@
    "visitante": "CD Adassa"
   },
   "21980": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/6gTkdcdh7PWXHBKY6",
+   "campo_latitud": "29.06260660",
+   "campo_longitud": "-13.55680460",
    "escudo_local": "adassaEscudo.png",
    "escudo_visitante": "100x100yaiza.png",
    "estadio": "Teguise",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-26 17:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 21980,
    "id_local": 1773,
    "id_visitante": 1779,
    "jornada": 7,
    "liga_id": 183,
    "local": "CD Adassa",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Lanzarote Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "D",
+    "V",
+    "D",
+    "D"
+   ],
+   "racha_visitante": [
+    "D",
+    "D",
+    "D",
+    "E"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "US Yaiza B"
   },
   "21981": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/R6Q8LX2SDdxyjS598",
+   "campo_latitud": "28.97805810",
+   "campo_longitud": "-13.54820970",
    "escudo_local": "1Maritima.png",
    "escudo_visitante": "100x100tahiche.png",
    "estadio": "Agapito Reyes",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-28 12:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 21981,
    "id_local": 1777,
    "id_visitante": 1775,
    "jornada": 7,
    "liga_id": 183,
    "local": "Juv. Marítima",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Lanzarote Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [
+    "V",
+    "V",
+    "V",
+    "V"
+   ],
+   "racha_visitante": [
+    "V",
+    "V",
+    "V",
+    "V"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "CD Tahiche"
   },
   "21982": {
+   "arbitro_principal_nombre": null,
+   "asistente1_nombre": null,
+   "asistente2_nombre": null,
    "campo_gps": "https://goo.gl/maps/kmzfdYdrULCXdnkd8",
+   "campo_latitud": "28.92294010",
+   "campo_longitud": "-13.67968290",
    "escudo_local": "puertodelCarmenEscudo.png",
    "escudo_visitante": "200x200palmeiroTeguise.png",
    "estadio": "Pto. del Carmen",
    "estado": "no_iniciado",
+   "fase_eliminatoria": "",
    "fecha_programada": "2026-11-28 12:00:00",
+   "goleadores_local": null,
+   "goleadores_visitante": null,
+   "goles_ida_local": 0,
+   "goles_ida_visitante": 0,
    "goles_local": 0,
    "goles_visitante": 0,
+   "hora_inicio": null,
    "id": 21982,
    "id_local": 1778,
    "id_visitante": 1774,
    "jornada": 7,
    "liga_id": 183,
    "local": "Pto. del Carmen",
-   "motivo_aplazado": null,
+   "minutos_jugados": 0,
+   "motivo_aplazado": "",
    "nombre_liga_partido": "Benjamin Lanzarote Grupo 1",
+   "pen_local": "",
+   "pen_visit": "",
+   "penaltis_local": "",
+   "penaltis_visitante": "",
    "permitir_comentarios_liga": 1,
+   "racha_local": [],
+   "racha_visitante": [
+    "V",
+    "V",
+    "D",
+    "V",
+    "D"
+   ],
+   "tecnico_local": null,
+   "tecnico_visitante": null,
+   "total_comentarios": 0,
    "visitante": "UD Palmeiros"
   },
   "21983": {
@@ -51445,6 +51535,8 @@
    "campo_gps": "https://goo.gl/maps/SqHsxMpvUtcx8prE7",
    "campo_latitud": "28.05576360",
    "campo_longitud": "-14.35530860",
+   "club_padre_local": "UD Sotavento",
+   "club_padre_visitante": "",
    "escudo_local": "100x100playasdesotavento.png",
    "escudo_visitante": "costaCalmaEscudo.png",
    "estadio": "Morro Jable",
@@ -51471,6 +51563,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D",
@@ -52023,6 +52116,8 @@
    "campo_gps": "https://goo.gl/maps/5AHRnFvmT6MXu6mN7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "UD Sotavento",
+   "club_padre_visitante": "CD Breñamén",
    "escudo_local": "100x100playasdesotavento.png",
    "escudo_visitante": "f-brenamen.png",
    "estadio": "Costa Calma",
@@ -52049,6 +52144,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -52068,6 +52164,8 @@
    "campo_gps": "https://goo.gl/maps/5AHRnFvmT6MXu6mN7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "",
+   "club_padre_visitante": "UD Jandía",
    "escudo_local": "costaCalmaEscudo.png",
    "escudo_visitante": "200x200jandia.png",
    "estadio": "Costa Calma",
@@ -52094,6 +52192,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -52111,6 +52210,8 @@
    "campo_gps": "https://goo.gl/maps/5AHRnFvmT6MXu6mN7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "CD Tamasite",
+   "club_padre_visitante": "UD Tarajalejo",
    "escudo_local": "TamasiteEscudo.png",
    "escudo_visitante": "f-200x200tarajalejo.png",
    "estadio": "Costa Calma",
@@ -52137,6 +52238,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -52156,6 +52258,8 @@
    "campo_gps": "https://goo.gl/maps/5AHRnFvmT6MXu6mN7",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "CD Tamasite",
+   "club_padre_visitante": "UD Sotavento",
    "escudo_local": "TamasiteEscudo.png",
    "escudo_visitante": "100x100playasdesotavento.png",
    "estadio": "Costa Calma",
@@ -52182,6 +52286,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -53433,6 +53538,8 @@
    "campo_gps": "https://goo.gl/maps/MXv3CfcMG2q6tfVY8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "CD Teguinte",
+   "club_padre_visitante": "Peña Amistad",
    "escudo_local": "100x100teguinte.png",
    "escudo_visitante": "penaAmistadEscudo.png",
    "estadio": "Tetir",
@@ -53459,6 +53566,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -53478,6 +53586,8 @@
    "campo_gps": "https://goo.gl/maps/MXv3CfcMG2q6tfVY8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "CD 35600",
+   "club_padre_visitante": "CD FuerteKlub",
    "escudo_local": "f-cd-35600.png",
    "escudo_visitante": "fuerteklubEscudo.png",
    "estadio": "Tetir",
@@ -53504,6 +53614,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -53523,6 +53634,8 @@
    "campo_gps": "https://goo.gl/maps/MXv3CfcMG2q6tfVY8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "Balompédica",
+   "club_padre_visitante": "Unión Tetir",
    "escudo_local": "100x100balompedicafuev.png",
    "escudo_visitante": "200x200uniontetir.png",
    "estadio": "Tetir",
@@ -53549,6 +53662,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -53568,6 +53682,8 @@
    "campo_gps": "https://goo.gl/maps/MXv3CfcMG2q6tfVY8",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "CD Herbania",
+   "club_padre_visitante": "CD 35600",
    "escudo_local": "HerbaniaEscudo.png",
    "escudo_visitante": "f-cd-35600.png",
    "estadio": "Tetir",
@@ -53594,6 +53710,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -54585,6 +54702,8 @@
    "campo_gps": "https://maps.app.goo.gl/Tfe4eVsNthE6i49C9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "CD Herbania",
+   "club_padre_visitante": "SD Villaverde",
    "escudo_local": "charcoEscudo.png",
    "escudo_visitante": "150x150villaverdenorte.png",
    "estadio": "La Oliva",
@@ -54611,6 +54730,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"
@@ -54630,6 +54750,8 @@
    "campo_gps": "https://maps.app.goo.gl/Tfe4eVsNthE6i49C9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "La Oliva",
+   "club_padre_visitante": "Inter Fuerteventura",
    "escudo_local": "f-laoliva2019.png",
    "escudo_visitante": "interFTVEscudo.png",
    "estadio": "La Oliva",
@@ -54656,6 +54778,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [],
    "racha_visitante": [
@@ -54673,6 +54796,8 @@
    "campo_gps": "https://maps.app.goo.gl/Tfe4eVsNthE6i49C9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "El Cotillo",
+   "club_padre_visitante": "Atisachi CF",
    "escudo_local": "100x100cotillo2016.png",
    "escudo_visitante": "atisachiEscudo.png",
    "estadio": "La Oliva",
@@ -54699,6 +54824,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "V"
@@ -54718,6 +54844,8 @@
    "campo_gps": "https://maps.app.goo.gl/Tfe4eVsNthE6i49C9",
    "campo_latitud": null,
    "campo_longitud": null,
+   "club_padre_local": "Atisachi CF",
+   "club_padre_visitante": "CD Corralejo",
    "escudo_local": "atisachiEscudo.png",
    "escudo_visitante": "corralejoEscudo.png",
    "estadio": "La Oliva",
@@ -54744,6 +54872,7 @@
    "pen_visit": "",
    "penaltis_local": "",
    "penaltis_visitante": "",
+   "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
    "racha_local": [
     "D"

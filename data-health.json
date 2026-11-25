@@ -499,38 +499,36 @@
     }
   ],
   "run": {
-    "pass": 1717,
+    "pass": 1720,
     "groups": 69,
-    "refreshed": 32,
+    "refreshed": 0,
     "priority": [
+      "PG2",
       "FF5"
     ],
-    "fresh": [
-      "PG2"
-    ],
+    "fresh": [],
     "resting": [
       "AL1",
       "AL2",
-      "AL3",
       "AL4",
       "AL5",
       "AL6",
       "AL7",
       "AL8",
       "AL9",
-      "AL10",
       "AL12",
       "AL13",
       "AL14",
       "AL15",
+      "AL16",
       "AL17",
       "AL18",
       "AL19",
       "AL20",
+      "AL21",
       "AL22",
       "AL23",
       "AL24",
-      "AL25",
       "AL26",
       "AL27",
       "AL28",
@@ -539,30 +537,64 @@
       "AL32"
     ],
     "deferred": [
+      "FF5",
+      "AL3",
+      "AL10",
+      "AL25",
       "FF8",
       "FF9",
+      "PG1",
       "FF1",
+      "AL11",
       "FF2",
       "FF3",
       "FF4",
       "FF6",
-      "FF7"
+      "AL31",
+      "FF7",
+      "FF16",
+      "FF17",
+      "PG3",
+      "FF10",
+      "FF11",
+      "FF12",
+      "FF13",
+      "FF14",
+      "FF15",
+      "FF24",
+      "FV11",
+      "FF18",
+      "FF19",
+      "PG4",
+      "FF20",
+      "FF21",
+      "FF22",
+      "FF23",
+      "LZ4",
+      "LZ5",
+      "FV12",
+      "FV13",
+      "FV14",
+      "LZ1",
+      "LZ2",
+      "LZ3"
     ],
-    "unserved": [],
+    "unserved": [
+      "PG2"
+    ],
     "extrasDeferred": [],
-    "seconds": 877,
-    "pages": 126,
-    "extras": [
-      "competiciones",
-      "directorio"
-    ],
-    "calendarShows": {
-      "other": 15
-    }
+    "seconds": 783,
+    "pages": 11,
+    "blocked": true,
+    "pauses": 1,
+    "resumed": 0,
+    "brakeAfter": [
+      0
+    ]
   },
-  "checkedAt": "2026-11-25T16:44:07+00:00",
+  "checkedAt": "2026-11-25T22:22:40+00:00",
   "lastDataChange": "2026-11-25",
-  "dataVersion": "20261125b",
+  "dataVersion": "20261125c",
   "summary": {
     "ok": 69,
     "rejected": 0,

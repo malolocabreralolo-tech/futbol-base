@@ -50,7 +50,7 @@
   "2026-11-24": "2026-11-25T05:18:14",
   "2026-11-25": "2026-11-26T09:48:25",
   "2026-11-26": "2026-11-27T02:47:44",
-  "2026-11-27": "2026-11-27T12:23:10"
+  "2026-11-27": "2026-11-27T19:03:09"
  },
  "ligas": {
   "121": {
@@ -38368,15 +38368,15 @@
    "escudo_local": "doramasEscudo.png",
    "escudo_visitante": "udTeldeEscudo.png",
    "estadio": "Cruce Arinaga",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-27 17:00:00",
-   "goleadores_local": null,
-   "goleadores_visitante": null,
+   "goleadores_local": "8&#039; - Aduen \r\n25&#039; - Aziel \r\n38&#039; - Aduen \r\n39&#039; - Izan \r\n54&#039; - Elian",
+   "goleadores_visitante": "1&#039; - Aleix \r\n2&#039; - Dara \r\n6&#039; - Aleix \r\n12&#039; - Enzo \r\n44&#039; - Aleix (p)\r\n58&#039; - Aleix",
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 5,
+   "goles_visitante": 6,
    "hora_inicio": null,
    "id": 19378,
    "id_local": 1364,
@@ -38394,21 +38394,21 @@
    "permitir_comentarios": 0,
    "permitir_comentarios_liga": 0,
    "racha_local": [
-    "V",
     "D",
     "D",
     "D",
-    "E"
-   ],
-   "racha_visitante": [
     "E",
-    "V",
-    "V",
-    "V",
     "D"
    ],
-   "tecnico_local": null,
-   "tecnico_visitante": null,
+   "racha_visitante": [
+    "V",
+    "V",
+    "V",
+    "D",
+    "V"
+   ],
+   "tecnico_local": "",
+   "tecnico_visitante": "",
    "total_comentarios": 0,
    "visitante": "UD Telde"
   },
@@ -62738,16 +62738,16 @@
    "escudo_local": "100x100tamaraceite.png",
    "escudo_visitante": "100x100puertoslaspalmas.png",
    "estadio": "Juan Guedes",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-27 17:00:00",
-   "goleadores_local": null,
-   "goleadores_visitante": null,
+   "goleadores_local": "11&#039; - Jayson \r\n12&#039; - Mauro \r\n14&#039; - Mauro \r\n16&#039; - Dylan \r\n19&#039; - Dylan \r\n27&#039; - Mauro \r\n28&#039; - Marco \r\n29&#039; - Dylan \r\n31&#039; - Lucas \r\n35&#039; - Jayson \r\n38&#039; - Jayson \r\n39&#039; - Aimar \r\n41&#039; - Aimar \r\n47&#039; - Marco \r\n49&#039; - Derek \r\n56&#039; - Derek \r\n57&#039; - Pablo \r\n59&#039; - Dylan",
+   "goleadores_visitante": "",
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
+   "goles_local": 18,
    "goles_visitante": 0,
-   "hora_inicio": null,
+   "hora_inicio": "2026-11-27 01:09:21",
    "id": 25870,
    "id_local": 2478,
    "id_visitante": 2479,
@@ -62763,10 +62763,14 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
-   "tecnico_local": null,
-   "tecnico_visitante": null,
+   "racha_local": [
+    "V"
+   ],
+   "racha_visitante": [
+    "D"
+   ],
+   "tecnico_local": "",
+   "tecnico_visitante": "",
    "total_comentarios": 0,
    "visitante": "Puertos LP"
   },
@@ -74146,15 +74150,15 @@
    "escudo_local": "100x100aguimes.png",
    "escudo_visitante": "100x100cerruda.png",
    "estadio": "Las Crucitas",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-27 17:00:00",
-   "goleadores_local": null,
-   "goleadores_visitante": null,
+   "goleadores_local": "28&#039; - Dylan \r\n32&#039; - Alvaro",
+   "goleadores_visitante": "11&#039; - Hamid \r\n20&#039; - Giordani \r\n36&#039; - Adam \r\n45&#039; - Giordani \r\n51&#039; - Mouhamed \r\n54&#039; - Mouhamed",
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 2,
+   "goles_visitante": 6,
    "hora_inicio": null,
    "id": 26529,
    "id_local": 2536,
@@ -74171,10 +74175,14 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
-   "tecnico_local": null,
-   "tecnico_visitante": null,
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
+   "tecnico_local": "",
+   "tecnico_visitante": "",
    "total_comentarios": 0,
    "visitante": "CD Cerruda"
   },

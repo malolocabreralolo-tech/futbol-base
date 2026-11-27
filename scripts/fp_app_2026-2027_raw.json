@@ -50,7 +50,7 @@
   "2026-11-24": "2026-11-25T05:18:14",
   "2026-11-25": "2026-11-26T09:48:25",
   "2026-11-26": "2026-11-27T02:47:44",
-  "2026-11-27": "2026-11-27T20:52:45"
+  "2026-11-27": "2026-11-27T21:47:29"
  },
  "ligas": {
   "121": {
@@ -74190,7 +74190,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com28.02844810,-15.41538850",
+   "campo_gps": "https://goo.gl/maps/CgxHDYPR3e85LKz78",
    "campo_latitud": "28.02844810",
    "campo_longitud": "-15.41538850",
    "club_padre_local": "CD Vallinamar",
@@ -74198,15 +74198,15 @@
    "escudo_local": "vallinamarEscudo.png",
    "escudo_visitante": "200x200maspalomas20-21.png",
    "estadio": "EM Jinámar",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-27 18:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 2,
+   "goles_visitante": 2,
    "hora_inicio": null,
    "id": 26530,
    "id_local": 2538,
@@ -74223,8 +74223,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "E"
+   ],
+   "racha_visitante": [
+    "E"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
@@ -81020,7 +81024,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com28.15528540,-15.69479470",
+   "campo_gps": "https://goo.gl/maps/Fo4MXUjfvWguQDXM9",
    "campo_latitud": "28.15528540",
    "campo_longitud": "-15.69479470",
    "club_padre_local": "Sardina CF",
@@ -81028,15 +81032,15 @@
    "escudo_local": "100x100sardina.png",
    "escudo_visitante": "200x200AtalayaSanPablo.png",
    "estadio": "Sardina",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-27 18:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 5,
+   "goles_visitante": 8,
    "hora_inicio": null,
    "id": 27057,
    "id_local": 2582,
@@ -81053,8 +81057,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,

@@ -50,8 +50,8 @@
   "2026-11-24": "2026-11-25T05:18:14",
   "2026-11-25": "2026-11-26T09:48:25",
   "2026-11-26": "2026-11-27T02:47:44",
-  "2026-11-27": "2026-11-28T12:07:18",
-  "2026-11-28": "2026-11-28T12:07:18"
+  "2026-11-27": "2026-11-28T13:01:30",
+  "2026-11-28": "2026-11-28T13:01:30"
  },
  "ligas": {
   "121": {
@@ -38653,7 +38653,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com27.99372900,-15.49657990",
+   "campo_gps": "https://goo.gl/maps/HstbJBBoFZs",
    "campo_latitud": "27.99372900",
    "campo_longitud": "-15.49657990",
    "club_padre_local": "UD Valsequillo",
@@ -38661,7 +38661,7 @@
    "escudo_local": "100x100valsequillo.png",
    "escudo_visitante": "200x200atleticograncanaria19-20.png",
    "estadio": "Valsequillo",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-28 11:00:00",
    "goleadores_local": null,
@@ -38669,7 +38669,7 @@
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
    "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_visitante": 7,
    "hora_inicio": null,
    "id": 19383,
    "id_local": 1358,
@@ -38694,9 +38694,9 @@
     "D"
    ],
    "racha_visitante": [
-    "V",
     "D",
     "E",
+    "V",
     "V",
     "V"
    ],
@@ -67470,7 +67470,7 @@
    "arbitro_principal_nombre": null,
    "asistente1_nombre": null,
    "asistente2_nombre": null,
-   "campo_gps": "https://google.com28.12662660,-15.66627420",
+   "campo_gps": "https://goo.gl/maps/jGnsjd1EmbvhLCnz6",
    "campo_latitud": "28.12662660",
    "campo_longitud": "-15.66627420",
    "club_padre_local": "Roque Amagro",
@@ -67478,15 +67478,15 @@
    "escudo_local": "escudoRoqueAmagro.png",
    "escudo_visitante": "100x100veteranos.png",
    "estadio": "Venancio Monzón",
-   "estado": "no_iniciado",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-28 10:30:00",
    "goleadores_local": null,
    "goleadores_visitante": null,
    "goles_ida_local": 0,
    "goles_ida_visitante": 0,
-   "goles_local": 0,
-   "goles_visitante": 0,
+   "goles_local": 1,
+   "goles_visitante": 7,
    "hora_inicio": null,
    "id": 26134,
    "id_local": 2502,
@@ -67503,8 +67503,12 @@
    "penaltis_visitante": "",
    "permitir_comentarios": 1,
    "permitir_comentarios_liga": 1,
-   "racha_local": [],
-   "racha_visitante": [],
+   "racha_local": [
+    "D"
+   ],
+   "racha_visitante": [
+    "V"
+   ],
    "tecnico_local": null,
    "tecnico_visitante": null,
    "total_comentarios": 0,
@@ -79180,7 +79184,7 @@
    "escudo_local": "100x100cerruda.png",
    "escudo_visitante": "escudoFutboltec.png",
    "estadio": "Axo. Vecindario",
-   "estado": "en_juego",
+   "estado": "finalizado",
    "fase_eliminatoria": "",
    "fecha_programada": "2026-11-28 10:30:00",
    "goleadores_local": null,
